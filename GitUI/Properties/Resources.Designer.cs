@@ -528,6 +528,27 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconCloneRepoGit {
+            get {
+                object obj = ResourceManager.GetObject("IconCloneRepoGit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconCloneRepoGithub {
+            get {
+                object obj = ResourceManager.GetObject("IconCloneRepoGithub", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconCloneRepoSvn {
+            get {
+                object obj = ResourceManager.GetObject("IconCloneRepoSvn", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconCommit {
             get {
                 object obj = ResourceManager.GetObject("IconCommit", resourceCulture);
@@ -545,6 +566,13 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap IconDiff {
             get {
                 object obj = ResourceManager.GetObject("IconDiff", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconDiffTool {
+            get {
+                object obj = ResourceManager.GetObject("IconDiffTool", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -650,6 +678,20 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap IconResetWorkingDirChanges {
             get {
                 object obj = ResourceManager.GetObject("IconResetWorkingDirChanges", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconSave {
+            get {
+                object obj = ResourceManager.GetObject("IconSave", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconSaveAs {
+            get {
+                object obj = ResourceManager.GetObject("IconSaveAs", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -846,20 +888,6 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap rss {
             get {
                 object obj = ResourceManager.GetObject("rss", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap Save {
-            get {
-                object obj = ResourceManager.GetObject("Save", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap SaveAs {
-            get {
-                object obj = ResourceManager.GetObject("SaveAs", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
