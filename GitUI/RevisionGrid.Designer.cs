@@ -542,6 +542,7 @@ namespace GitUI
             // 
             // filterToolStripMenuItem
             // 
+            this.filterToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFilter;
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.filterToolStripMenuItem.Text = "Set advanced filter";
