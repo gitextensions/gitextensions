@@ -763,6 +763,7 @@ namespace GitUI
             // 
             // copyFilenameToClipboardToolStripMenuItem
             // 
+            this.copyFilenameToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.Copied;
             this.copyFilenameToClipboardToolStripMenuItem.Name = "copyFilenameToClipboardToolStripMenuItem";
             this.copyFilenameToClipboardToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.copyFilenameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
