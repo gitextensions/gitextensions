@@ -29,6 +29,7 @@ namespace GitUI.RepoHosting
         private AsyncLoader remoteLoader = new AsyncLoader();
 
         public CreatePullRequestForm(GitUICommands aCommands, IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
+            : base(aCommands)
         {
             _repoHost = repoHost;
             _chooseRemote = chooseRemote;
