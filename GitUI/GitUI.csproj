@@ -1367,6 +1367,7 @@
     <None Include="Resources\Icons\IconPreview.png" />
     <None Include="Resources\Icons\7.png" />
     <None Include="Resources\Icons\IconResetWorkingDirChanges.png" />
+    <None Include="Resources\Icons\IconResetCurrentBranchToHere.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
