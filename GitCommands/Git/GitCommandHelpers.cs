@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -1216,6 +1217,35 @@ namespace GitCommands
             {
                 return false;
             }
+        }
+        
+#if !MONO
+        [DllImport("kernel32.dll")]
+        static extern bool SetConsoleCtrlHandler(IntPtr HandlerRoutine,
+           bool Add);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool AttachConsole(int dwProcessId);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent,
+           int dwProcessGroupId);
+#endif
+
+        public static void TerminateTree(this Process process)
+        {
+#if !MONO
+            if (Settings.RunningOnWindows())
+            {
+                // Send Ctrl+C
+                AttachConsole(process.Id);
+                SetConsoleCtrlHandler(IntPtr.Zero, true);
+                GenerateConsoleCtrlEvent(0, 0);
+                process.WaitForExit(500);
+            }
+#endif
+            process.Kill();
         }
     }
 }

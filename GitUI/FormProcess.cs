@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
@@ -137,7 +138,7 @@ namespace GitUI
         {
             if (Process != null)
             {
-                Process.Kill();
+                Process.TerminateTree();
             }
         }
 
