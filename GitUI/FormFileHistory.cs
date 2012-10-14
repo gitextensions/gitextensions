@@ -24,6 +24,20 @@ namespace GitUI
             : base(aCommands)
         {
             InitializeComponent();
+
+            // set tab page images
+            {
+                var imageList = new ImageList();
+                tabControl1.ImageList = imageList;
+                imageList.ColorDepth = ColorDepth.Depth8Bit;
+                imageList.Images.Add(global::GitUI.Properties.Resources.IconViewFile);
+                imageList.Images.Add(global::GitUI.Properties.Resources.IconDiff);
+                imageList.Images.Add(global::GitUI.Properties.Resources.IconBlame);
+                tabControl1.TabPages[0].ImageIndex = 0;
+                tabControl1.TabPages[1].ImageIndex = 1;
+                tabControl1.TabPages[2].ImageIndex = 2;
+            }
+
             syncContext = SynchronizationContext.Current;
             filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, FileChanges);
             filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, FileChanges, toolStripLabel2, this);
