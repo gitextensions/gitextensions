@@ -1598,6 +1598,7 @@ namespace GitUI
             // 
             // verifyGitDatabaseToolStripMenuItem
             // 
+            this.verifyGitDatabaseToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconRecoverLostObjects;
             this.verifyGitDatabaseToolStripMenuItem.Name = "verifyGitDatabaseToolStripMenuItem";
             this.verifyGitDatabaseToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.verifyGitDatabaseToolStripMenuItem.Text = "Recover lost objects";
