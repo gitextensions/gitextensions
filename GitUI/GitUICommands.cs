@@ -25,7 +25,7 @@ namespace GitUI
         }
 
         public GitUICommands(string workingDir)
-            : this(new GitModule(workingDir)){}
+            : this(new GitModule(workingDir)) { }
 
         #region IGitUICommands Members
 
@@ -805,8 +805,11 @@ namespace GitUI
             var unstagedFiles = Module.GetUnstagedFiles();
             // Show a form asking the user if they want to reset the changes.
             FormResetChanges.ResultType resetType = FormResetChanges.ShowResetDialog(owner, unstagedFiles.Any(item => !item.IsNew), unstagedFiles.Any(item => item.IsNew));
+
             if (resetType == FormResetChanges.ResultType.CANCEL)
+            {
                 return false;
+            }
 
             // Reset all changes.
             Module.ResetHard("");
@@ -824,6 +827,7 @@ namespace GitUI
                     catch (System.UnauthorizedAccessException) { }
                 }
             }
+
             return true;
         }
 
