@@ -118,6 +118,20 @@ namespace GitUI
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
+
+            // set tab page images
+            {
+                var imageList = new ImageList();
+                CommitInfoTabControl.ImageList = imageList;
+                imageList.ColorDepth = ColorDepth.Depth8Bit;
+                imageList.Images.Add(global::GitUI.Properties.Resources.IconCommit);
+                imageList.Images.Add(global::GitUI.Properties.Resources.IconFileTree);
+                imageList.Images.Add(global::GitUI.Properties.Resources.IconDiff);
+                CommitInfoTabControl.TabPages[0].ImageIndex = 0;
+                CommitInfoTabControl.TabPages[1].ImageIndex = 1;
+                CommitInfoTabControl.TabPages[2].ImageIndex = 2;
+            }
+
             RevisionGrid.UICommandsSource = this;
             AsyncLoader.DoAsync(() => PluginLoader.Load(), () => RegisterPlugins());
             RevisionGrid.GitModuleChanged += DashboardGitModuleChanged;
