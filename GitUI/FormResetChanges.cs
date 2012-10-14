@@ -8,7 +8,9 @@ namespace GitUI
     /// </summary>
     public partial class FormResetChanges : GitExtensionsForm
     {
-        public enum ResultType { RESET, RESET_AND_DELETE, CANCEL };
+        // CANCEL must be placed at first position because it is the default value when
+        // closing the dialog via the X button
+        public enum ResultType { CANCEL, RESET, RESET_AND_DELETE };
 
         public ResultType Result { get; private set; }
 
@@ -22,7 +24,7 @@ namespace GitUI
                 // No existing files => new files only => force the "delete new files" checkbox on.
                 cbDeleteNewFiles.Enabled = false;
                 cbDeleteNewFiles.Checked = true;
-            }            
+            }
             else if (!hasNewFiles)
             {
                 // No new files => force the "delete new files" checkbox off. 
@@ -30,7 +32,9 @@ namespace GitUI
                 cbDeleteNewFiles.Checked = false;
             }
             else
+            {
                 cbDeleteNewFiles.Enabled = true; // A mix of types, so enable the checkbox.
+            }
         }
 
         /// <summary>
