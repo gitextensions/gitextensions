@@ -751,6 +751,7 @@ namespace GitUI
             // 
             // editCheckedOutFileToolStripMenuItem
             // 
+            this.editCheckedOutFileToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconEditFile;
             this.editCheckedOutFileToolStripMenuItem.Name = "editCheckedOutFileToolStripMenuItem";
             this.editCheckedOutFileToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.editCheckedOutFileToolStripMenuItem.Text = "Edit checked out file";
@@ -793,6 +794,7 @@ namespace GitUI
             // 
             // findToolStripMenuItem
             // 
+            this.findToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFind;
             this.findToolStripMenuItem.Name = "findToolStripMenuItem";
             this.findToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
             this.findToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
@@ -803,7 +805,7 @@ namespace GitUI
             // 
             this.expandAllToolStripMenuItem.Name = "expandAllToolStripMenuItem";
             this.expandAllToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
-            this.expandAllToolStripMenuItem.Text = "Expand all";
+            this.expandAllToolStripMenuItem.Text = "Expand all (takes a while on large trees)";
             this.expandAllToolStripMenuItem.Click += new System.EventHandler(this.expandAllStripMenuItem_Click);
             // 
             // collapseAllToolStripMenuItem
