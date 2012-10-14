@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -598,6 +599,36 @@ namespace GitUI.Editor.RichTextBoxExtension
                 url = v[0];
             else
                 url = v[1];
+        }
+
+        public static string GetPlaintText(this RichTextBox rtb)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var line in rtb.Text.Split('\n'))
+            {
+                bool insideLink = false;
+                // HACK: Remove link by # character
+                foreach (var ch in line)
+                {
+                    if (!insideLink)
+                    {
+                        if (ch != '#')
+                            sb.Append(ch);
+                        else
+                            insideLink = true;
+                    }
+                    else
+                    {
+                        if (ch == ' ' || ch == '\t' || ch == ',')
+                        {
+                            insideLink = false;
+                            sb.Append(ch);
+                        }
+                    }
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString().TrimEnd();
         }
 
         public static void SetXHTMLText(this RichTextBox rtb, string xhtmlText)
