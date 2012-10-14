@@ -252,7 +252,7 @@ namespace GitUI
             // 
             // copyToClipboardToolStripMenuItem
             // 
-            this.copyToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.Copied;
+            this.copyToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
             this.copyToClipboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.messageToolStripMenuItem,
             this.authorToolStripMenuItem,
