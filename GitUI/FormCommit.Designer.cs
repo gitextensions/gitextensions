@@ -287,7 +287,7 @@ namespace GitUI
             // 
             // openContainingFolderToolStripMenuItem
             // 
-            this.openContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFileExplorer;
+            this.openContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconBrowseFileExplorer;
             this.openContainingFolderToolStripMenuItem.Name = "openContainingFolderToolStripMenuItem";
             this.openContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(232, 24);
             this.openContainingFolderToolStripMenuItem.Text = "Open containing folder";
@@ -364,6 +364,7 @@ namespace GitUI
             // 
             // toolStripMenuItem6
             // 
+            this.toolStripMenuItem6.Image = global::GitUI.Properties.Resources.IconFileHistory;
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
             this.toolStripMenuItem6.Size = new System.Drawing.Size(232, 24);
             this.toolStripMenuItem6.Text = "View file history";
@@ -390,6 +391,7 @@ namespace GitUI
             // 
             // toolStripMenuItem9
             // 
+            this.toolStripMenuItem9.Image = global::GitUI.Properties.Resources.IconDiffTool;
             this.toolStripMenuItem9.Name = "toolStripMenuItem9";
             this.toolStripMenuItem9.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.toolStripMenuItem9.Size = new System.Drawing.Size(232, 24);
@@ -398,6 +400,7 @@ namespace GitUI
             // 
             // toolStripMenuItem10
             // 
+            this.toolStripMenuItem10.Image = global::GitUI.Properties.Resources.IconBrowseFileExplorer;
             this.toolStripMenuItem10.Name = "toolStripMenuItem10";
             this.toolStripMenuItem10.Size = new System.Drawing.Size(232, 24);
             this.toolStripMenuItem10.Text = "Open containing folder";
@@ -410,6 +413,7 @@ namespace GitUI
             // 
             // toolStripMenuItem11
             // 
+            this.toolStripMenuItem11.Image = global::GitUI.Properties.Resources.IconEditFile;
             this.toolStripMenuItem11.Name = "toolStripMenuItem11";
             this.toolStripMenuItem11.Size = new System.Drawing.Size(232, 24);
             this.toolStripMenuItem11.Text = "Edit file";
@@ -422,6 +426,7 @@ namespace GitUI
             // 
             // toolStripMenuItem14
             // 
+            this.toolStripMenuItem14.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
             this.toolStripMenuItem14.Name = "toolStripMenuItem14";
             this.toolStripMenuItem14.Size = new System.Drawing.Size(232, 24);
             this.toolStripMenuItem14.Text = "Copy filename";
