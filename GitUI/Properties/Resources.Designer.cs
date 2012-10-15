@@ -402,13 +402,6 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Bitmap Goto {
-            get {
-                object obj = ResourceManager.GetObject("Goto", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         public static System.Drawing.Bitmap history {
             get {
                 object obj = ResourceManager.GetObject("history", resourceCulture);
@@ -626,6 +619,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconGotoCommit {
+            get {
+                object obj = ResourceManager.GetObject("IconGotoCommit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconMerge {
             get {
                 object obj = ResourceManager.GetObject("IconMerge", resourceCulture);
@@ -675,6 +675,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconResetFileTo {
+            get {
+                object obj = ResourceManager.GetObject("IconResetFileTo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconResetWorkingDirChanges {
             get {
                 object obj = ResourceManager.GetObject("IconResetWorkingDirChanges", resourceCulture);
@@ -692,6 +699,20 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap IconSaveAs {
             get {
                 object obj = ResourceManager.GetObject("IconSaveAs", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconSelectBranch {
+            get {
+                object obj = ResourceManager.GetObject("IconSelectBranch", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconSelectRevision {
+            get {
+                object obj = ResourceManager.GetObject("IconSelectRevision", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
