@@ -15,6 +15,7 @@ namespace GitUI
         private readonly SynchronizationContext syncContext;
         private readonly FilterRevisionsHelper filterRevisionsHelper;
         private readonly FilterBranchHelper filterBranchHelper;
+        private AsyncLoader asyncLoader = new AsyncLoader();
 
         private FormFileHistory()
             : this(null)
@@ -78,13 +79,21 @@ namespace GitUI
         private void LoadFileHistory()
         {
             FileChanges.Visible = true;
-            ThreadPool.QueueUserWorkItem(o => LoadFileHistory(FileName));
+
+            asyncLoader.Load(() => BuildFilter(FileName), (filter) =>
+            {
+                if (filter == null)
+                    return;
+                FileChanges.FixedFilter = filter;
+                FileChanges.AllowGraphWithFilter = true;
+                FileChanges.Load();
+            });
         }
 
-        private void LoadFileHistory(string fileName)
+        private string BuildFilter(string fileName)
         {
             if (string.IsNullOrEmpty(fileName))
-                return;
+                return null;
 
             //Replace windows path seperator to linux path seperator. 
             //This is needed to keep the file history working when started from file tree in
@@ -166,12 +175,7 @@ namespace GitUI
                 filter = string.Concat(" --full-history --simplify-by-decoration ", filter);
             }
 
-            syncContext.Post(_ =>
-            {
-                FileChanges.FixedFilter = filter;
-                FileChanges.AllowGraphWithFilter = true;
-                FileChanges.Load();
-            }, null);
+            return filter;
         }
 
         private void DiffExtraDiffArgumentsChanged(object sender, EventArgs e)
