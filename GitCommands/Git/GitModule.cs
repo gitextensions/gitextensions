@@ -275,6 +275,11 @@ namespace GitCommands
             return configFile.GetConfigSections().Select(configSection => configSection.GetPathValue("path").Trim()).ToList();
         }
 
+        public string GetConfigValue(string name)
+        {
+            return RunCmd("git config --get " + name.Quote());
+        }
+
         public string GetGlobalSetting(string setting)
         {
             var configFile = GitCommandHelpers.GetGlobalConfig();
