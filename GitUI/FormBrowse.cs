@@ -1824,7 +1824,7 @@ namespace GitUI
             {
                 MessageBox.Show("Exactly one revision must be selected. Abort.");
                 return;
-                ////throw new ApplicationException("Exactly one revision must be selected");
+                ////throw new ApplicationException("Exactly one revision must be selected"); // todo: unified exception handling?
             }
 
             if (MessageBox.Show("Really reset selected file / directory?", "Reset", MessageBoxButtons.OKCancel)
@@ -2563,7 +2563,7 @@ namespace GitUI
                 if (!revisions[0].HasParent())
                 {
                     MessageBox.Show("Revision must have a parent. Abort.");
-                    ////throw new ApplicationException("Revision must have a parent.");
+                    ////throw new ApplicationException("Revision must have a parent."); // todo: unified exception handling?
                 }
 
                 Module.CheckoutFiles(files, revisions[0].Guid + "^", false);
