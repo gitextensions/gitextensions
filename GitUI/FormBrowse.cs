@@ -791,7 +791,7 @@ namespace GitUI
 
         private void FillFileTree()
         {
-            if (CommitInfoTabControl.SelectedTab != Tree)
+            if (CommitInfoTabControl.SelectedTab != TreeTabPage)
                 return;
 
             try
@@ -859,7 +859,7 @@ namespace GitUI
 
         private void FillDiff()
         {
-            if (CommitInfoTabControl.SelectedTab != Diff)
+            if (CommitInfoTabControl.SelectedTab != DiffTabPage)
             {
                 return;
             }
@@ -928,7 +928,7 @@ namespace GitUI
 
         private void FillCommitInfo()
         {
-            if (CommitInfoTabControl.SelectedTab != CommitInfo)
+            if (CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
                 return;
 
             if (RevisionGrid.GetSelectedRevisions().Count == 0)
@@ -1117,13 +1117,13 @@ namespace GitUI
                     (revisions[0].Guid == GitRevision.UncommittedWorkingDirGuid ||
                      revisions[0].Guid == GitRevision.IndexGuid))
                 {
-                    CommitInfoTabControl.RemoveIfExists(CommitInfo);
-                    CommitInfoTabControl.RemoveIfExists(Tree);
+                    CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
+                    CommitInfoTabControl.RemoveIfExists(TreeTabPage);
                 }
                 else
                 {
-                    CommitInfoTabControl.InsertIfNotExists(0, CommitInfo);
-                    CommitInfoTabControl.InsertIfNotExists(1, Tree);
+                    CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
+                    CommitInfoTabControl.InsertIfNotExists(1, TreeTabPage);
                 }
 
                 //RevisionGrid.HighlightSelectedBranch();
@@ -2068,7 +2068,7 @@ namespace GitUI
 
         private void FindFileInSelectedCommit()
         {
-            CommitInfoTabControl.SelectedTab = Tree;
+            CommitInfoTabControl.SelectedTab = TreeTabPage;
             EnabledSplitViewLayout(true);
             GitTree.Focus();
             FindFileOnClick(null, null);
@@ -2089,9 +2089,9 @@ namespace GitUI
                 case Commands.GitGui: Module.RunGui(); break;
                 case Commands.GitGitK: Module.RunGitK(); break;
                 case Commands.FocusRevisionGrid: RevisionGrid.Focus(); break;
-                case Commands.FocusCommitInfo: CommitInfoTabControl.SelectedTab = CommitInfo; break;
-                case Commands.FocusFileTree: CommitInfoTabControl.SelectedTab = Tree; GitTree.Focus(); break;
-                case Commands.FocusDiff: CommitInfoTabControl.SelectedTab = Diff; DiffFiles.Focus(); break;
+                case Commands.FocusCommitInfo: CommitInfoTabControl.SelectedTab = CommitInfoTabPage; break;
+                case Commands.FocusFileTree: CommitInfoTabControl.SelectedTab = TreeTabPage; GitTree.Focus(); break;
+                case Commands.FocusDiff: CommitInfoTabControl.SelectedTab = DiffTabPage; DiffFiles.Focus(); break;
                 case Commands.Commit: CommitToolStripMenuItemClick(null, null); break;
                 case Commands.AddNotes: AddNotes(); break;
                 case Commands.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
