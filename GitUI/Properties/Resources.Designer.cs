@@ -465,6 +465,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconAddToGitIgnore {
+            get {
+                object obj = ResourceManager.GetObject("IconAddToGitIgnore", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconArchiveRevision {
             get {
                 object obj = ResourceManager.GetObject("IconArchiveRevision", resourceCulture);
@@ -587,6 +594,20 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap IconEditFile {
             get {
                 object obj = ResourceManager.GetObject("IconEditFile", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconEditGitIgnore {
+            get {
+                object obj = ResourceManager.GetObject("IconEditGitIgnore", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconFileExplorer {
+            get {
+                object obj = ResourceManager.GetObject("IconFileExplorer", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
