@@ -2502,11 +2502,10 @@ namespace GitUI
         {
             IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
 
-            if (revisions.Count == 0)
+            if (!revisions.Any() || !DiffFiles.SelectedItems.Any())
+            {
                 return;
-
-            if (DiffFiles.SelectedItems.Count == 0)
-                return;
+            }
 
             var files = DiffFiles.SelectedItems.Select(item => item.Name);
 
@@ -2517,19 +2516,14 @@ namespace GitUI
         {
             IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
 
-            if (revisions.Count == 0)
+            if (!revisions.Any() || !revisions[0].HasParent() || !DiffFiles.SelectedItems.Any())
+            {
                 return;
-
-            if (!revisions[0].HasParent())
-                return;
-
-            if (DiffFiles.SelectedItems.Count == 0)
-                return;
+            }
 
             var files = DiffFiles.SelectedItems.Select(item => item.Name);
 
             Module.CheckoutFiles(files, revisions[0].Guid + "^", false);
-
         }
 
         private void _NO_TRANSLATE_Workingdir_MouseUp(object sender, MouseEventArgs e)
