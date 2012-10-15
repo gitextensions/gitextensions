@@ -960,6 +960,7 @@ namespace GitUI
             // 
             // resetFileToToolStripMenuItem
             // 
+            this.resetFileToToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetFileTo;
             this.resetFileToToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.resetFileToAToolStripMenuItem,
             this.resetFileToBaseToolStripMenuItem,
@@ -1433,7 +1434,7 @@ namespace GitUI
             // 
             // goToToolStripMenuItem
             // 
-            this.goToToolStripMenuItem.Image = global::GitUI.Properties.Resources.Goto;
+            this.goToToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconGotoCommit;
             this.goToToolStripMenuItem.Name = "goToToolStripMenuItem";
             this.goToToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.G)));

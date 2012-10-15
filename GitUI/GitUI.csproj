@@ -1375,6 +1375,11 @@
     <None Include="Resources\Icons\IconCloneRepoGithub.png" />
     <None Include="Resources\Icons\IconCloneRepoSvn.png" />
     <None Include="Resources\Icons\IconSave.png" />
+    <None Include="Resources\Icons\IconResetFileTo.png" />
+    <None Include="Resources\Icons\IconGotoCommit.png" />
+    <None Include="Resources\Icons\IconSelectBranch.png" />
+    <None Include="Resources\Icons\IconSelectCommit.png" />
+    <None Include="Resources\Icons\IconSelectRevision.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
