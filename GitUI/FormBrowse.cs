@@ -103,6 +103,8 @@ namespace GitUI
         private FilterRevisionsHelper filterRevisionsHelper;
         private FilterBranchHelper _FilterBranchHelper;
 
+        private const string DiffTabPageTitleBase = "Diff";
+
         /// <summary>
         /// For VS designer
         /// </summary>
@@ -859,6 +861,8 @@ namespace GitUI
 
         private void FillDiff()
         {
+            DiffTabPage.Text = string.Format("{0}", DiffTabPageTitleBase);
+
             if (CommitInfoTabControl.SelectedTab != DiffTabPage)
             {
                 return;
@@ -874,6 +878,7 @@ namespace GitUI
             {
                 case 0:
                     DiffFiles.GitItemStatuses = null;
+                    DiffTabPage.Text = string.Format("{0} (no selection)", DiffTabPageTitleBase);
                     break;
 
                 case 1: // diff "parent" --> "selected revision"
@@ -903,6 +908,8 @@ namespace GitUI
                         { 
                             DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
                         }
+
+                        DiffTabPage.Text = string.Format("{0} (parent --> selection)", DiffTabPageTitleBase);
                     }
                     break;
 
@@ -916,12 +923,14 @@ namespace GitUI
                     else
                     {
                         DiffFiles.GitItemStatuses = Module.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
+                        DiffTabPage.Text = string.Format("{0} (first --> second)", DiffTabPageTitleBase);
                     }
                     break;
 
                 default: // more than 2 revisions selected => no diff
                     DiffFiles.SetNoFilesText(_UnsupportedMultiselectAction.Text);
                     DiffFiles.GitItemStatuses = null;
+                    DiffTabPage.Text = string.Format("{0} (not supported)", DiffTabPageTitleBase);
                     break;
             }
         }
