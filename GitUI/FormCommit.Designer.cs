@@ -219,6 +219,7 @@ namespace GitUI
             // 
             // resetChanges
             // 
+            this.resetChanges.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
             this.resetChanges.Name = "resetChanges";
             this.resetChanges.Size = new System.Drawing.Size(232, 24);
             this.resetChanges.Text = "Reset file changes";
@@ -250,6 +251,7 @@ namespace GitUI
             // 
             // viewFileHistoryToolStripItem
             // 
+            this.viewFileHistoryToolStripItem.Image = global::GitUI.Properties.Resources.IconFileHistory;
             this.viewFileHistoryToolStripItem.Name = "viewFileHistoryToolStripItem";
             this.viewFileHistoryToolStripItem.Size = new System.Drawing.Size(232, 24);
             this.viewFileHistoryToolStripItem.Text = "View file history";
@@ -276,6 +278,7 @@ namespace GitUI
             // 
             // openWithDifftoolToolStripMenuItem
             // 
+            this.openWithDifftoolToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconDiffTool;
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
             this.openWithDifftoolToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(232, 24);
@@ -284,6 +287,7 @@ namespace GitUI
             // 
             // openContainingFolderToolStripMenuItem
             // 
+            this.openContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFileExplorer;
             this.openContainingFolderToolStripMenuItem.Name = "openContainingFolderToolStripMenuItem";
             this.openContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(232, 24);
             this.openContainingFolderToolStripMenuItem.Text = "Open containing folder";
@@ -296,6 +300,7 @@ namespace GitUI
             // 
             // editFileToolStripMenuItem
             // 
+            this.editFileToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconEditFile;
             this.editFileToolStripMenuItem.Name = "editFileToolStripMenuItem";
             this.editFileToolStripMenuItem.Size = new System.Drawing.Size(232, 24);
             this.editFileToolStripMenuItem.Text = "Edit file";
@@ -315,6 +320,7 @@ namespace GitUI
             // 
             // addFileTogitignoreToolStripMenuItem
             // 
+            this.addFileTogitignoreToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconAddToGitIgnore;
             this.addFileTogitignoreToolStripMenuItem.Name = "addFileTogitignoreToolStripMenuItem";
             this.addFileTogitignoreToolStripMenuItem.Size = new System.Drawing.Size(232, 24);
             this.addFileTogitignoreToolStripMenuItem.Text = "Add file to .gitignore";
@@ -327,6 +333,7 @@ namespace GitUI
             // 
             // filenameToClipboardToolStripMenuItem
             // 
+            this.filenameToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
             this.filenameToClipboardToolStripMenuItem.Name = "filenameToClipboardToolStripMenuItem";
             this.filenameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(232, 24);
             this.filenameToClipboardToolStripMenuItem.Text = "Copy filename";
@@ -720,6 +727,7 @@ namespace GitUI
             // 
             // resetSelectedFilesToolStripMenuItem
             // 
+            this.resetSelectedFilesToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
             this.resetSelectedFilesToolStripMenuItem.Name = "resetSelectedFilesToolStripMenuItem";
             this.resetSelectedFilesToolStripMenuItem.Size = new System.Drawing.Size(255, 24);
             this.resetSelectedFilesToolStripMenuItem.Text = "Reset selected files";
@@ -727,6 +735,7 @@ namespace GitUI
             // 
             // resetAlltrackedChangesToolStripMenuItem
             // 
+            this.resetAlltrackedChangesToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
             this.resetAlltrackedChangesToolStripMenuItem.Name = "resetAlltrackedChangesToolStripMenuItem";
             this.resetAlltrackedChangesToolStripMenuItem.Size = new System.Drawing.Size(255, 24);
             this.resetAlltrackedChangesToolStripMenuItem.Text = "Reset all (tracked) changes";
@@ -739,6 +748,7 @@ namespace GitUI
             // 
             // editGitIgnoreToolStripMenuItem
             // 
+            this.editGitIgnoreToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconEditGitIgnore;
             this.editGitIgnoreToolStripMenuItem.Name = "editGitIgnoreToolStripMenuItem";
             this.editGitIgnoreToolStripMenuItem.Size = new System.Drawing.Size(255, 24);
             this.editGitIgnoreToolStripMenuItem.Text = "Edit ignored files";

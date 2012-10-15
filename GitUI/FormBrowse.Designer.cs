@@ -1102,7 +1102,7 @@ namespace GitUI
             // 
             // fileExplorerToolStripMenuItem
             // 
-            this.fileExplorerToolStripMenuItem.Image = global::GitUI.Properties.Resources.open;
+            this.fileExplorerToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFileExplorer;
             this.fileExplorerToolStripMenuItem.Name = "fileExplorerToolStripMenuItem";
             this.fileExplorerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.O)));
