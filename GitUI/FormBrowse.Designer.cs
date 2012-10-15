@@ -873,13 +873,13 @@ namespace GitUI
             this.openWithDifftoolToolStripMenuItem,
             this.copyFilenameToClipboardToolStripMenuItem1,
             this.saveAsToolStripMenuItem1,
+            this.resetFileToToolStripMenuItem,
             this.fileHistoryDiffToolstripMenuItem,
             this.blameToolStripMenuItem,
             this.diffBaseLocalToolStripMenuItem,
             this.difftoolRemoteLocalToolStripMenuItem,
             this.openContainingFolderToolStripMenuItem,
-            this.findInDiffToolStripMenuItem,
-            this.resetFileToToolStripMenuItem});
+            this.findInDiffToolStripMenuItem});
             this.DiffContextMenu.Name = "DiffContextMenu";
             this.DiffContextMenu.Size = new System.Drawing.Size(261, 224);
             this.DiffContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.DiffContextMenu_Opening);
@@ -908,8 +908,40 @@ namespace GitUI
             this.saveAsToolStripMenuItem1.Name = "saveAsToolStripMenuItem1";
             this.saveAsToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveAsToolStripMenuItem1.Size = new System.Drawing.Size(260, 22);
-            this.saveAsToolStripMenuItem1.Text = "Save as...";
+            this.saveAsToolStripMenuItem1.Text = "Save B as...";
             this.saveAsToolStripMenuItem1.Click += new System.EventHandler(this.saveAsToolStripMenuItem1_Click);
+            // 
+            // resetFileToToolStripMenuItem
+            // 
+            this.resetFileToToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetFileTo;
+            this.resetFileToToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.resetFileToAToolStripMenuItem,
+            this.resetFileToBaseToolStripMenuItem,
+            this.resetFileToRemoteToolStripMenuItem});
+            this.resetFileToToolStripMenuItem.Name = "resetFileToToolStripMenuItem";
+            this.resetFileToToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.resetFileToToolStripMenuItem.Text = "Reset file to";
+            // 
+            // resetFileToAToolStripMenuItem
+            // 
+            this.resetFileToAToolStripMenuItem.Name = "resetFileToAToolStripMenuItem";
+            this.resetFileToAToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.resetFileToAToolStripMenuItem.Text = "A";
+            this.resetFileToAToolStripMenuItem.Click += new System.EventHandler(this.resetFileToAToolStripMenuItem_Click);
+            // 
+            // resetFileToBaseToolStripMenuItem
+            // 
+            this.resetFileToBaseToolStripMenuItem.Name = "resetFileToBaseToolStripMenuItem";
+            this.resetFileToBaseToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.resetFileToBaseToolStripMenuItem.Text = "Base (parent of B)";
+            this.resetFileToBaseToolStripMenuItem.Click += new System.EventHandler(this.resetFileToBaseToolStripMenuItem_Click);
+            // 
+            // resetFileToRemoteToolStripMenuItem
+            // 
+            this.resetFileToRemoteToolStripMenuItem.Name = "resetFileToRemoteToolStripMenuItem";
+            this.resetFileToRemoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.resetFileToRemoteToolStripMenuItem.Text = "Remote (B)";
+            this.resetFileToRemoteToolStripMenuItem.Click += new System.EventHandler(this.resetFileToRemoteToolStripMenuItem_Click);
             // 
             // fileHistoryDiffToolstripMenuItem
             // 
@@ -957,38 +989,6 @@ namespace GitUI
             this.findInDiffToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.findInDiffToolStripMenuItem.Text = "Find";
             this.findInDiffToolStripMenuItem.Click += new System.EventHandler(this.findInDiffToolStripMenuItem_Click);
-            // 
-            // resetFileToToolStripMenuItem
-            // 
-            this.resetFileToToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetFileTo;
-            this.resetFileToToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.resetFileToAToolStripMenuItem,
-            this.resetFileToBaseToolStripMenuItem,
-            this.resetFileToRemoteToolStripMenuItem});
-            this.resetFileToToolStripMenuItem.Name = "resetFileToToolStripMenuItem";
-            this.resetFileToToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-            this.resetFileToToolStripMenuItem.Text = "Reset file to";
-            // 
-            // resetFileToAToolStripMenuItem
-            // 
-            this.resetFileToAToolStripMenuItem.Name = "resetFileToAToolStripMenuItem";
-            this.resetFileToAToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            this.resetFileToAToolStripMenuItem.Text = "A";
-            this.resetFileToAToolStripMenuItem.Click += new System.EventHandler(this.resetFileToAToolStripMenuItem_Click);
-            // 
-            // resetFileToBaseToolStripMenuItem
-            // 
-            this.resetFileToBaseToolStripMenuItem.Name = "resetFileToBaseToolStripMenuItem";
-            this.resetFileToBaseToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            this.resetFileToBaseToolStripMenuItem.Text = "Base (parent of B)";
-            this.resetFileToBaseToolStripMenuItem.Click += new System.EventHandler(this.resetFileToBaseToolStripMenuItem_Click);
-            // 
-            // resetFileToRemoteToolStripMenuItem
-            // 
-            this.resetFileToRemoteToolStripMenuItem.Name = "resetFileToRemoteToolStripMenuItem";
-            this.resetFileToRemoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            this.resetFileToRemoteToolStripMenuItem.Text = "Remote (B)";
-            this.resetFileToRemoteToolStripMenuItem.Click += new System.EventHandler(this.resetFileToRemoteToolStripMenuItem_Click);
             // 
             // DiffText
             // 
