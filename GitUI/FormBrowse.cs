@@ -909,7 +909,7 @@ namespace GitUI
                             DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
                         }
 
-                        DiffTabPage.Text = string.Format("{0} (parent --> selection)", DiffTabPageTitleBase);
+                        DiffTabPage.Text = string.Format("{0} (A: parent --> B: selection)", DiffTabPageTitleBase);
                     }
                     break;
 
@@ -923,7 +923,7 @@ namespace GitUI
                     else
                     {
                         DiffFiles.GitItemStatuses = Module.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
-                        DiffTabPage.Text = string.Format("{0} (first --> second)", DiffTabPageTitleBase);
+                        DiffTabPage.Text = string.Format("{0} (A: first --> B: second)", DiffTabPageTitleBase);
                     }
                     break;
 
@@ -2527,19 +2527,30 @@ namespace GitUI
                 Module.LastPullActionToPullMerge();
         }
 
-
-        private void resetFileToRemoteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void resetFileToAToolStripMenuItem_Click(object sender, EventArgs e)
         {
             IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
 
-            if (!revisions.Any() || !DiffFiles.SelectedItems.Any())
+            if (!revisions.Any() || revisions.Count < 1 || revisions.Count > 2 || !DiffFiles.SelectedItems.Any())
             {
                 return;
             }
 
             var files = DiffFiles.SelectedItems.Select(item => item.Name);
 
-            Module.CheckoutFiles(files, revisions[0].Guid, false);
+            if (revisions.Count == 1)
+            {
+                if (!revisions[0].HasParent())
+                {
+                    throw new ApplicationException("Revision must have a parent.");
+                }
+
+                Module.CheckoutFiles(files, revisions[0].Guid + "^", false);
+            }
+            else
+            {
+                Module.CheckoutFiles(files, revisions[1].Guid, false);
+            }
         }
 
         private void resetFileToBaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2554,6 +2565,20 @@ namespace GitUI
             var files = DiffFiles.SelectedItems.Select(item => item.Name);
 
             Module.CheckoutFiles(files, revisions[0].Guid + "^", false);
+        }
+
+        private void resetFileToRemoteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+
+            if (!revisions.Any() || !DiffFiles.SelectedItems.Any())
+            {
+                return;
+            }
+
+            var files = DiffFiles.SelectedItems.Select(item => item.Name);
+
+            Module.CheckoutFiles(files, revisions[0].Guid, false);
         }
 
         private void _NO_TRANSLATE_Workingdir_MouseUp(object sender, MouseEventArgs e)
