@@ -71,9 +71,9 @@ namespace GitUI
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.CommitInfoTabControl = new System.Windows.Forms.TabControl();
-            this.CommitInfo = new System.Windows.Forms.TabPage();
+            this.CommitInfoTabPage = new System.Windows.Forms.TabPage();
             this.RevisionInfo = new GitUI.CommitInfo();
-            this.Tree = new System.Windows.Forms.TabPage();
+            this.TreeTabPage = new System.Windows.Forms.TabPage();
             this.FileTreeSplitContainer = new System.Windows.Forms.SplitContainer();
             this.GitTree = new System.Windows.Forms.TreeView();
             this.FileTreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -91,7 +91,7 @@ namespace GitUI
             this.expandAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.collapseAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FileText = new GitUI.Editor.FileViewer();
-            this.Diff = new System.Windows.Forms.TabPage();
+            this.DiffTabPage = new System.Windows.Forms.TabPage();
             this.DiffSplitContainer = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
             this.DiffContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -218,8 +218,8 @@ namespace GitUI
             this.MainSplitContainer.Panel2.SuspendLayout();
             this.MainSplitContainer.SuspendLayout();
             this.CommitInfoTabControl.SuspendLayout();
-            this.CommitInfo.SuspendLayout();
-            this.Tree.SuspendLayout();
+            this.CommitInfoTabPage.SuspendLayout();
+            this.TreeTabPage.SuspendLayout();
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.FileTreeSplitContainer)).BeginInit();
 #endif
@@ -227,7 +227,7 @@ namespace GitUI
             this.FileTreeSplitContainer.Panel2.SuspendLayout();
             this.FileTreeSplitContainer.SuspendLayout();
             this.FileTreeContextMenu.SuspendLayout();
-            this.Diff.SuspendLayout();
+            this.DiffTabPage.SuspendLayout();
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.DiffSplitContainer)).BeginInit();
 #endif
@@ -620,9 +620,9 @@ namespace GitUI
             // 
             // CommitInfoTabControl
             // 
-            this.CommitInfoTabControl.Controls.Add(this.CommitInfo);
-            this.CommitInfoTabControl.Controls.Add(this.Tree);
-            this.CommitInfoTabControl.Controls.Add(this.Diff);
+            this.CommitInfoTabControl.Controls.Add(this.CommitInfoTabPage);
+            this.CommitInfoTabControl.Controls.Add(this.TreeTabPage);
+            this.CommitInfoTabControl.Controls.Add(this.DiffTabPage);
             this.CommitInfoTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CommitInfoTabControl.Location = new System.Drawing.Point(0, 0);
             this.CommitInfoTabControl.Name = "CommitInfoTabControl";
@@ -633,14 +633,14 @@ namespace GitUI
             // 
             // CommitInfo
             // 
-            this.CommitInfo.Controls.Add(this.RevisionInfo);
-            this.CommitInfo.Location = new System.Drawing.Point(4, 24);
-            this.CommitInfo.Margin = new System.Windows.Forms.Padding(15);
-            this.CommitInfo.Name = "CommitInfo";
-            this.CommitInfo.Size = new System.Drawing.Size(915, 259);
-            this.CommitInfo.TabIndex = 2;
-            this.CommitInfo.Text = "Commit";
-            this.CommitInfo.UseVisualStyleBackColor = true;
+            this.CommitInfoTabPage.Controls.Add(this.RevisionInfo);
+            this.CommitInfoTabPage.Location = new System.Drawing.Point(4, 24);
+            this.CommitInfoTabPage.Margin = new System.Windows.Forms.Padding(15);
+            this.CommitInfoTabPage.Name = "CommitInfo";
+            this.CommitInfoTabPage.Size = new System.Drawing.Size(915, 259);
+            this.CommitInfoTabPage.TabIndex = 2;
+            this.CommitInfoTabPage.Text = "Commit";
+            this.CommitInfoTabPage.UseVisualStyleBackColor = true;
             // 
             // RevisionInfo
             // 
@@ -657,14 +657,14 @@ namespace GitUI
             // 
             // Tree
             // 
-            this.Tree.Controls.Add(this.FileTreeSplitContainer);
-            this.Tree.Location = new System.Drawing.Point(4, 24);
-            this.Tree.Name = "Tree";
-            this.Tree.Padding = new System.Windows.Forms.Padding(3);
-            this.Tree.Size = new System.Drawing.Size(915, 259);
-            this.Tree.TabIndex = 0;
-            this.Tree.Text = "File tree";
-            this.Tree.UseVisualStyleBackColor = true;
+            this.TreeTabPage.Controls.Add(this.FileTreeSplitContainer);
+            this.TreeTabPage.Location = new System.Drawing.Point(4, 24);
+            this.TreeTabPage.Name = "Tree";
+            this.TreeTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.TreeTabPage.Size = new System.Drawing.Size(915, 259);
+            this.TreeTabPage.TabIndex = 0;
+            this.TreeTabPage.Text = "File tree";
+            this.TreeTabPage.UseVisualStyleBackColor = true;
             // 
             // FileTreeSplitContainer
             // 
@@ -826,13 +826,13 @@ namespace GitUI
             // 
             // Diff
             // 
-            this.Diff.Controls.Add(this.DiffSplitContainer);
-            this.Diff.Location = new System.Drawing.Point(4, 24);
-            this.Diff.Name = "Diff";
-            this.Diff.Size = new System.Drawing.Size(915, 259);
-            this.Diff.TabIndex = 1;
-            this.Diff.Text = "Diff";
-            this.Diff.UseVisualStyleBackColor = true;
+            this.DiffTabPage.Controls.Add(this.DiffSplitContainer);
+            this.DiffTabPage.Location = new System.Drawing.Point(4, 24);
+            this.DiffTabPage.Name = "Diff";
+            this.DiffTabPage.Size = new System.Drawing.Size(915, 259);
+            this.DiffTabPage.TabIndex = 1;
+            this.DiffTabPage.Text = "Diff";
+            this.DiffTabPage.UseVisualStyleBackColor = true;
             // 
             // DiffSplitContainer
             // 
@@ -1789,8 +1789,8 @@ namespace GitUI
 #endif
             this.MainSplitContainer.ResumeLayout(false);
             this.CommitInfoTabControl.ResumeLayout(false);
-            this.CommitInfo.ResumeLayout(false);
-            this.Tree.ResumeLayout(false);
+            this.CommitInfoTabPage.ResumeLayout(false);
+            this.TreeTabPage.ResumeLayout(false);
             this.FileTreeSplitContainer.Panel1.ResumeLayout(false);
             this.FileTreeSplitContainer.Panel2.ResumeLayout(false);
 #if Mono212Released //waiting for mono 2.12
@@ -1798,7 +1798,7 @@ namespace GitUI
 #endif
             this.FileTreeSplitContainer.ResumeLayout(false);
             this.FileTreeContextMenu.ResumeLayout(false);
-            this.Diff.ResumeLayout(false);
+            this.DiffTabPage.ResumeLayout(false);
             this.DiffSplitContainer.Panel1.ResumeLayout(false);
             this.DiffSplitContainer.Panel2.ResumeLayout(false);
 #if Mono212Released //waiting for mono 2.12
@@ -1823,7 +1823,7 @@ namespace GitUI
         private System.Windows.Forms.TreeView GitTree;
         private System.Windows.Forms.SplitContainer MainSplitContainer;
         private System.Windows.Forms.TabControl CommitInfoTabControl;
-        private System.Windows.Forms.TabPage Tree;
+        private System.Windows.Forms.TabPage TreeTabPage;
         private System.Windows.Forms.BindingSource gitRevisionBindingSource;
         private System.Windows.Forms.BindingSource gitItemBindingSource;
         private GitUI.RevisionGrid RevisionGrid;
@@ -1838,13 +1838,13 @@ namespace GitUI
         private System.Windows.Forms.ToolStripButton RefreshButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBoxFilter;
-        private System.Windows.Forms.TabPage Diff;
+        private System.Windows.Forms.TabPage DiffTabPage;
         private System.Windows.Forms.SplitContainer DiffSplitContainer;
         private FileStatusList DiffFiles;
         private System.Windows.Forms.ToolStripButton toolStripButtonPush;
         private FileViewer FileText;
         private FileViewer DiffText;
-        private System.Windows.Forms.TabPage CommitInfo;
+        private System.Windows.Forms.TabPage CommitInfoTabPage;
         private CommitInfo RevisionInfo;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripSplitButton toolStripSplitStash;
