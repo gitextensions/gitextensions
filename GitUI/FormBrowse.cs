@@ -118,6 +118,20 @@ namespace GitUI
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
+
+            // set tab page images
+            {
+                var imageList = new ImageList();
+                CommitInfoTabControl.ImageList = imageList;
+                imageList.ColorDepth = ColorDepth.Depth8Bit;
+                imageList.Images.Add(global::GitUI.Properties.Resources.IconCommit);
+                imageList.Images.Add(global::GitUI.Properties.Resources.IconFileTree);
+                imageList.Images.Add(global::GitUI.Properties.Resources.IconDiff);
+                CommitInfoTabControl.TabPages[0].ImageIndex = 0;
+                CommitInfoTabControl.TabPages[1].ImageIndex = 1;
+                CommitInfoTabControl.TabPages[2].ImageIndex = 2;
+            }
+
             RevisionGrid.UICommandsSource = this;
             AsyncLoader.DoAsync(() => PluginLoader.Load(), () => RegisterPlugins());
             RevisionGrid.GitModuleChanged += DashboardGitModuleChanged;
@@ -201,7 +215,7 @@ namespace GitUI
             if (item.IsBlob)
                 FileText.ViewGitItem(item.FileName, item.Guid);
             else if (item.IsCommit)
-                FileText.ViewText(item.FileName, 
+                FileText.ViewText(item.FileName,
                     GitCommandHelpers.GetSubmoduleText(Module, item.FileName, item.Guid));
             else
                 FileText.ViewText("", "");
@@ -871,7 +885,7 @@ namespace GitUI
                     return;
                 default:
                     var revision = revisions[0];
-                    
+
                     DiffFiles.Revision = revision;
 
                     if (revision == null)
@@ -885,7 +899,7 @@ namespace GitUI
                         else if (revision.Guid == GitRevision.IndexGuid) //index
                             DiffFiles.GitItemStatuses = Module.GetStagedFiles();
                         else
-                            DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);                    
+                            DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
                     }
                     break;
             }
@@ -1092,7 +1106,7 @@ namespace GitUI
                 }
 
                 //RevisionGrid.HighlightSelectedBranch();
- 
+
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
@@ -1200,7 +1214,7 @@ namespace GitUI
             if (_dashboard == null || !_dashboard.Visible)
             {
                 RevisionGrid.ForceRefreshRevisions();
-                InternalInitialize(false);                
+                InternalInitialize(false);
             }
         }
 
@@ -1411,8 +1425,8 @@ namespace GitUI
 
                 string currentBranch = Module.GetSelectedBranch();
                 string currentCheckout = RevisionGrid.CurrentCheckout;
-                
-                
+
+
                 if (revisions[0].Guid == currentCheckout)
                 {
                     from = revisions[1].Guid.Substring(0, 8);
@@ -1561,7 +1575,7 @@ namespace GitUI
             if (button == null)
                 return;
 
-            SetWorkingDir(button.Text);           
+            SetWorkingDir(button.Text);
         }
 
         private void SettingsToolStripMenuItemClick(object sender, EventArgs e)
@@ -2526,7 +2540,7 @@ namespace GitUI
 
         private void branchSelect_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right) 
+            if (e.Button == MouseButtons.Right)
                 CheckoutBranchToolStripMenuItemClick(sender, e);
         }
 
@@ -2633,7 +2647,7 @@ namespace GitUI
                         var name = submodule;
                         string path = Module.SuperprojectModule.GetSubmoduleFullPath(submodule);
                         if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                                name = name + " " + GetModuleBranch(path);
+                            name = name + " " + GetModuleBranch(path);
 
                         var submenu = new ToolStripMenuItem(name);
                         if (submodule == localpath)
@@ -2664,7 +2678,7 @@ namespace GitUI
             if (Module.SuperprojectModule != null)
                 SetGitModule(Module.SuperprojectModule);
         }
-      
+
     }
 
 }

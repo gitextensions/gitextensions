@@ -252,7 +252,7 @@ namespace GitUI
             // 
             // copyToClipboardToolStripMenuItem
             // 
-            this.copyToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.Copied;
+            this.copyToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
             this.copyToClipboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.messageToolStripMenuItem,
             this.authorToolStripMenuItem,
@@ -372,6 +372,7 @@ namespace GitUI
             // 
             // resetCurrentBranchToHereToolStripMenuItem
             // 
+            this.resetCurrentBranchToHereToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetCurrentBranchToHere;
             this.resetCurrentBranchToHereToolStripMenuItem.Name = "resetCurrentBranchToHereToolStripMenuItem";
             this.resetCurrentBranchToHereToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.resetCurrentBranchToHereToolStripMenuItem.Text = "Reset current branch to here";
@@ -541,6 +542,7 @@ namespace GitUI
             // 
             // filterToolStripMenuItem
             // 
+            this.filterToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFilter;
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.filterToolStripMenuItem.Text = "Set advanced filter";

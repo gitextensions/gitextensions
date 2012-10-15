@@ -140,7 +140,7 @@ namespace GitUI
             // saveAs
             // 
             this.saveAs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.saveAs.Image = global::GitUI.Properties.Resources.SaveAs;
+            this.saveAs.Image = global::GitUI.Properties.Resources.IconSaveAs;
             this.saveAs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveAs.Name = "saveAs";
             this.saveAs.Size = new System.Drawing.Size(23, 27);

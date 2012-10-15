@@ -69,18 +69,18 @@ namespace GitUI
             openItem.Click += openItem_Click;
             CommonActions.AddItem(openItem);
 
-            var cloneItem = new DashboardItem(Resources.SaveAs, cloneRepository.Text);
+            var cloneItem = new DashboardItem(Resources.IconCloneRepoGit, cloneRepository.Text);
             cloneItem.Click += cloneItem_Click;
             CommonActions.AddItem(cloneItem);
 
-            var cloneSvnItem = new DashboardItem(Resources.SaveAs, cloneSvnRepository.Text);
+            var cloneSvnItem = new DashboardItem(Resources.IconCloneRepoSvn, cloneSvnRepository.Text);
             cloneSvnItem.Click += cloneSvnItem_Click;
             CommonActions.AddItem(cloneSvnItem);
 
             foreach (IRepositoryHostPlugin el in RepoHosts.GitHosters)
             {
                 IRepositoryHostPlugin gitHoster = el;
-                var di = new DashboardItem(Resources.SaveAs, string.Format(cloneFork.Text, el.Description));
+                var di = new DashboardItem(Resources.IconCloneRepoGithub, string.Format(cloneFork.Text, el.Description));
                 di.Click += (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged);
                 CommonActions.AddItem(di);
             }

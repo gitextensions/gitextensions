@@ -8,9 +8,11 @@ namespace GitUI
     /// </summary>
     public partial class FormResetChanges : GitExtensionsForm
     {
-        public enum ResultType { RESET, RESET_AND_DELETE, CANCEL };
+        // CANCEL must be placed at first position because it is the default value when
+        // closing the dialog via the X button
+        public enum ActionEnum { Cancel, Reset, ResetAndDelete };
 
-        public ResultType Result { get; private set; }
+        public ActionEnum SelectedAction { get; private set; }
 
         public FormResetChanges(bool hasExistingFiles, bool hasNewFiles)
         {
@@ -22,7 +24,7 @@ namespace GitUI
                 // No existing files => new files only => force the "delete new files" checkbox on.
                 cbDeleteNewFiles.Enabled = false;
                 cbDeleteNewFiles.Checked = true;
-            }            
+            }
             else if (!hasNewFiles)
             {
                 // No new files => force the "delete new files" checkbox off. 
@@ -30,7 +32,9 @@ namespace GitUI
                 cbDeleteNewFiles.Checked = false;
             }
             else
+            {
                 cbDeleteNewFiles.Enabled = true; // A mix of types, so enable the checkbox.
+            }
         }
 
         /// <summary>
@@ -39,24 +43,24 @@ namespace GitUI
         /// <param name="owner">Shows this form as a modal dialog with the specified owner.</param>
         /// <param name="hasExistingFiles">Are there existing (modified) files selected?</param>
         /// <param name="hasNewFiles">Are there new (untracked) files selected?</param>
-        public static ResultType ShowResetDialog(IWin32Window owner, bool hasExistingFiles, bool hasNewFiles)
+        public static ActionEnum ShowResetDialog(IWin32Window owner, bool hasExistingFiles, bool hasNewFiles)
         {
             using (FormResetChanges form = new FormResetChanges(hasExistingFiles, hasNewFiles))
             {
                 form.ShowDialog(owner);
-                return form.Result;
+                return form.SelectedAction;
             }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            Result = ResultType.CANCEL;
+            SelectedAction = ActionEnum.Cancel;
             Close();
         }
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            Result = (cbDeleteNewFiles.Checked) ? ResultType.RESET_AND_DELETE : ResultType.RESET;
+            SelectedAction = (cbDeleteNewFiles.Checked) ? ActionEnum.ResetAndDelete : ActionEnum.Reset;
             Close();
         }
     }
