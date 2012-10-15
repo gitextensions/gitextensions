@@ -1380,6 +1380,9 @@
     <None Include="Resources\Icons\IconSelectBranch.png" />
     <None Include="Resources\Icons\IconSelectCommit.png" />
     <None Include="Resources\Icons\IconSelectRevision.png" />
+    <None Include="Resources\Icons\IconEditGitIgnore.png" />
+    <None Include="Resources\Icons\401.png" />
+    <None Include="Resources\Icons\IconAddToGitIgnore.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
