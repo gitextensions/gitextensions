@@ -1345,7 +1345,6 @@
     <None Include="Resources\Icons\PullFetchAll.png" />
     <None Include="Resources\Icons\loadingpanel_static.png" />
     <None Include="Resources\Icons\Delete.png" />
-    <None Include="Resources\Icons\ark_3_16.png" />
     <None Include="Resources\Icons\edit_clear_2_16.png" />
     <None Include="Resources\Icons\folder_remote_2_16.png" />
     <None Include="Resources\Icons\BranchCreate.png" />
@@ -1381,7 +1380,6 @@
     <None Include="Resources\Icons\IconSelectCommit.png" />
     <None Include="Resources\Icons\IconSelectRevision.png" />
     <None Include="Resources\Icons\IconEditGitIgnore.png" />
-    <None Include="Resources\Icons\401.png" />
     <None Include="Resources\Icons\IconAddToGitIgnore.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
