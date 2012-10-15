@@ -860,16 +860,53 @@ namespace GitUI
         private void FillDiff()
         {
             if (CommitInfoTabControl.SelectedTab != Diff)
+            {
                 return;
+            }
 
             var revisions = RevisionGrid.GetSelectedRevisions();
 
             DiffText.SaveCurrentScrollPos();
 
             DiffFiles.SetNoFilesText(_NoDiffFilesChangesText);
+
             switch (revisions.Count)
             {
-                case 2:
+                case 0:
+                    DiffFiles.GitItemStatuses = null;
+                    break;
+
+                case 1: // diff "parent" --> "selected revision"
+                    var revision = revisions[0];
+
+                    DiffFiles.Revision = revision;
+
+                    if (revision == null)
+                    {
+                        DiffFiles.GitItemStatuses = null;
+                    }
+                    else if (revision.ParentGuids == null || revision.ParentGuids.Length == 0)
+                    {
+                        DiffFiles.GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
+                    }
+                    else
+                    {
+                        if (revision.Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+                        {
+                            DiffFiles.GitItemStatuses = Module.GetUnstagedFiles();
+                        }
+                        else if (revision.Guid == GitRevision.IndexGuid) //index
+                        {
+                            DiffFiles.GitItemStatuses = Module.GetStagedFiles();
+                        }
+                        else
+                        { 
+                            DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                        }
+                    }
+                    break;
+
+                case 2: // diff "first clicked revision" --> "second clicked revision"
                     bool artificialRevSelected = revisions[0].IsArtificial() || revisions[1].IsArtificial();
                     if (artificialRevSelected)
                     {
@@ -877,30 +914,14 @@ namespace GitUI
                         DiffFiles.GitItemStatuses = null;
                     }
                     else
-                        DiffFiles.GitItemStatuses =
-                            Module.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
-                    break;
-                case 0:
-                    DiffFiles.GitItemStatuses = null;
-                    return;
-                default:
-                    var revision = revisions[0];
-
-                    DiffFiles.Revision = revision;
-
-                    if (revision == null)
-                        DiffFiles.GitItemStatuses = null;
-                    else if (revision.ParentGuids == null || revision.ParentGuids.Length == 0)
-                        DiffFiles.GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
-                    else
                     {
-                        if (revision.Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
-                            DiffFiles.GitItemStatuses = Module.GetUnstagedFiles();
-                        else if (revision.Guid == GitRevision.IndexGuid) //index
-                            DiffFiles.GitItemStatuses = Module.GetStagedFiles();
-                        else
-                            DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                        DiffFiles.GitItemStatuses = Module.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
                     }
+                    break;
+
+                default: // more than 2 revisions selected => no diff
+                    DiffFiles.SetNoFilesText(_UnsupportedMultiselectAction.Text);
+                    DiffFiles.GitItemStatuses = null;
                     break;
             }
         }
