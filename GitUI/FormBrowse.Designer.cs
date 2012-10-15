@@ -78,6 +78,7 @@ namespace GitUI
             this.GitTree = new System.Windows.Forms.TreeView();
             this.FileTreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetToThisRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -704,6 +705,7 @@ namespace GitUI
             // 
             this.FileTreeContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveAsToolStripMenuItem,
+            this.resetToThisRevisionToolStripMenuItem,
             this.openFileToolStripMenuItem,
             this.openFileWithToolStripMenuItem,
             this.openWithToolStripMenuItem,
@@ -727,6 +729,14 @@ namespace GitUI
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
             this.saveAsToolStripMenuItem.Text = "Save as...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsOnClick);
+            // 
+            // resetToThisRevisionToolStripMenuItem
+            // 
+            this.resetToThisRevisionToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetFileTo;
+            this.resetToThisRevisionToolStripMenuItem.Name = "resetToThisRevisionToolStripMenuItem";
+            this.resetToThisRevisionToolStripMenuItem.Size = new System.Drawing.Size(268, 22);
+            this.resetToThisRevisionToolStripMenuItem.Text = "Reset to this revision";
+            this.resetToThisRevisionToolStripMenuItem.Click += new System.EventHandler(this.ResetToThisRevisionOnClick);
             // 
             // openFileToolStripMenuItem
             // 
@@ -1869,6 +1879,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
         private ContextMenuStrip FileTreeContextMenu;
         private ToolStripMenuItem saveAsToolStripMenuItem;
+        private ToolStripMenuItem resetToThisRevisionToolStripMenuItem;
         private ToolStripMenuItem openFileToolStripMenuItem;
         private ToolStripMenuItem openFileWithToolStripMenuItem;
         private ToolStripMenuItem fileHistoryToolStripMenuItem;

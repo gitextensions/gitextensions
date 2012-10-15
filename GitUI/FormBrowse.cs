@@ -905,7 +905,7 @@ namespace GitUI
                             DiffFiles.GitItemStatuses = Module.GetStagedFiles();
                         }
                         else
-                        { 
+                        {
                             DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
                         }
 
@@ -1816,6 +1816,26 @@ namespace GitUI
             }
         }
 
+        private void ResetToThisRevisionOnClick(object sender, EventArgs e)
+        {
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+
+            if (!revisions.Any() || revisions.Count != 1)
+            {
+                MessageBox.Show("Exactly one revision must be selected. Abort.");
+                return;
+                ////throw new ApplicationException("Exactly one revision must be selected");
+            }
+
+            if (MessageBox.Show("Really reset selected file / directory?", "Reset", MessageBoxButtons.OKCancel)
+                == System.Windows.Forms.DialogResult.OK)
+            {
+                var item = GitTree.SelectedNode.Tag as GitItem;
+                var files = new List<string> { item.FileName };
+                Module.CheckoutFiles(files, revisions.First().Guid, false);
+            }
+        }
+
         private void GitTreeBeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
             if (e.Node.IsExpanded)
@@ -2542,7 +2562,8 @@ namespace GitUI
             {
                 if (!revisions[0].HasParent())
                 {
-                    throw new ApplicationException("Revision must have a parent.");
+                    MessageBox.Show("Revision must have a parent. Abort.");
+                    ////throw new ApplicationException("Revision must have a parent.");
                 }
 
                 Module.CheckoutFiles(files, revisions[0].Guid + "^", false);
