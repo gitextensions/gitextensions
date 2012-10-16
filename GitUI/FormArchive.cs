@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using ResourceManager.Translation;
+using GitCommands;
 
 namespace GitUI
 {
@@ -13,6 +14,8 @@ namespace GitUI
             new TranslationString("Zip file (*.zip)");
         private readonly TranslationString _saveFileDialogCaption =
             new TranslationString("Save archive as");
+
+        public GitRevision SelectedRevision { get; set; }
 
         /// <summary>
         /// For VS designer

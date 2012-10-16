@@ -1845,6 +1845,18 @@ namespace GitUI
             OnActionOnRepositoryPerformed();
         }
 
+        private void ArchiveRevisionToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var selectedRevisions = GetSelectedRevisions();
+            if (selectedRevisions.Count != 1)
+            {
+                MessageBox.Show(this, "Select exactly one revision. Abort.", "Archive revision");
+                return;
+            }
+
+            UICommands.StartArchiveDialog(this, selectedRevisions.First());
+        }
+
         private void ShowAuthorDateToolStripMenuItemClick(object sender, EventArgs e)
         {
             Settings.ShowAuthorDate = !showAuthorDateToolStripMenuItem.Checked;
