@@ -66,7 +66,7 @@ namespace GitUI
             this.MessageTextBox.BackColor = System.Drawing.SystemColors.Window;
             this.MessageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.MessageTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MessageTextBox.Location = new System.Drawing.Point(3, 3);
+            this.MessageTextBox.Location = new System.Drawing.Point(56, 3);
             this.MessageTextBox.Name = "MessageTextBox";
             this.MessageTextBox.ReadOnly = true;
             this.MessageTextBox.Size = new System.Drawing.Size(480, 255);
@@ -148,7 +148,7 @@ namespace GitUI
             // picBoxSuccessFail
             // 
             this.picBoxSuccessFail.Image = global::GitUI.Properties.Resources.success;
-            this.picBoxSuccessFail.Location = new System.Drawing.Point(489, 3);
+            this.picBoxSuccessFail.Location = new System.Drawing.Point(3, 3);
             this.picBoxSuccessFail.Name = "picBoxSuccessFail";
             this.picBoxSuccessFail.Size = new System.Drawing.Size(47, 50);
             this.picBoxSuccessFail.TabIndex = 1;
@@ -157,7 +157,7 @@ namespace GitUI
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel3.Controls.Add(this.MessageTextBox, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.picBoxSuccessFail, 0, 0);
