@@ -15,7 +15,16 @@ namespace GitUI
         private readonly TranslationString _saveFileDialogCaption =
             new TranslationString("Save archive as");
 
-        public GitRevision SelectedRevision { get; set; }
+        private GitRevision _selectedRevision;
+        public GitRevision SelectedRevision
+        {
+            get { return _selectedRevision; }
+            set
+            {
+                _selectedRevision = value;
+                commitSummaryUserControl1.Revision = SelectedRevision;
+            }
+        }
 
         /// <summary>
         /// For VS designer
@@ -28,31 +37,31 @@ namespace GitUI
         public FormArchive(GitUICommands aCommands)
             : base(true, aCommands)
         {
-            InitializeComponent(); 
+            InitializeComponent();
             Translate();
-        }
-
-        private void FormArchive_Load(object sender, EventArgs e)
-        {
-            revisionGrid1.Load();
         }
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (revisionGrid1.GetSelectedRevisions().Count != 1)
-            {
-                MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            string revision = revisionGrid1.GetSelectedRevisions()[0].TreeGuid;
+            string revision = SelectedRevision.Guid;
 
             using (var saveFileDialog = new SaveFileDialog { Filter = _saveFileDialogFilter.Text + "|*.zip", Title = _saveFileDialogCaption.Text })
             {
-
                 if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                FormProcess.ShowDialog(this, "archive --format=zip " + revision + " --output \"" + saveFileDialog.FileName + "\"");
+                    FormProcess.ShowDialog(this, "archive --format=zip " + revision + " --output \"" + saveFileDialog.FileName + "\"");
                     Close();
+                }
+            }
+        }
+
+        private void btnChooseRevision_Click(object sender, EventArgs e)
+        {
+            using (var chooseForm = new FormChooseCommit(UICommands, SelectedRevision.Guid))
+            {
+                if (chooseForm.ShowDialog() == DialogResult.OK && chooseForm.SelectedRevision != null)
+                {
+                    SelectedRevision = chooseForm.SelectedRevision;
                 }
             }
         }
