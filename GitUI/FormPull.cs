@@ -527,7 +527,7 @@ namespace GitUI
 
         public void SetForFetchAll()
         {
-            _NO_TRANSLATE_Remotes.SelectedIndex = 0;
+            _NO_TRANSLATE_Remotes.Text = "[ ALL ]";
         }
 
         private void PullFromUrlCheckedChanged(object sender, EventArgs e)
