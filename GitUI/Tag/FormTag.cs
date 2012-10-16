@@ -17,12 +17,9 @@ namespace GitUI.Tag
 
         private readonly TranslationString _noTagMessage = new TranslationString("Please enter a tag message");
 
-        private readonly TranslationString _pushToCaption = new TranslationString("Push tag to {0}");
+        private readonly TranslationString _pushToCaption = new TranslationString("Push tag to '{0}'");
 
-        private FormTag()
-            : this(null)
-        { 
-        }
+        private string currentRemote = "";
 
         public FormTag(GitUICommands aCommands)
             : base(aCommands)
@@ -35,6 +32,9 @@ namespace GitUI.Tag
 
         private void FormTagLoad(object sender, EventArgs e)
         {
+            currentRemote = Module.GetCurrentRemote();
+            pushTag.Text = string.Format(_pushToCaption.Text, currentRemote);
+
             GitRevisions.Load();
         }
         
@@ -84,15 +84,14 @@ namespace GitUI.Tag
 
         private void PushTag(string tagName)
         {
-            var currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", Module.GetSelectedBranch()));
-            var pushCmd = GitCommandHelpers.PushTagCmd(currentBranchRemote, tagName, false);
+            var pushCmd = GitCommandHelpers.PushTagCmd(currentRemote, tagName, false);
 
             ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
 
             using (var form = new FormRemoteProcess(Module, pushCmd)
             {
-                Remote = currentBranchRemote,
-                Text = string.Format(_pushToCaption.Text, currentBranchRemote),
+                Remote = currentRemote,
+                Text = string.Format(_pushToCaption.Text, currentRemote),
             })
             {
 

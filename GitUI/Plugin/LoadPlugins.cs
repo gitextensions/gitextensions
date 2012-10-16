@@ -31,7 +31,7 @@ namespace GitUI
 
                 foreach (var pluginFile in plugins)
                 {
-                    if (pluginFile.FullName.Contains("Microsoft.WindowsAPICodePack"))
+                    if (pluginFile.Name.StartsWith("Microsoft."))
                     {
                         continue;
                     }

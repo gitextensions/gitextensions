@@ -1614,7 +1614,7 @@ namespace GitUI
 
             var revision = GetRevision(LastRow);
 
-            var tagDropDown = new ContextMenuStrip();
+            var deleteTagDropDown = new ContextMenuStrip();
             var deleteBranchDropDown = new ContextMenuStrip();
             var checkoutBranchDropDown = new ContextMenuStrip();
             var mergeBranchDropDown = new ContextMenuStrip();
@@ -1628,8 +1628,8 @@ namespace GitUI
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
                 ToolStripItem tagName = new ToolStripMenuItem(head.Name);
-                toolStripItem.Click += ToolStripItemClick;
-                tagDropDown.Items.Add(toolStripItem);
+                toolStripItem.Click += ToolStripItemClickDeleteTag;
+                deleteTagDropDown.Items.Add(toolStripItem);
                 tagName.Click += copyToClipBoard;
                 tagNameCopy.Items.Add(tagName);
             }
@@ -1689,7 +1689,7 @@ namespace GitUI
                     if (!head.Name.Equals(currentBranch))
                     {
                         toolStripItem = new ToolStripMenuItem(head.Name);
-                        toolStripItem.Click += ToolStripItemClickBranch;
+                        toolStripItem.Click += ToolStripItemClickDeleteBranch;
                         deleteBranchDropDown.Items.Add(toolStripItem); //Add to delete branch
                     }
 
@@ -1710,8 +1710,8 @@ namespace GitUI
                 }
             }
 
-            deleteTagToolStripMenuItem.DropDown = tagDropDown;
-            deleteTagToolStripMenuItem.Visible = tagDropDown.Items.Count > 0;
+            deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
+            deleteTagToolStripMenuItem.Visible = deleteTagDropDown.Items.Count > 0;
 
             deleteBranchToolStripMenuItem.DropDown = deleteBranchDropDown;
             deleteBranchToolStripMenuItem.Visible = deleteBranchDropDown.Items.Count > 0;
@@ -1739,18 +1739,19 @@ namespace GitUI
             RefreshOwnScripts();
         }
 
-        private void ToolStripItemClick(object sender, EventArgs e)
+        private void ToolStripItemClickDeleteTag(object sender, EventArgs e)
         {
             var toolStripItem = sender as ToolStripItem;
 
             if (toolStripItem == null)
                 return;
 
-            FormProcess.ShowDialog(this, Module, GitCommandHelpers.DeleteTagCmd(toolStripItem.Text));
+            UICommands.StartDeleteTagDialog(this, toolStripItem.Text);
+
             ForceRefreshRevisions();
         }
 
-        private void ToolStripItemClickBranch(object sender, EventArgs e)
+        private void ToolStripItemClickDeleteBranch(object sender, EventArgs e)
         {
             var toolStripItem = sender as ToolStripItem;
 
@@ -2366,7 +2367,7 @@ namespace GitUI
             }
         }
 
-        private void toolStripMenuWithOneItem_Click(object sender, EventArgs e)
+        private void deleteBranchTagToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (sender is ToolStripMenuItem)
             {

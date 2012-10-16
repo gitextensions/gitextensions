@@ -45,6 +45,7 @@
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionGrid.Location = new System.Drawing.Point(3, 3);
             this.RevisionGrid.Name = "RevisionGrid";
+            this.RevisionGrid.RevisionGraphDrawStyle = GitUI.DvcsGraph.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
             this.RevisionGrid.Size = new System.Drawing.Size(740, 437);
             this.RevisionGrid.TabIndex = 0;
             // 

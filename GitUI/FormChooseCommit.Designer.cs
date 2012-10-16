@@ -38,6 +38,7 @@
             // 
             this.revisionGrid.Location = new System.Drawing.Point(0, 0);
             this.revisionGrid.Name = "revisionGrid";
+            this.revisionGrid.RevisionGraphDrawStyle = GitUI.DvcsGraph.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
             this.revisionGrid.Size = new System.Drawing.Size(842, 313);
             this.revisionGrid.TabIndex = 0;
             // 
@@ -63,6 +64,7 @@
             // 
             // FormChooseCommit
             // 
+            this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.ClientSize = new System.Drawing.Size(842, 378);
             this.Controls.Add(this.panel1);
