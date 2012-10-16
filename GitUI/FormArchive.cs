@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using ResourceManager.Translation;
 using GitCommands;
+using System.IO;
 
 namespace GitUI
 {
@@ -58,10 +59,15 @@ namespace GitUI
             string fileFilterCaption = GetSelectedOutputFormat() == OutputFormat.Zip ? _saveFileDialogFilterZip.Text : _saveFileDialogFilterTar.Text;
             string fileFilterEnding = GetSelectedOutputFormat() == OutputFormat.Zip ? "zip" : "tar";
 
+            // TODO (feature): if there is a tag on the revision use the tag name as suggestion
+            // TODO (feature): let user decide via GUI
+            string filenameSuggestion = string.Format("{0}_{1}", new DirectoryInfo(Module.WorkingDir).Name, revision);
+
             using (var saveFileDialog = new SaveFileDialog
             {
                 Filter = string.Format("{0}|*.{1}", fileFilterCaption, fileFilterEnding),
-                Title = _saveFileDialogCaption.Text
+                Title = _saveFileDialogCaption.Text,
+                FileName = filenameSuggestion
             })
             {
                 if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
