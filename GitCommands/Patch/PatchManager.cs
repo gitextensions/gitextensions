@@ -58,7 +58,7 @@ namespace PatchApply
 
             //git apply has problem with dealing with autocrlf
             //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-            if ("true".Equals(module.GetConfigValue("core.autocrlf"), StringComparison.InvariantCultureIgnoreCase))
+            if ("true".Equals(module.GetEffectiveSetting("core.autocrlf"), StringComparison.InvariantCultureIgnoreCase))
                 body = body.Replace("\r", "");            
 
             if (header == null || body == null)
