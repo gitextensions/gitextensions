@@ -287,7 +287,7 @@ namespace GitUI
                 ResetSoftClick(this, null);
                 return true;
             }
-            else if (SelectedDiff.ContainsFocus && _currentItemStaged)
+            else if (SelectedDiff.ContainsFocus)
             {
                 ResetSelectedLinesToolStripMenuItemClick(this, null);
                 return true;
@@ -437,19 +437,24 @@ namespace GitUI
                 return;
 
             // Prepare git command
-            string args = "apply --whitespace=nowarn --reverse";
+            string args = "apply --whitespace=nowarn";
 
-            if (_currentItemStaged) //staged
-                args += " --index";
+           if (_currentItemStaged) //staged
+               args += " --reverse --index";
 
-            byte[] patch = PatchManager.GetSelectedLinesAsPatch(SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding);
+           byte[] patch;
+
+           if (_currentItemStaged)
+               patch = PatchManager.GetSelectedLinesAsPatch(SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding);
+           else
+               patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding);
 
             if (patch != null && patch.Length > 0)
             {
                 string output = Module.RunGitCmd(args, patch);
                 if (!string.IsNullOrEmpty(output))
                 {
-                    MessageBox.Show(this, output);
+                    MessageBox.Show(this, output + "\n\n" + SelectedDiff.Encoding.GetString(patch));
                 }
                 Staged.StoreNextIndexToSelect();
                 ScheduleGoToLine();
@@ -602,7 +607,7 @@ namespace GitUI
             _StageSelectedLinesToolStripMenuItem.Text = staged ? _unstageSelectedLines.Text : _stageSelectedLines.Text;
             _StageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = 
                 GetShortcutKeys((int) (staged ? Commands.UnStageSelectedFile : Commands.StageSelectedFile)).ToShortcutKeyDisplayString();
-            _ResetSelectedLinesToolStripMenuItem.Enabled = staged;
+            //_ResetSelectedLinesToolStripMenuItem.Enabled = staged;
         }
 
         private long GetItemLength(string fileName)

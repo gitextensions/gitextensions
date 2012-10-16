@@ -520,7 +520,7 @@ namespace GitUI.SpellChecker
 
         private void ShowWatermark()
         {
-            if (!Focused && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont != null)
+            if (!ContainsFocus && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont != null)
             {
                 TextBox.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
                 TextBox.ForeColor = SystemColors.InactiveCaption;

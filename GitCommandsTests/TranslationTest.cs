@@ -10,8 +10,11 @@ using TestClass = NUnit.Framework.TestFixtureAttribute;
 using TestMethod = NUnit.Framework.TestAttribute;
 using TestCleanup = NUnit.Framework.TearDownAttribute;
 #endif
-using System.Collections.Generic;
+using GitUI;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
 using ResourceManager.Translation;
 
 
@@ -25,6 +28,9 @@ namespace GitCommandsTests
         [STAThread]
         public void CreateInstanceOfClass()
         {
+            // just reference to GitUI
+            MouseWheelRedirector.Active = true;
+
             List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
 
             Translation testTranslation = new Translation();

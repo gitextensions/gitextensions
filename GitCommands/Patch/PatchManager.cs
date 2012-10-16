@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 using GitCommands;
 
 namespace PatchApply
@@ -18,6 +20,63 @@ namespace PatchApply
             get { return _patches; }
             set { _patches = value; }
         }
+
+        public static byte[] GetResetUnstagedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding)
+        {
+            //When there is no patch, return nothing
+            if (string.IsNullOrEmpty(text))
+                return null;
+
+            // Divide diff into header and patch
+            int patchPos = text.IndexOf("@@");
+            if (patchPos < 1)
+                return null;
+            string header = text.Substring(0, patchPos);
+            string diff = text.Substring(patchPos - 1);
+
+            string[] chunks = diff.Split(new string[] {"\n@@"}, StringSplitOptions.RemoveEmptyEntries);
+            ChunkList selectedChunks = new ChunkList();
+            int i = 0;
+            int currentPos = patchPos-1;
+
+            while (i < chunks.Length && currentPos <= selectionPosition + selectionLength)
+            {
+                string chunkStr = chunks[i];
+                currentPos += 3;
+                //if selection intersects with chunsk
+                if (currentPos + chunkStr.Length >= selectionPosition)
+                {
+                    Chunk chunk = Chunk.ParseChunk(chunkStr, currentPos, selectionPosition, selectionLength);
+                    if (chunk != null)
+                        selectedChunks.Add(chunk);
+                }
+                currentPos += chunkStr.Length;
+                i++;
+            }
+
+            string body = selectedChunks.ToResetUnstagedLinesPatch();
+
+            //git apply has problem with dealing with autocrlf
+            //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
+            if ("true".Equals(module.GetConfigValue("core.autocrlf"), StringComparison.InvariantCultureIgnoreCase))
+                body = body.Replace("\r", "");            
+
+            if (header == null || body == null)
+                return null;
+            else
+                return GetPatchBytes(header, body, fileContentEncoding);
+        }
+
+        public static byte[] GetPatchBytes(string header, string body, Encoding fileContentEncoding)
+        {
+            byte[] hb = EncodingHelper.ConvertTo(GitModule.SystemEncoding, header);
+            byte[] bb = EncodingHelper.ConvertTo(fileContentEncoding, body);
+            byte[] result = new byte[hb.Length + bb.Length];
+            hb.CopyTo(result, 0);
+            bb.CopyTo(result, hb.Length);
+            return result;        
+        }
+
 
         public static byte[] GetSelectedLinesAsPatch(string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding)
         {
@@ -319,4 +378,230 @@ namespace PatchApply
             LoadPatch(reader.ReadToEnd(), applyPatch, filesContentEncoding);
         }
     }
+
+    internal class PatchLine
+    {
+        public string Text { get; set; }
+        public bool Selected { get; set; }
+    }
+
+    internal class SubChunk
+    {
+        public List<PatchLine> PreContext = new List<PatchLine>();
+        public List<PatchLine> RemovedLines = new List<PatchLine>();
+        public List<PatchLine> AddedLines = new List<PatchLine>();
+        public List<PatchLine> PostContext = new List<PatchLine>();
+        public string WasNoNewLineAtTheEnd = null;
+        public string IsNoNewLineAtTheEnd = null;
+
+        //patch base is changed file
+        public string ToResetUnstagedLinesPatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
+        {
+
+            string diff = null;
+            string removePart = null;
+            string addPart = null;
+            string prePart = null;
+            string postPart = null;
+            bool inPostPart = false;
+            addedCount += PreContext.Count + PostContext.Count;
+            removedCount += PreContext.Count + PostContext.Count;
+
+            foreach (PatchLine line in PreContext)
+                diff = diff.Combine("\n", line.Text);
+
+            foreach (PatchLine removedLine in RemovedLines)
+            {
+                if (removedLine.Selected)
+                {
+                    wereSelectedLines = true;
+                    inPostPart = true;
+                    removePart = removePart.Combine("\n", "+" + removedLine.Text.Substring(1));
+                    addedCount++;
+                }
+            }
+
+            foreach (PatchLine addedLine in AddedLines)
+            {
+                if (addedLine.Selected)
+                {
+                    wereSelectedLines = true;
+                    inPostPart = true;
+                    removePart = removePart.Combine("\n", "-" + addedLine.Text.Substring(1));
+                    removedCount++;
+                }
+                else
+                {
+                    if (inPostPart)
+                        postPart = postPart.Combine("\n", " " + addedLine.Text.Substring(1));
+                    else
+                        prePart = prePart.Combine("\n", " " + addedLine.Text.Substring(1));
+                    addedCount++;
+                    removedCount++;
+                }
+            }
+
+            diff = diff.Combine("\n", prePart);
+            diff = diff.Combine("\n", removePart);
+            diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
+            diff = diff.Combine("\n", addPart);
+            diff = diff.Combine("\n", postPart);
+            foreach (PatchLine line in PostContext)
+                diff = diff.Combine("\n", line.Text);
+            diff = diff.Combine("\n", IsNoNewLineAtTheEnd);
+
+            return diff;
+        }
+    }
+
+    internal class Chunk
+    {
+        private int StartLine;
+        private List<SubChunk> SubChunks = new List<SubChunk>();
+        private SubChunk _CurrentSubChunk = null;
+
+        public SubChunk CurrentSubChunk
+        {
+            get
+            {
+                if (_CurrentSubChunk == null)
+                {
+                    _CurrentSubChunk = new SubChunk();
+                    SubChunks.Add(_CurrentSubChunk);
+                }
+                return _CurrentSubChunk;
+            }
+        }
+
+        public void AddContextLine(PatchLine line, bool preContext)
+        {
+            if (preContext)
+                CurrentSubChunk.PreContext.Add(line);
+            else
+                CurrentSubChunk.PostContext.Add(line);
+        }
+
+        public void AddDiffLine(PatchLine line, bool removed)
+        {
+            //if postContext is not empty @line comes from next SubChunk
+            if (CurrentSubChunk.PostContext.Count > 0)
+                _CurrentSubChunk = null;//start new SubChunk
+
+            if (removed)
+                CurrentSubChunk.RemovedLines.Add(line);
+            else
+                CurrentSubChunk.AddedLines.Add(line);
+        }
+
+        public bool ParseHeader(string header)
+        {
+            header = header.SkipStr("-");
+            header = header.TakeUntilStr(",");
+
+            return int.TryParse(header, out StartLine);
+        }
+
+        public static Chunk ParseChunk(string chunkStr, int currentPos, int selectionPosition, int selectionLength)
+        {
+            string[] lines = chunkStr.Split('\n');
+            if (lines.Length < 2)
+                return null;
+
+            bool inPatch = true;
+            bool inPreContext = true;
+            int i = 1;
+
+            Chunk result = new Chunk();
+            result.ParseHeader(lines[0]);
+            currentPos += lines[0].Length + 1;
+
+            while (i < lines.Length)
+            {
+                string line = lines[i];
+                if (inPatch)
+                {
+                    PatchLine patchLine = new PatchLine()
+                    {
+                        Text = line
+                    };
+                    //do not refactor, there are no break points condition in VS Experss
+                    if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
+                        patchLine.Selected = true;
+
+                    if (line.StartsWith(" "))
+                        result.AddContextLine(patchLine, inPreContext);
+                    else if (line.StartsWith("-"))
+                    {
+                        inPreContext = false;
+                        result.AddDiffLine(patchLine, true);
+                    }
+                    else if (line.StartsWith("+"))
+                    {
+                        inPreContext = false;
+                        result.AddDiffLine(patchLine, false);
+                    }
+                    else if (line.StartsWith("\\"))
+                    {
+                        if (line.Contains("No newline at end of file"))
+                            if (result.CurrentSubChunk.AddedLines.Count > 0)
+                                result.CurrentSubChunk.IsNoNewLineAtTheEnd = line;
+                            else
+                                result.CurrentSubChunk.WasNoNewLineAtTheEnd = line;
+                    }
+                    else
+                        inPatch = false;
+
+                }
+
+                currentPos += line.Length + 1;
+                i++;
+            }
+
+            return result;
+        }
+
+        //patch base is changed file
+        public string ToResetUnstagedLinesPatch()
+        {
+            bool wereSelectedLines = false;
+            string diff = null;
+            int addedCount = 0;
+            int removedCount = 0;
+
+            foreach (SubChunk subChunk in SubChunks)
+            {
+                string subDiff = subChunk.ToResetUnstagedLinesPatch(ref addedCount, ref removedCount, ref wereSelectedLines);
+                diff = diff.Combine("\n", subDiff);
+            }
+
+            if (!wereSelectedLines)
+                return null;
+
+            diff = "@@ -" + StartLine + "," + removedCount + " +" + StartLine + "," + addedCount + " @@".Combine("\n", diff);
+
+            return diff;
+        }
+    }
+
+    internal class ChunkList : List<Chunk>
+    {
+
+        public string ToResetUnstagedLinesPatch()
+        {
+            string result = null;
+
+            foreach (Chunk chunk in this)
+                result = result.Combine("\n", chunk.ToResetUnstagedLinesPatch());
+
+
+            if (result != null)
+            {
+                result = result.Combine("\n", "--");
+                result = result.Combine("\n", Application.ProductName + " " + Settings.GitExtensionsVersionString);                
+            }
+            return result;
+        }
+    }
+
+
 }

@@ -275,6 +275,11 @@ namespace GitCommands
             return configFile.GetConfigSections().Select(configSection => configSection.GetPathValue("path").Trim()).ToList();
         }
 
+        public string GetConfigValue(string name)
+        {
+            return RunCmd("git config --get " + name.Quote());
+        }
+
         public string GetGlobalSetting(string setting)
         {
             var configFile = GitCommandHelpers.GetGlobalConfig();
@@ -2282,6 +2287,14 @@ namespace GitCommands
         public string GetSelectedBranch()
         {
             return GetSelectedBranch(_workingdir);
+        }
+
+        public string GetCurrentRemote()
+        {
+            string remote = GetSetting(string.Format("branch.{0}.remote", GetSelectedBranch()));
+            if (String.IsNullOrEmpty(remote))
+                return "origin";
+            return remote;
         }
 
         public string GetRemoteBranch(string branch)

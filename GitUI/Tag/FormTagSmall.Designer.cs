@@ -85,9 +85,9 @@ namespace GitUI.Tag
             this.pushTag.AutoSize = true;
             this.pushTag.Location = new System.Drawing.Point(108, 34);
             this.pushTag.Name = "pushTag";
-            this.pushTag.Size = new System.Drawing.Size(72, 19);
+            this.pushTag.Size = new System.Drawing.Size(109, 19);
             this.pushTag.TabIndex = 10;
-            this.pushTag.Text = "Push tag";
+            this.pushTag.Text = "Push tag to \'{0}\'";
             this.pushTag.UseVisualStyleBackColor = true;
             // 
             // tagMessage
@@ -101,7 +101,6 @@ namespace GitUI.Tag
             this.tagMessage.Name = "tagMessage";
             this.tagMessage.Size = new System.Drawing.Size(339, 82);
             this.tagMessage.TabIndex = 11;
-            this.tagMessage.WatermarkText = "";
             // 
             // label2
             // 
@@ -141,6 +140,7 @@ namespace GitUI.Tag
             this.Name = "FormTagSmall";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create tag";
+            this.Load += new System.EventHandler(this.FormTagSmall_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

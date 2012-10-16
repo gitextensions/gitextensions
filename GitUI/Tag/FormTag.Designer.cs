@@ -77,6 +77,7 @@ namespace GitUI.Tag
             this.GitRevisions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GitRevisions.Location = new System.Drawing.Point(0, 0);
             this.GitRevisions.Name = "GitRevisions";
+            this.GitRevisions.RevisionGraphDrawStyle = GitUI.DvcsGraph.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
             this.GitRevisions.Size = new System.Drawing.Size(734, 352);
             this.GitRevisions.TabIndex = 0;
             // 
@@ -146,9 +147,9 @@ namespace GitUI.Tag
             this.pushTag.AutoSize = true;
             this.pushTag.Location = new System.Drawing.Point(110, 33);
             this.pushTag.Name = "pushTag";
-            this.pushTag.Size = new System.Drawing.Size(72, 19);
+            this.pushTag.Size = new System.Drawing.Size(109, 19);
             this.pushTag.TabIndex = 12;
-            this.pushTag.Text = "Push tag";
+            this.pushTag.Text = "Push tag to \'{0}\'";
             this.pushTag.UseVisualStyleBackColor = true;
             // 
             // ForceTag
@@ -163,6 +164,7 @@ namespace GitUI.Tag
             // 
             // FormTag
             // 
+            this.AcceptButton = this.btnCreateTag;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(734, 523);

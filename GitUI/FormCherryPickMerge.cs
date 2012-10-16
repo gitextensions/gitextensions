@@ -21,7 +21,7 @@ namespace GitUI
 
             Translate();
 
-            //constructor for translation
+            // for translation form
             if (parents != null)
             {
                 for (int i = 0; i < parents.Length; i++)
