@@ -7,7 +7,7 @@ namespace GitUI
 {
     public partial class FormSelectMultipleBranches : GitExtensionsForm
     {
-        // for translation only
+        // only for translation
         private FormSelectMultipleBranches()
             : base(true)
         {

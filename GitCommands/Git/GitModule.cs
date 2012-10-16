@@ -2289,6 +2289,14 @@ namespace GitCommands
             return GetSelectedBranch(_workingdir);
         }
 
+        public string GetCurrentRemote()
+        {
+            string remote = GetSetting(string.Format("branch.{0}.remote", GetSelectedBranch()));
+            if (String.IsNullOrEmpty(remote))
+                return "origin";
+            return remote;
+        }
+
         public string GetRemoteBranch(string branch)
         {
             string remote = GetSetting(string.Format("branch.{0}.remote", branch));
