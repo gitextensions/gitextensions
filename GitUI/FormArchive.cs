@@ -10,8 +10,12 @@ namespace GitUI
         private readonly TranslationString _noRevisionSelectedMsgBox =
             new TranslationString("Select 1 revision to archive");
 
-        private readonly TranslationString _saveFileDialogFilter =
+        private readonly TranslationString _saveFileDialogFilterZip =
             new TranslationString("Zip file (*.zip)");
+
+        private readonly TranslationString _saveFileDialogFilterTar =
+            new TranslationString("Tar file (*.tar)");
+
         private readonly TranslationString _saveFileDialogCaption =
             new TranslationString("Save archive as");
 
@@ -24,6 +28,12 @@ namespace GitUI
                 _selectedRevision = value;
                 commitSummaryUserControl1.Revision = SelectedRevision;
             }
+        }
+
+        private enum OutputFormat
+        {
+            Zip,
+            Tar
         }
 
         /// <summary>
@@ -45,14 +55,30 @@ namespace GitUI
         {
             string revision = SelectedRevision.Guid;
 
-            using (var saveFileDialog = new SaveFileDialog { Filter = _saveFileDialogFilter.Text + "|*.zip", Title = _saveFileDialogCaption.Text })
+            string fileFilterCaption = GetSelectedOutputFormat() == OutputFormat.Zip ? _saveFileDialogFilterZip.Text : _saveFileDialogFilterTar.Text;
+            string fileFilterEnding = GetSelectedOutputFormat() == OutputFormat.Zip ? "zip" : "tar";
+
+            using (var saveFileDialog = new SaveFileDialog
+            {
+                Filter = string.Format("{0}|*.{1}", fileFilterCaption, fileFilterEnding),
+                Title = _saveFileDialogCaption.Text
+            })
             {
                 if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    FormProcess.ShowDialog(this, "archive --format=zip " + revision + " --output \"" + saveFileDialog.FileName + "\"");
+                    string format = GetSelectedOutputFormat() == OutputFormat.Zip ? "zip" : "tar";
+
+                    FormProcess.ShowDialog(this,
+                        string.Format("archive --format={0} {1} --output \"{2}\"",
+                        format, revision, saveFileDialog.FileName));
                     Close();
                 }
             }
+        }
+
+        private OutputFormat GetSelectedOutputFormat()
+        {
+            return radioButtonFormatZip.Checked ? OutputFormat.Zip : OutputFormat.Tar;
         }
 
         private void btnChooseRevision_Click(object sender, EventArgs e)

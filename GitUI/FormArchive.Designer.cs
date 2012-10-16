@@ -33,8 +33,8 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButtonFormatZip = new System.Windows.Forms.RadioButton();
+            this.radioButtonFormatTar = new System.Windows.Forms.RadioButton();
             this.commitSummaryUserControl1 = new GitUI.CommitSummaryUserControl();
             this.btnChooseRevision = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
@@ -55,11 +55,13 @@
             // Save
             // 
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Location = new System.Drawing.Point(464, 187);
+            this.Save.Image = global::GitUI.Properties.Resources.IconSaveAs;
+            this.Save.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Save.Location = new System.Drawing.Point(428, 187);
             this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(75, 25);
+            this.Save.Size = new System.Drawing.Size(111, 25);
             this.Save.TabIndex = 3;
-            this.Save.Text = "Save";
+            this.Save.Text = "Save as...";
             this.Save.UseVisualStyleBackColor = true;
             this.Save.Click += new System.EventHandler(this.Save_Click);
             // 
@@ -88,7 +90,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.tableLayoutPanel2);
-            this.groupBox1.Location = new System.Drawing.Point(349, 158);
+            this.groupBox1.Location = new System.Drawing.Point(313, 158);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(109, 54);
             this.groupBox1.TabIndex = 4;
@@ -100,8 +102,8 @@
             this.tableLayoutPanel2.ColumnCount = 2;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.radioButton1, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.radioButton2, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.radioButtonFormatZip, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.radioButtonFormatTar, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 19);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -110,28 +112,27 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(103, 32);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
-            // radioButton1
+            // radioButtonFormatZip
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Checked = true;
-            this.radioButton1.Location = new System.Drawing.Point(3, 3);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(40, 19);
-            this.radioButton1.TabIndex = 0;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "zip";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButtonFormatZip.AutoSize = true;
+            this.radioButtonFormatZip.Checked = true;
+            this.radioButtonFormatZip.Location = new System.Drawing.Point(3, 3);
+            this.radioButtonFormatZip.Name = "radioButtonFormatZip";
+            this.radioButtonFormatZip.Size = new System.Drawing.Size(40, 19);
+            this.radioButtonFormatZip.TabIndex = 0;
+            this.radioButtonFormatZip.TabStop = true;
+            this.radioButtonFormatZip.Text = "zip";
+            this.radioButtonFormatZip.UseVisualStyleBackColor = true;
             // 
-            // radioButton2
+            // radioButtonFormatTar
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Enabled = false;
-            this.radioButton2.Location = new System.Drawing.Point(54, 3);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(39, 19);
-            this.radioButton2.TabIndex = 1;
-            this.radioButton2.Text = "tar";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButtonFormatTar.AutoSize = true;
+            this.radioButtonFormatTar.Location = new System.Drawing.Point(54, 3);
+            this.radioButtonFormatTar.Name = "radioButtonFormatTar";
+            this.radioButtonFormatTar.Size = new System.Drawing.Size(39, 19);
+            this.radioButtonFormatTar.TabIndex = 1;
+            this.radioButtonFormatTar.Text = "tar";
+            this.radioButtonFormatTar.UseVisualStyleBackColor = true;
             // 
             // commitSummaryUserControl1
             // 
@@ -140,14 +141,14 @@
             this.commitSummaryUserControl1.Location = new System.Drawing.Point(23, 43);
             this.commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             this.commitSummaryUserControl1.Revision = null;
-            this.commitSummaryUserControl1.Size = new System.Drawing.Size(435, 96);
+            this.commitSummaryUserControl1.Size = new System.Drawing.Size(399, 96);
             this.commitSummaryUserControl1.TabIndex = 5;
             // 
             // btnChooseRevision
             // 
             this.btnChooseRevision.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnChooseRevision.Image = global::GitUI.Properties.Resources.IconSelectRevision;
-            this.btnChooseRevision.Location = new System.Drawing.Point(464, 79);
+            this.btnChooseRevision.Location = new System.Drawing.Point(428, 79);
             this.btnChooseRevision.Name = "btnChooseRevision";
             this.btnChooseRevision.Size = new System.Drawing.Size(25, 24);
             this.btnChooseRevision.TabIndex = 31;
@@ -180,8 +181,8 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.RadioButton radioButtonFormatZip;
+        private System.Windows.Forms.RadioButton radioButtonFormatTar;
         private CommitSummaryUserControl commitSummaryUserControl1;
         private System.Windows.Forms.Button btnChooseRevision;
     }
