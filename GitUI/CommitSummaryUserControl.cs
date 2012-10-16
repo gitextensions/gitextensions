@@ -29,10 +29,21 @@ namespace GitUI
             set
             {
                 _revision = value;
-                Commit.Text = string.Format(Strings.GetCommitHashText() + ": {0}", Revision.Guid);
-                Author.Text = string.Format(Strings.GetAuthorText() + ": {0}", Revision.Author);
-                Date.Text = string.Format(Strings.GetCommitDateText() + ": {0}", Revision.CommitDate);
-                Message.Text = string.Format(Strings.GetMessageText() + ": {0}", Revision.Message);
+
+                if (Revision != null)
+                {
+                    Commit.Text = string.Format(Strings.GetCommitHashText() + ": {0}", Revision.Guid);
+                    Author.Text = string.Format(Strings.GetAuthorText() + ": {0}", Revision.Author);
+                    Date.Text = string.Format(Strings.GetCommitDateText() + ": {0}", Revision.CommitDate);
+                    Message.Text = string.Format(Strings.GetMessageText() + ": {0}", Revision.Message);
+                }
+                else
+                {
+                    Commit.Text = "No revision";
+                    Author.Text = string.Format(Strings.GetAuthorText() + ": {0}", "---");
+                    Date.Text = string.Format(Strings.GetCommitDateText() + ": {0}", "---");
+                    Message.Text = string.Format(Strings.GetMessageText() + ": {0}", "---");
+                }
             }
         }
     }
