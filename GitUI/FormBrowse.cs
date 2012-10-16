@@ -1418,7 +1418,14 @@ namespace GitUI
 
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartArchiveDialog(this, RevisionGrid.GetCurrentRevision());
+            var revisions = RevisionGrid.GetSelectedRevisions();
+            if (revisions.Count != 1)
+            {
+                MessageBox.Show("Select exactly one revision.");
+                return;
+            }
+
+            UICommands.StartArchiveDialog(this, revisions.First());
         }
 
         private void EditMailMapToolStripMenuItemClick(object sender, EventArgs e)
