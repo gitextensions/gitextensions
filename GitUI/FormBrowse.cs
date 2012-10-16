@@ -1418,7 +1418,7 @@ namespace GitUI
 
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartArchiveDialog(this);
+            UICommands.StartArchiveDialog(this, RevisionGrid.GetCurrentRevision());
         }
 
         private void EditMailMapToolStripMenuItemClick(object sender, EventArgs e)

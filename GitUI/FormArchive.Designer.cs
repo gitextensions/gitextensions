@@ -47,7 +47,7 @@
             // Save
             // 
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Location = new System.Drawing.Point(731, 352);
+            this.Save.Location = new System.Drawing.Point(731, 18);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(75, 25);
             this.Save.TabIndex = 3;
@@ -58,8 +58,9 @@
             // revisionGrid1
             // 
             this.revisionGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.revisionGrid1.Location = new System.Drawing.Point(3, 18);
+            this.revisionGrid1.Location = new System.Drawing.Point(3, 49);
             this.revisionGrid1.Name = "revisionGrid1";
+            this.revisionGrid1.RevisionGraphDrawStyle = GitUI.DvcsGraph.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
             this.revisionGrid1.Size = new System.Drawing.Size(803, 328);
             this.revisionGrid1.TabIndex = 0;
             // 
