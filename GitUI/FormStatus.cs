@@ -151,7 +151,7 @@ namespace GitUI
                 picBoxSuccessFail.Image = GitUI.Properties.Resources.success;
             else
                 picBoxSuccessFail.Image = GitUI.Properties.Resources.error;
-            picBoxSuccessFail.Show();
+            ShowPicBoxSuccessFail();
 
             errorOccurred = !isSuccess;
 
@@ -208,9 +208,23 @@ namespace GitUI
             DialogResult = DialogResult.OK;
         }
 
-        private void FormStatus_Load(object sender, EventArgs e)
+        private void HidePicBoxSuccessFail()
         {
             picBoxSuccessFail.Hide();
+            tableLayoutPanel3.SetColumn(MessageTextBox, 0);
+            tableLayoutPanel3.SetColumnSpan(MessageTextBox, 2);
+        }
+
+        private void ShowPicBoxSuccessFail()
+        {
+            tableLayoutPanel3.SetColumn(MessageTextBox, 1);
+            tableLayoutPanel3.SetColumnSpan(MessageTextBox, 1);
+            picBoxSuccessFail.Show();
+        }
+
+        private void FormStatus_Load(object sender, EventArgs e)
+        {
+            HidePicBoxSuccessFail();            
             if (DesignMode)
                 return;
 
