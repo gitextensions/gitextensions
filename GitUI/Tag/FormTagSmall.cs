@@ -17,9 +17,12 @@ namespace GitUI.Tag
 
         private readonly TranslationString _noTagMassage = new TranslationString("Please enter a tag message");
 
-        private readonly TranslationString _pushToCaption = new TranslationString("Push tag to {0}");
+        private readonly TranslationString _pushToCaption = new TranslationString("Push tag to '{0}'");
+
         private readonly GitRevision revision;
 
+        private string currentRemote = "";
+        
         public FormTagSmall(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
         {
@@ -28,6 +31,12 @@ namespace GitUI.Tag
 
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
             this.revision = revision;
+        }
+
+        private void FormTagSmall_Load(object sender, EventArgs e)
+        {
+            currentRemote = Module.GetCurrentRemote();
+            pushTag.Text = string.Format(_pushToCaption.Text, currentRemote);
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -63,7 +72,6 @@ namespace GitUI.Tag
                 File.WriteAllText(Module.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
             }
 
-
             var s = Module.Tag(TName.Text, revision.Guid, annotate.Checked, ForceTag.Checked);
 
             if (!string.IsNullOrEmpty(s))
@@ -78,15 +86,14 @@ namespace GitUI.Tag
 
         private void PushTag(string tagName)
         {
-            var currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", Module.GetSelectedBranch()));
-            var pushCmd = GitCommandHelpers.PushTagCmd(currentBranchRemote, tagName, false);
+            var pushCmd = GitCommandHelpers.PushTagCmd(currentRemote, tagName, false);
 
             ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
 
             using (var form = new FormRemoteProcess(Module, pushCmd)
             {
-                Remote = currentBranchRemote,
-                Text = string.Format(_pushToCaption.Text, currentBranchRemote),
+                Remote = currentRemote,
+                Text = string.Format(_pushToCaption.Text, currentRemote),
             })
             {
 

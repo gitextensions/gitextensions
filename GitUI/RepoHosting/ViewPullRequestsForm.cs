@@ -28,7 +28,7 @@ namespace GitUI.RepoHosting
         private bool _isFirstLoad;
         private AsyncLoader loader = new AsyncLoader();
 
-        // for translation only
+        // only for translation
         private ViewPullRequestsForm()
             : this(null)
         { }

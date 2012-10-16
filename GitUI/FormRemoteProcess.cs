@@ -25,7 +25,7 @@ namespace GitUI
         private bool restart;
         protected readonly GitModule Module;
 
-        //for translation
+        // only for translation
         protected FormRemoteProcess()
             : base()
         { }
