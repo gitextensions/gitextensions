@@ -277,7 +277,10 @@ namespace GitCommands
 
         public string GetConfigValue(string name)
         {
-            return RunCmd("git config --get " + name.Quote());
+            var s =  RunGitCmd("config --get " + name.Quote());
+            if (s != null)
+                s = s.Trim();
+            return s;
         }
 
         public string GetGlobalSetting(string setting)
