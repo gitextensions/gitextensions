@@ -918,7 +918,7 @@ namespace GitUI
             this.saveAsToolStripMenuItem1.Name = "saveAsToolStripMenuItem1";
             this.saveAsToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveAsToolStripMenuItem1.Size = new System.Drawing.Size(260, 22);
-            this.saveAsToolStripMenuItem1.Text = "Save B as...";
+            this.saveAsToolStripMenuItem1.Text = "Save (B) as...";
             this.saveAsToolStripMenuItem1.Click += new System.EventHandler(this.saveAsToolStripMenuItem1_Click);
             // 
             // resetFileToToolStripMenuItem
