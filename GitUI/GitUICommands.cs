@@ -930,7 +930,7 @@ namespace GitUI
             return StartCreateTagDialog(null);
         }
 
-        public bool StartDeleteTagDialog(IWin32Window owner)
+        public bool StartDeleteTagDialog(IWin32Window owner, string tag)
         {
             if (!RequiresValidWorkingDir(owner))
                 return false;
@@ -938,7 +938,7 @@ namespace GitUI
             if (!InvokeEvent(owner, PreDeleteTag))
                 return true;
 
-            using (var form = new FormDeleteTag(this))
+            using (var form = new FormDeleteTag(this, tag))
                 form.ShowDialog(owner);
 
             InvokeEvent(owner, PostDeleteTag);
@@ -946,9 +946,14 @@ namespace GitUI
             return true;
         }
 
+        public bool StartDeleteTagDialog(string tag)
+        {
+            return StartDeleteTagDialog(null, tag);
+        }
+
         public bool StartDeleteTagDialog()
         {
-            return StartDeleteTagDialog(null);
+            return StartDeleteTagDialog(null, "");
         }
 
         public bool StartEditGitIgnoreDialog(IWin32Window owner)

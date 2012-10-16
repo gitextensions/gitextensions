@@ -1332,6 +1332,12 @@ namespace GitUI
                 Initialize();
         }
 
+        private void DeleteTagToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (UICommands.StartDeleteTagDialog(this, null))
+                Initialize();
+        }
+
         private void CherryPickToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (UICommands.StartCherryPickDialog(this))
@@ -1378,12 +1384,6 @@ namespace GitUI
         private void DonateToolStripMenuItemClick(object sender, EventArgs e)
         {
             using (var frm = new FormDonate()) frm.ShowDialog(this);
-        }
-
-        private void DeleteTagToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (UICommands.StartDeleteTagDialog(this))
-                Initialize();
         }
 
         private void FormBrowseFormClosing(object sender, FormClosingEventArgs e)
