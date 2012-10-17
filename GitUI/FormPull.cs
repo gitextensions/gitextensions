@@ -516,12 +516,8 @@ namespace GitUI
             _NO_TRANSLATE_Remotes.Enabled = true;
             AddRemote.Enabled = true;
 
-            if (IsPullAll())
-            {
-                // Do not merge or rebase when fetching all remotes.
-                Merge.Enabled = false;
-                Rebase.Enabled = false;
-            }
+            Merge.Enabled = !IsPullAll();
+            Rebase.Enabled = !IsPullAll();
         }
 
         private bool IsPullAll()
@@ -623,11 +619,10 @@ namespace GitUI
             label3.Visible = !string.IsNullOrEmpty(labelRemoteUrl.Text);
 
             // update merge options radio buttons
+            Merge.Enabled = !IsPullAll();
+            Rebase.Enabled = !IsPullAll();
             if (IsPullAll())
             {
-                // Do not merge or rebase when fetching all. 
-                Merge.Enabled = false;
-                Rebase.Enabled = false;
                 Fetch.Checked = true;
             }
         }
