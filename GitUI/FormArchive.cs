@@ -58,6 +58,7 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+            revisionGrid1.MultiSelect = false; // TODO: it should be possible to set this via VS designer
         }
 
         private void FormArchive_Load(object sender, EventArgs e)
@@ -114,7 +115,7 @@ namespace GitUI
         private void revisionGrid1_SelectionChanged(object sender, EventArgs e)
         {
             var revision = revisionGrid1.GetSelectedRevisions().FirstOrDefault();
-            if (revision != null) // TODO: would not be necessary if we could enforce the revisionGrid1 to always have 1 valid selection
+            if (revision != null) // would not be necessary if we could enforce the revisionGrid1 to always have valid non-null selection (which currently can be achieved by using the Ctrl key and mouse click)
             {
                 SelectedRevision = revision;
             }
