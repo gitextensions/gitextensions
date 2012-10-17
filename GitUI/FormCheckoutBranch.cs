@@ -87,8 +87,8 @@ namespace GitUI
                     isDirtyDir = Module.IsDirtyDir();
                 else
                     isDirtyDir = false;
-                
-                localChangesGB.Visible = isDirtyDir || !Settings.CheckForUncommittedChangesInCheckoutBranch;
+
+                localChangesGB.Visible = ShowLocalChangesGB();
                 ChangesMode = Settings.CheckoutBranchAction;
                 defaultActionChx.Checked = Settings.UseDefaultCheckoutBranchAction;
             }
@@ -96,6 +96,11 @@ namespace GitUI
             {
                 isLoading = false;
             }
+        }
+
+        private bool ShowLocalChangesGB()
+        {
+            return isDirtyDir || !Settings.CheckForUncommittedChangesInCheckoutBranch;
         }
 
         public DialogResult DoDefaultActionOrShow(IWin32Window owner)
@@ -204,7 +209,7 @@ namespace GitUI
             Settings.CheckoutBranchAction = changes;
             Settings.UseDefaultCheckoutBranchAction = defaultActionChx.Checked;
 
-            if (localChangesGB.Visible)
+            if (ShowLocalChangesGB())
                 cmd.SetLocalChangesFromSettings(changes);
             else
                 cmd.SetLocalChangesFromSettings(Settings.LocalChanges.DontChange);
