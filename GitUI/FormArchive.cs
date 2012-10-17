@@ -64,6 +64,7 @@ namespace GitUI
         private void FormArchive_Load(object sender, EventArgs e)
         {
             revisionGrid1.Load();
+            buttonArchiveRevision.Focus();
         }
 
         private void Save_Click(object sender, EventArgs e)
