@@ -181,7 +181,7 @@ namespace GitPlugin
                         _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsApplyPatch", "&Apply patch", "Apply patch", 0, n++, true);
                         _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsFormatPatch", "&Format patch", "Format patch", 0, n++);
                         _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsDiff", "V&iew changes", "View commit change history", 0, n++);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsSearchFile", "Search fi&le", "Search a file in the repository", 0, n++);
+                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsSearchFile", "Search fi&le", "Search a file in the repository", 23, n++);
                     }
 
                     {
@@ -195,7 +195,7 @@ namespace GitPlugin
 
                     {
                         _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsBash", "&Git bash", "Start git bash", 21, n++, true);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsGitIgnore", "Edit &.gitignore", "Edit .gitignore file", 0, n++);
+                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsGitIgnore", "Edit &.gitignore", "Edit .gitignore file", 22, n++);
                         _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsSettings", "Se&ttings", "Settings", 2, n++);
                         _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsAbout", "About Git E&xtensions", "About Git Extensions", 20, n++);
                     }
