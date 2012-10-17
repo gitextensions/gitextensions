@@ -28,10 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Date = new System.Windows.Forms.Label();
-            this.Message = new System.Windows.Forms.Label();
-            this.Author = new System.Windows.Forms.Label();
-            this.Commit = new System.Windows.Forms.Label();
             this.BranchInfo = new System.Windows.Forms.Label();
             this.Pick = new System.Windows.Forms.Button();
             this.AutoCommit = new System.Windows.Forms.CheckBox();
@@ -42,43 +38,8 @@
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ParentsLabel = new System.Windows.Forms.Label();
             this.checkAddReference = new System.Windows.Forms.CheckBox();
+            this.commitSummaryUserControl1 = new GitUI.CommitSummaryUserControl();
             this.SuspendLayout();
-            // 
-            // Date
-            // 
-            this.Date.AutoSize = true;
-            this.Date.Location = new System.Drawing.Point(30, 78);
-            this.Date.Name = "Date";
-            this.Date.Size = new System.Drawing.Size(80, 15);
-            this.Date.TabIndex = 9;
-            this.Date.Text = "Commit date:";
-            // 
-            // Message
-            // 
-            this.Message.AutoSize = true;
-            this.Message.Location = new System.Drawing.Point(30, 102);
-            this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(56, 15);
-            this.Message.TabIndex = 8;
-            this.Message.Text = "Message:";
-            // 
-            // Author
-            // 
-            this.Author.AutoSize = true;
-            this.Author.Location = new System.Drawing.Point(30, 53);
-            this.Author.Name = "Author";
-            this.Author.Size = new System.Drawing.Size(47, 15);
-            this.Author.TabIndex = 7;
-            this.Author.Text = "Author:";
-            // 
-            // Commit
-            // 
-            this.Commit.AutoSize = true;
-            this.Commit.Location = new System.Drawing.Point(30, 30);
-            this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(54, 15);
-            this.Commit.TabIndex = 6;
-            this.Commit.Text = "Commit:";
             // 
             // BranchInfo
             // 
@@ -166,6 +127,15 @@
             this.checkAddReference.Text = "Add commit reference";
             this.checkAddReference.UseVisualStyleBackColor = true;
             // 
+            // commitSummaryUserControl1
+            // 
+            this.commitSummaryUserControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.commitSummaryUserControl1.Location = new System.Drawing.Point(11, 27);
+            this.commitSummaryUserControl1.Name = "commitSummaryUserControl1";
+            this.commitSummaryUserControl1.Size = new System.Drawing.Size(549, 101);
+            this.commitSummaryUserControl1.TabIndex = 15;
+            // 
             // FormCherryPickCommitSmall
             // 
             this.AcceptButton = this.Pick;
@@ -173,15 +143,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(574, 262);
+            this.Controls.Add(this.commitSummaryUserControl1);
             this.Controls.Add(this.checkAddReference);
             this.Controls.Add(this.ParentsLabel);
             this.Controls.Add(this.ParentsList);
             this.Controls.Add(this.AutoCommit);
             this.Controls.Add(this.Pick);
-            this.Controls.Add(this.Date);
-            this.Controls.Add(this.Message);
-            this.Controls.Add(this.Author);
-            this.Controls.Add(this.Commit);
             this.Controls.Add(this.BranchInfo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -197,10 +164,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Label Date;
-        private System.Windows.Forms.Label Message;
-        private System.Windows.Forms.Label Author;
-        private System.Windows.Forms.Label Commit;
         private System.Windows.Forms.Label BranchInfo;
         private System.Windows.Forms.Button Pick;
         private System.Windows.Forms.CheckBox AutoCommit;
@@ -211,5 +174,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.Label ParentsLabel;
         private System.Windows.Forms.CheckBox checkAddReference;
+        private CommitSummaryUserControl commitSummaryUserControl1;
     }
 }

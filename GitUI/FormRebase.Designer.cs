@@ -309,7 +309,7 @@ namespace GitUI
             // 
             this.btnChooseFromRevision.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnChooseFromRevision.Enabled = false;
-            this.btnChooseFromRevision.Image = global::GitUI.Properties.Resources.Goto;
+            this.btnChooseFromRevision.Image = global::GitUI.Properties.Resources.IconSelectRevision;
             this.btnChooseFromRevision.Location = new System.Drawing.Point(267, 3);
             this.btnChooseFromRevision.Name = "btnChooseFromRevision";
             this.btnChooseFromRevision.Size = new System.Drawing.Size(25, 24);

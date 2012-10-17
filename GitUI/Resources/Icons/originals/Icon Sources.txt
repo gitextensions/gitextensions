@@ -12,3 +12,14 @@ IconArchive
 -----------
 cherry-icon.png: http://www.iconarchive.com/show/fruit-icons-by-miniartx/cherry-icon.html
 glossy-3d-blue-hourglass-icon64.png http://www.iconarchive.com/show/clean-3d-icons-by-mysitemyway/glossy-3d-blue-hourglass-icon.html
+
+IconFinder
+----------
+database_save_a*.png: FatCow Web Hosting - http://www.fatcow.com/
+
+Misc
+----
+Revert16.png
+RvisionHistory16.png
+  both: recreated from bmp
+   
