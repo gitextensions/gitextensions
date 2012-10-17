@@ -210,6 +210,7 @@ namespace GitUI
         void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _StageSelectedLinesToolStripMenuItem.Enabled = SelectedDiff.HasAnyPatches();
+            _ResetSelectedLinesToolStripMenuItem.Enabled = _StageSelectedLinesToolStripMenuItem.Enabled;
         }
 
         #region Hotkey commands
@@ -287,7 +288,7 @@ namespace GitUI
                 ResetSoftClick(this, null);
                 return true;
             }
-            else if (SelectedDiff.ContainsFocus)
+            else if (SelectedDiff.ContainsFocus && _ResetSelectedLinesToolStripMenuItem.Enabled)
             {
                 ResetSelectedLinesToolStripMenuItemClick(this, null);
                 return true;
@@ -303,7 +304,7 @@ namespace GitUI
                 StageClick(this, null);
                 return true;
             }
-            else if (SelectedDiff.ContainsFocus && !_currentItemStaged)
+            else if (SelectedDiff.ContainsFocus && !_currentItemStaged && _StageSelectedLinesToolStripMenuItem.Enabled)
             {
                 StageSelectedLinesToolStripMenuItemClick(this, null);
                 return true;
