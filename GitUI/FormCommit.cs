@@ -1076,14 +1076,14 @@ namespace GitUI
                     return;
 
                 // Show a form asking the user if they want to reset the changes.
-                FormResetChanges.ResultType resetType = FormResetChanges.ShowResetDialog(this, Unstaged.SelectedItems.Any(item => !item.IsNew), Unstaged.SelectedItems.Any(item => item.IsNew));
-                if (resetType == FormResetChanges.ResultType.CANCEL)
+                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, Unstaged.SelectedItems.Any(item => !item.IsNew), Unstaged.SelectedItems.Any(item => item.IsNew));
+                if (resetType == FormResetChanges.ActionEnum.Cancel)
                     return;
 
                 //remember max selected index
                 Unstaged.StoreNextIndexToSelect();
 
-                var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ResultType.RESET_AND_DELETE);
+                var deleteNewFiles = Unstaged.SelectedItems.Any(item => item.IsNew) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
                 var filesInUse = new List<string>();
                 var output = new StringBuilder();
                 foreach (var item in Unstaged.SelectedItems)
@@ -1481,15 +1481,17 @@ namespace GitUI
         private void ResetClick(object sender, EventArgs e)
         {
             // Show a form asking the user if they want to reset the changes.
-            FormResetChanges.ResultType resetType = FormResetChanges.ShowResetDialog(this, Unstaged.AllItems.Any(item => !item.IsNew), Unstaged.AllItems.Any(item => item.IsNew));
-            if (resetType == FormResetChanges.ResultType.CANCEL)
+            FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(this, Unstaged.AllItems.Any(item => !item.IsNew), Unstaged.AllItems.Any(item => item.IsNew));
+            if (resetAction == FormResetChanges.ActionEnum.Cancel)
+            {
                 return;
+            }
 
             // Reset all changes.
             Module.ResetHard("");
 
             // Also delete new files, if requested.
-            if (resetType == FormResetChanges.ResultType.RESET_AND_DELETE)
+            if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
             {
                 foreach (var item in Unstaged.AllItems.Where(item => item.IsNew))
                 {
@@ -1501,6 +1503,7 @@ namespace GitUI
                     catch (System.UnauthorizedAccessException) { }
                 }
             }
+
             Initialize();
             NeedRefresh = true;
         }
@@ -1770,8 +1773,8 @@ namespace GitUI
                 return;
 
             // Show a form asking the user if they want to reset the changes.
-            FormResetChanges.ResultType resetType = FormResetChanges.ShowResetDialog(this, true, true);
-            if (resetType == FormResetChanges.ResultType.CANCEL)
+            FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, true, true);
+            if (resetType == FormResetChanges.ActionEnum.Cancel)
                 return;
 
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
@@ -1782,7 +1785,7 @@ namespace GitUI
                 module.ResetHard("");
 
                 // Also delete new files, if requested.
-                if (resetType == FormResetChanges.ResultType.RESET_AND_DELETE)
+                if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
                 {
                     var unstagedFiles = module.GetUnstagedFiles();
                     foreach (var file in unstagedFiles.Where(file => file.IsNew))

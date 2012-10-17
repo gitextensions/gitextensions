@@ -1,5 +1,6 @@
 ﻿using System;
 using GitCommands;
+using System.Diagnostics;
 
 namespace GitUI
 {
@@ -21,6 +22,11 @@ namespace GitUI
         private void goButton_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void linkGitRevParse_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(@"http://www.kernel.org/pub/software/scm/git/docs/git-rev-parse.html");
         }
     }
 }

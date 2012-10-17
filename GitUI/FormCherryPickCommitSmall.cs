@@ -66,10 +66,7 @@ namespace GitUI
 
         private void FormCherryPickCommitSmall_Load(object sender, EventArgs e)
         {
-            Commit.Text = string.Format(Strings.GetCommitHashText() + ": {0}", Revision.Guid);
-            Author.Text = string.Format(Strings.GetAuthorText() + ": {0}", Revision.Author);
-            Date.Text = string.Format(Strings.GetCommitDateText() + ": {0}", Revision.CommitDate);
-            Message.Text = string.Format(Strings.GetMessageText() + ": {0}", Revision.Message);
+            commitSummaryUserControl1.Revision = Revision;
         }
 
         private void Revert_Click(object sender, EventArgs e)
