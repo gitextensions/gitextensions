@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using ResourceManager.Translation;
 using GitCommands;
 using System.IO;
+using System.Linq;
 
 namespace GitUI
 {
@@ -27,7 +28,14 @@ namespace GitUI
             set
             {
                 _selectedRevision = value;
-                commitSummaryUserControl1.Revision = SelectedRevision;
+                commitSummaryUserControl1.Revision = _selectedRevision;
+
+                if (revisionGrid1.GetSelectedRevisions().FirstOrDefault() != _selectedRevision)
+                {
+                    revisionGrid1.SetSelectedRevision(null);
+                    revisionGrid1.SetInitialRevision(_selectedRevision);
+                    revisionGrid1.SetSelectedRevision(_selectedRevision);
+                }
             }
         }
 
@@ -50,6 +58,11 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+        }
+
+        private void FormArchive_Load(object sender, EventArgs e)
+        {
+            revisionGrid1.Load();
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -95,6 +108,15 @@ namespace GitUI
                 {
                     SelectedRevision = chooseForm.SelectedRevision;
                 }
+            }
+        }
+
+        private void revisionGrid1_SelectionChanged(object sender, EventArgs e)
+        {
+            var revision = revisionGrid1.GetSelectedRevisions().FirstOrDefault();
+            if (revision != null) // TODO: would not be necessary if we could enforce the revisionGrid1 to always have 1 valid selection
+            {
+                SelectedRevision = revision;
             }
         }
     }
