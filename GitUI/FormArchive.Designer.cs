@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.Save = new System.Windows.Forms.Button();
+            this.buttonArchiveRevision = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -58,16 +58,16 @@
             // 
             // Save
             // 
-            this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Image = global::GitUI.Properties.Resources.IconSaveAs;
-            this.Save.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Save.Location = new System.Drawing.Point(480, 274);
-            this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(111, 25);
-            this.Save.TabIndex = 3;
-            this.Save.Text = "Save as...";
-            this.Save.UseVisualStyleBackColor = true;
-            this.Save.Click += new System.EventHandler(this.Save_Click);
+            this.buttonArchiveRevision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonArchiveRevision.Image = global::GitUI.Properties.Resources.IconSaveAs;
+            this.buttonArchiveRevision.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonArchiveRevision.Location = new System.Drawing.Point(480, 274);
+            this.buttonArchiveRevision.Name = "Save";
+            this.buttonArchiveRevision.Size = new System.Drawing.Size(111, 25);
+            this.buttonArchiveRevision.TabIndex = 3;
+            this.buttonArchiveRevision.Text = "Save as...";
+            this.buttonArchiveRevision.UseVisualStyleBackColor = true;
+            this.buttonArchiveRevision.Click += new System.EventHandler(this.Save_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -76,7 +76,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.label1, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.Save, 2, 3);
+            this.tableLayoutPanel1.Controls.Add(this.buttonArchiveRevision, 2, 3);
             this.tableLayoutPanel1.Controls.Add(this.groupBox1, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.commitSummaryUserControl1, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 2, 1);
@@ -224,7 +224,7 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button Save;
+        private System.Windows.Forms.Button buttonArchiveRevision;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
