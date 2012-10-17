@@ -204,8 +204,7 @@ namespace GitUI
             Settings.CheckoutBranchAction = changes;
             Settings.UseDefaultCheckoutBranchAction = defaultActionChx.Checked;
 
-            //If the setting CheckForUncommittedChangesInCheckoutBranch is false, ignore the 'localchanges' radiobutton.
-            if (Settings.CheckForUncommittedChangesInCheckoutBranch)
+            if (localChangesGB.Visible)
                 cmd.SetLocalChangesFromSettings(changes);
             else
                 cmd.SetLocalChangesFromSettings(Settings.LocalChanges.DontChange);
