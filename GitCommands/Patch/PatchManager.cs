@@ -87,9 +87,6 @@ namespace PatchApply
             // Ported from the git-gui tcl code to C#
             // see lib/diff.tcl
 
-            if (text.EndsWith("\n\\ No newline at end of file\n"))
-                text = text.Remove(text.Length - "\n\\ No newline at end of file\n".Length);
-
             // Divide diff into header and patch
             int patchPos = text.IndexOf("@@");
             string header = text.Substring(0, patchPos);
@@ -272,8 +269,11 @@ namespace PatchApply
                         // update $patch
                         patch += preContext + ln;
                         // increase counters by one each
-                        n++;
-                        m++;
+                        if (c1 != '\\')
+                        {
+                            n++;
+                            m++;
+                        }
                         // reset $pre_context
                         preContext = "";
 
