@@ -175,6 +175,8 @@
     <Content Include="GitPlugin.AddIn">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\IconFind.bmp" />
+    <None Include="Resources\IconEditGitIgnore.bmp" />
     <None Include="Resources\IconBranchCreate.bmp" />
     <None Include="Resources\IconBrowseFileExplorer.bmp" />
     <None Include="Resources\IconCherryPick.bmp" />
