@@ -1,3 +1,4 @@
+' extensions: odt;ods
 '
 ' TortoiseSVN Diff script for Open Office Text files
 '
@@ -6,8 +7,8 @@
 '
 ' Last commit by:
 ' $Author: tortoisesvn $
-' $Date: 2009-04-01 20:54:32 +0200 (Mi, 01 Apr 2009) $
-' $Rev: 16007 $
+' $Date: 2009-10-18 09:25:24 +0200 (So, 18. Okt 2009) $
+' $Rev: 17472 $
 '
 ' Authors:
 ' Jonathan Ashley, 2007
