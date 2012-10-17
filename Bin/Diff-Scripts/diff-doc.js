@@ -1,3 +1,4 @@
+// extensions: doc;docx;docm
 //
 // TortoiseSVN Diff script for Word Doc files
 //
@@ -6,10 +7,11 @@
 //
 // Last commit by:
 // $Author: tortoisesvn $
-// $Date: 2008-12-05 17:38:43 +0100 (Fr, 05 Dez 2008) $
-// $Rev: 14781 $
+// $Date: 2011-04-01 22:28:10 +0200 (Fr, 01. Apr 2011) $
+// $Rev: 21095 $
 //
 // Authors:
+// Stefan Kueng, 2011
 // Jared Silva, 2008
 // Davide Orlandi and Hans-Emil Skogh, 2005
 //
@@ -133,9 +135,18 @@ try
 }
 catch(e)
 {
-    WScript.Echo("Error opening " + sNewDoc);
-    // Quit
-    WScript.Quit(1);
+    try
+    {
+        // open empty document to prevent bug where first Open() call fails
+        word.Documents.Add();
+        destination = word.Documents.Open(sNewDoc, true, true);
+    }
+    catch(e)
+    {
+        WScript.Echo("Error opening " + sNewDoc);
+        // Quit
+        WScript.Quit(1);
+    }
 }
 
 // If the Type property returns either wdOutlineView or wdMasterView and the Count property returns zero, the current document is an outline.

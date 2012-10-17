@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace GitUI
     public partial class FormResolveConflicts : GitModuleForm
     {
         #region Translation
-        private readonly TranslationString uskUseCustomMergeScript = new TranslationString("There is a custom merge script({0}) for this file type." + Environment.NewLine + Environment.NewLine + "Do you want to use this custom merge script?");
+        private readonly TranslationString uskUseCustomMergeScript = new TranslationString("There is a custom merge script ({0}) for this file type." + Environment.NewLine + Environment.NewLine + "Do you want to use this custom merge script?");
         private readonly TranslationString uskUseCustomMergeScriptCaption = new TranslationString("Custom merge script");
         private readonly TranslationString fileUnchangedAfterMerge = new TranslationString("The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location." + Environment.NewLine + Environment.NewLine + "The merge conflict will not be marked as solved. Please try again.");
         private readonly TranslationString allConflictsResolved = new TranslationString("All mergeconflicts are resolved, you can commit." + Environment.NewLine + "Do you want to commit now?");
@@ -202,8 +203,18 @@ namespace GitUI
 
         private string FixPath(string path)
         {
-            return path.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+            return (path ?? "").Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
         }
+
+        private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>()
+            {
+                {".doc",  "merge-doc.js"},
+                {".docx", "merge-doc.js"},
+                {".docm", "merge-doc.js"},
+                {".ods",  "merge-ods.vbs"},
+                {".odt",  "merge-ods.vbs"},
+                {".sxw",  "merge-ods.vbs"},
+            };
 
         private bool TryMergeWithScript(string fileName, string baseFileName, string remoteFileName, string localFileName)
         {
@@ -212,25 +223,23 @@ namespace GitUI
 
             try
             {
-                int extensionsSeperator = fileName.LastIndexOf('.');
-                if (!(extensionsSeperator > 0) || extensionsSeperator + 1 >= fileName.Length)
+                string extension = Path.GetExtension(fileName).ToLower();
+                if (extension.Length <= 1)
                     return false;
 
                 string dir = Path.GetDirectoryName(Application.ExecutablePath) +
                     Settings.PathSeparator + "Diff-Scripts" + Settings.PathSeparator;
                 if (Directory.Exists(dir))
                 {
-                    string[] mergeScripts = Directory.GetFiles(dir, "merge-" +
-                    fileName.Substring(extensionsSeperator + 1) + ".*");
-
-                    if (mergeScripts.Length > 0)
+                    string mergeScript = "";
+                    if (_mergeScripts.TryGetValue(extension, out mergeScript) &&
+                        File.Exists(dir + mergeScript))
                     {
-                        string mergeScript = mergeScripts[0];
-                        if (MessageBox.Show(this, string.Format(uskUseCustomMergeScript.Text,
-                            mergeScript.Replace(Settings.PathSeparator + Settings.PathSeparator.ToString(), Settings.PathSeparator.ToString())),
-                            uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        if (MessageBox.Show(this, string.Format(uskUseCustomMergeScript.Text, mergeScript),
+                                            uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
+                            DialogResult.Yes)
                         {
-                            UseMergeWithScript(fileName, mergeScript, baseFileName, remoteFileName, localFileName);
+                            UseMergeWithScript(fileName, dir + mergeScript, baseFileName, remoteFileName, localFileName);
 
                             return true;
                         }

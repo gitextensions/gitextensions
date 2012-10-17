@@ -1,3 +1,4 @@
+' extensions: xls;xlsx;xlsm;xlsb;xlam
 '
 ' TortoiseSVN Diff script for Excel files
 '
@@ -5,9 +6,9 @@
 ' This file is distributed under the same license as TortoiseSVN
 '
 ' Last commit by:
-' $Author: luebbe.tortoisesvn $
-' $Date: 2008-06-13 15:52:53 +0200 (Fr, 13 Jun 2008) $
-' $Rev: 13247 $
+' $Author: tortoisesvn $
+' $Date: 2009-10-18 09:25:24 +0200 (So, 18. Okt 2009) $
+' $Rev: 17472 $
 '
 ' Authors:
 ' Michael Joras <michael@joras.net>, 2008
