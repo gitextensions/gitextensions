@@ -75,6 +75,7 @@ namespace GitUI
             this.renameBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkoutBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkoutRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.archiveRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manipulateCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.revertCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cherryPickCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -201,6 +202,7 @@ namespace GitUI
             this.checkoutBranchToolStripMenuItem,
             this.checkoutRevisionToolStripMenuItem,
             this.manipulateCommitToolStripMenuItem,
+            this.archiveRevisionToolStripMenuItem,
             this.toolStripSeparator1,
             this.showBranchesToolStripMenuItem,
             this.showRevisionGraphToolStripMenuItem,
@@ -252,7 +254,7 @@ namespace GitUI
             // 
             // copyToClipboardToolStripMenuItem
             // 
-            this.copyToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.Copied;
+            this.copyToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
             this.copyToClipboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.messageToolStripMenuItem,
             this.authorToolStripMenuItem,
@@ -372,6 +374,7 @@ namespace GitUI
             // 
             // resetCurrentBranchToHereToolStripMenuItem
             // 
+            this.resetCurrentBranchToHereToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetCurrentBranchToHere;
             this.resetCurrentBranchToHereToolStripMenuItem.Name = "resetCurrentBranchToHereToolStripMenuItem";
             this.resetCurrentBranchToHereToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.resetCurrentBranchToHereToolStripMenuItem.Text = "Reset current branch to here";
@@ -410,6 +413,14 @@ namespace GitUI
             this.manipulateCommitToolStripMenuItem.Name = "manipulateCommitToolStripMenuItem";
             this.manipulateCommitToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.manipulateCommitToolStripMenuItem.Text = "Manipulate commit";
+            // 
+            // archiveRevisionToolStripMenuItem
+            // 
+            this.archiveRevisionToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconArchiveRevision;
+            this.archiveRevisionToolStripMenuItem.Name = "archiveRevisionToolStripMenuItem";
+            this.archiveRevisionToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.archiveRevisionToolStripMenuItem.Text = "Archive revision";
+            this.archiveRevisionToolStripMenuItem.Click += new System.EventHandler(this.ArchiveRevisionToolStripMenuItemClick);
             // 
             // revertCommitToolStripMenuItem
             // 
@@ -541,6 +552,7 @@ namespace GitUI
             // 
             // filterToolStripMenuItem
             // 
+            this.filterToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFilter;
             this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
             this.filterToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
             this.filterToolStripMenuItem.Text = "Set advanced filter";
@@ -778,6 +790,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem deleteTagToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkoutRevisionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem archiveRevisionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkoutBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mergeBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cherryPickCommitToolStripMenuItem;

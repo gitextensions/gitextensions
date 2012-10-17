@@ -11,3 +11,14 @@ zoom-2.png
 IconArchive
 -----------
 cherry-icon.png: http://www.iconarchive.com/show/fruit-icons-by-miniartx/cherry-icon.html
+
+IconFinder
+----------
+database_save_a*.png: FatCow Web Hosting - http://www.fatcow.com/
+
+Misc
+----
+Revert16.png
+RvisionHistory16.png
+  both: recreated from bmp
+   
