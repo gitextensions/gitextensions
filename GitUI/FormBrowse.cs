@@ -922,6 +922,12 @@ namespace GitUI
                     }
                     else
                     {
+                        // TODO: depending on which commit was selected first (how to determine this?)
+                        // show either
+                        // "{0} (A: lower --> B: upper)" or
+                        // "{0} (A: upper --> B: lower)"
+                        // Alternatively: Make A and B somehow visible in the revision grid as soon as the Diff Tab is visible
+                        //
                         DiffFiles.GitItemStatuses = Module.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
                         DiffTabPage.Text = string.Format("{0} (A: first --> B: second)", DiffTabPageTitleBase);
                     }
@@ -2579,20 +2585,6 @@ namespace GitUI
             {
                 Module.CheckoutFiles(files, revisions[1].Guid, false);
             }
-        }
-
-        private void resetFileToBaseToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
-
-            if (!revisions.Any() || !revisions[0].HasParent() || !DiffFiles.SelectedItems.Any())
-            {
-                return;
-            }
-
-            var files = DiffFiles.SelectedItems.Select(item => item.Name);
-
-            Module.CheckoutFiles(files, revisions[0].Guid + "^", false);
         }
 
         private void resetFileToRemoteToolStripMenuItem_Click(object sender, EventArgs e)
