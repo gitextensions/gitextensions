@@ -12,7 +12,6 @@ namespace GitUI
 {
     public sealed partial class FormFileHistory : GitModuleForm
     {
-        private readonly SynchronizationContext syncContext;
         private readonly FilterRevisionsHelper filterRevisionsHelper;
         private readonly FilterBranchHelper filterBranchHelper;
         private AsyncLoader asyncLoader = new AsyncLoader();
@@ -39,7 +38,6 @@ namespace GitUI
                 tabControl1.TabPages[2].ImageIndex = 2;
             }
 
-            syncContext = SynchronizationContext.Current;
             filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, FileChanges);
             filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, FileChanges, toolStripLabel2, this);
         }

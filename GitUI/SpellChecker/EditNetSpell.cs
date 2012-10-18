@@ -50,6 +50,9 @@ namespace GitUI.SpellChecker
         {
             get
             {
+				if (TextBox == null)
+					return string.Empty;
+				
                 return IsWatermarkShowing ? string.Empty : TextBox.Text;
             }
             set

@@ -61,7 +61,7 @@ namespace GitUI
                     GitIndexWatcher.IncludeSubdirectories = false;
                     GitIndexWatcher.EnableRaisingEvents = enabled;
 
-                    RefsWatcher.Path = Module.WorkingDirGitDir() + "\\refs";
+                    RefsWatcher.Path = Module.WorkingDirGitDir() + Settings.PathSeparator + "refs";
                     RefsWatcher.IncludeSubdirectories = true;
                     RefsWatcher.EnableRaisingEvents = enabled;
                 }

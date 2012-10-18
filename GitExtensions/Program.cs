@@ -16,7 +16,8 @@ namespace GitExtensions
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
+			if (Settings.RunningOnWindows())
+				AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
 
             string[] args = Environment.GetCommandLineArgs();
             FormSplash.ShowSplash();

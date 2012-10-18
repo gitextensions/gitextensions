@@ -33,7 +33,7 @@ namespace GitUI.Tag
         {
             try
             {
-                string s = Module.DeleteTag(Tags.Text);
+                Module.DeleteTag(Tags.Text);
 
                 if (deleteTag.Checked && !string.IsNullOrEmpty(Tags.Text))
                     RemoveRemoteTag(Tags.Text);
