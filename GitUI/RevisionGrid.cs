@@ -190,7 +190,6 @@ namespace GitUI
         [Description("Indicates whether the user is allowed to select more than one commit at a time.")]
         [Category("Behavior")]
         [DefaultValue(true)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public bool MultiSelect
         {
             get { return Revisions.MultiSelect; }
