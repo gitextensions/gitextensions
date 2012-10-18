@@ -109,7 +109,7 @@
             this.CommonActions.AutoSize = true;
             this.CommonActions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.CommonActions.BackColor = System.Drawing.Color.Transparent;
-            this.CommonActions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CommonActions.Dock = System.Windows.Forms.DockStyle.None;
             this.CommonActions.Location = new System.Drawing.Point(0, 0);
             this.CommonActions.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.CommonActions.Name = "CommonActions";
