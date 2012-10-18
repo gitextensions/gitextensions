@@ -393,7 +393,7 @@ namespace GitUI
         private void StageSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
             // Prepare git command
-            string args = "apply --cached --whitespace=nowarn";
+            string args = "apply --cached --whitespace=nowarn --inaccurate-eof";
 
             if (_currentItemStaged) //staged
                 args += " --reverse";

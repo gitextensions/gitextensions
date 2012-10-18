@@ -262,18 +262,15 @@ namespace PatchApply
                         // if the line doesn't start with either - or +
                         // this is a context line 
                     }
-                    else if (c1 != '-' && c1 != '+')
+                    else if (c1 != '-' && c1 != '+' && c1 != '\\')
                     {
                         // set $ln to the content of the line at $i_l
                         string ln = diff.Substring(iLine, nextLine - iLine);
                         // update $patch
                         patch += preContext + ln;
                         // increase counters by one each
-                        if (c1 != '\\')
-                        {
-                            n++;
-                            m++;
-                        }
+                        n++;
+                        m++;
                         // reset $pre_context
                         preContext = "";
 
@@ -295,7 +292,7 @@ namespace PatchApply
                         // if the line starts with the opposite sign of
                         // $to_context this line should be removed
                     }
-                    else
+                    else if (c1 != '\\')
                     {
                         // a change in the opposite direction of
                         // to_context which is outside the range of
