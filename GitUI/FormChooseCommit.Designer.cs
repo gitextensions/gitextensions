@@ -30,22 +30,23 @@
         {
             this.revisionGrid = new GitUI.RevisionGrid();
             this.btnOK = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel1.SuspendLayout();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // revisionGrid
             // 
+            this.revisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.revisionGrid.Location = new System.Drawing.Point(0, 0);
             this.revisionGrid.Name = "revisionGrid";
             this.revisionGrid.RevisionGraphDrawStyle = GitUI.DvcsGraph.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
-            this.revisionGrid.Size = new System.Drawing.Size(842, 313);
+            this.revisionGrid.Size = new System.Drawing.Size(842, 378);
             this.revisionGrid.TabIndex = 0;
             // 
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(718, 14);
+            this.btnOK.Location = new System.Drawing.Point(717, 8);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(112, 29);
             this.btnOK.TabIndex = 1;
@@ -53,26 +54,31 @@
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // panel1
+            // flowLayoutPanel1
             // 
-            this.panel1.Controls.Add(this.btnOK);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 323);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(842, 55);
-            this.panel1.TabIndex = 2;
+            this.flowLayoutPanel1.AutoScroll = true;
+            this.flowLayoutPanel1.AutoSize = true;
+            this.flowLayoutPanel1.Controls.Add(this.btnOK);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 333);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(5);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(842, 45);
+            this.flowLayoutPanel1.TabIndex = 3;
             // 
             // FormChooseCommit
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.ClientSize = new System.Drawing.Size(842, 378);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.revisionGrid);
             this.Name = "FormChooseCommit";
             this.Text = "Choose Commit";
-            this.panel1.ResumeLayout(false);
+            this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -80,7 +86,7 @@
 
         private RevisionGrid revisionGrid;
         private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
 
     }
 }
