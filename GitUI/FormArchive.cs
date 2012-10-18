@@ -9,9 +9,6 @@ namespace GitUI
 {
     public partial class FormArchive : GitModuleForm
     {
-        private readonly TranslationString _noRevisionSelectedMsgBox =
-            new TranslationString("Select 1 revision to archive");
-
         private readonly TranslationString _saveFileDialogFilterZip =
             new TranslationString("Zip file (*.zip)");
 
