@@ -37,9 +37,17 @@ namespace GitCommandsTests
 
             foreach (Type type in translatableTypes)
             {
-                ITranslate obj = TranslationUtl.CreateInstanceOfClass(type) as ITranslate;
-                obj.AddTranslationItems(testTranslation);
-                obj.TranslateItems(testTranslation);
+                try
+                {
+                    ITranslate obj = TranslationUtl.CreateInstanceOfClass(type) as ITranslate;
+                    obj.AddTranslationItems(testTranslation);
+                    obj.TranslateItems(testTranslation);
+                }
+                catch (System.Exception ex)
+                {
+                    Trace.WriteLine("Problem with class: " + type.FullName);
+                    throw;
+                }
             }
         }       
     }
