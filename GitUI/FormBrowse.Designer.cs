@@ -107,7 +107,6 @@ namespace GitUI
             this.findInDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetFileToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetFileToAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetFileToBaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetFileToRemoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DiffText = new GitUI.Editor.FileViewer();
             this.TreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -926,31 +925,23 @@ namespace GitUI
             this.resetFileToToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetFileTo;
             this.resetFileToToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.resetFileToAToolStripMenuItem,
-            this.resetFileToBaseToolStripMenuItem,
             this.resetFileToRemoteToolStripMenuItem});
             this.resetFileToToolStripMenuItem.Name = "resetFileToToolStripMenuItem";
             this.resetFileToToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-            this.resetFileToToolStripMenuItem.Text = "Reset file to";
+            this.resetFileToToolStripMenuItem.Text = "Reset file(s) to";
             // 
             // resetFileToAToolStripMenuItem
             // 
             this.resetFileToAToolStripMenuItem.Name = "resetFileToAToolStripMenuItem";
             this.resetFileToAToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            this.resetFileToAToolStripMenuItem.Text = "A";
+            this.resetFileToAToolStripMenuItem.Text = "A (Base)";
             this.resetFileToAToolStripMenuItem.Click += new System.EventHandler(this.resetFileToAToolStripMenuItem_Click);
-            // 
-            // resetFileToBaseToolStripMenuItem
-            // 
-            this.resetFileToBaseToolStripMenuItem.Name = "resetFileToBaseToolStripMenuItem";
-            this.resetFileToBaseToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            this.resetFileToBaseToolStripMenuItem.Text = "Base (parent of B)";
-            this.resetFileToBaseToolStripMenuItem.Click += new System.EventHandler(this.resetFileToBaseToolStripMenuItem_Click);
             // 
             // resetFileToRemoteToolStripMenuItem
             // 
             this.resetFileToRemoteToolStripMenuItem.Name = "resetFileToRemoteToolStripMenuItem";
             this.resetFileToRemoteToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
-            this.resetFileToRemoteToolStripMenuItem.Text = "Remote (B)";
+            this.resetFileToRemoteToolStripMenuItem.Text = "B (Remote)";
             this.resetFileToRemoteToolStripMenuItem.Click += new System.EventHandler(this.resetFileToRemoteToolStripMenuItem_Click);
             // 
             // fileHistoryDiffToolstripMenuItem
@@ -2011,7 +2002,6 @@ namespace GitUI
         private ToolStripMenuItem fetchAllToolStripMenuItem;
         private ToolStripMenuItem resetFileToToolStripMenuItem;
         private ToolStripMenuItem resetFileToAToolStripMenuItem;
-        private ToolStripMenuItem resetFileToBaseToolStripMenuItem;
         private ToolStripMenuItem resetFileToRemoteToolStripMenuItem;
         private ToolStripMenuItem resetToolStripMenuItem;        
     }
