@@ -1242,10 +1242,14 @@ namespace GitCommands
                 AttachConsole(process.Id);
                 SetConsoleCtrlHandler(IntPtr.Zero, true);
                 GenerateConsoleCtrlEvent(0, 0);
-                process.WaitForExit(500);
+                if (!process.HasExited)
+                    System.Threading.Thread.Sleep(500);
+                if (!process.HasExited)
+                    process.Kill();
             }
-#endif
+#else
             process.Kill();
+#endif
         }
     }
 }
