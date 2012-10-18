@@ -1,6 +1,53 @@
 ﻿Changelog
 =========
 
+### Version 2.42
+* Fixed issue 47: Support non-standard SSH port for Test Connection
+* Fixed issue 85: Integrated git-credential-winstore to installer to handle HTTP authentication
+* Fixed issue 407: Added links to parent commit, branches and tags to commit info
+* Fixed issue 517: Added button to go to superproject
+* Fixed issue 528: Correctly terminate processes tree on abort
+* Fixed issue 650: Enable reset for unstaged files
+* Fixed issue 737: Support local commit.template
+* Fixed issue 945: Delete tag from remote repository added
+* Fixed issue 1021: Added option to always show checkout dialog
+* Fixed issue 1135: Auto suggestion disabled in the Clone Repository dialog
+* Fixed issue 1161: Jump list fixed
+* Fixed issue 1173: Integraded NBug
+* Fixed issue 1195: Email address HTML encoding fixed
+* Fixed issue 1199: Warn user when reset file changes failed because it is in use
+* Fixed issue 1201: Fixed url to MSysGit project page
+* Fixed issue 1201: Git.cmd used instead of git.exe
+* Fixed issue 1269: Default button and focus for checkout branch dialog
+* Fixed issue 1276: Diff fixed when diff.mnemonicprefix = true
+* Fixed issue 1290: Automatic file encoding detection improved
+* Fixed issue 1295: Do not refresh revision grid after cancel create tag
+* Fixed issue 1301: Escaping characters for git.cmd added
+* Fixed issue 1303: Displaying pulled new repositories without HEAD
+* Fixed issue 1309: Fix stash apply and drop error
+* Fixed issue 1312: Fixed FormStatus layout
+* Fixed issue 1319: Fixed FormStatus layout
+* Fixed issue 1321: Fix Fetch all from toolbar
+* Fixed description for repositories on dashboard
+* Fixed two way merge fixed for Perforce Merge
+* Fixed bug in rendering revision graph that a lane was grayed out
+* Fixed commit dialog splitter position saving
+* Use a checkbox for Commit Amend
+* Improved support for high DPI systems
+* Reset changes dialog improved for submodules
+* Added generating text for submodules in file tree
+* Added new icons
+* Added "No tags" checkbox to Pull dialog and allow fetch to new local branch
+* Show local changes radio group if state of working dir is unknown
+* The diff tab now shows current diff
+* Added options to "Reset file to" in diff tab
+* Added "Reset file to this revision" to file tree
+* Added hint to "Go to commit" dialog
+* Added "Archive revision" to revision grid context menu
+* Archive revision dialog improved
+* Renamed Visual Studio plugin renamed from Visual Git to Git Extensions
+* Updated merge scripts
+
 ### Version 2.41
 * Fixed issue 1254: Visual Studio 2005 plugin not working
 * Fixed issue 1225: Visual Studio 2008 plugin not working
