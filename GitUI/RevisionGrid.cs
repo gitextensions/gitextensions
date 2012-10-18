@@ -278,20 +278,6 @@ namespace GitUI
             var curIndex = -1;
             if (Revisions.SelectedRows.Count > 0)
                 curIndex = Revisions.SelectedRows[0].Index;
-            if (e.Alt && (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down))
-            {
-                RestartQuickSearchTimer();
-
-                bool reverse = e.KeyCode == Keys.Up;
-                var nextIndex = 0;
-                if (curIndex >= 0)
-                    nextIndex = reverse ? curIndex - 1 : curIndex + 1;
-                _quickSearchString = _lastQuickSearchString;
-                FindNextMatch(nextIndex, _quickSearchString, reverse);
-                ShowQuickSearchString();
-                e.Handled = true;
-                return;
-            }
 
             curIndex = curIndex >= 0 ? curIndex : 0;
             int key = e.KeyValue;
@@ -2327,7 +2313,9 @@ namespace GitUI
             ShowAllBranches,
             ShowCurrentBranchOnly,
             GoToParent,
-            ToggleHighlightSelectedBranch
+            ToggleHighlightSelectedBranch,
+            NextQuickSearch,
+            PrevQuickSearch
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -2348,6 +2336,8 @@ namespace GitUI
                 case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnlyToolStripMenuItemClick(null, null); break;
                 case Commands.GoToParent: goToParentToolStripMenuItem_Click(null, null); break;
                 case Commands.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
+                case Commands.NextQuickSearch: NextQuickSearch(true); break;
+                case Commands.PrevQuickSearch: NextQuickSearch(false); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
@@ -2355,6 +2345,23 @@ namespace GitUI
         }
 
         #endregion
+
+        private void NextQuickSearch(bool down)
+        {
+            var curIndex = -1;
+            if (Revisions.SelectedRows.Count > 0)
+                curIndex = Revisions.SelectedRows[0].Index;
+
+            RestartQuickSearchTimer();
+
+            bool reverse = !down;
+            var nextIndex = 0;
+            if (curIndex >= 0)
+                nextIndex = reverse ? curIndex - 1 : curIndex + 1;
+            _quickSearchString = _lastQuickSearchString;
+            FindNextMatch(nextIndex, _quickSearchString, reverse);
+            ShowQuickSearchString();
+        }
 
         private void ToggleHighlightSelectedBranch()
         {
