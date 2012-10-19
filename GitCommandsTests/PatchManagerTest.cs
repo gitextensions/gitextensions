@@ -121,7 +121,7 @@ namespace GitCommandsTests
         [TestMethod]
         public void TestGetSelectedLinesAsPatchReturnsNull()
         {
-            Assert.IsNull(PatchManager.GetSelectedLinesAsPatch(null, -1, -1, false, Encoding.UTF8));
+            Assert.IsNull(PatchManager.GetSelectedLinesAsPatch(new GitModule(null), null, -1, -1, false, Encoding.UTF8));
         }
 
         private static PatchManager NewManager()
