@@ -14,9 +14,14 @@ namespace GitCommands
             return "<a href='gitex://gotobranch/" + noPrefixBranch + "'>" + HttpUtility.HtmlEncode(noPrefixBranch) + "</a>";
         }
 
-        public static string CreateCommitLink(string parentGuid)
+        public static string CreateCommitLink(string guid)
         {
-            return "<a href='gitex://gotocommit/" + parentGuid + "'>" + parentGuid.Substring(0, 10) + "</a>";
+            if (GitRevision.UncommittedWorkingDirGuid == guid)
+                return "<a href='gitex://gotocommit/" + guid + "'>" + Strings.GetCurrentWorkingDirChanges() + "</a>";
+            else if (GitRevision.IndexGuid == guid)
+                return "<a href='gitex://gotocommit/" + guid + "'>" + Strings.GetCurrentIndex() + "</a>";
+            else
+                return "<a href='gitex://gotocommit/" + guid + "'>" + guid.Substring(0, 10) + "</a>";
         }
     }
 }
