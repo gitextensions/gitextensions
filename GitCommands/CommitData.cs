@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
@@ -34,6 +35,7 @@ namespace GitCommands
         public string Guid { get; private set; }
         public string TreeGuid { get; private set; }
         public ReadOnlyCollection<string> ParentGuids { get; private set; }
+        public List<string> ChildrenGuids { get; set; }
         public string Author { get; private set; }
         public DateTimeOffset AuthorDate { get; private set; }
         public string Committer { get; private set; }
@@ -67,6 +69,14 @@ namespace GitCommands
                 header.AppendLine();
                 var commitsString = parentGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
                 header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetParentsText()) + ":",
+                                           COMMITHEADER_STRING_LENGTH) + commitsString);
+            }
+
+            if (ChildrenGuids != null && ChildrenGuids.Count != 0)
+            {
+                header.AppendLine();
+                var commitsString = ChildrenGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetChildrensText()) + ":",
                                            COMMITHEADER_STRING_LENGTH) + commitsString);
             }
 

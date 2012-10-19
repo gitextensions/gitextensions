@@ -73,6 +73,21 @@ namespace GitCommands
             return Instance._parentsText.Text;
         }
 
+        public static string GetChildrensText()
+        {
+            return Instance._childrensText.Text;
+        }
+
+        public static string GetCurrentWorkingDirChanges()
+        {
+            return Instance._currentWorkingDirChanges.Text;
+        }
+
+        public static string GetCurrentIndex()
+        {
+            return Instance._currentIndex.Text;
+        }
+
         private readonly TranslationString _dateText       = new TranslationString("Date");
         private readonly TranslationString _authorText     = new TranslationString("Author");
         private readonly TranslationString _authorDateText = new TranslationString("Author date");
@@ -81,6 +96,9 @@ namespace GitCommands
         private readonly TranslationString _commitHashText = new TranslationString("Commit hash");
         private readonly TranslationString _messageText    = new TranslationString("Message");
         private readonly TranslationString _parentsText    = new TranslationString("Parent(s)");
+        private readonly TranslationString _childrensText = new TranslationString("Children(s)");
+        private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current uncommitted changes");
+        private readonly TranslationString _currentIndex = new TranslationString("Commit index");
 
 
         public static string GetNSecondsAgoText(int value)
