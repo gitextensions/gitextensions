@@ -26,13 +26,6 @@ namespace GitUI
             {
                 _selectedRevision = value;
                 commitSummaryUserControl1.Revision = _selectedRevision;
-
-                if (revisionGrid1.GetSelectedRevisions().FirstOrDefault() != _selectedRevision)
-                {
-                    revisionGrid1.SetSelectedRevision(null);
-                    revisionGrid1.SetInitialRevision(_selectedRevision);
-                    revisionGrid1.SetSelectedRevision(_selectedRevision);
-                }
             }
         }
 
@@ -55,12 +48,10 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
-            revisionGrid1.MultiSelect = false; // TODO: it should be possible to set this via VS designer
         }
 
         private void FormArchive_Load(object sender, EventArgs e)
         {
-            revisionGrid1.Load();
             buttonArchiveRevision.Focus();
         }
 
@@ -107,15 +98,6 @@ namespace GitUI
                 {
                     SelectedRevision = chooseForm.SelectedRevision;
                 }
-            }
-        }
-
-        private void revisionGrid1_SelectionChanged(object sender, EventArgs e)
-        {
-            var revision = revisionGrid1.GetSelectedRevisions().FirstOrDefault();
-            if (revision != null) // would not be necessary if we could enforce the revisionGrid1 to always have valid non-null selection (which currently can be achieved by using the Ctrl key and mouse click)
-            {
-                SelectedRevision = revision;
             }
         }
     }
