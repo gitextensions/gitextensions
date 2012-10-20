@@ -16,8 +16,19 @@ namespace GitExtensions
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-			if (Settings.RunningOnWindows())
-				AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
+            if (Settings.RunningOnWindows())
+            {
+                NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
+
+                // Uncomment the following after testing to see that NBug is working as configured
+                NBug.Settings.ReleaseMode = true;
+                NBug.Settings.ExitApplicationImmediately = false;
+                NBug.Settings.WriteLogToDisk = true;
+                NBug.Settings.MaxQueuedReports = 10;
+                
+                AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
+                Application.ThreadException += NBug.Handler.ThreadException;
+            }
 
             string[] args = Environment.GetCommandLineArgs();
             FormSplash.ShowSplash();
