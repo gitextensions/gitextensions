@@ -399,10 +399,10 @@ namespace GitUI
             if (_currentItemStaged) //staged
                 args += " --reverse";
             byte[] patch;
-            if(_currentItem.IsNew)
+            if (!_currentItemStaged && _currentItem.IsNew)
                 patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding);
             else
-              patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding);
+                patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding, _currentItem.IsNew);
 
             if (patch != null && patch.Length > 0)
             {
@@ -441,6 +441,7 @@ namespace GitUI
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
+            Debug.Assert(_currentItem != null);
             // Prepare git command
             string args = "apply --whitespace=nowarn";
 
@@ -450,7 +451,7 @@ namespace GitUI
            byte[] patch;
 
            if (_currentItemStaged)
-               patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding);
+               patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding, _currentItem.IsNew);
            else
                patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding);
 
