@@ -2345,15 +2345,30 @@ namespace GitCommands
 
         private string GetTree(bool tags, bool branches)
         {
-            if (tags && branches)
-                return RunGitCmd("show-ref --dereference", GitModule.SystemEncoding);
+            using (var repo = new LibGit2Sharp.Repository(WorkingDir))
+            {
+                if (tags && branches)
+                {
+                    return repo.Refs
+                        .Select( r => string.Format("{0} {1}", r.ResolveToDirectReference().TargetIdentifier, r.CanonicalName))
+                        .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
+                        .ToString();
+                }
 
-            if (tags)
-                return RunGitCmd("show-ref --tags", GitModule.SystemEncoding);
+                if (tags)
+                    return repo.Tags
+                        .Select(r => string.Format("{0} {1}", r.Target.Sha, r.CanonicalName))
+                        .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
+                        .ToString();
 
-            if (branches)
-                return RunGitCmd("show-ref --dereference --heads", GitModule.SystemEncoding);
-            return "";
+                if (branches)
+                    return repo.Branches
+                        .Where(r => !r.IsRemote)
+                        .Select(r => string.Format("{0} {1}", r.Tip.Sha, r.CanonicalName))
+                        .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
+                        .ToString();
+                return "";
+            }
         }
 
         private List<GitHead> GetHeads(string tree)
