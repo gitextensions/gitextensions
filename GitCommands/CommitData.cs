@@ -63,20 +63,20 @@ namespace GitCommands
             header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitHashText()) + ":", COMMITHEADER_STRING_LENGTH) +
                 HttpUtility.HtmlEncode(Guid));
 
+            if (ChildrenGuids != null && ChildrenGuids.Count != 0)
+            {
+                header.AppendLine();
+                var commitsString = ChildrenGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetChildrensText()) + ":",
+                                           COMMITHEADER_STRING_LENGTH) + commitsString);
+            }
+
             var parentGuids = ParentGuids.Where(s => !string.IsNullOrEmpty(s));
             if (parentGuids.Any())
             {
                 header.AppendLine();
                 var commitsString = parentGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
                 header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetParentsText()) + ":",
-                                           COMMITHEADER_STRING_LENGTH) + commitsString);
-            }
-
-            if (ChildrenGuids != null && ChildrenGuids.Count != 0)
-            {
-                header.AppendLine();
-                var commitsString = ChildrenGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
-                header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetChildrensText()) + ":",
                                            COMMITHEADER_STRING_LENGTH) + commitsString);
             }
 
