@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web;
+using LibGit2Sharp;
 
 namespace GitCommands
 {
@@ -113,38 +114,11 @@ namespace GitCommands
             if (sha1 == null)
                 throw new ArgumentNullException("sha1");
 
-            //Do not cache this command, since notes can be added
-            string arguments = string.Format(CultureInfo.InvariantCulture,
-                    "log -1 --pretty=\"format:"+LogFormat+"\" {0}", sha1);
-            var info =
-                module.RunCmd(
-                    Settings.GitCommand,
-                    arguments,
-                    GitModule.LosslessEncoding
-                    );
-
-            if (info.Trim().StartsWith("fatal"))
+            using (var repo = new LibGit2Sharp.Repository(module.WorkingDir))
             {
-                error = "Cannot find commit " + sha1;
-                return null;
+                //TODO: add error handling
+                return CreateFromFormatedData(repo.Lookup<LibGit2Sharp.Commit>(sha1));
             }
-
-            int index = info.IndexOf(sha1) + sha1.Length;
-
-            if (index < 0)
-            {
-                error = "Cannot find commit " + sha1;
-                return null;
-            }
-            if (index >= info.Length)
-            {
-                error = info;
-                return null;
-            }
-
-            CommitData commitInformation = CreateFromFormatedData(info, module);
-
-            return commitInformation;
         }
 
         public const string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N"; 
@@ -153,54 +127,23 @@ namespace GitCommands
         /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
         /// exact output of a log or show command using --format=LogFormat.
         /// </summary>
-        /// <param name="data">Formated commit data from git.</param>
-        /// <returns>CommitData object populated with parsed info from git string.</returns>
-        public static CommitData CreateFromFormatedData(string data, GitModule aModule)
+        /// <param name="commit">Commit object from libgit2sharp.</param>
+        /// <returns>CommitData object populated with parsed info from commit object.</returns>
+        public static CommitData CreateFromFormatedData(LibGit2Sharp.Commit commit)
         {
-            if (data == null)
-                throw new ArgumentNullException("Data");
+            if (commit == null)
+                throw new ArgumentNullException("commit");
 
-            var lines = data.Split('\n');
-            
-            var guid = lines[0];
+            var author = string.Format("{0} <{1}>", commit.Author.Name, commit.Author.Email);
+            var authorDate = commit.Author.When;
 
-            // TODO: we can use this to add more relationship info like gitk does if wanted
-            var treeGuid = lines[1];
+            var committer = string.Format("{0} <{1}>", commit.Committer.Name, commit.Committer.Email); ;
+            var commitDate = commit.Committer.When;
 
-            // TODO: we can use this to add more relationship info like gitk does if wanted
-            string[] parentLines = lines[2].Split(new char[]{' '});
-            ReadOnlyCollection<string> parentGuids = parentLines.ToList().AsReadOnly();
+            var body = commit.Message;
 
-            var author = aModule.ReEncodeStringFromLossless(lines[3]);
-            var authorDate = DateTimeUtils.ParseUnixTime(lines[4]);
-
-            var committer = aModule.ReEncodeStringFromLossless(lines[5]);
-            var commitDate = DateTimeUtils.ParseUnixTime(lines[6]);
-
-            string commitEncoding = lines[7];
-
-            int startIndex = 8;
-            int endIndex = lines.Length - 1;
-            if (lines[endIndex] == "Notes:")
-                endIndex--;
-
-            var message = new StringBuilder();
-            bool bNotesStart = false;
-            for (int i = startIndex; i <= endIndex; i++)
-            {
-                string line = lines[i];
-                if (bNotesStart)
-                    line = "    " + line;
-                message.AppendLine(line);
-                if (lines[i] == "Notes:")
-                    bNotesStart = true;
-            }
-
-            //commit message is not reencoded by git when format is given
-            var body = aModule.ReEncodeCommitMessage(message.ToString(), commitEncoding);
-
-            var commitInformation = new CommitData(guid, treeGuid, parentGuids, author, authorDate,
-                committer, commitDate, body);
+            var parents = commit.Parents.Select(p => p.Sha).ToList().AsReadOnly();
+            var commitInformation = new CommitData(commit.Sha, commit.Tree.Sha, parents, author, authorDate, committer, commitDate, body);
 
             return commitInformation;
         }
