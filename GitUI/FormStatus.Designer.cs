@@ -159,8 +159,8 @@ namespace GitUI
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.Controls.Add(this.MessageTextBox, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.picBoxSuccessFail, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.MessageTextBox, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
