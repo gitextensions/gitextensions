@@ -169,22 +169,16 @@ namespace PatchApply
                 }
                 else if (!staged)
                 {
-                    if (i == RemovedLines.Count - 1 && WasNoNewLineAtTheEnd != null)
-                    {
-                        removePart = removePart.Combine("\n", removedLine.Text);
-                        addPart = addPart.Combine("\n", "+" + removedLine.Text.Substring(1));
-                    }
+                    if (inPostPart)
+                        removePart = removePart.Combine("\n", " " + removedLine.Text.Substring(1));
                     else
-                    {
-                        if (inPostPart)
-                            removePart = removePart.Combine("\n", " " + removedLine.Text.Substring(1));
-                        else
-                            prePart = prePart.Combine("\n", " " + removedLine.Text.Substring(1));
-                    }
+                        prePart = prePart.Combine("\n", " " + removedLine.Text.Substring(1));
                     addedCount++;
                     removedCount++;
                 }
             }
+
+            bool selectedLastRemovedLine = selectedLastLine;
 
             for (int i = 0; i < AddedLines.Count; i++)
             {
@@ -198,20 +192,12 @@ namespace PatchApply
                     addedCount++;
                 }
 
-                else if(staged)
+                else if (staged)
                 {
-/*                    if (i == AddedLines.Count - 1 && IsNoNewLineAtTheEnd != null)
-                    {
-                        removePart = removePart.Combine("\n", "-" + addedLine.Text.Substring(1));
-                        addPart = addPart.Combine("\n", addedLine.Text);
-                    }
-                    else */
-                    {
-                        if (inPostPart)
-                            postPart = postPart.Combine("\n", " " + addedLine.Text.Substring(1));
-                        else
-                            prePart = prePart.Combine("\n", " " + addedLine.Text.Substring(1));
-                    }
+                    if (inPostPart)
+                        postPart = postPart.Combine("\n", " " + addedLine.Text.Substring(1));
+                    else
+                        prePart = prePart.Combine("\n", " " + addedLine.Text.Substring(1));
                     addedCount++;
                     removedCount++;
                 }
@@ -220,19 +206,19 @@ namespace PatchApply
 
             diff = diff.Combine("\n", prePart);
             diff = diff.Combine("\n", removePart);
-            if (PostContext.Count == 0 && (!staged))
+            if (PostContext.Count == 0 && (!staged || selectedLastRemovedLine))
                 diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
             diff = diff.Combine("\n", addPart);
             diff = diff.Combine("\n", postPart);
             foreach (PatchLine line in PostContext)
                 diff = diff.Combine("\n", line.Text);
-                                       //stage no new line at the end only if last +- line is selected 
+            //stage no new line at the end only if last +- line is selected 
             if (PostContext.Count == 0 && (selectedLastLine || staged))
                 diff = diff.Combine("\n", IsNoNewLineAtTheEnd);
-            else
+            if (PostContext.Count > 0)
                 diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
 
-            return diff;        
+            return diff;
         }
 
         //patch base is changed file
