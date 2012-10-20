@@ -1855,8 +1855,10 @@ namespace GitCommands
 
         public string[] GetRemotes(bool allowEmpty)
         {
-            string remotes = RunGitCmd("remote show");
-            return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            using(var repo = new LibGit2Sharp.Repository(WorkingDir))
+            {
+                return repo.Remotes.Select(r => r.Name).ToArray();
+            }
         }
 
         public ConfigFile GetLocalConfig()
