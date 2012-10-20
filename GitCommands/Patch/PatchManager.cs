@@ -41,7 +41,7 @@ namespace PatchApply
                 return GetPatchBytes(header, body, fileContentEncoding);
         }
 
-        public static byte[] GetSelectedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding)
+        public static byte[] GetSelectedLinesAsPatch(GitModule module, string text, int selectionPosition, int selectionLength, bool staged, Encoding fileContentEncoding, bool isNewFile)
         {
 
             string header;
@@ -51,12 +51,37 @@ namespace PatchApply
             if (selectedChunks == null)
                 return null;
 
+            //if file is new, --- /dev/null has to be replaced by --- a/fileName
+            if (isNewFile)
+                header = CorrectHeaderForNewFile(header);
+
             string body = selectedChunks.ToStagePatch(staged);
 
             if (header == null || body == null)
                 return null;
             else
                 return GetPatchBytes(header, body, fileContentEncoding);
+        }
+
+        private static string CorrectHeaderForNewFile(string header)
+        {
+            string[] headerLines = header.Split(new string[] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
+            string pppLine = null;
+            foreach (string line in headerLines)
+                if (line.StartsWith("+++"))
+                    pppLine = "---" + line.Substring(3);
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (string line in headerLines)
+            {
+                if (line.StartsWith("---"))
+                    sb.Append(pppLine + "\n");
+                else if (!line.StartsWith("new file mode"))
+                    sb.Append(line + "\n");
+            }
+
+            return sb.ToString();        
         }
 
         public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding)
