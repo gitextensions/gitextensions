@@ -209,8 +209,8 @@ namespace GitUI
 
         void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _StageSelectedLinesToolStripMenuItem.Enabled = SelectedDiff.HasAnyPatches();
-            _ResetSelectedLinesToolStripMenuItem.Enabled = _StageSelectedLinesToolStripMenuItem.Enabled;
+            _ResetSelectedLinesToolStripMenuItem.Enabled = SelectedDiff.HasAnyPatches();
+            _StageSelectedLinesToolStripMenuItem.Enabled = _ResetSelectedLinesToolStripMenuItem.Enabled || _currentItem != null && _currentItem.IsNew;
         }
 
         #region Hotkey commands
@@ -392,13 +392,17 @@ namespace GitUI
 
         private void StageSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
+            Debug.Assert(_currentItem != null);
             // Prepare git command
             string args = "apply --cached --whitespace=nowarn";
 
             if (_currentItemStaged) //staged
                 args += " --reverse";
-
-            byte[] patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding);
+            byte[] patch;
+            if(_currentItem.IsNew)
+                patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding);
+            else
+              patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding);
 
             if (patch != null && patch.Length > 0)
             {

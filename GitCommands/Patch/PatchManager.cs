@@ -53,17 +53,43 @@ namespace PatchApply
 
             string body = selectedChunks.ToStagePatch(staged);
 
-            //git apply has problem with dealing with autocrlf
-            //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-           // if (body != null && "true".Equals(module.GetEffectiveSetting("core.autocrlf"), StringComparison.InvariantCultureIgnoreCase))
-             //   body = body.Replace("\r", "");
+            if (header == null || body == null)
+                return null;
+            else
+                return GetPatchBytes(header, body, fileContentEncoding);
+        }
+
+        public static byte[] GetSelectedLinesAsNewPatch(GitModule module, string newFileName, string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding)
+        {
+            StringBuilder sb = new StringBuilder();
+            string fileMode = "100000";//given fake mode to satisfy patch format, git will override this
+            sb.Append(string.Format("diff --git a/{0} b/{0}", newFileName));
+            sb.Append("\n");
+            sb.Append("new file mode " + fileMode);
+            sb.Append("\n");
+            sb.Append("index 0000000..0000000");
+            sb.Append("\n");
+            sb.Append("--- /dev/null");
+            sb.Append("\n");
+            sb.Append("+++ b/" + newFileName);
+            sb.Append("\n");
+
+            string header = sb.ToString();
+
+            ChunkList selectedChunks = ChunkList.FromNewFile(module, text, selectionPosition, selectionLength);
+
+            if (selectedChunks == null)
+                return null;
+
+            
+            string body = selectedChunks.ToStagePatch(false);
 
             if (header == null || body == null)
                 return null;
             else
                 return GetPatchBytes(header, body, fileContentEncoding);
         }
-       
+
         public static byte[] GetPatchBytes(string header, string body, Encoding fileContentEncoding)
         {
             byte[] hb = EncodingHelper.ConvertTo(GitModule.SystemEncoding, header);
@@ -392,6 +418,53 @@ namespace PatchApply
             return result;
         }
 
+        public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength)
+        {
+            Chunk result = new Chunk();
+            result.StartLine = 0;
+            int currentPos = 0;
+            string gitEol = module.GetEffectiveSetting("core.eol");
+            string eol;
+            if ("crlf".Equals(gitEol))
+                eol = "\r\n";
+            else if ("native".Equals(gitEol))
+                eol = Environment.NewLine;
+            else
+                eol = "\n";            
+
+            int eolLength = eol.Length;
+
+            string[] lines = fileText.Split(new string[] { eol }, StringSplitOptions.None);
+            int i = 0;
+
+            while (i < lines.Length)
+            {
+                string line = lines[i];
+                PatchLine patchLine = new PatchLine()
+                {
+                    Text = "+" + line
+                };
+                //do not refactor, there are no breakpoints condition in VS Experss
+                if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
+                    patchLine.Selected = true;
+
+                if (i == lines.Length - 1)
+                {
+                    if (!line.Equals(string.Empty))
+                    {
+                        result.CurrentSubChunk.IsNoNewLineAtTheEnd = "\\ No newline at end of file";
+                        result.AddDiffLine(patchLine, false);
+                    }
+                }
+                else
+                    result.AddDiffLine(patchLine, false);
+
+                currentPos += line.Length + eolLength;
+                i++;
+            }
+            return result;
+        }
+
 
         public string ToPatch(SubChunkToPatchFnc subChunkToPatch)
         {
@@ -454,6 +527,14 @@ namespace PatchApply
             }
 
             return selectedChunks;
+        }
+
+        public static ChunkList FromNewFile(GitModule module, string text, int selectionPosition, int selectionLength)
+        {
+            Chunk chunk = Chunk.FromNewFile(module, text, selectionPosition, selectionLength);
+            ChunkList result = new ChunkList();
+            result.Add(chunk);
+            return result;
         }
 
         public string ToResetUnstagedLinesPatch()
