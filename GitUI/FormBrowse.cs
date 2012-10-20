@@ -950,9 +950,10 @@ namespace GitUI
                 return;
 
             var revision = RevisionGrid.GetSelectedRevisions()[0];
+            var children = RevisionGrid.GetRevisionChildren(revision.Guid);
 
             if (revision != null)
-                RevisionInfo.SetRevision(revision.Guid);
+                RevisionInfo.SetRevision(revision.Guid, children);
         }
 
         public void FileHistoryOnClick(object sender, EventArgs e)

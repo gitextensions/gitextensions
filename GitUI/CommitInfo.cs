@@ -77,10 +77,17 @@ namespace GitUI
         }
 
         private string _revision;
-        public void SetRevision(string revision)
+        private List<string> _children;
+        public void SetRevision(string revision, List<string> children)
         {
             _revision = revision;
+            _children = children;
             ReloadCommitInfo();
+        }
+
+        public void SetRevision(string revision)
+        {
+            SetRevision(revision, null);
         }
 
         public string GetRevision()
@@ -107,6 +114,7 @@ namespace GitUI
 
             string error = "";
             CommitData data = CommitData.GetCommitData(Module, _revision, ref error);
+            data.ChildrenGuids = _children;
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(data);
 
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
