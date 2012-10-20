@@ -189,7 +189,11 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
   -->
+  <Target Name="AfterBuild">
+    <CreateItem Include="$(MSBuildProjectDirectory)\..\libgit2sharp\Lib\NativeBinaries\**\*.*">
+      <Output TaskParameter="Include" ItemName="NativeBinaries" />
+    </CreateItem>
+    <Copy SourceFiles="@(NativeBinaries)" DestinationFiles="@(NativeBinaries->'$(OutputPath)NativeBinaries\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
+  </Target>
 </Project>
