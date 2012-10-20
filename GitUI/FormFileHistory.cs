@@ -14,7 +14,7 @@ namespace GitUI
     {
         private readonly FilterRevisionsHelper filterRevisionsHelper;
         private readonly FilterBranchHelper filterBranchHelper;
-        private AsyncLoader asyncLoader = new AsyncLoader();
+        private AsyncLoader asyncLoader;
 
         private FormFileHistory()
             : this(null)
@@ -24,7 +24,7 @@ namespace GitUI
             : base(aCommands)
         {
             InitializeComponent();
-
+            asyncLoader = new AsyncLoader();
             // set tab page images
             {
                 var imageList = new ImageList();

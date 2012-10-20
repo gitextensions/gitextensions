@@ -43,7 +43,7 @@ namespace GitCommandsTests
                     obj.AddTranslationItems(testTranslation);
                     obj.TranslateItems(testTranslation);
                 }
-                catch (System.Exception ex)
+                catch (System.Exception)
                 {
                     Trace.WriteLine("Problem with class: " + type.FullName);
                     throw;
