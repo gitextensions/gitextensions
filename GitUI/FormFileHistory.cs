@@ -107,7 +107,7 @@ namespace GitUI
             if (string.IsNullOrEmpty(fileName))
                 return null;
 
-            //Replace windows path seperator to linux path seperator. 
+            //Replace windows path separator to Linux path separator. 
             //This is needed to keep the file history working when started from file tree in
             //browse dialog.
             fileName = fileName.Replace('\\', '/');

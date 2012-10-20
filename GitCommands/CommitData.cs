@@ -67,7 +67,7 @@ namespace GitCommands
             {
                 header.AppendLine();
                 var commitsString = ChildrenGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
-                header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetChildrensText()) + ":",
+                header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetChildrenText()) + ":",
                                            COMMITHEADER_STRING_LENGTH) + commitsString);
             }
 
