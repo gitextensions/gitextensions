@@ -115,14 +115,14 @@ namespace GitUI
                 AcceptButton = Mergetool;
                 Mergetool.Focus();
                 Mergetool.Text = _solveConflictsText2.Text;
-                MergeToolPanel.BackColor = Color.Black;
+                MergeToolPanel.BackColor = Color.Yellow;
             }
             else if (Module.InTheMiddleOfRebase())
             {
                 AcceptButton = Resolved;
                 Resolved.Focus();
                 Resolved.Text = _continueRebaseText2.Text;
-                ContinuePanel.BackColor = Color.Black;
+                ContinuePanel.BackColor = Color.Yellow;
             }
         }
 
