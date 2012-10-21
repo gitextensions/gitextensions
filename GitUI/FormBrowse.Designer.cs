@@ -1074,6 +1074,7 @@ namespace GitUI
             // 
             // recentToolStripMenuItem
             // 
+            this.recentToolStripMenuItem.Image = global::GitUI.Properties.Resources.RecentRepositories;
             this.recentToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem2});
             this.recentToolStripMenuItem.Name = "recentToolStripMenuItem";
@@ -1536,6 +1537,7 @@ namespace GitUI
             // 
             // manageSubmodulesToolStripMenuItem
             // 
+            this.manageSubmodulesToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconSubmodulesManage;
             this.manageSubmodulesToolStripMenuItem.Name = "manageSubmodulesToolStripMenuItem";
             this.manageSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.manageSubmodulesToolStripMenuItem.Text = "Manage submodules";
