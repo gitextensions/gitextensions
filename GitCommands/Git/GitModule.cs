@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using LibGit2Sharp;
 using PatchApply;
 
 namespace GitCommands
@@ -2582,7 +2583,11 @@ namespace GitCommands
 
         public string GetFileText(string id, Encoding encoding)
         {
-            return RunCachableCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"", encoding);
+            using (var repo = new LibGit2Sharp.Repository(WorkingDir))
+            {
+                var blob = repo.Lookup<LibGit2Sharp.Blob>(new ObjectId(id));
+                return encoding.GetString(blob.Content);
+            }
         }
 
         public string GetFileBlobHash(string fileName, string revision)
