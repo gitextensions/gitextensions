@@ -550,4 +550,28 @@
   <data name="IconSelectRevision" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\IconSelectRevision.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="IconStage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconStage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconStageAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconStageAll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmodulesManage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconSubmodulesManage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmodulesSync" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconSubmodulesSync.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconSubmodulesUpdate" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconSubmodulesUpdate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconUnstage" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconUnstage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconUnstageAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconUnstageAll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RecentRepositories" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\RecentRepositories.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

@@ -9,8 +9,8 @@
 //------------------------------------------------------------------------------
 
 namespace GitUI.Properties {
-using System;
-
+    using System;
+    
     
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -22,7 +22,7 @@ using System;
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class Resources   {
+    public partial class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -113,16 +113,15 @@ using System;
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///### Version 2.41
-        ///* Fixed issue 1254: Visual Studio 2005 plugin not working
-        ///* Fixed issue 1225: Visual Studio 2008 plugin not working
-        ///* Fixed window position in multi monitor configuration
-        ///* Fill title with the most recent commit message
-        ///* New dialog for checkout branch
-        ///* Remote repositories dialog layout changes
-        ///* Added option to not use the commit dialog to specify the commit message
-        ///* Added option to change application font
-        ///* Updated msysgit to a more stable build of versi [rest of string was truncated]&quot;;.
+        ///### Version 2.42
+        ///* Fixed issue 47: Support non-standard SSH port for Test Connection
+        ///* Fixed issue 85: Integrated git-credential-winstore to installer to handle HTTP authentication
+        ///* Fixed issue 407: Added links to parent commit, branches and tags to commit info
+        ///* Fixed issue 517: Added button to go to superproject
+        ///* Fixed issue 528: Correctly terminate processes tree on abort
+        ///* Fixed issue 650: Enable reset for unstaged files
+        ///* Fixed issue 737: Support local commit.template
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ChangeLog {
             get {
@@ -738,9 +737,44 @@ using System;
             }
         }
         
+        public static System.Drawing.Bitmap IconStage {
+            get {
+                object obj = ResourceManager.GetObject("IconStage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconStageAll {
+            get {
+                object obj = ResourceManager.GetObject("IconStageAll", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconStaged {
             get {
                 object obj = ResourceManager.GetObject("IconStaged", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconSubmodulesManage {
+            get {
+                object obj = ResourceManager.GetObject("IconSubmodulesManage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconSubmodulesSync {
+            get {
+                object obj = ResourceManager.GetObject("IconSubmodulesSync", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconSubmodulesUpdate {
+            get {
+                object obj = ResourceManager.GetObject("IconSubmodulesUpdate", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -755,6 +789,20 @@ using System;
         public static System.Drawing.Bitmap IconTagDelete {
             get {
                 object obj = ResourceManager.GetObject("IconTagDelete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconUnstage {
+            get {
+                object obj = ResourceManager.GetObject("IconUnstage", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconUnstageAll {
+            get {
+                object obj = ResourceManager.GetObject("IconUnstageAll", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -902,6 +950,13 @@ using System;
         public static System.Drawing.Bitmap Rebase {
             get {
                 object obj = ResourceManager.GetObject("Rebase", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap RecentRepositories {
+            get {
+                object obj = ResourceManager.GetObject("RecentRepositories", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
