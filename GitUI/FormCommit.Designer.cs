@@ -1127,6 +1127,8 @@ namespace GitUI
             // 
             this.Reset.Location = new System.Drawing.Point(1, 84);
             this.Reset.Margin = new System.Windows.Forms.Padding(1, 4, 4, 4);
+            this.Reset.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
+            this.Reset.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Reset.Name = "Reset";
             this.Reset.Size = new System.Drawing.Size(214, 32);
             this.Reset.TabIndex = 11;
