@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Web;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -601,34 +602,554 @@ namespace GitUI.Editor.RichTextBoxExtension
                 url = v[1];
         }
 
-        public static string GetPlaintText(this RichTextBox rtb)
+        // format states
+        private enum ctformatStates
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (var line in rtb.Text.Split('\n'))
+            nctNone = 0, // none format applied
+            nctNew = 1, // new format
+            nctContinue = 2, // continue with previous format
+            nctReset = 3 // reset format (close this tag)
+        }
+
+        private struct cMyREFormat
+        {
+            public cMyREFormat(int nPos, string strValue)
             {
-                bool insideLink = false;
-                // HACK: Remove link by # character
-                foreach (var ch in line)
+                this.nPos = nPos;
+                this.strValue = strValue;
+            }
+            public int nPos;
+            public string strValue;
+        }
+
+        private class CurrentState
+        {
+            public ctformatStates bold = ctformatStates.nctNone;
+            public ctformatStates bitalic = ctformatStates.nctNone;
+            public ctformatStates bstrikeout = ctformatStates.nctNone;
+            public ctformatStates bunderline = ctformatStates.nctNone;
+            public ctformatStates super = ctformatStates.nctNone;
+            public ctformatStates sub = ctformatStates.nctNone;
+
+            public ctformatStates bacenter = ctformatStates.nctNone;
+            public ctformatStates baleft = ctformatStates.nctNone;
+            public ctformatStates baright = ctformatStates.nctNone;
+            public ctformatStates bnumbering = ctformatStates.nctNone;
+            public bool fontSet = false;
+        }
+        
+        public static string GetXHTMLText(this RichTextBox rtb, bool bParaFormat)
+        {
+            StringBuilder strHTML = new StringBuilder();
+
+            rtb.HideSelection = true;
+            int oldMask = rtb.BeginUpdate();
+
+            int nStart = rtb.SelectionStart;
+            int nEnd = rtb.SelectionLength;
+
+            try
+            {
+                // to store formatting
+                List<cMyREFormat> colFormat = new List<cMyREFormat>();
+                string strT = ProcessTags(rtb, colFormat, bParaFormat);
+
+                // apply format by replacing and inserting HTML tags
+                // stored in the Format Array
+                int nAcum = 0;
+                for (int i = 0; i < colFormat.Count; i++)
                 {
-                    if (!insideLink)
+                    cMyREFormat mfr = colFormat[i];
+                    strHTML.Append(HttpUtility.HtmlEncode(strT.Substring(nAcum, mfr.nPos - nAcum)) + mfr.strValue);
+                    nAcum = mfr.nPos;
+                }
+
+                if (nAcum < strT.Length)
+                    strHTML.Append(strT.Substring(nAcum));
+            }
+            catch (Exception /*ex*/)
+            {
+                //MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                // finish, restore
+                rtb.SelectionStart = nStart;
+                rtb.SelectionLength = nEnd;
+
+                rtb.EndUpdate(oldMask);
+                rtb.HideSelection = false;
+            }
+
+            return strHTML.ToString();
+        }
+
+        private static string ProcessTags( RichTextBox rtb, List<cMyREFormat> colFormat,  bool bParaFormat )
+        {
+            StringBuilder sbT = new StringBuilder();
+            CurrentState cs = new CurrentState();
+	        string strFont = "";
+            Int32 crFont = 0;
+            Color color = new Color();
+            int yHeight = 0;
+
+            int i = 0;
+            int pos = 0;
+            int k = rtb.TextLength;
+            char[] chtrim = { ' ', '\x0000' };
+
+            //--------------------------------
+            // this is an inefficient method to get text format
+            // but RichTextBox doesn't provide another method to
+            // get something like an array of charformat and paraformat
+            //--------------------------------
+            for (i = 0; i < k; i++)
+            {
+                // select one character
+                rtb.Select(i, 1);
+                string strChar = rtb.SelectedText;
+
+                //-------------------------
+                // get format for this character
+                CHARFORMAT cf = rtb.GetCharFormat();
+                PARAFORMAT pf = rtb.GetParaFormat();
+
+                string strfname = cf.szFaceName;
+                strfname = strfname.Trim(chtrim);
+                //-------------------------
+
+                //-------------------------
+                // new font format ?
+                if ((strFont != strfname) || (crFont != cf.crTextColor) || (yHeight != cf.yHeight))
+                {
+                    cMyREFormat mfr;
+                    if (strFont != "")
                     {
-                        if (ch != '#')
-                            sb.Append(ch);
-                        else
-                            insideLink = true;
+                        // close previous <font> tag
+                        mfr = new cMyREFormat(pos, "</font>");
+
+                        colFormat.Add(mfr);
                     }
-                    else
+
+                    //-------------------------
+                    // save this for cache
+                    strFont = strfname;
+                    crFont = cf.crTextColor;
+                    yHeight = cf.yHeight;
+                    //-------------------------
+
+                    cs.fontSet = strFont != "";
+
+                    //-------------------------
+                    // font size should be translate to 
+                    // html size (Approximately)
+                    int fsize = yHeight / (20 * 5);
+                    //-------------------------
+
+                    //-------------------------
+                    // color object from COLORREF
+                    color = GetColor(crFont);
+                    //-------------------------
+
+                    //-------------------------
+                    // add <font> tag
+
+                    string strcolor = string.Concat("#", (color.ToArgb() & 0x00FFFFFF).ToString("X6"));
+
+                    mfr = new cMyREFormat(pos, "<font face=\"" + strFont + "\" color=\"" + strcolor + "\" size=\"" + fsize + "\">");
+
+                    colFormat.Add(mfr);
+                    //-------------------------
+                }
+
+                //-------------------------
+                // are we in another line ?
+                if ((strChar == "\r") || (strChar == "\n"))
+                {
+                    // yes?
+                    // then, we need to reset paragraph format
+                    // and character format
+                    if (bParaFormat)
                     {
-                        if (ch == ' ' || ch == '\t' || ch == ',')
-                        {
-                            insideLink = false;
-                            sb.Append(ch);
-                        }
+                        cs.bnumbering = ctformatStates.nctNone;
+                        cs.baleft = ctformatStates.nctNone;
+                        cs.baright = ctformatStates.nctNone;
+                        cs.bacenter = ctformatStates.nctNone;
+                    }
+
+                    // close previous tags
+
+                    // is italic? => close it
+                    if (cs.bitalic != ctformatStates.nctNone)
+                    {
+                        cMyREFormat mfr = new cMyREFormat(pos, "</i>");
+
+                        colFormat.Add(mfr);
+
+                        cs.bitalic = ctformatStates.nctNone;
+                    }
+
+                    // is bold? => close it
+                    if (cs.bold != ctformatStates.nctNone)
+                    {
+                        cMyREFormat mfr = new cMyREFormat(pos, "</b>");
+
+                        colFormat.Add(mfr);
+
+                        cs.bold = ctformatStates.nctNone;
+                    }
+
+                    // is underline? => close it
+                    if (cs.bunderline != ctformatStates.nctNone)
+                    {
+                        cMyREFormat mfr = new cMyREFormat(pos, "</u>");
+
+                        colFormat.Add(mfr);
+
+                        cs.bunderline = ctformatStates.nctNone;
+                    }
+
+                    // is strikeout? => close it
+                    if (cs.bstrikeout != ctformatStates.nctNone)
+                    {
+                        cMyREFormat mfr = new cMyREFormat(pos, "</s>");
+
+                        colFormat.Add(mfr);
+
+                        cs.bstrikeout = ctformatStates.nctNone;
+                    }
+
+                    // is super? => close it
+                    if (cs.super != ctformatStates.nctNone)
+                    {
+                        cMyREFormat mfr = new cMyREFormat(pos, "</sup>");
+
+                        colFormat.Add(mfr);
+
+                        cs.super = ctformatStates.nctNone;
+                    }
+
+                    // is sub? => close it
+                    if (cs.sub != ctformatStates.nctNone)
+                    {
+                        cMyREFormat mfr = new cMyREFormat(pos, "</sub>");
+
+                        colFormat.Add(mfr);
+
+                        cs.sub = ctformatStates.nctNone;
                     }
                 }
-                sb.AppendLine();
+
+                // now, process the paragraph format,
+                // managing states: none, new, continue {with previous}, reset
+                if (bParaFormat)
+                {
+                    // align to center?
+                    UpdateState(pf.wAlignment == PFA.CENTER, ref cs.bacenter);
+
+                    if (cs.bacenter == ctformatStates.nctNew)
+                    {
+                        cMyREFormat mfr = new cMyREFormat(pos, "<p align=\"center\">");
+
+                        colFormat.Add(mfr);
+                    }
+                    else if (cs.bacenter == ctformatStates.nctReset)
+                        cs.bacenter = ctformatStates.nctNone;
+                    //---------------------
+
+                    //---------------------
+                    // align to left ?
+                    UpdateState(pf.wAlignment == PFA.LEFT, ref cs.baleft);
+
+                    if (cs.baleft == ctformatStates.nctNew)
+                    {
+                        cMyREFormat mfr = new cMyREFormat(pos, "<p align=\"left\">");
+
+                        colFormat.Add(mfr);
+                    }
+                    else if (cs.baleft == ctformatStates.nctReset)
+                        cs.baleft = ctformatStates.nctNone;
+                    //---------------------
+
+                    //---------------------
+                    // align to right ?
+                    UpdateState(pf.wAlignment == PFA.RIGHT, ref cs.baright);
+
+                    if (cs.baright == ctformatStates.nctNew)
+                    {
+                        cMyREFormat mfr = new cMyREFormat(pos, "<p align=\"right\">");
+
+                        colFormat.Add(mfr);
+                    }
+                    else if (cs.baright == ctformatStates.nctReset)
+                        cs.baright = ctformatStates.nctNone;
+                    //---------------------
+
+                    //---------------------
+                    // bullet ?
+                    UpdateState(pf.wNumbering == PFN.BULLET, ref cs.bnumbering);
+
+                    if (cs.bnumbering == ctformatStates.nctNew)
+                    {
+                        cMyREFormat mfr = new cMyREFormat(pos, "<li>");
+
+                        colFormat.Add(mfr);
+                    }
+                    else if (cs.bnumbering == ctformatStates.nctReset)
+                        cs.bnumbering = ctformatStates.nctNone;
+                    //---------------------
+                }
+
+                //---------------------
+                // bold ?
+                UpdateState((cf.dwEffects & CFE.BOLD) == CFE.BOLD, ref cs.bold);
+
+                if (cs.bold == ctformatStates.nctNew)
+                {
+                    cMyREFormat mfr = new cMyREFormat(pos, "<b>");
+
+                    colFormat.Add(mfr);
+                }
+                else if (cs.bold == ctformatStates.nctReset)
+                {
+                    cMyREFormat mfr = new cMyREFormat(pos, "</b>");
+
+                    colFormat.Add(mfr);
+
+                    cs.bold = ctformatStates.nctNone;
+                }
+                //---------------------
+
+                //---------------------
+                // Italic
+                UpdateState((cf.dwEffects & CFE.ITALIC) == CFE.ITALIC, ref cs.bitalic);
+
+                if (cs.bitalic == ctformatStates.nctNew)
+                {
+                    cMyREFormat mfr = new cMyREFormat(pos, "<i>");
+
+                    colFormat.Add(mfr);
+                }
+                else if (cs.bitalic == ctformatStates.nctReset)
+                {
+                    cMyREFormat mfr = new cMyREFormat(pos, "</i>");
+
+                    colFormat.Add(mfr);
+
+                    cs.bitalic = ctformatStates.nctNone;
+                }
+                //---------------------
+
+                //---------------------
+                // strikeout
+                UpdateState((cf.dwEffects & CFE.STRIKEOUT) == CFE.STRIKEOUT, ref cs.bstrikeout);
+
+                if (cs.bstrikeout == ctformatStates.nctNew)
+                {
+                    cMyREFormat mfr = new cMyREFormat(pos, "<s>");
+
+                    colFormat.Add(mfr);
+                }
+                else if (cs.bstrikeout == ctformatStates.nctReset)
+                {
+                    cMyREFormat mfr = new cMyREFormat(pos, "</s>");
+
+                    colFormat.Add(mfr);
+
+                    cs.bstrikeout = ctformatStates.nctNone;
+                }
+                //---------------------
+
+                //---------------------
+                // underline ?
+                UpdateState((cf.dwEffects & CFE.UNDERLINE) == CFE.UNDERLINE, ref cs.bunderline);
+
+                if (cs.bunderline == ctformatStates.nctNew)
+                {
+                    cMyREFormat mfr = new cMyREFormat(pos, "<u>");
+
+                    colFormat.Add(mfr);
+                }
+                else if (cs.bunderline == ctformatStates.nctReset)
+                {
+                    cMyREFormat mfr = new cMyREFormat(pos, "</u>");
+
+                    colFormat.Add(mfr);
+
+                    cs.bunderline = ctformatStates.nctNone;
+                }
+                //---------------------
+
+                //---------------------
+                // superscript ?
+                UpdateState((cf.dwEffects & CFE.SUPERSCRIPT) == CFE.SUPERSCRIPT, ref cs.super);
+
+                if (cs.super == ctformatStates.nctNew)
+                {
+                    cMyREFormat mfr = new cMyREFormat(pos, "<sup>");
+
+                    colFormat.Add(mfr);
+                }
+                else if (cs.super == ctformatStates.nctReset)
+                {
+                    cMyREFormat mfr = new cMyREFormat(pos, "</sup>");
+
+                    colFormat.Add(mfr);
+
+                    cs.super = ctformatStates.nctNone;
+                }
+                //---------------------
+
+                //---------------------
+                // subscript ?
+                UpdateState((cf.dwEffects & CFE.SUBSCRIPT) == CFE.SUBSCRIPT, ref cs.sub);
+
+                if (cs.sub == ctformatStates.nctNew)
+                {
+                    cMyREFormat mfr = new cMyREFormat(pos, "<sub>");
+
+                    colFormat.Add(mfr);
+                }
+                else if (cs.sub == ctformatStates.nctReset)
+                {
+                    cMyREFormat mfr = new cMyREFormat(pos, "</sub>");
+
+                    colFormat.Add(mfr);
+
+                    cs.sub = ctformatStates.nctNone;
+                }
+
+                sbT.Append(strChar);
+                pos = sbT.Length;
             }
-            return sb.ToString().TrimEnd();
+    
+            // close pending tags
+            if (cs.bold != ctformatStates.nctNone)
+            {
+                cMyREFormat mfr = new cMyREFormat(pos, "</b>");
+
+                colFormat.Add(mfr);
+            }
+
+            if (cs.bitalic != ctformatStates.nctNone)
+            {
+                cMyREFormat mfr = new cMyREFormat(pos, "</i>");
+
+                colFormat.Add(mfr);
+            }
+
+            if (cs.bstrikeout != ctformatStates.nctNone)
+            {
+                cMyREFormat mfr = new cMyREFormat(pos, "</s>");
+
+                colFormat.Add(mfr);
+            }
+
+            if (cs.bunderline != ctformatStates.nctNone)
+            {
+                cMyREFormat mfr = new cMyREFormat(pos, "</u>");
+
+                colFormat.Add(mfr);
+            }
+
+            if (cs.super != ctformatStates.nctNone)
+            {
+                cMyREFormat mfr = new cMyREFormat(pos, "</sup>");
+
+                colFormat.Add(mfr);
+            }
+
+            if (cs.sub != ctformatStates.nctNone)
+            {
+                cMyREFormat mfr = new cMyREFormat(pos, "</sub>");
+
+                colFormat.Add(mfr);
+            }
+
+            if (cs.fontSet)
+            {
+                // close pending font format
+                cMyREFormat mfr = new cMyREFormat(pos, "</font>");
+
+                colFormat.Add(mfr);
+            }
+
+            // now, reorder the formatting array
+            k = colFormat.Count;
+            for (i = 0; i < k - 1; i++)
+            {
+                for (int j = i + 1; j < k; j++)
+                {
+                    cMyREFormat mfr = colFormat[i];
+                    cMyREFormat mfr2 = colFormat[j];
+
+                    if (mfr2.nPos < mfr.nPos)
+                    {
+                        colFormat.RemoveAt(j);
+                        colFormat.Insert(i, mfr2);
+                        j--;
+                    }
+                }
+            }
+            return sbT.ToString();
+        }
+
+        private static void UpdateState(bool value, ref ctformatStates state)
+        {
+            if (value)
+            {
+                if (state == ctformatStates.nctNone)
+                    state = ctformatStates.nctNew;
+                else
+                    state = ctformatStates.nctContinue;
+            }
+            else
+            {
+                if (state != ctformatStates.nctNone)
+                    state = ctformatStates.nctReset;
+            }
+        }
+
+        public static string GetPlaintText(this RichTextBox rtb)
+        {
+            //rtb.HideSelection = true;
+            int oldMask = rtb.BeginUpdate();
+
+            int nStart = rtb.SelectionStart;
+            int nEnd = rtb.SelectionLength;
+            StringBuilder text = new StringBuilder();
+
+            try
+            {
+                //--------------------------------
+                // this is an inefficient method to get text format
+                // but RichTextBox doesn't provide another method to
+                // get something like an array of charformat and paraformat
+                //--------------------------------
+                for (int i = 0; i < rtb.TextLength; i++)
+                {
+                    // select one character
+                    rtb.Select(i, 1);
+                    text.Append(rtb.SelectedText);
+                }
+            }
+            catch (Exception /*ex*/)
+            {
+                //MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                //--------------------------
+                // finish, restore
+                rtb.SelectionStart = nStart;
+                rtb.SelectionLength = nEnd;
+
+                rtb.EndUpdate(oldMask);
+                rtb.HideSelection = false;
+                //--------------------------
+            }
+
+            return text.ToString();
         }
 
         public static void SetXHTMLText(this RichTextBox rtb, string xhtmlText)
