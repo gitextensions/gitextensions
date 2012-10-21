@@ -29,18 +29,23 @@ namespace GitUI.Editor.RichTextBoxExtension
         /// control so that no events are sent.
         /// </para>
         /// </remarks>
+        private static int BeginUpdate(HandleRef handleRef)
+        {
+            // Prevent the control from raising any events.
+            int oldEventMask = NativeMethods.SendMessage(handleRef,
+                NativeMethods.EM_SETEVENTMASK, IntPtr.Zero, IntPtr.Zero);
+
+            // Prevent the control from redrawing itself.
+            NativeMethods.SendMessage(handleRef,
+                NativeMethods.WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
+
+            return oldEventMask;
+        }
 
         public static int BeginUpdate(this RichTextBox rtb)
         {
-            // Prevent the control from raising any events.
-            int oldEventMask = NativeMethods.SendMessage(rtb,
-                NativeMethods.EM_SETEVENTMASK, 0, 0);
-
-            // Prevent the control from redrawing itself.
-            NativeMethods.SendMessage(rtb,
-                NativeMethods.WM_SETREDRAW, 0, 0);
-
-            return oldEventMask;
+            var handleRef = new HandleRef(rtb, rtb.Handle);
+            return BeginUpdate(handleRef);
         }
 
         /// <summary>
@@ -51,15 +56,21 @@ namespace GitUI.Editor.RichTextBoxExtension
         /// made to BeginUpdate. It resets the event mask to it's
         /// original value and enables redrawing of the control.
         /// </remarks>
-        public static void EndUpdate(this RichTextBox rtb, int oldEventMask)
+        private static void EndUpdate(HandleRef handleRef, int oldEventMask)
         {
             // Allow the control to redraw itself.
-            NativeMethods.SendMessage(rtb,
-                NativeMethods.WM_SETREDRAW, 1, 0);
+            NativeMethods.SendMessage(handleRef,
+                NativeMethods.WM_SETREDRAW, (IntPtr)1, IntPtr.Zero);
 
             // Allow the control to raise event messages.
-            NativeMethods.SendMessage(rtb,
-                NativeMethods.EM_SETEVENTMASK, 0, oldEventMask);
+            NativeMethods.SendMessage(handleRef,
+                NativeMethods.EM_SETEVENTMASK, IntPtr.Zero, (IntPtr)oldEventMask);
+        }
+
+        public static void EndUpdate(this RichTextBox rtb, int oldEventMask)
+        {
+            var handleRef = new HandleRef(rtb, rtb.Handle);
+            EndUpdate(handleRef, oldEventMask);
         }
 
         // Defines for STRUCT_CHARFORMAT member dwMask
@@ -263,8 +274,10 @@ namespace GitUI.Editor.RichTextBoxExtension
             public CHARFORMAT(CFM mask, CFE effects)
                 : this()
             {
+                cbSize = Marshal.SizeOf(this);
                 dwMask = mask;
                 dwEffects = effects;
+                szFaceName = "";
             }
 
             public int cbSize;
@@ -316,61 +329,34 @@ namespace GitUI.Editor.RichTextBoxExtension
             internal const int LF_FACESIZE = 32;
 
             [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern IntPtr SendMessage(HandleRef hWnd,
-                UInt32 msg,
+            internal static extern int SendMessage(HandleRef hWnd,
+                int msg,
                 IntPtr wParam,
                 IntPtr lParam);
 
             [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern IntPtr SendMessage(HandleRef hWnd,
-                UInt32 msg,
+            internal static extern int SendMessage(HandleRef hWnd,
+                int msg,
                 IntPtr wParam,
                 ref Point lParam);
 
-            internal static int SendMessage(RichTextBox rtb,
-                UInt32 msg,
-                int wParam,
-                int lParam)
-            {
-                return (int)SendMessage(new HandleRef(rtb, rtb.Handle),
-                    msg, (IntPtr)wParam, (IntPtr)lParam);
-            }
-
             [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern IntPtr SendMessage(HandleRef hWnd,
-                UInt32 msg,
+            internal static extern int SendMessage(HandleRef hWnd,
+                int msg,
                 IntPtr wParam,
                 ref PARAFORMAT lp);
 
-            internal static void SendMessage(RichTextBox rtb,
-                UInt32 msg,
-                int wParam,
-                ref PARAFORMAT pf)
-            {
-                SendMessage(new HandleRef(rtb, rtb.Handle),
-                    msg, (IntPtr)wParam, ref pf);
-            }
-
             [DllImport("user32", CharSet = CharSet.Auto)]
             internal static extern int SendMessage(HandleRef hWnd,
-                UInt32 msg,
+                int msg,
                 IntPtr wParam,
                 ref CHARFORMAT lp);
-
-            internal static void SendMessage(RichTextBox rtb,
-                UInt32 msg,
-                int wParam,
-                ref CHARFORMAT pf)
-            {
-                SendMessage(new HandleRef(rtb, rtb.Handle),
-                    msg, (IntPtr)wParam, ref pf);
-            }
         }
         #endregion
 
-        internal static void SetHideSelectionInternal(this RichTextBox rtb, bool bSet)
+        internal static void SetHideSelectionInternal(HandleRef handleRef, bool bSet)
         {
-            NativeMethods.SendMessage(rtb, (uint)NativeMethods.EM_HIDESELECTION, bSet ? 1 : 0, 0);
+            NativeMethods.SendMessage(handleRef, NativeMethods.EM_HIDESELECTION, bSet ? (IntPtr)1 : (IntPtr)0, IntPtr.Zero);
         }
 
         public static void SetSuperScript(this RichTextBox rtb, bool bSet)
@@ -445,76 +431,109 @@ namespace GitUI.Editor.RichTextBoxExtension
             rtb.Select(position + text.Length + hyperlink.Length + 1, 0);
         }
 
-        public static PARAFORMAT GetParaFormat(this RichTextBox rtb)
+        private static PARAFORMAT GetParaFormat(HandleRef handleRef)
         {
             PARAFORMAT pf = new PARAFORMAT();
             pf.cbSize = Marshal.SizeOf(pf);
 
             // Get the alignment.
-            NativeMethods.SendMessage(rtb,
+            NativeMethods.SendMessage(handleRef,
                 NativeMethods.EM_GETPARAFORMAT,
-                NativeMethods.SCF_SELECTION, ref pf);
+                (IntPtr)NativeMethods.SCF_SELECTION, ref pf);
 
             return pf;
+        }
+
+        public static PARAFORMAT GetParaFormat(this RichTextBox rtb)
+        {
+            var handleRef = new HandleRef(rtb, rtb.Handle);
+            return GetParaFormat(handleRef);
+        }
+
+        private static void SetParaFormat(HandleRef handleRef, PARAFORMAT value)
+        {
+            Debug.Assert(value.cbSize == Marshal.SizeOf(value));
+
+            // Set the alignment.
+            NativeMethods.SendMessage(handleRef,
+                NativeMethods.EM_SETPARAFORMAT,
+                (IntPtr)NativeMethods.SCF_SELECTION, ref value);
         }
 
         public static void SetParaFormat(this RichTextBox rtb, PARAFORMAT value)
         {
-            PARAFORMAT pf = value;
-            pf.cbSize = Marshal.SizeOf(pf);
-
-            // Set the alignment.
-            NativeMethods.SendMessage(rtb,
-                NativeMethods.EM_SETPARAFORMAT,
-                NativeMethods.SCF_SELECTION, ref pf);
+            var handleRef = new HandleRef(rtb, rtb.Handle);
+            SetParaFormat(handleRef, value);
         }
 
-        public static PARAFORMAT GetDefaultParaFormat(this RichTextBox rtb)
+        private static PARAFORMAT GetDefaultParaFormat(HandleRef handleRef)
         {
             PARAFORMAT pf = new PARAFORMAT();
             pf.cbSize = Marshal.SizeOf(pf);
 
             // Get the alignment.
-            NativeMethods.SendMessage(rtb,
+            NativeMethods.SendMessage(handleRef,
                 NativeMethods.EM_GETPARAFORMAT,
-                NativeMethods.SCF_ALL, ref pf);
+                (IntPtr)NativeMethods.SCF_ALL, ref pf);
 
             return pf;
         }
 
-        public static void SetDefaultParaFormat(this RichTextBox rtb, PARAFORMAT value)
+        public static PARAFORMAT GetDefaultParaFormat(this RichTextBox rtb)
         {
-            PARAFORMAT pf = value;
-            pf.cbSize = Marshal.SizeOf(pf);
-
-            // Set the alignment.
-            NativeMethods.SendMessage(rtb,
-                NativeMethods.EM_SETPARAFORMAT,
-                NativeMethods.SCF_ALL, ref pf);
+            var handleRef = new HandleRef(rtb, rtb.Handle);
+            return GetDefaultParaFormat(handleRef);
         }
 
-        public static CHARFORMAT GetCharFormat(this RichTextBox rtb)
+        private static void SetDefaultParaFormat(HandleRef handleRef, PARAFORMAT value)
+        {
+            Debug.Assert(value.cbSize == Marshal.SizeOf(value));
+
+            // Set the alignment.
+            NativeMethods.SendMessage(handleRef,
+                NativeMethods.EM_SETPARAFORMAT,
+                (IntPtr)NativeMethods.SCF_ALL, ref value);
+        }
+
+        public static void SetDefaultParaFormat(this RichTextBox rtb, PARAFORMAT value)
+        {
+            var handleRef = new HandleRef(rtb, rtb.Handle);
+            SetDefaultParaFormat(handleRef, value);
+        }
+
+        private static CHARFORMAT GetCharFormat(HandleRef handleRef)
         {
             CHARFORMAT cf = new CHARFORMAT();
             cf.cbSize = Marshal.SizeOf(cf);
 
             // Get the alignment.
-            NativeMethods.SendMessage(rtb,
+            NativeMethods.SendMessage(handleRef,
                 NativeMethods.EM_GETCHARFORMAT,
-                NativeMethods.SCF_SELECTION, ref cf);
+                (IntPtr)NativeMethods.SCF_SELECTION, ref cf);
 
             return cf;
         }
 
-        public static void SetCharFormat(this RichTextBox rtb, CHARFORMAT value)
+        public static CHARFORMAT GetCharFormat(this RichTextBox rtb)
         {
-            CHARFORMAT cf = value;
-            cf.cbSize = Marshal.SizeOf(cf);
+            var handleRef = new HandleRef(rtb, rtb.Handle);
+            return GetCharFormat(handleRef);
+        }
+
+        private static void SetCharFormat(HandleRef handleRef, CHARFORMAT value)
+        {
+            Debug.Assert(value.cbSize == Marshal.SizeOf(value));
 
             // Set the alignment.
-            NativeMethods.SendMessage(rtb,
+            NativeMethods.SendMessage(handleRef,
                 NativeMethods.EM_SETCHARFORMAT,
-                NativeMethods.SCF_SELECTION, ref cf);
+                (IntPtr)NativeMethods.SCF_SELECTION, ref value);
+        }
+
+        public static void SetCharFormat(this RichTextBox rtb, CHARFORMAT value)
+        {
+            var handleRef = new HandleRef(rtb, rtb.Handle);
+            SetCharFormat(handleRef, value);
         }
 
         public static void SetCharFormat(this RichTextBox rtb, CFM mask, CFE effects)
@@ -523,28 +542,39 @@ namespace GitUI.Editor.RichTextBoxExtension
             rtb.SetCharFormat(cf);
         }
 
-        public static CHARFORMAT GetDefaultCharFormat(this RichTextBox rtb)
+        private static CHARFORMAT GetDefaultCharFormat(HandleRef handleRef)
         {
             CHARFORMAT cf = new CHARFORMAT();
             cf.cbSize = Marshal.SizeOf(cf);
 
             // Get the alignment.
-            NativeMethods.SendMessage(rtb,
+            NativeMethods.SendMessage(handleRef,
                 NativeMethods.EM_GETCHARFORMAT,
-                NativeMethods.SCF_ALL, ref cf);
+                (IntPtr)NativeMethods.SCF_ALL, ref cf);
 
             return cf;
         }
 
-        public static void SetDefaultCharFormat(this RichTextBox rtb, CHARFORMAT value)
+        public static CHARFORMAT GetDefaultCharFormat(this RichTextBox rtb)
         {
-            CHARFORMAT cf = value;
-            cf.cbSize = Marshal.SizeOf(cf);
+            var handleRef = new HandleRef(rtb, rtb.Handle);
+            return GetDefaultCharFormat(handleRef);
+        }
+
+        private static void SetDefaultCharFormat(HandleRef handleRef, CHARFORMAT value)
+        {
+            Debug.Assert(value.cbSize == Marshal.SizeOf(value));
 
             // Set the alignment.
-            NativeMethods.SendMessage(rtb,
+            NativeMethods.SendMessage(handleRef,
                 NativeMethods.EM_SETCHARFORMAT,
-                NativeMethods.SCF_ALL, ref cf);
+                (IntPtr)NativeMethods.SCF_ALL, ref value);
+        }
+
+        public static void SetDefaultCharFormat(this RichTextBox rtb, CHARFORMAT value)
+        {
+            var handleRef = new HandleRef(rtb, rtb.Handle);
+            SetDefaultCharFormat(handleRef, value);
         }
 
         public static void SetDefaultCharFormat(this RichTextBox rtb, CFM mask, CFE effects)
@@ -553,16 +583,28 @@ namespace GitUI.Editor.RichTextBoxExtension
             rtb.SetDefaultCharFormat(cf);
         }
 
-        public static Point GetScrollPoint(this RichTextBox rtb)
+        private static Point GetScrollPoint(HandleRef handleRef)
         {
             Point scrollPoint = new Point();
-            NativeMethods.SendMessage(new HandleRef(rtb, rtb.Handle), (uint)NativeMethods.EM_GETSCROLLPOS, IntPtr.Zero, ref scrollPoint);
+            NativeMethods.SendMessage(handleRef, NativeMethods.EM_GETSCROLLPOS, IntPtr.Zero, ref scrollPoint);
             return scrollPoint;
+        }
+
+        public static Point GetScrollPoint(this RichTextBox rtb)
+        {
+            var handleRef = new HandleRef(rtb, rtb.Handle);
+            return GetScrollPoint(handleRef);
+        }
+
+        private static void SetScrollPoint(HandleRef handleRef, Point scrollPoint)
+        {
+            NativeMethods.SendMessage(handleRef, NativeMethods.EM_SETSCROLLPOS, IntPtr.Zero, ref scrollPoint);
         }
 
         public static void SetScrollPoint(this RichTextBox rtb, Point scrollPoint)
         {
-            NativeMethods.SendMessage(new HandleRef(rtb, rtb.Handle), (uint)NativeMethods.EM_SETSCROLLPOS, IntPtr.Zero, ref scrollPoint);
+            var handleRef = new HandleRef(rtb, rtb.Handle);
+            SetScrollPoint(handleRef, scrollPoint);
         }
 
         #region COLORREF helper functions
@@ -1065,11 +1107,12 @@ namespace GitUI.Editor.RichTextBoxExtension
             rtb.Clear();
             RTFCurrentState cs = new RTFCurrentState();
 
-            cs.cf = rtb.GetDefaultCharFormat(); // to apply character formatting
-            cs.pf = rtb.GetDefaultParaFormat(); // to apply paragraph formatting
+            var handleRef = new HandleRef(rtb, rtb.Handle);
+            cs.cf = GetDefaultCharFormat(handleRef); // to apply character formatting
+            cs.pf = GetDefaultParaFormat(handleRef); // to apply paragraph formatting
 
-            int oldMask = rtb.BeginUpdate();
-            SetHideSelectionInternal(rtb, true);
+            int oldMask = BeginUpdate(handleRef);
+            SetHideSelectionInternal(handleRef, true);
 
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.ConformanceLevel = ConformanceLevel.Fragment;
@@ -1080,7 +1123,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 using (XmlReader reader = XmlReader.Create(stringreader, settings))
                 {
                     while (reader.Read())
-                        ProcessNode(rtb, reader, cs);
+                        ProcessNode(rtb, handleRef, reader, cs);
                 }
             }
             catch (System.Xml.XmlException ex)
@@ -1089,19 +1132,20 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
             // apply links style
             CHARFORMAT ncf = new CHARFORMAT(CFM.LINK, CFE.LINK);
+            ncf.cbSize = Marshal.SizeOf(ncf);
             foreach (var pair in cs.links)
             {
                 rtb.Select(pair.Key, pair.Value);
-                rtb.SetCharFormat(ncf);
+                SetCharFormat(handleRef, ncf);
             }
-            SetHideSelectionInternal(rtb, false);
+            SetHideSelectionInternal(handleRef, false);
             // reposition to first
             rtb.Select(0, 0);
-            rtb.EndUpdate(oldMask);
+            EndUpdate(handleRef, oldMask);
             rtb.Invalidate();
         }
 
-        private static void ProcessNode(RichTextBox rtb, XmlReader reader, RTFCurrentState cs)
+        private static void ProcessNode(RichTextBox rtb, HandleRef handleRef, XmlReader reader, RTFCurrentState cs)
         {
             switch (reader.NodeType)
             {
@@ -1124,9 +1168,9 @@ namespace GitUI.Editor.RichTextBoxExtension
 
                         // apply format
                         if (cs.paraFormatChanged)
-                            rtb.SetParaFormat(cs.pf);
+                            SetParaFormat(handleRef, cs.pf);
                         if (cs.charFormatChanged)
-                            rtb.SetCharFormat(cs.cf);
+                            SetCharFormat(handleRef, cs.cf);
                         cs.charFormatChanged = false;
                         cs.paraFormatChanged = false;
 
