@@ -639,6 +639,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconFolderSubmodule {
+            get {
+                object obj = ResourceManager.GetObject("IconFolderSubmodule", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconGotoCommit {
             get {
                 object obj = ResourceManager.GetObject("IconGotoCommit", resourceCulture);
@@ -1048,13 +1055,6 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap StatusHourglass {
             get {
                 object obj = ResourceManager.GetObject("StatusHourglass", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap Submodule {
-            get {
-                object obj = ResourceManager.GetObject("Submodule", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
