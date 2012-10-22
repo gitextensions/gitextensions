@@ -147,6 +147,7 @@ namespace GitUI
             // 
             // picBoxSuccessFail
             // 
+            this.picBoxSuccessFail.Dock = System.Windows.Forms.DockStyle.Right;
             this.picBoxSuccessFail.Image = global::GitUI.Properties.Resources.StatusHourglass;
             this.picBoxSuccessFail.Location = new System.Drawing.Point(3, 3);
             this.picBoxSuccessFail.Name = "picBoxSuccessFail";
@@ -156,11 +157,12 @@ namespace GitUI
             // 
             // tableLayoutPanel3
             // 
+            this.tableLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.Controls.Add(this.picBoxSuccessFail, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.MessageTextBox, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.picBoxSuccessFail, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.MessageTextBox, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
