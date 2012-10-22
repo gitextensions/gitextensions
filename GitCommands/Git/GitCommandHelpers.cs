@@ -567,7 +567,7 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
                 return string.Format("push {0}\"{1}\" {2}:{3}", options, path.Trim(), fromBranch, toBranch);
 
-            return string.Format("push {0}\"{1}\" {2}", sforce, options, path.Trim(), fromBranch);
+            return string.Format("push {0}\"{1}\" {2}", options, path.Trim(), fromBranch);
         }
 
         public static string PushMultipleCmd(string path, IEnumerable<GitPushAction> pushActions)
