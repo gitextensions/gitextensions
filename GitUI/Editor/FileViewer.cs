@@ -881,7 +881,7 @@ namespace GitUI.Editor
                 encod = new UTF32Encoding(true, false);
             else
                 encod = Module.FilesEncoding;
-            if (encod != this.Encoding)
+            if (!encod.Equals(this.Encoding))
             {
                 this.Encoding = encod;
                 this.OnExtraDiffArgumentsChanged();
