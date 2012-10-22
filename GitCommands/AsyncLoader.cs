@@ -149,31 +149,22 @@ namespace GitCommands
                             if (_cancelled) return;
                             var content = _loadContent(this);
 
-                            if (_cancelled) return;
                             RunOnUiThread(
                                 () =>
                                 {
                                     try
                                     {
-                                        if (_cancelled) return;
                                         _onLoaded(content);
                                     }
                                     catch (Exception exception)
                                     {
-                                        if (_cancelled) return;
                                         _onError(exception);
                                     }
                                 });
                         }
                         catch (Exception exception)
                         {
-                            if (_cancelled) return;
-                            RunOnUiThread(
-                                () =>
-                                {
-                                    if (_cancelled) return;
-                                    _onError(exception);
-                                });
+                            RunOnUiThread(() => _onError(exception));
                         }
                     });
             }
@@ -187,7 +178,14 @@ namespace GitCommands
 
             private void RunOnUiThread(Action action)
             {
-                _syncContext.Post(_ => action(), null);
+                if (_cancelled) 
+                    return;
+
+                _syncContext.Post(_ =>
+                    {
+                        if (!_cancelled)
+                            action();
+                    }, null);
             }
         }
 
