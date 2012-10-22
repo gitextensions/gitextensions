@@ -186,6 +186,7 @@ namespace GitUI
             _StageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.StageSelectedFile).ToShortcutKeyDisplayString();
             _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
             _ResetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
+            _ResetSelectedLinesToolStripMenuItem.Image = Reset.Image;
         }
 
         private void FormCommit_Load(object sender, EventArgs e)
@@ -320,7 +321,7 @@ namespace GitUI
                 UnstageFilesClick(this, null);
                 return true;
             }
-            else if (SelectedDiff.ContainsFocus && _currentItemStaged)
+            else if (SelectedDiff.ContainsFocus && _currentItemStaged && _StageSelectedLinesToolStripMenuItem.Enabled)
             {
                 StageSelectedLinesToolStripMenuItemClick(this, null);
                 return true;
@@ -614,9 +615,9 @@ namespace GitUI
             }
 
             _StageSelectedLinesToolStripMenuItem.Text = staged ? _unstageSelectedLines.Text : _stageSelectedLines.Text;
+            _StageSelectedLinesToolStripMenuItem.Image = staged ? toolUnstageItem.Image : toolStageItem.Image;
             _StageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = 
                 GetShortcutKeys((int) (staged ? Commands.UnStageSelectedFile : Commands.StageSelectedFile)).ToShortcutKeyDisplayString();
-            //_ResetSelectedLinesToolStripMenuItem.Enabled = staged;
         }
 
         private long GetItemLength(string fileName)
