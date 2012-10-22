@@ -73,7 +73,8 @@
         #endregion
 
         private System.Windows.Forms.ListBox FileStatusListBox;
-        private System.Windows.Forms.ToolTip DiffFilesTooltip;
+		//This property cannot be protected becuase this will break compilation in monodevelop
+        protected System.Windows.Forms.ToolTip DiffFilesTooltip;
         private System.Windows.Forms.Label NoFiles;
     }
 }
