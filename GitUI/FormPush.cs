@@ -45,6 +45,9 @@ namespace GitUI
         private readonly TranslationString _selectTag =
             new TranslationString("You need to select a tag to push or select \"Push all tags\".");
 
+        private readonly TranslationString _updateTrackingReference =
+            new TranslationString("The branch {0} does not have a tracking reference. Do you want to add a tracking reference to {1}?");
+
         private readonly TranslationString _yes = new TranslationString("Yes");
         private readonly TranslationString _no = new TranslationString("No");
         #endregion
@@ -178,8 +181,6 @@ namespace GitUI
                 return false;
             }
 
-            bool newBranch = false;
-
             //Extra check if the branch is already known to the remote, give a warning when not.
             //This is not possible when the remote is an URL, but this is ok since most users push to
             //known remotes anyway.
@@ -194,10 +195,6 @@ namespace GitUI
                         DialogResult.No)
                     {
                         return false;
-                    }
-                    else
-                    {
-                        newBranch = true;
                     }
             }
 
@@ -230,14 +227,26 @@ namespace GitUI
             if (TabControlTagBranch.SelectedTab == BranchTab)
             {
                 bool track = ReplaceTrackingReference.Checked;
-                if (!track)
+                if (!track && !string.IsNullOrWhiteSpace(RemoteBranch.Text))
                 {
-                    track = newBranch;
+                    GitHead selectedLocalBranch = _NO_TRANSLATE_Branch.SelectedItem as GitHead;
+                    track = selectedLocalBranch != null && string.IsNullOrEmpty(selectedLocalBranch.TrackingRemote);
+
                     string[] remotes = _NO_TRANSLATE_Remotes.DataSource as string[];
                     if (remotes != null)
                         foreach (string remoteBranch in remotes)
                             if (!string.IsNullOrEmpty(remoteBranch) && _NO_TRANSLATE_Branch.Text.StartsWith(remoteBranch))
                                 track = false;
+
+                    if (track)
+                    {
+                        DialogResult result = MessageBox.Show(String.Format(_updateTrackingReference.Text, selectedLocalBranch.Name, RemoteBranch.Text), _pushCaption.Text, MessageBoxButtons.YesNoCancel);
+
+                        if (result == DialogResult.Cancel)
+                            return false;
+
+                        track = result == DialogResult.OK;
+                    }
                 }
 
                 pushCmd = GitCommandHelpers.PushCmd(destination, _NO_TRANSLATE_Branch.Text, RemoteBranch.Text,
