@@ -425,15 +425,21 @@ namespace GitUI
         {
             int SelectedDifflineToSelect = SelectedDiff.GetText().Substring(0, SelectedDiff.GetSelectionPosition()).Count(c => c == '\n');
             string selectedFileName = _currentItem.Name;
-            EventHandler textLoaded = null;
-            textLoaded = (a, b) =>
+            Action stageAreaLoaded = null;
+            stageAreaLoaded = () =>
             {
-                if (_currentItem != null && _currentItem.Name.Equals(selectedFileName))
-                    SelectedDiff.GoToLine(SelectedDifflineToSelect);
-                SelectedDiff.TextLoaded -= textLoaded;
+                EventHandler textLoaded = null;
+                textLoaded = (a, b) =>
+                    {
+                        if (_currentItem != null && _currentItem.Name.Equals(selectedFileName))
+                            SelectedDiff.GoToLine(SelectedDifflineToSelect);
+                        SelectedDiff.TextLoaded -= textLoaded;
+                    };
+                SelectedDiff.TextLoaded += textLoaded;
+                OnStageAreaLoaded -= stageAreaLoaded;
             };
 
-            SelectedDiff.TextLoaded += textLoaded;
+            OnStageAreaLoaded += stageAreaLoaded;
         }
 
         private void ResetSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
@@ -538,6 +544,8 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
+        private event Action OnStageAreaLoaded;
+
         private bool LoadUnstagedOutputFirstTime = true;
 
         /// <summary>
@@ -577,6 +585,9 @@ namespace GitUI
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
             Unstaged.SelectStoredNextIndex();
             Staged.SelectStoredNextIndex();
+
+            if (OnStageAreaLoaded != null)
+                OnStageAreaLoaded();
 
             if (LoadUnstagedOutputFirstTime)
             {
