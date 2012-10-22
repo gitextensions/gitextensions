@@ -46,7 +46,7 @@ namespace GitUI
         private int NODE_DIMENSION = 8;
         private int LANE_WIDTH = 13;
         private int LANE_LINE_WIDTH = 2;
-        private const int MAX_LANES = 30;
+        private const int MAX_LANES = 40;
         private Brush selectionBrush;
         
         private Pen whiteBorderPen;

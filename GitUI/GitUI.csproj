@@ -1391,6 +1391,14 @@
     <None Include="Resources\Icons\IconSelectRevision.png" />
     <None Include="Resources\Icons\IconEditGitIgnore.png" />
     <None Include="Resources\Icons\IconAddToGitIgnore.png" />
+    <None Include="Resources\Icons\IconStage.png" />
+    <None Include="Resources\Icons\IconStageAll.png" />
+    <None Include="Resources\Icons\IconSubmodulesManage.png" />
+    <None Include="Resources\Icons\IconSubmodulesSync.png" />
+    <None Include="Resources\Icons\IconSubmodulesUpdate.png" />
+    <None Include="Resources\Icons\IconUnstage.png" />
+    <None Include="Resources\Icons\IconUnstageAll.png" />
+    <None Include="Resources\Icons\RecentRepositories.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

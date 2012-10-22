@@ -209,7 +209,7 @@ namespace GitUI
 
         void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _StageSelectedLinesToolStripMenuItem.Enabled = SelectedDiff.HasAnyPatches();
+            _StageSelectedLinesToolStripMenuItem.Enabled = SelectedDiff.HasAnyPatches() || _currentItem != null && _currentItem.IsNew;
             _ResetSelectedLinesToolStripMenuItem.Enabled = _StageSelectedLinesToolStripMenuItem.Enabled;
         }
 
@@ -392,13 +392,17 @@ namespace GitUI
 
         private void StageSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
+            Debug.Assert(_currentItem != null);
             // Prepare git command
             string args = "apply --cached --whitespace=nowarn";
 
             if (_currentItemStaged) //staged
                 args += " --reverse";
-
-            byte[] patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding);
+            byte[] patch;
+            if (!_currentItemStaged && _currentItem.IsNew)
+                patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding, false);
+            else
+                patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding, _currentItem.IsNew);
 
             if (patch != null && patch.Length > 0)
             {
@@ -437,6 +441,7 @@ namespace GitUI
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
 
+            Debug.Assert(_currentItem != null);
             // Prepare git command
             string args = "apply --whitespace=nowarn";
 
@@ -446,9 +451,12 @@ namespace GitUI
            byte[] patch;
 
            if (_currentItemStaged)
-               patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding);
+               patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding, _currentItem.IsNew);
            else
-               patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding);
+               if (_currentItem.IsNew)
+                   patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding, true);
+               else
+                   patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding);
 
             if (patch != null && patch.Length > 0)
             {
