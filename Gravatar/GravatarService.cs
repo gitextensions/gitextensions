@@ -77,6 +77,8 @@ namespace Gravatar
     {
         static IImageCache cache;
         static object gravatarServiceLock = new object();
+        const string defaultGravatarUrl = "http://www.gravatar.com/avatar/";
+        static string gravatarUrl = defaultGravatarUrl;
 
         /// <summary>
         /// Provides a mapping for the image defaults.
@@ -105,6 +107,15 @@ namespace Gravatar
             {
                 return fallBackStrings.Keys;
             }
+        }
+
+        /// <summary>
+        /// Gets or sets Gravatar URL to use. This allows to connect to Gravatar-compatible servers.
+        /// </summary>
+        public static string GravatarUrl
+        {
+            get { return gravatarUrl; }
+            set { gravatarUrl = string.IsNullOrEmpty(gravatarUrl) ? defaultGravatarUrl : value; }
         }
 
         public static void ClearImageCache()
@@ -252,7 +263,7 @@ namespace Gravatar
         /// <returns>The constructed <see cref="System.Uri"/>.</returns>
         private static Uri BuildGravatarUrl(string email, int size, bool useHttps, Rating rating, FallBackService fallBack)
         {
-            var builder = new UriBuilder("http://www.gravatar.com/avatar/");
+            var builder = new UriBuilder(GravatarUrl);
 
             if (useHttps)
             {
