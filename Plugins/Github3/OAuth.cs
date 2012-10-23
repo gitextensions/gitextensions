@@ -1,5 +1,8 @@
 ﻿using System;
-using System.Web;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Git.hub;
 
@@ -31,6 +34,15 @@ namespace Github3
             checkAuth(e.Url.ToString());
         }
 
+        static private Dictionary<string, string> GetParams(string uri)
+        {
+            var matches = Regex.Matches(uri, @"[\?&](([^&=]+)=([^&=#]*))", RegexOptions.Compiled);
+            return matches.Cast<Match>().ToDictionary(
+                m => Uri.UnescapeDataString(m.Groups[2].Value),
+                m => Uri.UnescapeDataString(m.Groups[3].Value)
+            );
+        }
+
         public void checkAuth(string url)
         {
             if (gotToken)
@@ -39,8 +51,9 @@ namespace Github3
             if (url.Contains("?code="))
             {
                 Uri uri = new Uri(url);
-                string code = HttpUtility.ParseQueryString(uri.Query).Get("code");
-                if (!code.IsNullOrEmpty())
+                var queryParams = GetParams(uri.Query);
+                string code;
+                if (queryParams.TryGetValue("code", out code))
                 {
                     this.Hide();
                     this.Close();

@@ -5,7 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Web;
+using System.Net;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -699,7 +699,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 for (int i = 0; i < colFormat.Count; i++)
                 {
                     var mfr = colFormat[i];
-                    strHTML.Append(HttpUtility.HtmlEncode(strT.Substring(nAcum, mfr.Key - nAcum)) + mfr.Value);
+                    strHTML.Append(WebUtility.HtmlEncode(strT.Substring(nAcum, mfr.Key - nAcum)) + mfr.Value);
                     nAcum = mfr.Key;
                 }
 

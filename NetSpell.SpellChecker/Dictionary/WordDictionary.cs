@@ -7,7 +7,9 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+#if FULL_PROFILE
 using System.Windows.Forms.Design;
+#endif
 using NetSpell.SpellChecker.Dictionary.Affix;
 using NetSpell.SpellChecker.Dictionary.Phonetic;
 
@@ -647,7 +649,9 @@ namespace NetSpell.SpellChecker.Dictionary
         [DefaultValue("")]
         [Category("Dictionary")]
         [Description("The folder containing dictionaries")]
+#if FULL_PROFILE
         [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
+#endif
         [NotifyParentProperty(true)]
         public string DictionaryFolder
         {
@@ -656,7 +660,7 @@ namespace NetSpell.SpellChecker.Dictionary
         }
 
         /// <summary>
-        ///     Set this to true to automaticly create a user dictionary when
+        ///     Set this to true to automatically create a user dictionary when
         ///     a word is added.
         /// </summary>
         /// <remarks>
