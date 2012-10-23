@@ -237,6 +237,13 @@ namespace GitCommands
             set { SafeSet("gravatarurl", value, ref _gravatarUrl); }
         }
 
+        private static string _customGravatarPattern;
+        public static string CustomGravatarPattern
+        {
+            get { return SafeGet("customgravatarpattern", "", ref _customGravatarPattern); }
+            set { SafeSet("customgravatarpattern", value, ref _customGravatarPattern); }
+        }
+
         private static bool? _closeCommitDialogAfterCommit;
         public static bool CloseCommitDialogAfterCommit
         {

@@ -118,6 +118,11 @@ namespace Gravatar
             set { gravatarUrl = string.IsNullOrEmpty(value) ? defaultGravatarUrl : value; }
         }
 
+        /// <summary>
+        /// Gets or sets the pattern to use custom Gravatar URL.
+        /// </summary>
+        public static string CustomGravatarPattern { get; set; }
+
         public static void ClearImageCache()
         {
             if (cache != null)
@@ -263,7 +268,16 @@ namespace Gravatar
         /// <returns>The constructed <see cref="System.Uri"/>.</returns>
         private static Uri BuildGravatarUrl(string email, int size, bool useHttps, Rating rating, FallBackService fallBack)
         {
-            var builder = new UriBuilder(GravatarUrl);
+            string url;
+            try
+            {
+                url = string.IsNullOrEmpty(CustomGravatarPattern) ? CustomGravatarPattern : Regex.IsMatch(email, CustomGravatarPattern) ? GravatarUrl : defaultGravatarUrl;
+            }
+            catch
+            {
+                url = defaultGravatarUrl;
+            }
+            var builder = new UriBuilder(url);
 
             if (useHttps)
             {
