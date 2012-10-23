@@ -53,6 +53,8 @@ namespace GitUI
                 return;
             }
 
+            GravatarService.GravatarUrl = Settings.GravatarUrl;
+
             FallBackService gravatarFallBack = FallBackService.Identicon;
             try
             {
