@@ -336,6 +336,7 @@ namespace GitUI
             this.toolStripButtonLevelUp.Name = "toolStripButtonLevelUp";
             this.toolStripButtonLevelUp.Size = new System.Drawing.Size(32, 22);
             this.toolStripButtonLevelUp.Text = "Go to superproject";
+            this.toolStripButtonLevelUp.ToolTipText = "Go to superproject";
             this.toolStripButtonLevelUp.ButtonClick += new System.EventHandler(this.toolStripButtonLevelUp_ButtonClick);
             this.toolStripButtonLevelUp.DropDownOpening += new System.EventHandler(this.toolStripButtonLevelUp_DropDownOpening);
             // 
