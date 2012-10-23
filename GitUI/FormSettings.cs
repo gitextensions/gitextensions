@@ -192,6 +192,18 @@ namespace GitUI
 
         private readonly TranslationString _registryKeyGitExtensionsCorrect =
             new TranslationString("GitExtensions is properly registered.");
+
+        private readonly TranslationString _credentialHelperInstalled =
+            new TranslationString("Git credential helper is installed.");
+
+        private readonly TranslationString _noCredentialsHelperInstalled =
+            new TranslationString("No credential helper installed.");
+
+        private readonly TranslationString _gitCredentialWinStoreHelperInstalled =
+            new TranslationString("Git Credential Win Store is installed as credential helper.");
+
+        private readonly TranslationString _noCredentialsHelperInstalledTryGCS =
+            new TranslationString("No credential helper could be installed. Try to install git-credential-winstore.exe.");
         #endregion
 
         private Font diffFont;
@@ -241,12 +253,59 @@ namespace GitUI
             if (!Settings.RunningOnWindows())
                 return SolveGitCommand();
 
-            return SolveGitCommand() &&
-                   SolveLinuxToolsDir() &&
-                   SolveMergeToolForKDiff() &&
-                   SolveDiffToolForKDiff() &&
-                   SolveGitExtensionsDir() &&
-                   SolveEditor();
+            bool valid = true;
+            valid = SolveGitCommand() && valid;
+            valid = SolveLinuxToolsDir() && valid;
+            valid = SolveMergeToolForKDiff() && valid;
+            valid = SolveDiffToolForKDiff() && valid;
+            valid = SolveGitExtensionsDir() && valid;
+            valid = SolveEditor() && valid;
+            valid = SolveGitCredentialStore() && valid;
+
+            return valid;
+        }
+
+        private bool CheckGitCredentialStore()
+        {
+            gitCredentialWinStore.Visible = true;
+            bool isValid = !string.IsNullOrEmpty(GitCommandHelpers.GetGlobalConfig().GetValue("credential.helper"));
+
+            if (isValid)
+            {
+                gitCredentialWinStore.BackColor = Color.LightGreen;
+                gitCredentialWinStore.Text = _credentialHelperInstalled.Text;
+                gitCredentialWinStore_Fix.Visible = false;
+            }
+            else
+            {
+                gitCredentialWinStore.BackColor = Color.LightSalmon;
+                gitCredentialWinStore.Text = _noCredentialsHelperInstalled.Text;
+                gitCredentialWinStore_Fix.Visible = true;
+            }
+
+            return isValid;
+        }
+
+        private bool SolveGitCredentialStore()
+        {
+            if (!CheckGitCredentialStore())
+            {
+                string gcsFileName = Settings.GetInstallDir() + @"\GitCredentialWinStore\git-credential-winstore.exe";
+                if (File.Exists(gcsFileName))
+                {
+                    ConfigFile config = GitCommandHelpers.GetGlobalConfig();
+                    if (Settings.RunningOnWindows())
+                        config.SetValue("credential.helper", "!\\\"" + GitCommandHelpers.FixPath(gcsFileName) + "\\\"");
+                    else if (Settings.RunningOnMacOSX())
+                        config.SetValue("credential.helper", "osxkeychain");
+                    else
+                        config.SetValue("credential.helper", "cache --timeout=300"); // 5 min
+                    config.Save();
+                    return true;
+                }
+                return false;
+            }
+            return true;
         }
 
         private string GetGlobalEditor()
@@ -835,6 +894,7 @@ namespace GitUI
                     bValid = CheckGitExtensionRegistrySettings() && bValid;
                     bValid = CheckGitExe() && bValid;
                     bValid = CheckSSHSettings() && bValid;
+                    bValid = CheckGitCredentialStore() && bValid;
                 }
             }
             catch (Exception ex)
@@ -2376,6 +2436,20 @@ namespace GitUI
             using (var frm = new FormFixHome()) frm.ShowDialog(this);
             LoadSettings();
             Rescan_Click(null, null);
+        }
+
+        private void gitCredentialWinStore_Fix_Click(object sender, EventArgs e)
+        {
+            if (SolveGitCredentialStore())
+            {
+                MessageBox.Show(this, _gitCredentialWinStoreHelperInstalled.Text);
+            }
+            else
+            {
+                MessageBox.Show(this, _noCredentialsHelperInstalledTryGCS.Text);
+            }
+
+            CheckSettings();
         }
 
     }
