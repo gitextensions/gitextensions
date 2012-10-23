@@ -120,7 +120,7 @@ namespace GitUI
         private bool IsMergeCommit { get; set; }
         private bool shouldRescanChanges = true;
         private bool _shouldReloadCommitTemplates = true;
-        private AsyncLoader unstagedLoader = new AsyncLoader();
+        private AsyncLoader unstagedLoader;
         private bool _useFormCommitMessage;
         private CancellationTokenSource interactiveAddBashCloseWaitCTS;
 
@@ -140,6 +140,8 @@ namespace GitUI
             : base(true, aCommands)
         {
             _syncContext = SynchronizationContext.Current;
+
+            unstagedLoader = new AsyncLoader(_syncContext);
 
             _useFormCommitMessage = Settings.UseFormCommitMessage;
 
