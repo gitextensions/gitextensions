@@ -42,6 +42,7 @@
       <Directory Id="ProgramFilesFolder">
         <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
           <Directory Id="PuttyDir" Name="PuTTY"/>
+          <Directory Id="GitCredentialWinStoreDir" Name="GitCredentialWinStore"/>
           <Directory Id="PluginsDir" Name="Plugins"/>
           <Directory Id="InstallerDir" Name="Installer"/>
           <Directory Id="DictionariesDir" Name="Dictionaries"/>
@@ -369,6 +370,12 @@
       </Component>
     </DirectoryRef>
 
+    <DirectoryRef Id="GitCredentialWinStoreDir">
+      <Component Id="gitcredentialwinstore.exe" Guid="*">
+        <File Source="..\Bin\git-credential-winstore.exe"/>
+      </Component>
+    </DirectoryRef>
+
     <DirectoryRef Id="PuttyDir">
       <Component Id="plink.exe" Guid="*">
         <File Source="..\Bin\plink.exe"/>
@@ -500,6 +507,7 @@
       <ComponentRef Id="pageant.reg"/>
       <ComponentRef Id="puttygen.exe"/>
       <ComponentRef Id="puttygen.reg"/>
+      <ComponentRef Id="gitcredentialwinstore.exe"/>
 
       <ComponentRef Id="GitExtensions.newstartmenu"/>
       <ComponentRef Id="GitExtensions.startmenu"/>
@@ -668,13 +676,9 @@
     <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.7.11-preview20120710.exe"/>
     <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore"/>
 
-    <Binary Id="GCS" SourceFile="..\Bin\git-credential-winstore.exe"/>
-    <CustomAction Id="GCS" Impersonate="no" BinaryKey="GCS" Execute="deferred" ExeCommand="-s" Return="ignore"/>
-    
     <InstallExecuteSequence>
       <Custom Action="KDiff" After="InstallFiles"><![CDATA[INSTALLKDIFF3=1]]></Custom>
       <Custom Action="MsysGit" After="InstallFiles"><![CDATA[INSTALLMSYSGIT=1]]></Custom>
-      <Custom Action="GCS" After="InstallFiles"><![CDATA[INSTALLGCS=1]]></Custom>
     </InstallExecuteSequence>
     <?endif?>
 
