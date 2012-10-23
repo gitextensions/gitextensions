@@ -192,6 +192,18 @@ namespace GitUI
 
         private readonly TranslationString _registryKeyGitExtensionsCorrect =
             new TranslationString("GitExtensions is properly registered.");
+
+        private readonly TranslationString _credentialHelperInstalled =
+            new TranslationString("Git credential helper is installed.");
+
+        private readonly TranslationString _noCredentialsHelperInstalled =
+            new TranslationString("No credential helper installed.");
+
+        private readonly TranslationString _gitCredentialWinStoreHelperInstalled =
+            new TranslationString("Git Credential Win Store is installed as credential helper.");
+
+        private readonly TranslationString _noCredentialsHelperInstalledTryGCS =
+            new TranslationString("No credential helper could be installed. Try to install git-credential-winstore.exe.");
         #endregion
 
         private Font diffFont;
@@ -261,13 +273,13 @@ namespace GitUI
             if (isValid)
             {
                 gitCredentialWinStore.BackColor = Color.LightGreen;
-                gitCredentialWinStore.Text = "Git Credential Win Store is installed as credential helper.";
+                gitCredentialWinStore.Text = _credentialHelperInstalled.Text;
                 gitCredentialWinStore_Fix.Visible = false;
             }
             else
             {
                 gitCredentialWinStore.BackColor = Color.LightSalmon;
-                gitCredentialWinStore.Text = "No credential helper installed.";
+                gitCredentialWinStore.Text = _noCredentialsHelperInstalled.Text;
                 gitCredentialWinStore_Fix.Visible = true;
             }
 
@@ -2430,11 +2442,11 @@ namespace GitUI
         {
             if (SolveGitCredentialStore())
             {
-                MessageBox.Show(this, "Git Credential Win Store is installed as credential helper.");
+                MessageBox.Show(this, _gitCredentialWinStoreHelperInstalled.Text);
             }
             else
             {
-                MessageBox.Show(this, "No credential helper could be installed. Try to install git-credential-winstore.exe.");
+                MessageBox.Show(this, _noCredentialsHelperInstalledTryGCS.Text);
             }
 
             CheckSettings();
