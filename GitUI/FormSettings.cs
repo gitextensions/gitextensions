@@ -282,7 +282,12 @@ namespace GitUI
                 if (File.Exists(gcsFileName))
                 {
                     ConfigFile config = GitCommandHelpers.GetGlobalConfig();
-                    config.SetValue("credential.helper", "!\\\"" + GitCommandHelpers.FixPath(gcsFileName) + "\\\"");
+                    if (Settings.RunningOnWindows())
+                        config.SetValue("credential.helper", "!\\\"" + GitCommandHelpers.FixPath(gcsFileName) + "\\\"");
+                    else if (Settings.RunningOnMacOSX())
+                        config.SetValue("credential.helper", "osxkeychain");
+                    else
+                        config.SetValue("credential.helper", "cache --timeout=300"); // 5 min
                     config.Save();
                     return true;
                 }
