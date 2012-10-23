@@ -293,6 +293,8 @@ namespace GitUI
             this.Ok = new System.Windows.Forms.Button();
             this.applicationDialog = new System.Windows.Forms.FontDialog();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.GravatarUrl = new System.Windows.Forms.TextBox();
+            this.label34 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -1407,6 +1409,8 @@ namespace GitUI
             // 
             this.groupBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox6.Controls.Add(this.label34);
+            this.groupBox6.Controls.Add(this.GravatarUrl);
             this.groupBox6.Controls.Add(this.noImageService);
             this.groupBox6.Controls.Add(this.label53);
             this.groupBox6.Controls.Add(this.label47);
@@ -3358,6 +3362,22 @@ namespace GitUI
             this.tableLayoutPanel3.Size = new System.Drawing.Size(744, 567);
             this.tableLayoutPanel3.TabIndex = 2;
             // 
+            // GravatarUrl
+            // 
+            this.GravatarUrl.Location = new System.Drawing.Point(354, 16);
+            this.GravatarUrl.Name = "GravatarUrl";
+            this.GravatarUrl.Size = new System.Drawing.Size(351, 23);
+            this.GravatarUrl.TabIndex = 10;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(275, 20);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(73, 15);
+            this.label34.TabIndex = 11;
+            this.label34.Text = "Custom URL";
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -3716,6 +3736,8 @@ namespace GitUI
         private TextBox nameTextBox;
         private FlowLayoutPanel flowLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel3;
+        private TextBox GravatarUrl;
+        private Label label34;
 
     }
 }
