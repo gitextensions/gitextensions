@@ -282,7 +282,7 @@ namespace GitUI
                 if (File.Exists(gcsFileName))
                 {
                     ConfigFile config = GitCommandHelpers.GetGlobalConfig();
-                    config.SetValue("credential.helper", "\\\"" + gcsFileName.Replace("\\", "/") + "\\\"");
+                    config.SetValue("credential.helper", "!\\\"" + GitCommandHelpers.FixPath(gcsFileName) + "\\\"");
                     config.Save();
                     return true;
                 }
