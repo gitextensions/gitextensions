@@ -1,4 +1,4 @@
-﻿using System.Web;
+﻿using System.Net;
 
 namespace GitCommands
 {
@@ -6,12 +6,12 @@ namespace GitCommands
     {
          public static string CreateTagLink(string tag)
          {
-             return "<a href='gitex://gototag/" + tag + "'>" + HttpUtility.HtmlEncode(tag) + "</a>";
+             return "<a href='gitex://gototag/" + tag + "'>" + WebUtility.HtmlEncode(tag) + "</a>";
          }
 
         public static string CreateBranchLink(string noPrefixBranch)
         {
-            return "<a href='gitex://gotobranch/" + noPrefixBranch + "'>" + HttpUtility.HtmlEncode(noPrefixBranch) + "</a>";
+            return "<a href='gitex://gotobranch/" + noPrefixBranch + "'>" + WebUtility.HtmlEncode(noPrefixBranch) + "</a>";
         }
 
         public static string CreateCommitLink(string guid)

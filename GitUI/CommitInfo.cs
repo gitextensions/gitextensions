@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Web;
+using System.Net;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor.RichTextBoxExtension;
@@ -209,7 +209,7 @@ namespace GitUI
                     if (showBranchesAsLinks)
                         branchText = LinkFactory.CreateBranchLink(noPrefixBranch);
                     else 
-                        branchText = HttpUtility.HtmlEncode(noPrefixBranch);
+                        branchText = WebUtility.HtmlEncode(noPrefixBranch);
                     links.Add(branchText);
                 }
 
@@ -217,19 +217,19 @@ namespace GitUI
                     allowRemote = false;
             }
             if (links.Any())
-                return Environment.NewLine + HttpUtility.HtmlEncode(containedInBranches.Text) + " " + links.Join(", ");
-            return Environment.NewLine + HttpUtility.HtmlEncode(containedInNoBranch.Text);
+                return Environment.NewLine + WebUtility.HtmlEncode(containedInBranches.Text) + " " + links.Join(", ");
+            return Environment.NewLine + WebUtility.HtmlEncode(containedInNoBranch.Text);
         }
 
         private string GetTagsWhichContainsThisCommit(string revision, bool showBranchesAsLinks)
         {
             var tagString = CommitInformation
                 .GetAllTagsWhichContainGivenCommit(Module, revision)
-                .Select(s => showBranchesAsLinks ? LinkFactory.CreateTagLink(s) : HttpUtility.HtmlEncode(s)).Join(", ");
+                .Select(s => showBranchesAsLinks ? LinkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s)).Join(", ");
 
             if (tagString != string.Empty)
-                return Environment.NewLine + HttpUtility.HtmlEncode(containedInTags.Text) + " " + tagString;
-            return Environment.NewLine + HttpUtility.HtmlEncode(containedInNoTag.Text);
+                return Environment.NewLine + WebUtility.HtmlEncode(containedInTags.Text) + " " + tagString;
+            return Environment.NewLine + WebUtility.HtmlEncode(containedInNoTag.Text);
         }
 
         private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)

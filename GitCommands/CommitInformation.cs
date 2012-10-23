@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web;
+using System.Net;
 
 namespace GitCommands
 {
@@ -93,7 +93,7 @@ namespace GitCommands
                 return new CommitInformation(error, "");
 
             string header = data.GetHeader();
-            string body = "\n\n" + HttpUtility.HtmlEncode(data.Body.Trim()) + "\n\n";
+            string body = "\n\n" + WebUtility.HtmlEncode(data.Body.Trim()) + "\n\n";
 
             return new CommitInformation(header, body);
         }
@@ -108,7 +108,7 @@ namespace GitCommands
                 throw new ArgumentNullException("data");
 
             string header = data.GetHeader();
-            string body = "\n\n" + HttpUtility.HtmlEncode(data.Body.Trim()) + "\n\n";
+            string body = "\n\n" + WebUtility.HtmlEncode(data.Body.Trim()) + "\n\n";
 
             return new CommitInformation(header, body);
         }
