@@ -8,6 +8,7 @@ using System.Text;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
+using GitCommands;
 
 namespace GitUI.Editor.RichTextBoxExtension
 {
@@ -1104,6 +1105,12 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static void SetXHTMLText(this RichTextBox rtb, string xhtmlText)
         {
+            if (!Settings.RunningOnWindows())
+            {
+                SetXHTMLTextAsPlainText(rtb, xhtmlText);
+                return;
+            }
+
             rtb.Clear();
             RTFCurrentState cs = new RTFCurrentState();
 
@@ -1402,6 +1409,51 @@ namespace GitUI.Editor.RichTextBoxExtension
                     cs.charFormatChanged = true;
                     break;
             }
+        }
+
+        public static void SetXHTMLTextAsPlainText(this RichTextBox rtb, string xhtmlText)
+        {
+            rtb.Clear();
+
+            rtb.HideSelection = true;
+
+            XmlReaderSettings settings = new XmlReaderSettings();
+            settings.ConformanceLevel = ConformanceLevel.Fragment;
+
+            try
+            {
+                using (XmlReader reader = XmlReader.Create(new StringReader(xhtmlText), settings))
+                {
+                    while (reader.Read())
+                    {
+                        switch (reader.NodeType)
+                        {
+                            case XmlNodeType.Text:
+                            case XmlNodeType.Whitespace:
+                            case XmlNodeType.SignificantWhitespace:
+                                rtb.SelectedText = reader.Value;
+                                break;
+                            case XmlNodeType.Element:
+                            case XmlNodeType.EndElement:
+                                break;
+                            case XmlNodeType.XmlDeclaration:
+                            case XmlNodeType.ProcessingInstruction:
+                                break;
+                            case XmlNodeType.Comment:
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (System.Xml.XmlException ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            rtb.HideSelection = false;
+            // reposition to final
+            rtb.Select(rtb.TextLength + 1, 0);
         }
     }
 }
