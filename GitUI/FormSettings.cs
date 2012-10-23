@@ -359,6 +359,8 @@ namespace GitUI
                 _NO_TRANSLATE_DaysToCacheImages.Value = Settings.AuthorImageCacheDays;
                 _NO_TRANSLATE_authorImageSize.Value = Settings.AuthorImageSize;
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
+                GravatarUrl.Text = Settings.GravatarUrl;
+                CustomGravatarPattern.Text = Settings.CustomGravatarPattern;
                 noImageService.Text = Settings.GravatarFallbackService;
                 chkShowErrorsWhenStagingFiles.Checked = Settings.ShowErrorsWhenStagingFiles;
                 chkStashUntrackedFiles.Checked = Settings.IncludeUntrackedFilesInAutoStash;
@@ -594,6 +596,8 @@ namespace GitUI
             Settings.GitBinDir = GitBinPath.Text;
 
             Settings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
+            Settings.GravatarUrl = GravatarUrl.Text;
+            Settings.CustomGravatarPattern = CustomGravatarPattern.Text;
             Settings.GravatarFallbackService = noImageService.Text;
 
             Settings.CloseProcessDialog = chkCloseProcessDialog.Checked;

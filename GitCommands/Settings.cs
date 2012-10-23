@@ -230,6 +230,20 @@ namespace GitCommands
             set { SafeSet("showauthorgravatar", value, ref _showAuthorGravatar); }
         }
 
+        private static string _gravatarUrl;
+        public static string GravatarUrl
+        {
+            get { return SafeGet("gravatarurl", "", ref _gravatarUrl); }
+            set { SafeSet("gravatarurl", value, ref _gravatarUrl); }
+        }
+
+        private static string _customGravatarPattern;
+        public static string CustomGravatarPattern
+        {
+            get { return SafeGet("customgravatarpattern", "", ref _customGravatarPattern); }
+            set { SafeSet("customgravatarpattern", value, ref _customGravatarPattern); }
+        }
+
         private static bool? _closeCommitDialogAfterCommit;
         public static bool CloseCommitDialogAfterCommit
         {
