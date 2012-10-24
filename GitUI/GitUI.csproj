@@ -191,6 +191,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GitUIExtensions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Hotkey\ControlHotkeys.cs">
       <SubType>UserControl</SubType>
     </Compile>
