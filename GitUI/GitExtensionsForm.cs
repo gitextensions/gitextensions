@@ -50,7 +50,7 @@ namespace GitUI
                 SavePosition(this.GetType().Name);
 
 #if !__MonoCS__
-            if (TaskbarManager.IsPlatformSupported)
+            if (GitCommands.Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {

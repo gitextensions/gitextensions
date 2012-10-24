@@ -956,7 +956,7 @@ namespace GitUI
             var children = RevisionGrid.GetRevisionChildren(revision.Guid);
 
             if (revision != null)
-                RevisionInfo.SetRevision(revision.Guid, children);
+                RevisionInfo.SetRevisionWithChildren(revision.Guid, children);
         }
 
         public void FileHistoryOnClick(object sender, EventArgs e)
@@ -2625,16 +2625,16 @@ namespace GitUI
                 CheckoutBranchToolStripMenuItemClick(sender, e);
         }
 
-        private void RevisionInfo_CommandClick(string command, string data)
+        private void RevisionInfo_CommandClick(object sender, CommandEventArgs e)
         {
-            if (command == "gotocommit")
+            if (e.Command == "gotocommit")
             {
-                RevisionGrid.SetSelectedRevision(new GitRevision(Module, data));
+                RevisionGrid.SetSelectedRevision(new GitRevision(Module, e.Data));
             }
-            else if (command == "gotobranch" || command == "gototag")
+            else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
                 string error = "";
-                CommitData commit = CommitData.GetCommitData(Module, data, ref error);
+                CommitData commit = CommitData.GetCommitData(Module, e.Data, ref error);
                 if (commit != null)
                     RevisionGrid.SetSelectedRevision(new GitRevision(Module, commit.Guid));
             }
