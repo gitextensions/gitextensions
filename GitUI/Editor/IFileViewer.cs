@@ -41,6 +41,7 @@ namespace GitUI.Editor
         
         int FirstVisibleLine { get; set; }
         int GetLineFromVisualPosY(int visualPosY);
+        int LineAtCaret { get; }
         string GetLineText(int line);
         int TotalNumberOfLines { get; }
         //lineNumber is 0 based
