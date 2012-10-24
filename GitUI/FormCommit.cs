@@ -486,11 +486,20 @@ namespace GitUI
             if (patch != null && patch.Length > 0)
             {
                 string output = Module.RunGitCmd(args, patch);
+                if (Settings.RunningOnWindows())
+                {
+                    //remove file mode warnings on windows
+                    Regex regEx = new Regex("warning: .*has type .* expected .*", RegexOptions.Compiled);
+                    output = output.RemoveLines(line => regEx.IsMatch(line));
+                }
                 if (!string.IsNullOrEmpty(output))
                 {
                     MessageBox.Show(this, output + "\n\n" + SelectedDiff.Encoding.GetString(patch));
                 }
-                Staged.StoreNextIndexToSelect();
+                if (_currentItemStaged)
+                    Staged.StoreNextIndexToSelect();
+                else
+                    Unstaged.StoreNextIndexToSelect();
                 ScheduleGoToLine();
                 selectedDiffReloaded = false;
                 RescanChanges();
