@@ -1030,93 +1030,78 @@ namespace GitUI
                         List<Color> curColors = GetJunctionColors(laneInfo.Junctions);
 
                         // Create the brush for drawing the line
-                        Brush brushLineColor = null;
-                        try
-                        {
-                            bool drawBorder = Settings.BranchBorders && highLight; //hide border for "non-relatives"
+                        Brush brushLineColor;                        
+                        
+                        bool drawBorder = Settings.BranchBorders && highLight; //hide border for "non-relatives"
 
-                            if (curColors.Count == 1 || !Settings.StripedBranchChange)
+                        if (curColors.Count == 1 || !Settings.StripedBranchChange)
+                        {
+                            if (curColors[0] != nonRelativeColor)
                             {
-                                if (curColors[0] != nonRelativeColor)
-                                {
-                                    brushLineColor = new SolidBrush(curColors[0]);
-                                }
-                                else if (curColors.Count > 1 && curColors[1] != nonRelativeColor)
-                                {
-                                    brushLineColor = new SolidBrush(curColors[1]);
-                                }
-                                else
-                                {
-                                    drawBorder = false;
-                                    brushLineColor = new SolidBrush(nonRelativeColor);
-                                }
+                                brushLineColor = new SolidBrush(curColors[0]);
+                            }
+                            else if (curColors.Count > 1 && curColors[1] != nonRelativeColor)
+                            {
+                                brushLineColor = new SolidBrush(curColors[1]);
                             }
                             else
                             {
-                                Color lastRealColor = curColors.LastOrDefault(c => c != nonRelativeColor);
-
-
-                                if (lastRealColor.IsEmpty)
-                                {
-                                    brushLineColor = new SolidBrush(nonRelativeColor);
-                                    drawBorder = false;
-                                }
-                                else
-                                {
-                                    brushLineColor = new HatchBrush(HatchStyle.DarkDownwardDiagonal, curColors[0], lastRealColor);
-                                }
-                            }
-
-                            for (int i = drawBorder ? 0 : 2; i < 3; i++)
-                            {
-                                Pen penLine = null;
-                                try
-                                {
-                                    if (i == 0)
-                                    {
-                                        penLine = whiteBorderPen;
-                                    }
-                                    else if (i == 1)
-                                    {
-                                        penLine = blackBorderPen;
-                                    }
-                                    else
-                                    {
-                                        penLine = new Pen(brushLineColor, LANE_LINE_WIDTH);
-                                    }
-
-                                    if (laneInfo.ConnectLane == lane)
-                                    {
-                                        wa.DrawLine
-                                            (
-                                                penLine,
-                                                new Point(mid, top - 1),
-                                                new Point(mid, top + rowHeight + 2)
-                                            );
-                                    }
-                                    else
-                                    {
-                                        wa.DrawBezier
-                                            (
-                                                penLine,
-                                                new Point(mid, top - 1),
-                                                new Point(mid, top + rowHeight + 2),
-                                                new Point(mid + (laneInfo.ConnectLane - lane) * LANE_WIDTH, top - 1),
-                                                new Point(mid + (laneInfo.ConnectLane - lane) * LANE_WIDTH, top + rowHeight + 2)
-                                            );
-                                    }
-                                }
-                                finally
-                                {
-                                    if (penLine != null)
-                                        ((IDisposable)penLine).Dispose();
-                                }
+                                drawBorder = false;
+                                brushLineColor = new SolidBrush(nonRelativeColor);
                             }
                         }
-                        finally
+                        else
                         {
-                            if (brushLineColor != null)
-                                ((IDisposable)brushLineColor).Dispose();
+                            Color lastRealColor = curColors.LastOrDefault(c => c != nonRelativeColor);
+
+
+                            if (lastRealColor.IsEmpty)
+                            {
+                                brushLineColor = new SolidBrush(nonRelativeColor);
+                                drawBorder = false;
+                            }
+                            else
+                            {
+                                brushLineColor = new HatchBrush(HatchStyle.DarkDownwardDiagonal, curColors[0], lastRealColor);
+                            }
+                        }
+
+                        for (int i = drawBorder ? 0 : 2; i < 3; i++)
+                        {
+                            Pen penLine;
+                            if (i == 0)
+                            {
+                                penLine = whiteBorderPen;
+                            }
+                            else if (i == 1)
+                            {
+                                penLine = blackBorderPen;
+                            }
+                            else
+                            {
+                                penLine = new Pen(brushLineColor, LANE_LINE_WIDTH);
+                            }
+
+                            if (laneInfo.ConnectLane == lane)
+                            {
+                                wa.DrawLine
+                                    (
+                                        penLine,
+                                        new Point(mid, top - 1),
+                                        new Point(mid, top + rowHeight + 2)
+                                    );
+                            }
+                            else
+                            {
+                                wa.DrawBezier
+                                    (
+                                        penLine,
+                                        new Point(mid, top - 1),
+                                        new Point(mid, top + rowHeight + 2),
+                                        new Point(mid + (laneInfo.ConnectLane - lane) * LANE_WIDTH, top - 1),
+                                        new Point(mid + (laneInfo.ConnectLane - lane) * LANE_WIDTH, top + rowHeight + 2)
+                                    );
+                            }
                         }
                     }
                 }
