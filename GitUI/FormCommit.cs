@@ -393,8 +393,14 @@ namespace GitUI
             );
         }
 
+        private bool selectedDiffReloaded = true;
+
         private void StageSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
+            //to prevent multiple clicks
+            if (!selectedDiffReloaded)
+                return;
+
             Debug.Assert(_currentItem != null);
             // Prepare git command
             string args = "apply --cached --whitespace=nowarn";
@@ -419,6 +425,7 @@ namespace GitUI
                 else
                     Unstaged.StoreNextIndexToSelect();
                 ScheduleGoToLine();
+                selectedDiffReloaded = false;
                 RescanChanges();                
             }
         }
@@ -440,6 +447,7 @@ namespace GitUI
                             SelectedDiff.ScrollPos = scrollPosition;
                         }
                         SelectedDiff.TextLoaded -= textLoaded;
+                        selectedDiffReloaded = true;
                     };
                 SelectedDiff.TextLoaded += textLoaded;
                 OnStageAreaLoaded -= stageAreaLoaded;
@@ -450,6 +458,10 @@ namespace GitUI
 
         private void ResetSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
+            //to prevent multiple clicks
+            if (!selectedDiffReloaded)
+                return;
+
             if (MessageBox.Show(this, _resetSelectedLinesConfirmation.Text, _resetChangesCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 return;
@@ -480,6 +492,7 @@ namespace GitUI
                 }
                 Staged.StoreNextIndexToSelect();
                 ScheduleGoToLine();
+                selectedDiffReloaded = false;
                 RescanChanges();
             }
         }
