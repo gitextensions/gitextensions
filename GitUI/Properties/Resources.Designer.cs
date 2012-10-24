@@ -688,6 +688,20 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconRepoCreate {
+            get {
+                object obj = ResourceManager.GetObject("IconRepoCreate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconRepoOpen {
+            get {
+                object obj = ResourceManager.GetObject("IconRepoOpen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconResetCurrentBranchToHere {
             get {
                 object obj = ResourceManager.GetObject("IconResetCurrentBranchToHere", resourceCulture);
@@ -873,13 +887,6 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap nonprintchar {
             get {
                 object obj = ResourceManager.GetObject("nonprintchar", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap open {
-            get {
-                object obj = ResourceManager.GetObject("open", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
