@@ -695,33 +695,6 @@ namespace GitUI.Editor
             _internalFileViewer.GoToLine(line);
         }
 
-        private void NextChangeButtonClick(object sender, EventArgs e)
-        {
-            var firstVisibleLine = _internalFileViewer.FirstVisibleLine;
-            var totalNumberOfLines = _internalFileViewer.TotalNumberOfLines;
-            var emptyLineCheck = false;
-
-            for (var line = firstVisibleLine + 1; line < totalNumberOfLines; line++)
-            {
-                var lineContent = _internalFileViewer.GetLineText(line);
-                if (lineContent.StartsWith("+") || lineContent.StartsWith("-"))
-                {
-                    if (emptyLineCheck)
-                    {
-                        _internalFileViewer.FirstVisibleLine = Math.Max(line - 1, 0);
-                        return;
-                    }
-                }
-                else
-                {
-                    emptyLineCheck = true;
-                }
-            }
-
-            //Do not go to the end of the file if no change is found
-            //TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = totalNumberOfLines - TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
-        }
-
         public int GetLineFromVisualPosY(int visualPosY)
         {
             return _internalFileViewer.GetLineFromVisualPosY(visualPosY);
@@ -747,15 +720,51 @@ namespace GitUI.Editor
             _internalFileViewer.ClearHighlighting();
         }
 
-        private void PreviousChangeButtonClick(object sender, EventArgs e)
+        private void NextChangeButtonClick(object sender, EventArgs e)
         {
-            var firstVisibleLine = _internalFileViewer.FirstVisibleLine;
+            Focus();
+            var firstVisibleLine = _internalFileViewer.LineAtCaret;
+            var totalNumberOfLines = _internalFileViewer.TotalNumberOfLines;
             var emptyLineCheck = false;
 
-            for (var line = firstVisibleLine - 1; line > 0; line--)
+            for (var line = firstVisibleLine + 1; line < totalNumberOfLines; line++)
             {
                 var lineContent = _internalFileViewer.GetLineText(line);
-                if (lineContent.StartsWith("+") || lineContent.StartsWith("-"))
+                if (lineContent.StartsWithAny(new string[] { "+", "-" })
+                    && !lineContent.StartsWithAny(new string[] { "++", "--" }))
+                {
+                    if (emptyLineCheck)
+                    {
+                        _internalFileViewer.FirstVisibleLine = Math.Max(line - 4, 0);
+                        GoToLine(line);
+                        return;
+                    }
+                }
+                else
+                {
+                    emptyLineCheck = true;
+                }
+            }
+
+            //Do not go to the end of the file if no change is found
+            //TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = totalNumberOfLines - TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
+        }
+
+        private void PreviousChangeButtonClick(object sender, EventArgs e)
+        {
+            Focus();
+            var firstVisibleLine = _internalFileViewer.LineAtCaret;
+            var emptyLineCheck = false;
+            //go to the top of change block
+            while (firstVisibleLine > 0 &&
+                _internalFileViewer.GetLineText(firstVisibleLine).StartsWithAny(new string[] { "+", "-" }))
+                firstVisibleLine--;
+
+            for (var line = firstVisibleLine; line > 0; line--)
+            {
+                var lineContent = _internalFileViewer.GetLineText(line);
+                if (lineContent.StartsWithAny(new string[] { "+", "-" })
+                    && !lineContent.StartsWithAny(new string[] { "++", "--" }))
                 {
                     emptyLineCheck = true;
                 }
@@ -763,7 +772,8 @@ namespace GitUI.Editor
                 {
                     if (emptyLineCheck)
                     {
-                        _internalFileViewer.FirstVisibleLine = line;
+                        _internalFileViewer.FirstVisibleLine = Math.Max(0, line - 3);
+                        GoToLine(line + 1);
                         return;
                     }
                 }

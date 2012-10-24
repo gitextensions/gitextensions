@@ -411,6 +411,14 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(0, lineNumber);
         }
 
+        public int LineAtCaret
+        {
+            get
+            {
+                return TextEditor.ActiveTextAreaControl.Caret.Position.Line;
+            }
+        }
+
         public void HighlightLine(int line, Color color)
         {
             if (line >= TextEditor.Document.TotalNumberOfLines)

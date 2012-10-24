@@ -426,6 +426,7 @@ namespace GitUI
         private void ScheduleGoToLine()
         {
             int SelectedDifflineToSelect = SelectedDiff.GetText().Substring(0, SelectedDiff.GetSelectionPosition()).Count(c => c == '\n');
+            int scrollPosition = SelectedDiff.ScrollPos;
             string selectedFileName = _currentItem.Name;
             Action stageAreaLoaded = null;
             stageAreaLoaded = () =>
@@ -434,7 +435,10 @@ namespace GitUI
                 textLoaded = (a, b) =>
                     {
                         if (_currentItem != null && _currentItem.Name.Equals(selectedFileName))
+                        {
                             SelectedDiff.GoToLine(SelectedDifflineToSelect);
+                            SelectedDiff.ScrollPos = scrollPosition;
+                        }
                         SelectedDiff.TextLoaded -= textLoaded;
                     };
                 SelectedDiff.TextLoaded += textLoaded;
