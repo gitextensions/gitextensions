@@ -15,9 +15,12 @@ glossy-3d-blue-hourglass-icon64.png http://www.iconarchive.com/show/clean-3d-ico
 
 IconFinder
 ----------
-database_save_a*.png: FatCow Web Hosting - http://www.fatcow.com/
 1350825545_refresh yellow.png - Webdesigner Depot - http://www.webdesignerdepot.com
 1350825556_refresh yellow.png - Webdesigner Depot - http://www.webdesignerdepot.com
+
+http://www.fatcow.com/free-icons
+database_save_a*.png
+database*.png
 
 icons.lisisoft.com
 ------------------
