@@ -1049,7 +1049,7 @@ namespace GitUI
             // 
             // openToolStripMenuItem
             // 
-            this.openToolStripMenuItem.Image = global::GitUI.Properties.Resources.open;
+            this.openToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconRepoOpen;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
@@ -1224,7 +1224,7 @@ namespace GitUI
             // 
             // initNewRepositoryToolStripMenuItem
             // 
-            this.initNewRepositoryToolStripMenuItem.Image = global::GitUI.Properties.Resources.Star;
+            this.initNewRepositoryToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconRepoCreate;
             this.initNewRepositoryToolStripMenuItem.Name = "initNewRepositoryToolStripMenuItem";
             this.initNewRepositoryToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.initNewRepositoryToolStripMenuItem.Text = "Create new repository";
