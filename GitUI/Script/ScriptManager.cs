@@ -74,8 +74,8 @@ namespace GitUI.Script
             {
                 var serializer = new XmlSerializer(typeof(BindingList<ScriptInfo>));
                 using (var stringReader = new StringReader(xml))
-                using (var xmlReader = new XmlTextReader(stringReader))
                 {
+                    var xmlReader = new XmlTextReader(stringReader);
                     Scripts = serializer.Deserialize(xmlReader) as BindingList<ScriptInfo>;
                 }
             }

@@ -128,7 +128,7 @@ namespace GitUI.Blame
                 return;
 
             _lastRevision = newRevision;
-            commitInfo.SetRevision(_lastRevision);
+            commitInfo.Revision = _lastRevision;
         }
 
         bool bChangeScrollPosition;
@@ -175,7 +175,7 @@ namespace GitUI.Blame
         public void LoadBlame(string guid, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding)
         {
             //refresh only when something changed
-            if (guid.Equals(commitInfo.GetRevision()) && fileName.Equals(fileName) && revGrid == _revGrid && encoding == _encoding)
+            if (guid.Equals(commitInfo.Revision) && fileName.Equals(fileName) && revGrid == _revGrid && encoding == _encoding)
                 return;
 
             if (controlToMask != null)
@@ -218,7 +218,7 @@ namespace GitUI.Blame
                 BlameFile.ViewText(fileName, blameFile.ToString());
                 BlameFile.ScrollPos = scrollpos;
 
-                commitInfo.SetRevision(guid);
+                commitInfo.Revision = guid;
 
                 if (controlToMask != null)
                     controlToMask.UnMask();

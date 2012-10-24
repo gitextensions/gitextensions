@@ -68,16 +68,16 @@ namespace GitUI
 
 #if !__MonoCS__
                         if (GitCommands.Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+                        {
+                            try
                             {
-                                try
-                                {
-                                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-                                    TaskbarManager.Instance.SetProgressValue(progressValue, 100);
-                                }
-                                catch (InvalidOperationException)
-                                {
-                                }
+                                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+                                TaskbarManager.Instance.SetProgressValue(progressValue, 100);
                             }
+                            catch (InvalidOperationException)
+                            {
+                            }
+                        }
 #endif
                     }
                     Text = text;

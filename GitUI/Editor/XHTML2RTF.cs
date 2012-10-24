@@ -1127,8 +1127,8 @@ namespace GitUI.Editor.RichTextBoxExtension
             try
             {
                 using (StringReader stringreader = new StringReader(xhtmlText))
-                using (XmlReader reader = XmlReader.Create(stringreader, settings))
                 {
+                    XmlReader reader = XmlReader.Create(stringreader, settings);
                     while (reader.Read())
                         ProcessNode(rtb, handleRef, reader, cs);
                 }
@@ -1422,8 +1422,9 @@ namespace GitUI.Editor.RichTextBoxExtension
 
             try
             {
-                using (XmlReader reader = XmlReader.Create(new StringReader(xhtmlText), settings))
+                using (StringReader strReader = new StringReader(xhtmlText))
                 {
+                    XmlReader reader = XmlReader.Create(strReader, settings);
                     while (reader.Read())
                     {
                         switch (reader.NodeType)
