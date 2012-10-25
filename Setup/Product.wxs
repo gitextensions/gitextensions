@@ -85,9 +85,9 @@
         <File Source="..\GitExtensions\bin\Release\GitExtensions.exe">
           <netfx:NativeImage Id="ngen_GitExtensions.exe" Platform="all" Priority="1"/>
         </File>
-        <ProgId Id="GitExtensions" Description="Git Extentions Shortcut" Icon="gitextensions.ico" Advertise="yes">
+        <ProgId Id="GitExtensions" Description="Git Extentions Shortcut" Advertise="no">
           <Extension Id="gitext">
-            <Verb Id="open" Command="Open Git Extentions Repository" Argument="openrepo &quot;%1&quot;" />
+            <Verb Id="open" Command="Open Git Extentions Repository" TargetFile="GitExtensions.exe" Argument="openrepo &quot;%1&quot;" />
           </Extension>
         </ProgId>
       </Component>
