@@ -85,9 +85,9 @@
         <File Source="..\GitExtensions\bin\Release\GitExtensions.exe">
           <netfx:NativeImage Id="ngen_GitExtensions.exe" Platform="all" Priority="1"/>
         </File>
-        <ProgId Id="GitExtensions" Description="Git Extentions Shortcut" Icon="gitextensions.ico" Advertise="yes">
+        <ProgId Id="GitExtensions" Description="Git Extentions Shortcut" Advertise="no">
           <Extension Id="gitext">
-            <Verb Id="open" Command="Open Git Extentions Repository" Argument="openrepo &quot;%1&quot;" />
+            <Verb Id="open" Command="Open Git Extentions Repository" TargetFile="GitExtensions.exe" Argument="openrepo &quot;%1&quot;" />
           </Extension>
         </ProgId>
       </Component>
@@ -673,7 +673,7 @@
     <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.97.exe"/>
     <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore"/>
 
-    <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.7.11-preview20120710.exe"/>
+    <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.8.0-preview20121022.exe"/>
     <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore"/>
 
     <InstallExecuteSequence>
