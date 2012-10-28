@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Web;
+using System.Net;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor.RichTextBoxExtension;
@@ -13,6 +13,16 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
+    public class CommandEventArgs : EventArgs {
+        public CommandEventArgs(string command, string data)
+        {
+            this.Command = command;
+            this.Data = data;
+        }
+        public string Command { get; set; }
+        public string Data { get; set; }
+    }
+
     public partial class CommitInfo : GitModuleControl
     {
         private readonly TranslationString containedInBranches = new TranslationString("Contained in branches:");
@@ -32,10 +42,8 @@ namespace GitUI
 
         [DefaultValue(false)]
         public bool ShowBranchesAsLinks { get; set; }
-
-        public delegate void CommandClickHandler(string command, string data);
-
-        public event CommandClickHandler CommandClick;
+        
+        public event EventHandler<CommandEventArgs> CommandClick;
 
         private void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
         {
@@ -54,7 +62,7 @@ namespace GitUI
                         if (CommandClick != null)
                         {
                             string path = result.AbsolutePath.TrimStart('/');
-                            CommandClick(result.Host, path);
+                            CommandClick(sender, new CommandEventArgs(result.Host, path));
                         }
                         return;
                     }
@@ -64,11 +72,12 @@ namespace GitUI
 
                 }
 
-                new Process
+                using (var process = new Process
                     {
                         EnableRaisingEvents = false,
                         StartInfo = { FileName = url }
-                    }.Start();
+                    })
+                    process.Start();
             }
             catch (Exception ex)
             {
@@ -78,21 +87,25 @@ namespace GitUI
 
         private string _revision;
         private List<string> _children;
-        public void SetRevision(string revision, List<string> children)
+        public void SetRevisionWithChildren(string revision, List<string> children)
         {
             _revision = revision;
             _children = children;
             ReloadCommitInfo();
         }
 
-        public void SetRevision(string revision)
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public string Revision
         {
-            SetRevision(revision, null);
-        }
-
-        public string GetRevision()
-        {
-            return _revision;
+            get
+            {
+                return _revision;
+            }
+            set
+            {
+                SetRevisionWithChildren(value, null);
+            }
         }
 
         private string _revisionInfo;
@@ -209,7 +222,7 @@ namespace GitUI
                     if (showBranchesAsLinks)
                         branchText = LinkFactory.CreateBranchLink(noPrefixBranch);
                     else 
-                        branchText = HttpUtility.HtmlEncode(noPrefixBranch);
+                        branchText = WebUtility.HtmlEncode(noPrefixBranch);
                     links.Add(branchText);
                 }
 
@@ -217,19 +230,19 @@ namespace GitUI
                     allowRemote = false;
             }
             if (links.Any())
-                return Environment.NewLine + HttpUtility.HtmlEncode(containedInBranches.Text) + " " + links.Join(", ");
-            return Environment.NewLine + HttpUtility.HtmlEncode(containedInNoBranch.Text);
+                return Environment.NewLine + WebUtility.HtmlEncode(containedInBranches.Text) + " " + links.Join(", ");
+            return Environment.NewLine + WebUtility.HtmlEncode(containedInNoBranch.Text);
         }
 
         private string GetTagsWhichContainsThisCommit(string revision, bool showBranchesAsLinks)
         {
             var tagString = CommitInformation
                 .GetAllTagsWhichContainGivenCommit(Module, revision)
-                .Select(s => showBranchesAsLinks ? LinkFactory.CreateTagLink(s) : HttpUtility.HtmlEncode(s)).Join(", ");
+                .Select(s => showBranchesAsLinks ? LinkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s)).Join(", ");
 
-            if (tagString != string.Empty)
-                return Environment.NewLine + HttpUtility.HtmlEncode(containedInTags.Text) + " " + tagString;
-            return Environment.NewLine + HttpUtility.HtmlEncode(containedInNoTag.Text);
+            if (!String.IsNullOrEmpty(tagString))
+                return Environment.NewLine + WebUtility.HtmlEncode(containedInTags.Text) + " " + tagString;
+            return Environment.NewLine + WebUtility.HtmlEncode(containedInNoTag.Text);
         }
 
         private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)

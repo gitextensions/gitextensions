@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Text;
 using JetBrains.Annotations;
 
 namespace System
@@ -96,6 +97,24 @@ namespace System
         public static bool StartsWithAny([CanBeNull] this string value, string[] starts)
         {
             return value != null && starts.Any(s => value.StartsWith(s));
+        }
+
+        public static string RemoveLines(this string value, Func<string, bool> shouldRemoveLine)
+        {
+            if (value.IsNullOrEmpty())
+                return value;
+
+            if (value[value.Length - 1] == '\n')
+                value = value.Substring(0, value.Length - 1);
+
+            StringBuilder sb = new StringBuilder();
+            string[] lines = value.Split('\n');
+            
+            foreach (string line in lines)
+                if (!shouldRemoveLine(line))
+                    sb.Append(line + '\n');
+
+            return sb.ToString();
         }
 
     }

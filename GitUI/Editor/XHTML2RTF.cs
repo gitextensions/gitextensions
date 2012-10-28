@@ -5,9 +5,10 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Web;
+using System.Net;
 using System.Windows.Forms;
 using System.Xml;
+using GitCommands;
 
 namespace GitUI.Editor.RichTextBoxExtension
 {
@@ -699,7 +700,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 for (int i = 0; i < colFormat.Count; i++)
                 {
                     var mfr = colFormat[i];
-                    strHTML.Append(HttpUtility.HtmlEncode(strT.Substring(nAcum, mfr.Key - nAcum)) + mfr.Value);
+                    strHTML.Append(WebUtility.HtmlEncode(strT.Substring(nAcum, mfr.Key - nAcum)) + mfr.Value);
                     nAcum = mfr.Key;
                 }
 
@@ -1104,6 +1105,12 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static void SetXHTMLText(this RichTextBox rtb, string xhtmlText)
         {
+            if (!Settings.RunningOnWindows())
+            {
+                SetXHTMLTextAsPlainText(rtb, xhtmlText);
+                return;
+            }
+
             rtb.Clear();
             RTFCurrentState cs = new RTFCurrentState();
 
@@ -1120,8 +1127,8 @@ namespace GitUI.Editor.RichTextBoxExtension
             try
             {
                 using (StringReader stringreader = new StringReader(xhtmlText))
-                using (XmlReader reader = XmlReader.Create(stringreader, settings))
                 {
+                    XmlReader reader = XmlReader.Create(stringreader, settings);
                     while (reader.Read())
                         ProcessNode(rtb, handleRef, reader, cs);
                 }
@@ -1402,6 +1409,52 @@ namespace GitUI.Editor.RichTextBoxExtension
                     cs.charFormatChanged = true;
                     break;
             }
+        }
+
+        public static void SetXHTMLTextAsPlainText(this RichTextBox rtb, string xhtmlText)
+        {
+            rtb.Clear();
+
+            rtb.HideSelection = true;
+
+            XmlReaderSettings settings = new XmlReaderSettings();
+            settings.ConformanceLevel = ConformanceLevel.Fragment;
+
+            try
+            {
+                using (StringReader strReader = new StringReader(xhtmlText))
+                {
+                    XmlReader reader = XmlReader.Create(strReader, settings);
+                    while (reader.Read())
+                    {
+                        switch (reader.NodeType)
+                        {
+                            case XmlNodeType.Text:
+                            case XmlNodeType.Whitespace:
+                            case XmlNodeType.SignificantWhitespace:
+                                rtb.SelectedText = reader.Value;
+                                break;
+                            case XmlNodeType.Element:
+                            case XmlNodeType.EndElement:
+                                break;
+                            case XmlNodeType.XmlDeclaration:
+                            case XmlNodeType.ProcessingInstruction:
+                                break;
+                            case XmlNodeType.Comment:
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (System.Xml.XmlException ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            rtb.HideSelection = false;
+            // reposition to final
+            rtb.Select(rtb.TextLength + 1, 0);
         }
     }
 }

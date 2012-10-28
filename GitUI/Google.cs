@@ -1,5 +1,5 @@
-﻿using System.Net;
-using System.Web;
+﻿using System;
+using System.Net;
 
 namespace GitUI
 {
@@ -19,7 +19,7 @@ namespace GitUI
             var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy, Encoding = System.Text.Encoding.UTF8 };
 
             webClient.QueryString.Add("v", "1.0");
-            webClient.QueryString.Add("q", HttpUtility.UrlEncode(input));
+            webClient.QueryString.Add("q", Uri.EscapeDataString(input));
             webClient.QueryString.Add("langpair", string.Format("{0}|{1}", translateFrom, translateTo));
             webClient.QueryString.Add("ie", "UTF8");
             webClient.QueryString.Add("key", "ABQIAAAAL-jmAvZrZhQkLeK6o_JtUhSHPdD4FWU0q3SlSmtsnuxmaaTWWhRV86w05sbgIY6R6F3MqsVyCi0-Kg");
