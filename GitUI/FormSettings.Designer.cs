@@ -1316,13 +1316,15 @@ namespace GitUI
             // 
             // groupBox15
             // 
+            this.groupBox15.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox15.Controls.Add(this.diffFontChangeButton);
             this.groupBox15.Controls.Add(this.applicationFontChangeButton);
             this.groupBox15.Controls.Add(this.label26);
             this.groupBox15.Controls.Add(this.label56);
             this.groupBox15.Location = new System.Drawing.Point(11, 313);
             this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(725, 100);
+            this.groupBox15.Size = new System.Drawing.Size(711, 100);
             this.groupBox15.TabIndex = 55;
             this.groupBox15.TabStop = false;
             this.groupBox15.Text = "Fonts";
