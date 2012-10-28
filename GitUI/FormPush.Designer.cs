@@ -521,9 +521,9 @@
             this.AddRemote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.AddRemote.Image = global::GitUI.Properties.Resources.IconRemotes;
             this.AddRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.AddRemote.Location = new System.Drawing.Point(514, 17);
+            this.AddRemote.Location = new System.Drawing.Point(482, 17);
             this.AddRemote.Name = "AddRemote";
-            this.AddRemote.Size = new System.Drawing.Size(101, 25);
+            this.AddRemote.Size = new System.Drawing.Size(133, 25);
             this.AddRemote.TabIndex = 3;
             this.AddRemote.Text = "Manage remotes";
             this.AddRemote.UseVisualStyleBackColor = true;
@@ -538,7 +538,7 @@
             this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
             this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(128, 19);
             this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
-            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(380, 23);
+            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(348, 23);
             this._NO_TRANSLATE_Remotes.TabIndex = 2;
             this._NO_TRANSLATE_Remotes.SelectedIndexChanged += new System.EventHandler(this.RemotesUpdated);
             this._NO_TRANSLATE_Remotes.TextUpdate += new System.EventHandler(this.RemotesUpdated);
@@ -548,9 +548,9 @@
             // 
             this.BrowseSource.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.BrowseSource.Enabled = false;
-            this.BrowseSource.Location = new System.Drawing.Point(514, 46);
+            this.BrowseSource.Location = new System.Drawing.Point(482, 46);
             this.BrowseSource.Name = "BrowseSource";
-            this.BrowseSource.Size = new System.Drawing.Size(101, 25);
+            this.BrowseSource.Size = new System.Drawing.Size(133, 25);
             this.BrowseSource.TabIndex = 5;
             this.BrowseSource.Text = "Browse";
             this.BrowseSource.UseVisualStyleBackColor = true;
@@ -566,7 +566,7 @@
             this.PushDestination.FormattingEnabled = true;
             this.PushDestination.Location = new System.Drawing.Point(128, 48);
             this.PushDestination.Name = "PushDestination";
-            this.PushDestination.Size = new System.Drawing.Size(380, 23);
+            this.PushDestination.Size = new System.Drawing.Size(348, 23);
             this.PushDestination.TabIndex = 4;
             // 
             // Pull
