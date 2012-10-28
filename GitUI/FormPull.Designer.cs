@@ -121,7 +121,7 @@
             this.Pull.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.Pull.Image = global::GitUI.Properties.Resources.ArrowDown;
             this.Pull.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Pull.Location = new System.Drawing.Point(462, 8);
+            this.Pull.Location = new System.Drawing.Point(512, 8);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(111, 25);
             this.Pull.TabIndex = 40;
@@ -142,7 +142,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(674, 362);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(724, 362);
             this.tableLayoutPanel1.TabIndex = 16;
             // 
             // PullImage
@@ -163,7 +163,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(89, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(582, 356);
+            this.panel2.Size = new System.Drawing.Size(632, 356);
             this.panel2.TabIndex = 19;
             // 
             // tableLayoutPanel2
@@ -184,7 +184,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(582, 356);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(632, 356);
             this.tableLayoutPanel2.TabIndex = 42;
             // 
             // groupBox2
@@ -201,7 +201,7 @@
             this.groupBox2.Controls.Add(this.PullSource);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(576, 109);
+            this.groupBox2.Size = new System.Drawing.Size(626, 109);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pull from";
@@ -212,7 +212,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelRemoteUrl.Location = new System.Drawing.Point(145, 44);
             this.labelRemoteUrl.Name = "labelRemoteUrl";
-            this.labelRemoteUrl.Size = new System.Drawing.Size(422, 15);
+            this.labelRemoteUrl.Size = new System.Drawing.Size(472, 15);
             this.labelRemoteUrl.TabIndex = 7;
             this.labelRemoteUrl.Text = "...";
             // 
@@ -230,9 +230,9 @@
             this.AddRemote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.AddRemote.Image = global::GitUI.Properties.Resources.IconRemotes;
             this.AddRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.AddRemote.Location = new System.Drawing.Point(459, 14);
+            this.AddRemote.Location = new System.Drawing.Point(486, 14);
             this.AddRemote.Name = "AddRemote";
-            this.AddRemote.Size = new System.Drawing.Size(108, 25);
+            this.AddRemote.Size = new System.Drawing.Size(131, 25);
             this.AddRemote.TabIndex = 2;
             this.AddRemote.Text = "Manage";
             this.AddRemote.UseVisualStyleBackColor = true;
@@ -247,7 +247,7 @@
             this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
             this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(148, 16);
             this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
-            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(305, 23);
+            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(332, 23);
             this._NO_TRANSLATE_Remotes.TabIndex = 1;
             this._NO_TRANSLATE_Remotes.TextChanged += new System.EventHandler(this.Remotes_TextChanged);
             this._NO_TRANSLATE_Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
@@ -256,9 +256,9 @@
             // 
             this.BrowseSource.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.BrowseSource.Enabled = false;
-            this.BrowseSource.Location = new System.Drawing.Point(459, 74);
+            this.BrowseSource.Location = new System.Drawing.Point(486, 74);
             this.BrowseSource.Name = "BrowseSource";
-            this.BrowseSource.Size = new System.Drawing.Size(108, 25);
+            this.BrowseSource.Size = new System.Drawing.Size(131, 25);
             this.BrowseSource.TabIndex = 5;
             this.BrowseSource.Text = "Browse";
             this.BrowseSource.UseVisualStyleBackColor = true;
@@ -272,7 +272,7 @@
             this.PullSource.FormattingEnabled = true;
             this.PullSource.Location = new System.Drawing.Point(148, 76);
             this.PullSource.Name = "PullSource";
-            this.PullSource.Size = new System.Drawing.Size(305, 23);
+            this.PullSource.Size = new System.Drawing.Size(332, 23);
             this.PullSource.TabIndex = 4;
             this.PullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             // 
@@ -283,7 +283,7 @@
             this.groupBox1.Controls.Add(this.flowLayoutPanel1);
             this.groupBox1.Location = new System.Drawing.Point(3, 202);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(576, 102);
+            this.groupBox1.Size = new System.Drawing.Size(626, 102);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge options";
@@ -298,7 +298,7 @@
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 19);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(570, 80);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(620, 80);
             this.flowLayoutPanel1.TabIndex = 11;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -351,7 +351,7 @@
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Location = new System.Drawing.Point(3, 118);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(576, 78);
+            this.groupBox3.Size = new System.Drawing.Size(626, 78);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Branch";
@@ -392,7 +392,7 @@
             this.tableLayoutPanel3.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(576, 41);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(626, 41);
             this.tableLayoutPanel3.TabIndex = 42;
             // 
             // NoTags
@@ -444,7 +444,7 @@
             this.AcceptButton = this.Pull;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(674, 362);
+            this.ClientSize = new System.Drawing.Size(724, 362);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
