@@ -384,7 +384,22 @@ namespace GitUI
             //Only show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
             _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
             if (RepoHosts.GitHosters.Count == 1)
+            {
                 _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
+                var hoster = RepoHosts.GitHosters[0];
+                try
+                {
+                    string iconStr = hoster.Settings.GetSetting("Icon");
+                    byte[] iconBytes = Convert.FromBase64String(iconStr);
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        ms.Write(iconBytes, 0, iconBytes.Length);
+                        ms.Position = 0;
+                        _repositoryHostsToolStripMenuItem.Image = Image.FromStream(ms);
+                    }
+                }
+                catch { }
+            }
             _FilterBranchHelper.InitToolStripBranchFilter();
             if (hard && hasWorkingDir)
                 ShowRevisions();
