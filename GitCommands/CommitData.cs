@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Web;
+using System.Net;
 using LibGit2Sharp;
 
 namespace GitCommands
@@ -52,23 +52,23 @@ namespace GitCommands
         {
             StringBuilder header = new StringBuilder();
             string authorEmail = GetEmail(Author);
-            header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetAuthorText()) + ":", COMMITHEADER_STRING_LENGTH) +
-                "<a href='mailto:" + HttpUtility.HtmlEncode(authorEmail) + "'>" + HttpUtility.HtmlEncode(Author) + "</a>");
-            header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetAuthorDateText()) + ":", COMMITHEADER_STRING_LENGTH) +
-                HttpUtility.HtmlEncode(GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, AuthorDate.UtcDateTime) + " (" + AuthorDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy")) + ")");
+            header.AppendLine(FillToLength(WebUtility.HtmlEncode(Strings.GetAuthorText()) + ":", COMMITHEADER_STRING_LENGTH) +
+                "<a href='mailto:" + WebUtility.HtmlEncode(authorEmail) + "'>" + WebUtility.HtmlEncode(Author) + "</a>");
+            header.AppendLine(FillToLength(WebUtility.HtmlEncode(Strings.GetAuthorDateText()) + ":", COMMITHEADER_STRING_LENGTH) +
+                WebUtility.HtmlEncode(GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, AuthorDate.UtcDateTime) + " (" + AuthorDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy")) + ")");
             string committerEmail = GetEmail(Committer);
-            header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitterText()) + ":", COMMITHEADER_STRING_LENGTH) +
-                "<a href='mailto:" + HttpUtility.HtmlEncode(committerEmail) + "'>" + HttpUtility.HtmlEncode(Committer) + "</a>");
-            header.AppendLine(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitDateText()) + ":", COMMITHEADER_STRING_LENGTH) +
-                HttpUtility.HtmlEncode(GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, CommitDate.UtcDateTime) + " (" + CommitDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy")) + ")");
-            header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetCommitHashText()) + ":", COMMITHEADER_STRING_LENGTH) +
-                HttpUtility.HtmlEncode(Guid));
+            header.AppendLine(FillToLength(WebUtility.HtmlEncode(Strings.GetCommitterText()) + ":", COMMITHEADER_STRING_LENGTH) +
+                "<a href='mailto:" + WebUtility.HtmlEncode(committerEmail) + "'>" + WebUtility.HtmlEncode(Committer) + "</a>");
+            header.AppendLine(FillToLength(WebUtility.HtmlEncode(Strings.GetCommitDateText()) + ":", COMMITHEADER_STRING_LENGTH) +
+                WebUtility.HtmlEncode(GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, CommitDate.UtcDateTime) + " (" + CommitDate.LocalDateTime.ToString("ddd MMM dd HH':'mm':'ss yyyy")) + ")");
+            header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetCommitHashText()) + ":", COMMITHEADER_STRING_LENGTH) +
+                WebUtility.HtmlEncode(Guid));
 
             if (ChildrenGuids != null && ChildrenGuids.Count != 0)
             {
                 header.AppendLine();
                 var commitsString = ChildrenGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
-                header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetChildrenText()) + ":",
+                header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetChildrenText()) + ":",
                                            COMMITHEADER_STRING_LENGTH) + commitsString);
             }
 
@@ -77,7 +77,7 @@ namespace GitCommands
             {
                 header.AppendLine();
                 var commitsString = parentGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
-                header.Append(FillToLength(HttpUtility.HtmlEncode(Strings.GetParentsText()) + ":",
+                header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetParentsText()) + ":",
                                            COMMITHEADER_STRING_LENGTH) + commitsString);
             }
 

@@ -79,8 +79,11 @@ namespace GitUI
         private readonly TranslationString _UnsupportedMultiselectAction =
             new TranslationString("Operation not supported");
 
-        private readonly TranslationString alwaysShowCheckoutDlgStr =
+        private readonly TranslationString _alwaysShowCheckoutDlgStr =
             new TranslationString("Always show checkout dialog");
+
+        private readonly TranslationString _updateCurrentSubmodule =
+            new TranslationString("Update current submodule");
 
         #endregion
 
@@ -953,7 +956,7 @@ namespace GitUI
             var children = RevisionGrid.GetRevisionChildren(revision.Guid);
 
             if (revision != null)
-                RevisionInfo.SetRevision(revision.Guid, children);
+                RevisionInfo.SetRevisionWithChildren(revision.Guid, children);
         }
 
         public void FileHistoryOnClick(object sender, EventArgs e)
@@ -1552,6 +1555,14 @@ namespace GitUI
             if (UICommands.StartSubmodulesDialog(this))
                 Initialize();
         }
+        
+        private void UpdateSubmoduleToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var submodule = (sender as ToolStripMenuItem).Tag as string;
+            FormProcess.ShowDialog(this, Module.SuperprojectModule,
+                GitCommandHelpers.SubmoduleUpdateCmd(submodule));
+            Initialize();
+        }
 
         private void UpdateAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
@@ -2024,7 +2035,7 @@ namespace GitUI
             branchSelect.DropDownItems.Add(item);
             item.Click += (hs, he) => CheckoutBranchToolStripMenuItemClick(hs, he);
 
-            ToolStripMenuItem alwaysShowCheckoutDlg = new ToolStripMenuItem(alwaysShowCheckoutDlgStr.Text);
+            ToolStripMenuItem alwaysShowCheckoutDlg = new ToolStripMenuItem(_alwaysShowCheckoutDlgStr.Text);
             alwaysShowCheckoutDlg.Checked = Settings.AlwaysShowCheckoutBranchDlg;
             branchSelect.DropDownItems.Add(alwaysShowCheckoutDlg);
             alwaysShowCheckoutDlg.Click += (hs, he) =>
@@ -2614,16 +2625,16 @@ namespace GitUI
                 CheckoutBranchToolStripMenuItemClick(sender, e);
         }
 
-        private void RevisionInfo_CommandClick(string command, string data)
+        private void RevisionInfo_CommandClick(object sender, CommandEventArgs e)
         {
-            if (command == "gotocommit")
+            if (e.Command == "gotocommit")
             {
-                RevisionGrid.SetSelectedRevision(new GitRevision(Module, data));
+                RevisionGrid.SetSelectedRevision(new GitRevision(Module, e.Data));
             }
-            else if (command == "gotobranch" || command == "gototag")
+            else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
                 string error = "";
-                CommitData commit = CommitData.GetCommitData(Module, data, ref error);
+                CommitData commit = CommitData.GetCommitData(Module, e.Data, ref error);
                 if (commit != null)
                     RevisionGrid.SetSelectedRevision(new GitRevision(Module, commit.Guid));
             }
@@ -2686,10 +2697,11 @@ namespace GitUI
             if (!containSubmodules)
                 toolStripButtonLevelUp.DropDownItems.Add(_noSubmodulesPresent.Text);
 
+            string currentSubmoduleName = null;
             if (Module.SuperprojectModule != null)
             {
-                var separator = new ToolStripSeparator();
-                toolStripButtonLevelUp.DropDownItems.Add(separator);
+                var superprojectSeparator = new ToolStripSeparator();
+                toolStripButtonLevelUp.DropDownItems.Add(superprojectSeparator);
 
                 {
                     var name = "Superproject";
@@ -2721,7 +2733,10 @@ namespace GitUI
 
                         var submenu = new ToolStripMenuItem(name);
                         if (submodule == localpath)
+                        {
+                            currentSubmoduleName = submodule;
                             submenu.Font = new Font(submenu.Font, FontStyle.Bold);
+                        }
                         submenu.Click += SubmoduleToolStripButtonClick;
                         submenu.Tag = path;
                         submenu.Width = 200;
@@ -2730,15 +2745,20 @@ namespace GitUI
                 }
             }
 
-            if (containSubmodules)
-            {
-                var separator = new ToolStripSeparator();
-                toolStripButtonLevelUp.DropDownItems.Add(separator);
+            var separator = new ToolStripSeparator();
+            toolStripButtonLevelUp.DropDownItems.Add(separator);
 
-                var mi = new ToolStripMenuItem(updateAllSubmodulesToolStripMenuItem.Text);
-                mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
-                toolStripButtonLevelUp.DropDownItems.Add(mi);
+            if (currentSubmoduleName != null)
+            {
+                var usmi = new ToolStripMenuItem(_updateCurrentSubmodule.Text);
+                usmi.Tag = currentSubmoduleName;
+                usmi.Click += UpdateSubmoduleToolStripMenuItemClick;
+                toolStripButtonLevelUp.DropDownItems.Add(usmi);
             }
+
+            var mi = new ToolStripMenuItem(updateAllSubmodulesToolStripMenuItem.Text);
+            mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
+            toolStripButtonLevelUp.DropDownItems.Add(mi);
 
             Cursor.Current = Cursors.Default;
         }
@@ -2747,6 +2767,8 @@ namespace GitUI
         {
             if (Module.SuperprojectModule != null)
                 SetGitModule(Module.SuperprojectModule);
+            else
+                toolStripButtonLevelUp.ShowDropDown();
         }
 
     }

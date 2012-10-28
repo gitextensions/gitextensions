@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using GitCommands.Config;
 using GitCommands.Git;
 using JetBrains.Annotations;
@@ -187,39 +188,13 @@ namespace GitCommands
                     process.StandardInput.Close();
                 }
 
-                stdOutput = ReadByte(process.StandardOutput.BaseStream);
-                stdError = ReadByte(process.StandardError.BaseStream);
+                SynchronizedProcessReader.ReadBytes(process, out stdOutput, out stdError);
+
                 process.WaitForExit();
+
                 startInfo = null;
                 return process.ExitCode;
             }
-        }
-
-        private static byte[] ReadByte(Stream stream)
-        {
-            if (!stream.CanRead)
-            {
-                return null;
-            }
-            int commonLen = 0;
-            List<byte[]> list = new List<byte[]>();
-            byte[] buffer = new byte[4096];
-            int len;
-            while ((len = stream.Read(buffer, 0, buffer.Length)) != 0)
-            {
-                byte[] newbuff = new byte[len];
-                Array.Copy(buffer, newbuff, len);
-                commonLen += len;
-                list.Add(newbuff);
-            }
-            buffer = new byte[commonLen];
-            commonLen = 0;
-            for (int i = 0; i < list.Count; i++)
-            {
-                Array.Copy(list[i], 0, buffer, commonLen, list[i].Length);
-                commonLen += list[i].Length;
-            }
-            return buffer;
         }
 
         internal static int CreateAndStartProcess(string arguments, string cmd, string workDir, out string stdOutput, out string stdError, string stdInput)
@@ -251,8 +226,8 @@ namespace GitCommands
                     process.StandardInput.Close();
                 }
 
-                stdOutput = process.StandardOutput.ReadToEnd();
-                stdError = process.StandardError.ReadToEnd();
+                SynchronizedProcessReader.Read(process, out stdOutput, out stdError);
+
                 process.WaitForExit();
                 return process.ExitCode;
             }
@@ -567,7 +542,7 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
                 return string.Format("push {0}\"{1}\" {2}:{3}", options, path.Trim(), fromBranch, toBranch);
 
-            return string.Format("push {0}\"{1}\" {2}", sforce, options, path.Trim(), fromBranch);
+            return string.Format("push {0}\"{1}\" {2}", options, path.Trim(), fromBranch);
         }
 
         public static string PushMultipleCmd(string path, IEnumerable<GitPushAction> pushActions)

@@ -1,4 +1,5 @@
-﻿namespace GitUI
+﻿#pragma warning disable 0628
+namespace GitUI
 {
     partial class FileStatusList
     {
@@ -73,7 +74,8 @@
         #endregion
 
         private System.Windows.Forms.ListBox FileStatusListBox;
-        private System.Windows.Forms.ToolTip DiffFilesTooltip;
+		//This property cannot be private because this will break compilation in monodevelop
+        protected System.Windows.Forms.ToolTip DiffFilesTooltip;
         private System.Windows.Forms.Label NoFiles;
     }
 }

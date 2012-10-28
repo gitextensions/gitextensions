@@ -206,6 +206,14 @@ namespace GitUI.Editor
 
         }
 
+        public int LineAtCaret
+        {
+            get
+            {                
+                return TextEditor.GetLineFromCharIndex(TextEditor.SelectionStart + TextEditor.SelectionLength);
+            }
+        }
+
         public string GetLineText(int line)
         {
             return TextEditor.Lines[line];
