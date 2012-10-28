@@ -138,6 +138,7 @@ namespace GitUI
             this.commitCursorLine = new System.Windows.Forms.ToolStripStatusLabel();
             this.commitCursorColumnLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.commitCursorColumn = new System.Windows.Forms.ToolStripStatusLabel();
+            this.commitEndPadding = new System.Windows.Forms.ToolStripStatusLabel();
             this.flowCommitButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.Commit = new System.Windows.Forms.Button();
             this.CommitAndPush = new System.Windows.Forms.Button();
@@ -1037,7 +1038,8 @@ namespace GitUI
             this.commitCursorLineLabel,
             this.commitCursorLine,
             this.commitCursorColumnLabel,
-            this.commitCursorColumn});
+            this.commitCursorColumn,
+            this.commitEndPadding});
             this.commitStatusStrip.Location = new System.Drawing.Point(0, 87);
             this.commitStatusStrip.Name = "commitStatusStrip";
             this.commitStatusStrip.Size = new System.Drawing.Size(511, 25);
@@ -1077,6 +1079,12 @@ namespace GitUI
             this.commitCursorColumn.Size = new System.Drawing.Size(40, 20);
             this.commitCursorColumn.Text = "0";
             this.commitCursorColumn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // commitEndPadding
+            // 
+            this.commitEndPadding.AutoSize = false;
+            this.commitSpacer.Name = "commitEndPadding";
+            this.commitEndPadding.Size = new System.Drawing.Size(1, 20);
             // 
             // flowCommitButtons
             // 
@@ -1442,6 +1450,7 @@ namespace GitUI
         private ToolStripStatusLabel commitCursorLine;
         private ToolStripStatusLabel commitCursorColumnLabel;
         private ToolStripStatusLabel commitCursorColumn;
+        private ToolStripStatusLabel commitEndPadding;
         private ToolStripSeparator toolStripSeparator12;
         private ToolStripMenuItem toolStripMenuItem4;
         private TableLayoutPanel tableLayoutPanel1;
