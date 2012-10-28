@@ -272,9 +272,12 @@ namespace GitUI.RepoHosting
             string repoSrc = repo.CloneReadWriteUrl;
 
             string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir);
-            var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, cmd, string.Empty, null, true);
 
-            if (errorOccurred)
+            FormRemoteProcess formRemoteProcess = new FormRemoteProcess(new GitModule(null), Settings.GitCommand, cmd);
+            formRemoteProcess.Remote = repoSrc;
+            formRemoteProcess.ShowDialog();
+
+            if (formRemoteProcess.ErrorOccurred())
                 return;
 
             GitModule module = new GitModule(targetDir);
