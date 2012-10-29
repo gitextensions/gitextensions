@@ -509,8 +509,6 @@ namespace GitUI
 
             ResetRemoteHeads();
 
-            label3.Visible = true;
-            labelRemoteUrl.Visible = true;
             comboBoxPullSource.Enabled = false;
             BrowseSource.Enabled = false;
             _NO_TRANSLATE_Remotes.Enabled = true;
@@ -539,8 +537,6 @@ namespace GitUI
 
             ResetRemoteHeads();
 
-            label3.Visible = false;
-            labelRemoteUrl.Visible = false;
             comboBoxPullSource.Enabled = true;
             BrowseSource.Enabled = true;
             _NO_TRANSLATE_Remotes.Enabled = false;
@@ -613,10 +609,9 @@ namespace GitUI
         {
             ResetRemoteHeads();
 
-            // update the label text of the Remote Url
-            labelRemoteUrl.Text = Module.GetPathSetting(
+            // update the text box of the Remote Url combobox to show the URL of selected remote
+            comboBoxPullSource.Text = Module.GetPathSetting(
                 string.Format(SettingKeyString.RemoteUrl, _NO_TRANSLATE_Remotes.Text));
-            label3.Visible = !string.IsNullOrEmpty(labelRemoteUrl.Text);
 
             // update merge options radio buttons
             Merge.Enabled = !IsPullAll();
