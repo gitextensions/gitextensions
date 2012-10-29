@@ -45,7 +45,7 @@
             this.AddRemote = new System.Windows.Forms.Button();
             this._NO_TRANSLATE_Remotes = new System.Windows.Forms.ComboBox();
             this.BrowseSource = new System.Windows.Forms.Button();
-            this.PullSource = new System.Windows.Forms.ComboBox();
+            this.comboBoxPullSource = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.Merge = new System.Windows.Forms.RadioButton();
@@ -75,7 +75,7 @@
             this.PullFromUrl.AutoSize = true;
             this.PullFromUrl.Location = new System.Drawing.Point(7, 77);
             this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(40, 19);
+            this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
             this.PullFromUrl.TabIndex = 1;
             this.PullFromUrl.Text = "Url";
             this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
@@ -88,7 +88,7 @@
             this.PullFromRemote.Checked = true;
             this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
             this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(66, 19);
+            this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
             this.PullFromRemote.TabIndex = 0;
             this.PullFromRemote.TabStop = true;
             this.PullFromRemote.Text = "Remote";
@@ -198,7 +198,7 @@
             this.groupBox2.Controls.Add(this.AddRemote);
             this.groupBox2.Controls.Add(this._NO_TRANSLATE_Remotes);
             this.groupBox2.Controls.Add(this.BrowseSource);
-            this.groupBox2.Controls.Add(this.PullSource);
+            this.groupBox2.Controls.Add(this.comboBoxPullSource);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(626, 109);
@@ -264,17 +264,17 @@
             this.BrowseSource.UseVisualStyleBackColor = true;
             this.BrowseSource.Click += new System.EventHandler(this.BrowseSourceClick);
             // 
-            // PullSource
+            // comboBoxPullSource
             // 
-            this.PullSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboBoxPullSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.PullSource.Enabled = false;
-            this.PullSource.FormattingEnabled = true;
-            this.PullSource.Location = new System.Drawing.Point(148, 76);
-            this.PullSource.Name = "PullSource";
-            this.PullSource.Size = new System.Drawing.Size(332, 23);
-            this.PullSource.TabIndex = 4;
-            this.PullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
+            this.comboBoxPullSource.Enabled = false;
+            this.comboBoxPullSource.FormattingEnabled = true;
+            this.comboBoxPullSource.Location = new System.Drawing.Point(148, 76);
+            this.comboBoxPullSource.Name = "comboBoxPullSource";
+            this.comboBoxPullSource.Size = new System.Drawing.Size(332, 23);
+            this.comboBoxPullSource.TabIndex = 4;
+            this.comboBoxPullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             // 
             // groupBox1
             // 
@@ -483,7 +483,7 @@
         private System.Windows.Forms.RadioButton Rebase;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton Fetch;
-        private System.Windows.Forms.ComboBox PullSource;
+        private System.Windows.Forms.ComboBox comboBoxPullSource;
         private System.Windows.Forms.Button Stash;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_Remotes;
         private System.Windows.Forms.Button AddRemote;
