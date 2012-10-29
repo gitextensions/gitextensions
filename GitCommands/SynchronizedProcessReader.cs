@@ -12,7 +12,7 @@ namespace GitCommands
     {
         /// <summary>
         /// This function reads the output to a string. This function can be dangerous, because it returns a string
-        /// and needs to know the correct encoding. This function should not be avoided!
+        /// and needs to know the correct encoding. This function should be avoided!
         /// </summary>
         public static void Read(Process process, out string stdOutput, out string stdError)
         {
