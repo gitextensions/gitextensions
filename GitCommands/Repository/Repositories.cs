@@ -17,33 +17,36 @@ namespace GitCommands.Repository
         {
             get
             {
-                if (_repositoryHistory == null)
-                {
-                    object setting = Settings.GetValue<string>("history", null);
-                    if (setting != null)
-                    {
-                        _repositoryHistory = DeserializeHistoryFromXml(setting.ToString());
-                        if (_repositoryHistory != null)
-                        {
-                            AssignRepositoryHistoryFromCategories(null);
+                if (_repositoryHistory != null)
+                    return _repositoryHistory;
 
-                            // migration from old version (move URL history to _remoteRepositoryHistory)
-                            if (Settings.GetValue<string>("history remote", null) == null)
+                object setting = Settings.GetValue<string>("history", null);
+                if (setting == null)
+                {
+                    _repositoryHistory = new RepositoryHistory();
+                    return _repositoryHistory;
+                }
+
+                _repositoryHistory = DeserializeHistoryFromXml(setting.ToString());
+                if (_repositoryHistory != null)
+                {
+                    AssignRepositoryHistoryFromCategories(null);
+
+                    // migration from old version (move URL history to _remoteRepositoryHistory)
+                    if (Settings.GetValue<string>("history remote", null) == null)
+                    {
+                        _remoteRepositoryHistory = new RepositoryHistory();
+                        foreach (Repository repo in _repositoryHistory.Repositories)
+                        {
+                            if (repo.IsRemote)
                             {
-                                _remoteRepositoryHistory = new RepositoryHistory();
-                                foreach (Repository repo in _repositoryHistory.Repositories)
-                                {
-                                    if (repo.IsRemote)
-                                    {
-                                        repo.Path = repo.Path.Replace('\\', '/');
-                                        _remoteRepositoryHistory.AddRepository(repo);
-                                    }
-                                }
-                                foreach (Repository repo in _remoteRepositoryHistory.Repositories)
-                                {
-                                    _repositoryHistory.RemoveRepository(repo);
-                                }
+                                repo.Path = repo.Path.Replace('\\', '/');
+                                _remoteRepositoryHistory.AddRepository(repo);
                             }
+                        }
+                        foreach (Repository repo in _remoteRepositoryHistory.Repositories)
+                        {
+                            _repositoryHistory.RemoveRepository(repo);
                         }
                     }
                 }

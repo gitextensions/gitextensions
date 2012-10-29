@@ -1155,7 +1155,8 @@ namespace GitCommands
     {
         public static string AsString(this Font value)
         {
-            return String.Format("{0};{1}", value.FontFamily.Name, value.Size);
+            return String.Format(System.Globalization.CultureInfo.InstalledUICulture,
+                "{0};{1}", value.FontFamily.Name, value.Size);
         }
 
         public static Font Parse(this string value, Font defaultValue)
@@ -1170,7 +1171,8 @@ namespace GitCommands
 
             try
             {
-                return new Font(parts[0], Single.Parse(parts[1]));
+                return new Font(parts[0], Single.Parse(parts[1],
+                  System.Globalization.CultureInfo.InstalledUICulture));
             }
             catch (Exception)
             {
