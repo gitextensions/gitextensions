@@ -84,6 +84,8 @@ namespace GitUI
             this.openWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editCheckedOutFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator30 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator31 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFilenameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -706,16 +708,18 @@ namespace GitUI
             this.FileTreeContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveAsToolStripMenuItem,
             this.resetToThisRevisionToolStripMenuItem,
+            this.toolStripSeparator30,
+            this.copyFilenameToClipboardToolStripMenuItem,
+            this.toolStripSeparator31,
+            this.fileHistoryToolStripMenuItem,
+            this.blameToolStripMenuItem1,
+            this.findToolStripMenuItem,
+            this.toolStripSeparator20,
+            this.editCheckedOutFileToolStripMenuItem,
             this.openFileToolStripMenuItem,
             this.openFileWithToolStripMenuItem,
             this.openWithToolStripMenuItem,
-            this.editCheckedOutFileToolStripMenuItem,
-            this.toolStripSeparator20,
-            this.copyFilenameToClipboardToolStripMenuItem,
-            this.fileHistoryToolStripMenuItem,
-            this.blameToolStripMenuItem1,
             this.toolStripSeparator18,
-            this.findToolStripMenuItem,
             this.expandAllToolStripMenuItem,
             this.collapseAllToolStripMenuItem});
             this.FileTreeContextMenu.Name = "FileTreeContextMenu";
@@ -772,6 +776,13 @@ namespace GitUI
             // 
             this.toolStripSeparator20.Name = "toolStripSeparator20";
             this.toolStripSeparator20.Size = new System.Drawing.Size(276, 6);
+
+            this.toolStripSeparator30.Name = "toolStripSeparator30";
+            this.toolStripSeparator30.Size = new System.Drawing.Size(276, 6);
+
+            this.toolStripSeparator31.Name = "toolStripSeparator31";
+            this.toolStripSeparator31.Size = new System.Drawing.Size(276, 6);
+
             // 
             // copyFilenameToClipboardToolStripMenuItem
             // 
@@ -1891,6 +1902,8 @@ namespace GitUI
         private ToolStripStatusLabel toolStripStatusLabel1;
         private ToolStripMenuItem openWithToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator20;
+        private ToolStripSeparator toolStripSeparator30;
+        private ToolStripSeparator toolStripSeparator31;
         private ToolStripMenuItem fileHistoryDiffToolstripMenuItem;
         private ToolStripSplitButton branchSelect;
         private ToolStripButton toggleSplitViewLayout;
