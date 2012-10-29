@@ -109,6 +109,7 @@ namespace GitUI
             this.diffBaseLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.difftoolRemoteLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileTreeOpenContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findInDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetFileToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetFileToAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -713,6 +714,7 @@ namespace GitUI
             this.resetToThisRevisionToolStripMenuItem,
             this.toolStripSeparator30,
             this.copyFilenameToClipboardToolStripMenuItem,
+            this.fileTreeOpenContainingFolderToolStripMenuItem,
             this.toolStripSeparator31,
             this.fileHistoryToolStripMenuItem,
             this.blameToolStripMenuItem1,
@@ -1009,6 +1011,15 @@ namespace GitUI
             this.openContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.openContainingFolderToolStripMenuItem.Text = "Open containing folder";
             this.openContainingFolderToolStripMenuItem.Click += new System.EventHandler(this.openContainingFolderToolStripMenuItem_Click);
+
+            //
+            // in FileTree tab
+            //
+            this.fileTreeOpenContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFileTree;
+            this.fileTreeOpenContainingFolderToolStripMenuItem.Name = "fileTreeOpenContainingFolderToolStripMenuItem";
+            this.fileTreeOpenContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.fileTreeOpenContainingFolderToolStripMenuItem.Text = "Open containing folder";
+            this.fileTreeOpenContainingFolderToolStripMenuItem.Click += new System.EventHandler(this.fileTreeOpenContainingFolderToolStripMenuItem_Click);
             // 
             // findInDiffToolStripMenuItem
             // 
@@ -2012,6 +2023,7 @@ namespace GitUI
         private ToolStripMenuItem diffBaseLocalToolStripMenuItem;
         private ToolStripMenuItem difftoolRemoteLocalToolStripMenuItem;
         private ToolStripMenuItem openContainingFolderToolStripMenuItem;
+        private ToolStripMenuItem fileTreeOpenContainingFolderToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator21;
         private ToolStripSeparator toolStripSeparator25;
         private ToolStripSeparator toolStripSeparator22;
