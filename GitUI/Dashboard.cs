@@ -230,19 +230,44 @@ namespace GitUI
 
         private void SetSplitterDistance(SplitContainer splitContainer, int value, int @default)
         {
-            if (value != 0)
+
+            try
             {
-                try
+                if (isValidSplit(splitContainer,value))
                 {
                     splitContainer.SplitterDistance = value;
                 }
-                catch
+                else if (isValidSplit(splitContainer, @default))
                 {
                     splitContainer.SplitterDistance = @default;
                 }
+                else
+                {
+                    // Both the value and default are invalid.
+                    // Don't attempt to change the SplitterDistance
+                }
             }
-            else
-                splitContainer.SplitterDistance = @default;
+            catch
+            {
+                // The attempt to set even the default value has failed.
+            }
+        }
+
+        /// <summary>
+        /// Determine whether a given splitter value would be permitted for a given SplitContainer
+        /// </summary>
+        /// <param name="splitcontainer">The SplitContainer to check</param>
+        /// <param name="value">The potential SplitterDistance to try </param>
+        /// <returns>true if it is expected that setting a SplitterDistance of value would succeed
+        /// </returns>
+        bool isValidSplit(SplitContainer splitcontainer, int value)
+        {
+            bool valid;
+            int limit = (splitcontainer.Orientation == Orientation.Horizontal)
+                ? splitcontainer.Height
+                : splitcontainer.Width;
+            valid = (value > splitcontainer.Panel1MinSize) && (value < limit - splitcontainer.Panel2MinSize);
+            return valid;
         }
 
         private void TranslateItem_Click(object sender, EventArgs e)
