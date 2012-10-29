@@ -1446,7 +1446,7 @@ namespace GitUI
 
         private void CompressGitDatabaseToolStripMenuItemClick(object sender, EventArgs e)
         {
-            FormProcess.ShowDialog(this, "gc");
+            FormProcess.ShowModeless(this, "gc");
         }
 
         private void VerifyGitDatabaseToolStripMenuItemClick(object sender, EventArgs e)
