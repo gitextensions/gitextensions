@@ -128,23 +128,4 @@ namespace System
         }
 
     }
-
-    public static class StreamExtensions
-    {
-        //copied from http://stackoverflow.com/a/1253049/1399492
-        //it can be removed after move to .net 4
-        public static void CopyTo(this System.IO.Stream src, System.IO.Stream dest)
-        {
-            int size = (src.CanSeek) ? Math.Min((int)(src.Length - src.Position), 0x2000) : 0x2000;
-            byte[] buffer = new byte[size];
-            int n;
-            do
-            {
-                n = src.Read(buffer, 0, buffer.Length);
-                dest.Write(buffer, 0, n);
-            } while (n != 0);
-        }
-    }
-
-
 }
