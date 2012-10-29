@@ -40,8 +40,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.labelRemoteUrl = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.AddRemote = new System.Windows.Forms.Button();
             this._NO_TRANSLATE_Remotes = new System.Windows.Forms.ComboBox();
             this.BrowseSource = new System.Windows.Forms.Button();
@@ -73,9 +71,9 @@
             // PullFromUrl
             // 
             this.PullFromUrl.AutoSize = true;
-            this.PullFromUrl.Location = new System.Drawing.Point(7, 77);
+            this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
             this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
+            this.PullFromUrl.Size = new System.Drawing.Size(40, 19);
             this.PullFromUrl.TabIndex = 1;
             this.PullFromUrl.Text = "Url";
             this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
@@ -88,7 +86,7 @@
             this.PullFromRemote.Checked = true;
             this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
             this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
+            this.PullFromRemote.Size = new System.Drawing.Size(66, 19);
             this.PullFromRemote.TabIndex = 0;
             this.PullFromRemote.TabStop = true;
             this.PullFromRemote.Text = "Remote";
@@ -191,8 +189,6 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.labelRemoteUrl);
-            this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.PullFromUrl);
             this.groupBox2.Controls.Add(this.PullFromRemote);
             this.groupBox2.Controls.Add(this.AddRemote);
@@ -201,29 +197,10 @@
             this.groupBox2.Controls.Add(this.comboBoxPullSource);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(626, 109);
+            this.groupBox2.Size = new System.Drawing.Size(626, 87);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pull from";
-            // 
-            // labelRemoteUrl
-            // 
-            this.labelRemoteUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelRemoteUrl.Location = new System.Drawing.Point(145, 44);
-            this.labelRemoteUrl.Name = "labelRemoteUrl";
-            this.labelRemoteUrl.Size = new System.Drawing.Size(472, 15);
-            this.labelRemoteUrl.TabIndex = 7;
-            this.labelRemoteUrl.Text = "...";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(106, 44);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(22, 15);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Url";
             // 
             // AddRemote
             // 
@@ -256,7 +233,7 @@
             // 
             this.BrowseSource.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.BrowseSource.Enabled = false;
-            this.BrowseSource.Location = new System.Drawing.Point(486, 74);
+            this.BrowseSource.Location = new System.Drawing.Point(486, 44);
             this.BrowseSource.Name = "BrowseSource";
             this.BrowseSource.Size = new System.Drawing.Size(131, 25);
             this.BrowseSource.TabIndex = 5;
@@ -270,7 +247,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxPullSource.Enabled = false;
             this.comboBoxPullSource.FormattingEnabled = true;
-            this.comboBoxPullSource.Location = new System.Drawing.Point(148, 76);
+            this.comboBoxPullSource.Location = new System.Drawing.Point(148, 46);
             this.comboBoxPullSource.Name = "comboBoxPullSource";
             this.comboBoxPullSource.Size = new System.Drawing.Size(332, 23);
             this.comboBoxPullSource.TabIndex = 4;
@@ -281,7 +258,7 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.flowLayoutPanel1);
-            this.groupBox1.Location = new System.Drawing.Point(3, 202);
+            this.groupBox1.Location = new System.Drawing.Point(3, 180);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(626, 102);
             this.groupBox1.TabIndex = 10;
@@ -349,7 +326,7 @@
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.Branches);
             this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Location = new System.Drawing.Point(3, 118);
+            this.groupBox3.Location = new System.Drawing.Point(3, 96);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(626, 78);
             this.groupBox3.TabIndex = 8;
@@ -495,8 +472,6 @@
         private System.Windows.Forms.PictureBox PullImage;
         private System.Windows.Forms.ToolTip Tooltip;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label labelRemoteUrl;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox localBranch;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panel2;
