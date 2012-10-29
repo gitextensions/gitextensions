@@ -263,7 +263,7 @@ namespace GitUI
         bool isValidSplit(SplitContainer splitcontainer, int value)
         {
             bool valid;
-            int limit = (splitContainer7.Orientation == Orientation.Horizontal)
+            int limit = (splitcontainer.Orientation == Orientation.Horizontal)
                 ? splitcontainer.Height
                 : splitcontainer.Width;
             valid = (value > splitcontainer.Panel1MinSize) && (value < limit - splitcontainer.Panel2MinSize);
