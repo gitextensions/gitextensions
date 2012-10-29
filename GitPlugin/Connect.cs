@@ -184,7 +184,7 @@ namespace GitPlugin
 
                     {
                         _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsDiff", "V&iew changes", "View commit change history", 0, n++, true);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsSearchFile", "Find fi&le", "Search for a file in the repository", 23, n++);
+                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsSearchFile", "Search fi&le", "Search for a file in the repository", 23, n++);
                     }
 
                     {
