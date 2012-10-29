@@ -137,10 +137,10 @@ namespace GitUI
 
         private void BrowseSourceClick(object sender, EventArgs e)
         {
-            using (var dialog = new FolderBrowserDialog { SelectedPath = PullSource.Text })
+            using (var dialog = new FolderBrowserDialog { SelectedPath = comboBoxPullSource.Text })
             {
                 if (dialog.ShowDialog(this) == DialogResult.OK)
-                    PullSource.Text = dialog.SelectedPath;
+                    comboBoxPullSource.Text = dialog.SelectedPath;
             }
         }
 
@@ -156,7 +156,7 @@ namespace GitUI
 
         private void BranchesDropDown(object sender, EventArgs e)
         {
-            if ((PullFromUrl.Checked && string.IsNullOrEmpty(PullSource.Text)) &&
+            if ((PullFromUrl.Checked && string.IsNullOrEmpty(comboBoxPullSource.Text)) &&
                 (PullFromRemote.Checked && string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text)))
             {
                 Branches.DataSource = null;
@@ -231,7 +231,7 @@ namespace GitUI
             if (dr != DialogResult.Yes)
                 return dr;
 
-            Repositories.RepositoryHistory.AddMostRecentRepository(PullSource.Text);
+            Repositories.RepositoryHistory.AddMostRecentRepository(comboBoxPullSource.Text);
 
             var source = CalculateSource();
 
@@ -249,7 +249,7 @@ namespace GitUI
 
         private bool ShouldPullChanges()
         {
-            if (PullFromUrl.Checked && string.IsNullOrEmpty(PullSource.Text))
+            if (PullFromUrl.Checked && string.IsNullOrEmpty(comboBoxPullSource.Text))
             {
                 MessageBox.Show(this, _selectSourceDirectory.Text);
                 return false;
@@ -415,7 +415,7 @@ namespace GitUI
         private string CalculateSource()
         {
             if (PullFromUrl.Checked)
-                return PullSource.Text;
+                return comboBoxPullSource.Text;
             LoadPuttyKey();
             return IsPullAll() ? "--all" : _NO_TRANSLATE_Remotes.Text;
         }
@@ -491,8 +491,8 @@ namespace GitUI
 
         private void FillPullSourceDropDown()
         {
-            PullSource.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
-            PullSource.DisplayMember = "Path";
+            comboBoxPullSource.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
+            comboBoxPullSource.DisplayMember = "Path";
         }
 
         private void StashClick(object sender, EventArgs e)
@@ -511,7 +511,7 @@ namespace GitUI
 
             label3.Visible = true;
             labelRemoteUrl.Visible = true;
-            PullSource.Enabled = false;
+            comboBoxPullSource.Enabled = false;
             BrowseSource.Enabled = false;
             _NO_TRANSLATE_Remotes.Enabled = true;
             AddRemote.Enabled = true;
@@ -541,7 +541,7 @@ namespace GitUI
 
             label3.Visible = false;
             labelRemoteUrl.Visible = false;
-            PullSource.Enabled = true;
+            comboBoxPullSource.Enabled = true;
             BrowseSource.Enabled = true;
             _NO_TRANSLATE_Remotes.Enabled = false;
             AddRemote.Enabled = false;
