@@ -120,6 +120,7 @@ namespace GitUI
             showCurrentBranchMenuItem.Checked = Settings.DashboardShowCurrentBranch;
             contextMenu.Items.Add(showCurrentBranchMenuItem);
 
+            SuspendLayout();
             flowLayoutPanel.SuspendLayout();
             
             foreach (Repository repository in m_repositoryCategory.Repositories)
@@ -134,6 +135,7 @@ namespace GitUI
             }
 
             flowLayoutPanel.ResumeLayout();
+            ResumeLayout();
         }
 
         private Repository repository;
