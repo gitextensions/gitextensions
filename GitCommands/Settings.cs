@@ -1017,7 +1017,7 @@ namespace GitCommands
             get
             {
                 if (_VersionIndependentRegKey == null)
-                    _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions\\Settings", RegistryKeyPermissionCheck.ReadWriteSubTree);
+                    _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
                 return _VersionIndependentRegKey;
             }
         }
@@ -1155,7 +1155,7 @@ namespace GitCommands
     {
         public static string AsString(this Font value)
         {
-            return String.Format(System.Globalization.CultureInfo.CurrentUICulture,
+            return String.Format(System.Globalization.CultureInfo.InstalledUICulture,
                 "{0};{1}", value.FontFamily.Name, value.Size);
         }
 
@@ -1172,7 +1172,7 @@ namespace GitCommands
             try
             {
                 return new Font(parts[0], Single.Parse(parts[1],
-                  System.Globalization.CultureInfo.CurrentUICulture));
+                  System.Globalization.CultureInfo.InstalledUICulture));
             }
             catch (Exception)
             {
