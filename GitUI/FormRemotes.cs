@@ -67,6 +67,8 @@ namespace GitUI
             {
                 Remotes.Text = PreselectRemoteOnLoad;
             }
+
+            RemotesSelectedIndexChanged(null, null);
         }
 
         private void RemoteBranchesDataError(object sender, DataGridViewDataErrorEventArgs e)
