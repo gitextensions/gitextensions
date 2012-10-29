@@ -742,7 +742,7 @@ namespace GitUI
             this.resetToThisRevisionToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetFileTo;
             this.resetToThisRevisionToolStripMenuItem.Name = "resetToThisRevisionToolStripMenuItem";
             this.resetToThisRevisionToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
-            this.resetToThisRevisionToolStripMenuItem.Text = "Reset to this revision";
+            this.resetToThisRevisionToolStripMenuItem.Text = "Reset to selected revision";
             this.resetToThisRevisionToolStripMenuItem.Click += new System.EventHandler(this.ResetToThisRevisionOnClick);
             // 
             // openFileToolStripMenuItem
@@ -802,7 +802,7 @@ namespace GitUI
             this.copyFilenameToClipboardToolStripMenuItem.Name = "copyFilenameToClipboardToolStripMenuItem";
             this.copyFilenameToClipboardToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.copyFilenameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
-            this.copyFilenameToClipboardToolStripMenuItem.Text = "Copy filename to clipboard";
+            this.copyFilenameToClipboardToolStripMenuItem.Text = "Copy full path";
             this.copyFilenameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyFilenameToClipboardToolStripMenuItem_Click);
             // 
             // fileHistoryToolStripMenuItem
@@ -936,7 +936,7 @@ namespace GitUI
             this.copyFilenameToClipboardToolStripMenuItem1.Name = "copyFilenameToClipboardToolStripMenuItem1";
             this.copyFilenameToClipboardToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.copyFilenameToClipboardToolStripMenuItem1.Size = new System.Drawing.Size(260, 22);
-            this.copyFilenameToClipboardToolStripMenuItem1.Text = "Copy filename to clipboard";
+            this.copyFilenameToClipboardToolStripMenuItem1.Text = "Copy full path";
             this.copyFilenameToClipboardToolStripMenuItem1.Click += new System.EventHandler(this.copyFilenameToClipboardToolStripMenuItem1_Click);
             // 
             // saveAsToolStripMenuItem1
@@ -951,8 +951,8 @@ namespace GitUI
             // resetFileToToolStripMenuItem
             // 
             this.resetFileToToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.resetFileToAToolStripMenuItem,
-            this.resetFileToRemoteToolStripMenuItem});
+            this.resetFileToRemoteToolStripMenuItem,
+            this.resetFileToAToolStripMenuItem});
             this.resetFileToToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetFileTo;
             this.resetFileToToolStripMenuItem.Name = "resetFileToToolStripMenuItem";
             this.resetFileToToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
@@ -962,14 +962,14 @@ namespace GitUI
             // 
             this.resetFileToAToolStripMenuItem.Name = "resetFileToAToolStripMenuItem";
             this.resetFileToAToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.resetFileToAToolStripMenuItem.Text = "A (Base)";
+            this.resetFileToAToolStripMenuItem.Text = "A";
             this.resetFileToAToolStripMenuItem.Click += new System.EventHandler(this.resetFileToAToolStripMenuItem_Click);
             // 
             // resetFileToRemoteToolStripMenuItem
             // 
             this.resetFileToRemoteToolStripMenuItem.Name = "resetFileToRemoteToolStripMenuItem";
             this.resetFileToRemoteToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.resetFileToRemoteToolStripMenuItem.Text = "B (Remote)";
+            this.resetFileToRemoteToolStripMenuItem.Text = "B";
             this.resetFileToRemoteToolStripMenuItem.Click += new System.EventHandler(this.resetFileToRemoteToolStripMenuItem_Click);
             // 
             // fileHistoryDiffToolstripMenuItem
