@@ -86,6 +86,9 @@ namespace GitUI
             this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator30 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator31 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator32 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator33 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator34 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFilenameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -783,6 +786,15 @@ namespace GitUI
             this.toolStripSeparator31.Name = "toolStripSeparator31";
             this.toolStripSeparator31.Size = new System.Drawing.Size(276, 6);
 
+            this.toolStripSeparator32.Name = "toolStripSeparator32";
+            this.toolStripSeparator32.Size = new System.Drawing.Size(276, 6);
+
+            this.toolStripSeparator33.Name = "toolStripSeparator33";
+            this.toolStripSeparator33.Size = new System.Drawing.Size(276, 6);
+
+            this.toolStripSeparator34.Name = "toolStripSeparator34";
+            this.toolStripSeparator34.Size = new System.Drawing.Size(276, 6);
+
             // 
             // copyFilenameToClipboardToolStripMenuItem
             // 
@@ -891,16 +903,20 @@ namespace GitUI
             // DiffContextMenu
             // 
             this.DiffContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openWithDifftoolToolStripMenuItem,
-            this.copyFilenameToClipboardToolStripMenuItem1,
             this.saveAsToolStripMenuItem1,
             this.resetFileToToolStripMenuItem,
+            this.toolStripSeparator32,
+            this.copyFilenameToClipboardToolStripMenuItem1,
+            this.openContainingFolderToolStripMenuItem,
+            this.toolStripSeparator33,
             this.fileHistoryDiffToolstripMenuItem,
             this.blameToolStripMenuItem,
+            this.findInDiffToolStripMenuItem,
+            this.toolStripSeparator34,
+            this.openWithDifftoolToolStripMenuItem,
             this.diffBaseLocalToolStripMenuItem,
-            this.difftoolRemoteLocalToolStripMenuItem,
-            this.openContainingFolderToolStripMenuItem,
-            this.findInDiffToolStripMenuItem});
+            this.difftoolRemoteLocalToolStripMenuItem
+            });
             this.DiffContextMenu.Name = "DiffContextMenu";
             this.DiffContextMenu.Size = new System.Drawing.Size(261, 224);
             this.DiffContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.DiffContextMenu_Opening);
@@ -1904,6 +1920,9 @@ namespace GitUI
         private ToolStripSeparator toolStripSeparator20;
         private ToolStripSeparator toolStripSeparator30;
         private ToolStripSeparator toolStripSeparator31;
+        private ToolStripSeparator toolStripSeparator32;
+        private ToolStripSeparator toolStripSeparator33;
+        private ToolStripSeparator toolStripSeparator34;
         private ToolStripMenuItem fileHistoryDiffToolstripMenuItem;
         private ToolStripSplitButton branchSelect;
         private ToolStripButton toggleSplitViewLayout;
