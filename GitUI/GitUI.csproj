@@ -1401,6 +1401,8 @@
     <None Include="Resources\Icons\IconUnstage.png" />
     <None Include="Resources\Icons\IconUnstageAll.png" />
     <None Include="Resources\Icons\RecentRepositories.png" />
+    <None Include="Resources\Icons\IconRepoCreate.png" />
+    <None Include="Resources\Icons\IconRepoOpen.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
