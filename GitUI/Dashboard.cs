@@ -65,7 +65,7 @@ namespace GitUI
             DonateCategory.Dock = DockStyle.Top;
             //Show buttons
             CommonActions.DisableContextMenu();
-            var openItem = new DashboardItem(Resources.Folder, openRepository.Text);
+            var openItem = new DashboardItem(Resources.IconRepoOpen, openRepository.Text);
             openItem.Click += openItem_Click;
             CommonActions.AddItem(openItem);
 
@@ -85,7 +85,7 @@ namespace GitUI
                 CommonActions.AddItem(di);
             }
 
-            var createItem = new DashboardItem(Resources.Star, createRepository.Text);
+            var createItem = new DashboardItem(Resources.IconRepoCreate, createRepository.Text);
             createItem.Click += createItem_Click;
             CommonActions.AddItem(createItem);
 
