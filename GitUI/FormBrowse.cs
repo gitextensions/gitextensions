@@ -1689,12 +1689,19 @@ namespace GitUI
             var selectedItem = DiffFiles.SelectedItem;
             GitUIExtensions.DiffWithRevisionKind diffKind;
 
-            if (sender == diffBaseLocalToolStripMenuItem)
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffBaseLocal;
-            else if (sender == difftoolRemoteLocalToolStripMenuItem)
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffRemoteLocal;
+            if (sender == aLocalToolStripMenuItem)
+                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffALocal;
+            else if (sender == bLocalToolStripMenuItem)
+                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffBLocal;
+            else if (sender == parentOfALocalToolStripMenuItem)
+                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAParentLocal;
+            else if (sender == parentOfBLocalToolStripMenuItem)
+                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffBParentLocal;
             else
-                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAsSelected;
+            {
+                Debug.Assert(sender == aBToolStripMenuItem, "Not implemented DiffWithRevisionKind: " + sender);
+                diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAB;
+            }
 
             RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind);
         }
@@ -2328,6 +2335,28 @@ namespace GitUI
             }
         }
 
+        private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var gitItem = GitTree.SelectedNode.Tag as GitItem;
+            if (gitItem == null)
+            {
+                return;
+            }
+
+            var filePath = Module.WorkingDir + gitItem.FileName;
+            // needed?
+            ////    var fileNames = new StringBuilder();
+            ////    fileNames.Append((Module.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+            if (File.Exists(filePath))
+            {
+                Process.Start("explorer.exe", "/select," + filePath);
+            }
+            else if (Directory.Exists(filePath))
+            {
+                Process.Start("explorer.exe", filePath);
+            }
+        }
+
         private void DiffContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             bool artificialRevSelected;
@@ -2349,15 +2378,11 @@ namespace GitUI
                 if (File.Exists(fileNames.ToString()))
                 {
                     openContainingFolderToolStripMenuItem.Enabled = true;
-                    diffBaseLocalToolStripMenuItem.Enabled = !artificialRevSelected;
-                    difftoolRemoteLocalToolStripMenuItem.Enabled = !artificialRevSelected;
                     return;
                 }
             }
 
             openContainingFolderToolStripMenuItem.Enabled = false;
-            diffBaseLocalToolStripMenuItem.Enabled = false;
-            difftoolRemoteLocalToolStripMenuItem.Enabled = false;
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -2769,6 +2794,55 @@ namespace GitUI
                 SetGitModule(Module.SuperprojectModule);
             else
                 toolStripButtonLevelUp.ShowDropDown();
+        }
+
+        private void openWithDifftoolToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            bool artificialRevSelected = false;
+            bool enableDiffDropDown = true;
+            bool showParentItems = false;
+
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+
+            if (revisions.Count > 0)
+            {
+                artificialRevSelected = revisions[0].IsArtificial();
+
+                if (revisions.Count == 2)
+                {
+                    artificialRevSelected = artificialRevSelected || revisions[revisions.Count - 1].IsArtificial();
+                    showParentItems = true;
+                }
+                else
+                    enableDiffDropDown = revisions.Count == 1;
+            }
+
+            aBToolStripMenuItem.Enabled = enableDiffDropDown;
+            bLocalToolStripMenuItem.Enabled = enableDiffDropDown;
+            aLocalToolStripMenuItem.Enabled = enableDiffDropDown;
+            parentOfALocalToolStripMenuItem.Enabled = enableDiffDropDown;
+            parentOfBLocalToolStripMenuItem.Enabled = enableDiffDropDown;
+
+            parentOfALocalToolStripMenuItem.Visible = showParentItems;
+            parentOfBLocalToolStripMenuItem.Visible = showParentItems;
+
+            if (!enableDiffDropDown)
+                return;
+            //enable *<->Local items only when local file exists
+            foreach (var item in DiffFiles.SelectedItems)
+            {
+                var fileNames = new StringBuilder();
+                fileNames.Append((Module.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+
+                if (File.Exists(fileNames.ToString()))
+                {
+                    bLocalToolStripMenuItem.Enabled = !artificialRevSelected;
+                    aLocalToolStripMenuItem.Enabled = !artificialRevSelected;
+                    parentOfALocalToolStripMenuItem.Enabled = !artificialRevSelected;
+                    parentOfBLocalToolStripMenuItem.Enabled = !artificialRevSelected;
+                    return;
+                }
+            }
         }
 
     }
