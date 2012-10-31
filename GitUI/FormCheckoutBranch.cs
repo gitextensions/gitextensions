@@ -29,7 +29,6 @@ namespace GitUI
 
         private List<string> _localBranches;
         private List<string> _remoteBranches;
-        private List<string> _containsRevisionBranches;
 
         private FormCheckoutBranch()
             : this(null)
@@ -310,12 +309,9 @@ namespace GitUI
 
         private IList<string> getContainsRevisionBranches()
         {
-            if (_containsRevisionBranches == null)
-                _containsRevisionBranches = CommitInformation
+            return CommitInformation
                         .GetAllBranchesWhichContainGivenCommit(Module, _containRevison, LocalBranch.Checked, !LocalBranch.Checked)
                         .Where(a => !a.Equals("(no branch)", StringComparison.OrdinalIgnoreCase)).ToList();
-
-            return _containsRevisionBranches;
         }
 
         private void FormCheckoutBranch_Activated(object sender, EventArgs e)

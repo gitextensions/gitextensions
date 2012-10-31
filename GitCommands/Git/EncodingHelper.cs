@@ -45,8 +45,8 @@ namespace GitCommands
             {
                 throw new ArgumentNullException("encoding");
             }
-
-            string outputString = null;
+            
+            string outputString = "";
             if (output != null && output.Length > 0)
             {
                 using (Stream ms = new MemoryStream(output))
@@ -60,6 +60,7 @@ namespace GitCommands
                             return outputString;
                     }
                 }
+                outputString = outputString + Environment.NewLine;
             }
 
             string errorString = null;
@@ -79,7 +80,7 @@ namespace GitCommands
                 }
             }
 
-            return outputString + Environment.NewLine + errorString;
+            return outputString + errorString;
         }
-	}
+    }
 }

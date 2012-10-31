@@ -68,7 +68,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Commands\SearchFile.cs" />
+    <Compile Include="Commands\FindFile.cs" />
     <Compile Include="Git\GitCommands.cs" />
     <Compile Include="Commands\About.cs" />
     <Compile Include="Commands\ApplyPatch.cs" />
