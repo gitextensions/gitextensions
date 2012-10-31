@@ -670,6 +670,6 @@
     <value>DashboardEditor</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>GitUI.GitExtensionsControl, GitUI, Version=2.42.0.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>GitUI.GitExtensionsControl, GitUI, Version=2.43.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
 </root>
