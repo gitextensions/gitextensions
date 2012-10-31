@@ -4,7 +4,7 @@ using GitPlugin.Git;
 
 namespace GitPlugin.Commands
 {
-    public sealed class SearchFile : ItemCommandBase
+    public sealed class FindFile : ItemCommandBase
     {
         public override void OnCommand(EnvDTE80.DTE2 application, OutputWindowPane pane)
         {
