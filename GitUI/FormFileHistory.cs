@@ -274,7 +274,7 @@ namespace GitUI
             {
                 orgFileName = selectedRows[0].Name;
             }
-            FileChanges.OpenWithDifftool(FileName, orgFileName, GitUIExtensions.DiffWithRevisionKind.DiffAsSelected);
+            FileChanges.OpenWithDifftool(FileName, orgFileName, GitUIExtensions.DiffWithRevisionKind.DiffAB);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -369,7 +369,7 @@ namespace GitUI
 
         private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileChanges.OpenWithDifftool(FileName, string.Empty, GitUIExtensions.DiffWithRevisionKind.DiffRemoteLocal);
+            FileChanges.OpenWithDifftool(FileName, string.Empty, GitUIExtensions.DiffWithRevisionKind.DiffBLocal);
         }
 
         private void toolStripSplitLoad_ButtonClick(object sender, EventArgs e)

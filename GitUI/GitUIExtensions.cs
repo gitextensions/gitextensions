@@ -12,31 +12,33 @@ namespace GitUI
     public static class GitUIExtensions
     {
 
+        /// <summary>
+        /// One row selected:
+        /// B - Selected row
+        /// A - B's parent
+        /// 
+        /// Two rows selected:
+        /// A - first selected row
+        /// B - second selected row
+        /// </summary>
         public enum DiffWithRevisionKind
         {
-            DiffBaseLocal,
-            DiffRemoteLocal,
-            DiffAsSelected
+            DiffAB,
+            DiffALocal,
+            DiffBLocal,
+            DiffAParentLocal,
+            DiffBParentLocal
         }
 
         public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, DiffWithRevisionKind diffKind)
         {
             IList<GitRevision> revisions = grid.GetSelectedRevisions();
 
-            if (revisions.Count == 0)
+            if (revisions.Count == 0 || revisions.Count > 2)
                 return;
 
             string output;
-            if (diffKind == DiffWithRevisionKind.DiffBaseLocal)
-            {
-                if (revisions[0].ParentGuids.Length == 0)
-                    return;
-                output = grid.Module.OpenWithDifftool(fileName, revisions[0].ParentGuids[0]);
-
-            }
-            else if (diffKind == DiffWithRevisionKind.DiffRemoteLocal)
-                output = grid.Module.OpenWithDifftool(fileName, revisions[0].Guid);
-            else
+            if (diffKind == DiffWithRevisionKind.DiffAB)
             {
                 string firstRevision = revisions[0].Guid;
                 var secondRevision = revisions.Count == 2 ? revisions[1].Guid : null;
@@ -86,6 +88,38 @@ namespace GitUI
                     secondRevision = firstRevision + "^";
 
                 output = grid.Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, extraDiffArgs);
+            }
+            else
+            {
+                string revisionToCmp;
+                if (revisions.Count == 1)
+                {
+                    GitRevision revision = revisions[0];
+                    if (diffKind == DiffWithRevisionKind.DiffALocal)
+                        revisionToCmp = revision.ParentGuids.Length == 0 ? null : revision.ParentGuids[0];
+                    else if (diffKind == DiffWithRevisionKind.DiffBLocal)
+                        revisionToCmp = revision.Guid;
+                    else
+                        revisionToCmp = null;
+                }
+                else
+                {
+                    if (diffKind == DiffWithRevisionKind.DiffALocal)
+                        revisionToCmp = revisions[0].Guid;
+                    else if (diffKind == DiffWithRevisionKind.DiffBLocal)
+                        revisionToCmp = revisions[1].Guid;
+                    else if (diffKind == DiffWithRevisionKind.DiffAParentLocal)
+                        revisionToCmp = revisions[0].ParentGuids.Length == 0 ? null : revisions[0].ParentGuids[0];
+                    else if (diffKind == DiffWithRevisionKind.DiffBLocal)
+                        revisionToCmp = revisions[1].ParentGuids.Length == 0 ? null : revisions[1].ParentGuids[0];
+                    else
+                        revisionToCmp = null;
+                }
+
+                if (revisionToCmp == null)
+                    return;
+
+                output = grid.Module.OpenWithDifftool(fileName, revisionToCmp);            
             }
 
             if (!string.IsNullOrEmpty(output))
