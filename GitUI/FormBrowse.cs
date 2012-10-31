@@ -2328,6 +2328,28 @@ namespace GitUI
             }
         }
 
+        private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var gitItem = GitTree.SelectedNode.Tag as GitItem;
+            if (gitItem == null)
+            {
+                return;
+            }
+
+            var filePath = Module.WorkingDir + gitItem.FileName;
+            // needed?
+            ////    var fileNames = new StringBuilder();
+            ////    fileNames.Append((Module.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+            if (File.Exists(filePath))
+            {
+                Process.Start("explorer.exe", "/select," + filePath);
+            }
+            else if (Directory.Exists(filePath))
+            {
+                Process.Start("explorer.exe", filePath);
+            }
+        }
+
         private void DiffContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             bool artificialRevSelected;
