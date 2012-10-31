@@ -136,7 +136,7 @@ namespace GitUI
             // 
             this.diffToolremotelocalStripMenuItem.Name = "diffToolremotelocalStripMenuItem";
             this.diffToolremotelocalStripMenuItem.Size = new System.Drawing.Size(215, 22);
-            this.diffToolremotelocalStripMenuItem.Text = "Difftool remote < - > local";
+            this.diffToolremotelocalStripMenuItem.Text = "Difftool selected < - > local";
             this.diffToolremotelocalStripMenuItem.Click += new System.EventHandler(this.diffToolremotelocalStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
