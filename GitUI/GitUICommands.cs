@@ -1721,7 +1721,8 @@ namespace GitUI
         {
             var searchWindow = new SearchWindow<string>(FindFileMatches);
             Application.Run(searchWindow);
-            Console.WriteLine(Module.WorkingDir + searchWindow.SelectedItem);
+            if (searchWindow.SelectedItem != null)
+                Console.WriteLine(Module.WorkingDir + searchWindow.SelectedItem);
         }
 
         private void RunBrowseCommand(string[] args)

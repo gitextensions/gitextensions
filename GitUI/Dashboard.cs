@@ -210,7 +210,7 @@ namespace GitUI
                 SetSplitterDistance(
                     splitContainer6,
                     Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance,
-                    (int)Math.Max(2, (CommonActions.Height * 1.2)));
+                    Math.Max(2, (int)(CommonActions.Height * 1.2)));
 
                 SetSplitterDistance(
                     splitContainer7,
@@ -230,7 +230,6 @@ namespace GitUI
 
         private void SetSplitterDistance(SplitContainer splitContainer, int value, int @default)
         {
-
             try
             {
                 if (isValidSplit(splitContainer,value))
@@ -247,7 +246,7 @@ namespace GitUI
                     // Don't attempt to change the SplitterDistance
                 }
             }
-            catch
+            catch (SystemException)
             {
                 // The attempt to set even the default value has failed.
             }
