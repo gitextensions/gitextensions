@@ -113,7 +113,7 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///### Version 2.42
+        ///### Version 2.43
         ///* Fixed issue 47: Support non-standard SSH port for Test Connection
         ///* Fixed issue 85: Integrated git-credential-winstore to installer to handle HTTP authentication
         ///* Fixed issue 407: Added links to parent commit, branches and tags to commit info
@@ -639,6 +639,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap IconFolderSubmodule {
+            get {
+                object obj = ResourceManager.GetObject("IconFolderSubmodule", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap IconGotoCommit {
             get {
                 object obj = ResourceManager.GetObject("IconGotoCommit", resourceCulture);
@@ -684,6 +691,20 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap IconRemotes {
             get {
                 object obj = ResourceManager.GetObject("IconRemotes", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconRepoCreate {
+            get {
+                object obj = ResourceManager.GetObject("IconRepoCreate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap IconRepoOpen {
+            get {
+                object obj = ResourceManager.GetObject("IconRepoOpen", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -877,13 +898,6 @@ namespace GitUI.Properties {
             }
         }
         
-        public static System.Drawing.Bitmap open {
-            get {
-                object obj = ResourceManager.GetObject("open", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         public static System.Drawing.Bitmap Options {
             get {
                 object obj = ResourceManager.GetObject("Options", resourceCulture);
@@ -1041,13 +1055,6 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap StatusHourglass {
             get {
                 object obj = ResourceManager.GetObject("StatusHourglass", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        public static System.Drawing.Bitmap Submodule {
-            get {
-                object obj = ResourceManager.GetObject("Submodule", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
