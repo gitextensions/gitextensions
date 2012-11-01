@@ -230,6 +230,9 @@
       <Component Id="Gerrit.dll" Guid="*">
         <File Source="..\Plugins\Gerrit\bin\Release\Gerrit.dll"/>
       </Component>
+      <Component Id="Newtonsoft.Json.dll" Guid="*">
+        <File Source="..\Plugins\Gerrit\Dependencies\Newtonsoft.Json.dll"/>
+      </Component>
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
         <RemoveFile Name="Github.dll" Id="Github.dll" On="both"/>
@@ -538,6 +541,7 @@
         </Feature>
         <Feature Id="Gerrit" Title="Gerrit code review" Level="1">
           <ComponentRef Id="Gerrit.dll"/>
+          <ComponentRef Id="Newtonsoft.Json.dll"/>
         </Feature>
         <Feature Id="Github" Title="Github integration" Level="1">
           <ComponentRef Id="Github3.dll"/>

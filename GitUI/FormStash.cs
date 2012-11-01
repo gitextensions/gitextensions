@@ -295,11 +295,12 @@ namespace GitUI
 
         private void toolStripButton_customMessage_EnabledChanged(object sender, EventArgs e)
         {
-            if (!((ToolStripButton)sender).Enabled)
+            var button = (ToolStripButton)sender;
+            if (!button.Enabled)
             {
                 StashMessage.ReadOnly = true;
             }
-            else if (((ToolStripButton)sender).Enabled && ((ToolStripButton)sender).Checked)
+            else if (button.Enabled && button.Checked)
             {
                 StashMessage.ReadOnly = false;
             }
