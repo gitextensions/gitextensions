@@ -184,7 +184,7 @@ namespace GitPlugin
 
                     {
                         _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsDiff", "V&iew changes", "View commit change history", 0, n++, true);
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsSearchFile", "Find fi&le", "Search for a file in the repository", 23, n++);
+                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsFindFile", "Find fi&le", "Search for a file in the repository", 23, n++);
                     }
 
                     {
@@ -258,7 +258,7 @@ namespace GitPlugin
                 this._gitPlugin.RegisterCommand("GitExtensionsBash", new ToolbarCommand<Bash>());
                 this._gitPlugin.RegisterCommand("GitExtensionsGitIgnore", new ToolbarCommand<GitIgnore>());
                 this._gitPlugin.RegisterCommand("GitExtensionsRemotes", new ToolbarCommand<Remotes>());
-                this._gitPlugin.RegisterCommand("GitExtensionsSearchFile", new ToolbarCommand<SearchFile>());
+                this._gitPlugin.RegisterCommand("GitExtensionsFindFile", new ToolbarCommand<FindFile>());
             }
             catch (Exception ex)
             {
