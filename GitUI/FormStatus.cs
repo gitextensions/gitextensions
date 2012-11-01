@@ -48,6 +48,23 @@ namespace GitUI
         private bool errorOccurred;
         private bool showOnError;
 
+        private const int CP_NOCLOSE_BUTTON = 0x200;
+        protected override CreateParams CreateParams
+        {
+
+            get
+            {
+
+                CreateParams mdiCp = base.CreateParams;
+
+                mdiCp.ClassStyle = mdiCp.ClassStyle | CP_NOCLOSE_BUTTON;
+
+                return mdiCp;
+
+            }
+
+        }
+
         public bool ErrorOccurred()
         {
             return errorOccurred;
