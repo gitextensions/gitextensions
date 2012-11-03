@@ -2015,7 +2015,6 @@ namespace GitUI
 
         private static IEnumerable<string> GetGitLocations()
         {
-            yield return @"C:\cygwin\";
             yield return
                 GetRegistryValue(Registry.LocalMachine,
                                  "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
@@ -2031,6 +2030,7 @@ namespace GitUI
                 yield return programFilesX86 + @"\msysgit\";
             yield return programFiles + @"\msysgit\";
             yield return @"C:\msysgit\";
+            yield return @"C:\cygwin\";
         }
 
 
@@ -2048,6 +2048,19 @@ namespace GitUI
             {
                 Settings.GitBinDir = "";
                 return true;
+            }
+
+            string gitpath = Settings.GitCommand
+                .Replace(@"\cmd\git.exe", @"\bin\")
+                .Replace(@"\cmd\git.cmd", @"\bin\")
+                .Replace(@"\bin\git.exe", @"\bin\");
+            if (Directory.Exists(gitpath))
+            {
+                if (File.Exists(gitpath + "sh.exe") || File.Exists(gitpath + "sh"))
+                {
+                    Settings.GitBinDir = gitpath;
+                    return true;
+                }
             }
 
             if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
