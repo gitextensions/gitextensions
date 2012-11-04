@@ -3368,9 +3368,9 @@ namespace GitUI
             // 
             // GravatarUrl
             // 
-            this.GravatarUrl.Location = new System.Drawing.Point(354, 16);
+            this.GravatarUrl.Location = new System.Drawing.Point(450, 16);
             this.GravatarUrl.Name = "GravatarUrl";
-            this.GravatarUrl.Size = new System.Drawing.Size(351, 23);
+            this.GravatarUrl.Size = new System.Drawing.Size(250, 23);
             this.GravatarUrl.TabIndex = 10;
             // 
             // label34
@@ -3393,9 +3393,9 @@ namespace GitUI
             // 
             // CustomGravatarPattern
             // 
-            this.CustomGravatarPattern.Location = new System.Drawing.Point(428, 41);
+            this.CustomGravatarPattern.Location = new System.Drawing.Point(450, 41);
             this.CustomGravatarPattern.Name = "CustomGravatarPattern";
-            this.CustomGravatarPattern.Size = new System.Drawing.Size(277, 23);
+            this.CustomGravatarPattern.Size = new System.Drawing.Size(250, 23);
             //
             // FormSettings
             // 
