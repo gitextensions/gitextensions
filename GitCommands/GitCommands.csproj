@@ -82,6 +82,7 @@
     <Compile Include="Git\GitModule.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Git\GitSubmoduleStatus.cs" />
     <Compile Include="Git\GitSvnCommandHelpers.cs" />
     <Compile Include="Git\GitCommandsInstance.cs" />
     <Compile Include="LinkFactory.cs" />
