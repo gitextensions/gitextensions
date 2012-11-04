@@ -32,17 +32,21 @@ namespace GitUI
 
                 if (Revision != null)
                 {
-                    Commit.Text = string.Format(Strings.GetCommitHashText() + ": {0}", Revision.Guid);
-                    Author.Text = string.Format(Strings.GetAuthorText() + ": {0}", Revision.Author);
-                    Date.Text = string.Format(Strings.GetCommitDateText() + ": {0}", Revision.CommitDate);
-                    Message.Text = string.Format(Strings.GetMessageText() + ": {0}", Revision.Message);
+                    labelCommit.Text = string.Format(Strings.GetCommitHashText() + ": {0}", Revision.Guid);
+                    labelAuthor.Text = string.Format(Strings.GetAuthorText() + ": {0}", Revision.Author);
+                    labelDate.Text = string.Format(Strings.GetCommitDateText() + ": {0}", Revision.CommitDate);
+                    labelMessage.Text = string.Format(Strings.GetMessageText() + ": {0}", Revision.Message);
+                    var tagList = Revision.Heads.Where(r => r.IsTag);
+                    string tagListStr = string.Join(", ", tagList.Select(h => h.LocalName).ToArray());
+                    labelTags.Text = string.Format("Tags" + ": {0}", tagListStr.IsNullOrEmpty() ? "n/a" : tagListStr);
                 }
                 else
                 {
-                    Commit.Text = "No revision";
-                    Author.Text = string.Format(Strings.GetAuthorText() + ": {0}", "---");
-                    Date.Text = string.Format(Strings.GetCommitDateText() + ": {0}", "---");
-                    Message.Text = string.Format(Strings.GetMessageText() + ": {0}", "---");
+                    labelCommit.Text = "No revision";
+                    labelAuthor.Text = string.Format(Strings.GetAuthorText() + ": {0}", "---");
+                    labelDate.Text = string.Format(Strings.GetCommitDateText() + ": {0}", "---");
+                    labelMessage.Text = string.Format(Strings.GetMessageText() + ": {0}", "---");
+                    labelTags.Text = string.Format("Tags" + ": {0}", "---");
                 }
             }
         }
