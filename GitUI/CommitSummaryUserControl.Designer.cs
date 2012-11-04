@@ -28,57 +28,69 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Date = new System.Windows.Forms.Label();
-            this.Message = new System.Windows.Forms.Label();
-            this.Author = new System.Windows.Forms.Label();
-            this.Commit = new System.Windows.Forms.Label();
+            this.labelDate = new System.Windows.Forms.Label();
+            this.labelMessage = new System.Windows.Forms.Label();
+            this.labelAuthor = new System.Windows.Forms.Label();
+            this.labelCommit = new System.Windows.Forms.Label();
+            this.labelTags = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // Date
+            // labelDate
             // 
-            this.Date.AutoSize = true;
-            this.Date.Location = new System.Drawing.Point(4, 51);
-            this.Date.Name = "Date";
-            this.Date.Size = new System.Drawing.Size(68, 13);
-            this.Date.TabIndex = 13;
-            this.Date.Text = "Commit date:";
+            this.labelDate.AutoSize = true;
+            this.labelDate.Location = new System.Drawing.Point(4, 51);
+            this.labelDate.Name = "labelDate";
+            this.labelDate.Size = new System.Drawing.Size(68, 13);
+            this.labelDate.TabIndex = 13;
+            this.labelDate.Text = "Commit date:";
             // 
-            // Message
+            // labelMessage
             // 
-            this.Message.AutoSize = true;
-            this.Message.Location = new System.Drawing.Point(4, 75);
-            this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(53, 13);
-            this.Message.TabIndex = 12;
-            this.Message.Text = "Message:";
+            this.labelMessage.AutoSize = true;
+            this.labelMessage.Location = new System.Drawing.Point(4, 75);
+            this.labelMessage.Name = "labelMessage";
+            this.labelMessage.Size = new System.Drawing.Size(53, 13);
+            this.labelMessage.TabIndex = 12;
+            this.labelMessage.Text = "Message:";
             // 
-            // Author
+            // labelAuthor
             // 
-            this.Author.AutoSize = true;
-            this.Author.Location = new System.Drawing.Point(4, 26);
-            this.Author.Name = "Author";
-            this.Author.Size = new System.Drawing.Size(41, 13);
-            this.Author.TabIndex = 11;
-            this.Author.Text = "Author:";
+            this.labelAuthor.AutoSize = true;
+            this.labelAuthor.Location = new System.Drawing.Point(4, 26);
+            this.labelAuthor.Name = "labelAuthor";
+            this.labelAuthor.Size = new System.Drawing.Size(41, 13);
+            this.labelAuthor.TabIndex = 11;
+            this.labelAuthor.Text = "Author:";
             // 
-            // Commit
+            // labelCommit
             // 
-            this.Commit.AutoSize = true;
-            this.Commit.Location = new System.Drawing.Point(4, 3);
-            this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(44, 13);
-            this.Commit.TabIndex = 10;
-            this.Commit.Text = "Commit:";
+            this.labelCommit.AutoSize = true;
+            this.labelCommit.Location = new System.Drawing.Point(4, 3);
+            this.labelCommit.Name = "labelCommit";
+            this.labelCommit.Size = new System.Drawing.Size(44, 13);
+            this.labelCommit.TabIndex = 10;
+            this.labelCommit.Text = "Commit:";
+            // 
+            // labelTags
+            // 
+            this.labelTags.AutoSize = true;
+            this.labelTags.Location = new System.Drawing.Point(4, 102);
+            this.labelTags.Name = "labelTags";
+            this.labelTags.Size = new System.Drawing.Size(34, 13);
+            this.labelTags.TabIndex = 14;
+            this.labelTags.Text = "Tags:";
             // 
             // CommitSummaryUserControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.Date);
-            this.Controls.Add(this.Message);
-            this.Controls.Add(this.Author);
-            this.Controls.Add(this.Commit);
+            this.AutoSize = true;
+            this.Controls.Add(this.labelTags);
+            this.Controls.Add(this.labelDate);
+            this.Controls.Add(this.labelMessage);
+            this.Controls.Add(this.labelAuthor);
+            this.Controls.Add(this.labelCommit);
             this.Name = "CommitSummaryUserControl";
-            this.Size = new System.Drawing.Size(377, 96);
+            this.Size = new System.Drawing.Size(377, 124);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -86,9 +98,10 @@
 
         #endregion
 
-        private System.Windows.Forms.Label Date;
-        private System.Windows.Forms.Label Message;
-        private System.Windows.Forms.Label Author;
-        private System.Windows.Forms.Label Commit;
+        private System.Windows.Forms.Label labelDate;
+        private System.Windows.Forms.Label labelMessage;
+        private System.Windows.Forms.Label labelAuthor;
+        private System.Windows.Forms.Label labelCommit;
+        private System.Windows.Forms.Label labelTags;
     }
 }
