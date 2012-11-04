@@ -10,6 +10,7 @@ using GitCommands.Repository;
 using GitUI.RepoHosting;
 using GitUI.Script;
 using ResourceManager.Translation;
+using GitCommands.Config;
 
 namespace GitUI
 {
@@ -468,6 +469,16 @@ namespace GitUI
                 UpdateMultiBranchView();
 
             EnableLoadSshButton();
+
+            // update the text box of the Remote Url combobox to show the URL of selected remote
+            {
+                string pushUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemotePushUrl, _NO_TRANSLATE_Remotes.Text));
+                if (pushUrl.IsNullOrEmpty())
+                {
+                    pushUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, _NO_TRANSLATE_Remotes.Text));
+                }
+                PushDestination.Text = pushUrl;
+            }
 
             var pushSettingValue = Module.GetSetting(string.Format("remote.{0}.push", _NO_TRANSLATE_Remotes.Text));
 
