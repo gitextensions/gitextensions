@@ -146,7 +146,7 @@
             this.commitSummaryUserControl1.Location = new System.Drawing.Point(23, 43);
             this.commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             this.commitSummaryUserControl1.Revision = null;
-            this.commitSummaryUserControl1.Size = new System.Drawing.Size(451, 117);
+            this.commitSummaryUserControl1.Size = new System.Drawing.Size(451, 90);
             this.commitSummaryUserControl1.TabIndex = 5;
             // 
             // tableLayoutPanel3
@@ -156,7 +156,7 @@
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.Controls.Add(this.btnChooseRevision, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.label2, 0, 0);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(480, 51);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(480, 43);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -181,9 +181,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(76, 30);
+            this.label2.Size = new System.Drawing.Size(94, 30);
             this.label2.TabIndex = 32;
-            this.label2.Text = "Pick another revision:";
+            this.label2.Text = "Choose another revision:";
             // 
             // FormArchive
             // 
