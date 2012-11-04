@@ -199,6 +199,7 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(670, 330);
             this.Name = "FormCherryPickCommitSmall";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Cherry pick commit";
             this.Load += new System.EventHandler(this.FormCherryPickCommitSmall_Load);
