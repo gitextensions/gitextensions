@@ -65,6 +65,7 @@
             this.btnChooseRevision.Size = new System.Drawing.Size(25, 24);
             this.btnChooseRevision.TabIndex = 33;
             this.btnChooseRevision.UseVisualStyleBackColor = true;
+            this.btnChooseRevision.Click += new System.EventHandler(this.btnChooseRevision_Click);
             // 
             // label2
             // 
