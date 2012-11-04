@@ -128,6 +128,10 @@
       <Project>{687A73BB-12A0-4AF7-B420-4A9C47DB75CB}</Project>
       <Name>Gource</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Plugins\ProxySwitcher\ProxySwitcher.csproj">
+      <Project>{274F449F-7472-4248-9A57-8CA665A75B5D}</Project>
+      <Name>ProxySwitcher</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plugins\Statistics\GitImpact\GitImpact.csproj">
       <Project>{0B131F9D-BB10-4C3E-9656-5AB858158DE5}</Project>
       <Name>GitImpact</Name>

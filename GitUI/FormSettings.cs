@@ -1040,7 +1040,14 @@ namespace GitUI
 
             Module.SetGlobalPathSetting(string.Format("difftool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
             string exeName;
-            string exeFile = MergeToolsHelper.FindDiffToolFullPath(GlobalDiffTool.Text, out exeName);
+            string exeFile;
+            if (!String.IsNullOrEmpty(DifftoolPath.Text))
+            {
+                exeFile = DifftoolPath.Text;
+                exeName = Path.GetFileName(exeFile);
+            }
+            else
+                exeFile = MergeToolsHelper.FindDiffToolFullPath(GlobalDiffTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
                 DifftoolPath.SelectAll();
@@ -1065,7 +1072,14 @@ namespace GitUI
 
             Module.SetGlobalPathSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
             string exeName;
-            string exeFile = MergeToolsHelper.FindMergeToolFullPath(GlobalMergeTool.Text, out exeName);
+            string exeFile;
+            if (!String.IsNullOrEmpty(MergetoolPath.Text))
+            {
+                exeFile = MergetoolPath.Text;
+                exeName = Path.GetFileName(exeFile);
+            }
+            else
+                exeFile = MergeToolsHelper.FindMergeToolFullPath(GlobalMergeTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
                 MergetoolPath.SelectAll();
@@ -2015,7 +2029,6 @@ namespace GitUI
 
         private static IEnumerable<string> GetGitLocations()
         {
-            yield return @"C:\cygwin\";
             yield return
                 GetRegistryValue(Registry.LocalMachine,
                                  "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
@@ -2031,6 +2044,7 @@ namespace GitUI
                 yield return programFilesX86 + @"\msysgit\";
             yield return programFiles + @"\msysgit\";
             yield return @"C:\msysgit\";
+            yield return @"C:\cygwin\";
         }
 
 
@@ -2048,6 +2062,19 @@ namespace GitUI
             {
                 Settings.GitBinDir = "";
                 return true;
+            }
+
+            string gitpath = Settings.GitCommand
+                .Replace(@"\cmd\git.exe", @"\bin\")
+                .Replace(@"\cmd\git.cmd", @"\bin\")
+                .Replace(@"\bin\git.exe", @"\bin\");
+            if (Directory.Exists(gitpath))
+            {
+                if (File.Exists(gitpath + "sh.exe") || File.Exists(gitpath + "sh"))
+                {
+                    Settings.GitBinDir = gitpath;
+                    return true;
+                }
             }
 
             if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))

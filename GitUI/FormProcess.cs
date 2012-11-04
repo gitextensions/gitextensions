@@ -85,6 +85,21 @@ namespace GitUI
             }
         }
 
+        public static FormProcess ShowModeless(IWin32Window owner, string process, string arguments, string aWorkingDirectory, string input, bool useDialogSettings)
+        {
+            FormProcess formProcess = new FormProcess(process, arguments, aWorkingDirectory, input, useDialogSettings);
+
+            formProcess.ControlBox = true;
+            formProcess.Show(owner);
+
+            return formProcess;
+        }
+
+        public static FormProcess ShowModeless(GitModuleForm owner, string arguments)
+        {
+            return ShowModeless(owner, null, arguments, owner.Module.WorkingDir, null, true);
+        }
+
         public static string ReadDialog(GitModuleForm owner, string arguments)
         {
             return ReadDialog(owner, null, arguments, owner.Module, null, true);

@@ -55,13 +55,13 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Selected revision to archive:";
             // 
-            // Save
+            // buttonArchiveRevision
             // 
             this.buttonArchiveRevision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonArchiveRevision.Image = global::GitUI.Properties.Resources.IconSaveAs;
             this.buttonArchiveRevision.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonArchiveRevision.Location = new System.Drawing.Point(480, 274);
-            this.buttonArchiveRevision.Name = "Save";
+            this.buttonArchiveRevision.Location = new System.Drawing.Point(480, 224);
+            this.buttonArchiveRevision.Name = "buttonArchiveRevision";
             this.buttonArchiveRevision.Size = new System.Drawing.Size(111, 25);
             this.buttonArchiveRevision.TabIndex = 3;
             this.buttonArchiveRevision.Text = "Save as...";
@@ -87,14 +87,14 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(594, 302);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(594, 252);
             this.tableLayoutPanel1.TabIndex = 5;
             // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.tableLayoutPanel2);
-            this.groupBox1.Location = new System.Drawing.Point(365, 244);
+            this.groupBox1.Location = new System.Drawing.Point(365, 194);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(109, 55);
             this.groupBox1.TabIndex = 4;
@@ -142,10 +142,11 @@
             // 
             this.commitSummaryUserControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.commitSummaryUserControl1.AutoSize = true;
             this.commitSummaryUserControl1.Location = new System.Drawing.Point(23, 43);
             this.commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             this.commitSummaryUserControl1.Revision = null;
-            this.commitSummaryUserControl1.Size = new System.Drawing.Size(451, 96);
+            this.commitSummaryUserControl1.Size = new System.Drawing.Size(451, 90);
             this.commitSummaryUserControl1.TabIndex = 5;
             // 
             // tableLayoutPanel3
@@ -180,17 +181,17 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(76, 30);
+            this.label2.Size = new System.Drawing.Size(94, 30);
             this.label2.TabIndex = 32;
-            this.label2.Text = "Pick another revision:";
+            this.label2.Text = "Choose another revision:";
             // 
             // FormArchive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(594, 302);
+            this.ClientSize = new System.Drawing.Size(594, 252);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.MinimumSize = new System.Drawing.Size(610, 340);
+            this.MinimumSize = new System.Drawing.Size(610, 290);
             this.Name = "FormArchive";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Archive";
