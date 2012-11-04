@@ -1040,7 +1040,14 @@ namespace GitUI
 
             Module.SetGlobalPathSetting(string.Format("difftool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
             string exeName;
-            string exeFile = MergeToolsHelper.FindDiffToolFullPath(GlobalDiffTool.Text, out exeName);
+            string exeFile;
+            if (!String.IsNullOrEmpty(DifftoolPath.Text))
+            {
+                exeFile = DifftoolPath.Text;
+                exeName = Path.GetFileName(exeFile);
+            }
+            else
+                exeFile = MergeToolsHelper.FindDiffToolFullPath(GlobalDiffTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
                 DifftoolPath.SelectAll();
@@ -1065,7 +1072,14 @@ namespace GitUI
 
             Module.SetGlobalPathSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
             string exeName;
-            string exeFile = MergeToolsHelper.FindMergeToolFullPath(GlobalMergeTool.Text, out exeName);
+            string exeFile;
+            if (!String.IsNullOrEmpty(MergetoolPath.Text))
+            {
+                exeFile = MergetoolPath.Text;
+                exeName = Path.GetFileName(exeFile);
+            }
+            else
+                exeFile = MergeToolsHelper.FindMergeToolFullPath(GlobalMergeTool.Text, out exeName);
             if (String.IsNullOrEmpty(exeFile))
             {
                 MergetoolPath.SelectAll();
