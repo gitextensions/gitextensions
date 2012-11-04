@@ -270,9 +270,9 @@ namespace GitPlugin
         {
             try
             {
-                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsFileHistory", "File history",
+                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsFileHistory", "Git: File history",
                                          "Show file history", 6, 4);
-                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsRevert", "Undo file changes",
+                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsRevert", "Git: Reset file changes",
                                          "Undo changes made to this file", 4, 5);
             }
             catch
