@@ -334,16 +334,33 @@ namespace GitUI
             if ((e.Bounds.Height - ImageSize) > 1)
                 centeredImageTop = e.Bounds.Top + ((e.Bounds.Height - ImageSize) / 2);
 
+            Bitmap image = null;
             if (gitItemStatus.IsDeleted)
-                e.Graphics.DrawImage(Resources.Removed, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+                image = Resources.Removed;
             else if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
-                e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+                image = Resources.Added;
             else if (gitItemStatus.IsChanged)
-                e.Graphics.DrawImage(Resources.Modified, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+            {
+                if (!gitItemStatus.IsSubmodule || gitItemStatus.SubmoduleStatus == null)
+                    image = Resources.Modified;
+                else
+                {
+                    var status = gitItemStatus.SubmoduleStatus;
+                    if (status.IsDirty && status.Commit == status.OldCommit)
+                        image = Resources.IconSubmoduleDirty;
+                    else if (status.IsCommitNewer)
+                        image = status.IsDirty ? Resources.IconSubmoduleRevisionUpDirty : Resources.IconSubmoduleRevisionUp;
+                    else
+                        image = status.IsDirty ? Resources.IconSubmoduleRevisionDownDirty : Resources.IconSubmoduleRevisionDown;
+                }                
+            }
             else if (gitItemStatus.IsRenamed)
-                e.Graphics.DrawImage(Resources.Renamed, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+                image = Resources.Renamed;
             else if (gitItemStatus.IsCopied)
-                e.Graphics.DrawImage(Resources.Copied, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+                image = Resources.Copied;
+            
+            if (image != null)
+                e.Graphics.DrawImage(image, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
 
             string text = GetItemText(e.Graphics, gitItemStatus);
 

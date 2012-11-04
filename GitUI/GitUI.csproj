@@ -1403,6 +1403,11 @@
     <None Include="Resources\Icons\RecentRepositories.png" />
     <None Include="Resources\Icons\IconRepoCreate.png" />
     <None Include="Resources\Icons\IconRepoOpen.png" />
+    <None Include="Resources\Icons\IconSubmoduleDirty.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionDown.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionUp.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionDownDirty.png" />
+    <None Include="Resources\Icons\IconSubmoduleRevisionUpDirty.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

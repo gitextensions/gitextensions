@@ -366,7 +366,7 @@ namespace GitUI
         private void ComputeUnstagedFiles(Action<List<GitItemStatus>> onComputed)
         {
             unstagedLoader.Load(() =>
-                Module.GetAllChangedFiles(
+                Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked),
                     onComputed);
