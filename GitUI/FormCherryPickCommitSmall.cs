@@ -35,31 +35,22 @@ namespace GitUI
             base.OnLoad(e);
 
             IsMerge = Module.IsMerge(Revision.Guid);
+            
             if (IsMerge)
             {
-                GitRevision[] Parents = Module.GetParents(Revision.Guid);
-                for (int i = 0; i < Parents.Length; i++)
+                var parents = Module.GetParents(Revision.Guid);
+                
+                for (int i = 0; i < parents.Length; i++)
                 {
                     ParentsList.Items.Add(i + 1 + "");
-                    ParentsList.Items[ParentsList.Items.Count - 1].SubItems.Add(Parents[i].Message);
-                    ParentsList.Items[ParentsList.Items.Count - 1].SubItems.Add(Parents[i].Author);
-                    ParentsList.Items[ParentsList.Items.Count - 1].SubItems.Add(Parents[i].CommitDate.ToShortDateString());
+                    ParentsList.Items[ParentsList.Items.Count - 1].SubItems.Add(parents[i].Message);
+                    ParentsList.Items[ParentsList.Items.Count - 1].SubItems.Add(parents[i].Author);
+                    ParentsList.Items[ParentsList.Items.Count - 1].SubItems.Add(parents[i].CommitDate.ToShortDateString());
                 }
-                ParentsList.TopItem.Selected = true;
-            }
-            else
-            {
-                ParentsList.Visible = false;
-                ParentsLabel.Visible = false;
-                Height = Height - (ParentsList.Height + ParentsLabel.Height);
-                Pick.Location = new System.Drawing.Point(Pick.Location.X,
-                    Pick.Location.Y - (ParentsList.Height + ParentsLabel.Height));
-                AutoCommit.Location = new System.Drawing.Point(AutoCommit.Location.X,
-                    AutoCommit.Location.Y - (ParentsList.Height + ParentsLabel.Height));
-                checkAddReference.Location = new System.Drawing.Point(checkAddReference.Location.X,
-                    checkAddReference.Location.Y - (ParentsList.Height + ParentsLabel.Height));
-            }
 
+                ParentsList.TopItem.Selected = true;
+                panelParentsList.Visible = true;
+            }
         }
 
         public GitRevision Revision { get; set; }
@@ -73,6 +64,7 @@ namespace GitUI
         {
             List<string> argumentsList = new List<string>();
             bool CanExecute = true;
+            
             if (IsMerge)
             {
                 if (ParentsList.SelectedItems.Count == 0)
@@ -85,10 +77,12 @@ namespace GitUI
                     argumentsList.Add("-m " + (ParentsList.SelectedItems[0].Index + 1));
                 }
             }
+
             if (checkAddReference.Checked)
             {
                 argumentsList.Add("-x");
             }
+
             if (CanExecute)
             {
                 FormProcess.ShowDialog(this, GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, string.Join(" ", argumentsList.ToArray())));
