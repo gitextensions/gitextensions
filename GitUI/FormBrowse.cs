@@ -1350,8 +1350,17 @@ namespace GitUI
 
         private void CherryPickToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (UICommands.StartCherryPickDialog(this))
+            var revisions = RevisionGrid.GetSelectedRevisions();
+            if (revisions.Count != 1)
+            {
+                MessageBox.Show("Select exactly one revision.");
+                return;
+            }
+
+            if (UICommands.StartCherryPickDialog(this, revisions.First()))
+            {
                 Initialize();
+            }
         }
 
         private void MergeBranchToolStripMenuItemClick(object sender, EventArgs e)
