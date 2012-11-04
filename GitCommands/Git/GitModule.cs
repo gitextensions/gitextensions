@@ -2108,6 +2108,29 @@ namespace GitCommands
             return GitCommandHelpers.GetAllChangedFilesFromString(this, status);
         }
 
+        public List<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles, bool untrackedFiles)
+        {
+            var status = GetAllChangedFiles(excludeIgnoredFiles, untrackedFiles);
+
+            foreach(var item in status)
+                if (item.IsSubmodule)
+                {
+                    item.SubmoduleStatus = GitCommandHelpers.GetSubmoduleChanges(this, item.Name, item.OldName, item.IsStaged);
+                    if (item.SubmoduleStatus.Commit != item.SubmoduleStatus.OldCommit)
+                    {
+                        var submodule = item.SubmoduleStatus.GetSubmodule(this);
+                        if (submodule != null)
+                        {
+                            var commitData = item.SubmoduleStatus.GetCommitData(submodule);
+                            var oldCommitData = item.SubmoduleStatus.GetOldCommitData(submodule);
+                            if (commitData != null && oldCommitData != null)
+                                item.SubmoduleStatus.IsCommitNewer = commitData.CommitDate >= oldCommitData.CommitDate;
+                        }
+                    }
+                }
+            return status;
+        }
+
         public List<GitItemStatus> GetTrackedChangedFiles()
         {
             var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(true, false));
