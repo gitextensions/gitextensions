@@ -30,16 +30,23 @@ namespace GitUI
             Translate();
         }
 
-        protected override void OnLoad(EventArgs e)
+        public GitRevision Revision { get; set; }
+
+        private void FormCherryPickCommitSmall_Load(object sender, EventArgs e)
         {
-            base.OnLoad(e);
+            OnRevisionChanged();
+        }
+
+        private void OnRevisionChanged()
+        {
+            commitSummaryUserControl1.Revision = Revision;
 
             IsMerge = Module.IsMerge(Revision.Guid);
-            
+
             if (IsMerge)
             {
                 var parents = Module.GetParents(Revision.Guid);
-                
+
                 for (int i = 0; i < parents.Length; i++)
                 {
                     ParentsList.Items.Add(i + 1 + "");
@@ -49,15 +56,9 @@ namespace GitUI
                 }
 
                 ParentsList.TopItem.Selected = true;
-                panelParentsList.Visible = true;
             }
-        }
 
-        public GitRevision Revision { get; set; }
-
-        private void FormCherryPickCommitSmall_Load(object sender, EventArgs e)
-        {
-            commitSummaryUserControl1.Revision = Revision;
+            panelParentsList.Visible = IsMerge;
         }
 
         private void Revert_Click(object sender, EventArgs e)
@@ -96,6 +97,19 @@ namespace GitUI
         {
             AutoCommit.Checked = source.AutoCommit.Checked;
             checkAddReference.Checked = source.checkAddReference.Checked;
+        }
+
+        private void btnChooseRevision_Click(object sender, EventArgs e)
+        {
+            using (var chooseForm = new FormChooseCommit(UICommands, Revision.Guid))
+            {
+                if (chooseForm.ShowDialog() == DialogResult.OK && chooseForm.SelectedRevision != null)
+                {
+                    Revision = chooseForm.SelectedRevision;
+                }
+            }
+
+            OnRevisionChanged();
         }
     }
 }
