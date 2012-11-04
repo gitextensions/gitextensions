@@ -235,7 +235,8 @@ namespace GitPlugin
             //GitPlugin.DeleteCommandBar("GitExtensions");
             try
             {
-                this._gitPlugin.RegisterCommand("GitExtensionsFileHistory", new ToolbarCommand<FileHistory>());
+                this._gitPlugin.RegisterCommand("GitExtensionsShowFileHistory", new ToolbarCommand<FileHistory>());
+                this._gitPlugin.RegisterCommand("GitExtensionsResetChanges", new ToolbarCommand<Revert>());
                 this._gitPlugin.RegisterCommand("GitExtensionsCommit", new ToolbarCommand<Commit>());
                 this._gitPlugin.RegisterCommand("GitExtensionsBrowse", new ToolbarCommand<Browse>());
                 this._gitPlugin.RegisterCommand("GitExtensionsClone", new ToolbarCommand<Clone>());
@@ -247,7 +248,6 @@ namespace GitPlugin
                 this._gitPlugin.RegisterCommand("GitExtensionsPull", new ToolbarCommand<Pull>());
                 this._gitPlugin.RegisterCommand("GitExtensionsPush", new ToolbarCommand<Push>());
                 this._gitPlugin.RegisterCommand("GitExtensionsRebase", new ToolbarCommand<Rebase>());
-                this._gitPlugin.RegisterCommand("GitExtensionsRevert", new ToolbarCommand<Revert>());
                 this._gitPlugin.RegisterCommand("GitExtensionsMerge", new ToolbarCommand<Merge>());
                 this._gitPlugin.RegisterCommand("GitExtensionsCherryPick", new ToolbarCommand<Cherry>());
                 this._gitPlugin.RegisterCommand("GitExtensionsStash", new ToolbarCommand<Stash>());
@@ -270,9 +270,9 @@ namespace GitPlugin
         {
             try
             {
-                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsFileHistory", "Git: File history",
+                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsShowFileHistory", "Git: File history",
                                          "Show file history", 6, 4);
-                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsRevert", "Git: Reset file changes",
+                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsResetChanges", "Git: Reset file changes",
                                          "Undo changes made to this file", 4, 5);
             }
             catch
