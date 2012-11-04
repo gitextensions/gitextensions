@@ -867,20 +867,31 @@ namespace GitUI
             return StartResolveConflictsDialog(null, true);
         }
 
-        public bool StartCherryPickDialog(IWin32Window owner)
+        public bool StartCherryPickDialog(IWin32Window owner, GitRevision revision)
         {
             if (!RequiresValidWorkingDir(owner))
+            {
                 return false;
+            }
 
             if (!InvokeEvent(owner, PreCherryPick))
+            {
                 return true;
+            }
 
-            using (var form = new FormCherryPick(this))
+            using (var form = new FormCherryPickCommitSmall(this, revision))
+            {
                 form.ShowDialog(owner);
+            }
 
             InvokeEvent(owner, PostCherryPick);
 
             return true;
+        }
+
+        public bool StartCherryPickDialog(IWin32Window owner)
+        {
+            return StartCherryPickDialog(owner, null);
         }
 
         public bool StartCherryPickDialog()
