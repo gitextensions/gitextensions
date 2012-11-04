@@ -869,6 +869,8 @@ namespace GitUI
 
         public bool StartCherryPickDialog(IWin32Window owner, GitRevision revision)
         {
+            // TODO: compare this code with StartArchiveDialog(...). Which one is to use?
+
             if (!RequiresValidWorkingDir(owner))
             {
                 return false;
@@ -881,12 +883,16 @@ namespace GitUI
 
             using (var form = new FormCherryPickCommitSmall(this, revision))
             {
-                form.ShowDialog(owner);
-            }
-
-            InvokeEvent(owner, PostCherryPick);
-
-            return true;
+                if (form.ShowDialog(owner) == DialogResult.OK)
+                {
+                    InvokeEvent(owner, PostCherryPick);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }            
         }
 
         public bool StartCherryPickDialog(IWin32Window owner)
