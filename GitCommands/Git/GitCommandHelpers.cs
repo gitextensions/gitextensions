@@ -828,6 +828,55 @@ namespace GitCommands
             return stringBuilder.ToString();
         }
 
+        public static GitSubmoduleStatus GetSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged)
+        {
+            string text = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
+            return GetSubmoduleStatus(text);
+        }
+
+        public static GitSubmoduleStatus GetSubmoduleStatus(string text)
+        {
+            var status = new GitSubmoduleStatus();
+            using (StringReader reader = new StringReader(text))
+            {
+                string line = reader.ReadLine();
+                string moduleName = "";
+                if (line != null)
+                {
+                    var match = Regex.Match(line, @"diff --git a/(\S+) b/(\S+)");
+                    if (match != null && match.Groups.Count > 0)
+                    {
+                        status.Name = match.Groups[1].Value;
+                        status.OldName = match.Groups[2].Value;
+                    }
+                }
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (!line.Contains("Subproject"))
+                        continue;
+
+                    char c = line[0];
+                    const string commit = "commit ";
+                    string hash = "";
+                    int pos = line.IndexOf(commit);
+                    if (pos >= 0)
+                        hash = line.Substring(pos + commit.Length);
+                    bool bdirty = hash.EndsWith("-dirty");
+                    hash = hash.Replace("-dirty", "");
+                    if (c == '-')
+                    {
+                        status.OldCommit = hash;
+                    }
+                    else if (c == '+')
+                    {
+                        status.Commit = hash;
+                        status.IsDirty = bdirty;
+                    }
+                }
+            }
+            return status;
+        }
+
         public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString)
         {
             return GetAllChangedFilesFromString(module, statusString, false);
@@ -1000,87 +1049,68 @@ namespace GitCommands
 
         public static string ProcessSubmodulePatch(GitModule module, string text)
         {
+            var status = GetSubmoduleStatus(text);
+            GitModule gitmodule = module.GetSubmodule(status.Name);
             StringBuilder sb = new StringBuilder();
-            using (StringReader reader = new StringReader(text))
+            sb.AppendLine("Submodule " + status.Name + " Change");
+
+            sb.AppendLine();
+            sb.AppendLine("From:\t" + status.OldCommit);
+            if (gitmodule.ValidWorkingDir())
             {
-                string line = reader.ReadLine();
-                string moduleName = "";
-                if (line != null)
+                string error = "";
+                CommitData commitData = CommitData.GetCommitData(gitmodule, status.OldCommit, ref error);
+                if (commitData != null)
                 {
-                    var match = Regex.Match(line, @"diff --git a/(\S+) b/(\S+)");
-                    if (match != null && match.Groups.Count > 0)
-                        moduleName = match.Groups[1].Value;
-                }
-                sb.AppendLine("Submodule " + moduleName + " Change");
-                string fromHash = null;
-                string toHash = null;
-                bool dirtyFlag = false;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    if (line.Contains("Subproject"))
-                    {
-                        sb.AppendLine();
-                        char c = line[0];
-                        const string commit = "commit ";
-                        string hash = "";
-                        int pos = line.IndexOf(commit);
-                        if (pos >= 0)
-                            hash = line.Substring(pos + commit.Length);
-                        bool bdirty = hash.EndsWith("-dirty");
-                        dirtyFlag |= bdirty;
-                        hash = hash.Replace("-dirty", "");
-                        string dirty = !bdirty ? "" : " (dirty)";
-                        if (c == '-')
-                        {
-                            fromHash = hash;
-                            sb.AppendLine("From:\t" + hash + dirty);
-                        }
-                        else if (c == '+')
-                        {
-                            toHash = hash;
-                            sb.AppendLine("To:\t\t" + hash + dirty);
-                        }
-
-                        GitModule gitmodule = module.GetSubmodule(moduleName);
-
-                        if (gitmodule.ValidWorkingDir())
-                        {
-                            string error = "";
-                            CommitData commitData = CommitData.GetCommitData(gitmodule, hash, ref error);
-                            if (commitData != null)
-                            {
-                                sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
-                                var delim = new char[] { '\n', '\r' };
-                                var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
-                                foreach (var curline in lines)
-                                    sb.AppendLine("\t\t" + curline);
-                            }
-                            if (fromHash != null && toHash != null)
-                            {
-                                if (dirtyFlag)
-                                {
-                                    string status = gitmodule.GetStatusText(false);
-                                    if (!String.IsNullOrEmpty(status))
-                                    {
-                                        sb.AppendLine("\nStatus:");
-                                        sb.Append(status);
-                                    }
-                                }
-
-                                string diffs = gitmodule.GetDiffFilesText(fromHash, toHash);
-                                if (!String.IsNullOrEmpty(diffs))
-                                {
-                                    sb.AppendLine("\nDifferences:");
-                                    sb.Append(diffs);
-                                }
-                            }
-                        }
-                        else
-                            sb.AppendLine();
-
-                    }
+                    sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                    var delim = new char[] { '\n', '\r' };
+                    var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
+                    foreach (var curline in lines)
+                        sb.AppendLine("\t\t" + curline);
                 }
             }
+            else
+                sb.AppendLine();
+
+            sb.AppendLine();
+            string dirty = !status.IsDirty ? "" : " (dirty)";
+            sb.AppendLine("To:\t\t" + status.Commit + dirty);
+            if (gitmodule.ValidWorkingDir())
+            {
+                string error = "";
+                CommitData commitData = CommitData.GetCommitData(gitmodule, status.Commit, ref error);
+                if (commitData != null)
+                {
+                    sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                    var delim = new char[] { '\n', '\r' };
+                    var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
+                    foreach (var curline in lines)
+                        sb.AppendLine("\t\t" + curline);
+                }
+            }
+            else
+                sb.AppendLine();
+
+            if (status.Commit != null && status.OldCommit != null)
+            {
+                if (status.IsDirty)
+                {
+                    string statusText = gitmodule.GetStatusText(false);
+                    if (!String.IsNullOrEmpty(statusText))
+                    {
+                        sb.AppendLine("\nStatus:");
+                        sb.Append(statusText);
+                    }
+                }
+
+                string diffs = gitmodule.GetDiffFilesText(status.OldCommit, status.Commit);
+                if (!String.IsNullOrEmpty(diffs))
+                {
+                    sb.AppendLine("\nDifferences:");
+                    sb.Append(diffs);
+                }
+            }
+
             return sb.ToString();
         }
 

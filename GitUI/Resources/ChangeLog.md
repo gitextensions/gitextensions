@@ -1,7 +1,7 @@
 ﻿Changelog
 =========
 
-### Version 2.42
+### Version 2.43
 * Fixed issue 47: Support non-standard SSH port for Test Connection
 * Fixed issue 85: Integrated git-credential-winstore to installer to handle HTTP authentication
 * Fixed issue 407: Added links to parent commit, branches and tags to commit info

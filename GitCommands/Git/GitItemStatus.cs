@@ -47,6 +47,8 @@ namespace GitCommands
         public bool IsSubmodule { get; set; }
         public string RenameCopyPercentage { get; set; }
 
+        public GitSubmoduleStatus SubmoduleStatus { get; set; }
+
         public override string ToString()
         {
             string toString = string.Empty;
