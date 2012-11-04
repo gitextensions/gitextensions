@@ -33,12 +33,13 @@
             this.labelAuthor = new System.Windows.Forms.Label();
             this.labelCommit = new System.Windows.Forms.Label();
             this.labelTags = new System.Windows.Forms.Label();
+            this.labelBranches = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelDate
             // 
             this.labelDate.AutoSize = true;
-            this.labelDate.Location = new System.Drawing.Point(4, 51);
+            this.labelDate.Location = new System.Drawing.Point(213, 26);
             this.labelDate.Name = "labelDate";
             this.labelDate.Size = new System.Drawing.Size(68, 13);
             this.labelDate.TabIndex = 13;
@@ -46,10 +47,12 @@
             // 
             // labelMessage
             // 
-            this.labelMessage.AutoSize = true;
-            this.labelMessage.Location = new System.Drawing.Point(4, 75);
+            this.labelMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelMessage.Location = new System.Drawing.Point(4, 74);
             this.labelMessage.Name = "labelMessage";
-            this.labelMessage.Size = new System.Drawing.Size(53, 13);
+            this.labelMessage.Size = new System.Drawing.Size(405, 51);
             this.labelMessage.TabIndex = 12;
             this.labelMessage.Text = "Message:";
             // 
@@ -74,23 +77,33 @@
             // labelTags
             // 
             this.labelTags.AutoSize = true;
-            this.labelTags.Location = new System.Drawing.Point(4, 102);
+            this.labelTags.Location = new System.Drawing.Point(4, 50);
             this.labelTags.Name = "labelTags";
             this.labelTags.Size = new System.Drawing.Size(34, 13);
             this.labelTags.TabIndex = 14;
             this.labelTags.Text = "Tags:";
             // 
+            // labelBranches
+            // 
+            this.labelBranches.AutoSize = true;
+            this.labelBranches.Location = new System.Drawing.Point(213, 50);
+            this.labelBranches.Name = "labelBranches";
+            this.labelBranches.Size = new System.Drawing.Size(55, 13);
+            this.labelBranches.TabIndex = 15;
+            this.labelBranches.Text = "Branches:";
+            // 
             // CommitSummaryUserControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
+            this.Controls.Add(this.labelBranches);
             this.Controls.Add(this.labelTags);
             this.Controls.Add(this.labelDate);
             this.Controls.Add(this.labelMessage);
             this.Controls.Add(this.labelAuthor);
             this.Controls.Add(this.labelCommit);
             this.Name = "CommitSummaryUserControl";
-            this.Size = new System.Drawing.Size(377, 124);
+            this.Size = new System.Drawing.Size(412, 126);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -103,5 +116,6 @@
         private System.Windows.Forms.Label labelAuthor;
         private System.Windows.Forms.Label labelCommit;
         private System.Windows.Forms.Label labelTags;
+        private System.Windows.Forms.Label labelBranches;
     }
 }
