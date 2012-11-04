@@ -1886,13 +1886,17 @@ namespace GitUI
                     }
                     prevForm = frm;
                     if (frm.ShowDialog(this) != DialogResult.OK)
-                        break;
+                    {
+                        return;
+                    }
                 }
             }
             finally
             {
                 if (prevForm != null)
+                {
                     prevForm.Dispose();
+                }
             }
 
             ForceRefreshRevisions();

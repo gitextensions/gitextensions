@@ -867,20 +867,37 @@ namespace GitUI
             return StartResolveConflictsDialog(null, true);
         }
 
-        public bool StartCherryPickDialog(IWin32Window owner)
+        public bool StartCherryPickDialog(IWin32Window owner, GitRevision revision)
         {
+            // TODO: compare this code with StartArchiveDialog(...). Which one is to use?
+
             if (!RequiresValidWorkingDir(owner))
+            {
                 return false;
+            }
 
             if (!InvokeEvent(owner, PreCherryPick))
+            {
                 return true;
+            }
 
-            using (var form = new FormCherryPick(this))
-                form.ShowDialog(owner);
+            using (var form = new FormCherryPickCommitSmall(this, revision))
+            {
+                if (form.ShowDialog(owner) == DialogResult.OK)
+                {
+                    InvokeEvent(owner, PostCherryPick);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }            
+        }
 
-            InvokeEvent(owner, PostCherryPick);
-
-            return true;
+        public bool StartCherryPickDialog(IWin32Window owner)
+        {
+            return StartCherryPickDialog(owner, null);
         }
 
         public bool StartCherryPickDialog()
