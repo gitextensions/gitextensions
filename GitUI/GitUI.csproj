@@ -369,11 +369,11 @@
     <Compile Include="FileStatusList.Designer.cs">
       <DependentUpon>FileStatusList.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCherryPickCommitSmall.cs">
+    <Compile Include="FormCherryPick.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCherryPickCommitSmall.Designer.cs">
-      <DependentUpon>FormCherryPickCommitSmall.cs</DependentUpon>
+    <Compile Include="FormCherryPick.Designer.cs">
+      <DependentUpon>FormCherryPick.cs</DependentUpon>
     </Compile>
     <Compile Include="GitFileTreeComparer.cs" />
     <Compile Include="Google.cs" />
@@ -892,8 +892,8 @@
       <DependentUpon>FileStatusList.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCherryPickCommitSmall.resx">
-      <DependentUpon>FormCherryPickCommitSmall.cs</DependentUpon>
+    <EmbeddedResource Include="FormCherryPick.resx">
+      <DependentUpon>FormCherryPick.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormRunScriptSpecify.resx">

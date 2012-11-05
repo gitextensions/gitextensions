@@ -6,7 +6,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormCherryPickCommitSmall : GitModuleForm
+    public partial class FormCherryPick : GitModuleForm
     {
         #region Translation
         private readonly TranslationString _noneParentSelectedText =
@@ -17,11 +17,11 @@ namespace GitUI
 
         private bool IsMerge;
 
-        private FormCherryPickCommitSmall()
+        private FormCherryPick()
             : this(null, null)
         { }
 
-        public FormCherryPickCommitSmall(GitUICommands aCommands, GitRevision revision)
+        public FormCherryPick(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
         {
             Revision = revision;
@@ -93,7 +93,7 @@ namespace GitUI
             }
         }
 
-        public void CopyOptions(FormCherryPickCommitSmall source)
+        public void CopyOptions(FormCherryPick source)
         {
             AutoCommit.Checked = source.AutoCommit.Checked;
             checkAddReference.Checked = source.checkAddReference.Checked;
