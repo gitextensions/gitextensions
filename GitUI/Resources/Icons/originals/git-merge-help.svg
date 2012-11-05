@@ -83,9 +83,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.45819228"
-     inkscape:cx="1607.2144"
-     inkscape:cy="157.43792"
+     inkscape:zoom="0.64798174"
+     inkscape:cx="1690.3472"
+     inkscape:cy="610.69714"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -308,7 +308,7 @@
          style="font-size:45px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;font-family:Arial;-inkscape-font-specification:Arial">d</tspan></text>
     <path
        sodipodi:type="arc"
-       style="color:#000000;fill:#7e0080;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:#4d4d4d;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="path2985-0"
        sodipodi:cx="142.9079"
        sodipodi:cy="257.27463"
@@ -330,7 +330,7 @@
          style="font-size:45px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;font-family:Arial;-inkscape-font-specification:Arial">e</tspan></text>
     <path
        sodipodi:type="arc"
-       style="fill:#7e0080;fill-opacity:1;stroke:#000000;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:#808080;fill-opacity:1;stroke:#4d4d4d;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none"
        id="path2985-2-0"
        sodipodi:cx="142.9079"
        sodipodi:cy="257.27463"
@@ -936,7 +936,7 @@
          style="font-size:45px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;font-family:Arial;-inkscape-font-specification:Arial">d</tspan></text>
     <path
        sodipodi:type="arc"
-       style="color:#000000;fill:#7e0080;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:#4d4d4d;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="path2985-0-9"
        sodipodi:cx="142.9079"
        sodipodi:cy="257.27463"
@@ -958,7 +958,7 @@
          style="font-size:45px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffffff;font-family:Arial;-inkscape-font-specification:Arial">e</tspan></text>
     <path
        sodipodi:type="arc"
-       style="fill:#7e0080;fill-opacity:1;stroke:#000000;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:#808080;fill-opacity:1;stroke:#4d4d4d;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none"
        id="path2985-2-0-3"
        sodipodi:cx="142.9079"
        sodipodi:cy="257.27463"
@@ -1349,7 +1349,7 @@
        sodipodi:cy="257.27463"
        sodipodi:cx="142.9079"
        id="path3319"
-       style="color:#000000;fill:#7e0080;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:#4d4d4d;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        sodipodi:type="arc" />
     <text
        sodipodi:linespacing="125%"
@@ -1371,7 +1371,7 @@
        sodipodi:cy="257.27463"
        sodipodi:cx="142.9079"
        id="path3325"
-       style="fill:#7e0080;fill-opacity:1;stroke:#000000;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:#808080;fill-opacity:1;stroke:#4d4d4d;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none"
        sodipodi:type="arc" />
     <text
        sodipodi:linespacing="125%"
