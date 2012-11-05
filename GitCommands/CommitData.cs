@@ -125,16 +125,13 @@ namespace GitCommands
             if (sha1 == null)
                 throw new ArgumentNullException("sha1");
 
-            using (var repo = new LibGit2Sharp.Repository(module.WorkingDir))
+            var commit = module.Repository.Lookup<LibGit2Sharp.Commit>(sha1);
+            if (commit == null)
             {
-                var commit = repo.Lookup<LibGit2Sharp.Commit>(sha1);
-                if (commit == null)
-                {
-                    error = "Cannot find commit " + sha1;
-                    return null;
-                }
-                return CreateFromCommit(commit);
+                error = "Cannot find commit " + sha1;
+                return null;
             }
+            return CreateFromCommit(commit);
         }
 
         /// <summary>
