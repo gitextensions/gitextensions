@@ -47,6 +47,8 @@ namespace GitUI
             {
                 var parents = Module.GetParents(Revision.Guid);
 
+                ParentsList.Items.Clear();
+
                 for (int i = 0; i < parents.Length; i++)
                 {
                     ParentsList.Items.Add(i + 1 + "");
