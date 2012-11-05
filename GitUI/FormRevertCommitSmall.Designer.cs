@@ -28,47 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.Revert = new System.Windows.Forms.Button();
-            this.AutoCommit = new System.Windows.Forms.CheckBox();
+            this.commitSummaryUserControl1 = new GitUI.CommitSummaryUserControl();
             this.ParentsLabel = new System.Windows.Forms.Label();
             this.ParentsList = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.AutoCommit = new System.Windows.Forms.CheckBox();
+            this.Revert = new System.Windows.Forms.Button();
             this.BranchInfo = new System.Windows.Forms.Label();
-            this.Commit = new System.Windows.Forms.Label();
-            this.Author = new System.Windows.Forms.Label();
-            this.Message = new System.Windows.Forms.Label();
-            this.Date = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // Revert
+            // commitSummaryUserControl1
             // 
-            this.Revert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Revert.Location = new System.Drawing.Point(425, 224);
-            this.Revert.Name = "Revert";
-            this.Revert.Size = new System.Drawing.Size(137, 25);
-            this.Revert.TabIndex = 10;
-            this.Revert.Text = "Revert this commit";
-            this.Revert.UseVisualStyleBackColor = true;
-            this.Revert.Click += new System.EventHandler(this.Revert_Click);
-            // 
-            // AutoCommit
-            // 
-            this.AutoCommit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.AutoCommit.AutoSize = true;
-            this.AutoCommit.Location = new System.Drawing.Point(12, 230);
-            this.AutoCommit.Name = "AutoCommit";
-            this.AutoCommit.Size = new System.Drawing.Size(194, 19);
-            this.AutoCommit.TabIndex = 11;
-            this.AutoCommit.Text = "Automatically creates a commit";
-            this.AutoCommit.UseVisualStyleBackColor = true;
+            this.commitSummaryUserControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.commitSummaryUserControl1.AutoSize = true;
+            this.commitSummaryUserControl1.Location = new System.Drawing.Point(28, 32);
+            this.commitSummaryUserControl1.Name = "commitSummaryUserControl1";
+            this.commitSummaryUserControl1.Revision = null;
+            this.commitSummaryUserControl1.Size = new System.Drawing.Size(584, 160);
+            this.commitSummaryUserControl1.TabIndex = 16;
             // 
             // ParentsLabel
             // 
             this.ParentsLabel.AutoSize = true;
-            this.ParentsLabel.Location = new System.Drawing.Point(12, 128);
+            this.ParentsLabel.Location = new System.Drawing.Point(12, 206);
             this.ParentsLabel.Name = "ParentsLabel";
             this.ParentsLabel.Size = new System.Drawing.Size(207, 15);
             this.ParentsLabel.TabIndex = 15;
@@ -84,10 +70,10 @@
             this.columnHeader4});
             this.ParentsList.FullRowSelect = true;
             this.ParentsList.HideSelection = false;
-            this.ParentsList.Location = new System.Drawing.Point(12, 148);
+            this.ParentsList.Location = new System.Drawing.Point(12, 226);
             this.ParentsList.MultiSelect = false;
             this.ParentsList.Name = "ParentsList";
-            this.ParentsList.Size = new System.Drawing.Size(550, 65);
+            this.ParentsList.Size = new System.Drawing.Size(599, 86);
             this.ParentsList.TabIndex = 14;
             this.ParentsList.UseCompatibleStateImageBehavior = false;
             this.ParentsList.View = System.Windows.Forms.View.Details;
@@ -112,6 +98,28 @@
             this.columnHeader4.Text = "Date";
             this.columnHeader4.Width = 80;
             // 
+            // AutoCommit
+            // 
+            this.AutoCommit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.AutoCommit.AutoSize = true;
+            this.AutoCommit.Location = new System.Drawing.Point(12, 341);
+            this.AutoCommit.Name = "AutoCommit";
+            this.AutoCommit.Size = new System.Drawing.Size(189, 19);
+            this.AutoCommit.TabIndex = 11;
+            this.AutoCommit.Text = "Automatically create a commit";
+            this.AutoCommit.UseVisualStyleBackColor = true;
+            // 
+            // Revert
+            // 
+            this.Revert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Revert.Location = new System.Drawing.Point(475, 335);
+            this.Revert.Name = "Revert";
+            this.Revert.Size = new System.Drawing.Size(137, 25);
+            this.Revert.TabIndex = 10;
+            this.Revert.Text = "Revert this commit";
+            this.Revert.UseVisualStyleBackColor = true;
+            this.Revert.Click += new System.EventHandler(this.Revert_Click);
+            // 
             // BranchInfo
             // 
             this.BranchInfo.AutoSize = true;
@@ -121,60 +129,22 @@
             this.BranchInfo.TabIndex = 5;
             this.BranchInfo.Text = "Revert this commit:";
             // 
-            // Commit
-            // 
-            this.Commit.AutoSize = true;
-            this.Commit.Location = new System.Drawing.Point(30, 30);
-            this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(71, 15);
-            this.Commit.TabIndex = 6;
-            this.Commit.Text = "Commit: {0}";
-            // 
-            // Author
-            // 
-            this.Author.AutoSize = true;
-            this.Author.Location = new System.Drawing.Point(30, 53);
-            this.Author.Name = "Author";
-            this.Author.Size = new System.Drawing.Size(64, 15);
-            this.Author.TabIndex = 7;
-            this.Author.Text = "Author: {0}";
-            // 
-            // Message
-            // 
-            this.Message.AutoSize = true;
-            this.Message.Location = new System.Drawing.Point(30, 102);
-            this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(73, 15);
-            this.Message.TabIndex = 8;
-            this.Message.Text = "Message: {0}";
-            // 
-            // Date
-            // 
-            this.Date.AutoSize = true;
-            this.Date.Location = new System.Drawing.Point(30, 78);
-            this.Date.Name = "Date";
-            this.Date.Size = new System.Drawing.Size(97, 15);
-            this.Date.TabIndex = 9;
-            this.Date.Text = "Commit date: {0}";
-            // 
             // FormRevertCommitSmall
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(574, 261);
+            this.ClientSize = new System.Drawing.Size(624, 372);
+            this.Controls.Add(this.commitSummaryUserControl1);
             this.Controls.Add(this.ParentsLabel);
             this.Controls.Add(this.ParentsList);
             this.Controls.Add(this.AutoCommit);
             this.Controls.Add(this.Revert);
-            this.Controls.Add(this.Date);
-            this.Controls.Add(this.Message);
-            this.Controls.Add(this.Author);
-            this.Controls.Add(this.Commit);
             this.Controls.Add(this.BranchInfo);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(640, 410);
             this.Name = "FormRevertCommitSmall";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Revert commit";
             this.Load += new System.EventHandler(this.FormRevertCommitSmall_Load);
@@ -194,9 +164,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.Label BranchInfo;
-        private System.Windows.Forms.Label Commit;
-        private System.Windows.Forms.Label Author;
-        private System.Windows.Forms.Label Message;
-        private System.Windows.Forms.Label Date;
+        private CommitSummaryUserControl commitSummaryUserControl1;
     }
 }
