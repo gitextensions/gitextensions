@@ -695,7 +695,7 @@ namespace GitUI
 
             Module.HandleConflictsSaveSide(GetFileName(), fileName, "BASE");
 
-            OpenWith.OpenAs(fileName);
+            OsShellUtil.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
         }
 
@@ -709,7 +709,7 @@ namespace GitUI
 
             Module.HandleConflictsSaveSide(GetFileName(), fileName, "LOCAL");
 
-            OpenWith.OpenAs(fileName);
+            OsShellUtil.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
         }
 
@@ -741,7 +741,7 @@ namespace GitUI
 
             Module.HandleConflictsSaveSide(GetFileName(), fileName, "REMOTE");
 
-            OpenWith.OpenAs(fileName);
+            OsShellUtil.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
         }
 
@@ -820,7 +820,7 @@ namespace GitUI
         private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = GetFileName();
-            OpenWith.OpenAs(Module.WorkingDir + fileName);
+            OsShellUtil.OpenAs(Module.WorkingDir + fileName);
         }
 
         private void stageFile(string filename)
