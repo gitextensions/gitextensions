@@ -727,7 +727,7 @@
     <Compile Include="FormOpenDirectory.Designer.cs">
       <DependentUpon>FormOpenDirectory.cs</DependentUpon>
     </Compile>
-    <Compile Include="OpenWith.cs" />
+    <Compile Include="OsShellUtil.cs" />
     <Compile Include="PatchGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>
