@@ -1470,7 +1470,7 @@ namespace GitUI
             var item = list.SelectedItem;
             var fileName = item.Name;
 
-            OpenWith.OpenAs(Module.WorkingDir + fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+            OsShellUtil.OpenAs(Module.WorkingDir + fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
         }
 
         private void FilenameToClipboardToolStripMenuItemClick(object sender, EventArgs e)
@@ -1992,12 +1992,10 @@ namespace GitUI
                 string filePath = fileNames.ToString();
                 if (File.Exists(filePath))
                 {
-                    Process.Start("explorer.exe", "/select, " + filePath);
+                    OsShellUtil.SelectPathInFileExplorer(filePath);
                 }
             }
         }
-
-
 
         private void toolStripMenuItem9_Click(object sender, EventArgs e)
         {
