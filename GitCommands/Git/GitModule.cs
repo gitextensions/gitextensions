@@ -2363,6 +2363,29 @@ namespace GitCommands
             return GetHeads(tree);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderByCommitDate">true: slower!</param>
+        /// <returns></returns>
+        public IList<GitHead> GetTagHeads(bool orderByCommitDate)
+        {
+            var list = GetHeads(true, false);
+
+            if (orderByCommitDate)
+            {
+                var listSorted = list.OrderBy(head =>
+                {
+                    var r = new GitRevision(this, head.Guid);
+                    return r.CommitDate;
+                });
+
+                return listSorted.ToList();
+            }
+
+            return list;
+        }
+
         public ICollection<string> GetMergedBranches()
         {
             return RunGitCmd(GitCommandHelpers.MergedBranches()).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
