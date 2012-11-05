@@ -840,7 +840,7 @@ namespace GitCommands
             using (StringReader reader = new StringReader(text))
             {
                 string line = reader.ReadLine();
-                string moduleName = "";
+
                 if (line != null)
                 {
                     var match = Regex.Match(line, @"diff --git a/(\S+) b/(\S+)");
@@ -850,6 +850,7 @@ namespace GitCommands
                         status.OldName = match.Groups[2].Value;
                     }
                 }
+
                 while ((line = reader.ReadLine()) != null)
                 {
                     if (!line.Contains("Subproject"))
