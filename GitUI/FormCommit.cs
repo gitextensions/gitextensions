@@ -363,7 +363,7 @@ namespace GitUI
             ShowDialogWhenChanges(null);
         }
 
-        private void ComputeUnstagedFiles(Action<List<GitItemStatus>> onComputed)
+        private void ComputeUnstagedFiles(Action<IList<GitItemStatus>> onComputed)
         {
             unstagedLoader.Load(() =>
                 Module.GetAllChangedFilesWithSubmodulesStatus(
@@ -581,7 +581,7 @@ namespace GitUI
         ///   This method is passed in to the SetTextCallBack delegate
         ///   to set the Text property of textBox1.
         /// </summary>
-        private void LoadUnstagedOutput(List<GitItemStatus> allChangedFiles)
+        private void LoadUnstagedOutput(IList<GitItemStatus> allChangedFiles)
         {
             var unStagedFiles = new List<GitItemStatus>();
             var stagedFiles = new List<GitItemStatus>();
