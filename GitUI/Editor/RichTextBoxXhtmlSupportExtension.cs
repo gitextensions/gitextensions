@@ -12,7 +12,7 @@ using GitCommands;
 
 namespace GitUI.Editor.RichTextBoxExtension
 {
-    static class RichTextBoxXHTMLSupportExtension
+    static class RichTextBoxXhtmlSupportExtension
     {
         /// <summary>
         /// Maintains performance while updating.
