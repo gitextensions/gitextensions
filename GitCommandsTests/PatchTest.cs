@@ -25,9 +25,8 @@ namespace GitCommandsTests
                 writer.WriteLine(text);
                 writer.Flush();
             }
-
-            
         }
+
         private static Patch GetNewPatch()
         {
             return new Patch();    
@@ -38,7 +37,6 @@ namespace GitCommandsTests
         {
             Patch patch = new Patch();
             Assert.IsNotNull(patch);
-
         }
 
         [TestMethod]
@@ -49,7 +47,6 @@ namespace GitCommandsTests
             patch.AppendText("text2");
 
             Assert.AreEqual(patch.Text, "text1text2");
-
         }
 
         [TestMethod]

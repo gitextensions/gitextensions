@@ -119,6 +119,7 @@ namespace GitCommands
         /// </summary>
         public static CommitData GetCommitData(GitModule module, string sha1, ref string error)
         {
+            error = "";
             if (module == null)
                 throw new ArgumentNullException("module");
             if (sha1 == null)
@@ -126,20 +127,22 @@ namespace GitCommands
 
             using (var repo = new LibGit2Sharp.Repository(module.WorkingDir))
             {
-                //TODO: add error handling
-                return CreateFromFormatedData(repo.Lookup<LibGit2Sharp.Commit>(sha1));
+                var commit = repo.Lookup<LibGit2Sharp.Commit>(sha1);
+                if (commit == null)
+                {
+                    error = "Cannot find commit " + sha1;
+                    return null;
+                }
+                return CreateFromCommit(commit);
             }
         }
 
-        public const string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N"; 
-
         /// <summary>
-        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
-        /// exact output of a log or show command using --format=LogFormat.
+        /// Creates a CommitData object from formated commit info data from git.
         /// </summary>
         /// <param name="commit">Commit object from libgit2sharp.</param>
         /// <returns>CommitData object populated with parsed info from commit object.</returns>
-        public static CommitData CreateFromFormatedData(LibGit2Sharp.Commit commit)
+        public static CommitData CreateFromCommit(LibGit2Sharp.Commit commit)
         {
             if (commit == null)
                 throw new ArgumentNullException("commit");
