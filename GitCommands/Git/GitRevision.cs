@@ -14,7 +14,7 @@ namespace GitCommands
 
 
         public String[] ParentGuids;
-        private List<IGitItem> _subItems;
+        private IList<IGitItem> _subItems;
         private readonly List<GitHead> heads = new List<GitHead>();
         private readonly GitModule Module;
 
@@ -44,7 +44,7 @@ namespace GitCommands
         public string Guid { get; set; }
         public string Name { get; set; }
 
-        public List<IGitItem> SubItems
+        public IList<IGitItem> SubItems
         {
             get { return _subItems ?? (_subItems = Module.GetTree(TreeGuid, false)); }
         }

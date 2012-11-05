@@ -1094,9 +1094,10 @@ namespace GitUI
             }
         }
 
-        protected void LoadInTree(List<IGitItem> items, TreeNodeCollection node)
+        protected void LoadInTree(IList<IGitItem> items, TreeNodeCollection node)
         {
-            items.Sort(new GitFileTreeComparer());
+            // TODO: remove the cast
+            ((List<GitItem>)items).Sort(new GitFileTreeComparer());
 
             foreach (var item in items)
             {
