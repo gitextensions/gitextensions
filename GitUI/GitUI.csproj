@@ -91,6 +91,7 @@
     <Compile Include="BranchComboBox.Designer.cs">
       <DependentUpon>BranchComboBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommitInfo\CommandEventArgs.cs" />
     <Compile Include="CommitSummaryUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -327,10 +328,10 @@
     <Compile Include="FormCommit.Designer.cs">
       <DependentUpon>FormCommit.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommitInfo.cs">
+    <Compile Include="CommitInfo\CommitInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommitInfo.Designer.cs">
+    <Compile Include="CommitInfo\CommitInfo.Designer.cs">
       <DependentUpon>CommitInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Dashboard.cs">
@@ -864,7 +865,7 @@
       <DependentUpon>FormCommit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommitInfo.resx">
+    <EmbeddedResource Include="CommitInfo\CommitInfo.resx">
       <DependentUpon>CommitInfo.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
