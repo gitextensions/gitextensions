@@ -15,7 +15,7 @@ namespace GitUI
 
         public string GetRevision()
         {
-            return Module.RevParse(commitExpression.Text);
+            return Module.RevParse(commitExpression.Text.Trim());
         }
 
 
