@@ -534,7 +534,8 @@ namespace GitUI
         private void FillTagDropDown()
         {
             TagComboBox.DisplayMember = "Name";
-            var tags = Module.GetHeads(true, false);
+            /// var tags = Module.GetTagHeads(true).Reverse().ToList(); // comment out to sort by commit date
+            var tags = Module.GetTagHeads(false);
             TagComboBox.DataSource = tags;
         }
 
