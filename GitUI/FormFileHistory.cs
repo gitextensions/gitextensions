@@ -331,7 +331,7 @@ namespace GitUI
             var selectedRevisions = FileChanges.GetSelectedRevisions();
             if (selectedRevisions.Count == 1)
             {
-                using (var frm = new FormCherryPickCommitSmall(UICommands, selectedRevisions[0]))
+                using (var frm = new FormCherryPick(UICommands, selectedRevisions[0]))
                     frm.ShowDialog(this);
             }
         }
