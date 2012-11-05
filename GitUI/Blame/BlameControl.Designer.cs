@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.commitInfo = new GitUI.CommitInfo();
+            this.commitInfo = new GitUI.CommitInfo.CommitInfo();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.BlameCommitter = new GitUI.Editor.FileViewer();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -190,7 +190,7 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private CommitInfo commitInfo;
+        private CommitInfo.CommitInfo commitInfo;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private GitUI.Editor.FileViewer BlameCommitter;
         private GitUI.Editor.FileViewer BlameFile;
