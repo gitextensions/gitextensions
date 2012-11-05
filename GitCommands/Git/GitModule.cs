@@ -33,8 +33,19 @@ namespace GitCommands
         }
 
         private string _workingdir;
+        private LibGit2Sharp.Repository _repository;
         private GitModule _superprojectModule;
         private string _submoduleName;
+
+        public LibGit2Sharp.Repository Repository
+        {
+            get
+            {
+                if (_repository == null)
+                    _repository = new LibGit2Sharp.Repository(WorkingDir);
+                return _repository;
+            }
+        }
 
         public string WorkingDir
         {
@@ -1857,10 +1868,7 @@ namespace GitCommands
 
         public string[] GetRemotes(bool allowEmpty)
         {
-            using(var repo = new LibGit2Sharp.Repository(WorkingDir))
-            {
-                return repo.Remotes.Select(r => r.Name).ToArray();
-            }
+            return Repository.Remotes.Select(r => r.Name).ToArray();
         }
 
         public ConfigFile GetLocalConfig()
@@ -2370,30 +2378,27 @@ namespace GitCommands
 
         private string GetTree(bool tags, bool branches)
         {
-            using (var repo = new LibGit2Sharp.Repository(WorkingDir))
+            if (tags && branches)
             {
-                if (tags && branches)
-                {
-                    return repo.Refs
-                        .Select( r => string.Format("{0} {1}", r.ResolveToDirectReference().TargetIdentifier, r.CanonicalName))
-                        .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
-                        .ToString();
-                }
-
-                if (tags)
-                    return repo.Tags
-                        .Select(r => string.Format("{0} {1}", r.Target.Sha, r.CanonicalName))
-                        .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
-                        .ToString();
-
-                if (branches)
-                    return repo.Branches
-                        .Where(r => !r.IsRemote)
-                        .Select(r => string.Format("{0} {1}", r.Tip.Sha, r.CanonicalName))
-                        .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
-                        .ToString();
-                return "";
+                return Repository.Refs
+                    .Select(r => string.Format("{0} {1}", r.ResolveToDirectReference().TargetIdentifier, r.CanonicalName))
+                    .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
+                    .ToString();
             }
+
+            if (tags)
+                return Repository.Tags
+                    .Select(r => string.Format("{0} {1}", r.Target.Sha, r.CanonicalName))
+                    .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
+                    .ToString();
+
+            if (branches)
+                return Repository.Branches
+                    .Where(r => !r.IsRemote)
+                    .Select(r => string.Format("{0} {1}", r.Tip.Sha, r.CanonicalName))
+                    .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
+                    .ToString();
+            return "";
         }
 
         private List<GitHead> GetHeads(string tree)
@@ -2607,11 +2612,8 @@ namespace GitCommands
 
         public string GetFileText(string id, Encoding encoding)
         {
-            using (var repo = new LibGit2Sharp.Repository(WorkingDir))
-            {
-                var blob = repo.Lookup<LibGit2Sharp.Blob>(new ObjectId(id));
-                return encoding.GetString(blob.Content);
-            }
+            var blob = Repository.Lookup<LibGit2Sharp.Blob>(new ObjectId(id));
+            return encoding.GetString(blob.Content);
         }
 
         public string GetFileBlobHash(string fileName, string revision)
@@ -3058,5 +3060,30 @@ namespace GitCommands
         }
 
         #endregion
+
+        private bool disposed = false;
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected void Dispose(bool disposing)
+        {
+            if (this.disposed)
+                return;
+
+            if (disposing && _repository != null)
+                _repository.Dispose();
+
+            _repository = null;
+
+            disposed = true;
+        }
+
+        ~GitModule()
+        {
+            Dispose(false);
+        }
     }
 }
