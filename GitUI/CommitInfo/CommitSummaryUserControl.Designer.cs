@@ -55,16 +55,16 @@
             this.labelMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelMessage.Location = new System.Drawing.Point(4, 108);
+            this.labelMessage.Location = new System.Drawing.Point(4, 115);
             this.labelMessage.Name = "labelMessage";
-            this.labelMessage.Size = new System.Drawing.Size(405, 53);
+            this.labelMessage.Size = new System.Drawing.Size(403, 45);
             this.labelMessage.TabIndex = 12;
             this.labelMessage.Text = "...";
             // 
             // labelAuthor
             // 
             this.labelAuthor.AutoSize = true;
-            this.labelAuthor.Location = new System.Drawing.Point(80, 26);
+            this.labelAuthor.Location = new System.Drawing.Point(93, 26);
             this.labelAuthor.Name = "labelAuthor";
             this.labelAuthor.Size = new System.Drawing.Size(16, 13);
             this.labelAuthor.TabIndex = 11;
@@ -73,7 +73,7 @@
             // labelCommit
             // 
             this.labelCommit.AutoSize = true;
-            this.labelCommit.Location = new System.Drawing.Point(80, 3);
+            this.labelCommit.Location = new System.Drawing.Point(93, 3);
             this.labelCommit.Name = "labelCommit";
             this.labelCommit.Size = new System.Drawing.Size(16, 13);
             this.labelCommit.TabIndex = 10;
@@ -83,7 +83,7 @@
             // 
             this.labelTags.AutoSize = true;
             this.labelTags.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.labelTags.Location = new System.Drawing.Point(80, 49);
+            this.labelTags.Location = new System.Drawing.Point(93, 49);
             this.labelTags.Name = "labelTags";
             this.labelTags.Size = new System.Drawing.Size(16, 13);
             this.labelTags.TabIndex = 14;
@@ -92,7 +92,7 @@
             // labelBranches
             // 
             this.labelBranches.AutoSize = true;
-            this.labelBranches.Location = new System.Drawing.Point(80, 72);
+            this.labelBranches.Location = new System.Drawing.Point(93, 72);
             this.labelBranches.Name = "labelBranches";
             this.labelBranches.Size = new System.Drawing.Size(16, 13);
             this.labelBranches.TabIndex = 15;
@@ -158,7 +158,7 @@
             this.Controls.Add(this.labelAuthor);
             this.Controls.Add(this.labelCommit);
             this.Name = "CommitSummaryUserControl";
-            this.Size = new System.Drawing.Size(412, 161);
+            this.Size = new System.Drawing.Size(410, 160);
             this.ResumeLayout(false);
             this.PerformLayout();
 

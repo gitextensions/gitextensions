@@ -65,12 +65,12 @@ namespace GitUI
                 else
                 {
                     labelCommit.Text = "No revision";
-                    labelAuthor.Text = string.Format(Strings.GetAuthorText() + ": {0}", "---");
-                    labelDate.Text = string.Format(Strings.GetCommitDateText() + ": {0}", "---");
-                    labelMessage.Text = string.Format(Strings.GetMessageText() + ": {0}", "---");
-                    labelTags.Text = string.Format(tagsCaption + ": {0}", "---");
+                    labelAuthor.Text = "---";
+                    labelDate.Text = "---";
+                    labelMessage.Text = "---";
+                    labelTags.Text = "---";
                     labelTags.BackColor = Control.DefaultBackColor;
-                    labelBranches.Text = string.Format(branchesCaption + ": {0}", "---");
+                    labelBranches.Text = "---";
                     labelBranches.BackColor = Control.DefaultBackColor;
                 }
             }
