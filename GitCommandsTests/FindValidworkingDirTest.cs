@@ -25,7 +25,6 @@ namespace GitCommandsTests
             return path.Substring(0, path.LastIndexOf('\\'));
         }
 
-
         [TestMethod]
         public void TestWorkingDir()
         {

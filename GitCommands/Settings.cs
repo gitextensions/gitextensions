@@ -34,9 +34,6 @@ namespace GitCommands
             }
 
             GitLog = new CommandLogger();
-
-            //Make applicationdatapath version dependent
-            ApplicationDataPath = Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
         }
 
         private static int? _UserMenuLocationX;
@@ -160,7 +157,19 @@ namespace GitCommands
             set { SafeSet("commitinfoshowcontainedintags", value, ref _commitInfoShowContainedInTags); }
         }
 
-        public static string ApplicationDataPath { get; private set; }
+        
+        private static string _ApplicationDataPath;
+        public static string ApplicationDataPath { 
+            get
+            {
+                if (_ApplicationDataPath == null)
+                {
+                    //Make applicationdatapath version dependent
+                    _ApplicationDataPath = Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
+                }
+                return _ApplicationDataPath;
+            }
+        }
 
         public static string GravatarCachePath
         {
