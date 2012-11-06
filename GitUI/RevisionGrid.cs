@@ -1872,13 +1872,13 @@ namespace GitUI
         {
             var revisions = GetSelectedRevisions(SortDirection.Descending);
 
-            FormCherryPickCommitSmall prevForm = null;
+            FormCherryPick prevForm = null;
 
             try
             {
                 foreach (var r in revisions)
                 {
-                    var frm = new FormCherryPickCommitSmall(UICommands, r);
+                    var frm = new FormCherryPick(UICommands, r);
                     if (prevForm != null)
                     {
                         frm.CopyOptions(prevForm);
