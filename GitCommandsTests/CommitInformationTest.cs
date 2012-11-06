@@ -42,18 +42,19 @@ namespace GitCommandsTests
         public void CanCreateCommitInformationFromCommitData()
         {
             string error = "";
-            CommitData data = CommitData.GetCommitData(Module, "77aa51fa41818794776512f623b9bd048b29e453", ref error);
+            CommitData data = CommitData.GetCommitData(Module, "5003a05de05307b83b0c8a81ab282613231b1a9f", ref error);
             Assert.IsNotNull(data);
             Assert.AreNotEqual(data.AuthorDate, data.CommitDate);
 
-            var expectedHeader = "Author:\t\t<a href='mailto:henk_westhuis@hotmail.com'>Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</a>" + Environment.NewLine +
+            var expectedHeader = "Author:\t\t<a href='mailto:getit@xs4all.nl'>Wilbert van Dolleweerd &lt;getit@xs4all.nl&gt;</a>" + Environment.NewLine +
                                  "Author date:\t3 years ago (" + data.AuthorDate.ToLocalTime().ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")" + Environment.NewLine +
-                                 "Committer:\t<a href='mailto:henk_westhuis@hotmail.com'>Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</a>" + Environment.NewLine +
+                                 "Committer:\t<a href='mailto:Henk_Westhuis@hotmail.com'>Henk Westhuis &lt;Henk_Westhuis@hotmail.com&gt;</a>" + Environment.NewLine +
                                  "Commit date:\t3 years ago (" + data.CommitDate.ToLocalTime().ToString("ddd MMM dd HH':'mm':'ss yyyy") + ")" + Environment.NewLine +
                                  "Commit hash:\t" + data.Guid + Environment.NewLine +
                                  "Parent(s):\t<a href='gitex://gotocommit/" + data.ParentGuids[0] + "'>" + data.ParentGuids[0].Substring(0, 10) + "</a>";
 
-            var expectedBody = data.Body;
+            // TODO: Check notes
+            var expectedBody = "\n\n" + WebUtility.HtmlEncode(data.Body.Trim()) + "\n\n";
 
             var commitInformation = CommitInformation.GetCommitInfo(data);
 
