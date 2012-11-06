@@ -2659,7 +2659,7 @@ namespace GitUI
                 CheckoutBranchToolStripMenuItemClick(sender, e);
         }
 
-        private void RevisionInfo_CommandClick(object sender, CommandEventArgs e)
+        private void RevisionInfo_CommandClick(object sender, CommitInfo.CommandEventArgs e)
         {
             if (e.Command == "gotocommit")
             {

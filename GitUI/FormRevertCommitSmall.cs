@@ -7,10 +7,6 @@ namespace GitUI
 {
     public partial class FormRevertCommitSmall : GitModuleForm
     {
-        private readonly TranslationString _commitInfo = new TranslationString("Commit: {0}");
-        private readonly TranslationString _authorInfo = new TranslationString("Author: {0}");
-        private readonly TranslationString _dateInfo = new TranslationString("Commit date: {0}");
-        private readonly TranslationString _commitMessage = new TranslationString("Message: {0}");
         private readonly TranslationString _noneParentSelectedText =  new TranslationString("None parent is selected!");
         private readonly TranslationString _noneParentSelectedTextCaption = new TranslationString("Error");
 
@@ -21,22 +17,23 @@ namespace GitUI
         {
             this.Revision = Revision;
 
-            InitializeComponent(); Translate();
+            InitializeComponent();
+            Translate();
         }
 
         public GitRevision Revision { get; set; }
 
         private void FormRevertCommitSmall_Load(object sender, EventArgs e)
         {
-            Commit.Text = string.Format(_commitInfo.Text, Revision.Guid);
-            Author.Text = string.Format(_authorInfo.Text, Revision.Author);
-            Date.Text = string.Format(_dateInfo.Text, Revision.CommitDate);
-            Message.Text = string.Format(_commitMessage.Text, Revision.Message);
+            commitSummaryUserControl1.Revision = Revision;
 
             _isMerge = Module.IsMerge(Revision.Guid);
             if (_isMerge)
             {
                 var parents = Module.GetParents(Revision.Guid);
+
+                ParentsList.Items.Clear(); // TODO: search this line and the ones below to find code duplication
+
                 for (int i = 0; i < parents.Length; i++)
                 {
                     ParentsList.Items.Add(i + 1 + "");
@@ -50,7 +47,6 @@ namespace GitUI
             {
                 ParentsList.Visible = false;
                 ParentsLabel.Visible = false;
-                Height = Height - (ParentsList.Height + ParentsLabel.Height);
             }
         }
 

@@ -34,7 +34,7 @@ namespace GitUI
             this.DiffFiles = new GitUI.FileStatusList();
             this.DiffText = new GitUI.Editor.FileViewer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.commitInfo = new GitUI.CommitInfo();
+            this.commitInfo = new GitUI.CommitInfo.CommitInfo();
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 #endif
@@ -143,6 +143,6 @@ namespace GitUI
         private FileStatusList DiffFiles;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private FileViewer DiffText;
-        private CommitInfo commitInfo;
+        private CommitInfo.CommitInfo commitInfo;
     }
 }
