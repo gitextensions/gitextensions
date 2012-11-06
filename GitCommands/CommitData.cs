@@ -103,14 +103,14 @@ namespace GitCommands
             return RemoveRedundancies(header.ToString());
         }
 
-        private string GetEmail(string author)
+        private static string GetEmail(string author)
         {
-            if (String.IsNullOrEmpty(Author))
+            if (String.IsNullOrEmpty(author))
                 return "";
-            int ind = Author.IndexOf("<") + 1;
+            int ind = author.IndexOf("<") + 1;
             if (ind == -1)
                 return "";
-            return Author.Substring(ind, Author.LastIndexOf(">") - ind);
+            return author.Substring(ind, author.LastIndexOf(">") - ind);
         }
 
         /// <summary>
