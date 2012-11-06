@@ -881,7 +881,7 @@ namespace GitUI
                 return true;
             }
 
-            using (var form = new FormCherryPickCommitSmall(this, revision))
+            using (var form = new FormCherryPick(this, revision))
             {
                 if (form.ShowDialog(owner) == DialogResult.OK)
                 {
