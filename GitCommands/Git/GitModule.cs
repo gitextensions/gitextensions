@@ -270,10 +270,29 @@ namespace GitCommands
         /// This is a faster function to get the names of all submodules then the 
         /// GetSubmodules() function. The command @git submodule is very slow.
         /// </summary>
-        public IList<string> GetSubmodulesLocalPathes()
+        public IList<string> GetSubmodulesLocalPathes(bool recursive)
         {
             var configFile = GetSubmoduleConfigFile();
-            return configFile.GetConfigSections().Select(configSection => configSection.GetPathValue("path").Trim()).ToList();
+            var submodules = configFile.GetConfigSections().Select(configSection => configSection.GetPathValue("path").Trim()).ToList();
+            if (recursive)
+            {
+                for (int i = 0; i < submodules.Count; i++)
+                {
+                    var submodule = GetSubmodule(submodules[i]);
+                    var submoduleConfigFile = submodule.GetSubmoduleConfigFile();
+                    var subsubmodules = submoduleConfigFile.GetConfigSections().Select(configSection => configSection.GetPathValue("path").Trim()).ToList();
+                    for (int j = 0; j < subsubmodules.Count; j++)
+                        subsubmodules[j] = Path.Combine(submodules[i], subsubmodules[j]);
+                    submodules.InsertRange(i + 1, subsubmodules);
+                    i += subsubmodules.Count;
+                }
+            }
+            return submodules;
+        }
+
+        public IList<string> GetSubmodulesLocalPathes()
+        {
+            return GetSubmodulesLocalPathes(true);
         }
 
         public string GetGlobalSetting(string setting)
