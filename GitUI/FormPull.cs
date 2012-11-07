@@ -231,7 +231,8 @@ namespace GitUI
             if (dr != DialogResult.Yes)
                 return dr;
 
-            Repositories.RepositoryHistory.AddMostRecentRepository(comboBoxPullSource.Text);
+            if (PullFromUrl.Checked)
+                Repositories.RepositoryHistory.AddMostRecentRepository(comboBoxPullSource.Text);
 
             var source = CalculateSource();
 

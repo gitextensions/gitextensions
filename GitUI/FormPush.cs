@@ -165,12 +165,12 @@ namespace GitUI
 
         private bool PushChanges(IWin32Window owner)
         {
-            if (PullFromUrl.Checked && string.IsNullOrEmpty(PushDestination.Text))
+            if (PushToUrl.Checked && string.IsNullOrEmpty(PushDestination.Text))
             {
                 MessageBox.Show(owner, _selectDestinationDirectory.Text);
                 return false;
             }
-            if (PullFromRemote.Checked && string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text))
+            if (PushToRemote.Checked && string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text))
             {
                 MessageBox.Show(owner, _selectRemote.Text);
                 return false;
@@ -185,7 +185,7 @@ namespace GitUI
             //Extra check if the branch is already known to the remote, give a warning when not.
             //This is not possible when the remote is an URL, but this is ok since most users push to
             //known remotes anyway.
-            if (TabControlTagBranch.SelectedTab == BranchTab && PullFromRemote.Checked)
+            if (TabControlTagBranch.SelectedTab == BranchTab && PushToRemote.Checked)
             {
                 //If the current branch is not the default push, and not known by the remote 
                 //(as far as we know since we are disconnected....)
@@ -199,14 +199,15 @@ namespace GitUI
                     }
             }
 
-            Repositories.AddMostRecentRepository(PushDestination.Text);
+            if (PushToUrl.Checked)
+                Repositories.AddMostRecentRepository(PushDestination.Text);
             Settings.PushAllTags = PushAllTags.Checked;
             Settings.AutoPullOnRejected = AutoPullOnRejected.Checked;
             Settings.RecursiveSubmodulesCheck = RecursiveSubmodulesCheck.Checked;
 
             var remote = "";
             string destination;
-            if (PullFromUrl.Checked)
+            if (PushToUrl.Checked)
             {
                 destination = PushDestination.Text;
             }
@@ -277,7 +278,7 @@ namespace GitUI
             ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
 
             //controls can be accessed only from UI thread
-            candidateForRebasingMergeCommit = Settings.PullMerge == Settings.PullAction.Rebase && PullFromRemote.Checked && !PushAllBranches.Checked && TabControlTagBranch.SelectedTab == BranchTab;
+            candidateForRebasingMergeCommit = Settings.PullMerge == Settings.PullAction.Rebase && PushToRemote.Checked && !PushAllBranches.Checked && TabControlTagBranch.SelectedTab == BranchTab;
             selectedBranch = _NO_TRANSLATE_Branch.Text;
             selectedBranchRemote = _NO_TRANSLATE_Remotes.Text;
             selectedRemoteBranchName = RemoteBranch.Text;
@@ -402,7 +403,7 @@ namespace GitUI
         {
             if (_NO_TRANSLATE_Branch.Text != HeadText)
             {
-                if (PullFromRemote.Checked)
+                if (PushToRemote.Checked)
                 {
                     var branch = _NO_TRANSLATE_Branch.SelectedItem as GitHead;
                     if (branch != null && branch.TrackingRemote.Equals(_NO_TRANSLATE_Remotes.Text.Trim()))
@@ -438,10 +439,10 @@ namespace GitUI
             }
         }
 
-        private void PullFromRemoteCheckedChanged(object sender, EventArgs e)
+        private void PushToRemoteCheckedChanged(object sender, EventArgs e)
         {
             BranchSelectedValueChanged(null, null);
-            if (!PullFromRemote.Checked)
+            if (!PushToRemote.Checked)
                 return;
 
             PushDestination.Enabled = false;
@@ -450,9 +451,9 @@ namespace GitUI
             AddRemote.Enabled = true;
         }
 
-        private void PullFromUrlCheckedChanged(object sender, EventArgs e)
+        private void PushToUrlCheckedChanged(object sender, EventArgs e)
         {
-            if (!PullFromUrl.Checked)
+            if (!PushToUrl.Checked)
                 return;
 
             PushDestination.Enabled = true;
@@ -482,7 +483,7 @@ namespace GitUI
 
             var pushSettingValue = Module.GetSetting(string.Format("remote.{0}.push", _NO_TRANSLATE_Remotes.Text));
 
-            if (PullFromRemote.Checked && !string.IsNullOrEmpty(pushSettingValue))
+            if (PushToRemote.Checked && !string.IsNullOrEmpty(pushSettingValue))
             {
                 string defaultLocal = GetDefaultPushLocal(_NO_TRANSLATE_Remotes.Text);
                 string defaultRemote = GetDefaultPushRemote(_NO_TRANSLATE_Remotes.Text);
