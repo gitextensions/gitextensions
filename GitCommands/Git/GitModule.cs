@@ -2167,10 +2167,8 @@ namespace GitCommands
                         var submodule = item.SubmoduleStatus.GetSubmodule(this);
                         if (submodule != null)
                         {
-                            var commitData = item.SubmoduleStatus.GetCommitData(submodule);
-                            var oldCommitData = item.SubmoduleStatus.GetOldCommitData(submodule);
-                            if (commitData != null && oldCommitData != null)
-                                item.SubmoduleStatus.IsCommitNewer = commitData.CommitDate >= oldCommitData.CommitDate;
+                            string baseCommit = submodule.GetMergeBase(item.SubmoduleStatus.Commit, item.SubmoduleStatus.OldCommit);
+                            item.SubmoduleStatus.IsCommitNewer = baseCommit == item.SubmoduleStatus.OldCommit;
                         }
                     }
                 }
@@ -2781,6 +2779,11 @@ namespace GitCommands
             int exitCode = 0;
             string[] resultStrings = RunCmd(Settings.GitCommand, revparseCommand, out exitCode).Split('\n');
             return exitCode == 0 ? resultStrings[0] : "";
+        }
+
+        public string GetMergeBase(string a, string b)
+        {
+            return RunGitCmd("merge-base " + a + " " + b).TrimEnd();
         }
 
         public static string WorkingDirGitDir(string repositoryPath)
