@@ -55,14 +55,16 @@
             this.labelMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelMessage.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelMessage.AutoEllipsis = true;
             this.labelMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelMessage.Location = new System.Drawing.Point(12, 22);
+            this.labelMessage.MaximumSize = new System.Drawing.Size(1000, 50);
             this.labelMessage.Name = "labelMessage";
-            this.labelMessage.Size = new System.Drawing.Size(422, 51);
+            this.labelMessage.Size = new System.Drawing.Size(422, 50);
             this.labelMessage.TabIndex = 12;
             this.labelMessage.Text = "...";
             this.labelMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelMessage.SizeChanged += new System.EventHandler(this.labelMessage_SizeChanged);
             // 
             // labelAuthor
             // 
@@ -130,6 +132,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.BackColor = System.Drawing.Color.Lavender;
             this.groupBox1.Controls.Add(this.labelAuthorCaption);
             this.groupBox1.Controls.Add(this.labelBranchesCaption);
             this.groupBox1.Controls.Add(this.labelTagsCaption);
@@ -145,6 +148,7 @@
             this.groupBox1.TabIndex = 21;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "...";
+            this.groupBox1.Resize += new System.EventHandler(this.groupBox1_Resize);
             // 
             // CommitSummaryUserControl
             // 
