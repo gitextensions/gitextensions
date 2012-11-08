@@ -2681,7 +2681,10 @@ namespace GitUI
             if (button == null)
                 return;
 
-            SetWorkingDir(button.Tag as string);
+            if (button.Tag is GitModule)
+                SetGitModule(button.Tag as GitModule);
+            else
+                SetWorkingDir(button.Tag as string);
         }
 
         private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
@@ -2748,7 +2751,7 @@ namespace GitUI
                     var spmenu = new ToolStripMenuItem(name);
                     spmenu.Click += SubmoduleToolStripButtonClick;
                     spmenu.Width = 200;
-                    spmenu.Tag = path;
+                    spmenu.Tag = supersuperproject;
                     toolStripButtonLevelUp.DropDownItems.Add(spmenu);
                 }
 
@@ -2770,7 +2773,7 @@ namespace GitUI
                     var spmenu = new ToolStripMenuItem(name);
                     spmenu.Click += SubmoduleToolStripButtonClick;
                     spmenu.Width = 200;
-                    spmenu.Tag = path;
+                    spmenu.Tag = Module.SuperprojectModule;
                     toolStripButtonLevelUp.DropDownItems.Add(spmenu);
                 }
 
