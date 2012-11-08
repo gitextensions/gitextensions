@@ -834,13 +834,19 @@ namespace GitCommands
             return GetSubmoduleStatus(text);
         }
 
+        public static GitSubmoduleStatus GetSubmoduleChanges(GitModule module, string submodule)
+        {
+            return GetSubmoduleChanges(module, submodule, submodule, false);
+        }
+
         public static GitSubmoduleStatus GetSubmoduleStatus(string text)
         {
+            if (string.IsNullOrEmpty(text))
+                return null;
             var status = new GitSubmoduleStatus();
             using (StringReader reader = new StringReader(text))
             {
                 string line = reader.ReadLine();
-                string moduleName = "";
                 if (line != null)
                 {
                     var match = Regex.Match(line, @"diff --git a/(\S+) b/(\S+)");

@@ -25,9 +25,18 @@ namespace GitCommands
             return module.GetSubmodule(Name);
         }
 
+        public void CheckIsCommitNewer(GitModule submodule)
+        {
+            if (submodule == null || !submodule.ValidWorkingDir())
+                return;
+
+            string baseCommit = submodule.GetMergeBase(Commit, OldCommit);
+            IsCommitNewer = baseCommit == OldCommit;
+        }
+
         public CommitData GetCommitData(GitModule submodule)
         {
-            if (!submodule.ValidWorkingDir())
+            if (submodule == null || !submodule.ValidWorkingDir())
                 return null;
 
             string error = "";
@@ -36,7 +45,7 @@ namespace GitCommands
 
         public CommitData GetOldCommitData(GitModule submodule)
         {
-            if (!submodule.ValidWorkingDir())
+            if (submodule == null || !submodule.ValidWorkingDir())
                 return null;
 
             string error = "";
