@@ -32,8 +32,6 @@ namespace GitCommands
         }
 
         private string _workingdir;
-        private GitModule _superprojectModule;
-        private string _submoduleName;
 
         public string WorkingDir
         {
@@ -43,16 +41,25 @@ namespace GitCommands
             }
             private set
             {
+                _superprojectInit = false;
                 _workingdir = FindGitWorkingDir(value);
-                string superprojectDir = FindGitSuperprojectPath(out _submoduleName);
-                _superprojectModule = superprojectDir == null ? null : new GitModule(superprojectDir);
             }
         }
+
+        private bool _superprojectInit;
+        private GitModule _superprojectModule;
+        private string _submoduleName;
 
         public string SubmoduleName
         {
             get
             {
+                if (!_superprojectInit)
+                {
+                    string superprojectDir = FindGitSuperprojectPath(out _submoduleName);
+                    _superprojectModule = superprojectDir == null ? null : new GitModule(superprojectDir);
+                    _superprojectInit = true;
+                }
                 return _submoduleName;
             }
         }
@@ -61,8 +68,28 @@ namespace GitCommands
         {
             get
             {
+                if (!_superprojectInit)
+                {
+                    string superprojectDir = FindGitSuperprojectPath(out _submoduleName);
+                    _superprojectModule = superprojectDir == null ? null : new GitModule(superprojectDir);
+                    _superprojectInit = true;
+                }
                 return _superprojectModule;
             }
+        }
+
+        public GitModule FindSupersuperprojectModule()
+        {
+            GitModule module = SuperprojectModule;
+            if (module == null)
+                return null;
+            do
+            {
+                if (module.SuperprojectModule == null)
+                    return module;
+                module = module.SuperprojectModule;
+            } while (module != null);
+            return module;
         }
 
         //encoding for files paths
@@ -282,7 +309,7 @@ namespace GitCommands
                     var submoduleConfigFile = submodule.GetSubmoduleConfigFile();
                     var subsubmodules = submoduleConfigFile.GetConfigSections().Select(configSection => configSection.GetPathValue("path").Trim()).ToList();
                     for (int j = 0; j < subsubmodules.Count; j++)
-                        subsubmodules[j] = Path.Combine(submodules[i], subsubmodules[j]);
+                        subsubmodules[j] = submodules[i] + '/' + subsubmodules[j];
                     submodules.InsertRange(i + 1, subsubmodules);
                     i += subsubmodules.Count;
                 }
@@ -1054,10 +1081,10 @@ namespace GitCommands
 
         public string GetSuperprojectCurrentCheckout()
         {
-            if (_superprojectModule == null)
+            if (SuperprojectModule == null)
                 return "";
 
-            var lines = _superprojectModule.RunGitCmd("submodule status --cached " + _submoduleName).Split('\n');
+            var lines = SuperprojectModule.RunGitCmd("submodule status --cached " + _submoduleName).Split('\n');
 
             if (lines.Length == 0)
                 return "";
