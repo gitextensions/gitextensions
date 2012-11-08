@@ -49,15 +49,15 @@ namespace GitUI
             this.label3 = new System.Windows.Forms.Label();
             this.SshBrowse = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.labelPushUrl = new System.Windows.Forms.Label();
+            this.folderBrowserButtonPushUrl = new GitUI.UserControls.FolderBrowserButton();
             this.comboBoxPushUrl = new System.Windows.Forms.ComboBox();
-            this.buttonBrowsePushUrl = new System.Windows.Forms.Button();
+            this.folderBrowserButtonUrl = new GitUI.UserControls.FolderBrowserButton();
+            this.Url = new System.Windows.Forms.ComboBox();
+            this.labelPushUrl = new System.Windows.Forms.Label();
             this.checkBoxSepPushUrl = new System.Windows.Forms.CheckBox();
             this.RemoteName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.Url = new System.Windows.Forms.ComboBox();
-            this.Browse = new System.Windows.Forms.Button();
             this.buttonClose = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -316,15 +316,15 @@ namespace GitUI
             // groupBox1
             // 
             this.groupBox1.AutoSize = true;
+            this.groupBox1.Controls.Add(this.folderBrowserButtonPushUrl);
+            this.groupBox1.Controls.Add(this.folderBrowserButtonUrl);
             this.groupBox1.Controls.Add(this.labelPushUrl);
             this.groupBox1.Controls.Add(this.comboBoxPushUrl);
-            this.groupBox1.Controls.Add(this.buttonBrowsePushUrl);
             this.groupBox1.Controls.Add(this.checkBoxSepPushUrl);
             this.groupBox1.Controls.Add(this.RemoteName);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.Url);
-            this.groupBox1.Controls.Add(this.Browse);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
@@ -333,15 +333,15 @@ namespace GitUI
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Details";
             // 
-            // labelPushUrl
+            // folderBrowserButtonPushUrl
             // 
-            this.labelPushUrl.AutoSize = true;
-            this.labelPushUrl.Location = new System.Drawing.Point(13, 99);
-            this.labelPushUrl.Name = "labelPushUrl";
-            this.labelPushUrl.Size = new System.Drawing.Size(51, 15);
-            this.labelPushUrl.TabIndex = 6;
-            this.labelPushUrl.Text = "Push Url";
-            this.labelPushUrl.Visible = false;
+            this.folderBrowserButtonPushUrl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.folderBrowserButtonPushUrl.Location = new System.Drawing.Point(361, 94);
+            this.folderBrowserButtonPushUrl.Name = "folderBrowserButtonPushUrl";
+            this.folderBrowserButtonPushUrl.PathShowingControl = this.comboBoxPushUrl;
+            this.folderBrowserButtonPushUrl.Size = new System.Drawing.Size(100, 25);
+            this.folderBrowserButtonPushUrl.TabIndex = 10;
+            this.folderBrowserButtonPushUrl.Visible = false;
             // 
             // comboBoxPushUrl
             // 
@@ -356,17 +356,36 @@ namespace GitUI
             this.comboBoxPushUrl.TabIndex = 7;
             this.comboBoxPushUrl.Visible = false;
             // 
-            // buttonBrowsePushUrl
+            // folderBrowserButtonUrl
             // 
-            this.buttonBrowsePushUrl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonBrowsePushUrl.Location = new System.Drawing.Point(361, 93);
-            this.buttonBrowsePushUrl.Name = "buttonBrowsePushUrl";
-            this.buttonBrowsePushUrl.Size = new System.Drawing.Size(100, 25);
-            this.buttonBrowsePushUrl.TabIndex = 8;
-            this.buttonBrowsePushUrl.Text = "Browse";
-            this.buttonBrowsePushUrl.UseVisualStyleBackColor = true;
-            this.buttonBrowsePushUrl.Visible = false;
-            this.buttonBrowsePushUrl.Click += new System.EventHandler(this.buttonBrowsePushUrl_Click);
+            this.folderBrowserButtonUrl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.folderBrowserButtonUrl.Location = new System.Drawing.Point(361, 46);
+            this.folderBrowserButtonUrl.Name = "folderBrowserButtonUrl";
+            this.folderBrowserButtonUrl.PathShowingControl = this.Url;
+            this.folderBrowserButtonUrl.Size = new System.Drawing.Size(100, 25);
+            this.folderBrowserButtonUrl.TabIndex = 9;
+            // 
+            // Url
+            // 
+            this.Url.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.Url.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.Url.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.Url.FormattingEnabled = true;
+            this.Url.Location = new System.Drawing.Point(136, 48);
+            this.Url.Name = "Url";
+            this.Url.Size = new System.Drawing.Size(219, 23);
+            this.Url.TabIndex = 3;
+            // 
+            // labelPushUrl
+            // 
+            this.labelPushUrl.AutoSize = true;
+            this.labelPushUrl.Location = new System.Drawing.Point(13, 99);
+            this.labelPushUrl.Name = "labelPushUrl";
+            this.labelPushUrl.Size = new System.Drawing.Size(51, 15);
+            this.labelPushUrl.TabIndex = 6;
+            this.labelPushUrl.Text = "Push Url";
+            this.labelPushUrl.Visible = false;
             // 
             // checkBoxSepPushUrl
             // 
@@ -405,29 +424,6 @@ namespace GitUI
             this.label2.Size = new System.Drawing.Size(22, 15);
             this.label2.TabIndex = 2;
             this.label2.Text = "Url";
-            // 
-            // Url
-            // 
-            this.Url.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.Url.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.Url.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.Url.FormattingEnabled = true;
-            this.Url.Location = new System.Drawing.Point(136, 48);
-            this.Url.Name = "Url";
-            this.Url.Size = new System.Drawing.Size(219, 23);
-            this.Url.TabIndex = 3;
-            // 
-            // Browse
-            // 
-            this.Browse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Browse.Location = new System.Drawing.Point(361, 45);
-            this.Browse.Name = "Browse";
-            this.Browse.Size = new System.Drawing.Size(100, 25);
-            this.Browse.TabIndex = 4;
-            this.Browse.Text = "Browse";
-            this.Browse.UseVisualStyleBackColor = true;
-            this.Browse.Click += new System.EventHandler(this.BrowseClick);
             // 
             // buttonClose
             // 
@@ -813,11 +809,9 @@ namespace GitUI
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox Url;
-        private System.Windows.Forms.Button Browse;
         private System.Windows.Forms.CheckBox checkBoxSepPushUrl;
         private System.Windows.Forms.Label labelPushUrl;
         private System.Windows.Forms.ComboBox comboBoxPushUrl;
-        private System.Windows.Forms.Button buttonBrowsePushUrl;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panelButtons;
         private System.Windows.Forms.Button buttonClose;
@@ -845,5 +839,7 @@ namespace GitUI
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private UserControls.FolderBrowserButton folderBrowserButtonUrl;
+        private UserControls.FolderBrowserButton folderBrowserButtonPushUrl;
     }
 }
