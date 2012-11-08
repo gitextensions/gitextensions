@@ -47,7 +47,7 @@
             this.goButton.Location = new System.Drawing.Point(466, 10);
             this.goButton.Name = "goButton";
             this.goButton.Size = new System.Drawing.Size(75, 28);
-            this.goButton.TabIndex = 1;
+            this.goButton.TabIndex = 2;
             this.goButton.Text = "Go";
             this.goButton.UseVisualStyleBackColor = true;
             this.goButton.Click += new System.EventHandler(this.goButton_Click);
@@ -124,7 +124,7 @@
             this.comboBoxTags.Location = new System.Drawing.Point(155, 216);
             this.comboBoxTags.Name = "comboBoxTags";
             this.comboBoxTags.Size = new System.Drawing.Size(232, 23);
-            this.comboBoxTags.TabIndex = 2;
+            this.comboBoxTags.TabIndex = 1;
             this.comboBoxTags.SelectionChangeCommitted += new System.EventHandler(this.comboBoxTags_SelectionChangeCommitted);
             this.comboBoxTags.TextChanged += new System.EventHandler(this.comboBoxTags_TextChanged);
             this.comboBoxTags.Enter += new System.EventHandler(this.comboBoxTags_Enter);
