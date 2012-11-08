@@ -2737,8 +2737,32 @@ namespace GitUI
                 var superprojectSeparator = new ToolStripSeparator();
                 toolStripButtonLevelUp.DropDownItems.Add(superprojectSeparator);
 
+                var supersuperproject = Module.FindSupersuperprojectModule();
+                if (Module.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
                 {
-                    var name = "Superproject";
+                    var name = "Supersuperproject: " + Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
+                    string path = supersuperproject.WorkingDir;
+                    if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
+                        name = name + " " + GetModuleBranch(path);
+
+                    var spmenu = new ToolStripMenuItem(name);
+                    spmenu.Click += SubmoduleToolStripButtonClick;
+                    spmenu.Width = 200;
+                    spmenu.Tag = path;
+                    toolStripButtonLevelUp.DropDownItems.Add(spmenu);
+                }
+
+                {
+                    var name = "Superproject: ";
+                    if (Module.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
+                    {
+                        string localpath = Module.SuperprojectModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
+                        localpath = localpath.Replace(Settings.PathSeparator, Settings.PathSeparatorWrong).TrimEnd(
+                                Settings.PathSeparatorWrong);
+                        name = name + localpath;
+                    }
+                    else
+                        name = name + Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
                     string path = Module.SuperprojectModule.WorkingDir;
                     if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
                         name = name + " " + GetModuleBranch(path);
@@ -2750,18 +2774,17 @@ namespace GitUI
                     toolStripButtonLevelUp.DropDownItems.Add(spmenu);
                 }
 
-                var submodules = Module.SuperprojectModule.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName);
+                var submodules = supersuperproject.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName);
                 if (submodules.Any())
                 {
-
-                    string localpath = Module.WorkingDir.Substring(Module.SuperprojectModule.WorkingDir.Length);
+                    string localpath = Module.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
                     localpath = localpath.Replace(Settings.PathSeparator, Settings.PathSeparatorWrong).TrimEnd(
                             Settings.PathSeparatorWrong);
 
                     foreach (var submodule in submodules)
                     {
                         var name = submodule;
-                        string path = Module.SuperprojectModule.GetSubmoduleFullPath(submodule);
+                        string path = supersuperproject.GetSubmoduleFullPath(submodule);
                         if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
                             name = name + " " + GetModuleBranch(path);
 
