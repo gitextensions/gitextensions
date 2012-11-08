@@ -85,6 +85,9 @@ namespace GitUI
         private readonly TranslationString _updateCurrentSubmodule =
             new TranslationString("Update current submodule");
 
+        private readonly TranslationString _updateAllSuperprojectSubmodules =
+            new TranslationString("Update all superproject submodules");
+
         #endregion
 
         private string _NoDiffFilesChangesText;
@@ -1573,6 +1576,14 @@ namespace GitUI
             Initialize();
         }
 
+        private void UpdateAllSubmodulesForSuperProjectToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var module = (sender as ToolStripMenuItem).Tag as GitModule;
+            GitUICommands uiCommands = new GitUICommands(module);
+            if (uiCommands.StartUpdateSubmodulesDialog(this))
+                Initialize();
+        }
+
         private void UpdateAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (UICommands.StartUpdateSubmodulesDialog(this))
@@ -2710,6 +2721,16 @@ namespace GitUI
             return "[" + branch + "]";
         }
 
+        private ToolStripMenuItem AddSubmoduleToMenu(string name, object module)
+        {
+            var spmenu = new ToolStripMenuItem(name);
+            spmenu.Click += SubmoduleToolStripButtonClick;
+            spmenu.Width = 200;
+            spmenu.Tag = module;
+            toolStripButtonLevelUp.DropDownItems.Add(spmenu);
+            return spmenu;
+        }
+
         private void LoadSubmodulesIntoDropDownMenu()
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -2723,11 +2744,7 @@ namespace GitUI
                 if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
                     name = name + " " + GetModuleBranch(path);
 
-                var submenu = new ToolStripMenuItem(name);
-                submenu.Click += SubmoduleToolStripButtonClick;
-                submenu.Width = 200;
-                submenu.Tag = path;
-                toolStripButtonLevelUp.DropDownItems.Add(submenu);
+                AddSubmoduleToMenu(name, path);
             }
 
             bool containSubmodules = toolStripButtonLevelUp.DropDownItems.Count != 0;
@@ -2735,24 +2752,21 @@ namespace GitUI
                 toolStripButtonLevelUp.DropDownItems.Add(_noSubmodulesPresent.Text);
 
             string currentSubmoduleName = null;
+            GitModule supersuperproject = null;
             if (Module.SuperprojectModule != null)
             {
                 var superprojectSeparator = new ToolStripSeparator();
                 toolStripButtonLevelUp.DropDownItems.Add(superprojectSeparator);
 
-                var supersuperproject = Module.FindSupersuperprojectModule();
+                supersuperproject = Module.FindTopProjectModule();
                 if (Module.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
                 {
-                    var name = "Supersuperproject: " + Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
+                    var name = "Top project: " + Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
                     string path = supersuperproject.WorkingDir;
                     if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
                         name = name + " " + GetModuleBranch(path);
 
-                    var spmenu = new ToolStripMenuItem(name);
-                    spmenu.Click += SubmoduleToolStripButtonClick;
-                    spmenu.Width = 200;
-                    spmenu.Tag = supersuperproject;
-                    toolStripButtonLevelUp.DropDownItems.Add(spmenu);
+                    AddSubmoduleToMenu(name, supersuperproject);
                 }
 
                 {
@@ -2770,11 +2784,7 @@ namespace GitUI
                     if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
                         name = name + " " + GetModuleBranch(path);
 
-                    var spmenu = new ToolStripMenuItem(name);
-                    spmenu.Click += SubmoduleToolStripButtonClick;
-                    spmenu.Width = 200;
-                    spmenu.Tag = Module.SuperprojectModule;
-                    toolStripButtonLevelUp.DropDownItems.Add(spmenu);
+                    AddSubmoduleToMenu(name, Module.SuperprojectModule);
                 }
 
                 var submodules = supersuperproject.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName);
@@ -2790,23 +2800,27 @@ namespace GitUI
                         string path = supersuperproject.GetSubmoduleFullPath(submodule);
                         if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
                             name = name + " " + GetModuleBranch(path);
-
-                        var submenu = new ToolStripMenuItem(name);
+                        //var module = supersuperproject.GetSubmodule(submodule);
+                        //var status = GitCommandHelpers.GetSubmoduleChanges(module.SuperprojectModule,
+                        //    module.GetCurrentSubmoduleLocalPath());
+                        //if (status != null && status.IsDirty)
+                        //    name = name + "-dirty";
+                        var submenu = AddSubmoduleToMenu(name, path);
                         if (submodule == localpath)
                         {
-                            currentSubmoduleName = submodule;
+                            currentSubmoduleName = Module.GetCurrentSubmoduleLocalPath();
                             submenu.Font = new Font(submenu.Font, FontStyle.Bold);
                         }
-                        submenu.Click += SubmoduleToolStripButtonClick;
-                        submenu.Tag = path;
-                        submenu.Width = 200;
-                        toolStripButtonLevelUp.DropDownItems.Add(submenu);
                     }
                 }
             }
 
             var separator = new ToolStripSeparator();
             toolStripButtonLevelUp.DropDownItems.Add(separator);
+
+            var mi = new ToolStripMenuItem(updateAllSubmodulesToolStripMenuItem.Text);
+            mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
+            toolStripButtonLevelUp.DropDownItems.Add(mi);
 
             if (currentSubmoduleName != null)
             {
@@ -2816,9 +2830,13 @@ namespace GitUI
                 toolStripButtonLevelUp.DropDownItems.Add(usmi);
             }
 
-            var mi = new ToolStripMenuItem(updateAllSubmodulesToolStripMenuItem.Text);
-            mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
-            toolStripButtonLevelUp.DropDownItems.Add(mi);
+            if (supersuperproject != null)
+            {
+                mi = new ToolStripMenuItem(_updateAllSuperprojectSubmodules.Text);
+                mi.Click += UpdateAllSubmodulesForSuperProjectToolStripMenuItemClick;
+                mi.Tag = supersuperproject;
+                toolStripButtonLevelUp.DropDownItems.Add(mi);
+            }
 
             Cursor.Current = Cursors.Default;
         }
