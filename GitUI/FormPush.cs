@@ -190,7 +190,7 @@ namespace GitUI
                 //If the current branch is not the default push, and not known by the remote 
                 //(as far as we know since we are disconnected....)
                 if (RemoteBranch.Text != GetDefaultPushRemote(_NO_TRANSLATE_Remotes.Text) &&
-                    !Module.GetHeads(true, true).Exists(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text) )
+                    !Module.GetHeads(true, true).Any(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text) )
                     //Ask if this is really what the user wants
                     if (MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.No)
@@ -535,7 +535,8 @@ namespace GitUI
         private void FillTagDropDown()
         {
             TagComboBox.DisplayMember = "Name";
-            var tags = Module.GetHeads(true, false);
+            /// var tags = Module.GetTagHeads(true).Reverse().ToList(); // comment out to sort by commit date
+            var tags = Module.GetTagHeads(false);
             TagComboBox.DataSource = tags;
         }
 
@@ -576,8 +577,8 @@ namespace GitUI
             if (remote == "")
                 return;
 
-            List<GitHead> localHeads = Module.GetHeads(false, true);
-            List<GitHead> remoteHeads = Module.GetRemoteHeads(remote, false, true);
+            var localHeads = Module.GetHeads(false, true);
+            var remoteHeads = Module.GetRemoteHeads(remote, false, true);
 
             // Add all the local branches.
             foreach (var head in localHeads)

@@ -1051,7 +1051,7 @@ namespace GitUI
 
             fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
             Module.SaveBlobAs(fileName, gitItem.Guid);
-            OpenWith.OpenAs(fileName);
+            OsShellUtil.OpenAs(fileName);
         }
 
         private void FileTreeContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1094,9 +1094,10 @@ namespace GitUI
             }
         }
 
-        protected void LoadInTree(List<IGitItem> items, TreeNodeCollection node)
+        protected void LoadInTree(IList<IGitItem> items, TreeNodeCollection node)
         {
-            items.Sort(new GitFileTreeComparer());
+            // TODO: remove the cast by using other sort method
+            ((List<IGitItem>)items).Sort(new GitFileTreeComparer());
 
             foreach (var item in items)
             {
@@ -2005,7 +2006,7 @@ namespace GitUI
                 return;
 
             var fileName = Module.WorkingDir + (gitItem).FileName;
-            OpenWith.OpenAs(fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+            OsShellUtil.OpenAs(fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
         }
 
         private void pluginsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -2339,7 +2340,7 @@ namespace GitUI
                 string filePath = fileNames.ToString();
                 if (File.Exists(filePath))
                 {
-                    Process.Start("explorer.exe", "/select, " + filePath);
+                    OsShellUtil.SelectPathInFileExplorer(filePath);
                 }
             }
         }
@@ -2358,11 +2359,11 @@ namespace GitUI
             ////    fileNames.Append((Module.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
             if (File.Exists(filePath))
             {
-                Process.Start("explorer.exe", "/select," + filePath);
+                OsShellUtil.SelectPathInFileExplorer(filePath);
             }
             else if (Directory.Exists(filePath))
             {
-                Process.Start("explorer.exe", filePath);
+                OsShellUtil.OpenWithFileExplorer(filePath);
             }
         }
 
