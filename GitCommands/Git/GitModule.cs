@@ -2366,22 +2366,48 @@ namespace GitCommands
         /// </summary>
         /// <param name="orderByCommitDate">true: slower!</param>
         /// <returns></returns>
-        public IList<GitHead> GetTagHeads(bool orderByCommitDate)
+        public IList<GitHead> GetTagHeads(GetTagHeadsSortOrder option)
         {
             var list = GetHeads(true, false);
 
-            if (orderByCommitDate)
+            var sortedList = new List<GitHead>();
+
+            if (option == GetTagHeadsSortOrder.ByCommitDateAscending)
             {
-                var listSorted = list.OrderBy(head =>
+                sortedList = list.OrderBy(head =>
                 {
                     var r = new GitRevision(this, head.Guid);
                     return r.CommitDate;
-                });
-
-                return listSorted.ToList();
+                }).ToList();   
+            }
+            else if (option == GetTagHeadsSortOrder.ByCommitDateDescending)
+            {
+                sortedList = list.OrderByDescending(head =>
+                {
+                    var r = new GitRevision(this, head.Guid);
+                    return r.CommitDate;
+                }).ToList();
             }
 
-            return list;
+            return sortedList;
+        }
+
+        public enum GetTagHeadsSortOrder
+        {
+            /// <summary>
+            /// default
+            /// </summary>
+            ByName,
+
+            /// <summary>
+            /// slower than ByName
+            /// </summary>
+            ByCommitDateAscending,
+
+            /// <summary>
+            /// slower than ByName
+            /// </summary>
+            ByCommitDateDescending
         }
 
         public ICollection<string> GetMergedBranches()

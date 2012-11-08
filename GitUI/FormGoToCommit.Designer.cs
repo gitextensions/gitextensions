@@ -127,6 +127,7 @@
             this.comboBoxTags.TabIndex = 2;
             this.comboBoxTags.SelectionChangeCommitted += new System.EventHandler(this.comboBoxTags_SelectionChangeCommitted);
             this.comboBoxTags.TextChanged += new System.EventHandler(this.comboBoxTags_TextChanged);
+            this.comboBoxTags.Enter += new System.EventHandler(this.comboBoxTags_Enter);
             // 
             // FormGoToCommit
             // 
