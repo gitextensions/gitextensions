@@ -14,8 +14,6 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
-
-            comboBoxTags.DataSource = this.Module.GetHeads(true, false).Select(g => new GitHeaderGuiWrapper(g)).ToList();
         }
 
         public string GetRevision()
@@ -54,6 +52,11 @@ namespace GitUI
         private void linkGitRevParse_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"http://www.kernel.org/pub/software/scm/git/docs/git-rev-parse.html");
+        }
+
+        private void comboBoxTags_Enter(object sender, EventArgs e)
+        {
+            comboBoxTags.DataSource = this.Module.GetTagHeads(GitModule.GetTagHeadsSortOrder.ByCommitDateDescending).Select(g => new GitHeaderGuiWrapper(g)).Reverse().ToList();
         }
     }
 
