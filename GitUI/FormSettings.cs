@@ -234,7 +234,8 @@ namespace GitUI
 
             GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
 
-            SetCurrentDiffFont(Settings.Font, Settings.DiffFont);
+            SetCurrentApplicationFont(Settings.Font);
+            SetCurrentDiffFont(Settings.DiffFont);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -2379,7 +2380,7 @@ namespace GitUI
 
             if (result == DialogResult.OK || result == DialogResult.Yes)
             {
-                SetCurrentDiffFont(applicationFont, diffFontDialog.Font);
+                SetCurrentDiffFont(diffFontDialog.Font);
             }
         }
 
@@ -2390,19 +2391,25 @@ namespace GitUI
 
             if (result == DialogResult.OK || result == DialogResult.Yes)
             {
-                SetCurrentDiffFont(applicationDialog.Font, diffFont);
+                SetCurrentApplicationFont(applicationDialog.Font);
             }
         }
 
-        private void SetCurrentDiffFont(Font applicationFont, Font diffFont)
+        private void SetCurrentDiffFont(Font newFont)
         {
-            this.diffFont = diffFont;
-            this.applicationFont = applicationFont;
+            this.diffFont = newFont;
+            SetFontButtonText(newFont, diffFontChangeButton);
+        }
 
-            diffFontChangeButton.Text =
-                string.Format("{0}, {1}", this.diffFont.FontFamily.Name, (int)(this.diffFont.Size + 0.5f));
-            applicationFontChangeButton.Text =
-                string.Format("{0}, {1}", this.applicationFont.FontFamily.Name, (int)(this.applicationFont.Size + 0.5f));
+        private void SetCurrentApplicationFont(Font newFont)
+        {
+            this.applicationFont = newFont;
+            SetFontButtonText(newFont, applicationFontChangeButton);
+        }
+
+        private void SetFontButtonText(Font font, Button button)
+        {
+            button.Text = string.Format("{0}, {1}", font.FontFamily.Name, (int) (font.Size + 0.5f));
         }
 
         private void BrowseCommitTemplate_Click(object sender, EventArgs e)
