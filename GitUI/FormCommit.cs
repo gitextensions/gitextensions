@@ -568,7 +568,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             Staged.GitItemStatuses = null;
             SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
-            Staged.GitItemStatuses = Module.GetStagedFiles();
+            Staged.GitItemStatuses = Module.GetStagedFilesWithSubmodulesStatus();
             Cursor.Current = Cursors.Default;
         }
 
@@ -1827,7 +1827,7 @@ namespace GitUI
 
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
-                GitModule module = new GitModule(Module.WorkingDir + item.Name + Settings.PathSeparator.ToString());
+                GitModule module = Module.GetSubmodule(item.Name);
 
                 // Reset all changes.
                 module.ResetHard("");
@@ -1875,7 +1875,7 @@ namespace GitUI
             var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInManualStash);
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
-                GitModule module = new GitModule(Module.WorkingDir + item.Name + Settings.PathSeparator.ToString());
+                GitModule module = Module.GetSubmodule(item.Name);
                 FormProcess.ShowDialog(this, module, arguments);
             }
 
