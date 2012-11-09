@@ -2167,8 +2167,18 @@ namespace GitCommands
         public List<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles, bool untrackedFiles)
         {
             var status = GetAllChangedFiles(excludeIgnoredFiles, untrackedFiles);
+            GetSubmoduleStatus(status);
+            return status;
+        }
 
-            foreach(var item in status)
+        public List<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus()
+        {
+            return GetAllChangedFilesWithSubmodulesStatus(true, true);
+        }
+
+        private void GetSubmoduleStatus(IList<GitItemStatus> status)
+        {
+            foreach (var item in status)
                 if (item.IsSubmodule)
                 {
                     item.SubmoduleStatus = GitCommandHelpers.GetSubmoduleChanges(this, item.Name, item.OldName, item.IsStaged);
@@ -2178,7 +2188,6 @@ namespace GitCommands
                         item.SubmoduleStatus.CheckIsCommitNewer(submodule);
                     }
                 }
-            return status;
         }
 
         public List<GitItemStatus> GetTrackedChangedFiles()
@@ -2236,9 +2245,21 @@ namespace GitCommands
             return GitCommandHelpers.GetAllChangedFilesFromString(this, status, true);
         }
 
+        public IList<GitItemStatus> GetStagedFilesWithSubmodulesStatus()
+        {
+            var status = GetStagedFiles();
+            GetSubmoduleStatus(status);
+            return status;
+        }
+
         public IList<GitItemStatus> GetUnstagedFiles()
         {
             return GetAllChangedFiles().Where(x => !x.IsStaged).ToArray();
+        }
+
+        public IList<GitItemStatus> GetUnstagedFilesWithSubmodulesStatus()
+        {
+            return GetAllChangedFilesWithSubmodulesStatus().Where(x => !x.IsStaged).ToArray();
         }
 
         public IList<GitItemStatus> GitStatus()
