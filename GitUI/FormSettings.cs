@@ -208,6 +208,7 @@ namespace GitUI
 
         private Font diffFont;
         private Font applicationFont;
+        private Font commitFont;
         private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
         private string IconName = "bug";
 
@@ -236,6 +237,7 @@ namespace GitUI
 
             SetCurrentApplicationFont(Settings.Font);
             SetCurrentDiffFont(Settings.DiffFont);
+            SetCurrentCommitFont(Settings.CommitFont);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -692,6 +694,7 @@ namespace GitUI
             Settings.DiffRemovedExtraColor = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor;
             Settings.DiffFont = diffFont;
             Settings.Font = applicationFont;
+            Settings.CommitFont = commitFont;
             Settings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
 
             Settings.IconColor = GetSelectedApplicationIconColor();
@@ -2395,6 +2398,17 @@ namespace GitUI
             }
         }
 
+        private void commitFontChangeButton_Click(object sender, EventArgs e)
+        {
+            commitFontDialog.Font = commitFont;
+            DialogResult result = commitFontDialog.ShowDialog(this);
+
+            if (result == DialogResult.OK || result == DialogResult.Yes)
+            {
+                SetCurrentCommitFont(commitFontDialog.Font);
+            }
+        }
+
         private void SetCurrentDiffFont(Font newFont)
         {
             this.diffFont = newFont;
@@ -2405,6 +2419,12 @@ namespace GitUI
         {
             this.applicationFont = newFont;
             SetFontButtonText(newFont, applicationFontChangeButton);
+        }
+
+        private void SetCurrentCommitFont(Font newFont)
+        {
+            this.commitFont = newFont;
+            SetFontButtonText(newFont, commitFontChangeButton);
         }
 
         private void SetFontButtonText(Font font, Button button)

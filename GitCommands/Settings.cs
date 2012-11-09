@@ -666,6 +666,13 @@ namespace GitCommands
             set { SafeSet("difffont", value, ref _diffFont); }
         }
 
+        private static Font _commitFont;
+        public static Font CommitFont
+        {
+            get { return SafeGet("commitfont", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size), ref _commitFont); }
+            set { SafeSet("commitfont", value, ref _commitFont); }
+        }
+
         private static Font _font;
         public static Font Font
         {

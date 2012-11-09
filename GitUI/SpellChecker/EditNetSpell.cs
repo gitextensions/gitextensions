@@ -32,7 +32,8 @@ namespace GitUI.SpellChecker
         private readonly SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
         private static WordDictionary _wordDictionary;
-        private Font TextBoxFont;
+
+        public Font TextBoxFont { get; set; }
 
         public EditNetSpell()
         {
