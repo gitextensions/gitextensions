@@ -112,6 +112,8 @@ namespace GitUI
             this.Language = new System.Windows.Forms.ComboBox();
             this.helpTranslate = new System.Windows.Forms.LinkLabel();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
+            this.commitFontChangeButton = new System.Windows.Forms.Button();
+            this.label34 = new System.Windows.Forms.Label();
             this.diffFontChangeButton = new System.Windows.Forms.Button();
             this.applicationFontChangeButton = new System.Windows.Forms.Button();
             this.label26 = new System.Windows.Forms.Label();
@@ -295,6 +297,7 @@ namespace GitUI
             this.Ok = new System.Windows.Forms.Button();
             this.applicationDialog = new System.Windows.Forms.FontDialog();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.commitFontDialog = new System.Windows.Forms.FontDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -1247,7 +1250,7 @@ namespace GitUI
             this.groupBox13.Controls.Add(this.downloadDictionary);
             this.groupBox13.Controls.Add(this.Language);
             this.groupBox13.Controls.Add(this.helpTranslate);
-            this.groupBox13.Location = new System.Drawing.Point(8, 419);
+            this.groupBox13.Location = new System.Drawing.Point(11, 434);
             this.groupBox13.Name = "groupBox13";
             this.groupBox13.Size = new System.Drawing.Size(711, 84);
             this.groupBox13.TabIndex = 56;
@@ -1318,17 +1321,40 @@ namespace GitUI
             // 
             this.groupBox15.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox15.Controls.Add(this.commitFontChangeButton);
+            this.groupBox15.Controls.Add(this.label34);
             this.groupBox15.Controls.Add(this.diffFontChangeButton);
             this.groupBox15.Controls.Add(this.applicationFontChangeButton);
             this.groupBox15.Controls.Add(this.label26);
             this.groupBox15.Controls.Add(this.label56);
             this.groupBox15.Location = new System.Drawing.Point(11, 313);
             this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(711, 100);
+            this.groupBox15.Size = new System.Drawing.Size(711, 115);
             this.groupBox15.TabIndex = 55;
             this.groupBox15.TabStop = false;
             this.groupBox15.Text = "Fonts";
             // 
+            // commitFontChangeButton
+            //
+            this.commitFontChangeButton.AutoSize = true;
+            this.commitFontChangeButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.commitFontChangeButton.Location = new System.Drawing.Point(143, 80);
+            this.commitFontChangeButton.Name = "commitFontChangeButton";
+            this.commitFontChangeButton.Size = new System.Drawing.Size(64, 23);
+            this.commitFontChangeButton.TabIndex = 56;
+            this.commitFontChangeButton.Text = "font name";
+            this.commitFontChangeButton.UseVisualStyleBackColor = true;
+            this.commitFontChangeButton.Click += new System.EventHandler(this.commitFontChangeButton_Click);
+            //
+            // label34
+            //
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(17, 85);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(76, 15);
+            this.label34.TabIndex = 55;
+            this.label34.Text = "Commit font";
+            //
             // diffFontChangeButton
             // 
             this.diffFontChangeButton.AutoSize = true;
@@ -3395,6 +3421,11 @@ namespace GitUI
             this.tableLayoutPanel3.Size = new System.Drawing.Size(752, 573);
             this.tableLayoutPanel3.TabIndex = 2;
             // 
+            // commitFontDialog
+            //
+            this.commitFontDialog.AllowVerticalFonts = false;
+            this.commitFontDialog.Color = System.Drawing.SystemColors.ControlText;
+            //
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -3755,6 +3786,9 @@ namespace GitUI
         private TableLayoutPanel tableLayoutPanel3;
         private Button gitCredentialWinStore_Fix;
         private Button gitCredentialWinStore;
+        private Button commitFontChangeButton;
+        private Label label34;
+        private FontDialog commitFontDialog;
 
     }
 }

@@ -530,6 +530,8 @@ namespace GitUI
 
             UpdateMergeHead();
 
+            Message.TextBoxFont = Settings.CommitFont;
+
             // Check if commit.template is used
             string fileName = Module.GetEffectivePathSetting("commit.template");
             if (!string.IsNullOrEmpty(fileName))
