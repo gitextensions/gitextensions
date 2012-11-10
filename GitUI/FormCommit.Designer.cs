@@ -48,7 +48,7 @@ namespace GitUI
             this.resetChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.resetPartOfFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.interactiveAddtoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.viewFileHistoryToolStripItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
@@ -200,21 +200,22 @@ namespace GitUI
             this.resetChanges,
             this.resetPartOfFileToolStripMenuItem,
             this.toolStripSeparator12,
-            this.toolStripMenuItem4,
-            this.toolStripSeparator8,
-            this.viewFileHistoryToolStripItem,
-            this.toolStripSeparator7,
             this.openToolStripMenuItem,
             this.openWithToolStripMenuItem,
             this.openWithDifftoolToolStripMenuItem,
+            this.toolStripSeparator9,
+            this.filenameToClipboardToolStripMenuItem,
             this.openContainingFolderToolStripMenuItem,
-            this.toolStripSeparator4,
+            this.toolStripSeparator8,
+            this.viewFileHistoryToolStripItem,
+            this.toolStripSeparator7,
             this.editFileToolStripMenuItem,
             this.deleteFileToolStripMenuItem,
-            this.toolStripSeparator9,
-            this.addFileTogitignoreToolStripMenuItem,
             this.toolStripSeparator5,
-            this.filenameToClipboardToolStripMenuItem});
+            this.addFileTogitignoreToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.interactiveAddtoolStripMenuItem
+            });
             this.UnstagedFileContext.Name = "UnstagedFileContext";
             this.UnstagedFileContext.Size = new System.Drawing.Size(233, 328);
             // 
@@ -240,10 +241,10 @@ namespace GitUI
             // 
             // toolStripMenuItem4
             // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(232, 24);
-            this.toolStripMenuItem4.Text = "Interactive Add";
-            this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
+            this.interactiveAddtoolStripMenuItem.Name = "toolStripMenuItem4";
+            this.interactiveAddtoolStripMenuItem.Size = new System.Drawing.Size(232, 24);
+            this.interactiveAddtoolStripMenuItem.Text = "Interactive Add";
+            this.interactiveAddtoolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // toolStripSeparator8
             // 
@@ -337,7 +338,7 @@ namespace GitUI
             this.filenameToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
             this.filenameToClipboardToolStripMenuItem.Name = "filenameToClipboardToolStripMenuItem";
             this.filenameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(232, 24);
-            this.filenameToClipboardToolStripMenuItem.Text = "Copy filename";
+            this.filenameToClipboardToolStripMenuItem.Text = "Copy full path";
             this.filenameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.FilenameToClipboardToolStripMenuItemClick);
             // 
             // fileTooltip
@@ -355,11 +356,12 @@ namespace GitUI
             this.toolStripMenuItem7,
             this.toolStripMenuItem8,
             this.toolStripMenuItem9,
+            this.toolStripSeparator18,
+            this.toolStripMenuItem14,
             this.toolStripMenuItem10,
             this.toolStripSeparator17,
-            this.toolStripMenuItem11,
-            this.toolStripSeparator18,
-            this.toolStripMenuItem14});
+            this.toolStripMenuItem11
+            });
             this.StagedFileContext.Name = "UnstagedFileContext";
             this.StagedFileContext.Size = new System.Drawing.Size(233, 190);
             // 
@@ -430,7 +432,7 @@ namespace GitUI
             this.toolStripMenuItem14.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
             this.toolStripMenuItem14.Name = "toolStripMenuItem14";
             this.toolStripMenuItem14.Size = new System.Drawing.Size(232, 24);
-            this.toolStripMenuItem14.Text = "Copy filename";
+            this.toolStripMenuItem14.Text = "Copy full path";
             this.toolStripMenuItem14.Click += new System.EventHandler(this.FilenameToClipboardToolStripMenuItemClick);
             // 
             // UnstagedSubmoduleContext
@@ -1452,7 +1454,7 @@ namespace GitUI
         private ToolStripStatusLabel commitCursorColumn;
         private ToolStripStatusLabel commitEndPadding;
         private ToolStripSeparator toolStripSeparator12;
-        private ToolStripMenuItem toolStripMenuItem4;
+        private ToolStripMenuItem interactiveAddtoolStripMenuItem;
         private TableLayoutPanel tableLayoutPanel1;
         private CheckBox Amend;
     }
