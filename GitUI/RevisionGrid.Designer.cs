@@ -201,8 +201,10 @@ namespace GitUI
             this.renameBranchToolStripMenuItem,
             this.checkoutBranchToolStripMenuItem,
             this.checkoutRevisionToolStripMenuItem,
-            this.manipulateCommitToolStripMenuItem,
+            this.revertCommitToolStripMenuItem,
+            this.cherryPickCommitToolStripMenuItem,
             this.archiveRevisionToolStripMenuItem,
+            this.manipulateCommitToolStripMenuItem,
             this.toolStripSeparator1,
             this.showBranchesToolStripMenuItem,
             this.showRevisionGraphToolStripMenuItem,
@@ -406,13 +408,11 @@ namespace GitUI
             // manipulateCommitToolStripMenuItem
             // 
             this.manipulateCommitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.revertCommitToolStripMenuItem,
-            this.cherryPickCommitToolStripMenuItem,
             this.fixupCommitToolStripMenuItem,
             this.squashCommitToolStripMenuItem});
             this.manipulateCommitToolStripMenuItem.Name = "manipulateCommitToolStripMenuItem";
             this.manipulateCommitToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.manipulateCommitToolStripMenuItem.Text = "Manipulate commit";
+            this.manipulateCommitToolStripMenuItem.Text = "Advanced";
             // 
             // archiveRevisionToolStripMenuItem
             // 
