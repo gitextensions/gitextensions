@@ -473,6 +473,10 @@ namespace GitUI.SpellChecker
             SpellCheckTimer.Enabled = false;
             SpellCheckTimer.Interval = 250;
             SpellCheckTimer.Enabled = true;
+            if (!IsWatermarkShowing)
+            {
+                OnTextChanged(e);
+            }
         }
 
         private void TextBoxSizeChanged(object sender, EventArgs e)
@@ -528,8 +532,8 @@ namespace GitUI.SpellChecker
             {
                 TextBox.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
                 TextBox.ForeColor = SystemColors.InactiveCaption;
-                TextBox.Text = WatermarkText;
                 IsWatermarkShowing = true;
+                TextBox.Text = WatermarkText;
             }
         }
 
@@ -538,10 +542,10 @@ namespace GitUI.SpellChecker
             if (IsWatermarkShowing && TextBoxFont != null)
             {
                 TextBox.Font = TextBoxFont;
+                IsWatermarkShowing = false;
                 TextBox.Text = string.Empty;
                 TextBox.ForeColor = SystemColors.WindowText;
             }
-            IsWatermarkShowing = false;
         }
 
         public new bool Focus()
