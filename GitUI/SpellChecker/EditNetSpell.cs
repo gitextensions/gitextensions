@@ -64,6 +64,16 @@ namespace GitUI.SpellChecker
             }
         }
 
+        public int LineLength(int line)
+        {
+            return LineCount() <= line ? 0 : TextBox.Lines[line].Length;
+        }
+
+        public int LineCount()
+        {
+            return TextBox.Lines.Length;
+        }
+
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Font MistakeFont { get; set; }
