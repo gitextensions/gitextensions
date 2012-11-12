@@ -597,7 +597,7 @@ namespace GitUI.SpellChecker
             TextBox.SelectAll();
         }
 
-        public void WrapWord()
+        public void WrapWord(string indent)
         {
             var text = TextBox.Text;
             var originalCursorPosition = TextBox.SelectionStart;
@@ -618,7 +618,7 @@ namespace GitUI.SpellChecker
 
             string textBefore = text.Substring(0, endOfPreviousWord + 1);
             string textAfter = text.Substring(cursor + 1);
-            TextBox.Text = textBefore + "\n   " + textAfter;
+            TextBox.Text = textBefore + Environment.NewLine + indent + textAfter;
 
             TextBox.SelectionStart = newCursorPosition;
         }
