@@ -1687,8 +1687,8 @@ namespace GitUI
 
             if (empty2 && line == 1)
             {
-                // Force next line. Optionally add a bullet.
-                Message.ForceNextLine(Settings.CommitValidationIndentAfterFirstLine);
+                // Ensure next line. Optionally add a bullet.
+                Message.EnsureEmptyLine(Settings.CommitValidationIndentAfterFirstLine, 1);
                 Message.ChangeTextColor(2, 0, Message.LineLength(2), Color.Black);
                 FormatLine(2);
             }
