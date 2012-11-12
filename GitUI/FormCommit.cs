@@ -123,6 +123,7 @@ namespace GitUI
         private AsyncLoader unstagedLoader;
         private bool _useFormCommitMessage;
         private CancellationTokenSource interactiveAddBashCloseWaitCTS;
+        private readonly string _indent;
 
         /// <summary>
         /// For VS designer
@@ -190,6 +191,7 @@ namespace GitUI
             _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
             _ResetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
             _ResetSelectedLinesToolStripMenuItem.Image = Reset.Image;
+            _indent = Settings.CommitValidationIndentAfterFirstLine ? "   " : String.Empty;
         }
 
         private void FormCommit_Load(object sender, EventArgs e)
@@ -1679,15 +1681,15 @@ namespace GitUI
 
             if (empty2 && line == 1)
             {
-                // Force next line and add a bullet.
-                Message.ForceNextLine(true);
+                // Force next line. Optionally add a bullet.
+                Message.ForceNextLine(Settings.CommitValidationIndentAfterFirstLine);
                 Message.ChangeTextColor(2, 0, Message.LineLength(2), Color.Black);
                 FormatLine(2);
             }
 
             if (limitX > 0 && line >= (empty2 ? 2 : 1) && lineLength > limitX)
             {
-                Message.WrapWord();
+                Message.WrapWord(_indent);
             }
         }
 
