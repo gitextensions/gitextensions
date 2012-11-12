@@ -148,6 +148,7 @@ namespace GitUI
 
             InitializeComponent();
             Message.TextChanged += Message_TextChanged;
+            Message.TextAssigned += Message_TextAssigned;
 
             Loading.Image = Properties.Resources.loadingpanel;
 
@@ -1662,6 +1663,11 @@ namespace GitUI
             FormatLine(Message.CurrentLine - 1);
         }
 
+        private void Message_TextAssigned(object sender, EventArgs e)
+        {
+            FormatAllText();
+        }
+
         private void FormatLine(int line)
         {
             int limit1 = Settings.CommitValidationMaxCntCharsFirstLine;
@@ -1690,6 +1696,15 @@ namespace GitUI
             if (limitX > 0 && line >= (empty2 ? 2 : 1) && lineLength > limitX)
             {
                 Message.WrapWord(_indent);
+            }
+        }
+
+        private void FormatAllText()
+        {
+            var lineCount = Message.LineCount();
+            for (int line = 0; line < lineCount; line++)
+            {
+                FormatLine(line);
             }
         }
 

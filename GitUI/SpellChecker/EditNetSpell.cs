@@ -34,6 +34,7 @@ namespace GitUI.SpellChecker
         private static WordDictionary _wordDictionary;
 
         public Font TextBoxFont { get; set; }
+        public EventHandler TextAssigned;
 
         public EditNetSpell()
         {
@@ -61,6 +62,15 @@ namespace GitUI.SpellChecker
                 HideWatermark();
                 TextBox.Text = value;
                 ShowWatermark();
+                OnTextAssigned();
+            }
+        }
+
+        private void OnTextAssigned()
+        {
+            if (TextAssigned != null)
+            {
+                TextAssigned(this, EventArgs.Empty);
             }
         }
 
