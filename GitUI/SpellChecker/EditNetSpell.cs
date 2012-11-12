@@ -623,6 +623,20 @@ namespace GitUI.SpellChecker
             TextBox.SelectionStart = newCursorPosition;
         }
 
+        public void ChangeTextColor(int line, int offset, int length, Color color)
+        {
+            var oldColor = TextBox.SelectionColor;
+            var oldPos = TextBox.SelectionStart;
+            var lineIndex = TextBox.GetFirstCharIndexFromLine(line);
+            TextBox.SelectionStart = lineIndex + offset;
+            TextBox.SelectionLength = length;
+            TextBox.SelectionColor = color;
+
+            TextBox.SelectionLength = 0;
+            TextBox.SelectionStart = oldPos;
+            TextBox.SelectionColor = oldColor;
+        }
+
         /// <summary>
         /// Make sure this line is empty by inserting a newline at its start.
         /// </summary>

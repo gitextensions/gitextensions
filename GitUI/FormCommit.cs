@@ -1657,22 +1657,35 @@ namespace GitUI
 
         private void Message_TextChanged(object sender, EventArgs e)
         {
+            FormatLine(Message.CurrentLine - 1);
+        }
+
+        private void FormatLine(int line)
+        {
             int limit1 = Settings.CommitValidationMaxCntCharsFirstLine;
             int limitX = Settings.CommitValidationMaxCntCharsPerLine;
             bool empty2 = Settings.CommitValidationSecondLineMustBeEmpty;
 
-            if (limit1 > 0 && Message.CurrentLine == 1 && Message.CurrentColumn > limit1)
+            var lineLength = Message.LineLength(line);
+
+            if (limit1 > 0 && line == 0)
             {
-                // TODO: I don't really know what to do in this case.
+                Message.ChangeTextColor(line, 0, Math.Min(limit1, lineLength), Color.Black);
+                if (lineLength > limit1)
+                {
+                    Message.ChangeTextColor(line, limit1, lineLength - limit1, Color.Red);
+                }
             }
 
-            if (empty2 && Message.CurrentLine == 2)
+            if (empty2 && line == 1)
             {
                 // Force next line and add a bullet.
                 Message.ForceNextLine(true);
+                Message.ChangeTextColor(2, 0, Message.LineLength(2), Color.Black);
+                FormatLine(2);
             }
 
-            if (limitX > 0 && Message.CurrentLine >= (empty2 ? 3 : 2) && Message.CurrentColumn > limitX)
+            if (limitX > 0 && line >= (empty2 ? 2 : 1) && lineLength > limitX)
             {
                 Message.WrapWord();
             }
