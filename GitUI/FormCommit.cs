@@ -146,6 +146,7 @@ namespace GitUI
             _useFormCommitMessage = Settings.UseFormCommitMessage;
 
             InitializeComponent();
+            Message.TextChanged += Message_TextChanged;
 
             Loading.Image = Properties.Resources.loadingpanel;
 
@@ -1654,7 +1655,7 @@ namespace GitUI
                 e.Handled = true;
         }
 
-        private void Message_KeyPress(object sender, KeyPressEventArgs e)
+        private void Message_TextChanged(object sender, EventArgs e)
         {
             int limit1 = Settings.CommitValidationMaxCntCharsFirstLine;
             int limitX = Settings.CommitValidationMaxCntCharsPerLine;
