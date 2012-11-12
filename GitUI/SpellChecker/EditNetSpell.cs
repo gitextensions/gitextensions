@@ -651,18 +651,17 @@ namespace GitUI.SpellChecker
         /// <summary>
         /// Make sure this line is empty by inserting a newline at its start.
         /// </summary>
-        public void ForceNextLine(bool addBullet)
+        public void EnsureEmptyLine(bool addBullet, int afterLine)
         {
             var bullet = addBullet ? " - " : "";
-            var text = TextBox.Text;
-            var originalCursorPosition = TextBox.SelectionStart;
-            var cursor = originalCursorPosition - (CurrentColumn - 1);
-
-            string textBefore = text.Substring(0, cursor);
-            string textAfter = text.Substring(cursor);
-            TextBox.Text = textBefore + "\n" + bullet + textAfter;
-
-            TextBox.SelectionStart = originalCursorPosition + 1 + bullet.Length;
+            var indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
+            var lineLength = LineLength(afterLine);
+            var newLine = (lineLength > 0) ? Environment.NewLine : String.Empty;
+            var lastIndexOfLine = indexOfLine + lineLength;
+            TextBox.SelectionLength = 0;
+            TextBox.SelectionStart = lastIndexOfLine;
+            TextBox.SelectedText = newLine + bullet;
+            TextBox.SelectionLength = 0;
         }
     }
 }
