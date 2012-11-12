@@ -904,6 +904,13 @@ namespace GitCommands
             set { SafeSet("CommitValidationSecondLineMustBeEmpty", value, ref _CommitValidationSecondLineMustBeEmpty); }
         }
 
+        private static bool? _CommitValidationIndentAfterFirstLine;
+        public static bool CommitValidationIndentAfterFirstLine
+        {
+            get { return SafeGet("CommitValidationIndentAfterFirstLine", true, ref _CommitValidationIndentAfterFirstLine); }
+            set { SafeSet("CommitValidationIndentAfterFirstLine", value, ref _CommitValidationIndentAfterFirstLine); }
+        }
+
         private static string _CommitValidationRegEx;
         public static string CommitValidationRegEx
         {
