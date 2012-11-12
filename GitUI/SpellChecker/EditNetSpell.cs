@@ -616,11 +616,12 @@ namespace GitUI.SpellChecker
             int endOfPreviousWord;
 
             // Find the beginning of current word
-            while (!char.IsWhiteSpace(text[cursor])) cursor--;
+            while (cursor >= 0 && !char.IsWhiteSpace(text[cursor])) cursor--;
             endOfPreviousWord = cursor;
 
             // Find the end of the previous word
-            while (char.IsWhiteSpace(text[endOfPreviousWord])) endOfPreviousWord--;
+            while (endOfPreviousWord >= 0 && char.IsWhiteSpace(text[endOfPreviousWord]))
+                endOfPreviousWord--;
 
             // Calculate the new cursor position which would keep the cursor
             // at the same spot in the word being typed.
