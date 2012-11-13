@@ -106,6 +106,8 @@ namespace GitUI
         private readonly TranslationString _commitValidationCaption = new TranslationString("Commit validation");
 
         private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
+
+        private readonly TranslationString _checkBoxAutoWrap = new TranslationString("Auto-wrap");
         #endregion
 
         private readonly SynchronizationContext _syncContext;
@@ -201,6 +203,16 @@ namespace GitUI
                 splitMain.SplitterDistance = Settings.CommitDialogSplitter;
             if (Settings.CommitDialogRightSplitter != -1)
                 splitRight.SplitterDistance = Settings.CommitDialogRightSplitter;
+
+            AddAutoWrapCheckboxToStatusBar();
+        }
+
+        private void AddAutoWrapCheckboxToStatusBar()
+        {
+            var cb = new CheckBox {Text = _checkBoxAutoWrap.Text, Checked = Settings.CommitValidationAutoWrap};
+            cb.CheckStateChanged += (s, ex) => Settings.CommitValidationAutoWrap = cb.Checked;
+            var toolStripHost = new ToolStripControlHost(cb);
+            commitStatusStrip.Items.Insert(0, toolStripHost);
         }
 
         private void FormCommitFormClosing(object sender, FormClosingEventArgs e)
@@ -1693,9 +1705,34 @@ namespace GitUI
                 FormatLine(2);
             }
 
-            if (limitX > 0 && line >= (empty2 ? 2 : 1) && lineLength > limitX)
+            if (limitX > 0 && line >= (empty2 ? 2 : 1))
+            {
+                if (Settings.CommitValidationAutoWrap)
+                {
+                    WrapIfNecessary(lineLength, limitX);
+                }
+                else
+                {
+                    ColorTextAsNecessary(line, lineLength, limitX);
+                }
+            }
+        }
+
+        private void WrapIfNecessary(int lineLength, int lineLimit)
+        {
+            if (lineLength > lineLimit)
             {
                 Message.WrapWord(_indent);
+                FormatAllText();
+            }
+        }
+
+        private void ColorTextAsNecessary(int line, int lineLength, int lineLimit)
+        {
+            Message.ChangeTextColor(line, 0, Math.Min(lineLimit, lineLength), Color.Black);
+            if (lineLength > lineLimit)
+            {
+                Message.ChangeTextColor(line, lineLimit, lineLength - lineLimit, Color.Red);
             }
         }
 
