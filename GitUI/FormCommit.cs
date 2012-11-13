@@ -363,13 +363,16 @@ namespace GitUI
             ShowDialogWhenChanges(null);
         }
 
-        private void ComputeUnstagedFiles(Action<List<GitItemStatus>> onComputed)
+        private void ComputeUnstagedFiles(Action<List<GitItemStatus>> onComputed, bool async)
         {
-            unstagedLoader.Load(() =>
-                Module.GetAllChangedFilesWithSubmodulesStatus(
+            Func < List < GitItemStatus >> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
-                    showUntrackedFilesToolStripMenuItem.Checked),
-                    onComputed);
+                    showUntrackedFilesToolStripMenuItem.Checked);
+
+            if (async)
+                unstagedLoader.Load(getAllChangedFilesWithSubmodulesStatus, onComputed);
+            else
+                onComputed(getAllChangedFilesWithSubmodulesStatus());
         }
 
 
@@ -389,7 +392,7 @@ namespace GitUI
                     //trying to properly dispose loading image issue #1037
                     Loading.Image.Dispose();
 #endif
-                }
+                }, false
             );
         }
 
@@ -521,12 +524,22 @@ namespace GitUI
         {
             initialized = true;
 
-            EnableStageButtons(false);
 
             Cursor.Current = Cursors.WaitCursor;
 
             if (loadUnstaged)
-                ComputeUnstagedFiles(LoadUnstagedOutput);
+            {
+                Loading.Visible = true;
+                LoadingStaged.Visible = true;
+
+                Commit.Enabled = false;
+                CommitAndPush.Enabled = false;
+                Amend.Enabled = false;
+                Reset.Enabled = false;
+                EnableStageButtons(false);
+
+                ComputeUnstagedFiles(LoadUnstagedOutput, true);
+            }
 
             UpdateMergeHead();
 
@@ -540,14 +553,6 @@ namespace GitUI
                 }
                 Message.Text = commitTemplate;
             }
-
-            Loading.Visible = true;
-            LoadingStaged.Visible = true;
-
-            Commit.Enabled = false;
-            CommitAndPush.Enabled = false;
-            Amend.Enabled = false;
-            Reset.Enabled = false;
 
             Cursor.Current = Cursors.Default;
         }
