@@ -2515,6 +2515,31 @@ namespace GitCommands
 
         public List<IGitItem> GetTree(string id, bool full)
         {
+            if (!full)
+            {
+                return GetTreeNew(id, full);
+            }
+            return GetTreeOld(id, full);
+        }
+
+        //TODO: unit tests for submodules should be added to libgit2sharp
+        //TODO: submodules should be implemented in libgit2sharp
+        public List<IGitItem> GetTreeNew(string id, bool full)
+        {
+            var tree = Repository.Lookup<Tree>(id);
+            return tree.Where(t => t.Type == GitObjectType.Tree || t.Type == GitObjectType.Blob)
+                       .Select(t => (IGitItem) new GitItem(this)
+                                                {
+                                                    Mode = ((int) t.Mode).ToString(),
+                                                    ItemType = t.Type.ToString().ToLower(),
+                                                    Guid = t.Target.Sha,
+                                                    Name = t.Name,
+                                                    FileName = t.Name
+                                                }).ToList();
+        }
+
+        public List<IGitItem> GetTreeOld(string id, bool full)
+        {
             string args = "-z";
             if (full)
                 args += " -r";
