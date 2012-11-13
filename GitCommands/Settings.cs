@@ -911,6 +911,13 @@ namespace GitCommands
             set { SafeSet("CommitValidationIndentAfterFirstLine", value, ref _CommitValidationIndentAfterFirstLine); }
         }
 
+        private static bool? _CommitValidationAutoWrap;
+        public static bool CommitValidationAutoWrap
+        {
+            get { return SafeGet("CommitValidationAutoWrap", true, ref _CommitValidationAutoWrap); }
+            set { SafeSet("CommitValidationAutoWrap", value, ref _CommitValidationAutoWrap); }
+        }
+
         private static string _CommitValidationRegEx;
         public static string CommitValidationRegEx
         {
