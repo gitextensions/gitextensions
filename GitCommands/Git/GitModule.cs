@@ -1045,7 +1045,8 @@ namespace GitCommands
 
         public string GetCurrentCheckout()
         {
-            return RunGitCmd("log -g -1 HEAD --pretty=format:%H");
+            return Repository.Head.Tip.Sha;
+            //return RunGitCmd("log -g -1 HEAD --pretty=format:%H");
         }
 
         public string GetSuperprojectCurrentCheckout()
