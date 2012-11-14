@@ -746,26 +746,29 @@ namespace GitCommands
 
         public void SaveBlobAs(string saveAs, string blob)
         {
-            using (var ms = (MemoryStream)GetFileStream(blob)) //Ugly, has implementation info.
+            using (var stream = GetFileStream(blob))
             {
+                var bytes = new byte[stream.Length];
+                stream.Read(bytes, 0, bytes.Length);
+                stream.Seek(0, SeekOrigin.Begin);
+
                 string autocrlf = GetEffectiveSetting("core.autocrlf").ToLower();
                 bool convertcrlf = autocrlf == "true";
 
-                byte[] buf = ms.ToArray();
                 if (convertcrlf)
                 {
-                    if (!FileHelper.IsBinaryFile(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(buf))
+                    if (!FileHelper.IsBinaryFile(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(bytes))
                     {
-                        StreamReader reader = new StreamReader(ms, FilesEncoding);
+                        StreamReader reader = new StreamReader(stream, FilesEncoding);
                         String sfileout = reader.ReadToEnd();
                         sfileout = sfileout.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
-                        buf = FilesEncoding.GetBytes(sfileout);
+                        bytes = FilesEncoding.GetBytes(sfileout);
                     }
                 }
 
                 using (FileStream fileOut = File.Create(saveAs))
                 {
-                    fileOut.Write(buf, 0, buf.Length);
+                    fileOut.Write(bytes, 0, bytes.Length);
                 }
             }
         }
@@ -1042,7 +1045,8 @@ namespace GitCommands
 
         public string GetCurrentCheckout()
         {
-            return RunGitCmd("log -g -1 HEAD --pretty=format:%H");
+            return Repository.Head.Tip.Sha;
+            //return RunGitCmd("log -g -1 HEAD --pretty=format:%H");
         }
 
         public string GetSuperprojectCurrentCheckout()
@@ -2683,45 +2687,7 @@ namespace GitCommands
 
         public Stream GetFileStream(string blob)
         {
-            try
-            {
-                var newStream = new MemoryStream();
-
-                GitCommandHelpers.SetEnvironmentVariable();
-
-                Settings.GitLog.Log(Settings.GitCommand + " " + "cat-file blob " + blob);
-                //process used to execute external commands
-
-                var info = new ProcessStartInfo()
-                {
-                    UseShellExecute = false,
-                    ErrorDialog = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = false,
-                    RedirectStandardError = false,
-                    CreateNoWindow = true,
-                    FileName = "\"" + Settings.GitCommand + "\"",
-                    Arguments = "cat-file blob " + blob,
-                    WorkingDirectory = _workingdir,
-                    WindowStyle = ProcessWindowStyle.Normal,
-                    LoadUserProfile = true
-                };
-
-                using (var process = Process.Start(info))
-                {
-                    StreamCopy(process.StandardOutput.BaseStream, newStream);
-                    newStream.Position = 0;
-
-                    process.WaitForExit();
-                    return newStream;
-                }
-            }
-            catch (Win32Exception ex)
-            {
-                Trace.WriteLine(ex);
-            }
-
-            return null;
+            return Repository.Lookup<Blob>(new ObjectId(blob)).ContentStream;
         }
 
         public string GetPreviousCommitMessage(int numberBack)
