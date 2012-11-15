@@ -692,10 +692,7 @@ namespace GitUI
             }
             else if (item.IsTracked)
             {
-                if (!item.IsSubmodule)
-                    SelectedDiff.ViewCurrentChanges(item.Name, item.OldName, staged);
-                else
-                    SelectedDiff.ViewSubmoduleChanges(item.Name, item.OldName, staged);
+                SelectedDiff.ViewCurrentChanges(item, staged);
             }
             else
             {
