@@ -764,6 +764,12 @@
       <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
     </Compile>
     <Compile Include="SpellChecker\TextPos.cs" />
+    <Compile Include="UserControls\FolderBrowserButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\FolderBrowserButton.Designer.cs">
+      <DependentUpon>FolderBrowserButton.cs</DependentUpon>
+    </Compile>
     <Compile Include="WarningToolStripItem.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1164,6 +1170,9 @@
     <EmbeddedResource Include="SearchWindow.resx">
       <DependentUpon>SearchWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\FolderBrowserButton.resx">
+      <DependentUpon>FolderBrowserButton.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
