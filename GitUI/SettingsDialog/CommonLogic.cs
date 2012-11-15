@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace GitUI.SettingsDialog
 {
-    class CommonLogic
+    public class CommonLogic
     {
         [Browsable(false)]
         public GitModule Module { get { return null; /* TODO: see GitModuleForm */ } }
