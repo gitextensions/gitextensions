@@ -34,8 +34,6 @@ namespace GitCommands
 
         private string _workingdir;
         private LibGit2Sharp.Repository _repository;
-        private GitModule _superprojectModule;
-        private string _submoduleName;
 
         public LibGit2Sharp.Repository Repository
         {
@@ -55,16 +53,25 @@ namespace GitCommands
             }
             private set
             {
+                _superprojectInit = false;
                 _workingdir = FindGitWorkingDir(value);
-                string superprojectDir = FindGitSuperprojectPath(out _submoduleName);
-                _superprojectModule = superprojectDir == null ? null : new GitModule(superprojectDir);
             }
         }
+
+        private bool _superprojectInit;
+        private GitModule _superprojectModule;
+        private string _submoduleName;
 
         public string SubmoduleName
         {
             get
             {
+                if (!_superprojectInit)
+                {
+                    string superprojectDir = FindGitSuperprojectPath(out _submoduleName);
+                    _superprojectModule = superprojectDir == null ? null : new GitModule(superprojectDir);
+                    _superprojectInit = true;
+                }
                 return _submoduleName;
             }
         }
@@ -73,8 +80,28 @@ namespace GitCommands
         {
             get
             {
+                if (!_superprojectInit)
+                {
+                    string superprojectDir = FindGitSuperprojectPath(out _submoduleName);
+                    _superprojectModule = superprojectDir == null ? null : new GitModule(superprojectDir);
+                    _superprojectInit = true;
+                }
                 return _superprojectModule;
             }
+        }
+
+        public GitModule FindTopProjectModule()
+        {
+            GitModule module = SuperprojectModule;
+            if (module == null)
+                return null;
+            do
+            {
+                if (module.SuperprojectModule == null)
+                    return module;
+                module = module.SuperprojectModule;
+            } while (module != null);
+            return module;
         }
 
         //encoding for files paths
@@ -282,10 +309,29 @@ namespace GitCommands
         /// This is a faster function to get the names of all submodules then the 
         /// GetSubmodules() function. The command @git submodule is very slow.
         /// </summary>
-        public IList<string> GetSubmodulesLocalPathes()
+        public IList<string> GetSubmodulesLocalPathes(bool recursive)
         {
             var configFile = GetSubmoduleConfigFile();
-            return configFile.GetConfigSections().Select(configSection => configSection.GetPathValue("path").Trim()).ToList();
+            var submodules = configFile.GetConfigSections().Select(configSection => configSection.GetPathValue("path").Trim()).ToList();
+            if (recursive)
+            {
+                for (int i = 0; i < submodules.Count; i++)
+                {
+                    var submodule = GetSubmodule(submodules[i]);
+                    var submoduleConfigFile = submodule.GetSubmoduleConfigFile();
+                    var subsubmodules = submoduleConfigFile.GetConfigSections().Select(configSection => configSection.GetPathValue("path").Trim()).ToList();
+                    for (int j = 0; j < subsubmodules.Count; j++)
+                        subsubmodules[j] = submodules[i] + '/' + subsubmodules[j];
+                    submodules.InsertRange(i + 1, subsubmodules);
+                    i += subsubmodules.Count;
+                }
+            }
+            return submodules;
+        }
+
+        public IList<string> GetSubmodulesLocalPathes()
+        {
+            return GetSubmodulesLocalPathes(true);
         }
 
         public string GetGlobalSetting(string setting)
@@ -1051,10 +1097,10 @@ namespace GitCommands
 
         public string GetSuperprojectCurrentCheckout()
         {
-            if (_superprojectModule == null)
+            if (SuperprojectModule == null)
                 return "";
 
-            var lines = _superprojectModule.RunGitCmd("submodule status --cached " + _submoduleName).Split('\n');
+            var lines = SuperprojectModule.RunGitCmd("submodule status --cached " + _submoduleName).Split('\n');
 
             if (lines.Length == 0)
                 return "";
@@ -1100,6 +1146,16 @@ namespace GitCommands
         public ConfigFile GetSubmoduleConfigFile()
         {
             return new ConfigFile(_workingdir + ".gitmodules", true);
+        }
+
+        public string GetCurrentSubmoduleLocalPath()
+        {
+            if (SuperprojectModule == null)
+                return null;
+            string submodulePath = WorkingDir.Substring(SuperprojectModule.WorkingDir.Length);
+            submodulePath = submodulePath.Replace(Settings.PathSeparator, Settings.PathSeparatorWrong).TrimEnd(
+                    Settings.PathSeparatorWrong);
+            return submodulePath;
         }
 
         public string GetSubmoduleNameByPath(string localPath)
@@ -2126,24 +2182,27 @@ namespace GitCommands
         public List<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles, bool untrackedFiles)
         {
             var status = GetAllChangedFiles(excludeIgnoredFiles, untrackedFiles);
+            GetSubmoduleStatus(status);
+            return status;
+        }
 
-            foreach(var item in status)
+        public List<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus()
+        {
+            return GetAllChangedFilesWithSubmodulesStatus(true, true);
+        }
+
+        private void GetSubmoduleStatus(IList<GitItemStatus> status)
+        {
+            foreach (var item in status)
                 if (item.IsSubmodule)
                 {
                     item.SubmoduleStatus = GitCommandHelpers.GetSubmoduleChanges(this, item.Name, item.OldName, item.IsStaged);
                     if (item.SubmoduleStatus.Commit != item.SubmoduleStatus.OldCommit)
                     {
                         var submodule = item.SubmoduleStatus.GetSubmodule(this);
-                        if (submodule != null)
-                        {
-                            var commitData = item.SubmoduleStatus.GetCommitData(submodule);
-                            var oldCommitData = item.SubmoduleStatus.GetOldCommitData(submodule);
-                            if (commitData != null && oldCommitData != null)
-                                item.SubmoduleStatus.IsCommitNewer = commitData.CommitDate >= oldCommitData.CommitDate;
-                        }
+                        item.SubmoduleStatus.CheckIsCommitNewer(submodule);
                     }
                 }
-            return status;
         }
 
         public List<GitItemStatus> GetTrackedChangedFiles()
@@ -2201,9 +2260,21 @@ namespace GitCommands
             return GitCommandHelpers.GetAllChangedFilesFromString(this, status, true);
         }
 
+        public IList<GitItemStatus> GetStagedFilesWithSubmodulesStatus()
+        {
+            var status = GetStagedFiles();
+            GetSubmoduleStatus(status);
+            return status;
+        }
+
         public IList<GitItemStatus> GetUnstagedFiles()
         {
             return GetAllChangedFiles().Where(x => !x.IsStaged).ToArray();
+        }
+
+        public IList<GitItemStatus> GetUnstagedFilesWithSubmodulesStatus()
+        {
+            return GetAllChangedFilesWithSubmodulesStatus().Where(x => !x.IsStaged).ToArray();
         }
 
         public IList<GitItemStatus> GitStatus()
@@ -2750,6 +2821,11 @@ namespace GitCommands
             int exitCode = 0;
             string[] resultStrings = RunCmd(Settings.GitCommand, revparseCommand, out exitCode).Split('\n');
             return exitCode == 0 ? resultStrings[0] : "";
+        }
+
+        public string GetMergeBase(string a, string b)
+        {
+            return RunGitCmd("merge-base " + a + " " + b).TrimEnd();
         }
 
         public static string WorkingDirGitDir(string repositoryPath)

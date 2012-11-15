@@ -72,7 +72,7 @@ namespace GitUI
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.CommitInfoTabControl = new System.Windows.Forms.TabControl();
             this.CommitInfoTabPage = new System.Windows.Forms.TabPage();
-            this.RevisionInfo = new GitUI.CommitInfo();
+            this.RevisionInfo = new GitUI.CommitInfo.CommitInfo();
             this.TreeTabPage = new System.Windows.Forms.TabPage();
             this.FileTreeSplitContainer = new System.Windows.Forms.SplitContainer();
             this.GitTree = new System.Windows.Forms.TreeView();
@@ -663,7 +663,7 @@ namespace GitUI
             this.RevisionInfo.ShowBranchesAsLinks = true;
             this.RevisionInfo.Size = new System.Drawing.Size(915, 259);
             this.RevisionInfo.TabIndex = 1;
-            this.RevisionInfo.CommandClick += new System.EventHandler<GitUI.CommandEventArgs>(this.RevisionInfo_CommandClick);
+            this.RevisionInfo.CommandClick += new System.EventHandler<GitUI.CommitInfo.CommandEventArgs>(this.RevisionInfo_CommandClick);
             // 
             // TreeTabPage
             // 
@@ -1920,7 +1920,7 @@ namespace GitUI
         private FileViewer FileText;
         private FileViewer DiffText;
         private System.Windows.Forms.TabPage CommitInfoTabPage;
-        private CommitInfo RevisionInfo;
+        private CommitInfo.CommitInfo RevisionInfo;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripSplitButton toolStripSplitStash;
         private System.Windows.Forms.ToolStripMenuItem stashChangesToolStripMenuItem;

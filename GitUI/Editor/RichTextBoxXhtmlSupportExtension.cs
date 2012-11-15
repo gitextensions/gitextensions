@@ -12,7 +12,7 @@ using GitCommands;
 
 namespace GitUI.Editor.RichTextBoxExtension
 {
-    static class RichTextBoxXHTMLSupportExtension
+    static class RichTextBoxXhtmlSupportExtension
     {
         /// <summary>
         /// Maintains performance while updating.
@@ -677,7 +677,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             nctContinue = 2, // continue with previous format
             nctReset = 3 // reset format (close this tag)
         }
-        
+
         public static string GetXHTMLText(this RichTextBox rtb, bool bParaFormat)
         {
             StringBuilder strHTML = new StringBuilder();
@@ -724,7 +724,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             return strHTML.ToString();
         }
 
-        private static string ProcessTags( RichTextBox rtb, List<KeyValuePair<int, string>> colFormat,  bool bParaFormat )
+        private static string ProcessTags(RichTextBox rtb, List<KeyValuePair<int, string>> colFormat, bool bParaFormat)
         {
             StringBuilder sbT = new StringBuilder();
 
@@ -740,7 +740,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             ctformatStates baright = ctformatStates.nctNone;
             ctformatStates bnumbering = ctformatStates.nctNone;
             bool fontSet = false;
-	        string strFont = "";
+            string strFont = "";
             Int32 crFont = 0;
             Color color = new Color();
             int yHeight = 0;
@@ -783,7 +783,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     strFont = strfname;
                     crFont = cf.crTextColor;
                     yHeight = cf.yHeight;
-                    
+
                     fontSet = strFont != "";
 
                     // font size should be translate to 
@@ -941,7 +941,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 sbT.Append(strChar);
                 pos = sbT.Length;
             }
-    
+
             // close pending tags
             if (bold != ctformatStates.nctNone)
             {
