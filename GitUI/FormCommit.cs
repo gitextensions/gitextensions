@@ -372,7 +372,10 @@ namespace GitUI
             if (async)
                 unstagedLoader.Load(getAllChangedFilesWithSubmodulesStatus, onComputed);
             else
+            {
+                unstagedLoader.Cancel();
                 onComputed(getAllChangedFilesWithSubmodulesStatus());
+            }
         }
 
 
