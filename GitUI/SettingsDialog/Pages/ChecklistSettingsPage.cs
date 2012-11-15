@@ -292,7 +292,7 @@ namespace GitUI.SettingsDialog.Pages
                                                       null)))
             {
                 //Check if shell extensions are installed
-                string path = Path.Combine(Settings.GetInstallDir(), GitExtensionsShellExName);
+                string path = Path.Combine(Settings.GetInstallDir(), CommonLogic.GitExtensionsShellExName);
                 if (!File.Exists(path))
                 {
                     ShellExtensionsRegistered.BackColor = Color.LightGreen;
@@ -302,7 +302,7 @@ namespace GitUI.SettingsDialog.Pages
                 }
 
                 ShellExtensionsRegistered.BackColor = Color.LightSalmon;
-                ShellExtensionsRegistered.Text = String.Format(_shellExtNeedsToBeRegistered.Text, GitExtensionsShellExName);
+                ShellExtensionsRegistered.Text = String.Format(_shellExtNeedsToBeRegistered.Text, CommonLogic.GitExtensionsShellExName);
                 ShellExtensionsRegistered_Fix.Visible = true;
                 return false;
             }
