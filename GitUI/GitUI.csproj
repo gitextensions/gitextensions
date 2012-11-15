@@ -415,6 +415,7 @@
     <Compile Include="Script\RunScript.cs" />
     <Compile Include="Script\ScriptInfo.cs" />
     <Compile Include="Script\ScriptManager.cs" />
+    <Compile Include="SettingsDialog\CheckSettingsLogic.cs" />
     <Compile Include="SettingsDialog\CommonLogic.cs" />
     <Compile Include="SettingsDialog\Pages\ChecklistSettingsPage.cs">
       <SubType>UserControl</SubType>
