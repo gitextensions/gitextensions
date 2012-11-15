@@ -346,20 +346,30 @@ namespace GitUI.Editor
             return _internalFileViewer.GetText();
         }
 
-        public void ViewCurrentChanges(string fileName, string oldFileName, bool staged)
+        public void ViewCurrentChanges(GitItemStatus item)
         {
-            _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewStagingPatch);
+            ViewCurrentChanges(item.Name, item.OldName, item.IsStaged, item.IsSubmodule);
+        }
+
+        public void ViewCurrentChanges(GitItemStatus item, bool isStaged)
+        {
+            ViewCurrentChanges(item.Name, item.OldName, isStaged, item.IsSubmodule);
+        }
+
+        public void ViewCurrentChanges(string fileName, string oldFileName, bool staged, bool isSubmodule)
+        {
+            if (!isSubmodule)
+                _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
+                    ViewStagingPatch);
+            else
+                _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
+                    ViewSubmodulePatch);
         }
 
         public void ViewStagingPatch(string text)
         {
             ViewPatch(text);
             Reset(true, true, true);
-        }
-
-        public void ViewSubmoduleChanges(string fileName, string oldFileName, bool staged)
-        {
-            _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewSubmodulePatch);
         }
 
         public void ViewSubmodulePatch(string text)
