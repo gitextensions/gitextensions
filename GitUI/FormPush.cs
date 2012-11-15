@@ -118,15 +118,6 @@ namespace GitUI
             PushAndShowDialogWhenFailed(null);
         }
 
-        private void BrowseSourceClick(object sender, EventArgs e)
-        {
-            using (var dialog = new FolderBrowserDialog { SelectedPath = PushDestination.Text })
-            {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                    PushDestination.Text = dialog.SelectedPath;
-            }
-        }
-
         private void PushClick(object sender, EventArgs e)
         {
             if (PushChanges(this))
@@ -447,7 +438,7 @@ namespace GitUI
                 return;
 
             PushDestination.Enabled = false;
-            BrowseSource.Enabled = false;
+            folderBrowserButton1.Enabled = false;
             _NO_TRANSLATE_Remotes.Enabled = true;
             AddRemote.Enabled = true;
         }
@@ -458,7 +449,7 @@ namespace GitUI
                 return;
 
             PushDestination.Enabled = true;
-            BrowseSource.Enabled = true;
+            folderBrowserButton1.Enabled = true;
             _NO_TRANSLATE_Remotes.Enabled = false;
             AddRemote.Enabled = false;
 
