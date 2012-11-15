@@ -43,4 +43,3 @@ GitCommandsTests/test-results/*
 /!runTests.bat
 GitExtensionsMono.sln.VisualState.xml
 TestResult.xml
-libgit2sharp
