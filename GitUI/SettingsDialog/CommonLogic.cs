@@ -12,6 +12,8 @@ namespace GitUI.SettingsDialog
         [Browsable(false)]
         public GitModule Module { get { return null; /* TODO: see GitModuleForm */ } }
 
+        public const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
+
         public string GetMergeTool()
         {
             return Module.GetGlobalSetting("merge.tool");

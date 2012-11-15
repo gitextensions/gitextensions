@@ -209,7 +209,6 @@ namespace GitUI
 
         private Font diffFont;
         private Font applicationFont;
-        private const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
         private string IconName = "bug";
 
         CommonLogic _commonLogic = new CommonLogic(); // TODO: init with GitModule
@@ -936,12 +935,12 @@ namespace GitUI
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
-            string path = Path.Combine(Settings.GetInstallDir(), GitExtensionsShellExName);
+            string path = Path.Combine(Settings.GetInstallDir(), CommonLogic.GitExtensionsShellExName);
             if (!File.Exists(path))
             {
                 path = Assembly.GetAssembly(GetType()).Location;
                 path = Path.GetDirectoryName(path);
-                path = Path.Combine(path, GitExtensionsShellExName);
+                path = Path.Combine(path, CommonLogic.GitExtensionsShellExName);
             }
             if (File.Exists(path))
             {
@@ -949,7 +948,7 @@ namespace GitUI
             }
             else
             {
-                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, GitExtensionsShellExName));
+                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellExName));
             }
 
             CheckSettings();
