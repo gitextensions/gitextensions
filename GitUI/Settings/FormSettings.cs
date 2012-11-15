@@ -245,7 +245,7 @@ namespace GitUI
                 diffFontDialog.Dispose();
                 applicationDialog.Dispose();
             }
-            
+
         }
 
         public bool AutoSolveAllSettings()
@@ -702,7 +702,7 @@ namespace GitUI
             String l_ShellVisibleMenuItems = "";
 
             for (int i = 0; i < chlMenuEntries.Items.Count; i++)
-			{
+            {
                 if (chlMenuEntries.GetItemChecked(i))
                 {
                     l_ShellVisibleMenuItems += "1";
@@ -711,7 +711,7 @@ namespace GitUI
                 {
                     l_ShellVisibleMenuItems += "0";
                 }
-			}
+            }
 
             Settings.ShellVisibleMenuItems = l_ShellVisibleMenuItems;
 
@@ -1416,7 +1416,7 @@ namespace GitUI
                         PlinkPath.Text = installdir + "TortoisePlink.exe";
                 }
             }
-            
+
             if (!File.Exists(PuttygenPath.Text))
             {
                 if (File.Exists(installdir + "puttygen.exe"))
@@ -1685,12 +1685,12 @@ namespace GitUI
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var tc = (TabControl) sender;
+            var tc = (TabControl)sender;
             if (tc.SelectedTab == tpScriptsTab)
                 populateSplitbutton();
             else if (tc.SelectedTab == tpHotkeys)
                 controlHotkeys.ReloadSettings();
-            
+
             if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(MergeToolCmd.Text))
                 MergeToolCmd.Enabled = false;
