@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using GitCommands;
 using Microsoft.Win32;
 using System.IO;
+using GitCommands.Config;
 
 namespace GitUI.SettingsDialog.Pages
 {
@@ -28,7 +29,16 @@ namespace GitUI.SettingsDialog.Pages
 
         private void gitCredentialWinStore_Fix_Click(object sender, EventArgs e)
         {
+            if (SolveGitCredentialStore())
+            {
+                MessageBox.Show(this, _gitCredentialWinStoreHelperInstalled.Text);
+            }
+            else
+            {
+                MessageBox.Show(this, _noCredentialsHelperInstalledTryGCS.Text);
+            }
 
+            CheckSettings();
         }
 
         private void translationConfig_Click(object sender, EventArgs e)
