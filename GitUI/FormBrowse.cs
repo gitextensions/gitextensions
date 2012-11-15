@@ -1094,12 +1094,11 @@ namespace GitUI
             }
         }
 
-        protected void LoadInTree(IList<IGitItem> items, TreeNodeCollection node)
+        protected void LoadInTree(IEnumerable<IGitItem> items, TreeNodeCollection node)
         {
-            // TODO: remove the cast by using other sort method
-            ((List<IGitItem>)items).Sort(new GitFileTreeComparer());
+            var sortedItems = items.OrderBy(gi => gi, new GitFileTreeComparer());
 
-            foreach (var item in items)
+            foreach (var item in sortedItems)
             {
                 var subNode = node.Add(item.Name);
                 subNode.Tag = item;
@@ -2320,7 +2319,7 @@ namespace GitUI
             if (idx == -1)
                 return new Tuple<int, string>(idx, null);
 
-            idx = getNextIdx(idx, DiffFiles.GitItemStatuses.Count - 1, searchBackward);
+            idx = getNextIdx(idx, DiffFiles.GitItemStatuses.Count() - 1, searchBackward);
             _dontUpdateOnIndexChange = true;
             DiffFiles.SelectedIndex = idx;
             _dontUpdateOnIndexChange = false;
@@ -2437,7 +2436,7 @@ namespace GitUI
 
         private void DiffFiles_DataSourceChanged(object sender, EventArgs e)
         {
-            if (DiffFiles.GitItemStatuses == null || DiffFiles.GitItemStatuses.Count == 0)
+            if (DiffFiles.GitItemStatuses == null || !DiffFiles.GitItemStatuses.Any())
                 DiffText.ViewPatch(String.Empty);
         }
 

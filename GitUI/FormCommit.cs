@@ -619,9 +619,9 @@ namespace GitUI
 
             if (LoadUnstagedOutputFirstTime)
             {
-                if (Unstaged.GitItemStatuses.Count > 0)
+                if (Unstaged.GitItemStatuses.Any())
                     Unstaged.Focus();
-                else if (Staged.GitItemStatuses.Count > 0)
+                else if (Staged.GitItemStatuses.Any())
                     Message.Focus();
                 else
                     Amend.Focus();
@@ -941,7 +941,7 @@ namespace GitUI
             Stage(Unstaged.GitItemStatuses);
         }
 
-        private void Stage(ICollection<GitItemStatus> gitItemStatusses)
+        private void Stage(IEnumerable<GitItemStatus> gitItemStatusses)
         {
             EnableStageButtons(false);
             try
@@ -949,7 +949,7 @@ namespace GitUI
                 Cursor.Current = Cursors.WaitCursor;
                 Unstaged.StoreNextIndexToSelect();
                 toolStripProgressBar1.Visible = true;
-                toolStripProgressBar1.Maximum = gitItemStatusses.Count * 2;
+                toolStripProgressBar1.Maximum = gitItemStatusses.Count() * 2;
                 toolStripProgressBar1.Value = 0;
 
                 var files = new List<GitItemStatus>();
@@ -1014,7 +1014,7 @@ namespace GitUI
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                if (Staged.GitItemStatuses.Count > 10 && Staged.SelectedItems.Count == Staged.GitItemStatuses.Count)
+                if (Staged.GitItemStatuses.Count() > 10 && Staged.SelectedItems.Count() == Staged.GitItemStatuses.Count())
                 {
                     Loading.Visible = true;
                     LoadingStaged.Visible = true;
