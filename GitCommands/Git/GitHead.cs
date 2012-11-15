@@ -124,7 +124,7 @@ namespace GitCommands
         public string Guid { get; private set; }
         public string Name { get; private set; }
 
-        public IList<IGitItem> SubItems
+        public IEnumerable<IGitItem> SubItems
         {
             get { return _subItems ?? (_subItems = Module.GetTree(Guid, false)); }
         }

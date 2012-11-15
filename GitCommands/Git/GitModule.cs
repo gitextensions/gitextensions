@@ -2022,37 +2022,37 @@ namespace GitCommands
             return noCache ? RunGitCmd(cmd) : this.RunCachableCmd(Settings.GitCommand, cmd, GitModule.SystemEncoding);
         }
 
-        public IList<GitItemStatus> GetDiffFiles(string from, string to)
+        public IEnumerable<GitItemStatus> GetDiffFiles(string from, string to)
         {
             return GetDiffFiles(from, to, false);
         }
 
-        public IList<GitItemStatus> GetDiffFiles(string from, string to, bool noCache)
+        public IEnumerable<GitItemStatus> GetDiffFiles(string from, string to, bool noCache)
         {
             string cmd = "diff -M -C -z --name-status \"" + to + "\" \"" + from + "\"";
             string result = noCache ? RunGitCmd(cmd) : this.RunCachableCmd(Settings.GitCommand, cmd, GitModule.SystemEncoding);
             return GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
         }
 
-        public IList<GitItemStatus> GetStashDiffFiles(string stashName)
+        public IEnumerable<GitItemStatus> GetStashDiffFiles(string stashName)
         {
             bool gitShowsUntrackedFiles = false;
 
-            var list = GetDiffFiles(stashName, stashName + "^", true);
+            var resultCollection = GetDiffFiles(stashName, stashName + "^", true);
+
             if (!gitShowsUntrackedFiles)
             {
                 string untrackedTreeHash = RunGitCmd("log " + stashName + "^3 --pretty=format:\"%T\" --max-count=1");
                 if (GitRevision.Sha1HashRegex.IsMatch(untrackedTreeHash))
                 {
-                    // TODO: remove the cast
-                    ((List<GitItemStatus>)list).AddRange(GetTreeFiles(untrackedTreeHash, true));
+                    resultCollection = resultCollection.Concat(GetTreeFiles(untrackedTreeHash, true));
                 }
             }
 
-            return list;
+            return resultCollection;
         }
 
-        public IList<GitItemStatus> GetUntrackedFiles()
+        public IEnumerable<GitItemStatus> GetUntrackedFiles()
         {
             var status = RunCmd(Settings.GitCommand,
                                 "ls-files -z --others --directory --no-empty-directory --exclude-standard");
@@ -2067,12 +2067,10 @@ namespace GitCommands
                 IsDeleted = false,
                 IsTracked = false,
                 Name = statusString
-            })
-                .ToList();
-
+            });
         }
 
-        public IList<GitItemStatus> GetTreeFiles(string treeGuid, bool full)
+        public IEnumerable<GitItemStatus> GetTreeFiles(string treeGuid, bool full)
         {
             var tree = GetTree(treeGuid, full);
 
@@ -2085,16 +2083,16 @@ namespace GitCommands
                     IsStaged = false,
                     Name = file.Name,
                     TreeGuid = file.Guid
-                })
-                .ToList();
+                });
 
             // Doesn't work with removed submodules
-            IList<string> Submodules = GetSubmodulesLocalPathes();
+            var submodulesList = GetSubmodulesLocalPathes();
             foreach (var item in list)
             {
-                if (Submodules.Contains(item.Name))
+                if (submodulesList.Contains(item.Name))
                     item.IsSubmodule = true;
             }
+
             return list;
         }
 
