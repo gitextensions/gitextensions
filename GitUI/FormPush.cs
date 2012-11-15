@@ -73,16 +73,17 @@ namespace GitUI
 
         private void Init()
         {
-            
             if (GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesCheck)
             {
-                RecursiveSubmodulesCheck.Enabled = true;
-                RecursiveSubmodulesCheck.Checked = Settings.RecursiveSubmodulesCheck;
+                RecursiveSubmodules.Enabled = true;
+                RecursiveSubmodules.SelectedIndex = Settings.RecursiveSubmodules;
+                if (!GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesOnDemand)
+                    RecursiveSubmodules.Items.RemoveAt(2);
             }
             else
             {
-                RecursiveSubmodulesCheck.Enabled = false;
-                RecursiveSubmodulesCheck.Checked = false;
+                RecursiveSubmodules.Enabled = false;
+                RecursiveSubmodules.SelectedIndex = 0;
             }
 
             _currentBranch = Module.GetSelectedBranch();
@@ -203,7 +204,7 @@ namespace GitUI
                 Repositories.AddMostRecentRepository(PushDestination.Text);
             Settings.PushAllTags = PushAllTags.Checked;
             Settings.AutoPullOnRejected = AutoPullOnRejected.Checked;
-            Settings.RecursiveSubmodulesCheck = RecursiveSubmodulesCheck.Checked;
+            Settings.RecursiveSubmodules = RecursiveSubmodules.SelectedIndex;
 
             var remote = "";
             string destination;
@@ -252,7 +253,7 @@ namespace GitUI
                 }
 
                 pushCmd = GitCommandHelpers.PushCmd(destination, _NO_TRANSLATE_Branch.Text, RemoteBranch.Text,
-                    PushAllBranches.Checked, ForcePushBranches.Checked, track, RecursiveSubmodulesCheck.Checked);
+                    PushAllBranches.Checked, ForcePushBranches.Checked, track, RecursiveSubmodules.SelectedIndex);
             }
             else if (TabControlTagBranch.SelectedTab == TagTab)
                 pushCmd = GitCommandHelpers.PushTagCmd(destination, TagComboBox.Text, PushAllTags.Checked,
