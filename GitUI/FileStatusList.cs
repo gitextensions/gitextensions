@@ -379,20 +379,20 @@ namespace GitUI
         [DefaultValue(true)]
         public bool IsEmpty
         {
-            get { return GitItemStatuses == null || GitItemStatuses.Count == 0; }
+            get { return GitItemStatuses == null || !GitItemStatuses.Any(); }
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IList<GitItemStatus> GitItemStatuses
+        public IEnumerable<GitItemStatus> GitItemStatuses
         {
             get
             {
-                return FileStatusListBox.DataSource as IList<GitItemStatus>;
+                return FileStatusListBox.DataSource as IEnumerable<GitItemStatus>;
             }
             set
             {
-                if (value == null || value.Count == 0)
+                if (value == null || !value.Any())
                     NoFiles.Visible = true;
                 else
                     NoFiles.Visible = false;
@@ -400,7 +400,7 @@ namespace GitUI
                 FileStatusListBox.HorizontalExtent = 0;
                 int prevSelectedIndex = FileStatusListBox.SelectedIndex;
                 FileStatusListBox.DataSource = value;
-                if (value != null && value.Count == 0 && prevSelectedIndex >= 0)
+                if (value != null && !value.Any() && prevSelectedIndex >= 0)
                 {
                     //bug in the ListBox control where supplying an empty list will not trigger a SelectedIndexChanged event, so we force it to trigger
                     FileStatusListBox_SelectedIndexChanged(this, EventArgs.Empty);

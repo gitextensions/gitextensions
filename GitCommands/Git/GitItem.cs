@@ -38,7 +38,7 @@ namespace GitCommands
             get { return ItemType == "tree"; }
         }
 
-        public IList<IGitItem> SubItems
+        public IEnumerable<IGitItem> SubItems
         {
             get
             {

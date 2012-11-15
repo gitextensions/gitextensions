@@ -102,7 +102,7 @@ namespace GitUI
                 AsyncLoader.DoAsync(() => Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
         }
 
-        private void LoadGitItemStatuses(IList<GitItemStatus> gitItemStatuses)
+        private void LoadGitItemStatuses(IEnumerable<GitItemStatus> gitItemStatuses)
         {
             Stashed.GitItemStatuses = gitItemStatuses;
             Loading.Visible = false;

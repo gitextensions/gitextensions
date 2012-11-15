@@ -7,6 +7,6 @@ namespace GitCommands
         string Guid { get; }
         string Name { get; }
 
-        IList<IGitItem> SubItems { get; }
+        IEnumerable<IGitItem> SubItems { get; }
     }
 }
