@@ -363,13 +363,19 @@ namespace GitUI
             ShowDialogWhenChanges(null);
         }
 
-        private void ComputeUnstagedFiles(Action<List<GitItemStatus>> onComputed)
+        private void ComputeUnstagedFiles(Action<List<GitItemStatus>> onComputed, bool async)
         {
-            unstagedLoader.Load(() =>
-                Module.GetAllChangedFilesWithSubmodulesStatus(
+            Func < List < GitItemStatus >> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
-                    showUntrackedFilesToolStripMenuItem.Checked),
-                    onComputed);
+                    showUntrackedFilesToolStripMenuItem.Checked);
+
+            if (async)
+                unstagedLoader.Load(getAllChangedFilesWithSubmodulesStatus, onComputed);
+            else
+            {
+                unstagedLoader.Cancel();
+                onComputed(getAllChangedFilesWithSubmodulesStatus());
+            }
         }
 
 
@@ -389,7 +395,7 @@ namespace GitUI
                     //trying to properly dispose loading image issue #1037
                     Loading.Image.Dispose();
 #endif
-                }
+                }, false
             );
         }
 
@@ -521,12 +527,22 @@ namespace GitUI
         {
             initialized = true;
 
-            EnableStageButtons(false);
 
             Cursor.Current = Cursors.WaitCursor;
 
             if (loadUnstaged)
-                ComputeUnstagedFiles(LoadUnstagedOutput);
+            {
+                Loading.Visible = true;
+                LoadingStaged.Visible = true;
+
+                Commit.Enabled = false;
+                CommitAndPush.Enabled = false;
+                Amend.Enabled = false;
+                Reset.Enabled = false;
+                EnableStageButtons(false);
+
+                ComputeUnstagedFiles(LoadUnstagedOutput, true);
+            }
 
             UpdateMergeHead();
 
@@ -540,14 +556,6 @@ namespace GitUI
                 }
                 Message.Text = commitTemplate;
             }
-
-            Loading.Visible = true;
-            LoadingStaged.Visible = true;
-
-            Commit.Enabled = false;
-            CommitAndPush.Enabled = false;
-            Amend.Enabled = false;
-            Reset.Enabled = false;
 
             Cursor.Current = Cursors.Default;
         }
@@ -568,7 +576,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             Staged.GitItemStatuses = null;
             SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
-            Staged.GitItemStatuses = Module.GetStagedFiles();
+            Staged.GitItemStatuses = Module.GetStagedFilesWithSubmodulesStatus();
             Cursor.Current = Cursors.Default;
         }
 
@@ -687,10 +695,7 @@ namespace GitUI
             }
             else if (item.IsTracked)
             {
-                if (!item.IsSubmodule)
-                    SelectedDiff.ViewCurrentChanges(item.Name, item.OldName, staged);
-                else
-                    SelectedDiff.ViewSubmoduleChanges(item.Name, item.OldName, staged);
+                SelectedDiff.ViewCurrentChanges(item, staged);
             }
             else
             {
@@ -1827,7 +1832,7 @@ namespace GitUI
 
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
-                GitModule module = new GitModule(Module.WorkingDir + item.Name + Settings.PathSeparator.ToString());
+                GitModule module = Module.GetSubmodule(item.Name);
 
                 // Reset all changes.
                 module.ResetHard("");
@@ -1875,7 +1880,7 @@ namespace GitUI
             var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInManualStash);
             foreach (var item in unStagedFiles.Where(it => it.IsSubmodule))
             {
-                GitModule module = new GitModule(Module.WorkingDir + item.Name + Settings.PathSeparator.ToString());
+                GitModule module = Module.GetSubmodule(item.Name);
                 FormProcess.ShowDialog(this, module, arguments);
             }
 

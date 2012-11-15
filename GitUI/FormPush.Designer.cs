@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.PullFromUrl = new System.Windows.Forms.RadioButton();
-            this.PullFromRemote = new System.Windows.Forms.RadioButton();
+            this.PushToUrl = new System.Windows.Forms.RadioButton();
+            this.PushToRemote = new System.Windows.Forms.RadioButton();
             this.AutoPullOnRejected = new System.Windows.Forms.CheckBox();
             this.Push = new System.Windows.Forms.Button();
             this.TabControlTagBranch = new System.Windows.Forms.TabControl();
@@ -85,31 +85,31 @@
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // PullFromUrl
+            // PushToUrl
             // 
-            this.PullFromUrl.AutoSize = true;
-            this.PullFromUrl.Location = new System.Drawing.Point(7, 49);
-            this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
-            this.PullFromUrl.TabIndex = 1;
-            this.PullFromUrl.Text = "Url";
-            this.toolTip1.SetToolTip(this.PullFromUrl, "Url to push to");
-            this.PullFromUrl.UseVisualStyleBackColor = true;
-            this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrlCheckedChanged);
+            this.PushToUrl.AutoSize = true;
+            this.PushToUrl.Location = new System.Drawing.Point(7, 49);
+            this.PushToUrl.Name = "PushToUrl";
+            this.PushToUrl.Size = new System.Drawing.Size(38, 17);
+            this.PushToUrl.TabIndex = 1;
+            this.PushToUrl.Text = "Url";
+            this.toolTip1.SetToolTip(this.PushToUrl, "Url to push to");
+            this.PushToUrl.UseVisualStyleBackColor = true;
+            this.PushToUrl.CheckedChanged += new System.EventHandler(this.PushToUrlCheckedChanged);
             // 
-            // PullFromRemote
+            // PushToRemote
             // 
-            this.PullFromRemote.AutoSize = true;
-            this.PullFromRemote.Checked = true;
-            this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
-            this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
-            this.PullFromRemote.TabIndex = 0;
-            this.PullFromRemote.TabStop = true;
-            this.PullFromRemote.Text = "Remote";
-            this.toolTip1.SetToolTip(this.PullFromRemote, "Remote repository to push to");
-            this.PullFromRemote.UseVisualStyleBackColor = true;
-            this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemoteCheckedChanged);
+            this.PushToRemote.AutoSize = true;
+            this.PushToRemote.Checked = true;
+            this.PushToRemote.Location = new System.Drawing.Point(7, 19);
+            this.PushToRemote.Name = "PushToRemote";
+            this.PushToRemote.Size = new System.Drawing.Size(62, 17);
+            this.PushToRemote.TabIndex = 0;
+            this.PushToRemote.TabStop = true;
+            this.PushToRemote.Text = "Remote";
+            this.toolTip1.SetToolTip(this.PushToRemote, "Remote repository to push to");
+            this.PushToRemote.UseVisualStyleBackColor = true;
+            this.PushToRemote.CheckedChanged += new System.EventHandler(this.PushToRemoteCheckedChanged);
             // 
             // AutoPullOnRejected
             // 
@@ -503,8 +503,8 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.PullFromUrl);
-            this.groupBox2.Controls.Add(this.PullFromRemote);
+            this.groupBox2.Controls.Add(this.PushToUrl);
+            this.groupBox2.Controls.Add(this.PushToRemote);
             this.groupBox2.Controls.Add(this.AddRemote);
             this.groupBox2.Controls.Add(this._NO_TRANSLATE_Remotes);
             this.groupBox2.Controls.Add(this.BrowseSource);
@@ -625,8 +625,8 @@
         private System.Windows.Forms.CheckBox ForcePushTags;
         private System.Windows.Forms.Button Pull;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.RadioButton PullFromUrl;
-        private System.Windows.Forms.RadioButton PullFromRemote;
+        private System.Windows.Forms.RadioButton PushToUrl;
+        private System.Windows.Forms.RadioButton PushToRemote;
         private System.Windows.Forms.Button AddRemote;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_Remotes;
         private System.Windows.Forms.Button LoadSSHKey;

@@ -119,21 +119,29 @@ namespace GitUI
             if (stashedItem != null &&
                 gitStash == currentWorkingDirStashItem) //current working dir
             {
-                View.ViewCurrentChanges(stashedItem.Name, stashedItem.OldName, stashedItem.IsStaged);
+                View.ViewCurrentChanges(stashedItem.Name, stashedItem.OldName, stashedItem.IsStaged, stashedItem.IsSubmodule);
             }
             else if (stashedItem != null)
             {
                 if (stashedItem.IsNew && !stashedItem.IsTracked)
-                    View.ViewGitItem(stashedItem.Name, stashedItem.TreeGuid);
-                else
+                {
+                    if (!stashedItem.IsSubmodule)
+                        View.ViewGitItem(stashedItem.Name, stashedItem.TreeGuid);
+                    else
+                        View.ViewText(stashedItem.Name,
+                            GitCommandHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid));
+                }
+                else 
                 {
                     string extraDiffArguments = View.GetExtraDiffArguments();
                     Encoding encoding = this.View.Encoding;
                     View.ViewPatch(() =>
                     {
-                        PatchApply.Patch patch = Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding);
+                        Patch patch = Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding);
                         if (patch == null)
                             return String.Empty;
+                        if (stashedItem.IsSubmodule)
+                            return GitCommandHelpers.ProcessSubmodulePatch(Module, patch.Text);
                         return patch.Text;
                     });
                 }
