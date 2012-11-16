@@ -1026,47 +1026,6 @@ namespace GitUI
             Rescan_Click(null, null);
         }
 
-        private void MergeToolFix_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(GetMergeTool()))
-            {
-                if (
-                    MessageBox.Show(this, _noMergeToolConfigured.Text,
-                        _noMergeToolConfiguredCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    SolveMergeToolForKDiff();
-                    GlobalMergeTool.Text = "kdiff3";
-                }
-                else
-                {
-                    tabControl1.SelectTab(tpGlobalSettings);
-                    return;
-                }
-            }
-
-            if (_commonLogic.IsMergeTool("kdiff3"))
-            {
-                SolveMergeToolPathForKDiff();
-            }
-            else if (_commonLogic.IsMergeTool("p4merge") || _commonLogic.IsMergeTool("TortoiseMerge"))
-            {
-                AutoConfigMergeToolCmd(true);
-
-                Module.SetGlobalPathSetting(
-                    string.Format("mergetool.{0}.cmd", _commonLogic.GetMergeTool()), MergeToolCmd.Text);
-            }
-
-            if (_commonLogic.IsMergeTool("kdiff3") &&
-                string.IsNullOrEmpty(Module.GetGlobalSetting("mergetool.kdiff3.path")))
-            {
-                MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
-                tabControl1.SelectTab(tpGlobalSettings);
-                return;
-            }
-
-            Rescan_Click(null, null);
-        }
-
         private void BrowseMergeTool_Click(object sender, EventArgs e)
         {
             string mergeTool = GlobalMergeTool.Text.ToLowerInvariant();

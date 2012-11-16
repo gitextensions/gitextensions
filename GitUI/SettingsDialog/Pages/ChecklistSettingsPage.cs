@@ -16,6 +16,7 @@ namespace GitUI.SettingsDialog.Pages
     public partial class ChecklistSettingsPage : UserControl
     {
         CommonLogic _commonLogic = new CommonLogic();
+        CheckSettingsLogic _checkSettingsLogic = new CheckSettingsLogic(null, null); // TODO
 
         public ChecklistSettingsPage()
         {
@@ -29,7 +30,7 @@ namespace GitUI.SettingsDialog.Pages
 
         private void gitCredentialWinStore_Fix_Click(object sender, EventArgs e)
         {
-            if (SolveGitCredentialStore())
+            if (_checkSettingsLogic.SolveGitCredentialStore())
             {
                 MessageBox.Show(this, _gitCredentialWinStoreHelperInstalled.Text);
             }
@@ -73,7 +74,43 @@ namespace GitUI.SettingsDialog.Pages
 
         private void MergeToolFix_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(_commonLogic.GetMergeTool()))
+            {
+                if (
+                    MessageBox.Show(this, _noMergeToolConfigured.Text,
+                        _noMergeToolConfiguredCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    _checkSettingsLogic.SolveMergeToolForKDiff();
+                    GlobalMergeTool.Text = "kdiff3";
+                }
+                else
+                {
+                    tabControl1.SelectTab(tpGlobalSettings);
+                    return;
+                }
+            }
 
+            if (_commonLogic.IsMergeTool("kdiff3"))
+            {
+                _checkSettingsLogic.SolveMergeToolPathForKDiff();
+            }
+            else if (_commonLogic.IsMergeTool("p4merge") || _commonLogic.IsMergeTool("TortoiseMerge"))
+            {
+                AutoConfigMergeToolCmd(true);
+
+                Module.SetGlobalPathSetting(
+                    string.Format("mergetool.{0}.cmd", _commonLogic.GetMergeTool()), MergeToolCmd.Text);
+            }
+
+            if (_commonLogic.IsMergeTool("kdiff3") &&
+                string.IsNullOrEmpty(Module.GetGlobalSetting("mergetool.kdiff3.path")))
+            {
+                MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
+                tabControl1.SelectTab(tpGlobalSettings);
+                return;
+            }
+
+            Rescan_Click(null, null);
         }
 
         private void UserNameSet_Click(object sender, EventArgs e)
