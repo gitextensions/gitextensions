@@ -852,6 +852,8 @@ namespace GitUI
                     return;
                 }
 
+                Amend.Checked = false;
+
                 if (Unstaged.GitItemStatuses.Any(gitItemStatus => gitItemStatus.IsTracked))
                 {
                     InitializedStaged();
