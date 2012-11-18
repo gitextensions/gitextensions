@@ -155,6 +155,8 @@ namespace GitUI
 
             SelectedDiff.ExtraDiffArgumentsChanged += SelectedDiffExtraDiffArgumentsChanged;
 
+            StageInSuperproject.Visible = Module.SuperprojectModule != null;
+            StageInSuperproject.Checked = Settings.StageInSuperprojectAfterCommit;
             closeDialogAfterEachCommitToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterCommit;
             closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterLastCommit;
             refreshDialogOnFormFocusToolStripMenuItem.Checked = Settings.RefreshCommitDialogOnFormFocus;
@@ -835,6 +837,9 @@ namespace GitUI
 
                 if (errorOccurred)
                     return;
+
+                if (Module.SuperprojectModule != null && Settings.StageInSuperprojectAfterCommit)
+                    Module.SuperprojectModule.StageFile(Module.SubmoduleName);
 
                 ScriptManager.RunEventScripts(Module, ScriptEvent.AfterCommit);
 
@@ -1698,7 +1703,6 @@ namespace GitUI
         {
             closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = !closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked;
             Settings.CloseCommitDialogAfterLastCommit = closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked;
-
         }
 
         private void refreshDialogOnFormFocusToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2058,6 +2062,12 @@ namespace GitUI
                 Message.Text = Module.GetPreviousCommitMessage(0).Trim();
                 return;
             }
+        }
+
+        private void StageInSuperproject_CheckedChanged(object sender, EventArgs e)
+        {
+            if (StageInSuperproject.Visible)
+                Settings.StageInSuperprojectAfterCommit = StageInSuperproject.Checked;
         }
     }
 
