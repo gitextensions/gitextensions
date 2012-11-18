@@ -251,6 +251,13 @@ namespace GitCommands
             set { SafeSet("refreshcommitdialogonformfocus", value, ref _refreshCommitDialogOnFormFocus); }
         }
 
+        private static bool? _stageInSuperprojectAfterCommit;
+        public static bool StageInSuperprojectAfterCommit
+        {
+            get { return SafeGet("stageinsuperprojectaftercommit", true, ref _stageInSuperprojectAfterCommit); }
+            set { SafeSet("stageinsuperprojectaftercommit", value, ref _stageInSuperprojectAfterCommit); }
+        }
+
         private static bool? _PlaySpecialStartupSound;
         public static bool PlaySpecialStartupSound
         {
