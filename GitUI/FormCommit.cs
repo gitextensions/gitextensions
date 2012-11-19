@@ -1652,7 +1652,7 @@ namespace GitUI
             // Ctrl + Enter = Commit
             if (e.Control && e.KeyCode == Keys.Enter)
             {
-                CheckForStagedAndCommit(false, false);
+                CheckForStagedAndCommit(Amend.Checked, false);
                 e.Handled = true;
             }
         }
