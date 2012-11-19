@@ -744,7 +744,7 @@ namespace GitUI
 
         private void CommitClick(object sender, EventArgs e)
         {
-            CheckForStagedAndCommit(Amend.Checked, false);
+            ExecuteCommitCommand();
         }
 
         private void CheckForStagedAndCommit(bool amend, bool push)
@@ -1652,9 +1652,14 @@ namespace GitUI
             // Ctrl + Enter = Commit
             if (e.Control && e.KeyCode == Keys.Enter)
             {
-                CheckForStagedAndCommit(Amend.Checked, false);
+                ExecuteCommitCommand();
                 e.Handled = true;
             }
+        }
+
+        private void ExecuteCommitCommand()
+        {
+            CheckForStagedAndCommit(Amend.Checked, false);
         }
 
         private void Message_KeyDown(object sender, KeyEventArgs e)
