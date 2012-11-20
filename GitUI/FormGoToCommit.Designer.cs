@@ -120,7 +120,6 @@
             // 
             this.comboBoxTags.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.comboBoxTags.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.comboBoxTags.DisplayMember = "LocalName";
             this.comboBoxTags.FormattingEnabled = true;
             this.comboBoxTags.Location = new System.Drawing.Point(155, 216);
             this.comboBoxTags.Name = "comboBoxTags";
