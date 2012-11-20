@@ -768,7 +768,7 @@ namespace GitUI
             this.openWithToolStripMenuItem.Name = "openWithToolStripMenuItem";
             this.openWithToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openWithToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
-            this.openWithToolStripMenuItem.Text = "Open checked out file with...";
+            this.openWithToolStripMenuItem.Text = "Open working dir file with...";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
             // 
             // editCheckedOutFileToolStripMenuItem
@@ -776,7 +776,7 @@ namespace GitUI
             this.editCheckedOutFileToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconEditFile;
             this.editCheckedOutFileToolStripMenuItem.Name = "editCheckedOutFileToolStripMenuItem";
             this.editCheckedOutFileToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
-            this.editCheckedOutFileToolStripMenuItem.Text = "Edit checked out file";
+            this.editCheckedOutFileToolStripMenuItem.Text = "Edit working dir file";
             this.editCheckedOutFileToolStripMenuItem.Click += new System.EventHandler(this.editCheckedOutFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator20
@@ -937,35 +937,35 @@ namespace GitUI
             this.aBToolStripMenuItem.Name = "aBToolStripMenuItem";
             this.aBToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.aBToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.aBToolStripMenuItem.Text = "A < - > B";
+            this.aBToolStripMenuItem.Text = "A <--> B";
             this.aBToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // aLocalToolStripMenuItem
             // 
             this.aLocalToolStripMenuItem.Name = "aLocalToolStripMenuItem";
             this.aLocalToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.aLocalToolStripMenuItem.Text = "A < - > Local";
+            this.aLocalToolStripMenuItem.Text = "A <--> Working dir";
             this.aLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // bLocalToolStripMenuItem
             // 
             this.bLocalToolStripMenuItem.Name = "bLocalToolStripMenuItem";
             this.bLocalToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.bLocalToolStripMenuItem.Text = "B < - > Local";
+            this.bLocalToolStripMenuItem.Text = "B <--> Working dir";
             this.bLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // parentOfALocalToolStripMenuItem
             // 
             this.parentOfALocalToolStripMenuItem.Name = "parentOfALocalToolStripMenuItem";
             this.parentOfALocalToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.parentOfALocalToolStripMenuItem.Text = "A\'s parent < - > Local";
+            this.parentOfALocalToolStripMenuItem.Text = "A\'s parent <--> Working dir";
             this.parentOfALocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // parentOfBLocalToolStripMenuItem
             // 
             this.parentOfBLocalToolStripMenuItem.Name = "parentOfBLocalToolStripMenuItem";
             this.parentOfBLocalToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.parentOfBLocalToolStripMenuItem.Text = "B\'s parent < - > Local";
+            this.parentOfBLocalToolStripMenuItem.Text = "B\'s parent <--> Working dir";
             this.parentOfBLocalToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem1
