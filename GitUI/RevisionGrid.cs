@@ -623,11 +623,13 @@ namespace GitUI
             Revision.AuthorDate = date;
             DateTime.TryParse(Infos[4], out date);
             Revision.CommitDate = date;
-            List<GitHead> heads = Module.GetHeads(true, true);
-            foreach (GitHead head in heads)
+            var heads = Module.GetHeads(true, true);
+            foreach (var head in heads)
             {
                 if (head.Guid.Equals(Revision.Guid))
+                {
                     Revision.Heads.Add(head);
+                }
             }
             return Revision;
         }

@@ -64,7 +64,7 @@ namespace GitUI
 
         private const string PuttyCaption = "PuTTY";
 
-        private List<GitHead> _heads;
+        private IList<GitHead> _heads;
         public bool ErrorOccurred { get; private set; }
         private string branch;
 

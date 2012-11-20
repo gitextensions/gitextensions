@@ -1054,7 +1054,7 @@ namespace GitUI
 
             fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
             Module.SaveBlobAs(fileName, gitItem.Guid);
-            OpenWith.OpenAs(fileName);
+            OsShellUtil.OpenAs(fileName);
         }
 
         private void FileTreeContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1097,11 +1097,11 @@ namespace GitUI
             }
         }
 
-        protected void LoadInTree(List<IGitItem> items, TreeNodeCollection node)
+        protected void LoadInTree(IEnumerable<IGitItem> items, TreeNodeCollection node)
         {
-            items.Sort(new GitFileTreeComparer());
+            var sortedItems = items.OrderBy(gi => gi, new GitFileTreeComparer());
 
-            foreach (var item in items)
+            foreach (var item in sortedItems)
             {
                 var subNode = node.Add(item.Name);
                 subNode.Tag = item;
@@ -2016,7 +2016,7 @@ namespace GitUI
                 return;
 
             var fileName = Module.WorkingDir + (gitItem).FileName;
-            OpenWith.OpenAs(fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+            OsShellUtil.OpenAs(fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
         }
 
         private void pluginsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -2330,7 +2330,7 @@ namespace GitUI
             if (idx == -1)
                 return new Tuple<int, string>(idx, null);
 
-            idx = getNextIdx(idx, DiffFiles.GitItemStatuses.Count - 1, searchBackward);
+            idx = getNextIdx(idx, DiffFiles.GitItemStatuses.Count() - 1, searchBackward);
             _dontUpdateOnIndexChange = true;
             DiffFiles.SelectedIndex = idx;
             _dontUpdateOnIndexChange = false;
@@ -2350,7 +2350,7 @@ namespace GitUI
                 string filePath = fileNames.ToString();
                 if (File.Exists(filePath))
                 {
-                    Process.Start("explorer.exe", "/select, " + filePath);
+                    OsShellUtil.SelectPathInFileExplorer(filePath);
                 }
             }
         }
@@ -2369,11 +2369,11 @@ namespace GitUI
             ////    fileNames.Append((Module.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
             if (File.Exists(filePath))
             {
-                Process.Start("explorer.exe", "/select," + filePath);
+                OsShellUtil.SelectPathInFileExplorer(filePath);
             }
             else if (Directory.Exists(filePath))
             {
-                Process.Start("explorer.exe", filePath);
+                OsShellUtil.OpenWithFileExplorer(filePath);
             }
         }
 
@@ -2447,7 +2447,7 @@ namespace GitUI
 
         private void DiffFiles_DataSourceChanged(object sender, EventArgs e)
         {
-            if (DiffFiles.GitItemStatuses == null || DiffFiles.GitItemStatuses.Count == 0)
+            if (DiffFiles.GitItemStatuses == null || !DiffFiles.GitItemStatuses.Any())
                 DiffText.ViewPatch(String.Empty);
         }
 

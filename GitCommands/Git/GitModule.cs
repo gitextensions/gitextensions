@@ -696,7 +696,7 @@ namespace GitCommands
             return !string.IsNullOrEmpty(RunGitCmd("ls-files -z --unmerged"));
         }
 
-        public List<GitItem> GetConflictedFiles()
+        public IList<GitItem> GetConflictedFiles()
         {
             var unmergedFiles = new List<GitItem>();
 
@@ -1656,7 +1656,7 @@ namespace GitCommands
             return output;
         }
 
-        public string UnstageFiles(List<GitItemStatus> files)
+        public string UnstageFiles(IList<GitItemStatus> files)
         {
             var gitCommand = new GitCommandsInstance(this);
 
@@ -1704,7 +1704,7 @@ namespace GitCommands
 
             return output;
         }
-      
+
         public bool InTheMiddleOfBisect()
         {
             return File.Exists(WorkingDirGitDir() + Settings.PathSeparator.ToString() + "BISECT_START");
@@ -1728,7 +1728,7 @@ namespace GitCommands
             return File.Exists(file) ? File.ReadAllText(file).Trim() : "";
         }
 
-        public List<PatchFile> GetRebasePatchFiles()
+        public IList<PatchFile> GetRebasePatchFiles()
         {
             var patchFiles = new List<PatchFile>();
 
@@ -1977,7 +1977,7 @@ namespace GitCommands
             configFile.Save();
         }
 
-        public List<Patch> GetStashedItems(string stashName)
+        public IList<Patch> GetStashedItems(string stashName)
         {
             var patchManager = new PatchManager();
             patchManager.LoadPatch(RunGitCmd("stash show -p " + stashName, GitModule.LosslessEncoding), false, FilesEncoding);
@@ -1985,7 +1985,7 @@ namespace GitCommands
             return patchManager.Patches;
         }
 
-        public List<GitStash> GetStashes()
+        public IList<GitStash> GetStashes()
         {
             var list = RunGitCmd("stash list").Split('\n');
 
@@ -2078,34 +2078,37 @@ namespace GitCommands
             return noCache ? RunGitCmd(cmd) : this.RunCachableCmd(Settings.GitCommand, cmd, GitModule.SystemEncoding);
         }
 
-        public List<GitItemStatus> GetDiffFiles(string from, string to)
+        public IEnumerable<GitItemStatus> GetDiffFiles(string from, string to)
         {
             return GetDiffFiles(from, to, false);
         }
 
-        public List<GitItemStatus> GetDiffFiles(string from, string to, bool noCache)
+        public IEnumerable<GitItemStatus> GetDiffFiles(string from, string to, bool noCache)
         {
             string cmd = "diff -M -C -z --name-status \"" + to + "\" \"" + from + "\"";
             string result = noCache ? RunGitCmd(cmd) : this.RunCachableCmd(Settings.GitCommand, cmd, GitModule.SystemEncoding);
             return GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
         }
 
-        public List<GitItemStatus> GetStashDiffFiles(string stashName)
+        public IEnumerable<GitItemStatus> GetStashDiffFiles(string stashName)
         {
             bool gitShowsUntrackedFiles = false;
 
-            var list = GetDiffFiles(stashName, stashName + "^", true);
+            var resultCollection = GetDiffFiles(stashName, stashName + "^", true);
+
             if (!gitShowsUntrackedFiles)
             {
                 string untrackedTreeHash = RunGitCmd("log " + stashName + "^3 --pretty=format:\"%T\" --max-count=1");
                 if (GitRevision.Sha1HashRegex.IsMatch(untrackedTreeHash))
-                    list.AddRange(GetTreeFiles(untrackedTreeHash, true));
+                {
+                    resultCollection = resultCollection.Concat(GetTreeFiles(untrackedTreeHash, true));
+                }
             }
 
-            return list;
+            return resultCollection;
         }
 
-        public List<GitItemStatus> GetUntrackedFiles()
+        public IEnumerable<GitItemStatus> GetUntrackedFiles()
         {
             var status = RunCmd(Settings.GitCommand,
                                 "ls-files -z --others --directory --no-empty-directory --exclude-standard");
@@ -2120,12 +2123,10 @@ namespace GitCommands
                 IsDeleted = false,
                 IsTracked = false,
                 Name = statusString
-            })
-                .ToList();
-
+            });
         }
 
-        public List<GitItemStatus> GetTreeFiles(string treeGuid, bool full)
+        public IEnumerable<GitItemStatus> GetTreeFiles(string treeGuid, bool full)
         {
             var tree = GetTree(treeGuid, full);
 
@@ -2138,40 +2139,40 @@ namespace GitCommands
                     IsStaged = false,
                     Name = file.Name,
                     TreeGuid = file.Guid
-                })
-                .ToList();
+                });
 
             // Doesn't work with removed submodules
-            IList<string> Submodules = GetSubmodulesLocalPathes();
+            var submodulesList = GetSubmodulesLocalPathes();
             foreach (var item in list)
             {
-                if (Submodules.Contains(item.Name))
+                if (submodulesList.Contains(item.Name))
                     item.IsSubmodule = true;
             }
+
             return list;
         }
 
 
-        public List<GitItemStatus> GetAllChangedFiles()
+        public IList<GitItemStatus> GetAllChangedFiles()
         {
             return GetAllChangedFiles(true, true);
         }
 
-        public List<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles, bool untrackedFiles)
+        public IList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles, bool untrackedFiles)
         {
             var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles));
 
             return GitCommandHelpers.GetAllChangedFilesFromString(this, status);
         }
 
-        public List<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles, bool untrackedFiles)
+        public IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles, bool untrackedFiles)
         {
             var status = GetAllChangedFiles(excludeIgnoredFiles, untrackedFiles);
             GetSubmoduleStatus(status);
             return status;
         }
 
-        public List<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus()
+        public IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus()
         {
             return GetAllChangedFilesWithSubmodulesStatus(true, true);
         }
@@ -2190,14 +2191,14 @@ namespace GitCommands
                 }
         }
 
-        public List<GitItemStatus> GetTrackedChangedFiles()
+        public IList<GitItemStatus> GetTrackedChangedFiles()
         {
             var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(true, false));
 
             return GitCommandHelpers.GetAllChangedFilesFromString(this, status);
         }
 
-        public List<GitItemStatus> GetDeletedFiles()
+        public IList<GitItemStatus> GetDeletedFiles()
         {
             var status = RunGitCmd("ls-files -z --deleted --exclude-standard");
 
@@ -2238,7 +2239,7 @@ namespace GitCommands
                 //This command is a little more expensive because it will return both staged and unstaged files
                 string command = GitCommandHelpers.GetAllChangedFilesCmd(true, false);
                 status = RunGitCmd(command, GitModule.SystemEncoding);
-                List<GitItemStatus> stagedFiles = GitCommandHelpers.GetAllChangedFilesFromString(this, status, false);
+                IList<GitItemStatus> stagedFiles = GitCommandHelpers.GetAllChangedFilesFromString(this, status, false);
                 return stagedFiles.Where(f => f.IsStaged).ToList<GitItemStatus>();
             }
 
@@ -2396,7 +2397,7 @@ namespace GitCommands
             return remote + "/" + (merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge);
         }
 
-        public List<GitHead> GetRemoteHeads(string remote, bool tags, bool branches)
+        public IList<GitHead> GetRemoteHeads(string remote, bool tags, bool branches)
         {
             remote = FixPath(remote);
 
@@ -2415,20 +2416,43 @@ namespace GitCommands
             return "";
         }
 
-        public List<GitHead> GetHeads()
+        public IList<GitHead> GetHeads()
         {
             return GetHeads(true);
         }
 
-        public List<GitHead> GetHeads(bool tags)
+        public IList<GitHead> GetHeads(bool tags)
         {
             return GetHeads(tags, true);
         }
 
-        public List<GitHead> GetHeads(bool tags, bool branches)
+        public IList<GitHead> GetHeads(bool tags, bool branches)
         {
             var tree = GetTree(tags, branches);
             return GetHeads(tree);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderByCommitDate">true: slower!</param>
+        /// <returns></returns>
+        public IList<GitHead> GetTagHeads(bool orderByCommitDate)
+        {
+            var list = GetHeads(true, false);
+
+            if (orderByCommitDate)
+            {
+                var listSorted = list.OrderBy(head =>
+                {
+                    var r = new GitRevision(this, head.Guid);
+                    return r.CommitDate;
+                });
+
+                return listSorted.ToList();
+            }
+
+            return list;
         }
 
         public ICollection<string> GetMergedBranches()
@@ -2449,7 +2473,7 @@ namespace GitCommands
             return "";
         }
 
-        private List<GitHead> GetHeads(string tree)
+        private IList<GitHead> GetHeads(string tree)
         {
             var itemsStrings = tree.Split('\n');
 
@@ -2511,7 +2535,7 @@ namespace GitCommands
                 .ToList();
         }
 
-        public List<GitItem> GetFileChanges(string file)
+        public IList<GitItem> GetFileChanges(string file)
         {
             file = FixPath(file);
             var tree = RunGitCmd("whatchanged --all -- \"" + file + "\"");
@@ -2561,7 +2585,7 @@ namespace GitCommands
             return tree.Split(new char[] { '\0', '\n' });
         }
 
-        public List<IGitItem> GetTree(string id, bool full)
+        public IList<IGitItem> GetTree(string id, bool full)
         {
             string args = "-z";
             if (full)
@@ -2914,7 +2938,7 @@ namespace GitCommands
         public static string UnquoteFileName(string fileName)
         {
             char[] chars = fileName.ToCharArray();
-            List<byte> blist = new List<byte>();
+            IList<byte> blist = new List<byte>();
             int i = 0;
             StringBuilder sb = new StringBuilder();
             while (i < chars.Length)

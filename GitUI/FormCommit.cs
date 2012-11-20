@@ -365,9 +365,9 @@ namespace GitUI
             ShowDialogWhenChanges(null);
         }
 
-        private void ComputeUnstagedFiles(Action<List<GitItemStatus>> onComputed, bool async)
+        private void ComputeUnstagedFiles(Action<IList<GitItemStatus>> onComputed, bool async)
         {
-            Func < List < GitItemStatus >> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
+            Func < IList < GitItemStatus >> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked);
 
@@ -591,7 +591,7 @@ namespace GitUI
         ///   This method is passed in to the SetTextCallBack delegate
         ///   to set the Text property of textBox1.
         /// </summary>
-        private void LoadUnstagedOutput(List<GitItemStatus> allChangedFiles)
+        private void LoadUnstagedOutput(IList<GitItemStatus> allChangedFiles)
         {
             var unStagedFiles = new List<GitItemStatus>();
             var stagedFiles = new List<GitItemStatus>();
@@ -629,9 +629,9 @@ namespace GitUI
 
             if (LoadUnstagedOutputFirstTime)
             {
-                if (Unstaged.GitItemStatuses.Count > 0)
+                if (Unstaged.GitItemStatuses.Any())
                     Unstaged.Focus();
-                else if (Staged.GitItemStatuses.Count > 0)
+                else if (Staged.GitItemStatuses.Any())
                     Message.Focus();
                 else
                     Amend.Focus();
@@ -953,7 +953,7 @@ namespace GitUI
             Stage(Unstaged.GitItemStatuses);
         }
 
-        private void Stage(ICollection<GitItemStatus> gitItemStatusses)
+        private void Stage(IEnumerable<GitItemStatus> gitItemStatusses)
         {
             EnableStageButtons(false);
             try
@@ -961,7 +961,7 @@ namespace GitUI
                 Cursor.Current = Cursors.WaitCursor;
                 Unstaged.StoreNextIndexToSelect();
                 toolStripProgressBar1.Visible = true;
-                toolStripProgressBar1.Maximum = gitItemStatusses.Count * 2;
+                toolStripProgressBar1.Maximum = gitItemStatusses.Count() * 2;
                 toolStripProgressBar1.Value = 0;
 
                 var files = new List<GitItemStatus>();
@@ -1026,7 +1026,7 @@ namespace GitUI
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                if (Staged.GitItemStatuses.Count > 10 && Staged.SelectedItems.Count == Staged.GitItemStatuses.Count)
+                if (Staged.GitItemStatuses.Count() > 10 && Staged.SelectedItems.Count() == Staged.GitItemStatuses.Count())
                 {
                     Loading.Visible = true;
                     LoadingStaged.Visible = true;
@@ -1482,7 +1482,7 @@ namespace GitUI
             var item = list.SelectedItem;
             var fileName = item.Name;
 
-            OpenWith.OpenAs(Module.WorkingDir + fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+            OsShellUtil.OpenAs(Module.WorkingDir + fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
         }
 
         private void FilenameToClipboardToolStripMenuItemClick(object sender, EventArgs e)
@@ -2008,12 +2008,10 @@ namespace GitUI
                 string filePath = fileNames.ToString();
                 if (File.Exists(filePath))
                 {
-                    Process.Start("explorer.exe", "/select, " + filePath);
+                    OsShellUtil.SelectPathInFileExplorer(filePath);
                 }
             }
         }
-
-
 
         private void toolStripMenuItem9_Click(object sender, EventArgs e)
         {
