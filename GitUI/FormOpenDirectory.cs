@@ -14,6 +14,7 @@ namespace GitUI
 
         private readonly TranslationString _warningOpenFailedCaption =
             new TranslationString("Error");
+
         private GitModule choosenModule = null;
 
         public Open()
@@ -40,18 +41,6 @@ namespace GitUI
 
         }
 
-        private void BrowseClick(object sender, EventArgs e)
-        {
-            using (var browseDialog = new FolderBrowserDialog { SelectedPath = _NO_TRANSLATE_Directory.Text })
-            {
-
-                if (browseDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    _NO_TRANSLATE_Directory.Text = browseDialog.SelectedPath;
-                }
-            }
-        }
-
         private void LoadClick(object sender, EventArgs e)
         {
             if (Directory.Exists(_NO_TRANSLATE_Directory.Text))
@@ -75,7 +64,7 @@ namespace GitUI
 
         private void DirectoryKeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char) Keys.Enter)
+            if (e.KeyChar == (char)Keys.Enter)
             {
                 LoadClick(null, null);
             }
