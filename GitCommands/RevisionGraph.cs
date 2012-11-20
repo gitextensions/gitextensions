@@ -203,21 +203,21 @@ namespace GitCommands
                 Exited(this, EventArgs.Empty);            
         }
 
-        private List<GitHead> GetHeads()
+        private IList<GitHead> GetHeads()
         {
             var result = Module.GetHeads(true);
             bool validWorkingDir = Module.ValidWorkingDir();
             selectedBranchName = validWorkingDir ? Module.GetSelectedBranch() : string.Empty;
-            GitHead selectedHead = result.Find(head => head.Name == selectedBranchName);
+            GitHead selectedHead = result.FirstOrDefault(head => head.Name == selectedBranchName);
 
             if (selectedHead != null)
             {
                 selectedHead.Selected = true;
 
-                ConfigFile localConfigFile = Module.GetLocalConfig();
+                var localConfigFile = Module.GetLocalConfig();
 
-                GitHead selectedHeadMergeSource =
-                    result.Find(head => head.IsRemote
+                var selectedHeadMergeSource =
+                    result.FirstOrDefault(head => head.IsRemote
                                         && selectedHead.GetTrackingRemote(localConfigFile) == head.Remote
                                         && selectedHead.GetMergeWith(localConfigFile) == head.LocalName);
 

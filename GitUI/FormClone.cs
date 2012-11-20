@@ -261,12 +261,14 @@ namespace GitUI
 
         private AsyncLoader branchListLoader = new AsyncLoader();
 
-        private void UpdateBranches(List<GitHead> branchList)
+        private void UpdateBranches(IList<GitHead> branchList)
         {
             string text = Branches.Text;
             Branches.DataSource = branchList;
             if (branchList.Any(a => a.LocalName == text))
+            {
                 Branches.Text = text;
+            }
             Cursor = Cursors.Default;
         }
 
