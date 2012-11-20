@@ -95,7 +95,7 @@ namespace GitUI
         }
 
         private void Init()
-        {            
+        {
             UpdateRemotesList();
 
             branch = Module.GetSelectedBranch();
@@ -395,14 +395,14 @@ namespace GitUI
             var curLocalBranch = branch == localBranch.Text ? null : localBranch.Text;
             if (Fetch.Checked)
             {
-                return new FormRemoteProcess(Module, Module.FetchCmd(source, Branches.Text, curLocalBranch, NoTags.Checked));
+                return new FormRemoteProcess(Module, Module.FetchCmd(source, Branches.Text, curLocalBranch, AllTags.Checked ? true : NoTags.Checked ? false : (bool?)null));
             }
 
             curLocalBranch = CalculateLocalBranch();
             if (Merge.Checked)
-                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, false, NoTags.Checked));
+                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, false, AllTags.Checked ? true : NoTags.Checked ? false : (bool?)null));
             if (Rebase.Checked)
-                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, true, NoTags.Checked));
+                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, true, AllTags.Checked ? true : NoTags.Checked ? false : (bool?)null));
             return null;
         }
 
