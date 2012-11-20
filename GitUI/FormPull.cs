@@ -135,15 +135,6 @@ namespace GitUI
             return result;
         }
 
-        private void BrowseSourceClick(object sender, EventArgs e)
-        {
-            using (var dialog = new FolderBrowserDialog { SelectedPath = comboBoxPullSource.Text })
-            {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                    comboBoxPullSource.Text = dialog.SelectedPath;
-            }
-        }
-
         private void MergetoolClick(object sender, EventArgs e)
         {
             Module.RunGitRealCmd("mergetool");
@@ -511,7 +502,7 @@ namespace GitUI
             ResetRemoteHeads();
 
             comboBoxPullSource.Enabled = false;
-            BrowseSource.Enabled = false;
+            folderBrowserButton1.Enabled = false;
             _NO_TRANSLATE_Remotes.Enabled = true;
             AddRemote.Enabled = true;
 
@@ -539,7 +530,7 @@ namespace GitUI
             ResetRemoteHeads();
 
             comboBoxPullSource.Enabled = true;
-            BrowseSource.Enabled = true;
+            folderBrowserButton1.Enabled = true;
             _NO_TRANSLATE_Remotes.Enabled = false;
             AddRemote.Enabled = false;
 
