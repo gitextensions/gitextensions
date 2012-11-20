@@ -34,7 +34,11 @@ namespace GitUI
         private void comboBoxTags_SelectionChangeCommitted(object sender, EventArgs e)
         {
             // does not work when using autocomplete, therefore we have the _TextChanged method
-            _selectedRevision = Module.RevParse(((GitHeaderGuiWrapper)comboBoxTags.SelectedValue).GitHead.CompleteName);
+            GitHead selected = (GitHead)comboBoxTags.SelectedValue;
+            if (selected == null)
+                return;
+
+            _selectedRevision = Module.RevParse(selected.CompleteName);
             Go();
         }
 
@@ -56,26 +60,7 @@ namespace GitUI
 
         private void comboBoxTags_Enter(object sender, EventArgs e)
         {
-            comboBoxTags.DataSource = this.Module.GetTagHeads(GitModule.GetTagHeadsSortOrder.ByCommitDateDescending).Select(g => new GitHeaderGuiWrapper(g)).Reverse().ToList();
+            comboBoxTags.DataSource = this.Module.GetTagHeads(GitModule.GetTagHeadsSortOrder.ByCommitDateDescending).ToList();
         }
-    }
-
-    /// <summary>
-    /// to override ToString() for display in combobox
-    /// </summary>
-    class GitHeaderGuiWrapper
-    {
-        GitHead _gitHead;
-        public GitHeaderGuiWrapper(GitHead gitHead)
-        {
-            _gitHead = gitHead;
-        }
-
-        public override string ToString()
-        {
-            return _gitHead.LocalName;
-        }
-
-        public GitHead GitHead { get { return _gitHead; } }
     }
 }
