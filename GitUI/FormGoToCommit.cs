@@ -8,12 +8,14 @@ namespace GitUI
     public sealed partial class FormGoToCommit : GitModuleForm
     {
         string _selectedRevision = null;
+        private AsyncLoader tagsLoader;
 
         public FormGoToCommit(GitUICommands aCommands)
             : base(aCommands)
         {
             InitializeComponent();
             Translate();
+            tagsLoader = new AsyncLoader();
         }
 
         public string GetRevision()
@@ -56,7 +58,17 @@ namespace GitUI
 
         private void comboBoxTags_Enter(object sender, EventArgs e)
         {
-            comboBoxTags.DataSource = this.Module.GetTagHeads(GitModule.GetTagHeadsSortOrder.ByCommitDateDescending).Select(g => new GitHeaderGuiWrapper(g)).ToList();
+            comboBoxTags.Text = Strings.GetLoadingData();
+            tagsLoader.Load(
+                () => Module.GetTagHeads(GitModule.GetTagHeadsSortOrder.ByCommitDateDescending).Select(g => new GitHeaderGuiWrapper(g)).ToList(),
+                list =>
+                {
+                    comboBoxTags.Text = string.Empty;
+                    comboBoxTags.DataSource = list;
+                    if (!comboBoxTags.Text.IsNullOrEmpty())
+                        comboBoxTags.Select(0, comboBoxTags.Text.Length);
+                }
+            );
         }
     }
 
