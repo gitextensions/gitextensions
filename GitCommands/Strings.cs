@@ -88,6 +88,11 @@ namespace GitCommands
             return Instance._currentIndex.Text;
         }
 
+        public static string GetLoadingData()
+        {
+            return Instance._LoadingData.Text;
+        }
+
         private readonly TranslationString _dateText       = new TranslationString("Date");
         private readonly TranslationString _authorText     = new TranslationString("Author");
         private readonly TranslationString _authorDateText = new TranslationString("Author date");
@@ -99,6 +104,7 @@ namespace GitCommands
         private readonly TranslationString _childrenText = new TranslationString("Children");
         private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current uncommitted changes");
         private readonly TranslationString _currentIndex = new TranslationString("Commit index");
+        private readonly TranslationString _LoadingData = new TranslationString("Loading data...");
 
 
         public static string GetNSecondsAgoText(int value)
