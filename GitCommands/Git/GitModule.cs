@@ -2346,7 +2346,20 @@ namespace GitCommands
 
         public static bool IsBareRepository(string repositoryPath)
         {
-            return !Directory.Exists(GetGitDirectory(repositoryPath));
+            if (string.IsNullOrEmpty(repositoryPath))
+                return false;
+
+            try
+            {
+                using (var repo = new LibGit2Sharp.Repository(repositoryPath))
+                {
+                    return repo.Info.IsBare;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
 
