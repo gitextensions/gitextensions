@@ -255,7 +255,7 @@ namespace GitUI
             // 
             // openWithDifftoolToolStripMenuItem
             // 
-            this.openWithDifftoolToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconDiffTool;
+            this.openWithDifftoolToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconDiff;
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
             this.openWithDifftoolToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(232, 24);
@@ -393,7 +393,7 @@ namespace GitUI
             // 
             // toolStripMenuItem9
             // 
-            this.toolStripMenuItem9.Image = global::GitUI.Properties.Resources.IconDiffTool;
+            this.toolStripMenuItem9.Image = global::GitUI.Properties.Resources.IconDiff;
             this.toolStripMenuItem9.Name = "toolStripMenuItem9";
             this.toolStripMenuItem9.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.toolStripMenuItem9.Size = new System.Drawing.Size(232, 24);
