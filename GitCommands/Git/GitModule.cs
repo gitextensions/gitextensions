@@ -282,12 +282,17 @@ namespace GitCommands
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            if (Directory.Exists(dir + Settings.PathSeparator.ToString() + ".git") || File.Exists(dir + Settings.PathSeparator.ToString() + ".git"))
-                return true;
-
-            return Directory.Exists(dir + Settings.PathSeparator.ToString() + "info") &&
-                   Directory.Exists(dir + Settings.PathSeparator.ToString() + "objects") &&
-                   Directory.Exists(dir + Settings.PathSeparator.ToString() + "refs");
+            try
+            {
+                using (var repo = new LibGit2Sharp.Repository(dir))
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public string GetGitDirectory()
