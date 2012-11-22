@@ -506,11 +506,11 @@ namespace GitCommands
 
         public static string PushCmd(string path, string branch, bool all)
         {
-            return PushCmd(path, null, branch, all, false, true, false);
+            return PushCmd(path, null, branch, all, false, true, 0);
         }
 
         public static string PushCmd(string path, string fromBranch, string toBranch,
-            bool all, bool force, bool track, bool recursiveSubmodulesCheck)
+            bool all, bool force, bool track, int recursiveSubmodules)
         {
             path = FixPath(path);
 
@@ -527,15 +527,17 @@ namespace GitCommands
             if (track)
                 strack = "-u ";
 
-            var srecursiveSubmodulesCheck = "";
-            if (recursiveSubmodulesCheck)
-                srecursiveSubmodulesCheck = "--recurse-submodules=check ";
+            var srecursiveSubmodules = "";
+            if (recursiveSubmodules == 1)
+                srecursiveSubmodules = "--recurse-submodules=check ";
+            if (recursiveSubmodules == 2)
+                srecursiveSubmodules = "--recurse-submodules=on-demand ";
 
             var sprogressOption = "";
             if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
                 sprogressOption = "--progress ";
 
-            var options = String.Concat(sforce, strack, srecursiveSubmodulesCheck, sprogressOption);
+            var options = String.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
             if (all)
                 return string.Format("push {0}--all \"{1}\"", options, path.Trim());
 
@@ -847,6 +849,7 @@ namespace GitCommands
             using (StringReader reader = new StringReader(text))
             {
                 string line = reader.ReadLine();
+
                 if (line != null)
                 {
                     var match = Regex.Match(line, @"diff --git a/(\S+) b/(\S+)");
@@ -856,6 +859,7 @@ namespace GitCommands
                         status.OldName = match.Groups[2].Value;
                     }
                 }
+
                 while ((line = reader.ReadLine()) != null)
                 {
                     if (!line.Contains("Subproject"))

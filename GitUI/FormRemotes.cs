@@ -5,6 +5,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
 using ResourceManager.Translation;
+using GitUI.UserControls;
 
 namespace GitUI
 {
@@ -111,50 +112,6 @@ namespace GitUI
         {
             comboBoxPushUrl.DataSource = Repositories.RemoteRepositoryHistory.Repositories;
             comboBoxPushUrl.DisplayMember = "Path";
-        }
-
-        private void BrowseClick(object sender, EventArgs e)
-        {
-            ShowFolderBrowserDialogWithPreselectedPath(() => Url.Text, path => Url.Text = path);
-        }
-
-        private void buttonBrowsePushUrl_Click(object sender, EventArgs e)
-        {
-            ShowFolderBrowserDialogWithPreselectedPath(() => comboBoxPushUrl.Text, path => comboBoxPushUrl.Text = path);
-        }
-
-        /// <summary>
-        /// Opens a a FolderBrowserDialog with the path in "getter" preselected and 
-        /// if the DialogResult.OK is returned uses "setter" to set the path
-        /// 
-        /// TODO: extract this method and use it at more places
-        /// </summary>
-        /// <param name="getter"></param>
-        /// <param name="setter"></param>
-        private void ShowFolderBrowserDialogWithPreselectedPath(Func<string> getter, Action<string> setter)
-        {
-            string directoryInfoPath = null;
-            try
-            {
-                directoryInfoPath = new DirectoryInfo(getter()).FullName;
-            }
-            catch (Exception)
-            {
-                // since the DirectoryInfo stuff is for convenience we swallow exceptions
-            }
-
-            using (var dialog = new FolderBrowserDialog
-            {
-                RootFolder = Environment.SpecialFolder.Desktop,
-                // if we do not use the DirectoryInfo then a path with slashes instead of backslashes won't work
-                SelectedPath = directoryInfoPath ?? getter()
-            })
-            {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    setter(dialog.SelectedPath);
-                }
-            }
         }
 
         private void SaveClick(object sender, EventArgs e)
@@ -349,7 +306,6 @@ namespace GitUI
             DefaultMergeWithCombo.Text = head.MergeWith;
         }
 
-
         private void DefaultMergeWithComboDropDown(object sender, EventArgs e)
         {
             if (RemoteBranches.SelectedRows.Count != 1)
@@ -445,7 +401,8 @@ namespace GitUI
         {
             labelPushUrl.Visible = visible;
             comboBoxPushUrl.Visible = visible;
-            buttonBrowsePushUrl.Visible = visible;
+            folderBrowserButtonPushUrl.Visible = visible;
+
             if (!visible)
                 label2.Text = _labelUrlAsFetchPush.Text;
             else
