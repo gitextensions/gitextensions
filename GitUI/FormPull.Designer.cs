@@ -40,10 +40,10 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.folderBrowserButton1 = new GitUI.UserControls.FolderBrowserButton();
+            this.comboBoxPullSource = new System.Windows.Forms.ComboBox();
             this.AddRemote = new System.Windows.Forms.Button();
             this._NO_TRANSLATE_Remotes = new System.Windows.Forms.ComboBox();
-            this.BrowseSource = new System.Windows.Forms.Button();
-            this.comboBoxPullSource = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.Merge = new System.Windows.Forms.RadioButton();
@@ -73,7 +73,7 @@
             this.PullFromUrl.AutoSize = true;
             this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
             this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(40, 19);
+            this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
             this.PullFromUrl.TabIndex = 1;
             this.PullFromUrl.Text = "Url";
             this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
@@ -86,7 +86,7 @@
             this.PullFromRemote.Checked = true;
             this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
             this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(66, 19);
+            this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
             this.PullFromRemote.TabIndex = 0;
             this.PullFromRemote.TabStop = true;
             this.PullFromRemote.Text = "Remote";
@@ -189,11 +189,11 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.folderBrowserButton1);
             this.groupBox2.Controls.Add(this.PullFromUrl);
             this.groupBox2.Controls.Add(this.PullFromRemote);
             this.groupBox2.Controls.Add(this.AddRemote);
             this.groupBox2.Controls.Add(this._NO_TRANSLATE_Remotes);
-            this.groupBox2.Controls.Add(this.BrowseSource);
             this.groupBox2.Controls.Add(this.comboBoxPullSource);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
@@ -201,6 +201,28 @@
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pull from";
+            // 
+            // folderBrowserButton1
+            // 
+            this.folderBrowserButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.folderBrowserButton1.Enabled = false;
+            this.folderBrowserButton1.Location = new System.Drawing.Point(486, 45);
+            this.folderBrowserButton1.Name = "folderBrowserButton1";
+            this.folderBrowserButton1.PathShowingControl = this.comboBoxPullSource;
+            this.folderBrowserButton1.Size = new System.Drawing.Size(131, 25);
+            this.folderBrowserButton1.TabIndex = 5;
+            // 
+            // comboBoxPullSource
+            // 
+            this.comboBoxPullSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxPullSource.Enabled = false;
+            this.comboBoxPullSource.FormattingEnabled = true;
+            this.comboBoxPullSource.Location = new System.Drawing.Point(148, 46);
+            this.comboBoxPullSource.Name = "comboBoxPullSource";
+            this.comboBoxPullSource.Size = new System.Drawing.Size(332, 23);
+            this.comboBoxPullSource.TabIndex = 4;
+            this.comboBoxPullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             // 
             // AddRemote
             // 
@@ -228,30 +250,6 @@
             this._NO_TRANSLATE_Remotes.TabIndex = 1;
             this._NO_TRANSLATE_Remotes.TextChanged += new System.EventHandler(this.Remotes_TextChanged);
             this._NO_TRANSLATE_Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
-            // 
-            // BrowseSource
-            // 
-            this.BrowseSource.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseSource.Enabled = false;
-            this.BrowseSource.Location = new System.Drawing.Point(486, 44);
-            this.BrowseSource.Name = "BrowseSource";
-            this.BrowseSource.Size = new System.Drawing.Size(131, 25);
-            this.BrowseSource.TabIndex = 5;
-            this.BrowseSource.Text = "Browse";
-            this.BrowseSource.UseVisualStyleBackColor = true;
-            this.BrowseSource.Click += new System.EventHandler(this.BrowseSourceClick);
-            // 
-            // comboBoxPullSource
-            // 
-            this.comboBoxPullSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxPullSource.Enabled = false;
-            this.comboBoxPullSource.FormattingEnabled = true;
-            this.comboBoxPullSource.Location = new System.Drawing.Point(148, 46);
-            this.comboBoxPullSource.Name = "comboBoxPullSource";
-            this.comboBoxPullSource.Size = new System.Drawing.Size(332, 23);
-            this.comboBoxPullSource.TabIndex = 4;
-            this.comboBoxPullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             // 
             // groupBox1
             // 
@@ -451,7 +449,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Button BrowseSource;
         private System.Windows.Forms.ComboBox Branches;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button Pull;
@@ -479,5 +476,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.CheckBox NoTags;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private UserControls.FolderBrowserButton folderBrowserButton1;
     }
 }

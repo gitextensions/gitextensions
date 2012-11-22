@@ -73,16 +73,17 @@ namespace GitUI
 
         private void Init()
         {
-            
             if (GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesCheck)
             {
-                RecursiveSubmodulesCheck.Enabled = true;
-                RecursiveSubmodulesCheck.Checked = Settings.RecursiveSubmodulesCheck;
+                RecursiveSubmodules.Enabled = true;
+                RecursiveSubmodules.SelectedIndex = Settings.RecursiveSubmodules;
+                if (!GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesOnDemand)
+                    RecursiveSubmodules.Items.RemoveAt(2);
             }
             else
             {
-                RecursiveSubmodulesCheck.Enabled = false;
-                RecursiveSubmodulesCheck.Checked = false;
+                RecursiveSubmodules.Enabled = false;
+                RecursiveSubmodules.SelectedIndex = 0;
             }
 
             _currentBranch = Module.GetSelectedBranch();
@@ -115,15 +116,6 @@ namespace GitUI
         public void PushAndShowDialogWhenFailed()
         {
             PushAndShowDialogWhenFailed(null);
-        }
-
-        private void BrowseSourceClick(object sender, EventArgs e)
-        {
-            using (var dialog = new FolderBrowserDialog { SelectedPath = PushDestination.Text })
-            {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                    PushDestination.Text = dialog.SelectedPath;
-            }
         }
 
         private void PushClick(object sender, EventArgs e)
@@ -190,7 +182,7 @@ namespace GitUI
                 //If the current branch is not the default push, and not known by the remote 
                 //(as far as we know since we are disconnected....)
                 if (RemoteBranch.Text != GetDefaultPushRemote(_NO_TRANSLATE_Remotes.Text) &&
-                    !Module.GetHeads(true, true).Exists(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text) )
+                    !Module.GetHeads(true, true).Any(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text) )
                     //Ask if this is really what the user wants
                     if (MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.No)
@@ -203,7 +195,7 @@ namespace GitUI
                 Repositories.AddMostRecentRepository(PushDestination.Text);
             Settings.PushAllTags = PushAllTags.Checked;
             Settings.AutoPullOnRejected = AutoPullOnRejected.Checked;
-            Settings.RecursiveSubmodulesCheck = RecursiveSubmodulesCheck.Checked;
+            Settings.RecursiveSubmodules = RecursiveSubmodules.SelectedIndex;
 
             var remote = "";
             string destination;
@@ -252,7 +244,7 @@ namespace GitUI
                 }
 
                 pushCmd = GitCommandHelpers.PushCmd(destination, _NO_TRANSLATE_Branch.Text, RemoteBranch.Text,
-                    PushAllBranches.Checked, ForcePushBranches.Checked, track, RecursiveSubmodulesCheck.Checked);
+                    PushAllBranches.Checked, ForcePushBranches.Checked, track, RecursiveSubmodules.SelectedIndex);
             }
             else if (TabControlTagBranch.SelectedTab == TagTab)
                 pushCmd = GitCommandHelpers.PushTagCmd(destination, TagComboBox.Text, PushAllTags.Checked,
@@ -446,7 +438,7 @@ namespace GitUI
                 return;
 
             PushDestination.Enabled = false;
-            BrowseSource.Enabled = false;
+            folderBrowserButton1.Enabled = false;
             _NO_TRANSLATE_Remotes.Enabled = true;
             AddRemote.Enabled = true;
         }
@@ -457,7 +449,7 @@ namespace GitUI
                 return;
 
             PushDestination.Enabled = true;
-            BrowseSource.Enabled = true;
+            folderBrowserButton1.Enabled = true;
             _NO_TRANSLATE_Remotes.Enabled = false;
             AddRemote.Enabled = false;
 
@@ -535,7 +527,8 @@ namespace GitUI
         private void FillTagDropDown()
         {
             TagComboBox.DisplayMember = "Name";
-            var tags = Module.GetHeads(true, false);
+            /// var tags = Module.GetTagHeads(GitModule.GetTagHeadsOption.OrderByCommitDateDescending); // comment out to sort by commit date
+            var tags = Module.GetTagHeads(GitModule.GetTagHeadsSortOrder.ByName);
             TagComboBox.DataSource = tags;
         }
 
@@ -576,8 +569,8 @@ namespace GitUI
             if (remote == "")
                 return;
 
-            List<GitHead> localHeads = Module.GetHeads(false, true);
-            List<GitHead> remoteHeads = Module.GetRemoteHeads(remote, false, true);
+            var localHeads = Module.GetHeads(false, true);
+            var remoteHeads = Module.GetRemoteHeads(remote, false, true);
 
             // Add all the local branches.
             foreach (var head in localHeads)
