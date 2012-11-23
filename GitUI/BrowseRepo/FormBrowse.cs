@@ -192,6 +192,7 @@ namespace GitUI
             MenuUtil.SetAsSubsectionMenuItem(repositorySubsectionToolStripMenuItem);
             MenuUtil.SetAsSubsectionMenuItem(gitSubsectionToolStripMenuItem1);
             MenuUtil.SetAsSubsectionMenuItem(gitExtensionsSubsectionToolStripMenuItem);
+            MenuUtil.SetAsSubsectionMenuItem(PuTTYSubsectionToolStripMenuItem);
         }
 
         private void ShowDashboard()
