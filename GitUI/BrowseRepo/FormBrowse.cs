@@ -21,6 +21,7 @@ using GitUIPluginInterfaces;
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
 using ResourceManager.Translation;
+using GitUI.BrowseRepo;
 
 namespace GitUI
 {
@@ -185,6 +186,13 @@ namespace GitUI
                 UICommands.BrowseInitialize += (a, b) => Initialize();
             }
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+
+            // init menu
+            MenuUtil.SetCustomMenuRenderer(menuStrip1);
+            MenuUtil.SetAsSubsectionMenuItem(repositorySubsectionToolStripMenuItem);
+            MenuUtil.SetAsSubsectionMenuItem(gitSubsectionToolStripMenuItem1);
+            MenuUtil.SetAsSubsectionMenuItem(gitExtensionsSubsectionToolStripMenuItem);
+            MenuUtil.SetAsSubsectionMenuItem(PuTTYSubsectionToolStripMenuItem);
         }
 
         private void ShowDashboard()

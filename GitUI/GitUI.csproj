@@ -91,6 +91,8 @@
     <Compile Include="BranchComboBox.Designer.cs">
       <DependentUpon>BranchComboBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="BrowseRepo\CustomMenuRenderer.cs" />
+    <Compile Include="BrowseRepo\MenuUtil.cs" />
     <Compile Include="CommitInfo\CommandEventArgs.cs" />
     <Compile Include="CommitInfo\CommitSummaryUserControl.cs">
       <SubType>UserControl</SubType>
@@ -315,10 +317,10 @@
     <Compile Include="GitExtensionsUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FormBrowse.cs">
+    <Compile Include="BrowseRepo\FormBrowse.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormBrowse.Designer.cs">
+    <Compile Include="BrowseRepo\FormBrowse.Designer.cs">
       <DependentUpon>FormBrowse.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\ColorHelper.cs" />
@@ -863,7 +865,7 @@
       <DependentUpon>FormGitAttributes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormBrowse.resx">
+    <EmbeddedResource Include="BrowseRepo\FormBrowse.resx">
       <DependentUpon>FormBrowse.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
