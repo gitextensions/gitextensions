@@ -64,8 +64,6 @@ STDAPI DllRegisterServer()
     LONG    lRet;
     if ( 0 == (GetVersion() & 0x80000000UL) )
     {
-
-
         lRet = reg.Open ( HKEY_LOCAL_MACHINE,
             _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved"),
             KEY_SET_VALUE );
@@ -79,6 +77,7 @@ STDAPI DllRegisterServer()
         if ( ERROR_SUCCESS != lRet )
             return E_ACCESSDENIED;
     }
+
     {
         ///////////////////////
         /// File context menu handler
