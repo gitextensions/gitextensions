@@ -134,10 +134,6 @@ namespace GitUI
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.gitExtensionsSubsectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gitBashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gitGUIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.kGitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.archiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cleanupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -216,6 +212,9 @@ namespace GitUI
             this.menuStrip1 = new GitUI.MenuStripEx();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.gitBashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gitGUIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.kGitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).BeginInit();
 #endif
@@ -1111,6 +1110,9 @@ namespace GitUI
             this.closeToolStripMenuItem,
             this.toolStripSeparator12,
             this.gitSubsectionToolStripMenuItem1,
+            this.gitBashToolStripMenuItem,
+            this.gitGUIToolStripMenuItem,
+            this.kGitToolStripMenuItem,
             this.toolStripMenuItem1,
             this.gitExtensionsSubsectionToolStripMenuItem,
             this.exitToolStripMenuItem});
@@ -1206,39 +1208,9 @@ namespace GitUI
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
             // 
-            // gitToolStripMenuItem
-            // 
-            this.gitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gitBashToolStripMenuItem,
-            this.gitGUIToolStripMenuItem,
-            this.kGitToolStripMenuItem});
-            this.gitToolStripMenuItem.Name = "gitToolStripMenuItem";
-            this.gitToolStripMenuItem.Size = new System.Drawing.Size(34, 20);
-            this.gitToolStripMenuItem.Text = "Git";
-            // 
-            // gitBashToolStripMenuItem
-            // 
-            this.gitBashToolStripMenuItem.Image = global::GitUI.Properties.Resources.bash;
-            this.gitBashToolStripMenuItem.Name = "gitBashToolStripMenuItem";
-            this.gitBashToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.gitBashToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.gitBashToolStripMenuItem.Text = "Git bash";
             this.gitBashToolStripMenuItem.Click += new System.EventHandler(this.GitBashToolStripMenuItemClick1);
-            // 
-            // gitGUIToolStripMenuItem
-            // 
-            this.gitGUIToolStripMenuItem.Name = "gitGUIToolStripMenuItem";
-            this.gitGUIToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.gitGUIToolStripMenuItem.Text = "Git GUI";
             this.gitGUIToolStripMenuItem.Click += new System.EventHandler(this.GitGuiToolStripMenuItemClick);
-            // 
-            // kGitToolStripMenuItem
-            // 
-            this.kGitToolStripMenuItem.Name = "kGitToolStripMenuItem";
-            this.kGitToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.kGitToolStripMenuItem.Text = "GitK";
             this.kGitToolStripMenuItem.Click += new System.EventHandler(this.KGitToolStripMenuItemClick);
-            // 
             // commandsToolStripMenuItem
             // 
             this.commandsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1851,7 +1823,6 @@ namespace GitUI
             this.menuStrip1.ClickThrough = true;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.gitToolStripMenuItem,
             this.commandsToolStripMenuItem,
             this.remotesToolStripMenuItem,
             this._repositoryHostsToolStripMenuItem,
@@ -1863,6 +1834,26 @@ namespace GitUI
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(923, 24);
             this.menuStrip1.TabIndex = 3;
+            // 
+            // gitBashToolStripMenuItem
+            // 
+            this.gitBashToolStripMenuItem.Image = global::GitUI.Properties.Resources.bash;
+            this.gitBashToolStripMenuItem.Name = "gitBashToolStripMenuItem";
+            this.gitBashToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
+            this.gitBashToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.gitBashToolStripMenuItem.Text = "Git bash";
+            // 
+            // gitGUIToolStripMenuItem
+            // 
+            this.gitGUIToolStripMenuItem.Name = "gitGUIToolStripMenuItem";
+            this.gitGUIToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.gitGUIToolStripMenuItem.Text = "Git GUI";
+            // 
+            // kGitToolStripMenuItem
+            // 
+            this.kGitToolStripMenuItem.Name = "kGitToolStripMenuItem";
+            this.kGitToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.kGitToolStripMenuItem.Text = "GitK";
             // 
             // FormBrowse
             // 
@@ -2001,10 +1992,6 @@ namespace GitUI
         private ToolStripMenuItem fileExplorerToolStripMenuItem;
         private ToolStripSeparator toolStripMenuItem1;
         private ToolStripMenuItem exitToolStripMenuItem;
-        private ToolStripMenuItem gitToolStripMenuItem;
-        private ToolStripMenuItem gitBashToolStripMenuItem;
-        private ToolStripMenuItem gitGUIToolStripMenuItem;
-        private ToolStripMenuItem kGitToolStripMenuItem;
         private ToolStripMenuItem commandsToolStripMenuItem;
         private ToolStripMenuItem applyPatchToolStripMenuItem;
         private ToolStripMenuItem archiveToolStripMenuItem;
@@ -2107,6 +2094,9 @@ namespace GitUI
         private ToolStripMenuItem parentOfBLocalToolStripMenuItem;
         private ToolStripMenuItem repositorySubsectionToolStripMenuItem;
         private ToolStripMenuItem gitSubsectionToolStripMenuItem1;
-        private ToolStripMenuItem gitExtensionsSubsectionToolStripMenuItem;        
+        private ToolStripMenuItem gitExtensionsSubsectionToolStripMenuItem;
+        private ToolStripMenuItem gitBashToolStripMenuItem;
+        private ToolStripMenuItem gitGUIToolStripMenuItem;
+        private ToolStripMenuItem kGitToolStripMenuItem;        
     }
 }
