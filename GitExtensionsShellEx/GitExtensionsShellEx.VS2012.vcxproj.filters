@@ -32,6 +32,51 @@
     <None Include="GitExtensionsShellEx.def">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="Resources\git-extensions-logo.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\IconAbout.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\IconAdded.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\IconBranchCheckout.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\IconBranchCreate.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\IconBrowseFileExplorer.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\IconCloneRepoGit.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\IconCommit.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\IconDiff.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\IconFileHistory.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\IconPull.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\IconPush.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\IconResetFileTo.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\IconRevisionCheckout.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Resources\IconSettings.ico">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -45,13 +90,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include=".\GitExtensionsShellEx.rc">
-      <Filter>Source Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <Midl Include="GitExtensionsShellEx.idl">
       <Filter>Source Files</Filter>
     </Midl>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include=".\GitExtensionsShellEx.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
