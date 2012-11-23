@@ -36,15 +36,6 @@ namespace GitUI
         private readonly TranslationString _cantFindGitMessageCaption =
             new TranslationString("Incorrect path");
 
-        private static readonly TranslationString _cantReadRegistry =
-            new TranslationString("GitExtensions has insufficient permissions to check the registry.");
-
-        private static readonly TranslationString _cantReadRegistryAddEntryManually =
-            new TranslationString("GitExtensions has insufficient permissions to modify the registry." +
-                                Environment.NewLine + "Please add this key to the registry manually." +
-                                Environment.NewLine + "Path:  {0}\\{1}" + Environment.NewLine +
-                                "Value:  {2} = {3}");
-
         private readonly TranslationString _cantRegisterShellExtension =
             new TranslationString("Could not register the shell extension because '{0}' could not be found.");
 
@@ -211,7 +202,8 @@ namespace GitUI
         private Font applicationFont;
         private string IconName = "bug";
 
-        CommonLogic _commonLogic = new CommonLogic(); // TODO: init with GitModule
+        CommonLogic _commonLogic;
+        CheckSettingsLogic _checkSettingsLogic;
 
         private FormSettings()
             : this(null)
@@ -237,6 +229,9 @@ namespace GitUI
             GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
 
             SetCurrentDiffFont(Settings.Font, Settings.DiffFont);
+
+            _commonLogic = new CommonLogic(); // TODO: use a common instance
+            _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -264,17 +259,6 @@ namespace GitUI
             return Environment.GetEnvironmentVariable("EDITOR");
         }
 
-        private bool SolveEditor()
-        {
-            string editor = GetGlobalEditor();
-            if (string.IsNullOrEmpty(editor))
-            {
-                Module.SetGlobalPathSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
-            }
-
-            return true;
-        }
-
         private static void SetCheckboxFromString(CheckBox checkBox, string str)
         {
             str = str.Trim().ToLower();
@@ -295,23 +279,6 @@ namespace GitUI
                     checkBox.CheckState = CheckState.Indeterminate;
                     return;
             }
-        }
-
-        private static string GetGlobalDiffToolFromConfig()
-        {
-            if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
-                return GitCommandHelpers.GetGlobalConfig().GetValue("diff.guitool");
-            return GitCommandHelpers.GetGlobalConfig().GetValue("diff.tool");
-        }
-
-        private static void SetGlobalDiffToolToConfig(ConfigFile configFile, string diffTool)
-        {
-            if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
-            {
-                configFile.SetValue("diff.guitool", diffTool);
-                return;
-            }
-            configFile.SetValue("diff.tool", diffTool);
         }
 
         private void EncodingToCombo(Encoding encoding, ComboBox combo)
@@ -472,7 +439,7 @@ namespace GitUI
 
                 ShowIconPreview();
 
-                GlobalDiffTool.Text = GetGlobalDiffToolFromConfig();
+                GlobalDiffTool.Text = CheckSettingsLogic.GetGlobalDiffToolFromConfig();
 
                 if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
                     DifftoolPath.Text = globalConfig.GetPathValue(string.Format("difftool.{0}.path", GlobalDiffTool.Text));
@@ -736,7 +703,7 @@ namespace GitUI
                 globalConfig.SetValue("commit.template", CommitTemplatePath.Text);
             globalConfig.SetPathValue("core.editor", GlobalEditor.Text);
 
-            SetGlobalDiffToolToConfig(globalConfig, GlobalDiffTool.Text);
+            CheckSettingsLogic.SetGlobalDiffToolToConfig(globalConfig, GlobalDiffTool.Text);
 
             if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
                 globalConfig.SetPathValue(string.Format("difftool.{0}.path", GlobalDiffTool.Text), DifftoolPath.Text);
@@ -778,99 +745,9 @@ namespace GitUI
                 localConfig.Save();
         }
 
-        private static string GetRegistryValue(RegistryKey root, string subkey, string key)
-        {
-            string value = null;
-            try
-            {
-                RegistryKey registryKey = root.OpenSubKey(subkey, false);
-                if (registryKey != null)
-                {
-                    using (registryKey)
-                    {
-                        value = registryKey.GetValue(key) as string;
-                    }
-                }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                MessageBox.Show(_cantReadRegistry.Text);
-            }
-            return value ?? string.Empty;
-        }
-
-        private void SetRegistryValue(RegistryKey root, string subkey, string key, string value)
-        {
-            try
-            {
-                value = value.Replace("\\", "\\\\");
-                string reg = "Windows Registry Editor Version 5.00" + Environment.NewLine + Environment.NewLine + "[" + root +
-                             "\\" + subkey + "]" + Environment.NewLine + "\"" + key + "\"=\"" + value + "\"";
-
-                TextWriter tw = new StreamWriter(Path.GetTempPath() + "GitExtensions.reg", false);
-                tw.Write(reg);
-                tw.Close();
-                Module.RunCmd("regedit", "\"" + Path.GetTempPath() + "GitExtensions.reg" + "\"");
-            }
-            catch (UnauthorizedAccessException)
-            {
-                MessageBox.Show(String.Format(_cantReadRegistryAddEntryManually.Text, root, subkey, key, value));
-            }
-        }
-
-        public bool CheckSettings()
-        {
-            bool bValid = true;
-            try
-            {
-                // once a check fails, we want bValid to stay false
-                bValid = CheckGitCmdValid();
-                bValid = CheckGlobalUserSettingsValid() && bValid;
-                bValid = CheckMergeTool() && bValid;
-                bValid = CheckDiffToolConfiguration() && bValid;
-                bValid = CheckTranslationConfigSettings() && bValid;
-
-                if (Settings.RunningOnWindows())
-                {
-                    bValid = CheckGitExtensionsInstall() && bValid;
-                    bValid = CheckGitExtensionRegistrySettings() && bValid;
-                    bValid = CheckGitExe() && bValid;
-                    bValid = CheckSSHSettings() && bValid;
-                    bValid = CheckGitCredentialStore() && bValid;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message);
-            }
-
-            CheckAtStartup.Checked = getCheckAtStartupChecked(bValid);
-            return bValid;
-        }
-
         private bool CanFindGitCmd()
         {
             return !string.IsNullOrEmpty(Module.RunGitCmd(""));
-        }
-
-        private void GitExtensionsInstall_Click(object sender, EventArgs e)
-        {
-            SolveGitExtensionsDir();
-
-            CheckSettings();
-        }
-
-        public static bool SolveGitExtensionsDir()
-        {
-            string fileName = Settings.GetGitExtensionsDirectory();
-
-            if (Directory.Exists(fileName))
-            {
-                Settings.SetInstallDir(fileName);
-                return true;
-            }
-
-            return false;
         }
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
@@ -995,12 +872,12 @@ namespace GitUI
 
         private void DiffToolFix_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(GetGlobalDiffToolFromConfig()))
+            if (string.IsNullOrEmpty(CheckSettingsLogic.GetGlobalDiffToolFromConfig()))
             {
                 if (MessageBox.Show(this, _noDiffToolConfigured.Text, _noDiffToolConfiguredCaption.Text,
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    SolveDiffToolForKDiff();
+                    _checkSettingsLogic.SolveDiffToolForKDiff();
                     GlobalDiffTool.Text = "kdiff3";
                 }
                 else
@@ -1010,12 +887,12 @@ namespace GitUI
                 }
             }
 
-            if (GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            if (CheckSettingsLogic.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
             {
-                SolveDiffToolPathForKDiff();
+                _checkSettingsLogic.SolveDiffToolPathForKDiff();
             }
 
-            if (GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
+            if (CheckSettingsLogic.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(Module.GetGlobalSetting("difftool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
@@ -1078,22 +955,6 @@ namespace GitUI
             MergeToolCmdSuggest_Click(null, null);
         }
 
-        private void GitFound_Click(object sender, EventArgs e)
-        {
-            if (!SolveGitCommand())
-            {
-                MessageBox.Show(this, _solveGitCommandFailed.Text, _solveGitCommandFailedCaption.Text);
-
-                tabControl1.SelectTab(tpGit);
-                return;
-            }
-
-            MessageBox.Show(this, String.Format(_gitCanBeRun.Text, Settings.GitCommand), _gitCanBeRunCaption.Text);
-
-            GitPath.Text = Settings.GitCommand;
-            Rescan_Click(null, null);
-        }
-
         private void FormSettings_Load(object sender, EventArgs e)
         {
             if (DesignMode)
@@ -1141,13 +1002,13 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             Save();
             LoadSettings();
-            CheckSettings();
+            _checkSettingsLogic.CheckSettings();
             Cursor.Current = Cursors.Default;
         }
 
         private void BrowseGitPath_Click(object sender, EventArgs e)
         {
-            SolveGitCommand();
+            _checkSettingsLogic.SolveGitCommand();
 
             using (var browseDialog = new OpenFileDialog
                                    {
@@ -1174,20 +1035,6 @@ namespace GitUI
                 return;
             Settings.GitCommand = GitPath.Text;
             LoadSettings();
-        }
-
-        private void GitBinFound_Click(object sender, EventArgs e)
-        {
-            if (!SolveLinuxToolsDir())
-            {
-                MessageBox.Show(this, _linuxToolsShNotFound.Text, _linuxToolsShNotFoundCaption.Text);
-                tabControl1.SelectTab(tpGit);
-                return;
-            }
-
-            MessageBox.Show(this, String.Format(_shCanBeRun.Text, Settings.GitBinDir), _shCanBeRunCaption.Text);
-            GitBinPath.Text = Settings.GitBinDir;
-            Rescan_Click(null, null);
         }
 
         private void OpenSSH_CheckedChanged(object sender, EventArgs e)
@@ -1220,7 +1067,7 @@ namespace GitUI
             yield return programFiles + @"\TortoiseSvn\bin\";
             if (programFilesX86 != null)
                 yield return programFilesX86 + @"\TortoiseSvn\bin\";
-            yield return GetRegistryValue(Registry.LocalMachine,
+            yield return CommonLogic.GetRegistryValue(Registry.LocalMachine,
                                                         "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1",
                                                         "InstallLocation");
             yield return Settings.GetInstallDir() + @"\PuTTY\";
@@ -1339,7 +1186,7 @@ namespace GitUI
 
         private void BrowseGitBinPath_Click(object sender, EventArgs e)
         {
-            SolveLinuxToolsDir();
+            _checkSettingsLogic.SolveLinuxToolsDir();
 
             using (var browseDialog = new FolderBrowserDialog { SelectedPath = Settings.GitBinDir })
             {
@@ -1611,117 +1458,6 @@ namespace GitUI
                 retValue = false;
             }
             return retValue;
-        }
-
-        private static IEnumerable<string> GetGitLocations()
-        {
-            yield return
-                GetRegistryValue(Registry.LocalMachine,
-                                 "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
-            string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
-            string programFilesX86 = null;
-            if (8 == IntPtr.Size
-                || !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
-                programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
-            if (programFilesX86 != null)
-                yield return programFilesX86 + @"\Git\";
-            yield return programFiles + @"\Git\";
-            if (programFilesX86 != null)
-                yield return programFilesX86 + @"\msysgit\";
-            yield return programFiles + @"\msysgit\";
-            yield return @"C:\msysgit\";
-            yield return @"C:\cygwin\";
-        }
-
-
-        public static bool CheckIfFileIsInPath(string fileName)
-        {
-            string path = string.Concat(Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.User), ";",
-                                        Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine));
-
-            return path.Split(';').Any(dir => File.Exists(dir + " \\" + fileName) || File.Exists(dir + fileName));
-        }
-
-        public static bool SolveLinuxToolsDir()
-        {
-            if (!Settings.RunningOnWindows())
-            {
-                Settings.GitBinDir = "";
-                return true;
-            }
-
-            string gitpath = Settings.GitCommand
-                .Replace(@"\cmd\git.exe", @"\bin\")
-                .Replace(@"\cmd\git.cmd", @"\bin\")
-                .Replace(@"\bin\git.exe", @"\bin\");
-            if (Directory.Exists(gitpath))
-            {
-                if (File.Exists(gitpath + "sh.exe") || File.Exists(gitpath + "sh"))
-                {
-                    Settings.GitBinDir = gitpath;
-                    return true;
-                }
-            }
-
-            if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
-            {
-                Settings.GitBinDir = "";
-                return true;
-            }
-
-            foreach (var path in GetGitLocations())
-            {
-                if (Directory.Exists(path + @"bin\"))
-                {
-                    if (File.Exists(path + @"bin\sh.exe") || File.Exists(path + @"bin\sh"))
-                    {
-                        Settings.GitBinDir = path + @"bin\";
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        private static IEnumerable<string> GetWindowsCommandLocations()
-        {
-            if (!string.IsNullOrEmpty(Settings.GitCommand) && File.Exists(Settings.GitCommand))
-                yield return Settings.GitCommand;
-            foreach (var path in GetGitLocations())
-            {
-                if (Directory.Exists(path + @"bin\"))
-                    yield return path + @"bin\git.exe";
-            }
-            foreach (var path in GetGitLocations())
-            {
-                if (Directory.Exists(path + @"cmd\"))
-                {
-                    yield return path + @"cmd\git.exe";
-                    yield return path + @"cmd\git.cmd";
-                }
-            }
-            yield return "git";
-            yield return "git.cmd";
-        }
-
-        private bool SolveGitCommand()
-        {
-            if (Settings.RunningOnWindows())
-            {
-                var command = (from cmd in GetWindowsCommandLocations()
-                               let output = Module.RunCmd(cmd, string.Empty)
-                               where !string.IsNullOrEmpty(output)
-                               select cmd).FirstOrDefault();
-
-                if (command != null)
-                {
-                    Settings.GitCommand = command;
-                    return true;
-                }
-                return false;
-            }
-            Settings.GitCommand = "git";
-            return !string.IsNullOrEmpty(Module.RunGitCmd(""));
         }
 
         private void SaveScripts()

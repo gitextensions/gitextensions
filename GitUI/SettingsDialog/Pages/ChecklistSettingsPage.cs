@@ -54,7 +54,8 @@ namespace GitUI.SettingsDialog.Pages
 
         private void GitExtensionsInstall_Click(object sender, EventArgs e)
         {
-
+            _checkSettingsLogic.SolveGitExtensionsDir();
+            _checkSettingsLogic.CheckSettings();
         }
 
         private void GitBinFound_Click(object sender, EventArgs e)
@@ -85,7 +86,7 @@ namespace GitUI.SettingsDialog.Pages
                 }
                 else
                 {
-                    tabControl1.SelectTab(tpGlobalSettings);
+                    GotoPageGlobalSettings();
                     return;
                 }
             }
@@ -106,11 +107,16 @@ namespace GitUI.SettingsDialog.Pages
                 string.IsNullOrEmpty(Module.GetGlobalSetting("mergetool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
-                tabControl1.SelectTab(tpGlobalSettings);
+                GotoPageGlobalSettings();
                 return;
             }
 
             Rescan_Click(null, null);
+        }
+
+        private void GotoPageGlobalSettings()
+        {
+            throw new NotImplementedException("tabControl1.SelectTab(tpGlobalSettings);");
         }
 
         private void UserNameSet_Click(object sender, EventArgs e)
@@ -120,8 +126,25 @@ namespace GitUI.SettingsDialog.Pages
 
         private void GitFound_Click(object sender, EventArgs e)
         {
+            if (!_checkSettingsLogic.SolveGitCommand())
+            {
+                MessageBox.Show(this, _solveGitCommandFailed.Text, _solveGitCommandFailedCaption.Text);
 
+                GotoPageGit();
+                return;
+            }
+
+            MessageBox.Show(this, String.Format(_gitCanBeRun.Text, Settings.GitCommand), _gitCanBeRunCaption.Text);
+
+            GitPath.Text = Settings.GitCommand;
+            Rescan_Click(null, null);
         }
+
+        private void GotoPageGit()
+        {
+            throw new NotImplementedException("tabControl1.SelectTab(tpGit);");
+        }
+
 
         private void Rescan_Click(object sender, EventArgs e)
         {
@@ -217,10 +240,31 @@ namespace GitUI.SettingsDialog.Pages
             return true;
         }
 
+        private bool CheckGitCredentialStore()
+        {
+            gitCredentialWinStore.Visible = true;
+            bool isValid = !string.IsNullOrEmpty(GitCommandHelpers.GetGlobalConfig().GetValue("credential.helper"));
+
+            if (isValid)
+            {
+                gitCredentialWinStore.BackColor = Color.LightGreen;
+                gitCredentialWinStore.Text = _credentialHelperInstalled.Text;
+                gitCredentialWinStore_Fix.Visible = false;
+            }
+            else
+            {
+                gitCredentialWinStore.BackColor = Color.LightSalmon;
+                gitCredentialWinStore.Text = _noCredentialsHelperInstalled.Text;
+                gitCredentialWinStore_Fix.Visible = true;
+            }
+
+            return isValid;
+        }
+
         private bool CheckDiffToolConfiguration()
         {
             DiffTool.Visible = true;
-            if (string.IsNullOrEmpty(GetGlobalDiffToolFromConfig()))
+            if (string.IsNullOrEmpty(CheckSettingsLogic.GetGlobalDiffToolFromConfig()))
             {
                 DiffTool.BackColor = Color.LightSalmon;
                 DiffTool_Fix.Visible = true;
@@ -245,7 +289,7 @@ namespace GitUI.SettingsDialog.Pages
                     return true;
                 }
             }
-            string difftool = GetGlobalDiffToolFromConfig();
+            string difftool = CheckSettingsLogic.GetGlobalDiffToolFromConfig();
             DiffTool.BackColor = Color.LightGreen;
             DiffTool.Text = String.Format(_diffToolXConfigured.Text, difftool);
             DiffTool_Fix.Visible = false;
@@ -327,14 +371,14 @@ namespace GitUI.SettingsDialog.Pages
 
             ShellExtensionsRegistered.Visible = true;
 
-            if (string.IsNullOrEmpty(GetRegistryValue(Registry.LocalMachine,
+            if (string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.LocalMachine,
                                                       "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved",
                                                       "{3C16B20A-BA16-4156-916F-0A375ECFFE24}")) ||
-                string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot,
+                string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.ClassesRoot,
                                                       "*\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||
-                string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot,
+                string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.ClassesRoot,
                                                       "Directory\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||
-                string.IsNullOrEmpty(GetRegistryValue(Registry.ClassesRoot,
+                string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.ClassesRoot,
                                                       "Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2",
                                                       null)))
             {
