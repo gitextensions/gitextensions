@@ -5,6 +5,9 @@ using System.Text;
 using GitCommands;
 using GitCommands.Config;
 using System.IO;
+using Microsoft.Win32;
+using System.Windows.Forms;
+using System.Drawing;
 
 namespace GitUI.SettingsDialog
 {
@@ -17,6 +20,36 @@ namespace GitUI.SettingsDialog
         {
             _commonLogic = commonLogic;
             Module = gitModule;
+        }
+
+        public bool CheckSettings()
+        {
+            bool bValid = true;
+            try
+            {
+                // once a check fails, we want bValid to stay false
+                bValid = CheckGitCmdValid();
+                bValid = CheckGlobalUserSettingsValid() && bValid;
+                bValid = CheckMergeTool() && bValid;
+                bValid = CheckDiffToolConfiguration() && bValid;
+                bValid = CheckTranslationConfigSettings() && bValid;
+
+                if (Settings.RunningOnWindows())
+                {
+                    bValid = CheckGitExtensionsInstall() && bValid;
+                    bValid = CheckGitExtensionRegistrySettings() && bValid;
+                    bValid = CheckGitExe() && bValid;
+                    bValid = CheckSSHSettings() && bValid;
+                    bValid = CheckGitCredentialStore() && bValid;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message);
+            }
+
+            CheckAtStartup.Checked = getCheckAtStartupChecked(bValid);
+            return bValid;
         }
 
         public bool AutoSolveAllSettings()
@@ -36,25 +69,15 @@ namespace GitUI.SettingsDialog
             return valid;
         }
 
-        private bool CheckGitCredentialStore()
+        private bool SolveEditor()
         {
-            gitCredentialWinStore.Visible = true;
-            bool isValid = !string.IsNullOrEmpty(GitCommandHelpers.GetGlobalConfig().GetValue("credential.helper"));
-
-            if (isValid)
+            string editor = GetGlobalEditor();
+            if (string.IsNullOrEmpty(editor))
             {
-                gitCredentialWinStore.BackColor = Color.LightGreen;
-                gitCredentialWinStore.Text = _credentialHelperInstalled.Text;
-                gitCredentialWinStore_Fix.Visible = false;
-            }
-            else
-            {
-                gitCredentialWinStore.BackColor = Color.LightSalmon;
-                gitCredentialWinStore.Text = _noCredentialsHelperInstalled.Text;
-                gitCredentialWinStore_Fix.Visible = true;
+                Module.SetGlobalPathSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
             }
 
-            return isValid;
+            return true;
         }
 
         public bool SolveGitCredentialStore()
@@ -77,6 +100,129 @@ namespace GitUI.SettingsDialog
                 return false;
             }
             return true;
+        }
+
+        public bool SolveLinuxToolsDir()
+        {
+            if (!Settings.RunningOnWindows())
+            {
+                Settings.GitBinDir = "";
+                return true;
+            }
+
+            string gitpath = Settings.GitCommand
+                .Replace(@"\cmd\git.exe", @"\bin\")
+                .Replace(@"\cmd\git.cmd", @"\bin\")
+                .Replace(@"\bin\git.exe", @"\bin\");
+            if (Directory.Exists(gitpath))
+            {
+                if (File.Exists(gitpath + "sh.exe") || File.Exists(gitpath + "sh"))
+                {
+                    Settings.GitBinDir = gitpath;
+                    return true;
+                }
+            }
+
+            if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
+            {
+                Settings.GitBinDir = "";
+                return true;
+            }
+
+            foreach (var path in GetGitLocations())
+            {
+                if (Directory.Exists(path + @"bin\"))
+                {
+                    if (File.Exists(path + @"bin\sh.exe") || File.Exists(path + @"bin\sh"))
+                    {
+                        Settings.GitBinDir = path + @"bin\";
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private static IEnumerable<string> GetGitLocations()
+        {
+            yield return
+                CommonLogic.GetRegistryValue(Registry.LocalMachine,
+                                 "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
+            string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
+            string programFilesX86 = null;
+            if (8 == IntPtr.Size
+                || !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
+                programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+            if (programFilesX86 != null)
+                yield return programFilesX86 + @"\Git\";
+            yield return programFiles + @"\Git\";
+            if (programFilesX86 != null)
+                yield return programFilesX86 + @"\msysgit\";
+            yield return programFiles + @"\msysgit\";
+            yield return @"C:\msysgit\";
+            yield return @"C:\cygwin\";
+        }
+
+        private static IEnumerable<string> GetWindowsCommandLocations()
+        {
+            if (!string.IsNullOrEmpty(Settings.GitCommand) && File.Exists(Settings.GitCommand))
+                yield return Settings.GitCommand;
+            foreach (var path in GetGitLocations())
+            {
+                if (Directory.Exists(path + @"bin\"))
+                    yield return path + @"bin\git.exe";
+            }
+            foreach (var path in GetGitLocations())
+            {
+                if (Directory.Exists(path + @"cmd\"))
+                {
+                    yield return path + @"cmd\git.exe";
+                    yield return path + @"cmd\git.cmd";
+                }
+            }
+            yield return "git";
+            yield return "git.cmd";
+        }
+
+        public bool SolveGitExtensionsDir()
+        {
+            string fileName = Settings.GetGitExtensionsDirectory();
+
+            if (Directory.Exists(fileName))
+            {
+                Settings.SetInstallDir(fileName);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool SolveGitCommand()
+        {
+            if (Settings.RunningOnWindows())
+            {
+                var command = (from cmd in GetWindowsCommandLocations()
+                               let output = Module.RunCmd(cmd, string.Empty)
+                               where !string.IsNullOrEmpty(output)
+                               select cmd).FirstOrDefault();
+
+                if (command != null)
+                {
+                    Settings.GitCommand = command;
+                    return true;
+                }
+                return false;
+            }
+            Settings.GitCommand = "git";
+            return !string.IsNullOrEmpty(Module.RunGitCmd(""));
+        }
+
+        public static bool CheckIfFileIsInPath(string fileName)
+        {
+            string path = string.Concat(Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.User), ";",
+                                        Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine));
+
+            return path.Split(';').Any(dir => File.Exists(dir + " \\" + fileName) || File.Exists(dir + fileName));
         }
 
         public bool SolveMergeToolForKDiff()
@@ -109,6 +255,23 @@ namespace GitUI.SettingsDialog
                 return SolveDiffToolPathForKDiff();
 
             return true;
+        }
+
+        public static string GetGlobalDiffToolFromConfig()
+        {
+            if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
+                return GitCommandHelpers.GetGlobalConfig().GetValue("diff.guitool");
+            return GitCommandHelpers.GetGlobalConfig().GetValue("diff.tool");
+        }
+
+        private static void SetGlobalDiffToolToConfig(ConfigFile configFile, string diffTool)
+        {
+            if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
+            {
+                configFile.SetValue("diff.guitool", diffTool);
+                return;
+            }
+            configFile.SetValue("diff.tool", diffTool);
         }
 
         public bool SolveDiffToolPathForKDiff()
