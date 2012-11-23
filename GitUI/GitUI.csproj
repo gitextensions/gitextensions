@@ -91,6 +91,8 @@
     <Compile Include="BranchComboBox.Designer.cs">
       <DependentUpon>BranchComboBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="BrowseRepo\CustomMenuRenderer.cs" />
+    <Compile Include="BrowseRepo\MenuUtil.cs" />
     <Compile Include="CommitInfo\CommandEventArgs.cs" />
     <Compile Include="CommitInfo\CommitSummaryUserControl.cs">
       <SubType>UserControl</SubType>
