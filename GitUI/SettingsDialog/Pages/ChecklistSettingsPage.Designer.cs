@@ -63,6 +63,7 @@
             this.gitCredentialWinStore_Fix.Text = "Repair";
             this.gitCredentialWinStore_Fix.UseVisualStyleBackColor = true;
             this.gitCredentialWinStore_Fix.Visible = false;
+            this.gitCredentialWinStore_Fix.Click += new System.EventHandler(this.gitCredentialWinStore_Fix_Click);
             // 
             // gitCredentialWinStore
             // 
@@ -91,6 +92,7 @@
             this.translationConfig_Fix.Text = "Repair";
             this.translationConfig_Fix.UseVisualStyleBackColor = true;
             this.translationConfig_Fix.Visible = false;
+            this.translationConfig_Fix.Click += new System.EventHandler(this.translationConfig_Click);
             // 
             // SshConfig_Fix
             // 
@@ -102,6 +104,7 @@
             this.SshConfig_Fix.Text = "Repair";
             this.SshConfig_Fix.UseVisualStyleBackColor = true;
             this.SshConfig_Fix.Visible = false;
+            this.SshConfig_Fix.Click += new System.EventHandler(this.SshConfig_Click);
             // 
             // GitExtensionsInstall_Fix
             // 
@@ -113,6 +116,7 @@
             this.GitExtensionsInstall_Fix.Text = "Repair";
             this.GitExtensionsInstall_Fix.UseVisualStyleBackColor = true;
             this.GitExtensionsInstall_Fix.Visible = false;
+            this.GitExtensionsInstall_Fix.Click += new System.EventHandler(this.GitExtensionsInstall_Click);
             // 
             // GitBinFound_Fix
             // 
@@ -124,6 +128,7 @@
             this.GitBinFound_Fix.Text = "Repair";
             this.GitBinFound_Fix.UseVisualStyleBackColor = true;
             this.GitBinFound_Fix.Visible = false;
+            this.GitBinFound_Fix.Click += new System.EventHandler(this.GitBinFound_Click);
             // 
             // ShellExtensionsRegistered_Fix
             // 
@@ -135,6 +140,7 @@
             this.ShellExtensionsRegistered_Fix.Text = "Repair";
             this.ShellExtensionsRegistered_Fix.UseVisualStyleBackColor = true;
             this.ShellExtensionsRegistered_Fix.Visible = false;
+            this.ShellExtensionsRegistered_Fix.Click += new System.EventHandler(this.ShellExtensionsRegistered_Click);
             // 
             // DiffTool_Fix
             // 
@@ -146,6 +152,7 @@
             this.DiffTool_Fix.Text = "Repair";
             this.DiffTool_Fix.UseVisualStyleBackColor = true;
             this.DiffTool_Fix.Visible = false;
+            this.DiffTool_Fix.Click += new System.EventHandler(this.DiffToolFix_Click);
             // 
             // MergeTool_Fix
             // 
@@ -157,6 +164,7 @@
             this.MergeTool_Fix.Text = "Repair";
             this.MergeTool_Fix.UseVisualStyleBackColor = true;
             this.MergeTool_Fix.Visible = false;
+            this.MergeTool_Fix.Click += new System.EventHandler(this.MergeToolFix_Click);
             // 
             // UserNameSet_Fix
             // 
@@ -168,6 +176,7 @@
             this.UserNameSet_Fix.Text = "Repair";
             this.UserNameSet_Fix.UseVisualStyleBackColor = true;
             this.UserNameSet_Fix.Visible = false;
+            this.UserNameSet_Fix.Click += new System.EventHandler(this.UserNameSet_Click);
             // 
             // GitFound_Fix
             // 
@@ -179,6 +188,7 @@
             this.GitFound_Fix.Text = "Repair";
             this.GitFound_Fix.UseVisualStyleBackColor = true;
             this.GitFound_Fix.Visible = false;
+            this.GitFound_Fix.Click += new System.EventHandler(this.GitFound_Click);
             // 
             // translationConfig
             // 
@@ -257,6 +267,7 @@
             this.Rescan.TabIndex = 54;
             this.Rescan.Text = "Save and rescan";
             this.Rescan.UseVisualStyleBackColor = true;
+            this.Rescan.Click += new System.EventHandler(this.Rescan_Click);
             // 
             // CheckAtStartup
             // 
@@ -268,6 +279,7 @@
             this.CheckAtStartup.Text = "Check settings at startup (disables automatically if all settings are correct)";
             this.CheckAtStartup.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.CheckAtStartup.UseVisualStyleBackColor = true;
+            this.CheckAtStartup.Click += new System.EventHandler(this.CheckAtStartup_CheckedChanged);
             // 
             // label11
             // 
