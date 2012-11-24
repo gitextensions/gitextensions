@@ -139,13 +139,17 @@ namespace GitUI.SettingsDialog.Pages
             new TranslationString("Path to kdiff3 could not be found automatically." + Environment.NewLine +
                 "Please make sure KDiff3 is installed or set path manually.");
 
-        CommonLogic _commonLogic = new CommonLogic(null); // TODO
-        CheckSettingsLogic _checkSettingsLogic = new CheckSettingsLogic(null, null, null); // TODO
+        CommonLogic _commonLogic;
+        CheckSettingsLogic _checkSettingsLogic;
         GitModule _gitModule;
 
-        public ChecklistSettingsPage()
+        public ChecklistSettingsPage(CommonLogic commonLogic, CheckSettingsLogic checkSettingsLogic, GitModule gitModule)
         {
             InitializeComponent();
+
+            _commonLogic = commonLogic;
+            _checkSettingsLogic = checkSettingsLogic;
+            _gitModule = gitModule;
         }
 
         [Browsable(false)]

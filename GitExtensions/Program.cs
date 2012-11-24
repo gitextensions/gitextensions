@@ -68,12 +68,13 @@ namespace GitExtensions
                     Application.DoEvents();
 
                     GitUICommands uiCommands = new GitUICommands(string.Empty);
-                    using (var checklistSettingsPage = new ChecklistSettingsPage())
+                    var commonLogic = new CommonLogic(uiCommands.Module); // TODO: use a common instance?
+                    var checkSettingsLogic = new CheckSettingsLogic(commonLogic, uiCommands.Module);
+                    using (var checklistSettingsPage = new ChecklistSettingsPage(commonLogic, checkSettingsLogic, uiCommands.Module))
                     {
+                        checkSettingsLogic.ChecklistSettingsPage = checklistSettingsPage;
                         if (!checklistSettingsPage.CheckSettings())
                         {
-                            // TODO: initializer without null?
-                            var checkSettingsLogic = new CheckSettingsLogic(new CommonLogic(null), null, checklistSettingsPage);
                             checkSettingsLogic.AutoSolveAllSettings();
                             uiCommands.StartSettingsDialog();
                         }
