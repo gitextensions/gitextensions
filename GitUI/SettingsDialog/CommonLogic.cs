@@ -22,8 +22,16 @@ namespace GitUI.SettingsDialog
                                 Environment.NewLine + "Path:  {0}\\{1}" + Environment.NewLine +
                                 "Value:  {2} = {3}");
 
-        [Browsable(false)]
-        public GitModule Module { get { return null; /* TODO: see GitModuleForm */ } }
+        private GitModule _gitModule;
+        public CommonLogic(GitModule gitModule)
+        {
+            _gitModule = gitModule;
+        }
+
+        /// <summary>
+        /// remove later
+        /// </summary>
+        private GitModule Module { get { return _gitModule;} }
 
         public const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
 
@@ -76,6 +84,20 @@ namespace GitUI.SettingsDialog
             {
                 MessageBox.Show(String.Format(_cantReadRegistryAddEntryManually.Text, root, subkey, key, value));
             }
+        }
+
+        public string GetGlobalEditor()
+        {
+            string editor = Environment.GetEnvironmentVariable("GIT_EDITOR");
+            if (!string.IsNullOrEmpty(editor))
+                return editor;
+            editor = Module.GetGlobalPathSetting("core.editor");
+            if (!string.IsNullOrEmpty(editor))
+                return editor;
+            editor = Environment.GetEnvironmentVariable("VISUAL");
+            if (!string.IsNullOrEmpty(editor))
+                return editor;
+            return Environment.GetEnvironmentVariable("EDITOR");
         }
     }
 }

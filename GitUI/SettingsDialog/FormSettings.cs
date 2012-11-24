@@ -245,20 +245,6 @@ namespace GitUI
 
         }
 
-        private string GetGlobalEditor()
-        {
-            string editor = Environment.GetEnvironmentVariable("GIT_EDITOR");
-            if (!string.IsNullOrEmpty(editor))
-                return editor;
-            editor = Module.GetGlobalPathSetting("core.editor");
-            if (!string.IsNullOrEmpty(editor))
-                return editor;
-            editor = Environment.GetEnvironmentVariable("VISUAL");
-            if (!string.IsNullOrEmpty(editor))
-                return editor;
-            return Environment.GetEnvironmentVariable("EDITOR");
-        }
-
         private static void SetCheckboxFromString(CheckBox checkBox, string str)
         {
             str = str.Trim().ToLower();
@@ -1446,18 +1432,6 @@ namespace GitUI
                 _NO_TRANSLATE_ColorGraphLabel.Visible = true;
                 StripedBanchChange.Enabled = false;
             }
-        }
-
-        private static bool getCheckAtStartupChecked(bool bValid)
-        {
-            var retValue = Settings.GetValue<string>("checksettings", null) == null || Settings.GetValue<string>("checksettings", null) == "true";
-
-            if (bValid && retValue)
-            {
-                Settings.SetValue("checksettings", false);
-                retValue = false;
-            }
-            return retValue;
         }
 
         private void SaveScripts()

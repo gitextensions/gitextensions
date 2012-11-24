@@ -82,7 +82,7 @@ namespace GitUI.SettingsDialog.Pages
                         _noMergeToolConfiguredCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     _checkSettingsLogic.SolveMergeToolForKDiff();
-                    GlobalMergeTool.Text = "kdiff3";
+                    SetGlobalMergeToolText("kdiff3");
                 }
                 else
                 {
@@ -100,7 +100,7 @@ namespace GitUI.SettingsDialog.Pages
                 AutoConfigMergeToolCmd(true);
 
                 Module.SetGlobalPathSetting(
-                    string.Format("mergetool.{0}.cmd", _commonLogic.GetMergeTool()), MergeToolCmd.Text);
+                    string.Format("mergetool.{0}.cmd", _commonLogic.GetMergeTool()), GetMergeToolCmdText());
             }
 
             if (_commonLogic.IsMergeTool("kdiff3") &&
@@ -112,6 +112,16 @@ namespace GitUI.SettingsDialog.Pages
             }
 
             Rescan_Click(null, null);
+        }
+
+        private void SetGlobalMergeToolText(string text)
+        {
+            throw new NotImplementedException("GlobalMergeTool.Text = ...");
+        }
+
+        private string GetMergeToolCmdText()
+        {
+            throw new NotImplementedException("MergeToolCmd.Text");
         }
 
         private void GotoPageGlobalSettings()
@@ -136,15 +146,19 @@ namespace GitUI.SettingsDialog.Pages
 
             MessageBox.Show(this, String.Format(_gitCanBeRun.Text, Settings.GitCommand), _gitCanBeRunCaption.Text);
 
-            GitPath.Text = Settings.GitCommand;
+            SetGitPathText(Settings.GitCommand);
             Rescan_Click(null, null);
+        }
+
+        private void SetGitPathText(string text)
+        {
+            throw new NotImplementedException("GitPath.Text = Settings.GitCommand;");
         }
 
         private void GotoPageGit()
         {
             throw new NotImplementedException("tabControl1.SelectTab(tpGit);");
         }
-
 
         private void Rescan_Click(object sender, EventArgs e)
         {
@@ -154,6 +168,49 @@ namespace GitUI.SettingsDialog.Pages
         private void CheckAtStartup_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        public bool CheckSettings()
+        {
+            bool bValid = true;
+            try
+            {
+                // once a check fails, we want bValid to stay false
+                bValid = CheckGitCmdValid();
+                bValid = CheckGlobalUserSettingsValid() && bValid;
+                bValid = CheckMergeTool() && bValid;
+                bValid = CheckDiffToolConfiguration() && bValid;
+                bValid = CheckTranslationConfigSettings() && bValid;
+
+                if (Settings.RunningOnWindows())
+                {
+                    bValid = CheckGitExtensionsInstall() && bValid;
+                    bValid = CheckGitExtensionRegistrySettings() && bValid;
+                    bValid = CheckGitExe() && bValid;
+                    bValid = CheckSSHSettings() && bValid;
+                    bValid = CheckGitCredentialStore() && bValid;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message);
+            }
+
+            CheckAtStartup.Checked = getCheckAtStartupChecked(bValid);
+
+            return bValid;
+        }
+
+        private static bool getCheckAtStartupChecked(bool bValid)
+        {
+            var retValue = Settings.GetValue<string>("checksettings", null) == null || Settings.GetValue<string>("checksettings", null) == "true";
+
+            if (bValid && retValue)
+            {
+                Settings.SetValue("checksettings", false);
+                retValue = false;
+            }
+            return retValue;
         }
 
         private bool CheckTranslationConfigSettings()
@@ -273,7 +330,7 @@ namespace GitUI.SettingsDialog.Pages
             }
             if (Settings.RunningOnWindows())
             {
-                if (GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+                if (CheckSettingsLogic.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
                 {
                     string p = Module.GetGlobalSetting("difftool.kdiff3.path");
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
@@ -299,7 +356,7 @@ namespace GitUI.SettingsDialog.Pages
         private bool CheckMergeTool()
         {
             MergeTool.Visible = true;
-            if (string.IsNullOrEmpty(GetMergeTool()))
+            if (string.IsNullOrEmpty(_commonLogic.GetMergeTool()))
             {
                 MergeTool.BackColor = Color.LightSalmon;
                 MergeTool.Text = _configureMergeTool.Text;
@@ -324,7 +381,7 @@ namespace GitUI.SettingsDialog.Pages
                     MergeTool_Fix.Visible = false;
                     return true;
                 }
-                string mergetool = GetMergeTool().ToLowerInvariant();
+                string mergetool = _commonLogic.GetMergeTool().ToLowerInvariant();
                 if (mergetool == "p4merge" || mergetool == "tmerge")
                 {
                     string p = Module.GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
