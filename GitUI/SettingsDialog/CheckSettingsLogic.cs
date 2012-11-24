@@ -22,13 +22,17 @@ namespace GitUI.SettingsDialog
 
         CommonLogic _commonLogic;
         GitModule Module; // TODO: rename to gitModule
-        ChecklistSettingsPage _checklistSettingsPage; // TODO: remove later!!!
 
-        public CheckSettingsLogic(CommonLogic commonLogic, GitModule gitModule, ChecklistSettingsPage checklistspage)
+        /// <summary>
+        /// TODO: remove later!
+        /// </summary>
+        [Obsolete("Remove this dependency!")]
+        public ChecklistSettingsPage ChecklistSettingsPage { get; set; } 
+
+        public CheckSettingsLogic(CommonLogic commonLogic, GitModule gitModule)
         {
             _commonLogic = commonLogic;
             Module = gitModule;
-            _checklistSettingsPage = checklistspage;
         }
 
         public bool AutoSolveAllSettings()
@@ -61,7 +65,7 @@ namespace GitUI.SettingsDialog
 
         public bool SolveGitCredentialStore()
         {
-            if (!_checklistSettingsPage.CheckGitCredentialStore())
+            if (!ChecklistSettingsPage.CheckGitCredentialStore())
             {
                 string gcsFileName = Settings.GetInstallDir() + @"\GitCredentialWinStore\git-credential-winstore.exe";
                 if (File.Exists(gcsFileName))
