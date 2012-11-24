@@ -107,8 +107,11 @@ namespace GitUI
 
             SetCurrentDiffFont(Settings.Font, Settings.DiffFont);
 
-            _commonLogic = new CommonLogic(Module); // TODO: use a common instance
-            _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module, null); // TODO
+            // TODO:
+            _commonLogic = new CommonLogic(Module); // TODO: use a common instance?
+            _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module); // TODO
+            _checklistSettingsPage = new ChecklistSettingsPage(_commonLogic, _checkSettingsLogic, Module); // TODO
+            _checkSettingsLogic.ChecklistSettingsPage = _checklistSettingsPage; // TODO
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
