@@ -3,6 +3,8 @@ using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI;
+using GitUI.SettingsDialog.Pages;
+using GitUI.SettingsDialog;
 
 namespace GitExtensions
 {
@@ -66,11 +68,13 @@ namespace GitExtensions
                     Application.DoEvents();
 
                     GitUICommands uiCommands = new GitUICommands(string.Empty);
-                    using (var settings = new FormSettings(uiCommands))
+                    using (var checklistSettingsPage = new ChecklistSettingsPage())
                     {
-                        if (!settings.CheckSettings())
+                        if (!checklistSettingsPage.CheckSettings())
                         {
-                            settings.AutoSolveAllSettings();
+                            // TODO: initializer without null?
+                            var checkSettingsLogic = new CheckSettingsLogic(new CommonLogic(null), null, checklistSettingsPage);
+                            checkSettingsLogic.AutoSolveAllSettings();
                             uiCommands.StartSettingsDialog();
                         }
                     }
@@ -80,7 +84,6 @@ namespace GitExtensions
             {
                 // TODO: remove catch-all
             }
-
 
             FormSplash.HideSplash();
 

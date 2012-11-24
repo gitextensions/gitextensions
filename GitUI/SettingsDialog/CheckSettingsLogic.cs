@@ -18,6 +18,8 @@ namespace GitUI.SettingsDialog
         public static readonly TranslationString _toolSuggestPath =
             new TranslationString("Please enter the path to {0} and press suggest.");
 
+        public static readonly TranslationString __mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
+
         CommonLogic _commonLogic;
         GitModule Module; // TODO: rename to gitModule
         ChecklistSettingsPage _checklistSettingsPage; // TODO: remove later!!!
@@ -241,7 +243,7 @@ namespace GitUI.SettingsDialog
             return GitCommandHelpers.GetGlobalConfig().GetValue("diff.tool");
         }
 
-        private static void SetGlobalDiffToolToConfig(ConfigFile configFile, string diffTool)
+        public static void SetGlobalDiffToolToConfig(ConfigFile configFile, string diffTool)
         {
             if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
             {
@@ -271,7 +273,7 @@ namespace GitUI.SettingsDialog
             return true;
         }
 
-        private bool CanFindGitCmd()
+        public bool CanFindGitCmd()
         {
             return !string.IsNullOrEmpty(Module.RunGitCmd(""));
         }
@@ -285,7 +287,7 @@ namespace GitUI.SettingsDialog
                 SetMergetoolPathText("");
                 SetMergeToolCmdText("");
                 if (!silent)
-                    MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
+                    MessageBox.Show(/*this, */String.Format(_toolSuggestPath.Text, exeName),
                         __mergeToolSuggestCaption.Text);
                 return;
             }
