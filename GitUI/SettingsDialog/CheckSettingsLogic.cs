@@ -22,36 +22,6 @@ namespace GitUI.SettingsDialog
             Module = gitModule;
         }
 
-        public bool CheckSettings()
-        {
-            bool bValid = true;
-            try
-            {
-                // once a check fails, we want bValid to stay false
-                bValid = CheckGitCmdValid();
-                bValid = CheckGlobalUserSettingsValid() && bValid;
-                bValid = CheckMergeTool() && bValid;
-                bValid = CheckDiffToolConfiguration() && bValid;
-                bValid = CheckTranslationConfigSettings() && bValid;
-
-                if (Settings.RunningOnWindows())
-                {
-                    bValid = CheckGitExtensionsInstall() && bValid;
-                    bValid = CheckGitExtensionRegistrySettings() && bValid;
-                    bValid = CheckGitExe() && bValid;
-                    bValid = CheckSSHSettings() && bValid;
-                    bValid = CheckGitCredentialStore() && bValid;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message);
-            }
-
-            CheckAtStartup.Checked = getCheckAtStartupChecked(bValid);
-            return bValid;
-        }
-
         public bool AutoSolveAllSettings()
         {
             if (!Settings.RunningOnWindows())
@@ -71,7 +41,7 @@ namespace GitUI.SettingsDialog
 
         private bool SolveEditor()
         {
-            string editor = GetGlobalEditor();
+            string editor = _commonLogic.GetGlobalEditor();
             if (string.IsNullOrEmpty(editor))
             {
                 Module.SetGlobalPathSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
