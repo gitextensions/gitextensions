@@ -15,6 +15,7 @@ using Gravatar;
 using Microsoft.Win32;
 using ResourceManager.Translation;
 using GitUI.SettingsDialog;
+using GitUI.SettingsDialog.Pages;
 
 namespace GitUI
 {
@@ -46,30 +47,6 @@ namespace GitUI
         private readonly TranslationString _noDiffToolConfiguredCaption =
             new TranslationString("Difftool");
 
-        private readonly TranslationString _kdiff3NotFoundAuto =
-            new TranslationString("Path to kdiff3 could not be found automatically." + Environment.NewLine +
-                "Please make sure KDiff3 is installed or set path manually.");
-
-        private readonly TranslationString _noMergeToolConfigured =
-            new TranslationString("There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?" +
-                Environment.NewLine + "Select no if you want to configure a different mergetool yourself.");
-
-        private readonly TranslationString _noMergeToolConfiguredCaption =
-            new TranslationString("Mergetool");
-
-        private readonly TranslationString _solveGitCommandFailed =
-            new TranslationString("The command to run git could not be determined automatically." + Environment.NewLine +
-                "Please make sure git (msysgit or cygwin) is installed or set the correct command manually.");
-
-        private readonly TranslationString _solveGitCommandFailedCaption =
-            new TranslationString("Locate git");
-
-        private readonly TranslationString _gitCanBeRun =
-            new TranslationString("Git can be run using: {0}");
-
-        private readonly TranslationString _gitCanBeRunCaption =
-            new TranslationString("Locate git");
-
         private readonly TranslationString _linuxToolsShNotFound =
             new TranslationString("The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
                 "Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.");
@@ -95,107 +72,7 @@ namespace GitUI
         private readonly TranslationString _noDictFilesFound =
             new TranslationString("No dictionary files found in: {0}");
 
-        private readonly TranslationString _noLanguageConfigured =
-            new TranslationString("There is no language configured for Git Extensions.");
 
-        private readonly TranslationString _languageConfigured =
-            new TranslationString("The configured language is {0}.");
-
-        private readonly TranslationString _plinkputtyGenpageantNotFound =
-            new TranslationString("PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.");
-
-        private readonly TranslationString _puttyConfigured =
-            new TranslationString("SSH client PuTTY is configured properly.");
-
-        private readonly TranslationString _opensshUsed =
-            new TranslationString("Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)");
-
-        private readonly TranslationString _unknownSshClient =
-            new TranslationString("Unknown SSH client configured: {0}.");
-
-        private readonly TranslationString _linuxToolsSshNotFound =
-            new TranslationString("Linux tools (sh) not found. To solve this problem you can set the correct path in settings.");
-
-        private readonly TranslationString _linuxToolsSshFound =
-            new TranslationString("Linux tools (sh) found on your computer.");
-
-        private readonly TranslationString _gitNotFound =
-            new TranslationString("Git not found. To solve this problem you can set the correct path in settings.");
-
-        private readonly TranslationString _wrongGitVersion =
-            new TranslationString("Git found but version {0} is not supported. Upgrage to version {1} or later");
-
-        private readonly TranslationString _gitVersionFound =
-            new TranslationString("Git {0} is found on your computer.");
-
-        private readonly TranslationString _adviceDiffToolConfiguration =
-            new TranslationString("You should configure a diff tool to show file diff in external program (kdiff3 for example).");
-
-        private readonly TranslationString _kdiffAsDiffConfiguredButNotFound =
-            new TranslationString("KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.");
-
-        private readonly TranslationString _kdiffAsDiffConfigured =
-            new TranslationString("KDiff3 is configured as difftool.");
-
-        private readonly TranslationString _toolSuggestPath =
-            new TranslationString("Please enter the path to {0} and press suggest.");
-
-        private readonly TranslationString _diffToolXConfigured =
-            new TranslationString("There is a difftool configured: {0}");
-
-        private readonly TranslationString _configureMergeTool =
-            new TranslationString("You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).");
-
-        private readonly TranslationString _kdiffAsMergeConfiguredButNotFound =
-            new TranslationString("KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.");
-
-        private readonly TranslationString _kdiffAsMergeConfigured =
-            new TranslationString("KDiff3 is configured as mergetool.");
-
-        private readonly TranslationString _mergeToolXConfiguredNeedsCmd =
-            new TranslationString("{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.");
-
-        private readonly TranslationString _customMergeToolXConfigured =
-            new TranslationString("There is a custom mergetool configured: {0}");
-
-        private readonly TranslationString _mergeToolXConfigured =
-            new TranslationString("There is a custom mergetool configured.");
-
-        private readonly TranslationString _noEmailSet =
-            new TranslationString("You need to configure a username and an email address.");
-
-        private readonly TranslationString _emailSet =
-            new TranslationString("A username and an email address are configured.");
-
-        private readonly TranslationString _shellExtNoInstalled =
-            new TranslationString("Shell extensions are not installed. Run the installer to install the shell extensions.");
-
-        private readonly TranslationString _shellExtNeedsToBeRegistered =
-            new TranslationString("{0} needs to be registered in order to use the shell extensions.");
-
-        private readonly TranslationString _shellExtRegistered =
-            new TranslationString("Shell extensions registered properly.");
-
-        private readonly TranslationString _registryKeyGitExtensionsMissing =
-            new TranslationString("Registry entry missing [Software\\GitExtensions\\GitExtensions\\InstallDir].");
-
-        private readonly TranslationString _registryKeyGitExtensionsFaulty =
-            new TranslationString("Invalid installation directory stored in [Software\\GitExtensions\\GitExtensions\\InstallDir].");
-
-        private readonly TranslationString _registryKeyGitExtensionsCorrect =
-            new TranslationString("GitExtensions is properly registered.");
-
-        private readonly TranslationString _credentialHelperInstalled =
-            new TranslationString("Git credential helper is installed.");
-
-        private readonly TranslationString _noCredentialsHelperInstalled =
-            new TranslationString("No credential helper installed.");
-
-        private readonly TranslationString _gitCredentialWinStoreHelperInstalled =
-            new TranslationString("Git Credential Win Store is installed as credential helper.");
-
-        private readonly TranslationString _noCredentialsHelperInstalledTryGCS =
-            new TranslationString("No credential helper could be installed. Try to install git-credential-winstore.exe.");
         #endregion
 
         private Font diffFont;
@@ -204,6 +81,7 @@ namespace GitUI
 
         CommonLogic _commonLogic;
         CheckSettingsLogic _checkSettingsLogic;
+        ChecklistSettingsPage _checklistSettingsPage; // TODO: remove later
 
         private FormSettings()
             : this(null)
@@ -612,7 +490,7 @@ namespace GitUI
 
             EnableSettings();
 
-            if (!CanFindGitCmd())
+            if (!_checkSettingsLogic.CanFindGitCmd())
             {
                 if (MessageBox.Show(this, _cantFindGitMessage.Text, _cantFindGitMessageCaption.Text,
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -731,11 +609,6 @@ namespace GitUI
                 localConfig.Save();
         }
 
-        private bool CanFindGitCmd()
-        {
-            return !string.IsNullOrEmpty(Module.RunGitCmd(""));
-        }
-
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
             string path = Path.Combine(Settings.GetInstallDir(), CommonLogic.GitExtensionsShellExName);
@@ -754,7 +627,7 @@ namespace GitUI
                 MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellExName));
             }
 
-            CheckSettings();
+            _checklistSettingsPage.CheckSettings();
         }
 
         private void UserNameSet_Click(object sender, EventArgs e)
@@ -797,7 +670,7 @@ namespace GitUI
                 DifftoolCmd.SelectAll();
                 DifftoolCmd.SelectedText = "";
                 if (sender != null)
-                    MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
+                    MessageBox.Show(this, String.Format(CheckSettingsLogic._toolSuggestPath.Text, exeName),
                         __diffToolSuggestCaption.Text);
                 return;
             }
@@ -829,7 +702,7 @@ namespace GitUI
                 MergeToolCmd.SelectAll();
                 MergeToolCmd.SelectedText = "";
                 if (sender != null)
-                    MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
+                    MessageBox.Show(this, String.Format(CheckSettingsLogic._toolSuggestPath.Text, exeName),
                         __mergeToolSuggestCaption.Text);
                 return;
             }
@@ -837,23 +710,6 @@ namespace GitUI
             MergetoolPath.SelectedText = exeFile;
             MergeToolCmd.SelectAll();
             MergeToolCmd.SelectedText = MergeToolsHelper.MergeToolcmdSuggest(GlobalMergeTool.Text, exeFile);
-        }
-
-        private void AutoConfigMergeToolCmd(bool silent)
-        {
-            string exeName;
-            string exeFile = MergeToolsHelper.FindMergeToolFullPath(GlobalMergeTool.Text, out exeName);
-            if (String.IsNullOrEmpty(exeFile))
-            {
-                MergetoolPath.Text = "";
-                MergeToolCmd.Text = "";
-                if (!silent)
-                    MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
-                        __mergeToolSuggestCaption.Text);
-                return;
-            }
-            MergetoolPath.Text = exeFile;
-            MergeToolCmd.Text = MergeToolsHelper.AutoConfigMergeToolCmd(GlobalMergeTool.Text, exeFile);
         }
 
         private void DiffToolFix_Click(object sender, EventArgs e)
@@ -953,7 +809,7 @@ namespace GitUI
 
         private void EnableSettings()
         {
-            bool canFindGitCmd = CanFindGitCmd();
+            bool canFindGitCmd = _checkSettingsLogic.CanFindGitCmd();
             GlobalUserName.Enabled = canFindGitCmd;
             GlobalUserEmail.Enabled = canFindGitCmd;
             GlobalEditor.Enabled = canFindGitCmd;
@@ -976,11 +832,6 @@ namespace GitUI
             localAutoCrlfInput.Enabled = valid;
             localAutoCrlfTrue.Enabled = valid;
             NoGitRepo.Visible = !valid;
-        }
-
-        private void CheckAtStartup_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.SetBool("checksettings", CheckAtStartup.Checked);
         }
 
         private void Rescan_Click(object sender, EventArgs e)
@@ -1189,7 +1040,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             WindowState = FormWindowState.Normal;
             LoadSettings();
-            CheckSettings();
+            _checklistSettingsPage.CheckSettings();
             WindowState = FormWindowState.Normal;
             Cursor.Current = Cursors.Default;
         }
