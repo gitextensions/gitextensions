@@ -24,7 +24,6 @@ namespace GitUI
         #region Translation
         private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
         private readonly TranslationString __diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
-        private readonly TranslationString __mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
 
         private readonly TranslationString _loadingSettingsFailed =
             new TranslationString("Could not load settings.");
@@ -108,8 +107,8 @@ namespace GitUI
 
             SetCurrentDiffFont(Settings.Font, Settings.DiffFont);
 
-            _commonLogic = new CommonLogic(); // TODO: use a common instance
-            _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module);
+            _commonLogic = new CommonLogic(Module); // TODO: use a common instance
+            _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module, null); // TODO
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -703,7 +702,7 @@ namespace GitUI
                 MergeToolCmd.SelectedText = "";
                 if (sender != null)
                     MessageBox.Show(this, String.Format(CheckSettingsLogic._toolSuggestPath.Text, exeName),
-                        __mergeToolSuggestCaption.Text);
+                        CheckSettingsLogic.__mergeToolSuggestCaption.Text);
                 return;
             }
             MergetoolPath.SelectAll(); // allow Undo action
@@ -737,7 +736,7 @@ namespace GitUI
             if (CheckSettingsLogic.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(Module.GetGlobalSetting("difftool.kdiff3.path")))
             {
-                MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
+                MessageBox.Show(this, ChecklistSettingsPage._kdiff3NotFoundAuto.Text);
                 tabControl1.SelectTab(tpGlobalSettings);
                 return;
             }
@@ -839,7 +838,7 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             Save();
             LoadSettings();
-            _checkSettingsLogic.CheckSettings();
+            _checklistSettingsPage.CheckSettings();
             Cursor.Current = Cursors.Default;
         }
 

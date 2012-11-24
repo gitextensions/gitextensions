@@ -135,12 +135,13 @@ namespace GitUI.SettingsDialog.Pages
         private readonly TranslationString _kdiffAsMergeConfigured =
             new TranslationString("KDiff3 is configured as mergetool.");
 
-        private readonly TranslationString _kdiff3NotFoundAuto =
+        public static readonly TranslationString _kdiff3NotFoundAuto =
             new TranslationString("Path to kdiff3 could not be found automatically." + Environment.NewLine +
                 "Please make sure KDiff3 is installed or set path manually.");
 
         CommonLogic _commonLogic = new CommonLogic(null); // TODO
         CheckSettingsLogic _checkSettingsLogic = new CheckSettingsLogic(null, null, null); // TODO
+        GitModule _gitModule;
 
         public ChecklistSettingsPage()
         {
@@ -148,9 +149,10 @@ namespace GitUI.SettingsDialog.Pages
         }
 
         [Browsable(false)]
-        public GitModule Module { 
-            get { return null; /* TODO: see GitModuleForm */ }
-            set { _commonLogic.Module = value; } }
+        public GitModule Module {
+            get { return _gitModule; /* TODO: see GitModuleForm */ }
+            set { _gitModule = value; }
+        }
 
         private void gitCredentialWinStore_Fix_Click(object sender, EventArgs e)
         {
@@ -179,7 +181,7 @@ namespace GitUI.SettingsDialog.Pages
         private void GitExtensionsInstall_Click(object sender, EventArgs e)
         {
             _checkSettingsLogic.SolveGitExtensionsDir();
-            _checkSettingsLogic.CheckSettings();
+            CheckSettings();
         }
 
         private void GitBinFound_Click(object sender, EventArgs e)
@@ -383,7 +385,7 @@ namespace GitUI.SettingsDialog.Pages
         {
             GitBinFound.Visible = true;
             if (!File.Exists(Settings.GitBinDir + "sh.exe") && !File.Exists(Settings.GitBinDir + "sh") &&
-                !_checkSettingsLogic.CheckIfFileIsInPath("sh.exe") && !_checkSettingsLogic.CheckIfFileIsInPath("sh"))
+                !CheckSettingsLogic.CheckIfFileIsInPath("sh.exe") && !CheckSettingsLogic.CheckIfFileIsInPath("sh"))
             {
                 GitBinFound.BackColor = Color.LightSalmon;
                 GitBinFound.Text = _linuxToolsSshNotFound.Text;
@@ -421,7 +423,7 @@ namespace GitUI.SettingsDialog.Pages
             return true;
         }
 
-        private bool CheckGitCredentialStore()
+        public bool CheckGitCredentialStore()
         {
             gitCredentialWinStore.Visible = true;
             bool isValid = !string.IsNullOrEmpty(GitCommandHelpers.GetGlobalConfig().GetValue("credential.helper"));
