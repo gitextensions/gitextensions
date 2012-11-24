@@ -8,18 +8,25 @@ using System.IO;
 using Microsoft.Win32;
 using System.Windows.Forms;
 using System.Drawing;
+using GitUI.SettingsDialog.Pages;
+using ResourceManager.Translation;
 
 namespace GitUI.SettingsDialog
 {
     public class CheckSettingsLogic
     {
+        public static readonly TranslationString _toolSuggestPath =
+            new TranslationString("Please enter the path to {0} and press suggest.");
+
         CommonLogic _commonLogic;
         GitModule Module; // TODO: rename to gitModule
+        ChecklistSettingsPage _checklistSettingsPage; // TODO: remove later!!!
 
-        public CheckSettingsLogic(CommonLogic commonLogic, GitModule gitModule)
+        public CheckSettingsLogic(CommonLogic commonLogic, GitModule gitModule, ChecklistSettingsPage checklistspage)
         {
             _commonLogic = commonLogic;
             Module = gitModule;
+            _checklistSettingsPage = checklistspage;
         }
 
         public bool AutoSolveAllSettings()
@@ -52,7 +59,7 @@ namespace GitUI.SettingsDialog
 
         public bool SolveGitCredentialStore()
         {
-            if (!CheckGitCredentialStore())
+            if (!_checklistSettingsPage.CheckGitCredentialStore())
             {
                 string gcsFileName = Settings.GetInstallDir() + @"\GitCredentialWinStore\git-credential-winstore.exe";
                 if (File.Exists(gcsFileName))
@@ -262,6 +269,44 @@ namespace GitUI.SettingsDialog
 
             Module.SetGlobalPathSetting("mergetool.kdiff3.path", kdiff3path);
             return true;
+        }
+
+        private bool CanFindGitCmd()
+        {
+            return !string.IsNullOrEmpty(Module.RunGitCmd(""));
+        }
+
+        public void AutoConfigMergeToolCmd(bool silent)
+        {
+            string exeName;
+            string exeFile = MergeToolsHelper.FindMergeToolFullPath(GetGlobalMergeToolText(), out exeName);
+            if (String.IsNullOrEmpty(exeFile))
+            {
+                SetMergetoolPathText("");
+                SetMergeToolCmdText("");
+                if (!silent)
+                    MessageBox.Show(this, String.Format(_toolSuggestPath.Text, exeName),
+                        __mergeToolSuggestCaption.Text);
+                return;
+            }
+
+            SetMergetoolPathText(exeFile);
+            SetMergeToolCmdText(MergeToolsHelper.AutoConfigMergeToolCmd(GetGlobalMergeToolText(), exeFile));
+        }
+
+        private void SetMergetoolPathText(string text)
+        {
+            throw new NotImplementedException("MergetoolPath.Text = ...");
+        }
+
+        private void SetMergeToolCmdText(string text)
+        {
+            throw new NotImplementedException("MergeToolCmd.Text = ...");
+        }
+
+        private string GetGlobalMergeToolText()
+        {
+            throw new NotImplementedException("GlobalMergeTool.Text");
         }
     }
 }
