@@ -86,6 +86,8 @@ namespace GitUI
             : this(null)
         { }
 
+        Panel settingsPagePanel;
+
         public FormSettings(GitUICommands aCommands)
             : base(aCommands)
         {
@@ -115,11 +117,26 @@ namespace GitUI
             settingsTreeViewUserControl1.RegisterSettingsPage(_checklistSettingsPage);
             // todo: more
             settingsTreeViewUserControl1.RegisteringComplete();
+
+            // todo: alter this when all tab pages are converted
+            //this.tableLayoutPanel3.Controls.Add(this.tabControl1, 1, 0);
+            tableLayoutPanel3.Controls.Remove(tabControl1);
+            settingsPagePanel = new Panel();
+            settingsPagePanel.Dock = DockStyle.Fill;
+            tableLayoutPanel3.Controls.Add(settingsPagePanel, 1, 0);
         }
 
         private void settingsTreeViewUserControl1_SettingsPageSelected(object sender, SettingsPageSelectedEventArgs e)
         {
-            // TODO
+            settingsPagePanel.Controls.Clear();
+            if (e.SettingsPageBase == null)
+            {
+                settingsPagePanel.Controls.Add(tabControl1);
+            }
+            else
+            {
+                settingsPagePanel.Controls.Add(e.SettingsPageBase);
+            }
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)

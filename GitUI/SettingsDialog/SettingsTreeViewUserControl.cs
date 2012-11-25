@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using GitUI.SettingsDialog.Pages;
 
 namespace GitUI.SettingsDialog
 {
@@ -13,6 +14,7 @@ namespace GitUI.SettingsDialog
     {
         private TreeNode _geRootNode;
         private TreeNode _pluginsRootNode;
+        private SettingsPageBase _blankSettingsPage = new BlankSettingsPage();
 
         public event EventHandler<SettingsPageSelectedEventArgs> SettingsPageSelected;
 
@@ -41,7 +43,7 @@ namespace GitUI.SettingsDialog
 
         public void RegisteringComplete()
         {
-            _geRootNode.Nodes.Add("Other settings");
+            _geRootNode.Nodes.Add("TODO: more");
             treeView1.ExpandAll();
         }
 
@@ -53,9 +55,13 @@ namespace GitUI.SettingsDialog
                 {
                     SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPageBase = (SettingsPageBase)(e.Node.Tag) });
                 }
-                else if (e.Node.Text == "Other settings")
+                else if (e.Node.Text == "Git Extensions")
                 {
                     SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPageBase = null });
+                }
+                else
+                {
+                    SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPageBase = _blankSettingsPage });
                 }
             }
         }
