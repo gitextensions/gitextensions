@@ -417,6 +417,12 @@
     <Compile Include="Script\ScriptManager.cs" />
     <Compile Include="SettingsDialog\CheckSettingsLogic.cs" />
     <Compile Include="SettingsDialog\CommonLogic.cs" />
+    <Compile Include="SettingsDialog\Pages\BlankSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\BlankSettingsPage.Designer.cs">
+      <DependentUpon>BlankSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsDialog\Pages\ChecklistSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -946,6 +952,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Script\SimplePrompt.resx">
       <DependentUpon>SimplePrompt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog\Pages\BlankSettingsPage.resx">
+      <DependentUpon>BlankSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsDialog\Pages\ChecklistSettingsPage.resx">
       <DependentUpon>ChecklistSettingsPage.cs</DependentUpon>

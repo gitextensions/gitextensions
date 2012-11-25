@@ -42,7 +42,6 @@ namespace GitUI
             this.argumentsTextBox = new System.Windows.Forms.RichTextBox();
             this.diffFontDialog = new System.Windows.Forms.FontDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tpChecklist = new System.Windows.Forms.TabPage();
             this.tpGit = new System.Windows.Forms.TabPage();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.homeIsSetToLabel = new System.Windows.Forms.Label();
@@ -385,7 +384,6 @@ namespace GitUI
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tpChecklist);
             this.tabControl1.Controls.Add(this.tpGit);
             this.tabControl1.Controls.Add(this.tpGitExtensions);
             this.tabControl1.Controls.Add(this.tpAppearance);
@@ -404,15 +402,6 @@ namespace GitUI
             this.tabControl1.Size = new System.Drawing.Size(648, 536);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
-            // 
-            // tpChecklist
-            // 
-            this.tpChecklist.Location = new System.Drawing.Point(4, 24);
-            this.tpChecklist.Name = "tpChecklist";
-            this.tpChecklist.Size = new System.Drawing.Size(640, 508);
-            this.tpChecklist.TabIndex = 2;
-            this.tpChecklist.Text = "Checklist";
-            this.tpChecklist.UseVisualStyleBackColor = true;
             // 
             // tpGit
             // 
@@ -2889,7 +2878,7 @@ namespace GitUI
             // 
             this.scriptNeedsConfirmation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.scriptNeedsConfirmation.AutoSize = true;
-            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, -1190);
+            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, -1624);
             this.scriptNeedsConfirmation.Name = "scriptNeedsConfirmation";
             this.scriptNeedsConfirmation.Size = new System.Drawing.Size(119, 17);
             this.scriptNeedsConfirmation.TabIndex = 21;
@@ -2901,7 +2890,7 @@ namespace GitUI
             // 
             this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.inMenuCheckBox.AutoSize = true;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(107, -1151);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(107, -1585);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
             this.inMenuCheckBox.Size = new System.Drawing.Size(183, 17);
             this.inMenuCheckBox.TabIndex = 15;
@@ -3143,7 +3132,6 @@ namespace GitUI
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.CheckBox KeepMergeBackup;
         private System.Windows.Forms.CheckBox GlobalKeepMergeBackup;
-        private System.Windows.Forms.TabPage tpChecklist;
         private System.Windows.Forms.TabPage tpGitExtensions;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_MaxCommits;
