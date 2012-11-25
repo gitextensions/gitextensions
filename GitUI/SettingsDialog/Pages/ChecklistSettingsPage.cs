@@ -14,7 +14,7 @@ using ResourceManager.Translation;
 
 namespace GitUI.SettingsDialog.Pages
 {
-    public partial class ChecklistSettingsPage : UserControl
+    public partial class ChecklistSettingsPage : SettingsPageBase
     {
         private readonly TranslationString _wrongGitVersion =
             new TranslationString("Git found but version {0} is not supported. Upgrage to version {1} or later");
@@ -150,6 +150,8 @@ namespace GitUI.SettingsDialog.Pages
             _commonLogic = commonLogic;
             _checkSettingsLogic = checkSettingsLogic;
             _gitModule = gitModule;
+
+            Text = "Checklist";
         }
 
         [Browsable(false)]

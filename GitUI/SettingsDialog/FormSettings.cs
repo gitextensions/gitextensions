@@ -112,6 +112,14 @@ namespace GitUI
             _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module); // TODO
             _checklistSettingsPage = new ChecklistSettingsPage(_commonLogic, _checkSettingsLogic, Module); // TODO
             _checkSettingsLogic.ChecklistSettingsPage = _checklistSettingsPage; // TODO
+            settingsTreeViewUserControl1.RegisterSettingsPage(_checklistSettingsPage);
+            // todo: more
+            settingsTreeViewUserControl1.RegisteringComplete();
+        }
+
+        private void settingsTreeViewUserControl1_SettingsPageSelected(object sender, SettingsPageSelectedEventArgs e)
+        {
+            // TODO
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
