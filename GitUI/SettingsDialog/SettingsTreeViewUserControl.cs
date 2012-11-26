@@ -15,12 +15,16 @@ namespace GitUI.SettingsDialog
         private TreeNode _geRootNode;
         private TreeNode _pluginsRootNode;
         private SettingsPageBase _blankSettingsPage = new BlankSettingsPage();
+        private Font _origTextBoxFont;
 
         public event EventHandler<SettingsPageSelectedEventArgs> SettingsPageSelected;
 
         public SettingsTreeViewUserControl()
         {
             InitializeComponent();
+
+            _origTextBoxFont = textBoxFind.Font;
+            SetFindPrompt(true);
 
             AddRootNodes();
         }
@@ -65,6 +69,63 @@ namespace GitUI.SettingsDialog
                 }
             }
         }
+
+        private void textBoxFind_TextChanged(object sender, EventArgs e)
+        {
+            if (textBoxFind.Text.IsNullOrEmpty() || textBoxFind.Text == "Type to find")
+            {
+                ResetAllNodeHighlighting();
+            }
+            else
+            {
+                string searchFor = textBoxFind.Text;
+
+                // TODO: search
+                // TODO: HighlightNode
+            }
+        }
+
+        private void HighlightNode(TreeNode treeNode)
+        {
+            // TODO
+        }
+
+        private void ResetAllNodeHighlighting()
+        {
+            // TODO
+        }
+
+        #region FindPrompt
+        private void SetFindPrompt(bool show)
+        {
+            if (show)
+            {
+                textBoxFind.Font = new Font("Calibri", textBoxFind.Font.Size, FontStyle.Italic);
+                textBoxFind.Text = "Type to find";
+                textBoxFind.ForeColor = Color.Gray;
+            }
+            else
+            {
+                textBoxFind.Font = _origTextBoxFont;
+                textBoxFind.ForeColor = Color.Black;
+            }
+        }
+
+        private void textBoxFind_Enter(object sender, EventArgs e)
+        {
+            SetFindPrompt(false);
+
+            if (textBoxFind.Text == "Type to find")
+            {
+                textBoxFind.Text = "";
+            }
+        }
+
+        private void textBoxFind_Leave(object sender, EventArgs e)
+        {
+            SetFindPrompt(true);
+        }
+        #endregion
     }
 
     public class SettingsPageSelectedEventArgs : EventArgs
