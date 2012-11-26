@@ -407,7 +407,6 @@ namespace GitUI
             this.tpGitExtensions.TabIndex = 3;
             this.tpGitExtensions.Text = "Git extensions";
             this.tpGitExtensions.UseVisualStyleBackColor = true;
-            this.tpGitExtensions.Click += new System.EventHandler(this.TabPageGitExtensions_Click);
             // 
             // groupBox12
             // 
