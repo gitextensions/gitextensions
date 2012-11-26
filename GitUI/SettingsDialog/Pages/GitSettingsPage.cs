@@ -31,6 +31,12 @@ namespace GitUI.SettingsDialog.Pages
             Text = "Git";
         }
 
+        public override IEnumerable<string> GetSearchKeywords()
+        {
+            return new List<string> { "path", "home", "environment", "variable", "msys", "cygwin", "download", "git", "command", "linux", "tools" };
+
+        }
+
         public override void RefreshView()
         {
             GitPath.Text = Settings.GitCommand;
