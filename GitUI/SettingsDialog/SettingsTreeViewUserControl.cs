@@ -107,7 +107,17 @@ namespace GitUI.SettingsDialog
 
                 foreach (var node in GetFindableNodes())
                 {
-                    if (searchFor.Contains(node.Text.ToLowerInvariant()))
+                    var settingsPage = (SettingsPageBase)node.Tag;
+
+                    // search for title
+                    if (searchFor.Contains(settingsPage.Text.ToLowerInvariant()))
+                    {
+                        foundNodes.Add(node);
+                    }
+
+                    // search for keywords (space combines as 'and')
+                    var andKeywords = searchFor.Split(' ');
+                    if (andKeywords.All(keyword => settingsPage.GetSearchKeywords().Contains(keyword)))
                     {
                         foundNodes.Add(node);
                     }
