@@ -22,7 +22,6 @@ namespace GitUI
     public sealed partial class FormSettings : GitModuleForm
     {
         #region Translation
-        private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
         private readonly TranslationString __diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
 
         private readonly TranslationString _loadingSettingsFailed =
@@ -80,7 +79,8 @@ namespace GitUI
 
         CommonLogic _commonLogic;
         CheckSettingsLogic _checkSettingsLogic;
-        ChecklistSettingsPage _checklistSettingsPage; // TODO: remove later
+        ChecklistSettingsPage _checklistSettingsPage;
+        GitSettingsPage _gitSettingsPage;
 
         private FormSettings()
             : this(null)
@@ -115,6 +115,10 @@ namespace GitUI
             _checklistSettingsPage = new ChecklistSettingsPage(_commonLogic, _checkSettingsLogic, Module); // TODO
             _checkSettingsLogic.ChecklistSettingsPage = _checklistSettingsPage; // TODO
             settingsTreeViewUserControl1.RegisterSettingsPage(_checklistSettingsPage);
+
+            _gitSettingsPage = new GitSettingsPage(_checkSettingsLogic);
+            settingsTreeViewUserControl1.RegisterSettingsPage(_gitSettingsPage);
+
             // todo: more
             settingsTreeViewUserControl1.RegisteringComplete();
 
@@ -200,9 +204,6 @@ namespace GitUI
             loadingSettings = true;
             try
             {
-                GitCommandHelpers.SetEnvironmentVariable();
-                homeIsSetToLabel.Text = string.Concat(_homeIsSetToString.Text, " ", GitCommandHelpers.GetHomeDir());
-
                 chkEnableAutoScale.Checked = Settings.EnableAutoScale;
 
                 scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
@@ -287,9 +288,6 @@ namespace GitUI
                 SmtpServer.Text = Settings.Smtp;
 
                 _NO_TRANSLATE_MaxCommits.Value = Settings.MaxRevisionGraphCommits;
-
-                GitPath.Text = Settings.GitCommand;
-                GitBinPath.Text = Settings.GitBinDir;
 
                 ConfigFile localConfig = Module.GetLocalConfig();
                 ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
@@ -450,9 +448,6 @@ namespace GitUI
             Settings.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 
             Settings.Smtp = SmtpServer.Text;
-
-            Settings.GitCommand = GitPath.Text;
-            Settings.GitBinDir = GitBinPath.Text;
 
             Settings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
             Settings.GravatarFallbackService = noImageService.Text;
@@ -870,11 +865,6 @@ namespace GitUI
             LoadSettings();
             _checklistSettingsPage.CheckSettings();
             Cursor.Current = Cursors.Default;
-        }
-
-        private void TabPageGitExtensions_Click(object sender, EventArgs e)
-        {
-            GitPath.Text = Settings.GitCommand;
         }
 
         private void OpenSSH_CheckedChanged(object sender, EventArgs e)
