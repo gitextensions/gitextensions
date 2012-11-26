@@ -19,7 +19,8 @@ namespace GitUI.SettingsDialog
         private Font _nodeFontBold;
         private Font _nodeFontItalic;
         ////private IList<SettingsPageBase> registeredSettingsPages = new List<SettingsPageBase>();
-        private IList<TreeNode> treeNodesWithSettingsPage = new List<TreeNode>();
+        private IList<TreeNode> _treeNodesWithSettingsPage = new List<TreeNode>();
+        private SettingsPageBase _firstRegisteredSettingsPage;
 
         public event EventHandler<SettingsPageSelectedEventArgs> SettingsPageSelected;
 
@@ -55,14 +56,22 @@ namespace GitUI.SettingsDialog
         {
             ////registeredSettingsPages.Add(settingsPage);
             var settingsPageNode = _geRootNode.Nodes.Add(settingsPage.Text);
-            treeNodesWithSettingsPage.Add(settingsPageNode);
+            _treeNodesWithSettingsPage.Add(settingsPageNode);
             settingsPageNode.Tag = settingsPage;
+
+            if (_firstRegisteredSettingsPage == null)
+            {
+                _firstRegisteredSettingsPage = settingsPage;
+            }
         }
 
         public void RegisteringComplete()
         {
             _geRootNode.Nodes.Add("TODO: more");
             treeView1.ExpandAll();
+
+            var firstRegistered = FindNodeBySettingsPage(_firstRegisteredSettingsPage);
+            treeView1.SelectedNode = firstRegistered;
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -115,7 +124,7 @@ namespace GitUI.SettingsDialog
 
         private IEnumerable<TreeNode> GetFindableNodes()
         {
-            return treeNodesWithSettingsPage;
+            return _treeNodesWithSettingsPage;
         }
 
         private void HighlightNode(TreeNode treeNode, bool highlight)
@@ -129,6 +138,11 @@ namespace GitUI.SettingsDialog
             {
                 HighlightNode(node, false);
             }
+        }
+
+        private TreeNode FindNodeBySettingsPage(SettingsPageBase settingsPage)
+        {
+            return GetFindableNodes().FirstOrDefault(te => te.Tag == settingsPage);
         }
 
         #region FindPrompt
