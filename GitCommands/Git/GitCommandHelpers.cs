@@ -1065,14 +1065,16 @@ namespace GitCommands
             sb.AppendLine("Submodule " + status.Name + " Change");
 
             sb.AppendLine();
-            sb.AppendLine("From:\t" + status.OldCommit);
+            sb.AppendLine("From:\t" + (status.OldCommit ?? "null"));
             if (gitmodule.ValidWorkingDir())
             {
                 string error = "";
-                CommitData commitData = CommitData.GetCommitData(gitmodule, status.OldCommit, ref error);
+                CommitData commitData = null;
+                if (status.OldCommit != null)
+                    commitData = CommitData.GetCommitData(gitmodule, status.OldCommit, ref error);
                 if (commitData != null)
                 {
-                    sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
                     var delim = new char[] { '\n', '\r' };
                     var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
                     foreach (var curline in lines)
@@ -1084,14 +1086,16 @@ namespace GitCommands
 
             sb.AppendLine();
             string dirty = !status.IsDirty ? "" : " (dirty)";
-            sb.AppendLine("To:\t\t" + status.Commit + dirty);
+            sb.AppendLine("To:\t\t" + (status.Commit ?? "null") + dirty);
             if (gitmodule.ValidWorkingDir())
             {
                 string error = "";
-                CommitData commitData = CommitData.GetCommitData(gitmodule, status.Commit, ref error);
+                CommitData commitData = null;
+                if (status.Commit != null)
+                    commitData = CommitData.GetCommitData(gitmodule, status.Commit, ref error);
                 if (commitData != null)
                 {
-                    sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
                     var delim = new char[] { '\n', '\r' };
                     var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
                     foreach (var curline in lines)
