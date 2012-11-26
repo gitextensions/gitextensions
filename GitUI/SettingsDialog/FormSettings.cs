@@ -123,7 +123,7 @@ namespace GitUI
             tableLayoutPanel3.Controls.Remove(tabControl1);
             settingsPagePanel = new Panel();
             settingsPagePanel.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Controls.Add(settingsPagePanel, 1, 0);
+            tableLayoutPanel3.Controls.Add(settingsPagePanel, 1, 1);
         }
 
         private void settingsTreeViewUserControl1_SettingsPageSelected(object sender, SettingsPageSelectedEventArgs e)
@@ -132,10 +132,12 @@ namespace GitUI
             if (e.SettingsPageBase == null)
             {
                 settingsPagePanel.Controls.Add(tabControl1);
+                labelSettingsPageTitle.Text = "(TabControl to be removed)";
             }
             else
             {
                 settingsPagePanel.Controls.Add(e.SettingsPageBase);
+                labelSettingsPageTitle.Text = e.SettingsPageBase.Text;
             }
         }
 

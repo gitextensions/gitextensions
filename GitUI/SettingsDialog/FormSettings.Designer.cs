@@ -272,6 +272,7 @@ namespace GitUI
             this.applicationDialog = new System.Windows.Forms.FontDialog();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.settingsTreeViewUserControl1 = new GitUI.SettingsDialog.SettingsTreeViewUserControl();
+            this.labelSettingsPageTitle = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -396,10 +397,10 @@ namespace GitUI
             this.tabControl1.Controls.Add(this.tpHotkeys);
             this.tabControl1.Controls.Add(this.tpShellExt);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(203, 3);
+            this.tabControl1.Location = new System.Drawing.Point(203, 38);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(648, 536);
+            this.tabControl1.Size = new System.Drawing.Size(648, 501);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -409,7 +410,7 @@ namespace GitUI
             this.tpGit.Controls.Add(this.groupBox7);
             this.tpGit.Location = new System.Drawing.Point(4, 24);
             this.tpGit.Name = "tpGit";
-            this.tpGit.Size = new System.Drawing.Size(640, 508);
+            this.tpGit.Size = new System.Drawing.Size(640, 473);
             this.tpGit.TabIndex = 7;
             this.tpGit.Text = "Git";
             this.tpGit.UseVisualStyleBackColor = true;
@@ -499,7 +500,7 @@ namespace GitUI
             // BrowseGitBinPath
             // 
             this.BrowseGitBinPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseGitBinPath.Location = new System.Drawing.Point(367, 63);
+            this.BrowseGitBinPath.Location = new System.Drawing.Point(109, 63);
             this.BrowseGitBinPath.Name = "BrowseGitBinPath";
             this.BrowseGitBinPath.Size = new System.Drawing.Size(75, 25);
             this.BrowseGitBinPath.TabIndex = 8;
@@ -538,7 +539,7 @@ namespace GitUI
             // BrowseGitPath
             // 
             this.BrowseGitPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseGitPath.Location = new System.Drawing.Point(367, 37);
+            this.BrowseGitPath.Location = new System.Drawing.Point(109, 37);
             this.BrowseGitPath.Name = "BrowseGitPath";
             this.BrowseGitPath.Size = new System.Drawing.Size(75, 25);
             this.BrowseGitPath.TabIndex = 5;
@@ -561,7 +562,7 @@ namespace GitUI
             this.tpGitExtensions.Controls.Add(this.groupBox11);
             this.tpGitExtensions.Location = new System.Drawing.Point(4, 24);
             this.tpGitExtensions.Name = "tpGitExtensions";
-            this.tpGitExtensions.Size = new System.Drawing.Size(640, 508);
+            this.tpGitExtensions.Size = new System.Drawing.Size(640, 473);
             this.tpGitExtensions.TabIndex = 3;
             this.tpGitExtensions.Text = "Git extensions";
             this.tpGitExtensions.UseVisualStyleBackColor = true;
@@ -842,7 +843,7 @@ namespace GitUI
             this.tpAppearance.Location = new System.Drawing.Point(4, 24);
             this.tpAppearance.Name = "tpAppearance";
             this.tpAppearance.Padding = new System.Windows.Forms.Padding(3);
-            this.tpAppearance.Size = new System.Drawing.Size(640, 508);
+            this.tpAppearance.Size = new System.Drawing.Size(640, 473);
             this.tpAppearance.TabIndex = 10;
             this.tpAppearance.Text = "Appearance";
             this.tpAppearance.UseVisualStyleBackColor = true;
@@ -1165,7 +1166,7 @@ namespace GitUI
             this.tpColors.Controls.Add(this.groupBox3);
             this.tpColors.Location = new System.Drawing.Point(4, 24);
             this.tpColors.Name = "tpColors";
-            this.tpColors.Size = new System.Drawing.Size(640, 508);
+            this.tpColors.Size = new System.Drawing.Size(640, 473);
             this.tpColors.TabIndex = 5;
             this.tpColors.Text = "Colors";
             this.tpColors.UseVisualStyleBackColor = true;
@@ -1648,7 +1649,7 @@ namespace GitUI
             this.tpStart.Location = new System.Drawing.Point(4, 24);
             this.tpStart.Name = "tpStart";
             this.tpStart.Padding = new System.Windows.Forms.Padding(3);
-            this.tpStart.Size = new System.Drawing.Size(640, 508);
+            this.tpStart.Size = new System.Drawing.Size(640, 473);
             this.tpStart.TabIndex = 6;
             this.tpStart.Text = "Start page";
             this.tpStart.UseVisualStyleBackColor = true;
@@ -1659,7 +1660,7 @@ namespace GitUI
             this.dashboardEditor1.Location = new System.Drawing.Point(3, 3);
             this.dashboardEditor1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.dashboardEditor1.Name = "dashboardEditor1";
-            this.dashboardEditor1.Size = new System.Drawing.Size(634, 502);
+            this.dashboardEditor1.Size = new System.Drawing.Size(634, 467);
             this.dashboardEditor1.TabIndex = 0;
             // 
             // tpGlobalSettings
@@ -1698,7 +1699,7 @@ namespace GitUI
             this.tpGlobalSettings.Location = new System.Drawing.Point(4, 24);
             this.tpGlobalSettings.Name = "tpGlobalSettings";
             this.tpGlobalSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tpGlobalSettings.Size = new System.Drawing.Size(640, 508);
+            this.tpGlobalSettings.Size = new System.Drawing.Size(640, 473);
             this.tpGlobalSettings.TabIndex = 1;
             this.tpGlobalSettings.Text = "Global settings";
             this.tpGlobalSettings.UseVisualStyleBackColor = true;
@@ -2081,7 +2082,7 @@ namespace GitUI
             this.tpLocalSettings.Location = new System.Drawing.Point(4, 24);
             this.tpLocalSettings.Name = "tpLocalSettings";
             this.tpLocalSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tpLocalSettings.Size = new System.Drawing.Size(640, 508);
+            this.tpLocalSettings.Size = new System.Drawing.Size(640, 473);
             this.tpLocalSettings.TabIndex = 0;
             this.tpLocalSettings.Text = "Local settings";
             this.tpLocalSettings.UseVisualStyleBackColor = true;
@@ -2305,7 +2306,7 @@ namespace GitUI
             this.tpSsh.Location = new System.Drawing.Point(4, 24);
             this.tpSsh.Name = "tpSsh";
             this.tpSsh.Padding = new System.Windows.Forms.Padding(3);
-            this.tpSsh.Size = new System.Drawing.Size(640, 508);
+            this.tpSsh.Size = new System.Drawing.Size(640, 473);
             this.tpSsh.TabIndex = 4;
             this.tpSsh.Text = "Ssh";
             this.tpSsh.UseVisualStyleBackColor = true;
@@ -2523,7 +2524,7 @@ namespace GitUI
             this.tpScriptsTab.Location = new System.Drawing.Point(4, 24);
             this.tpScriptsTab.Name = "tpScriptsTab";
             this.tpScriptsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.tpScriptsTab.Size = new System.Drawing.Size(640, 508);
+            this.tpScriptsTab.Size = new System.Drawing.Size(640, 473);
             this.tpScriptsTab.TabIndex = 8;
             this.tpScriptsTab.Text = "Scripts";
             this.tpScriptsTab.UseVisualStyleBackColor = true;
@@ -2878,7 +2879,7 @@ namespace GitUI
             // 
             this.scriptNeedsConfirmation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.scriptNeedsConfirmation.AutoSize = true;
-            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, -2058);
+            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, -4138);
             this.scriptNeedsConfirmation.Name = "scriptNeedsConfirmation";
             this.scriptNeedsConfirmation.Size = new System.Drawing.Size(119, 17);
             this.scriptNeedsConfirmation.TabIndex = 21;
@@ -2890,7 +2891,7 @@ namespace GitUI
             // 
             this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.inMenuCheckBox.AutoSize = true;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(107, -2019);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(107, -4099);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
             this.inMenuCheckBox.Size = new System.Drawing.Size(183, 17);
             this.inMenuCheckBox.TabIndex = 15;
@@ -2904,7 +2905,7 @@ namespace GitUI
             this.tpHotkeys.Location = new System.Drawing.Point(4, 24);
             this.tpHotkeys.Name = "tpHotkeys";
             this.tpHotkeys.Padding = new System.Windows.Forms.Padding(3);
-            this.tpHotkeys.Size = new System.Drawing.Size(640, 508);
+            this.tpHotkeys.Size = new System.Drawing.Size(640, 473);
             this.tpHotkeys.TabIndex = 9;
             this.tpHotkeys.Text = "Hotkeys";
             this.tpHotkeys.UseVisualStyleBackColor = true;
@@ -2926,7 +2927,7 @@ namespace GitUI
             this.tpShellExt.Location = new System.Drawing.Point(4, 24);
             this.tpShellExt.Name = "tpShellExt";
             this.tpShellExt.Padding = new System.Windows.Forms.Padding(3);
-            this.tpShellExt.Size = new System.Drawing.Size(640, 508);
+            this.tpShellExt.Size = new System.Drawing.Size(640, 473);
             this.tpShellExt.TabIndex = 11;
             this.tpShellExt.Text = "Shell extension";
             this.tpShellExt.UseVisualStyleBackColor = true;
@@ -2995,13 +2996,15 @@ namespace GitUI
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.Ok, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.tabControl1, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.Ok, 1, 2);
+            this.tableLayoutPanel3.Controls.Add(this.tabControl1, 1, 1);
             this.tableLayoutPanel3.Controls.Add(this.settingsTreeViewUserControl1, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.labelSettingsPageTitle, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowCount = 3;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.Size = new System.Drawing.Size(854, 572);
@@ -3013,9 +3016,24 @@ namespace GitUI
             this.settingsTreeViewUserControl1.Location = new System.Drawing.Point(3, 3);
             this.settingsTreeViewUserControl1.MinimumSize = new System.Drawing.Size(100, 220);
             this.settingsTreeViewUserControl1.Name = "settingsTreeViewUserControl1";
+            this.tableLayoutPanel3.SetRowSpan(this.settingsTreeViewUserControl1, 2);
             this.settingsTreeViewUserControl1.Size = new System.Drawing.Size(194, 536);
             this.settingsTreeViewUserControl1.TabIndex = 1;
             this.settingsTreeViewUserControl1.SettingsPageSelected += new System.EventHandler<GitUI.SettingsDialog.SettingsPageSelectedEventArgs>(this.settingsTreeViewUserControl1_SettingsPageSelected);
+            // 
+            // labelSettingsPageTitle
+            // 
+            this.labelSettingsPageTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelSettingsPageTitle.AutoSize = true;
+            this.labelSettingsPageTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.labelSettingsPageTitle.Location = new System.Drawing.Point(210, 0);
+            this.labelSettingsPageTitle.Margin = new System.Windows.Forms.Padding(10, 0, 3, 0);
+            this.labelSettingsPageTitle.Name = "labelSettingsPageTitle";
+            this.labelSettingsPageTitle.Size = new System.Drawing.Size(47, 35);
+            this.labelSettingsPageTitle.TabIndex = 2;
+            this.labelSettingsPageTitle.Text = "label11";
+            this.labelSettingsPageTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // FormSettings
             // 
@@ -3106,6 +3124,7 @@ namespace GitUI
             this.tpShellExt.ResumeLayout(false);
             this.tpShellExt.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3352,6 +3371,7 @@ namespace GitUI
         private FlowLayoutPanel flowLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel3;
         private SettingsDialog.SettingsTreeViewUserControl settingsTreeViewUserControl1;
+        private Label labelSettingsPageTitle;
 
     }
 }
