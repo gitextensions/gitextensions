@@ -821,7 +821,11 @@ namespace GitUI
                 {
                     try
                     {
-                        File.Delete(Module.WorkingDir + item.Name);
+                        string path = Module.WorkingDir + item.Name;
+                        if (File.Exists(path))
+                            File.Delete(path);
+                        else
+                            Directory.Delete(path, true);
                     }
                     catch (System.IO.IOException) { }
                     catch (System.UnauthorizedAccessException) { }
