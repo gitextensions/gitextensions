@@ -136,11 +136,12 @@ namespace GitUI
             if (e.SettingsPageBase == null)
             {
                 settingsPagePanel.Controls.Add(tabControl1);
-                labelSettingsPageTitle.Text = "(TabControl to be removed)";
+                labelSettingsPageTitle.Text = "(TabControl to be migrated)";
             }
             else
             {
                 settingsPagePanel.Controls.Add(e.SettingsPageBase);
+                e.SettingsPageBase.Dock = DockStyle.Fill;
                 labelSettingsPageTitle.Text = e.SettingsPageBase.Text;
             }
         }
