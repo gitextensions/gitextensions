@@ -16,6 +16,10 @@ namespace GitUI.SettingsDialog
         private TreeNode _pluginsRootNode;
         private SettingsPageBase _blankSettingsPage = new BlankSettingsPage();
         private Font _origTextBoxFont;
+        private Font _nodeFontBold;
+        private Font _nodeFontItalic;
+        ////private IList<SettingsPageBase> registeredSettingsPages = new List<SettingsPageBase>();
+        private IList<TreeNode> treeNodesWithSettingsPage = new List<TreeNode>();
 
         public event EventHandler<SettingsPageSelectedEventArgs> SettingsPageSelected;
 
@@ -29,19 +33,29 @@ namespace GitUI.SettingsDialog
             AddRootNodes();
         }
 
+        /// <summary>
+        /// ... and save fonts
+        /// </summary>
         private void AddRootNodes()
         {
             _geRootNode = treeView1.Nodes.Add("Git Extensions");
 
+            // create fonts
+            var nodeFond = treeView1.Font;
+            _nodeFontBold = new Font(nodeFond, FontStyle.Bold);
+            _nodeFontItalic = new Font(nodeFond, FontStyle.Italic);
+
             _pluginsRootNode = treeView1.Nodes.Add("Plugins");
             var pluginPlaceHolderNode = _pluginsRootNode.Nodes.Add("todo");
-            pluginPlaceHolderNode.NodeFont = new Font(treeView1.Font, FontStyle.Italic);
+            pluginPlaceHolderNode.NodeFont = _nodeFontItalic;
             pluginPlaceHolderNode.ForeColor = Color.Gray;
         }
 
         public void RegisterSettingsPage(SettingsPageBase settingsPage)
         {
+            ////registeredSettingsPages.Add(settingsPage);
             var settingsPageNode = _geRootNode.Nodes.Add(settingsPage.Text);
+            treeNodesWithSettingsPage.Add(settingsPageNode);
             settingsPageNode.Tag = settingsPage;
         }
 
@@ -78,21 +92,43 @@ namespace GitUI.SettingsDialog
             }
             else
             {
-                string searchFor = textBoxFind.Text;
+                string searchFor = textBoxFind.Text.ToLowerInvariant();
 
-                // TODO: search
-                // TODO: HighlightNode
+                var foundNodes = new List<TreeNode>();
+
+                foreach (var node in GetFindableNodes())
+                {
+                    if (searchFor.Contains(node.Text.ToLowerInvariant()))
+                    {
+                        foundNodes.Add(node);
+                    }
+                }
+
+                ResetAllNodeHighlighting();
+
+                foreach (var node in foundNodes)
+                {
+                    HighlightNode(node, true);
+                }
             }
         }
 
-        private void HighlightNode(TreeNode treeNode)
+        private IEnumerable<TreeNode> GetFindableNodes()
         {
-            // TODO
+            return treeNodesWithSettingsPage;
+        }
+
+        private void HighlightNode(TreeNode treeNode, bool highlight)
+        {
+            treeNode.NodeFont = highlight ? _nodeFontBold : null;
         }
 
         private void ResetAllNodeHighlighting()
         {
-            // TODO
+            foreach (var node in GetFindableNodes())
+            {
+                HighlightNode(node, false);
+            }
         }
 
         #region FindPrompt
@@ -100,7 +136,8 @@ namespace GitUI.SettingsDialog
         {
             if (show)
             {
-                textBoxFind.Font = new Font("Calibri", textBoxFind.Font.Size, FontStyle.Italic);
+                //textBoxFind.Font = new Font("Calibri", textBoxFind.Font.Size, FontStyle.Italic);
+                textBoxFind.Font = new Font(textBoxFind.Font, FontStyle.Italic);
                 textBoxFind.Text = "Type to find";
                 textBoxFind.ForeColor = Color.Gray;
             }
