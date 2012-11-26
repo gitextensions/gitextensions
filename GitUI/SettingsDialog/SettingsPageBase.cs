@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace GitUI.SettingsDialog
 {
-    public abstract class SettingsPageBase : UserControl
+    public class SettingsPageBase : UserControl
     {
         //// public abstract string Title { get; }
     }
