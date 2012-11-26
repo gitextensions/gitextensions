@@ -165,10 +165,6 @@ Current Branch:
   <metadata name="diffFontDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>187, 54</value>
   </metadata>
-  <data name="label51.Text" xml:space="preserve">
-    <value>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </value>
-  </data>
   <data name="label18.Text" xml:space="preserve">
     <value>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
 but requires the PuTTY authentication client to run  in the background.
