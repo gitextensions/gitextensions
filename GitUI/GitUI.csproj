@@ -429,6 +429,12 @@
     <Compile Include="SettingsDialog\Pages\ChecklistSettingsPage.Designer.cs">
       <DependentUpon>ChecklistSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsDialog\Pages\GitSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\GitSettingsPage.Designer.cs">
+      <DependentUpon>GitSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsDialog\SettingsPageBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -958,6 +964,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsDialog\Pages\ChecklistSettingsPage.resx">
       <DependentUpon>ChecklistSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog\Pages\GitSettingsPage.resx">
+      <DependentUpon>GitSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsDialog\SettingsTreeViewUserControl.resx">
       <DependentUpon>SettingsTreeViewUserControl.cs</DependentUpon>
