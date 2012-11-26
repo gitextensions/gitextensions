@@ -8,22 +8,47 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI.SettingsDialog.Pages
 {
     public partial class GitSettingsPage : SettingsPageBase
     {
-        CommonLogic _commonLogic;
-        CheckSettingsLogic _checkSettingsLogic;
-        GitModule _gitModule;
+        private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
 
-        public GitSettingsPage(CommonLogic commonLogic, CheckSettingsLogic checkSettingsLogic, GitModule gitModule)
+        ////CommonLogic _commonLogic;
+        CheckSettingsLogic _checkSettingsLogic;
+
+        public GitSettingsPage(
+            ////CommonLogic commonLogic,
+            CheckSettingsLogic checkSettingsLogic)
         {
             InitializeComponent();
 
-            _commonLogic = commonLogic;
+            ////_commonLogic = commonLogic;
             _checkSettingsLogic = checkSettingsLogic;
-            _gitModule = gitModule;
+
+            Text = "Git";
+        }
+
+        public override void RefreshView()
+        {
+            GitPath.Text = Settings.GitCommand;
+        }
+
+        public override void LoadSettings()
+        {
+            GitCommandHelpers.SetEnvironmentVariable();
+            homeIsSetToLabel.Text = string.Concat(_homeIsSetToString.Text, " ", GitCommandHelpers.GetHomeDir());
+
+            GitPath.Text = Settings.GitCommand;
+            GitBinPath.Text = Settings.GitBinDir;
+        }
+
+        public override void SaveSettings()
+        {
+            Settings.GitCommand = GitPath.Text;
+            Settings.GitBinDir = GitBinPath.Text;
         }
 
         private void BrowseGitPath_Click(object sender, EventArgs e)
@@ -60,8 +85,10 @@ namespace GitUI.SettingsDialog.Pages
 
         private void GitPath_TextChanged(object sender, EventArgs e)
         {
-            if (loadingSettings)
-                return;
+            // TODO
+            ////if (loadingSettings)
+            ////    return;
+
             Settings.GitCommand = GitPath.Text;
             LoadSettings();
         }
@@ -73,10 +100,12 @@ namespace GitUI.SettingsDialog.Pages
 
         private void ChangeHomeButton_Click(object sender, EventArgs e)
         {
+            throw new NotImplementedException(@"
             Save();
             using (var frm = new FormFixHome()) frm.ShowDialog(this);
             LoadSettings();
             Rescan_Click(null, null);
+            ");
         }
     }
 }
