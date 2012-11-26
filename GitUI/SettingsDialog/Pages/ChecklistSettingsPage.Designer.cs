@@ -81,6 +81,7 @@
             this.gitCredentialWinStore.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.gitCredentialWinStore.UseVisualStyleBackColor = false;
             this.gitCredentialWinStore.Visible = false;
+            this.gitCredentialWinStore.Click += new System.EventHandler(this.gitCredentialWinStore_Fix_Click);
             // 
             // translationConfig_Fix
             // 
@@ -206,6 +207,7 @@
             this.translationConfig.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.translationConfig.UseVisualStyleBackColor = false;
             this.translationConfig.Visible = false;
+            this.translationConfig.Click += new System.EventHandler(this.translationConfig_Click);
             // 
             // DiffTool
             // 
@@ -223,6 +225,7 @@
             this.DiffTool.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.DiffTool.UseVisualStyleBackColor = false;
             this.DiffTool.Visible = false;
+            this.DiffTool.Click += new System.EventHandler(this.DiffToolFix_Click);
             // 
             // SshConfig
             // 
@@ -240,6 +243,7 @@
             this.SshConfig.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SshConfig.UseVisualStyleBackColor = false;
             this.SshConfig.Visible = false;
+            this.SshConfig.Click += new System.EventHandler(this.SshConfig_Click);
             // 
             // GitBinFound
             // 
@@ -257,13 +261,14 @@
             this.GitBinFound.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.GitBinFound.UseVisualStyleBackColor = false;
             this.GitBinFound.Visible = false;
+            this.GitBinFound.Click += new System.EventHandler(this.GitBinFound_Click);
             // 
             // Rescan
             // 
             this.Rescan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Rescan.Location = new System.Drawing.Point(515, 389);
+            this.Rescan.Location = new System.Drawing.Point(496, 389);
             this.Rescan.Name = "Rescan";
-            this.Rescan.Size = new System.Drawing.Size(150, 25);
+            this.Rescan.Size = new System.Drawing.Size(169, 25);
             this.Rescan.TabIndex = 54;
             this.Rescan.Text = "Save and rescan";
             this.Rescan.UseVisualStyleBackColor = true;
@@ -307,6 +312,7 @@
             this.GitFound.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.GitFound.UseVisualStyleBackColor = false;
             this.GitFound.Visible = false;
+            this.GitFound.Click += new System.EventHandler(this.GitFound_Click);
             // 
             // MergeTool
             // 
@@ -324,6 +330,7 @@
             this.MergeTool.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.MergeTool.UseVisualStyleBackColor = false;
             this.MergeTool.Visible = false;
+            this.MergeTool.Click += new System.EventHandler(this.MergeToolFix_Click);
             // 
             // UserNameSet
             // 
@@ -341,6 +348,7 @@
             this.UserNameSet.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.UserNameSet.UseVisualStyleBackColor = false;
             this.UserNameSet.Visible = false;
+            this.UserNameSet.Click += new System.EventHandler(this.UserNameSet_Click);
             // 
             // ShellExtensionsRegistered
             // 
@@ -358,6 +366,7 @@
             this.ShellExtensionsRegistered.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ShellExtensionsRegistered.UseVisualStyleBackColor = false;
             this.ShellExtensionsRegistered.Visible = false;
+            this.ShellExtensionsRegistered.Click += new System.EventHandler(this.ShellExtensionsRegistered_Click);
             // 
             // GitExtensionsInstall
             // 
@@ -375,6 +384,7 @@
             this.GitExtensionsInstall.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.GitExtensionsInstall.UseVisualStyleBackColor = false;
             this.GitExtensionsInstall.Visible = false;
+            this.GitExtensionsInstall.Click += new System.EventHandler(this.GitExtensionsInstall_Click);
             // 
             // ChecklistSettingsPage
             // 
