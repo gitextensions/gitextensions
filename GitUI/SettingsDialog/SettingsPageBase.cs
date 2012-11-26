@@ -8,12 +8,14 @@ using GitCommands;
 namespace GitUI.SettingsDialog
 {
     /// <summary>
-    /// set Text property to set the title
+    /// set Text property in derived classes to set the title
     /// </summary>
     public class SettingsPageBase : UserControl
     {
         /// <summary>
         /// called when SettingsPage is shown (again)
+        /// 
+        /// TODO: call
         /// </summary>
         public virtual void RefreshView()
         {
@@ -22,6 +24,8 @@ namespace GitUI.SettingsDialog
 
         /// <summary>
         /// use GitCommands.Settings to load settings
+        /// 
+        /// TODO: call
         /// </summary>
         /// <param name="settings"></param>
         public virtual void LoadSettings()
@@ -31,11 +35,21 @@ namespace GitUI.SettingsDialog
 
         /// <summary>
         /// use GitCommands.Settings to save settings
+        /// 
+        /// TODO: call
         /// </summary>
         /// <param name="settings"></param>
         public virtual void SaveSettings()
         {
             // to be overridden
+        }
+
+        /// <summary>
+        /// override to provide search keywords
+        /// </summary>
+        public virtual IEnumerable<string> GetSearchKeywords()
+        {
+            return new List<string>();
         }
     }
 }
