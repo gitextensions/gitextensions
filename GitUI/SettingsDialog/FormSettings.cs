@@ -872,35 +872,9 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
         }
 
-        private void BrowseGitPath_Click(object sender, EventArgs e)
-        {
-            _checkSettingsLogic.SolveGitCommand();
-
-            using (var browseDialog = new OpenFileDialog
-                                   {
-                                       FileName = Settings.GitCommand,
-                                       Filter = "Git.cmd (git.cmd)|git.cmd|Git.exe (git.exe)|git.exe|Git (git)|git"
-                                   })
-            {
-
-                if (browseDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    GitPath.Text = browseDialog.FileName;
-                }
-            }
-        }
-
         private void TabPageGitExtensions_Click(object sender, EventArgs e)
         {
             GitPath.Text = Settings.GitCommand;
-        }
-
-        private void GitPath_TextChanged(object sender, EventArgs e)
-        {
-            if (loadingSettings)
-                return;
-            Settings.GitCommand = GitPath.Text;
-            LoadSettings();
         }
 
         private void OpenSSH_CheckedChanged(object sender, EventArgs e)
@@ -1047,20 +1021,6 @@ namespace GitUI
                     MessageBox.Show(this, _puttyFoundAuto.Text, _puttyFoundAutoCaption.Text);
                 else
                     tabControl1.SelectTab(tpSsh);
-            }
-        }
-
-        private void BrowseGitBinPath_Click(object sender, EventArgs e)
-        {
-            _checkSettingsLogic.SolveLinuxToolsDir();
-
-            using (var browseDialog = new FolderBrowserDialog { SelectedPath = Settings.GitBinDir })
-            {
-
-                if (browseDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    GitBinPath.Text = browseDialog.SelectedPath;
-                }
             }
         }
 
@@ -1626,19 +1586,6 @@ namespace GitUI
                 sbtn_icon.Visible = false;
                 lbl_icon.Visible = false;
             }
-        }
-
-        private void downloadMsysgit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start(@"http://msysgit.github.com/");
-        }
-
-        private void ChangeHomeButton_Click(object sender, EventArgs e)
-        {
-            Save();
-            using (var frm = new FormFixHome()) frm.ShowDialog(this);
-            LoadSettings();
-            Rescan_Click(null, null);
         }
     }
 }
