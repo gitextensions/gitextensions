@@ -42,7 +42,6 @@ namespace GitUI
             this.argumentsTextBox = new System.Windows.Forms.RichTextBox();
             this.diffFontDialog = new System.Windows.Forms.FontDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tpGit = new System.Windows.Forms.TabPage();
             this.tpGitExtensions = new System.Windows.Forms.TabPage();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.chkWriteCommitMessageInCommitWindow = new System.Windows.Forms.CheckBox();
@@ -369,7 +368,6 @@ namespace GitUI
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tpGit);
             this.tabControl1.Controls.Add(this.tpGitExtensions);
             this.tabControl1.Controls.Add(this.tpAppearance);
             this.tabControl1.Controls.Add(this.tpColors);
@@ -387,15 +385,6 @@ namespace GitUI
             this.tabControl1.Size = new System.Drawing.Size(648, 501);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
-            // 
-            // tpGit
-            // 
-            this.tpGit.Location = new System.Drawing.Point(4, 24);
-            this.tpGit.Name = "tpGit";
-            this.tpGit.Size = new System.Drawing.Size(640, 473);
-            this.tpGit.TabIndex = 7;
-            this.tpGit.Text = "Git";
-            this.tpGit.UseVisualStyleBackColor = true;
             // 
             // tpGitExtensions
             // 
@@ -427,7 +416,7 @@ namespace GitUI
             this.groupBox12.Controls.Add(this.chkFollowRenamesInFileHistory);
             this.groupBox12.Location = new System.Drawing.Point(11, 186);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(0, 296);
+            this.groupBox12.Size = new System.Drawing.Size(448, 296);
             this.groupBox12.TabIndex = 54;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Behaviour";
@@ -587,7 +576,7 @@ namespace GitUI
             this.groupBox11.Controls.Add(this._NO_TRANSLATE_MaxCommits);
             this.groupBox11.Location = new System.Drawing.Point(11, 3);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(0, 177);
+            this.groupBox11.Size = new System.Drawing.Size(448, 177);
             this.groupBox11.TabIndex = 53;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "Performance";
@@ -2719,7 +2708,7 @@ namespace GitUI
             // 
             this.scriptNeedsConfirmation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.scriptNeedsConfirmation.AutoSize = true;
-            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, -4537);
+            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, -5335);
             this.scriptNeedsConfirmation.Name = "scriptNeedsConfirmation";
             this.scriptNeedsConfirmation.Size = new System.Drawing.Size(119, 17);
             this.scriptNeedsConfirmation.TabIndex = 21;
@@ -2731,7 +2720,7 @@ namespace GitUI
             // 
             this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.inMenuCheckBox.AutoSize = true;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(107, -4498);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(107, -5296);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
             this.inMenuCheckBox.Size = new System.Drawing.Size(183, 17);
             this.inMenuCheckBox.TabIndex = 15;
@@ -3076,7 +3065,6 @@ namespace GitUI
         private System.Windows.Forms.Button DiffToolCmdSuggest;
         private System.Windows.Forms.ComboBox DifftoolCmd;
         private System.Windows.Forms.Label label48;
-        private System.Windows.Forms.TabPage tpGit;
         private System.Windows.Forms.CheckBox MulticolorBranches;
         private System.Windows.Forms.CheckBox BranchBorders;
         private System.Windows.Forms.Label _NO_TRANSLATE_ColorGraphLabel;
