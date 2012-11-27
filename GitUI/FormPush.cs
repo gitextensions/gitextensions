@@ -332,13 +332,16 @@ namespace GitUI
                                             + "and one of the commits that are about to be rebased is a merge.");
                     else
                     {
+                        form.Visible = false;
                         bool pullCompleted;
-                        UICommands.StartPullDialog(this, true, out pullCompleted);
+                        UICommands.StartPullDialog(form, true, out pullCompleted);
                         if (pullCompleted)
                         {
+                            form.Visible = true;
                             form.Retry();
                             return true;
                         }
+                        form.Visible = true;
                     }
                 }
             }
