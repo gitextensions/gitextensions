@@ -37,6 +37,24 @@ namespace SyncToRemote
 			git = gitUiCommands.GitModule;
 			remote = Settings.GetSetting(SettingNames.RemoteName);
 
+			string[] statusResults = RunGit("status --porcelain");
+			if (statusResults.Length > 0)
+			{
+				string message = "Sync can only be done on a clean working directory. Would you like to clean and reset your working directory now?\nALL local changes will be discarded if you choose Yes.";
+				string caption = "Clean working directory?";
+				if (MessageBox.Show(message, caption, MessageBoxButtons.YesNo) == DialogResult.Yes)
+				{
+					RunGit("reset --hard");
+					RunGit("clean -x -f");
+				}
+				else
+				{
+					// Cancel
+					MessageBox.Show("Sync canceled.");
+					return true;
+				}
+			}
+
 			string[] fetchResults = RunGit("fetch -p");
 
 			DeletePrunedBranches(gitUiCommands, fetchResults);
