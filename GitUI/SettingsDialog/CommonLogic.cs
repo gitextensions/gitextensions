@@ -22,6 +22,9 @@ namespace GitUI.SettingsDialog
                                 Environment.NewLine + "Path:  {0}\\{1}" + Environment.NewLine +
                                 "Value:  {2} = {3}");
 
+        private static readonly TranslationString _selectFile =
+            new TranslationString("Select file");
+
         private GitModule _gitModule;
         public CommonLogic(GitModule gitModule)
         {
@@ -98,6 +101,19 @@ namespace GitUI.SettingsDialog
             if (!string.IsNullOrEmpty(editor))
                 return editor;
             return Environment.GetEnvironmentVariable("EDITOR");
+        }
+
+        public static string SelectFile(string initialDirectory, string filter, string prev)
+        {
+            using (var dialog = new OpenFileDialog
+            {
+                Filter = filter,
+                InitialDirectory = initialDirectory,
+                Title = _selectFile.Text
+            })
+            {
+                return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : prev;
+            }
         }
     }
 }
