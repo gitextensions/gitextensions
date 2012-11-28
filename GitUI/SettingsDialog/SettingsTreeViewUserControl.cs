@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitUI.SettingsDialog.Pages;
+using GitCommands;
 
 namespace GitUI.SettingsDialog
 {
@@ -27,6 +28,8 @@ namespace GitUI.SettingsDialog
         public SettingsTreeViewUserControl()
         {
             InitializeComponent();
+
+            Font = Settings.Font;
 
             _origTextBoxFont = textBoxFind.Font;
             SetFindPrompt(true);
