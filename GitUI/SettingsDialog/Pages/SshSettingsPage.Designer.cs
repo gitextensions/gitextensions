@@ -104,6 +104,7 @@
             this.PageantBrowse.TabIndex = 10;
             this.PageantBrowse.Text = "Browse";
             this.PageantBrowse.UseVisualStyleBackColor = true;
+            this.PageantBrowse.Click += new System.EventHandler(this.PageantBrowse_Click);
             // 
             // label17
             // 
@@ -132,6 +133,7 @@
             this.PuttygenBrowse.TabIndex = 7;
             this.PuttygenBrowse.Text = "Browse";
             this.PuttygenBrowse.UseVisualStyleBackColor = true;
+            this.PuttygenBrowse.Click += new System.EventHandler(this.PuttygenBrowse_Click);
             // 
             // label16
             // 
@@ -169,6 +171,7 @@
             this.PlinkBrowse.TabIndex = 3;
             this.PlinkBrowse.Text = "Browse";
             this.PlinkBrowse.UseVisualStyleBackColor = true;
+            this.PlinkBrowse.Click += new System.EventHandler(this.PuttyBrowse_Click);
             // 
             // groupBox1
             // 
@@ -205,6 +208,7 @@
             this.OtherSshBrowse.TabIndex = 5;
             this.OtherSshBrowse.Text = "Browse";
             this.OtherSshBrowse.UseVisualStyleBackColor = true;
+            this.OtherSshBrowse.Click += new System.EventHandler(this.OtherSshBrowse_Click);
             // 
             // Other
             // 
@@ -215,6 +219,7 @@
             this.Other.TabIndex = 3;
             this.Other.Text = "Other ssh client";
             this.Other.UseVisualStyleBackColor = true;
+            this.Other.CheckedChanged += new System.EventHandler(this.Other_CheckedChanged);
             // 
             // label18
             // 
@@ -236,6 +241,7 @@
             this.OpenSSH.TabIndex = 1;
             this.OpenSSH.Text = "OpenSSH";
             this.OpenSSH.UseVisualStyleBackColor = true;
+            this.OpenSSH.CheckedChanged += new System.EventHandler(this.OpenSSH_CheckedChanged);
             // 
             // Putty
             // 
@@ -248,6 +254,7 @@
             this.Putty.TabStop = true;
             this.Putty.Text = "PuTTY";
             this.Putty.UseVisualStyleBackColor = true;
+            this.Putty.CheckedChanged += new System.EventHandler(this.Putty_CheckedChanged);
             // 
             // SshSettingsPage
             // 

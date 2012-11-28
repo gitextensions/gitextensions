@@ -55,9 +55,6 @@ namespace GitUI
         private readonly TranslationString _shCanBeRunCaption =
             new TranslationString("Locate linux tools");
 
-        private static readonly TranslationString _selectFile =
-            new TranslationString("Select file");
-
         private readonly TranslationString _puttyFoundAuto =
             new TranslationString("All paths needed for PuTTY could be automatically found and are set.");
 
@@ -354,11 +351,6 @@ namespace GitUI
                 globalAutoCrlfInput.Checked = globalAutocrlf == "input";
                 globalAutoCrlfTrue.Checked = globalAutocrlf == "true";
 
-                PlinkPath.Text = Settings.Plink;
-                PuttygenPath.Text = Settings.Puttygen;
-                PageantPath.Text = Settings.Pageant;
-                AutostartPageant.Checked = Settings.AutoStartPageant;
-
                 chkCascadedContextMenu.Checked = Settings.ShellCascadeContextMenu;
 
                 for (int i = 0; i < Settings.ShellVisibleMenuItems.Length; i++)
@@ -366,17 +358,6 @@ namespace GitUI
                     chlMenuEntries.SetItemChecked(i, Settings.ShellVisibleMenuItems[i] == '1');
                 }
 
-                if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
-                    OpenSSH.Checked = true;
-                else if (GitCommandHelpers.Plink())
-                    Putty.Checked = true;
-                else
-                {
-                    OtherSsh.Text = GitCommandHelpers.GetSsh();
-                    Other.Checked = true;
-                }
-
-                EnableSshOptions();
                 LoadScripts();
             }
             catch (Exception ex)
@@ -409,10 +390,6 @@ namespace GitUI
 
             GitCommandHelpers.SetEnvironmentVariable(true);
 
-            Settings.Plink = PlinkPath.Text;
-            Settings.Puttygen = PuttygenPath.Text;
-            Settings.Pageant = PageantPath.Text;
-            Settings.AutoStartPageant = AutostartPageant.Checked;
             Module.SetFilesEncoding(false, ComboToEncoding(Global_FilesEncoding));
             Module.SetFilesEncoding(true, ComboToEncoding(Local_FilesEncoding));
             Settings.MulticolorBranches = MulticolorBranches.Checked;
@@ -466,15 +443,6 @@ namespace GitUI
             {
                 handleCanFindGitCommand();
             }
-
-            if (OpenSSH.Checked)
-                GitCommandHelpers.UnsetSsh();
-
-            if (Putty.Checked)
-                GitCommandHelpers.SetSsh(PlinkPath.Text);
-
-            if (Other.Checked)
-                GitCommandHelpers.SetSsh(OtherSsh.Text);
 
             Settings.SaveSettings();
 
@@ -696,9 +664,9 @@ namespace GitUI
             string exeFile = MergeToolsHelper.GetMergeToolExeFile(mergeTool);
 
             if (exeFile != null)
-                MergetoolPath.Text = SelectFile(".", string.Format("{0} ({1})|{1}", GlobalMergeTool.Text, exeFile), MergetoolPath.Text);
+                MergetoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} ({1})|{1}", GlobalMergeTool.Text, exeFile), MergetoolPath.Text);
             else
-                MergetoolPath.Text = SelectFile(".", string.Format("{0} (*.exe)|*.exe", GlobalMergeTool.Text), MergetoolPath.Text);
+                MergetoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} (*.exe)|*.exe", GlobalMergeTool.Text), MergetoolPath.Text);
         }
 
         private void GlobalDiffTool_TextChanged(object sender, EventArgs e)
@@ -721,9 +689,9 @@ namespace GitUI
             string exeFile = MergeToolsHelper.GetDiffToolExeFile(diffTool);
 
             if (exeFile != null)
-                DifftoolPath.Text = SelectFile(".", string.Format("{0} ({1})|{1}", GlobalDiffTool.Text, exeFile), DifftoolPath.Text);
+                DifftoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} ({1})|{1}", GlobalDiffTool.Text, exeFile), DifftoolPath.Text);
             else
-                DifftoolPath.Text = SelectFile(".", string.Format("{0} (*.exe)|*.exe", GlobalDiffTool.Text), DifftoolPath.Text);
+                DifftoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} (*.exe)|*.exe", GlobalDiffTool.Text), DifftoolPath.Text);
         }
 
         private void GlobalMergeTool_TextChanged(object sender, EventArgs e)
@@ -786,142 +754,6 @@ namespace GitUI
             LoadSettings();
             _checklistSettingsPage.CheckSettings();
             Cursor.Current = Cursors.Default;
-        }
-
-        private void OpenSSH_CheckedChanged(object sender, EventArgs e)
-        {
-            EnableSshOptions();
-        }
-
-        private void Putty_CheckedChanged(object sender, EventArgs e)
-        {
-            if (Putty.Checked)
-            {
-                AutoFindPuttyPaths();
-            }
-            EnableSshOptions();
-        }
-
-        private static IEnumerable<string> GetPuttyLocations()
-        {
-            string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
-            string programFilesX86 = null;
-            if (8 == IntPtr.Size
-                || !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
-                programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
-            yield return programFiles + @"\PuTTY\";
-            if (programFilesX86 != null)
-                yield return programFilesX86 + @"\PuTTY\";
-            yield return programFiles + @"\TortoiseGit\bin\";
-            if (programFilesX86 != null)
-                yield return programFilesX86 + @"\TortoiseGit\bin\";
-            yield return programFiles + @"\TortoiseSvn\bin\";
-            if (programFilesX86 != null)
-                yield return programFilesX86 + @"\TortoiseSvn\bin\";
-            yield return CommonLogic.GetRegistryValue(Registry.LocalMachine,
-                                                        "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1",
-                                                        "InstallLocation");
-            yield return Settings.GetInstallDir() + @"\PuTTY\";
-        }
-
-        private bool AutoFindPuttyPaths()
-        {
-            if (!Settings.RunningOnWindows())
-                return false;
-
-            foreach (var path in GetPuttyLocations())
-            {
-                if (AutoFindPuttyPathsInDir(path))
-                    return true;
-            }
-            return false;
-        }
-
-        private bool AutoFindPuttyPathsInDir(string installdir)
-        {
-            if (!installdir.EndsWith("\\"))
-                installdir += "\\";
-
-            if (!File.Exists(PlinkPath.Text))
-            {
-                if (File.Exists(installdir + "plink.exe"))
-                    PlinkPath.Text = installdir + "plink.exe";
-                if (!File.Exists(PlinkPath.Text))
-                {
-                    if (File.Exists(installdir + "TortoisePlink.exe"))
-                        PlinkPath.Text = installdir + "TortoisePlink.exe";
-                }
-            }
-
-            if (!File.Exists(PuttygenPath.Text))
-            {
-                if (File.Exists(installdir + "puttygen.exe"))
-                    PuttygenPath.Text = installdir + "puttygen.exe";
-            }
-
-            if (!File.Exists(PageantPath.Text))
-            {
-                if (File.Exists(installdir + "pageant.exe"))
-                    PageantPath.Text = installdir + "pageant.exe";
-            }
-
-            if (File.Exists(PlinkPath.Text) && File.Exists(PuttygenPath.Text) && File.Exists(PageantPath.Text))
-                return true;
-            return false;
-        }
-
-        private static string SelectFile(string initialDirectory, string filter, string prev)
-        {
-            using (var dialog = new OpenFileDialog
-                             {
-                                 Filter = filter,
-                                 InitialDirectory = initialDirectory,
-                                 Title = _selectFile.Text
-                             })
-            {
-                return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : prev;
-            }
-        }
-
-        private void OtherSshBrowse_Click(object sender, EventArgs e)
-        {
-            OtherSsh.Text = SelectFile(".", "Executable file (*.exe)|*.exe", OtherSsh.Text);
-        }
-
-        private void Other_CheckedChanged(object sender, EventArgs e)
-        {
-            EnableSshOptions();
-        }
-
-        private void EnableSshOptions()
-        {
-            OtherSsh.Enabled = Other.Checked;
-            OtherSshBrowse.Enabled = Other.Checked;
-
-            PlinkPath.Enabled = Putty.Checked;
-            PuttygenPath.Enabled = Putty.Checked;
-            PageantPath.Enabled = Putty.Checked;
-            PlinkBrowse.Enabled = Putty.Checked;
-            PuttygenBrowse.Enabled = Putty.Checked;
-            PageantBrowse.Enabled = Putty.Checked;
-            AutostartPageant.Enabled = Putty.Checked;
-        }
-
-        private void PuttyBrowse_Click(object sender, EventArgs e)
-        {
-            PlinkPath.Text = SelectFile(".",
-                                        "Plink.exe (plink.exe)|plink.exe|TortoisePlink.exe (tortoiseplink.exe)|tortoiseplink.exe",
-                                        PlinkPath.Text);
-        }
-
-        private void PuttygenBrowse_Click(object sender, EventArgs e)
-        {
-            PuttygenPath.Text = SelectFile(".", "puttygen.exe (puttygen.exe)|puttygen.exe", PuttygenPath.Text);
-        }
-
-        private void PageantBrowse_Click(object sender, EventArgs e)
-        {
-            PageantPath.Text = SelectFile(".", "pageant.exe (pageant.exe)|pageant.exe", PageantPath.Text);
         }
 
         private void FormSettings_Shown(object sender, EventArgs e)
@@ -1382,7 +1214,7 @@ namespace GitUI
 
         private void BrowseCommitTemplate_Click(object sender, EventArgs e)
         {
-            CommitTemplatePath.Text = SelectFile(".", "*.txt (*.txt)|*.txt", CommitTemplatePath.Text);
+            CommitTemplatePath.Text = CommonLogic.SelectFile(".", "*.txt (*.txt)|*.txt", CommitTemplatePath.Text);
         }
 
         private void SplitButtonMenuItem_Click(object sender, EventArgs e)
