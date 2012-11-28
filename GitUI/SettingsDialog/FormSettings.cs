@@ -77,10 +77,12 @@ namespace GitUI
         private Font applicationFont;
         private string IconName = "bug";
 
+        SettingsPageRegistry _settingsPageRegistry = new SettingsPageRegistry();
         CommonLogic _commonLogic;
         CheckSettingsLogic _checkSettingsLogic;
         ChecklistSettingsPage _checklistSettingsPage;
         GitSettingsPage _gitSettingsPage;
+        GitExtensionsSettingsPage _gitExtensionsSettingsPage;
 
         private FormSettings()
             : this(null)
@@ -114,13 +116,17 @@ namespace GitUI
             _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module); // TODO
             _checklistSettingsPage = new ChecklistSettingsPage(_commonLogic, _checkSettingsLogic, Module); // TODO
             _checkSettingsLogic.ChecklistSettingsPage = _checklistSettingsPage; // TODO
-            settingsTreeViewUserControl1.RegisterSettingsPage(_checklistSettingsPage);
+            _settingsPageRegistry.RegisterSettingsPage(_checklistSettingsPage);
 
             _gitSettingsPage = new GitSettingsPage(_checkSettingsLogic);
-            settingsTreeViewUserControl1.RegisterSettingsPage(_gitSettingsPage);
+            _settingsPageRegistry.RegisterSettingsPage(_gitSettingsPage);
+
+            _gitExtensionsSettingsPage = new GitExtensionsSettingsPage();
+            _settingsPageRegistry.RegisterSettingsPage(_gitExtensionsSettingsPage);
 
             // todo: more
-            settingsTreeViewUserControl1.RegisteringComplete();
+
+            settingsTreeViewUserControl1.SetSettingsPages(_settingsPageRegistry);
 
             // todo: alter this when all tab pages are converted
             //this.tableLayoutPanel3.Controls.Add(this.tabControl1, 1, 0);
@@ -205,6 +211,11 @@ namespace GitUI
             loadingSettings = true;
             try
             {
+                foreach (var settingsPage in _settingsPageRegistry.GetSettingsPages())
+                {
+                    settingsPage.LoadSettings();
+                }
+
                 chkEnableAutoScale.Checked = Settings.EnableAutoScale;
 
                 scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
@@ -395,6 +406,11 @@ namespace GitUI
 
         private bool Save()
         {
+            foreach (var settingsPage in _settingsPageRegistry.GetSettingsPages())
+            {
+                settingsPage.SaveSettings();
+            }
+
             SaveScripts();
 
             if (Settings.RunningOnWindows())
