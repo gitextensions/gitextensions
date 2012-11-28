@@ -211,20 +211,11 @@ namespace GitUI
                 EncodingToCombo(Module.GetFilesEncoding(false), Global_FilesEncoding);
                 EncodingToCombo(Module.GetFilesEncoding(true), Local_FilesEncoding);
 
-                chkCheckForUncommittedChangesInCheckoutBranch.Checked = Settings.CheckForUncommittedChangesInCheckoutBranch;
-                chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
-                chkPlaySpecialStartupSound.Checked = Settings.PlaySpecialStartupSound;
-                chkWriteCommitMessageInCommitWindow.Checked = Settings.UseFormCommitMessage;
-                chkUsePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
                 chkShowCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
-                RevisionGridQuickSearchTimeout.Value = Settings.RevisionGridQuickSearchTimeout;
-                chkFollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
                 _NO_TRANSLATE_DaysToCacheImages.Value = Settings.AuthorImageCacheDays;
                 _NO_TRANSLATE_authorImageSize.Value = Settings.AuthorImageSize;
                 ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
                 noImageService.Text = Settings.GravatarFallbackService;
-                chkShowErrorsWhenStagingFiles.Checked = Settings.ShowErrorsWhenStagingFiles;
-                chkStashUntrackedFiles.Checked = Settings.IncludeUntrackedFilesInAutoStash;
 
                 Language.Items.Clear();
                 Language.Items.Add("English");
@@ -235,11 +226,8 @@ namespace GitUI
                 MulticolorBranches_CheckedChanged(null, null);
                 DrawNonRelativesGray.Checked = Settings.RevisionGraphDrawNonRelativesGray;
                 DrawNonRelativesTextGray.Checked = Settings.RevisionGraphDrawNonRelativesTextGray;
-                chkShowCurrentChangesInRevisionGraph.Checked = Settings.RevisionGraphShowWorkingDirChanges;
-                chkShowStashCountInBrowseWindow.Checked = Settings.ShowStashCount;
                 BranchBorders.Checked = Settings.BranchBorders;
                 StripedBanchChange.Checked = Settings.StripedBranchChange;
-                chkShowGitStatusInToolbar.Checked = Settings.ShowGitStatusInBrowseToolbar;
 
                 _NO_TRANSLATE_truncatePathMethod.Text = Settings.TruncatePathMethod;
                 _NO_TRANSLATE_ColorGraphLabel.BackColor = Settings.GraphColor;
@@ -285,10 +273,6 @@ namespace GitUI
                 _NO_TRANSLATE_ColorSectionLabel.Text = Settings.DiffSectionColor.Name;
                 _NO_TRANSLATE_ColorSectionLabel.ForeColor =
                     ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorSectionLabel.BackColor);
-
-                SmtpServer.Text = Settings.Smtp;
-
-                _NO_TRANSLATE_MaxCommits.Value = Settings.MaxRevisionGraphCommits;
 
                 ConfigFile localConfig = Module.GetLocalConfig();
                 ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
@@ -371,10 +355,6 @@ namespace GitUI
                 PageantPath.Text = Settings.Pageant;
                 AutostartPageant.Checked = Settings.AutoStartPageant;
 
-                chkCloseProcessDialog.Checked = Settings.CloseProcessDialog;
-                chkShowGitCommandLine.Checked = Settings.ShowGitCommandLine;
-
-                chkUseFastChecks.Checked = Settings.UseFastChecks;
                 chkShowRelativeDate.Checked = Settings.RelativeDate;
 
                 chkCascadedContextMenu.Checked = Settings.ShellCascadeContextMenu;
@@ -424,16 +404,8 @@ namespace GitUI
 
             Settings.EnableAutoScale = chkEnableAutoScale.Checked;
 
-            Settings.CheckForUncommittedChangesInCheckoutBranch = chkCheckForUncommittedChangesInCheckoutBranch.Checked;
-            Settings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
-            Settings.PlaySpecialStartupSound = chkPlaySpecialStartupSound.Checked;
-            Settings.UseFormCommitMessage = chkWriteCommitMessageInCommitWindow.Checked;
-            Settings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
             Settings.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
             Settings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
-            Settings.ShowErrorsWhenStagingFiles = chkShowErrorsWhenStagingFiles.Checked;
-            Settings.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
-            Settings.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;
 
             if ((int)_NO_TRANSLATE_authorImageSize.Value != Settings.AuthorImageSize)
             {
@@ -444,24 +416,14 @@ namespace GitUI
             Settings.Translation = Language.Text;
             Strings.Reinit();
 
-            Settings.ShowGitStatusInBrowseToolbar = chkShowGitStatusInToolbar.Checked;
-
             Settings.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
-
-            Settings.Smtp = SmtpServer.Text;
 
             Settings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
             Settings.GravatarFallbackService = noImageService.Text;
 
-            Settings.CloseProcessDialog = chkCloseProcessDialog.Checked;
-            Settings.ShowGitCommandLine = chkShowGitCommandLine.Checked;
-
-            Settings.UseFastChecks = chkUseFastChecks.Checked;
             Settings.RelativeDate = chkShowRelativeDate.Checked;
 
             Settings.Dictionary = Dictionary.Text;
-
-            Settings.MaxRevisionGraphCommits = (int)_NO_TRANSLATE_MaxCommits.Value;
 
             Settings.Plink = PlinkPath.Text;
             Settings.Puttygen = PuttygenPath.Text;
@@ -469,12 +431,9 @@ namespace GitUI
             Settings.AutoStartPageant = AutostartPageant.Checked;
             Module.SetFilesEncoding(false, ComboToEncoding(Global_FilesEncoding));
             Module.SetFilesEncoding(true, ComboToEncoding(Local_FilesEncoding));
-            Settings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
             Settings.MulticolorBranches = MulticolorBranches.Checked;
             Settings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
             Settings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
-            Settings.RevisionGraphShowWorkingDirChanges = chkShowCurrentChangesInRevisionGraph.Checked;
-            Settings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
             Settings.BranchBorders = BranchBorders.Checked;
             Settings.StripedBranchChange = StripedBanchChange.Checked;
             Settings.GraphColor = _NO_TRANSLATE_ColorGraphLabel.BackColor;
