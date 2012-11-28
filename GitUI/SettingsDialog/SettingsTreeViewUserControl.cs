@@ -52,20 +52,25 @@ namespace GitUI.SettingsDialog
             pluginPlaceHolderNode.ForeColor = Color.Gray;
         }
 
-        public void RegisterSettingsPage(SettingsPageBase settingsPage)
+        public void SetSettingsPages(SettingsPageRegistry settingsPageRegistry)
         {
-            ////registeredSettingsPages.Add(settingsPage);
-            var settingsPageNode = _geRootNode.Nodes.Add(settingsPage.Text);
-            _treeNodesWithSettingsPage.Add(settingsPageNode);
-            settingsPageNode.Tag = settingsPage;
-
-            if (_firstRegisteredSettingsPage == null)
+            foreach (var settingsPage in settingsPageRegistry.GetSettingsPages())
             {
-                _firstRegisteredSettingsPage = settingsPage;
+                ////registeredSettingsPages.Add(settingsPage);
+                var settingsPageNode = _geRootNode.Nodes.Add(settingsPage.Text);
+                _treeNodesWithSettingsPage.Add(settingsPageNode);
+                settingsPageNode.Tag = settingsPage;
+
+                if (_firstRegisteredSettingsPage == null)
+                {
+                    _firstRegisteredSettingsPage = settingsPage;
+                }
             }
+
+            RegisteringComplete();
         }
 
-        public void RegisteringComplete()
+        private void RegisteringComplete()
         {
             _geRootNode.Nodes.Add("TODO: more");
             treeView1.ExpandAll();
