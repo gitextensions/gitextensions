@@ -435,6 +435,12 @@
     <Compile Include="SettingsDialog\Pages\ChecklistSettingsPage.Designer.cs">
       <DependentUpon>ChecklistSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsDialog\Pages\ColorsSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\ColorsSettingsPage.Designer.cs">
+      <DependentUpon>ColorsSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsDialog\Pages\GitExtensionsSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -446,6 +452,48 @@
     </Compile>
     <Compile Include="SettingsDialog\Pages\GitSettingsPage.Designer.cs">
       <DependentUpon>GitSettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\GlobalSettingsSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\GlobalSettingsSettingsPage.Designer.cs">
+      <DependentUpon>GlobalSettingsSettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\HotkeysSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\HotkeysSettingsPage.Designer.cs">
+      <DependentUpon>HotkeysSettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\LocalSettingsSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\LocalSettingsSettingsPage.Designer.cs">
+      <DependentUpon>LocalSettingsSettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\ScriptsSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\ScriptsSettingsPage.Designer.cs">
+      <DependentUpon>ScriptsSettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\ShellExtensionSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\ShellExtensionSettingsPage.Designer.cs">
+      <DependentUpon>ShellExtensionSettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\SshSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\SshSettingsPage.Designer.cs">
+      <DependentUpon>SshSettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\StartPageSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\StartPageSettingsPage.Designer.cs">
+      <DependentUpon>StartPageSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="SettingsDialog\SettingsPageBase.cs">
       <SubType>UserControl</SubType>
@@ -981,11 +1029,35 @@
     <EmbeddedResource Include="SettingsDialog\Pages\ChecklistSettingsPage.resx">
       <DependentUpon>ChecklistSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog\Pages\ColorsSettingsPage.resx">
+      <DependentUpon>ColorsSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SettingsDialog\Pages\GitExtensionsSettingsPage.resx">
       <DependentUpon>GitExtensionsSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsDialog\Pages\GitSettingsPage.resx">
       <DependentUpon>GitSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog\Pages\GlobalSettingsSettingsPage.resx">
+      <DependentUpon>GlobalSettingsSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog\Pages\HotkeysSettingsPage.resx">
+      <DependentUpon>HotkeysSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog\Pages\LocalSettingsSettingsPage.resx">
+      <DependentUpon>LocalSettingsSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog\Pages\ScriptsSettingsPage.resx">
+      <DependentUpon>ScriptsSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog\Pages\ShellExtensionSettingsPage.resx">
+      <DependentUpon>ShellExtensionSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog\Pages\SshSettingsPage.resx">
+      <DependentUpon>SshSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog\Pages\StartPageSettingsPage.resx">
+      <DependentUpon>StartPageSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsDialog\SettingsTreeViewUserControl.resx">
       <DependentUpon>SettingsTreeViewUserControl.cs</DependentUpon>
