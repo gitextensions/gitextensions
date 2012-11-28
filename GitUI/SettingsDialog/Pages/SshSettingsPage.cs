@@ -21,6 +21,11 @@ namespace GitUI.SettingsDialog.Pages
             Text = "Ssh";
         }
 
+        public override IEnumerable<string> GetSearchKeywords()
+        {
+            return new string[] { "plink", "putty", "openssh", "pageant" };
+        }
+
         public override void LoadSettings()
         {
             PlinkPath.Text = Settings.Plink;
