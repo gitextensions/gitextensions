@@ -11,9 +11,13 @@ using Microsoft.Win32;
 using System.IO;
 using GitCommands.Config;
 using ResourceManager.Translation;
+using System.Reflection;
 
 namespace GitUI.SettingsDialog.Pages
 {
+    /// <summary>
+    /// TODO: search for NotImplementedException
+    /// </summary>
     public partial class ChecklistSettingsPage : SettingsPageBase
     {
         private readonly TranslationString _wrongGitVersion =
@@ -139,6 +143,9 @@ namespace GitUI.SettingsDialog.Pages
             new TranslationString("Path to kdiff3 could not be found automatically." + Environment.NewLine +
                 "Please make sure KDiff3 is installed or set path manually.");
 
+        private readonly TranslationString _cantRegisterShellExtension =
+            new TranslationString("Could not register the shell extension because '{0}' could not be found.");
+
         CommonLogic _commonLogic;
         CheckSettingsLogic _checkSettingsLogic;
         GitModule _gitModule;
@@ -176,12 +183,23 @@ namespace GitUI.SettingsDialog.Pages
 
         private void translationConfig_Click(object sender, EventArgs e)
         {
-
+            using (var frm = new FormChooseTranslation()) frm.ShowDialog(this);
+            throw new NotImplementedException("Translate();");
+            throw new NotImplementedException("Language.Text = Settings.Translation;");
+            Rescan_Click(null, null);
         }
 
         private void SshConfig_Click(object sender, EventArgs e)
         {
-
+            throw new NotImplementedException(@"
+            if (Putty.Checked)
+            {
+                if (AutoFindPuttyPaths())
+                    MessageBox.Show(this, _puttyFoundAuto.Text, _puttyFoundAutoCaption.Text);
+                else
+                    tabControl1.SelectTab(tpSsh);
+            }
+");
         }
 
         private void GitExtensionsInstall_Click(object sender, EventArgs e)
@@ -192,12 +210,28 @@ namespace GitUI.SettingsDialog.Pages
 
         private void GitBinFound_Click(object sender, EventArgs e)
         {
-
+            // TODO
         }
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
+            string path = Path.Combine(Settings.GetInstallDir(), CommonLogic.GitExtensionsShellExName);
+            if (!File.Exists(path))
+            {
+                path = Assembly.GetAssembly(GetType()).Location;
+                path = Path.GetDirectoryName(path);
+                path = Path.Combine(path, CommonLogic.GitExtensionsShellExName);
+            }
+            if (File.Exists(path))
+            {
+                Module.RunCmd("regsvr32", string.Format("\"{0}\"", path));
+            }
+            else
+            {
+                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellExName));
+            }
 
+            CheckSettings();
         }
 
         private void DiffToolFix_Click(object sender, EventArgs e)

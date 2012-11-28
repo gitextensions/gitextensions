@@ -40,7 +40,6 @@ namespace GitUI
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.argumentsTextBox = new System.Windows.Forms.RichTextBox();
-            this.diffFontDialog = new System.Windows.Forms.FontDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tpColors = new System.Windows.Forms.TabPage();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -203,7 +202,6 @@ namespace GitUI
             this.chlMenuEntries = new System.Windows.Forms.CheckedListBox();
             this.chkCascadedContextMenu = new System.Windows.Forms.CheckBox();
             this.Ok = new System.Windows.Forms.Button();
-            this.applicationDialog = new System.Windows.Forms.FontDialog();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.settingsTreeViewUserControl1 = new GitUI.SettingsDialog.SettingsTreeViewUserControl();
             this.labelSettingsPageTitle = new System.Windows.Forms.Label();
@@ -296,12 +294,6 @@ namespace GitUI
             this.argumentsTextBox.Enter += new System.EventHandler(this.argumentsTextBox_Enter);
             this.argumentsTextBox.Leave += new System.EventHandler(this.argumentsTextBox_Leave);
             this.argumentsTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
-            // 
-            // diffFontDialog
-            // 
-            this.diffFontDialog.AllowVerticalFonts = false;
-            this.diffFontDialog.Color = System.Drawing.SystemColors.ControlText;
-            this.diffFontDialog.FixedPitchOnly = true;
             // 
             // tabControl1
             // 
@@ -811,7 +803,7 @@ namespace GitUI
             this.tpStart.Location = new System.Drawing.Point(4, 24);
             this.tpStart.Name = "tpStart";
             this.tpStart.Padding = new System.Windows.Forms.Padding(3);
-            this.tpStart.Size = new System.Drawing.Size(1382, 521);
+            this.tpStart.Size = new System.Drawing.Size(816, 521);
             this.tpStart.TabIndex = 6;
             this.tpStart.Text = "Start page";
             this.tpStart.UseVisualStyleBackColor = true;
@@ -822,7 +814,7 @@ namespace GitUI
             this.dashboardEditor1.Location = new System.Drawing.Point(3, 3);
             this.dashboardEditor1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.dashboardEditor1.Name = "dashboardEditor1";
-            this.dashboardEditor1.Size = new System.Drawing.Size(1376, 515);
+            this.dashboardEditor1.Size = new System.Drawing.Size(810, 515);
             this.dashboardEditor1.TabIndex = 0;
             // 
             // tpGlobalSettings
@@ -861,7 +853,7 @@ namespace GitUI
             this.tpGlobalSettings.Location = new System.Drawing.Point(4, 24);
             this.tpGlobalSettings.Name = "tpGlobalSettings";
             this.tpGlobalSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tpGlobalSettings.Size = new System.Drawing.Size(1382, 521);
+            this.tpGlobalSettings.Size = new System.Drawing.Size(816, 521);
             this.tpGlobalSettings.TabIndex = 1;
             this.tpGlobalSettings.Text = "Global settings";
             this.tpGlobalSettings.UseVisualStyleBackColor = true;
@@ -1244,7 +1236,7 @@ namespace GitUI
             this.tpLocalSettings.Location = new System.Drawing.Point(4, 24);
             this.tpLocalSettings.Name = "tpLocalSettings";
             this.tpLocalSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tpLocalSettings.Size = new System.Drawing.Size(1382, 521);
+            this.tpLocalSettings.Size = new System.Drawing.Size(816, 521);
             this.tpLocalSettings.TabIndex = 0;
             this.tpLocalSettings.Text = "Local settings";
             this.tpLocalSettings.UseVisualStyleBackColor = true;
@@ -1468,7 +1460,7 @@ namespace GitUI
             this.tpSsh.Location = new System.Drawing.Point(4, 24);
             this.tpSsh.Name = "tpSsh";
             this.tpSsh.Padding = new System.Windows.Forms.Padding(3);
-            this.tpSsh.Size = new System.Drawing.Size(1382, 521);
+            this.tpSsh.Size = new System.Drawing.Size(816, 521);
             this.tpSsh.TabIndex = 4;
             this.tpSsh.Text = "Ssh";
             this.tpSsh.UseVisualStyleBackColor = true;
@@ -1686,7 +1678,7 @@ namespace GitUI
             this.tpScriptsTab.Location = new System.Drawing.Point(4, 24);
             this.tpScriptsTab.Name = "tpScriptsTab";
             this.tpScriptsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.tpScriptsTab.Size = new System.Drawing.Size(1382, 521);
+            this.tpScriptsTab.Size = new System.Drawing.Size(816, 521);
             this.tpScriptsTab.TabIndex = 8;
             this.tpScriptsTab.Text = "Scripts";
             this.tpScriptsTab.UseVisualStyleBackColor = true;
@@ -2041,7 +2033,7 @@ namespace GitUI
             // 
             this.scriptNeedsConfirmation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.scriptNeedsConfirmation.AutoSize = true;
-            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, -7729);
+            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, -8623);
             this.scriptNeedsConfirmation.Name = "scriptNeedsConfirmation";
             this.scriptNeedsConfirmation.Size = new System.Drawing.Size(119, 17);
             this.scriptNeedsConfirmation.TabIndex = 21;
@@ -2053,7 +2045,7 @@ namespace GitUI
             // 
             this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.inMenuCheckBox.AutoSize = true;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(107, -7690);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(107, -8584);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
             this.inMenuCheckBox.Size = new System.Drawing.Size(183, 17);
             this.inMenuCheckBox.TabIndex = 15;
@@ -2067,7 +2059,7 @@ namespace GitUI
             this.tpHotkeys.Location = new System.Drawing.Point(4, 24);
             this.tpHotkeys.Name = "tpHotkeys";
             this.tpHotkeys.Padding = new System.Windows.Forms.Padding(3);
-            this.tpHotkeys.Size = new System.Drawing.Size(1382, 521);
+            this.tpHotkeys.Size = new System.Drawing.Size(816, 521);
             this.tpHotkeys.TabIndex = 9;
             this.tpHotkeys.Text = "Hotkeys";
             this.tpHotkeys.UseVisualStyleBackColor = true;
@@ -2089,7 +2081,7 @@ namespace GitUI
             this.tpShellExt.Location = new System.Drawing.Point(4, 24);
             this.tpShellExt.Name = "tpShellExt";
             this.tpShellExt.Padding = new System.Windows.Forms.Padding(3);
-            this.tpShellExt.Size = new System.Drawing.Size(1382, 521);
+            this.tpShellExt.Size = new System.Drawing.Size(816, 521);
             this.tpShellExt.TabIndex = 11;
             this.tpShellExt.Text = "Shell extension";
             this.tpShellExt.UseVisualStyleBackColor = true;
@@ -2147,11 +2139,6 @@ namespace GitUI
             this.Ok.Text = "OK";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
-            // 
-            // applicationDialog
-            // 
-            this.applicationDialog.AllowVerticalFonts = false;
-            this.applicationDialog.Color = System.Drawing.SystemColors.ControlText;
             // 
             // tableLayoutPanel3
             // 
@@ -2419,7 +2406,6 @@ namespace GitUI
         private PictureBox IconPreview;
         private PictureBox IconPreviewSmall;
         private Label label55;
-        private FontDialog diffFontDialog;
         private ContextMenuStrip contextMenuStrip_SplitButton;
         private Button BrowseCommitTemplate;
         private Label label57;
@@ -2432,7 +2418,6 @@ namespace GitUI
         private Label lblMenuEntries;
         private CheckedListBox chlMenuEntries;
         private CheckBox chkCascadedContextMenu;
-        private FontDialog applicationDialog;
         private TableLayoutPanel tableLayoutPanel1;
         private DataGridView ScriptList;
         private DataGridViewTextBoxColumn HotkeyCommandIdentifier;

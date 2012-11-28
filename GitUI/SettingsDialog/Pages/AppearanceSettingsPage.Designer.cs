@@ -56,6 +56,8 @@
             this._NO_TRANSLATE_authorImageSize = new System.Windows.Forms.NumericUpDown();
             this.ClearImageCache = new System.Windows.Forms.Button();
             this.ShowAuthorGravatar = new System.Windows.Forms.CheckBox();
+            this.diffFontDialog = new System.Windows.Forms.FontDialog();
+            this.applicationDialog = new System.Windows.Forms.FontDialog();
             this.groupBox13.SuspendLayout();
             this.groupBox15.SuspendLayout();
             this.groupBox14.SuspendLayout();
@@ -106,6 +108,7 @@
             this.Dictionary.Name = "Dictionary";
             this.Dictionary.Size = new System.Drawing.Size(169, 21);
             this.Dictionary.TabIndex = 15;
+            this.Dictionary.DropDown += new System.EventHandler(this.Dictionary_DropDown);
             // 
             // downloadDictionary
             // 
@@ -164,6 +167,7 @@
             this.diffFontChangeButton.TabIndex = 14;
             this.diffFontChangeButton.Text = "font name";
             this.diffFontChangeButton.UseVisualStyleBackColor = true;
+            this.diffFontChangeButton.Click += new System.EventHandler(this.diffFontChangeButton_Click);
             // 
             // applicationFontChangeButton
             // 
@@ -175,6 +179,7 @@
             this.applicationFontChangeButton.TabIndex = 54;
             this.applicationFontChangeButton.Text = "font name";
             this.applicationFontChangeButton.UseVisualStyleBackColor = true;
+            this.applicationFontChangeButton.Click += new System.EventHandler(this.applicationFontChangeButton_Click);
             // 
             // label26
             // 
@@ -370,6 +375,17 @@
             this.ShowAuthorGravatar.Text = "Get author image from gravatar.com";
             this.ShowAuthorGravatar.UseVisualStyleBackColor = true;
             // 
+            // diffFontDialog
+            // 
+            this.diffFontDialog.AllowVerticalFonts = false;
+            this.diffFontDialog.Color = System.Drawing.SystemColors.ControlText;
+            this.diffFontDialog.FixedPitchOnly = true;
+            // 
+            // applicationDialog
+            // 
+            this.applicationDialog.AllowVerticalFonts = false;
+            this.applicationDialog.Color = System.Drawing.SystemColors.ControlText;
+            // 
             // AppearanceSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -424,5 +440,7 @@
         private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_authorImageSize;
         private System.Windows.Forms.Button ClearImageCache;
         private System.Windows.Forms.CheckBox ShowAuthorGravatar;
+        private System.Windows.Forms.FontDialog diffFontDialog;
+        private System.Windows.Forms.FontDialog applicationDialog;
     }
 }
