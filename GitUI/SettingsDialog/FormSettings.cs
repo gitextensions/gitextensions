@@ -75,6 +75,14 @@ namespace GitUI
         GitSettingsPage _gitSettingsPage;
         GitExtensionsSettingsPage _gitExtensionsSettingsPage;
         AppearanceSettingsPage _appearanceSettingsPage;
+        ColorsSettingsPage _colorsSettingsPage;
+        GlobalSettingsSettingsPage _globalSettingsSettingsPage;
+        HotkeysSettingsPage _hotkeysSettingsPage;
+        LocalSettingsSettingsPage _localSettingsSettingsPage;
+        ScriptsSettingsPage _scriptsSettingsPage;
+        ShellExtensionSettingsPage _shellExtensionSettingsPage;
+        SshSettingsPage _sshSettingsPage;
+        StartPageSettingsPage _startPageSettingsPage;
 
         private FormSettings()
             : this(null)
@@ -115,8 +123,30 @@ namespace GitUI
             _appearanceSettingsPage = new AppearanceSettingsPage();
             _settingsPageRegistry.RegisterSettingsPage(_appearanceSettingsPage);
 
-            // todo: more
+            _colorsSettingsPage = new ColorsSettingsPage();
+            _settingsPageRegistry.RegisterSettingsPage(_colorsSettingsPage);
 
+            _startPageSettingsPage = new StartPageSettingsPage();
+            _settingsPageRegistry.RegisterSettingsPage(_startPageSettingsPage);
+
+            _globalSettingsSettingsPage = new GlobalSettingsSettingsPage();
+            _settingsPageRegistry.RegisterSettingsPage(_globalSettingsSettingsPage);
+
+            _localSettingsSettingsPage = new LocalSettingsSettingsPage();
+            _settingsPageRegistry.RegisterSettingsPage(_localSettingsSettingsPage);
+
+            _sshSettingsPage = new SshSettingsPage();
+            _settingsPageRegistry.RegisterSettingsPage(_sshSettingsPage);
+
+            _scriptsSettingsPage = new ScriptsSettingsPage();
+            _settingsPageRegistry.RegisterSettingsPage(_scriptsSettingsPage);
+            
+            _hotkeysSettingsPage = new HotkeysSettingsPage();
+            _settingsPageRegistry.RegisterSettingsPage(_hotkeysSettingsPage);
+            
+            _shellExtensionSettingsPage = new ShellExtensionSettingsPage();
+            _settingsPageRegistry.RegisterSettingsPage(_shellExtensionSettingsPage);
+            
             settingsTreeViewUserControl1.SetSettingsPages(_settingsPageRegistry);
 
             // todo: alter this when all tab pages are converted

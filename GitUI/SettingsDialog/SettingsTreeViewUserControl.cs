@@ -72,7 +72,6 @@ namespace GitUI.SettingsDialog
 
         private void RegisteringComplete()
         {
-            _geRootNode.Nodes.Add("TODO: more");
             treeView1.ExpandAll();
 
             var firstRegistered = FindNodeBySettingsPage(_firstRegisteredSettingsPage);
