@@ -35,9 +35,6 @@ namespace GitUI
         private readonly TranslationString _cantFindGitMessageCaption =
             new TranslationString("Incorrect path");
 
-        private readonly TranslationString _cantRegisterShellExtension =
-            new TranslationString("Could not register the shell extension because '{0}' could not be found.");
-
         private readonly TranslationString _noDiffToolConfigured =
             new TranslationString("There is no difftool configured. Do you want to configure kdiff3 as your difftool?" +
                 Environment.NewLine + "Select no if you want to configure a different difftool yourself.");
@@ -67,14 +64,8 @@ namespace GitUI
         private readonly TranslationString _puttyFoundAutoCaption =
             new TranslationString("PuTTY");
 
-        private readonly TranslationString _noDictFilesFound =
-            new TranslationString("No dictionary files found in: {0}");
-
-
         #endregion
 
-        private Font diffFont;
-        private Font applicationFont;
         private string IconName = "bug";
 
         SettingsPageRegistry _settingsPageRegistry = new SettingsPageRegistry();
@@ -83,6 +74,7 @@ namespace GitUI
         ChecklistSettingsPage _checklistSettingsPage;
         GitSettingsPage _gitSettingsPage;
         GitExtensionsSettingsPage _gitExtensionsSettingsPage;
+        AppearanceSettingsPage _appearanceSettingsPage;
 
         private FormSettings()
             : this(null)
@@ -96,8 +88,6 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            noImageService.Items.AddRange(GravatarService.DynamicServices.Cast<object>().ToArray());
-
             FillEncodings(Global_FilesEncoding);
             FillEncodings(Local_FilesEncoding);
 
@@ -108,8 +98,6 @@ namespace GitUI
                 npp = "\"" + npp + "\"";
 
             GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
-
-            SetCurrentDiffFont(Settings.Font, Settings.DiffFont);
 
             // TODO:
             _commonLogic = new CommonLogic(Module); // TODO: use a common instance?
@@ -123,6 +111,9 @@ namespace GitUI
 
             _gitExtensionsSettingsPage = new GitExtensionsSettingsPage();
             _settingsPageRegistry.RegisterSettingsPage(_gitExtensionsSettingsPage);
+
+            _appearanceSettingsPage = new AppearanceSettingsPage();
+            _settingsPageRegistry.RegisterSettingsPage(_appearanceSettingsPage);
 
             // todo: more
 
@@ -150,17 +141,6 @@ namespace GitUI
                 e.SettingsPageBase.Dock = DockStyle.Fill;
                 labelSettingsPageTitle.Text = e.SettingsPageBase.Text;
             }
-        }
-
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-        {
-            base.OnClosing(e);
-            if (!e.Cancel)
-            {
-                diffFontDialog.Dispose();
-                applicationDialog.Dispose();
-            }
-
         }
 
         private static void SetCheckboxFromString(CheckBox checkBox, string str)
@@ -216,22 +196,9 @@ namespace GitUI
                     settingsPage.LoadSettings();
                 }
 
-                chkEnableAutoScale.Checked = Settings.EnableAutoScale;
-
                 scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
                 EncodingToCombo(Module.GetFilesEncoding(false), Global_FilesEncoding);
                 EncodingToCombo(Module.GetFilesEncoding(true), Local_FilesEncoding);
-
-                chkShowCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
-                _NO_TRANSLATE_DaysToCacheImages.Value = Settings.AuthorImageCacheDays;
-                _NO_TRANSLATE_authorImageSize.Value = Settings.AuthorImageSize;
-                ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
-                noImageService.Text = Settings.GravatarFallbackService;
-
-                Language.Items.Clear();
-                Language.Items.Add("English");
-                Language.Items.AddRange(Translator.GetAllTranslations());
-                Language.Text = Settings.Translation;
 
                 MulticolorBranches.Checked = Settings.MulticolorBranches;
                 MulticolorBranches_CheckedChanged(null, null);
@@ -240,7 +207,6 @@ namespace GitUI
                 BranchBorders.Checked = Settings.BranchBorders;
                 StripedBanchChange.Checked = Settings.StripedBranchChange;
 
-                _NO_TRANSLATE_truncatePathMethod.Text = Settings.TruncatePathMethod;
                 _NO_TRANSLATE_ColorGraphLabel.BackColor = Settings.GraphColor;
                 _NO_TRANSLATE_ColorGraphLabel.Text = Settings.GraphColor.Name;
                 _NO_TRANSLATE_ColorGraphLabel.ForeColor =
@@ -261,7 +227,6 @@ namespace GitUI
                 _NO_TRANSLATE_ColorOtherLabel.Text = Settings.OtherTagColor.Name;
                 _NO_TRANSLATE_ColorOtherLabel.ForeColor =
                     ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorOtherLabel.BackColor);
-
 
                 _NO_TRANSLATE_ColorAddedLineLabel.BackColor = Settings.DiffAddedColor;
                 _NO_TRANSLATE_ColorAddedLineLabel.Text = Settings.DiffAddedColor.Name;
@@ -292,8 +257,6 @@ namespace GitUI
                 UserEmail.Text = localConfig.GetValue("user.email");
                 Editor.Text = localConfig.GetPathValue("core.editor");
                 LocalMergeTool.Text = localConfig.GetValue("merge.tool");
-
-                Dictionary.Text = Settings.Dictionary;
 
                 GlobalUserName.Text = globalConfig.GetValue("user.name");
                 GlobalUserEmail.Text = globalConfig.GetValue("user.email");
@@ -366,8 +329,6 @@ namespace GitUI
                 PageantPath.Text = Settings.Pageant;
                 AutostartPageant.Checked = Settings.AutoStartPageant;
 
-                chkShowRelativeDate.Checked = Settings.RelativeDate;
-
                 chkCascadedContextMenu.Checked = Settings.ShellCascadeContextMenu;
 
                 for (int i = 0; i < Settings.ShellVisibleMenuItems.Length; i++)
@@ -418,29 +379,6 @@ namespace GitUI
 
             GitCommandHelpers.SetEnvironmentVariable(true);
 
-            Settings.EnableAutoScale = chkEnableAutoScale.Checked;
-
-            Settings.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
-            Settings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
-
-            if ((int)_NO_TRANSLATE_authorImageSize.Value != Settings.AuthorImageSize)
-            {
-                Settings.AuthorImageSize = (int)_NO_TRANSLATE_authorImageSize.Value;
-                GravatarService.ClearImageCache();
-            }
-
-            Settings.Translation = Language.Text;
-            Strings.Reinit();
-
-            Settings.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
-
-            Settings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
-            Settings.GravatarFallbackService = noImageService.Text;
-
-            Settings.RelativeDate = chkShowRelativeDate.Checked;
-
-            Settings.Dictionary = Dictionary.Text;
-
             Settings.Plink = PlinkPath.Text;
             Settings.Puttygen = PuttygenPath.Text;
             Settings.Pageant = PageantPath.Text;
@@ -462,8 +400,6 @@ namespace GitUI
             Settings.DiffRemovedColor = _NO_TRANSLATE_ColorRemovedLine.BackColor;
             Settings.DiffAddedExtraColor = _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor;
             Settings.DiffRemovedExtraColor = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor;
-            Settings.DiffFont = diffFont;
-            Settings.Font = applicationFont;
             Settings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
 
             Settings.IconColor = GetSelectedApplicationIconColor();
@@ -607,27 +543,6 @@ namespace GitUI
             //Only save local settings when we are inside a valid working dir
             if (Module.ValidWorkingDir())
                 localConfig.Save();
-        }
-
-        private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
-        {
-            string path = Path.Combine(Settings.GetInstallDir(), CommonLogic.GitExtensionsShellExName);
-            if (!File.Exists(path))
-            {
-                path = Assembly.GetAssembly(GetType()).Location;
-                path = Path.GetDirectoryName(path);
-                path = Path.Combine(path, CommonLogic.GitExtensionsShellExName);
-            }
-            if (File.Exists(path))
-            {
-                Module.RunCmd("regsvr32", string.Format("\"{0}\"", path));
-            }
-            else
-            {
-                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellExName));
-            }
-
-            _checklistSettingsPage.CheckSettings();
         }
 
         private void UserNameSet_Click(object sender, EventArgs e)
@@ -979,17 +894,6 @@ namespace GitUI
             PageantPath.Text = SelectFile(".", "pageant.exe (pageant.exe)|pageant.exe", PageantPath.Text);
         }
 
-        private void SshConfig_Click(object sender, EventArgs e)
-        {
-            if (Putty.Checked)
-            {
-                if (AutoFindPuttyPaths())
-                    MessageBox.Show(this, _puttyFoundAuto.Text, _puttyFoundAutoCaption.Text);
-                else
-                    tabControl1.SelectTab(tpSsh);
-            }
-        }
-
         private void FormSettings_Shown(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -1006,26 +910,6 @@ namespace GitUI
             if (DialogResult != DialogResult.Abort && !Save())
                 e.Cancel = true;
             Cursor.Current = Cursors.Default;
-        }
-
-        private void Dictionary_DropDown(object sender, EventArgs e)
-        {
-            try
-            {
-                Dictionary.Items.Clear();
-                Dictionary.Items.Add("None");
-                foreach (
-                    string fileName in
-                        Directory.GetFiles(Settings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))
-                {
-                    var file = new FileInfo(fileName);
-                    Dictionary.Items.Add(file.Name.Replace(".dic", ""));
-                }
-            }
-            catch
-            {
-                MessageBox.Show(this, String.Format(_noDictFilesFound.Text, Settings.GetDictionaryDir()));
-            }
         }
 
         private void ColorAddedLineDiffLabel_Click(object sender, EventArgs e)
@@ -1375,14 +1259,6 @@ namespace GitUI
             helpLabel.Visible = false;
         }
 
-        private void translationConfig_Click(object sender, EventArgs e)
-        {
-            using (var frm = new FormChooseTranslation()) frm.ShowDialog(this);
-            Translate();
-            Language.Text = Settings.Translation;
-            Rescan_Click(null, null);
-        }
-
         private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Spelling");
@@ -1472,39 +1348,6 @@ namespace GitUI
             if (loadingSettings)
                 return;
             ShowIconPreview();
-        }
-
-        private void diffFontChangeButton_Click(object sender, EventArgs e)
-        {
-            diffFontDialog.Font = diffFont;
-            DialogResult result = diffFontDialog.ShowDialog(this);
-
-            if (result == DialogResult.OK || result == DialogResult.Yes)
-            {
-                SetCurrentDiffFont(applicationFont, diffFontDialog.Font);
-            }
-        }
-
-        private void applicationFontChangeButton_Click(object sender, EventArgs e)
-        {
-            applicationDialog.Font = applicationFont;
-            DialogResult result = applicationDialog.ShowDialog(this);
-
-            if (result == DialogResult.OK || result == DialogResult.Yes)
-            {
-                SetCurrentDiffFont(applicationDialog.Font, diffFont);
-            }
-        }
-
-        private void SetCurrentDiffFont(Font applicationFont, Font diffFont)
-        {
-            this.diffFont = diffFont;
-            this.applicationFont = applicationFont;
-
-            diffFontChangeButton.Text =
-                string.Format("{0}, {1}", this.diffFont.FontFamily.Name, (int)(this.diffFont.Size + 0.5f));
-            applicationFontChangeButton.Text =
-                string.Format("{0}, {1}", this.applicationFont.FontFamily.Name, (int)(this.applicationFont.Size + 0.5f));
         }
 
         private void BrowseCommitTemplate_Click(object sender, EventArgs e)
