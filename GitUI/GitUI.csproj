@@ -417,6 +417,12 @@
     <Compile Include="Script\ScriptManager.cs" />
     <Compile Include="SettingsDialog\CheckSettingsLogic.cs" />
     <Compile Include="SettingsDialog\CommonLogic.cs" />
+    <Compile Include="SettingsDialog\Pages\AppearanceSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\AppearanceSettingsPage.Designer.cs">
+      <DependentUpon>AppearanceSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsDialog\Pages\BlankSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -965,6 +971,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Script\SimplePrompt.resx">
       <DependentUpon>SimplePrompt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog\Pages\AppearanceSettingsPage.resx">
+      <DependentUpon>AppearanceSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsDialog\Pages\BlankSettingsPage.resx">
       <DependentUpon>BlankSettingsPage.cs</DependentUpon>
