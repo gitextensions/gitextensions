@@ -444,6 +444,7 @@
     <Compile Include="SettingsDialog\SettingsPageBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="SettingsDialog\SettingsPageRegistry.cs" />
     <Compile Include="SettingsDialog\SettingsTreeViewUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

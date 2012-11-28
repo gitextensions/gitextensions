@@ -15,6 +15,8 @@ namespace GitUI.SettingsDialog.Pages
         public GitExtensionsSettingsPage()
         {
             InitializeComponent();
+
+            Text = "Git Extensions";
         }
 
         public override void LoadSettings()
