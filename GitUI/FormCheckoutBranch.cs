@@ -275,7 +275,7 @@ namespace GitUI
             else
             {
                 _remoteName = GitModule.GetRemoteName(_branch, Module.GetRemotes(false));
-                _localBranchName = _branch.Substring(_remoteName.Length + 1);
+                _localBranchName = _remoteName.Length > 0 ? _branch.Substring(_remoteName.Length + 1) : _branch;
                 _newLocalBranchName = string.Concat(_remoteName, "_", _localBranchName);
                 int i = 2;
                 while (LocalBranchExists(_newLocalBranchName))
