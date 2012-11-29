@@ -2124,7 +2124,7 @@ namespace GitCommands
                 IsDeleted = false,
                 IsTracked = false,
                 Name = statusString
-            }).ToList();
+            });
         }
 
         public IEnumerable<GitItemStatus> GetTreeFiles(string treeGuid, bool full)
@@ -2150,7 +2150,7 @@ namespace GitCommands
                     item.IsSubmodule = true;
             }
 
-            return list.ToList();
+            return list;
         }
 
         public IList<GitItemStatus> GetAllChangedFiles()
