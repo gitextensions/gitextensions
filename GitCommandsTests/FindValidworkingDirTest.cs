@@ -38,6 +38,7 @@ namespace GitCommandsTests
 
         private static void CheckWorkingDir(string path)
         {
+            path = GitModule.FindGitWorkingDir(path);
             GitModule module = new GitModule(path);
             //Should not contain double slashes -> \\
             Assert.IsFalse(module.WorkingDir.Contains("\\\\"), "WorkingDir" + module.WorkingDir + "\n" + GetCurrentDir());
