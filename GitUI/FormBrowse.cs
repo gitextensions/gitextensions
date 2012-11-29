@@ -898,7 +898,7 @@ namespace GitUI
                     }
                     else if (revision.ParentGuids == null || revision.ParentGuids.Length == 0)
                     {
-                        DiffFiles.GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
+                        DiffFiles.GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true).ToList();
                     }
                     else
                     {
