@@ -52,9 +52,9 @@ namespace GitUI
                 if (!Directory.Exists(dirTo))
                     Directory.CreateDirectory(dirTo);
 
-                var authorsfile = this._NO_TRANSLATE_authorsFileTextBox.Text;
+                var authorsfile = this._NO_TRANSLATE_authorsFileTextBox.Text.Trim();
                 bool resetauthorsfile = false;
-                if (authorsfile != null && authorsfile.Trim().Length != 0 && !File.Exists(authorsfile.Trim()) && !(resetauthorsfile = AskContinutWithoutAuthorsFile(authorsfile)))
+                if (!String.IsNullOrEmpty(authorsfile) && !File.Exists(authorsfile) && !(resetauthorsfile = AskContinutWithoutAuthorsFile(authorsfile)))
                 {
                     return;
                 }
@@ -62,8 +62,16 @@ namespace GitUI
                 {
                     authorsfile = null;
                 }
+                int from;
+                if (!int.TryParse(tbFrom.Text, out from))
+                    from = 0;
+                
                 var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, 
-                    GitSvnCommandHelpers.CloneCmd(_NO_TRANSLATE_svnRepositoryComboBox.Text, dirTo, authorsfile));
+                    GitSvnCommandHelpers.CloneCmd(_NO_TRANSLATE_svnRepositoryComboBox.Text, dirTo,
+                    tbUsername.Text, authorsfile, from,
+                    cbTrunk.Checked ? tbTrunk.Text : null,
+                    cbTags.Checked ? tbTags.Text : null,
+                    cbBranches.Checked ? tbBranches.Text : null));
                 
                 if (errorOccurred || Module.InTheMiddleOfPatch())
                     return;
@@ -120,6 +128,30 @@ namespace GitUI
                 this._NO_TRANSLATE_destinationComboBox.Items.Clear();
                 foreach (Repository repo in repos)
                     this._NO_TRANSLATE_destinationComboBox.Items.Add(repo.Path);
+            }
+        }
+
+        private void cbTrunk_CheckedChanged(object sender, EventArgs e)
+        {
+            tbTrunk.Enabled = cbTrunk.Checked;
+        }
+
+        private void cbTags_CheckedChanged(object sender, EventArgs e)
+        {
+            tbTags.Enabled = cbTags.Checked;
+        }
+
+        private void cbBranches_CheckedChanged(object sender, EventArgs e)
+        {
+            tbBranches.Enabled = cbBranches.Checked;
+        }
+
+        private void tbFrom_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar)
+                && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
             }
         }
     }
