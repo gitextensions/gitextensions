@@ -1194,7 +1194,8 @@ namespace GitCommands
             }
             if (delta < 24 * 60 * 60)
             {
-                return Strings.GetNHoursAgoText(ts.Hours);
+                int hours = delta < 60*60 ? Math.Sign(ts.Minutes) * 1 : ts.Hours;
+                return Strings.GetNHoursAgoText(hours);
             }
             // 30.417 = 365 days / 12 months - note that the if statement only bothers with 30 days for "1 month ago" because ts.Days is int
             if (delta < (displayWeeks ? 7 : 30) * 24 * 60 * 60)
