@@ -155,7 +155,8 @@ namespace GitUI
 
             SelectedDiff.ExtraDiffArgumentsChanged += SelectedDiffExtraDiffArgumentsChanged;
 
-            StageInSuperproject.Visible = Module.SuperprojectModule != null;
+            if (IsUICommandsInitialized)
+                StageInSuperproject.Visible = Module.SuperprojectModule != null;
             StageInSuperproject.Checked = Settings.StageInSuperprojectAfterCommit;
             closeDialogAfterEachCommitToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterCommit;
             closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterLastCommit;
