@@ -42,7 +42,7 @@ namespace GitCommands
             private set
             {
                 _superprojectInit = false;
-                _workingdir = FindGitWorkingDir(value);
+                _workingdir = value;
             }
         }
 
