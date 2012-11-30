@@ -19,7 +19,7 @@ namespace GitUI.SettingsDialog.Pages
             Text = "Git Extensions";
         }
 
-        public override void LoadSettings()
+        protected override void OnLoadSettings()
         {
             chkCheckForUncommittedChangesInCheckoutBranch.Checked = Settings.CheckForUncommittedChangesInCheckoutBranch;
             chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;

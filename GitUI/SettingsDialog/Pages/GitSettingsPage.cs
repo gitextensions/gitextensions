@@ -42,7 +42,7 @@ namespace GitUI.SettingsDialog.Pages
             GitPath.Text = Settings.GitCommand;
         }
 
-        public override void LoadSettings()
+        protected override void OnLoadSettings()
         {
             GitCommandHelpers.SetEnvironmentVariable();
             homeIsSetToLabel.Text = string.Concat(_homeIsSetToString.Text, " ", GitCommandHelpers.GetHomeDir());
@@ -91,12 +91,11 @@ namespace GitUI.SettingsDialog.Pages
 
         private void GitPath_TextChanged(object sender, EventArgs e)
         {
-            // TODO
-            ////if (loadingSettings)
-            ////    return;
+            if (loadingSettings)
+                return;
 
             Settings.GitCommand = GitPath.Text;
-            LoadSettings();
+            OnLoadSettings();
         }
 
         private void downloadMsysgit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

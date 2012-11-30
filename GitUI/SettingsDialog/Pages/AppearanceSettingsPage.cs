@@ -40,7 +40,7 @@ namespace GitUI.SettingsDialog.Pages
         ////    }
         ////}
 
-        public override void LoadSettings()
+        protected override void OnLoadSettings()
         {
             chkEnableAutoScale.Checked = Settings.EnableAutoScale;
 

@@ -20,7 +20,7 @@ namespace GitUI.SettingsDialog.Pages
             Text = "Colors";
         }
 
-        public override void LoadSettings()
+        protected override void OnLoadSettings()
         {
             MulticolorBranches.Checked = Settings.MulticolorBranches;
             MulticolorBranches_CheckedChanged(null, null);
@@ -131,18 +131,16 @@ namespace GitUI.SettingsDialog.Pages
 
         private void IconStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // TODO: needed?
-            ////if (loadingSettings)
-            ////    return;
+            if (loadingSettings)
+                return;
 
             ShowIconPreview();
         }
 
         private void IconColor_CheckedChanged(object sender, EventArgs e)
         {
-            // TODO: needed?
-            ////if (loadingSettings)
-            ////    return;
+            if (loadingSettings)
+                return;
 
             ShowIconPreview();
         }
