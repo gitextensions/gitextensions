@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using PatchApply;
@@ -87,14 +88,14 @@ namespace GitUI
                     DiffFiles.GitItemStatuses =
                         Module.GetDiffFiles(
                             revisions[0].Guid,
-                            revisions[0].ParentGuids[0]);
+                            revisions[0].ParentGuids[0]).ToList();
                 }
                 else if (revisions.Count == 2)
                 {
                     DiffFiles.GitItemStatuses =
                         Module.GetDiffFiles(
                             revisions[0].Guid,
-                            revisions[1].Guid);
+                            revisions[1].Guid).ToList();
                 }
             }
             catch (Exception ex)

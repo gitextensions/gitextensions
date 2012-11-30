@@ -384,11 +384,11 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IEnumerable<GitItemStatus> GitItemStatuses
+        public IList<GitItemStatus> GitItemStatuses
         {
             get
             {
-                return FileStatusListBox.DataSource as IEnumerable<GitItemStatus>;
+                return FileStatusListBox.DataSource as IList<GitItemStatus>;
             }
             set
             {
