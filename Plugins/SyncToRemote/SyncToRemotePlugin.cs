@@ -143,7 +143,7 @@ namespace SyncToRemote
 
 				if (localCommit != remoteCommit)
 				{
-					string message = string.Format("Local branch {0} does not match {1}/{0}.\nDo you want to reset branch {0} to match {1}/{0}? ALL local changes will be discareded if you choose to do so.", branch, remote);
+					string message = string.Format("Local branch {0} does not match {1}/{0}.\nDo you want to reset branch {0} to match {1}/{0}? ALL local changes will be discarded if you choose to do so.", branch, remote);
 					string caption = string.Format("Reset branch {0} to {1}/{0}?", branch, remote);
 					DialogResult proceed = MessageBox.Show(message, caption, MessageBoxButtons.YesNo);
 					if (proceed == DialogResult.Yes)
