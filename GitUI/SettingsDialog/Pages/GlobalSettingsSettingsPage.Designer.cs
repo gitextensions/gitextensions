@@ -284,6 +284,7 @@
             this.GlobalMergeTool.Name = "GlobalMergeTool";
             this.GlobalMergeTool.Size = new System.Drawing.Size(155, 21);
             this.GlobalMergeTool.TabIndex = 60;
+            this.GlobalMergeTool.TextChanged += new System.EventHandler(this.GlobalMergeTool_TextChanged);
             // 
             // PathToKDiff3
             // 

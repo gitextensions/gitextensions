@@ -35,13 +35,6 @@ namespace GitUI
         private readonly TranslationString _cantFindGitMessageCaption =
             new TranslationString("Incorrect path");
 
-        private readonly TranslationString _noDiffToolConfigured =
-            new TranslationString("There is no difftool configured. Do you want to configure kdiff3 as your difftool?" +
-                Environment.NewLine + "Select no if you want to configure a different difftool yourself.");
-
-        private readonly TranslationString _noDiffToolConfiguredCaption =
-            new TranslationString("Difftool");
-
         private readonly TranslationString _linuxToolsShNotFound =
             new TranslationString("The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
                 "Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.");
@@ -442,11 +435,6 @@ namespace GitUI
                 localConfig.Save();
         }
 
-        private void UserNameSet_Click(object sender, EventArgs e)
-        {
-            tabControl1.SelectTab(tpGlobalSettings);
-        }
-
         private void ResolveDiffToolPath()
         {
             string kdiff3path = MergeToolsHelper.FindPathForKDiff(Module.GetGlobalSetting("difftool.kdiff3.path"));
@@ -492,71 +480,6 @@ namespace GitUI
             DifftoolCmd.SelectedText = MergeToolsHelper.DiffToolCmdSuggest(GlobalDiffTool.Text, exeFile);
         }
 
-        private void MergeToolCmdSuggest_Click(object sender, EventArgs e)
-        {
-            if (!Settings.RunningOnWindows())
-                return;
-
-            Module.SetGlobalPathSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
-            string exeName;
-            string exeFile;
-            if (!String.IsNullOrEmpty(MergetoolPath.Text))
-            {
-                exeFile = MergetoolPath.Text;
-                exeName = Path.GetFileName(exeFile);
-            }
-            else
-                exeFile = MergeToolsHelper.FindMergeToolFullPath(GlobalMergeTool.Text, out exeName);
-            if (String.IsNullOrEmpty(exeFile))
-            {
-                MergetoolPath.SelectAll();
-                MergetoolPath.SelectedText = "";
-                MergeToolCmd.SelectAll();
-                MergeToolCmd.SelectedText = "";
-                if (sender != null)
-                    MessageBox.Show(this, String.Format(CheckSettingsLogic._toolSuggestPath.Text, exeName),
-                        CheckSettingsLogic.__mergeToolSuggestCaption.Text);
-                return;
-            }
-            MergetoolPath.SelectAll(); // allow Undo action
-            MergetoolPath.SelectedText = exeFile;
-            MergeToolCmd.SelectAll();
-            MergeToolCmd.SelectedText = MergeToolsHelper.MergeToolcmdSuggest(GlobalMergeTool.Text, exeFile);
-        }
-
-        private void DiffToolFix_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(CheckSettingsLogic.GetGlobalDiffToolFromConfig()))
-            {
-                if (MessageBox.Show(this, _noDiffToolConfigured.Text, _noDiffToolConfiguredCaption.Text,
-                        MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    _checkSettingsLogic.SolveDiffToolForKDiff();
-                    GlobalDiffTool.Text = "kdiff3";
-                }
-                else
-                {
-                    tabControl1.SelectTab(tpGlobalSettings);
-                    return;
-                }
-            }
-
-            if (CheckSettingsLogic.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
-            {
-                _checkSettingsLogic.SolveDiffToolPathForKDiff();
-            }
-
-            if (CheckSettingsLogic.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
-                string.IsNullOrEmpty(Module.GetGlobalSetting("difftool.kdiff3.path")))
-            {
-                MessageBox.Show(this, ChecklistSettingsPage._kdiff3NotFoundAuto.Text);
-                tabControl1.SelectTab(tpGlobalSettings);
-                return;
-            }
-
-            Rescan_Click(null, null);
-        }
-
         private void BrowseMergeTool_Click(object sender, EventArgs e)
         {
             string mergeTool = GlobalMergeTool.Text.ToLowerInvariant();
@@ -591,22 +514,6 @@ namespace GitUI
                 DifftoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} ({1})|{1}", GlobalDiffTool.Text, exeFile), DifftoolPath.Text);
             else
                 DifftoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} (*.exe)|*.exe", GlobalDiffTool.Text), DifftoolPath.Text);
-        }
-
-        private void GlobalMergeTool_TextChanged(object sender, EventArgs e)
-        {
-            if (loadingSettings)
-                return;
-            MergetoolPath.Text = Module.GetGlobalSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()));
-            MergeToolCmd.Text = Module.GetGlobalSetting(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text.Trim()));
-
-            if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
-                string.IsNullOrEmpty(MergeToolCmd.Text))
-                MergeToolCmd.Enabled = false;
-            else
-                MergeToolCmd.Enabled = true;
-
-            MergeToolCmdSuggest_Click(null, null);
         }
 
         private void FormSettings_Load(object sender, EventArgs e)
