@@ -94,6 +94,7 @@
             this.BrowseCommitTemplate.TabIndex = 77;
             this.BrowseCommitTemplate.Text = "Browse";
             this.BrowseCommitTemplate.UseVisualStyleBackColor = true;
+            this.BrowseCommitTemplate.Click += new System.EventHandler(this.BrowseCommitTemplate_Click);
             // 
             // label57
             // 
@@ -119,6 +120,7 @@
             this.DiffToolCmdSuggest.TabIndex = 74;
             this.DiffToolCmdSuggest.Text = "Suggest command";
             this.DiffToolCmdSuggest.UseVisualStyleBackColor = true;
+            this.DiffToolCmdSuggest.Click += new System.EventHandler(this.DiffToolCmdSuggest_Click);
             // 
             // DifftoolCmd
             // 
@@ -145,6 +147,7 @@
             this.BrowseDiffTool.TabIndex = 71;
             this.BrowseDiffTool.Text = "Browse";
             this.BrowseDiffTool.UseVisualStyleBackColor = true;
+            this.BrowseDiffTool.Click += new System.EventHandler(this.BrowseDiffTool_Click);
             // 
             // label42
             // 
@@ -185,6 +188,7 @@
             this.GlobalDiffTool.Name = "GlobalDiffTool";
             this.GlobalDiffTool.Size = new System.Drawing.Size(155, 21);
             this.GlobalDiffTool.TabIndex = 68;
+            this.GlobalDiffTool.TextChanged += new System.EventHandler(this.GlobalDiffTool_TextChanged);
             // 
             // label41
             // 
@@ -243,6 +247,7 @@
             this.MergeToolCmdSuggest.TabIndex = 64;
             this.MergeToolCmdSuggest.Text = "Suggest command";
             this.MergeToolCmdSuggest.UseVisualStyleBackColor = true;
+            this.MergeToolCmdSuggest.Click += new System.EventHandler(this.MergeToolCmdSuggest_Click);
             // 
             // MergeToolCmd
             // 
@@ -269,6 +274,7 @@
             this.BrowseMergeTool.TabIndex = 61;
             this.BrowseMergeTool.Text = "Browse";
             this.BrowseMergeTool.UseVisualStyleBackColor = true;
+            this.BrowseMergeTool.Click += new System.EventHandler(this.BrowseMergeTool_Click);
             // 
             // GlobalMergeTool
             // 
