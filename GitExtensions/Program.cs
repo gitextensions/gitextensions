@@ -68,7 +68,7 @@ namespace GitExtensions
                     Application.DoEvents();
 
                     GitUICommands uiCommands = new GitUICommands(string.Empty);
-                    var commonLogic = new CommonLogic(uiCommands.Module); // TODO: use a common instance?
+                    var commonLogic = new CommonLogic(uiCommands.Module);
                     var checkSettingsLogic = new CheckSettingsLogic(commonLogic, uiCommands.Module);
                     using (var checklistSettingsPage = new ChecklistSettingsPage(commonLogic, checkSettingsLogic, uiCommands.Module))
                     {

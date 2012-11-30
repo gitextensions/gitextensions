@@ -37,7 +37,7 @@ namespace GitUI.SettingsDialog.Pages
 
         }
 
-        public override void RefreshView()
+        public override void OnPageShown()
         {
             GitPath.Text = Settings.GitCommand;
         }

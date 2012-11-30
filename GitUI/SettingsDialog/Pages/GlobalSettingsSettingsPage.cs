@@ -28,14 +28,19 @@ namespace GitUI.SettingsDialog.Pages
             _gitModule = gitModule;
 
             Text = "Global Settings";
+
+            _commonLogic.FillEncodings(Global_FilesEncoding);
+
+            string npp = MergeToolsHelper.FindFileInFolders("notepad++.exe", "Notepad++");
+            if (string.IsNullOrEmpty(npp))
+                npp = "notepad++";
+            else
+                npp = "\"" + npp + "\"";
+
+            GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
         }
 
         protected override void OnLoadSettings()
-        {
-            
-        }
-
-        public override void SaveSettings()
         {
             ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
 
@@ -85,7 +90,12 @@ namespace GitUI.SettingsDialog.Pages
 
             globalAutoCrlfFalse.Checked = globalAutocrlf == "false";
             globalAutoCrlfInput.Checked = globalAutocrlf == "input";
-            globalAutoCrlfTrue.Checked = globalAutocrlf == "true";
+            globalAutoCrlfTrue.Checked = globalAutocrlf == "true";            
+        }
+
+        public override void SaveSettings()
+        {
+            _gitModule.SetFilesEncoding(false, _commonLogic.ComboToEncoding(Global_FilesEncoding));
         }
 
         private void GlobalMergeTool_TextChanged(object sender, EventArgs e)
