@@ -146,6 +146,13 @@ namespace GitUI.SettingsDialog.Pages
         private readonly TranslationString _cantRegisterShellExtension =
             new TranslationString("Could not register the shell extension because '{0}' could not be found.");
 
+        private readonly TranslationString _noDiffToolConfigured =
+            new TranslationString("There is no difftool configured. Do you want to configure kdiff3 as your difftool?" +
+                Environment.NewLine + "Select no if you want to configure a different difftool yourself.");
+
+        private readonly TranslationString _noDiffToolConfiguredCaption =
+            new TranslationString("Difftool");
+
         CommonLogic _commonLogic;
         CheckSettingsLogic _checkSettingsLogic;
         GitModule _gitModule;
@@ -236,7 +243,35 @@ namespace GitUI.SettingsDialog.Pages
 
         private void DiffToolFix_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(CheckSettingsLogic.GetGlobalDiffToolFromConfig()))
+            {
+                if (MessageBox.Show(this, _noDiffToolConfigured.Text, _noDiffToolConfiguredCaption.Text,
+                        MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    _checkSettingsLogic.SolveDiffToolForKDiff();
+                    throw new NotImplementedException("GlobalDiffTool.Text = \"kdiff3\";");
+                }
+                else
+                {
+                    GotoPageGlobalSettings();
+                    return;
+                }
+            }
 
+            if (CheckSettingsLogic.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+            {
+                _checkSettingsLogic.SolveDiffToolPathForKDiff();
+            }
+
+            if (CheckSettingsLogic.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
+                string.IsNullOrEmpty(Module.GetGlobalSetting("difftool.kdiff3.path")))
+            {
+                MessageBox.Show(this, ChecklistSettingsPage._kdiff3NotFoundAuto.Text);
+                GotoPageGlobalSettings();
+                return;
+            }
+
+            Rescan_Click(null, null);
         }
 
         private void MergeToolFix_Click(object sender, EventArgs e)
@@ -297,7 +332,8 @@ namespace GitUI.SettingsDialog.Pages
 
         private void UserNameSet_Click(object sender, EventArgs e)
         {
-
+            GotoPageGlobalSettings();
+            // TODO: bonus: jump directly to correct text box
         }
 
         private void GitFound_Click(object sender, EventArgs e)
