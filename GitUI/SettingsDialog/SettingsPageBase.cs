@@ -22,13 +22,28 @@ namespace GitUI.SettingsDialog
             // to be overridden
         }
 
+        // TODO: is this needed here or globally for all settings?
+        protected bool loadingSettings;
+
+        public void LoadSettings()
+        {
+            loadingSettings = true;
+            OnLoadSettings();
+            loadingSettings = false;
+        }
+
+        ////public void SaveSettings()
+        ////{
+        ////    OnSaveSettings();
+        ////}
+
         /// <summary>
         /// use GitCommands.Settings to load settings
         /// 
         /// TODO: call
         /// </summary>
         /// <param name="settings"></param>
-        public virtual void LoadSettings()
+        protected virtual void OnLoadSettings()
         {
             // to be overridden
         }

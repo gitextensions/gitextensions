@@ -26,7 +26,7 @@ namespace GitUI.SettingsDialog.Pages
             return new string[] { "plink", "putty", "openssh", "pageant" };
         }
 
-        public override void LoadSettings()
+        protected override void OnLoadSettings()
         {
             PlinkPath.Text = Settings.Plink;
             PuttygenPath.Text = Settings.Puttygen;
