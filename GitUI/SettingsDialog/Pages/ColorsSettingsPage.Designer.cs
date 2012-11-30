@@ -289,6 +289,7 @@
             this._NO_TRANSLATE_ColorGraphLabel.Size = new System.Drawing.Size(29, 15);
             this._NO_TRANSLATE_ColorGraphLabel.TabIndex = 15;
             this._NO_TRANSLATE_ColorGraphLabel.Text = "Red";
+            this._NO_TRANSLATE_ColorGraphLabel.Click += new System.EventHandler(this._ColorGraphLabel_Click);
             // 
             // StripedBanchChange
             // 
@@ -319,6 +320,7 @@
             this.MulticolorBranches.TabIndex = 12;
             this.MulticolorBranches.Text = "Multicolor branches";
             this.MulticolorBranches.UseVisualStyleBackColor = true;
+            this.MulticolorBranches.CheckedChanged += new System.EventHandler(this.MulticolorBranches_CheckedChanged);
             // 
             // label33
             // 
@@ -340,6 +342,7 @@
             this._NO_TRANSLATE_ColorRemoteBranchLabel.Size = new System.Drawing.Size(29, 15);
             this._NO_TRANSLATE_ColorRemoteBranchLabel.TabIndex = 9;
             this._NO_TRANSLATE_ColorRemoteBranchLabel.Text = "Red";
+            this._NO_TRANSLATE_ColorRemoteBranchLabel.Click += new System.EventHandler(this.ColorRemoteBranchLabel_Click);
             // 
             // _NO_TRANSLATE_ColorOtherLabel
             // 
@@ -352,6 +355,7 @@
             this._NO_TRANSLATE_ColorOtherLabel.Size = new System.Drawing.Size(29, 15);
             this._NO_TRANSLATE_ColorOtherLabel.TabIndex = 11;
             this._NO_TRANSLATE_ColorOtherLabel.Text = "Red";
+            this._NO_TRANSLATE_ColorOtherLabel.Click += new System.EventHandler(this.ColorOtherLabel_Click);
             // 
             // label36
             // 
@@ -382,6 +386,7 @@
             this._NO_TRANSLATE_ColorTagLabel.Size = new System.Drawing.Size(29, 15);
             this._NO_TRANSLATE_ColorTagLabel.TabIndex = 5;
             this._NO_TRANSLATE_ColorTagLabel.Text = "Red";
+            this._NO_TRANSLATE_ColorTagLabel.Click += new System.EventHandler(this.ColorTagLabel_Click);
             // 
             // _NO_TRANSLATE_ColorBranchLabel
             // 
@@ -394,6 +399,7 @@
             this._NO_TRANSLATE_ColorBranchLabel.Size = new System.Drawing.Size(29, 15);
             this._NO_TRANSLATE_ColorBranchLabel.TabIndex = 7;
             this._NO_TRANSLATE_ColorBranchLabel.Text = "Red";
+            this._NO_TRANSLATE_ColorBranchLabel.Click += new System.EventHandler(this.ColorBranchLabel_Click);
             // 
             // label32
             // 
@@ -443,6 +449,7 @@
             this._NO_TRANSLATE_ColorRemovedLineDiffLabel.Size = new System.Drawing.Size(29, 15);
             this._NO_TRANSLATE_ColorRemovedLineDiffLabel.TabIndex = 11;
             this._NO_TRANSLATE_ColorRemovedLineDiffLabel.Text = "Red";
+            this._NO_TRANSLATE_ColorRemovedLineDiffLabel.Click += new System.EventHandler(this.ColorRemovedLineDiffLabel_Click);
             // 
             // label45
             // 
@@ -464,6 +471,7 @@
             this._NO_TRANSLATE_ColorAddedLineDiffLabel.Size = new System.Drawing.Size(29, 15);
             this._NO_TRANSLATE_ColorAddedLineDiffLabel.TabIndex = 13;
             this._NO_TRANSLATE_ColorAddedLineDiffLabel.Text = "Red";
+            this._NO_TRANSLATE_ColorAddedLineDiffLabel.Click += new System.EventHandler(this.ColorAddedLineDiffLabel_Click);
             // 
             // label27
             // 
@@ -485,6 +493,7 @@
             this._NO_TRANSLATE_ColorSectionLabel.Size = new System.Drawing.Size(29, 15);
             this._NO_TRANSLATE_ColorSectionLabel.TabIndex = 9;
             this._NO_TRANSLATE_ColorSectionLabel.Text = "Red";
+            this._NO_TRANSLATE_ColorSectionLabel.Click += new System.EventHandler(this.ColorSectionLabel_Click);
             // 
             // _NO_TRANSLATE_ColorRemovedLine
             // 
@@ -497,6 +506,7 @@
             this._NO_TRANSLATE_ColorRemovedLine.Size = new System.Drawing.Size(29, 15);
             this._NO_TRANSLATE_ColorRemovedLine.TabIndex = 5;
             this._NO_TRANSLATE_ColorRemovedLine.Text = "Red";
+            this._NO_TRANSLATE_ColorRemovedLine.Click += new System.EventHandler(this.ColorRemovedLine_Click);
             // 
             // label31
             // 
@@ -527,6 +537,7 @@
             this._NO_TRANSLATE_ColorAddedLineLabel.Size = new System.Drawing.Size(29, 15);
             this._NO_TRANSLATE_ColorAddedLineLabel.TabIndex = 7;
             this._NO_TRANSLATE_ColorAddedLineLabel.Text = "Red";
+            this._NO_TRANSLATE_ColorAddedLineLabel.Click += new System.EventHandler(this.colorAddedLineLabel_Click);
             // 
             // ColorsSettingsPage
             // 
