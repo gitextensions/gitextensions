@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using PatchApply;
@@ -28,7 +29,7 @@ namespace GitUI
             DiffFiles.GitItemStatuses = null;
             if (this.revision != null)
             {
-                DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.Guid + "^");
+                DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.Guid + "^").ToList();
 
                 commitInfo.Revision = revision.Guid;
             }

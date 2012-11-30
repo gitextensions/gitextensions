@@ -25,7 +25,6 @@ namespace GitUI.Blame
             if (revision == null)
                 revision = new GitRevision(Module, "Head");
 
-
             blameControl1.LoadBlame(revision.Guid, fileName, null, null, Module.FilesEncoding);
         }
 
