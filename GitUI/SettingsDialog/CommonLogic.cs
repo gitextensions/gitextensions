@@ -115,5 +115,40 @@ namespace GitUI.SettingsDialog
                 return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : prev;
             }
         }
+
+        public void EncodingToCombo(Encoding encoding, ComboBox combo)
+        {
+            if (encoding == null)
+                combo.Text = "";
+            else
+                combo.Text = encoding.EncodingName;
+        }
+
+        public Encoding ComboToEncoding(ComboBox combo)
+        {
+            return combo.SelectedItem as Encoding;
+        }
+
+        public static void SetCheckboxFromString(CheckBox checkBox, string str)
+        {
+            str = str.Trim().ToLower();
+
+            switch (str)
+            {
+                case "true":
+                    {
+                        checkBox.CheckState = CheckState.Checked;
+                        return;
+                    }
+                case "false":
+                    {
+                        checkBox.CheckState = CheckState.Unchecked;
+                        return;
+                    }
+                default:
+                    checkBox.CheckState = CheckState.Indeterminate;
+                    return;
+            }
+        }
     }
 }
