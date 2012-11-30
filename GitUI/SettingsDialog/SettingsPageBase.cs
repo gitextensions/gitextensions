@@ -13,11 +13,10 @@ namespace GitUI.SettingsDialog
     public class SettingsPageBase : UserControl
     {
         /// <summary>
-        /// called when SettingsPage is shown (again)
-        /// 
-        /// TODO: call
+        /// Called when SettingsPage is shown (again);
+        /// e. g. after user clicked a tree item
         /// </summary>
-        public virtual void RefreshView()
+        public virtual void OnPageShown()
         {
             // to be overridden
         }
@@ -38,9 +37,7 @@ namespace GitUI.SettingsDialog
         ////}
 
         /// <summary>
-        /// use GitCommands.Settings to load settings
-        /// 
-        /// TODO: call
+        /// use GitCommands.Settings to load settings in derived classes
         /// </summary>
         /// <param name="settings"></param>
         protected virtual void OnLoadSettings()
@@ -49,9 +46,7 @@ namespace GitUI.SettingsDialog
         }
 
         /// <summary>
-        /// use GitCommands.Settings to save settings
-        /// 
-        /// TODO: call
+        /// use GitCommands.Settings to save settings in derived classes
         /// </summary>
         /// <param name="settings"></param>
         public virtual void SaveSettings()

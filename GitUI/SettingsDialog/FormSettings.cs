@@ -85,19 +85,11 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            FillEncodings(Global_FilesEncoding);
-            FillEncodings(Local_FilesEncoding);
+            _commonLogic.FillEncodings(Local_FilesEncoding);
 
-            string npp = MergeToolsHelper.FindFileInFolders("notepad++.exe", "Notepad++");
-            if (string.IsNullOrEmpty(npp))
-                npp = "notepad++";
-            else
-                npp = "\"" + npp + "\"";
+            // NEW:
 
-            GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
-
-            // TODO:
-            _commonLogic = new CommonLogic(Module); // TODO: use a common instance?
+            _commonLogic = new CommonLogic(Module);
             _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module); // TODO
             _checklistSettingsPage = new ChecklistSettingsPage(_commonLogic, _checkSettingsLogic, Module); // TODO
             _checkSettingsLogic.ChecklistSettingsPage = _checklistSettingsPage; // TODO
@@ -118,7 +110,7 @@ namespace GitUI
             _startPageSettingsPage = new StartPageSettingsPage();
             _settingsPageRegistry.RegisterSettingsPage(_startPageSettingsPage);
 
-            _globalSettingsSettingsPage = new GlobalSettingsSettingsPage();
+            _globalSettingsSettingsPage = new GlobalSettingsSettingsPage(_commonLogic, Module);
             _settingsPageRegistry.RegisterSettingsPage(_globalSettingsSettingsPage);
 
             _localSettingsSettingsPage = new LocalSettingsSettingsPage();
@@ -156,16 +148,13 @@ namespace GitUI
             }
             else
             {
-                settingsPagePanel.Controls.Add(e.SettingsPageBase);
+                var settingsPage = e.SettingsPageBase;
+                settingsPagePanel.Controls.Add(settingsPage);
                 e.SettingsPageBase.Dock = DockStyle.Fill;
                 labelSettingsPageTitle.Text = e.SettingsPageBase.Text;
-            }
-        }
 
-        private void FillEncodings(ComboBox combo)
-        {
-            combo.Items.AddRange(Settings.availableEncodings.Values.ToArray());
-            combo.DisplayMember = "EncodingName";
+                settingsPage.OnPageShown();
+            }
         }
 
         private bool loadingSettings;
@@ -237,8 +226,7 @@ namespace GitUI
 
             GitCommandHelpers.SetEnvironmentVariable(true);
 
-            Module.SetFilesEncoding(false, ComboToEncoding(Global_FilesEncoding));
-            Module.SetFilesEncoding(true, ComboToEncoding(Local_FilesEncoding));
+            Module.SetFilesEncoding(true, _commonLogic.ComboToEncoding(Local_FilesEncoding));
 
             // Shell Extension settings
             Settings.ShellCascadeContextMenu = chkCascadedContextMenu.Checked;

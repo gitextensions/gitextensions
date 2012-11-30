@@ -129,6 +129,12 @@ namespace GitUI.SettingsDialog
             return combo.SelectedItem as Encoding;
         }
 
+        public void FillEncodings(ComboBox combo)
+        {
+            combo.Items.AddRange(Settings.availableEncodings.Values.ToArray());
+            combo.DisplayMember = "EncodingName";
+        }
+
         public static void SetCheckboxFromString(CheckBox checkBox, string str)
         {
             str = str.Trim().ToLower();
