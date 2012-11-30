@@ -214,7 +214,7 @@ namespace GitUI.SettingsDialog.Pages
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor);
         }
 
-        private void label28_Click(object sender, EventArgs e)
+        private void colorAddedLineLabel_Click(object sender, EventArgs e)
         {
             using (var colorDialog = new ColorDialog
             {
