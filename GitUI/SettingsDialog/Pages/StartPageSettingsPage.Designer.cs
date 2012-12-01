@@ -28,18 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.dashboardEditor1 = new GitUI.DashboardEditor();
             this.SuspendLayout();
+            // 
+            // dashboardEditor1
+            // 
+            this.dashboardEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dashboardEditor1.Location = new System.Drawing.Point(0, 0);
+            this.dashboardEditor1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.dashboardEditor1.Name = "dashboardEditor1";
+            this.dashboardEditor1.Size = new System.Drawing.Size(706, 397);
+            this.dashboardEditor1.TabIndex = 1;
             // 
             // StartPageSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.Controls.Add(this.dashboardEditor1);
             this.Name = "StartPageSettingsPage";
-            this.Size = new System.Drawing.Size(672, 509);
+            this.Size = new System.Drawing.Size(706, 397);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private DashboardEditor dashboardEditor1;
     }
 }
