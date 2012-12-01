@@ -75,7 +75,7 @@
             this.groupBox12.Controls.Add(this.chkFollowRenamesInFileHistory);
             this.groupBox12.Location = new System.Drawing.Point(3, 186);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(649, 296);
+            this.groupBox12.Size = new System.Drawing.Size(581, 296);
             this.groupBox12.TabIndex = 56;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Behaviour";
@@ -141,7 +141,7 @@
             // 
             // SmtpServer
             // 
-            this.SmtpServer.Location = new System.Drawing.Point(395, 255);
+            this.SmtpServer.Location = new System.Drawing.Point(316, 255);
             this.SmtpServer.Name = "SmtpServer";
             this.SmtpServer.Size = new System.Drawing.Size(242, 20);
             this.SmtpServer.TabIndex = 17;
@@ -153,7 +153,7 @@
             0,
             0,
             0});
-            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(395, 224);
+            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(316, 224);
             this.RevisionGridQuickSearchTimeout.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -235,7 +235,7 @@
             this.groupBox11.Controls.Add(this._NO_TRANSLATE_MaxCommits);
             this.groupBox11.Location = new System.Drawing.Point(3, 3);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(649, 177);
+            this.groupBox11.Size = new System.Drawing.Size(581, 177);
             this.groupBox11.TabIndex = 55;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "Performance";
@@ -296,9 +296,9 @@
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(6, 143);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(257, 13);
+            this.label12.Size = new System.Drawing.Size(254, 13);
             this.label12.TabIndex = 0;
-            this.label12.Text = "Limit number of commits that will be loaded at startup.";
+            this.label12.Text = "Limit number of commits that will be loaded at startup";
             // 
             // _NO_TRANSLATE_MaxCommits
             // 
@@ -307,7 +307,7 @@
             0,
             0,
             0});
-            this._NO_TRANSLATE_MaxCommits.Location = new System.Drawing.Point(394, 141);
+            this._NO_TRANSLATE_MaxCommits.Location = new System.Drawing.Point(320, 141);
             this._NO_TRANSLATE_MaxCommits.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -329,7 +329,7 @@
             this.Controls.Add(this.groupBox12);
             this.Controls.Add(this.groupBox11);
             this.Name = "GitExtensionsSettingsPage";
-            this.Size = new System.Drawing.Size(655, 497);
+            this.Size = new System.Drawing.Size(587, 497);
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).EndInit();
