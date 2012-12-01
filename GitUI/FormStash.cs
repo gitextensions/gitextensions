@@ -100,7 +100,7 @@ namespace GitUI
                 AsyncLoader.DoAsync(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
             }
             else
-                AsyncLoader.DoAsync(() => Module.GetStashDiffFiles(gitStash.Name).ToList(), LoadGitItemStatuses);
+                AsyncLoader.DoAsync(() => Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
         }
 
         private void LoadGitItemStatuses(IList<GitItemStatus> gitItemStatuses)

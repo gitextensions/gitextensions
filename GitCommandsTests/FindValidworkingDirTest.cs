@@ -38,13 +38,12 @@ namespace GitCommandsTests
 
         private static void CheckWorkingDir(string path)
         {
-            path = GitModule.FindGitWorkingDir(path);
-            GitModule module = new GitModule(path);
+            string workingDir = GitModule.FindGitWorkingDir(path);
             //Should not contain double slashes -> \\
-            Assert.IsFalse(module.WorkingDir.Contains("\\\\"), "WorkingDir" + module.WorkingDir + "\n" + GetCurrentDir());
+            Assert.IsFalse(workingDir.Contains("\\\\"), "WorkingDir" + workingDir + "\n" + GetCurrentDir());
 
             //Should end with slash
-            Assert.IsTrue(module.WorkingDir.EndsWith("\\"), "WorkingDir" + module.WorkingDir + "\n" + GetCurrentDir());
+            Assert.IsTrue(workingDir.EndsWith("\\"), "WorkingDir" + workingDir + "\n" + GetCurrentDir());
         }
     }
 }

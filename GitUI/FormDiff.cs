@@ -88,14 +88,14 @@ namespace GitUI
                     DiffFiles.GitItemStatuses =
                         Module.GetDiffFiles(
                             revisions[0].Guid,
-                            revisions[0].ParentGuids[0]).ToList();
+                            revisions[0].ParentGuids[0]);
                 }
                 else if (revisions.Count == 2)
                 {
                     DiffFiles.GitItemStatuses =
                         Module.GetDiffFiles(
                             revisions[0].Guid,
-                            revisions[1].Guid).ToList();
+                            revisions[1].Guid);
                 }
             }
             catch (Exception ex)
