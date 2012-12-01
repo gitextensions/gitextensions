@@ -104,11 +104,14 @@ namespace GitUI
             this.lblMenuEntries = new System.Windows.Forms.Label();
             this.chlMenuEntries = new System.Windows.Forms.CheckedListBox();
             this.chkCascadedContextMenu = new System.Windows.Forms.CheckBox();
-            this.Ok = new System.Windows.Forms.Button();
+            this.buttonOk = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.settingsTreeViewUserControl1 = new GitUI.SettingsDialog.SettingsTreeViewUserControl();
             this.labelSettingsPageTitle = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
+            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonCancel = new System.Windows.Forms.Button();
+            this.buttonDiscard = new System.Windows.Forms.Button();
+            this.buttonApply = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -129,6 +132,7 @@ namespace GitUI
             this.tpHotkeys.SuspendLayout();
             this.tpShellExt.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
+            this.flowLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStrip_SplitButton
@@ -196,7 +200,7 @@ namespace GitUI
             this.tabControl1.Location = new System.Drawing.Point(203, 38);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1156, 549);
+            this.tabControl1.Size = new System.Drawing.Size(800, 542);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -206,7 +210,7 @@ namespace GitUI
             this.tpStart.Location = new System.Drawing.Point(4, 24);
             this.tpStart.Name = "tpStart";
             this.tpStart.Padding = new System.Windows.Forms.Padding(3);
-            this.tpStart.Size = new System.Drawing.Size(1148, 521);
+            this.tpStart.Size = new System.Drawing.Size(792, 514);
             this.tpStart.TabIndex = 6;
             this.tpStart.Text = "Start page";
             this.tpStart.UseVisualStyleBackColor = true;
@@ -217,7 +221,7 @@ namespace GitUI
             this.dashboardEditor1.Location = new System.Drawing.Point(3, 3);
             this.dashboardEditor1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.dashboardEditor1.Name = "dashboardEditor1";
-            this.dashboardEditor1.Size = new System.Drawing.Size(1142, 515);
+            this.dashboardEditor1.Size = new System.Drawing.Size(786, 508);
             this.dashboardEditor1.TabIndex = 0;
             // 
             // tpLocalSettings
@@ -466,7 +470,7 @@ namespace GitUI
             this.tpScriptsTab.Location = new System.Drawing.Point(4, 24);
             this.tpScriptsTab.Name = "tpScriptsTab";
             this.tpScriptsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.tpScriptsTab.Size = new System.Drawing.Size(1470, 521);
+            this.tpScriptsTab.Size = new System.Drawing.Size(1148, 521);
             this.tpScriptsTab.TabIndex = 8;
             this.tpScriptsTab.Text = "Scripts";
             this.tpScriptsTab.UseVisualStyleBackColor = true;
@@ -847,7 +851,7 @@ namespace GitUI
             this.tpHotkeys.Location = new System.Drawing.Point(4, 24);
             this.tpHotkeys.Name = "tpHotkeys";
             this.tpHotkeys.Padding = new System.Windows.Forms.Padding(3);
-            this.tpHotkeys.Size = new System.Drawing.Size(1470, 521);
+            this.tpHotkeys.Size = new System.Drawing.Size(1148, 521);
             this.tpHotkeys.TabIndex = 9;
             this.tpHotkeys.Text = "Hotkeys";
             this.tpHotkeys.UseVisualStyleBackColor = true;
@@ -869,7 +873,7 @@ namespace GitUI
             this.tpShellExt.Location = new System.Drawing.Point(4, 24);
             this.tpShellExt.Name = "tpShellExt";
             this.tpShellExt.Padding = new System.Windows.Forms.Padding(3);
-            this.tpShellExt.Size = new System.Drawing.Size(1470, 521);
+            this.tpShellExt.Size = new System.Drawing.Size(1148, 521);
             this.tpShellExt.TabIndex = 11;
             this.tpShellExt.Text = "Shell extension";
             this.tpShellExt.UseVisualStyleBackColor = true;
@@ -917,27 +921,25 @@ namespace GitUI
             this.chkCascadedContextMenu.Text = "Cascaded context menu";
             this.chkCascadedContextMenu.UseVisualStyleBackColor = true;
             // 
-            // Ok
+            // buttonOk
             // 
-            this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Ok.Location = new System.Drawing.Point(1271, 593);
-            this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(88, 24);
-            this.Ok.TabIndex = 0;
-            this.Ok.Text = "OK";
-            this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.Ok_Click);
+            this.buttonOk.Location = new System.Drawing.Point(427, 3);
+            this.buttonOk.Name = "buttonOk";
+            this.buttonOk.Size = new System.Drawing.Size(88, 25);
+            this.buttonOk.TabIndex = 0;
+            this.buttonOk.Text = "OK";
+            this.buttonOk.UseVisualStyleBackColor = true;
+            this.buttonOk.Click += new System.EventHandler(this.Ok_Click);
             // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.Ok, 1, 2);
             this.tableLayoutPanel3.Controls.Add(this.tabControl1, 1, 1);
             this.tableLayoutPanel3.Controls.Add(this.settingsTreeViewUserControl1, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.labelSettingsPageTitle, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.label11, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel4, 1, 2);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -945,7 +947,7 @@ namespace GitUI
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(1362, 620);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(1006, 620);
             this.tableLayoutPanel3.TabIndex = 2;
             // 
             // settingsTreeViewUserControl1
@@ -956,7 +958,7 @@ namespace GitUI
             this.settingsTreeViewUserControl1.MinimumSize = new System.Drawing.Size(100, 220);
             this.settingsTreeViewUserControl1.Name = "settingsTreeViewUserControl1";
             this.tableLayoutPanel3.SetRowSpan(this.settingsTreeViewUserControl1, 2);
-            this.settingsTreeViewUserControl1.Size = new System.Drawing.Size(194, 584);
+            this.settingsTreeViewUserControl1.Size = new System.Drawing.Size(194, 577);
             this.settingsTreeViewUserControl1.TabIndex = 1;
             this.settingsTreeViewUserControl1.SettingsPageSelected += new System.EventHandler<GitUI.SettingsDialog.SettingsPageSelectedEventArgs>(this.settingsTreeViewUserControl1_SettingsPageSelected);
             // 
@@ -974,20 +976,55 @@ namespace GitUI
             this.labelSettingsPageTitle.Text = "label11";
             this.labelSettingsPageTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label11
+            // flowLayoutPanel4
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(3, 590);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(190, 30);
-            this.label11.TabIndex = 3;
-            this.label11.Text = "Settings will be saved when dialog closes.";
+            this.flowLayoutPanel4.AutoSize = true;
+            this.flowLayoutPanel4.Controls.Add(this.buttonApply);
+            this.flowLayoutPanel4.Controls.Add(this.buttonDiscard);
+            this.flowLayoutPanel4.Controls.Add(this.buttonCancel);
+            this.flowLayoutPanel4.Controls.Add(this.buttonOk);
+            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(203, 586);
+            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(800, 31);
+            this.flowLayoutPanel4.TabIndex = 3;
+            // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Location = new System.Drawing.Point(521, 3);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(88, 25);
+            this.buttonCancel.TabIndex = 1;
+            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
+            // buttonDiscard
+            // 
+            this.buttonDiscard.Location = new System.Drawing.Point(615, 3);
+            this.buttonDiscard.Name = "buttonDiscard";
+            this.buttonDiscard.Size = new System.Drawing.Size(88, 25);
+            this.buttonDiscard.TabIndex = 2;
+            this.buttonDiscard.Text = "Discard";
+            this.buttonDiscard.UseVisualStyleBackColor = true;
+            this.buttonDiscard.Click += new System.EventHandler(this.buttonDiscard_Click);
+            // 
+            // buttonApply
+            // 
+            this.buttonApply.Location = new System.Drawing.Point(709, 3);
+            this.buttonApply.Name = "buttonApply";
+            this.buttonApply.Size = new System.Drawing.Size(88, 25);
+            this.buttonApply.TabIndex = 3;
+            this.buttonApply.Text = "Apply";
+            this.buttonApply.UseVisualStyleBackColor = true;
+            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
             // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1362, 620);
+            this.ClientSize = new System.Drawing.Size(1006, 620);
             this.Controls.Add(this.tableLayoutPanel3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -1029,6 +1066,7 @@ namespace GitUI
             this.tpShellExt.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
+            this.flowLayoutPanel4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1041,7 +1079,7 @@ namespace GitUI
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.Button Ok;
+        private System.Windows.Forms.Button buttonOk;
         private System.Windows.Forms.TextBox Editor;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label8;
@@ -1111,7 +1149,10 @@ namespace GitUI
         private TableLayoutPanel tableLayoutPanel3;
         private SettingsDialog.SettingsTreeViewUserControl settingsTreeViewUserControl1;
         private Label labelSettingsPageTitle;
-        private Label label11;
+        private FlowLayoutPanel flowLayoutPanel4;
+        private Button buttonApply;
+        private Button buttonDiscard;
+        private Button buttonCancel;
 
     }
 }

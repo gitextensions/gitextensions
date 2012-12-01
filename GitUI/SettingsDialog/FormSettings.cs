@@ -210,7 +210,12 @@ namespace GitUI
 
         private void Ok_Click(object sender, EventArgs e)
         {
-            Close();
+            Cursor.Current = Cursors.WaitCursor;
+            if (Save())
+            {
+                Close();
+            }
+            Cursor.Current = Cursors.Default;
         }
 
         private bool Save()
@@ -354,10 +359,12 @@ namespace GitUI
 
         private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            if (DialogResult != DialogResult.Abort && !Save())
-                e.Cancel = true;
-            Cursor.Current = Cursors.Default;
+            ////Cursor.Current = Cursors.WaitCursor;
+            ////if (DialogResult != DialogResult.Abort)
+            ////{
+            ////    e.Cancel = true;
+            ////}
+            ////Cursor.Current = Cursors.Default;
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -371,7 +378,6 @@ namespace GitUI
 
         private void populateSplitbutton()
         {
-
             System.Resources.ResourceManager rm =
                 new System.Resources.ResourceManager("GitUI.Properties.Resources",
                             System.Reflection.Assembly.GetExecutingAssembly());
@@ -428,7 +434,6 @@ namespace GitUI
         private void LoadScripts()
         {
             ScriptList.DataSource = ScriptManager.GetScripts();
-
         }
 
         private void ClearScriptDetails()
@@ -482,7 +487,6 @@ namespace GitUI
                 ClearScriptDetails();
             }
         }
-
 
         private void ScriptInfoFromEdits()
         {
@@ -644,6 +648,25 @@ namespace GitUI
                 sbtn_icon.Visible = false;
                 lbl_icon.Visible = false;
             }
+        }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void buttonDiscard_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            LoadSettings();
+            Cursor.Current = Cursors.Default;            
+        }
+
+        private void buttonApply_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            Save();
+            Cursor.Current = Cursors.Default;
         }
     }
 }
