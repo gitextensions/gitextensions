@@ -41,8 +41,6 @@ namespace GitUI
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.argumentsTextBox = new System.Windows.Forms.RichTextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tpStart = new System.Windows.Forms.TabPage();
-            this.dashboardEditor1 = new GitUI.DashboardEditor();
             this.tpScriptsTab = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.ScriptList = new System.Windows.Forms.DataGridView();
@@ -93,7 +91,6 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.tabControl1.SuspendLayout();
-            this.tpStart.SuspendLayout();
             this.tpScriptsTab.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ScriptList)).BeginInit();
@@ -156,7 +153,7 @@ namespace GitUI
             this.argumentsTextBox.Location = new System.Drawing.Point(78, 83);
             this.argumentsTextBox.Name = "argumentsTextBox";
             this.helpProvider1.SetShowHelp(this.argumentsTextBox, true);
-            this.argumentsTextBox.Size = new System.Drawing.Size(3, 1);
+            this.argumentsTextBox.Size = new System.Drawing.Size(603, 149);
             this.argumentsTextBox.TabIndex = 8;
             this.argumentsTextBox.Text = "";
             this.argumentsTextBox.Enter += new System.EventHandler(this.argumentsTextBox_Enter);
@@ -165,7 +162,6 @@ namespace GitUI
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tpStart);
             this.tabControl1.Controls.Add(this.tpScriptsTab);
             this.tabControl1.Controls.Add(this.tpHotkeys);
             this.tabControl1.Controls.Add(this.tpShellExt);
@@ -176,26 +172,6 @@ namespace GitUI
             this.tabControl1.Size = new System.Drawing.Size(800, 542);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
-            // 
-            // tpStart
-            // 
-            this.tpStart.Controls.Add(this.dashboardEditor1);
-            this.tpStart.Location = new System.Drawing.Point(4, 24);
-            this.tpStart.Name = "tpStart";
-            this.tpStart.Padding = new System.Windows.Forms.Padding(3);
-            this.tpStart.Size = new System.Drawing.Size(792, 514);
-            this.tpStart.TabIndex = 6;
-            this.tpStart.Text = "Start page";
-            this.tpStart.UseVisualStyleBackColor = true;
-            // 
-            // dashboardEditor1
-            // 
-            this.dashboardEditor1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dashboardEditor1.Location = new System.Drawing.Point(3, 3);
-            this.dashboardEditor1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.dashboardEditor1.Name = "dashboardEditor1";
-            this.dashboardEditor1.Size = new System.Drawing.Size(786, 508);
-            this.dashboardEditor1.TabIndex = 0;
             // 
             // tpScriptsTab
             // 
@@ -224,7 +200,7 @@ namespace GitUI
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 230F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(186, 68);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(786, 508);
             this.tableLayoutPanel1.TabIndex = 24;
             // 
             // ScriptList
@@ -249,7 +225,7 @@ namespace GitUI
             this.ScriptList.RowHeadersVisible = false;
             this.ScriptList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ScriptList.ShowCellErrors = false;
-            this.ScriptList.Size = new System.Drawing.Size(84, 224);
+            this.ScriptList.Size = new System.Drawing.Size(684, 224);
             this.ScriptList.TabIndex = 18;
             this.ScriptList.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ScriptList_CellClick);
             this.ScriptList.SelectionChanged += new System.EventHandler(this.ScriptList_SelectionChanged);
@@ -310,7 +286,7 @@ namespace GitUI
             this.panel1.Controls.Add(this.removeScriptButton);
             this.panel1.Controls.Add(this.moveDownButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(93, 3);
+            this.panel1.Location = new System.Drawing.Point(693, 3);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(90, 224);
             this.panel1.TabIndex = 0;
@@ -383,7 +359,7 @@ namespace GitUI
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(84, 1);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(684, 272);
             this.tableLayoutPanel2.TabIndex = 19;
             // 
             // flowLayoutPanel3
@@ -394,9 +370,9 @@ namespace GitUI
             this.flowLayoutPanel3.Controls.Add(this.sbtn_icon);
             this.flowLayoutPanel3.Controls.Add(this.helpLabel);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(78, -79);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(78, 238);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(3, 77);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(603, 31);
             this.flowLayoutPanel3.TabIndex = 26;
             // 
             // scriptEvent
@@ -404,7 +380,7 @@ namespace GitUI
             this.scriptEvent.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.scriptEvent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.scriptEvent.FormattingEnabled = true;
-            this.scriptEvent.Location = new System.Drawing.Point(3, 3);
+            this.scriptEvent.Location = new System.Drawing.Point(3, 4);
             this.scriptEvent.Name = "scriptEvent";
             this.scriptEvent.Size = new System.Drawing.Size(208, 23);
             this.scriptEvent.TabIndex = 19;
@@ -415,7 +391,7 @@ namespace GitUI
             // 
             this.lbl_icon.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lbl_icon.AutoSize = true;
-            this.lbl_icon.Location = new System.Drawing.Point(3, 29);
+            this.lbl_icon.Location = new System.Drawing.Point(217, 8);
             this.lbl_icon.Name = "lbl_icon";
             this.lbl_icon.Size = new System.Drawing.Size(33, 15);
             this.lbl_icon.TabIndex = 23;
@@ -429,7 +405,7 @@ namespace GitUI
             this.sbtn_icon.AutoSize = true;
             this.sbtn_icon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.sbtn_icon.ContextMenuStrip = this.contextMenuStrip_SplitButton;
-            this.sbtn_icon.Location = new System.Drawing.Point(3, 47);
+            this.sbtn_icon.Location = new System.Drawing.Point(256, 3);
             this.sbtn_icon.Name = "sbtn_icon";
             this.sbtn_icon.Size = new System.Drawing.Size(92, 25);
             this.sbtn_icon.SplitMenuStrip = this.contextMenuStrip_SplitButton;
@@ -447,7 +423,7 @@ namespace GitUI
             this.helpLabel.AutoSize = true;
             this.helpLabel.BackColor = System.Drawing.SystemColors.Info;
             this.helpLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.helpLabel.Location = new System.Drawing.Point(3, 75);
+            this.helpLabel.Location = new System.Drawing.Point(354, 7);
             this.helpLabel.Name = "helpLabel";
             this.helpLabel.Size = new System.Drawing.Size(177, 17);
             this.helpLabel.TabIndex = 16;
@@ -472,7 +448,7 @@ namespace GitUI
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(78, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(3, 34);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(603, 34);
             this.flowLayoutPanel1.TabIndex = 13;
             // 
             // nameTextBox
@@ -488,7 +464,7 @@ namespace GitUI
             // 
             this.scriptEnabled.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.scriptEnabled.AutoSize = true;
-            this.scriptEnabled.Location = new System.Drawing.Point(3, 32);
+            this.scriptEnabled.Location = new System.Drawing.Point(169, 5);
             this.scriptEnabled.Name = "scriptEnabled";
             this.scriptEnabled.Size = new System.Drawing.Size(68, 19);
             this.scriptEnabled.TabIndex = 18;
@@ -513,13 +489,13 @@ namespace GitUI
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(78, 43);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(3, 34);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(603, 34);
             this.flowLayoutPanel2.TabIndex = 14;
             // 
             // commandTextBox
             // 
             this.commandTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.commandTextBox.Location = new System.Drawing.Point(3, 3);
+            this.commandTextBox.Location = new System.Drawing.Point(3, 4);
             this.commandTextBox.Name = "commandTextBox";
             this.commandTextBox.Size = new System.Drawing.Size(441, 23);
             this.commandTextBox.TabIndex = 7;
@@ -528,7 +504,7 @@ namespace GitUI
             // browseScriptButton
             // 
             this.browseScriptButton.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.browseScriptButton.Location = new System.Drawing.Point(3, 32);
+            this.browseScriptButton.Location = new System.Drawing.Point(450, 3);
             this.browseScriptButton.Name = "browseScriptButton";
             this.browseScriptButton.Size = new System.Drawing.Size(75, 25);
             this.browseScriptButton.TabIndex = 11;
@@ -540,9 +516,9 @@ namespace GitUI
             // 
             this.argumentsLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.argumentsLabel.AutoSize = true;
-            this.argumentsLabel.Location = new System.Drawing.Point(3, 80);
+            this.argumentsLabel.Location = new System.Drawing.Point(3, 150);
             this.argumentsLabel.Name = "argumentsLabel";
-            this.argumentsLabel.Size = new System.Drawing.Size(69, 1);
+            this.argumentsLabel.Size = new System.Drawing.Size(69, 15);
             this.argumentsLabel.TabIndex = 14;
             this.argumentsLabel.Text = "Arguments:";
             // 
@@ -550,7 +526,7 @@ namespace GitUI
             // 
             this.labelOnEvent.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelOnEvent.AutoSize = true;
-            this.labelOnEvent.Location = new System.Drawing.Point(3, -48);
+            this.labelOnEvent.Location = new System.Drawing.Point(3, 246);
             this.labelOnEvent.Name = "labelOnEvent";
             this.labelOnEvent.Size = new System.Drawing.Size(58, 15);
             this.labelOnEvent.TabIndex = 20;
@@ -560,9 +536,9 @@ namespace GitUI
             // 
             this.scriptNeedsConfirmation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.scriptNeedsConfirmation.AutoSize = true;
-            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, -12199);
+            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, -12641);
             this.scriptNeedsConfirmation.Name = "scriptNeedsConfirmation";
-            this.scriptNeedsConfirmation.Size = new System.Drawing.Size(119, 17);
+            this.scriptNeedsConfirmation.Size = new System.Drawing.Size(135, 19);
             this.scriptNeedsConfirmation.TabIndex = 21;
             this.scriptNeedsConfirmation.Text = "Ask for confirmation";
             this.scriptNeedsConfirmation.UseVisualStyleBackColor = true;
@@ -572,9 +548,9 @@ namespace GitUI
             // 
             this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.inMenuCheckBox.AutoSize = true;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(107, -12160);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(107, -12602);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
-            this.inMenuCheckBox.Size = new System.Drawing.Size(183, 17);
+            this.inMenuCheckBox.Size = new System.Drawing.Size(206, 19);
             this.inMenuCheckBox.TabIndex = 15;
             this.inMenuCheckBox.Text = "Add to revision grid context menu";
             this.inMenuCheckBox.UseVisualStyleBackColor = true;
@@ -597,7 +573,7 @@ namespace GitUI
             this.controlHotkeys.Location = new System.Drawing.Point(3, 3);
             this.controlHotkeys.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.controlHotkeys.Name = "controlHotkeys";
-            this.controlHotkeys.Size = new System.Drawing.Size(186, 68);
+            this.controlHotkeys.Size = new System.Drawing.Size(786, 508);
             this.controlHotkeys.TabIndex = 0;
             // 
             // tpShellExt
@@ -774,7 +750,6 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            this.tpStart.ResumeLayout(false);
             this.tpScriptsTab.ResumeLayout(false);
             this.tpScriptsTab.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -807,9 +782,7 @@ namespace GitUI
         private System.DirectoryServices.DirectorySearcher directorySearcher2;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.TabPage tpStart;
         private System.Windows.Forms.BindingSource repositoryBindingSource;
-        private DashboardEditor dashboardEditor1;
         private System.Windows.Forms.TabPage tpScriptsTab;
         private System.Windows.Forms.CheckBox inMenuCheckBox;
         private System.Windows.Forms.Label argumentsLabel;
