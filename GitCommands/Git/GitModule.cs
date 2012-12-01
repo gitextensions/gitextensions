@@ -720,30 +720,24 @@ namespace GitCommands
             return RunGitCmd("ls-files -z --unmerged").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public bool HandleConflictSelectBase(string fileName)
+        public bool HandleConflictSelectSide(string fileName, string side)
         {
-            if (!HandleConflictsSaveSide(fileName, fileName, "1"))
+            Directory.SetCurrentDirectory(_workingdir);
+
+            side = GetSide(side);
+
+            string result = RunGitCmd(String.Format("checkout-index -f --stage={0} -- \"{1}\"", side, fileName));
+            if (!result.IsNullOrEmpty())
+            {
                 return false;
+            }
 
-            RunGitCmd("add -- \"" + fileName + "\"");
-            return true;
-        }
-
-        public bool HandleConflictSelectLocal(string fileName)
-        {
-            if (!HandleConflictsSaveSide(fileName, fileName, "2"))
+            result = RunGitCmd(String.Format("add -- \"{0}\"", fileName));
+            if (!result.IsNullOrEmpty())
+            {
                 return false;
+            }
 
-            RunGitCmd("add -- \"" + fileName + "\"");
-            return true;
-        }
-
-        public bool HandleConflictSelectRemote(string fileName)
-        {
-            if (!HandleConflictsSaveSide(fileName, fileName, "3"))
-                return false;
-
-            RunGitCmd("add -- \"" + fileName + "\"");
             return true;
         }
 
