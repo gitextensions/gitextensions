@@ -153,6 +153,10 @@ namespace GitUI
                 labelSettingsPageTitle.Text = e.SettingsPage.Text;
 
                 settingsPage.OnPageShown();
+
+                bool isInstantApplyPage = settingsPage.IsInstantApplyPage;
+                buttonApply.Enabled = !isInstantApplyPage;
+                buttonDiscard.Enabled = !isInstantApplyPage;
             }
         }
 

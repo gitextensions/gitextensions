@@ -63,5 +63,10 @@ namespace GitUI.SettingsDialog
         {
             return new List<string>();
         }
+
+        public virtual bool IsInstantApplyPage
+        {
+            get { return false; }
+        }
     }
 }
