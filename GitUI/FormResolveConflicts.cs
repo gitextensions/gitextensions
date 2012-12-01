@@ -83,6 +83,9 @@ namespace GitUI
                 Environment.NewLine + "This action cannot be made undone.");
 
         private readonly TranslationString _areYouSureYouWantDeleteFilesCaption = new TranslationString("WARNING!");
+
+        private readonly TranslationString _failureWhileOpenFile = new TranslationString("Open temporary file failed.");
+        private readonly TranslationString _failureWhileSaveFile = new TranslationString("Save file failed.");
         #endregion
 
         public FormResolveConflicts(GitUICommands aCommands)
@@ -703,19 +706,15 @@ namespace GitUI
 
         private void ContextOpenBaseWith_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            string fileName = GetFileName();
-            fileName = GetShortFileName(fileName);
-
-            fileName = Path.GetTempPath() + fileName;
-
-            Module.HandleConflictsSaveSide(GetFileName(), fileName, "BASE");
-
-            OsShellUtil.OpenAs(fileName);
-            Cursor.Current = Cursors.Default;
+            OpenSideWith("BASE");
         }
 
         private void ContextOpenLocalWith_Click(object sender, EventArgs e)
+        {
+            OpenSideWith("LOCAL");
+        }
+
+        private void OpenSideWith(string side)
         {
             Cursor.Current = Cursors.WaitCursor;
             string fileName = GetFileName();
@@ -723,12 +722,14 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            Module.HandleConflictsSaveSide(GetFileName(), fileName, "LOCAL");
+            if (!Module.HandleConflictsSaveSide(GetFileName(), fileName, side))
+                MessageBox.Show(this, _failureWhileOpenFile.Text);
 
             OsShellUtil.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
         }
 
+        
         private static string GetShortFileName(string fileName)
         {
             if (fileName.Contains(Settings.PathSeparator.ToString()) && fileName.LastIndexOf(Settings.PathSeparator.ToString()) < fileName.Length)
@@ -749,16 +750,7 @@ namespace GitUI
 
         private void ContextOpenRemoteWith_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            string fileName = GetFileName();
-            fileName = GetShortFileName(fileName);
-
-            fileName = Path.GetTempPath() + fileName;
-
-            Module.HandleConflictsSaveSide(GetFileName(), fileName, "REMOTE");
-
-            OsShellUtil.OpenAs(fileName);
-            Cursor.Current = Cursors.Default;
+            OpenSideWith("REMOTE");
         }
 
         private void ConflictedFiles_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
@@ -793,7 +785,8 @@ namespace GitUI
 
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    Module.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side);
+                    if (!Module.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side))
+                        MessageBox.Show(this, _failureWhileSaveFile.Text);
                 }
             }
             Cursor.Current = Cursors.Default;
