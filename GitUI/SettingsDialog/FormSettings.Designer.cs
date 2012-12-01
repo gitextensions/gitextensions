@@ -43,28 +43,6 @@ namespace GitUI
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tpStart = new System.Windows.Forms.TabPage();
             this.dashboardEditor1 = new GitUI.DashboardEditor();
-            this.tpLocalSettings = new System.Windows.Forms.TabPage();
-            this.label61 = new System.Windows.Forms.Label();
-            this.Local_FilesEncoding = new System.Windows.Forms.ComboBox();
-            this.groupBox10 = new System.Windows.Forms.GroupBox();
-            this.localAutoCrlfFalse = new System.Windows.Forms.RadioButton();
-            this.localAutoCrlfInput = new System.Windows.Forms.RadioButton();
-            this.localAutoCrlfTrue = new System.Windows.Forms.RadioButton();
-            this.label30 = new System.Windows.Forms.Label();
-            this.InvalidGitPathLocal = new System.Windows.Forms.Panel();
-            this.label21 = new System.Windows.Forms.Label();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.NoGitRepo = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.LocalMergeTool = new System.Windows.Forms.ComboBox();
-            this.KeepMergeBackup = new System.Windows.Forms.CheckBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.Editor = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.UserEmail = new System.Windows.Forms.TextBox();
-            this.UserName = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.tpScriptsTab = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.ScriptList = new System.Windows.Forms.DataGridView();
@@ -109,17 +87,13 @@ namespace GitUI
             this.settingsTreeViewUserControl1 = new GitUI.SettingsDialog.SettingsTreeViewUserControl();
             this.labelSettingsPageTitle = new System.Windows.Forms.Label();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.buttonDiscard = new System.Windows.Forms.Button();
             this.buttonApply = new System.Windows.Forms.Button();
+            this.buttonDiscard = new System.Windows.Forms.Button();
+            this.buttonCancel = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tpStart.SuspendLayout();
-            this.tpLocalSettings.SuspendLayout();
-            this.groupBox10.SuspendLayout();
-            this.InvalidGitPathLocal.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.tpScriptsTab.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ScriptList)).BeginInit();
@@ -192,7 +166,6 @@ namespace GitUI
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tpStart);
-            this.tabControl1.Controls.Add(this.tpLocalSettings);
             this.tabControl1.Controls.Add(this.tpScriptsTab);
             this.tabControl1.Controls.Add(this.tpHotkeys);
             this.tabControl1.Controls.Add(this.tpShellExt);
@@ -224,244 +197,6 @@ namespace GitUI
             this.dashboardEditor1.Size = new System.Drawing.Size(786, 508);
             this.dashboardEditor1.TabIndex = 0;
             // 
-            // tpLocalSettings
-            // 
-            this.tpLocalSettings.Controls.Add(this.label61);
-            this.tpLocalSettings.Controls.Add(this.Local_FilesEncoding);
-            this.tpLocalSettings.Controls.Add(this.groupBox10);
-            this.tpLocalSettings.Controls.Add(this.label30);
-            this.tpLocalSettings.Controls.Add(this.InvalidGitPathLocal);
-            this.tpLocalSettings.Controls.Add(this.NoGitRepo);
-            this.tpLocalSettings.Controls.Add(this.label20);
-            this.tpLocalSettings.Controls.Add(this.LocalMergeTool);
-            this.tpLocalSettings.Controls.Add(this.KeepMergeBackup);
-            this.tpLocalSettings.Controls.Add(this.label8);
-            this.tpLocalSettings.Controls.Add(this.Editor);
-            this.tpLocalSettings.Controls.Add(this.label5);
-            this.tpLocalSettings.Controls.Add(this.UserEmail);
-            this.tpLocalSettings.Controls.Add(this.UserName);
-            this.tpLocalSettings.Controls.Add(this.label2);
-            this.tpLocalSettings.Controls.Add(this.label1);
-            this.tpLocalSettings.Location = new System.Drawing.Point(4, 24);
-            this.tpLocalSettings.Name = "tpLocalSettings";
-            this.tpLocalSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tpLocalSettings.Size = new System.Drawing.Size(1148, 521);
-            this.tpLocalSettings.TabIndex = 0;
-            this.tpLocalSettings.Text = "Local settings";
-            this.tpLocalSettings.UseVisualStyleBackColor = true;
-            // 
-            // label61
-            // 
-            this.label61.AutoSize = true;
-            this.label61.Location = new System.Drawing.Point(14, 261);
-            this.label61.Name = "label61";
-            this.label61.Size = new System.Drawing.Size(127, 15);
-            this.label61.TabIndex = 45;
-            this.label61.Text = "Files content encoding";
-            // 
-            // Local_FilesEncoding
-            // 
-            this.Local_FilesEncoding.FormattingEnabled = true;
-            this.Local_FilesEncoding.Location = new System.Drawing.Point(178, 258);
-            this.Local_FilesEncoding.Name = "Local_FilesEncoding";
-            this.Local_FilesEncoding.Size = new System.Drawing.Size(262, 23);
-            this.Local_FilesEncoding.TabIndex = 44;
-            // 
-            // groupBox10
-            // 
-            this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox10.Controls.Add(this.localAutoCrlfFalse);
-            this.groupBox10.Controls.Add(this.localAutoCrlfInput);
-            this.groupBox10.Controls.Add(this.localAutoCrlfTrue);
-            this.groupBox10.Location = new System.Drawing.Point(13, 147);
-            this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(0, 105);
-            this.groupBox10.TabIndex = 32;
-            this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "Line endings";
-            // 
-            // localAutoCrlfFalse
-            // 
-            this.localAutoCrlfFalse.AutoSize = true;
-            this.localAutoCrlfFalse.Location = new System.Drawing.Point(5, 74);
-            this.localAutoCrlfFalse.Name = "localAutoCrlfFalse";
-            this.localAutoCrlfFalse.Size = new System.Drawing.Size(313, 17);
-            this.localAutoCrlfFalse.TabIndex = 2;
-            this.localAutoCrlfFalse.TabStop = true;
-            this.localAutoCrlfFalse.Text = "Checkout as-is, commit as-is (\"core.autocrlf\"  is set to \"false\")";
-            this.localAutoCrlfFalse.UseVisualStyleBackColor = true;
-            // 
-            // localAutoCrlfInput
-            // 
-            this.localAutoCrlfInput.AutoSize = true;
-            this.localAutoCrlfInput.Location = new System.Drawing.Point(5, 48);
-            this.localAutoCrlfInput.Name = "localAutoCrlfInput";
-            this.localAutoCrlfInput.Size = new System.Drawing.Size(397, 17);
-            this.localAutoCrlfInput.TabIndex = 1;
-            this.localAutoCrlfInput.TabStop = true;
-            this.localAutoCrlfInput.Text = "Checkout as-is, commit Unix-style line endings (\"core.autocrlf\"  is set to \"input" +
-    "\")";
-            this.localAutoCrlfInput.UseVisualStyleBackColor = true;
-            // 
-            // localAutoCrlfTrue
-            // 
-            this.localAutoCrlfTrue.AutoSize = true;
-            this.localAutoCrlfTrue.Location = new System.Drawing.Point(5, 22);
-            this.localAutoCrlfTrue.Name = "localAutoCrlfTrue";
-            this.localAutoCrlfTrue.Size = new System.Drawing.Size(439, 17);
-            this.localAutoCrlfTrue.TabIndex = 0;
-            this.localAutoCrlfTrue.TabStop = true;
-            this.localAutoCrlfTrue.Text = "Checkout Windows-style, commit Unix-style line endings (\"core.autocrlf\"  is set t" +
-    "o \"true\")";
-            this.localAutoCrlfTrue.UseVisualStyleBackColor = true;
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(8, 127);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(174, 15);
-            this.label30.TabIndex = 23;
-            this.label30.Text = "Keep backup (.orig) after merge";
-            // 
-            // InvalidGitPathLocal
-            // 
-            this.InvalidGitPathLocal.BackColor = System.Drawing.SystemColors.Info;
-            this.InvalidGitPathLocal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.InvalidGitPathLocal.Controls.Add(this.label21);
-            this.InvalidGitPathLocal.Controls.Add(this.pictureBox3);
-            this.InvalidGitPathLocal.Location = new System.Drawing.Point(423, 8);
-            this.InvalidGitPathLocal.Name = "InvalidGitPathLocal";
-            this.InvalidGitPathLocal.Size = new System.Drawing.Size(279, 65);
-            this.InvalidGitPathLocal.TabIndex = 20;
-            this.InvalidGitPathLocal.Visible = false;
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(74, 6);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(193, 45);
-            this.label21.TabIndex = 19;
-            this.label21.Text = "You need to set the correct path to \r\ngit before you can change\r\nlocal settings.\r" +
-    "\n";
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = global::GitUI.Properties.Resources.error;
-            this.pictureBox3.Location = new System.Drawing.Point(3, 4);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(54, 50);
-            this.pictureBox3.TabIndex = 18;
-            this.pictureBox3.TabStop = false;
-            // 
-            // NoGitRepo
-            // 
-            this.NoGitRepo.AutoSize = true;
-            this.NoGitRepo.ForeColor = System.Drawing.Color.Red;
-            this.NoGitRepo.Location = new System.Drawing.Point(460, 76);
-            this.NoGitRepo.Name = "NoGitRepo";
-            this.NoGitRepo.Size = new System.Drawing.Size(122, 15);
-            this.NoGitRepo.TabIndex = 12;
-            this.NoGitRepo.Text = "Not in a git repository";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.BackColor = System.Drawing.SystemColors.Info;
-            this.label20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label20.Location = new System.Drawing.Point(440, 6);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(165, 62);
-            this.label20.TabIndex = 11;
-            this.label20.Text = "You only need local settings\r\nif you want to override the \r\nglobal settings for t" +
-    "he current\r\nrepository.";
-            // 
-            // LocalMergeTool
-            // 
-            this.LocalMergeTool.FormattingEnabled = true;
-            this.LocalMergeTool.Items.AddRange(new object[] {
-            "Araxis",
-            "BeyondCompare3",
-            "DiffMerge",
-            "kdiff3",
-            "p4merge",
-            "TortoiseMerge"});
-            this.LocalMergeTool.Location = new System.Drawing.Point(150, 94);
-            this.LocalMergeTool.Name = "LocalMergeTool";
-            this.LocalMergeTool.Size = new System.Drawing.Size(159, 23);
-            this.LocalMergeTool.TabIndex = 10;
-            // 
-            // KeepMergeBackup
-            // 
-            this.KeepMergeBackup.AutoSize = true;
-            this.KeepMergeBackup.Checked = true;
-            this.KeepMergeBackup.CheckState = System.Windows.Forms.CheckState.Indeterminate;
-            this.KeepMergeBackup.Location = new System.Drawing.Point(472, 127);
-            this.KeepMergeBackup.Name = "KeepMergeBackup";
-            this.KeepMergeBackup.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.KeepMergeBackup.Size = new System.Drawing.Size(15, 14);
-            this.KeepMergeBackup.TabIndex = 9;
-            this.KeepMergeBackup.UseVisualStyleBackColor = true;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(8, 97);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(62, 15);
-            this.label8.TabIndex = 6;
-            this.label8.Text = "Mergetool";
-            // 
-            // Editor
-            // 
-            this.Editor.Location = new System.Drawing.Point(150, 67);
-            this.Editor.Name = "Editor";
-            this.Editor.Size = new System.Drawing.Size(304, 23);
-            this.Editor.TabIndex = 5;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 70);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(38, 15);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "Editor";
-            // 
-            // UserEmail
-            // 
-            this.UserEmail.Location = new System.Drawing.Point(150, 40);
-            this.UserEmail.Name = "UserEmail";
-            this.UserEmail.Size = new System.Drawing.Size(280, 23);
-            this.UserEmail.TabIndex = 3;
-            // 
-            // UserName
-            // 
-            this.UserName.Location = new System.Drawing.Point(150, 12);
-            this.UserName.Name = "UserName";
-            this.UserName.Size = new System.Drawing.Size(280, 23);
-            this.UserName.TabIndex = 1;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 40);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(62, 15);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "User email";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(63, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "User name";
-            // 
             // tpScriptsTab
             // 
             this.tpScriptsTab.Controls.Add(this.tableLayoutPanel1);
@@ -470,7 +205,7 @@ namespace GitUI
             this.tpScriptsTab.Location = new System.Drawing.Point(4, 24);
             this.tpScriptsTab.Name = "tpScriptsTab";
             this.tpScriptsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.tpScriptsTab.Size = new System.Drawing.Size(1148, 521);
+            this.tpScriptsTab.Size = new System.Drawing.Size(792, 514);
             this.tpScriptsTab.TabIndex = 8;
             this.tpScriptsTab.Text = "Scripts";
             this.tpScriptsTab.UseVisualStyleBackColor = true;
@@ -825,7 +560,7 @@ namespace GitUI
             // 
             this.scriptNeedsConfirmation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.scriptNeedsConfirmation.AutoSize = true;
-            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, -11752);
+            this.scriptNeedsConfirmation.Location = new System.Drawing.Point(107, -12199);
             this.scriptNeedsConfirmation.Name = "scriptNeedsConfirmation";
             this.scriptNeedsConfirmation.Size = new System.Drawing.Size(119, 17);
             this.scriptNeedsConfirmation.TabIndex = 21;
@@ -837,7 +572,7 @@ namespace GitUI
             // 
             this.inMenuCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.inMenuCheckBox.AutoSize = true;
-            this.inMenuCheckBox.Location = new System.Drawing.Point(107, -11713);
+            this.inMenuCheckBox.Location = new System.Drawing.Point(107, -12160);
             this.inMenuCheckBox.Name = "inMenuCheckBox";
             this.inMenuCheckBox.Size = new System.Drawing.Size(183, 17);
             this.inMenuCheckBox.TabIndex = 15;
@@ -851,7 +586,7 @@ namespace GitUI
             this.tpHotkeys.Location = new System.Drawing.Point(4, 24);
             this.tpHotkeys.Name = "tpHotkeys";
             this.tpHotkeys.Padding = new System.Windows.Forms.Padding(3);
-            this.tpHotkeys.Size = new System.Drawing.Size(1148, 521);
+            this.tpHotkeys.Size = new System.Drawing.Size(792, 514);
             this.tpHotkeys.TabIndex = 9;
             this.tpHotkeys.Text = "Hotkeys";
             this.tpHotkeys.UseVisualStyleBackColor = true;
@@ -873,7 +608,7 @@ namespace GitUI
             this.tpShellExt.Location = new System.Drawing.Point(4, 24);
             this.tpShellExt.Name = "tpShellExt";
             this.tpShellExt.Padding = new System.Windows.Forms.Padding(3);
-            this.tpShellExt.Size = new System.Drawing.Size(1148, 521);
+            this.tpShellExt.Size = new System.Drawing.Size(792, 514);
             this.tpShellExt.TabIndex = 11;
             this.tpShellExt.Text = "Shell extension";
             this.tpShellExt.UseVisualStyleBackColor = true;
@@ -990,15 +725,15 @@ namespace GitUI
             this.flowLayoutPanel4.Size = new System.Drawing.Size(800, 31);
             this.flowLayoutPanel4.TabIndex = 3;
             // 
-            // buttonCancel
+            // buttonApply
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(521, 3);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(88, 25);
-            this.buttonCancel.TabIndex = 1;
-            this.buttonCancel.Text = "Cancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            this.buttonApply.Location = new System.Drawing.Point(709, 3);
+            this.buttonApply.Name = "buttonApply";
+            this.buttonApply.Size = new System.Drawing.Size(88, 25);
+            this.buttonApply.TabIndex = 3;
+            this.buttonApply.Text = "Apply";
+            this.buttonApply.UseVisualStyleBackColor = true;
+            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
             // 
             // buttonDiscard
             // 
@@ -1010,15 +745,15 @@ namespace GitUI
             this.buttonDiscard.UseVisualStyleBackColor = true;
             this.buttonDiscard.Click += new System.EventHandler(this.buttonDiscard_Click);
             // 
-            // buttonApply
+            // buttonCancel
             // 
-            this.buttonApply.Location = new System.Drawing.Point(709, 3);
-            this.buttonApply.Name = "buttonApply";
-            this.buttonApply.Size = new System.Drawing.Size(88, 25);
-            this.buttonApply.TabIndex = 3;
-            this.buttonApply.Text = "Apply";
-            this.buttonApply.UseVisualStyleBackColor = true;
-            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
+            this.buttonCancel.Location = new System.Drawing.Point(521, 3);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(88, 25);
+            this.buttonCancel.TabIndex = 1;
+            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // FormSettings
             // 
@@ -1040,13 +775,6 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tpStart.ResumeLayout(false);
-            this.tpLocalSettings.ResumeLayout(false);
-            this.tpLocalSettings.PerformLayout();
-            this.groupBox10.ResumeLayout(false);
-            this.groupBox10.PerformLayout();
-            this.InvalidGitPathLocal.ResumeLayout(false);
-            this.InvalidGitPathLocal.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.tpScriptsTab.ResumeLayout(false);
             this.tpScriptsTab.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -1073,35 +801,15 @@ namespace GitUI
 
         #endregion
 
-        private System.Windows.Forms.TabPage tpLocalSettings;
-        private System.Windows.Forms.TextBox UserEmail;
-        private System.Windows.Forms.TextBox UserName;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.Button buttonOk;
-        private System.Windows.Forms.TextBox Editor;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.CheckBox KeepMergeBackup;
         private System.DirectoryServices.DirectorySearcher directorySearcher1;
         private System.DirectoryServices.DirectorySearcher directorySearcher2;
-        private System.Windows.Forms.ComboBox LocalMergeTool;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.Label NoGitRepo;
-        private System.Windows.Forms.Panel InvalidGitPathLocal;
-        private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TabPage tpStart;
         private System.Windows.Forms.BindingSource repositoryBindingSource;
         private DashboardEditor dashboardEditor1;
-        private System.Windows.Forms.GroupBox groupBox10;
-        private System.Windows.Forms.RadioButton localAutoCrlfFalse;
-        private System.Windows.Forms.RadioButton localAutoCrlfInput;
-        private System.Windows.Forms.RadioButton localAutoCrlfTrue;
         private System.Windows.Forms.TabPage tpScriptsTab;
         private System.Windows.Forms.CheckBox inMenuCheckBox;
         private System.Windows.Forms.Label argumentsLabel;
@@ -1121,8 +829,6 @@ namespace GitUI
         private Label labelOnEvent;
         private CheckBox scriptNeedsConfirmation;
         private ContextMenuStrip contextMenuStrip_SplitButton;
-        private Label label61;
-        private ComboBox Local_FilesEncoding;
         private TabPage tpShellExt;
         private Label lblMenuEntries;
         private CheckedListBox chlMenuEntries;

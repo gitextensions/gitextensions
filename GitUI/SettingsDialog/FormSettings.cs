@@ -89,10 +89,8 @@ namespace GitUI
 
             _commonLogic = new CommonLogic(Module);
 
-            _commonLogic.FillEncodings(Local_FilesEncoding); // TODO: to be moved
-
-            _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module); // TODO
-            _checklistSettingsPage = new ChecklistSettingsPage(_commonLogic, _checkSettingsLogic, Module); // TODO
+            _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module);
+            _checklistSettingsPage = new ChecklistSettingsPage(_commonLogic, _checkSettingsLogic, Module);
             _checkSettingsLogic.ChecklistSettingsPage = _checklistSettingsPage; // TODO
             _settingsPageRegistry.RegisterSettingsPage(_checklistSettingsPage);
 
@@ -114,7 +112,7 @@ namespace GitUI
             _globalSettingsSettingsPage = new GlobalSettingsSettingsPage(_commonLogic, _checkSettingsLogic, Module);
             _settingsPageRegistry.RegisterSettingsPage(_globalSettingsSettingsPage);
 
-            _localSettingsSettingsPage = new LocalSettingsSettingsPage();
+            _localSettingsSettingsPage = new LocalSettingsSettingsPage(_commonLogic, _checkSettingsLogic, Module);
             _settingsPageRegistry.RegisterSettingsPage(_localSettingsSettingsPage);
 
             _sshSettingsPage = new SshSettingsPage();
@@ -171,22 +169,6 @@ namespace GitUI
                 }
 
                 scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
-                
-                _commonLogic.EncodingToCombo(Module.GetFilesEncoding(true), Local_FilesEncoding);
-
-                ConfigFile localConfig = Module.GetLocalConfig();
-
-                UserName.Text = localConfig.GetValue("user.name");
-                UserEmail.Text = localConfig.GetValue("user.email");
-                Editor.Text = localConfig.GetPathValue("core.editor");
-                LocalMergeTool.Text = localConfig.GetValue("merge.tool");
-
-                CommonLogic.SetCheckboxFromString(KeepMergeBackup, localConfig.GetValue("mergetool.keepBackup"));
-
-                string autocrlf = localConfig.GetValue("core.autocrlf").ToLower();
-                localAutoCrlfFalse.Checked = autocrlf == "false";
-                localAutoCrlfInput.Checked = autocrlf == "input";
-                localAutoCrlfTrue.Checked = autocrlf == "true";
 
                 chkCascadedContextMenu.Checked = Settings.ShellCascadeContextMenu;
 
@@ -242,8 +224,6 @@ namespace GitUI
             // TODO: to which settings page does this belong?
             GitCommandHelpers.SetEnvironmentVariable(true);
 
-            Module.SetFilesEncoding(true, _commonLogic.ComboToEncoding(Local_FilesEncoding));
-
             // Shell Extension settings
             Settings.ShellCascadeContextMenu = chkCascadedContextMenu.Checked;
 
@@ -263,51 +243,10 @@ namespace GitUI
 
             Settings.ShellVisibleMenuItems = l_ShellVisibleMenuItems;
 
-            EnableSettings();
-
-            if (!_checkSettingsLogic.CanFindGitCmd())
-            {
-                // messagebox was moved up
-            }
-            else
-            {
-                handleCanFindGitCommand();
-            }
-
-            // TODO: this method has a general sounding name but only saves some specific settings
+            // TODO: this method has a generic sounding name but only saves some specific settings
             Settings.SaveSettings();
 
             return true;
-        }
-
-        private void handleCanFindGitCommand()
-        {
-            ConfigFile localConfig = Module.GetLocalConfig();
-
-            if (string.IsNullOrEmpty(UserName.Text) || !UserName.Text.Equals(localConfig.GetValue("user.name")))
-                localConfig.SetValue("user.name", UserName.Text);
-            if (string.IsNullOrEmpty(UserEmail.Text) || !UserEmail.Text.Equals(localConfig.GetValue("user.email")))
-                localConfig.SetValue("user.email", UserEmail.Text);
-            localConfig.SetPathValue("core.editor", Editor.Text);
-            localConfig.SetValue("merge.tool", LocalMergeTool.Text);
-
-
-            if (KeepMergeBackup.CheckState == CheckState.Checked)
-                localConfig.SetValue("mergetool.keepBackup", "true");
-            else if (KeepMergeBackup.CheckState == CheckState.Unchecked)
-                localConfig.SetValue("mergetool.keepBackup", "false");
-
-            if (localAutoCrlfFalse.Checked) localConfig.SetValue("core.autocrlf", "false");
-            if (localAutoCrlfInput.Checked) localConfig.SetValue("core.autocrlf", "input");
-            if (localAutoCrlfTrue.Checked) localConfig.SetValue("core.autocrlf", "true");
-            
-            CommonLogic.SetEncoding(Module.GetFilesEncoding(true), localConfig, "i18n.filesEncoding");
-
-            //Only save local settings when we are inside a valid working dir
-            if (Module.ValidWorkingDir())
-            {
-                localConfig.Save();
-            }
         }
 
         private void FormSettings_Load(object sender, EventArgs e)
@@ -315,27 +254,7 @@ namespace GitUI
             if (DesignMode)
                 return;
 
-            EnableSettings();
-
             WindowState = FormWindowState.Normal;
-        }
-
-        private void EnableSettings()
-        {
-            bool canFindGitCmd = _checkSettingsLogic.CanFindGitCmd();
-
-            InvalidGitPathLocal.Visible = !canFindGitCmd;
-
-            bool valid = Module.ValidWorkingDir() && canFindGitCmd;
-            UserName.Enabled = valid;
-            UserEmail.Enabled = valid;
-            Editor.Enabled = valid;
-            LocalMergeTool.Enabled = valid;
-            KeepMergeBackup.Enabled = valid;
-            localAutoCrlfFalse.Enabled = valid;
-            localAutoCrlfInput.Enabled = valid;
-            localAutoCrlfTrue.Enabled = valid;
-            NoGitRepo.Visible = !valid;
         }
 
         private void Rescan_Click(object sender, EventArgs e)
