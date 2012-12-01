@@ -723,6 +723,7 @@ namespace GitCommands
         public bool HandleConflictSelectSide(string fileName, string side)
         {
             Directory.SetCurrentDirectory(_workingdir);
+            fileName = FixPath(fileName);
 
             side = GetSide(side);
 
@@ -741,36 +742,60 @@ namespace GitCommands
             return true;
         }
 
-        public bool HandleConflictsSaveSide(string fileName, string saveAs, string side)
+        public bool HandleConflictsSaveSide(string fileName, string saveAsFileName, string side)
         {
             Directory.SetCurrentDirectory(_workingdir);
+            fileName = FixPath(fileName);
 
             side = GetSide(side);
 
-            fileName = FixPath(fileName);
-            var unmerged = RunGitCmd("ls-files -z --unmerged \"" + fileName + "\"").Split(new char[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var file in unmerged)
+            var result = RunGitCmd(String.Format("checkout-index --stage={0} --temp -- \"{1}\"", side, fileName));
+            if (result.IsNullOrEmpty())
             {
-                string fileStage = null;
-                int findSecondWhitespace = file.IndexOfAny(new[] { ' ', '\t' });
-                if (findSecondWhitespace >= 0) fileStage = file.Substring(findSecondWhitespace).Trim();
-                findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
-                if (findSecondWhitespace >= 0) fileStage = fileStage.Substring(findSecondWhitespace).Trim();
-                if (string.IsNullOrEmpty(fileStage))
-                    continue;
-                if (fileStage.Trim()[0] != side[0])
-                    continue;
-
-
-                var fileline = file.Split(new[] { ' ', '\t' });
-                if (fileline.Length < 3)
-                    continue;
-                Directory.SetCurrentDirectory(_workingdir);
-                SaveBlobAs(saveAs, fileline[1]);
-                return true;
+                return false;
             }
-            return false;
+
+            if (!result.StartsWith(".merge_file_"))
+            {
+                return false;
+            }
+
+            // Parse temporary file name from command line result
+            var splitResult = result.Split(new string[] { "\t", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+            if (splitResult.Length != 2)
+            {
+                return false;
+            }
+
+            var temporaryFileName = splitResult[0].Trim();
+
+            if (!File.Exists(temporaryFileName))
+            {
+                return false;
+            }
+
+            var retValue = false;
+            try
+            {
+                if (File.Exists(saveAsFileName))
+                {
+                    File.Delete(saveAsFileName);
+                }
+                File.Move(temporaryFileName, saveAsFileName);
+                retValue = true;
+            }
+            catch
+            {
+            }
+            finally
+            {
+                if (File.Exists(temporaryFileName))
+                {
+                    File.Delete(temporaryFileName);
+                }
+            }
+
+            return retValue;
         }
 
         public void SaveBlobAs(string saveAs, string blob)
