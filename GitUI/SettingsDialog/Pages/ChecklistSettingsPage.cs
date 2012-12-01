@@ -168,6 +168,14 @@ namespace GitUI.SettingsDialog.Pages
             Text = "Checklist";
         }
 
+        public override bool IsInstantApplyPage
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         [Browsable(false)]
         public GitModule Module {
             get { return _gitModule; /* TODO: see GitModuleForm */ }
