@@ -15,13 +15,13 @@ namespace GitUI.SettingsDialog
     {
         private TreeNode _geRootNode;
         private TreeNode _pluginsRootNode;
-        private SettingsPageBase _blankSettingsPage = new BlankSettingsPage();
+        private ISettingsPage _blankSettingsPage = new BlankSettingsPage();
         private Font _origTextBoxFont;
         private Font _nodeFontBold;
         private Font _nodeFontItalic;
         ////private IList<SettingsPageBase> registeredSettingsPages = new List<SettingsPageBase>();
         private IList<TreeNode> _treeNodesWithSettingsPage = new List<TreeNode>();
-        private SettingsPageBase _firstRegisteredSettingsPage;
+        private ISettingsPage _firstRegisteredSettingsPage;
 
         public event EventHandler<SettingsPageSelectedEventArgs> SettingsPageSelected;
 
@@ -85,17 +85,17 @@ namespace GitUI.SettingsDialog
         {
             if (SettingsPageSelected != null)
             {
-                if (e.Node.Tag as SettingsPageBase != null)
+                if (e.Node.Tag as ISettingsPage != null)
                 {
-                    SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPageBase = (SettingsPageBase)(e.Node.Tag) });
+                    SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPage = (ISettingsPage)(e.Node.Tag) });
                 }
                 else if (e.Node.Text == "Git Extensions")
                 {
-                    SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPageBase = null });
+                    SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPage = null });
                 }
                 else
                 {
-                    SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPageBase = _blankSettingsPage });
+                    SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPage = _blankSettingsPage });
                 }
             }
         }
@@ -114,7 +114,7 @@ namespace GitUI.SettingsDialog
 
                 foreach (var node in GetFindableNodes())
                 {
-                    var settingsPage = (SettingsPageBase)node.Tag;
+                    var settingsPage = (ISettingsPage)node.Tag;
 
                     // search for title
                     if (searchFor.Contains(settingsPage.Text.ToLowerInvariant()))
@@ -157,7 +157,7 @@ namespace GitUI.SettingsDialog
             }
         }
 
-        private TreeNode FindNodeBySettingsPage(SettingsPageBase settingsPage)
+        private TreeNode FindNodeBySettingsPage(ISettingsPage settingsPage)
         {
             return GetFindableNodes().FirstOrDefault(te => te.Tag == settingsPage);
         }
@@ -198,6 +198,6 @@ namespace GitUI.SettingsDialog
 
     public class SettingsPageSelectedEventArgs : EventArgs
     {
-        public SettingsPageBase SettingsPageBase { get; internal set; }
+        public ISettingsPage SettingsPage { get; internal set; }
     }
 }
