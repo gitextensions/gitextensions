@@ -386,7 +386,7 @@
             this.groupBox9.Controls.Add(this.globalAutoCrlfTrue);
             this.groupBox9.Location = new System.Drawing.Point(7, 316);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(493, 105);
+            this.groupBox9.Size = new System.Drawing.Size(679, 105);
             this.groupBox9.TabIndex = 80;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Line endings";
