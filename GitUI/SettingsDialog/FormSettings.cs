@@ -29,7 +29,7 @@ namespace GitUI
         private readonly TranslationString _cantFindGitMessage =
             new TranslationString("The command to run git is not configured correct." + Environment.NewLine +
                 "You need to set the correct path to be able to use GitExtensions." + Environment.NewLine +
-                Environment.NewLine + "Do you want to set the correct command now?");
+                Environment.NewLine + "Do you want to set the correct command now? If not Global and Local Settings will not be saved.");
 
         private readonly TranslationString _cantFindGitMessageCaption =
             new TranslationString("Incorrect path");
@@ -85,11 +85,12 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            _commonLogic.FillEncodings(Local_FilesEncoding);
-
             // NEW:
 
             _commonLogic = new CommonLogic(Module);
+
+            _commonLogic.FillEncodings(Local_FilesEncoding); // TODO: to be moved
+
             _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module); // TODO
             _checklistSettingsPage = new ChecklistSettingsPage(_commonLogic, _checkSettingsLogic, Module); // TODO
             _checkSettingsLogic.ChecklistSettingsPage = _checklistSettingsPage; // TODO
@@ -110,7 +111,7 @@ namespace GitUI
             _startPageSettingsPage = new StartPageSettingsPage();
             _settingsPageRegistry.RegisterSettingsPage(_startPageSettingsPage);
 
-            _globalSettingsSettingsPage = new GlobalSettingsSettingsPage(_commonLogic, Module);
+            _globalSettingsSettingsPage = new GlobalSettingsSettingsPage(_commonLogic, _checkSettingsLogic, Module);
             _settingsPageRegistry.RegisterSettingsPage(_globalSettingsSettingsPage);
 
             _localSettingsSettingsPage = new LocalSettingsSettingsPage();
@@ -214,6 +215,15 @@ namespace GitUI
 
         private bool Save()
         {
+            if (!_checkSettingsLogic.CanFindGitCmd())
+            {
+                if (MessageBox.Show(this, _cantFindGitMessage.Text, _cantFindGitMessageCaption.Text,
+                        MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    return false;
+                }
+            }
+
             foreach (var settingsPage in _settingsPageRegistry.GetSettingsPages())
             {
                 settingsPage.SaveSettings();
@@ -224,6 +234,7 @@ namespace GitUI
             if (Settings.RunningOnWindows())
                 FormFixHome.CheckHomePath();
 
+            // TODO: to which settings page does this belong?
             GitCommandHelpers.SetEnvironmentVariable(true);
 
             Module.SetFilesEncoding(true, _commonLogic.ComboToEncoding(Local_FilesEncoding));
@@ -251,15 +262,14 @@ namespace GitUI
 
             if (!_checkSettingsLogic.CanFindGitCmd())
             {
-                if (MessageBox.Show(this, _cantFindGitMessage.Text, _cantFindGitMessageCaption.Text,
-                        MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    return false;
+                // messagebox was moved up
             }
             else
             {
                 handleCanFindGitCommand();
             }
 
+            // TODO: this method has a general sounding name but only saves some specific settings
             Settings.SaveSettings();
 
             return true;
@@ -268,7 +278,6 @@ namespace GitUI
         private void handleCanFindGitCommand()
         {
             ConfigFile localConfig = Module.GetLocalConfig();
-            ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
 
             if (string.IsNullOrEmpty(UserName.Text) || !UserName.Text.Equals(localConfig.GetValue("user.name")))
                 localConfig.SetValue("user.name", UserName.Text);
@@ -286,58 +295,14 @@ namespace GitUI
             if (localAutoCrlfFalse.Checked) localConfig.SetValue("core.autocrlf", "false");
             if (localAutoCrlfInput.Checked) localConfig.SetValue("core.autocrlf", "input");
             if (localAutoCrlfTrue.Checked) localConfig.SetValue("core.autocrlf", "true");
-
-            if (string.IsNullOrEmpty(GlobalUserName.Text) ||
-                !GlobalUserName.Text.Equals(globalConfig.GetValue("user.name")))
-                globalConfig.SetValue("user.name", GlobalUserName.Text);
-            if (string.IsNullOrEmpty(GlobalUserEmail.Text) ||
-                !GlobalUserEmail.Text.Equals(globalConfig.GetValue("user.email")))
-                globalConfig.SetValue("user.email", GlobalUserEmail.Text);
-            if (string.IsNullOrEmpty(CommitTemplatePath.Text) ||
-                !CommitTemplatePath.Text.Equals(globalConfig.GetValue("commit.template")))
-                globalConfig.SetValue("commit.template", CommitTemplatePath.Text);
-            globalConfig.SetPathValue("core.editor", GlobalEditor.Text);
-
-            CheckSettingsLogic.SetGlobalDiffToolToConfig(globalConfig, GlobalDiffTool.Text);
-
-            if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                globalConfig.SetPathValue(string.Format("difftool.{0}.path", GlobalDiffTool.Text), DifftoolPath.Text);
-            if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                globalConfig.SetPathValue(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text), DifftoolCmd.Text);
-
-            globalConfig.SetValue("merge.tool", GlobalMergeTool.Text);
-
-            if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                globalConfig.SetPathValue(string.Format("mergetool.{0}.path", GlobalMergeTool.Text), MergetoolPath.Text);
-            if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                globalConfig.SetPathValue(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text), MergeToolCmd.Text);
-
-            if (GlobalKeepMergeBackup.CheckState == CheckState.Checked)
-                globalConfig.SetValue("mergetool.keepBackup", "true");
-            else if (GlobalKeepMergeBackup.CheckState == CheckState.Unchecked)
-                globalConfig.SetValue("mergetool.keepBackup", "false");
-
-            if (globalAutoCrlfFalse.Checked) globalConfig.SetValue("core.autocrlf", "false");
-            if (globalAutoCrlfInput.Checked) globalConfig.SetValue("core.autocrlf", "input");
-            if (globalAutoCrlfTrue.Checked) globalConfig.SetValue("core.autocrlf", "true");
-
-            Action<Encoding, bool, string> setEncoding = delegate(Encoding e, bool local, string name)
-            {
-                string value = e == null ? "" : e.HeaderName;
-                if (local)
-                    localConfig.SetValue(name, value);
-                else
-                    globalConfig.SetValue(name, value);
-            };
-            setEncoding(Module.GetFilesEncoding(false), false, "i18n.filesEncoding");
-            setEncoding(Module.GetFilesEncoding(true), true, "i18n.filesEncoding");
-
-
-            globalConfig.Save();
+            
+            CommonLogic.SetEncoding(Module.GetFilesEncoding(true), localConfig, "i18n.filesEncoding");
 
             //Only save local settings when we are inside a valid working dir
             if (Module.ValidWorkingDir())
+            {
                 localConfig.Save();
+            }
         }
 
         private void FormSettings_Load(object sender, EventArgs e)
@@ -353,16 +318,7 @@ namespace GitUI
         private void EnableSettings()
         {
             bool canFindGitCmd = _checkSettingsLogic.CanFindGitCmd();
-            GlobalUserName.Enabled = canFindGitCmd;
-            GlobalUserEmail.Enabled = canFindGitCmd;
-            GlobalEditor.Enabled = canFindGitCmd;
-            CommitTemplatePath.Enabled = canFindGitCmd;
-            GlobalMergeTool.Enabled = canFindGitCmd;
-            MergetoolPath.Enabled = canFindGitCmd;
-            MergeToolCmd.Enabled = canFindGitCmd;
-            GlobalKeepMergeBackup.Enabled = canFindGitCmd;
 
-            InvalidGitPathGlobal.Visible = !canFindGitCmd;
             InvalidGitPathLocal.Visible = !canFindGitCmd;
 
             bool valid = Module.ValidWorkingDir() && canFindGitCmd;
@@ -411,12 +367,6 @@ namespace GitUI
                 populateSplitbutton();
             else if (tc.SelectedTab == tpHotkeys)
                 controlHotkeys.ReloadSettings();
-
-            if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
-                string.IsNullOrEmpty(MergeToolCmd.Text))
-                MergeToolCmd.Enabled = false;
-            else
-                MergeToolCmd.Enabled = true;
         }
 
         private void populateSplitbutton()
