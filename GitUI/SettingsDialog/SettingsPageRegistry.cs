@@ -7,14 +7,14 @@ namespace GitUI.SettingsDialog
 {
     public class SettingsPageRegistry
     {
-        private IList<SettingsPageBase> _settingsPageCollection = new List<SettingsPageBase>();
+        private IList<ISettingsPage> _settingsPageCollection = new List<ISettingsPage>();
 
-        public void RegisterSettingsPage(SettingsPageBase settingsPage)
+        public void RegisterSettingsPage(ISettingsPage settingsPage)
         {
             _settingsPageCollection.Add(settingsPage);
         }
 
-        public IEnumerable<SettingsPageBase> GetSettingsPages()
+        public IEnumerable<ISettingsPage> GetSettingsPages()
         {
             return _settingsPageCollection;
         }

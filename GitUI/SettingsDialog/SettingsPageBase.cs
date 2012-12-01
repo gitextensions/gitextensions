@@ -10,8 +10,10 @@ namespace GitUI.SettingsDialog
     /// <summary>
     /// set Text property in derived classes to set the title
     /// </summary>
-    public class SettingsPageBase : UserControl
+    public class SettingsPageBase : UserControl, ISettingsPage
     {
+        public Control GuiControl { get { return this; } }
+
         /// <summary>
         /// Called when SettingsPage is shown (again);
         /// e. g. after user clicked a tree item

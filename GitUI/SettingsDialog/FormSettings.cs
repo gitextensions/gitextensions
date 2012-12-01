@@ -140,17 +140,17 @@ namespace GitUI
         private void settingsTreeViewUserControl1_SettingsPageSelected(object sender, SettingsPageSelectedEventArgs e)
         {
             settingsPagePanel.Controls.Clear();
-            if (e.SettingsPageBase == null)
+            if (e.SettingsPage == null)
             {
                 settingsPagePanel.Controls.Add(tabControl1);
                 labelSettingsPageTitle.Text = "(TabControl to be migrated)";
             }
             else
             {
-                var settingsPage = e.SettingsPageBase;
-                settingsPagePanel.Controls.Add(settingsPage);
-                e.SettingsPageBase.Dock = DockStyle.Fill;
-                labelSettingsPageTitle.Text = e.SettingsPageBase.Text;
+                var settingsPage = e.SettingsPage;
+                settingsPagePanel.Controls.Add(settingsPage.GuiControl);
+                e.SettingsPage.GuiControl.Dock = DockStyle.Fill;
+                labelSettingsPageTitle.Text = e.SettingsPage.Text;
 
                 settingsPage.OnPageShown();
             }
