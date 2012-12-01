@@ -817,8 +817,48 @@ namespace GitUI
 
         private void ConflictedFilesContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            ConflictedFilesContextMenu.Enabled = !string.IsNullOrEmpty(GetFileName());
+            var fileName = GetFileName();
+            ConflictedFilesContextMenu.Enabled = !string.IsNullOrEmpty(fileName);
+
+            if (ConflictedFilesContextMenu.Enabled)
+            {
+                EnableAllEntriesInConflictedFilesContextMenu();
+                DisableInvalidEntriesInCoflictedFilesContextMenu(fileName);
+            }
         }
+
+        private void EnableAllEntriesInConflictedFilesContextMenu()
+        {
+            ContextOpenLocalWith.Enabled = true;
+            ContextSaveLocalAs.Enabled = true;
+
+            ContextOpenRemoteWith.Enabled = true;
+            ContextSaveRemoteAs.Enabled = true;
+
+            ContextOpenBaseWith.Enabled = true;
+            ContextSaveBaseAs.Enabled = true;
+        }
+
+        private void DisableInvalidEntriesInCoflictedFilesContextMenu(string fileName)
+        {
+            var conflictedFileNames = Module.GetConflictedFileNames(fileName);
+            if (conflictedFileNames[1].IsNullOrEmpty())
+            {
+                ContextSaveLocalAs.Enabled = false;
+                ContextOpenLocalWith.Enabled = false;
+            }
+            if (conflictedFileNames[2].IsNullOrEmpty())
+            {
+                ContextSaveRemoteAs.Enabled = false;
+                ContextOpenRemoteWith.Enabled = false;
+            }
+            if (conflictedFileNames[0].IsNullOrEmpty())
+            {
+                ContextSaveBaseAs.Enabled = false;
+                ContextOpenBaseWith.Enabled = false;
+            }
+        }
+
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
