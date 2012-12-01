@@ -898,7 +898,7 @@ namespace GitUI
                     }
                     else if (revision.ParentGuids == null || revision.ParentGuids.Length == 0)
                     {
-                        DiffFiles.GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true).ToList();
+                        DiffFiles.GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
                     }
                     else
                     {
@@ -912,7 +912,7 @@ namespace GitUI
                         }
                         else
                         {
-                            DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]).ToList();
+                            DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
                         }
 
                         DiffTabPage.Text = string.Format("{0} (A: parent --> B: selection)", DiffTabPageTitleBase);
@@ -934,7 +934,7 @@ namespace GitUI
                         // "{0} (A: upper --> B: lower)"
                         // Alternatively: Make A and B somehow visible in the revision grid as soon as the Diff Tab is visible
                         //
-                        DiffFiles.GitItemStatuses = Module.GetDiffFiles(revisions[0].Guid, revisions[1].Guid).ToList();
+                        DiffFiles.GitItemStatuses = Module.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
                         DiffTabPage.Text = string.Format("{0} (A: first --> B: second)", DiffTabPageTitleBase);
                     }
                     break;
