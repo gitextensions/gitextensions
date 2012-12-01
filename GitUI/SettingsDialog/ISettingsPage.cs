@@ -18,6 +18,11 @@ namespace GitUI.SettingsDialog
 
         void SaveSettings();
 
+        /// <summary>
+        /// true if the page cannot properly react to cancel or discard
+        /// </summary>
+        bool IsInstantApplyPage { get; }
+
         IEnumerable<string> GetSearchKeywords();
     }
 }

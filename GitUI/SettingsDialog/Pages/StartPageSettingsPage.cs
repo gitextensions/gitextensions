@@ -17,5 +17,13 @@ namespace GitUI.SettingsDialog.Pages
 
             Text = "Start Page";
         }
+
+        public override bool IsInstantApplyPage
+        {
+            get
+            {
+                return true;
+            }
+        }
     }
 }
