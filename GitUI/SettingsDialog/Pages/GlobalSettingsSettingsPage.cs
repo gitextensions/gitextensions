@@ -18,13 +18,15 @@ namespace GitUI.SettingsDialog.Pages
         private readonly TranslationString __diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
 
         CommonLogic _commonLogic;
+        CheckSettingsLogic _checkSettingsLogic;
         GitModule _gitModule;
 
-        public GlobalSettingsSettingsPage(CommonLogic commonLogic, GitModule gitModule)
+        public GlobalSettingsSettingsPage(CommonLogic commonLogic, CheckSettingsLogic checkSettingsLogic, GitModule gitModule)
         {
             InitializeComponent();
 
             _commonLogic = commonLogic;
+            _checkSettingsLogic = checkSettingsLogic;
             _gitModule = gitModule;
 
             Text = "Global Settings";
@@ -38,6 +40,33 @@ namespace GitUI.SettingsDialog.Pages
                 npp = "\"" + npp + "\"";
 
             GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
+        }
+
+        public override void OnPageShown()
+        {
+            {
+                bool canFindGitCmd = _checkSettingsLogic.CanFindGitCmd();
+
+                GlobalUserName.Enabled = canFindGitCmd;
+                GlobalUserEmail.Enabled = canFindGitCmd;
+                GlobalEditor.Enabled = canFindGitCmd;
+                CommitTemplatePath.Enabled = canFindGitCmd;
+                GlobalMergeTool.Enabled = canFindGitCmd;
+                MergetoolPath.Enabled = canFindGitCmd;
+                MergeToolCmd.Enabled = canFindGitCmd;
+                GlobalKeepMergeBackup.Enabled = canFindGitCmd;
+                InvalidGitPathGlobal.Visible = !canFindGitCmd;
+            }
+
+            if (GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase)
+                && string.IsNullOrEmpty(MergeToolCmd.Text))
+            {
+                MergeToolCmd.Enabled = false;
+            }
+            else
+            {
+                MergeToolCmd.Enabled = true;
+            }
         }
 
         protected override void OnLoadSettings()
@@ -90,12 +119,58 @@ namespace GitUI.SettingsDialog.Pages
 
             globalAutoCrlfFalse.Checked = globalAutocrlf == "false";
             globalAutoCrlfInput.Checked = globalAutocrlf == "input";
-            globalAutoCrlfTrue.Checked = globalAutocrlf == "true";            
+            globalAutoCrlfTrue.Checked = globalAutocrlf == "true";
         }
 
+        /// <summary>
+        /// silently does not save some settings if Git is not configured correctly
+        /// (user notification is done elsewhere)
+        /// </summary>
         public override void SaveSettings()
         {
             _gitModule.SetFilesEncoding(false, _commonLogic.ComboToEncoding(Global_FilesEncoding));
+
+            if (_checkSettingsLogic.CanFindGitCmd())
+            {
+                ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
+
+                if (string.IsNullOrEmpty(GlobalUserName.Text) ||
+                    !GlobalUserName.Text.Equals(globalConfig.GetValue("user.name")))
+                    globalConfig.SetValue("user.name", GlobalUserName.Text);
+                if (string.IsNullOrEmpty(GlobalUserEmail.Text) ||
+                    !GlobalUserEmail.Text.Equals(globalConfig.GetValue("user.email")))
+                    globalConfig.SetValue("user.email", GlobalUserEmail.Text);
+                if (string.IsNullOrEmpty(CommitTemplatePath.Text) ||
+                    !CommitTemplatePath.Text.Equals(globalConfig.GetValue("commit.template")))
+                    globalConfig.SetValue("commit.template", CommitTemplatePath.Text);
+                globalConfig.SetPathValue("core.editor", GlobalEditor.Text);
+
+                CheckSettingsLogic.SetGlobalDiffToolToConfig(globalConfig, GlobalDiffTool.Text);
+
+                if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
+                    globalConfig.SetPathValue(string.Format("difftool.{0}.path", GlobalDiffTool.Text), DifftoolPath.Text);
+                if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
+                    globalConfig.SetPathValue(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text), DifftoolCmd.Text);
+
+                globalConfig.SetValue("merge.tool", GlobalMergeTool.Text);
+
+                if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
+                    globalConfig.SetPathValue(string.Format("mergetool.{0}.path", GlobalMergeTool.Text), MergetoolPath.Text);
+                if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
+                    globalConfig.SetPathValue(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text), MergeToolCmd.Text);
+
+                if (GlobalKeepMergeBackup.CheckState == CheckState.Checked)
+                    globalConfig.SetValue("mergetool.keepBackup", "true");
+                else if (GlobalKeepMergeBackup.CheckState == CheckState.Unchecked)
+                    globalConfig.SetValue("mergetool.keepBackup", "false");
+
+                if (globalAutoCrlfFalse.Checked) globalConfig.SetValue("core.autocrlf", "false");
+                if (globalAutoCrlfInput.Checked) globalConfig.SetValue("core.autocrlf", "input");
+                if (globalAutoCrlfTrue.Checked) globalConfig.SetValue("core.autocrlf", "true");
+
+                CommonLogic.SetEncoding(_gitModule.GetFilesEncoding(false), globalConfig, "i18n.filesEncoding");
+                globalConfig.Save();
+            }
         }
 
         private void GlobalMergeTool_TextChanged(object sender, EventArgs e)

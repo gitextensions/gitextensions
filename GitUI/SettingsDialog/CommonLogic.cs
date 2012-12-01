@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using System.Windows.Forms;
 using ResourceManager.Translation;
 using System.IO;
+using GitCommands.Config;
 
 namespace GitUI.SettingsDialog
 {
@@ -34,7 +35,7 @@ namespace GitUI.SettingsDialog
         /// <summary>
         /// remove later
         /// </summary>
-        private GitModule Module { get { return _gitModule;} }
+        private GitModule Module { get { return _gitModule; } }
 
         public const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
 
@@ -155,6 +156,12 @@ namespace GitUI.SettingsDialog
                     checkBox.CheckState = CheckState.Indeterminate;
                     return;
             }
+        }
+
+        public static void SetEncoding(Encoding e, ConfigFile configFile, string name)
+        {
+            string value = e == null ? "" : e.HeaderName;
+            configFile.SetValue(name, value);
         }
     }
 }
