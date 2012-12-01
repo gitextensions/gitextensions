@@ -417,6 +417,7 @@
     <Compile Include="Script\ScriptManager.cs" />
     <Compile Include="SettingsDialog\CheckSettingsLogic.cs" />
     <Compile Include="SettingsDialog\CommonLogic.cs" />
+    <Compile Include="SettingsDialog\ISettingsPage.cs" />
     <Compile Include="SettingsDialog\Pages\AppearanceSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
