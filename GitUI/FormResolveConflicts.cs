@@ -536,43 +536,59 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            string filename = GetFileName();
+            string fileName = GetFileName();
 
-            if (CheckForBaseRevision(filename))
+            if (CheckForBaseRevision(fileName))
             {
-                if (!Module.HandleConflictSelectBase(filename))
-                    MessageBox.Show(this, _chooseBaseFileFailedText.Text);
+                ChooseBaseOnConflict(fileName);
             }
             Initialize();
             Cursor.Current = Cursors.Default;
+        }
+
+        private void ChooseBaseOnConflict(string fileName)
+        {
+            if (!Module.HandleConflictSelectSide(fileName, "BASE"))
+                MessageBox.Show(this, _chooseBaseFileFailedText.Text);
         }
 
         private void ContextChooseLocal_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            string filename = GetFileName();
-            if (CheckForLocalRevision(filename))
+            string fileName = GetFileName();
+            if (CheckForLocalRevision(fileName))
             {
-                if (!Module.HandleConflictSelectLocal(GetFileName()))
-                    MessageBox.Show(this, _chooseLocalFileFailedText.Text);
+                ChooseLocalOnConflict(fileName);
             }
             Initialize();
             Cursor.Current = Cursors.Default;
         }
 
+        private void ChooseLocalOnConflict(string fileName)
+        {
+            if (!Module.HandleConflictSelectSide(fileName, "LOCAL"))
+                MessageBox.Show(this, _chooseLocalFileFailedText.Text);
+        }
+
         private void ContextChooseRemote_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            string filename = GetFileName();
-            if (CheckForRemoteRevision(filename))
+
+            string fileName = GetFileName();
+            if (CheckForRemoteRevision(fileName))
             {
-                if (!Module.HandleConflictSelectRemote(GetFileName()))
-                    MessageBox.Show(this, _chooseRemoteFileFailedText.Text);
+                ChooseRemoteOnConflict(fileName);
             }
             Initialize();
 
             Cursor.Current = Cursors.Default;
+        }
+
+        private void ChooseRemoteOnConflict(string fileName)
+        {
+            if (!Module.HandleConflictSelectSide(fileName, "REMOTE"))
+                MessageBox.Show(this, _chooseRemoteFileFailedText.Text);
         }
 
         private void BinairyFilesChooseLocalBaseRemote(string filename)
@@ -589,11 +605,11 @@ namespace GitUI
             {
                 frm.ShowDialog(this);
                 if (frm.KeepBase) //base
-                    Module.HandleConflictSelectBase(GetFileName());
+                    ChooseBaseOnConflict(GetFileName());
                 if (frm.KeepLocal) //local
-                    Module.HandleConflictSelectLocal(GetFileName());
+                    ChooseLocalOnConflict(GetFileName());
                 if (frm.KeepRemote) //remote
-                    Module.HandleConflictSelectRemote(GetFileName());
+                    ChooseRemoteOnConflict(GetFileName());
             }
         }
 
@@ -615,9 +631,9 @@ namespace GitUI
                     if (frm.KeepBase) //delete
                         Module.RunGitCmd("rm -- \"" + filename + "\"");
                     if (frm.KeepLocal) //local
-                        Module.HandleConflictSelectLocal(GetFileName());
+                        ChooseLocalOnConflict(GetFileName());
                     if (frm.KeepRemote) //remote
-                        Module.HandleConflictSelectRemote(GetFileName());
+                        ChooseRemoteOnConflict(GetFileName());
                 }
                 return false;
             }
@@ -640,11 +656,11 @@ namespace GitUI
                 {
                     frm.ShowDialog(this);
                     if (frm.KeepBase) //base
-                        Module.HandleConflictSelectBase(GetFileName());
+                        ChooseBaseOnConflict(GetFileName());
                     if (frm.KeepLocal) //delete
                         Module.RunGitCmd("rm -- \"" + filename + "\"");
                     if (frm.KeepRemote) //remote
-                        Module.HandleConflictSelectRemote(GetFileName());
+                        ChooseRemoteOnConflict(GetFileName());
                 }
                 return false;
             }
@@ -667,9 +683,9 @@ namespace GitUI
                 {
                     frm.ShowDialog(this);
                     if (frm.KeepBase) //base
-                        Module.HandleConflictSelectBase(GetFileName());
+                        ChooseBaseOnConflict(GetFileName());
                     if (frm.KeepLocal) //delete
-                        Module.HandleConflictSelectLocal(GetFileName());
+                        ChooseLocalOnConflict(GetFileName());
                     if (frm.KeepRemote) //remote
                         Module.RunGitCmd("rm -- \"" + filename + "\"");
                 }
