@@ -78,7 +78,7 @@
             this.groupBox13.Controls.Add(this.helpTranslate);
             this.groupBox13.Location = new System.Drawing.Point(0, 417);
             this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(710, 84);
+            this.groupBox13.Size = new System.Drawing.Size(509, 84);
             this.groupBox13.TabIndex = 60;
             this.groupBox13.TabStop = false;
             this.groupBox13.Text = "Language";
@@ -97,14 +97,14 @@
             this.label22.AutoSize = true;
             this.label22.Location = new System.Drawing.Point(6, 50);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(152, 13);
+            this.label22.Size = new System.Drawing.Size(149, 13);
             this.label22.TabIndex = 14;
-            this.label22.Text = "Dictionary for spelling checker.";
+            this.label22.Text = "Dictionary for spelling checker";
             // 
             // Dictionary
             // 
             this.Dictionary.FormattingEnabled = true;
-            this.Dictionary.Location = new System.Drawing.Point(394, 47);
+            this.Dictionary.Location = new System.Drawing.Point(205, 48);
             this.Dictionary.Name = "Dictionary";
             this.Dictionary.Size = new System.Drawing.Size(169, 21);
             this.Dictionary.TabIndex = 15;
@@ -113,7 +113,7 @@
             // downloadDictionary
             // 
             this.downloadDictionary.AutoSize = true;
-            this.downloadDictionary.Location = new System.Drawing.Point(569, 50);
+            this.downloadDictionary.Location = new System.Drawing.Point(380, 51);
             this.downloadDictionary.Name = "downloadDictionary";
             this.downloadDictionary.Size = new System.Drawing.Size(103, 13);
             this.downloadDictionary.TabIndex = 40;
@@ -127,7 +127,7 @@
             "en-US",
             "ja-JP",
             "nl-NL"});
-            this.Language.Location = new System.Drawing.Point(394, 18);
+            this.Language.Location = new System.Drawing.Point(205, 19);
             this.Language.Name = "Language";
             this.Language.Size = new System.Drawing.Size(169, 21);
             this.Language.TabIndex = 29;
@@ -135,7 +135,7 @@
             // helpTranslate
             // 
             this.helpTranslate.AutoSize = true;
-            this.helpTranslate.Location = new System.Drawing.Point(569, 21);
+            this.helpTranslate.Location = new System.Drawing.Point(380, 22);
             this.helpTranslate.Name = "helpTranslate";
             this.helpTranslate.Size = new System.Drawing.Size(72, 13);
             this.helpTranslate.TabIndex = 30;
@@ -152,7 +152,7 @@
             this.groupBox15.Controls.Add(this.label56);
             this.groupBox15.Location = new System.Drawing.Point(3, 311);
             this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(707, 100);
+            this.groupBox15.Size = new System.Drawing.Size(506, 100);
             this.groupBox15.TabIndex = 59;
             this.groupBox15.TabStop = false;
             this.groupBox15.Text = "Fonts";
@@ -210,7 +210,7 @@
             this.groupBox14.Controls.Add(this._NO_TRANSLATE_truncatePathMethod);
             this.groupBox14.Location = new System.Drawing.Point(3, 3);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(707, 125);
+            this.groupBox14.Size = new System.Drawing.Size(506, 125);
             this.groupBox14.TabIndex = 58;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "General";
@@ -262,7 +262,7 @@
             "none",
             "compact",
             "trimstart"});
-            this._NO_TRANSLATE_truncatePathMethod.Location = new System.Drawing.Point(396, 88);
+            this._NO_TRANSLATE_truncatePathMethod.Location = new System.Drawing.Point(166, 89);
             this._NO_TRANSLATE_truncatePathMethod.Name = "_NO_TRANSLATE_truncatePathMethod";
             this._NO_TRANSLATE_truncatePathMethod.Size = new System.Drawing.Size(242, 21);
             this._NO_TRANSLATE_truncatePathMethod.TabIndex = 49;
@@ -282,7 +282,7 @@
             this.groupBox6.Controls.Add(this.ShowAuthorGravatar);
             this.groupBox6.Location = new System.Drawing.Point(3, 134);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(707, 171);
+            this.groupBox6.Size = new System.Drawing.Size(506, 171);
             this.groupBox6.TabIndex = 57;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Author images";
@@ -395,7 +395,7 @@
             this.Controls.Add(this.groupBox14);
             this.Controls.Add(this.groupBox6);
             this.Name = "AppearanceSettingsPage";
-            this.Size = new System.Drawing.Size(713, 508);
+            this.Size = new System.Drawing.Size(512, 508);
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
             this.groupBox15.ResumeLayout(false);
