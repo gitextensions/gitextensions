@@ -31,10 +31,9 @@ namespace GitUI.SettingsDialog.Pages
             Text = "Git";
         }
 
-        public override IEnumerable<string> GetSearchKeywords()
+        protected override string GetCommaSeparatedKeywordList()
         {
-            return new List<string> { "path", "home", "environment", "variable", "msys", "cygwin", "download", "git", "command", "linux", "tools" };
-
+            return "path,home,environment,variable,msys,cygwin,download,git,command,linux,tools";
         }
 
         public override void OnPageShown()

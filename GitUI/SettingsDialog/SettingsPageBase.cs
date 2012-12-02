@@ -61,7 +61,15 @@ namespace GitUI.SettingsDialog
         /// </summary>
         public virtual IEnumerable<string> GetSearchKeywords()
         {
-            return new List<string>();
+            // split at comma and return a list of trimmed strings
+            return GetCommaSeparatedKeywordList()
+                .Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim());
+        }
+
+        protected virtual string GetCommaSeparatedKeywordList()
+        {
+            return "";
         }
 
         public virtual bool IsInstantApplyPage
