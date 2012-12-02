@@ -22,6 +22,7 @@ namespace GitUI.SettingsDialog
         ////private IList<SettingsPageBase> registeredSettingsPages = new List<SettingsPageBase>();
         private IList<TreeNode> _treeNodesWithSettingsPage = new List<TreeNode>();
         private ISettingsPage _firstRegisteredSettingsPage;
+        private bool _isSelectionChangeTriggeredByGoto;
 
         public event EventHandler<SettingsPageSelectedEventArgs> SettingsPageSelected;
 
@@ -83,13 +84,21 @@ namespace GitUI.SettingsDialog
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            if (!_isSelectionChangeTriggeredByGoto)
+            {
+                FireSettingsPageSelectedEvent(e.Node);
+            }
+        }
+
+        private void FireSettingsPageSelectedEvent(TreeNode node)
+        {
             if (SettingsPageSelected != null)
             {
-                if (e.Node.Tag as ISettingsPage != null)
+                if (node.Tag as ISettingsPage != null)
                 {
-                    SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPage = (ISettingsPage)(e.Node.Tag) });
+                    SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPage = (ISettingsPage)(node.Tag), IsTriggeredByGoto = _isSelectionChangeTriggeredByGoto });
                 }
-                else if (e.Node.Text == "Git Extensions")
+                else if (node.Text == "Git Extensions")
                 {
                     SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPage = null });
                 }
@@ -98,6 +107,8 @@ namespace GitUI.SettingsDialog
                     SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPage = _blankSettingsPage });
                 }
             }
+
+            _isSelectionChangeTriggeredByGoto = false;        
         }
 
         private void textBoxFind_TextChanged(object sender, EventArgs e)
@@ -203,7 +214,9 @@ namespace GitUI.SettingsDialog
 
                 if (settingsPage.GetType() == settingsPageReference.SettingsPageType)
                 {
+                    _isSelectionChangeTriggeredByGoto = true;
                     treeView1.SelectedNode = node;
+                    FireSettingsPageSelectedEvent(node);
                     return;
                 }
             }
@@ -212,6 +225,7 @@ namespace GitUI.SettingsDialog
 
     public class SettingsPageSelectedEventArgs : EventArgs
     {
+        public bool IsTriggeredByGoto { get; internal set; }
         public ISettingsPage SettingsPage { get; internal set; }
     }
 }
