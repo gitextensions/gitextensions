@@ -78,7 +78,7 @@
             this.groupBox13.Controls.Add(this.helpTranslate);
             this.groupBox13.Location = new System.Drawing.Point(0, 417);
             this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(509, 84);
+            this.groupBox13.Size = new System.Drawing.Size(512, 84);
             this.groupBox13.TabIndex = 60;
             this.groupBox13.TabStop = false;
             this.groupBox13.Text = "Language";
@@ -154,7 +154,7 @@
             this.groupBox15.Controls.Add(this.label56);
             this.groupBox15.Location = new System.Drawing.Point(3, 311);
             this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(506, 100);
+            this.groupBox15.Size = new System.Drawing.Size(509, 100);
             this.groupBox15.TabIndex = 59;
             this.groupBox15.TabStop = false;
             this.groupBox15.Text = "Fonts";
@@ -212,7 +212,7 @@
             this.groupBox14.Controls.Add(this._NO_TRANSLATE_truncatePathMethod);
             this.groupBox14.Location = new System.Drawing.Point(3, 3);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(506, 125);
+            this.groupBox14.Size = new System.Drawing.Size(509, 125);
             this.groupBox14.TabIndex = 58;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "General";
@@ -284,7 +284,7 @@
             this.groupBox6.Controls.Add(this.ShowAuthorGravatar);
             this.groupBox6.Location = new System.Drawing.Point(3, 134);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(506, 171);
+            this.groupBox6.Size = new System.Drawing.Size(509, 171);
             this.groupBox6.TabIndex = 57;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Author images";
@@ -397,8 +397,9 @@
             this.Controls.Add(this.groupBox15);
             this.Controls.Add(this.groupBox14);
             this.Controls.Add(this.groupBox6);
+            this.MinimumSize = new System.Drawing.Size(515, 510);
             this.Name = "AppearanceSettingsPage";
-            this.Size = new System.Drawing.Size(512, 508);
+            this.Size = new System.Drawing.Size(515, 510);
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
             this.groupBox15.ResumeLayout(false);
