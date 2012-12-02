@@ -75,8 +75,6 @@ namespace GitUI
             : this(null)
         { }
 
-        Panel settingsPagePanel;
-
         public FormSettings(GitUICommands aCommands)
             : base(aCommands)
         {
@@ -118,38 +116,27 @@ namespace GitUI
 
             _scriptsSettingsPage = new ScriptsSettingsPage();
             _settingsPageRegistry.RegisterSettingsPage(_scriptsSettingsPage);
-            
+
             _hotkeysSettingsPage = new HotkeysSettingsPage();
             _settingsPageRegistry.RegisterSettingsPage(_hotkeysSettingsPage);
-            
+
             _shellExtensionSettingsPage = new ShellExtensionSettingsPage();
             _settingsPageRegistry.RegisterSettingsPage(_shellExtensionSettingsPage);
-            
-            settingsTreeViewUserControl1.SetSettingsPages(_settingsPageRegistry);
 
-            // todo: alter this when all tab pages are converted
-            //this.tableLayoutPanel3.Controls.Add(this.tabControl1, 1, 0);
-            tableLayoutPanel3.Controls.Remove(tabControl1);
-            settingsPagePanel = new Panel();
-            settingsPagePanel.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Controls.Add(settingsPagePanel, 1, 1);
+            settingsTreeViewUserControl1.SetSettingsPages(_settingsPageRegistry);
         }
 
         private void settingsTreeViewUserControl1_SettingsPageSelected(object sender, SettingsPageSelectedEventArgs e)
         {
-            settingsPagePanel.Controls.Clear();
-            if (e.SettingsPage == null)
-            {
-                settingsPagePanel.Controls.Add(tabControl1);
-                labelSettingsPageTitle.Text = "(TabControl to be migrated)";
-            }
-            else
-            {
-                var settingsPage = e.SettingsPage;
+            panelCurrentSettingsPage.Controls.Clear();
 
-                settingsPagePanel.Controls.Add(settingsPage.GuiControl);
+            var settingsPage = e.SettingsPage;
+
+            if (settingsPage != null)
+            {
+                panelCurrentSettingsPage.Controls.Add(settingsPage.GuiControl);
                 e.SettingsPage.GuiControl.Dock = DockStyle.Fill;
-                
+
                 labelSettingsPageTitle.Text = e.SettingsPage.Text;
                 Application.DoEvents();
 
@@ -160,6 +147,16 @@ namespace GitUI
                 bool isInstantApplyPage = settingsPage.IsInstantApplyPage;
                 buttonApply.Enabled = !isInstantApplyPage;
                 buttonDiscard.Enabled = !isInstantApplyPage;
+                buttonOk.Enabled = true;
+                buttonCancel.Enabled = true;
+            }
+            else
+            {
+                buttonApply.Enabled = false;
+                buttonDiscard.Enabled = false;
+                buttonOk.Enabled = false;
+                buttonCancel.Enabled = false;
+                labelSettingsPageTitle.Text = "[Please select another node]";
             }
         }
 
@@ -281,7 +278,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
             LoadSettings();
-            Cursor.Current = Cursors.Default;            
+            Cursor.Current = Cursors.Default;
         }
 
         private void buttonApply_Click(object sender, EventArgs e)
