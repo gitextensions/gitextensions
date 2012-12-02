@@ -38,8 +38,6 @@ namespace GitUI
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tpHotkeys = new System.Windows.Forms.TabPage();
-            this.controlHotkeys = new GitUI.Hotkey.ControlHotkeys();
             this.scriptInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.buttonOk = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -52,8 +50,6 @@ namespace GitUI
             this.labelSettingsPageTitle = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
-            this.tabControl1.SuspendLayout();
-            this.tpHotkeys.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
@@ -97,34 +93,12 @@ namespace GitUI
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tpHotkeys);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(203, 43);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(800, 537);
             this.tabControl1.TabIndex = 0;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
-            // 
-            // tpHotkeys
-            // 
-            this.tpHotkeys.Controls.Add(this.controlHotkeys);
-            this.tpHotkeys.Location = new System.Drawing.Point(4, 24);
-            this.tpHotkeys.Name = "tpHotkeys";
-            this.tpHotkeys.Padding = new System.Windows.Forms.Padding(3);
-            this.tpHotkeys.Size = new System.Drawing.Size(792, 509);
-            this.tpHotkeys.TabIndex = 9;
-            this.tpHotkeys.Text = "Hotkeys";
-            this.tpHotkeys.UseVisualStyleBackColor = true;
-            // 
-            // controlHotkeys
-            // 
-            this.controlHotkeys.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.controlHotkeys.Location = new System.Drawing.Point(3, 3);
-            this.controlHotkeys.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.controlHotkeys.Name = "controlHotkeys";
-            this.controlHotkeys.Size = new System.Drawing.Size(786, 503);
-            this.controlHotkeys.TabIndex = 0;
             // 
             // scriptInfoBindingSource
             // 
@@ -258,8 +232,6 @@ namespace GitUI
             this.Shown += new System.EventHandler(this.FormSettings_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
-            this.tabControl1.ResumeLayout(false);
-            this.tpHotkeys.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).EndInit();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
@@ -280,8 +252,6 @@ namespace GitUI
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.BindingSource repositoryBindingSource;
         private System.Windows.Forms.HelpProvider helpProvider1;
-        private System.Windows.Forms.TabPage tpHotkeys;
-        private Hotkey.ControlHotkeys controlHotkeys;
         private BindingSource scriptInfoBindingSource;
         private TableLayoutPanel tableLayoutPanel3;
         private SettingsDialog.SettingsTreeViewUserControl settingsTreeViewUserControl1;

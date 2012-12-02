@@ -17,5 +17,10 @@ namespace GitUI.SettingsDialog.Pages
 
             Text = "Hotkeys";
         }
+
+        public override void OnPageShown()
+        {
+            controlHotkeys.ReloadSettings();
+        }
     }
 }
