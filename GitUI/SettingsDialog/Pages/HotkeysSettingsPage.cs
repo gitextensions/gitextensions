@@ -18,6 +18,14 @@ namespace GitUI.SettingsDialog.Pages
             Text = "Hotkeys";
         }
 
+        public override bool IsInstantApplyPage
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public override void OnPageShown()
         {
             controlHotkeys.ReloadSettings();
