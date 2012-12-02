@@ -810,10 +810,7 @@ namespace GitCommands
                 {
                     if (!FileHelper.IsBinaryFile(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(buf))
                     {
-                        StreamReader reader = new StreamReader(ms, FilesEncoding);
-                        String sfileout = reader.ReadToEnd();
-                        sfileout = sfileout.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n");
-                        buf = FilesEncoding.GetBytes(sfileout);
+                        buf = GitConvert.ConvertCrLfToWorktree(buf);
                     }
                 }
 
