@@ -10,6 +10,7 @@ using GitCommands;
 using ResourceManager.Translation;
 using Gravatar;
 using System.IO;
+using System.Diagnostics;
 
 namespace GitUI.SettingsDialog.Pages
 {
@@ -143,6 +144,21 @@ namespace GitUI.SettingsDialog.Pages
                 string.Format("{0}, {1}", this.diffFont.FontFamily.Name, (int)(this.diffFont.Size + 0.5f));
             applicationFontChangeButton.Text =
                 string.Format("{0}, {1}", this.applicationFont.FontFamily.Name, (int)(this.applicationFont.Size + 0.5f));
+        }
+
+        private void ClearImageCache_Click(object sender, EventArgs e)
+        {
+            GravatarService.ClearImageCache();
+        }
+
+        private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            using (var frm = new FormTranslate()) frm.ShowDialog(this);
+        }
+
+        private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Spelling");
         }
     }
 }
