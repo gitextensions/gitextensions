@@ -83,8 +83,9 @@
             this.Controls.Add(this.lblMenuEntries);
             this.Controls.Add(this.chlMenuEntries);
             this.Controls.Add(this.chkCascadedContextMenu);
+            this.MinimumSize = new System.Drawing.Size(350, 320);
             this.Name = "ShellExtensionSettingsPage";
-            this.Size = new System.Drawing.Size(350, 327);
+            this.Size = new System.Drawing.Size(350, 320);
             this.ResumeLayout(false);
             this.PerformLayout();
 
