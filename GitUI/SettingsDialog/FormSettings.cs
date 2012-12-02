@@ -261,14 +261,6 @@ namespace GitUI
             ////Cursor.Current = Cursors.Default;
         }
 
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var tc = (TabControl)sender;
-
-            if (tc.SelectedTab == tpHotkeys)
-                controlHotkeys.ReloadSettings();
-        }
-
         #region Hotkey commands
 
         public const string HotkeySettingsName = "Scripts";
