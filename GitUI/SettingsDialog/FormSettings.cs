@@ -339,16 +339,6 @@ namespace GitUI
             return result;
         }
 
-        private void ClearImageCache_Click(object sender, EventArgs e)
-        {
-            GravatarService.ClearImageCache();
-        }
-
-        private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            using (var frm = new FormTranslate()) frm.ShowDialog(this);
-        }
-
         private void SaveScripts()
         {
             Settings.ownScripts = ScriptManager.SerializeIntoXml();
@@ -480,11 +470,6 @@ namespace GitUI
         private void argumentsTextBox_Leave(object sender, EventArgs e)
         {
             helpLabel.Visible = false;
-        }
-
-        private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Spelling");
         }
 
         private void ScriptList_SelectionChanged(object sender, EventArgs e)
