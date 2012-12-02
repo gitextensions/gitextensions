@@ -21,9 +21,9 @@ namespace GitUI.SettingsDialog.Pages
             Text = "Ssh";
         }
 
-        public override IEnumerable<string> GetSearchKeywords()
+        protected override string GetCommaSeparatedKeywordList()
         {
-            return new string[] { "plink", "putty", "openssh", "pageant" };
+            return "plink,putty,openssh,pageant";
         }
 
         protected override void OnLoadSettings()
