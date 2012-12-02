@@ -72,7 +72,7 @@ namespace GitUI.SettingsDialog
             return "";
         }
 
-        public virtual bool IsInstantApplyPage
+        public virtual bool IsInstantSavePage
         {
             get { return false; }
         }
