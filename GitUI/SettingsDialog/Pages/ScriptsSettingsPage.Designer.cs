@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.ScriptList = new System.Windows.Forms.DataGridView();
             this.HotkeyCommandIdentifier = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -58,6 +59,7 @@
             this.argumentsLabel = new System.Windows.Forms.Label();
             this.argumentsTextBox = new System.Windows.Forms.RichTextBox();
             this.labelOnEvent = new System.Windows.Forms.Label();
+            this.contextMenuStrip_SplitButton = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ScriptList)).BeginInit();
             this.panel1.SuspendLayout();
@@ -411,6 +413,11 @@
             this.labelOnEvent.TabIndex = 20;
             this.labelOnEvent.Text = "On event:";
             // 
+            // contextMenuStrip_SplitButton
+            // 
+            this.contextMenuStrip_SplitButton.Name = "contextMenuStrip1";
+            this.contextMenuStrip_SplitButton.Size = new System.Drawing.Size(61, 4);
+            // 
             // ScriptsSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -465,5 +472,6 @@
         private System.Windows.Forms.Label argumentsLabel;
         private System.Windows.Forms.RichTextBox argumentsTextBox;
         private System.Windows.Forms.Label labelOnEvent;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_SplitButton;
     }
 }

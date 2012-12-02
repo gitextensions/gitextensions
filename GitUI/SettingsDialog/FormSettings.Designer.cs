@@ -31,7 +31,6 @@ namespace GitUI
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.contextMenuStrip_SplitButton = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.directorySearcher2 = new System.DirectoryServices.DirectorySearcher();
             this.label10 = new System.Windows.Forms.Label();
@@ -40,13 +39,13 @@ namespace GitUI
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tpScriptsTab = new System.Windows.Forms.TabPage();
-            this.scriptInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tpHotkeys = new System.Windows.Forms.TabPage();
             this.controlHotkeys = new GitUI.Hotkey.ControlHotkeys();
             this.tpShellExt = new System.Windows.Forms.TabPage();
             this.lblMenuEntries = new System.Windows.Forms.Label();
             this.chlMenuEntries = new System.Windows.Forms.CheckedListBox();
             this.chkCascadedContextMenu = new System.Windows.Forms.CheckBox();
+            this.scriptInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.buttonOk = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.settingsTreeViewUserControl1 = new GitUI.SettingsDialog.SettingsTreeViewUserControl();
@@ -59,18 +58,13 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.tabControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).BeginInit();
             this.tpHotkeys.SuspendLayout();
             this.tpShellExt.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // contextMenuStrip_SplitButton
-            // 
-            this.contextMenuStrip_SplitButton.Name = "contextMenuStrip1";
-            this.contextMenuStrip_SplitButton.Size = new System.Drawing.Size(61, 4);
             // 
             // directorySearcher1
             // 
@@ -129,10 +123,6 @@ namespace GitUI
             this.tpScriptsTab.TabIndex = 8;
             this.tpScriptsTab.Text = "Scripts";
             this.tpScriptsTab.UseVisualStyleBackColor = true;
-            // 
-            // scriptInfoBindingSource
-            // 
-            this.scriptInfoBindingSource.DataSource = typeof(GitUI.Script.ScriptInfo);
             // 
             // tpHotkeys
             // 
@@ -209,6 +199,10 @@ namespace GitUI
             this.chkCascadedContextMenu.TabIndex = 0;
             this.chkCascadedContextMenu.Text = "Cascaded context menu";
             this.chkCascadedContextMenu.UseVisualStyleBackColor = true;
+            // 
+            // scriptInfoBindingSource
+            // 
+            this.scriptInfoBindingSource.DataSource = typeof(GitUI.Script.ScriptInfo);
             // 
             // buttonOk
             // 
@@ -339,10 +333,10 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
             this.tabControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).EndInit();
             this.tpHotkeys.ResumeLayout(false);
             this.tpShellExt.ResumeLayout(false);
             this.tpShellExt.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).EndInit();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             this.flowLayoutPanel4.ResumeLayout(false);
@@ -366,7 +360,6 @@ namespace GitUI
         private System.Windows.Forms.TabPage tpHotkeys;
         private Hotkey.ControlHotkeys controlHotkeys;
         private BindingSource scriptInfoBindingSource;
-        private ContextMenuStrip contextMenuStrip_SplitButton;
         private TabPage tpShellExt;
         private Label lblMenuEntries;
         private CheckedListBox chlMenuEntries;
