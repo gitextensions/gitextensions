@@ -63,7 +63,7 @@
             "View diff"});
             this.chlMenuEntries.Location = new System.Drawing.Point(5, 56);
             this.chlMenuEntries.Name = "chlMenuEntries";
-            this.chlMenuEntries.Size = new System.Drawing.Size(240, 244);
+            this.chlMenuEntries.Size = new System.Drawing.Size(240, 304);
             this.chlMenuEntries.TabIndex = 4;
             // 
             // chkCascadedContextMenu
@@ -85,7 +85,7 @@
             this.Controls.Add(this.chkCascadedContextMenu);
             this.MinimumSize = new System.Drawing.Size(350, 320);
             this.Name = "ShellExtensionSettingsPage";
-            this.Size = new System.Drawing.Size(350, 320);
+            this.Size = new System.Drawing.Size(350, 382);
             this.ResumeLayout(false);
             this.PerformLayout();
 
