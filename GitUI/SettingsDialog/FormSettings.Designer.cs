@@ -37,7 +37,6 @@ namespace GitUI
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
             this.scriptInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.buttonOk = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -48,6 +47,7 @@ namespace GitUI
             this.buttonCancel = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.labelSettingsPageTitle = new System.Windows.Forms.Label();
+            this.panelCurrentSettingsPage = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).BeginInit();
@@ -91,15 +91,6 @@ namespace GitUI
             // 
             this.repositoryBindingSource.DataSource = typeof(GitCommands.Repository.Repository);
             // 
-            // tabControl1
-            // 
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(203, 43);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(800, 537);
-            this.tabControl1.TabIndex = 0;
-            // 
             // scriptInfoBindingSource
             // 
             this.scriptInfoBindingSource.DataSource = typeof(GitUI.Script.ScriptInfo);
@@ -119,10 +110,10 @@ namespace GitUI
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.tabControl1, 1, 1);
             this.tableLayoutPanel3.Controls.Add(this.settingsTreeViewUserControl1, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel4, 1, 2);
             this.tableLayoutPanel3.Controls.Add(this.panel2, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.panelCurrentSettingsPage, 1, 1);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -209,10 +200,18 @@ namespace GitUI
             this.labelSettingsPageTitle.Margin = new System.Windows.Forms.Padding(0);
             this.labelSettingsPageTitle.Name = "labelSettingsPageTitle";
             this.labelSettingsPageTitle.Padding = new System.Windows.Forms.Padding(20, 2, 20, 2);
-            this.labelSettingsPageTitle.Size = new System.Drawing.Size(100, 24);
+            this.labelSettingsPageTitle.Size = new System.Drawing.Size(101, 24);
             this.labelSettingsPageTitle.TabIndex = 2;
-            this.labelSettingsPageTitle.Text = "label11";
+            this.labelSettingsPageTitle.Text = "...title...";
             this.labelSettingsPageTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panelCurrentSettingsPage
+            // 
+            this.panelCurrentSettingsPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelCurrentSettingsPage.Location = new System.Drawing.Point(203, 43);
+            this.panelCurrentSettingsPage.Name = "panelCurrentSettingsPage";
+            this.panelCurrentSettingsPage.Size = new System.Drawing.Size(800, 537);
+            this.panelCurrentSettingsPage.TabIndex = 5;
             // 
             // FormSettings
             // 
@@ -244,7 +243,6 @@ namespace GitUI
 
         #endregion
 
-        private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.Button buttonOk;
         private System.DirectoryServices.DirectorySearcher directorySearcher1;
         private System.DirectoryServices.DirectorySearcher directorySearcher2;
@@ -261,6 +259,7 @@ namespace GitUI
         private Button buttonDiscard;
         private Button buttonCancel;
         private Panel panel2;
+        private Panel panelCurrentSettingsPage;
 
     }
 }
