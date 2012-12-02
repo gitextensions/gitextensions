@@ -38,13 +38,8 @@ namespace GitUI
             this.repositoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tpScriptsTab = new System.Windows.Forms.TabPage();
             this.tpHotkeys = new System.Windows.Forms.TabPage();
             this.controlHotkeys = new GitUI.Hotkey.ControlHotkeys();
-            this.tpShellExt = new System.Windows.Forms.TabPage();
-            this.lblMenuEntries = new System.Windows.Forms.Label();
-            this.chlMenuEntries = new System.Windows.Forms.CheckedListBox();
-            this.chkCascadedContextMenu = new System.Windows.Forms.CheckBox();
             this.scriptInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.buttonOk = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -59,7 +54,6 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tpHotkeys.SuspendLayout();
-            this.tpShellExt.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
@@ -103,9 +97,7 @@ namespace GitUI
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tpScriptsTab);
             this.tabControl1.Controls.Add(this.tpHotkeys);
-            this.tabControl1.Controls.Add(this.tpShellExt);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(203, 43);
             this.tabControl1.Name = "tabControl1";
@@ -113,16 +105,6 @@ namespace GitUI
             this.tabControl1.Size = new System.Drawing.Size(800, 537);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
-            // 
-            // tpScriptsTab
-            // 
-            this.tpScriptsTab.Location = new System.Drawing.Point(4, 24);
-            this.tpScriptsTab.Name = "tpScriptsTab";
-            this.tpScriptsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.tpScriptsTab.Size = new System.Drawing.Size(792, 509);
-            this.tpScriptsTab.TabIndex = 8;
-            this.tpScriptsTab.Text = "Scripts";
-            this.tpScriptsTab.UseVisualStyleBackColor = true;
             // 
             // tpHotkeys
             // 
@@ -143,62 +125,6 @@ namespace GitUI
             this.controlHotkeys.Name = "controlHotkeys";
             this.controlHotkeys.Size = new System.Drawing.Size(786, 503);
             this.controlHotkeys.TabIndex = 0;
-            // 
-            // tpShellExt
-            // 
-            this.tpShellExt.Controls.Add(this.lblMenuEntries);
-            this.tpShellExt.Controls.Add(this.chlMenuEntries);
-            this.tpShellExt.Controls.Add(this.chkCascadedContextMenu);
-            this.tpShellExt.Location = new System.Drawing.Point(4, 24);
-            this.tpShellExt.Name = "tpShellExt";
-            this.tpShellExt.Padding = new System.Windows.Forms.Padding(3);
-            this.tpShellExt.Size = new System.Drawing.Size(792, 509);
-            this.tpShellExt.TabIndex = 11;
-            this.tpShellExt.Text = "Shell extension";
-            this.tpShellExt.UseVisualStyleBackColor = true;
-            // 
-            // lblMenuEntries
-            // 
-            this.lblMenuEntries.AutoSize = true;
-            this.lblMenuEntries.Location = new System.Drawing.Point(8, 50);
-            this.lblMenuEntries.Name = "lblMenuEntries";
-            this.lblMenuEntries.Size = new System.Drawing.Size(158, 15);
-            this.lblMenuEntries.TabIndex = 2;
-            this.lblMenuEntries.Text = "Visible context menu entries:";
-            // 
-            // chlMenuEntries
-            // 
-            this.chlMenuEntries.CheckOnClick = true;
-            this.chlMenuEntries.FormattingEnabled = true;
-            this.chlMenuEntries.Items.AddRange(new object[] {
-            "Add files",
-            "Apply patch",
-            "Browse",
-            "Create branch",
-            "Checkout branch",
-            "Checkout revision",
-            "Clone",
-            "Commit",
-            "File history",
-            "Reset file changes",
-            "Pull",
-            "Push",
-            "Settings",
-            "View diff"});
-            this.chlMenuEntries.Location = new System.Drawing.Point(10, 68);
-            this.chlMenuEntries.Name = "chlMenuEntries";
-            this.chlMenuEntries.Size = new System.Drawing.Size(240, 256);
-            this.chlMenuEntries.TabIndex = 1;
-            // 
-            // chkCascadedContextMenu
-            // 
-            this.chkCascadedContextMenu.AutoSize = true;
-            this.chkCascadedContextMenu.Location = new System.Drawing.Point(8, 15);
-            this.chkCascadedContextMenu.Name = "chkCascadedContextMenu";
-            this.chkCascadedContextMenu.Size = new System.Drawing.Size(141, 17);
-            this.chkCascadedContextMenu.TabIndex = 0;
-            this.chkCascadedContextMenu.Text = "Cascaded context menu";
-            this.chkCascadedContextMenu.UseVisualStyleBackColor = true;
             // 
             // scriptInfoBindingSource
             // 
@@ -334,8 +260,6 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tpHotkeys.ResumeLayout(false);
-            this.tpShellExt.ResumeLayout(false);
-            this.tpShellExt.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).EndInit();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
@@ -355,15 +279,10 @@ namespace GitUI
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.BindingSource repositoryBindingSource;
-        private System.Windows.Forms.TabPage tpScriptsTab;
         private System.Windows.Forms.HelpProvider helpProvider1;
         private System.Windows.Forms.TabPage tpHotkeys;
         private Hotkey.ControlHotkeys controlHotkeys;
         private BindingSource scriptInfoBindingSource;
-        private TabPage tpShellExt;
-        private Label lblMenuEntries;
-        private CheckedListBox chlMenuEntries;
-        private CheckBox chkCascadedContextMenu;
         private TableLayoutPanel tableLayoutPanel3;
         private SettingsDialog.SettingsTreeViewUserControl settingsTreeViewUserControl1;
         private Label labelSettingsPageTitle;
