@@ -112,7 +112,7 @@ namespace GitUI.SettingsDialog
 
                 var foundNodes = new List<TreeNode>();
 
-                foreach (var node in GetFindableNodes())
+                foreach (var node in GetNodesWithSettingsPage())
                 {
                     var settingsPage = (ISettingsPage)node.Tag;
 
@@ -139,7 +139,7 @@ namespace GitUI.SettingsDialog
             }
         }
 
-        private IEnumerable<TreeNode> GetFindableNodes()
+        private IEnumerable<TreeNode> GetNodesWithSettingsPage()
         {
             return _treeNodesWithSettingsPage;
         }
@@ -151,7 +151,7 @@ namespace GitUI.SettingsDialog
 
         private void ResetAllNodeHighlighting()
         {
-            foreach (var node in GetFindableNodes())
+            foreach (var node in GetNodesWithSettingsPage())
             {
                 HighlightNode(node, false);
             }
@@ -159,7 +159,7 @@ namespace GitUI.SettingsDialog
 
         private TreeNode FindNodeBySettingsPage(ISettingsPage settingsPage)
         {
-            return GetFindableNodes().FirstOrDefault(te => te.Tag == settingsPage);
+            return GetNodesWithSettingsPage().FirstOrDefault(te => te.Tag == settingsPage);
         }
 
         #region FindPrompt
@@ -194,6 +194,20 @@ namespace GitUI.SettingsDialog
             SetFindPrompt(true);
         }
         #endregion
+
+        public void GotoPage(SettingsPageReference settingsPageReference)
+        {
+            foreach (var node in GetNodesWithSettingsPage())
+            {
+                var settingsPage = (ISettingsPage)node.Tag;
+
+                if (settingsPage.GetType() == settingsPageReference.SettingsPageType)
+                {
+                    treeView1.SelectedNode = node;
+                    return;
+                }
+            }
+        }
     }
 
     public class SettingsPageSelectedEventArgs : EventArgs
