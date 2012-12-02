@@ -48,6 +48,7 @@ namespace GitUI
             this.panel2 = new System.Windows.Forms.Panel();
             this.labelSettingsPageTitle = new System.Windows.Forms.Label();
             this.panelCurrentSettingsPage = new System.Windows.Forms.Panel();
+            this.labelInstantSaveNotice = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).BeginInit();
@@ -143,12 +144,14 @@ namespace GitUI
             this.flowLayoutPanel4.Controls.Add(this.buttonDiscard);
             this.flowLayoutPanel4.Controls.Add(this.buttonCancel);
             this.flowLayoutPanel4.Controls.Add(this.buttonOk);
+            this.flowLayoutPanel4.Controls.Add(this.labelInstantSaveNotice);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(203, 586);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(800, 31);
             this.flowLayoutPanel4.TabIndex = 3;
+            this.flowLayoutPanel4.WrapContents = false;
             // 
             // buttonApply
             // 
@@ -213,6 +216,16 @@ namespace GitUI
             this.panelCurrentSettingsPage.Size = new System.Drawing.Size(800, 537);
             this.panelCurrentSettingsPage.TabIndex = 5;
             // 
+            // labelInstantSaveNotice
+            // 
+            this.labelInstantSaveNotice.AutoSize = true;
+            this.labelInstantSaveNotice.Location = new System.Drawing.Point(171, 8);
+            this.labelInstantSaveNotice.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this.labelInstantSaveNotice.Name = "labelInstantSaveNotice";
+            this.labelInstantSaveNotice.Size = new System.Drawing.Size(250, 15);
+            this.labelInstantSaveNotice.TabIndex = 4;
+            this.labelInstantSaveNotice.Text = "Changes made on this page are save instantly.";
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -235,6 +248,7 @@ namespace GitUI
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             this.flowLayoutPanel4.ResumeLayout(false);
+            this.flowLayoutPanel4.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.ResumeLayout(false);
@@ -260,6 +274,7 @@ namespace GitUI
         private Button buttonCancel;
         private Panel panel2;
         private Panel panelCurrentSettingsPage;
+        private Label labelInstantSaveNotice;
 
     }
 }

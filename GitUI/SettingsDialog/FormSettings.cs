@@ -164,11 +164,12 @@ namespace GitUI
                 settingsPage.OnPageShown();
                 Cursor.Current = Cursors.Default;
 
-                bool isInstantApplyPage = settingsPage.IsInstantApplyPage;
-                buttonApply.Enabled = !isInstantApplyPage;
-                buttonDiscard.Enabled = !isInstantApplyPage;
+                bool isInstantSavePage = settingsPage.IsInstantSavePage;
+                buttonApply.Enabled = !isInstantSavePage;
+                buttonDiscard.Enabled = !isInstantSavePage;
                 buttonOk.Enabled = true;
                 buttonCancel.Enabled = true;
+                labelInstantSaveNotice.Visible = isInstantSavePage;
 
                 if (e.IsTriggeredByGoto)
                 {

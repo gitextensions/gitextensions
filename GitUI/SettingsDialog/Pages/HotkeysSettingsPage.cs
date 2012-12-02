@@ -18,7 +18,7 @@ namespace GitUI.SettingsDialog.Pages
             Text = "Hotkeys";
         }
 
-        public override bool IsInstantApplyPage
+        public override bool IsInstantSavePage
         {
             get
             {
