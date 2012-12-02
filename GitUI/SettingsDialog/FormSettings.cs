@@ -174,13 +174,6 @@ namespace GitUI
                 {
                     settingsPage.LoadSettings();
                 }
-
-                chkCascadedContextMenu.Checked = Settings.ShellCascadeContextMenu;
-
-                for (int i = 0; i < Settings.ShellVisibleMenuItems.Length; i++)
-                {
-                    chlMenuEntries.SetItemChecked(i, Settings.ShellVisibleMenuItems[i] == '1');
-                }
             }
             catch (Exception ex)
             {
@@ -224,25 +217,6 @@ namespace GitUI
 
             // TODO: to which settings page does this belong?
             GitCommandHelpers.SetEnvironmentVariable(true);
-
-            // Shell Extension settings
-            Settings.ShellCascadeContextMenu = chkCascadedContextMenu.Checked;
-
-            String l_ShellVisibleMenuItems = "";
-
-            for (int i = 0; i < chlMenuEntries.Items.Count; i++)
-            {
-                if (chlMenuEntries.GetItemChecked(i))
-                {
-                    l_ShellVisibleMenuItems += "1";
-                }
-                else
-                {
-                    l_ShellVisibleMenuItems += "0";
-                }
-            }
-
-            Settings.ShellVisibleMenuItems = l_ShellVisibleMenuItems;
 
             // TODO: this method has a generic sounding name but only saves some specific settings
             Settings.SaveSettings();
