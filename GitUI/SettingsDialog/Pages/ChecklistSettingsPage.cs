@@ -178,7 +178,7 @@ namespace GitUI.SettingsDialog.Pages
             return new SettingsPageReference(typeof(ChecklistSettingsPage));
         }
 
-        public override bool IsInstantApplyPage
+        public override bool IsInstantSavePage
         {
             get
             {
