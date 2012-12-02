@@ -146,11 +146,16 @@ namespace GitUI
             else
             {
                 var settingsPage = e.SettingsPage;
+
                 settingsPagePanel.Controls.Add(settingsPage.GuiControl);
                 e.SettingsPage.GuiControl.Dock = DockStyle.Fill;
+                
                 labelSettingsPageTitle.Text = e.SettingsPage.Text;
+                Application.DoEvents();
 
+                Cursor.Current = Cursors.WaitCursor;
                 settingsPage.OnPageShown();
+                Cursor.Current = Cursors.Default;
 
                 bool isInstantApplyPage = settingsPage.IsInstantApplyPage;
                 buttonApply.Enabled = !isInstantApplyPage;
