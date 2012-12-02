@@ -126,6 +126,26 @@ namespace GitUI
             settingsTreeViewUserControl1.SetSettingsPages(_settingsPageRegistry);
         }
 
+        private void FormSettings_Load(object sender, EventArgs e)
+        {
+            if (DesignMode)
+                return;
+
+            WindowState = FormWindowState.Normal;
+        }
+
+        private void FormSettings_Shown(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            WindowState = FormWindowState.Normal;
+            LoadSettings();
+            _checklistSettingsPage.CheckSettings();
+            WindowState = FormWindowState.Normal;
+            Cursor.Current = Cursors.Default;
+
+            GotoPage(ChecklistSettingsPage.GetReference());
+        }
+
         private void settingsTreeViewUserControl1_SettingsPageSelected(object sender, SettingsPageSelectedEventArgs e)
         {
             panelCurrentSettingsPage.Controls.Clear();
@@ -149,6 +169,11 @@ namespace GitUI
                 buttonDiscard.Enabled = !isInstantApplyPage;
                 buttonOk.Enabled = true;
                 buttonCancel.Enabled = true;
+
+                if (e.IsTriggeredByGoto)
+                {
+                    settingsPage.GuiControl.Focus();
+                }
             }
             else
             {
@@ -221,30 +246,12 @@ namespace GitUI
             return true;
         }
 
-        private void FormSettings_Load(object sender, EventArgs e)
-        {
-            if (DesignMode)
-                return;
-
-            WindowState = FormWindowState.Normal;
-        }
-
         private void Rescan_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             Save();
             LoadSettings();
             _checklistSettingsPage.CheckSettings();
-            Cursor.Current = Cursors.Default;
-        }
-
-        private void FormSettings_Shown(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            WindowState = FormWindowState.Normal;
-            LoadSettings();
-            _checklistSettingsPage.CheckSettings();
-            WindowState = FormWindowState.Normal;
             Cursor.Current = Cursors.Default;
         }
 

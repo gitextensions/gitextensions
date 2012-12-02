@@ -173,6 +173,11 @@ namespace GitUI.SettingsDialog.Pages
             Text = "Checklist";
         }
 
+        public static SettingsPageReference GetReference()
+        {
+            return new SettingsPageReference(typeof(ChecklistSettingsPage));
+        }
+
         public override bool IsInstantApplyPage
         {
             get
