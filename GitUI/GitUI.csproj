@@ -418,6 +418,7 @@
     <Compile Include="SettingsDialog\CheckSettingsLogic.cs" />
     <Compile Include="SettingsDialog\CommonLogic.cs" />
     <Compile Include="SettingsDialog\ISettingsPage.cs" />
+    <Compile Include="SettingsDialog\ISettingsPageHost.cs" />
     <Compile Include="SettingsDialog\Pages\AppearanceSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -499,6 +500,7 @@
     <Compile Include="SettingsDialog\SettingsPageBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="SettingsDialog\SettingsPageReference.cs" />
     <Compile Include="SettingsDialog\SettingsPageRegistry.cs" />
     <Compile Include="SettingsDialog\SettingsTreeViewUserControl.cs">
       <SubType>UserControl</SubType>

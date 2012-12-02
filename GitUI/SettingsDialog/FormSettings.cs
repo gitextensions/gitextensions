@@ -19,7 +19,7 @@ using GitUI.SettingsDialog.Pages;
 
 namespace GitUI
 {
-    public sealed partial class FormSettings : GitModuleForm
+    public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
     {
         #region Translation
 
@@ -86,7 +86,7 @@ namespace GitUI
             _commonLogic = new CommonLogic(Module);
 
             _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module);
-            _checklistSettingsPage = new ChecklistSettingsPage(_commonLogic, _checkSettingsLogic, Module);
+            _checklistSettingsPage = new ChecklistSettingsPage(_commonLogic, _checkSettingsLogic, Module, this);
             _checkSettingsLogic.ChecklistSettingsPage = _checklistSettingsPage; // TODO
             _settingsPageRegistry.RegisterSettingsPage(_checklistSettingsPage);
 
@@ -286,6 +286,11 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             Save();
             Cursor.Current = Cursors.Default;
+        }
+
+        public void GotoPage(SettingsPageReference settingsPageReference)
+        {
+            settingsTreeViewUserControl1.GotoPage(settingsPageReference);
         }
     }
 }

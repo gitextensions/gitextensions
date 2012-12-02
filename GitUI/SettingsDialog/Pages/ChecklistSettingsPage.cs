@@ -156,14 +156,19 @@ namespace GitUI.SettingsDialog.Pages
         CommonLogic _commonLogic;
         CheckSettingsLogic _checkSettingsLogic;
         GitModule _gitModule;
+        ISettingsPageHost _settingsPageHost;
 
-        public ChecklistSettingsPage(CommonLogic commonLogic, CheckSettingsLogic checkSettingsLogic, GitModule gitModule)
+        public ChecklistSettingsPage(CommonLogic commonLogic,
+            CheckSettingsLogic checkSettingsLogic,
+            GitModule gitModule,
+            ISettingsPageHost settingsPageHost)
         {
             InitializeComponent();
 
             _commonLogic = commonLogic;
             _checkSettingsLogic = checkSettingsLogic;
             _gitModule = gitModule;
+            _settingsPageHost = settingsPageHost;
 
             Text = "Checklist";
         }
@@ -335,7 +340,7 @@ namespace GitUI.SettingsDialog.Pages
 
         private void GotoPageGlobalSettings()
         {
-            throw new NotImplementedException("tabControl1.SelectTab(tpGlobalSettings);");
+            _settingsPageHost.GotoPage(GlobalSettingsSettingsPage.GetReference());
         }
 
         private void UserNameSet_Click(object sender, EventArgs e)
