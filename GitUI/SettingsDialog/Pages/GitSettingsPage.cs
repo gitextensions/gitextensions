@@ -88,13 +88,14 @@ namespace GitUI.SettingsDialog.Pages
             }
         }
 
+        // TODO: handle the case when Checklist makes auto setting
         private void GitPath_TextChanged(object sender, EventArgs e)
         {
-            if (loadingSettings)
-                return;
+        ////    if (loadingSettings)
+        ////        return;
 
-            Settings.GitCommand = GitPath.Text;
-            OnLoadSettings();
+        ////    Settings.GitCommand = GitPath.Text;
+        ////    OnLoadSettings();
         }
 
         private void downloadMsysgit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
