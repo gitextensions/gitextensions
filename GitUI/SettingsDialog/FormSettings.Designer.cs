@@ -45,10 +45,10 @@ namespace GitUI
             this.buttonApply = new System.Windows.Forms.Button();
             this.buttonDiscard = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.labelInstantSaveNotice = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.labelSettingsPageTitle = new System.Windows.Forms.Label();
             this.panelCurrentSettingsPage = new System.Windows.Forms.Panel();
-            this.labelInstantSaveNotice = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).BeginInit();
@@ -183,6 +183,16 @@ namespace GitUI
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // labelInstantSaveNotice
+            // 
+            this.labelInstantSaveNotice.AutoSize = true;
+            this.labelInstantSaveNotice.Location = new System.Drawing.Point(146, 8);
+            this.labelInstantSaveNotice.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this.labelInstantSaveNotice.Name = "labelInstantSaveNotice";
+            this.labelInstantSaveNotice.Size = new System.Drawing.Size(275, 15);
+            this.labelInstantSaveNotice.TabIndex = 4;
+            this.labelInstantSaveNotice.Text = "Changes made on this page will be saved instantly.";
+            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.labelSettingsPageTitle);
@@ -215,16 +225,6 @@ namespace GitUI
             this.panelCurrentSettingsPage.Name = "panelCurrentSettingsPage";
             this.panelCurrentSettingsPage.Size = new System.Drawing.Size(800, 537);
             this.panelCurrentSettingsPage.TabIndex = 5;
-            // 
-            // labelInstantSaveNotice
-            // 
-            this.labelInstantSaveNotice.AutoSize = true;
-            this.labelInstantSaveNotice.Location = new System.Drawing.Point(171, 8);
-            this.labelInstantSaveNotice.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
-            this.labelInstantSaveNotice.Name = "labelInstantSaveNotice";
-            this.labelInstantSaveNotice.Size = new System.Drawing.Size(250, 15);
-            this.labelInstantSaveNotice.TabIndex = 4;
-            this.labelInstantSaveNotice.Text = "Changes made on this page are save instantly.";
             // 
             // FormSettings
             // 
