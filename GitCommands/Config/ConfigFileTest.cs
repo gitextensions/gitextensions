@@ -14,7 +14,7 @@ using System.IO;
 using GitCommands;
 using GitCommands.Config;
 
-namespace GitCommandsTests.Config
+namespace GitCommandsTest.Config
 {
     /// <summary>
     /// Tests for configfile class. 
@@ -50,12 +50,11 @@ namespace GitCommandsTests.Config
         {
             StringBuilder content = new StringBuilder();
             content.AppendLine("[section1]");
-            content.AppendLine("\tkey1=value1");
+            content.AppendLine("key1=value1");
             content.AppendLine("[section2.subsection]");
-            content.AppendLine("\tkey2=value2");
-            content.AppendLine("\tkey4 = value4");
+            content.AppendLine("key2=value2");
             content.AppendLine("[section3 \"subsection\"]");
-            content.AppendLine("\tkey3=value3");
+            content.AppendLine("key3=value3");
             return content.ToString();
         }
 		
