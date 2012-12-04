@@ -109,7 +109,7 @@ namespace GitCommands.Config
                     continue;
 
                 configFileContent.Append(section.ToString());
-                configFileContent.Append("\n");
+                configFileContent.Append(Environment.NewLine);
 
                 foreach (var key in section.Keys)
                 {
