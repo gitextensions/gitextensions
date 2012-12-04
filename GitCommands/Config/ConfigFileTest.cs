@@ -345,9 +345,8 @@ namespace GitCommandsTest.Config
             Assert.IsFalse(file.HasValue("section10.key1"));
         }
 
-        
         [TestMethod]
-        public void TestHasSection()
+        public void TestHasConfigSection()
         {
             { //TESTDATA
                 //Write test config
