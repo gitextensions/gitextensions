@@ -144,41 +144,6 @@ namespace GitCommandsTest.Config
         }
 
         [TestMethod]
-        public void TestSetValueRemoveExisting()
-        {
-            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-            configFile.SetValue("section1.key1", "section1.key1");
-            configFile.SetValue("section2.key1", "section2.key1");
-            configFile.SetValue("section1.key2", "section1.key2");
-            configFile.Save();
-
-            configFile.SetValue("section1.key1", null);
-            configFile.Save();
-
-            configFile = new ConfigFile(GetConfigFileName(), true);
-            Assert.IsFalse(configFile.HasValue("section1.key1"));
-            Assert.IsTrue(configFile.HasValue("section2.key1"));
-            Assert.IsTrue(configFile.HasValue("section1.key2"));
-        }
-
-        [TestMethod]
-        public void TestSetValueRemoveValueNonExisting()
-        {
-            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-            configFile.SetValue("section2.key1", "section2.key1");
-            configFile.SetValue("section1.key2", "section1.key2");
-            configFile.Save();
-
-            configFile.SetValue("section1.key1", null);
-            configFile.Save();
-
-            configFile = new ConfigFile(GetConfigFileName(), true);
-            Assert.IsFalse(configFile.HasValue("section1.key1"));
-            Assert.IsTrue(configFile.HasValue("section2.key1"));
-            Assert.IsTrue(configFile.HasValue("section1.key2"));
-        }
-
-        [TestMethod]
         public void TestSetValueSectionWithDotNonExisting()
         {
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
@@ -209,24 +174,6 @@ namespace GitCommandsTest.Config
 
             configFile = new ConfigFile(GetConfigFileName(), true);
             Assert.AreEqual("submodule.test.test1.path1", configFile.GetValue("submodule.test.test1.path1"));
-            Assert.AreEqual("submodule.test.test2.path1", configFile.GetValue("submodule.test.test2.path1"));
-            Assert.AreEqual("submodule.test.test2.path2", configFile.GetValue("submodule.test.test2.path2"));
-        }
-
-        [TestMethod]
-        public void TestSetValueRemoveSectionWithDotExisting()
-        {
-            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-            configFile.SetValue("submodule.test.test1.path1", "invalid");
-            configFile.SetValue("submodule.test.test2.path1", "submodule.test.test2.path1");
-            configFile.SetValue("submodule.test.test2.path2", "submodule.test.test2.path2");
-            configFile.Save();
-
-            configFile.SetValue("submodule.test.test1.path1", null);
-            configFile.Save();
-
-            configFile = new ConfigFile(GetConfigFileName(), true);
-            Assert.IsFalse(configFile.HasValue("submodule.test.test1.path1"));
             Assert.AreEqual("submodule.test.test2.path1", configFile.GetValue("submodule.test.test2.path1"));
             Assert.AreEqual("submodule.test.test2.path2", configFile.GetValue("submodule.test.test2.path2"));
         }
@@ -393,6 +340,59 @@ namespace GitCommandsTest.Config
             Assert.IsTrue(configFile.GetConfigSections().Count == 3);
             configFile.RemoveConfigSection("section1");
             Assert.IsTrue(configFile.GetConfigSections().Count == 2);
+        }
+
+        [TestMethod]
+        public void TestRemoveSettingExisting()
+        {
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+            configFile.SetValue("section1.key1", "section1.key1");
+            configFile.SetValue("section2.key1", "section2.key1");
+            configFile.SetValue("section1.key2", "section1.key2");
+            configFile.Save();
+
+            configFile.RemoveSetting("section1.key1");
+            configFile.Save();
+
+            configFile = new ConfigFile(GetConfigFileName(), true);
+            Assert.IsFalse(configFile.HasValue("section1.key1"));
+            Assert.IsTrue(configFile.HasValue("section2.key1"));
+            Assert.IsTrue(configFile.HasValue("section1.key2"));
+        }
+
+        [TestMethod]
+        public void TestRemoveSettingNonExisting()
+        {
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+            configFile.SetValue("section2.key1", "section2.key1");
+            configFile.SetValue("section1.key2", "section1.key2");
+            configFile.Save();
+
+            configFile.RemoveSetting("section1.key1");
+            configFile.Save();
+
+            configFile = new ConfigFile(GetConfigFileName(), true);
+            Assert.IsFalse(configFile.HasValue("section1.key1"));
+            Assert.IsTrue(configFile.HasValue("section2.key1"));
+            Assert.IsTrue(configFile.HasValue("section1.key2"));
+        }
+
+        [TestMethod]
+        public void TestRemoveSettingSectionWithDotExisting()
+        {
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+            configFile.SetValue("submodule.test.test1.path1", "invalid");
+            configFile.SetValue("submodule.test.test2.path1", "submodule.test.test2.path1");
+            configFile.SetValue("submodule.test.test2.path2", "submodule.test.test2.path2");
+            configFile.Save();
+
+            configFile.RemoveSetting("submodule.test.test1.path1");
+            configFile.Save();
+
+            configFile = new ConfigFile(GetConfigFileName(), true);
+            Assert.IsFalse(configFile.HasValue("submodule.test.test1.path1"));
+            Assert.AreEqual("submodule.test.test2.path1", configFile.GetValue("submodule.test.test2.path1"));
+            Assert.AreEqual("submodule.test.test2.path2", configFile.GetValue("submodule.test.test2.path2"));
         }
 
         [TestMethod]
