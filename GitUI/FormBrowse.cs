@@ -1485,7 +1485,6 @@ namespace GitUI
                 string currentBranch = Module.GetSelectedBranch();
                 string currentCheckout = RevisionGrid.CurrentCheckout;
 
-
                 if (revisions[0].Guid == currentCheckout)
                 {
                     from = revisions[1].Guid.Substring(0, 8);
