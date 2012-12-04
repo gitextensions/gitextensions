@@ -58,7 +58,7 @@ objDiffNotebook.WriteLine "Notebook[{" + vbCrLf + _
 """" + Replace(sBaseDoc,"\","\\") + """," + vbCrLf + _
 """" + Replace(sNewDoc,"\","\\") + """" + vbCrLf + _
 "]])]], NotebookDefault]" + vbCrLf + _
-"}, Saveable->False, Editable->False, WindowToolbars->{}, WindowFrame->ModelessDialog, WindowElements->{}, WindowFrameElements->CloseBox, WindowTitle->""Diff"", ShowCellBracket->False, WindowSize->{Fit,Fit}]"
+"}, Saveable->False, Editable->False, Selectable->False, WindowToolbars->{}, WindowFrame->ModelessDialog, WindowElements->{}, WindowFrameElements->CloseBox, WindowTitle->""Diff"", ShowCellBracket->False, WindowSize->{Fit,Fit}]"
 
 
 objDiffNotebook.Close

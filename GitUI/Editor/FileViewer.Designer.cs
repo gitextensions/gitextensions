@@ -13,6 +13,8 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            GitUICommandsSourceSet -= FileViewer_GitUICommandsSourceSet;
+
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -29,10 +31,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.ContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ignoreWhitespaceChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.increaseNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,17 +56,17 @@
             this.ignoreWhiteSpaces = new System.Windows.Forms.ToolStripButton();
             this.encodingToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.PictureBox = new System.Windows.Forms.PictureBox();
-            this.ContextMenu.SuspendLayout();
+            this.contextMenu.SuspendLayout();
             this.fileviewerToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
             this.SuspendLayout();
             // 
-            // ContextMenu
+            // contextMenu
             // 
-            this.ContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.findToolStripMenuItem,
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyToolStripMenuItem,
             this.copyPatchToolStripMenuItem,
+            this.findToolStripMenuItem,
             this.toolStripSeparator1,
             this.ignoreWhitespaceChangesToolStripMenuItem,
             this.increaseNumberOfLinesToolStripMenuItem,
@@ -74,16 +76,8 @@
             this.treatAllFilesAsTextToolStripMenuItem,
             this.showNonprintableCharactersToolStripMenuItem,
             this.goToLineToolStripMenuItem});
-            this.ContextMenu.Name = "ContextMenu";
-            this.ContextMenu.Size = new System.Drawing.Size(244, 236);
-            // 
-            // findToolStripMenuItem
-            // 
-            this.findToolStripMenuItem.Name = "findToolStripMenuItem";
-            this.findToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.findToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.findToolStripMenuItem.Text = "Find";
-            this.findToolStripMenuItem.Click += new System.EventHandler(this.FindToolStripMenuItemClick);
+            this.contextMenu.Name = "ContextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(244, 236);
             // 
             // copyToolStripMenuItem
             // 
@@ -99,6 +93,14 @@
             this.copyPatchToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.copyPatchToolStripMenuItem.Text = "Copy patch";
             this.copyPatchToolStripMenuItem.Click += new System.EventHandler(this.CopyPatchToolStripMenuItemClick);
+            // 
+            // findToolStripMenuItem
+            // 
+            this.findToolStripMenuItem.Name = "findToolStripMenuItem";
+            this.findToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+            this.findToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.findToolStripMenuItem.Text = "Find";
+            this.findToolStripMenuItem.Click += new System.EventHandler(this.FindToolStripMenuItemClick);
             // 
             // toolStripSeparator1
             // 
@@ -176,9 +178,9 @@
             this.ignoreWhiteSpaces,
             this.encodingToolStripComboBox});
             this.fileviewerToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.fileviewerToolbar.Location = new System.Drawing.Point(382, 0);
+            this.fileviewerToolbar.Location = new System.Drawing.Point(535, 0);
             this.fileviewerToolbar.Name = "fileviewerToolbar";
-            this.fileviewerToolbar.Size = new System.Drawing.Size(347, 23);
+            this.fileviewerToolbar.Size = new System.Drawing.Size(316, 23);
             this.fileviewerToolbar.TabIndex = 4;
             this.fileviewerToolbar.Visible = false;
             this.fileviewerToolbar.VisibleChanged += new System.EventHandler(this.fileviewerToolbar_VisibleChanged);
@@ -275,6 +277,7 @@
             this.PictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.PictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PictureBox.Location = new System.Drawing.Point(0, 0);
+            this.PictureBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.PictureBox.Name = "PictureBox";
             this.PictureBox.Size = new System.Drawing.Size(757, 518);
             this.PictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -284,14 +287,13 @@
             // 
             // FileViewer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ContextMenuStrip = this.ContextMenu;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.PictureBox);
             this.Controls.Add(this.fileviewerToolbar);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "FileViewer";
             this.Size = new System.Drawing.Size(757, 518);
-            this.ContextMenu.ResumeLayout(false);
+            this.contextMenu.ResumeLayout(false);
             this.fileviewerToolbar.ResumeLayout(false);
             this.fileviewerToolbar.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).EndInit();
@@ -302,7 +304,7 @@
 
         #endregion
 
-        private new System.Windows.Forms.ContextMenuStrip ContextMenu;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem ignoreWhitespaceChangesToolStripMenuItem;

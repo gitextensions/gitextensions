@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
-using System.IO;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 using GitUI.Editor;
 
 namespace GitUI.Hotkey
@@ -204,7 +204,12 @@ namespace GitUI.Hotkey
                     hk(RevisionGrid.Commands.ToggleShowGitNotes, Keys.None),
                     hk(RevisionGrid.Commands.ToggleRevisionCardLayout, Keys.Control | Keys.Shift | Keys.L),
                     hk(RevisionGrid.Commands.ShowAllBranches, Keys.Control | Keys.Shift | Keys.A),
-                    hk(RevisionGrid.Commands.ShowCurrentBranchOnly, Keys.Control | Keys.Shift | Keys.U)),
+                    hk(RevisionGrid.Commands.ShowCurrentBranchOnly, Keys.Control | Keys.Shift | Keys.U),
+                    hk(RevisionGrid.Commands.GoToParent, Keys.Control | Keys.P),
+                    hk(RevisionGrid.Commands.GoToChild, Keys.Control | Keys.C),
+                    hk(RevisionGrid.Commands.ToggleHighlightSelectedBranch, Keys.None),
+                    hk(RevisionGrid.Commands.NextQuickSearch, Keys.Alt | Keys.Down),
+                    hk(RevisionGrid.Commands.PrevQuickSearch, Keys.Alt | Keys.Up)),
                 new HotkeySettings(FileViewer.HotkeySettingsName,
                     hk(FileViewer.Commands.Find, Keys.Control | Keys.F),
                     hk(FileViewer.Commands.GoToLine, Keys.Control | Keys.G),

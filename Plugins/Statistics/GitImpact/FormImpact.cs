@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands.Statistics;
-using System.Threading;
+using GitUIPluginInterfaces;
 
 namespace GitImpact
 {
@@ -13,12 +10,13 @@ namespace GitImpact
     {
         private readonly SynchronizationContext syncContext;
 
-        public FormImpact()
+        public FormImpact(IGitModule Module)
         {
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
             UpdateAuthorInfo("");
+            Impact.Init(Module);
             Impact.UpdateData();
             Impact.Invalidated += Impact_Invalidated;
         }
@@ -41,7 +39,7 @@ namespace GitImpact
 
             if (lblAuthor.Visible)
             {
-                GitCommands.Statistics.ImpactLoader.DataPoint data = Impact.GetAuthorInfo(author);
+                ImpactLoader.DataPoint data = Impact.GetAuthorInfo(author);
                 lblAuthor.Text = author + "(" + data.Commits + " Commits, " + data.ChangedLines + " Changed Lines)";
                 pnlAuthorColor.BackColor = Impact.GetAuthorColor(author);
 
@@ -61,6 +59,12 @@ namespace GitImpact
                 Impact.SelectAuthor(author);
                 Impact.Invalidate();
             }            
+        }
+
+        private void cbShowSubmodules_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateAuthorInfo("");
+            Impact.ShowSubmodules = cbIncludingSubmodules.Checked;
         }
     }
 }

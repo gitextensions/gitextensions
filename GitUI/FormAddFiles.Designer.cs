@@ -49,7 +49,7 @@
             // 
             this.Filter.Location = new System.Drawing.Point(71, 5);
             this.Filter.Name = "Filter";
-            this.Filter.Size = new System.Drawing.Size(176, 21);
+            this.Filter.Size = new System.Drawing.Size(176, 23);
             this.Filter.TabIndex = 1;
             this.Filter.Text = ".";
             // 
@@ -58,7 +58,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(31, 13);
+            this.label1.Size = new System.Drawing.Size(33, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Filter";
             // 
@@ -77,15 +77,15 @@
             this.force.AutoSize = true;
             this.force.Location = new System.Drawing.Point(71, 32);
             this.force.Name = "force";
-            this.force.Size = new System.Drawing.Size(53, 17);
+            this.force.Size = new System.Drawing.Size(55, 19);
             this.force.TabIndex = 4;
             this.force.Text = "Force";
             this.force.UseVisualStyleBackColor = true;
             // 
             // FormAddFiles
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(443, 56);
             this.Controls.Add(this.force);
             this.Controls.Add(this.ShowFiles);

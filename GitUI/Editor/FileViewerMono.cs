@@ -24,6 +24,7 @@ namespace GitUI.Editor
 
         public new Font Font
         {
+            get { return TextEditor.Font; }
             set { TextEditor.Font = value; }
         }
 
@@ -188,6 +189,12 @@ namespace GitUI.Editor
         {
 
         }
+
+        public void HighlightLines(int startLine, int endLine, Color color)
+        {
+
+        }
+
         public void ClearHighlighting()
         {
         }
@@ -197,6 +204,14 @@ namespace GitUI.Editor
             int index = TextEditor.GetCharIndexFromPosition(new Point(0, visualPosY));
             return TextEditor.GetLineFromCharIndex(index);
 
+        }
+
+        public int LineAtCaret
+        {
+            get
+            {                
+                return TextEditor.GetLineFromCharIndex(TextEditor.SelectionStart + TextEditor.SelectionLength);
+            }
         }
 
         public string GetLineText(int line)

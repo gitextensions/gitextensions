@@ -31,7 +31,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 					int passCount = 0;
 					for (int i = 0;  i < entry.ConditionCount; i++) 
 					{
-						int charCode = (int)word[i];
+						int charCode = word[i];
 						if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
 						{
 							passCount++;
@@ -78,7 +78,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 					int passCount = 0;
 					for (int i = 0;  i < entry.ConditionCount; i++) 
 					{
-						int charCode = (int)word[word.Length - (entry.ConditionCount - i)];
+						int charCode = word[word.Length - (entry.ConditionCount - i)];
 						if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
 						{
 							passCount++;
@@ -177,7 +177,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 							// turn off chars in member group
 							for (int j=0; j < numMember; j++) 
 							{
-								int charCode = (int)memberChars[j];
+								int charCode = memberChars[j];
 								entry.Condition[charCode] = entry.Condition[charCode] & ~(1 << num);
 							}
 						}
@@ -186,7 +186,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 							// turn on chars in member group
 							for (int j=0; j < numMember; j++) 
 							{
-								int charCode = (int)memberChars[j];
+								int charCode = memberChars[j];
 								entry.Condition[charCode] = entry.Condition[charCode] | (1 << num);
 							}
 						}
@@ -207,7 +207,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 						else 
 						{
 							// turn on char
-							int charCode = (int)cond;
+							int charCode = cond;
 							entry.Condition[charCode] = entry.Condition[charCode] | (1 << num);
 						}
 					} // not group
@@ -257,7 +257,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 				int passCount = 0;
 				for (int i = 0;  i < entry.ConditionCount; i++) 
 				{
-					int charCode = (int)tempWord[i];
+					int charCode = tempWord[i];
 					if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
 					{
 						passCount++;
@@ -305,7 +305,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 				int passCount = 0;
 				for (int i = 0;  i < entry.ConditionCount; i++) 
 				{
-					int charCode = (int)tempWord[tempWord.Length - (entry.ConditionCount - i)];
+					int charCode = tempWord[tempWord.Length - (entry.ConditionCount - i)];
 					if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
 					{
 						passCount++;

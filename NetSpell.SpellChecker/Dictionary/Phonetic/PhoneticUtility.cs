@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 
 namespace NetSpell.SpellChecker.Dictionary.Phonetic
@@ -90,7 +89,7 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
 						// turn on chars in member group
 						for (int j=0; j < numMember; j++) 
 						{
-							int charCode = (int)memberChars[j];
+							int charCode = memberChars[j];
 							rule.Condition[charCode] = rule.Condition[charCode] | (1 << rule.ConditionCount);
 						}
 
@@ -100,7 +99,7 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
 					else
 					{
 						// turn on char
-						int charCode = (int)cond;
+						int charCode = cond;
 						rule.Condition[charCode] = rule.Condition[charCode] | (1 << rule.ConditionCount);
 					}
 					end = false;

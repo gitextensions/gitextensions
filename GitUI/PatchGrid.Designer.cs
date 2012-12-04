@@ -56,6 +56,7 @@
             this.Patches.DataSource = this.patchFileBindingSource;
             this.Patches.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Patches.Location = new System.Drawing.Point(0, 0);
+            this.Patches.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Patches.Name = "Patches";
             this.Patches.ReadOnly = true;
             this.Patches.RowHeadersVisible = false;
@@ -114,12 +115,12 @@
             // 
             // PatchGrid
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            
             this.Controls.Add(this.Patches);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "PatchGrid";
             this.Size = new System.Drawing.Size(675, 406);
-            this.Load += new System.EventHandler(this.PatchGrid_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Patches)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.patchFileBindingSource)).EndInit();
             this.ResumeLayout(false);

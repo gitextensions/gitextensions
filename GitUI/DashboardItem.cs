@@ -72,14 +72,17 @@ namespace GitUI
             _NO_TRANSLATE_BranchName.Text = branchName;
 
             Height = _NO_TRANSLATE_Title.Height + 6;
+
+            //The description is not on the panel. Do not add the description height.prr
+            _NO_TRANSLATE_Panel.MinimumSize = new Size(0, Height);
+            
             if (_NO_TRANSLATE_Description.Visible)
             {
                 _NO_TRANSLATE_Description.Top = _NO_TRANSLATE_Title.Height + 4;
-                Height += _NO_TRANSLATE_Description.Height + 2;
+                Height += _NO_TRANSLATE_Description.Height + 4;
             }
 
-
-            if (icon != null)
+           if (icon != null)
                 Icon.Image = icon;
 
 

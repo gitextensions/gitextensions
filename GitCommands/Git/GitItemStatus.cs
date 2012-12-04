@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace GitCommands
 {
     public class GitItemStatus
@@ -21,6 +19,7 @@ namespace GitCommands
 
         public string Name { get; set; }
         public string OldName { get; set; }
+        public string TreeGuid { get; set; }
 
         public string ChangeString
         {
@@ -47,6 +46,8 @@ namespace GitCommands
         public bool IsStaged { get; set; }
         public bool IsSubmodule { get; set; }
         public string RenameCopyPercentage { get; set; }
+
+        public GitSubmoduleStatus SubmoduleStatus { get; set; }
 
         public override string ToString()
         {

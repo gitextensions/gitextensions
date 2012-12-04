@@ -107,7 +107,7 @@
             this.Hard.Size = new System.Drawing.Size(500, 19);
             this.Hard.TabIndex = 2;
             this.Hard.Text = "Hard: reset working dir and index (discard ALL local changes, even uncommitted ch" +
-                "anges)";
+    "anges)";
             this.Hard.UseVisualStyleBackColor = true;
             // 
             // Mixed
@@ -154,8 +154,8 @@
             // 
             // FormResetCurrentBranch
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(538, 269);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.Ok);

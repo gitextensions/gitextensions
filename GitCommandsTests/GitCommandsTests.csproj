@@ -59,6 +59,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
@@ -77,12 +78,25 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TestResource.resx</DependentUpon>
     </Compile>
+    <Compile Include="TranslationTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
       <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\GitUI\GitUI.csproj">
+      <Project>{cf5b22e7-230f-4e50-be88-c4f7023ced2c}</Project>
+      <Name>GitUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+      <Project>{27559302-f35e-4b62-a6ec-11ff21a5fa6f}</Project>
+      <Name>GitUIPluginInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
+      <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
+      <Name>ResourceManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

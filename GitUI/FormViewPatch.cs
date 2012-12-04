@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Windows.Forms;
+using GitCommands;
 using GitUI;
 using ResourceManager.Translation;
 
 namespace PatchApply
 {
-    public partial class ViewPatch : GitExtensionsForm
+    public partial class ViewPatch : GitModuleForm
     {
         private readonly TranslationString _patchFileFilterString =
             new TranslationString("Patch file (*.Patch)");
@@ -13,7 +14,8 @@ namespace PatchApply
         private readonly TranslationString _patchFileFilterTitle =
             new TranslationString("Select patch file");
 
-        public ViewPatch()
+        public ViewPatch(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent(); Translate();
 
@@ -60,13 +62,15 @@ namespace PatchApply
 
         private string SelectPatchFile(string initialDirectory)
         {
-            var dialog = new OpenFileDialog
+            using (var dialog = new OpenFileDialog
                              {
                                  Filter = _patchFileFilterString.Text + "|*.Patch",
                                  InitialDirectory = initialDirectory,
                                  Title = _patchFileFilterTitle.Text
-                             };
-            return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFileNameEdit.Text;
+                             })
+            {
+                return (dialog.ShowDialog(this) == DialogResult.OK) ? dialog.FileName : PatchFileNameEdit.Text;
+            }
         }
 
         private void BrowsePatch_Click(object sender, EventArgs e)
@@ -80,7 +84,7 @@ namespace PatchApply
             try
             {
                 PatchManager.PatchFileName = PatchFileNameEdit.Text;
-                PatchManager.LoadPatchFile(false);
+                PatchManager.LoadPatchFile(false, Module.FilesEncoding);
 
                 GridChangedFiles.DataSource = PatchManager.Patches;
             }

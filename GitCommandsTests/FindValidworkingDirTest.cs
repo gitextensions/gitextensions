@@ -10,22 +10,15 @@ using TestClass = NUnit.Framework.TestFixtureAttribute;
 using TestMethod = NUnit.Framework.TestAttribute;
 using TestCleanup = NUnit.Framework.TearDownAttribute;
 #endif
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
 using GitCommands;
 
 namespace GitCommandsTests
 {
-    /// <summary>
 
-    /// </summary>
     [TestClass]
     public class FindValidworkingDirTest
     {
-        private string GetCurrentDir()
+        private static string GetCurrentDir()
         {
             string path = typeof(FindValidworkingDirTest).Assembly.Location;
 
@@ -36,26 +29,21 @@ namespace GitCommandsTests
         [TestMethod]
         public void TestWorkingDir()
         {
-            Settings.WorkingDir = GetCurrentDir();
-            CheckWorkingDir();
-            Settings.WorkingDir = GetCurrentDir() + "\\testfile.txt";
-            CheckWorkingDir();
-            Settings.WorkingDir = GetCurrentDir() + "\\";
-            CheckWorkingDir();
-            Settings.WorkingDir = GetCurrentDir() + "\\\\";
-            CheckWorkingDir();
-            Settings.WorkingDir = GetCurrentDir() + "\\test\\test\\tralala";
-            CheckWorkingDir();
-
+            CheckWorkingDir(GetCurrentDir());
+            CheckWorkingDir(GetCurrentDir() + "\\testfile.txt");
+            CheckWorkingDir(GetCurrentDir() + "\\");
+            CheckWorkingDir(GetCurrentDir() + "\\\\");
+            CheckWorkingDir(GetCurrentDir() + "\\test\\test\\tralala");
         }
 
-        private static void CheckWorkingDir()
+        private static void CheckWorkingDir(string path)
         {
+            string workingDir = GitModule.FindGitWorkingDir(path);
             //Should not contain double slashes -> \\
-            Assert.IsFalse(Settings.WorkingDir.Contains("\\\\"));
+            Assert.IsFalse(workingDir.Contains("\\\\"), "WorkingDir" + workingDir + "\n" + GetCurrentDir());
 
             //Should end with slash
-            Assert.IsTrue(Settings.WorkingDir.EndsWith("\\"));
+            Assert.IsTrue(workingDir.EndsWith("\\"), "WorkingDir" + workingDir + "\n" + GetCurrentDir());
         }
     }
 }

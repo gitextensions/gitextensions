@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Xml.Serialization;
 
 namespace ResourceManager.Translation
 {
@@ -10,6 +10,9 @@ namespace ResourceManager.Translation
         {
             translationCategories = new List<TranslationCategory>();
         }
+
+        [XmlAttribute("GitExVersion")]
+        public string GitExVersion { get; set; }
 
         public string LanguageCode { get; set; }
 

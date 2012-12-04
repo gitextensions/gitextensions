@@ -1,17 +1,26 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using PatchApply;
 
 namespace GitUI
 {
-    public sealed partial class FormDiffSmall : GitExtensionsForm
+    public sealed partial class FormDiffSmall : GitModuleForm
     {
         private readonly GitRevision revision;
 
-        public FormDiffSmall(GitRevision revision)
+        private FormDiffSmall()
+            : this(null, null)
+        { 
+        
+        }
+
+        public FormDiffSmall(GitUICommands aCommands, GitRevision revision)
+            : base(aCommands)
         {
-            InitializeComponent(); Translate();
+            InitializeComponent(); 
+            Translate();
             DiffText.ExtraDiffArgumentsChanged += DiffText_ExtraDiffArgumentsChanged;
             DiffFiles.Focus();
 
@@ -20,20 +29,10 @@ namespace GitUI
             DiffFiles.GitItemStatuses = null;
             if (this.revision != null)
             {
-                DiffFiles.GitItemStatuses = Settings.Module.GetDiffFiles(revision.Guid, revision.Guid + "^");
+                DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.Guid + "^");
 
-                commitInfo.SetRevision(revision.Guid);
+                commitInfo.Revision = revision.Guid;
             }
-        }
-
-        private void FormDiffSmall_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("diff-small");
-        }
-
-        private void FormDiffSmall_Load(object sender, EventArgs e)
-        {
-            RestorePosition("diff-small");
         }
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -47,7 +46,7 @@ namespace GitUI
 
             if (DiffFiles.SelectedItem != null && revision != null)
             {
-                Patch selectedPatch = Settings.Module.GetSingleDiff(revision.Guid, revision.Guid + "^", DiffFiles.SelectedItem.Name, DiffFiles.SelectedItem.OldName, DiffText.GetExtraDiffArguments(), DiffText.Encoding);
+                Patch selectedPatch = Module.GetSingleDiff(revision.Guid, revision.Guid + "^", DiffFiles.SelectedItem.Name, DiffFiles.SelectedItem.OldName, DiffText.GetExtraDiffArguments(), DiffText.Encoding);
                 DiffText.ViewPatch(selectedPatch != null ? selectedPatch.Text : "");
             }
             Cursor.Current = Cursors.Default;

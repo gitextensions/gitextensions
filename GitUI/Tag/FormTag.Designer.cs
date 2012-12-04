@@ -33,12 +33,16 @@ namespace GitUI.Tag
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.GitRevisions = new GitUI.RevisionGrid();
             this.label2 = new System.Windows.Forms.Label();
-            this.tagMessage = new EditNetSpell();
+            this.tagMessage = new GitUI.SpellChecker.EditNetSpell();
             this.annotate = new System.Windows.Forms.CheckBox();
             this.Tagname = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnCreateTag = new System.Windows.Forms.Button();
             this.pushTag = new System.Windows.Forms.CheckBox();
+            this.ForceTag = new System.Windows.Forms.CheckBox();
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+#endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -70,12 +74,10 @@ namespace GitUI.Tag
             // 
             // GitRevisions
             // 
-            this.GitRevisions.CurrentCheckout = null;
             this.GitRevisions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GitRevisions.Filter = "";
-            this.GitRevisions.LastRow = 0;
             this.GitRevisions.Location = new System.Drawing.Point(0, 0);
             this.GitRevisions.Name = "GitRevisions";
+            this.GitRevisions.RevisionGraphDrawStyle = GitUI.DvcsGraph.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
             this.GitRevisions.Size = new System.Drawing.Size(734, 352);
             this.GitRevisions.TabIndex = 0;
             // 
@@ -95,6 +97,7 @@ namespace GitUI.Tag
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tagMessage.Enabled = false;
             this.tagMessage.Location = new System.Drawing.Point(110, 73);
+            this.tagMessage.Margin = new System.Windows.Forms.Padding(2);
             this.tagMessage.Name = "tagMessage";
             this.tagMessage.Size = new System.Drawing.Size(612, 82);
             this.tagMessage.TabIndex = 13;
@@ -144,25 +147,38 @@ namespace GitUI.Tag
             this.pushTag.AutoSize = true;
             this.pushTag.Location = new System.Drawing.Point(110, 33);
             this.pushTag.Name = "pushTag";
-            this.pushTag.Size = new System.Drawing.Size(72, 19);
+            this.pushTag.Size = new System.Drawing.Size(109, 19);
             this.pushTag.TabIndex = 12;
-            this.pushTag.Text = "Push tag";
+            this.pushTag.Text = "Push tag to \'{0}\'";
             this.pushTag.UseVisualStyleBackColor = true;
+            // 
+            // ForceTag
+            // 
+            this.ForceTag.AutoSize = true;
+            this.ForceTag.Location = new System.Drawing.Point(275, 33);
+            this.ForceTag.Name = "ForceTag";
+            this.ForceTag.Size = new System.Drawing.Size(55, 19);
+            this.ForceTag.TabIndex = 15;
+            this.ForceTag.Text = "Force";
+            this.ForceTag.UseVisualStyleBackColor = true;
             // 
             // FormTag
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AcceptButton = this.btnCreateTag;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(734, 523);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormTag";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Tag";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormTagFormClosing);
             this.Load += new System.EventHandler(this.FormTagLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+#endif
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -179,5 +195,6 @@ namespace GitUI.Tag
         private System.Windows.Forms.Label label2;
         private EditNetSpell tagMessage;
         private System.Windows.Forms.CheckBox annotate;
+        private System.Windows.Forms.CheckBox ForceTag;
     }
 }

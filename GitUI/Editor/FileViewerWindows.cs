@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
@@ -30,6 +31,7 @@ namespace GitUI.Editor
 
         public new Font Font 
         {
+            get { return TextEditor.Font; } 
             set { TextEditor.Font = value; } 
         }
 
@@ -155,69 +157,125 @@ namespace GitUI.Editor
             return 0;
         }
 
-        private void AddExtraPatchHighlighting()
+        private List<LineSegment> GetLinesStartingWith(IDocument document, ref int beginIndex, char startingChar, ref bool found)
         {
-            var document = TextEditor.Document;
+            List<LineSegment> result = new List<LineSegment>();
+
+            while (beginIndex < document.TotalNumberOfLines)
+            {
+                var lineSegment = document.GetLineSegment(beginIndex);
+
+                if (lineSegment.Length > 0 && document.GetCharAt(lineSegment.Offset) == startingChar)
+                {
+                    found = true;
+                    result.Add(lineSegment);
+                    beginIndex++;
+                }
+                else
+                {
+                    if (found)
+                        break;
+                    else
+                        beginIndex++;
+                }
+            }
+
+            return result;
+        }
+
+        private void MarkDifference(IDocument document, List<LineSegment> linesRemoved, List<LineSegment> linesAdded, int beginOffset)
+        {            
+            int count = Math.Min(linesRemoved.Count, linesAdded.Count);
+
+            for (int i = 0; i < count; i++)
+                MarkDifference(document, linesRemoved[i], linesAdded[i], beginOffset);        
+        }
+
+        private void MarkDifference(IDocument document, LineSegment lineRemoved, LineSegment lineAdded, int beginOffset)
+        {
+            var lineRemovedEndOffset = lineRemoved.Length;
+            var lineAddedEndOffset = lineAdded.Length;
+            var endOffsetMin = Math.Min(lineRemovedEndOffset, lineAddedEndOffset);
+            var reverseOffset = 0;
+
+            while (beginOffset < endOffsetMin)
+            {
+                if (!document.GetCharAt(lineAdded.Offset + beginOffset).Equals(
+                        document.GetCharAt(lineRemoved.Offset + beginOffset)))
+                    break;
+
+                beginOffset++;
+            }
+
+            while (lineAddedEndOffset > beginOffset && lineRemovedEndOffset > beginOffset)
+            {
+                reverseOffset = lineAdded.Length - lineAddedEndOffset;
+
+                if (!document.GetCharAt(lineAdded.Offset + lineAdded.Length - 1 - reverseOffset).
+                         Equals(document.GetCharAt(lineRemoved.Offset + lineRemoved.Length - 1 -
+                                                   reverseOffset)))
+                    break;
+
+                lineRemovedEndOffset--;
+                lineAddedEndOffset--;
+            }
+
+            Color color;
             var markerStrategy = document.MarkerStrategy;
 
-            for (var line = 0; line + 3 < document.TotalNumberOfLines; line++)
+            if (lineAdded.Length - beginOffset - reverseOffset > 0)
             {
-                var lineSegment1 = document.GetLineSegment(line);
-                var lineSegment2 = document.GetLineSegment(line + 1);
-                var lineSegment3 = document.GetLineSegment(line + 2);
-                var lineSegment4 = document.GetLineSegment(line + 3);
+                color = Settings.DiffAddedExtraColor;
+                markerStrategy.AddMarker(new TextMarker(lineAdded.Offset + beginOffset,
+                                                        lineAdded.Length - beginOffset - reverseOffset,
+                                                        TextMarkerType.SolidBlock, color,
+                                                        ColorHelper.GetForeColorForBackColor(color)));
+            }
 
-                if (document.GetCharAt(lineSegment1.Offset) != ' ' ||
-                    document.GetCharAt(lineSegment2.Offset) != '-' ||
-                    document.GetCharAt(lineSegment3.Offset) != '+' ||
-                    (lineSegment4.Length > 0 && document.GetCharAt(lineSegment4.Offset) != ' ')) //fix for issue 173
-                    continue;
+            if (lineRemoved.Length - beginOffset - reverseOffset > 0)
+            {
+                color = Settings.DiffRemovedExtraColor;
+                markerStrategy.AddMarker(new TextMarker(lineRemoved.Offset + beginOffset,
+                                                        lineRemoved.Length - beginOffset - reverseOffset,
+                                                        TextMarkerType.SolidBlock, color,
+                                                        ColorHelper.GetForeColorForBackColor(color)));
+            }
 
-                var beginOffset = 0;
-                var endOffset = lineSegment3.Length;
-                var reverseOffset = 0;
+        }
 
-                for (; beginOffset < endOffset; beginOffset++)
-                {
-                    if (!document.GetCharAt(lineSegment3.Offset + beginOffset).Equals('+') &&
-                        !document.GetCharAt(lineSegment2.Offset + beginOffset).Equals('-') &&
-                        !document.GetCharAt(lineSegment3.Offset + beginOffset).Equals(
-                            document.GetCharAt(lineSegment2.Offset + beginOffset)))
-                        break;
-                }
 
-                for (; endOffset > beginOffset; endOffset--)
-                {
-                    reverseOffset = lineSegment3.Length - endOffset;
+        private void AddExtraPatchHighlighting()
+        {
+            var document = TextEditor.Document;      
 
-                    if (!document.GetCharAt(lineSegment3.Offset + lineSegment3.Length - 1 - reverseOffset)
-                             .Equals('+') &&
-                        !document.GetCharAt(lineSegment2.Offset + lineSegment2.Length - 1 - reverseOffset)
-                             .Equals('-') &&
-                        !document.GetCharAt(lineSegment3.Offset + lineSegment3.Length - 1 - reverseOffset).
-                             Equals(document.GetCharAt(lineSegment2.Offset + lineSegment2.Length - 1 -
-                                                       reverseOffset)))
-                        break;
-                }
+            var line = 0;
 
-                Color color;
-                if (lineSegment3.Length - beginOffset - reverseOffset > 0)
-                {
-                    color = Settings.DiffAddedExtraColor;
-                    markerStrategy.AddMarker(new TextMarker(lineSegment3.Offset + beginOffset,
-                                                            lineSegment3.Length - beginOffset - reverseOffset,
-                                                            TextMarkerType.SolidBlock, color,
-                                                            ColorHelper.GetForeColorForBackColor(color)));
-                }
+            bool found = false;
+            int numberOfParents;
+            var linesRemoved = GetLinesStartingWith(document, ref line, '-', ref found);
+            var linesAdded = GetLinesStartingWith(document, ref line, '+', ref found);
+            if (linesAdded.Count == 1 && linesRemoved.Count == 1)
+            {
+                var lineA = linesRemoved[0];
+                var lineB = linesAdded[0];
+                if (lineA.Length > 4 && lineB.Length > 4 &&
+                    document.GetCharAt(lineA.Offset + 4) == 'a' &&
+                    document.GetCharAt(lineB.Offset + 4) == 'b')
+                    numberOfParents = 5;
+                else
+                    numberOfParents = 4;
 
-                if (lineSegment2.Length - beginOffset - reverseOffset > 0)
-                {
-                    color = Settings.DiffRemovedExtraColor;
-                    markerStrategy.AddMarker(new TextMarker(lineSegment2.Offset + beginOffset,
-                                                            lineSegment2.Length - beginOffset - reverseOffset,
-                                                            TextMarkerType.SolidBlock, color,
-                                                            ColorHelper.GetForeColorForBackColor(color)));
-                }
+                MarkDifference(document, linesRemoved, linesAdded, numberOfParents);
+            }
+            
+            numberOfParents = 1;
+            while (line < document.TotalNumberOfLines)
+            {
+                found = false;
+                linesRemoved = GetLinesStartingWith(document, ref line, '-', ref found);
+                linesAdded = GetLinesStartingWith(document, ref line, '+', ref found);
+
+                MarkDifference(document, linesRemoved, linesAdded, numberOfParents);                
             }
         }
 
@@ -353,6 +411,14 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(0, lineNumber);
         }
 
+        public int LineAtCaret
+        {
+            get
+            {
+                return TextEditor.ActiveTextAreaControl.Caret.Position.Line;
+            }
+        }
+
         public void HighlightLine(int line, Color color)
         {
             if (line >= TextEditor.Document.TotalNumberOfLines)
@@ -363,6 +429,21 @@ namespace GitUI.Editor
             var lineSegment = document.GetLineSegment(line);
             markerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
                                                     lineSegment.Length, TextMarkerType.SolidBlock, color
+                                                    ));
+        }
+
+        public void HighlightLines(int startLine, int endLine, Color color)
+        {
+            if (startLine > endLine || endLine >= TextEditor.Document.TotalNumberOfLines)
+                return;
+
+            var document = TextEditor.Document;
+            var markerStrategy = document.MarkerStrategy;
+            var startLineSegment = document.GetLineSegment(startLine);
+            var endLineSegment = document.GetLineSegment(endLine);
+            markerStrategy.AddMarker(new TextMarker(startLineSegment.Offset,
+                                                    endLineSegment.Offset - startLineSegment.Offset + endLineSegment.Length,
+                                                    TextMarkerType.SolidBlock, color
                                                     ));
         }
 

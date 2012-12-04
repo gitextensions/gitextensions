@@ -1,3 +1,4 @@
+// extensions: ppt;pptx;pptm
 //
 // TortoiseSVN Diff script for Powerpoint files
 //
@@ -6,8 +7,8 @@
 //
 // Last commit by:
 // $Author: tortoisesvn $
-// $Date: 2009-02-05 18:55:24 +0100 (Do, 05 Feb 2009) $
-// $Rev: 15274 $
+// $Date: 2010-08-07 16:09:56 +0200 (Sa, 07. Aug 2010) $
+// $Rev: 19994 $
 //
 // Authors:
 // Arne Moor, 2006
@@ -77,9 +78,9 @@ catch(e)
    WScript.Quit(1);
 }
 
-if (PptAppMajorVersion(powerpoint) >= 12) 
+if (PptAppMajorVersion(powerpoint) == 12) 
 {
-    WScript.Echo("Microsoft Powerpoint 2007 doesn't provide the DIFF features any more. Sorry!\r\nYou can try diffing with OpenOffice...");
+    WScript.Echo("Microsoft Powerpoint 2007 doesn't provide the DIFF features any more. Sorry!");
     WScript.Quit(1);
 }
 else 

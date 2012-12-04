@@ -5,38 +5,45 @@ using GitUIPluginInterfaces;
 
 namespace AutoCheckForUpdates
 {
-    public class AutoCheckForUpdates : IGitPlugin
+    public class AutoCheckForUpdates : GitPluginBase
     {
         //Description of the plugin
 
         #region IGitPlugin Members
 
-        public string Description
+        public override string Description
         {
             get { return "Check for updates"; }
         }
 
-        //Store settings to use later
-        public IGitPluginSettingsContainer Settings { get; set; }
-
-        public void Register(IGitUICommands gitUiCommands)
+        protected override void RegisterSettings()
         {
+            base.RegisterSettings();
             //Register settings
             Settings.AddSetting("Enabled (true / false)", "true");
             Settings.AddSetting("Check every # days", "7");
             Settings.AddSetting("Last check (yyyy/M/dd)",
                                 new DateTime(2000, 1, 1).ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
+        }
 
+        public override void Register(IGitUICommands gitUiCommands)
+        {
             //Connect to events -> connect to all main events because in theory the prebrowse
             //event can be missed since plugins are loaded asynchronous
             gitUiCommands.PreBrowse += GitUiCommandsPreBrowse;
             gitUiCommands.PreCommit += GitUiCommandsPreBrowse;
         }
 
-        public bool Execute(GitUIBaseEventArgs e)
+        public override void Unregister(IGitUICommands gitUiCommands)
         {
-            var updateForm = new Updates(e.GitVersion) {AutoClose = false};
-            updateForm.ShowDialog(e.OwnerForm as IWin32Window);
+            gitUiCommands.PreBrowse -= GitUiCommandsPreBrowse;
+            gitUiCommands.PreCommit -= GitUiCommandsPreBrowse;
+        }
+
+        public override bool Execute(GitUIBaseEventArgs e)
+        {
+            using (var updateForm = new Updates(e.GitModule.GitVersion) { AutoClose = false })
+                updateForm.ShowDialog(e.OwnerForm as IWin32Window);
             return false;
         }
 
@@ -69,8 +76,8 @@ namespace AutoCheckForUpdates
                                     DateTime.Now.ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
             }
 
-            var updateForm = new Updates(e.GitVersion) {AutoClose = true};
-            updateForm.ShowDialog();
+            using (var updateForm = new Updates(e.GitModule.GitVersion) { AutoClose = true })
+                updateForm.ShowDialog();
         }
     }
 }

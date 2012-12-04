@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using System.Drawing;
-using GitCommands;
+using System.IO;
 
 namespace GitCommands.Repository
 {
@@ -160,18 +157,15 @@ namespace GitCommands.Repository
             List<RecentRepoInfo> list = null;
             bool existsShortName;
             //if there is no short name for a repo, then try to find unique caption extendig short directory path
-            if (shortenPath)
+            if (shortenPath && repoInfo.DirInfo != null)
             {
-                if (repoInfo.DirInfo != null)
-                {
-                    string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
-                    s = s.Trim(Path.DirectorySeparatorChar);
-                    //candidate for short name
-                    repoInfo.Caption = repoInfo.ShortName;
-                    if (!s.IsNullOrEmpty())
-                        repoInfo.Caption += " (" + s + ")";
-                    repoInfo.DirInfo = repoInfo.DirInfo.Parent;
-                }
+                string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
+                s = s.Trim(Path.DirectorySeparatorChar);
+                //candidate for short name
+                repoInfo.Caption = repoInfo.ShortName;
+                if (!s.IsNullOrEmpty())
+                    repoInfo.Caption += " (" + s + ")";
+                repoInfo.DirInfo = repoInfo.DirInfo.Parent;
             }
             else
                 repoInfo.Caption = repoInfo.Repo.Path;
@@ -211,9 +205,9 @@ namespace GitCommands.Repository
                 return r;
             else
                 if (l.EndsWith(Path.DirectorySeparatorChar.ToString()))
-                    return l.Join("", r);
+                    return string.Join("", l, r);
                 else
-                    return l.Join(Path.DirectorySeparatorChar.ToString(), r);
+                    return string.Join(Path.DirectorySeparatorChar.ToString(), l, r);
 
         }
 

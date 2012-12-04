@@ -30,30 +30,27 @@ namespace GitUI
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormEdit));
-            this.Viewer = new FileViewer();
+            this.Viewer = new GitUI.Editor.FileViewer();
             this.SuspendLayout();
             // 
             // Viewer
             // 
             this.Viewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Viewer.Location = new System.Drawing.Point(0, 0);
+            this.Viewer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Viewer.Name = "Viewer";
             this.Viewer.Size = new System.Drawing.Size(733, 571);
             this.Viewer.TabIndex = 0;
             // 
             // FormEdit
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(733, 571);
             this.Controls.Add(this.Viewer);
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.Name = "FormEdit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "View";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormEditFormClosing);
-            this.Load += new System.EventHandler(this.FormEditLoad);
             this.ResumeLayout(false);
 
         }

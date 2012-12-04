@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Statistics;
 using GitStatistics.PieChart;
-using System.Threading;
-using System.Collections.Generic;
+using GitUIPluginInterfaces;
 
 namespace GitStatistics
 {
@@ -36,10 +38,12 @@ namespace GitStatistics
         public DirectoryInfo WorkingDir;
         private SynchronizationContext syncContext;
         private LineCounter lineCounter;
-        private Thread loadThread;
+        private AsyncLoader loadThread = new AsyncLoader();
+        private readonly IGitModule Module;
 
-        public FormGitStatistics(string codeFilePattern)
+        public FormGitStatistics(IGitModule aModule, string codeFilePattern)
         {
+            Module = aModule;
             _codeFilePattern = codeFilePattern;
             InitializeComponent();
 
@@ -70,7 +74,7 @@ namespace GitStatistics
         {
             Action<FormGitStatistics> a = sender =>
             {
-                var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor();
+                var allCommitsByUser = CommitCounter.GroupAllCommitsByContributor(Module);
                 syncContext.Post(o =>
                 {
                     if (this.IsDisposed)
@@ -138,9 +142,7 @@ namespace GitStatistics
             lineCounter = new LineCounter(WorkingDir);
             lineCounter.LinesOfCodeUpdated += lineCounter_LinesOfCodeUpdated;
 
-            loadThread = new Thread(LoadLinesOfCode);
-
-            loadThread.Start();
+            loadThread.Load(LoadLinesOfCode, () => { });
         }
         
         public void LoadLinesOfCode()
@@ -255,15 +257,8 @@ namespace GitStatistics
 
         private void FormGitStatistics_FormClosing(object sender, FormClosingEventArgs e)
         {
-            try
-            {
-                if (loadThread != null)
-                    loadThread.Abort();
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(this, ex.ToString());
-            }
+            lineCounter.LinesOfCodeUpdated -= lineCounter_LinesOfCodeUpdated;
+            loadThread.Cancel();
         }
     }
 }

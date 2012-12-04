@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace ResourceManager.Translation
 {
     public interface ITranslate
@@ -9,6 +7,5 @@ namespace ResourceManager.Translation
         void AddTranslationItems(Translation translation);
 
         void TranslateItems(Translation translation);
-
     }
 }

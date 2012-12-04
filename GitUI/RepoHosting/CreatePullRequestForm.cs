@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
-using GitCommands;
 
 namespace GitUI.RepoHosting
 {
-    public partial class CreatePullRequestForm : GitExtensionsForm
+    public partial class CreatePullRequestForm : GitModuleForm
     {
         #region Translation
         private readonly TranslationString _strLoading = new TranslationString("Loading...");
         private readonly TranslationString _strCouldNotLocateARemoteThatBelongsToYourUser = new TranslationString("Could not locate a remote that belongs to your user!");
-        private readonly TranslationString _strYouMustSpecifyATitleAndABody = new TranslationString("You must specify a title and a body.");
+        private readonly TranslationString _strYouMustSpecifyATitle = new TranslationString("You must specify a title.");
         private readonly TranslationString _strPullRequest = new TranslationString("Pull request");
         private readonly TranslationString _strFailedToCreatePullRequest = new TranslationString("Failed to create pull request.\r\n");
         private readonly TranslationString _strPleaseCloneGitHubRep = new TranslationString("Please clone GitHub repository before pull request.");
@@ -23,19 +23,20 @@ namespace GitUI.RepoHosting
 
         private readonly IRepositoryHostPlugin _repoHost;
         private IHostedRemote _currentHostedRemote;
-        private string _chooseBranch;
         private readonly string _chooseRemote;
         private List<IHostedRemote> _hostedRemotes;
         private string _currentBranch;
+        private AsyncLoader remoteLoader = new AsyncLoader();
 
-        public CreatePullRequestForm(IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
+        public CreatePullRequestForm(GitUICommands aCommands, IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
+            : base(aCommands)
         {
             _repoHost = repoHost;
-            _chooseBranch = chooseBranch;
             _chooseRemote = chooseRemote;
             _currentBranch = "";
             InitializeComponent();
             Translate();
+            prevTitle = _titleTB.Text;
         }
 
         private void CreatePullRequestForm_Load(object sender, EventArgs e)
@@ -47,19 +48,26 @@ namespace GitUI.RepoHosting
         {
             _createBtn.Enabled = false;
             _yourBranchesCB.Text = _strLoading.Text;
-            _hostedRemotes = _repoHost.GetHostedRemotesForCurrentWorkingDirRepo();
-            IHostedRemote[] foreignHostedRemotes = _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray();
-            if (foreignHostedRemotes.Length == 0)
-            {
-                MessageBox.Show(this, _strFailedToCreatePullRequest.Text + _strPleaseCloneGitHubRep.Text, "", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
-                return;
-            }
+            _hostedRemotes = _repoHost.GetHostedRemotesForModule(Module);
+            this.Mask();
+            remoteLoader.Load(
+                () => _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray(),
+                (IHostedRemote[] foreignHostedRemotes) =>
+                {
+                    if (foreignHostedRemotes.Length == 0)
+                    {
+                        MessageBox.Show(this, _strFailedToCreatePullRequest.Text + _strPleaseCloneGitHubRep.Text, "",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Close();
+                        return;
+                    }
 
-            _currentBranch = Settings.Module.ValidWorkingDir() ? Settings.Module.GetSelectedBranch() : "";
-            LoadRemotes(foreignHostedRemotes);
-            LoadMyBranches();
+                    this.UnMask();
+
+                    _currentBranch = Module.ValidWorkingDir() ? Module.GetSelectedBranch() : "";
+                    LoadRemotes(foreignHostedRemotes);
+                    LoadMyBranches();
+                });
         }
 
         private void LoadRemotes(IHostedRemote[] foreignHostedRemotes)
@@ -92,7 +100,7 @@ namespace GitUI.RepoHosting
             _remoteBranchesCB.Items.Clear();
             _remoteBranchesCB.Text = _strLoading.Text;
 
-            AsyncHelpers.DoAsync(
+            AsyncLoader.DoAsync(
                 () => _currentHostedRemote.GetHostedRepository().Branches,
                 branches =>
                 {
@@ -112,16 +120,25 @@ namespace GitUI.RepoHosting
                 ex => { throw ex; });
         }
 
+        private IHostedRemote MyRemote
+        {
+            get
+            {
+                var myRemote = _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
+                if (myRemote == null)
+                    throw new InvalidOperationException(_strCouldNotLocateARemoteThatBelongsToYourUser.Text);
+                return myRemote;
+            }
+        }
+
+
         private void LoadMyBranches()
         {
-            var myRemote = _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
-            if (myRemote == null)
-                throw new InvalidOperationException(_strCouldNotLocateARemoteThatBelongsToYourUser.Text);
 
             _yourBranchesCB.Items.Clear();
 
-            AsyncHelpers.DoAsync(
-                () => myRemote.GetHostedRepository().Branches,
+            AsyncLoader.DoAsync(
+                () => MyRemote.GetHostedRepository().Branches,
                 branches =>
                 {
                     branches.Sort((a, b) => String.Compare(a.Name, b.Name, true));
@@ -139,8 +156,15 @@ namespace GitUI.RepoHosting
                 ex => { throw ex; });
         }
 
+        private string prevTitle;
+
         private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (prevTitle.Equals(_titleTB.Text) && !_yourBranchesCB.Text.IsNullOrWhiteSpace())
+            {
+                _titleTB.Text = Module.GetPreviousCommitMessage(MyRemote.Name.Combine("/", _yourBranchesCB.Text), 0).TakeUntilStr("\n");
+                prevTitle = _titleTB.Text;
+            }
         }
 
         private void _createBtn_Click(object sender, EventArgs e)
@@ -150,9 +174,9 @@ namespace GitUI.RepoHosting
 
             var title = _titleTB.Text.Trim();
             var body = _bodyTB.Text.Trim();
-            if (title.Length == 0 || body.Length == 0)
+            if (title.Length == 0)
             {
-                MessageBox.Show(this, _strYouMustSpecifyATitleAndABody.Text , _strError.Text);
+                MessageBox.Show(this, _strYouMustSpecifyATitle.Text , _strError.Text);
                 return;
             }
 

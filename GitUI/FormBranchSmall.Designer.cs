@@ -79,8 +79,8 @@
             // FormBranchSmall
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(471, 58);
             this.Controls.Add(this.CheckoutAfterCreate);
             this.Controls.Add(this.label1);

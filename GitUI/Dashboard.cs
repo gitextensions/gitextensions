@@ -1,21 +1,21 @@
 ﻿using System;
-using System.IO;
+using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Repository;
 using GitUI.Properties;
 using GitUI.RepoHosting;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
-using Settings = GitCommands.Settings;
-using System.Configuration;
 
 namespace GitUI
 {
-    public partial class Dashboard : GitExtensionsControl
+    public partial class Dashboard : GitModuleControl
     {
         private readonly TranslationString cloneFork = new TranslationString("Clone {0} repository");
         private readonly TranslationString cloneRepository = new TranslationString("Clone repository");
@@ -65,27 +65,27 @@ namespace GitUI
             DonateCategory.Dock = DockStyle.Top;
             //Show buttons
             CommonActions.DisableContextMenu();
-            var openItem = new DashboardItem(Resources.Folder, openRepository.Text);
+            var openItem = new DashboardItem(Resources.IconRepoOpen, openRepository.Text);
             openItem.Click += openItem_Click;
             CommonActions.AddItem(openItem);
 
-            var cloneItem = new DashboardItem(Resources.SaveAs, cloneRepository.Text);
+            var cloneItem = new DashboardItem(Resources.IconCloneRepoGit, cloneRepository.Text);
             cloneItem.Click += cloneItem_Click;
             CommonActions.AddItem(cloneItem);
 
-            var cloneSvnItem = new DashboardItem(Resources.SaveAs, cloneSvnRepository.Text);
+            var cloneSvnItem = new DashboardItem(Resources.IconCloneRepoSvn, cloneSvnRepository.Text);
             cloneSvnItem.Click += cloneSvnItem_Click;
             CommonActions.AddItem(cloneSvnItem);
 
             foreach (IRepositoryHostPlugin el in RepoHosts.GitHosters)
             {
                 IRepositoryHostPlugin gitHoster = el;
-                var di = new DashboardItem(Resources.SaveAs, string.Format(cloneFork.Text, el.Description));
-                di.Click += (repoSender, eventArgs) => GitUICommands.Instance.StartCloneForkFromHoster(this, gitHoster);
+                var di = new DashboardItem(Resources.IconCloneRepoGithub, string.Format(cloneFork.Text, el.Description));
+                di.Click += (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged);
                 CommonActions.AddItem(di);
             }
 
-            var createItem = new DashboardItem(Resources.Star, createRepository.Text);
+            var createItem = new DashboardItem(Resources.IconRepoCreate, createRepository.Text);
             createItem.Click += createItem_Click;
             CommonActions.AddItem(createItem);
 
@@ -118,12 +118,12 @@ namespace GitUI
             }
         }
 
-        public event EventHandler WorkingDirChanged;
+        public event GitModuleChangedEventHandler GitModuleChanged;
 
-        public virtual void OnWorkingDirChanged()
+        public virtual void OnModuleChanged(GitModule aModule)
         {
-            if (WorkingDirChanged != null)
-                WorkingDirChanged(this, null);
+            if (GitModuleChanged != null)
+                GitModuleChanged(aModule);
         }
 
         private void AddDashboardEntry(RepositoryCategory entry)
@@ -210,7 +210,7 @@ namespace GitUI
                 SetSplitterDistance(
                     splitContainer6,
                     Properties.Settings.Default.Dashboard_CommonSplitContainer_SplitterDistance,
-                    (int)Math.Max(2, (CommonActions.Height * 1.2)));
+                    Math.Max(2, (int)(CommonActions.Height * 1.2)));
 
                 SetSplitterDistance(
                     splitContainer7,
@@ -230,34 +230,58 @@ namespace GitUI
 
         private void SetSplitterDistance(SplitContainer splitContainer, int value, int @default)
         {
-            if (value != 0)
+            try
             {
-                try
+                if (isValidSplit(splitContainer,value))
                 {
                     splitContainer.SplitterDistance = value;
                 }
-                catch
+                else if (isValidSplit(splitContainer, @default))
                 {
                     splitContainer.SplitterDistance = @default;
                 }
+                else
+                {
+                    // Both the value and default are invalid.
+                    // Don't attempt to change the SplitterDistance
+                }
             }
-            else
-                splitContainer.SplitterDistance = @default;
+            catch (SystemException)
+            {
+                // The attempt to set even the default value has failed.
+            }
+        }
+
+        /// <summary>
+        /// Determine whether a given splitter value would be permitted for a given SplitContainer
+        /// </summary>
+        /// <param name="splitcontainer">The SplitContainer to check</param>
+        /// <param name="value">The potential SplitterDistance to try </param>
+        /// <returns>true if it is expected that setting a SplitterDistance of value would succeed
+        /// </returns>
+        bool isValidSplit(SplitContainer splitcontainer, int value)
+        {
+            bool valid;
+            int limit = (splitcontainer.Orientation == Orientation.Horizontal)
+                ? splitcontainer.Height
+                : splitcontainer.Width;
+            valid = (value > splitcontainer.Panel1MinSize) && (value < limit - splitcontainer.Panel2MinSize);
+            return valid;
         }
 
         private void TranslateItem_Click(object sender, EventArgs e)
         {
-            new FormTranslate().ShowDialog(this);
+            using (var frm = new FormTranslate()) frm.ShowDialog(this);
         }
 
         private static void GitHubItem_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://github.com/spdr870/gitextensions");
+            Process.Start(@"http://github.com/gitextensions/gitextensions");
         }
 
         private static void IssuesItem_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://github.com/spdr870/gitextensions/issues");
+            Process.Start(@"http://github.com/gitextensions/gitextensions/issues");
         }
 
         private void dashboardItem_Click(object sender, EventArgs e)
@@ -280,53 +304,47 @@ namespace GitUI
 
         private void OpenPath(string path)
         {
-            Settings.WorkingDir = path;
+            GitModule module = new GitModule(path);
 
-            if (!Settings.Module.ValidWorkingDir())
+            if (!module.ValidWorkingDir())
             {
                 DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text, directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.Cancel)
                 {
-                    Settings.WorkingDir = string.Empty;
                     return;
                 }
                 if (dialogResult == DialogResult.Yes)
                 {
-                    Settings.WorkingDir = string.Empty;
                     Repositories.RepositoryHistory.RemoveRecentRepository(path);
                     Refresh();
                     return;
                 }
             }
 
-            Repositories.AddMostRecentRepository(Settings.WorkingDir);
-            OnWorkingDirChanged();
+            Repositories.AddMostRecentRepository(module.WorkingDir);
+            OnModuleChanged(module);
         }
 
         private void openItem_Click(object sender, EventArgs e)
         {
-            var open = new Open();
-            open.ShowDialog(this);
-            OnWorkingDirChanged();
+            GitModule module = Open.OpenModule(this);
+            if (module != null)
+                OnModuleChanged(module);
         }
 
         private void cloneItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartCloneDialog(this))
-                OnWorkingDirChanged();
+            UICommands.StartCloneDialog(this, null, false, OnModuleChanged);
         }
 
         private void cloneSvnItem_Click(object sender, EventArgs e)
         {
-            if (GitUICommands.Instance.StartSvnCloneDialog(this))
-                OnWorkingDirChanged();
+            UICommands.StartSvnCloneDialog(this, OnModuleChanged);
         }
 
         private void createItem_Click(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartInitializeDialog(this, Settings.WorkingDir);
-
-            OnWorkingDirChanged();
+            UICommands.StartInitializeDialog(this, Module.WorkingDir, OnModuleChanged);
         }
 
         private static void DonateItem_Click(object sender, EventArgs e)
@@ -337,7 +355,7 @@ namespace GitUI
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            new FormDashboardEditor().ShowDialog(this);
+            using (var frm = new FormDashboardEditor()) frm.ShowDialog(this);
             Refresh();
         }
 
@@ -365,8 +383,7 @@ namespace GitUI
                 string url = lines[0];
                 if (!string.IsNullOrEmpty(url))
                 {
-                    if (GitUICommands.Instance.StartCloneDialog(this, url))
-                        OnWorkingDirChanged();
+                    UICommands.StartCloneDialog(this, url, false, OnModuleChanged);
                 }
             }
         }

@@ -3,22 +3,16 @@ using GitUIPluginInterfaces;
 
 namespace CreateLocalBranches
 {
-	public class CreateLocalBranchesPlugin : IGitPluginForRepository
+    public class CreateLocalBranchesPlugin : GitPluginBase, IGitPluginForRepository
     {
-        public string Description
+        public override string Description
         {
             get { return "Create local tracking branches"; }
         }
 
-        public IGitPluginSettingsContainer Settings { get; set; }
-
-        public void Register(IGitUICommands gitUiCommands)
+        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
-        }
-
-        public bool Execute(GitUIBaseEventArgs gitUiCommands)
-        {
-            new CreateLocalBranchesForm(gitUiCommands).ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            using (var frm = new CreateLocalBranchesForm(gitUiCommands)) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
             return true;
         }
     }

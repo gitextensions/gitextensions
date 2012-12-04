@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Text;
-using System.Threading;
-using System.Windows.Forms;
+using GitCommands.Config;
 
 namespace GitCommands
 {
@@ -16,7 +16,18 @@ namespace GitCommands
     public sealed class RevisionGraph : IDisposable
     {
         public event EventHandler Exited;
-        public event EventHandler Error;
+        public event EventHandler<AsyncErrorEventArgs> Error 
+        {
+            add 
+            {
+                backgroundLoader.LoadingError += value;
+            }
+            
+            remove 
+            {
+                backgroundLoader.LoadingError -= value;
+            }
+        }
         public event EventHandler Updated;
         public event EventHandler BeginUpdate;
         public int RevisionCount { get; set; }
@@ -40,11 +51,8 @@ namespace GitCommands
 
         private const string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
 
-        private List<GitHead> heads;
+        private Dictionary<string, List<GitHead>> heads;
 
-        private GitCommandsInstance gitGetGraphCommand;
-
-        private Thread backgroundThread;
 
         private enum ReadStep
         {
@@ -67,9 +75,14 @@ namespace GitCommands
 
         private GitRevision revision;
 
-        public RevisionGraph()
+        private AsyncLoader backgroundLoader = new AsyncLoader();
+
+        private GitModule Module;
+
+        public RevisionGraph(GitModule module)
         {
             BackgroundThread = true;
+            Module = module;
         }
 
         ~RevisionGraph()
@@ -79,16 +92,7 @@ namespace GitCommands
 
         public void Dispose()
         {
-            if (backgroundThread != null)
-            {
-                backgroundThread.Abort();
-                backgroundThread = null;
-            }
-            if (gitGetGraphCommand != null)
-            {
-                gitGetGraphCommand.Kill();
-                gitGetGraphCommand = null;
-            }
+            backgroundLoader.Cancel();
         }
 
         public string LogParam = "HEAD --all";//--branches --remotes --tags";
@@ -100,73 +104,71 @@ namespace GitCommands
         {
             if (BackgroundThread)
             {
-                if (backgroundThread != null)
-                {
-                    backgroundThread.Abort();
-                }
-                backgroundThread = new Thread(execute) { IsBackground = true };
-                backgroundThread.Start();
+                backgroundLoader.Load(execute, executed);
             }
             else
             {
-                execute();
+                execute(new FixedLoadingTaskState(false));
+                executed();
             }
         }
 
-        private void execute()
+        private void execute(ILoadingTaskState taskState)
         {
-            try
+            RevisionCount = 0;
+            heads = GetHeads().ToDictionaryOfList(head => head.Guid);
+
+            string formatString =
+                /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
+                /* Hash           */ "%H%n" +
+                /* Parents        */ "%P%n";
+            if (!ShaOnly)
             {
-                RevisionCount = 0;
-                heads = GetHeads();
+                formatString +=
+                    /* Tree                    */ "%T%n" +
+                    /* Author Name             */ "%aN%n" +
+                    /* Author Email            */ "%aE%n" +
+                    /* Author Date             */ "%at%n" +
+                    /* Committer Name          */ "%cN%n" +
+                    /* Committer Date          */ "%ct%n" +
+                    /* Commit message encoding */ "%e%n" + //there is a bug: git does not recode commit message when format is given
+                    /* Commit Message          */ "%s";
+            }
 
-                string formatString =
-                    /* <COMMIT>       */ COMMIT_BEGIN + "%n" +
-                    /* Hash           */ "%H%n" +
-                    /* Parents        */ "%P%n";
-                if (!ShaOnly)
-                {
-                    formatString +=
-                        /* Tree                    */ "%T%n" +
-                        /* Author Name             */ "%aN%n" +
-                        /* Author Email            */ "%aE%n" +
-                        /* Author Date             */ "%at%n" +
-                        /* Committer Name          */ "%cN%n" +
-                        /* Committer Date          */ "%ct%n" +
-                        /* Commit message encoding */ "%e%n" + //there is a bug: git does not recode commit message when format is given
-                        /* Commit Message          */ "%s";
-                }
+            // NOTE:
+            // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
+            // the filename is the next line after the commit-format defined above.
 
-                // NOTE:
-                // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
-                // the filename is the next line after the commit-format defined above.
+            if (Settings.OrderRevisionByDate)
+            {
+                LogParam = " --date-order " + LogParam;
+            }
+            else
+            {
+                LogParam = " --topo-order " + LogParam;
+            }
 
-                if (Settings.OrderRevisionByDate)
-                {
-                    LogParam = " --date-order " + LogParam;
-                }
-                else
-                {
-                    LogParam = " --topo-order " + LogParam;
-                }
+            string arguments = String.Format(CultureInfo.InvariantCulture,
+                "log -z {2} --pretty=format:\"{1}\" {0}",
+                LogParam,
+                formatString,
+                BranchFilter);
 
-                string arguments = String.Format(CultureInfo.InvariantCulture,
-                    "log -z {2} --pretty=format:\"{1}\" {0}",
-                    LogParam,
-                    formatString,
-                    BranchFilter);
-
-                gitGetGraphCommand = new GitCommandsInstance();
+            using (GitCommandsInstance gitGetGraphCommand = new GitCommandsInstance(Module))
+            {
                 gitGetGraphCommand.StreamOutput = true;
-                gitGetGraphCommand.CollectOutput = false;                
-                Encoding LogOutputEncoding = Settings.LogOutputEncoding;
+                gitGetGraphCommand.CollectOutput = false;
+                Encoding LogOutputEncoding = Module.LogOutputEncoding;
                 gitGetGraphCommand.SetupStartInfoCallback = startInfo =>
                 {
-                    startInfo.StandardOutputEncoding = Settings.LosslessEncoding;
-                    startInfo.StandardErrorEncoding = Settings.LosslessEncoding;
-                }; 
+                    startInfo.StandardOutputEncoding = GitModule.LosslessEncoding;
+                    startInfo.StandardErrorEncoding = GitModule.LosslessEncoding;
+                };
 
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
+                
+                if (taskState.IsCanceled())
+                    return;
 
                 previousFileName = null;
                 if (BeginUpdate != null)
@@ -178,7 +180,7 @@ namespace GitCommands
                     line = p.StandardOutput.ReadLine();
                     //commit message is not encoded by git
                     if (nextStep != ReadStep.CommitMessage)
-                        line = GitCommandHelpers.ReEncodeString(line, Settings.LosslessEncoding, LogOutputEncoding);
+                        line = GitModule.ReEncodeString(line, GitModule.LosslessEncoding, LogOutputEncoding);
 
                     if (line != null)
                     {
@@ -187,42 +189,37 @@ namespace GitCommands
                             dataReceived(entry);
                         }
                     }
-                } while (line != null);
-                finishRevision();
-                previousFileName = null;
-            }
-            catch (ThreadAbortException)
-            {
-                //Silently ignore this exception...
-            }
-            catch (Exception ex)
-            {
-                if (Error != null)
-                    Error(this, EventArgs.Empty);
-                ExceptionUtils.ShowException(ex, "Cannot load commit log.");
-                previousFileName = null;
-                return;
-            }
+                } while (line != null && !taskState.IsCanceled());
 
-            if (Exited != null)
-                Exited(this, EventArgs.Empty);
+            }
         }
 
-        private List<GitHead> GetHeads()
+        private void executed()
         {
-            var result = Settings.Module.GetHeads(true);
-            bool validWorkingDir = Settings.Module.ValidWorkingDir();
-            selectedBranchName = validWorkingDir ? Settings.Module.GetSelectedBranch() : string.Empty;
-            GitHead selectedHead = result.Find(head => head.Name == selectedBranchName);
+            finishRevision();
+            previousFileName = null;
+
+            if (Exited != null)
+                Exited(this, EventArgs.Empty);            
+        }
+
+        private IList<GitHead> GetHeads()
+        {
+            var result = Module.GetHeads(true);
+            bool validWorkingDir = Module.ValidWorkingDir();
+            selectedBranchName = validWorkingDir ? Module.GetSelectedBranch() : string.Empty;
+            GitHead selectedHead = result.FirstOrDefault(head => head.Name == selectedBranchName);
 
             if (selectedHead != null)
             {
                 selectedHead.Selected = true;
 
-                GitHead selectedHeadMergeSource =
-                    result.Find(head => head.IsRemote
-                                        && selectedHead.TrackingRemote == head.Remote
-                                        && selectedHead.MergeWith == head.LocalName);
+                var localConfigFile = Module.GetLocalConfig();
+
+                var selectedHeadMergeSource =
+                    result.FirstOrDefault(head => head.IsRemote
+                                        && selectedHead.GetTrackingRemote(localConfigFile) == head.Remote
+                                        && selectedHead.GetMergeWith(localConfigFile) == head.LocalName);
 
                 if (selectedHeadMergeSource != null)
                     selectedHeadMergeSource.SelectedHeadMergeSource = true;
@@ -274,7 +271,7 @@ namespace GitCommands
                     // Sanity check
                     if (line == COMMIT_BEGIN)
                     {
-                        revision = new GitRevision(null);
+                        revision = new GitRevision(Module, null);
                     }
                     else
                     {
@@ -285,16 +282,11 @@ namespace GitCommands
 
                 case ReadStep.Hash:
                     revision.Guid = line;
-                    for (int i = heads.Count - 1; i >= 0; i--)
-                    {
-                        if (heads[i].Guid == revision.Guid)
-                        {
-                            revision.Heads.Add(heads[i]);
 
-                            //Only search for a head once, remove it from list
-                            heads.Remove(heads[i]);
-                        }
-                    }
+                    List<GitHead> headList;
+                    if (heads.TryGetValue(revision.Guid, out headList))
+                        revision.Heads.AddRange(headList);
+                    
                     break;
 
                 case ReadStep.Parents:
@@ -338,7 +330,7 @@ namespace GitCommands
                     break;
                 
                 case ReadStep.CommitMessage:
-                    revision.Message = GitCommandHelpers.ReEncodeCommitMessage(line, revision.MessageEncoding);
+                    revision.Message = Module.ReEncodeCommitMessage(line, revision.MessageEncoding);
 
                     break;
 

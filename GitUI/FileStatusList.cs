@@ -11,7 +11,7 @@ using GitUI.Properties;
 
 namespace GitUI
 {
-    public sealed partial class FileStatusList : GitExtensionsControl
+    public sealed partial class FileStatusList : GitModuleControl
     {
         private const int ImageSize = 16;
 
@@ -27,7 +27,7 @@ namespace GitUI
             FileStatusListBox.DoubleClick += FileStatusListBox_DoubleClick;
             FileStatusListBox.Sorted = true;
             FileStatusListBox.SelectionMode = SelectionMode.MultiExtended;
-#if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
+#if !__MonoCS__ // TODO Drag'n'Drop doesn't work on Mono/Linux
             FileStatusListBox.MouseMove += FileStatusListBox_MouseMove;
             FileStatusListBox.MouseDown += FileStatusListBox_MouseDown;
 #endif
@@ -173,7 +173,7 @@ namespace GitUI
 
                     foreach (GitItemStatus item in SelectedItems)
                     {
-                        string fileName = GitCommands.Settings.WorkingDir + item.Name;
+                        string fileName = Module.WorkingDir + item.Name;
 
                         fileList.Add(fileName.Replace('/', '\\'));
                     }
@@ -243,6 +243,7 @@ namespace GitUI
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public GitItemStatus SelectedItem
         {
@@ -257,6 +258,7 @@ namespace GitUI
             }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public int SelectedIndex
         {
@@ -299,7 +301,7 @@ namespace GitUI
         void FileStatusListBox_DoubleClick(object sender, EventArgs e)
         {
             if (DoubleClick == null)
-                GitUICommands.Instance.StartFileHistoryDialog(this, SelectedItem.Name, Revision);
+                UICommands.StartFileHistoryDialog(this, SelectedItem.Name, Revision);
             else
                 DoubleClick(sender, e);
         }
@@ -332,16 +334,33 @@ namespace GitUI
             if ((e.Bounds.Height - ImageSize) > 1)
                 centeredImageTop = e.Bounds.Top + ((e.Bounds.Height - ImageSize) / 2);
 
+            Bitmap image = null;
             if (gitItemStatus.IsDeleted)
-                e.Graphics.DrawImage(Resources.Removed, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+                image = Resources.Removed;
             else if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
-                e.Graphics.DrawImage(Resources.Added, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+                image = Resources.Added;
             else if (gitItemStatus.IsChanged)
-                e.Graphics.DrawImage(Resources.Modified, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+            {
+                if (!gitItemStatus.IsSubmodule || gitItemStatus.SubmoduleStatus == null)
+                    image = Resources.Modified;
+                else
+                {
+                    var status = gitItemStatus.SubmoduleStatus;
+                    if (status.IsDirty && status.Commit == status.OldCommit)
+                        image = Resources.IconSubmoduleDirty;
+                    else if (status.IsCommitNewer)
+                        image = status.IsDirty ? Resources.IconSubmoduleRevisionUpDirty : Resources.IconSubmoduleRevisionUp;
+                    else
+                        image = status.IsDirty ? Resources.IconSubmoduleRevisionDownDirty : Resources.IconSubmoduleRevisionDown;
+                }                
+            }
             else if (gitItemStatus.IsRenamed)
-                e.Graphics.DrawImage(Resources.Renamed, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+                image = Resources.Renamed;
             else if (gitItemStatus.IsCopied)
-                e.Graphics.DrawImage(Resources.Copied, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+                image = Resources.Copied;
+            
+            if (image != null)
+                e.Graphics.DrawImage(image, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
 
             string text = GetItemText(e.Graphics, gitItemStatus);
 
@@ -357,11 +376,13 @@ namespace GitUI
         }
 
         [Browsable(false)]
+        [DefaultValue(true)]
         public bool IsEmpty
         {
-            get { return GitItemStatuses == null || GitItemStatuses.Count == 0; }
+            get { return GitItemStatuses == null || !GitItemStatuses.Any(); }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public IList<GitItemStatus> GitItemStatuses
         {
@@ -371,7 +392,7 @@ namespace GitUI
             }
             set
             {
-                if (value == null || value.Count == 0)
+                if (value == null || !value.Any())
                     NoFiles.Visible = true;
                 else
                     NoFiles.Visible = false;
@@ -379,7 +400,7 @@ namespace GitUI
                 FileStatusListBox.HorizontalExtent = 0;
                 int prevSelectedIndex = FileStatusListBox.SelectedIndex;
                 FileStatusListBox.DataSource = value;
-                if (value != null && value.Count == 0 && prevSelectedIndex >= 0)
+                if (value != null && !value.Any() && prevSelectedIndex >= 0)
                 {
                     //bug in the ListBox control where supplying an empty list will not trigger a SelectedIndexChanged event, so we force it to trigger
                     FileStatusListBox_SelectedIndexChanged(this, EventArgs.Empty);
@@ -391,6 +412,7 @@ namespace GitUI
         /// Gets or sets the revision.
         /// </summary>
         /// <value>The revision.</value>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public GitRevision Revision { get; set; }
 

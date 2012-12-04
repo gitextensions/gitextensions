@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using GitUIPluginInterfaces.RepositoryHosts;
-using GitUIPluginInterfaces;
-using Git.hub;
-using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using Git.hub;
+using GitCommands.Config;
+using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace Github3
 {
@@ -64,7 +64,7 @@ namespace Github3
         }
     }
 
-    public class Github3 : IRepositoryHostPlugin
+    public class Github3 : GitPluginBase, IRepositoryHostPlugin
     {
         internal static Github3 instance;
         internal static Client github;
@@ -78,16 +78,19 @@ namespace Github3
             github = new Client();
         }
 
-        public string Description
+        public override string Description
         {
             get { return "Github"; }
         }
 
-        public IGitPluginSettingsContainer Settings { get; set; }
-
-        public void Register(IGitUICommands gitUiCommands)
+        protected override void RegisterSettings()
         {
+            base.RegisterSettings();
             Settings.AddSetting("OAuth Token", "");
+        }
+
+        public override void Register(IGitUICommands gitUiCommands)
+        {
 
             if (GithubLoginInfo.OAuthToken.Length > 0)
             {
@@ -95,11 +98,11 @@ namespace Github3
             }
         }
 
-        public bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             if (GithubLoginInfo.OAuthToken.Length == 0)
             {
-                new OAuth().ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+                using (var frm = new OAuth()) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
             }
             else
             {
@@ -112,12 +115,12 @@ namespace Github3
 
         public IList<IHostedRepository> SearchForRepository(string search)
         {
-            return github.searchRepositories(search).Select(repo => (IHostedRepository) new GithubRepo(repo)).ToList();
+            return github.searchRepositories(search).Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
         }
 
         public IList<IHostedRepository> GetRepositoriesOfUser(string user)
         {
-            return github.getRepositories(user).Select(repo => (IHostedRepository) new GithubRepo(repo)).ToList();
+            return github.getRepositories(user).Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
         }
 
         public IHostedRepository GetRepository(string user, string repositoryName)
@@ -131,20 +134,23 @@ namespace Github3
         }
 
         public bool ConfigurationOk { get { return true; } }
-        public bool CurrentWorkingDirRepoIsRelevantToMe { get { return GetHostedRemotesForCurrentWorkingDirRepo().Count > 0; } }
+        public bool GitModuleIsRelevantToMe(IGitModule aModule)
+        {
+            return GetHostedRemotesForModule(aModule).Count > 0;
+        }
 
         /// <summary>
         /// Returns all relevant github-remotes for the current working directory
         /// </summary>
         /// <returns></returns>
-        public List<IHostedRemote> GetHostedRemotesForCurrentWorkingDirRepo()
+        public List<IHostedRemote> GetHostedRemotesForModule(IGitModule aModule)
         {
             var repoInfos = new List<IHostedRemote>();
 
-            string[] remotes = GitCommands.Settings.Module.GetRemotes(false);
-            foreach(string remote in remotes)
+            string[] remotes = aModule.GetRemotes(false);
+            foreach (string remote in remotes)
             {
-                var url = GitCommands.Settings.Module.GetSetting(string.Format("remote.{0}.url", remote));
+                var url = aModule.GetISetting(string.Format(SettingKeyString.RemoteUrl, remote));
                 if (string.IsNullOrEmpty(url))
                     continue;
 

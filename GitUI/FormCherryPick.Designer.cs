@@ -28,168 +28,204 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.label1 = new System.Windows.Forms.Label();
-            this.RevisionGrid = new GitUI.RevisionGrid();
-            this.autoParent = new System.Windows.Forms.CheckBox();
-            this.AutoCommit = new System.Windows.Forms.CheckBox();
-            this.CherryPick = new System.Windows.Forms.Button();
+            this.Pick = new System.Windows.Forms.Button();
+            this.btnChooseRevision = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.panelParentsList = new System.Windows.Forms.Panel();
+            this.ParentsLabel = new System.Windows.Forms.Label();
+            this.ParentsList = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.checkAddReference = new System.Windows.Forms.CheckBox();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
+            this.AutoCommit = new System.Windows.Forms.CheckBox();
+            this.BranchInfo = new System.Windows.Forms.Label();
+            this.commitSummaryUserControl1 = new GitUI.CommitSummaryUserControl();
+            this.panelParentsList.SuspendLayout();
             this.SuspendLayout();
             // 
-            // splitContainer1
+            // Pick
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.Pick.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Pick.Location = new System.Drawing.Point(533, 356);
+            this.Pick.Name = "Pick";
+            this.Pick.Size = new System.Drawing.Size(109, 25);
+            this.Pick.TabIndex = 10;
+            this.Pick.Text = "Cherry pick";
+            this.Pick.UseVisualStyleBackColor = true;
+            this.Pick.Click += new System.EventHandler(this.Revert_Click);
             // 
-            // splitContainer1.Panel1
+            // btnChooseRevision
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
+            this.btnChooseRevision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnChooseRevision.Image = global::GitUI.Properties.Resources.IconSelectRevision;
+            this.btnChooseRevision.Location = new System.Drawing.Point(617, 76);
+            this.btnChooseRevision.Name = "btnChooseRevision";
+            this.btnChooseRevision.Size = new System.Drawing.Size(25, 24);
+            this.btnChooseRevision.TabIndex = 33;
+            this.btnChooseRevision.UseVisualStyleBackColor = true;
+            this.btnChooseRevision.Click += new System.EventHandler(this.btnChooseRevision_Click);
             // 
-            // splitContainer1.Panel2
+            // label2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.checkAddReference);
-            this.splitContainer1.Panel2.Controls.Add(this.autoParent);
-            this.splitContainer1.Panel2.Controls.Add(this.AutoCommit);
-            this.splitContainer1.Panel2.Controls.Add(this.CherryPick);
-            this.splitContainer1.Size = new System.Drawing.Size(638, 387);
-            this.splitContainer1.SplitterDistance = 303;
-            this.splitContainer1.TabIndex = 0;
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(561, 43);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(91, 30);
+            this.label2.TabIndex = 34;
+            this.label2.Text = "Choose another\r\nrevision:";
             // 
-            // splitContainer2
+            // panelParentsList
             // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.panelParentsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelParentsList.Controls.Add(this.ParentsLabel);
+            this.panelParentsList.Controls.Add(this.ParentsList);
+            this.panelParentsList.Location = new System.Drawing.Point(7, 204);
+            this.panelParentsList.Name = "panelParentsList";
+            this.panelParentsList.Size = new System.Drawing.Size(645, 131);
+            this.panelParentsList.TabIndex = 16;
+            this.panelParentsList.Visible = false;
             // 
-            // splitContainer2.Panel1
+            // ParentsLabel
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.label1);
+            this.ParentsLabel.AutoSize = true;
+            this.ParentsLabel.Location = new System.Drawing.Point(6, 8);
+            this.ParentsLabel.Name = "ParentsLabel";
+            this.ParentsLabel.Size = new System.Drawing.Size(207, 15);
+            this.ParentsLabel.TabIndex = 13;
+            this.ParentsLabel.Text = "This commit is a merge, select parent:";
             // 
-            // splitContainer2.Panel2
+            // ParentsList
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.RevisionGrid);
-            this.splitContainer2.Size = new System.Drawing.Size(638, 303);
-            this.splitContainer2.SplitterDistance = 25;
-            this.splitContainer2.TabIndex = 0;
+            this.ParentsList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.ParentsList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ParentsList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3,
+            this.columnHeader4});
+            this.ParentsList.FullRowSelect = true;
+            this.ParentsList.HideSelection = false;
+            this.ParentsList.Location = new System.Drawing.Point(6, 26);
+            this.ParentsList.MultiSelect = false;
+            this.ParentsList.Name = "ParentsList";
+            this.ParentsList.Size = new System.Drawing.Size(629, 99);
+            this.ParentsList.TabIndex = 12;
+            this.ParentsList.UseCompatibleStateImageBehavior = false;
+            this.ParentsList.View = System.Windows.Forms.View.Details;
             // 
-            // label1
+            // columnHeader1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(544, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Select a commit you want to cherry pick. The commit will be recommitted on top of" +
-                " the current head.";
+            this.columnHeader1.Text = "No.";
+            this.columnHeader1.Width = 38;
             // 
-            // RevisionGrid
+            // columnHeader2
             // 
-            this.RevisionGrid.AllowGraphWithFilter = false;
-            this.RevisionGrid.BranchFilter = "";
-            this.RevisionGrid.CurrentCheckout = "";
-            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionGrid.Filter = "";
-            this.RevisionGrid.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.RevisionGrid.InMemAuthorFilter = "";
-            this.RevisionGrid.InMemCommitterFilter = "";
-            this.RevisionGrid.InMemFilterIgnoreCase = false;
-            this.RevisionGrid.InMemMessageFilter = "";
-            this.RevisionGrid.LastRow = 0;
-            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
-            this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.NormalFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.RevisionGrid.Size = new System.Drawing.Size(638, 274);
-            this.RevisionGrid.TabIndex = 0;
+            this.columnHeader2.Text = "Message";
+            this.columnHeader2.Width = 291;
             // 
-            // autoParent
+            // columnHeader3
             // 
-            this.autoParent.AutoSize = true;
-            this.autoParent.Checked = true;
-            this.autoParent.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.autoParent.Location = new System.Drawing.Point(12, 32);
-            this.autoParent.Name = "autoParent";
-            this.autoParent.Size = new System.Drawing.Size(312, 19);
-            this.autoParent.TabIndex = 2;
-            this.autoParent.Text = "Automatically set parent to 1 when commit is a merge";
-            this.autoParent.UseVisualStyleBackColor = true;
+            this.columnHeader3.Text = "Author";
+            this.columnHeader3.Width = 120;
             // 
-            // AutoCommit
+            // columnHeader4
             // 
-            this.AutoCommit.AutoSize = true;
-            this.AutoCommit.Checked = true;
-            this.AutoCommit.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.AutoCommit.Location = new System.Drawing.Point(12, 7);
-            this.AutoCommit.Name = "AutoCommit";
-            this.AutoCommit.Size = new System.Drawing.Size(375, 19);
-            this.AutoCommit.TabIndex = 1;
-            this.AutoCommit.Text = "Automatically create a commit  when there are no merge conflicts";
-            this.AutoCommit.UseVisualStyleBackColor = true;
-            // 
-            // CherryPick
-            // 
-            this.CherryPick.Location = new System.Drawing.Point(516, 51);
-            this.CherryPick.Name = "CherryPick";
-            this.CherryPick.Size = new System.Drawing.Size(110, 25);
-            this.CherryPick.TabIndex = 0;
-            this.CherryPick.Text = "Cherry pick";
-            this.CherryPick.UseVisualStyleBackColor = true;
-            this.CherryPick.Click += new System.EventHandler(this.CherryPick_Click);
+            this.columnHeader4.Text = "Date";
+            this.columnHeader4.Width = 80;
             // 
             // checkAddReference
             // 
+            this.checkAddReference.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkAddReference.AutoSize = true;
-            this.checkAddReference.Location = new System.Drawing.Point(12, 57);
+            this.checkAddReference.Location = new System.Drawing.Point(12, 370);
             this.checkAddReference.Name = "checkAddReference";
-            this.checkAddReference.Size = new System.Drawing.Size(145, 19);
-            this.checkAddReference.TabIndex = 3;
-            this.checkAddReference.Text = "Add commit reference";
+            this.checkAddReference.Size = new System.Drawing.Size(253, 19);
+            this.checkAddReference.TabIndex = 14;
+            this.checkAddReference.Text = "Add commit reference to commit message";
             this.checkAddReference.UseVisualStyleBackColor = true;
+            // 
+            // AutoCommit
+            // 
+            this.AutoCommit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.AutoCommit.AutoSize = true;
+            this.AutoCommit.Location = new System.Drawing.Point(12, 345);
+            this.AutoCommit.Name = "AutoCommit";
+            this.AutoCommit.Size = new System.Drawing.Size(189, 19);
+            this.AutoCommit.TabIndex = 11;
+            this.AutoCommit.Text = "Automatically create a commit";
+            this.AutoCommit.UseVisualStyleBackColor = true;
+            // 
+            // BranchInfo
+            // 
+            this.BranchInfo.AutoSize = true;
+            this.BranchInfo.Location = new System.Drawing.Point(12, 9);
+            this.BranchInfo.Name = "BranchInfo";
+            this.BranchInfo.Size = new System.Drawing.Size(137, 15);
+            this.BranchInfo.TabIndex = 5;
+            this.BranchInfo.Text = "Cherry pick this commit:";
+            // 
+            // commitSummaryUserControl1
+            // 
+            this.commitSummaryUserControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.commitSummaryUserControl1.AutoSize = true;
+            this.commitSummaryUserControl1.Location = new System.Drawing.Point(11, 35);
+            this.commitSummaryUserControl1.MinimumSize = new System.Drawing.Size(440, 160);
+            this.commitSummaryUserControl1.Name = "commitSummaryUserControl1";
+            this.commitSummaryUserControl1.Revision = null;
+            this.commitSummaryUserControl1.Size = new System.Drawing.Size(545, 160);
+            this.commitSummaryUserControl1.TabIndex = 15;
             // 
             // FormCherryPick
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(638, 387);
-            this.Controls.Add(this.splitContainer1);
-            this.MinimumSize = new System.Drawing.Size(400, 200);
+            this.AcceptButton = this.Pick;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(654, 392);
+            this.Controls.Add(this.btnChooseRevision);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.panelParentsList);
+            this.Controls.Add(this.commitSummaryUserControl1);
+            this.Controls.Add(this.checkAddReference);
+            this.Controls.Add(this.AutoCommit);
+            this.Controls.Add(this.Pick);
+            this.Controls.Add(this.BranchInfo);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(670, 430);
             this.Name = "FormCherryPick";
-            this.Text = "Cherry pick";
-            this.Load += new System.EventHandler(this.FormCherryPick_Load);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCherryPick_FormClosing);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
-            this.splitContainer1.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel1.PerformLayout();
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            this.splitContainer2.ResumeLayout(false);
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Cherry pick commit";
+            this.Load += new System.EventHandler(this.FormCherryPickCommitSmall_Load);
+            this.panelParentsList.ResumeLayout(false);
+            this.panelParentsList.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.Label label1;
-        private RevisionGrid RevisionGrid;
-        private System.Windows.Forms.Button CherryPick;
+        private System.Windows.Forms.Label BranchInfo;
+        private System.Windows.Forms.Button Pick;
         private System.Windows.Forms.CheckBox AutoCommit;
-        private System.Windows.Forms.CheckBox autoParent;
+        private System.Windows.Forms.ListView ParentsList;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.Label ParentsLabel;
         private System.Windows.Forms.CheckBox checkAddReference;
+        private CommitSummaryUserControl commitSummaryUserControl1;
+        private System.Windows.Forms.Panel panelParentsList;
+        private System.Windows.Forms.Button btnChooseRevision;
+        private System.Windows.Forms.Label label2;
     }
 }

@@ -43,14 +43,14 @@
             panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             panel1.Location = new System.Drawing.Point(0, 48);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(459, 41);
+            panel1.Size = new System.Drawing.Size(461, 41);
             panel1.TabIndex = 3;
             // 
             // btnCancel
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(272, 4);
+            this.btnCancel.Location = new System.Drawing.Point(277, 9);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(178, 25);
             this.btnCancel.TabIndex = 4;
@@ -62,7 +62,7 @@
             // 
             this.Revert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Revert.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Revert.Location = new System.Drawing.Point(88, 4);
+            this.Revert.Location = new System.Drawing.Point(93, 9);
             this.Revert.Name = "Revert";
             this.Revert.Size = new System.Drawing.Size(178, 25);
             this.Revert.TabIndex = 3;
@@ -78,18 +78,18 @@
             this._NO_TRANSLATE_RevertLabel.MaximumSize = new System.Drawing.Size(460, 0);
             this._NO_TRANSLATE_RevertLabel.Name = "_NO_TRANSLATE_RevertLabel";
             this._NO_TRANSLATE_RevertLabel.Padding = new System.Windows.Forms.Padding(15);
-            this._NO_TRANSLATE_RevertLabel.Size = new System.Drawing.Size(80, 50);
+            this._NO_TRANSLATE_RevertLabel.Size = new System.Drawing.Size(68, 45);
             this._NO_TRANSLATE_RevertLabel.TabIndex = 5;
             this._NO_TRANSLATE_RevertLabel.Text = "label1";
             // 
             // FormRevert
             // 
             this.AcceptButton = this.Revert;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(459, 89);
+            this.ClientSize = new System.Drawing.Size(461, 89);
             this.Controls.Add(this._NO_TRANSLATE_RevertLabel);
             this.Controls.Add(panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;

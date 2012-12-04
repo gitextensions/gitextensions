@@ -78,9 +78,9 @@ namespace GitUI
 
             if (IsFixHome())
             {
-                if (MessageBox.Show(string.Format(_gitGlobalConfigNotFound.Text,Environment.GetEnvironmentVariable("HOME")),
+                if (MessageBox.Show(string.Format(_gitGlobalConfigNotFound.Text, Environment.GetEnvironmentVariable("HOME")),
                         _gitGlobalConfigNotFoundCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    new FormFixHome().ShowDialog();
+                    using (var frm = new FormFixHome()) frm.ShowDialog();
             }
         }
 
@@ -172,7 +172,7 @@ namespace GitUI
                     otherHomeDir.Text = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
                     return;
                 }
-                            }
+            }
             catch
             {
                 //Exception occured while checking for home dir. 
@@ -212,12 +212,14 @@ namespace GitUI
 
         private void otherHomeBrowse_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog browseDialog = new FolderBrowserDialog();
-            browseDialog.SelectedPath = Environment.GetEnvironmentVariable("USERPROFILE");
-
-            if (browseDialog.ShowDialog(this) == DialogResult.OK)
+            using (FolderBrowserDialog browseDialog = new FolderBrowserDialog())
             {
-                otherHomeDir.Text = browseDialog.SelectedPath;
+                browseDialog.SelectedPath = Environment.GetEnvironmentVariable("USERPROFILE");
+
+                if (browseDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    otherHomeDir.Text = browseDialog.SelectedPath;
+                }
             }
         }
     }
