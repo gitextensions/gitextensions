@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Windows.Forms;
-using System.Drawing;
-using System.ComponentModel;
-using ResourceManager;
-using ResourceManager.Translation;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
@@ -12,9 +12,17 @@ namespace GitUI
     {
         public GitExtensionsControl()
         {
-            Font = SystemFonts.MessageBoxFont;
+            Font = Settings.Font;
 
             Load += GitExtensionsControl_Load;
+        }
+
+        [Browsable(false)] // because we always read from settings
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public override Font Font
+        {
+            get { return base.Font; }
+            set { base.Font = value; }
         }
 
         private bool translated;
@@ -32,6 +40,20 @@ namespace GitUI
 
             return isComponentInDesignMode;
         }
+
+        protected virtual void OnRuntimeLoad(EventArgs e)
+        {
+
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            if (!CheckComponent(this))
+                OnRuntimeLoad(e);
+        }
+
 
         void GitExtensionsControl_Load(object sender, EventArgs e)
         {
@@ -91,20 +113,19 @@ namespace GitUI
         /// <param name="command"></param>
         protected virtual bool ExecuteCommand(int command)
         {
-            ExecuteScriptCommand(command, Keys.None);
-            return true;
+            return false;
         }
-        protected virtual bool ExecuteScriptCommand(int command, Keys keyData)
-        {
-            var curScripts = GitUI.Script.ScriptManager.GetScripts();
 
-            foreach (GitUI.Script.ScriptInfo s in curScripts)
-            {
-                if (s.HotkeyCommandIdentifier == command)
-                    GitUI.Script.ScriptRunner.RunScript(s.Name, null);
-            }
-            return true;
-        }
         #endregion
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // GitExtensionsControl
+            // 
+            this.Name = "GitExtensionsControl";
+            this.ResumeLayout(false);
+        }
     }
 }

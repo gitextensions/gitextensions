@@ -7,8 +7,9 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+#if FULL_PROFILE
 using System.Windows.Forms.Design;
-
+#endif
 using NetSpell.SpellChecker.Dictionary.Affix;
 using NetSpell.SpellChecker.Dictionary.Phonetic;
 
@@ -527,7 +528,7 @@ namespace NetSpell.SpellChecker.Dictionary
                         // loop through conditions
                         for (int i = 0; i < rule.ConditionCount; i++)
                         {
-                            int charCode = (int)tempWord[i];
+                            int charCode = tempWord[i];
                             if ((rule.Condition[charCode] & (1 << i)) == (1 << i))
                             {
                                 passCount++; // condition passed
@@ -625,7 +626,7 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     The file name for the main dictionary
         /// </summary>
         [DefaultValue("en-US.dic")]
-        [CategoryAttribute("Dictionary")]
+        [Category("Dictionary")]
         [Description("The file name for the main dictionary")]
         [NotifyParentProperty(true)]
         public string DictionaryFile
@@ -646,9 +647,11 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     Folder containing the dictionaries
         /// </summary>
         [DefaultValue("")]
-        [CategoryAttribute("Dictionary")]
+        [Category("Dictionary")]
         [Description("The folder containing dictionaries")]
+#if FULL_PROFILE
         [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
+#endif
         [NotifyParentProperty(true)]
         public string DictionaryFolder
         {
@@ -657,14 +660,14 @@ namespace NetSpell.SpellChecker.Dictionary
         }
 
         /// <summary>
-        ///     Set this to true to automaticly create a user dictionary when
+        ///     Set this to true to automatically create a user dictionary when
         ///     a word is added.
         /// </summary>
         /// <remarks>
         ///		This should be set to false in a web environment
         /// </remarks>
         [DefaultValue(true)]
-        [CategoryAttribute("Options")]
+        [Category("Options")]
         [Description("Set this to true to automaticly create a user dictionary")]
         [NotifyParentProperty(true)]
         public bool EnableUserFile
@@ -742,7 +745,7 @@ namespace NetSpell.SpellChecker.Dictionary
         ///     The file name for the user word list for this dictionary
         /// </summary>
         [DefaultValue("user.dic")]
-        [CategoryAttribute("Dictionary")]
+        [Category("Dictionary")]
         [Description("The file name for the user word list for this dictionary")]
         [NotifyParentProperty(true)]
         public string UserFile

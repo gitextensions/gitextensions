@@ -30,6 +30,9 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.PluginList = new System.Windows.Forms.ListBox();
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+#endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
@@ -51,25 +54,28 @@
             // 
             this.PluginList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PluginList.FormattingEnabled = true;
-            this.PluginList.ItemHeight = 16;
+            this.PluginList.ItemHeight = 15;
             this.PluginList.Location = new System.Drawing.Point(0, 0);
             this.PluginList.Name = "PluginList";
-            this.PluginList.Size = new System.Drawing.Size(213, 276);
+            this.PluginList.Size = new System.Drawing.Size(213, 291);
             this.PluginList.TabIndex = 1;
             this.PluginList.SelectedIndexChanged += new System.EventHandler(this.PluginListSelectedIndexChanged);
             // 
             // FormPluginSettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(885, 291);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormPluginSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Plugin settings";
-            this.Load += new System.EventHandler(this.FormPluginSettingsLoad);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormPluginSettingsFormClosing);
+            this.Load += new System.EventHandler(this.FormPluginSettingsLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+#endif
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 

@@ -3,28 +3,22 @@ using GitUIPluginInterfaces;
 
 namespace GitImpact
 {
-    public class GitImpactPlugin : IGitPluginForRepository
+    public class GitImpactPlugin : GitPluginBase, IGitPluginForRepository
     {
         #region IGitPlugin Members
 
-        public string Description
+        public override string Description
         {
             get { return "Impact Graph"; }
         }
 
-        public IGitPluginSettingsContainer Settings { get; set; }
-
-        public void Register(IGitUICommands gitUiCommands)
+        public override bool Execute(GitUIBaseEventArgs gitUIEventArgs)
         {
-        }
-
-        public bool Execute(GitUIBaseEventArgs gitUiCommands)
-        {
-            if (string.IsNullOrEmpty(gitUiCommands.GitWorkingDir))
+            if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.GitWorkingDir))
                 return false;
 
-            FormImpact form = new FormImpact();
-            form.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            using (FormImpact form = new FormImpact(gitUIEventArgs.GitModule))
+                form.ShowDialog(gitUIEventArgs.OwnerForm as IWin32Window);
             return false;
         }
 

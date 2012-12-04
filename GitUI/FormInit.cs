@@ -24,22 +24,14 @@ namespace GitUI
         private readonly TranslationString _initMsgBoxCaption =
             new TranslationString("Initialize new repository");
 
-        
+        private readonly GitModuleChangedEventHandler GitModuleChanged;
 
-        public FormInit(string dir)
+        public FormInit(string dir, GitModuleChangedEventHandler GitModuleChanged)
         {
+            this.GitModuleChanged = GitModuleChanged;
             InitializeComponent();
             Translate();
             Directory.Text = dir;
-        }
-
-        public FormInit()
-        {
-            InitializeComponent();
-            Translate();
-
-            if (!Settings.Module.ValidWorkingDir())
-                Directory.Text = Settings.WorkingDir;
         }
 
         private void DirectoryDropDown(object sender, EventArgs e)
@@ -62,12 +54,15 @@ namespace GitUI
                 return;
             }
 
-            Settings.WorkingDir = Directory.Text;
+            GitModule module = new GitModule(Directory.Text);
 
-            if (!System.IO.Directory.Exists(Settings.WorkingDir))
-                System.IO.Directory.CreateDirectory(Settings.WorkingDir);
+            if (!System.IO.Directory.Exists(module.WorkingDir))
+                System.IO.Directory.CreateDirectory(module.WorkingDir);
 
-            MessageBox.Show(this, Settings.Module.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text);
+            MessageBox.Show(this, module.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text);
+
+            if (GitModuleChanged != null)
+                GitModuleChanged(module);
 
             Repositories.AddMostRecentRepository(Directory.Text);
 
@@ -76,10 +71,12 @@ namespace GitUI
 
         private void BrowseClick(object sender, EventArgs e)
         {
-            var browseDialog = new FolderBrowserDialog();
+            using (var browseDialog = new FolderBrowserDialog())
+            {
 
-            if (browseDialog.ShowDialog(this) == DialogResult.OK)
-                Directory.Text = browseDialog.SelectedPath;
+                if (browseDialog.ShowDialog(this) == DialogResult.OK)
+                    Directory.Text = browseDialog.SelectedPath;
+            }
         }
     }
 }

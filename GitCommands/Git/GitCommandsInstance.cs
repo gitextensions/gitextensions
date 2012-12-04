@@ -1,22 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Security.Permissions;
 using System.Text;
+using System.Windows.Forms;
 using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
     public delegate void SetupStartInfo(ProcessStartInfo startInfo);
     
-    public sealed class GitCommandsInstance : IGitCommands, IDisposable
+    public sealed class GitCommandsInstance : IDisposable
     {
-        private readonly object processLock = new object();
+        private Process _myProcess;
+        private readonly object _processLock = new object();
+
         public SetupStartInfo SetupStartInfoCallback { get; set; }
+        public readonly string WorkingDirectory;
+
+        public GitCommandsInstance(IGitModule module)
+            : this(module.GitWorkingDir)
+        {
+        }
+
+        public GitCommandsInstance(string aWorkingDirectory)
+        {
+            WorkingDirectory = aWorkingDirectory;
+        }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public Process CmdStartProcess(string cmd, string arguments, string workingDir)
+        public Process CmdStartProcess(string cmd, string arguments)
         {
             try
             {
@@ -26,14 +38,17 @@ namespace GitCommands
 
                 Kill();
 
-                Settings.GitLog.Log(cmd + " " + arguments);
+                string quotedCmd = cmd;
+                if (quotedCmd.IndexOf(' ') != -1)
+                    quotedCmd = quotedCmd.Quote();
+                Settings.GitLog.Log(quotedCmd + " " + arguments);
 
                 //process used to execute external commands
-                var process = new Process { StartInfo = GitCommandHelpers.CreateProcessStartInfo() };
+                var process = new Process { StartInfo = GitCommandHelpers.CreateProcessStartInfo(null) };
                 process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
                 process.StartInfo.FileName = cmd;
                 process.StartInfo.Arguments = arguments;
-                process.StartInfo.WorkingDirectory = workingDir;
+                process.StartInfo.WorkingDirectory = WorkingDirectory;
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
                 process.StartInfo.LoadUserProfile = true;
                 if (SetupStartInfoCallback != null)
@@ -50,9 +65,9 @@ namespace GitCommands
 
                 process.Exited += ProcessExited;
                 process.Start();
-                lock (processLock)
+                lock (_processLock)
                 {
-                    myProcess = process;
+                    _myProcess = process;
                 }
                 if (!StreamOutput)
                 {
@@ -64,33 +79,29 @@ namespace GitCommands
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Error running command: '" + cmd + " " + arguments, ex);
+                ex.Data.Add("command", cmd);
+                ex.Data.Add("arguments", arguments);
+                throw ex;
             }
-        }
-
-        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public Process CmdStartProcess(string cmd, string arguments)
-        {
-            return CmdStartProcess(cmd, arguments, Settings.WorkingDir);
         }
 
         public void Kill()
         {
-            lock (processLock)
+            lock (_processLock)
             {
                 //If there was another process running, kill it
-                if (myProcess == null)
+                if (_myProcess == null)
                     return;
                 try
                 {
-                    if (!myProcess.HasExited)
+                    if (!_myProcess.HasExited)
                     {
-                        myProcess.Exited -= ProcessExited;
-                        myProcess.Kill();
+                        _myProcess.Exited -= ProcessExited;
+                        _myProcess.TerminateTree();
                     }
-                    if (myProcess != null) // process is null here if filter is a slow diff
+                    if (_myProcess != null) // process is null here if filter is a slow diff
                     {
-                        myProcess.Close();
+                        _myProcess.Close();
                     }
                 }
                 catch (Exception ex)
@@ -105,16 +116,6 @@ namespace GitCommands
             Kill();
         }
 
-        public string RunGit(string arguments)
-        {
-            return Settings.Module.RunGitCmd(arguments);
-        }
-
-        public string RunBatchFile(string batchFile)
-        {
-            return Settings.Module.RunBatchFile(batchFile);
-        }
-
         public event DataReceivedEventHandler DataReceived;
         public event EventHandler Exited;
 
@@ -122,23 +123,23 @@ namespace GitCommands
         {
             try
             {
-                if (myProcess != null)
+                if (_myProcess != null)
                 {
-                    ExitCode = myProcess.ExitCode;
+                    ExitCode = _myProcess.ExitCode;
                     if (Exited != null)
                     {
-                        //The process is exited already, but this command waits also until all output is recieved.
-                        //Only WaitForExit when someone is conntected to the exited event. For some reason a
+                        //The process is exited already, but this command waits also until all output is received.
+                        //Only WaitForExit when someone is connected to the exited event. For some reason a
                         //null reference is thrown sometimes when staging/unstaging in the commit dialog when
                         //we wait for exit, probably a timing issue... 
-                        myProcess.WaitForExit();
+                        _myProcess.WaitForExit();
 
                         Exited(this, e);
                     }
 
-                    lock (processLock)
+                    lock (_processLock)
                     {
-                        myProcess = null;
+                        _myProcess = null;
                     }
                 }
             }
@@ -163,37 +164,11 @@ namespace GitCommands
                 DataReceived(this, e);
         }
 
-        public IList<IGitSubmodule> GetSubmodules()
-        {
-            var submodules = Settings.Module.RunGitCmd("submodule status").Split('\n');
-
-            IList<IGitSubmodule> submoduleList = new List<IGitSubmodule>();
-
-            string lastLine = null;
-
-            foreach (var submodule in submodules)
-            {
-                if (submodule.Length < 43)
-                    continue;
-
-                if (submodule.Equals(lastLine))
-                    continue;
-
-                lastLine = submodule;
-
-                submoduleList.Add(GitModule.CreateGitSubmodule(submodule));
-            }
-
-            return submoduleList;
-        }
-
         public bool CollectOutput = true;
         public bool StreamOutput;
         public int ExitCode { get; set; }
-        public bool IsRunning { get { return myProcess != null && !myProcess.HasExited; } }
+        public bool IsRunning { get { return _myProcess != null && !_myProcess.HasExited; } }
         public StringBuilder Output { get; private set; }
         public StringBuilder ErrorOutput { get; private set; }
-
-        private Process myProcess;
     }
 }

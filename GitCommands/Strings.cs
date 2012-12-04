@@ -1,5 +1,5 @@
-﻿using ResourceManager.Translation;
-using ResourceManager;
+﻿using System;
+using ResourceManager.Translation;
 
 namespace GitCommands
 {
@@ -68,6 +68,31 @@ namespace GitCommands
             return Instance._messageText.Text;
         }
 
+        public static string GetParentsText()
+        {
+            return Instance._parentsText.Text;
+        }
+
+        public static string GetChildrenText()
+        {
+            return Instance._childrenText.Text;
+        }
+
+        public static string GetCurrentWorkingDirChanges()
+        {
+            return Instance._currentWorkingDirChanges.Text;
+        }
+
+        public static string GetCurrentIndex()
+        {
+            return Instance._currentIndex.Text;
+        }
+
+        public static string GetLoadingData()
+        {
+            return Instance._LoadingData.Text;
+        }
+
         private readonly TranslationString _dateText       = new TranslationString("Date");
         private readonly TranslationString _authorText     = new TranslationString("Author");
         private readonly TranslationString _authorDateText = new TranslationString("Author date");
@@ -75,75 +100,59 @@ namespace GitCommands
         private readonly TranslationString _commitDateText = new TranslationString("Commit date");
         private readonly TranslationString _commitHashText = new TranslationString("Commit hash");
         private readonly TranslationString _messageText    = new TranslationString("Message");
+        private readonly TranslationString _parentsText    = new TranslationString("Parent(s)");
+        private readonly TranslationString _childrenText = new TranslationString("Children");
+        private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current uncommitted changes");
+        private readonly TranslationString _currentIndex = new TranslationString("Commit index");
+        private readonly TranslationString _LoadingData = new TranslationString("Loading data...");
 
-        public static string Get1SecondAgoText()
+
+        public static string GetNSecondsAgoText(int value)
         {
-            return Instance._secondAgo.Text;
+            if (Math.Abs(value) == 1)
+                return string.Format(Instance._secondAgo.Text, value.ToString());
+            return string.Format(Instance._secondsAgo.Text, value.ToString());
         }
 
-        public static string GetNSecondsAgoText()
+        public static string GetNMinutesAgoText(int value)
         {
-            return Instance._secondsAgo.Text;
+            if (Math.Abs(value) == 1)
+                return string.Format(Instance._minuteAgo.Text, value.ToString());
+            return string.Format(Instance._minutesAgo.Text, value.ToString());
+        }
+        public static string GetNHoursAgoText(int value)
+        {
+            if (Math.Abs(value) == 1)
+                return string.Format(Instance._hourAgo.Text, value.ToString());
+            return string.Format(Instance._hoursAgo.Text, value.ToString());
         }
 
-        public static string Get1MinuteAgoText()
+        public static string GetNDaysAgoText(int value)
         {
-            return Instance._minuteAgo.Text;
+            if (Math.Abs(value) == 1)
+                return string.Format(Instance._dayAgo.Text, value.ToString());
+            return string.Format(Instance._daysAgo.Text, value.ToString());
         }
 
-        public static string GetNMinutesAgoText()
+        public static string GetNWeeksAgoText(int value)
         {
-            return Instance._minutesAgo.Text;
+            if (Math.Abs(value) == 1)
+                return string.Format(Instance._weekAgo.Text, value.ToString());
+            return string.Format(Instance._weeksAgo.Text, value.ToString());
         }
 
-        public static string Get1HourAgoText()
+        public static string GetNMonthsAgoText(int value)
         {
-            return Instance._hourAgo.Text;
+            if (Math.Abs(value) == 1)
+                return string.Format(Instance._monthAgo.Text, value.ToString());
+            return string.Format(Instance._monthsAgo.Text, value.ToString());
         }
 
-        public static string GetNHoursAgoText()
+        public static string GetNYearsAgoText(int value)
         {
-            return Instance._hoursAgo.Text;
-        }
-
-        public static string Get1DayAgoText()
-        {
-            return Instance._dayAgo.Text;
-        }
-
-        public static string GetNDaysAgoText()
-        {
-            return Instance._daysAgo.Text;
-        }
-
-        public static string Get1WeekAgoText()
-        {
-            return Instance._weekAgo.Text;
-        }
-
-        public static string GetNWeeksAgoText()
-        {
-            return Instance._weeksAgo.Text;
-        }
-
-        public static string Get1MonthAgoText()
-        {
-            return Instance._monthAgo.Text;
-        }
-
-        public static string GetNMonthsAgoText()
-        {
-            return Instance._monthsAgo.Text;
-        }
-
-        public static string Get1YearAgoText()
-        {
-            return Instance._yearAgo.Text;
-        }
-
-        public static string GetNYearsAgoText()
-        {
-            return Instance._yearsAgo.Text;
+            if (Math.Abs(value) == 1)
+                return string.Format(Instance._yearAgo.Text, value.ToString());
+            return string.Format(Instance._yearsAgo.Text, value.ToString());
         }
         
         private readonly TranslationString _secondAgo    = new TranslationString("{0} second ago");

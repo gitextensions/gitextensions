@@ -18,6 +18,11 @@ namespace GitUI
             {
                 components.Dispose();
             }
+            if (outpuTimer != null)
+            {
+                outpuTimer.Dispose();
+                outpuTimer = null;
+            }
             base.Dispose(disposing);
         }
 
@@ -30,20 +35,18 @@ namespace GitUI
         private void InitializeComponent()
         {
             this.Ok = new System.Windows.Forms.Button();
-            this.Output = new System.Windows.Forms.RichTextBox();
+            this.MessageTextBox = new System.Windows.Forms.RichTextBox();
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.KeepDialogOpen = new System.Windows.Forms.CheckBox();
             this.Abort = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.picBoxSuccessFail = new System.Windows.Forms.PictureBox();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxSuccessFail)).BeginInit();
+            this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // Ok
@@ -58,18 +61,17 @@ namespace GitUI
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.Ok_Click);
             // 
-            // Output
+            // MessageTextBox
             // 
-            this.Output.BackColor = System.Drawing.SystemColors.Window;
-            this.Output.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Output.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Output.Font = new System.Drawing.Font("Lucida Console", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Output.Location = new System.Drawing.Point(0, 0);
-            this.Output.Name = "Output";
-            this.Output.ReadOnly = true;
-            this.Output.Size = new System.Drawing.Size(489, 261);
-            this.Output.TabIndex = 0;
-            this.Output.Text = "";
+            this.MessageTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.MessageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.MessageTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MessageTextBox.Location = new System.Drawing.Point(56, 3);
+            this.MessageTextBox.Name = "MessageTextBox";
+            this.MessageTextBox.ReadOnly = true;
+            this.MessageTextBox.Size = new System.Drawing.Size(480, 255);
+            this.MessageTextBox.TabIndex = 0;
+            this.MessageTextBox.Text = "";
             // 
             // ProgressBar
             // 
@@ -98,6 +100,7 @@ namespace GitUI
             // Abort
             // 
             this.Abort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.Abort.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Abort.Location = new System.Drawing.Point(380, 5);
             this.Abort.Name = "Abort";
             this.Abort.Size = new System.Drawing.Size(75, 23);
@@ -112,15 +115,14 @@ namespace GitUI
             this.tableLayoutPanel1.AutoSize = true;
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.splitContainer1, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(10, 10);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.Size = new System.Drawing.Size(545, 307);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
@@ -143,38 +145,38 @@ namespace GitUI
             this.tableLayoutPanel2.Size = new System.Drawing.Size(539, 34);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
-            this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.Output);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.picBoxSuccessFail);
-            this.splitContainer1.Size = new System.Drawing.Size(539, 261);
-            this.splitContainer1.SplitterDistance = 489;
-            this.splitContainer1.TabIndex = 2;
-            // 
             // picBoxSuccessFail
             // 
-            this.picBoxSuccessFail.Image = global::GitUI.Properties.Resources.success;
+            this.picBoxSuccessFail.Dock = System.Windows.Forms.DockStyle.Right;
+            this.picBoxSuccessFail.Image = global::GitUI.Properties.Resources.StatusHourglass;
             this.picBoxSuccessFail.Location = new System.Drawing.Point(3, 3);
             this.picBoxSuccessFail.Name = "picBoxSuccessFail";
-            this.picBoxSuccessFail.Size = new System.Drawing.Size(50, 50);
+            this.picBoxSuccessFail.Size = new System.Drawing.Size(47, 50);
             this.picBoxSuccessFail.TabIndex = 1;
             this.picBoxSuccessFail.TabStop = false;
             // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel3.Controls.Add(this.picBoxSuccessFail, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.MessageTextBox, 0, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 1;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(539, 261);
+            this.tableLayoutPanel3.TabIndex = 4;
+            // 
             // FormStatus
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AcceptButton = this.Ok;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.CancelButton = this.Abort;
             this.ClientSize = new System.Drawing.Size(565, 327);
             this.ControlBox = false;
             this.Controls.Add(this.tableLayoutPanel1);
@@ -188,10 +190,8 @@ namespace GitUI
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picBoxSuccessFail)).EndInit();
+            this.tableLayoutPanel3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -200,13 +200,13 @@ namespace GitUI
         #endregion
 
         private System.Windows.Forms.ProgressBar ProgressBar;
-        private System.Windows.Forms.RichTextBox Output;
+        private System.Windows.Forms.RichTextBox MessageTextBox;
         protected System.Windows.Forms.Button Ok;
         protected System.Windows.Forms.CheckBox KeepDialogOpen;
         protected System.Windows.Forms.Button Abort;
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
         private PictureBox picBoxSuccessFail;
-        private SplitContainer splitContainer1;
+        private TableLayoutPanel tableLayoutPanel3;
     }
 }

@@ -9,28 +9,27 @@ using ICSharpCode.SharpZipLib.Zip;
 
 namespace Gource
 {
-    public class Gource : IGitPluginForRepository
+    public class Gource : GitPluginBase, IGitPluginForRepository
     {
         #region IGitPlugin Members
 
-        public string Description
+        public override string Description
         {
             get { return "gource"; }
         }
 
-        //Store settings to use later
-        public IGitPluginSettingsContainer Settings { get; set; }
-
-        public void Register(IGitUICommands gitUiCommands)
+        protected override void RegisterSettings()
         {
-            //Register settings
+            base.RegisterSettings();
             Settings.AddSetting("Path to \"gource\"", "");
-            Settings.AddSetting("Arguments", "--hide filenames");
+            Settings.AddSetting("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
         }
 
-        public bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIBaseEventArgs eventArgs)
         {
-            var ownerForm = gitUiCommands.OwnerForm as IWin32Window;
+
+            IGitModule gitUiCommands = eventArgs.GitModule;
+            var ownerForm = eventArgs.OwnerForm as IWin32Window;
             if (!gitUiCommands.IsValidGitWorkingDir(gitUiCommands.GitWorkingDir))
             {
                 MessageBox.Show(ownerForm, "The current directory is not a valid git repository." + Environment.NewLine +
@@ -44,8 +43,7 @@ namespace Gource
             {
                 if (!File.Exists(pathToGource))
                 {
-                    if (
-                        MessageBox.Show(gitUiCommands.OwnerForm as IWin32Window,
+                    if (MessageBox.Show(ownerForm,
                             "Cannot find \"gource\" in the configured path: " + pathToGource +
                             ".\n\n.Do you want to reset the configured path?", "Gource", MessageBoxButtons.YesNo) ==
                         DialogResult.Yes)
@@ -58,8 +56,7 @@ namespace Gource
 
             if (string.IsNullOrEmpty(pathToGource))
             {
-                if (
-                    MessageBox.Show(ownerForm,
+                if (MessageBox.Show(ownerForm,
                         "There is no path to \"gource\" configured.\n\nDo you want to automaticly download \"gource\"?",
                         "Download", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
@@ -71,7 +68,7 @@ namespace Gource
                             "Cannot find \"gource\".\nPlease download \"gource\" and set the path in the plugins settings dialog.");
                         return false;
                     }
-                    var downloadDir = Environment.GetFolderPath(Environment.SpecialFolder.InternetCache);
+                    var downloadDir = Path.GetTempPath();
                     var fileName = downloadDir + "\\gource.zip";
                     var downloadSize = DownloadFile(gourceUrl, fileName);
                     if (downloadSize > 0)
@@ -95,13 +92,15 @@ namespace Gource
                     }
                 }
             }
+            
+            using (var gourceStart = new GourceStart(pathToGource, eventArgs,
+                                              Settings.GetSetting("Arguments")))
+            {
+                gourceStart.ShowDialog(ownerForm);
 
-            var gourceStart = new GourceStart(pathToGource, gitUiCommands.GitWorkingDir,
-                                              Settings.GetSetting("Arguments"));
-            gourceStart.ShowDialog(ownerForm);
-
-            Settings.SetSetting("Arguments", gourceStart.GourceArguments);
-            Settings.SetSetting("Path to \"gource\"", gourceStart.PathToGource);
+                Settings.SetSetting("Arguments", gourceStart.GourceArguments);
+                Settings.SetSetting("Path to \"gource\"", gourceStart.PathToGource);
+            }
             return false;
         }
 

@@ -55,9 +55,16 @@ namespace GitPlugin.Commands
 
         public CommandBar GetMenuBar()
         {
-            return ((CommandBars)m_application.CommandBars)["MenuBar"];
+            return CommandBars["MenuBar"];
         }
 
+        public CommandBars CommandBars
+        {
+            get
+            {
+                return (CommandBars)m_application.CommandBars;
+            }
+        }
 
 
         public void RegisterCommand(string commandName, CommandBase command)
@@ -112,6 +119,19 @@ namespace GitPlugin.Commands
             {
                 //ignore!
                 return null;
+            }
+        }
+
+        private static MsoButtonStyle CommandStyleToButtonStyle(vsCommandStyle commandStyle)
+        {
+            switch (commandStyle)
+            {
+                case vsCommandStyle.vsCommandStylePict:
+                    return MsoButtonStyle.msoButtonIcon;
+                case vsCommandStyle.vsCommandStyleText:
+                    return MsoButtonStyle.msoButtonCaption;
+                default:
+                    return MsoButtonStyle.msoButtonIconAndCaption;
             }
         }
 
@@ -190,69 +210,6 @@ namespace GitPlugin.Commands
             return bar;
         }
 
-        public void AddPopupCommand(CommandBarPopup popup, string commandName, string caption,
-                                    string tooltip, int iconIndex, int insertIndex)
-        {
-            // Do not try to add commands to a null menu
-            if (popup == null)
-                return;
-
-            // Get commands collection
-            var commands = (Commands2)m_application.Commands;
-            var contextGUIDS = new object[] { };
-
-            // Add command
-            Command command = GetCommand(commandName);
-            if (!m_visualStudioCommands.ContainsKey(commandName))
-            {    
-                if (command == null)
-                {
-                    if (iconIndex > 0)
-                    {
-                        try
-                        {
-                            command = commands.AddNamedCommand2(m_addIn,
-                                                                commandName, caption, tooltip, false, iconIndex,
-                                                                ref contextGUIDS,
-                                                                (int)vsCommandStatus.vsCommandStatusSupported +
-                                                                (int)vsCommandStatus.vsCommandStatusEnabled,
-                                                                (int)vsCommandStyle.vsCommandStylePictAndText,
-                                                                vsCommandControlType.vsCommandControlTypeButton);
-                        }
-                        catch
-                        {
-                        }
-                    }
-
-                    if (command == null)
-                    {
-                        command = commands.AddNamedCommand2(m_addIn,
-                                                            commandName, caption, tooltip, true, -1, ref contextGUIDS,
-                                                            (int)vsCommandStatus.vsCommandStatusSupported +
-                                                            (int)vsCommandStatus.vsCommandStatusEnabled,
-                                                            (int)vsCommandStyle.vsCommandStylePictAndText,
-                                                            vsCommandControlType.vsCommandControlTypeButton);
-                    }
-                }
-                if (command != null)
-                {
-                    m_visualStudioCommands[commandName] = command;
-                }
-            }
-
-            if (command != null && popup != null)
-            {
-                if (!HasCommand(popup.CommandBar, caption))
-                {
-#if DEBUG
-                    OutputPane.OutputString("Add popup command: " + caption + Environment.NewLine);
-#endif
-
-                    command.AddControl(popup.CommandBar, insertIndex);
-                }
-            }
-        }
-
         public void AddConsoleOnlyCommand(string commandName, string itemName, string description)
         {
             var contextGuids = new object[] { };
@@ -285,28 +242,39 @@ namespace GitPlugin.Commands
         }
 
         public void AddToolbarCommand(CommandBar bar, string commandName, string caption,
-                                      string tooltip, int iconIndex, int insertIndex)
+                                      string tooltip, int iconIndex, int insertIndex, bool beginGroup = false)
         {
             AddToolbarOrMenuCommand(bar, commandName, caption, tooltip, iconIndex, insertIndex,
-                                    vsCommandStyle.vsCommandStylePict);
+                                    vsCommandStyle.vsCommandStylePict, beginGroup);
         }
 
         public void AddToolbarCommandWithText(CommandBar bar, string commandName, string caption,
-                                              string tooltip, int iconIndex, int insertIndex)
+                                              string tooltip, int iconIndex, int insertIndex, bool beginGroup = false)
         {
             AddToolbarOrMenuCommand(bar, commandName, caption, tooltip, iconIndex, insertIndex,
-                                    vsCommandStyle.vsCommandStylePictAndText);
+                                    vsCommandStyle.vsCommandStylePictAndText, beginGroup);
         }
 
         public void AddMenuCommand(CommandBar bar, string commandName, string caption,
-                                   string tooltip, int iconIndex, int insertIndex)
+                                   string tooltip, int iconIndex, int insertIndex, bool beginGroup = false)
         {
             AddToolbarOrMenuCommand(bar, commandName, caption, tooltip, iconIndex, insertIndex,
-                                    vsCommandStyle.vsCommandStylePictAndText);
+                                    vsCommandStyle.vsCommandStylePictAndText, beginGroup);
+        }
+
+        public void AddPopupCommand(CommandBarPopup popup, string commandName, string caption,
+                                    string tooltip, int iconIndex, int insertIndex, bool beginGroup = false)
+        {
+            // Do not try to add commands to a null menu
+            if (popup == null)
+                return;
+
+            AddToolbarOrMenuCommand(popup.CommandBar, commandName, caption, tooltip, iconIndex, insertIndex,
+                        vsCommandStyle.vsCommandStylePictAndText, beginGroup);
         }
 
         private void AddToolbarOrMenuCommand(CommandBar bar, string commandName, string caption,
-                                             string tooltip, int iconIndex, int insertIndex, vsCommandStyle commandStyle)
+                                             string tooltip, int iconIndex, int insertIndex, vsCommandStyle commandStyle, bool beginGroup)
         {
             // Do not try to add commands to a null bar
             if (bar == null)
@@ -354,12 +322,16 @@ namespace GitPlugin.Commands
                     m_visualStudioCommands[commandName] = command;
                 }
             }
-            if (command != null && bar != null)
+            if (command != null)
             {
                 if (!HasCommand(bar, caption))
                 {
+#if DEBUG
                     OutputPane.OutputString("Add toolbar command: " + caption + Environment.NewLine);
-                    command.AddControl(bar, insertIndex);
+#endif
+                    CommandBarButton control = command.AddControl(bar, insertIndex) as CommandBarButton;
+                    control.Style = CommandStyleToButtonStyle(commandStyle);
+                    control.BeginGroup = beginGroup;
                 }
             }
         }
@@ -687,11 +659,11 @@ namespace GitPlugin.Commands
         }
 
         public void AddMenuCommand(string toolbarName, string commandName, string caption,
-                                   string tooltip, int iconIndex, int insertIndex)
+                                   string tooltip, int iconIndex, int insertIndex, bool beginGroup = false)
         {
             CommandBar commandBar = ((CommandBars)m_application.CommandBars)[toolbarName];
             if (commandBar != null)
-                AddMenuCommand(commandBar, commandName, caption, tooltip, iconIndex, insertIndex);
+                AddMenuCommand(commandBar, commandName, caption, tooltip, iconIndex, insertIndex, beginGroup);
         }
 
         private static OutputWindowPane AquireOutputPane(DTE2 app, string name)

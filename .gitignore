@@ -17,7 +17,7 @@ Plugins/*/*/obj
 Plugins/*/*/bin
 
 #ignore output mild compiler
-SimpleExt/Generated/*
+GitExtensionsShellEx/Generated/
 
 #ignore some unwanted files
 *.ncb
@@ -31,7 +31,6 @@ SimpleExt/Generated/*
 *.[Cc]ache
 Thumbs.db
 GitPlugin/bin/*
-Setup/GitExtensions207.zip
 GitPlugin/Properties/Resources.resources
 *.pidb
 *.resources
@@ -41,3 +40,7 @@ GitPlugin/Properties/Resources.resources
 *.ncrunchsolution
 test-results/*
 GitCommandsTests/test-results/*
+/!runTests.bat
+GitExtensionsMono.sln.VisualState.xml
+TestResult.xml
+libgit2sharp

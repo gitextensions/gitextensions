@@ -32,6 +32,7 @@
             this.pnlTop = new System.Windows.Forms.Panel();
             this.pnlAuthorColor = new System.Windows.Forms.Panel();
             this.lblAuthor = new System.Windows.Forms.Label();
+            this.cbIncludingSubmodules = new System.Windows.Forms.CheckBox();
             this.Impact = new GitImpact.ImpactControl();
             this.pnlTop.SuspendLayout();
             this.SuspendLayout();
@@ -57,20 +58,30 @@
             // lblAuthor
             // 
             this.lblAuthor.AutoSize = true;
-            this.lblAuthor.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAuthor.Location = new System.Drawing.Point(30, 8);
             this.lblAuthor.Name = "lblAuthor";
             this.lblAuthor.Size = new System.Drawing.Size(46, 16);
             this.lblAuthor.TabIndex = 0;
             this.lblAuthor.Text = "Author";
             // 
+            // cbIncludingSubmodules
+            // 
+            this.cbIncludingSubmodules.AutoSize = true;
+            this.cbIncludingSubmodules.Location = new System.Drawing.Point(692, 9);
+            this.cbIncludingSubmodules.Name = "cbIncludingSubmodules";
+            this.cbIncludingSubmodules.Size = new System.Drawing.Size(128, 17);
+            this.cbIncludingSubmodules.TabIndex = 2;
+            this.cbIncludingSubmodules.Text = "Including submodules";
+            this.cbIncludingSubmodules.UseVisualStyleBackColor = true;
+            this.cbIncludingSubmodules.CheckedChanged += new System.EventHandler(this.cbShowSubmodules_CheckedChanged);
+            // 
             // Impact
             // 
             this.Impact.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.Impact.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Impact.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.Impact.Location = new System.Drawing.Point(0, 32);
             this.Impact.Name = "Impact";
+            this.Impact.ShowSubmodules = false;
             this.Impact.Size = new System.Drawing.Size(863, 452);
             this.Impact.TabIndex = 0;
             this.Impact.TabStop = false;
@@ -78,9 +89,10 @@
             // 
             // FormImpact
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(863, 484);
+            this.Controls.Add(this.cbIncludingSubmodules);
             this.Controls.Add(this.Impact);
             this.Controls.Add(this.pnlTop);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -89,6 +101,7 @@
             this.pnlTop.ResumeLayout(false);
             this.pnlTop.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -98,5 +111,6 @@
         private System.Windows.Forms.Panel pnlTop;
         private System.Windows.Forms.Panel pnlAuthorColor;
         private System.Windows.Forms.Label lblAuthor;
+        private System.Windows.Forms.CheckBox cbIncludingSubmodules;
     }
 }

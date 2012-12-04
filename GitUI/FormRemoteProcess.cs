@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.Diagnostics;
+using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Config;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -28,29 +23,37 @@ namespace GitUI
 
         public bool Plink { get; set; }
         private bool restart;
+        protected readonly GitModule Module;
 
-        //constructor for VS designer
+        // only for translation
         protected FormRemoteProcess()
-        {
+            : base()
+        { }
 
+        public FormRemoteProcess(GitModule module, string process, string arguments)
+            : base(process, arguments, module.WorkingDir, null, true)
+        {
+            this.Module = module;
         }
 
-        public FormRemoteProcess(string process, string arguments, string input)
-            : base(process, arguments, input)
+        public FormRemoteProcess(GitModule module, string arguments)
+            : base(null, arguments, module.WorkingDir, null, true)
         {
-
+            this.Module = module;
         }
 
-        public FormRemoteProcess(string process, string arguments)
-            : base(process, arguments)
+        public static new bool ShowDialog(GitModuleForm owner, string arguments)
         {
-
+            return ShowDialog(owner, owner.Module, arguments);
         }
 
-        public FormRemoteProcess(string arguments)
-            : base(arguments)
+        public static new bool ShowDialog(IWin32Window owner, GitModule module, string arguments)
         {
-
+            using (var formRemoteProcess = new FormRemoteProcess(module, arguments))
+            {
+                formRemoteProcess.ShowDialog(owner);
+                return !formRemoteProcess.ErrorOccurred();
+            }
         }
 
         private string UrlTryingToConnect = string.Empty;
@@ -103,8 +106,8 @@ namespace GitUI
                     {
                         // To prevent future authentication errors, save this key for this remote.
                         if (!String.IsNullOrEmpty(loadedKey) && !String.IsNullOrEmpty(this.Remote) && 
-                            String.IsNullOrEmpty(Settings.Module.GetPathSetting("remote.{0}.puttykeyfile")))
-                            Settings.Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", this.Remote), loadedKey);
+                            String.IsNullOrEmpty(Module.GetPathSetting("remote.{0}.puttykeyfile")))
+                            Module.SetPathSetting(string.Format("remote.{0}.puttykeyfile", this.Remote), loadedKey);
 
                         // Retry the command.
                         Retry();
@@ -117,7 +120,7 @@ namespace GitUI
 
                     if (string.IsNullOrEmpty(UrlTryingToConnect))
                     {
-                        remoteUrl = Settings.Module.GetSetting(string.Format("remote.{0}.url", Remote));
+                        remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
                         if (string.IsNullOrEmpty(remoteUrl))
                             remoteUrl = Remote;
                     }
@@ -126,7 +129,7 @@ namespace GitUI
                     if (!string.IsNullOrEmpty(remoteUrl))
                         if (MessageBox.Show(this, _serverHotkeyNotCachedText.Text, "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                         {
-                            Settings.Module.RunRealCmd(
+                            Module.RunRealCmd(
                                 "cmd.exe",
                                 string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, remoteUrl));
 
@@ -148,12 +151,12 @@ namespace GitUI
                 {
                     if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        string remoteUrl = Settings.Module.GetSetting(string.Format("remote.{0}.url", Remote));
+                        string remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
 
                         if (string.IsNullOrEmpty(remoteUrl))
-                            Settings.Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");
+                            Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");
                         else
-                            Settings.Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + remoteUrl + "\"");
+                            Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + remoteUrl + "\"");
 
                         restart = true;
                     }

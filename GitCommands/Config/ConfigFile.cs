@@ -14,7 +14,6 @@ namespace GitCommands.Config
                         ^\s*\[(?<SectionName>[^\]]+)?\]\s*$
                   )",
                 RegexOptions.Compiled |
-                RegexOptions.IgnoreCase |
                 RegexOptions.IgnorePatternWhitespace
                 );
 
@@ -24,7 +23,6 @@ namespace GitCommands.Config
                         ^\s*(?<Key>[^(\s*\=\s*)]+)?\s*\=\s*(?<Value>[\d\D]*)$
                    )",
                 RegexOptions.Compiled |
-                RegexOptions.IgnoreCase |
                 RegexOptions.IgnorePatternWhitespace
                 );
 
@@ -57,7 +55,7 @@ namespace GitCommands.Config
 
         private Encoding GetEncoding()
         {
-            return Local ? Settings.AppEncoding : Settings.GetAppEncoding(false, true);
+            return GitModule.SystemEncoding;
         }
 
         private void Load()
@@ -79,7 +77,7 @@ namespace GitCommands.Config
                 {
                     var name = m.Groups["SectionName"].Value;
 
-                    configSection = new ConfigSection(name);
+                    configSection = new ConfigSection(name, false);
                     _sections.Add(configSection);
                 }
                 else
@@ -110,7 +108,8 @@ namespace GitCommands.Config
                 if (section.Keys.Count == 0)
                     continue;
 
-                configFileContent.AppendLine(section.ToString());
+                configFileContent.Append(section.ToString());
+                configFileContent.Append("\n");
 
                 foreach (var key in section.Keys)
                 {
@@ -273,7 +272,7 @@ namespace GitCommands.Config
             var result = FindConfigSection(name);
             if (result == null)
             {
-                result = new ConfigSection(name);
+                result = new ConfigSection(name, true);
                 _sections.Add(result);
             }
             
@@ -292,7 +291,7 @@ namespace GitCommands.Config
 
         private ConfigSection FindConfigSection(string name)
         {
-            var configSectionToFind = new ConfigSection(name);
+            var configSectionToFind = new ConfigSection(name, true);
 
             foreach (var configSection in _sections)
             {

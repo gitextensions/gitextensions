@@ -3,12 +3,12 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
 using GitUI.Script;
+using ResourceManager.Translation;
 
 namespace GitUI.Tag
 {
-    public partial class FormTagSmall : GitExtensionsForm
+    public sealed partial class FormTagSmall : GitModuleForm
     {
         private readonly TranslationString _messageCaption = new TranslationString("Tag");
 
@@ -17,23 +17,33 @@ namespace GitUI.Tag
 
         private readonly TranslationString _noTagMassage = new TranslationString("Please enter a tag message");
 
-        private readonly TranslationString _pushToCaption = new TranslationString("Push tag to {0}");
+        private readonly TranslationString _pushToCaption = new TranslationString("Push tag to '{0}'");
 
-        public FormTagSmall()
+        private readonly GitRevision revision;
+
+        private string currentRemote = "";
+        
+        public FormTagSmall(GitUICommands aCommands, GitRevision revision)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
 
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
+            this.revision = revision;
         }
 
-        public GitRevision Revision { get; set; }
+        private void FormTagSmall_Load(object sender, EventArgs e)
+        {
+            currentRemote = Module.GetCurrentRemote();
+            pushTag.Text = string.Format(_pushToCaption.Text, currentRemote);
+        }
 
         private void OkClick(object sender, EventArgs e)
         {
             try
             {
-                var tagName = CreateTag(sender, e);
+                var tagName = CreateTag();
 
                 if (pushTag.Checked && !string.IsNullOrEmpty(tagName))
                     PushTag(tagName);
@@ -44,9 +54,9 @@ namespace GitUI.Tag
             }
         }
 
-        private string CreateTag(object sender, EventArgs e)
+        private string CreateTag()
         {
-            if (Revision == null)
+            if (revision == null)
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                 return string.Empty;
@@ -59,11 +69,10 @@ namespace GitUI.Tag
                     return string.Empty;
                 }
 
-                File.WriteAllText(Settings.Module.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
+                File.WriteAllText(Module.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
             }
 
-
-            var s = Settings.Module.Tag(TName.Text, Revision.Guid, annotate.Checked);
+            var s = Module.Tag(TName.Text, revision.Guid, annotate.Checked, ForceTag.Checked);
 
             if (!string.IsNullOrEmpty(s))
                 MessageBox.Show(this, s, _messageCaption.Text);
@@ -77,30 +86,25 @@ namespace GitUI.Tag
 
         private void PushTag(string tagName)
         {
-            var currentBranchRemote = Settings.Module.GetSetting(string.Format("branch.{0}.remote", Settings.Module.GetSelectedBranch()));
-            var pushCmd = GitCommandHelpers.PushTagCmd(currentBranchRemote, tagName, false);
+            var pushCmd = GitCommandHelpers.PushTagCmd(currentRemote, tagName, false);
 
-            ScriptManager.RunEventScripts(ScriptEvent.BeforePush);
+            ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
 
-            var form = new FormRemoteProcess(pushCmd)
+            using (var form = new FormRemoteProcess(Module, pushCmd)
             {
-                Remote = currentBranchRemote,
-                Text = string.Format(_pushToCaption.Text, currentBranchRemote),
-            };
-
-            form.ShowDialog();
-
-            if (!Settings.Module.InTheMiddleOfConflictedMerge() &&
-                !Settings.Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
+                Remote = currentRemote,
+                Text = string.Format(_pushToCaption.Text, currentRemote),
+            })
             {
-                ScriptManager.RunEventScripts(ScriptEvent.AfterPush);
+
+                form.ShowDialog();
+
+                if (!Module.InTheMiddleOfConflictedMerge() &&
+                    !Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
+                {
+                    ScriptManager.RunEventScripts(Module, ScriptEvent.AfterPush);
+                }
             }
-        }
-
-        private void NameKeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-                OkClick(null, null);
         }
 
         private void AnnotateCheckedChanged(object sender, EventArgs e)

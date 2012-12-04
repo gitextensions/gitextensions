@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
-using System.Threading;
 
 namespace GitUI
 {
@@ -9,7 +10,8 @@ namespace GitUI
     {
         private readonly SynchronizationContext syncContext;
 
-        internal GitLogForm()
+        private GitLogForm()
+            : base(true)
         {
             ShowInTaskbar = true;
             syncContext = SynchronizationContext.Current;
@@ -18,18 +20,11 @@ namespace GitUI
         }
 
         private void GitLogFormLoad(object sender, EventArgs e)
-        {
-            RestorePosition("log");
-
+        {            
             SubscribeToEvents();
             RefreshLogItems();
 
             RefreshCommandCacheItems();
-        }
-
-        private void GitLogFormFormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("log");
         }
 
         private void GitLogForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -62,11 +57,12 @@ namespace GitUI
         {
             string command = (string)CommandCacheItems.SelectedItem;
 
-            string output;
-            if (GitCommandCache.TryGet(command, Settings.LogOutputEncoding, out output))
+            byte[] cmdout, cmderr;
+            if (GitCommandCache.TryGet(command, out cmdout, out cmderr))
             {
                 commandCacheOutput.Text = command + "\n-------------------------------------\n\n";
-                commandCacheOutput.Text += output.Replace("\0", "\\0");
+                Encoding encoding = GitModule.SystemEncoding;
+                commandCacheOutput.Text += EncodingHelper.DecodeString(cmdout, cmderr, ref encoding).Replace("\0", "\\0");
             }
             else
             {

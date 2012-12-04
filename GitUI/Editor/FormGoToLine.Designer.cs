@@ -42,7 +42,7 @@
             this.lineLabel.AutoSize = true;
             this.lineLabel.Location = new System.Drawing.Point(12, 9);
             this.lineLabel.Name = "lineLabel";
-            this.lineLabel.Size = new System.Drawing.Size(65, 13);
+            this.lineLabel.Size = new System.Drawing.Size(74, 15);
             this.lineLabel.TabIndex = 5;
             this.lineLabel.Text = "Line number";
             // 
@@ -56,7 +56,7 @@
             0,
             0});
             this._NO_TRANSLATE_LineNumberUpDown.Name = "_NO_TRANSLATE_LineNumberUpDown";
-            this._NO_TRANSLATE_LineNumberUpDown.Size = new System.Drawing.Size(210, 21);
+            this._NO_TRANSLATE_LineNumberUpDown.Size = new System.Drawing.Size(210, 23);
             this._NO_TRANSLATE_LineNumberUpDown.TabIndex = 0;
             this._NO_TRANSLATE_LineNumberUpDown.Value = new decimal(new int[] {
             1,
@@ -87,8 +87,8 @@
             // FormGoToLine
             // 
             this.AcceptButton = this.okBtn;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(237, 91);
             this.Controls.Add(this.okBtn);
             this.Controls.Add(this.cancelBtn);

@@ -38,18 +38,17 @@
             this.TextEditor.Location = new System.Drawing.Point(0, 0);
             this.TextEditor.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.TextEditor.Name = "TextEditor";
-            this.TextEditor.Size = new System.Drawing.Size(660, 512);
+            this.TextEditor.Size = new System.Drawing.Size(660, 480);
             this.TextEditor.TabIndex = 0;
             this.TextEditor.Text = "";
             // 
             // FileViewerMono
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.TextEditor);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FileViewerMono";
-            this.Size = new System.Drawing.Size(660, 512);
+            this.Size = new System.Drawing.Size(660, 480);
             this.ResumeLayout(false);
 
         }

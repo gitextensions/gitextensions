@@ -6,7 +6,7 @@
 '
 ' Last commit by:
 ' $Author: tortoisesvn $
-' $Date: 2008-06-16 21:36:28 +0200 (Mo, 16 Jun 2008) $
+' $Date: 2008-06-16 21:36:28 +0200 (Mo, 16. Jun 2008) $
 ' $Rev: 13285 $
 '
 ' Authors:

@@ -35,7 +35,6 @@ namespace GitUI
             // ChangeLog
             // 
             this.ChangeLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ChangeLog.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
             this.ChangeLog.Location = new System.Drawing.Point(0, 0);
             this.ChangeLog.Name = "ChangeLog";
             this.ChangeLog.Size = new System.Drawing.Size(849, 411);
@@ -45,15 +44,14 @@ namespace GitUI
             // 
             // FormChangeLog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(849, 411);
             this.Controls.Add(this.ChangeLog);
             this.Name = "FormChangeLog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change log";
             this.Load += new System.EventHandler(this.FormChangeLog1Load);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormChangeLog1FormClosing);
             this.ResumeLayout(false);
 
         }

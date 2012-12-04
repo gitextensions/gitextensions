@@ -1,18 +1,28 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using GitCommands;
 using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormCheckout : GitExtensionsForm
+    public partial class FormCheckout : GitModuleForm
     {
         private readonly TranslationString _noRevisionSelectedMsgBox =
             new TranslationString("Select 1 revision to checkout.");
         private readonly TranslationString _noRevisionSelectedMsgBoxCaption =
             new TranslationString("Checkout");
 
-        public FormCheckout()
+        /// <summary>
+        /// For VS designer
+        /// </summary>
+        private FormCheckout()
+            : this(null)
+        {
+        }
+
+        public FormCheckout(GitUICommands aCommands)
+            : base(true, aCommands)
         {
             InitializeComponent();
             Translate();
@@ -28,30 +38,22 @@ namespace GitUI
                     return;
                 }
 
-                var command = "checkout \"" + RevisionGrid.GetSelectedRevisions()[0].Guid + "\"";
-                if (Force.Checked)
-                    command += " --force";
+                string command = GitCommandHelpers.CheckoutCmd(RevisionGrid.GetSelectedRevisions()[0].Guid, 
+                    Force.Checked ? Settings.LocalChanges.Reset : 0);
 
-                new FormProcess(command).ShowDialog(this);
+                FormProcess.ShowDialog(this, command);
 
                 Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
             }
         }
 
-        private void FormCheckoutFormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("checkout");
-        }
-
         private void FormCheckoutLoad(object sender, EventArgs e)
         {
             RevisionGrid.Load();
-
-            RestorePosition("checkout");
         }
     }
 }

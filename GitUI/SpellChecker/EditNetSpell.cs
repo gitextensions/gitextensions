@@ -15,8 +15,6 @@ namespace GitUI.SpellChecker
     [DefaultEvent("TextChanged")]
     public partial class EditNetSpell : GitExtensionsControl
     {
-        private readonly TranslationString undoMenuItemText = new TranslationString("Undo");
-        private readonly TranslationString redoMenuItemText = new TranslationString("Redo");
         private readonly TranslationString cutMenuItemText = new TranslationString("Cut");
         private readonly TranslationString copyMenuItemText = new TranslationString("Copy");
         private readonly TranslationString pasteMenuItemText = new TranslationString("Paste");
@@ -52,6 +50,9 @@ namespace GitUI.SpellChecker
         {
             get
             {
+				if (TextBox == null)
+					return string.Empty;
+				
                 return IsWatermarkShowing ? string.Empty : TextBox.Text;
             }
             set
@@ -62,10 +63,9 @@ namespace GitUI.SpellChecker
             }
         }
 
-        [Description("The font for spelling errors.")]
-        [Category("Appearance")]
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Font MistakeFont { get; set; }
-
 
         [Browsable(false)]
         public int CurrentColumn
@@ -96,6 +96,7 @@ namespace GitUI.SpellChecker
         private bool IsWatermarkShowing;
         private string _WatermarkText = "";
         [Category("Appearance")]
+        [DefaultValue("")]
         public string WatermarkText
         {
             get { return _WatermarkText; }
@@ -451,10 +452,13 @@ namespace GitUI.SpellChecker
 
         private void SpellCheckTimerTick(object sender, EventArgs e)
         {
-            CheckSpelling();
+            if (!_customUnderlines.IsImeStartingComposition)
+            {
+                CheckSpelling();
 
-            SpellCheckTimer.Enabled = false;
-            SpellCheckTimer.Interval = 250;
+                SpellCheckTimer.Enabled = false;
+                SpellCheckTimer.Interval = 250;
+            }
         }
 
         private void TextBoxTextChanged(object sender, EventArgs e)
@@ -519,7 +523,7 @@ namespace GitUI.SpellChecker
 
         private void ShowWatermark()
         {
-            if (!Focused && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont != null)
+            if (!ContainsFocus && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont != null)
             {
                 TextBox.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
                 TextBox.ForeColor = SystemColors.InactiveCaption;

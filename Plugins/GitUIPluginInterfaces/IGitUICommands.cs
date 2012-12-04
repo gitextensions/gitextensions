@@ -4,16 +4,18 @@ namespace GitUIPluginInterfaces
 {
     [Serializable]
     public delegate void GitUIEventHandler(object sender, GitUIBaseEventArgs e);
+    [Serializable]
+    public delegate void GitUIPostActionEventHandler(object sender, GitUIPostActionEventArgs e);
 
     public interface IGitUICommands
     {
-        event GitUIEventHandler PostAddFiles;
-        event GitUIEventHandler PostApplyPatch;
-        event GitUIEventHandler PostArchive;
-        event GitUIEventHandler PostBlame;
-        event GitUIEventHandler PostBrowse;
-        event GitUIEventHandler PostCheckoutBranch;
-        event GitUIEventHandler PostCheckoutRevision;
+        event GitUIPostActionEventHandler PostAddFiles;
+        event GitUIPostActionEventHandler PostApplyPatch;
+        event GitUIPostActionEventHandler PostArchive;
+        event GitUIPostActionEventHandler PostBlame;
+        event GitUIPostActionEventHandler PostBrowse;
+        event GitUIPostActionEventHandler PostCheckoutBranch;
+        event GitUIPostActionEventHandler PostCheckoutRevision;
         event GitUIEventHandler PostCherryPick;
         event GitUIEventHandler PostClone;
         event GitUIEventHandler PostCommit;
@@ -46,6 +48,7 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PostUpdateSubmodules;
         event GitUIEventHandler PostVerifyDatabase;
         event GitUIEventHandler PostViewPatch;
+        event GitUIEventHandler PostBrowseInitialize;
         event GitUIEventHandler PreAddFiles;
         event GitUIEventHandler PreApplyPatch;
         event GitUIEventHandler PreArchive;
@@ -85,9 +88,15 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PreUpdateSubmodules;
         event GitUIEventHandler PreVerifyDatabase;
         event GitUIEventHandler PreViewPatch;
-
+        event GitUIEventHandler PreBrowseInitialize;
+        event GitUIEventHandler BrowseInitialize;
+        
+        IGitModule GitModule { get; }
         string GitCommand(string arguments);
         string CommandLineCommand(string cmd, string arguments);
+        IGitRemoteCommand CreateRemoteCommand();
+        void RaiseBrowseInitialize();
+        void CacheAvatar(string email);
 
         bool StartCommandLineProcessDialog(object ownerForm, string command, string arguments);
         bool StartCommandLineProcessDialog(string command, string arguments);

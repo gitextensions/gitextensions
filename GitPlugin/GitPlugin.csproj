@@ -68,7 +68,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Commands\SearchFile.cs" />
+    <Compile Include="Commands\FindFile.cs" />
     <Compile Include="Git\GitCommands.cs" />
     <Compile Include="Commands\About.cs" />
     <Compile Include="Commands\ApplyPatch.cs" />
@@ -175,18 +175,26 @@
     <Content Include="GitPlugin.AddIn">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\IconFind.bmp" />
+    <None Include="Resources\IconEditGitIgnore.bmp" />
+    <None Include="Resources\IconBranchCreate.bmp" />
+    <None Include="Resources\IconBrowseFileExplorer.bmp" />
+    <None Include="Resources\IconCherryPick.bmp" />
+    <None Include="Resources\Stash.bmp" />
+    <None Include="Resources\Bash.bmp" />
+    <None Include="Resources\AboutBox.bmp" />
+    <None Include="Resources\IconRebase.bmp" />
+    <None Include="Resources\IconMerge.bmp" />
+    <None Include="Resources\IconManageRemotes.bmp" />
+    <None Include="Resources\IconBranchCheckout.bmp" />
     <None Include="Resources\14.bmp" />
     <None Include="Resources\13.bmp" />
-    <None Include="Resources\12.bmp" />
-    <None Include="Resources\11.bmp" />
-    <None Include="Resources\10.bmp" />
     <None Include="Resources\9.bmp" />
     <None Include="Resources\8.bmp" />
     <None Include="Resources\7.bmp" />
     <None Include="Resources\RevisionHistory.bmp" />
     <None Include="Resources\EditAll.bmp" />
     <None Include="Resources\Revert.bmp" />
-    <None Include="Resources\Diff.bmp" />
     <None Include="Resources\Configure.bmp" />
     <None Include="Resources\Edit.bmp" />
   </ItemGroup>

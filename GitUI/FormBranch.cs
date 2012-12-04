@@ -5,14 +5,24 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormBranch : GitExtensionsForm
+    public partial class FormBranch : GitModuleForm
     {
         private readonly TranslationString _selectOneRevision = new TranslationString("Select 1 revision to create the branch on.");
         private readonly TranslationString _branchCaption = new TranslationString("Branch");
 
-        public FormBranch()
+                /// <summary>
+        /// For VS designer
+        /// </summary>
+        private FormBranch()
+            : this(null)
         {
-            InitializeComponent(); 
+        }
+
+
+        public FormBranch(GitUICommands aCommands)
+            : base(true, aCommands)
+        {
+            InitializeComponent();
             Translate();
         }
 
@@ -28,7 +38,7 @@ namespace GitUI
                 }
 
                 string cmd = GitCommandHelpers.BranchCmd(BName.Text, RevisionGrid.GetSelectedRevisions()[0].Guid, CheckoutAfterCreate.Checked);
-                new FormProcess(cmd).ShowDialog(this);
+                FormProcess.ShowDialog(this, cmd);
 
                 Close();
 
@@ -40,21 +50,14 @@ namespace GitUI
 
         private void Checkout_Click(object sender, EventArgs e)
         {
-            GitUICommands.Instance.StartCheckoutBranchDialog(this);
-            MergeConflictHandler.HandleMergeConflicts(this);
+            UICommands.StartCheckoutBranchDialog(this);
             RevisionGrid.RefreshRevisions();
-        }
-
-        private void FormBranch_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("branch");
         }
 
         private void FormBranch_Load(object sender, EventArgs e)
         {
             RevisionGrid.Load();
 
-            RestorePosition("branch");
             BName.Focus();
             AcceptButton = Ok;
         }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace GitCommands
 {
@@ -16,8 +14,7 @@ namespace GitCommands
         /// <summary>
         /// here commands should add theirs arguments
         /// </summary>
-        /// <param name="argumentsList"></param>
-        public abstract void CollectArguments(List<string> argumentsList);
+        public abstract IEnumerable<string> CollectArguments();
 
         /// <summary>
         /// 
@@ -36,16 +33,10 @@ namespace GitCommands
         /// <summary>
         /// 
         /// </summary>
-        /// <returns>git command rguments as single line</returns>
+        /// <returns>git command arguments as single line</returns>
         public virtual string ToLine()
         {
-            List<string> argumentsList = new List<string>();
-            CollectArguments(argumentsList);
-            String args = null;
-            foreach (string s in argumentsList)
-                args = args.Join(" ", s);
- 
-            return GitComandName().Join(" ", args);            
+            return GitComandName() + " " + CollectArguments().Join(" ");
         }
 
         public override string ToString()

@@ -1,19 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Config;
 using GitUI.Hotkey;
 using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormResolveConflicts : GitExtensionsForm
+    public partial class FormResolveConflicts : GitModuleForm
     {
         #region Translation
-        private readonly TranslationString uskUseCustomMergeScript = new TranslationString("There is a custom merge script({0}) for this file type." + Environment.NewLine + Environment.NewLine + "Do you want to use this custom merge script?");
+        private readonly TranslationString uskUseCustomMergeScript = new TranslationString("There is a custom merge script ({0}) for this file type." + Environment.NewLine + Environment.NewLine + "Do you want to use this custom merge script?");
         private readonly TranslationString uskUseCustomMergeScriptCaption = new TranslationString("Custom merge script");
         private readonly TranslationString fileUnchangedAfterMerge = new TranslationString("The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location." + Environment.NewLine + Environment.NewLine + "The merge conflict will not be marked as solved. Please try again.");
         private readonly TranslationString allConflictsResolved = new TranslationString("All mergeconflicts are resolved, you can commit." + Environment.NewLine + "Do you want to commit now?");
@@ -70,12 +70,42 @@ namespace GitUI
             new TranslationString("Current format (*.{0})");
         private readonly TranslationString _allFilesFilter =
             new TranslationString("All files (*.*)");
+
+        private readonly TranslationString _abortCurrentOpperation =
+            new TranslationString("You can abort the current operation by resetting changes." + Environment.NewLine +
+                "All changes since the last commit will be deleted." + Environment.NewLine +
+                Environment.NewLine + "Do you want to reset changes?");
+
+        private readonly TranslationString _abortCurrentOpperationCaption = new TranslationString("Abort");
+
+        private readonly TranslationString _areYouSureYouWantDeleteFiles =
+            new TranslationString("Are you sure you want to DELETE all changes?" + Environment.NewLine +
+                Environment.NewLine + "This action cannot be made undone.");
+
+        private readonly TranslationString _areYouSureYouWantDeleteFilesCaption = new TranslationString("WARNING!");
         #endregion
-        
-        public FormResolveConflicts()
+
+        public FormResolveConflicts(GitUICommands aCommands)
+            : this(aCommands, true)
+        { }
+
+        public FormResolveConflicts(GitUICommands aCommands, bool offerCommit)
+            : base(aCommands)
         {
-            InitializeComponent(); Translate();
-            ThereWhereMergeConflicts = Settings.Module.InTheMiddleOfConflictedMerge();
+            InitializeComponent();
+            Translate();
+            _offerCommit = offerCommit;
+        }
+
+        private FormResolveConflicts()
+            : this(null)
+        {
+        }
+
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            base.OnRuntimeLoad(e);
+            _thereWhereMergeConflicts = Module.InTheMiddleOfConflictedMerge();
             merge.Focus();
             merge.Select();
 
@@ -83,26 +113,20 @@ namespace GitUI
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
         }
 
-
         private void Mergetool_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            Directory.SetCurrentDirectory(Settings.WorkingDir);
-            Settings.Module.RunRealCmd(Settings.GitCommand, "mergetool");
+            Directory.SetCurrentDirectory(Module.WorkingDir);
+            Module.RunRealCmd(Settings.GitCommand, "mergetool");
             Initialize();
             Cursor.Current = Cursors.Default;
         }
 
-        public bool ThereWhereMergeConflicts { get; set; }
-
-        private void FormResolveConflicts_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("resolve-conflicts");
-        }
+        private bool _offerCommit;
+        private bool _thereWhereMergeConflicts;
 
         private void FormResolveConflicts_Load(object sender, EventArgs e)
         {
-            RestorePosition("resolve-conflicts");
             Initialize();
         }
 
@@ -114,7 +138,7 @@ namespace GitUI
             int oldSelectedRow = 0;
             if (ConflictedFiles.SelectedRows.Count > 0)
                 oldSelectedRow = ConflictedFiles.SelectedRows[0].Index;
-            ConflictedFiles.DataSource = Settings.Module.GetConflictedFiles();
+            ConflictedFiles.DataSource = Module.GetConflictedFiles();
             if (ConflictedFiles.Rows.Count > oldSelectedRow)
             {
                 ConflictedFiles.Rows[oldSelectedRow].Selected = true;
@@ -130,7 +154,7 @@ namespace GitUI
             OpenMergetool.Text = _openMergeToolItemText.Text + " " + mergetool;
             openMergeToolBtn.Text = _button1Text.Text + " " + mergetool;
 
-            if (Settings.Module.InTheMiddleOfRebase())
+            if (Module.InTheMiddleOfRebase())
             {
                 Reset.Text = _resetItemRebaseText.Text;
                 ContextChooseLocal.Text = _contextChooseLocalRebaseText.Text;
@@ -143,15 +167,16 @@ namespace GitUI
                 ContextChooseRemote.Text = _contextChooseRemoteMergeText.Text;
             }
 
-            if (!Settings.Module.InTheMiddleOfPatch() && !Settings.Module.InTheMiddleOfRebase() && !Settings.Module.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
+            if (!Module.InTheMiddleOfPatch() && !Module.InTheMiddleOfRebase() &&
+                !Module.InTheMiddleOfConflictedMerge() && _thereWhereMergeConflicts && _offerCommit)
             {
                 if (MessageBox.Show(this, allConflictsResolved.Text, allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    GitUICommands.Instance.StartCommitDialog(this);
+                    UICommands.StartCommitDialog(this);
                 }
             }
 
-            if (!Settings.Module.InTheMiddleOfConflictedMerge() && ThereWhereMergeConflicts)
+            if (!Module.InTheMiddleOfConflictedMerge() && _thereWhereMergeConflicts)
             {
                 Close();
             }
@@ -178,8 +203,18 @@ namespace GitUI
 
         private string FixPath(string path)
         {
-            return path.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+            return (path ?? "").Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
         }
+
+        private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>()
+            {
+                {".doc",  "merge-doc.js"},
+                {".docx", "merge-doc.js"},
+                {".docm", "merge-doc.js"},
+                {".ods",  "merge-ods.vbs"},
+                {".odt",  "merge-ods.vbs"},
+                {".sxw",  "merge-ods.vbs"},
+            };
 
         private bool TryMergeWithScript(string fileName, string baseFileName, string remoteFileName, string localFileName)
         {
@@ -188,25 +223,23 @@ namespace GitUI
 
             try
             {
-                int extensionsSeperator = fileName.LastIndexOf('.');
-                if (!(extensionsSeperator > 0) || extensionsSeperator + 1 >= fileName.Length)
+                string extension = Path.GetExtension(fileName).ToLower();
+                if (extension.Length <= 1)
                     return false;
 
                 string dir = Path.GetDirectoryName(Application.ExecutablePath) +
                     Settings.PathSeparator + "Diff-Scripts" + Settings.PathSeparator;
                 if (Directory.Exists(dir))
                 {
-                    string[] mergeScripts = Directory.GetFiles(dir, "merge-" +
-                    fileName.Substring(extensionsSeperator + 1) + ".*");
-
-                    if (mergeScripts.Length > 0)
+                    string mergeScript = "";
+                    if (_mergeScripts.TryGetValue(extension, out mergeScript) &&
+                        File.Exists(dir + mergeScript))
                     {
-                        string mergeScript = mergeScripts[0];
-                        if (MessageBox.Show(this, string.Format(uskUseCustomMergeScript.Text,
-                            mergeScript.Replace(Settings.PathSeparator + Settings.PathSeparator.ToString(), Settings.PathSeparator.ToString())),
-                            uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        if (MessageBox.Show(this, string.Format(uskUseCustomMergeScript.Text, mergeScript),
+                                            uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
+                            DialogResult.Yes)
                         {
-                            UseMergeWithScript(fileName, mergeScript, baseFileName, remoteFileName, localFileName);
+                            UseMergeWithScript(fileName, dir + mergeScript, baseFileName, remoteFileName, localFileName);
 
                             return true;
                         }
@@ -224,22 +257,22 @@ namespace GitUI
         {
             //get timestamp of file before merge. This is an extra check to verify if merge was successfully
             DateTime lastWriteTimeBeforeMerge = DateTime.Now;
-            if (File.Exists(Settings.WorkingDir + fileName))
-                lastWriteTimeBeforeMerge = File.GetLastWriteTime(Settings.WorkingDir + fileName);
+            if (File.Exists(Module.WorkingDir + fileName))
+                lastWriteTimeBeforeMerge = File.GetLastWriteTime(Module.WorkingDir + fileName);
 
             int exitCode;
-            Settings.Module.RunCmd("wscript", "\"" + mergeScript + "\" \"" +
-                FixPath(Settings.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +
+            Module.RunCmd("wscript", "\"" + mergeScript + "\" \"" +
+                FixPath(Module.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +
                 FixPath(localFileName) + "\" \"" + FixPath(baseFileName) + "\"", out exitCode);
 
             if (MessageBox.Show(this, string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text,
-                FixPath(Settings.WorkingDir + fileName)), askMergeConflictSolvedCaption.Text,
+                FixPath(Module.WorkingDir + fileName)), askMergeConflictSolvedCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
 
                 DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
-                if (File.Exists(Settings.WorkingDir + fileName))
-                    lastWriteTimeAfterMerge = File.GetLastWriteTime(Settings.WorkingDir + fileName);
+                if (File.Exists(Module.WorkingDir + fileName))
+                    lastWriteTimeAfterMerge = File.GetLastWriteTime(Module.WorkingDir + fileName);
 
                 //The file is not modified, do not stage file and present warning
                 if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
@@ -254,21 +287,41 @@ namespace GitUI
             if (File.Exists(localFileName)) File.Delete(localFileName);
         }
 
+        private void Use2WayMerge(ref string arguments)
+        {
+            string mergeToolLower = mergetool.ToLowerInvariant();
+            switch (mergeToolLower)
+            {
+                case "kdiff3":
+                case "diffmerge":
+                case "beyondcompare3":
+                    arguments = arguments.Replace("\"$BASE\"", "");
+                    break;
+                case "araxis":
+                    arguments = arguments.Replace("-merge -3", "-merge");
+                    arguments = arguments.Replace("\"$BASE\"", "");
+                    break;
+                case "tortoisemerge":
+                    arguments = arguments.Replace("-base:\"$BASE\"", "").Replace("/base:\"$BASE\"", "");
+                    arguments = arguments.Replace("mine:\"$LOCAL\"", "base:\"$LOCAL\"");
+                    break;
+            }
+        }
+
         private void ConflictedFiles_DoubleClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             if (ConflictedFiles.SelectedRows.Count != 1)
                 return;
 
-            string filename = GetFileName();
-            string[] filenames = Settings.Module.GetConflictedFiles(filename);
-
             try
             {
-                if (Directory.Exists(Settings.WorkingDir + filename) && !File.Exists(Settings.WorkingDir + filename))
+                string filename = GetFileName();
+                string fullname = Path.Combine(Module.WorkingDir, filename);
+                if (Directory.Exists(fullname) && !File.Exists(fullname))
                 {
-                    var submoduleConfig = Settings.Module.GetSubmoduleConfigFile();
-                    if (submoduleConfig.GetConfigSections().Any(configSection => configSection.GetPathValue("path").Trim().Equals(filename.Trim())))
+                    var submodulesList = Module.GetSubmodulesLocalPathes();
+                    if (submodulesList.Any(configSection => configSection.Equals(filename.Trim())))
                     {
                         if (MessageBox.Show(this, mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                         {
@@ -279,8 +332,20 @@ namespace GitUI
                     //END: REPLACED WITH FASTER, BUT DIRTIER SUBMODULE CHECK
                 }
 
-                string arguments = mergetoolCmd;
+                ResolveFilesConflict(filename);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+                Initialize();
+            }
+        }
 
+        private void ResolveFilesConflict(string filename)
+        {
+            string[] filenames = Module.GetConflictedFiles(filename);
+            try
+            {
                 if (CheckForLocalRevision(filename) &&
                     CheckForRemoteRevision(filename))
                 {
@@ -290,7 +355,7 @@ namespace GitUI
                         return;
                     }
 
-                    if (FileHelper.IsBinaryFile(filename))
+                    if (FileHelper.IsBinaryFile(Module, filename))
                     {
                         if (MessageBox.Show(this, string.Format(fileIsBinary.Text, mergetool), _binaryFileWarningCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
                         {
@@ -299,6 +364,7 @@ namespace GitUI
                         }
                     }
 
+                    string arguments = mergetoolCmd;
                     //Check if there is a base file. If not, ask user to fall back to 2-way merge.
                     //git doesn't support 2-way merge, but we can try to adjust attributes to fix this.
                     //For kdiff3 this is easy; just remove the 3rd file from the arguments. Since the
@@ -308,35 +374,28 @@ namespace GitUI
                     {
                         DialogResult result = MessageBox.Show(this, string.Format(noBaseRevision.Text, filename), _noBaseFileMergeCaption.Text, MessageBoxButtons.YesNoCancel);
                         if (result == DialogResult.Yes)
-                        {
-                            arguments = arguments.Replace("-merge -3", "-merge"); // Araxis
-                            arguments = arguments.Replace("base:\"$BASE\"", ""); // TortoiseMerge
-                            arguments = arguments.Replace("mine:\"$LOCAL\"", "base:\"$LOCAL\""); // TortoiseMerge
-                            arguments = arguments.Replace("\"$BASE\"", ""); // Perforce, Beyond Compare 3, Araxis, DiffMerge
-                        }
+                            Use2WayMerge(ref arguments);
 
                         if (result == DialogResult.Cancel)
-                        {
                             return;
-                        }
                     }
 
                     arguments = arguments.Replace("$BASE", filenames[0]);
                     arguments = arguments.Replace("$LOCAL", filenames[1]);
                     arguments = arguments.Replace("$REMOTE", filenames[2]);
-                    arguments = arguments.Replace("$MERGED", filename + "");
+                    arguments = arguments.Replace("$MERGED", filename);
 
                     //get timestamp of file before merge. This is an extra check to verify if merge was successful
                     DateTime lastWriteTimeBeforeMerge = DateTime.Now;
-                    if (File.Exists(Settings.WorkingDir + filename))
-                        lastWriteTimeBeforeMerge = File.GetLastWriteTime(Settings.WorkingDir + filename);
+                    if (File.Exists(Module.WorkingDir + filename))
+                        lastWriteTimeBeforeMerge = File.GetLastWriteTime(Module.WorkingDir + filename);
 
                     int exitCode;
-                    Settings.Module.RunCmd(mergetoolPath, "" + arguments + "", out exitCode);
+                    Module.RunCmd(mergetoolPath, "" + arguments + "", out exitCode);
 
                     DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
-                    if (File.Exists(Settings.WorkingDir + filename))
-                        lastWriteTimeAfterMerge = File.GetLastWriteTime(Settings.WorkingDir + filename);
+                    if (File.Exists(Module.WorkingDir + filename))
+                        lastWriteTimeAfterMerge = File.GetLastWriteTime(Module.WorkingDir + filename);
 
                     //Check exitcode AND timestamp of the file. If exitcode is success and
                     //time timestamp is changed, we are pretty sure the merge was done.
@@ -360,8 +419,6 @@ namespace GitUI
             finally
             {
                 DeleteTemporaryFiles(filenames);
-                Cursor.Current = Cursors.Default;
-                Initialize();
             }
         }
 
@@ -377,7 +434,7 @@ namespace GitUI
 
         private void InitMergetool()
         {
-            mergetool = Settings.Module.GetEffectiveSetting("merge.tool");
+            mergetool = Module.GetEffectiveSetting("merge.tool");
 
             if (string.IsNullOrEmpty(mergetool))
             {
@@ -386,39 +443,59 @@ namespace GitUI
             }
             Cursor.Current = Cursors.WaitCursor;
 
-            mergetoolCmd = Settings.Module.GetEffectivePathSetting(string.Format("mergetool.{0}.cmd", mergetool));
+            mergetoolCmd = Module.GetEffectivePathSetting(string.Format("mergetool.{0}.cmd", mergetool));
 
-            mergetoolPath = Settings.Module.GetEffectivePathSetting(string.Format("mergetool.{0}.path", mergetool));
+            mergetoolPath = Module.GetEffectivePathSetting(string.Format("mergetool.{0}.path", mergetool));
 
             if (string.IsNullOrEmpty(mergetool) || mergetool == "kdiff3")
-                mergetoolCmd = mergetoolPath + " \"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
-
-            const string executablePattern = ".exe";
-            int idx = mergetoolCmd.IndexOf(executablePattern);
-            if (idx >= 0)
             {
-                mergetoolPath = mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim(new[] { '\"', ' ' });
-                mergetoolCmd = mergetoolCmd.Substring(idx + executablePattern.Length + 1);
+                mergetoolCmd = "\"$BASE\" \"$LOCAL\" \"$REMOTE\" -o \"$MERGED\"";
+            }
+            else
+            {
+                //This only works when on Windows....
+                const string executablePattern = ".exe";
+                int idx = mergetoolCmd.IndexOf(executablePattern);
+                if (idx >= 0)
+                {
+                    mergetoolPath = mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim(new[] { '\"', ' ' });
+                    mergetoolCmd = mergetoolCmd.Substring(idx + executablePattern.Length + 1);
+                }
             }
             Cursor.Current = Cursors.Default;
+        }
+
+        private bool ShowAbortMessage()
+        {
+            if (MessageBox.Show(_abortCurrentOpperation.Text, _abortCurrentOpperationCaption.Text,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                if (MessageBox.Show(_areYouSureYouWantDeleteFiles.Text, _areYouSureYouWantDeleteFilesCaption.Text,
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                    return true;
+            }
+            return false;
         }
 
         private void Reset_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            if (Abort.AbortCurrentAction())
+            if (ShowAbortMessage())
+            {
+                Module.ResetHard("");
                 Close();
+            }
             Cursor.Current = Cursors.Default;
         }
 
         private string GetRemoteSideString()
         {
-            bool inTheMiddleOfRebase = Settings.Module.InTheMiddleOfRebase();
+            bool inTheMiddleOfRebase = Module.InTheMiddleOfRebase();
             return inTheMiddleOfRebase ? ours.Text : theirs.Text;
         }
         private string GetLocalSideString()
         {
-            bool inTheMiddleOfRebase = Settings.Module.InTheMiddleOfRebase();
+            bool inTheMiddleOfRebase = Module.InTheMiddleOfRebase();
             return inTheMiddleOfRebase ? theirs.Text : ours.Text;
         }
 
@@ -432,7 +509,7 @@ namespace GitUI
             }
 
             string filename = GetFileName();
-            string[] filenames = Settings.Module.GetConflictedFileNames(filename);
+            string[] filenames = Module.GetConflictedFileNames(filename);
 
             bool baseFileExists = !string.IsNullOrEmpty(filenames[0]);
             bool localFileExists = !string.IsNullOrEmpty(filenames[1]);
@@ -463,7 +540,7 @@ namespace GitUI
 
             if (CheckForBaseRevision(filename))
             {
-                if (!Settings.Module.HandleConflictSelectBase(filename))
+                if (!Module.HandleConflictSelectBase(filename))
                     MessageBox.Show(this, _chooseBaseFileFailedText.Text);
             }
             Initialize();
@@ -477,7 +554,7 @@ namespace GitUI
             string filename = GetFileName();
             if (CheckForLocalRevision(filename))
             {
-                if (!Settings.Module.HandleConflictSelectLocal(GetFileName()))
+                if (!Module.HandleConflictSelectLocal(GetFileName()))
                     MessageBox.Show(this, _chooseLocalFileFailedText.Text);
             }
             Initialize();
@@ -490,7 +567,7 @@ namespace GitUI
             string filename = GetFileName();
             if (CheckForRemoteRevision(filename))
             {
-                if (!Settings.Module.HandleConflictSelectRemote(GetFileName()))
+                if (!Module.HandleConflictSelectRemote(GetFileName()))
                     MessageBox.Show(this, _chooseRemoteFileFailedText.Text);
             }
             Initialize();
@@ -505,39 +582,43 @@ namespace GitUI
                                             GetLocalSideString(),
                                             GetRemoteSideString());
 
-            var frm = new FormModifiedDeletedCreated(string.Format(chooseLocalButtonText.Text + " ({0})", GetLocalSideString()),
+            using (var frm = new FormModifiedDeletedCreated(string.Format(chooseLocalButtonText.Text + " ({0})", GetLocalSideString()),
                                                                             string.Format(chooseRemoteButtonText.Text + " ({0})", GetRemoteSideString()),
                                                                             keepBaseButtonText.Text,
-                                                                            caption);
-            frm.ShowDialog(this);
-            if (frm.KeepBase) //base
-                Settings.Module.HandleConflictSelectBase(GetFileName());
-            if (frm.KeepLocal) //local
-                Settings.Module.HandleConflictSelectLocal(GetFileName());
-            if (frm.KeepRemote) //remote
-                Settings.Module.HandleConflictSelectRemote(GetFileName());
+                                                                            caption))
+            {
+                frm.ShowDialog(this);
+                if (frm.KeepBase) //base
+                    Module.HandleConflictSelectBase(GetFileName());
+                if (frm.KeepLocal) //local
+                    Module.HandleConflictSelectLocal(GetFileName());
+                if (frm.KeepRemote) //remote
+                    Module.HandleConflictSelectRemote(GetFileName());
+            }
         }
 
         private bool CheckForBaseRevision(string filename)
         {
-            if (string.IsNullOrEmpty(Settings.Module.GetConflictedFileNames(filename)[0]))
+            if (string.IsNullOrEmpty(Module.GetConflictedFileNames(filename)[0]))
             {
                 string caption = string.Format(fileCreatedLocallyAndRemotelyLong.Text,
                                                 filename,
                                                 GetLocalSideString(),
                                                 GetRemoteSideString());
 
-                var frm = new FormModifiedDeletedCreated(string.Format(chooseLocalButtonText.Text + " ({0})", GetLocalSideString()),
+                using (var frm = new FormModifiedDeletedCreated(string.Format(chooseLocalButtonText.Text + " ({0})", GetLocalSideString()),
                                                                                 string.Format(chooseRemoteButtonText.Text + " ({0})", GetRemoteSideString()),
                                                                                 deleteFileButtonText.Text,
-                                                                                caption);
-                frm.ShowDialog(this);
-                if (frm.KeepBase) //delete
-                    Settings.Module.RunGitCmd("rm -- \"" + filename + "\"");
-                if (frm.KeepLocal) //local
-                    Settings.Module.HandleConflictSelectLocal(GetFileName());
-                if (frm.KeepRemote) //remote
-                    Settings.Module.HandleConflictSelectRemote(GetFileName());
+                                                                                caption))
+                {
+                    frm.ShowDialog(this);
+                    if (frm.KeepBase) //delete
+                        Module.RunGitCmd("rm -- \"" + filename + "\"");
+                    if (frm.KeepLocal) //local
+                        Module.HandleConflictSelectLocal(GetFileName());
+                    if (frm.KeepRemote) //remote
+                        Module.HandleConflictSelectRemote(GetFileName());
+                }
                 return false;
             }
             return true;
@@ -545,24 +626,26 @@ namespace GitUI
 
         private bool CheckForLocalRevision(string filename)
         {
-            if (string.IsNullOrEmpty(Settings.Module.GetConflictedFileNames(filename)[1]))
+            if (string.IsNullOrEmpty(Module.GetConflictedFileNames(filename)[1]))
             {
                 string caption = string.Format(fileDeletedLocallyAndModifiedRemotelyLong.Text,
                                                 filename,
                                                 GetLocalSideString(),
                                                 GetRemoteSideString());
 
-                var frm = new FormModifiedDeletedCreated(string.Format(deleteFileButtonText.Text + " ({0})", GetLocalSideString()),
+                using (var frm = new FormModifiedDeletedCreated(string.Format(deleteFileButtonText.Text + " ({0})", GetLocalSideString()),
                                                                                 string.Format(keepModifiedButtonText.Text + " ({0})", GetRemoteSideString()),
                                                                                 keepBaseButtonText.Text,
-                                                                                caption);
-                frm.ShowDialog(this);
-                if (frm.KeepBase) //base
-                    Settings.Module.HandleConflictSelectBase(GetFileName());
-                if (frm.KeepLocal) //delete
-                    Settings.Module.RunGitCmd("rm -- \"" + filename + "\"");
-                if (frm.KeepRemote) //remote
-                    Settings.Module.HandleConflictSelectRemote(GetFileName());
+                                                                                caption))
+                {
+                    frm.ShowDialog(this);
+                    if (frm.KeepBase) //base
+                        Module.HandleConflictSelectBase(GetFileName());
+                    if (frm.KeepLocal) //delete
+                        Module.RunGitCmd("rm -- \"" + filename + "\"");
+                    if (frm.KeepRemote) //remote
+                        Module.HandleConflictSelectRemote(GetFileName());
+                }
                 return false;
             }
             return true;
@@ -570,24 +653,26 @@ namespace GitUI
 
         private bool CheckForRemoteRevision(string filename)
         {
-            if (string.IsNullOrEmpty(Settings.Module.GetConflictedFileNames(filename)[2]))
+            if (string.IsNullOrEmpty(Module.GetConflictedFileNames(filename)[2]))
             {
                 string caption = string.Format(fileModifiedLocallyAndDelededRemotelyLong.Text,
                                                 filename,
                                                 GetLocalSideString(),
                                                 GetRemoteSideString());
 
-                var frm = new FormModifiedDeletedCreated(string.Format(keepModifiedButtonText.Text + " ({0})", GetLocalSideString()),
+                using (var frm = new FormModifiedDeletedCreated(string.Format(keepModifiedButtonText.Text + " ({0})", GetLocalSideString()),
                                                                                 string.Format(deleteFileButtonText.Text + " ({0})", GetRemoteSideString()),
                                                                                 keepBaseButtonText.Text,
-                                                                                caption);
-                frm.ShowDialog(this);
-                if (frm.KeepBase) //base
-                    Settings.Module.HandleConflictSelectBase(GetFileName());
-                if (frm.KeepLocal) //delete
-                    Settings.Module.HandleConflictSelectLocal(GetFileName());
-                if (frm.KeepRemote) //remote
-                    Settings.Module.RunGitCmd("rm -- \"" + filename + "\"");
+                                                                                caption))
+                {
+                    frm.ShowDialog(this);
+                    if (frm.KeepBase) //base
+                        Module.HandleConflictSelectBase(GetFileName());
+                    if (frm.KeepLocal) //delete
+                        Module.HandleConflictSelectLocal(GetFileName());
+                    if (frm.KeepRemote) //remote
+                        Module.RunGitCmd("rm -- \"" + filename + "\"");
+                }
                 return false;
             }
             return true;
@@ -608,9 +693,9 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            Settings.Module.HandleConflictsSaveSide(GetFileName(), fileName, "BASE");
+            Module.HandleConflictsSaveSide(GetFileName(), fileName, "BASE");
 
-            OpenWith.OpenAs(fileName);
+            OsShellUtil.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
         }
 
@@ -622,9 +707,9 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            Settings.Module.HandleConflictsSaveSide(GetFileName(), fileName, "LOCAL");
+            Module.HandleConflictsSaveSide(GetFileName(), fileName, "LOCAL");
 
-            OpenWith.OpenAs(fileName);
+            OsShellUtil.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
         }
 
@@ -654,9 +739,9 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            Settings.Module.HandleConflictsSaveSide(GetFileName(), fileName, "REMOTE");
+            Module.HandleConflictsSaveSide(GetFileName(), fileName, "REMOTE");
 
-            OpenWith.OpenAs(fileName);
+            OsShellUtil.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
         }
 
@@ -679,19 +764,21 @@ namespace GitUI
             string fileName = GetFileName();
             fileName = GetShortFileName(fileName);
 
-            var fileDialog = new SaveFileDialog
+            using (var fileDialog = new SaveFileDialog
                                  {
                                      FileName = fileName,
-                                     InitialDirectory = Settings.WorkingDir + GetDirectoryFromFileName(GetFileName()),
+                                     InitialDirectory = Module.WorkingDir + GetDirectoryFromFileName(GetFileName()),
                                      AddExtension = true
-                                 };
-            fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
-            fileDialog.Filter = string.Format(_currentFormatFilter.Text, GitCommandHelpers.GetFileExtension(fileDialog.FileName)) + "|*." +
-                                GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|" + _allFilesFilter.Text + "|*.*";
-
-            if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                                 })
             {
-                Settings.Module.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side);
+                fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
+                fileDialog.Filter = string.Format(_currentFormatFilter.Text, GitCommandHelpers.GetFileExtension(fileDialog.FileName)) + "|*." +
+                                    GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|" + _allFilesFilter.Text + "|*.*";
+
+                if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    Module.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side);
+                }
             }
             Cursor.Current = Cursors.Default;
         }
@@ -727,13 +814,13 @@ namespace GitUI
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = GetFileName();
-            System.Diagnostics.Process.Start(Settings.WorkingDir + fileName);
+            System.Diagnostics.Process.Start(Module.WorkingDir + fileName);
         }
 
         private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = GetFileName();
-            OpenWith.OpenAs(Settings.WorkingDir + fileName);
+            OsShellUtil.OpenAs(Module.WorkingDir + fileName);
         }
 
         private void stageFile(string filename)
@@ -742,17 +829,17 @@ namespace GitUI
                 (
                     delegate(FormStatus form)
                     {
-                        form.AddOutput(string.Format(stageFilename.Text, filename));
-                        string output = Settings.Module.RunCmd
+                        form.AddMessageLine(string.Format(stageFilename.Text, filename));
+                        string output = Module.RunCmd
                             (
                             Settings.GitCommand, "add -- \"" + filename + "\""
                             );
-                        form.AddOutput(output);
+                        form.AddMessageLine(output);
                         form.Done(string.IsNullOrEmpty(output));
                     }
                 );
-            var process = new FormStatus(processStart, null) { Text = string.Format(stageFilename.Text, filename) };
-            process.ShowDialogOnError(this);
+            using (var process = new FormStatus(processStart, null) { Text = string.Format(stageFilename.Text, filename) })
+                process.ShowDialogOnError(this);
         }
 
 
@@ -778,7 +865,7 @@ namespace GitUI
 
         private void fileHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new FormFileHistory(GetFileName()).ShowDialog(this);
+            UICommands.StartFileHistoryDialog(this, GetFileName());
         }
 
         #region Hotkey commands
@@ -805,7 +892,7 @@ namespace GitUI
                 case Commands.ChooseBase: this.ContextChooseBase_Click(null, null); break;
                 case Commands.ChooseLocal: this.ContextChooseLocal_Click(null, null); break;
                 case Commands.ChooseRemote: this.ContextChooseRemote_Click(null, null); break;
-                default: ExecuteScriptCommand(cmd, Keys.None); break;
+                default: return base.ExecuteCommand(cmd);
             }
 
             return true;

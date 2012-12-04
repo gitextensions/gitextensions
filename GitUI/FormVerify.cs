@@ -8,7 +8,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormVerify : GitExtensionsForm
+    public sealed partial class FormVerify : GitModuleForm
     {
         private const string RestoredObjectsTagPrefix = "LOST_FOUND_";
 
@@ -28,7 +28,13 @@ namespace GitUI
         private readonly SortableLostObjectsList filteredLostObjects = new SortableLostObjectsList();
         private readonly DataGridViewCheckBoxHeaderCell selectedItemsHeader = new DataGridViewCheckBoxHeaderCell();
 
-        public FormVerify()
+        private FormVerify()
+            : this(null)
+        {
+        }
+
+        public FormVerify(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
@@ -54,20 +60,19 @@ namespace GitUI
         {
             var options = GetOptions();
 
-            var process = new FormProcess("fsck-objects --lost-found" + options);
-            process.ShowDialog(this);
+            FormProcess.ShowDialog(this, "fsck-objects --lost-found" + options);
             UpdateLostObjects();
         }
 
         private void RemoveClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, 
+            if (MessageBox.Show(this,
                 _removeDanglingObjectsQuestion.Text,
                 _removeDanglingObjectsCaption.Text,
                 MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
 
-            new FormProcess("prune").ShowDialog(this);
+            FormProcess.ShowDialog(this, "prune");
             UpdateLostObjects();
         }
 
@@ -78,7 +83,7 @@ namespace GitUI
 
         private void mnuLostObjectsCreateTag_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormTagSmall { Revision = GetCurrentGitRevision() })
+            using (var frm = new FormTagSmall(UICommands, GetCurrentGitRevision()))
             {
                 var dialogResult = frm.ShowDialog(this);
                 if (dialogResult == DialogResult.OK)
@@ -88,7 +93,7 @@ namespace GitUI
 
         private void mnuLostObjectsCreateBranch_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormBranchSmall { Revision = GetCurrentGitRevision() })
+            using (var frm = new FormBranchSmall(UICommands) { Revision = GetCurrentGitRevision() })
             {
                 var dialogResult = frm.ShowDialog(this);
                 if (dialogResult == DialogResult.OK)
@@ -170,12 +175,7 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            string dialogResult;
-            using (var process = new FormProcess("fsck-objects" + GetOptions()))
-            {
-                process.ShowDialog(this);
-                dialogResult = process.OutputString.ToString();
-            }
+            var dialogResult = FormProcess.ReadDialog(this, "fsck-objects" + GetOptions());
 
             if (FormProcess.IsOperationAborted(dialogResult))
             {
@@ -187,7 +187,7 @@ namespace GitUI
             lostObjects.AddRange(dialogResult
                 .Split('\r', '\n')
                 .Where(s => !string.IsNullOrEmpty(s))
-                .Select<string, LostObject>(LostObject.TryParse)
+                .Select<string, LostObject>((s) => LostObject.TryParse(Module, s))
                 .Where(parsedLostObject => parsedLostObject != null));
 
             UpdateFilteredLostObjects();
@@ -231,7 +231,7 @@ namespace GitUI
             var currenItem = CurrentItem;
             if (currenItem == null)
                 return;
-            new FormEdit(Settings.Module.ShowSha1(currenItem.Hash)).ShowDialog(this);
+            using (var frm = new FormEdit(Module.ShowSha1(currenItem.Hash))) frm.ShowDialog(this);
         }
 
         private int CreateLostFoundTags()
@@ -252,18 +252,18 @@ namespace GitUI
             foreach (var lostObject in selectedLostObjects)
             {
                 currentTag++;
-                Settings.Module.Tag(RestoredObjectsTagPrefix + currentTag, lostObject.Hash, false);
+                Module.Tag(RestoredObjectsTagPrefix + currentTag, lostObject.Hash, false, false);
             }
 
             return currentTag;
         }
 
-        private static void DeleteLostFoundTags()
+        private void DeleteLostFoundTags()
         {
-            foreach (var head in Settings.Module.GetHeads(true, false))
+            foreach (var head in Module.GetHeads(true, false))
             {
                 if (head.Name.StartsWith(RestoredObjectsTagPrefix))
-                    Settings.Module.DeleteTag(head.Name);
+                    Module.DeleteTag(head.Name);
             }
         }
 
@@ -273,7 +273,7 @@ namespace GitUI
             if (currentItem == null)
                 throw new InvalidOperationException("There are no current selected item.");
 
-            return new GitRevision(currentItem.Hash);
+            return new GitRevision(Module, currentItem.Hash);
         }
     }
 }

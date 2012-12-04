@@ -35,11 +35,11 @@ namespace GitUI.Tag
             this.TName = new System.Windows.Forms.TextBox();
             this.annotate = new System.Windows.Forms.CheckBox();
             this.pushTag = new System.Windows.Forms.CheckBox();
-            this.tagMessage = new EditNetSpell();
+            this.tagMessage = new GitUI.SpellChecker.EditNetSpell();
             this.label2 = new System.Windows.Forms.Label();
+            this.ForceTag = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
-            
-			// 
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -48,8 +48,7 @@ namespace GitUI.Tag
             this.label1.Size = new System.Drawing.Size(60, 15);
             this.label1.TabIndex = 8;
             this.label1.Text = "Tag name";
-            
-			// 
+            // 
             // Ok
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -64,12 +63,11 @@ namespace GitUI.Tag
             // TName
             // 
             this.TName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-						| System.Windows.Forms.AnchorStyles.Right)));
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.TName.Location = new System.Drawing.Point(108, 7);
             this.TName.Name = "TName";
             this.TName.Size = new System.Drawing.Size(227, 23);
             this.TName.TabIndex = 6;
-            this.TName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.NameKeyUp);
             // 
             // annotate
             // 
@@ -87,9 +85,9 @@ namespace GitUI.Tag
             this.pushTag.AutoSize = true;
             this.pushTag.Location = new System.Drawing.Point(108, 34);
             this.pushTag.Name = "pushTag";
-            this.pushTag.Size = new System.Drawing.Size(72, 19);
+            this.pushTag.Size = new System.Drawing.Size(109, 19);
             this.pushTag.TabIndex = 10;
-            this.pushTag.Text = "Push tag";
+            this.pushTag.Text = "Push tag to \'{0}\'";
             this.pushTag.UseVisualStyleBackColor = true;
             // 
             // tagMessage
@@ -99,6 +97,7 @@ namespace GitUI.Tag
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tagMessage.Enabled = false;
             this.tagMessage.Location = new System.Drawing.Point(108, 73);
+            this.tagMessage.Margin = new System.Windows.Forms.Padding(2);
             this.tagMessage.Name = "tagMessage";
             this.tagMessage.Size = new System.Drawing.Size(339, 82);
             this.tagMessage.TabIndex = 11;
@@ -112,10 +111,21 @@ namespace GitUI.Tag
             this.label2.TabIndex = 12;
             this.label2.Text = "Message";
             // 
+            // ForceTag
+            // 
+            this.ForceTag.AutoSize = true;
+            this.ForceTag.Location = new System.Drawing.Point(280, 34);
+            this.ForceTag.Name = "ForceTag";
+            this.ForceTag.Size = new System.Drawing.Size(55, 19);
+            this.ForceTag.TabIndex = 13;
+            this.ForceTag.Text = "Force";
+            this.ForceTag.UseVisualStyleBackColor = true;
+            // 
             // FormTagSmall
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AcceptButton = this.Ok;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(459, 167);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tagMessage);
@@ -130,6 +140,7 @@ namespace GitUI.Tag
             this.Name = "FormTagSmall";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create tag";
+            this.Load += new System.EventHandler(this.FormTagSmall_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -144,5 +155,6 @@ namespace GitUI.Tag
         private System.Windows.Forms.CheckBox pushTag;
         private EditNetSpell tagMessage;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox ForceTag;
     }
 }

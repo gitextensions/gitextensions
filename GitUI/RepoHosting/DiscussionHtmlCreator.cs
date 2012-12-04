@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using GitUIPluginInterfaces.RepositoryHosts;
-using System.Drawing;
-using System.Reflection;
 
 namespace GitUI.RepoHosting
 {

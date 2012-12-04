@@ -36,12 +36,21 @@
             this.DonateCategory = new GitUI.DashboardCategory();
             this.groupLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
+#endif
             this.splitContainer5.Panel1.SuspendLayout();
             this.splitContainer5.Panel2.SuspendLayout();
             this.splitContainer5.SuspendLayout();
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).BeginInit();
+#endif
             this.splitContainer6.Panel1.SuspendLayout();
             this.splitContainer6.Panel2.SuspendLayout();
             this.splitContainer6.SuspendLayout();
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).BeginInit();
+#endif
             this.splitContainer7.Panel1.SuspendLayout();
             this.splitContainer7.Panel2.SuspendLayout();
             this.splitContainer7.SuspendLayout();
@@ -54,6 +63,7 @@
             this.splitContainer5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer5.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer5.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitContainer5.Name = "splitContainer5";
             // 
             // splitContainer5.Panel1
@@ -77,6 +87,7 @@
             this.splitContainer6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer6.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer6.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitContainer6.Name = "splitContainer6";
             this.splitContainer6.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -98,9 +109,9 @@
             this.CommonActions.AutoSize = true;
             this.CommonActions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.CommonActions.BackColor = System.Drawing.Color.Transparent;
-            this.CommonActions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommonActions.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.CommonActions.Dock = System.Windows.Forms.DockStyle.None;
             this.CommonActions.Location = new System.Drawing.Point(0, 0);
+            this.CommonActions.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.CommonActions.Name = "CommonActions";
             this.CommonActions.RepositoryCategory = null;
             this.CommonActions.Size = new System.Drawing.Size(314, 126);
@@ -127,7 +138,6 @@
             this.splitContainer7.Panel2.Controls.Add(this.DonateCategory);
             this.splitContainer7.Size = new System.Drawing.Size(314, 492);
             this.splitContainer7.SplitterDistance = 412;
-            this.splitContainer7.SplitterWidth = 5;
             this.splitContainer7.TabIndex = 0;
             // 
             // RecentRepositories
@@ -136,8 +146,8 @@
             this.RecentRepositories.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.RecentRepositories.BackColor = System.Drawing.Color.Transparent;
             this.RecentRepositories.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RecentRepositories.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.RecentRepositories.Location = new System.Drawing.Point(0, 0);
+            this.RecentRepositories.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RecentRepositories.Name = "RecentRepositories";
             this.RecentRepositories.RepositoryCategory = null;
             this.RecentRepositories.Size = new System.Drawing.Size(314, 412);
@@ -150,11 +160,11 @@
             this.DonateCategory.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.DonateCategory.BackColor = System.Drawing.Color.Transparent;
             this.DonateCategory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DonateCategory.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.DonateCategory.Location = new System.Drawing.Point(0, 0);
+            this.DonateCategory.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.DonateCategory.Name = "DonateCategory";
             this.DonateCategory.RepositoryCategory = null;
-            this.DonateCategory.Size = new System.Drawing.Size(314, 75);
+            this.DonateCategory.Size = new System.Drawing.Size(314, 76);
             this.DonateCategory.TabIndex = 0;
             this.DonateCategory.Title = "Contribute";
             // 
@@ -165,6 +175,7 @@
             this.groupLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.groupLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            this.groupLayoutPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupLayoutPanel.Name = "groupLayoutPanel";
             this.groupLayoutPanel.Size = new System.Drawing.Size(653, 623);
             this.groupLayoutPanel.TabIndex = 0;
@@ -179,7 +190,8 @@
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox1.Image = global::GitUI.Properties.Resources.git_extensions_logo_final_128;
-            this.pictureBox1.Location = new System.Drawing.Point(299, 328);
+            this.pictureBox1.Location = new System.Drawing.Point(256, 262);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(128, 128);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -189,24 +201,33 @@
             // 
             // Dashboard
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.splitContainer5);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Dashboard";
             this.Size = new System.Drawing.Size(972, 623);
             this.splitContainer5.Panel1.ResumeLayout(false);
             this.splitContainer5.Panel2.ResumeLayout(false);
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).EndInit();
+#endif
             this.splitContainer5.ResumeLayout(false);
             this.splitContainer6.Panel1.ResumeLayout(false);
             this.splitContainer6.Panel1.PerformLayout();
             this.splitContainer6.Panel2.ResumeLayout(false);
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).EndInit();
+#endif
             this.splitContainer6.ResumeLayout(false);
             this.splitContainer7.Panel1.ResumeLayout(false);
             this.splitContainer7.Panel1.PerformLayout();
             this.splitContainer7.Panel2.ResumeLayout(false);
             this.splitContainer7.Panel2.PerformLayout();
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer7)).EndInit();
+#endif
             this.splitContainer7.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

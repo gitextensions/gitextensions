@@ -1,4 +1,5 @@
-﻿namespace GitUI
+﻿#pragma warning disable 0628
+namespace GitUI
 {
     partial class FileStatusList
     {
@@ -38,9 +39,11 @@
             // 
             this.FileStatusListBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileStatusListBox.FormattingEnabled = true;
+            this.FileStatusListBox.ItemHeight = 15;
             this.FileStatusListBox.Location = new System.Drawing.Point(0, 0);
+            this.FileStatusListBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.FileStatusListBox.Name = "FileStatusListBox";
-            this.FileStatusListBox.Size = new System.Drawing.Size(585, 420);
+            this.FileStatusListBox.Size = new System.Drawing.Size(682, 485);
             this.FileStatusListBox.TabIndex = 0;
             this.FileStatusListBox.SizeChanged += new System.EventHandler(this.NoFiles_SizeChanged);
             this.FileStatusListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FileStatusListBox_KeyDown);
@@ -49,21 +52,21 @@
             // 
             this.NoFiles.BackColor = System.Drawing.SystemColors.Window;
             this.NoFiles.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.NoFiles.Location = new System.Drawing.Point(5, 5);
+            this.NoFiles.Location = new System.Drawing.Point(6, 6);
             this.NoFiles.Margin = new System.Windows.Forms.Padding(0);
             this.NoFiles.Name = "NoFiles";
-            this.NoFiles.Size = new System.Drawing.Size(172, 49);
+            this.NoFiles.Size = new System.Drawing.Size(201, 56);
             this.NoFiles.TabIndex = 1;
             this.NoFiles.Text = "No changes";
             // 
             // FileStatusList
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.NoFiles);
             this.Controls.Add(this.FileStatusListBox);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FileStatusList";
-            this.Size = new System.Drawing.Size(585, 420);
+            this.Size = new System.Drawing.Size(682, 485);
             this.ResumeLayout(false);
 
         }
@@ -71,7 +74,8 @@
         #endregion
 
         private System.Windows.Forms.ListBox FileStatusListBox;
-        private System.Windows.Forms.ToolTip DiffFilesTooltip;
+		//This property cannot be private because this will break compilation in monodevelop
+        protected System.Windows.Forms.ToolTip DiffFilesTooltip;
         private System.Windows.Forms.Label NoFiles;
     }
 }

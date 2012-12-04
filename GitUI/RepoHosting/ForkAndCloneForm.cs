@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using GitUIPluginInterfaces.RepositoryHosts;
 using GitCommands;
-using System.IO;
 using GitCommands.Repository;
-using System.Diagnostics;
+using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
 
 namespace GitUI.RepoHosting
@@ -35,9 +35,11 @@ namespace GitUI.RepoHosting
         #endregion
 
         readonly IRepositoryHostPlugin _gitHoster;
+        private GitModuleChangedEventHandler GitModuleChanged;
 
-        public ForkAndCloneForm(IRepositoryHostPlugin gitHoster)
+        public ForkAndCloneForm(IRepositoryHostPlugin gitHoster, GitModuleChangedEventHandler GitModuleChanged)
         {
+            this.GitModuleChanged = GitModuleChanged;
             _gitHoster = gitHoster;
             InitializeComponent();
             Translate();
@@ -70,7 +72,7 @@ namespace GitUI.RepoHosting
             _myReposLV.Items.Clear();
             _myReposLV.Items.Add(new ListViewItem { Text = _strLoading.Text });
 
-            AsyncHelpers.DoAsync(
+            AsyncLoader.DoAsync(
                 () => _gitHoster.GetMyRepos(),
 
                 repos =>
@@ -102,7 +104,7 @@ namespace GitUI.RepoHosting
 
             PrepareSearch(sender, e);
 
-            AsyncHelpers.DoAsync(
+            AsyncLoader.DoAsync(
                 () => _gitHoster.SearchForRepository(search),
                 HandleSearchResult,
                 ex => { MessageBox.Show(this, _strSearchFailed.Text + ex.Message, _strError.Text); _searchBtn.Enabled = true; });
@@ -114,7 +116,7 @@ namespace GitUI.RepoHosting
                 return;
             PrepareSearch(sender, e);
 
-            AsyncHelpers.DoAsync(
+            AsyncLoader.DoAsync(
                 () => _gitHoster.GetRepositoriesOfUser(search.Trim()),
                 HandleSearchResult,
                 ex =>
@@ -201,12 +203,14 @@ namespace GitUI.RepoHosting
         {
             var initialDir = _destinationTB.Text.Length > 0 ? _destinationTB.Text : "C:\\";
 
-            var browseDialog = new FolderBrowserDialog { SelectedPath = initialDir };
-
-            if (browseDialog.ShowDialog(this) == DialogResult.OK)
+            using (var browseDialog = new FolderBrowserDialog { SelectedPath = initialDir })
             {
-                _destinationTB.Text = browseDialog.SelectedPath;
-                _destinationTB_TextChanged(sender, e);
+
+                if (browseDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    _destinationTB.Text = browseDialog.SelectedPath;
+                    _destinationTB_TextChanged(sender, e);
+                }
             }
         }
 
@@ -268,21 +272,25 @@ namespace GitUI.RepoHosting
             string repoSrc = repo.CloneReadWriteUrl;
 
             string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir);
-            var formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog(this);
 
-            if (formProcess.ErrorOccurred())
+            FormRemoteProcess formRemoteProcess = new FormRemoteProcess(new GitModule(null), Settings.GitCommand, cmd);
+            formRemoteProcess.Remote = repoSrc;
+            formRemoteProcess.ShowDialog();
+
+            if (formRemoteProcess.ErrorOccurred())
                 return;
 
-            Repositories.AddMostRecentRepository(targetDir);
-            Settings.WorkingDir = targetDir;
+            GitModule module = new GitModule(targetDir);
 
             if (_addRemoteAsTB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentReadOnlyUrl))
             {
-                var error = Settings.Module.AddRemote(_addRemoteAsTB.Text.Trim(), repo.ParentReadOnlyUrl);
+                var error = module.AddRemote(_addRemoteAsTB.Text.Trim(), repo.ParentReadOnlyUrl);
                 if (!string.IsNullOrEmpty(error))
                     MessageBox.Show(this, error, _strCouldNotAddRemote.Text);
             }
+
+            if (GitModuleChanged != null)
+                GitModuleChanged(module);
 
             Close();
         }

@@ -1,34 +1,36 @@
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using PatchApply;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Threading;
 using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormStash : GitExtensionsForm
+    public sealed partial class FormStash : GitModuleForm
     {
         readonly TranslationString currentWorkingDirChanges = new TranslationString("Current working dir changes");
         readonly TranslationString noStashes = new TranslationString("There are no stashes.");
         readonly TranslationString stashUntrackedFilesNotSupportedCaption = new TranslationString("Stash untracked files");
         readonly TranslationString stashUntrackedFilesNotSupported = new TranslationString("Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.");
-
-
+        readonly TranslationString stashDropConfirmTitle = new TranslationString("Drop Stash Confirmation");
+        readonly TranslationString cannotBeUndone = new TranslationString("This action cannot be undone.");
+        readonly TranslationString areYouSure = new TranslationString("Are you sure you want to drop the stash? This action cannot be undone.");
+        readonly TranslationString dontShowAgain = new TranslationString("Don't show me this message again.");
         public bool NeedRefresh;
-        private readonly SynchronizationContext _syncContext;
 
-        public FormStash()
+        private FormStash()
+            : this(null)
+        { }
+
+        public FormStash(GitUICommands aCommands)
+            : base(aCommands)
         {
-            _syncContext = SynchronizationContext.Current;
-
             InitializeComponent();
-#if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
             Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
-#endif
             Translate();
             View.ExtraDiffArgumentsChanged += ViewExtraDiffArgumentsChanged;
         }
@@ -42,14 +44,13 @@ namespace GitUI
         {
             Settings.StashKeepIndex = StashKeepIndex.Checked;
             Settings.IncludeUntrackedFilesInManualStash = chkIncludeUntrackedFiles.Checked;
-            SavePosition("stash");
         }
 
         private void FormStashLoad(object sender, EventArgs e)
         {
             StashKeepIndex.Checked = Settings.StashKeepIndex;
             chkIncludeUntrackedFiles.Checked = Settings.IncludeUntrackedFilesInManualStash;
-            RestorePosition("stash");
+
             splitContainer2_SplitterMoved(null, null);
         }
 
@@ -57,7 +58,7 @@ namespace GitUI
 
         private void Initialize()
         {
-            IList<GitStash> stashedItems = Settings.Module.GetStashes();
+            IList<GitStash> stashedItems = Module.GetStashes();
 
             currentWorkingDirStashItem = new GitStash
             {
@@ -75,9 +76,8 @@ namespace GitUI
                 Stashes.Items.Add(stashedItem);
             if (Stashes.Items.Count > 1)
                 Stashes.SelectedIndex = 1;
-            else
-                if (Stashes.Items.Count > 0)
-                    Stashes.SelectedIndex = 0;
+            else if (Stashes.Items.Count > 0)
+                Stashes.SelectedIndex = 0;
         }
 
         private void InitializeSoft()
@@ -94,26 +94,13 @@ namespace GitUI
             {
                 Stashed.GitItemStatuses = null;
             }
+            else if (gitStash == currentWorkingDirStashItem)
+            {
+                toolStripButton_customMessage.Enabled = true;
+                AsyncLoader.DoAsync(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
+            }
             else
-                if (gitStash == currentWorkingDirStashItem)
-                {
-                    toolStripButton_customMessage.Enabled = true;
-                    ThreadPool.QueueUserWorkItem(
-                    o =>
-                    {
-                        IList<GitItemStatus> gitItemStatuses = Settings.Module.GetAllChangedFiles();
-                        _syncContext.Post(state1 => LoadGitItemStatuses(gitItemStatuses), null);
-                    });
-                }
-                else
-                {
-                    ThreadPool.QueueUserWorkItem(
-                    o =>
-                    {
-                        IList<GitItemStatus> gitItemStatuses = Settings.Module.GetDiffFiles(gitStash.Name, gitStash.Name + "^", true);
-                        _syncContext.Post(state1 => LoadGitItemStatuses(gitItemStatuses), null);
-                    });
-                }
+                AsyncLoader.DoAsync(() => Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
         }
 
         private void LoadGitItemStatuses(IList<GitItemStatus> gitItemStatuses)
@@ -133,24 +120,35 @@ namespace GitUI
             if (stashedItem != null &&
                 gitStash == currentWorkingDirStashItem) //current working dir
             {
-                View.ViewCurrentChanges(stashedItem.Name, stashedItem.OldName, stashedItem.IsStaged);
+                View.ViewCurrentChanges(stashedItem.Name, stashedItem.OldName, stashedItem.IsStaged, stashedItem.IsSubmodule);
             }
-            else
-                if (stashedItem != null)
+            else if (stashedItem != null)
+            {
+                if (stashedItem.IsNew && !stashedItem.IsTracked)
+                {
+                    if (!stashedItem.IsSubmodule)
+                        View.ViewGitItem(stashedItem.Name, stashedItem.TreeGuid);
+                    else
+                        View.ViewText(stashedItem.Name,
+                            GitCommandHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid));
+                }
+                else 
                 {
                     string extraDiffArguments = View.GetExtraDiffArguments();
                     Encoding encoding = this.View.Encoding;
                     View.ViewPatch(() =>
                     {
-                        PatchApply.Patch patch = Settings.Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding);
+                        Patch patch = Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding);
                         if (patch == null)
                             return String.Empty;
+                        if (stashedItem.IsSubmodule)
+                            return GitCommandHelpers.ProcessSubmodulePatch(Module, patch.Text);
                         return patch.Text;
                     });
-
                 }
-                else
-                    View.ViewText(string.Empty, string.Empty);
+            }
+            else
+                View.ViewText(string.Empty, string.Empty);
             Cursor.Current = Cursors.Default;
         }
 
@@ -180,7 +178,7 @@ namespace GitUI
                         return;
                 }
             }
-            new FormProcess(String.Format("stash save {0}{1}", arguments, msg)).ShowDialog(this);
+            FormProcess.ShowDialog(this, String.Format("stash save {0}{1}", arguments, msg));
             NeedRefresh = true;
             Initialize();
             Cursor.Current = Cursors.Default;
@@ -189,17 +187,49 @@ namespace GitUI
         private void ClearClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            new FormProcess(string.Format("stash drop {0}", Stashes.Text)).ShowDialog(this);
-            NeedRefresh = true;
-            Initialize();
-            Cursor.Current = Cursors.Default;
+
+            if (Settings.StashConfirmDropShow)
+            {
+                DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
+                                        this,
+                                       stashDropConfirmTitle.Text,
+                                       cannotBeUndone.Text,
+                                       areYouSure.Text,
+                                       "",
+                                       "",
+                                       dontShowAgain.Text,
+                                       PSTaskDialog.eTaskDialogButtons.OKCancel,
+                                       PSTaskDialog.eSysIcons.Information,
+                                       PSTaskDialog.eSysIcons.Information);
+                if (res == DialogResult.OK)
+                {
+                    FormProcess.ShowDialog(this, string.Format("stash drop \"{0}\"", Stashes.Text));
+                    NeedRefresh = true;
+                    Initialize();
+                    Cursor.Current = Cursors.Default;
+                }
+
+                if (PSTaskDialog.cTaskDialog.VerificationChecked)
+                {
+                    Settings.StashConfirmDropShow = false;
+                }
+            }
+            else
+            {
+                FormProcess.ShowDialog(this, string.Format("stash drop \"{0}\"", Stashes.Text));
+                NeedRefresh = true;
+                Initialize();
+                Cursor.Current = Cursors.Default;
+            }
+            
+
         }
 
         private void ApplyClick(object sender, EventArgs e)
         {
-            new FormProcess(string.Format("stash apply {0}", Stashes.Text)).ShowDialog(this);
+            FormProcess.ShowDialog(this, string.Format("stash apply \"{0}\"", Stashes.Text));
 
-            MergeConflictHandler.HandleMergeConflicts(this);
+            MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
 
             Initialize();
         }
@@ -274,11 +304,12 @@ namespace GitUI
 
         private void toolStripButton_customMessage_EnabledChanged(object sender, EventArgs e)
         {
-            if (!((ToolStripButton)sender).Enabled)
+            var button = (ToolStripButton)sender;
+            if (!button.Enabled)
             {
                 StashMessage.ReadOnly = true;
             }
-            else if (((ToolStripButton)sender).Enabled && ((ToolStripButton)sender).Checked)
+            else if (button.Enabled && button.Checked)
             {
                 StashMessage.ReadOnly = false;
             }

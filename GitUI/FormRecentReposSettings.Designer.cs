@@ -195,16 +195,16 @@
             this.LessRecentLB.FormattingEnabled = true;
             this.LessRecentLB.HorizontalScrollbar = true;
             this.LessRecentLB.ItemHeight = 15;
-            this.LessRecentLB.Location = new System.Drawing.Point(0, 216);
+            this.LessRecentLB.Location = new System.Drawing.Point(0, 201);
             this.LessRecentLB.Name = "LessRecentLB";
-            this.LessRecentLB.Size = new System.Drawing.Size(281, 206);
+            this.LessRecentLB.Size = new System.Drawing.Size(281, 221);
             this.LessRecentLB.TabIndex = 3;
             // 
             // panel3
             // 
             this.panel3.Controls.Add(this.label1);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 191);
+            this.panel3.Location = new System.Drawing.Point(0, 176);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(281, 25);
             this.panel3.TabIndex = 2;
@@ -228,7 +228,7 @@
             this.MostRecentLB.ItemHeight = 15;
             this.MostRecentLB.Location = new System.Drawing.Point(0, 22);
             this.MostRecentLB.Name = "MostRecentLB";
-            this.MostRecentLB.Size = new System.Drawing.Size(281, 169);
+            this.MostRecentLB.Size = new System.Drawing.Size(281, 154);
             this.MostRecentLB.TabIndex = 1;
             // 
             // panel2
@@ -340,8 +340,8 @@
             // 
             // FormRecentReposSettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(631, 456);
             this.Controls.Add(this.comboMinWidthEdit);
             this.Controls.Add(this.comboMinWidthLabel);

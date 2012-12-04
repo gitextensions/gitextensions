@@ -5,7 +5,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormResetCurrentBranch : GitExtensionsForm
+    public partial class FormResetCurrentBranch : GitModuleForm
     {
         readonly TranslationString branchInfo = new TranslationString("Reset {0} to:");
         readonly TranslationString commitInfo = new TranslationString("Commit: {0}");
@@ -15,7 +15,8 @@ namespace GitUI
         readonly TranslationString resetHardWarning = new TranslationString("You are about to discard ALL local changes, are you sure?");
         readonly TranslationString resetCaption = new TranslationString("Reset branch");
 
-        public FormResetCurrentBranch(GitRevision Revision)
+        public FormResetCurrentBranch(GitUICommands aCommands, GitRevision Revision)
+            : base(aCommands)
         {
             this.Revision = Revision;
 
@@ -29,7 +30,7 @@ namespace GitUI
             if (Revision == null)
                 throw new Exception("No revision");
 
-            _NO_TRANSLATE_BranchInfo.Text = string.Format(branchInfo.Text, Settings.Module.GetSelectedBranch());
+            _NO_TRANSLATE_BranchInfo.Text = string.Format(branchInfo.Text, Module.GetSelectedBranch());
             _NO_TRANSLATE_Commit.Text = string.Format(commitInfo.Text, Revision.Guid);
             _NO_TRANSLATE_Author.Text = string.Format(authorInfo.Text, Revision.Author);
             _NO_TRANSLATE_Date.Text = string.Format(dateInfo.Text, Revision.CommitDate);
@@ -41,17 +42,17 @@ namespace GitUI
         {
             if (Soft.Checked)
             {
-                new FormProcess(GitCommandHelpers.ResetSoftCmd(Revision.Guid)).ShowDialog(this);
+                FormProcess.ShowDialog(this, GitCommandHelpers.ResetSoftCmd(Revision.Guid));
             }
             else if (Mixed.Checked)
             {
-                new FormProcess(GitCommandHelpers.ResetMixedCmd(Revision.Guid)).ShowDialog(this);
+                FormProcess.ShowDialog(this, GitCommandHelpers.ResetMixedCmd(Revision.Guid));
             }
             else if (Hard.Checked)
             {
                 if (MessageBox.Show(this, resetHardWarning.Text, resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
-                    new FormProcess(GitCommandHelpers.ResetHardCmd(Revision.Guid)).ShowDialog(this);
+                    FormProcess.ShowDialog(this, GitCommandHelpers.ResetHardCmd(Revision.Guid));
                 }
                 else
                 {

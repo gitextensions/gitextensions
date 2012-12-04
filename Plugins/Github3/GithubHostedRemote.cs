@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using GitUIPluginInterfaces.RepositoryHosts;
-using Git.hub;
+﻿using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace Github3
 {
