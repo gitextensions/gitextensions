@@ -95,7 +95,7 @@ namespace GitCommandsTest.Config
         public void TestSave()
         {
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-            configFile.AddValue("branch.BranchName1.remote", "origin1");
+            configFile.SetValue("branch.BranchName1.remote", "origin1");
             configFile.Save();
 
             byte[] expectedFileContent =
@@ -110,7 +110,125 @@ namespace GitCommandsTest.Config
             {
                 Assert.AreEqual(expectedFileContent[index], fileContent[index]);
             }
+        }
 
+        [TestMethod]
+        public void TestSetValueNonExisting()
+        {
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+            configFile.Save();
+            
+            configFile.SetValue("section1.key1", "section1key1");
+            configFile.SetValue("section2.key1", "section2key1");
+            configFile.SetValue("section1.key2", "section1key2");
+            configFile.Save();
+
+            configFile = new ConfigFile(GetConfigFileName(), true);
+            Assert.AreEqual("section1key1", configFile.GetValue("section1.key1"));
+            Assert.AreEqual("section2key1", configFile.GetValue("section2.key1"));
+            Assert.AreEqual("section1key2", configFile.GetValue("section1.key2"));
+        }
+
+        [TestMethod]
+        public void TestSetValueExisting()
+        {
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+            configFile.SetValue("section.key", "section.key");
+            configFile.Save();
+
+            configFile.SetValue("section.key", "section.keyoverwrite");
+            configFile.Save();
+
+            configFile = new ConfigFile(GetConfigFileName(), true);
+            Assert.AreEqual("section.keyoverwrite", configFile.GetValue("section.key"));
+        }
+
+        [TestMethod]
+        public void TestSetValueRemoveExisting()
+        {
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+            configFile.SetValue("section1.key1", "section1.key1");
+            configFile.SetValue("section2.key1", "section2.key1");
+            configFile.SetValue("section1.key2", "section1.key2");
+            configFile.Save();
+
+            configFile.SetValue("section1.key1", null);
+            configFile.Save();
+
+            configFile = new ConfigFile(GetConfigFileName(), true);
+            Assert.IsFalse(configFile.HasValue("section1.key1"));
+            Assert.IsTrue(configFile.HasValue("section2.key1"));
+            Assert.IsTrue(configFile.HasValue("section1.key2"));
+        }
+
+        [TestMethod]
+        public void TestSetValueRemoveValueNonExisting()
+        {
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+            configFile.SetValue("section2.key1", "section2.key1");
+            configFile.SetValue("section1.key2", "section1.key2");
+            configFile.Save();
+
+            configFile.SetValue("section1.key1", null);
+            configFile.Save();
+
+            configFile = new ConfigFile(GetConfigFileName(), true);
+            Assert.IsFalse(configFile.HasValue("section1.key1"));
+            Assert.IsTrue(configFile.HasValue("section2.key1"));
+            Assert.IsTrue(configFile.HasValue("section1.key2"));
+        }
+
+        [TestMethod]
+        public void TestSetValueSectionWithDotNonExisting()
+        {
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+            configFile.SetValue("submodule.test.test2.path1", "submodule.test.test2.path1");
+            configFile.SetValue("submodule.test.test2.path2", "submodule.test.test2.path2");
+            configFile.Save();
+
+            configFile.SetValue("submodule.test.test1.path1", "submodule.test.test1.path1");
+            configFile.Save();
+
+            configFile = new ConfigFile(GetConfigFileName(), true);
+            Assert.AreEqual("submodule.test.test1.path1", configFile.GetValue("submodule.test.test1.path1"));
+            Assert.AreEqual("submodule.test.test2.path1", configFile.GetValue("submodule.test.test2.path1"));
+            Assert.AreEqual("submodule.test.test2.path2", configFile.GetValue("submodule.test.test2.path2"));
+        }
+
+        [TestMethod]
+        public void TestSetValueSectionWithDotExisting()
+        {
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+            configFile.SetValue("submodule.test.test1.path1", "invalid");
+            configFile.SetValue("submodule.test.test2.path1", "submodule.test.test2.path1");
+            configFile.SetValue("submodule.test.test2.path2", "submodule.test.test2.path2");
+            configFile.Save();
+
+            configFile.SetValue("submodule.test.test1.path1", "submodule.test.test1.path1");
+            configFile.Save();
+
+            configFile = new ConfigFile(GetConfigFileName(), true);
+            Assert.AreEqual("submodule.test.test1.path1", configFile.GetValue("submodule.test.test1.path1"));
+            Assert.AreEqual("submodule.test.test2.path1", configFile.GetValue("submodule.test.test2.path1"));
+            Assert.AreEqual("submodule.test.test2.path2", configFile.GetValue("submodule.test.test2.path2"));
+        }
+
+        [TestMethod]
+        public void TestSetValueRemoveSectionWithDotExisting()
+        {
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+            configFile.SetValue("submodule.test.test1.path1", "invalid");
+            configFile.SetValue("submodule.test.test2.path1", "submodule.test.test2.path1");
+            configFile.SetValue("submodule.test.test2.path2", "submodule.test.test2.path2");
+            configFile.Save();
+
+            configFile.SetValue("submodule.test.test1.path1", null);
+            configFile.Save();
+
+            configFile = new ConfigFile(GetConfigFileName(), true);
+            Assert.IsFalse(configFile.HasValue("submodule.test.test1.path1"));
+            Assert.AreEqual("submodule.test.test2.path1", configFile.GetValue("submodule.test.test2.path1"));
+            Assert.AreEqual("submodule.test.test2.path2", configFile.GetValue("submodule.test.test2.path2"));
         }
 
         [TestMethod]
@@ -220,72 +338,6 @@ namespace GitCommandsTest.Config
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual(@"c:/program files/gitextensions/gitextensions.exe", configFile.GetPathValue("directory.first"));
-            }
-        }
-
-        [TestMethod]
-        public void TestWithSectionWithDot()
-        {
-            { //TESTDATA
-                StringBuilder content = new StringBuilder();
-
-                content.AppendLine("[submodule \"test.test\"]");
-                content.AppendLine("path = test.test");
-
-                //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), GitModule.SystemEncoding);
-            }
-
-            //CHECK GET CONFIG VALUE
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                Assert.AreEqual("test.test", configFile.GetPathValue("submodule.test.test.path"));
-            }
-
-            //CHECK SET CONFIG VALUE
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                configFile.SetPathValue("submodule.test.test.path", "newvalue");
-                configFile.Save();
-            }
-
-            //CHECK WRITTEN VALUE
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                Assert.AreEqual("newvalue", configFile.GetPathValue("submodule.test.test.path"));
-            }
-        }
-
-        [TestMethod]
-        public void TestWithSectionWithDot2()
-        {
-            { //TESTDATA
-                StringBuilder content = new StringBuilder();
-
-                content.AppendLine("[submodule.test.test]");
-                content.AppendLine("path = test.test");
-
-                //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), GitModule.SystemEncoding);
-            }
-
-            //CHECK GET CONFIG VALUE
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                Assert.AreEqual("test.test", configFile.GetPathValue("submodule.test.test.path"));
-            }
-
-            //CHECK SET CONFIG VALUE
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                configFile.SetPathValue("submodule.test.test.path", "newvalue");
-                configFile.Save();
-            }
-
-            //CHECK WRITTEN VALUE
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                Assert.AreEqual("newvalue", configFile.GetPathValue("submodule.test.test.path"));
             }
         }
 
@@ -528,39 +580,13 @@ namespace GitCommandsTest.Config
         }
 
         [TestMethod]
-        public void CanSaveMultipleValuesForSameKeyInSections()
-        {
-            // create test data
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-
-                configFile.AddValue("remote.origin.fetch", "+mypath");
-                configFile.AddValue("remote.origin.fetch", "+myotherpath");
-
-                configFile.Save();
-            }
-
-            // verify
-            {
-
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-
-                IList<string> values = configFile.GetValues("remote.origin.fetch");
-
-                Assert.IsTrue(values.SingleOrDefault(x => x == "+mypath") != null);
-                Assert.IsTrue(values.SingleOrDefault(x => x == "+myotherpath") != null);
-            }
-        }
-
-
-        [TestMethod]
         public void CaseSensitive()
         {
 
 			// create test data
 			{
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                configFile.AddValue("branch.BranchName1.remote", "origin1");
+                configFile.SetValue("branch.BranchName1.remote", "origin1");
                 configFile.Save();
 
 				AddConfigValue(GetConfigFileName(), "branch.\"BranchName2\".remote", "origin2");
