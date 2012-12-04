@@ -333,6 +333,18 @@ namespace GitCommandsTest.Config
             }
         }
 
+        [TestMethod]
+        public void TestHasValue()
+        {
+            { //TESTDATA
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
+            }
+            ConfigFile file = new ConfigFile(GetConfigFileName(), true);
+            Assert.IsTrue(file.HasValue("section1.key1"));
+            Assert.IsFalse(file.HasValue("section10.key1"));
+        }
+
         
         [TestMethod]
         public void TestHasSection()
@@ -345,17 +357,6 @@ namespace GitCommandsTest.Config
             Assert.IsTrue(file.HasConfigSection("section1"));
             Assert.IsFalse(file.HasConfigSection("inexistent.section"));
             Assert.IsFalse(file.HasConfigSection("inexistent"));
-        }
-
-        [TestMethod]
-        public void TestHasValue()
-        {
-            { //TESTDATA
-                //Write test config
-                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
-            }
-            ConfigFile file = new ConfigFile(GetConfigFileName(), true);
-            Assert.IsTrue(file.HasValue("section1.key1"));
         }
 
         [TestMethod]
