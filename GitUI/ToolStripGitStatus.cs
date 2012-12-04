@@ -12,95 +12,152 @@ namespace GitUI
 {
     public sealed partial class ToolStripGitStatus : ToolStripMenuItem
     {
-        private static readonly Bitmap ICON_CLEAN = Properties.Resources.IconClean;
-        private static readonly Bitmap ICON_DIRTY = Properties.Resources.IconDirty;
-        private static readonly Bitmap ICON_DIRTY_SUBMODULES = Properties.Resources.IconDirtySubmodules;
-        private static readonly Bitmap ICON_STAGED = Properties.Resources.IconStaged;
-        private static readonly Bitmap ICON_MIXED = Properties.Resources.IconMixed;
+        private static readonly Bitmap IconClean = Properties.Resources.IconClean;
+        private static readonly Bitmap IconDirty = Properties.Resources.IconDirty;
+        private static readonly Bitmap IconDirtySubmodules = Properties.Resources.IconDirtySubmodules;
+        private static readonly Bitmap IconStaged = Properties.Resources.IconStaged;
+        private static readonly Bitmap IconMixed = Properties.Resources.IconMixed;
 
         /// <summary>
         /// We often change several files at once.
         /// Wait a second so they're all changed before we try to get the status.
         /// </summary>
-        private const int UpdateDelay = 1000;
+        private const int UpdateDelay = 500;
 
         /// <summary>
         /// Update every 5min, just to make sure something didn't slip through the cracks.
         /// </summary>
         private const int MaxUpdatePeriod = 5 * 60 * 1000;
 
-        private GitCommandsInstance gitGetUnstagedCommand = new GitCommandsInstance();
-        private readonly SynchronizationContext syncContext;
-        private readonly FileSystemWatcher watcher = new FileSystemWatcher();
+        private bool statusIsUpToDate = true;
+        private readonly FileSystemWatcher workTreeWatcher = new FileSystemWatcher();
         private readonly FileSystemWatcher gitDirWatcher = new FileSystemWatcher();
-        private string gitPath;
+        private string gitPath, submodulesPath;
         private int nextUpdateTime;
         private WorkingStatus currentStatus;
-        private bool hasDeferredUpdateRequests;
+        private HashSet<string> ignoredFiles = new HashSet<string>(); 
 
         public string CommitTranslatedString { get; set; }
 
+        private IGitUICommandsSource _UICommandsSource;
+        public IGitUICommandsSource UICommandsSource
+        {
+            get
+            {
+                return _UICommandsSource;
+            }
+
+            set
+            {
+                _UICommandsSource = value;
+                _UICommandsSource.GitUICommandsChanged += GitUICommandsChanged;
+                GitUICommandsChanged(UICommandsSource, null);
+            }
+        }
+        
+        public GitUICommands UICommands 
+        {
+            get
+            {
+                return UICommandsSource.UICommands;
+            }
+        }
+
+        public GitModule Module 
+        {
+            get
+            {
+                return UICommands.Module;
+            }
+        }
+
         public ToolStripGitStatus()
         {
-            syncContext = SynchronizationContext.Current;
-            gitGetUnstagedCommand.Exited += (o, ea) => syncContext.Post(_ => onData(), null);
-
             InitializeComponent();
+            components.Add(workTreeWatcher);
+            components.Add(gitDirWatcher);
             CommitTranslatedString = "Commit";
-
-            Settings.WorkingDirChanged += (_, newDir, newGitDir) => TryStartWatchingChanges(newDir, newGitDir);
-
-            GitUICommands.Instance.PreCheckoutBranch += GitUICommands_PreCheckout;
-            GitUICommands.Instance.PreCheckoutRevision += GitUICommands_PreCheckout;
-            GitUICommands.Instance.PostCheckoutBranch += GitUICommands_PostCheckout;
-            GitUICommands.Instance.PostCheckoutRevision += GitUICommands_PostCheckout;
+            ignoredFilesTimer.Interval = MaxUpdatePeriod;
+            CurrentStatus = WorkingStatus.Stopped;
 
             // Setup a file watcher to detect changes to our files. When they
             // change, we'll update our status.
-            watcher.Changed += watcher_Changed;
-            watcher.Created += watcher_Changed;
-            watcher.Deleted += watcher_Changed;
-            watcher.Error += watcher_Error;
-            watcher.IncludeSubdirectories = true;
-            watcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;
+            workTreeWatcher.EnableRaisingEvents = false;
+            workTreeWatcher.Changed += WorkTreeChanged;
+            workTreeWatcher.Created += WorkTreeChanged;
+            workTreeWatcher.Deleted += WorkTreeChanged;
+            workTreeWatcher.Renamed += WorkTreeChanged;
+            workTreeWatcher.Error += WorkTreeWatcherError;
+            workTreeWatcher.IncludeSubdirectories = true;
+            workTreeWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.LastWrite;
 
             // Setup a file watcher to detect changes to the .git repo files. When they
             // change, we'll update our status.
-            gitDirWatcher.Changed += gitWatcher_Changed;
-            gitDirWatcher.Created += gitWatcher_Changed;
-            gitDirWatcher.Deleted += gitWatcher_Changed;
-            gitDirWatcher.Error += watcher_Error;
+            gitDirWatcher.EnableRaisingEvents = false;
+            gitDirWatcher.Changed += GitDirChanged;
+            gitDirWatcher.Created += GitDirChanged;
+            gitDirWatcher.Deleted += GitDirChanged;
+            gitDirWatcher.Error += WorkTreeWatcherError;
             gitDirWatcher.IncludeSubdirectories = true;
-            gitDirWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;
-
-            TryStartWatchingChanges(Settings.WorkingDir, Settings.Module.GetGitDirectory());
+            gitDirWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite;            
         }
 
+        private void GitUICommandsChanged(IGitUICommandsSource source, GitUICommands oldCommands)
+        {
+            if (oldCommands != null)
+            {
+                oldCommands.PreCheckoutBranch -= GitUICommands_PreCheckout;
+                oldCommands.PreCheckoutRevision -= GitUICommands_PreCheckout;
+                oldCommands.PostCheckoutBranch -= GitUICommands_PostCheckout;
+                oldCommands.PostCheckoutRevision -= GitUICommands_PostCheckout;
+                oldCommands.PostEditGitIgnore -= GitUICommands_PostEditGitIgnore;
+            }
+
+            if (UICommands != null)
+            {
+                UICommands.PreCheckoutBranch += GitUICommands_PreCheckout;
+                UICommands.PreCheckoutRevision += GitUICommands_PreCheckout;
+                UICommands.PostCheckoutBranch += GitUICommands_PostCheckout;
+                UICommands.PostCheckoutRevision += GitUICommands_PostCheckout;
+                UICommands.PostEditGitIgnore += GitUICommands_PostEditGitIgnore;
+                
+                TryStartWatchingChanges(Module.WorkingDir, Module.GetGitDirectory());
+            }
+        }
 
         private void GitUICommands_PreCheckout(object sender, GitUIBaseEventArgs e)
         {
             CurrentStatus = WorkingStatus.Paused;
         }
 
-        private void GitUICommands_PostCheckout(object sender, GitUIBaseEventArgs e)
+        private void GitUICommands_PostCheckout(object sender, GitUIPostActionEventArgs e)
         {
             CurrentStatus = WorkingStatus.Started;
         }
 
-        private void TryStartWatchingChanges(string watchingPath, string watchingGitPath)
+        private void GitUICommands_PostEditGitIgnore(object sender, GitUIBaseEventArgs e)
+        {
+            UpdateIgnoredFiles(true);
+        }
+        
+        private void TryStartWatchingChanges(string workTreePath, string gitDirPath)
         {
             // reset status info, it was outdated
-            Text = string.Empty;
-            Image = null;
+            Text = CommitTranslatedString;
+            Image = IconClean;
 
             try
             {
-                if (!string.IsNullOrEmpty(watchingPath) && Directory.Exists(watchingPath) &&
-                    !string.IsNullOrEmpty(watchingGitPath) && Directory.Exists(watchingGitPath))
+                if (!string.IsNullOrEmpty(workTreePath) && Directory.Exists(workTreePath) &&
+                    !string.IsNullOrEmpty(gitDirPath) && Directory.Exists(gitDirPath))
                 {
-                    watcher.Path = watchingPath;
-                    gitDirWatcher.Path = watchingGitPath;
-                    gitPath = Path.GetDirectoryName(watchingGitPath);
+                    workTreeWatcher.Path = workTreePath;
+                    gitDirWatcher.Path = gitDirPath;
+                    gitPath = Path.GetDirectoryName(gitDirPath);
+                    submodulesPath = Path.Combine(gitPath, "modules");
+                    UpdateIgnoredFiles(true);
+                    ignoredFilesTimer.Stop();
+                    ignoredFilesTimer.Start();
                     CurrentStatus = WorkingStatus.Started;
                 }
                 else
@@ -113,16 +170,20 @@ namespace GitUI
 
         // destructor shouldn't be used because it's not predictable when
         // it's going to be called by the GC!
-        private void watcher_Error(object sender, ErrorEventArgs e)
+        private void WorkTreeWatcherError(object sender, ErrorEventArgs e)
         {
-            ScheduleNextRegularUpdate();
+            ScheduleDeferredUpdate();
         }
 
-        private void watcher_Changed(object sender, FileSystemEventArgs e)
+        private void WorkTreeChanged(object sender, FileSystemEventArgs e)
         {
+            var fileName = GitCommandHelpers.FixPath(e.FullPath.Substring(workTreeWatcher.Path.Length));
+            if (ignoredFiles.Contains(fileName))
+                return;
+
             if (e.FullPath.StartsWith(gitPath))
             {
-                gitWatcher_Changed(sender, e);
+                GitDirChanged(sender, e);
                 return;
             }
 
@@ -134,10 +195,10 @@ namespace GitUI
             if (e.FullPath.EndsWith("\\.git\\index.lock"))
                 return;
 
-            ScheduleNextRegularUpdate();
+            ScheduleDeferredUpdate();
         }
 
-        private void gitWatcher_Changed(object sender, FileSystemEventArgs e)
+        private void GitDirChanged(object sender, FileSystemEventArgs e)
         {
             // git directory changed
             if (e.FullPath.Length == gitPath.Length)
@@ -146,13 +207,31 @@ namespace GitUI
             if (e.FullPath.EndsWith("\\index.lock"))
                 return;
 
-            // new submodule changed
-            const string modulePath = "\\modules\\";
-            int index = e.FullPath.IndexOf(modulePath, gitPath.Length);
-            if (index >= 0 && e.FullPath.IndexOf("\\", index + modulePath.Length) == -1)
+            // submodules directory's subdir changed
+            // cut/paste/rename/delete operations are not expected on directories inside nested .git dirs
+            if (e.FullPath.StartsWith(submodulesPath) && (Directory.Exists(e.FullPath)))
                 return;
 
-            ScheduleNextRegularUpdate();
+            ScheduleDeferredUpdate();
+        }
+
+        private HashSet<string> LoadIgnoredFiles()
+        { 
+            string lsOutput = Module.RunGitCmd("ls-files -o -i --exclude-standard");
+            string[] tab = lsOutput.Split(new char[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
+            return new HashSet<string>(tab);
+        }
+
+        private void UpdateIgnoredFiles(bool clearImmediately)
+        {
+            if (clearImmediately)
+                ignoredFiles = new HashSet<string>();
+
+            AsyncLoader.DoAsync(
+                LoadIgnoredFiles, 
+                (ignoredSet) => { ignoredFiles = ignoredSet; },
+                (e) => { ignoredFiles = new HashSet<string>(); }
+                );   
         }
 
         private void timerRefresh_Tick(object sender, EventArgs e)
@@ -162,82 +241,65 @@ namespace GitUI
 
         private void Update()
         {
-            // If the previous status call hasn't exited yet, we'll wait until it is
-            // so we don't queue up a bunch of commands
-            if (gitGetUnstagedCommand.IsRunning)
-            {
-                hasDeferredUpdateRequests = true; // defer this update request
+            if (CurrentStatus != WorkingStatus.Started)
                 return;
-            }
 
-            hasDeferredUpdateRequests = false;
-
-            if (Environment.TickCount > nextUpdateTime)
+            if (Environment.TickCount >= nextUpdateTime || 
+                (Environment.TickCount < 0 && nextUpdateTime > 0))
             {
-                try
+                // If the previous status call hasn't exited yet, we'll wait until it is
+                // so we don't queue up a bunch of commands
+                if (Module.IsRunningGitProcess())
                 {
-                    string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
-                    gitGetUnstagedCommand.CmdStartProcess(Settings.GitCommand, command);
+                    statusIsUpToDate = false;//tell that computed status isn't up to date
+                    return;
+                }
 
-                    if (hasDeferredUpdateRequests)
-                        // New changes were detected while processing previous changes, schedule deferred update
-                        ScheduleDeferredUpdate();
-                    else
-                        // Always update every 5 min, even if we don't know anything changed
-                        ScheduleNextJustInCaseUpdate();
-                }
-                catch (Exception)
-                {
-                    CurrentStatus = WorkingStatus.Stopped;
-                }
+                statusIsUpToDate = true;
+                AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, (e) => { CurrentStatus = WorkingStatus.Stopped; });
+                // Always update every 5 min, even if we don't know anything changed
+                ScheduleNextJustInCaseUpdate();
             }
         }
 
-        private void onData()
+        private String RunStatusCommand()
+        {
+            string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
+            return Module.RunGitCmd(command);
+        }
+
+        private void UpdatedStatusReceived(string updatedStatus)
         {
             if (CurrentStatus != WorkingStatus.Started)
                 return;
 
-            List<GitItemStatus> allChangedFiles =
-                GitCommandHelpers.GetAllChangedFilesFromString(gitGetUnstagedCommand.Output.ToString());
-
-            var stagedCount = allChangedFiles.FindAll(status => status.IsStaged).Count;
-            var unstagedCount = allChangedFiles.FindAll(status => !status.IsStaged).Count;
-            var unstagedSubmodulesCount = allChangedFiles.FindAll(status => status.IsSubmodule && !status.IsStaged).Count;
-
-            if (stagedCount == 0 && unstagedCount == 0)
+            if (statusIsUpToDate)
             {
-                Image = ICON_CLEAN;
-            }
-            else
-            {
-                if (stagedCount == 0)
-                {
-                    if (unstagedCount != unstagedSubmodulesCount)
-                        Image = ICON_DIRTY;
-                    else
-                        Image = ICON_DIRTY_SUBMODULES;
-                }
-                else if (unstagedCount == 0)
-                {
-                    Image = ICON_STAGED;
-                }
+                var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(Module, updatedStatus);
+                var stagedCount = allChangedFiles.Count(status => status.IsStaged);
+                var unstagedCount = allChangedFiles.Count - stagedCount;
+                var unstagedSubmodulesCount = allChangedFiles.Count(status => status.IsSubmodule && !status.IsStaged);
+
+                Image = GetStatusIcon(stagedCount, unstagedCount, unstagedSubmodulesCount);
+
+                if (allChangedFiles.Count == 0)
+                    Text = CommitTranslatedString;
                 else
-                {
-                    Image = ICON_MIXED;
-                }
+                    Text = string.Format(CommitTranslatedString + " ({0})", allChangedFiles.Count.ToString());
             }
-
-            if (allChangedFiles.Count == 0)
-                Text = CommitTranslatedString;
             else
-                Text = string.Format(CommitTranslatedString + " ({0})", allChangedFiles.Count.ToString());
+                UpdateImmediately();
         }
 
-        private void ScheduleNextRegularUpdate()
+        private static Image GetStatusIcon(int stagedCount, int unstagedCount, int unstagedSubmodulesCount)
         {
-            nextUpdateTime = Math.Min(nextUpdateTime, Environment.TickCount + UpdateDelay);
-            hasDeferredUpdateRequests = true;
+            if (stagedCount == 0 && unstagedCount == 0)
+                return IconClean;
+
+            if (stagedCount == 0)
+                return unstagedCount != unstagedSubmodulesCount ? IconDirty : IconDirtySubmodules;
+
+            return unstagedCount == 0 ? IconStaged : IconMixed;
         }
 
         private void ScheduleNextJustInCaseUpdate()
@@ -253,9 +315,14 @@ namespace GitUI
         private void ScheduleImmediateUpdate()
         {
             nextUpdateTime = Environment.TickCount;
-            Update();
         }
 
+        private void UpdateImmediately()
+        {
+            ScheduleImmediateUpdate();
+            Update();
+        }
+        
         private WorkingStatus CurrentStatus
         {
             get { return currentStatus; }
@@ -266,20 +333,20 @@ namespace GitUI
                 {
                     case WorkingStatus.Stopped:
                         timerRefresh.Stop();
-                        watcher.EnableRaisingEvents = false;
+                        workTreeWatcher.EnableRaisingEvents = false;
                         gitDirWatcher.EnableRaisingEvents = false;
                         Visible = false;
                         return;
                     case WorkingStatus.Paused:
                         timerRefresh.Stop();
-                        watcher.EnableRaisingEvents = false;
+                        workTreeWatcher.EnableRaisingEvents = false;
                         gitDirWatcher.EnableRaisingEvents = false;
                         return;
                     case WorkingStatus.Started:
                         timerRefresh.Start();
-                        watcher.EnableRaisingEvents = true;
-                        gitDirWatcher.EnableRaisingEvents = !gitDirWatcher.Path.StartsWith(watcher.Path);
-                        ScheduleImmediateUpdate();
+                        workTreeWatcher.EnableRaisingEvents = true;
+                        gitDirWatcher.EnableRaisingEvents = !gitDirWatcher.Path.StartsWith(workTreeWatcher.Path);
+                        UpdateImmediately();
                         Visible = true;
                         return;
                     default:
@@ -293,6 +360,11 @@ namespace GitUI
             Stopped,
             Paused,
             Started
+        }
+
+        private void ignoredFilesTimer_Tick(object sender, EventArgs e)
+        {
+            UpdateIgnoredFiles(false);
         }
     }
 }

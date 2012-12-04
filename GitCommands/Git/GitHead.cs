@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GitCommands.Config;
 
 namespace GitCommands
 {
@@ -7,12 +8,14 @@ namespace GitCommands
     {
         private readonly string _mergeSettingName;
         private readonly string _remoteSettingName;
-        private List<IGitItem> _subItems;
+        private IList<IGitItem> _subItems;
+        public GitModule Module { get; private set; }
 
-        public GitHead(string guid, string completeName) : this(guid, completeName, string.Empty) {}
+        public GitHead(GitModule module, string guid, string completeName) : this(module, guid, completeName, string.Empty) {}
 
-        public GitHead(string guid, string completeName, string remote)
+        public GitHead(GitModule module, string guid, string completeName, string remote)
         {
+            Module = module;
             Guid = guid;
             Selected = false;
             CompleteName = completeName;
@@ -50,14 +53,17 @@ namespace GitCommands
 
         public string TrackingRemote
         {
-            get { return Settings.Module.GetSetting(_remoteSettingName); }
+            get 
+            {
+                return GetTrackingRemote(Module.GetLocalConfig());    
+            }
             set
             {
                 if (String.IsNullOrEmpty(value))
-                    Settings.Module.UnsetSetting(_remoteSettingName);
+                    Module.UnsetSetting(_remoteSettingName);
                 else
                 {
-                    Settings.Module.SetSetting(_remoteSettingName, value);
+                    Module.SetSetting(_remoteSettingName, value);
 
                     if (MergeWith == "")
                         MergeWith = Name;
@@ -65,30 +71,52 @@ namespace GitCommands
             }
         }
 
+        /// <summary>
+        /// This method is a faster than the property above. The property reads the config file
+        /// every time it is accessed. This method accepts a configfile what makes it faster when loading
+        /// the revisiongraph.
+        /// </summary>
+        public string GetTrackingRemote(ConfigFile configFile)
+        {
+            return configFile.GetValue(_remoteSettingName);
+        }
+
         public string MergeWith
         {
             get
             {
-                var merge = Settings.Module.GetSetting(_mergeSettingName);
-                return merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge;
+                return GetMergeWith(Module.GetLocalConfig());
             }
             set
             {
                 if (String.IsNullOrEmpty(value))
-                    Settings.Module.UnsetSetting(_mergeSettingName);
+                    Module.UnsetSetting(_mergeSettingName);
                 else
-                    Settings.Module.SetSetting(_mergeSettingName, "refs/heads/" + value);
+                    Module.SetSetting(_mergeSettingName, "refs/heads/" + value);
             }
         }
 
-        public static GitHead NoHead
+        /// <summary>
+        /// This method is a faster than the property above. The property reads the config file
+        /// every time it is accessed. This method accepts a configfile what makes it faster when loading
+        /// the revisiongraph.
+        /// </summary>
+        public string GetMergeWith(ConfigFile configFile)
         {
-            get { return new GitHead(null, ""); }
+            string merge = configFile.GetValue(_mergeSettingName);
+            return merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge;
+
         }
 
-        public static GitHead AllHeads
+
+        public static GitHead NoHead(GitModule module)
         {
-            get { return new GitHead(null, "*"); }
+            return new GitHead(module, null, "");
+        }
+
+        public static GitHead AllHeads(GitModule module)
+        {
+            return new GitHead(module, null, "*");
         }
 
         #region IGitItem Members
@@ -96,9 +124,9 @@ namespace GitCommands
         public string Guid { get; private set; }
         public string Name { get; private set; }
 
-        public List<IGitItem> SubItems
+        public IEnumerable<IGitItem> SubItems
         {
-            get { return _subItems ?? (_subItems = Settings.Module.GetTree(Guid)); }
+            get { return _subItems ?? (_subItems = Module.GetTree(Guid, false)); }
         }
 
         #endregion

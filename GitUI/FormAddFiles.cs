@@ -2,9 +2,19 @@
 
 namespace GitUI
 {
-    public partial class FormAddFiles : GitExtensionsForm
+    public sealed partial class FormAddFiles : GitModuleForm
     {
-        public FormAddFiles()
+
+        /// <summary>
+        /// For VS designer
+        /// </summary>
+        private FormAddFiles()
+            : this(null)
+        {
+        }
+
+        public FormAddFiles(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
@@ -12,16 +22,13 @@ namespace GitUI
 
         private void AddFilesClick(object sender, EventArgs e)
         {
-            if (force.Checked)
-                new FormProcess(string.Format("add -f \"{0}\"", Filter.Text)).ShowDialog(this);
-            else
-                new FormProcess(string.Format("add \"{0}\"", Filter.Text)).ShowDialog(this);
-            Close();
+            var argumentFormat = force.Checked ? "add -f \"{0}\"" : "add \"{0}\"";
+            FormProcess.ShowDialog(this, string.Format(argumentFormat, Filter.Text));
         }
 
         private void ShowFilesClick(object sender, EventArgs e)
         {
-            new FormProcess(string.Format("add --dry-run \"{0}\"", Filter.Text)).ShowDialog(this);
+            FormProcess.ShowDialog(this, string.Format("add --dry-run \"{0}\"", Filter.Text));
         }
     }
 }

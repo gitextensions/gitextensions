@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using GitUIPluginInterfaces.RepositoryHosts;
 using GitCommands;
+using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace GitUI.RepoHosting
 {
@@ -13,12 +13,12 @@ namespace GitUI.RepoHosting
             GitHosters = new List<IRepositoryHostPlugin>();
         }
 
-        public static IRepositoryHostPlugin TryGetGitHosterForCurrentWorkingDir()
+        public static IRepositoryHostPlugin TryGetGitHosterForModule(GitModule aModule)
         {
-            if (!Settings.Module.ValidWorkingDir())
+            if (!aModule.ValidWorkingDir())
                 return null;
 
-            return GitHosters.FirstOrDefault(gitHoster => gitHoster.CurrentWorkingDirRepoIsRelevantToMe);
+            return GitHosters.FirstOrDefault(gitHoster => gitHoster.GitModuleIsRelevantToMe(aModule));
         }
     }
 }

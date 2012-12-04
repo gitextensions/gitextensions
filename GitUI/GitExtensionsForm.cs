@@ -20,14 +20,20 @@ namespace GitUI
         private static Icon ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
 
         private bool _translated;
+        private bool _enablePositionRestore;
 
-        public GitExtensionsForm()
+        public GitExtensionsForm() : this(false)
         {
+        }
+
+        public GitExtensionsForm(bool enablePositionRestore)
+        {
+            _enablePositionRestore = enablePositionRestore;
+
             Icon = ApplicationIcon;
             SetFont();
 
             ShowInTaskbar = Application.OpenForms.Count <= 0 || (Application.OpenForms.Count == 1 && Application.OpenForms[0] is FormSplash);
-            AutoScaleMode = AutoScaleMode.None;
 
             var cancelButton = new Button();
             cancelButton.Click += CancelButtonClick;
@@ -40,8 +46,11 @@ namespace GitUI
 
         void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (_enablePositionRestore)
+                SavePosition(this.GetType().Name);
+
 #if !__MonoCS__
-            if (TaskbarManager.IsPlatformSupported)
+            if (GitCommands.Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {
@@ -75,6 +84,20 @@ namespace GitUI
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        protected Keys GetShortcutKeys(int commandCode)
+        {
+            var hotkey = GetHotkeyCommand(commandCode);
+            return hotkey == null ? Keys.None : hotkey.KeyData;
+        }
+
+        protected Hotkey.HotkeyCommand GetHotkeyCommand(int commandCode)
+        {
+            if (Hotkeys == null)
+                return null;
+
+            return Hotkeys.FirstOrDefault(h => h.CommandCode == commandCode);
+        }
+
         /// <summary>
         /// Override this method to handle form specific Hotkey commands
         /// This base method calls script-hotkeys
@@ -82,26 +105,14 @@ namespace GitUI
         /// <param name="command"></param>
         protected virtual bool ExecuteCommand(int command)
         {
-            ExecuteScriptCommand(command, Keys.None);
-            return true;
-        }
-        protected virtual bool ExecuteScriptCommand(int command, Keys keyData)
-        {
-            var curScripts = GitUI.Script.ScriptManager.GetScripts();
-
-            foreach (GitUI.Script.ScriptInfo s in curScripts)
-            {
-                if (s.HotkeyCommandIdentifier == command)
-                    GitUI.Script.ScriptRunner.RunScript(s.Name, null);
-            }
-            return true;
+            return false;
         }
 
         #endregion
 
         private void SetFont()
         {
-            Font = SystemFonts.MessageBoxFont;
+            Font = Settings.Font;
         }
 
         #region icon
@@ -226,6 +237,27 @@ namespace GitUI
             return (site != null) && site.DesignMode;
         }
 
+        protected virtual void OnRuntimeLoad(EventArgs e)
+        { 
+        
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            if (Settings.EnableAutoScale)
+                AutoScaleMode = AutoScaleMode.Dpi;
+            else
+                AutoScaleMode = AutoScaleMode.None;
+
+            if (_enablePositionRestore)
+                RestorePosition(this.GetType().Name);
+
+            base.OnLoad(e);
+
+            if (!CheckComponent(this))
+                OnRuntimeLoad(e);
+        }
+
         private void GitExtensionsFormLoad(object sender, EventArgs e)
         {
             // find out if the value is a component and is currently in design mode
@@ -256,7 +288,7 @@ namespace GitUI
         /// </summary>
         /// <param name = "name">The name to use when looking up the position in
         ///   the settings</param>
-        protected void RestorePosition(String name)
+        private void RestorePosition(String name)
         {
             if (!this.Visible || 
                 WindowState == FormWindowState.Minimized)
@@ -270,16 +302,45 @@ namespace GitUI
                 return;
 
             StartPosition = FormStartPosition.Manual;
-            Size = position.Rect.Size;
+            if (FormBorderStyle == FormBorderStyle.Sizable || 
+                FormBorderStyle == FormBorderStyle.SizableToolWindow)
+                Size = position.Rect.Size;
             if (Owner == null || !_windowCentred)
-                Location = position.Rect.Location;
+            {
+                Point location = position.Rect.Location;
+                Rectangle? rect = FindWindowScreen(location);
+                if (rect != null)
+                    location.Y = rect.Value.Y;
+                DesktopLocation = location;
+            }
             else
             {
                 // Calculate location for modal form with parent
-                Location = new Point(Owner.Left + Owner.Width / 2 - Width / 2, 
-                    Owner.Top + Owner.Height / 2 - Height / 2);
+                Location = new Point(Owner.Left + Owner.Width / 2 - Width / 2,
+                    Math.Max(0, Owner.Top + Owner.Height / 2 - Height / 2));
             }
             WindowState = position.State;
+        }
+
+        private Rectangle? FindWindowScreen(Point location)
+        {
+            SortedDictionary<float, Rectangle> distance = new SortedDictionary<float, Rectangle>();
+            foreach (var rect in (from screen in Screen.AllScreens
+                                  select screen.WorkingArea))
+            {
+                if (rect.Contains(location) && !distance.ContainsKey(0.0f))
+                    return null; // title in screen
+
+                int midPointX = (rect.X + rect.Width / 2);
+                int midPointY = (rect.Y + rect.Height / 2);
+                float d = (float)Math.Sqrt((location.X - midPointX) * (location.X - midPointX) +
+                    (location.Y - midPointY) * (location.Y - midPointY));
+                distance.Add(d, rect);
+            }
+            if (distance.Count > 0)
+                return distance.First().Value;
+            else
+                return null;
         }
 
         /// <summary>
@@ -288,7 +349,7 @@ namespace GitUI
         /// </summary>
         /// <param name = "name">The name to use when writing the position to the
         ///   settings</param>
-        protected void SavePosition(String name)
+        private void SavePosition(String name)
         {
             try
             {

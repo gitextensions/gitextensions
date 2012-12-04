@@ -31,7 +31,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.cbDeleteNewFiles = new System.Windows.Forms.CheckBox();
+            this.cbDeleteNewFilesAndDirectories = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -47,7 +47,7 @@
             // btnReset
             // 
             this.btnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnReset.Location = new System.Drawing.Point(218, 66);
+            this.btnReset.Location = new System.Drawing.Point(272, 66);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(81, 25);
             this.btnReset.TabIndex = 1;
@@ -59,7 +59,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(305, 66);
+            this.btnCancel.Location = new System.Drawing.Point(359, 66);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 25);
             this.btnCancel.TabIndex = 2;
@@ -69,14 +69,14 @@
             // 
             // cbDeleteNewFiles
             // 
-            this.cbDeleteNewFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cbDeleteNewFiles.AutoSize = true;
-            this.cbDeleteNewFiles.Location = new System.Drawing.Point(12, 66);
-            this.cbDeleteNewFiles.Name = "cbDeleteNewFiles";
-            this.cbDeleteNewFiles.Size = new System.Drawing.Size(133, 19);
-            this.cbDeleteNewFiles.TabIndex = 3;
-            this.cbDeleteNewFiles.Text = "Also delete new files";
-            this.cbDeleteNewFiles.UseVisualStyleBackColor = true;
+            this.cbDeleteNewFilesAndDirectories.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cbDeleteNewFilesAndDirectories.AutoSize = true;
+            this.cbDeleteNewFilesAndDirectories.Location = new System.Drawing.Point(12, 66);
+            this.cbDeleteNewFilesAndDirectories.Name = "cbDeleteNewFiles";
+            this.cbDeleteNewFilesAndDirectories.Size = new System.Drawing.Size(230, 19);
+            this.cbDeleteNewFilesAndDirectories.TabIndex = 3;
+            this.cbDeleteNewFilesAndDirectories.Text = "Also delete new files and/or directories";
+            this.cbDeleteNewFilesAndDirectories.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
@@ -90,12 +90,12 @@
             // FormResetChanges
             // 
             this.AcceptButton = this.btnCancel;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(392, 101);
+            this.ClientSize = new System.Drawing.Size(446, 101);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.cbDeleteNewFiles);
+            this.Controls.Add(this.cbDeleteNewFilesAndDirectories);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.label1);
@@ -115,7 +115,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.CheckBox cbDeleteNewFiles;
+        private System.Windows.Forms.CheckBox cbDeleteNewFilesAndDirectories;
         private System.Windows.Forms.Label label2;
     }
 }

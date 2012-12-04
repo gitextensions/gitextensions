@@ -5,9 +5,9 @@ using PatchApply;
 
 namespace GitUI
 {
-    public partial class PatchGrid : GitExtensionsControl
+    public partial class PatchGrid : GitModuleControl
     {
-        public PatchGrid()
+        public PatchGrid()            
         {
             InitializeComponent(); Translate();
             Patches.CellPainting += Patches_CellPainting;
@@ -23,14 +23,14 @@ namespace GitUI
 
         }
 
-        private void PatchGrid_Load(object sender, EventArgs e)
+        protected override void OnRuntimeLoad( EventArgs e)
         {
             Initialize();
         }
 
         public void Initialize()
         {
-            Patches.DataSource = Settings.Module.GetRebasePatchFiles();
+            Patches.DataSource = Module.GetRebasePatchFiles();
         }
 
         private void Patches_DoubleClick(object sender, EventArgs e)
@@ -39,9 +39,11 @@ namespace GitUI
 
             var patchFile = (PatchFile)Patches.SelectedRows[0].DataBoundItem;
 
-            var viewPatch = new ViewPatch();
-            viewPatch.LoadPatch(patchFile.FullName);
-            viewPatch.ShowDialog(this);
+            using (var viewPatch = new ViewPatch(UICommands))
+            {
+                viewPatch.LoadPatch(patchFile.FullName);
+                viewPatch.ShowDialog(this);
+            }
         }
     }
 }

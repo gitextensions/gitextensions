@@ -1,11 +1,10 @@
-// Copyright (c) 2003, Paul Welter
+﻿// Copyright (c) 2003, Paul Welter
 // All rights reserved.
 
 using System;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Globalization;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 //
 // General Information about an assembly is controlled through the following 
@@ -17,7 +16,7 @@ using System.Globalization;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("LoreSoft")]
 [assembly: AssemblyProduct("NetSpell")]
-[assembly: AssemblyCopyright("Copyright � 2003 Paul Welter, modified by Henk Westhuis for Git Extensions.")]
+[assembly: AssemblyCopyright("Copyright © 2003 Paul Welter, modified by Henk Westhuis for Git Extensions.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 

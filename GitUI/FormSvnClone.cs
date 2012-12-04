@@ -1,16 +1,15 @@
 ﻿
 
+using System;
+using System.IO;
+using System.Windows.Forms;
+using GitCommands;
+using GitCommands.Repository;
+using ResourceManager.Translation;
+
 namespace GitUI
 {
-    using System;
-    using System.IO;
-    using System.Windows.Forms;
-    using GitCommands;
-    using GitCommands.Repository;
-
-    using ResourceManager.Translation;
-
-    public partial class FormSvnClone : GitExtensionsForm
+    public partial class FormSvnClone : GitModuleForm
     {
         private readonly TranslationString _questionOpenRepo =
            new TranslationString("The repository has been cloned successfully." + Environment.NewLine +
@@ -23,9 +22,16 @@ namespace GitUI
             new TranslationString("Authors file \"{0}\" does not exists. Continue without authors file?");
 
         private readonly TranslationString _questionContinueWithoutAuthorsCaption = new TranslationString("Authors file");
+        private readonly GitModuleChangedEventHandler GitModuleChanged;
 
-        public FormSvnClone()
+        private FormSvnClone()
+            : this(null, null)
+        { }
+
+        public FormSvnClone(GitUICommands aCommands, GitModuleChangedEventHandler GitModuleChanged)
+            : base(aCommands)
         {
+            this.GitModuleChanged = GitModuleChanged;
             InitializeComponent();
             this.Translate();
         }
@@ -46,9 +52,9 @@ namespace GitUI
                 if (!Directory.Exists(dirTo))
                     Directory.CreateDirectory(dirTo);
 
-                var authorsfile = this._NO_TRANSLATE_authorsFileTextBox.Text;
+                var authorsfile = this._NO_TRANSLATE_authorsFileTextBox.Text.Trim();
                 bool resetauthorsfile = false;
-                if (authorsfile != null && authorsfile.Trim().Length != 0 && !File.Exists(authorsfile.Trim()) && !(resetauthorsfile = this.AskContinutWithoutAuthorsFile(authorsfile)))
+                if (!String.IsNullOrEmpty(authorsfile) && !File.Exists(authorsfile) && !(resetauthorsfile = AskContinutWithoutAuthorsFile(authorsfile)))
                 {
                     return;
                 }
@@ -56,16 +62,23 @@ namespace GitUI
                 {
                     authorsfile = null;
                 }
-                var fromProcess = new FormProcess(
-                    Settings.GitCommand, GitSvnCommandHelpers.CloneCmd(this._NO_TRANSLATE_svnRepositoryComboBox.Text, dirTo, authorsfile));
+                int from;
+                if (!int.TryParse(tbFrom.Text, out from))
+                    from = 0;
                 
-                fromProcess.ShowDialog(this);
-
-                if (fromProcess.ErrorOccurred() || Settings.Module.InTheMiddleOfPatch())
+                var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, 
+                    GitSvnCommandHelpers.CloneCmd(_NO_TRANSLATE_svnRepositoryComboBox.Text, dirTo,
+                    tbUsername.Text, authorsfile, from,
+                    cbTrunk.Checked ? tbTrunk.Text : null,
+                    cbTags.Checked ? tbTags.Text : null,
+                    cbBranches.Checked ? tbBranches.Text : null));
+                
+                if (errorOccurred || Module.InTheMiddleOfPatch())
                     return;
                 if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
-                    Settings.WorkingDir = dirTo;
+                    if (GitModuleChanged != null)
+                        GitModuleChanged(new GitModule(dirTo));
                 }
                 Close();
             }
@@ -91,16 +104,20 @@ namespace GitUI
 
         private void browseButton_Click(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog { SelectedPath = this._NO_TRANSLATE_destinationComboBox.Text };
-            if (dialog.ShowDialog(this) == DialogResult.OK)
-                this._NO_TRANSLATE_destinationComboBox.Text = dialog.SelectedPath;
+            using (var dialog = new FolderBrowserDialog { SelectedPath = this._NO_TRANSLATE_destinationComboBox.Text })
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    this._NO_TRANSLATE_destinationComboBox.Text = dialog.SelectedPath;
+            }
         }
 
         private void authorsFileBrowseButton_Click(object sender, EventArgs e)
         {
-            var dialog = new OpenFileDialog() { InitialDirectory = this._NO_TRANSLATE_destinationComboBox.Text };
-            if (dialog.ShowDialog(this) == DialogResult.OK) 
-                this._NO_TRANSLATE_authorsFileTextBox.Text = dialog.FileName;
+            using (var dialog = new OpenFileDialog { InitialDirectory = this._NO_TRANSLATE_destinationComboBox.Text })
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    this._NO_TRANSLATE_authorsFileTextBox.Text = dialog.FileName;
+            }
         }
 
         private void destinationComboBox_DropDown(object sender, EventArgs e)
@@ -111,6 +128,30 @@ namespace GitUI
                 this._NO_TRANSLATE_destinationComboBox.Items.Clear();
                 foreach (Repository repo in repos)
                     this._NO_TRANSLATE_destinationComboBox.Items.Add(repo.Path);
+            }
+        }
+
+        private void cbTrunk_CheckedChanged(object sender, EventArgs e)
+        {
+            tbTrunk.Enabled = cbTrunk.Checked;
+        }
+
+        private void cbTags_CheckedChanged(object sender, EventArgs e)
+        {
+            tbTags.Enabled = cbTags.Checked;
+        }
+
+        private void cbBranches_CheckedChanged(object sender, EventArgs e)
+        {
+            tbBranches.Enabled = cbBranches.Checked;
+        }
+
+        private void tbFrom_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar)
+                && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
             }
         }
     }

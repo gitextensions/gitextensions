@@ -1,52 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace GitCommands
 {
-    public class GitDeleteBranchCmd : GitCommand
+    public sealed class GitDeleteBranchCmd : GitCommand
     {
-        private readonly List<string> branchList = new List<string>();
+        private readonly ICollection<GitHead> branches;
+        private readonly bool force;
 
-        public bool Force { get; set; }
-        public bool HasRemoteBranch { get; set; }
-        public bool HasNonRemoteBranch { get; set; }
+        public GitDeleteBranchCmd(IEnumerable<GitHead> branches, bool force)
+        {
+            if (branches == null)
+                throw new ArgumentNullException("branches");
+
+            this.branches = branches.ToArray();
+            this.force = force;
+        }
 
         public override string GitComandName()
         {
             return "branch";
         }
 
-        public override void CollectArguments(List<string> argumentsList)
+        public override IEnumerable<string> CollectArguments()
         {
-            if (Force)
-                argumentsList.Add("-D");
-            else
-                argumentsList.Add("-d");
+            yield return force ? "-D" : "-d";
 
-            if (HasRemoteBranch)
-                if (HasNonRemoteBranch)
-                    argumentsList.Add("-a");
-                else
-                    argumentsList.Add("-r");
+            var hasRemoteBranch = branches.Any(branch => branch.IsRemote);
+            var hasNonRemoteBranch = branches.Any(branch => !branch.IsRemote);
+            if (hasRemoteBranch)
+                yield return hasNonRemoteBranch ? "-a" : "-r";
 
-            foreach (string branch in branchList)
-                argumentsList.Add("\""+branch+"\"");
+            foreach (var branch in branches)
+                yield return "\"" + branch.Name + "\"";
         }
 
         public override bool AccessesRemote()
         {
             return false;
-        }
-
-        public void AddBranch(string branchName, bool isRemote) 
-        {
-            branchList.Add(branchName);
-            if (isRemote)
-                HasRemoteBranch = true;
-            else
-                HasNonRemoteBranch = true;
         }
     }
 }

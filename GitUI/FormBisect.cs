@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormBisect : GitExtensionsForm
+    public sealed partial class FormBisect : GitModuleForm
     {
         // TODO: Improve me
         private readonly TranslationString _bisectStart =
@@ -14,67 +16,85 @@ namespace GitUI
 
         private readonly RevisionGrid _revisionGrid;
 
-        public FormBisect(RevisionGrid revisionGrid)
+        private FormBisect()
+            : this((GitUICommands)null)
+        { }
+
+        private FormBisect(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
-            Translate();
-            Initialize();
-            _revisionGrid = revisionGrid;
+            Translate();        
         }
 
-        private void Initialize()
+        public FormBisect(RevisionGrid revisionGrid)
+            : this(revisionGrid.UICommands)
         {
-            bool inTheMiddleOfBisect = Settings.Module.InTheMiddleOfBisect();
+            _revisionGrid = revisionGrid;
+            UpdateButtonsState();
+        }
+
+        private void UpdateButtonsState()
+        {
+            bool inTheMiddleOfBisect = Module.InTheMiddleOfBisect();
             Start.Enabled = !inTheMiddleOfBisect;
             Good.Enabled = inTheMiddleOfBisect;
             Bad.Enabled = inTheMiddleOfBisect;
             Stop.Enabled = inTheMiddleOfBisect;
+            btnSkip.Enabled = inTheMiddleOfBisect;
         }
 
         private void Start_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.StartBisectCmd()).ShowDialog(this);
-            Initialize();
+            FormProcess.ShowDialog(this, GitCommandHelpers.StartBisectCmd());
+            UpdateButtonsState();
 
             IList<GitRevision> revisions = _revisionGrid.GetSelectedRevisions();
             if (revisions.Count > 1)
             {
                 if (MessageBox.Show(this, _bisectStart.Text, Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    BisectRange(revisions[0].Guid, revisions[revisions.Count - 1].Guid);
+                    BisectRange(revisions.First().Guid, revisions.Last().Guid);
                     Close();
                 }
             }
         }
 
-        private void BisectRange( string startRevision, string endRevision )
+        private void BisectRange(string startRevision, string endRevision)
         {
-            var command = GitCommandHelpers.MarkRevisionBisectCmd(true, startRevision);
-            var form = new FormProcess(command);
-            form.ShowDialog(this);
-            if (!form.ErrorOccurred())
-            {
-                command = GitCommandHelpers.MarkRevisionBisectCmd(false, endRevision);
-                form = new FormProcess(command);
-                form.ShowDialog(this);
-            }
+            var command = GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good, startRevision);
+            var errorOccurred = !FormProcess.ShowDialog(this, command);
+            if (errorOccurred)
+                return;
+
+            command = GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Bad, endRevision);
+            FormProcess.ShowDialog(this, command);
         }
 
         private void Good_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.ContinueBisectCmd(true), false).ShowDialog(this);
-            Close();
+            ContinueBisect(GitBisectOption.Good);
         }
 
         private void Bad_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.ContinueBisectCmd(false), false).ShowDialog(this);
-            Close();
+            ContinueBisect(GitBisectOption.Bad);
         }
 
         private void Stop_Click(object sender, EventArgs e)
         {
-            new FormProcess(GitCommandHelpers.StopBisectCmd()).ShowDialog(this);
+            FormProcess.ShowDialog(this, GitCommandHelpers.StopBisectCmd());
+            Close();
+        }
+
+        private void btnSkip_Click(object sender, EventArgs e)
+        {
+            ContinueBisect(GitBisectOption.Skip);
+        }
+
+        private void ContinueBisect(GitBisectOption bisectOption)
+        {
+            FormProcess.ShowDialog(this, GitCommandHelpers.ContinueBisectCmd(bisectOption), false);
             Close();
         }
     }

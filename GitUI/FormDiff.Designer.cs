@@ -34,10 +34,16 @@ namespace GitUI
             this.RevisionGrid = new GitUI.RevisionGrid();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
-            this.diffViewer = new FileViewer();
+            this.diffViewer = new GitUI.Editor.FileViewer();
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+#endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+#endif
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
@@ -63,10 +69,7 @@ namespace GitUI
             // 
             // RevisionGrid
             // 
-            this.RevisionGrid.CurrentCheckout = "\nfatal: Not a git repository\n";
             this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionGrid.Filter = "";
-            this.RevisionGrid.LastRow = 0;
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Margin = new System.Windows.Forms.Padding(4);
             this.RevisionGrid.Name = "RevisionGrid";
@@ -95,45 +98,43 @@ namespace GitUI
             // DiffFiles
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffFiles.GitItemStatuses = null;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.SelectedItem = null;
             this.DiffFiles.Size = new System.Drawing.Size(188, 320);
             this.DiffFiles.TabIndex = 0;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFilesSelectedIndexChanged);
             // 
-            // DiffText
+            // diffViewer
             // 
             this.diffViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.diffViewer.IgnoreWhitespaceChanges = false;
             this.diffViewer.Location = new System.Drawing.Point(0, 0);
             this.diffViewer.Margin = new System.Windows.Forms.Padding(4);
             this.diffViewer.Name = "diffViewer";
-            this.diffViewer.NumberOfVisibleLines = 3;
-            this.diffViewer.ScrollPos = 0;
-            this.diffViewer.ShowEntireFile = false;
             this.diffViewer.Size = new System.Drawing.Size(558, 320);
             this.diffViewer.TabIndex = 1;
-            this.diffViewer.TreatAllFilesAsText = false;
             // 
             // FormDiff
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(750, 529);
             this.Controls.Add(this.splitContainer1);
             this.MinimumSize = new System.Drawing.Size(250, 250);
             this.Name = "FormDiff";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Diff";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormDiffFormClosing);
             this.Load += new System.EventHandler(this.FormDiffLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+#endif
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel2.ResumeLayout(false);
+#if Mono212Released //waiting for mono 2.12
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+#endif
             this.splitContainer3.ResumeLayout(false);
             this.ResumeLayout(false);
 

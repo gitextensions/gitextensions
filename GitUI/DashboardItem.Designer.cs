@@ -28,29 +28,29 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.Panel panel1;
+            this._NO_TRANSLATE_Panel = new System.Windows.Forms.Panel();
             this._NO_TRANSLATE_BranchName = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_Title = new System.Windows.Forms.LinkLabel();
             this.Icon = new System.Windows.Forms.PictureBox();
             this._NO_TRANSLATE_Description = new System.Windows.Forms.Label();
-            panel1 = new System.Windows.Forms.Panel();
-            panel1.SuspendLayout();
+            this._NO_TRANSLATE_Panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Icon)).BeginInit();
             this.SuspendLayout();
             // 
-            // panel1
+            // _NO_TRANSLATE_Panel
             // 
-            panel1.AutoSize = true;
-            panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            panel1.Controls.Add(this._NO_TRANSLATE_BranchName);
-            panel1.Controls.Add(this._NO_TRANSLATE_Title);
-            panel1.Location = new System.Drawing.Point(28, 2);
-            panel1.MinimumSize = new System.Drawing.Size(250, 15);
-            panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(250, 15);
-            panel1.TabIndex = 5;
-            panel1.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
-            panel1.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
+            this._NO_TRANSLATE_Panel.AutoSize = true;
+            this._NO_TRANSLATE_Panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this._NO_TRANSLATE_Panel.Controls.Add(this._NO_TRANSLATE_BranchName);
+            this._NO_TRANSLATE_Panel.Controls.Add(this._NO_TRANSLATE_Title);
+            this._NO_TRANSLATE_Panel.Location = new System.Drawing.Point(28, 2);
+            this._NO_TRANSLATE_Panel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this._NO_TRANSLATE_Panel.MinimumSize = new System.Drawing.Size(250, 15);
+            this._NO_TRANSLATE_Panel.Name = "_NO_TRANSLATE_Panel";
+            this._NO_TRANSLATE_Panel.Size = new System.Drawing.Size(250, 15);
+            this._NO_TRANSLATE_Panel.TabIndex = 5;
+            this._NO_TRANSLATE_Panel.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
+            this._NO_TRANSLATE_Panel.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
             // 
             // _NO_TRANSLATE_BranchName
             // 
@@ -86,6 +86,7 @@
             this.Icon.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.Icon.Cursor = System.Windows.Forms.Cursors.Hand;
             this.Icon.Location = new System.Drawing.Point(0, 2);
+            this.Icon.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Icon.Name = "Icon";
             this.Icon.Size = new System.Drawing.Size(19, 18);
             this.Icon.TabIndex = 0;
@@ -107,22 +108,22 @@
             // 
             // DashboardItem
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Controls.Add(panel1);
+            this.Controls.Add(this._NO_TRANSLATE_Panel);
             this.Controls.Add(this._NO_TRANSLATE_Description);
             this.Controls.Add(this.Icon);
             this.Cursor = System.Windows.Forms.Cursors.Hand;
             this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "DashboardItem";
             this.Size = new System.Drawing.Size(281, 40);
             this.SizeChanged += new System.EventHandler(this.DashboardItem_SizeChanged);
             this.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
             this.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
+            this._NO_TRANSLATE_Panel.ResumeLayout(false);
+            this._NO_TRANSLATE_Panel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Icon)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -135,5 +136,6 @@
         private System.Windows.Forms.LinkLabel _NO_TRANSLATE_Title;
         private System.Windows.Forms.Label _NO_TRANSLATE_Description;
         private System.Windows.Forms.Label _NO_TRANSLATE_BranchName;
+        private System.Windows.Forms.Panel _NO_TRANSLATE_Panel;
     }
 }

@@ -8,7 +8,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormGitIgnore : GitExtensionsForm
+    public sealed partial class FormGitIgnore : GitModuleForm
     {
         private readonly TranslationString _gitignoreOnlyInWorkingDirSupported =
             new TranslationString(".gitignore is only supported when there is a working dir.");
@@ -28,7 +28,7 @@ namespace GitUI
         private string _originalGitIgnoreFileContent = string.Empty;
 
         #region default patterns
-		private static readonly string DefaultIgnorePatternsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitExtensions/DefaultIgnorePatterns.txt");
+        private static readonly string DefaultIgnorePatternsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitExtensions/DefaultIgnorePatterns.txt");
         private static readonly string[] DefaultIgnorePatterns = new[]
         {
             "#ignore thumbnails created by windows",
@@ -62,11 +62,16 @@ namespace GitUI
         };
         #endregion
 
-        public FormGitIgnore()
+        public FormGitIgnore(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
+        }
 
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            base.OnRuntimeLoad(e);
             LoadGitIgnore();
             _NO_TRANSLATE_GitIgnoreEdit.TextLoaded += GitIgnoreFileLoaded;
         }
@@ -75,8 +80,8 @@ namespace GitUI
         {
             try
             {
-                if (File.Exists(Settings.WorkingDir + ".gitignore"))
-                    _NO_TRANSLATE_GitIgnoreEdit.ViewFile(Settings.WorkingDir + ".gitignore");
+                if (File.Exists(Module.WorkingDir + ".gitignore"))
+                    _NO_TRANSLATE_GitIgnoreEdit.ViewFile(Module.WorkingDir + ".gitignore");
             }
             catch (Exception ex)
             {
@@ -98,13 +103,13 @@ namespace GitUI
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(
-                        Settings.WorkingDir + ".gitignore",
+                        Module.WorkingDir + ".gitignore",
                         x =>
                         {
                             var fileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
                             if (!fileContent.EndsWith(Environment.NewLine))
                                 fileContent += Environment.NewLine;
-                            File.WriteAllBytes(x, Settings.SystemEncoding.GetBytes(fileContent));
+                            File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(fileContent));
                             _originalGitIgnoreFileContent = fileContent;
                         });
                 return true;
@@ -136,14 +141,11 @@ namespace GitUI
                         return;
                 }
             }
-
-            SavePosition("edit-git-ignore");
         }
 
         private void FormGitIgnoreLoad(object sender, EventArgs e)
         {
-            RestorePosition("edit-git-ignore");
-            if (!Settings.Module.IsBareRepository())
+            if (!Module.IsBareRepository())
                 return;
             MessageBox.Show(this, _gitignoreOnlyInWorkingDirSupported.Text, _gitignoreOnlyInWorkingDirSupportedCaption.Text);
             Close();
@@ -151,8 +153,8 @@ namespace GitUI
 
         private void AddDefaultClick(object sender, EventArgs e)
         {
-			var defaultIgnorePatterns = (File.Exists(DefaultIgnorePatternsFile)) ? File.ReadAllLines(DefaultIgnorePatternsFile) : DefaultIgnorePatterns;
-			
+            var defaultIgnorePatterns = (File.Exists(DefaultIgnorePatternsFile)) ? File.ReadAllLines(DefaultIgnorePatternsFile) : DefaultIgnorePatterns;
+
             var currentFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
             var patternsToAdd = defaultIgnorePatterns
                 .Except(currentFileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
@@ -171,7 +173,7 @@ namespace GitUI
         private void AddPattern_Click(object sender, EventArgs e)
         {
             SaveGitIgnore();
-            new FormAddToGitIgnore("*.dll").ShowDialog(this);
+            UICommands.StartAddToGitIgnoreDialog(this, "*.dll");
             LoadGitIgnore();
         }
 

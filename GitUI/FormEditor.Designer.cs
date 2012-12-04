@@ -28,9 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.fileViewer = new GitUI.Editor.FileViewer();
-            this.toolStrip1 = new ToolStripEx();
+            this.toolStrip1 = new GitUI.ToolStripEx();
             this.toolStripSaveButton = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStrip1.SuspendLayout();
@@ -40,22 +39,15 @@
             // fileViewer
             // 
             this.fileViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.fileViewer.Font = new System.Drawing.Font("Tahoma", 9.75F);
-            this.fileViewer.IgnoreWhitespaceChanges = false;
-            this.fileViewer.IsReadOnly = true;
             this.fileViewer.Location = new System.Drawing.Point(0, 25);
             this.fileViewer.Margin = new System.Windows.Forms.Padding(0);
             this.fileViewer.Name = "fileViewer";
-            this.fileViewer.NumberOfVisibleLines = 3;
-            this.fileViewer.ScrollPos = 0;
-            this.fileViewer.ShowEntireFile = false;
-            this.fileViewer.ShowLineNumbers = true;
             this.fileViewer.Size = new System.Drawing.Size(659, 518);
             this.fileViewer.TabIndex = 0;
-            this.fileViewer.TreatAllFilesAsText = false;
             // 
             // toolStrip1
             // 
+            this.toolStrip1.ClickThrough = true;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripSaveButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -66,7 +58,7 @@
             // toolStripSaveButton
             // 
             this.toolStripSaveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripSaveButton.Image = global::GitUI.Properties.Resources.Save;
+            this.toolStripSaveButton.Image = global::GitUI.Properties.Resources.IconSave;
             this.toolStripSaveButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSaveButton.Name = "toolStripSaveButton";
             this.toolStripSaveButton.Size = new System.Drawing.Size(23, 22);
@@ -91,8 +83,8 @@
             // 
             // FormEditor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(659, 543);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "FormEditor";

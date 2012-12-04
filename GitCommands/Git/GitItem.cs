@@ -5,6 +5,7 @@ namespace GitCommands
     public class GitItem : IGitItem
     {
         internal const int MinimumStringLength = 53;
+        private readonly GitModule Module;
 
         public string Guid { get; set; }
         public string CommitGuid { get; set; }
@@ -15,7 +16,12 @@ namespace GitCommands
         public string FileName { get; set; }
         public string Mode { get; set; }
 
-        private List<IGitItem> subItems;
+        public GitItem(GitModule aModule)
+        {
+            Module = aModule;
+        }
+
+        private IList<IGitItem> subItems;
 
         public bool IsBlob
         {
@@ -32,13 +38,13 @@ namespace GitCommands
             get { return ItemType == "tree"; }
         }
 
-        public List<IGitItem> SubItems
+        public IEnumerable<IGitItem> SubItems
         {
             get
             {
                 if (subItems == null)
                 {
-                    subItems = Settings.Module.GetTree(Guid);
+                    subItems = Module.GetTree(Guid, false);
 
                     foreach (GitItem item in subItems)
                     {
@@ -50,14 +56,14 @@ namespace GitCommands
             }
         }
 
-        internal static GitItem CreateGitItemFromString(string itemsString)
+        internal static GitItem CreateGitItemFromString(GitModule aModule, string itemsString)
         {
             if ((itemsString == null) || (itemsString.Length <= MinimumStringLength))
                 return null;
 
             var guidStart = itemsString.IndexOf(' ', 7);
 
-            var item = new GitItem
+            var item = new GitItem(aModule)
                            {
                                Mode = itemsString.Substring(0, 6),
                                ItemType = itemsString.Substring(7, guidStart - 7),
@@ -68,5 +74,37 @@ namespace GitCommands
             item.FileName = item.Name;
             return item;
         }
+
+
+        public static List<GitItem> CreateGitItemsFromString(GitModule aModule, string tree)
+        {
+            var itemsStrings = tree.Split(new char[] { '\0', '\n' });
+
+            var items = new List<GitItem>();
+
+            foreach (var itemsString in itemsStrings)
+            {
+                if (itemsString.Length <= 53)
+                    continue;
+
+                var item = GitItem.CreateGitItemFromString(aModule, itemsString);
+
+                items.Add(item);
+            }
+
+            return items;
+        }
+
+        public static List<IGitItem> CreateIGitItemsFromString(GitModule aModule, string tree)
+        {
+            var items = new List<IGitItem>();
+
+            foreach (var item in CreateGitItemsFromString(aModule, tree))
+                items.Add(item);
+
+            return items;
+        }
+
+
     }
 }

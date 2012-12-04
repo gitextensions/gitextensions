@@ -1,0 +1,35 @@
+From Open Icon Library
+----------------------
+char-scorpio.png
+archive-insert-2.png
+ark-3.png
+char-libra.png
+edit-clear-2.png
+folder-remote-2.png
+zoom-2.png
+
+IconArchive
+-----------
+cherry-icon.png: http://www.iconarchive.com/show/fruit-icons-by-miniartx/cherry-icon.html
+glossy-3d-blue-hourglass-icon64.png http://www.iconarchive.com/show/clean-3d-icons-by-mysitemyway/glossy-3d-blue-hourglass-icon.html
+
+IconFinder
+----------
+1350825545_refresh yellow.png - Webdesigner Depot - http://www.webdesignerdepot.com
+1350825556_refresh yellow.png - Webdesigner Depot - http://www.webdesignerdepot.com
+
+http://www.fatcow.com/free-icons
+database_save_a*.png
+database*.png
+
+icons.lisisoft.com
+------------------
+10145-16-yellow-submarine-icon.png - http://icons.lisisoft.com/icons-app/10145-yellow-submarine-icon.html - FatCow Hosting Icons
+10145-32-yellow-submarine-icon.png - http://icons.lisisoft.com/icons-app/10145-yellow-submarine-icon.html - FatCow Hosting Icons
+
+Misc
+----
+Revert16.png
+RvisionHistory16.png
+  both: recreated from bmp
+   

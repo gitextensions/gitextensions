@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using GitUIPluginInterfaces.RepositoryHosts;
-using GitCommands;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using GitCommands;
+using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
 
 namespace GitUI.RepoHosting
 {
-    public partial class ViewPullRequestsForm : GitExtensionsForm
+    public partial class ViewPullRequestsForm : GitModuleForm
     {
         #region Translation
         private readonly TranslationString _strFailedToFetchPullData = new TranslationString("Failed to fetch pull data!\r\n");
@@ -26,16 +26,28 @@ namespace GitUI.RepoHosting
 
         private readonly IRepositoryHostPlugin _gitHoster;
         private bool _isFirstLoad;
+        private AsyncLoader loader = new AsyncLoader();
 
-        // for translation only
-        internal ViewPullRequestsForm()
+        // only for translation
+        private ViewPullRequestsForm()
+            : this(null)
+        { }
+
+        private ViewPullRequestsForm(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
+            loader.LoadingError += (sender, ex) =>
+                {
+                    MessageBox.Show(this, ex.Exception.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    this.UnMask();
+                };
         }
 
-        public ViewPullRequestsForm(IRepositoryHostPlugin gitHoster)
-            : this()
+
+        public ViewPullRequestsForm(GitUICommands aCommands, IRepositoryHostPlugin gitHoster)
+            : this(aCommands)
         {
             _gitHoster = gitHoster;
         }
@@ -56,10 +68,11 @@ namespace GitUI.RepoHosting
         {
             _isFirstLoad = true;
 
-            AsyncHelpers.DoAsync(
+            this.Mask();
+            loader.Load(
                 () =>
                 {
-                    var t = _gitHoster.GetHostedRemotesForCurrentWorkingDirRepo().ToList();
+                    var t = _gitHoster.GetHostedRemotesForModule(Module).ToList();
                     foreach (var el in t)
                         el.GetHostedRepository(); // We do this now because we want to do it in the async part.
                     return t;
@@ -72,8 +85,8 @@ namespace GitUI.RepoHosting
                         _selectHostedRepoCB.Items.Add(hostedRepo.GetHostedRepository());
 
                     SelectNextHostedRepository();
-                },
-                ex => MessageBox.Show(this, ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error));
+                    this.UnMask();
+                });
         }
 
         private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
@@ -84,7 +97,7 @@ namespace GitUI.RepoHosting
             _selectHostedRepoCB.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
 
-            AsyncHelpers.DoAsync <List<IPullRequestInformation>>(
+            AsyncLoader.DoAsync<List<IPullRequestInformation>>(
                hostedRepo.GetPullRequests,
                res => { SetPullRequestsData(res); _selectHostedRepoCB.Enabled = true; },
                ex => MessageBox.Show(this, _strFailedToFetchPullData.Text + ex.Message, _strError.Text)
@@ -182,11 +195,11 @@ namespace GitUI.RepoHosting
 
         private void LoadDiscussion()
         {
-            AsyncHelpers.DoAsync(
+            AsyncLoader.DoAsync(
                 () => _currentPullRequestInfo.Discussion,
                 LoadDiscussion,
-                ex => 
-                { 
+                ex =>
+                {
                     MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + ex.Message, _strError.Text);
                     LoadDiscussion(null);
                 });
@@ -209,7 +222,7 @@ namespace GitUI.RepoHosting
 
         private void LoadDiffPatch()
         {
-            AsyncHelpers.DoAsync(
+            AsyncLoader.DoAsync(
                 () => _currentPullRequestInfo.DiffData,
                 SplitAndLoadDiff,
                 ex => MessageBox.Show(this, _strFailedToLoadDiffData.Text + ex.Message, _strError.Text));
@@ -256,10 +269,9 @@ namespace GitUI.RepoHosting
             var localBranchName = string.Format("pr/n{0}_{1}", _currentPullRequestInfo.Id, _currentPullRequestInfo.Owner);
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}", _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, localBranchName);
-            var formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog(this);
+            var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
 
-            if (formProcess.ErrorOccurred())
+            if (errorOccurred)
                 return;
             Close();
         }
@@ -285,7 +297,7 @@ namespace GitUI.RepoHosting
             }
             else
             {
-                var error = Settings.Module.AddRemote(remoteName, remoteUrl);
+                var error = Module.AddRemote(remoteName, remoteUrl);
                 if (!string.IsNullOrEmpty(error))
                 {
                     MessageBox.Show(this, error, string.Format(_strCouldNotAddRemote.Text, remoteName, remoteUrl));
@@ -294,15 +306,13 @@ namespace GitUI.RepoHosting
             }
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
-            var formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog(this);
+            var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
 
-            if (formProcess.ErrorOccurred())
+            if (errorOccurred)
                 return;
 
             cmd = string.Format("checkout {0}/{1}", remoteName, remoteRef);
-            formProcess = new FormProcess(Settings.GitCommand, cmd);
-            formProcess.ShowDialog(this);
+            FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
 
             Close();
         }

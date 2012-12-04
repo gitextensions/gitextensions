@@ -1,8 +1,14 @@
+' extensions: ods;odt;sxw
 '
 ' TortoiseSVN Merge script for Open Office Calc files
 '
 ' Copyright (C) 2004-2009 the TortoiseSVN team
 ' This file is distributed under the same license as TortoiseSVN
+'
+' Last commit by:
+' $Author: tortoisesvn $
+' $Date: 2009-10-18 09:25:24 +0200 (So, 18. Okt 2009) $
+' $Rev: 17472 $
 '
 ' Authors:
 ' Jonathan Ashley, 2007

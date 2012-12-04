@@ -7,7 +7,7 @@ using GitUIPluginInterfaces;
 
 namespace AutoCompileSubmodules
 {
-    public class AutoCompileSubModules : IGitPluginForRepository
+    public class AutoCompileSubModules : GitPluginBase, IGitPluginForRepository
     {
         private const string MsBuildPath = @"C:\Windows\Microsoft.NET\Framework\v3.5\msbuild.exe";
 
@@ -17,35 +17,41 @@ namespace AutoCompileSubmodules
         ///   Gets the plugin description.
         /// </summary>
         /// <value>The description.</value>
-        public string Description
+        public override string Description
         {
             get { return "Auto compile SubModules"; }
         }
 
-        // Store settings to use later
-        public IGitPluginSettingsContainer Settings { get; set; }
-
-        public void Register(IGitUICommands gitUiCommands)
+        protected override void RegisterSettings()
         {
-            // Register settings
+            base.RegisterSettings();
             Settings.AddSetting("Enabled (true / false)", "false");
             Settings.AddSetting("Path to msbuild.exe", FindMsBuild());
             Settings.AddSetting("msbuild.exe arguments", "/p:Configuration=Debug");
+        }
 
+        public override void Register(IGitUICommands gitUiCommands)
+        {
             // Connect to events
             gitUiCommands.PostUpdateSubmodules += GitUiCommandsPostUpdateSubmodules;
         }
 
-        public bool Execute(GitUIBaseEventArgs e)
+        public override void Unregister(IGitUICommands gitUiCommands)
+        {
+            // Connect to events
+            gitUiCommands.PostUpdateSubmodules -= GitUiCommandsPostUpdateSubmodules;
+        }
+
+        public override bool Execute(GitUIBaseEventArgs e)
         {
             // Only build when plugin is enabled
-            if (string.IsNullOrEmpty(e.GitWorkingDir))
+            if (string.IsNullOrEmpty(e.GitModule.GitWorkingDir))
                 return false;
 
             var arguments = Settings.GetSetting("msbuild.exe arguments");
             var msbuildpath = Settings.GetSetting("Path to msbuild.exe");
 
-            var workingDir = new DirectoryInfo(e.GitWorkingDir);
+            var workingDir = new DirectoryInfo(e.GitModule.GitWorkingDir);
             var solutionFiles = workingDir.GetFiles("*.sln", SearchOption.AllDirectories);
 
             for (var n = solutionFiles.Length - 1; n > 0; n--)

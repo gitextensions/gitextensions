@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using System.Reflection;
 using System.IO;
 
 namespace ResourceManager.Translation
@@ -21,10 +18,7 @@ namespace ResourceManager.Translation
             }
             else if (!translationName.Equals(Translator._name))
             {                
-                if (RunningOnWindows())
-                    Translator._translation = TranslationSerializer.Deserialize(Translator.GetTranslationDir() + @"\" + translationName + ".xml");
-                else
-                    Translator._translation = TranslationSerializer.Deserialize(Translator.GetTranslationDir() + @"/" + translationName + ".xml");
+                Translator._translation = TranslationSerializer.Deserialize(Path.Combine(Translator.GetTranslationDir(), translationName + ".xml"));
             }
             Translator._name = translationName;
             return Translator._translation;
@@ -46,10 +40,7 @@ namespace ResourceManager.Translation
 
         public static string GetTranslationDir()
         {
-            if (RunningOnWindows())
-                return typeof(Translator).Assembly.Location.Substring(0, typeof(Translator).Assembly.Location.LastIndexOf("\\")) + @"\Translation";
-            else
-                return typeof(Translator).Assembly.Location.Substring(0, typeof(Translator).Assembly.Location.LastIndexOf("/")) + @"/Translation";
+            return Path.Combine(Path.GetDirectoryName(typeof(Translator).Assembly.Location), "Translation");
         }
 
         public static string[] GetAllTranslations()

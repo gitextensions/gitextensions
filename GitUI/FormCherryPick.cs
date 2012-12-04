@@ -1,77 +1,117 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
-using System.Collections.Generic;
 
 namespace GitUI
 {
-    public partial class FormCherryPick : GitExtensionsForm
+    public partial class FormCherryPick : GitModuleForm
     {
-        private readonly TranslationString _noRevisionSelectedMsgBox =
-            new TranslationString("Select 1 revision to pick.");
-        private readonly TranslationString _noRevisionSelectedMsgBoxCaption =
-            new TranslationString("Cherry pick");
-        private readonly TranslationString _cmdExecutedMsgBox =
-            new TranslationString("Command executed");
-        private readonly TranslationString _cmdExecutedMsgBoxCaption =
-            new TranslationString("Cherry pick");
+        #region Translation
+        private readonly TranslationString _noneParentSelectedText =
+            new TranslationString("None parent is selected!");
+        private readonly TranslationString _noneParentSelectedTextCaption =
+            new TranslationString("Error");
+        #endregion
 
-        public FormCherryPick()
+        private bool IsMerge;
+
+        private FormCherryPick()
+            : this(null, null)
+        { }
+
+        public FormCherryPick(GitUICommands aCommands, GitRevision revision)
+            : base(aCommands)
         {
-            InitializeComponent(); Translate();
+            Revision = revision;
+            InitializeComponent();
+
+            Translate();
         }
 
-        private void FormCherryPick_FormClosing(object sender, FormClosingEventArgs e)
+        public GitRevision Revision { get; set; }
+
+        private void FormCherryPickCommitSmall_Load(object sender, EventArgs e)
         {
-            SavePosition("cherry-pick");
+            OnRevisionChanged();
         }
 
-        private void FormCherryPick_Load(object sender, EventArgs e)
+        private void OnRevisionChanged()
         {
-            RevisionGrid.Load();
+            commitSummaryUserControl1.Revision = Revision;
 
-            RestorePosition("cherry-pick");
-        }
+            IsMerge = Module.IsMerge(Revision.Guid);
 
-        private void CherryPick_Click(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            if (RevisionGrid.GetSelectedRevisions().Count != 1)
+            if (IsMerge)
             {
-                MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, _noRevisionSelectedMsgBoxCaption.Text);
-                return;
+                var parents = Module.GetParents(Revision.Guid);
+
+                ParentsList.Items.Clear();
+
+                for (int i = 0; i < parents.Length; i++)
+                {
+                    ParentsList.Items.Add(i + 1 + "");
+                    ParentsList.Items[ParentsList.Items.Count - 1].SubItems.Add(parents[i].Message);
+                    ParentsList.Items[ParentsList.Items.Count - 1].SubItems.Add(parents[i].Author);
+                    ParentsList.Items[ParentsList.Items.Count - 1].SubItems.Add(parents[i].CommitDate.ToShortDateString());
+                }
+
+                ParentsList.TopItem.Selected = true;
             }
-            bool formClosed = false;
-            List<string> arguments = new List<string>();
-            bool IsMerge = Settings.Module.IsMerge(RevisionGrid.GetSelectedRevisions()[0].Guid);
-            if (IsMerge && !autoParent.Checked)
+
+            panelParentsList.Visible = IsMerge;
+        }
+
+        private void Revert_Click(object sender, EventArgs e)
+        {
+            List<string> argumentsList = new List<string>();
+            bool CanExecute = true;
+            
+            if (IsMerge)
             {
-                GitRevision[] ParentsRevisions = Settings.Module.GetParents(RevisionGrid.GetSelectedRevisions()[0].Guid);
-                var choose = new FormCherryPickMerge(ParentsRevisions);
-                choose.ShowDialog(this);
-                if (choose.OkClicked)
-                    arguments.Add("-m " + (choose.ParentsList.SelectedItems[0].Index + 1));
+                if (ParentsList.SelectedItems.Count == 0)
+                {
+                    MessageBox.Show(this, _noneParentSelectedText.Text, _noneParentSelectedTextCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CanExecute = false;
+                }
                 else
-                    formClosed = true;
+                {
+                    argumentsList.Add("-m " + (ParentsList.SelectedItems[0].Index + 1));
+                }
             }
-            else if (IsMerge)
-                arguments.Add("-m 1");
 
             if (checkAddReference.Checked)
-                arguments.Add("-x");
-
-            if (!formClosed)
             {
-                MessageBox.Show(this, _cmdExecutedMsgBox.Text + " " + Environment.NewLine + Settings.Module.CherryPick(RevisionGrid.GetSelectedRevisions()[0].Guid, AutoCommit.Checked, string.Join(" ", arguments.ToArray())), _cmdExecutedMsgBoxCaption.Text);
-
-                MergeConflictHandler.HandleMergeConflicts(this);
-
-                RevisionGrid.RefreshRevisions();
-
-                Cursor.Current = Cursors.Default;
+                argumentsList.Add("-x");
             }
-            
+
+            if (CanExecute)
+            {
+                FormProcess.ShowDialog(this, GitCommandHelpers.CherryPickCmd(Revision.Guid, AutoCommit.Checked, string.Join(" ", argumentsList.ToArray())));
+                MergeConflictHandler.HandleMergeConflicts(UICommands, this, AutoCommit.Checked);
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+        }
+
+        public void CopyOptions(FormCherryPick source)
+        {
+            AutoCommit.Checked = source.AutoCommit.Checked;
+            checkAddReference.Checked = source.checkAddReference.Checked;
+        }
+
+        private void btnChooseRevision_Click(object sender, EventArgs e)
+        {
+            using (var chooseForm = new FormChooseCommit(UICommands, Revision.Guid))
+            {
+                if (chooseForm.ShowDialog() == DialogResult.OK && chooseForm.SelectedRevision != null)
+                {
+                    Revision = chooseForm.SelectedRevision;
+                }
+            }
+
+            OnRevisionChanged();
         }
     }
 }

@@ -21,7 +21,8 @@ namespace PatchApply
         {
             NewFile,
             DeleteFile,
-            ChangeFile
+            ChangeFile,
+            ChangeFileMode
         }
 
         public enum FileType
@@ -59,7 +60,7 @@ namespace PatchApply
             GetTextBuilder().Append(line).Append('\n');
         }
 
-        public void ApplyPatch()
+        public void ApplyPatch(Encoding filesContentEncoding)
         {
             FileTextB = "";
             Rate = 100;
@@ -81,7 +82,7 @@ namespace PatchApply
 
             if (Type == PatchType.ChangeFile)
             {
-                HandleChangeFilePatchType();
+                HandleChangeFilePatchType(filesContentEncoding);
                 return;
             }
         }
@@ -91,11 +92,11 @@ namespace PatchApply
             return _textBuilder ?? (_textBuilder = new StringBuilder());
         }
 
-        private string LoadFile(string fileName)
+        private string LoadFile(string fileName, Encoding filesContentEncoding)
         {
             try
             {
-                using (var streamReader = new StreamReader(DirToPatch + fileName, Settings.FilesEncoding))
+                using (var streamReader = new StreamReader(DirToPatch + fileName, filesContentEncoding))
                 {
                     string retval = "";
                     string line;
@@ -116,10 +117,10 @@ namespace PatchApply
             }
         }
 
-        private void HandleChangeFilePatchType()
+        private void HandleChangeFilePatchType(Encoding filesContentEncoding)
         {
             var fileLines = new List<string>();
-            foreach (string s in LoadFile(FileNameA).Split('\n'))
+            foreach (string s in LoadFile(FileNameA, filesContentEncoding).Split('\n'))
             {
                 fileLines.Add(s);
             }

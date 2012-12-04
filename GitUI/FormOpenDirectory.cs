@@ -15,6 +15,8 @@ namespace GitUI
         private readonly TranslationString _warningOpenFailedCaption =
             new TranslationString("Error");
 
+        private GitModule choosenModule = null;
+
         public Open()
         {
             InitializeComponent();
@@ -29,35 +31,40 @@ namespace GitUI
             _NO_TRANSLATE_Directory.Select();
         }
 
-        private void BrowseClick(object sender, EventArgs e)
+        public static GitModule OpenModule(IWin32Window owner)
         {
-            var browseDialog = new FolderBrowserDialog {SelectedPath = _NO_TRANSLATE_Directory.Text};
-
-            if (browseDialog.ShowDialog(this) == DialogResult.OK)
+            using (var open = new Open())
             {
-                _NO_TRANSLATE_Directory.Text = browseDialog.SelectedPath;
+                open.ShowDialog(owner);
+                return open.choosenModule;
             }
+
         }
 
         private void LoadClick(object sender, EventArgs e)
         {
             if (Directory.Exists(_NO_TRANSLATE_Directory.Text))
             {
-                Settings.WorkingDir = _NO_TRANSLATE_Directory.Text;
+                choosenModule = new GitModule(_NO_TRANSLATE_Directory.Text);
 
-                Repositories.AddMostRecentRepository(Settings.WorkingDir);
-
-                Close();
+                Repositories.AddMostRecentRepository(choosenModule.WorkingDir);
             }
             else
             {
+                DialogResult = DialogResult.None;
                 MessageBox.Show(this, _warningOpenFailed.Text, _warningOpenFailedCaption.Text);
             }
         }
 
+        private void Open_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (DialogResult == DialogResult.None)
+                e.Cancel = true;
+        }
+
         private void DirectoryKeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == (char) Keys.Enter)
+            if (e.KeyChar == (char)Keys.Enter)
             {
                 LoadClick(null, null);
             }

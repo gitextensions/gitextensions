@@ -5,53 +5,46 @@ namespace GitUI
 {
     public static class MergeConflictHandler
     {
-        public static bool HandleMergeConflicts(IWin32Window owner)
+        public static bool HandleMergeConflicts(GitUICommands aCommands, IWin32Window owner, bool offerCommit)
         {
-            if (Settings.Module.InTheMiddleOfConflictedMerge())
+            if (aCommands.Module.InTheMiddleOfConflictedMerge())
             {
-                if (MessageBox.Show(owner, "There are unresolved mergeconflicts, solve conflicts now?", "Merge conflicts", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBoxes.UnresolvedMergeConflicts(owner))
                 {
-                    SolveMergeConflicts();
+                    SolveMergeConflicts(aCommands, owner, offerCommit);
                 }
                 return true;
             }
             return false;
         }
 
-        public static bool HandleMergeConflicts()
+        public static bool HandleMergeConflicts(GitUICommands aCommands, IWin32Window owner)
         {
-            return HandleMergeConflicts(null);
+            return HandleMergeConflicts(aCommands, owner, true);
         }
 
-        public static void SolveMergeConflicts(IWin32Window owner)
+        private static void SolveMergeConflicts(GitUICommands aCommands, IWin32Window owner, bool offerCommit)
         {
-            if (Settings.Module.InTheMiddleOfConflictedMerge())
+            if (aCommands.Module.InTheMiddleOfConflictedMerge())
             {
-                GitUICommands.Instance.StartResolveConflictsDialog(owner);
+                aCommands.StartResolveConflictsDialog(owner, offerCommit);
             }
 
-            if (Settings.Module.InTheMiddleOfPatch())
+            if (aCommands.Module.InTheMiddleOfPatch())
             {
-                if (MessageBox.Show(owner, "You are in the middle of a patch apply, continue patch apply?", "Patch apply", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBoxes.MiddleOfPatchApply(owner))
                 {
-                    GitUICommands.Instance.StartApplyPatchDialog(owner);
+                    aCommands.StartApplyPatchDialog(owner);
                 }
             }
-            else
-                if (Settings.Module.InTheMiddleOfRebase())
+            else if (aCommands.Module.InTheMiddleOfRebase())
+            {
+                if (MessageBoxes.MiddleOfRebase(owner))
                 {
-                    if (MessageBox.Show(owner, "You are in the middle of a rebase , continue rebase?", "Rebase", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        GitUICommands.Instance.StartRebaseDialog(owner, null);
-                    }
+                    aCommands.StartRebaseDialog(owner, null);
                 }
+            }
 
         }
-
-        public static void SolveMergeConflicts()
-        {
-            SolveMergeConflicts(null);
-        }
-
     }
 }

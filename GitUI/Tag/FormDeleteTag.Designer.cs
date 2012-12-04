@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDeleteTag));
             this.Ok = new System.Windows.Forms.Button();
             this.Tags = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.deleteTag = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // Ok
@@ -52,7 +52,7 @@
             this.Tags.FormattingEnabled = true;
             this.Tags.Location = new System.Drawing.Point(126, 12);
             this.Tags.Name = "Tags";
-            this.Tags.Size = new System.Drawing.Size(236, 21);
+            this.Tags.Size = new System.Drawing.Size(236, 23);
             this.Tags.TabIndex = 7;
             // 
             // label1
@@ -61,20 +61,31 @@
             this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(7, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 13);
+            this.label1.Size = new System.Drawing.Size(58, 15);
             this.label1.TabIndex = 6;
             this.label1.Text = "Select tag";
             // 
+            // deleteTag
+            // 
+            this.deleteTag.AutoSize = true;
+            this.deleteTag.Location = new System.Drawing.Point(126, 41);
+            this.deleteTag.Name = "deleteTag";
+            this.deleteTag.Size = new System.Drawing.Size(131, 19);
+            this.deleteTag.TabIndex = 11;
+            this.deleteTag.Text = "Delete tag from \'{0}\'";
+            this.deleteTag.UseVisualStyleBackColor = true;
+            // 
             // FormDeleteTag
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(453, 40);
+            this.AcceptButton = this.Ok;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(453, 68);
+            this.Controls.Add(this.deleteTag);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.Tags);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            //this.Icon = global::GitUI.Properties.Resources.cow_head;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormDeleteTag";
@@ -91,5 +102,6 @@
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.ComboBox Tags;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox deleteTag;
     }
 }

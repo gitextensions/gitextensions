@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace GitCommands
@@ -55,18 +55,18 @@ namespace GitCommands
             ".tiff",
         };
 
-        public static bool IsBinaryFile(string fileName)
+        public static bool IsBinaryFile(GitModule aModule, string fileName)
         {
-            var t = IsBinaryAccordingToGitAttributes(fileName);
+            var t = IsBinaryAccordingToGitAttributes(aModule, fileName);
             if (t.HasValue)
                 return t.Value;
             return HasMatchingExtension(BinaryExtensions, fileName);
         }
 
         /// <returns>null if no info in .gitattributes. True if marked as binary, false if marked as text</returns>
-        private static bool? IsBinaryAccordingToGitAttributes(string fileName)
+        private static bool? IsBinaryAccordingToGitAttributes(GitModule aModule, string fileName)
         {
-            string gitAttributesPath = Path.Combine(GitCommands.Settings.WorkingDir, ".gitattributes");
+            string gitAttributesPath = Path.Combine(aModule.WorkingDir, ".gitattributes");
             if (File.Exists(gitAttributesPath))
             {
                 string[] lines = File.ReadAllLines(gitAttributesPath);

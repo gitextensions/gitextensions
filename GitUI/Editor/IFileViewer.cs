@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace GitUI.Editor
 {
@@ -24,6 +24,7 @@ namespace GitUI.Editor
         void SetText(string text);
         void SetHighlighting(string syntax);
         void HighlightLine(int line, Color color);
+        void HighlightLines(int startLine, int endLine, Color color);
         void ClearHighlighting();
         string GetSelectedText();
         int GetSelectionPosition();
@@ -40,11 +41,12 @@ namespace GitUI.Editor
         
         int FirstVisibleLine { get; set; }
         int GetLineFromVisualPosY(int visualPosY);
+        int LineAtCaret { get; }
         string GetLineText(int line);
         int TotalNumberOfLines { get; }
         //lineNumber is 0 based
         void GoToLine(int lineNumber);
-        Font Font { set; }
+        Font Font { get; set; }
         void FocusTextArea();
 
         void SetFileLoader(Func<bool, Tuple<int, string>> fileLoader);

@@ -1,11 +1,11 @@
 ﻿using System;
-using System.IO;
-using System.Xml.Serialization;
-using System.Xml;
-using System.Diagnostics;
-using GitCommands;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Serialization;
+using GitCommands;
 
 namespace GitUI.Script
 {
@@ -32,7 +32,7 @@ namespace GitUI.Script
             return null;
         }
 
-        public static void RunEventScripts(ScriptEvent scriptEvent)
+        public static void RunEventScripts(GitModule aModule, ScriptEvent scriptEvent)
         {
             foreach (ScriptInfo scriptInfo in GetScripts())
                 if (scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent)
@@ -40,8 +40,8 @@ namespace GitUI.Script
                     if (scriptInfo.AskConfirmation)
                         if (MessageBox.Show(String.Format("Do you want to execute '{0}'?", scriptInfo.Name), "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                             continue;
-                    
-                    ScriptRunner.RunScript(scriptInfo.Name, null);
+
+                    ScriptRunner.RunScript(aModule, scriptInfo.Name, null);
                 }
         }
 
@@ -74,8 +74,8 @@ namespace GitUI.Script
             {
                 var serializer = new XmlSerializer(typeof(BindingList<ScriptInfo>));
                 using (var stringReader = new StringReader(xml))
-                using (var xmlReader = new XmlTextReader(stringReader))
                 {
+                    var xmlReader = new XmlTextReader(stringReader);
                     Scripts = serializer.Deserialize(xmlReader) as BindingList<ScriptInfo>;
                 }
             }

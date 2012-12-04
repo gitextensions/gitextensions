@@ -3,41 +3,73 @@ using System.Timers;
 
 namespace GitUI
 {
-    class ProcessOutputTimer
+    public class ProcessOutputTimer
     {
-        static Timer _timer; 
-        public static StringBuilder linesToAdd = new StringBuilder();
-        private static FormStatus _form;
+        public delegate void DoOutputCallback(string text);
+        private Timer _timer; 
+        private StringBuilder textToAdd = new StringBuilder();
+        private DoOutputCallback doOutput;
 
-        public static void Start(FormStatus form)
+        public ProcessOutputTimer(DoOutputCallback doOutput)
         {
-            _form = form;
-            _timer = new Timer(600);
+            this.doOutput = doOutput;
+            _timer = new Timer();
             _timer.Elapsed += _timer_Elapsed;
+        }
+
+        public void Start(int interval)
+        {
+            _timer.Stop();
+            _timer.Interval = interval;
             _timer.Enabled = true;
         }
 
-        public static void addLine(string line)
+        public void Start()
         {
-            lock(linesToAdd)
-            {
-                linesToAdd.Append(line);
-            }
+            Start(600);
         }
-        private static void _timer_Elapsed(object sender, ElapsedEventArgs e)
+
+        public void Stop(bool flush)
         {
-            lock (linesToAdd)
-            {
-                if (linesToAdd.ToString().Length > 0)
-                    _form.AddOutputCrossThread(linesToAdd.ToString());
-                linesToAdd.Remove(0, linesToAdd.Length);
-                //linesToAdd = new StringBuilder();
-            }
-        }
-        public static void Stop()
-        {
-            _timer_Elapsed(null, null);
             _timer.Stop();
+            if (flush)
+                _timer_Elapsed(null, null);
         }
+
+        public void Append(string text)
+        {
+            lock(textToAdd)
+            {
+                textToAdd.Append(text);
+            }
+        }
+
+        private void _timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            lock (textToAdd)
+            {
+                if (textToAdd.Length > 0 && doOutput != null)
+                    doOutput(textToAdd.ToString());
+                Clear();
+            }
+        }
+
+        public void Clear()
+        {
+            lock (textToAdd)
+            {
+                textToAdd.Remove(0, textToAdd.Length);
+            }
+        }
+
+        public void Dispose()
+        {
+            Stop(false);
+            //clear will lock, to prevent outputting to disposed object
+            Clear();
+            doOutput = null;
+            _timer.Dispose();
+        }
+
     }
 }

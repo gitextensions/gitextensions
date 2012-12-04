@@ -1,11 +1,11 @@
 using System;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
 using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormEditor : GitExtensionsForm
+    public sealed partial class FormEditor : GitModuleForm
     {
         private readonly TranslationString _saveChanges = new TranslationString("Do you want to save changes?");
         private readonly TranslationString _saveChangesCaption = new TranslationString("Save changes");
@@ -15,7 +15,8 @@ namespace GitUI
         private bool _hasChanges;
         private string _fileName;
 
-        public FormEditor(string fileName)
+        public FormEditor(GitUICommands aCommands, string fileName)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
@@ -39,14 +40,12 @@ namespace GitUI
 
         private void OpenFile(string fileName)
         {
-            RestorePosition("fileeditor");
-
             try
             {
                 _fileName = fileName;
                 fileViewer.ViewFile(_fileName);
                 fileViewer.IsReadOnly = false;
-                fileViewer.EnableDiffContextMenu(false);
+                fileViewer.SetVisibilityDiffContextMenu(false);
                 Text = _fileName;
 
                 // loading a new file from disk, the text hasn't been changed yet.
@@ -94,10 +93,8 @@ namespace GitUI
             }
             else
             {
-                DialogResult = DialogResult.Cancel;
+                DialogResult = DialogResult.OK;
             }
-
-            SavePosition("fileeditor");
         }
 
         private void toolStripSaveButton_Click(object sender, EventArgs e)
@@ -116,7 +113,7 @@ namespace GitUI
         {
             if (!string.IsNullOrEmpty(_fileName))
             {
-                File.WriteAllText(_fileName, fileViewer.GetText(), GitCommands.Settings.FilesEncoding);
+                File.WriteAllText(_fileName, fileViewer.GetText(), Module.FilesEncoding);
 
                 // we've written the changes out to disk now, nothing to save.
                 HasChanges = false;

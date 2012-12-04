@@ -6,12 +6,17 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public sealed partial class FormBranchSmall : GitExtensionsForm
+    public sealed partial class FormBranchSmall : GitModuleForm
     {
         private readonly TranslationString _noRevisionSelected =
             new TranslationString("Select 1 revision to create the branch on.");
+        private readonly TranslationString _branchNameIsEmpty =
+            new TranslationString("Enter branch name.");
+        private readonly TranslationString _branchNameIsNotValud =
+            new TranslationString("“{0}” is not valid branch name.");
 
-        public FormBranchSmall()
+        public FormBranchSmall(GitUICommands aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
@@ -21,6 +26,20 @@ namespace GitUI
 
         private void OkClick(object sender, EventArgs e)
         {
+            var branchName = BranchNameTextBox.Text.Trim();
+
+            if (branchName.IsNullOrWhiteSpace())
+            {
+                MessageBox.Show(_branchNameIsEmpty.Text, Text);
+                DialogResult = DialogResult.None;
+                return;
+            }
+            if (!Module.CheckBranchFormat(branchName))
+            {
+                MessageBox.Show(string.Format(_branchNameIsNotValud.Text, branchName), Text);
+                DialogResult = DialogResult.None;
+                return;
+            }
             try
             {
                 if (Revision == null)
@@ -28,12 +47,9 @@ namespace GitUI
                     MessageBox.Show(this, _noRevisionSelected.Text, Text);
                     return;
                 }
-                var branchCmd = GitCommandHelpers.BranchCmd(BranchNameTextBox.Text, Revision.Guid,
+                var branchCmd = GitCommandHelpers.BranchCmd(branchName, Revision.Guid,
                                                                   CheckoutAfterCreate.Checked);
-                using (var formProcess = new FormProcess(branchCmd))
-                {
-                    formProcess.ShowDialog(this);
-                }
+                FormProcess.ShowDialog(this, branchCmd);
 
                 DialogResult = DialogResult.OK;
             }

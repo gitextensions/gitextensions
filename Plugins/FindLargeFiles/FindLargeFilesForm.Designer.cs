@@ -69,12 +69,11 @@
             this.dataGridViewCheckBoxColumn1});
             this.BranchesGrid.DataSource = this.gitObjectBindingSource;
             this.BranchesGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BranchesGrid.Location = new System.Drawing.Point(4, 35);
-            this.BranchesGrid.Margin = new System.Windows.Forms.Padding(4);
+            this.BranchesGrid.Location = new System.Drawing.Point(3, 28);
             this.BranchesGrid.Name = "BranchesGrid";
             this.BranchesGrid.ReadOnly = true;
             this.BranchesGrid.RowHeadersVisible = false;
-            this.BranchesGrid.Size = new System.Drawing.Size(1005, 434);
+            this.BranchesGrid.Size = new System.Drawing.Size(754, 353);
             this.BranchesGrid.TabIndex = 0;
             // 
             // sHADataGridViewTextBoxColumn
@@ -84,7 +83,7 @@
             this.sHADataGridViewTextBoxColumn.HeaderText = "SHA";
             this.sHADataGridViewTextBoxColumn.Name = "sHADataGridViewTextBoxColumn";
             this.sHADataGridViewTextBoxColumn.ReadOnly = true;
-            this.sHADataGridViewTextBoxColumn.Width = 61;
+            this.sHADataGridViewTextBoxColumn.Width = 54;
             // 
             // pathDataGridViewTextBoxColumn
             // 
@@ -101,7 +100,7 @@
             this.sizeDataGridViewTextBoxColumn.HeaderText = "Size";
             this.sizeDataGridViewTextBoxColumn.Name = "sizeDataGridViewTextBoxColumn";
             this.sizeDataGridViewTextBoxColumn.ReadOnly = true;
-            this.sizeDataGridViewTextBoxColumn.Width = 60;
+            this.sizeDataGridViewTextBoxColumn.Width = 52;
             // 
             // CompressedSize
             // 
@@ -117,7 +116,7 @@
             this.commitCountDataGridViewTextBoxColumn.HeaderText = "Commit count";
             this.commitCountDataGridViewTextBoxColumn.Name = "commitCountDataGridViewTextBoxColumn";
             this.commitCountDataGridViewTextBoxColumn.ReadOnly = true;
-            this.commitCountDataGridViewTextBoxColumn.Width = 108;
+            this.commitCountDataGridViewTextBoxColumn.Width = 88;
             // 
             // lastCommitDateDataGridViewTextBoxColumn
             // 
@@ -148,41 +147,38 @@
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1013, 518);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 37F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(760, 421);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
             this.tableLayoutPanel2.Controls.Add(this.Cancel, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.Delete, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.pbRevisions, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(4, 477);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 387);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1005, 37);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(754, 31);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
             // Cancel
             // 
             this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Cancel.Dock = System.Windows.Forms.DockStyle.Left;
-            this.Cancel.Location = new System.Drawing.Point(809, 4);
-            this.Cancel.Margin = new System.Windows.Forms.Padding(4);
+            this.Cancel.Location = new System.Drawing.Point(607, 3);
             this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(100, 29);
+            this.Cancel.Size = new System.Drawing.Size(75, 25);
             this.Cancel.TabIndex = 0;
             this.Cancel.Text = "Close";
             this.Cancel.UseVisualStyleBackColor = true;
@@ -190,10 +186,9 @@
             // Delete
             // 
             this.Delete.Dock = System.Windows.Forms.DockStyle.Right;
-            this.Delete.Location = new System.Drawing.Point(701, 4);
-            this.Delete.Margin = new System.Windows.Forms.Padding(4);
+            this.Delete.Location = new System.Drawing.Point(526, 3);
             this.Delete.Name = "Delete";
-            this.Delete.Size = new System.Drawing.Size(100, 29);
+            this.Delete.Size = new System.Drawing.Size(75, 25);
             this.Delete.TabIndex = 1;
             this.Delete.Text = "Delete";
             this.Delete.UseVisualStyleBackColor = true;
@@ -202,19 +197,19 @@
             // pbRevisions
             // 
             this.pbRevisions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbRevisions.Location = new System.Drawing.Point(3, 3);
+            this.pbRevisions.Location = new System.Drawing.Point(2, 2);
+            this.pbRevisions.Margin = new System.Windows.Forms.Padding(2);
             this.pbRevisions.Name = "pbRevisions";
-            this.pbRevisions.Size = new System.Drawing.Size(599, 31);
+            this.pbRevisions.Size = new System.Drawing.Size(450, 27);
             this.pbRevisions.TabIndex = 2;
             // 
             // label1
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 7);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(3, 6);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(725, 17);
+            this.label1.Size = new System.Drawing.Size(538, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Reset local changes before deleting files. Choose files delete. Force push for re" +
     "placing data on remote repository.";
@@ -225,13 +220,12 @@
             // 
             // FindLargeFilesForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.Cancel;
-            this.ClientSize = new System.Drawing.Size(1013, 518);
+            this.ClientSize = new System.Drawing.Size(760, 421);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FindLargeFilesForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Find large files";

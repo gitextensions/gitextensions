@@ -112,38 +112,49 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label1.Text" xml:space="preserve">
-    <value>Supported commandline arguments:
-
-browse
+  <data name="_NO_TRANSLATE_commands.Text" xml:space="preserve">
+    <value>browse [path] [-filter=]
+about
 add
 addfiles
-apply
-applypatch
+apply [filename]
+applypatch [filename]
+blame filename
 branch
 checkout
 checkoutbranch
 checkoutrevision
+cherry
 cleanup
 clone [path]
 commit [--quiet]
-filehistory [file]
+filehistory filename
+fileeditor filename
 formatpatch
-init
-pull [--rebase] [--merge] [--fetch] [--quiet]
-push [--quiet]
-settings
-viewdiff
-rebase [--branch name]
+gitbash
+gitignore
+init [path]
 merge [--branch name]
-cherry
-tag
+mergeconflicts [--quiet]
+mergetool [--quiet]
+openrepo [path] [-filter=]
+pull [--rebase] [--merge] [--fetch] [--quiet] [--remotebranch name]
+push [--quiet]
+rebase [--branch name]
+remotes
+reset
+revert filename
+searchfile
+settings
 stash
-synchronize [--rebase] [--merge] [--fetch] [--quiet]</value>
+synchronize [--rebase] [--merge] [--fetch] [--quiet]
+tag
+viewdiff
+viewpatch [filename]</value>
   </data>
 </root>

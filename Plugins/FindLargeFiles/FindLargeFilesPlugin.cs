@@ -3,27 +3,26 @@ using GitUIPluginInterfaces;
 
 namespace FindLargeFiles
 {
-    public class FindLargeFilesPlugin : IGitPluginForRepository
+    public class FindLargeFilesPlugin : GitPluginBase, IGitPluginForRepository
     {
-        public string Description
+        public override string Description
         {
             get { return "Find large files"; }
         }
 
-        public IGitPluginSettingsContainer Settings { get; set; }
-
-        public void Register(IGitUICommands gitUiCommands)
+        protected override void RegisterSettings()
         {
+            base.RegisterSettings();
             Settings.AddSetting("Find large files bigger than (Mb)", "1");
         }
 
-        public bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
             float threshold;
             if (!float.TryParse(Settings.GetSetting("Find large files bigger than (Mb)"), out threshold))
                 threshold = 1;
 
-            new FindLargeFilesForm(threshold, gitUiCommands).ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            using (var frm = new FindLargeFilesForm(threshold, gitUiCommands)) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
             return true;
         }
     }

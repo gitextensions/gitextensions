@@ -1,10 +1,9 @@
-﻿namespace GitCommands
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+﻿using System;
+using System.IO;
+using System.Text;
 
+namespace GitCommands
+{
     /// <summary>
     /// Encoding Helper
     /// </summary>
@@ -38,6 +37,50 @@
         {
             byte[] bytesunicode = Encoding.Unicode.GetBytes(filename);
             return Encoding.Convert(Encoding.Unicode, encoding, bytesunicode);
+        }
+
+        public static string DecodeString(byte[] output, byte[] error, ref Encoding encoding)
+        {
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+            
+            string outputString = "";
+            if (output != null && output.Length > 0)
+            {
+                using (Stream ms = new MemoryStream(output))
+                {
+                    using (StreamReader reader = new StreamReader(ms, encoding))
+                    {
+                        reader.Peek();
+                        encoding = reader.CurrentEncoding;
+                        outputString = reader.ReadToEnd();
+                        if (error == null || error.Length == 0)
+                            return outputString;
+                    }
+                }
+                outputString = outputString + Environment.NewLine;
+            }
+
+            string errorString = null;
+            if (error != null && error.Length > 0)
+            {
+                using (Stream ms = new MemoryStream(error))
+                {
+                    using (StreamReader reader = new StreamReader(ms, encoding))
+                    {
+                        reader.Peek();
+                        // .Net automatically detect Unicode encoding in StreamReader
+                        encoding = reader.CurrentEncoding;
+                        errorString = reader.ReadToEnd();
+                        if (output == null || output.Length == 0)
+                            return errorString;
+                    }
+                }
+            }
+
+            return outputString + errorString;
         }
     }
 }

@@ -1,19 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using GitCommands;
 
 namespace GitUI
 {
     public partial class FormSelectMultipleBranches : GitExtensionsForm
     {
-        // for translation only
-        internal FormSelectMultipleBranches()
+        // only for translation
+        private FormSelectMultipleBranches()
+            : base(true)
         {
             InitializeComponent();
             Translate();
@@ -59,16 +55,6 @@ namespace GitUI
         private void okButton_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        private void FormSelectMultipleBranches_Load(object sender, EventArgs e)
-        {
-            RestorePosition("selectmultiplebranches");
-        }
-
-        private void FormSelectMultipleBranches_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition("selectmultiplebranches");
         }
     }
 }

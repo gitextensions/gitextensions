@@ -14,7 +14,7 @@ namespace GitUI
             Translate();
         }
 
-        private static void PictureBox1Click(object sender, EventArgs e)
+        private void PictureBox1Click(object sender, EventArgs e)
         {
             Process.Start(DonationUrl);
         }

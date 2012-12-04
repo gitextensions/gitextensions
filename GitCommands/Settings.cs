@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
@@ -59,6 +60,12 @@ namespace GitCommands
             set { SafeSet("stashkeepindex", value, ref _stashKeepIndex); }
         }
 
+        private static bool? _stashConfirmDropShow;
+        public static bool StashConfirmDropShow
+        {
+            get { return SafeGet("stashconfirmdropshow", true, ref _stashConfirmDropShow); }
+            set { SafeSet("stashconfirmdropshow", value, ref _stashConfirmDropShow); }
+        }
 
         private static bool? _applyPatchIgnoreWhitespace;
         public static bool ApplyPatchIgnoreWhitespace
@@ -119,6 +126,19 @@ namespace GitCommands
             set { SafeSet("commitinfoshowcontainedinbrancheslocal", value, ref _commitInfoShowContainedInBranchesLocal); }
         }
 
+        private static bool? _checkForUncommittedChangesInCheckoutBranch;
+        public static bool CheckForUncommittedChangesInCheckoutBranch
+        {
+            get { return SafeGet("checkforuncommittedchangesincheckoutbranch", false, ref _checkForUncommittedChangesInCheckoutBranch); }
+            set { SafeSet("checkforuncommittedchangesincheckoutbranch", value, ref _checkForUncommittedChangesInCheckoutBranch); }
+        }
+
+        public static bool AlwaysShowCheckoutBranchDlg
+        {
+            get { return GetBool("AlwaysShowCheckoutBranchDlg", false).Value; }
+            set { SetBool("AlwaysShowCheckoutBranchDlg", value); }
+        }
+
         private static bool? _commitInfoShowContainedInBranchesRemote;
         public static bool CommitInfoShowContainedInBranchesRemote
         {
@@ -142,6 +162,11 @@ namespace GitCommands
 
         public static string ApplicationDataPath { get; private set; }
 
+        public static string GravatarCachePath
+        {
+            get { return ApplicationDataPath + "Images\\"; }
+        }
+
         private static string _translation;
         public static string Translation
         {
@@ -161,6 +186,13 @@ namespace GitCommands
         {
             get { return SafeGet("customhomedir", "", ref _customHomeDir); }
             set { SafeSet("customhomedir", value, ref _customHomeDir); }
+        }
+
+        private static bool? _enableAutoScale;
+        public static bool EnableAutoScale
+        {
+            get { return SafeGet("enableautoscale", true, ref _enableAutoScale); }
+            set { SafeSet("enableautoscale", value, ref _enableAutoScale); }
         }
 
         private static string _iconColor;
@@ -219,6 +251,20 @@ namespace GitCommands
             set { SafeSet("refreshcommitdialogonformfocus", value, ref _refreshCommitDialogOnFormFocus); }
         }
 
+        private static bool? _stageInSuperprojectAfterCommit;
+        public static bool StageInSuperprojectAfterCommit
+        {
+            get { return SafeGet("stageinsuperprojectaftercommit", true, ref _stageInSuperprojectAfterCommit); }
+            set { SafeSet("stageinsuperprojectaftercommit", value, ref _stageInSuperprojectAfterCommit); }
+        }
+
+        private static bool? _PlaySpecialStartupSound;
+        public static bool PlaySpecialStartupSound
+        {
+            get { return SafeGet("PlaySpecialStartupSound", false, ref _PlaySpecialStartupSound); }
+            set { SafeSet("PlaySpecialStartupSound", value, ref _PlaySpecialStartupSound); }
+        }
+
         private static bool? _followRenamesInFileHistory;
         public static bool FollowRenamesInFileHistory
         {
@@ -233,18 +279,23 @@ namespace GitCommands
             set { SafeSet("fullhistoryinfilehistory", value, ref _fullHistoryInFileHistory); }
         }
 
+        public static bool LoadFileHistoryOnShow
+        {
+            get { return GetBool("LoadFileHistoryOnShow", true).Value; }
+            set { SetBool("LoadFileHistoryOnShow", value); }
+        }
+
+        public static bool LoadBlameOnShow
+        {
+            get { return GetBool("LoadBlameOnShow", true).Value; }
+            set { SetBool("LoadBlameOnShow", value); }
+        }
+
         private static bool? _revisionGraphShowWorkingDirChanges;
         public static bool RevisionGraphShowWorkingDirChanges
         {
             get { return SafeGet("revisiongraphshowworkingdirchanges", false, ref _revisionGraphShowWorkingDirChanges); }
             set { SafeSet("revisiongraphshowworkingdirchanges", value, ref _revisionGraphShowWorkingDirChanges); }
-        }
-
-        private static bool? _DirtyDirWarnBeforeCheckoutBranch;
-        public static bool DirtyDirWarnBeforeCheckoutBranch
-        {
-            get { return SafeGet("DirtyDirWarnBeforeCheckoutBranch", false, ref _DirtyDirWarnBeforeCheckoutBranch); }
-            set { SafeSet("DirtyDirWarnBeforeCheckoutBranch", value, ref _DirtyDirWarnBeforeCheckoutBranch); }
         }
 
         private static bool? _revisionGraphDrawNonRelativesGray;
@@ -262,166 +313,21 @@ namespace GitCommands
         }
 
         public static readonly Dictionary<string, Encoding> availableEncodings = new Dictionary<string, Encoding>();
-           
-        private static Encoding GetEncoding(bool local, string settingName, bool fromSettings)
+
+        internal static bool GetEncoding(string settingName, out Encoding encoding)
         {
-            Encoding result;
-            string lname = local ? "_local" + '_' + WorkingDir : "_global";
-            lname = settingName + lname;
             object o;
-            if (byNameMap.TryGetValue(lname, out o))
-                result = o as Encoding;
-            else
-            {
-                string encodingName;
-                if (fromSettings)
-                    encodingName = GetString("n_" + lname, null);
-                else
-                {
-                    ConfigFile cfg;
-                    if (local)
-                        cfg = Module.GetLocalConfig();
-                    else
-                        cfg = GitCommandHelpers.GetGlobalConfig();
-
-                    encodingName = cfg.GetValue(settingName);
-                }
-
-                if (string.IsNullOrEmpty(encodingName))
-                    result = null;
-                else if (!availableEncodings.TryGetValue(encodingName, out result))
-                {
-                    try
-                    {
-                        result = Encoding.GetEncoding(encodingName);
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        throw new Exception(ex.Message + Environment.NewLine + "Unsupported encoding set in git config file: " + encodingName + Environment.NewLine + "Please check the setting i18n.commitencoding in your local and/or global config files. Command aborted.", ex);
-                    }
-                }
-                byNameMap[lname] = result;                
-            }
-
-            return result;
-
-        }
-
-        private static void SetEncoding(bool local, string settingName, Encoding encoding, bool toSettings)
-        {
-            string lname = local ? "_local" + '_' + WorkingDir : "_global";
-            lname = settingName + lname;
-            byNameMap[lname] = encoding;
-            //storing to config file is handled by FormSettings
-            if (toSettings)
-                SetString("n_" + lname, encoding == null ? null : encoding.HeaderName);
-        }
-
-        //encoding for files paths
-        public static Encoding SystemEncoding;
-        //Encoding that let us read all bytes without replacing any char
-        public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1");//is any better?
-        //follow by git i18n CommitEncoding and LogOutputEncoding is a hell
-        //command output may consist of:
-        //1) commit message encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of 
-        //   pretty parameter (pretty=raw - recoded, pretty=format - not recoded)
-        //2) author name encoded dependently on config file encoding, not recoded to LogOutputEncoding
-        //3) file content encoded in its original encoding, not recoded to LogOutputEncoding
-        //4) file path (file name is encoded in system default encoding), not recoded to LogOutputEncoding,
-        //   every not ASCII character is escaped with \ followed by its code as a three digit octal number
-        //5) branch or tag name encoded in system default encoding, not recoded to LogOutputEncoding
-        //saying that "At the core level, git is character encoding agnostic." is not enough
-        //In my opinion every data not encoded in utf8 should contain information
-        //about its encoding, also git should emit structuralized data
-        //i18n CommitEncoding and LogOutputEncoding properties are stored in config file, because of 2)
-        //it is better to encode this file in utf8 for international projects. To read config file properly
-        //we must know its encoding, let user decide by setting AppEncoding property which encoding has to be used
-        //to read/write config file
-        public static Encoding GetAppEncoding(bool local, bool returnDefault)
-        {
-            Encoding result = GetEncoding(local, "AppEncoding", true);
-            if (result == null && returnDefault)
-                result = new UTF8Encoding(false);
+            bool result = byNameMap.TryGetValue(settingName, out o);
+            encoding = o as Encoding;
             return result;
         }
-        public static void SetAppEncoding(bool local, Encoding encoding)
-        {
-            SetEncoding(local, "AppEncoding", encoding, true);
-        }
-        public static Encoding AppEncoding
-        {
-            get
-            {
-                Encoding result = GetAppEncoding(true, false);
-                if (result == null)
-                    result = GetAppEncoding(false, true);
-                return result;
-            }
-        }
 
-        public static Encoding GetFilesEncoding(bool local) 
+        internal static void SetEncoding(string settingName, Encoding encoding)
         {
-            return GetEncoding(local, "i18n.filesEncoding", false);                 
-        }
-        public static void SetFilesEncoding(bool local, Encoding encoding)
-        {
-            SetEncoding(local, "i18n.filesEncoding", encoding, false);
-        }
-        public static Encoding FilesEncoding
-        {
-            get
-            {
-                Encoding result = GetFilesEncoding(true);
-                if (result == null)
-                    result = GetFilesEncoding(false);
-                if (result == null)
-                    result = new UTF8Encoding(false);
-                return result;
-            }
-        }
-
-        public static Encoding GetCommitEncoding(bool local)
-        {
-            return GetEncoding(local, "i18n.commitEncoding", false);
-        }
-        public static void SetCommitEncoding(bool local, Encoding encoding)
-        {
-            SetEncoding(local, "i18n.commitEncoding", encoding, false);
-        }
-        public static Encoding CommitEncoding
-        {
-            get
-            {
-                Encoding result = GetCommitEncoding(true);
-                if (result == null)
-                    result = GetCommitEncoding(false);
-                if (result == null)
-                    result = new UTF8Encoding(false);
-                return result;
-            }
-        }
-
-        public static Encoding GetLogOutputEncoding(bool local)
-        {
-            return GetEncoding(local, "i18n.logoutputencoding", false);
-        }
-        public static void SetLogOutputEncoding(bool local, Encoding encoding)
-        {
-            SetEncoding(local, "i18n.logoutputencoding", encoding, false);
-        }
-        public static Encoding LogOutputEncoding
-        {
-            get
-            {
-                Encoding result = GetLogOutputEncoding(true);
-                if (result == null)
-                    result = GetLogOutputEncoding(false);
-                if (result == null)
-                    result = CommitEncoding;
-                if (result == null)
-                    result = new UTF8Encoding(false);
-                return result;
-            }
+            var items = (from item in byNameMap.Keys where item.StartsWith(settingName) select item).ToList();
+            foreach (var item in items)
+                byNameMap.Remove(item);
+            byNameMap[settingName] = encoding;
         }
 
         public enum PullAction
@@ -445,21 +351,6 @@ namespace GitCommands
             set { SetBool("DonSetAsLastPullAction", value); }
         }
 
-        public static PullAction LastPullAction
-        {
-            get { return GetEnum<PullAction>("LastPullAction_" + WorkingDir, PullAction.None); }
-            set { SetEnum<PullAction>("LastPullAction_" + WorkingDir, value); }
-        }
-
-        public static void LastPullActionToPullMerge()
-        {
-            if (LastPullAction == PullAction.FetchAll)
-                PullMerge = PullAction.Fetch;
-            else if (LastPullAction != PullAction.None)
-                PullMerge = LastPullAction;
-        }
-
-
         private static string _smtp;
         public static string Smtp
         {
@@ -474,11 +365,25 @@ namespace GitCommands
             set { SafeSet("autostash", value, ref _autoStash); }
         }
 
-        private static bool? _mergeAtCheckout;
-        public static bool MergeAtCheckout
+
+        public enum LocalChanges
         {
-            get { return SafeGet("mergeAtCheckout", true, ref _mergeAtCheckout); }
-            set { SafeSet("mergeAtCheckout", value, ref _mergeAtCheckout); }
+            DontChange,
+            Merge,
+            Reset,
+            Stash
+        }
+
+        public static LocalChanges CheckoutBranchAction
+        {
+            get { return GetEnum<LocalChanges>("checkoutbranchaction", LocalChanges.Merge); }
+            set { SetEnum<LocalChanges>("checkoutbranchaction", value); }
+        }
+
+        public static bool UseDefaultCheckoutBranchAction
+        {
+            get { return GetBool("UseDefaultCheckoutBranchAction", false).Value; }
+            set { SetBool("UseDefaultCheckoutBranchAction", value); }
         }
 
         private static bool? _includeUntrackedFilesInAutoStash;
@@ -582,8 +487,15 @@ namespace GitCommands
         private static int? _commitDialogSplitter;
         public static int CommitDialogSplitter
         {
-            get { return SafeGet("commitdialogsplitter", 400, ref _commitDialogSplitter); }
+            get { return SafeGet("commitdialogsplitter", -1, ref _commitDialogSplitter); }
             set { SafeSet("commitdialogsplitter", value, ref _commitDialogSplitter); }
+        }
+
+        private static int? _commitDialogRightSplitter;
+        public static int CommitDialogRightSplitter
+        {
+            get { return SafeGet("commitdialogrightsplitter", -1, ref _commitDialogRightSplitter); }
+            set { SafeSet("commitdialogrightsplitter", value, ref _commitDialogRightSplitter); }
         }
 
         private static int? _revisionGridQuickSearchTimeout;
@@ -633,37 +545,6 @@ namespace GitCommands
         {
             get { return SafeGet("maxrevisiongraphcommits", 100000, ref _maxRevisionGraphCommits); }
             set { SafeSet("maxrevisiongraphcommits", value, ref _maxRevisionGraphCommits); }
-        }
-
-        public delegate void WorkingDirChangedEventHandler(string oldDir, string newDir, string newGitDir);
-        public static event WorkingDirChangedEventHandler WorkingDirChanged;
-
-        private static readonly GitModule _module = new GitModule();
-        public static GitModule Module
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _module;
-            }
-        }
-
-        public static string WorkingDir
-        {
-            get
-            {
-                return _module.WorkingDir;
-            }
-            set
-            {
-                string old = _module.WorkingDir;
-                _module.WorkingDir = value;
-                RecentWorkingDir = _module.WorkingDir;
-                if (WorkingDirChanged != null)
-                {
-                    WorkingDirChanged(old, _module.WorkingDir, _module.GetGitDirectory());
-                }
-            }
         }
 
         public static string RecentWorkingDir
@@ -792,6 +673,13 @@ namespace GitCommands
             set { SafeSet("difffont", value, ref _diffFont); }
         }
 
+        private static Font _font;
+        public static Font Font
+        {
+            get { return SafeGet("font", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size), ref _font); }
+            set { SafeSet("font", value, ref _font); }
+        }
+
         #endregion
 
         private static bool? _multicolorBranches;
@@ -894,58 +782,8 @@ namespace GitCommands
             { }
         }
 
-        private static void TransferEncodings()
-        {
-            string encoding = GetValue("encoding", "");
-            if (!encoding.IsNullOrEmpty())
-            {
-                Encoding _encoding;
-
-                if (encoding.Equals("Default", StringComparison.CurrentCultureIgnoreCase))
-                    _encoding = Encoding.Default;
-                else if (encoding.Equals("Unicode", StringComparison.CurrentCultureIgnoreCase))
-                    _encoding = new UnicodeEncoding();
-                else if (encoding.Equals("ASCII", StringComparison.CurrentCultureIgnoreCase))
-                    _encoding = new ASCIIEncoding();
-                else if (encoding.Equals("UTF7", StringComparison.CurrentCultureIgnoreCase))
-                    _encoding = new UTF7Encoding();
-                else if (encoding.Equals("UTF32", StringComparison.CurrentCultureIgnoreCase))
-                    _encoding = new UTF32Encoding(true, false);
-                else
-                    _encoding = new UTF8Encoding(false);
-
-                SetFilesEncoding(false, _encoding);
-                SetAppEncoding(false, _encoding);
-                SetValue("encoding", null as string);
-            }
-        }
-
-        private static void SetupSystemEncoding()
-        {
-            //check whether GitExtensions works with standard msysgit or msysgit-unicode
-
-            // invoke a git command that returns an invalid argument in its response, and
-            // check if a unicode-only character is reported back. If so assume msysgit-unicode
-
-            // git config --get with a malformed key (no section) returns:
-            // "error: key does not contain a section: <key>"
-            const string controlStr = "ą"; // "a caudata"
-            string arguments = string.Format("config --get {0}", controlStr);
-
-            int exitCode;
-            String s = Module.RunGitCmd(arguments, out exitCode, null, Encoding.UTF8);
-            if (s != null && s.IndexOf(controlStr) != -1)
-                SystemEncoding = Encoding.UTF8;
-            else
-                SystemEncoding = Encoding.Default;
-        
-        }
-
         public static void LoadSettings()
         {
-
-            SetupSystemEncoding();
-
             Action<Encoding> addEncoding = delegate(Encoding e) { availableEncodings[e.HeaderName] = e; };
             addEncoding(Encoding.Default);
             addEncoding(new ASCIIEncoding());
@@ -955,7 +793,6 @@ namespace GitCommands
 
             try
             {
-                TransferEncodings();
                 TransferVerDependentReg();
             }
             catch
@@ -969,14 +806,14 @@ namespace GitCommands
             { }
         }
 
-        public static bool? _dashboardShowCurrentBranch;
+        private static bool? _dashboardShowCurrentBranch;
         public static bool DashboardShowCurrentBranch
         {
             get { return SafeGet("dashboardshowcurrentbranch", true, ref _dashboardShowCurrentBranch); }
             set { SafeSet("dashboardshowcurrentbranch", value, ref _dashboardShowCurrentBranch); }
         }
 
-        public static string _ownScripts;
+        private static string _ownScripts;
         public static string ownScripts
         {
             get { return SafeGet("ownScripts", "", ref _ownScripts); }
@@ -997,11 +834,11 @@ namespace GitCommands
             set { SafeSet("AutoPullOnRejected", value, ref _AutoPullOnRejected); }
         }
 
-        private static bool? _RecursiveSubmodulesCheck;
-        public static bool RecursiveSubmodulesCheck
+        private static int? _RecursiveSubmodules;
+        public static int RecursiveSubmodules
         {
-            get { return SafeGet("RecursiveSubmodulesCheck", true, ref _RecursiveSubmodulesCheck); }
-            set { SafeSet("RecursiveSubmodulesCheck", value, ref _RecursiveSubmodulesCheck); }
+            get { return SafeGet("RecursiveSubmodules", 1, ref _RecursiveSubmodules); }
+            set { SafeSet("RecursiveSubmodules", value, ref _RecursiveSubmodules); }
         }
 
         private static string _ShorteningRecentRepoPathStrategy;
@@ -1086,6 +923,27 @@ namespace GitCommands
         {
             get { return SafeGet("CreateLocalBranchForRemote", false, ref _CreateLocalBranchForRemote); }
             set { SafeSet("CreateLocalBranchForRemote", value, ref _CreateLocalBranchForRemote); }
+        }
+
+        private static bool? _ShellCascadeContextMenu;
+        public static bool ShellCascadeContextMenu
+        {
+            get { return SafeGet("ShellCascadeContextMenu", true, ref _ShellCascadeContextMenu); }
+            set { SafeSet("ShellCascadeContextMenu", value, ref _ShellCascadeContextMenu); }
+        }
+
+        private static string _ShellVisibleMenuItems;
+        public static string ShellVisibleMenuItems
+        {
+            get { return SafeGet("ShellVisibleMenuItems", "11111111111111", ref _ShellVisibleMenuItems); }
+            set { SafeSet("ShellVisibleMenuItems", value, ref _ShellVisibleMenuItems); }
+        }
+
+        private static bool? _UseFormCommitMessage;
+        public static bool UseFormCommitMessage
+        {
+            get { return SafeGet("UseFormCommitMessage", true, ref _UseFormCommitMessage); }
+            set { SafeSet("UseFormCommitMessage", value, ref _UseFormCommitMessage); }
         }
 
         public static string GetGitExtensionsFullPath()
@@ -1191,6 +1049,10 @@ namespace GitCommands
                 string r = Application.UserAppDataRegistry.Name.Replace(Application.ProductVersion, "1.0.0.0");
                 r = r.Substring(Registry.CurrentUser.Name.Length + 1, r.Length - Registry.CurrentUser.Name.Length - 1);
                 RegistryKey versionDependentRegKey = Registry.CurrentUser.OpenSubKey(r, true);
+                SetBool("TransferedVerDependentReg", true);
+                if (versionDependentRegKey == null)
+                    return;
+
                 try
                 {
                     foreach (string key in versionDependentRegKey.GetValueNames())
@@ -1205,7 +1067,6 @@ namespace GitCommands
                 {
                     versionDependentRegKey.Close();
                 }
-                SetBool("TransferedVerDependentReg", true);
             }
             
         }
@@ -1301,7 +1162,8 @@ namespace GitCommands
     {
         public static string AsString(this Font value)
         {
-            return String.Format("{0};{1}", value.FontFamily.Name, value.Size);
+            return String.Format(System.Globalization.CultureInfo.InstalledUICulture,
+                "{0};{1}", value.FontFamily.Name, value.Size);
         }
 
         public static Font Parse(this string value, Font defaultValue)
@@ -1316,7 +1178,8 @@ namespace GitCommands
 
             try
             {
-                return new Font(parts[0], Single.Parse(parts[1]));
+                return new Font(parts[0], Single.Parse(parts[1],
+                  System.Globalization.CultureInfo.InstalledUICulture));
             }
             catch (Exception)
             {

@@ -92,7 +92,6 @@
             // Branches
             // 
             this.Branches.BranchesToSelect = null;
-            this.Branches.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.Branches.Location = new System.Drawing.Point(146, 96);
             this.Branches.Margin = new System.Windows.Forms.Padding(0);
             this.Branches.Name = "Branches";
@@ -102,8 +101,8 @@
             // FormDeleteBranch
             // 
             this.AcceptButton = this.Ok;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(448, 162);
             this.Controls.Add(this.Branches);
             this.Controls.Add(this.ForceDelete);

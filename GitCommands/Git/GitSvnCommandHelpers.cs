@@ -1,11 +1,8 @@
-﻿namespace GitCommands
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
+﻿using System.IO;
+using System.Text;
 
+namespace GitCommands
+{
     /// <summary>
     /// git svn commands:
     /// svn clone
@@ -17,31 +14,49 @@
     {
         private const string SvnPrefix = "svn";
 
-        public static string CloneCmd(string fromSvn, string toPath, string authorsFile)
+        public static string CloneCmd(string fromSvn, string toPath, string username, 
+            string authorsFile, int fromRevision, 
+            string trunk, string tags, string branches)
         {
             toPath = GitCommandHelpers.FixPath(toPath);
             StringBuilder sb = new StringBuilder();
-            sb.Append(SvnPrefix);
-            sb.Append(" clone ");
-            sb.AppendFormat("\"{0}\"", fromSvn.Trim());
-            sb.Append(' ');
-            sb.AppendFormat("\"{0}\"", toPath.Trim());
-            if (authorsFile != null && authorsFile.Trim().Length!=0)
+            sb.AppendFormat("{0} clone \"{1}\" \"{2}\"", SvnPrefix, fromSvn, toPath);
+            if (!string.IsNullOrEmpty(username))
             {
-                sb.Append(" --authors-file ");
-                sb.AppendFormat("\"{0}\"", authorsFile.Trim());
+                sb.AppendFormat(" --username=\"{0}\"", username);
+            }
+            if (!string.IsNullOrEmpty(authorsFile))
+            {
+                sb.AppendFormat(" --authors-file=\"{0}\"", authorsFile);
+            }
+            if (fromRevision != 0)
+            {
+                sb.AppendFormat(" -r \"{0}\"", fromRevision);
+            }
+            if (!string.IsNullOrEmpty(trunk))
+            {
+                sb.AppendFormat(" --trunk=\"{0}\"", trunk);
+            }
+            if (!string.IsNullOrEmpty(tags))
+            {
+                sb.AppendFormat(" --tags=\"{0}\"", tags);
+            }
+            if (!string.IsNullOrEmpty(branches))
+            {
+                sb.AppendFormat(" --branches=\"{0}\"", branches);
             }
             return sb.ToString();
         }
-        public static bool CheckRefsRemoteSvn()
+
+        public static bool CheckRefsRemoteSvn(GitModule aModule)
         {
-            string svnremote = GetConfigSvnRemoteFetch();
+            string svnremote = GetConfigSvnRemoteFetch(aModule);
             return svnremote != null && svnremote.Trim().Contains(":refs/remote");
         }
 
-        public static string GetConfigSvnRemoteFetch()
+        public static string GetConfigSvnRemoteFetch(GitModule aModule)
         {
-            return Settings.Module.RunCmd(Settings.GitCommand, "config svn-remote.svn.fetch");
+            return aModule.RunCmd(Settings.GitCommand, "config svn-remote.svn.fetch");
         }
 
         public static string RebaseCmd()
@@ -59,9 +74,9 @@
             return SvnPrefix + " fetch";
         }
 
-        public static bool ValidSvnWorkingDir()
+        public static bool ValidSvnWorkingDir(GitModule aModule)
         {
-            return ValidSvnWorkingDir(Settings.WorkingDir);
+            return ValidSvnWorkingDir(aModule.WorkingDir);
         }
 
         public static bool ValidSvnWorkingDir(string dir)

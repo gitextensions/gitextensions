@@ -1,51 +1,103 @@
 ﻿using System;
 using System.Windows.Forms;
 using ResourceManager.Translation;
+using GitCommands;
+using System.IO;
+using System.Linq;
 
 namespace GitUI
 {
-    public partial class FormArchive : GitExtensionsForm
+    public partial class FormArchive : GitModuleForm
     {
-        private readonly TranslationString _noRevisionSelectedMsgBox =
-            new TranslationString("Select 1 revision to archive");
-
-        private readonly TranslationString _saveFileDialogFilter =
+        private readonly TranslationString _saveFileDialogFilterZip =
             new TranslationString("Zip file (*.zip)");
+
+        private readonly TranslationString _saveFileDialogFilterTar =
+            new TranslationString("Tar file (*.tar)");
+
         private readonly TranslationString _saveFileDialogCaption =
             new TranslationString("Save archive as");
 
-        public FormArchive()
+        private GitRevision _selectedRevision;
+        public GitRevision SelectedRevision
         {
-            InitializeComponent(); 
-            Translate();
+            get { return _selectedRevision; }
+            set
+            {
+                _selectedRevision = value;
+                commitSummaryUserControl1.Revision = _selectedRevision;
+            }
         }
 
-        private void FormArchive_FormClosing(object sender, FormClosingEventArgs e)
+        private enum OutputFormat
         {
-            SavePosition("archive");
+            Zip,
+            Tar
+        }
+
+        /// <summary>
+        /// For VS designer
+        /// </summary>
+        private FormArchive()
+            : this(null)
+        {
+        }
+
+        public FormArchive(GitUICommands aCommands)
+            : base(true, aCommands)
+        {
+            InitializeComponent();
+            Translate();
         }
 
         private void FormArchive_Load(object sender, EventArgs e)
         {
-            revisionGrid1.Load();
-            RestorePosition("archive");
+            buttonArchiveRevision.Focus();
         }
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (revisionGrid1.GetSelectedRevisions().Count != 1)
+            string revision = SelectedRevision.Guid;
+
+            string fileFilterCaption = GetSelectedOutputFormat() == OutputFormat.Zip ? _saveFileDialogFilterZip.Text : _saveFileDialogFilterTar.Text;
+            string fileFilterEnding = GetSelectedOutputFormat() == OutputFormat.Zip ? "zip" : "tar";
+
+            // TODO (feature): if there is a tag on the revision use the tag name as suggestion
+            // TODO (feature): let user decide via GUI
+            string filenameSuggestion = string.Format("{0}_{1}", new DirectoryInfo(Module.WorkingDir).Name, revision);
+
+            using (var saveFileDialog = new SaveFileDialog
             {
-                MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                Filter = string.Format("{0}|*.{1}", fileFilterCaption, fileFilterEnding),
+                Title = _saveFileDialogCaption.Text,
+                FileName = filenameSuggestion
+            })
+            {
+                if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    string format = GetSelectedOutputFormat() == OutputFormat.Zip ? "zip" : "tar";
+
+                    FormProcess.ShowDialog(this,
+                        string.Format("archive --format={0} {1} --output \"{2}\"",
+                        format, revision, saveFileDialog.FileName));
+                    Close();
+                }
             }
-            string revision = revisionGrid1.GetSelectedRevisions()[0].TreeGuid;
+        }
 
-            var saveFileDialog = new SaveFileDialog {Filter = _saveFileDialogFilter.Text + "|*.zip", Title = _saveFileDialogCaption.Text};
+        private OutputFormat GetSelectedOutputFormat()
+        {
+            return radioButtonFormatZip.Checked ? OutputFormat.Zip : OutputFormat.Tar;
+        }
 
-            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+        private void btnChooseRevision_Click(object sender, EventArgs e)
+        {
+            using (var chooseForm = new FormChooseCommit(UICommands, SelectedRevision.Guid))
             {
-                new FormProcess("archive --format=zip " + revision + " --output \"" + saveFileDialog.FileName + "\"").ShowDialog(this);
-                Close();
+                if (chooseForm.ShowDialog() == DialogResult.OK && chooseForm.SelectedRevision != null)
+                {
+                    SelectedRevision = chooseForm.SelectedRevision;
+                }
             }
         }
     }

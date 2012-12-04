@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -7,40 +9,55 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormAddToGitIgnore : GitExtensionsForm
+    public sealed partial class FormAddToGitIgnore : GitModuleForm
     {
-        private readonly TranslationString _matchingFilesString =
-            new TranslationString("{0} file(s) matched");
-            
-        public FormAddToGitIgnore(string filePattern)
+        private readonly TranslationString _matchingFilesString = new TranslationString("{0} file(s) matched");
+
+        public FormAddToGitIgnore(GitUICommands aCommands, params string[] filePatterns)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
-            FilePattern.Text = filePattern;
+            if (filePatterns != null)
+                FilePattern.Text = string.Join(Environment.NewLine, filePatterns);
+        }
+
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            base.OnRuntimeLoad(e);
             UpdatePreviewPanel();
         }
 
         private void AddToIngoreClick(object sender, EventArgs e)
         {
+            var patterns = GetCurrentPatterns().ToArray();
+            if (patterns.Length == 0)
+            {
+                Close();
+                return;
+            }
+
             try
             {
-                FileInfoExtensions
-                    .MakeFileTemporaryWritable(Settings.WorkingDir + ".gitignore",
-                                       x =>
-                                       {
-                                           var gitIgnoreFileAddition = new StringBuilder();
-                                           gitIgnoreFileAddition.Append(FilePattern.Text);
-                                           gitIgnoreFileAddition.Append(Environment.NewLine);
+                var fileName = Module.WorkingDir + ".gitignore";
+                FileInfoExtensions.MakeFileTemporaryWritable(fileName, x =>
+                {
+                    var gitIgnoreFileAddition = new StringBuilder();
 
-                                           if (File.Exists(Settings.WorkingDir + ".gitignore"))
-                                               if (!File.ReadAllText(Settings.WorkingDir + ".gitignore", Settings.SystemEncoding).EndsWith(Environment.NewLine))
-                                                   gitIgnoreFileAddition.Insert(0, Environment.NewLine);
+                    if (File.Exists(fileName) && !File.ReadAllText(fileName, GitModule.SystemEncoding).EndsWith(Environment.NewLine))
+                        gitIgnoreFileAddition.Append(Environment.NewLine);
 
-                                           using (TextWriter tw = new StreamWriter(x, true, Settings.SystemEncoding))
-                                           {
-                                               tw.Write(gitIgnoreFileAddition);
-                                           }
-                                       });
+                    foreach (var pattern in patterns)
+                    {
+                        gitIgnoreFileAddition.Append(pattern);
+                        gitIgnoreFileAddition.Append(Environment.NewLine);
+                    }
+
+                    using (TextWriter tw = new StreamWriter(x, true, GitModule.SystemEncoding))
+                    {
+                        tw.Write(gitIgnoreFileAddition);
+                    }
+                });
             }
             catch (Exception ex)
             {
@@ -52,14 +69,21 @@ namespace GitUI
 
         private void UpdatePreviewPanel()
         {
-            _NO_TRANSLATE_Preview.DataSource = Settings.Module.GetFiles(FilePattern.Text);
-            _NO_TRANSLATE_filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text, _NO_TRANSLATE_Preview.Items.Count.ToString());
-            noMatchPanel.Visible = (_NO_TRANSLATE_Preview.Items.Count == 0);
+            _NO_TRANSLATE_Preview.DataSource = Module.GetFiles(GetCurrentPatterns());
+            _NO_TRANSLATE_filesWillBeIgnored.Text = string.Format(_matchingFilesString.Text, _NO_TRANSLATE_Preview.Items.Count);
+            noMatchPanel.Visible = _NO_TRANSLATE_Preview.Items.Count == 0;
+        }
+
+        private IEnumerable<string> GetCurrentPatterns()
+        {
+            return FilePattern.Lines.Where(line => !string.IsNullOrEmpty(line));
         }
 
         private void FilePattern_TextChanged(object sender, EventArgs e)
         {
             UpdatePreviewPanel();
         }
+
+
     }
 }

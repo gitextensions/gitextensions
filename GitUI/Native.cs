@@ -1,6 +1,6 @@
 using System;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace GitUI
 {
@@ -81,5 +81,6 @@ namespace GitUI
         internal const uint MA_ACTIVATEANDEAT = 2;
         internal const uint MA_NOACTIVATE = 3;
         internal const uint MA_NOACTIVATEANDEAT = 4;
+        internal const int CP_NOCLOSE_BUTTON = 0x200;
     }
 }
