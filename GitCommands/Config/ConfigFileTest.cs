@@ -330,19 +330,6 @@ namespace GitCommandsTest.Config
         }
 
         [TestMethod]
-        public void TestRemoveSection()
-        {
-            { //TESTDATA
-                //Write test config
-                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
-            }
-            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-            Assert.IsTrue(configFile.GetConfigSections().Count == 3);
-            configFile.RemoveConfigSection("section1");
-            Assert.IsTrue(configFile.GetConfigSections().Count == 2);
-        }
-
-        [TestMethod]
         public void TestRemoveSettingExisting()
         {
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
@@ -393,6 +380,20 @@ namespace GitCommandsTest.Config
             Assert.IsFalse(configFile.HasValue("submodule.test.test1.path1"));
             Assert.AreEqual("submodule.test.test2.path1", configFile.GetValue("submodule.test.test2.path1"));
             Assert.AreEqual("submodule.test.test2.path2", configFile.GetValue("submodule.test.test2.path2"));
+        }
+
+        [TestMethod]
+        public void TestRemoveConfigSection()
+        {
+            { //TESTDATA
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
+            }
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+            Assert.IsTrue(configFile.GetConfigSections().Count == 3);
+            configFile.RemoveConfigSection("section1");
+            Assert.IsTrue(configFile.GetConfigSections().Count == 2);
+            Assert.IsFalse(configFile.HasConfigSection("section1"));
         }
 
         [TestMethod]
