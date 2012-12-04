@@ -92,6 +92,28 @@ namespace GitCommandsTest.Config
         }
 
         [TestMethod]
+        public void TestSave()
+        {
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+            configFile.AddValue("branch.BranchName1.remote", "origin1");
+            configFile.Save();
+
+            byte[] expectedFileContent =
+                GitModule.SystemEncoding.GetBytes(
+                    String.Format("[branch \"BranchName1\"]{0}\tremote = origin1{0}", Environment.NewLine));
+
+            Assert.IsTrue(File.Exists(GetConfigFileName()));
+            byte[] fileContent = File.ReadAllBytes(GetConfigFileName());
+
+            Assert.AreEqual(43, fileContent.Length);
+            for (int index = 0; index < fileContent.Length; index++)
+            {
+                Assert.AreEqual(expectedFileContent[index], fileContent[index]);
+            }
+
+        }
+
+        [TestMethod]
         public void TestHasSection()
         {
             { //TESTDATA
