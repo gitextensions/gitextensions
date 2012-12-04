@@ -372,6 +372,17 @@ namespace GitCommandsTest.Config
         }
 
         [TestMethod]
+        public void TestGetPathValue()
+        {
+            ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+            configFile.SetPathValue("path.unc", @"\\test\test2\");
+            configFile.Save();
+
+            configFile = new ConfigFile(GetConfigFileName(), true);
+            Assert.AreEqual(@"\\test\test2\", configFile.GetPathValue("path.unc"));
+        }
+
+        [TestMethod]
         public void TestRemoveSection()
         {
             { //TESTDATA
