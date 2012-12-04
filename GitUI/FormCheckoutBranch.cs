@@ -147,7 +147,7 @@ namespace GitUI
                 else if (rbMerge.Checked)
                     return Settings.LocalChanges.Merge;
                 else if (rbStash.Checked)
-                    return Settings.LocalChanges.Merge;
+                    return Settings.LocalChanges.Stash;
                 else
                     return Settings.LocalChanges.DontChange;
             }
