@@ -232,6 +232,109 @@ namespace GitCommandsTest.Config
         }
 
         [TestMethod]
+        public void TestSetPathValueNoneExisting()
+        {
+            { //TESTDATA
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
+            }
+
+            { //PERFORM TEST
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+                configFile.SetPathValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
+                configFile.Save();
+            }
+
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+                Assert.AreEqual(@"c:/program files/gitextensions/gitextensions.exe", configFile.GetPathValue("directory.first"));
+            }
+        }
+
+        [TestMethod]
+        public void TestSetPathValueFileNonExisting()
+        {
+
+            { //PERFORM TEST
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+                configFile.SetPathValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
+                configFile.Save();
+            }
+
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+                Assert.AreEqual(@"c:/program files/gitextensions/gitextensions.exe", configFile.GetPathValue("directory.first"));
+            }
+        }
+
+        [TestMethod]
+        public void TestSetPathValueWithUncPath1()
+        {
+            { //TESTDATA
+                StringBuilder content = new StringBuilder();
+
+                content.AppendLine(@"[path]");
+                content.AppendLine(@"	unc = //test/");
+
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), content.ToString(), GitModule.SystemEncoding);
+            }
+
+            //CHECK GET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+                Assert.AreEqual(@"//test/", configFile.GetPathValue("path.unc"));
+            }
+
+            //CHECK SET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+                configFile.SetPathValue("path.unc", @"//test/test2/");
+                configFile.Save();
+            }
+
+            //CHECK WRITTEN VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+                Assert.AreEqual(@"//test/test2/", configFile.GetPathValue("path.unc"));
+            }
+        }
+
+        [TestMethod]
+        public void TestSetPathValueWithUncPath2()
+        {
+            { //TESTDATA
+                StringBuilder content = new StringBuilder();
+
+                content.AppendLine(@"[path]");
+                content.AppendLine(@"	unc = \\\\test\\"); //<- escaped value in config file
+
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), content.ToString(), GitModule.SystemEncoding);
+            }
+
+            //CHECK GET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+                Assert.AreEqual(@"\\test\", configFile.GetPathValue("path.unc"));
+            }
+
+            //CHECK SET CONFIG VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+                configFile.SetPathValue("path.unc", @"\\test\test2\");
+                configFile.Save();
+            }
+
+            //CHECK WRITTEN VALUE
+            {
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+                Assert.AreEqual(@"\\test\test2\", configFile.GetPathValue("path.unc"));
+            }
+        }
+
+        
+        [TestMethod]
         public void TestHasSection()
         {
             { //TESTDATA
@@ -305,41 +408,6 @@ namespace GitCommandsTest.Config
             }
         }
 
-        [TestMethod]
-        public void TestWithDirectories()
-        {
-            { //TESTDATA
-                //Write test config
-                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
-            }
-
-            { //PERFORM TEST
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                configFile.SetPathValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
-                configFile.Save();
-            }
-
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                Assert.AreEqual(@"c:/program files/gitextensions/gitextensions.exe", configFile.GetPathValue("directory.first"));
-            }
-        }
-
-        [TestMethod]
-        public void TestNonExistingFile()
-        {
-
-            { //PERFORM TEST
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                configFile.SetPathValue("directory.first", @"c:\program files\gitextensions\gitextensions.exe");
-                configFile.Save();
-            }
-
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                Assert.AreEqual(@"c:/program files/gitextensions/gitextensions.exe", configFile.GetPathValue("directory.first"));
-            }
-        }
 
         [TestMethod]
         public void RandomTestCase1()
@@ -477,72 +545,6 @@ namespace GitCommandsTest.Config
             {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 Assert.AreEqual("data\\nnewline", configFile.GetValue("bugtraq.logregex"));
-            }
-        }
-
-        [TestMethod]
-        public void UncPathTest1()
-        {
-            { //TESTDATA
-                StringBuilder content = new StringBuilder();
-
-                content.AppendLine(@"[path]");
-                content.AppendLine(@"	unc = //test/");
-
-                //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), GitModule.SystemEncoding);
-            }
-
-            //CHECK GET CONFIG VALUE
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                Assert.AreEqual(@"//test/", configFile.GetPathValue("path.unc"));
-            }
-
-            //CHECK SET CONFIG VALUE
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                configFile.SetPathValue("path.unc", @"//test/test2/");
-                configFile.Save();
-            }
-
-            //CHECK WRITTEN VALUE
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                Assert.AreEqual(@"//test/test2/", configFile.GetPathValue("path.unc"));
-            }
-        }
-
-        [TestMethod]
-        public void UncPathTest2()
-        {
-            { //TESTDATA
-                StringBuilder content = new StringBuilder();
-
-                content.AppendLine(@"[path]");
-                content.AppendLine(@"	unc = \\\\test\\"); //<- escaped value in config file
-
-                //Write test config
-                File.WriteAllText(GetConfigFileName(), content.ToString(), GitModule.SystemEncoding);
-            }
-
-            //CHECK GET CONFIG VALUE
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                Assert.AreEqual(@"\\test\", configFile.GetPathValue("path.unc"));
-            }
-
-            //CHECK SET CONFIG VALUE
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                configFile.SetPathValue("path.unc", @"\\test\test2\");
-                configFile.Save();
-            }
-
-            //CHECK WRITTEN VALUE
-            {
-                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-                Assert.AreEqual(@"\\test\test2\", configFile.GetPathValue("path.unc"));
             }
         }
 
