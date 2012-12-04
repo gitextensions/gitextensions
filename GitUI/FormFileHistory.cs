@@ -96,6 +96,7 @@ namespace GitUI
                 if (filter == null)
                     return;
                 FileChanges.FixedFilter = filter;
+                FileChanges.FiltredFileName = FileName;
                 FileChanges.AllowGraphWithFilter = true;
                 FileChanges.Load();
             });

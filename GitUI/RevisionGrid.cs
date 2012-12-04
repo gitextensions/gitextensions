@@ -181,6 +181,10 @@ namespace GitUI
         [Browsable(false)]
         public string CurrentCheckout { get; private set; }
         [Browsable(false)]
+        public string FiltredFileName { get; set; }
+        [Browsable(false)]
+        private string FiltredCurrentCheckout { get; set; }
+        [Browsable(false)]
         public string SuperprojectCurrentCheckout { get; private set; }
         [Browsable(false)]
         public int LastRow { get; private set; }
@@ -763,6 +767,7 @@ namespace GitUI
 
                 Revisions.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
+                FiltredCurrentCheckout = CurrentCheckout;
                 SuperprojectCurrentCheckout = newSuperprojectCurrentCheckout;
                 Revisions.Clear();
                 Error.Visible = false;
@@ -925,16 +930,59 @@ namespace GitUI
 
         private void SelectInitialRevision()
         {
-            if (string.IsNullOrEmpty(_initialSelectedRevision) || Revisions.SelectedRows.Count != 0)
-                return;
+            string filtredCurrentCheckout;
+            if (SearchRevision(CurrentCheckout, out filtredCurrentCheckout) >= 0)
+                FiltredCurrentCheckout = filtredCurrentCheckout;
+            else
+                FiltredCurrentCheckout = CurrentCheckout;
 
-            for (var i = 0; i < Revisions.RowCount; i++)
+            if (!string.IsNullOrEmpty(_initialSelectedRevision) && Revisions.SelectedRows.Count == 0)
             {
-                if (GetRevision(i).Guid == _initialSelectedRevision)
-                    SetSelectedIndex(i);
+                string revision;
+                int index = SearchRevision(_initialSelectedRevision, out revision);
+                if (index >= 0)
+                    SetSelectedIndex(index);
             }
         }
 
+        private int SearchRevision(string initRevision, out string graphRevision)
+        {
+            var rows = Revisions
+                .Rows
+                .Cast<DataGridViewRow>();
+            var revisions = rows
+                .Select(row => new{ Index = row.Index, Guid = GetRevision(row.Index).Guid });
+
+            var idx = revisions.FirstOrDefault(rev => rev.Guid == initRevision);
+            if (idx != null)
+            {
+                graphRevision = idx.Guid;
+                return idx.Index;
+            }
+
+            var dict = rows
+                .ToDictionary(row => GetRevision(row.Index).Guid, row => row.Index);
+            var revListParams = "rev-list ";
+            if (Settings.OrderRevisionByDate)
+                revListParams += "--date-order ";
+            else
+                revListParams += "--topo-order ";
+            if (Settings.MaxRevisionGraphCommits > 0)
+                revListParams += string.Format("--max-count=\"{0}\" ", (int)Settings.MaxRevisionGraphCommits);
+
+            var allrevisions = Module.RunGitCmdAsync(revListParams + initRevision);
+            foreach (var rev in allrevisions)
+            {
+                int index;
+                if (dict.TryGetValue(rev, out index))
+                {
+                    graphRevision = rev;
+                    return index;
+                }
+            }
+            graphRevision = null;
+            return -1;
+        }
         private static string GetDateHeaderText()
         {
             return Settings.ShowAuthorDate ? Strings.GetAuthorDateText() : Strings.GetCommitDateText();
@@ -1957,6 +2005,7 @@ namespace GitUI
                     bool stagedChanges = false;
                     //Only check for tracked files. This usually makes more sense and it performs a lot
                     //better then checking for untracked files.
+                    // TODO: Check FiltredFileName
                     if (Module.GetTrackedChangedFiles().Count > 0)
                         uncommittedChanges = true;
                     if (Module.GetStagedFiles().Count > 0)
@@ -1971,7 +2020,7 @@ namespace GitUI
                                                  ParentGuids =
                                                      stagedChanges
                                                          ? new[] { GitRevision.IndexGuid }
-                                                         : new[] { CurrentCheckout }
+                                                         : new[] { FiltredCurrentCheckout }
                                              };
                         Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
                     }
@@ -1982,7 +2031,7 @@ namespace GitUI
                         var index = new GitRevision(Module, GitRevision.IndexGuid)
                                         {
                                             Message = Strings.GetCurrentIndex(),
-                                            ParentGuids = new string[] { CurrentCheckout }
+                                            ParentGuids = new string[] { FiltredCurrentCheckout }
                                         };
                         Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
                     }
