@@ -359,6 +359,19 @@ namespace GitCommandsTest.Config
         }
 
         [TestMethod]
+        public void TestGetValue()
+        {
+            { //TESTDATA
+                //Write test config
+                File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
+            }
+            ConfigFile file = new ConfigFile(GetConfigFileName(), true);
+            Assert.AreEqual("value1", file.GetValue("section1.key1"));
+            Assert.AreEqual("value2", file.GetValue("section2.subsection.key2"));
+            Assert.AreEqual("value3", file.GetValue("section3.subsection.key3"));
+        }
+
+        [TestMethod]
         public void TestRemoveSection()
         {
             { //TESTDATA
