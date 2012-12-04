@@ -239,7 +239,7 @@ namespace GitUI
                         if (result == DialogResult.Cancel)
                             return false;
 
-                        track = result == DialogResult.OK;
+                        track = result == DialogResult.Yes;
                     }
                 }
 
