@@ -201,7 +201,7 @@ namespace GitUI
             this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(162, 100);
-            this.flowLayoutPanel3.TabIndex = 2;
+            this.flowLayoutPanel3.TabIndex = 0;
             // 
             // New
             // 
@@ -210,7 +210,7 @@ namespace GitUI
             this.New.Location = new System.Drawing.Point(3, 3);
             this.New.Name = "New";
             this.New.Size = new System.Drawing.Size(92, 25);
-            this.New.TabIndex = 6;
+            this.New.TabIndex = 0;
             this.New.Text = "New";
             this.New.UseVisualStyleBackColor = true;
             this.New.Click += new System.EventHandler(this.NewClick);
@@ -222,7 +222,7 @@ namespace GitUI
             this.Delete.Location = new System.Drawing.Point(3, 34);
             this.Delete.Name = "Delete";
             this.Delete.Size = new System.Drawing.Size(92, 25);
-            this.Delete.TabIndex = 7;
+            this.Delete.TabIndex = 1;
             this.Delete.Text = "Delete";
             this.Delete.UseVisualStyleBackColor = true;
             this.Delete.Click += new System.EventHandler(this.DeleteClick);
@@ -261,7 +261,7 @@ namespace GitUI
             this.buttonClose.Location = new System.Drawing.Point(193, 3);
             this.buttonClose.Name = "buttonClose";
             this.buttonClose.Size = new System.Drawing.Size(75, 25);
-            this.buttonClose.TabIndex = 11;
+            this.buttonClose.TabIndex = 1;
             this.buttonClose.Text = "Close";
             this.buttonClose.UseVisualStyleBackColor = true;
             this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
@@ -274,7 +274,7 @@ namespace GitUI
             this.Save.Location = new System.Drawing.Point(57, 3);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(130, 25);
-            this.Save.TabIndex = 5;
+            this.Save.TabIndex = 0;
             this.Save.Text = "Save changes";
             this.Save.UseVisualStyleBackColor = true;
             this.Save.Click += new System.EventHandler(this.SaveClick);
@@ -290,7 +290,7 @@ namespace GitUI
             this.PuTTYSSH.Location = new System.Drawing.Point(3, 150);
             this.PuTTYSSH.Name = "PuTTYSSH";
             this.PuTTYSSH.Size = new System.Drawing.Size(468, 70);
-            this.PuTTYSSH.TabIndex = 10;
+            this.PuTTYSSH.TabIndex = 1;
             this.PuTTYSSH.TabStop = false;
             this.PuTTYSSH.Text = "PuTTY SSH";
             // 
@@ -302,7 +302,7 @@ namespace GitUI
             this.LoadSSHKey.Location = new System.Drawing.Point(146, 40);
             this.LoadSSHKey.Name = "LoadSSHKey";
             this.LoadSSHKey.Size = new System.Drawing.Size(153, 25);
-            this.LoadSSHKey.TabIndex = 9;
+            this.LoadSSHKey.TabIndex = 2;
             this.LoadSSHKey.Text = "Load SSH key";
             this.LoadSSHKey.UseVisualStyleBackColor = true;
             this.LoadSSHKey.Click += new System.EventHandler(this.LoadSshKeyClick);
@@ -314,7 +314,7 @@ namespace GitUI
             this.PuttySshKey.Location = new System.Drawing.Point(130, 13);
             this.PuttySshKey.Name = "PuttySshKey";
             this.PuttySshKey.Size = new System.Drawing.Size(225, 23);
-            this.PuttySshKey.TabIndex = 7;
+            this.PuttySshKey.TabIndex = 0;
             // 
             // TestConnection
             // 
@@ -324,7 +324,7 @@ namespace GitUI
             this.TestConnection.Location = new System.Drawing.Point(305, 40);
             this.TestConnection.Name = "TestConnection";
             this.TestConnection.Size = new System.Drawing.Size(156, 25);
-            this.TestConnection.TabIndex = 8;
+            this.TestConnection.TabIndex = 3;
             this.TestConnection.Text = "Test connection";
             this.TestConnection.UseVisualStyleBackColor = true;
             this.TestConnection.Click += new System.EventHandler(this.TestConnectionClick);
@@ -344,7 +344,7 @@ namespace GitUI
             this.SshBrowse.Location = new System.Drawing.Point(361, 11);
             this.SshBrowse.Name = "SshBrowse";
             this.SshBrowse.Size = new System.Drawing.Size(100, 25);
-            this.SshBrowse.TabIndex = 6;
+            this.SshBrowse.TabIndex = 1;
             this.SshBrowse.Text = "Browse";
             this.SshBrowse.UseVisualStyleBackColor = true;
             this.SshBrowse.Click += new System.EventHandler(this.SshBrowseClick);
@@ -365,7 +365,7 @@ namespace GitUI
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(468, 141);
-            this.groupBox1.TabIndex = 8;
+            this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Details";
             // 
@@ -376,7 +376,7 @@ namespace GitUI
             this.folderBrowserButtonPushUrl.Name = "folderBrowserButtonPushUrl";
             this.folderBrowserButtonPushUrl.PathShowingControl = this.comboBoxPushUrl;
             this.folderBrowserButtonPushUrl.Size = new System.Drawing.Size(100, 25);
-            this.folderBrowserButtonPushUrl.TabIndex = 10;
+            this.folderBrowserButtonPushUrl.TabIndex = 5;
             this.folderBrowserButtonPushUrl.Visible = false;
             // 
             // comboBoxPushUrl
@@ -389,7 +389,7 @@ namespace GitUI
             this.comboBoxPushUrl.Location = new System.Drawing.Point(136, 96);
             this.comboBoxPushUrl.Name = "comboBoxPushUrl";
             this.comboBoxPushUrl.Size = new System.Drawing.Size(219, 23);
-            this.comboBoxPushUrl.TabIndex = 7;
+            this.comboBoxPushUrl.TabIndex = 4;
             this.comboBoxPushUrl.Visible = false;
             // 
             // folderBrowserButtonUrl
@@ -399,7 +399,7 @@ namespace GitUI
             this.folderBrowserButtonUrl.Name = "folderBrowserButtonUrl";
             this.folderBrowserButtonUrl.PathShowingControl = this.Url;
             this.folderBrowserButtonUrl.Size = new System.Drawing.Size(100, 25);
-            this.folderBrowserButtonUrl.TabIndex = 9;
+            this.folderBrowserButtonUrl.TabIndex = 2;
             // 
             // Url
             // 
@@ -411,7 +411,7 @@ namespace GitUI
             this.Url.Location = new System.Drawing.Point(136, 48);
             this.Url.Name = "Url";
             this.Url.Size = new System.Drawing.Size(219, 23);
-            this.Url.TabIndex = 3;
+            this.Url.TabIndex = 1;
             // 
             // labelPushUrl
             // 
@@ -429,7 +429,7 @@ namespace GitUI
             this.checkBoxSepPushUrl.Location = new System.Drawing.Point(16, 77);
             this.checkBoxSepPushUrl.Name = "checkBoxSepPushUrl";
             this.checkBoxSepPushUrl.Size = new System.Drawing.Size(118, 19);
-            this.checkBoxSepPushUrl.TabIndex = 5;
+            this.checkBoxSepPushUrl.TabIndex = 3;
             this.checkBoxSepPushUrl.Text = "Separate Push Url";
             this.checkBoxSepPushUrl.UseVisualStyleBackColor = true;
             this.checkBoxSepPushUrl.CheckedChanged += new System.EventHandler(this.checkBoxSepPushUrl_CheckedChanged);
@@ -441,7 +441,7 @@ namespace GitUI
             this.RemoteName.Location = new System.Drawing.Point(136, 19);
             this.RemoteName.Name = "RemoteName";
             this.RemoteName.Size = new System.Drawing.Size(219, 23);
-            this.RemoteName.TabIndex = 1;
+            this.RemoteName.TabIndex = 0;
             // 
             // label1
             // 
@@ -508,7 +508,7 @@ namespace GitUI
             this.splitContainer3.Panel2.Controls.Add(this.label4);
             this.splitContainer3.Size = new System.Drawing.Size(634, 220);
             this.splitContainer3.SplitterDistance = 328;
-            this.splitContainer3.TabIndex = 2;
+            this.splitContainer3.TabIndex = 0;
             // 
             // RemoteBranches
             // 
@@ -641,7 +641,7 @@ namespace GitUI
             this.SaveDefaultPushPull.Location = new System.Drawing.Point(222, 192);
             this.SaveDefaultPushPull.Name = "SaveDefaultPushPull";
             this.SaveDefaultPushPull.Size = new System.Drawing.Size(75, 25);
-            this.SaveDefaultPushPull.TabIndex = 6;
+            this.SaveDefaultPushPull.TabIndex = 3;
             this.SaveDefaultPushPull.Text = "Save";
             this.SaveDefaultPushPull.UseVisualStyleBackColor = true;
             this.SaveDefaultPushPull.Click += new System.EventHandler(this.SaveDefaultPushPullClick);
@@ -653,7 +653,7 @@ namespace GitUI
             this.LocalBranchNameEdit.Location = new System.Drawing.Point(144, 6);
             this.LocalBranchNameEdit.Name = "LocalBranchNameEdit";
             this.LocalBranchNameEdit.Size = new System.Drawing.Size(153, 23);
-            this.LocalBranchNameEdit.TabIndex = 5;
+            this.LocalBranchNameEdit.TabIndex = 0;
             // 
             // RemoteRepositoryCombo
             // 
@@ -663,7 +663,7 @@ namespace GitUI
             this.RemoteRepositoryCombo.Location = new System.Drawing.Point(144, 32);
             this.RemoteRepositoryCombo.Name = "RemoteRepositoryCombo";
             this.RemoteRepositoryCombo.Size = new System.Drawing.Size(153, 23);
-            this.RemoteRepositoryCombo.TabIndex = 4;
+            this.RemoteRepositoryCombo.TabIndex = 1;
             this.RemoteRepositoryCombo.Validated += new System.EventHandler(this.RemoteRepositoryComboValidated);
             // 
             // DefaultMergeWithCombo
@@ -674,7 +674,7 @@ namespace GitUI
             this.DefaultMergeWithCombo.Location = new System.Drawing.Point(144, 59);
             this.DefaultMergeWithCombo.Name = "DefaultMergeWithCombo";
             this.DefaultMergeWithCombo.Size = new System.Drawing.Size(153, 23);
-            this.DefaultMergeWithCombo.TabIndex = 3;
+            this.DefaultMergeWithCombo.TabIndex = 2;
             this.DefaultMergeWithCombo.DropDown += new System.EventHandler(this.DefaultMergeWithComboDropDown);
             this.DefaultMergeWithCombo.Validated += new System.EventHandler(this.DefaultMergeWithComboValidated);
             // 
@@ -715,7 +715,7 @@ namespace GitUI
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 229);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(634, 31);
-            this.flowLayoutPanel1.TabIndex = 0;
+            this.flowLayoutPanel1.TabIndex = 1;
             this.flowLayoutPanel1.WrapContents = false;
             // 
             // UpdateBranch
@@ -724,7 +724,7 @@ namespace GitUI
             this.UpdateBranch.Location = new System.Drawing.Point(382, 3);
             this.UpdateBranch.Name = "UpdateBranch";
             this.UpdateBranch.Size = new System.Drawing.Size(249, 25);
-            this.UpdateBranch.TabIndex = 10;
+            this.UpdateBranch.TabIndex = 1;
             this.UpdateBranch.Text = "Update all remote branch info";
             this.UpdateBranch.UseVisualStyleBackColor = true;
             this.UpdateBranch.Click += new System.EventHandler(this.UpdateBranchClick);
@@ -735,7 +735,7 @@ namespace GitUI
             this.Prune.Location = new System.Drawing.Point(127, 3);
             this.Prune.Name = "Prune";
             this.Prune.Size = new System.Drawing.Size(249, 25);
-            this.Prune.TabIndex = 11;
+            this.Prune.TabIndex = 0;
             this.Prune.Text = "Prune remote branches";
             this.Prune.UseVisualStyleBackColor = true;
             this.Prune.Click += new System.EventHandler(this.PruneClick);
