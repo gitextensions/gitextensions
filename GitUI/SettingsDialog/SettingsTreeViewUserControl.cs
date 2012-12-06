@@ -15,7 +15,7 @@ namespace GitUI.SettingsDialog
     {
         private TreeNode _geRootNode;
         private TreeNode _pluginsRootNode;
-        private ISettingsPage _blankSettingsPage = new BlankSettingsPage();
+        ////private ISettingsPage _blankSettingsPage = new BlankSettingsPage();
         private Font _origTextBoxFont;
         private Font _nodeFontBold;
         private Font _nodeFontItalic;
@@ -98,13 +98,17 @@ namespace GitUI.SettingsDialog
                 {
                     SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPage = (ISettingsPage)(node.Tag), IsTriggeredByGoto = _isSelectionChangeTriggeredByGoto });
                 }
-                else if (node.Text == "Git Extensions")
+                else if (node == _geRootNode || node == _pluginsRootNode)
                 {
-                    SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPage = null });
+                    var firstSubNode = node.FirstNode;
+                    if (firstSubNode != null)
+                    {
+                        treeView1.SelectedNode = firstSubNode;
+                    }
                 }
                 else
                 {
-                    SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPage = _blankSettingsPage });
+                    SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPage = null });
                 }
             }
 
