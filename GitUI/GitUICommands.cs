@@ -1748,16 +1748,7 @@ namespace GitUI
 
         private void RunBrowseCommand(string[] args)
         {
-            GitUICommands c = this;
-            if (args.Length > 2)
-            {
-                if (Directory.Exists(args[2]))
-                {
-                    c = new GitUICommands(args[2]);
-                }
-            }
-
-            c.StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
+            StartBrowseDialog(GetParameterOrEmptyStringAsDefault(args, "-filter"));
         }
 
         private static string GetParameterOrEmptyStringAsDefault(string[] args, string paramName)
