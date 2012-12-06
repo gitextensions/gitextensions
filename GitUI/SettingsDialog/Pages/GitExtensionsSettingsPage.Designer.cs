@@ -83,17 +83,18 @@
             // chkWriteCommitMessageInCommitWindow
             // 
             this.chkWriteCommitMessageInCommitWindow.AutoSize = true;
-            this.chkWriteCommitMessageInCommitWindow.Location = new System.Drawing.Point(10, 206);
+            this.chkWriteCommitMessageInCommitWindow.Location = new System.Drawing.Point(10, 187);
             this.chkWriteCommitMessageInCommitWindow.Name = "chkWriteCommitMessageInCommitWindow";
-            this.chkWriteCommitMessageInCommitWindow.Size = new System.Drawing.Size(220, 17);
+            this.chkWriteCommitMessageInCommitWindow.Size = new System.Drawing.Size(290, 30);
             this.chkWriteCommitMessageInCommitWindow.TabIndex = 54;
-            this.chkWriteCommitMessageInCommitWindow.Text = "Write Commit Messages in Commit Dialog";
+            this.chkWriteCommitMessageInCommitWindow.Text = "Compose commit messages in Commit dialog\r\n(otherwise the message will be requeste" +
+    "d during commit)";
             this.chkWriteCommitMessageInCommitWindow.UseVisualStyleBackColor = true;
             // 
             // chkPlaySpecialStartupSound
             // 
             this.chkPlaySpecialStartupSound.AutoSize = true;
-            this.chkPlaySpecialStartupSound.Location = new System.Drawing.Point(10, 183);
+            this.chkPlaySpecialStartupSound.Location = new System.Drawing.Point(320, 158);
             this.chkPlaySpecialStartupSound.Name = "chkPlaySpecialStartupSound";
             this.chkPlaySpecialStartupSound.Size = new System.Drawing.Size(155, 17);
             this.chkPlaySpecialStartupSound.TabIndex = 53;
@@ -105,9 +106,9 @@
             this.chkCloseProcessDialog.AutoSize = true;
             this.chkCloseProcessDialog.Location = new System.Drawing.Point(10, 20);
             this.chkCloseProcessDialog.Name = "chkCloseProcessDialog";
-            this.chkCloseProcessDialog.Size = new System.Drawing.Size(322, 17);
+            this.chkCloseProcessDialog.Size = new System.Drawing.Size(259, 17);
             this.chkCloseProcessDialog.TabIndex = 9;
-            this.chkCloseProcessDialog.Text = "Close process dialog automatically when process is succeeded";
+            this.chkCloseProcessDialog.Text = "Close Process dialog when process is succeeded";
             this.chkCloseProcessDialog.UseVisualStyleBackColor = true;
             // 
             // chkShowGitCommandLine
@@ -115,9 +116,9 @@
             this.chkShowGitCommandLine.AutoSize = true;
             this.chkShowGitCommandLine.Location = new System.Drawing.Point(10, 43);
             this.chkShowGitCommandLine.Name = "chkShowGitCommandLine";
-            this.chkShowGitCommandLine.Size = new System.Drawing.Size(283, 17);
+            this.chkShowGitCommandLine.Size = new System.Drawing.Size(264, 17);
             this.chkShowGitCommandLine.TabIndex = 11;
-            this.chkShowGitCommandLine.Text = "Show Git commandline dialog when executing process";
+            this.chkShowGitCommandLine.Text = "Show console window when executing git process";
             this.chkShowGitCommandLine.UseVisualStyleBackColor = true;
             // 
             // chkStartWithRecentWorkingDir
@@ -141,7 +142,7 @@
             // 
             // SmtpServer
             // 
-            this.SmtpServer.Location = new System.Drawing.Point(316, 255);
+            this.SmtpServer.Location = new System.Drawing.Point(316, 259);
             this.SmtpServer.Name = "SmtpServer";
             this.SmtpServer.Size = new System.Drawing.Size(242, 20);
             this.SmtpServer.TabIndex = 17;
@@ -153,7 +154,7 @@
             0,
             0,
             0});
-            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(316, 224);
+            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(316, 231);
             this.RevisionGridQuickSearchTimeout.Maximum = new decimal(new int[] {
             1000000,
             0,
