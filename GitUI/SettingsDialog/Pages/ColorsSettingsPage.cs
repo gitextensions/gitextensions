@@ -20,6 +20,11 @@ namespace GitUI.SettingsDialog.Pages
             Text = "Colors";
         }
 
+        protected override string GetCommaSeparatedKeywordList()
+        {
+            return "color,graph,diff,icon";
+        }
+
         protected override void OnLoadSettings()
         {
             MulticolorBranches.Checked = Settings.MulticolorBranches;

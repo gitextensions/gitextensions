@@ -42,6 +42,11 @@ namespace GitUI.SettingsDialog.Pages
             GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
         }
 
+        protected override string GetCommaSeparatedKeywordList()
+        {
+            return "path,user,name,email,merge,tool,diff,line ending,encoding,commit template";
+        }
+
         public static SettingsPageReference GetReference()
         {
             return new SettingsPageReference(typeof(GlobalSettingsSettingsPage));

@@ -31,6 +31,11 @@ namespace GitUI.SettingsDialog.Pages
             noImageService.Items.AddRange(GravatarService.DynamicServices.Cast<object>().ToArray());
         }
 
+        protected override string GetCommaSeparatedKeywordList()
+        {
+            return "graph,visual studio,author,image,font,lang,language,spell,spelling";
+        }
+
         // TODO: needed?
         ////protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         ////{
