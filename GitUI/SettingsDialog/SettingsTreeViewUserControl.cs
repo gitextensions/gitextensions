@@ -6,23 +6,25 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using GitUI.SettingsDialog;
 using GitUI.SettingsDialog.Pages;
 using GitCommands;
 
 namespace GitUI.SettingsDialog
 {
-    public partial class SettingsTreeViewUserControl : UserControl
+    public sealed partial class SettingsTreeViewUserControl : UserControl
     {
         private TreeNode _geRootNode;
         private TreeNode _pluginsRootNode;
         ////private ISettingsPage _blankSettingsPage = new BlankSettingsPage();
-        private Font _origTextBoxFont;
+        private readonly Font _origTextBoxFont;
         private Font _nodeFontBold;
         private Font _nodeFontItalic;
         ////private IList<SettingsPageBase> registeredSettingsPages = new List<SettingsPageBase>();
-        private IList<TreeNode> _treeNodesWithSettingsPage = new List<TreeNode>();
+        private readonly IList<TreeNode> _treeNodesWithSettingsPage = new List<TreeNode>();
         private ISettingsPage _firstRegisteredSettingsPage;
         private bool _isSelectionChangeTriggeredByGoto;
+        private List<TreeNode> _nodesFoundByTextBox;
 
         public event EventHandler<SettingsPageSelectedEventArgs> SettingsPageSelected;
 
@@ -112,11 +114,13 @@ namespace GitUI.SettingsDialog
                 }
             }
 
-            _isSelectionChangeTriggeredByGoto = false;        
+            _isSelectionChangeTriggeredByGoto = false;
         }
 
         private void textBoxFind_TextChanged(object sender, EventArgs e)
         {
+            _nodesFoundByTextBox = new List<TreeNode>();
+
             if (textBoxFind.Text.IsNullOrEmpty() || textBoxFind.Text == "Type to find")
             {
                 ResetAllNodeHighlighting();
@@ -125,8 +129,6 @@ namespace GitUI.SettingsDialog
             {
                 string searchFor = textBoxFind.Text.ToLowerInvariant();
 
-                var foundNodes = new List<TreeNode>();
-
                 foreach (var node in GetNodesWithSettingsPage())
                 {
                     var settingsPage = (ISettingsPage)node.Tag;
@@ -134,20 +136,20 @@ namespace GitUI.SettingsDialog
                     // search for title
                     if (searchFor.Contains(settingsPage.Text.ToLowerInvariant()))
                     {
-                        foundNodes.Add(node);
+                        _nodesFoundByTextBox.Add(node);
                     }
 
                     // search for keywords (space combines as 'and')
                     var andKeywords = searchFor.Split(' ');
                     if (andKeywords.All(keyword => settingsPage.GetSearchKeywords().Contains(keyword)))
                     {
-                        foundNodes.Add(node);
+                        _nodesFoundByTextBox.Add(node);
                     }
                 }
 
                 ResetAllNodeHighlighting();
 
-                foreach (var node in foundNodes)
+                foreach (var node in _nodesFoundByTextBox)
                 {
                     HighlightNode(node, true);
                 }
@@ -222,6 +224,30 @@ namespace GitUI.SettingsDialog
                     treeView1.SelectedNode = node;
                     FireSettingsPageSelectedEvent(node);
                     return;
+                }
+            }
+        }
+
+        private void textBoxFind_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                // TODO: how to avoid the windows sound when pressing ENTER?
+                e.Handled = true;
+
+                // each enter key press selects next highlighted node (cycle)
+                int indexOfSelectedNode = _nodesFoundByTextBox.IndexOf(treeView1.SelectedNode);
+                if (indexOfSelectedNode == -1 || indexOfSelectedNode + 1 == _nodesFoundByTextBox.Count)
+                {
+                    var firstFoundNode = _nodesFoundByTextBox.FirstOrDefault();
+                    if (firstFoundNode != null)
+                    {
+                        treeView1.SelectedNode = firstFoundNode;
+                    }
+                }
+                else
+                {
+                    treeView1.SelectedNode = _nodesFoundByTextBox[indexOfSelectedNode + 1];
                 }
             }
         }
