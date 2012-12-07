@@ -18,6 +18,7 @@ namespace GitUI.SettingsDialog.Pages
         public ScriptsSettingsPage()
         {
             InitializeComponent();
+            Translate();
 
             Text = "Scripts";
         }

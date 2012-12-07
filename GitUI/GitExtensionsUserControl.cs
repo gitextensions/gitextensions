@@ -117,15 +117,5 @@ namespace GitUI
         }
 
         #endregion
-
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // GitExtensionsControl
-            // 
-            this.Name = "GitExtensionsControl";
-            this.ResumeLayout(false);
-        }
     }
 }
