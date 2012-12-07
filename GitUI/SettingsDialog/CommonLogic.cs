@@ -39,14 +39,19 @@ namespace GitUI.SettingsDialog
 
         public const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
 
-        public string GetMergeTool()
+        public string GetGlobalMergeTool()
         {
             return Module.GetGlobalSetting("merge.tool");
         }
 
+        public void SetGlobalMergeTool(string value)
+        {
+            Module.SetGlobalSetting("merge.tool", value);
+        }
+
         public bool IsMergeTool(string toolName)
         {
-            return GetMergeTool().Equals(toolName,
+            return GetGlobalMergeTool().Equals(toolName,
                 StringComparison.CurrentCultureIgnoreCase);
         }
 

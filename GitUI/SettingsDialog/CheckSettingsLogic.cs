@@ -210,7 +210,7 @@ namespace GitUI.SettingsDialog
 
         public bool SolveMergeToolForKDiff()
         {
-            string mergeTool = _commonLogic.GetMergeTool();
+            string mergeTool = _commonLogic.GetGlobalMergeTool();
             if (string.IsNullOrEmpty(mergeTool))
             {
                 mergeTool = "kdiff3";
