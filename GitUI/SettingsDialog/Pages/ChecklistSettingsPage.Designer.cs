@@ -272,7 +272,7 @@
             this.Rescan.TabIndex = 54;
             this.Rescan.Text = "Save and rescan";
             this.Rescan.UseVisualStyleBackColor = true;
-            this.Rescan.Click += new System.EventHandler(this.Rescan_Click);
+            this.Rescan.Click += new System.EventHandler(this.SaveAndRescan_Click);
             // 
             // CheckAtStartup
             // 

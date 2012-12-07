@@ -137,10 +137,8 @@ namespace GitUI
         private void FormSettings_Shown(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            WindowState = FormWindowState.Normal;
+            WindowState = FormWindowState.Normal; // TODO: is that needed?
             LoadSettings();
-            _checklistSettingsPage.CheckSettings();
-            WindowState = FormWindowState.Normal;
             Cursor.Current = Cursors.Default;
 
             GotoPage(ChecklistSettingsPage.GetReference());
@@ -247,15 +245,6 @@ namespace GitUI
             return true;
         }
 
-        private void Rescan_Click(object sender, EventArgs e)
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            Save();
-            LoadSettings();
-            _checklistSettingsPage.CheckSettings();
-            Cursor.Current = Cursors.Default;
-        }
-
         private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
         {
             ////Cursor.Current = Cursors.WaitCursor;
@@ -299,6 +288,16 @@ namespace GitUI
         public void GotoPage(SettingsPageReference settingsPageReference)
         {
             settingsTreeViewUserControl1.GotoPage(settingsPageReference);
+        }
+
+        public void SaveAll()
+        {
+            Save();
+        }
+
+        public void LoadAll()
+        {
+            LoadSettings();
         }
     }
 }
