@@ -164,6 +164,7 @@ namespace GitUI.SettingsDialog.Pages
             ISettingsPageHost settingsPageHost)
         {
             InitializeComponent();
+            Translate();
 
             _commonLogic = commonLogic;
             _checkSettingsLogic = checkSettingsLogic;
@@ -214,9 +215,13 @@ namespace GitUI.SettingsDialog.Pages
 
         private void translationConfig_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormChooseTranslation()) frm.ShowDialog(this);
-            throw new NotImplementedException("Translate();");
-            throw new NotImplementedException("Language.Text = Settings.Translation;");
+            using (var frm = new FormChooseTranslation())
+            {
+                frm.ShowDialog(this); // will set Settings.Translation
+            }
+
+            _settingsPageHost.LoadAll();
+            Translate();
             SaveAndRescan_Click(null, null);
         }
 

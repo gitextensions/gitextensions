@@ -24,6 +24,7 @@ namespace GitUI.SettingsDialog.Pages
             CheckSettingsLogic checkSettingsLogic)
         {
             InitializeComponent();
+            Translate();
 
             ////_commonLogic = commonLogic;
             _checkSettingsLogic = checkSettingsLogic;

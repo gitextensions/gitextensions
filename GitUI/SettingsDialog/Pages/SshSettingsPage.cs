@@ -17,6 +17,7 @@ namespace GitUI.SettingsDialog.Pages
         public SshSettingsPage()
         {
             InitializeComponent();
+            Translate();
 
             Text = "Ssh";
         }

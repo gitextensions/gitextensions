@@ -10,7 +10,7 @@ namespace GitUI.SettingsDialog
     /// <summary>
     /// set Text property in derived classes to set the title
     /// </summary>
-    public class SettingsPageBase : UserControl, ISettingsPage
+    public class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
         public Control GuiControl { get { return this; } }
 
@@ -41,7 +41,6 @@ namespace GitUI.SettingsDialog
         /// <summary>
         /// use GitCommands.Settings to load settings in derived classes
         /// </summary>
-        /// <param name="settings"></param>
         protected virtual void OnLoadSettings()
         {
             // to be overridden
@@ -50,7 +49,6 @@ namespace GitUI.SettingsDialog
         /// <summary>
         /// use GitCommands.Settings to save settings in derived classes
         /// </summary>
-        /// <param name="settings"></param>
         public virtual void SaveSettings()
         {
             // to be overridden
