@@ -15,6 +15,7 @@ namespace GitUI.SettingsDialog.Pages
         public ShellExtensionSettingsPage()
         {
             InitializeComponent();
+            Translate();
 
             Text = "Shell Extension";
         }

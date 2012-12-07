@@ -15,6 +15,7 @@ namespace GitUI.SettingsDialog.Pages
         public GitExtensionsSettingsPage()
         {
             InitializeComponent();
+            Translate();
 
             Text = "Git Extensions";
         }

@@ -25,6 +25,7 @@ namespace GitUI.SettingsDialog.Pages
         public AppearanceSettingsPage()
         {
             InitializeComponent();
+            Translate();
 
             Text = "Appearance";
 

@@ -24,6 +24,7 @@ namespace GitUI.SettingsDialog.Pages
         public GlobalSettingsSettingsPage(CommonLogic commonLogic, CheckSettingsLogic checkSettingsLogic, GitModule gitModule)
         {
             InitializeComponent();
+            Translate();
 
             _commonLogic = commonLogic;
             _checkSettingsLogic = checkSettingsLogic;
