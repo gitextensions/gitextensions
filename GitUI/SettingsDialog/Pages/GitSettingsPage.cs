@@ -36,6 +36,11 @@ namespace GitUI.SettingsDialog.Pages
             return "path,home,environment,variable,msys,cygwin,download,git,command,linux,tools";
         }
 
+        public static SettingsPageReference GetReference()
+        {
+            return new SettingsPageReference(typeof(GitSettingsPage));
+        }
+
         public override void OnPageShown()
         {
             GitPath.Text = Settings.GitCommand;

@@ -186,6 +186,12 @@ namespace GitUI.SettingsDialog.Pages
             }
         }
 
+        public override void OnPageShown()
+        {
+            ////LoadSettings();
+            CheckSettings();
+        }
+
         [Browsable(false)]
         public GitModule Module {
             get { return _gitModule; /* TODO: see GitModuleForm */ }
@@ -211,7 +217,7 @@ namespace GitUI.SettingsDialog.Pages
             using (var frm = new FormChooseTranslation()) frm.ShowDialog(this);
             throw new NotImplementedException("Translate();");
             throw new NotImplementedException("Language.Text = Settings.Translation;");
-            Rescan_Click(null, null);
+            SaveAndRescan_Click(null, null);
         }
 
         private void SshConfig_Click(object sender, EventArgs e)
@@ -267,7 +273,7 @@ namespace GitUI.SettingsDialog.Pages
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     _checkSettingsLogic.SolveDiffToolForKDiff();
-                    throw new NotImplementedException("GlobalDiffTool.Text = \"kdiff3\";");
+                    _settingsPageHost.LoadAll(); // so that the save and rescan below works
                 }
                 else
                 {
@@ -289,19 +295,19 @@ namespace GitUI.SettingsDialog.Pages
                 return;
             }
 
-            Rescan_Click(null, null);
+            SaveAndRescan_Click(null, null);
         }
 
         private void MergeToolFix_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_commonLogic.GetMergeTool()))
+            if (string.IsNullOrEmpty(_commonLogic.GetGlobalMergeTool()))
             {
                 if (
                     MessageBox.Show(this, _noMergeToolConfigured.Text,
                         _noMergeToolConfiguredCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    _checkSettingsLogic.SolveMergeToolForKDiff();
-                    SetGlobalMergeToolText("kdiff3");
+                    _commonLogic.SetGlobalMergeTool("kdiff3");
+                    _settingsPageHost.LoadAll(); // to apply changes to dialog controls so that later the save does not overwrite it again
                 }
                 else
                 {
@@ -319,7 +325,7 @@ namespace GitUI.SettingsDialog.Pages
                 _checkSettingsLogic.AutoConfigMergeToolCmd(true);
 
                 Module.SetGlobalPathSetting(
-                    string.Format("mergetool.{0}.cmd", _commonLogic.GetMergeTool()), GetMergeToolCmdText());
+                    string.Format("mergetool.{0}.cmd", _commonLogic.GetGlobalMergeTool()), GetMergeToolCmdText());
             }
 
             if (_commonLogic.IsMergeTool("kdiff3") &&
@@ -330,7 +336,7 @@ namespace GitUI.SettingsDialog.Pages
                 return;
             }
 
-            Rescan_Click(null, null);
+            SaveAndRescan_Click(null, null);
         }
 
         private void SetGlobalMergeToolText(string text)
@@ -360,29 +366,23 @@ namespace GitUI.SettingsDialog.Pages
             {
                 MessageBox.Show(this, _solveGitCommandFailed.Text, _solveGitCommandFailedCaption.Text);
 
-                GotoPageGit();
+                _settingsPageHost.GotoPage(GitSettingsPage.GetReference());
                 return;
             }
 
             MessageBox.Show(this, String.Format(_gitCanBeRun.Text, Settings.GitCommand), _gitCanBeRunCaption.Text);
 
-            SetGitPathText(Settings.GitCommand);
-            Rescan_Click(null, null);
+            _settingsPageHost.GotoPage(GitSettingsPage.GetReference());
+            SaveAndRescan_Click(null, null);
         }
 
-        private void SetGitPathText(string text)
+        private void SaveAndRescan_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException("GitPath.Text = Settings.GitCommand;");
-        }
-
-        private void GotoPageGit()
-        {
-            throw new NotImplementedException("tabControl1.SelectTab(tpGit);");
-        }
-
-        private void Rescan_Click(object sender, EventArgs e)
-        {
-
+            Cursor.Current = Cursors.WaitCursor;
+            _settingsPageHost.SaveAll();
+            _settingsPageHost.LoadAll();
+            CheckSettings();
+            Cursor.Current = Cursors.Default;
         }
 
         private void CheckAtStartup_CheckedChanged(object sender, EventArgs e)
@@ -576,7 +576,7 @@ namespace GitUI.SettingsDialog.Pages
         private bool CheckMergeTool()
         {
             MergeTool.Visible = true;
-            if (string.IsNullOrEmpty(_commonLogic.GetMergeTool()))
+            if (string.IsNullOrEmpty(_commonLogic.GetGlobalMergeTool()))
             {
                 MergeTool.BackColor = Color.LightSalmon;
                 MergeTool.Text = _configureMergeTool.Text;
@@ -601,7 +601,7 @@ namespace GitUI.SettingsDialog.Pages
                     MergeTool_Fix.Visible = false;
                     return true;
                 }
-                string mergetool = _commonLogic.GetMergeTool().ToLowerInvariant();
+                string mergetool = _commonLogic.GetGlobalMergeTool().ToLowerInvariant();
                 if (mergetool == "p4merge" || mergetool == "tmerge")
                 {
                     string p = Module.GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
