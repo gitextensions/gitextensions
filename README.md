@@ -1,6 +1,6 @@
 GitExtensionsTest
 =================
 
-This are Unit tests for GitExtensions (https://github.com/gitextensions/gitextensions).
+This repository contains unit tests for GitExtensions (https://github.com/gitextensions/gitextensions).
+It is a submodule of GitExtensions.
 
-This is just a submodule of GitExtensions
