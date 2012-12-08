@@ -1,0 +1,3 @@
+[submodule "gitextensionstest"]
+	path = GitExtensionsTest
+	url = git://github.com/fernsehkind/gitextensionstest.git
