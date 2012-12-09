@@ -412,21 +412,31 @@ namespace GitUI
             return StartCompareRevisionsDialog(null);
         }
 
-        public bool StartAddFilesDialog(IWin32Window owner)
+        public bool StartAddFilesDialog(IWin32Window owner, string addFiles)
         {
             return DoAction(owner, true, PreAddFiles, PostAddFiles, () =>
-                {
-                    using (var form = new FormAddFiles(this))
-                        form.ShowDialog(owner);
+            {
+                using (var form = new FormAddFiles(this, addFiles))
+                    form.ShowDialog(owner);
 
-                    return true;
-                }
+                return true;
+            }
             );
+        }
+
+        public bool StartAddFilesDialog(IWin32Window owner)
+        {
+            return StartAddFilesDialog(owner, null);
+        }
+
+        public bool StartAddFilesDialog(string addFiles)
+        {
+            return StartAddFilesDialog(null, addFiles);
         }
 
         public bool StartAddFilesDialog()
         {
-            return StartAddFilesDialog(null);
+            return StartAddFilesDialog(null, null);
         }
 
         public bool StartCreateBranchDialog(IWin32Window owner)
@@ -1608,11 +1618,13 @@ namespace GitUI
             switch (args[1])
             {
                 case "about":
-                    Application.Run(new AboutBox());
+                    var frm = new AboutBox();
+                    frm.StartPosition = FormStartPosition.CenterScreen;
+                    Application.Run(frm);
                     return;
                 case "add":
                 case "addfiles":
-                    StartAddFilesDialog();
+                    StartAddFilesDialog(args.Length == 3 ? args[2] : ".");
                     return;
                 case "apply":       // [filename]
                 case "applypatch":
@@ -1727,7 +1739,9 @@ namespace GitUI
                     }
                     break;
             }
-            Application.Run(new FormCommandlineHelp());
+            var frmCmdLine = new FormCommandlineHelp();
+            frmCmdLine.StartPosition = FormStartPosition.CenterScreen;
+            Application.Run(frmCmdLine);
         }
 
         private void RunMergeCommand(Dictionary<string, string> arguments)
