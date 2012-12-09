@@ -33,5 +33,19 @@ namespace GitCommandsTests.Patch
 
             Assert.AreEqual("text1text2", patch.Text);
         }
+
+        [TestMethod]
+        public void TestAppendTextLine()
+        {
+            PatchApply.Patch patch = new PatchApply.Patch();
+
+            patch.AppendTextLine("text1");
+            patch.AppendTextLine("text2");
+            patch.AppendTextLine("text3");
+
+            var expected = String.Format("text1{0}text2{0}text3{0}", Environment.NewLine);
+
+            Assert.AreEqual(expected, patch.Text);
+        }
     }
 }
