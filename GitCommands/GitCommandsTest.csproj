@@ -47,6 +47,8 @@
     <Compile Include="CommitInformationTest.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
     <Compile Include="Git\GitCommandHelpersTests.cs" />
+    <Compile Include="Patch\PatchManagerTest.cs" />
+    <Compile Include="Patch\PatchTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
