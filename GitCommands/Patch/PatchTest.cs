@@ -23,5 +23,15 @@ namespace GitCommandsTests.Patch
 
             Assert.IsNotNull(patch);
         }
+
+        [TestMethod]
+        public void TestAppendText()
+        {
+            PatchApply.Patch patch = new PatchApply.Patch();
+            patch.AppendText("text1");
+            patch.AppendText("text2");
+
+            Assert.AreEqual("text1text2", patch.Text);
+        }
     }
 }
