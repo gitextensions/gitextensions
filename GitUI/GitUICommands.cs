@@ -511,6 +511,17 @@ namespace GitUI
             return StartSvnCloneDialog(null, null);
         }
 
+        public void StartCleanupRepositoryDialog(IWin32Window owner)
+        {
+            using (var frm = new FormCleanupRepository(this))
+                frm.ShowDialog(owner);
+        }
+
+        public void StartCleanupRepositoryDialog()
+        {
+            StartCleanupRepositoryDialog(null);
+        }
+
         public bool StartCommitDialog(IWin32Window owner, bool showWhenNoChanges)
         {
             if (!RequiresValidWorkingDir(owner))
@@ -848,6 +859,17 @@ namespace GitUI
         public bool StartResetChangesDialog()
         {
             return StartResetChangesDialog(null);
+        }
+
+        public void StartRevertDialog(IWin32Window owner, string fileName)
+        {
+            using (var form = new FormRevert(this, fileName))
+                form.ShowDialog(owner);
+        }
+
+        public void StartRevertDialog(string fileName)
+        {
+            StartRevertDialog(null, fileName);
         }
 
         public bool StartResolveConflictsDialog(IWin32Window owner, bool offerCommit)
@@ -1592,6 +1614,11 @@ namespace GitUI
                 MessageBox.Show("Cannot open blame, there is no file selected.", "Blame");
                 return;
             }
+            if (args[1].Equals("difftool") && args.Length <= 2)
+            {
+                MessageBox.Show("Cannot open difftool, there is no file selected.", "Difftool");
+                return;
+            }
             if (args[1].Equals("filehistory") && args.Length <= 2)
             {
                 MessageBox.Show("Cannot open file history, there is no file selected.", "File history");
@@ -1650,14 +1677,16 @@ namespace GitUI
                     StartCherryPickDialog();
                     return;
                 case "cleanup":
-                    using (var form = new FormCleanupRepository(this))
-                        form.ShowDialog();
+                    StartCleanupRepositoryDialog();
                     return;
                 case "clone":       // [path]
                     RunCloneCommand(args);
                     return;
                 case "commit":      // [--quiet]
                     Commit(arguments);
+                    return;
+                case "difftool":      // filename
+                    Module.OpenWithDifftool(args[2]);
                     return;
                 case "filehistory": // filename
                     RunFileHistoryCommand(args);
@@ -1703,7 +1732,7 @@ namespace GitUI
                     StartResetChangesDialog();
                     return;
                 case "revert":      // filename
-                    Application.Run(new FormRevert(this, args[2]));
+                    StartRevertDialog(args[2]);
                     return;
                 case "searchfile":
                     RunSearchFileCommand();
