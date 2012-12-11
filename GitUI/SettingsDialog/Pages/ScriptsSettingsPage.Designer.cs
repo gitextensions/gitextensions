@@ -45,7 +45,7 @@
             this.scriptEvent = new System.Windows.Forms.ComboBox();
             this.lbl_icon = new System.Windows.Forms.Label();
             this.sbtn_icon = new GitUI.Script.SplitButton();
-            this.helpLabel = new System.Windows.Forms.Label();
+            this.contextMenuStrip_SplitButton = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.nameLabel = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.nameTextBox = new System.Windows.Forms.TextBox();
@@ -56,10 +56,11 @@
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.commandTextBox = new System.Windows.Forms.TextBox();
             this.browseScriptButton = new System.Windows.Forms.Button();
-            this.argumentsLabel = new System.Windows.Forms.Label();
             this.argumentsTextBox = new System.Windows.Forms.RichTextBox();
             this.labelOnEvent = new System.Windows.Forms.Label();
-            this.contextMenuStrip_SplitButton = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.argumentsLabel = new System.Windows.Forms.Label();
+            this.buttonShowArgumentsHelp = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ScriptList)).BeginInit();
             this.panel1.SuspendLayout();
@@ -67,6 +68,7 @@
             this.flowLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
+            this.flowLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -209,9 +211,9 @@
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.commandLabel, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel2, 1, 1);
-            this.tableLayoutPanel2.Controls.Add(this.argumentsLabel, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.argumentsTextBox, 1, 2);
             this.tableLayoutPanel2.Controls.Add(this.labelOnEvent, 0, 3);
+            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel4, 0, 2);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 233);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -229,11 +231,10 @@
             this.flowLayoutPanel3.Controls.Add(this.scriptEvent);
             this.flowLayoutPanel3.Controls.Add(this.lbl_icon);
             this.flowLayoutPanel3.Controls.Add(this.sbtn_icon);
-            this.flowLayoutPanel3.Controls.Add(this.helpLabel);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(78, 146);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(90, 146);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(559, 31);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(547, 31);
             this.flowLayoutPanel3.TabIndex = 26;
             // 
             // scriptEvent
@@ -278,19 +279,10 @@
             this.sbtn_icon.Visible = false;
             this.sbtn_icon.WholeButtonDropdown = true;
             // 
-            // helpLabel
+            // contextMenuStrip_SplitButton
             // 
-            this.helpLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.helpLabel.AutoSize = true;
-            this.helpLabel.BackColor = System.Drawing.SystemColors.Info;
-            this.helpLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.helpLabel.Location = new System.Drawing.Point(354, 7);
-            this.helpLabel.Name = "helpLabel";
-            this.helpLabel.Size = new System.Drawing.Size(177, 17);
-            this.helpLabel.TabIndex = 16;
-            this.helpLabel.Text = "Press F1 to see available options";
-            this.helpLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.helpLabel.Visible = false;
+            this.contextMenuStrip_SplitButton.Name = "contextMenuStrip1";
+            this.contextMenuStrip_SplitButton.Size = new System.Drawing.Size(61, 4);
             // 
             // nameLabel
             // 
@@ -309,9 +301,9 @@
             this.flowLayoutPanel1.Controls.Add(this.scriptNeedsConfirmation);
             this.flowLayoutPanel1.Controls.Add(this.inMenuCheckBox);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(78, 3);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(90, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(559, 34);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(547, 34);
             this.flowLayoutPanel1.TabIndex = 13;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -375,9 +367,9 @@
             this.flowLayoutPanel2.Controls.Add(this.commandTextBox);
             this.flowLayoutPanel2.Controls.Add(this.browseScriptButton);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(78, 43);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(90, 43);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(559, 34);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(547, 34);
             this.flowLayoutPanel2.TabIndex = 14;
             // 
             // commandTextBox
@@ -400,26 +392,14 @@
             this.browseScriptButton.UseVisualStyleBackColor = true;
             this.browseScriptButton.Click += new System.EventHandler(this.browseScriptButton_Click);
             // 
-            // argumentsLabel
-            // 
-            this.argumentsLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.argumentsLabel.AutoSize = true;
-            this.argumentsLabel.Location = new System.Drawing.Point(3, 104);
-            this.argumentsLabel.Name = "argumentsLabel";
-            this.argumentsLabel.Size = new System.Drawing.Size(69, 15);
-            this.argumentsLabel.TabIndex = 14;
-            this.argumentsLabel.Text = "Arguments:";
-            // 
             // argumentsTextBox
             // 
             this.argumentsTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.argumentsTextBox.Location = new System.Drawing.Point(78, 83);
+            this.argumentsTextBox.Location = new System.Drawing.Point(90, 83);
             this.argumentsTextBox.Name = "argumentsTextBox";
-            this.argumentsTextBox.Size = new System.Drawing.Size(559, 57);
+            this.argumentsTextBox.Size = new System.Drawing.Size(547, 57);
             this.argumentsTextBox.TabIndex = 8;
             this.argumentsTextBox.Text = "";
-            this.argumentsTextBox.Enter += new System.EventHandler(this.argumentsTextBox_Enter);
-            this.argumentsTextBox.Leave += new System.EventHandler(this.argumentsTextBox_Leave);
             this.argumentsTextBox.Validating += new System.ComponentModel.CancelEventHandler(this.ScriptInfoEdit_Validating);
             // 
             // labelOnEvent
@@ -432,10 +412,36 @@
             this.labelOnEvent.TabIndex = 20;
             this.labelOnEvent.Text = "On event:";
             // 
-            // contextMenuStrip_SplitButton
+            // flowLayoutPanel4
             // 
-            this.contextMenuStrip_SplitButton.Name = "contextMenuStrip1";
-            this.contextMenuStrip_SplitButton.Size = new System.Drawing.Size(61, 4);
+            this.flowLayoutPanel4.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.flowLayoutPanel4.AutoSize = true;
+            this.flowLayoutPanel4.Controls.Add(this.argumentsLabel);
+            this.flowLayoutPanel4.Controls.Add(this.buttonShowArgumentsHelp);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 89);
+            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(81, 44);
+            this.flowLayoutPanel4.TabIndex = 27;
+            // 
+            // argumentsLabel
+            // 
+            this.argumentsLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.argumentsLabel.AutoSize = true;
+            this.argumentsLabel.Location = new System.Drawing.Point(3, 0);
+            this.argumentsLabel.Name = "argumentsLabel";
+            this.argumentsLabel.Size = new System.Drawing.Size(69, 15);
+            this.argumentsLabel.TabIndex = 14;
+            this.argumentsLabel.Text = "Arguments:";
+            // 
+            // buttonShowArgumentsHelp
+            // 
+            this.buttonShowArgumentsHelp.Location = new System.Drawing.Point(3, 18);
+            this.buttonShowArgumentsHelp.Name = "buttonShowArgumentsHelp";
+            this.buttonShowArgumentsHelp.Size = new System.Drawing.Size(75, 23);
+            this.buttonShowArgumentsHelp.TabIndex = 15;
+            this.buttonShowArgumentsHelp.Text = "Help";
+            this.buttonShowArgumentsHelp.UseVisualStyleBackColor = true;
+            this.buttonShowArgumentsHelp.Click += new System.EventHandler(this.buttonShowArgumentsHelp_Click);
             // 
             // ScriptsSettingsPage
             // 
@@ -455,6 +461,8 @@
             this.flowLayoutPanel1.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
+            this.flowLayoutPanel4.ResumeLayout(false);
+            this.flowLayoutPanel4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -477,7 +485,6 @@
         private System.Windows.Forms.ComboBox scriptEvent;
         private System.Windows.Forms.Label lbl_icon;
         private Script.SplitButton sbtn_icon;
-        private System.Windows.Forms.Label helpLabel;
         private System.Windows.Forms.Label nameLabel;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.TextBox nameTextBox;
@@ -492,5 +499,7 @@
         private System.Windows.Forms.RichTextBox argumentsTextBox;
         private System.Windows.Forms.Label labelOnEvent;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_SplitButton;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
+        private System.Windows.Forms.Button buttonShowArgumentsHelp;
     }
 }
