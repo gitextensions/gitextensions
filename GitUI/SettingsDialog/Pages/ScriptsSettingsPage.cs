@@ -23,6 +23,14 @@ namespace GitUI.SettingsDialog.Pages
             Text = "Scripts";
         }
 
+        public override bool IsInstantSavePage
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public override void OnPageShown()
         {
             System.Resources.ResourceManager rm =
