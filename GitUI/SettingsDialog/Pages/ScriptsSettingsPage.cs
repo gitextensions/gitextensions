@@ -196,16 +196,6 @@ namespace GitUI.SettingsDialog.Pages
             }
         }
 
-        private void argumentsTextBox_Enter(object sender, EventArgs e)
-        {
-            helpLabel.Visible = true;
-        }
-
-        private void argumentsTextBox_Leave(object sender, EventArgs e)
-        {
-            helpLabel.Visible = false;
-        }
-
         private void ScriptList_SelectionChanged(object sender, EventArgs e)
         {
             if (ScriptList.SelectedRows.Count > 0)
@@ -287,6 +277,42 @@ namespace GitUI.SettingsDialog.Pages
                 sbtn_icon.Visible = false;
                 lbl_icon.Visible = false;
             }
+        }
+
+        private void buttonShowArgumentsHelp_Click(object sender, EventArgs e)
+        {
+            var helpDisplayDialog = new SimpleHelpDisplayDialog();
+            helpDisplayDialog.DialogTitle = "Arguments help";
+            helpDisplayDialog.ContentText = @"User Input:
+{UserInput}
+
+Selected Branch:
+{sTag}
+{sBranch}
+{sLocalBranch}
+{sRemoteBranch}
+{sRemote}
+{sHash}
+{sMessage}
+{sAuthor}
+{sCommitter}
+{sAuthorDate}
+{sCommitDate}
+
+Current Branch:
+{cTag}
+{cBranch}
+{cLocalBranch}
+{cRemoteBranch}
+{cHash}
+{cMessage}
+{cAuthor}
+{cCommitter}
+{cAuthorDate}
+{cCommitDate}
+{cDefaultRemote}".Replace("\n", Environment.NewLine);
+
+            helpDisplayDialog.ShowDialog();
         }
     }
 }
