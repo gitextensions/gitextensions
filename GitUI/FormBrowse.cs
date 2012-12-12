@@ -2165,15 +2165,15 @@ namespace GitUI
 
         private void toggleSplitViewLayout_Click(object sender, EventArgs e)
         {
-            EnabledSplitViewLayout(MainSplitContainer.Panel2.Height == 0 && MainSplitContainer.Height > 0);
+            EnabledSplitViewLayout(RightSplitContainer.Panel2.Height == 0 && RightSplitContainer.Height > 0);
         }
 
         private void EnabledSplitViewLayout(bool enabled)
         {
             if (enabled)
-                MainSplitContainer.SplitterDistance = (MainSplitContainer.Height / 5) * 2;
+                RightSplitContainer.SplitterDistance = (RightSplitContainer.Height / 5) * 2;
             else
-                MainSplitContainer.SplitterDistance = MainSplitContainer.Height;
+                RightSplitContainer.SplitterDistance = RightSplitContainer.Height;
         }
 
         private void editCheckedOutFileToolStripMenuItem_Click(object sender, EventArgs e)
