@@ -68,7 +68,7 @@ public:
 
     void RunGitEx(const TCHAR * command);
 
-    int PopulateMenu(HMENU hMenu, int firstId, int id, bool isSubMenu, bool isValidDir);
+    int PopulateMenu(HMENU hMenu, int firstId, int id, bool isSubMenu);
     void AddMenuItem(HMENU hmenu, LPTSTR text, int resource, int firstId, int id, UINT position, bool isSubMenu);
 
 protected:

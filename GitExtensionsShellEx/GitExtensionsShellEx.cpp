@@ -277,6 +277,13 @@ bool IsExists(const std::wstring& dir)
     return (dwAttrib != INVALID_FILE_ATTRIBUTES);
 }
 
+bool IsFileExists(LPCWSTR str)
+{
+    DWORD dwAttrib = GetFileAttributes(str);
+
+    return (dwAttrib != INVALID_FILE_ATTRIBUTES) && ((dwAttrib & FILE_ATTRIBUTE_DIRECTORY) == 0);
+}
+
 bool CGitExtensionsShellEx::ValidWorkingDir(const std::wstring& dir)
 {
     if (dir.empty())
@@ -316,8 +323,6 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu  (
     if ( uFlags & CMF_DEFAULTONLY )
         return S_OK;
 
-    bool isValidDir = IsValidGitDir(m_szFile);
-
     int id = 0;
 
     CString szCascadeContextMenu = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions\\GitExtensions", L"ShellCascadeContextMenu");
@@ -329,7 +334,7 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu  (
         // show context menu cascaded in submenu
         HMENU popupMenu = CreateMenu();
 
-        id = PopulateMenu(popupMenu, uidFirstCmd, id, true, isValidDir);
+        id = PopulateMenu(popupMenu, uidFirstCmd, id, true);
 
         MENUITEMINFO info;
 
@@ -346,7 +351,7 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu  (
     else
     {
         // show menu items directly
-        id = PopulateMenu(hmenu, uidFirstCmd, id, false, isValidDir);
+        id = PopulateMenu(hmenu, uidFirstCmd, id, false);
     }
 
     return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, id);
@@ -389,9 +394,12 @@ bool CGitExtensionsShellEx::IsMenuItemVisible(CString settings, int id)
     }
 }
 
-int CGitExtensionsShellEx::PopulateMenu(HMENU hMenu, int firstId, int id, bool isSubMenu, bool isValidDir)
+int CGitExtensionsShellEx::PopulateMenu(HMENU hMenu, int firstId, int id, bool isSubMenu)
 {
     CString szShellVisibleMenuItems = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions\\GitExtensions", L"ShellVisibleMenuItems");
+
+    bool isValidDir = IsValidGitDir(m_szFile);
+    bool isFile = IsFileExists(m_szFile);
 
     // preset values, if not used
     AddFilesId = -1;
@@ -411,47 +419,59 @@ int CGitExtensionsShellEx::PopulateMenu(HMENU hMenu, int firstId, int id, bool i
 
     int pos = 0;
 
-    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 0))
-        AddMenuItem(hMenu, L"Add files", IDI_ICONADDED, firstId, ++id, AddFilesId=pos++, isSubMenu);
+    if (isValidDir)
+    {
+        if (!isFile)
+        {
+            if (IsMenuItemVisible(szShellVisibleMenuItems, 2))
+                AddMenuItem(hMenu, L"Browse", IDI_ICONBROWSEFILEEXPLORER, firstId, ++id, BrowseId=pos++, isSubMenu);
 
-    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 1))
-        AddMenuItem(hMenu, L"Apply patch", 0, firstId, ++id, ApplyPatchId=pos++, isSubMenu);
+            if (IsMenuItemVisible(szShellVisibleMenuItems, 7))
+                AddMenuItem(hMenu, L"Commit", IDI_ICONCOMMIT, firstId, ++id, CommitId=pos++, isSubMenu);
 
-    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 2))
-        AddMenuItem(hMenu, L"Browse", IDI_ICONBROWSEFILEEXPLORER, firstId, ++id, BrowseId=pos++, isSubMenu);
+            if (IsMenuItemVisible(szShellVisibleMenuItems, 10))
+                AddMenuItem(hMenu, L"Pull", IDI_ICONPULL, firstId, ++id, PullId=pos++, isSubMenu);
 
-    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 3))
-        AddMenuItem(hMenu, L"Create branch", IDI_ICONBRANCHCREATE, firstId, ++id, CreateBranchId=pos++, isSubMenu);
+            if (IsMenuItemVisible(szShellVisibleMenuItems, 11))
+                AddMenuItem(hMenu, L"Push", IDI_ICONPUSH, firstId, ++id, PushId=pos++, isSubMenu);
 
-    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 4))
-        AddMenuItem(hMenu, L"Checkout branch", IDI_ICONBRANCHCHECKOUT, firstId, ++id, CheckoutBranchId=pos++, isSubMenu);
+            if (IsMenuItemVisible(szShellVisibleMenuItems, 13))
+                AddMenuItem(hMenu, L"View changes", IDI_ICONVIEWCHANGES, firstId, ++id, ViewDiffId=pos++, isSubMenu);
 
-    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 5))
-        AddMenuItem(hMenu, L"Checkout revision", IDI_ICONREVISIONCHECKOUT, firstId, ++id, CheckoutRevisionId=pos++, isSubMenu);
+            InsertMenu(hMenu, pos++, MF_SEPARATOR|MF_BYPOSITION, 0, NULL);
 
-    if (!isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 6))
+            if (IsMenuItemVisible(szShellVisibleMenuItems, 4))
+                AddMenuItem(hMenu, L"Checkout branch", IDI_ICONBRANCHCHECKOUT, firstId, ++id, CheckoutBranchId=pos++, isSubMenu);
+
+            if (IsMenuItemVisible(szShellVisibleMenuItems, 5))
+                AddMenuItem(hMenu, L"Checkout revision", IDI_ICONREVISIONCHECKOUT, firstId, ++id, CheckoutRevisionId=pos++, isSubMenu);
+
+            if (IsMenuItemVisible(szShellVisibleMenuItems, 3))
+                AddMenuItem(hMenu, L"Create branch", IDI_ICONBRANCHCREATE, firstId, ++id, CreateBranchId=pos++, isSubMenu);
+
+            InsertMenu(hMenu, pos++, MF_SEPARATOR|MF_BYPOSITION, 0, NULL);
+        }
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 8))
+            AddMenuItem(hMenu, L"File history", IDI_ICONFILEHISTORY, firstId, ++id, FileHistoryId=pos++, isSubMenu);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 9))
+            AddMenuItem(hMenu, L"Reset file changes", IDI_ICONTRESETFILETO, firstId, ++id, ResetFileChangesId=pos++, isSubMenu);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 0))
+            AddMenuItem(hMenu, L"Add files", IDI_ICONADDED, firstId, ++id, AddFilesId=pos++, isSubMenu);
+
+        if (IsMenuItemVisible(szShellVisibleMenuItems, 1))
+            AddMenuItem(hMenu, L"Apply patch", 0, firstId, ++id, ApplyPatchId=pos++, isSubMenu);
+    }
+    else if (IsMenuItemVisible(szShellVisibleMenuItems, 6))
         AddMenuItem(hMenu, L"Clone", IDI_ICONCLONEREPOGIT, firstId, ++id, CloneId=pos++, isSubMenu);
 
-    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 7))
-        AddMenuItem(hMenu, L"Commit", IDI_ICONCOMMIT, firstId, ++id, CommitId=pos++, isSubMenu);
-
-    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 8))
-        AddMenuItem(hMenu, L"File history", IDI_ICONFILEHISTORY, firstId, ++id, FileHistoryId=pos++, isSubMenu);
-
-    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 9))
-        AddMenuItem(hMenu, L"Reset file changes", IDI_ICONTRESETFILETO, firstId, ++id, ResetFileChangesId=pos++, isSubMenu);
-
-    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 10))
-        AddMenuItem(hMenu, L"Pull", IDI_ICONPULL, firstId, ++id, PullId=pos++, isSubMenu);
-
-    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 11))
-        AddMenuItem(hMenu, L"Push", IDI_ICONPUSH, firstId, ++id, PushId=pos++, isSubMenu);
+    if (isSubMenu)
+        InsertMenu(hMenu, pos++, MF_SEPARATOR|MF_BYPOSITION, 0, NULL);
 
     if (IsMenuItemVisible(szShellVisibleMenuItems, 12))
         AddMenuItem(hMenu, L"Settings", IDI_ICONSETTINGS, firstId, ++id, SettingsId=pos++, isSubMenu);
-
-    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 13))
-        AddMenuItem(hMenu, L"View diff", IDI_ICONDIFF, firstId, ++id, ViewDiffId=pos++, isSubMenu);
 
     ++id;
     return id;

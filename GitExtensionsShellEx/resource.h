@@ -18,7 +18,7 @@
 #define IDI_ICONPUSH                    213
 #define IDI_ICONTRESETFILETO            214
 #define IDI_ICONSETTINGS                215
-#define IDI_ICONDIFF                    216
+#define IDI_ICONVIEWCHANGES             216
 
 // Next default values for new objects
 // 
