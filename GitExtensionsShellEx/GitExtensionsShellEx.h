@@ -68,8 +68,7 @@ public:
 
     void RunGitEx(const TCHAR * command);
 
-    int PopulateMenu(HMENU hMenu, int firstId, int id, bool isSubMenu, bool isValidDir);
-    void AddMenuItem(HMENU hmenu, LPTSTR text, int resource, int firstId, int id, UINT position, bool isSubMenu);
+    UINT AddMenuItem(HMENU hmenu, LPTSTR text, int resource, UINT firstId, UINT id, UINT position, bool isSubMenu);
 
 protected:
     TCHAR m_szFile [MAX_PATH];
@@ -81,7 +80,7 @@ protected:
     FN_EndBufferedPaint pfnEndBufferedPaint;
 
     CString  GetRegistryValue(HKEY	hOpenKey, LPCTSTR szKey, LPCTSTR path);
-    bool IsMenuItemVisible(CString settings, int id);
+    bool DisplayInSubmenu(CString settings, int id);
 
     HBITMAP IconToBitmapPARGB32(UINT uIcon);
     HRESULT Create32BitHBITMAP(HDC hdc, const SIZE *psize, __deref_opt_out void **ppvBits, __out HBITMAP* phBmp);

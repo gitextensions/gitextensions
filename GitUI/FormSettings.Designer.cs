@@ -289,9 +289,8 @@ namespace GitUI
             this.tpHotkeys = new System.Windows.Forms.TabPage();
             this.controlHotkeys = new GitUI.Hotkey.ControlHotkeys();
             this.tpShellExt = new System.Windows.Forms.TabPage();
-            this.lblMenuEntries = new System.Windows.Forms.Label();
+            this.lblCascadedMenuEntries = new System.Windows.Forms.Label();
             this.chlMenuEntries = new System.Windows.Forms.CheckedListBox();
-            this.chkCascadedContextMenu = new System.Windows.Forms.CheckBox();
             this.Ok = new System.Windows.Forms.Button();
             this.applicationDialog = new System.Windows.Forms.FontDialog();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -3310,9 +3309,8 @@ namespace GitUI
             // 
             // tpShellExt
             // 
-            this.tpShellExt.Controls.Add(this.lblMenuEntries);
+            this.tpShellExt.Controls.Add(this.lblCascadedMenuEntries);
             this.tpShellExt.Controls.Add(this.chlMenuEntries);
-            this.tpShellExt.Controls.Add(this.chkCascadedContextMenu);
             this.tpShellExt.Location = new System.Drawing.Point(4, 25);
             this.tpShellExt.Name = "tpShellExt";
             this.tpShellExt.Padding = new System.Windows.Forms.Padding(3);
@@ -3321,14 +3319,14 @@ namespace GitUI
             this.tpShellExt.Text = "Shell extension";
             this.tpShellExt.UseVisualStyleBackColor = true;
             // 
-            // lblMenuEntries
+            // lblCascadedMenuEntries
             // 
-            this.lblMenuEntries.AutoSize = true;
-            this.lblMenuEntries.Location = new System.Drawing.Point(8, 50);
-            this.lblMenuEntries.Name = "lblMenuEntries";
-            this.lblMenuEntries.Size = new System.Drawing.Size(174, 16);
-            this.lblMenuEntries.TabIndex = 2;
-            this.lblMenuEntries.Text = "Visible context menu entries:";
+            this.lblCascadedMenuEntries.AutoSize = true;
+            this.lblCascadedMenuEntries.Location = new System.Drawing.Point(8, 15);
+            this.lblCascadedMenuEntries.Name = "lblCascadedMenuEntries";
+            this.lblCascadedMenuEntries.Size = new System.Drawing.Size(174, 16);
+            this.lblCascadedMenuEntries.TabIndex = 2;
+            this.lblCascadedMenuEntries.Text = "Cascaded context menu";
             // 
             // chlMenuEntries
             // 
@@ -3349,20 +3347,10 @@ namespace GitUI
             "Push",
             "Settings",
             "View diff"});
-            this.chlMenuEntries.Location = new System.Drawing.Point(10, 68);
+            this.chlMenuEntries.Location = new System.Drawing.Point(10, 38);
             this.chlMenuEntries.Name = "chlMenuEntries";
             this.chlMenuEntries.Size = new System.Drawing.Size(240, 256);
             this.chlMenuEntries.TabIndex = 1;
-            // 
-            // chkCascadedContextMenu
-            // 
-            this.chkCascadedContextMenu.AutoSize = true;
-            this.chkCascadedContextMenu.Location = new System.Drawing.Point(8, 15);
-            this.chkCascadedContextMenu.Name = "chkCascadedContextMenu";
-            this.chkCascadedContextMenu.Size = new System.Drawing.Size(141, 17);
-            this.chkCascadedContextMenu.TabIndex = 0;
-            this.chkCascadedContextMenu.Text = "Cascaded context menu";
-            this.chkCascadedContextMenu.UseVisualStyleBackColor = true;
             // 
             // Ok
             // 
@@ -3574,7 +3562,7 @@ namespace GitUI
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.PictureBox pictureBox2;
-		private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label23;
         private System.Windows.Forms.TextBox SmtpServer;
         private System.Windows.Forms.TabPage tpColors;
         private System.Windows.Forms.GroupBox groupBox4;
@@ -3716,9 +3704,8 @@ namespace GitUI
         private CheckBox ShowAuthorGravatar;
         private CheckBox chkPlaySpecialStartupSound;
         private TabPage tpShellExt;
-        private Label lblMenuEntries;
+        private Label lblCascadedMenuEntries;
         private CheckedListBox chlMenuEntries;
-        private CheckBox chkCascadedContextMenu;
         private CheckBox chkEnableAutoScale;
         private CheckBox chkWriteCommitMessageInCommitWindow;
         private GroupBox groupBox15;
