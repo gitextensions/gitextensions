@@ -1401,10 +1401,12 @@ namespace GitUI
                 {
                     using (var form = new FormApplyPatch(this))
                     {
-                        form.SetPatchFile(patchFile);
+                        if (Directory.Exists(patchFile))
+                            form.SetPatchDir(patchFile);
+                        else
+                            form.SetPatchFile(patchFile);
                         return form.ShowDialog(owner) != DialogResult.Cancel;
                     }
-
                 }
             );
         }
