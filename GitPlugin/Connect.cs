@@ -183,7 +183,7 @@ namespace GitPlugin
                     }
 
                     {
-                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsDiff", "V&iew changes", "View commit change history", 0, n++, true);
+                        _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsViewChanges", "V&iew changes", "View commit change history", 0, n++, true);
                         _gitPlugin.AddPopupCommand(mainMenuPopup, "GitExtensionsFindFile", "Find fi&le", "Search for a file in the repository", 23, n++);
                     }
 
@@ -235,6 +235,7 @@ namespace GitPlugin
             //GitPlugin.DeleteCommandBar("GitExtensions");
             try
             {
+                this._gitPlugin.RegisterCommand("GitExtensionsDifftool", new ToolbarCommand<OpenWithDiftool>());
                 this._gitPlugin.RegisterCommand("GitExtensionsShowFileHistory", new ToolbarCommand<FileHistory>());
                 this._gitPlugin.RegisterCommand("GitExtensionsResetChanges", new ToolbarCommand<Revert>());
                 this._gitPlugin.RegisterCommand("GitExtensionsCommit", new ToolbarCommand<Commit>());
@@ -242,7 +243,7 @@ namespace GitPlugin
                 this._gitPlugin.RegisterCommand("GitExtensionsClone", new ToolbarCommand<Clone>());
                 this._gitPlugin.RegisterCommand("GitExtensionsCreateBranch", new ToolbarCommand<CreateBranch>());
                 this._gitPlugin.RegisterCommand("GitExtensionsSwitchBranch", new ToolbarCommand<SwitchBranch>());
-                this._gitPlugin.RegisterCommand("GitExtensionsDiff", new ToolbarCommand<ViewDiff>());
+                this._gitPlugin.RegisterCommand("GitExtensionsViewChanges", new ToolbarCommand<ViewChanges>());
                 this._gitPlugin.RegisterCommand("GitExtensionsInitRepository", new ToolbarCommand<Init>());
                 this._gitPlugin.RegisterCommand("GitExtensionsFormatPatch", new ToolbarCommand<FormatPatch>());
                 this._gitPlugin.RegisterCommand("GitExtensionsPull", new ToolbarCommand<Pull>());
@@ -270,10 +271,12 @@ namespace GitPlugin
         {
             try
             {
+                _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsDifftool", "Git: Diff",
+                                         "Open with difftool", 24, 4);
                 _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsShowFileHistory", "Git: File history",
-                                         "Show file history", 6, 4);
+                                         "Show file history", 6, 5);
                 _gitPlugin.AddMenuCommand(toolbarName, "GitExtensionsResetChanges", "Git: Reset file changes",
-                                         "Undo changes made to this file", 4, 5);
+                                         "Undo changes made to this file", 4, 6);
             }
             catch
             {
