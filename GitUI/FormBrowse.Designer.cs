@@ -926,7 +926,7 @@ namespace GitUI
             this.bLocalToolStripMenuItem,
             this.parentOfALocalToolStripMenuItem,
             this.parentOfBLocalToolStripMenuItem});
-            this.openWithDifftoolToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconDiffTool;
+            this.openWithDifftoolToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconDiff;
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";

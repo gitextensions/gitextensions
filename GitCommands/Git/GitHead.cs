@@ -8,7 +8,7 @@ namespace GitCommands
     {
         private readonly string _mergeSettingName;
         private readonly string _remoteSettingName;
-        private List<IGitItem> _subItems;
+        private IList<IGitItem> _subItems;
         public GitModule Module { get; private set; }
 
         public GitHead(GitModule module, string guid, string completeName) : this(module, guid, completeName, string.Empty) {}
@@ -124,7 +124,7 @@ namespace GitCommands
         public string Guid { get; private set; }
         public string Name { get; private set; }
 
-        public List<IGitItem> SubItems
+        public IEnumerable<IGitItem> SubItems
         {
             get { return _subItems ?? (_subItems = Module.GetTree(Guid, false)); }
         }
