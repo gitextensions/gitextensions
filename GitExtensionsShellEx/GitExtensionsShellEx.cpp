@@ -1,18 +1,44 @@
 // GitExtensionsShellEx.cpp : Implementation of CGitExtensionsShellEx
 
 #include "stdafx.h"
+#include <vector>
 #include "resource.h"
 #include "Generated/GitExtensionsShellEx.h"
 #include "GitExtensionsShellEx.h"
-//#include "afx.h"
 
-
+#define MIIM_ID          0x00000002
 #define MIIM_STRING      0x00000040
 #define MIIM_BITMAP      0x00000080
-#define MIIM_FTYPE       0x00000100
 
 /////////////////////////////////////////////////////////////////////////////
 // CGitExtensionsShellEx
+
+bool IsVistaOrLater()
+{
+    static int version = -1;
+    if (version == -1)
+    {
+        OSVERSIONINFOEX         inf;
+        SecureZeroMemory(&inf, sizeof(OSVERSIONINFOEX));
+        inf.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+        GetVersionEx((OSVERSIONINFO *)&inf);
+        version = MAKEWORD(inf.dwMinorVersion, inf.dwMajorVersion);
+    }
+
+    return version >= 0x0600;
+}
+
+CGitExtensionsShellEx::CGitExtensionsShellEx()
+{
+    if (IsVistaOrLater())
+    {
+        HMODULE hUxTheme = ::GetModuleHandle (_T("UXTHEME.DLL"));
+
+        pfnGetBufferedPaintBits = (FN_GetBufferedPaintBits)::GetProcAddress(hUxTheme, "GetBufferedPaintBits");
+        pfnBeginBufferedPaint = (FN_BeginBufferedPaint)::GetProcAddress(hUxTheme, "BeginBufferedPaint");
+        pfnEndBufferedPaint = (FN_EndBufferedPaint)::GetProcAddress(hUxTheme, "EndBufferedPaint");
+    }
+}
 
 STDMETHODIMP CGitExtensionsShellEx::Initialize (
     LPCITEMIDLIST pidlFolder, LPDATAOBJECT pDataObj, HKEY hProgID )
@@ -56,6 +82,192 @@ STDMETHODIMP CGitExtensionsShellEx::Initialize (
     return hr;
 }
 
+HBITMAP CGitExtensionsShellEx::IconToBitmapPARGB32(UINT uIcon)
+{
+    std::map<UINT, HBITMAP>::iterator bitmap_it = bitmaps.lower_bound(uIcon);
+    if (bitmap_it != bitmaps.end() && bitmap_it->first == uIcon)
+        return bitmap_it->second;
+
+    HICON hIcon = (HICON)LoadImage(_Module.GetModuleInstance(), MAKEINTRESOURCE(uIcon), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+    if (!hIcon)
+        return NULL;
+
+    if (pfnBeginBufferedPaint == NULL || pfnEndBufferedPaint == NULL || pfnGetBufferedPaintBits == NULL)
+        return NULL;
+
+    SIZE sizIcon;
+    sizIcon.cx = GetSystemMetrics(SM_CXSMICON);
+    sizIcon.cy = GetSystemMetrics(SM_CYSMICON);
+
+    RECT rcIcon;
+    SetRect(&rcIcon, 0, 0, sizIcon.cx, sizIcon.cy);
+    HBITMAP hBmp = NULL;
+
+    HDC hdcDest = CreateCompatibleDC(NULL);
+    if (hdcDest)
+    {
+        if (SUCCEEDED(Create32BitHBITMAP(hdcDest, &sizIcon, NULL, &hBmp)))
+        {
+            HBITMAP hbmpOld = (HBITMAP)SelectObject(hdcDest, hBmp);
+            if (hbmpOld)
+            {
+                BLENDFUNCTION bfAlpha = { AC_SRC_OVER, 0, 255, AC_SRC_ALPHA };
+                BP_PAINTPARAMS paintParams = {0};
+                paintParams.cbSize = sizeof(paintParams);
+                paintParams.dwFlags = BPPF_ERASE;
+                paintParams.pBlendFunction = &bfAlpha;
+
+                HDC hdcBuffer;
+                HPAINTBUFFER hPaintBuffer = pfnBeginBufferedPaint(hdcDest, &rcIcon, BPBF_DIB, &paintParams, &hdcBuffer);
+                if (hPaintBuffer)
+                {
+                    if (DrawIconEx(hdcBuffer, 0, 0, hIcon, sizIcon.cx, sizIcon.cy, 0, NULL, DI_NORMAL))
+                    {
+                        // If icon did not have an alpha channel we need to convert buffer to PARGB
+                        ConvertBufferToPARGB32(hPaintBuffer, hdcDest, hIcon, sizIcon);
+                    }
+
+                    // This will write the buffer contents to the destination bitmap
+                    pfnEndBufferedPaint(hPaintBuffer, TRUE);
+                }
+
+                SelectObject(hdcDest, hbmpOld);
+            }
+        }
+
+        DeleteDC(hdcDest);
+    }
+
+    DestroyIcon(hIcon);
+
+    if(hBmp)
+        bitmaps.insert(bitmap_it, std::make_pair(uIcon, hBmp));
+    return hBmp;
+}
+
+HRESULT CGitExtensionsShellEx::Create32BitHBITMAP(HDC hdc, const SIZE *psize, __deref_opt_out void **ppvBits, __out HBITMAP* phBmp)
+{
+    *phBmp = NULL;
+
+    BITMAPINFO bmi;
+    ZeroMemory(&bmi, sizeof(bmi));
+    bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bmi.bmiHeader.biPlanes = 1;
+    bmi.bmiHeader.biCompression = BI_RGB;
+
+    bmi.bmiHeader.biWidth = psize->cx;
+    bmi.bmiHeader.biHeight = psize->cy;
+    bmi.bmiHeader.biBitCount = 32;
+
+    HDC hdcUsed = hdc ? hdc : GetDC(NULL);
+    if (hdcUsed)
+    {
+        *phBmp = CreateDIBSection(hdcUsed, &bmi, DIB_RGB_COLORS, ppvBits, NULL, 0);
+        if (hdc != hdcUsed)
+        {
+            ReleaseDC(NULL, hdcUsed);
+        }
+    }
+    return (NULL == *phBmp) ? E_OUTOFMEMORY : S_OK;
+}
+
+HRESULT CGitExtensionsShellEx::ConvertBufferToPARGB32(HPAINTBUFFER hPaintBuffer, HDC hdc, HICON hicon, SIZE& sizIcon)
+{
+    RGBQUAD *prgbQuad;
+    int cxRow;
+    HRESULT hr = pfnGetBufferedPaintBits(hPaintBuffer, &prgbQuad, &cxRow);
+    if (SUCCEEDED(hr))
+    {
+        ARGB *pargb = reinterpret_cast<ARGB *>(prgbQuad);
+        if (!HasAlpha(pargb, sizIcon, cxRow))
+        {
+            ICONINFO info;
+            if (GetIconInfo(hicon, &info))
+            {
+                if (info.hbmMask)
+                {
+                    hr = ConvertToPARGB32(hdc, pargb, info.hbmMask, sizIcon, cxRow);
+                }
+
+                DeleteObject(info.hbmColor);
+                DeleteObject(info.hbmMask);
+            }
+        }
+    }
+
+    return hr;
+}
+
+bool CGitExtensionsShellEx::HasAlpha(__in ARGB *pargb, SIZE& sizImage, int cxRow)
+{
+    ULONG cxDelta = cxRow - sizImage.cx;
+    for (ULONG y = sizImage.cy; y; --y)
+    {
+        for (ULONG x = sizImage.cx; x; --x)
+        {
+            if (*pargb++ & 0xFF000000)
+            {
+                return true;
+            }
+        }
+
+        pargb += cxDelta;
+    }
+
+    return false;
+}
+
+HRESULT CGitExtensionsShellEx::ConvertToPARGB32(HDC hdc, __inout ARGB *pargb, HBITMAP hbmp, SIZE& sizImage, int cxRow)
+{
+    BITMAPINFO bmi;
+    ZeroMemory(&bmi, sizeof(bmi));
+    bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    bmi.bmiHeader.biPlanes = 1;
+    bmi.bmiHeader.biCompression = BI_RGB;
+
+    bmi.bmiHeader.biWidth = sizImage.cx;
+    bmi.bmiHeader.biHeight = sizImage.cy;
+    bmi.bmiHeader.biBitCount = 32;
+
+    HRESULT hr = E_OUTOFMEMORY;
+    HANDLE hHeap = GetProcessHeap();
+    void *pvBits = HeapAlloc(hHeap, 0, bmi.bmiHeader.biWidth * 4 * bmi.bmiHeader.biHeight);
+    if (pvBits)
+    {
+        hr = E_UNEXPECTED;
+        if (GetDIBits(hdc, hbmp, 0, bmi.bmiHeader.biHeight, pvBits, &bmi, DIB_RGB_COLORS) == bmi.bmiHeader.biHeight)
+        {
+            ULONG cxDelta = cxRow - bmi.bmiHeader.biWidth;
+            ARGB *pargbMask = static_cast<ARGB *>(pvBits);
+
+            for (ULONG y = bmi.bmiHeader.biHeight; y; --y)
+            {
+                for (ULONG x = bmi.bmiHeader.biWidth; x; --x)
+                {
+                    if (*pargbMask++)
+                    {
+                        // transparent pixel
+                        *pargb++ = 0;
+                    }
+                    else
+                    {
+                        // opaque pixel
+                        *pargb++ |= 0xFF000000;
+                    }
+                }
+
+                pargb += cxDelta;
+            }
+
+            hr = S_OK;
+        }
+
+        HeapFree(hHeap, 0, pvBits);
+    }
+
+    return hr;
+}
+
 STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu  (
     HMENU hmenu, UINT uMenuIndex, UINT uidFirstCmd,
     UINT uidLastCmd, UINT uFlags )
@@ -63,8 +275,6 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu  (
     // If the flags include CMF_DEFAULTONLY then we shouldn't do anything.
     if ( uFlags & CMF_DEFAULTONLY )
         return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, 0 );
-
-    //InsertMenu (hmenu, uMenuIndex, MF_BYPOSITION, uidFirstCmd, _T("GitEx") );
 
     int id = 0;
 
@@ -77,15 +287,16 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu  (
         // show context menu cascaded in submenu
         HMENU popupMenu = CreateMenu();
 
-        id = PopulateMenu(popupMenu, uidFirstCmd + id, true);
+        id = PopulateMenu(popupMenu, uidFirstCmd, id, true);
 
-        //InsertMenu(hmenu, uMenuIndex++, MF_STRING | MF_BYPOSITION | MF_POPUP, (int)popupMenu, "Git Extensions");    
         MENUITEMINFO info;
 
         info.cbSize = sizeof( MENUITEMINFO );
-        info.fMask = MIIM_ID | MIIM_TYPE | MIIM_SUBMENU;
-        info.fType = MFT_STRING;
+        info.fMask = MIIM_STRING | MIIM_ID | MIIM_BITMAP | MIIM_SUBMENU;
         info.wID = uidFirstCmd + 1;
+        info.hbmpItem = IsVistaOrLater() ? IconToBitmapPARGB32(IDI_GITEXTENSIONS) : HBMMENU_CALLBACK;
+        myIDMap[1] = IDI_GITEXTENSIONS;
+        myIDMap[uidFirstCmd + 1] = IDI_GITEXTENSIONS;
         info.dwTypeData = _T("Git Extensions");
         info.hSubMenu = popupMenu;
         InsertMenuItem(hmenu, 0, true, &info);
@@ -93,26 +304,29 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu  (
     else
     {
         // show menu items directly
-        id = PopulateMenu(hmenu, uidFirstCmd + id, false);
+        id = PopulateMenu(hmenu, uidFirstCmd, id, false);
     }
 
-    return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, id-uidFirstCmd );
+    return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, id );
 }
 
-void CGitExtensionsShellEx::AddMenuItem(HMENU hMenu, LPSTR text, int id, UINT position)
+void CGitExtensionsShellEx::AddMenuItem(HMENU hMenu, LPSTR text, int resource, int firstId, int id, UINT position)
 {
     MENUITEMINFO mii;
     memset(&mii, 0, sizeof(mii));
     mii.cbSize = sizeof(mii);
-    mii.fMask = 0x00000010|0x00000002|0x00000001;//MIIM_TYPE|MIIM_ID|MIIM_STATE;
-    mii.wID	= id;
-    mii.fType = 0x00000000;
+    mii.fMask = MIIM_STRING | MIIM_ID;
+    if (resource)
+    {
+        mii.fMask |= MIIM_BITMAP;
+        mii.hbmpItem = IsVistaOrLater() ? IconToBitmapPARGB32(resource) : HBMMENU_CALLBACK;
+        myIDMap[id] = resource;
+        myIDMap[firstId + id] = resource;
+    }
+    mii.wID	= firstId + id;
     mii.dwTypeData	= text;
-    mii.fState = (UINT)0x00000000;
 
     InsertMenuItem(hMenu, position, TRUE, &mii);
-
-    //InsertMenu(hMenu, position, MF_BYPOSITION, id, _T("test"));
 }
 
 bool CGitExtensionsShellEx::IsMenuItemVisible(CString settings, int id)
@@ -126,7 +340,7 @@ bool CGitExtensionsShellEx::IsMenuItemVisible(CString settings, int id)
     }
 }
 
-int CGitExtensionsShellEx::PopulateMenu(HMENU hMenu, int id, bool isSubMenu)
+int CGitExtensionsShellEx::PopulateMenu(HMENU hMenu, int firstId, int id, bool isSubMenu)
 {
     CString szShellVisibleMenuItems = GetRegistryValue(HKEY_CURRENT_USER, "SOFTWARE\\GitExtensions\\GitExtensions", "ShellVisibleMenuItems");
 
@@ -151,91 +365,90 @@ int CGitExtensionsShellEx::PopulateMenu(HMENU hMenu, int id, bool isSubMenu)
     if (isSubMenu)
     {
         if (IsMenuItemVisible(szShellVisibleMenuItems, 0))
-            AddMenuItem(hMenu, "Add files", ++id, AddFilesId=pos++);
+            AddMenuItem(hMenu, "Add files", IDI_ICONADDED, firstId, ++id, AddFilesId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 1))
-            AddMenuItem(hMenu, "Apply patch", ++id, ApplyPatchId=pos++);
+            AddMenuItem(hMenu, "Apply patch", 0, firstId, ++id, ApplyPatchId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 2))
-            AddMenuItem(hMenu, "Browse", ++id, BrowseId=pos++);
+            AddMenuItem(hMenu, "Browse", IDI_ICONBROWSEFILEEXPLORER, firstId, ++id, BrowseId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 3))
-            AddMenuItem(hMenu, "Create branch", ++id, CreateBranchId=pos++);
+            AddMenuItem(hMenu, "Create branch", IDI_ICONBRANCHCREATE, firstId, ++id, CreateBranchId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 4))
-            AddMenuItem(hMenu, "Checkout branch", ++id, CheckoutBranchId=pos++);
+            AddMenuItem(hMenu, "Checkout branch", IDI_ICONBRANCHCHECKOUT, firstId, ++id, CheckoutBranchId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 5))
-            AddMenuItem(hMenu, "Checkout revision", ++id, CheckoutRevisionId=pos++);
+            AddMenuItem(hMenu, "Checkout revision", IDI_ICONREVISIONCHECKOUT, firstId, ++id, CheckoutRevisionId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 6))
-            AddMenuItem(hMenu, "Clone", ++id, CloneId=pos++);
+            AddMenuItem(hMenu, "Clone", IDI_ICONCLONEREPOGIT, firstId, ++id, CloneId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 7))
-            AddMenuItem(hMenu, "Commit", ++id, CommitId=pos++);
+            AddMenuItem(hMenu, "Commit", IDI_ICONCOMMIT, firstId, ++id, CommitId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 8))
-            AddMenuItem(hMenu, "File history", ++id, FileHistoryId=pos++);
+            AddMenuItem(hMenu, "File history", IDI_ICONFILEHISTORY, firstId, ++id, FileHistoryId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 9))
-            AddMenuItem(hMenu, "Reset file changes", ++id, ResetFileChangesId=pos++);
+            AddMenuItem(hMenu, "Reset file changes", IDI_ICONTRESETFILETO, firstId, ++id, ResetFileChangesId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 10))
-            AddMenuItem(hMenu, "Pull", ++id, PullId=pos++);
+            AddMenuItem(hMenu, "Pull", IDI_ICONPULL, firstId, ++id, PullId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 11))
-            AddMenuItem(hMenu, "Push", ++id, PushId=pos++);
+            AddMenuItem(hMenu, "Push", IDI_ICONPUSH, firstId, ++id, PushId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 12))
-            AddMenuItem(hMenu, "Settings", ++id, SettingsId=pos++);
+            AddMenuItem(hMenu, "Settings", IDI_ICONSETTINGS, firstId, ++id, SettingsId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 13))
-            AddMenuItem(hMenu, "View diff", ++id, ViewDiffId=pos++);
+            AddMenuItem(hMenu, "View diff", IDI_ICONDIFF, firstId, ++id, ViewDiffId=pos++);
     }
-
     else
     {
         if (IsMenuItemVisible(szShellVisibleMenuItems, 0))
-            AddMenuItem(hMenu, "GitExtensions Add files", ++id, AddFilesId=pos++);
+            AddMenuItem(hMenu, "GitEx Add files", IDI_ICONADDED, firstId, ++id, AddFilesId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 1))
-            AddMenuItem(hMenu, "GitExtensions Apply patch", ++id, ApplyPatchId=pos++);
+            AddMenuItem(hMenu, "GitEx Apply patch", 0, firstId, ++id, ApplyPatchId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 2))
-            AddMenuItem(hMenu, "GitExtensions Browse", ++id, BrowseId=pos++);
+            AddMenuItem(hMenu, "GitEx Browse", IDI_ICONBROWSEFILEEXPLORER, firstId, ++id, BrowseId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 3))
-            AddMenuItem(hMenu, "GitExtensions Create branch", ++id, CreateBranchId=pos++);
+            AddMenuItem(hMenu, "GitEx Create branch", IDI_ICONBRANCHCREATE, firstId, ++id, CreateBranchId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 4))
-            AddMenuItem(hMenu, "GitExtensions Checkout branch", ++id, CheckoutBranchId=pos++);
+            AddMenuItem(hMenu, "GitEx Checkout branch", IDI_ICONBRANCHCHECKOUT, firstId, ++id, CheckoutBranchId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 5))
-            AddMenuItem(hMenu, "GitExtensions Checkout revision", ++id, CheckoutRevisionId=pos++);
+            AddMenuItem(hMenu, "GitEx Checkout revision", IDI_ICONREVISIONCHECKOUT, firstId, ++id, CheckoutRevisionId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 6))
-            AddMenuItem(hMenu, "GitExtensions Clone", ++id, CloneId=pos++);
+            AddMenuItem(hMenu, "GitEx Clone", IDI_ICONCLONEREPOGIT, firstId, ++id, CloneId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 7))
-            AddMenuItem(hMenu, "GitExtensions Commit", ++id, CommitId=pos++);
+            AddMenuItem(hMenu, "GitEx Commit", IDI_ICONCOMMIT, firstId, ++id, CommitId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 8))
-            AddMenuItem(hMenu, "GitExtensions File history", ++id, FileHistoryId=pos++);
+            AddMenuItem(hMenu, "GitEx File history", IDI_ICONFILEHISTORY, firstId, ++id, FileHistoryId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 9))
-            AddMenuItem(hMenu, "GitExtensions Reset file changes", ++id, ResetFileChangesId=pos++);
+            AddMenuItem(hMenu, "GitEx Reset file changes", IDI_ICONTRESETFILETO, firstId, ++id, ResetFileChangesId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 10))
-            AddMenuItem(hMenu, "GitExtensions Pull", ++id, PullId=pos++);
+            AddMenuItem(hMenu, "GitEx Pull", IDI_ICONPULL, firstId, ++id, PullId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 11))
-            AddMenuItem(hMenu, "GitExtensions Push", ++id, PushId=pos++);
+            AddMenuItem(hMenu, "GitEx Push", IDI_ICONPUSH, firstId, ++id, PushId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 12))
-            AddMenuItem(hMenu, "GitExtensions Settings", ++id, SettingsId=pos++);
+            AddMenuItem(hMenu, "GitEx Settings", IDI_ICONSETTINGS, firstId, ++id, SettingsId=pos++);
 
         if (IsMenuItemVisible(szShellVisibleMenuItems, 13))
-            AddMenuItem(hMenu, "GitExtensions View diff", ++id, ViewDiffId=pos++);
+            AddMenuItem(hMenu, "GitEx View diff", IDI_ICONDIFF, firstId, ++id, ViewDiffId=pos++);
     }
 
     ++id;
@@ -380,4 +593,85 @@ STDMETHODIMP CGitExtensionsShellEx::InvokeCommand ( LPCMINVOKECOMMANDINFO pCmdIn
         return S_OK;
     }
     return E_INVALIDARG;
+}
+
+STDMETHODIMP CGitExtensionsShellEx::HandleMenuMsg( UINT uMsg, WPARAM wParam, LPARAM lParam )
+{	
+    LRESULT res;
+    return HandleMenuMsg2(uMsg, wParam, lParam, &res);
+}
+
+STDMETHODIMP CGitExtensionsShellEx::HandleMenuMsg2( UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT *pResult )
+{
+    switch (uMsg)
+    {
+    case WM_MEASUREITEM:
+        {
+            MEASUREITEMSTRUCT* lpmis = (MEASUREITEMSTRUCT*)lParam;
+            if (lpmis==NULL)
+                break;
+            lpmis->itemWidth = 16;
+            lpmis->itemHeight = 16;
+            if (pResult)
+                *pResult = TRUE;
+        }
+        break;
+    case WM_DRAWITEM:
+        {
+            LPCTSTR resource;
+            DRAWITEMSTRUCT* lpdis = (DRAWITEMSTRUCT*)lParam;
+            if ((lpdis==NULL)||(lpdis->CtlType != ODT_MENU))
+                return S_OK;		//not for a menu
+            auto it = myIDMap.find(lpdis->itemID);
+            if (it == myIDMap.end())
+                return S_OK;
+            resource = MAKEINTRESOURCE(it->second);
+            if (resource == NULL)
+                return S_OK;
+            HICON hIcon = (HICON)LoadImage(_Module.GetModuleInstance(), resource, IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+            if (hIcon == NULL)
+                return S_OK;
+            DrawIconEx(lpdis->hDC,
+                lpdis->rcItem.left,
+                lpdis->rcItem.top + (lpdis->rcItem.bottom - lpdis->rcItem.top - 16) / 2,
+                hIcon, 16, 16,
+                0, NULL, DI_NORMAL);
+            DestroyIcon(hIcon);
+            if (pResult)
+                *pResult = TRUE;
+        }
+        break;
+    default:
+        return S_OK;
+    }
+
+    return S_OK;
+}
+
+CString CGitExtensionsShellEx::GetRegistryValue( HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path )
+{
+    CString result = "";
+    HKEY key;
+
+    unsigned char tempStr[512];
+    unsigned long taille = sizeof(tempStr);
+    unsigned long type;
+
+    long res = RegOpenKeyEx(hOpenKey,szKey, 0, KEY_READ | KEY_WOW64_32KEY, &key);
+    if (res != ERROR_SUCCESS) {
+        return "";
+    }
+    if (RegQueryValueEx(key, path, 0, &type, (BYTE*)&tempStr[0], &taille) != ERROR_SUCCESS) {
+        RegCloseKey(key);
+        return "";
+    }
+
+    tempStr[taille] = 0;
+
+    result = tempStr;
+
+    RegCloseKey(key);
+
+
+    return result;
 }

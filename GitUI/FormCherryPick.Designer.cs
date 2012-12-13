@@ -48,7 +48,7 @@
             // Pick
             // 
             this.Pick.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Pick.Location = new System.Drawing.Point(533, 286);
+            this.Pick.Location = new System.Drawing.Point(533, 356);
             this.Pick.Name = "Pick";
             this.Pick.Size = new System.Drawing.Size(109, 25);
             this.Pick.TabIndex = 10;
@@ -60,7 +60,7 @@
             // 
             this.btnChooseRevision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnChooseRevision.Image = global::GitUI.Properties.Resources.IconSelectRevision;
-            this.btnChooseRevision.Location = new System.Drawing.Point(617, 62);
+            this.btnChooseRevision.Location = new System.Drawing.Point(617, 76);
             this.btnChooseRevision.Name = "btnChooseRevision";
             this.btnChooseRevision.Size = new System.Drawing.Size(25, 24);
             this.btnChooseRevision.TabIndex = 33;
@@ -71,7 +71,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(561, 27);
+            this.label2.Location = new System.Drawing.Point(561, 43);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(91, 30);
             this.label2.TabIndex = 34;
@@ -83,7 +83,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelParentsList.Controls.Add(this.ParentsLabel);
             this.panelParentsList.Controls.Add(this.ParentsList);
-            this.panelParentsList.Location = new System.Drawing.Point(6, 138);
+            this.panelParentsList.Location = new System.Drawing.Point(7, 204);
             this.panelParentsList.Name = "panelParentsList";
             this.panelParentsList.Size = new System.Drawing.Size(645, 131);
             this.panelParentsList.TabIndex = 16;
@@ -111,10 +111,10 @@
             this.columnHeader4});
             this.ParentsList.FullRowSelect = true;
             this.ParentsList.HideSelection = false;
-            this.ParentsList.Location = new System.Drawing.Point(6, 24);
+            this.ParentsList.Location = new System.Drawing.Point(6, 26);
             this.ParentsList.MultiSelect = false;
             this.ParentsList.Name = "ParentsList";
-            this.ParentsList.Size = new System.Drawing.Size(630, 101);
+            this.ParentsList.Size = new System.Drawing.Size(629, 99);
             this.ParentsList.TabIndex = 12;
             this.ParentsList.UseCompatibleStateImageBehavior = false;
             this.ParentsList.View = System.Windows.Forms.View.Details;
@@ -143,7 +143,7 @@
             // 
             this.checkAddReference.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkAddReference.AutoSize = true;
-            this.checkAddReference.Location = new System.Drawing.Point(12, 300);
+            this.checkAddReference.Location = new System.Drawing.Point(12, 370);
             this.checkAddReference.Name = "checkAddReference";
             this.checkAddReference.Size = new System.Drawing.Size(253, 19);
             this.checkAddReference.TabIndex = 14;
@@ -154,7 +154,7 @@
             // 
             this.AutoCommit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.AutoCommit.AutoSize = true;
-            this.AutoCommit.Location = new System.Drawing.Point(12, 275);
+            this.AutoCommit.Location = new System.Drawing.Point(12, 345);
             this.AutoCommit.Name = "AutoCommit";
             this.AutoCommit.Size = new System.Drawing.Size(189, 19);
             this.AutoCommit.TabIndex = 11;
@@ -175,10 +175,11 @@
             this.commitSummaryUserControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.commitSummaryUserControl1.AutoSize = true;
-            this.commitSummaryUserControl1.Location = new System.Drawing.Point(11, 27);
+            this.commitSummaryUserControl1.Location = new System.Drawing.Point(11, 35);
+            this.commitSummaryUserControl1.MinimumSize = new System.Drawing.Size(440, 160);
             this.commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             this.commitSummaryUserControl1.Revision = null;
-            this.commitSummaryUserControl1.Size = new System.Drawing.Size(545, 101);
+            this.commitSummaryUserControl1.Size = new System.Drawing.Size(545, 160);
             this.commitSummaryUserControl1.TabIndex = 15;
             // 
             // FormCherryPick
@@ -186,7 +187,7 @@
             this.AcceptButton = this.Pick;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(654, 322);
+            this.ClientSize = new System.Drawing.Size(654, 392);
             this.Controls.Add(this.btnChooseRevision);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.panelParentsList);
@@ -197,7 +198,7 @@
             this.Controls.Add(this.BranchInfo);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(670, 360);
+            this.MinimumSize = new System.Drawing.Size(670, 430);
             this.Name = "FormCherryPick";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

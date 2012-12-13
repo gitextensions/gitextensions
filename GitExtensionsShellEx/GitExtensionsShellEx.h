@@ -3,7 +3,15 @@
 #ifndef __GITEXTENSIONSSHELLEX_H_
 #define __GITEXTENSIONSSHELLEX_H_
 
-#include "atlstr.h"
+#include <atlstr.h>
+#include <uxtheme.h>
+#include <map>
+
+typedef DWORD ARGB;
+
+typedef HRESULT (WINAPI *FN_GetBufferedPaintBits) (HPAINTBUFFER hBufferedPaint, RGBQUAD **ppbBuffer, int *pcxRow);
+typedef HPAINTBUFFER (WINAPI *FN_BeginBufferedPaint) (HDC hdcTarget, const RECT *prcTarget, BP_BUFFERFORMAT dwFormat, BP_PAINTPARAMS *pPaintParams, HDC *phdc);
+typedef HRESULT (WINAPI *FN_EndBufferedPaint) (HPAINTBUFFER hBufferedPaint, BOOL fUpdateTarget);
 
 /////////////////////////////////////////////////////////////////////////////
 // CGitExtensionsShellEx
@@ -12,32 +20,34 @@ class ATL_NO_VTABLE CGitExtensionsShellEx :
     public CComObjectRootEx<CComSingleThreadModel>,
     public CComCoClass<CGitExtensionsShellEx, &CLSID_GitExtensionsShellEx>,
     public IShellExtInit,
-    public IContextMenu
+    public IContextMenu3
 {
 public:
-    CGitExtensionsShellEx() { }
+    CGitExtensionsShellEx();
 
     DECLARE_REGISTRY_RESOURCEID(IDR_GITEXTENSIONSSHELLEX)
 
     BEGIN_COM_MAP(CGitExtensionsShellEx)
         COM_INTERFACE_ENTRY(IShellExtInit)
         COM_INTERFACE_ENTRY(IContextMenu)
+        COM_INTERFACE_ENTRY(IContextMenu2)
+        COM_INTERFACE_ENTRY(IContextMenu3)
     END_COM_MAP()
 
-	int AddFilesId;
-	int ApplyPatchId;
-	int BrowseId;
-	int CreateBranchId;
-	int CheckoutBranchId;
-	int CheckoutRevisionId;
-	int CloneId;
-	int CommitId;
-	int FileHistoryId;
-	int PullId;
-	int PushId;
-	int SettingsId;
-	int ViewDiffId;
-	int ResetFileChangesId;
+    int AddFilesId;
+    int ApplyPatchId;
+    int BrowseId;
+    int CreateBranchId;
+    int CheckoutBranchId;
+    int CheckoutRevisionId;
+    int CloneId;
+    int CommitId;
+    int FileHistoryId;
+    int PullId;
+    int PushId;
+    int SettingsId;
+    int ViewDiffId;
+    int ResetFileChangesId;
 
     bool CascadeContextMenu;
 
@@ -50,48 +60,34 @@ public:
     STDMETHODIMP InvokeCommand(LPCMINVOKECOMMANDINFO);
     STDMETHODIMP QueryContextMenu(HMENU, UINT, UINT, UINT, UINT);
 
-	void RunGitEx(const char * command);
+    // IContextMenu2
+    STDMETHODIMP	HandleMenuMsg(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    
+    // IContextMenu3
+    STDMETHODIMP	HandleMenuMsg2(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT *pResult);
 
-	int PopulateMenu(HMENU hMenu, int id, bool isSubMenu);
-	void AddMenuItem(HMENU hmenu, LPSTR text, int id, UINT position);
+    void RunGitEx(const char * command);
+
+    int PopulateMenu(HMENU hMenu, int firstId, int id, bool isSubMenu);
+    void AddMenuItem(HMENU hmenu, LPSTR text, int resource, int firstId, int id, UINT position);
 
 protected:
     TCHAR m_szFile [MAX_PATH];
+    std::map<UINT_PTR, int>	myIDMap;
+    std::map<UINT, HBITMAP> bitmaps;
 
+    FN_GetBufferedPaintBits pfnGetBufferedPaintBits;
+    FN_BeginBufferedPaint pfnBeginBufferedPaint;
+    FN_EndBufferedPaint pfnEndBufferedPaint;
 
-		CString  GetRegistryValue(
-			HKEY	hOpenKey,
-			LPCTSTR szKey,
-			LPCTSTR path) {
-	
-	        CString result = "";
-			HKEY key;
- 
-			unsigned char tempStr[512];
-			unsigned long taille = sizeof(tempStr);
-			unsigned long type;
-			
-			long res = RegOpenKeyEx(hOpenKey,szKey, 0, KEY_READ, &key);
-			if (res != ERROR_SUCCESS) {
-				return "";
-			}
-			if (RegQueryValueEx(key, path, 0, &type, (BYTE*)&tempStr[0], &taille) != ERROR_SUCCESS) {
-				RegCloseKey(key);
-				return "";
-			}
-			
-			tempStr[taille] = 0;
- 
-			result = tempStr;
-			
-			RegCloseKey(key);
- 
-		
-			return result;
-	}
+    CString  GetRegistryValue(HKEY	hOpenKey, LPCTSTR szKey, LPCTSTR path);
+    bool IsMenuItemVisible(CString settings, int id);
 
-private:
-    bool CGitExtensionsShellEx::IsMenuItemVisible(CString settings, int id);
+    HBITMAP IconToBitmapPARGB32(UINT uIcon);
+    HRESULT Create32BitHBITMAP(HDC hdc, const SIZE *psize, __deref_opt_out void **ppvBits, __out HBITMAP* phBmp);
+    HRESULT ConvertBufferToPARGB32(HPAINTBUFFER hPaintBuffer, HDC hdc, HICON hicon, SIZE& sizIcon);
+    bool HasAlpha(__in ARGB *pargb, SIZE& sizImage, int cxRow);
+    HRESULT ConvertToPARGB32(HDC hdc, __inout ARGB *pargb, HBITMAP hbmp, SIZE& sizImage, int cxRow);
 };
 
 #endif //__GITEXTENSIONSSHELLEX_H_

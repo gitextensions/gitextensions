@@ -21,7 +21,7 @@ namespace GitCommands
             Module = aModule;
         }
 
-        private List<IGitItem> subItems;
+        private IList<IGitItem> subItems;
 
         public bool IsBlob
         {
@@ -38,7 +38,7 @@ namespace GitCommands
             get { return ItemType == "tree"; }
         }
 
-        public List<IGitItem> SubItems
+        public IEnumerable<IGitItem> SubItems
         {
             get
             {
