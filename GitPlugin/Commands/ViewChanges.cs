@@ -2,7 +2,7 @@
 
 namespace GitPlugin.Commands
 {
-    public sealed class ViewDiff : ItemCommandBase
+    public sealed class ViewChanges : ItemCommandBase
     {
         protected override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
         {
