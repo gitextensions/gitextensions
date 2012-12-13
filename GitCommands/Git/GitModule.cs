@@ -375,11 +375,6 @@ namespace GitCommands
             return startDir;
         }
 
-        public string RunCmd(string cmd)
-        {
-            return RunCmd(cmd, "");
-        }
-
         public void RunRealCmd(string cmd, string arguments)
         {
             try
@@ -500,6 +495,12 @@ namespace GitCommands
         public string RunCachableCmd(string cmd, string arguments)
         {
             return RunCachableCmd(cmd, arguments, GitModule.SystemEncoding);
+        }
+
+        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        public string RunCmd(string cmd)
+        {
+            return RunCmd(cmd, "");
         }
 
         [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
