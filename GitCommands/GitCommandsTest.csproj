@@ -58,7 +58,7 @@
   <ItemGroup>
     <Compile Include="CommitInformationTest.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
-    <Compile Include="Git\GitCommandHelpersTests.cs" />
+    <Compile Include="Git\GitCommandHelpersTest.cs" />
     <Compile Include="Git\EncodingHelperTest.cs" />
     <Compile Include="Helpers\FileInfoExtensions.cs" />
     <Compile Include="Helpers\FileInfoExtensionsTest.cs" />

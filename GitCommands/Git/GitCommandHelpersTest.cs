@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace GitCommandsTest.Git
 {
     [TestClass]
-    public class GitCommandsHelperTests
+    public class GitCommandsHelpersTest
     {
         [TestMethod]
         public void CanGetRelativeDateString()
