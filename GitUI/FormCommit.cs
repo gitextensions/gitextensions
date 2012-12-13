@@ -155,7 +155,8 @@ namespace GitUI
 
             SelectedDiff.ExtraDiffArgumentsChanged += SelectedDiffExtraDiffArgumentsChanged;
 
-            StageInSuperproject.Visible = Module.SuperprojectModule != null;
+            if (IsUICommandsInitialized)
+                StageInSuperproject.Visible = Module.SuperprojectModule != null;
             StageInSuperproject.Checked = Settings.StageInSuperprojectAfterCommit;
             closeDialogAfterEachCommitToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterCommit;
             closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = Settings.CloseCommitDialogAfterLastCommit;
@@ -1154,7 +1155,11 @@ namespace GitUI
                         {
                             try
                             {
-                                File.Delete(Module.WorkingDir + item.Name);
+                                string path = Module.WorkingDir + item.Name;
+                                if (File.Exists(path))
+                                    File.Delete(path);
+                                else
+                                    Directory.Delete(path, true);
                             }
                             catch (System.IO.IOException)
                             {
@@ -1557,7 +1562,11 @@ namespace GitUI
                 {
                     try
                     {
-                        File.Delete(Module.WorkingDir + item.Name);
+                        string path = Module.WorkingDir + item.Name;
+                        if (File.Exists(path))
+                            File.Delete(path);
+                        else
+                            Directory.Delete(path, true);
                     }
                     catch (System.IO.IOException) { }
                     catch (System.UnauthorizedAccessException) { }
@@ -1856,7 +1865,11 @@ namespace GitUI
                     {
                         try
                         {
-                            File.Delete(module.WorkingDir + file.Name);
+                            string path = module.WorkingDir + file.Name;
+                            if (File.Exists(path))
+                                File.Delete(path);
+                            else
+                                Directory.Delete(path, true);
                         }
                         catch (System.IO.IOException) { }
                         catch (System.UnauthorizedAccessException) { }

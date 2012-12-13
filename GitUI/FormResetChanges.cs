@@ -22,18 +22,18 @@ namespace GitUI
             if (!hasExistingFiles)
             {
                 // No existing files => new files only => force the "delete new files" checkbox on.
-                cbDeleteNewFiles.Enabled = false;
-                cbDeleteNewFiles.Checked = true;
+                cbDeleteNewFilesAndDirectories.Enabled = false;
+                cbDeleteNewFilesAndDirectories.Checked = true;
             }
             else if (!hasNewFiles)
             {
                 // No new files => force the "delete new files" checkbox off. 
-                cbDeleteNewFiles.Enabled = false;
-                cbDeleteNewFiles.Checked = false;
+                cbDeleteNewFilesAndDirectories.Enabled = false;
+                cbDeleteNewFilesAndDirectories.Checked = false;
             }
             else
             {
-                cbDeleteNewFiles.Enabled = true; // A mix of types, so enable the checkbox.
+                cbDeleteNewFilesAndDirectories.Enabled = true; // A mix of types, so enable the checkbox.
             }
         }
 
@@ -60,7 +60,7 @@ namespace GitUI
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            SelectedAction = (cbDeleteNewFiles.Checked) ? ActionEnum.ResetAndDelete : ActionEnum.Reset;
+            SelectedAction = (cbDeleteNewFilesAndDirectories.Checked) ? ActionEnum.ResetAndDelete : ActionEnum.Reset;
             Close();
         }
     }

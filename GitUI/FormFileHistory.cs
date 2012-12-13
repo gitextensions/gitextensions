@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
@@ -97,6 +96,7 @@ namespace GitUI
                 if (filter == null)
                     return;
                 FileChanges.FixedFilter = filter;
+                FileChanges.FiltredFileName = FileName;
                 FileChanges.AllowGraphWithFilter = true;
                 FileChanges.Load();
             });
