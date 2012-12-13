@@ -37,7 +37,8 @@ namespace GitUI.SettingsDialog
         /// </summary>
         private GitModule Module { get { return _gitModule; } }
 
-        public const string GitExtensionsShellExName = "GitExtensionsShellEx32.dll";
+        public const string GitExtensionsShellEx32Name = "GitExtensionsShellEx32.dll";
+        public const string GitExtensionsShellEx64Name = "GitExtensionsShellEx64.dll";
 
         public string GetGlobalMergeTool()
         {
