@@ -116,22 +116,26 @@ namespace GitUI
         private void RemoveSubmoduleClick(object sender, EventArgs e)
         {
             if (Submodules.SelectedRows.Count != 1 ||
-                MessageBox.Show(this, _removeSelectedSubmodule.Text, _removeSelectedSubmoduleCaption.Text, MessageBoxButtons.YesNo) !=
+                MessageBox.Show(this, _removeSelectedSubmodule.Text, _removeSelectedSubmoduleCaption.Text,
+                                MessageBoxButtons.YesNo) !=
                 DialogResult.Yes)
                 return;
 
             UseWaitCursor = true;
-            Module.RunGitCmd("rm --cached \"" + SubModuleName.Text + "\"");
+            Module.UnstageFile(SubModuleName.Text);
 
             var modules = Module.GetSubmoduleConfigFile();
-            modules.RemoveConfigSection("oldSubmodule \"" + SubModuleName.Text + "\"");
+            modules.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
             if (modules.GetConfigSections().Count > 0)
+            {
                 modules.Save();
+                Module.StageFile(".gitmodules");
+            }
             else
-                Module.RunGitCmd("rm --cached \".gitmodules\"");
+                Module.UnstageFile(".gitmodules");
 
             var configFile = Module.GetLocalConfig();
-            configFile.RemoveConfigSection("oldSubmodule \"" + SubModuleName.Text + "\"");
+            configFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
             configFile.Save();
 
             Initialize();
