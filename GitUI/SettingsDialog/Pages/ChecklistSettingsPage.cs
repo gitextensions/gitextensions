@@ -12,6 +12,7 @@ using System.IO;
 using GitCommands.Config;
 using ResourceManager.Translation;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace GitUI.SettingsDialog.Pages
 {
@@ -251,20 +252,43 @@ namespace GitUI.SettingsDialog.Pages
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
-            string path = Path.Combine(Settings.GetInstallDir(), CommonLogic.GitExtensionsShellExName);
+            string path = Path.Combine(Settings.GetInstallDir(), CommonLogic.GitExtensionsShellEx32Name);
             if (!File.Exists(path))
             {
                 path = Assembly.GetAssembly(GetType()).Location;
                 path = Path.GetDirectoryName(path);
-                path = Path.Combine(path, CommonLogic.GitExtensionsShellExName);
+                path = Path.Combine(path, CommonLogic.GitExtensionsShellEx32Name);
             }
             if (File.Exists(path))
             {
-                Module.RunCmd("regsvr32", string.Format("\"{0}\"", path));
+                var pi = new ProcessStartInfo();
+                pi.FileName = "regsvr32";
+                pi.Arguments = string.Format("\"{0}\"", path);
+                pi.Verb = "RunAs";
+                pi.UseShellExecute = true;
+
+                var process = Process.Start(pi);
+                process.WaitForExit();
+
+                if (IntPtr.Size == 8)
+                {
+                    path = path.Replace(CommonLogic.GitExtensionsShellEx32Name, CommonLogic.GitExtensionsShellEx64Name);
+                    if (File.Exists(path))
+                    {
+                        pi.Arguments = string.Format("\"{0}\"", path);
+
+                        var process64 = Process.Start(pi);
+                        process64.WaitForExit();
+                    }
+                    else
+                    {
+                        MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx64Name));
+                    }
+                }
             }
             else
             {
-                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellExName));
+                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx32Name));
             }
 
             CheckSettings();
@@ -665,8 +689,9 @@ namespace GitUI.SettingsDialog.Pages
                                                       null)))
             {
                 //Check if shell extensions are installed
-                string path = Path.Combine(Settings.GetInstallDir(), CommonLogic.GitExtensionsShellExName);
-                if (!File.Exists(path))
+                string path32 = Path.Combine(Settings.GetInstallDir(), CommonLogic.GitExtensionsShellEx32Name);
+                string path64 = Path.Combine(Settings.GetInstallDir(), CommonLogic.GitExtensionsShellEx64Name);
+                if (!File.Exists(path32) || (IntPtr.Size == 8 && !File.Exists(path64)))
                 {
                     ShellExtensionsRegistered.BackColor = Color.LightGreen;
                     ShellExtensionsRegistered.Text = String.Format(_shellExtNoInstalled.Text);
@@ -675,7 +700,7 @@ namespace GitUI.SettingsDialog.Pages
                 }
 
                 ShellExtensionsRegistered.BackColor = Color.LightSalmon;
-                ShellExtensionsRegistered.Text = String.Format(_shellExtNeedsToBeRegistered.Text, CommonLogic.GitExtensionsShellExName);
+                ShellExtensionsRegistered.Text = String.Format(_shellExtNeedsToBeRegistered.Text, CommonLogic.GitExtensionsShellEx32Name);
                 ShellExtensionsRegistered_Fix.Visible = true;
                 return false;
             }
