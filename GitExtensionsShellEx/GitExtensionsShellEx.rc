@@ -40,7 +40,7 @@ IDI_ICONPULL            ICON                    "Resources\\IconPull.ico"
 IDI_ICONPUSH            ICON                    "Resources\\IconPush.ico"
 IDI_ICONTRESETFILETO    ICON                    "Resources\\IconResetFileTo.ico"
 IDI_ICONSETTINGS        ICON                    "Resources\\IconSettings.ico"
-IDI_ICONDIFF            ICON                    "Resources\\IconDiff.ico"
+IDI_ICONVIEWCHANGES     ICON                    "Resources\\IconDiff.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

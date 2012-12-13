@@ -46,7 +46,14 @@ namespace GitUI
 
         public void SetPatchFile(string name)
         {
+            PatchFileMode.Checked = true;
             PatchFile.Text = name;
+        }
+
+        public void SetPatchDir(string name)
+        {
+            PatchDirMode.Checked = true;
+            PatchDir.Text = name;
         }
 
         private void EnableButtons()
