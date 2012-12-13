@@ -47,8 +47,15 @@ STDMETHODIMP CGitExtensionsShellEx::Initialize (
     STGMEDIUM stg = { TYMED_HGLOBAL };
     HDROP     hDrop;
 
+    /* store the folder, if provided */
+    if (pidlFolder)
+        SHGetPathFromIDList(pidlFolder, m_szFile);
+
+    if (!pDataObj)
+        return S_OK;
+
     // Look for CF_HDROP data in the data object.
-    if ( pDataObj == NULL || FAILED( pDataObj->GetData ( &fmt, &stg ) ))
+    if (FAILED( pDataObj->GetData ( &fmt, &stg ) ))
     {
         // Nope! Return an "invalid argument" error back to Explorer.
         return E_INVALIDARG;
@@ -65,15 +72,10 @@ STDMETHODIMP CGitExtensionsShellEx::Initialize (
     UINT uNumFiles = DragQueryFile ( hDrop, 0xFFFFFFFF, NULL, 0 );
     HRESULT hr = S_OK;
 
-    if ( 0 == uNumFiles )
-    {
-        GlobalUnlock ( stg.hGlobal );
-        ReleaseStgMedium ( &stg );
-        return E_INVALIDARG;
-    }
-
+    if (uNumFiles == 0)
+        hr = E_INVALIDARG;
     // Get the name of the first file and store it in our member variable m_szFile.
-    if ( 0 == DragQueryFile ( hDrop, 0, m_szFile, MAX_PATH ) )
+    else if (!DragQueryFile( hDrop, 0, m_szFile, MAX_PATH ))
         hr = E_INVALIDARG;
 
     GlobalUnlock ( stg.hGlobal );
@@ -268,17 +270,57 @@ HRESULT CGitExtensionsShellEx::ConvertToPARGB32(HDC hdc, __inout ARGB *pargb, HB
     return hr;
 }
 
+bool IsExists(const std::wstring& dir)
+{
+    DWORD dwAttrib = GetFileAttributes(dir.c_str());
+
+    return (dwAttrib != INVALID_FILE_ATTRIBUTES);
+}
+
+bool CGitExtensionsShellEx::ValidWorkingDir(const std::wstring& dir)
+{
+    if (dir.empty())
+        return false;
+
+    if (IsExists(dir + L"\\.git\\") || IsExists(dir + L"\\.git"))
+        return true;
+
+    return IsExists(dir + L"\\info\\") &&
+        IsExists(dir + L"\\objects\\") &&
+        IsExists(dir + L"\\refs\\");
+}
+
+bool CGitExtensionsShellEx::IsValidGitDir(TCHAR m_szFile[])
+{
+    if (m_szFile[0] == '\0')
+        return false;
+
+    std::wstring dir(m_szFile);
+
+    do
+    {
+        if (ValidWorkingDir(dir))
+            return true;
+        size_t pos = dir.rfind('\\');
+        if (dir.rfind('\\') != std::wstring::npos)
+            dir.resize(pos);
+    } while (dir.rfind('\\') != std::wstring::npos);
+    return false;
+}
+
 STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu  (
     HMENU hmenu, UINT uMenuIndex, UINT uidFirstCmd,
     UINT uidLastCmd, UINT uFlags )
 {
     // If the flags include CMF_DEFAULTONLY then we shouldn't do anything.
     if ( uFlags & CMF_DEFAULTONLY )
-        return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, 0 );
+        return S_OK;
+
+    bool isValidDir = IsValidGitDir(m_szFile);
 
     int id = 0;
 
-    CString szCascadeContextMenu = GetRegistryValue(HKEY_CURRENT_USER, "SOFTWARE\\GitExtensions\\GitExtensions", "ShellCascadeContextMenu");
+    CString szCascadeContextMenu = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions\\GitExtensions", L"ShellCascadeContextMenu");
 
     CascadeContextMenu = !(szCascadeContextMenu == "False");
 
@@ -287,7 +329,7 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu  (
         // show context menu cascaded in submenu
         HMENU popupMenu = CreateMenu();
 
-        id = PopulateMenu(popupMenu, uidFirstCmd, id, true);
+        id = PopulateMenu(popupMenu, uidFirstCmd, id, true, isValidDir);
 
         MENUITEMINFO info;
 
@@ -304,13 +346,13 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu  (
     else
     {
         // show menu items directly
-        id = PopulateMenu(hmenu, uidFirstCmd, id, false);
+        id = PopulateMenu(hmenu, uidFirstCmd, id, false, isValidDir);
     }
 
-    return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, id );
+    return MAKE_HRESULT ( SEVERITY_SUCCESS, FACILITY_NULL, id);
 }
 
-void CGitExtensionsShellEx::AddMenuItem(HMENU hMenu, LPSTR text, int resource, int firstId, int id, UINT position)
+void CGitExtensionsShellEx::AddMenuItem(HMENU hMenu, LPTSTR text, int resource, int firstId, int id, UINT position, bool isSubMenu)
 {
     MENUITEMINFO mii;
     memset(&mii, 0, sizeof(mii));
@@ -324,7 +366,14 @@ void CGitExtensionsShellEx::AddMenuItem(HMENU hMenu, LPSTR text, int resource, i
         myIDMap[firstId + id] = resource;
     }
     mii.wID	= firstId + id;
-    mii.dwTypeData	= text;
+    std::wstring textEx;
+    if (isSubMenu)
+        mii.dwTypeData = text;
+    else
+    {
+        textEx = std::wstring(L"GitEx ") + text;
+        mii.dwTypeData = &textEx[0];
+    }
 
     InsertMenuItem(hMenu, position, TRUE, &mii);
 }
@@ -340,9 +389,9 @@ bool CGitExtensionsShellEx::IsMenuItemVisible(CString settings, int id)
     }
 }
 
-int CGitExtensionsShellEx::PopulateMenu(HMENU hMenu, int firstId, int id, bool isSubMenu)
+int CGitExtensionsShellEx::PopulateMenu(HMENU hMenu, int firstId, int id, bool isSubMenu, bool isValidDir)
 {
-    CString szShellVisibleMenuItems = GetRegistryValue(HKEY_CURRENT_USER, "SOFTWARE\\GitExtensions\\GitExtensions", "ShellVisibleMenuItems");
+    CString szShellVisibleMenuItems = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions\\GitExtensions", L"ShellVisibleMenuItems");
 
     // preset values, if not used
     AddFilesId = -1;
@@ -362,94 +411,47 @@ int CGitExtensionsShellEx::PopulateMenu(HMENU hMenu, int firstId, int id, bool i
 
     int pos = 0;
 
-    if (isSubMenu)
-    {
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 0))
-            AddMenuItem(hMenu, "Add files", IDI_ICONADDED, firstId, ++id, AddFilesId=pos++);
+    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 0))
+        AddMenuItem(hMenu, L"Add files", IDI_ICONADDED, firstId, ++id, AddFilesId=pos++, isSubMenu);
 
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 1))
-            AddMenuItem(hMenu, "Apply patch", 0, firstId, ++id, ApplyPatchId=pos++);
+    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 1))
+        AddMenuItem(hMenu, L"Apply patch", 0, firstId, ++id, ApplyPatchId=pos++, isSubMenu);
 
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 2))
-            AddMenuItem(hMenu, "Browse", IDI_ICONBROWSEFILEEXPLORER, firstId, ++id, BrowseId=pos++);
+    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 2))
+        AddMenuItem(hMenu, L"Browse", IDI_ICONBROWSEFILEEXPLORER, firstId, ++id, BrowseId=pos++, isSubMenu);
 
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 3))
-            AddMenuItem(hMenu, "Create branch", IDI_ICONBRANCHCREATE, firstId, ++id, CreateBranchId=pos++);
+    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 3))
+        AddMenuItem(hMenu, L"Create branch", IDI_ICONBRANCHCREATE, firstId, ++id, CreateBranchId=pos++, isSubMenu);
 
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 4))
-            AddMenuItem(hMenu, "Checkout branch", IDI_ICONBRANCHCHECKOUT, firstId, ++id, CheckoutBranchId=pos++);
+    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 4))
+        AddMenuItem(hMenu, L"Checkout branch", IDI_ICONBRANCHCHECKOUT, firstId, ++id, CheckoutBranchId=pos++, isSubMenu);
 
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 5))
-            AddMenuItem(hMenu, "Checkout revision", IDI_ICONREVISIONCHECKOUT, firstId, ++id, CheckoutRevisionId=pos++);
+    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 5))
+        AddMenuItem(hMenu, L"Checkout revision", IDI_ICONREVISIONCHECKOUT, firstId, ++id, CheckoutRevisionId=pos++, isSubMenu);
 
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 6))
-            AddMenuItem(hMenu, "Clone", IDI_ICONCLONEREPOGIT, firstId, ++id, CloneId=pos++);
+    if (!isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 6))
+        AddMenuItem(hMenu, L"Clone", IDI_ICONCLONEREPOGIT, firstId, ++id, CloneId=pos++, isSubMenu);
 
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 7))
-            AddMenuItem(hMenu, "Commit", IDI_ICONCOMMIT, firstId, ++id, CommitId=pos++);
+    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 7))
+        AddMenuItem(hMenu, L"Commit", IDI_ICONCOMMIT, firstId, ++id, CommitId=pos++, isSubMenu);
 
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 8))
-            AddMenuItem(hMenu, "File history", IDI_ICONFILEHISTORY, firstId, ++id, FileHistoryId=pos++);
+    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 8))
+        AddMenuItem(hMenu, L"File history", IDI_ICONFILEHISTORY, firstId, ++id, FileHistoryId=pos++, isSubMenu);
 
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 9))
-            AddMenuItem(hMenu, "Reset file changes", IDI_ICONTRESETFILETO, firstId, ++id, ResetFileChangesId=pos++);
+    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 9))
+        AddMenuItem(hMenu, L"Reset file changes", IDI_ICONTRESETFILETO, firstId, ++id, ResetFileChangesId=pos++, isSubMenu);
 
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 10))
-            AddMenuItem(hMenu, "Pull", IDI_ICONPULL, firstId, ++id, PullId=pos++);
+    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 10))
+        AddMenuItem(hMenu, L"Pull", IDI_ICONPULL, firstId, ++id, PullId=pos++, isSubMenu);
 
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 11))
-            AddMenuItem(hMenu, "Push", IDI_ICONPUSH, firstId, ++id, PushId=pos++);
+    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 11))
+        AddMenuItem(hMenu, L"Push", IDI_ICONPUSH, firstId, ++id, PushId=pos++, isSubMenu);
 
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 12))
-            AddMenuItem(hMenu, "Settings", IDI_ICONSETTINGS, firstId, ++id, SettingsId=pos++);
+    if (IsMenuItemVisible(szShellVisibleMenuItems, 12))
+        AddMenuItem(hMenu, L"Settings", IDI_ICONSETTINGS, firstId, ++id, SettingsId=pos++, isSubMenu);
 
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 13))
-            AddMenuItem(hMenu, "View diff", IDI_ICONDIFF, firstId, ++id, ViewDiffId=pos++);
-    }
-    else
-    {
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 0))
-            AddMenuItem(hMenu, "GitEx Add files", IDI_ICONADDED, firstId, ++id, AddFilesId=pos++);
-
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 1))
-            AddMenuItem(hMenu, "GitEx Apply patch", 0, firstId, ++id, ApplyPatchId=pos++);
-
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 2))
-            AddMenuItem(hMenu, "GitEx Browse", IDI_ICONBROWSEFILEEXPLORER, firstId, ++id, BrowseId=pos++);
-
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 3))
-            AddMenuItem(hMenu, "GitEx Create branch", IDI_ICONBRANCHCREATE, firstId, ++id, CreateBranchId=pos++);
-
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 4))
-            AddMenuItem(hMenu, "GitEx Checkout branch", IDI_ICONBRANCHCHECKOUT, firstId, ++id, CheckoutBranchId=pos++);
-
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 5))
-            AddMenuItem(hMenu, "GitEx Checkout revision", IDI_ICONREVISIONCHECKOUT, firstId, ++id, CheckoutRevisionId=pos++);
-
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 6))
-            AddMenuItem(hMenu, "GitEx Clone", IDI_ICONCLONEREPOGIT, firstId, ++id, CloneId=pos++);
-
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 7))
-            AddMenuItem(hMenu, "GitEx Commit", IDI_ICONCOMMIT, firstId, ++id, CommitId=pos++);
-
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 8))
-            AddMenuItem(hMenu, "GitEx File history", IDI_ICONFILEHISTORY, firstId, ++id, FileHistoryId=pos++);
-
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 9))
-            AddMenuItem(hMenu, "GitEx Reset file changes", IDI_ICONTRESETFILETO, firstId, ++id, ResetFileChangesId=pos++);
-
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 10))
-            AddMenuItem(hMenu, "GitEx Pull", IDI_ICONPULL, firstId, ++id, PullId=pos++);
-
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 11))
-            AddMenuItem(hMenu, "GitEx Push", IDI_ICONPUSH, firstId, ++id, PushId=pos++);
-
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 12))
-            AddMenuItem(hMenu, "GitEx Settings", IDI_ICONSETTINGS, firstId, ++id, SettingsId=pos++);
-
-        if (IsMenuItemVisible(szShellVisibleMenuItems, 13))
-            AddMenuItem(hMenu, "GitEx View diff", IDI_ICONDIFF, firstId, ++id, ViewDiffId=pos++);
-    }
+    if (isValidDir && IsMenuItemVisible(szShellVisibleMenuItems, 13))
+        AddMenuItem(hMenu, L"View diff", IDI_ICONDIFF, firstId, ++id, ViewDiffId=pos++, isSubMenu);
 
     ++id;
     return id;
@@ -488,7 +490,7 @@ STDMETHODIMP CGitExtensionsShellEx::GetCommandString (
     return E_INVALIDARG;
 }
 
-void CGitExtensionsShellEx::RunGitEx(const char * command)
+void CGitExtensionsShellEx::RunGitEx(const TCHAR * command)
 {
     CString szFile = m_szFile;
     CString szCommandName = command;
@@ -502,14 +504,13 @@ void CGitExtensionsShellEx::RunGitEx(const char * command)
     CString dir = "";
 
     if (dir.GetLength() == 0)
-        dir = GetRegistryValue(HKEY_CURRENT_USER, "SOFTWARE\\GitExtensions\\GitExtensions", "InstallDir");
+        dir = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions\\GitExtensions", L"InstallDir");
     if (dir.GetLength() == 0)
-        dir = GetRegistryValue(HKEY_USERS, "SOFTWARE\\GitExtensions\\GitExtensions", "InstallDir");
+        dir = GetRegistryValue(HKEY_USERS, L"SOFTWARE\\GitExtensions\\GitExtensions", L"InstallDir");
     if (dir.GetLength() == 0)
-        dir = GetRegistryValue(HKEY_LOCAL_MACHINE, "SOFTWARE\\GitExtensions\\GitExtensions", "InstallDir");
+        dir = GetRegistryValue(HKEY_LOCAL_MACHINE, L"SOFTWARE\\GitExtensions\\GitExtensions", L"InstallDir");
 
-    ShellExecute(NULL, "open", "GitExtensions.exe", args, dir, SW_SHOWNORMAL); 
-    //system(szMsg);
+    ShellExecute(NULL, L"open", L"GitExtensions.exe", args, dir, SW_SHOWNORMAL); 
 }
 
 STDMETHODIMP CGitExtensionsShellEx::InvokeCommand ( LPCMINVOKECOMMANDINFO pCmdInfo )
@@ -653,7 +654,7 @@ CString CGitExtensionsShellEx::GetRegistryValue( HKEY hOpenKey, LPCTSTR szKey, L
     CString result = "";
     HKEY key;
 
-    unsigned char tempStr[512];
+    TCHAR tempStr[512];
     unsigned long taille = sizeof(tempStr);
     unsigned long type;
 
@@ -671,7 +672,6 @@ CString CGitExtensionsShellEx::GetRegistryValue( HKEY hOpenKey, LPCTSTR szKey, L
     result = tempStr;
 
     RegCloseKey(key);
-
 
     return result;
 }

@@ -53,6 +53,7 @@ namespace GitUI
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -62,16 +63,18 @@ namespace GitUI
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.DiffText);
-            this.splitContainer1.Size = new System.Drawing.Size(717, 410);
-            this.splitContainer1.SplitterDistance = 239;
+            this.splitContainer1.Size = new System.Drawing.Size(896, 466);
+            this.splitContainer1.SplitterDistance = 298;
+            this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 0;
             // 
             // DiffFiles
             // 
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
+            this.DiffFiles.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Size = new System.Drawing.Size(239, 410);
+            this.DiffFiles.Size = new System.Drawing.Size(298, 466);
             this.DiffFiles.TabIndex = 0;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
             // 
@@ -79,15 +82,16 @@ namespace GitUI
             // 
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffText.Location = new System.Drawing.Point(0, 0);
-            this.DiffText.Margin = new System.Windows.Forms.Padding(4);
+            this.DiffText.Margin = new System.Windows.Forms.Padding(5);
             this.DiffText.Name = "DiffText";
-            this.DiffText.Size = new System.Drawing.Size(474, 410);
+            this.DiffText.Size = new System.Drawing.Size(593, 466);
             this.DiffText.TabIndex = 0;
             // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(4);
             this.splitContainer2.Name = "splitContainer2";
             this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -98,26 +102,28 @@ namespace GitUI
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer1);
-            this.splitContainer2.Size = new System.Drawing.Size(717, 529);
-            this.splitContainer2.SplitterDistance = 115;
+            this.splitContainer2.Size = new System.Drawing.Size(896, 661);
+            this.splitContainer2.SplitterDistance = 190;
+            this.splitContainer2.SplitterWidth = 5;
             this.splitContainer2.TabIndex = 1;
             // 
             // commitInfo
             // 
             this.commitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.commitInfo.Location = new System.Drawing.Point(0, 0);
-            this.commitInfo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.commitInfo.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.commitInfo.Name = "commitInfo";
-            this.commitInfo.Size = new System.Drawing.Size(717, 115);
+            this.commitInfo.Size = new System.Drawing.Size(896, 190);
             this.commitInfo.TabIndex = 0;
             // 
             // FormDiffSmall
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(717, 529);
+            this.ClientSize = new System.Drawing.Size(896, 661);
             this.Controls.Add(this.splitContainer2);
-            this.MinimumSize = new System.Drawing.Size(150, 150);
+            this.Margin = new System.Windows.Forms.Padding(4);
+            this.MinimumSize = new System.Drawing.Size(183, 176);
             this.Name = "FormDiffSmall";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Diff";

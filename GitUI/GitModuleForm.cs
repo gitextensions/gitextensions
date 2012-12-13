@@ -27,6 +27,14 @@ namespace GitUI
             }
         }
 
+        public bool IsUICommandsInitialized
+        {
+            get
+            {
+                return _UICommands != null;
+            }
+        }
+
         [Browsable(false)]
         public GitModule Module { get { return UICommands.Module; } }
         public event GitUICommandsChangedEventHandler GitUICommandsChanged;

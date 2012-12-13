@@ -8,16 +8,21 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public sealed partial class FileStatusList : GitModuleControl
     {
+        private readonly TranslationString _UnsupportedMultiselectAction =
+            new TranslationString("Operation not supported");
+
         private const int ImageSize = 16;
 
         public FileStatusList()
         {
             InitializeComponent(); Translate();
+            _NoDiffFilesChangesText = NoFiles.Text;
             SizeChanged += FileStatusList_SizeChanged;
             FileStatusListBox.DrawMode = DrawMode.OwnerDrawVariable;
             FileStatusListBox.MeasureItem += FileStatusListBox_MeasureItem;
@@ -35,6 +40,18 @@ namespace GitUI
 
             NoFiles.Visible = false;
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
+        }
+
+        private string _NoDiffFilesChangesText;
+
+        public void SetNoFilesText(string text)
+        {
+            NoFiles.Text = text;
+        }
+
+        public string GetNoFilesText()
+        {
+            return NoFiles.Text;
         }
 
         void FileStatusList_SizeChanged(object sender, EventArgs e)
@@ -74,16 +91,6 @@ namespace GitUI
 
             return pathFormatter.FormatTextForDrawing(FileStatusListBox.ClientSize.Width - ImageSize,
                                                       gitItemStatus.Name, gitItemStatus.OldName);
-        }
-
-        public void SetNoFilesText(string text)
-        {
-            NoFiles.Text = text;
-        }
-
-        public string GetNoFilesText()
-        {
-            return NoFiles.Text;
         }
 
 #if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
@@ -384,11 +391,11 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IEnumerable<GitItemStatus> GitItemStatuses
+        public IList<GitItemStatus> GitItemStatuses
         {
             get
             {
-                return FileStatusListBox.DataSource as IEnumerable<GitItemStatus>;
+                return FileStatusListBox.DataSource as IList<GitItemStatus>;
             }
             set
             {
@@ -481,6 +488,53 @@ namespace GitUI
             finally
             {
                 ResumeLayout(true);
+            }
+        }
+
+        public void SetDiffs(List<GitRevision> revisions)
+        {
+            NoFiles.Text = _NoDiffFilesChangesText;
+            switch (revisions.Count)
+            {
+                case 0:
+                    GitItemStatuses = null;
+                    break;
+
+                case 1: // diff "parent" --> "selected revision"
+                    var revision = revisions[0];
+
+                    Revision = revision;
+
+                    if (revision == null)
+                        GitItemStatuses = null;
+                    else if (revision.ParentGuids == null || revision.ParentGuids.Length == 0)
+                        GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
+                    else
+                    {
+                        if (revision.Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+                            GitItemStatuses = Module.GetUnstagedFiles();
+                        else if (revision.Guid == GitRevision.IndexGuid) //index
+                            GitItemStatuses = Module.GetStagedFiles();
+                        else
+                            GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                    }
+                    break;
+
+                case 2: // diff "first clicked revision" --> "second clicked revision"
+                    bool artificialRevSelected = revisions[0].IsArtificial() || revisions[1].IsArtificial();
+                    if (artificialRevSelected)
+                    {
+                        NoFiles.Text = _UnsupportedMultiselectAction.Text;
+                        GitItemStatuses = null;
+                    }
+                    else
+                        GitItemStatuses = Module.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
+                    break;
+
+                default: // more than 2 revisions selected => no diff
+                    NoFiles.Text = _UnsupportedMultiselectAction.Text;
+                    GitItemStatuses = null;
+                    break;
             }
         }
     }

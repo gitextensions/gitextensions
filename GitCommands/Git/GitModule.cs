@@ -42,7 +42,7 @@ namespace GitCommands
             private set
             {
                 _superprojectInit = false;
-                _workingdir = FindGitWorkingDir(value);
+                _workingdir = value;
             }
         }
 
@@ -2079,19 +2079,19 @@ namespace GitCommands
             return noCache ? RunGitCmd(cmd) : this.RunCachableCmd(Settings.GitCommand, cmd, GitModule.SystemEncoding);
         }
 
-        public IEnumerable<GitItemStatus> GetDiffFiles(string from, string to)
+        public List<GitItemStatus> GetDiffFiles(string from, string to)
         {
             return GetDiffFiles(from, to, false);
         }
 
-        public IEnumerable<GitItemStatus> GetDiffFiles(string from, string to, bool noCache)
+        public List<GitItemStatus> GetDiffFiles(string from, string to, bool noCache)
         {
             string cmd = "diff -M -C -z --name-status \"" + to + "\" \"" + from + "\"";
             string result = noCache ? RunGitCmd(cmd) : this.RunCachableCmd(Settings.GitCommand, cmd, GitModule.SystemEncoding);
             return GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
         }
 
-        public IEnumerable<GitItemStatus> GetStashDiffFiles(string stashName)
+        public IList<GitItemStatus> GetStashDiffFiles(string stashName)
         {
             bool gitShowsUntrackedFiles = false;
 
@@ -2102,7 +2102,8 @@ namespace GitCommands
                 string untrackedTreeHash = RunGitCmd("log " + stashName + "^3 --pretty=format:\"%T\" --max-count=1");
                 if (GitRevision.Sha1HashRegex.IsMatch(untrackedTreeHash))
                 {
-                    resultCollection = resultCollection.Concat(GetTreeFiles(untrackedTreeHash, true));
+                    var files = GetTreeFiles(untrackedTreeHash, true);
+                    resultCollection.AddRange(files);
                 }
             }
 
@@ -2127,7 +2128,7 @@ namespace GitCommands
             });
         }
 
-        public IEnumerable<GitItemStatus> GetTreeFiles(string treeGuid, bool full)
+        public IList<GitItemStatus> GetTreeFiles(string treeGuid, bool full)
         {
             var tree = GetTree(treeGuid, full);
 
@@ -2140,7 +2141,7 @@ namespace GitCommands
                     IsStaged = false,
                     Name = file.Name,
                     TreeGuid = file.Guid
-                });
+                }).ToList();
 
             // Doesn't work with removed submodules
             var submodulesList = GetSubmodulesLocalPathes();
@@ -2152,7 +2153,6 @@ namespace GitCommands
 
             return list;
         }
-
 
         public IList<GitItemStatus> GetAllChangedFiles()
         {
