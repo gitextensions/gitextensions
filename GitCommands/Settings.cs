@@ -251,6 +251,13 @@ namespace GitCommands
             set { SafeSet("refreshcommitdialogonformfocus", value, ref _refreshCommitDialogOnFormFocus); }
         }
 
+        private static bool? _stageInSuperprojectAfterCommit;
+        public static bool StageInSuperprojectAfterCommit
+        {
+            get { return SafeGet("stageinsuperprojectaftercommit", true, ref _stageInSuperprojectAfterCommit); }
+            set { SafeSet("stageinsuperprojectaftercommit", value, ref _stageInSuperprojectAfterCommit); }
+        }
+
         private static bool? _PlaySpecialStartupSound;
         public static bool PlaySpecialStartupSound
         {
@@ -827,11 +834,11 @@ namespace GitCommands
             set { SafeSet("AutoPullOnRejected", value, ref _AutoPullOnRejected); }
         }
 
-        private static bool? _RecursiveSubmodulesCheck;
-        public static bool RecursiveSubmodulesCheck
+        private static int? _RecursiveSubmodules;
+        public static int RecursiveSubmodules
         {
-            get { return SafeGet("RecursiveSubmodulesCheck", true, ref _RecursiveSubmodulesCheck); }
-            set { SafeSet("RecursiveSubmodulesCheck", value, ref _RecursiveSubmodulesCheck); }
+            get { return SafeGet("RecursiveSubmodules", 1, ref _RecursiveSubmodules); }
+            set { SafeSet("RecursiveSubmodules", value, ref _RecursiveSubmodules); }
         }
 
         private static string _ShorteningRecentRepoPathStrategy;

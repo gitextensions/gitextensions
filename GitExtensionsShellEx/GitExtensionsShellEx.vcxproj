@@ -333,6 +333,21 @@ exit /b 0</Command>
   <ItemGroup>
     <None Include="GitExtensionsShellEx.def" />
     <None Include="GitExtensionsShellEx.rgs" />
+    <None Include="Resources\git-extensions-logo.ico" />
+    <None Include="Resources\IconAbout.ico" />
+    <None Include="Resources\IconAdded.ico" />
+    <None Include="Resources\IconBranchCheckout.ico" />
+    <None Include="Resources\IconBranchCreate.ico" />
+    <None Include="Resources\IconBrowseFileExplorer.ico" />
+    <None Include="Resources\IconCloneRepoGit.ico" />
+    <None Include="Resources\IconCommit.ico" />
+    <None Include="Resources\IconDiff.ico" />
+    <None Include="Resources\IconFileHistory.ico" />
+    <None Include="Resources\IconPull.ico" />
+    <None Include="Resources\IconPush.ico" />
+    <None Include="Resources\IconResetFileTo.ico" />
+    <None Include="Resources\IconRevisionCheckout.ico" />
+    <None Include="Resources\IconSettings.ico" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GitExtensionsShellEx.rc">

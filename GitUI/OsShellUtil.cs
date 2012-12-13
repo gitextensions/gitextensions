@@ -2,7 +2,7 @@
 
 namespace GitUI
 {
-    public static class OpenWith
+    public static class OsShellUtil
     {
         public static void OpenAs(string file)
         {
@@ -15,7 +15,17 @@ namespace GitUI
                          };
             var p = new Process { StartInfo = pi };
             p.Start();
+        }
 
+
+        public static void SelectPathInFileExplorer(string filePath)
+        {
+            Process.Start("explorer.exe", "/select, " + filePath);
+        }
+
+        public static void OpenWithFileExplorer(string filePath)
+        {
+            Process.Start("explorer.exe", filePath);
         }
     }
 }

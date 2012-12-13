@@ -821,7 +821,7 @@
     <Compile Include="FormOpenDirectory.Designer.cs">
       <DependentUpon>FormOpenDirectory.cs</DependentUpon>
     </Compile>
-    <Compile Include="OpenWith.cs" />
+    <Compile Include="OsShellUtil.cs" />
     <Compile Include="PatchGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1359,7 +1359,7 @@
     <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitItemStatus.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitRevision.datasource" />
-    <None Include="Resources\Icons\User.PNG" />
+    <None Include="Resources\Icons\User.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\Logo\cow-head-blue.ico">
@@ -1533,6 +1533,7 @@
     <None Include="Resources\Icons\IconSubmoduleRevisionUp.png" />
     <None Include="Resources\Icons\IconSubmoduleRevisionDownDirty.png" />
     <None Include="Resources\Icons\IconSubmoduleRevisionUpDirty.png" />
+    <None Include="Resources\Icons\IconRevertCommit.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
