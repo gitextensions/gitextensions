@@ -424,7 +424,7 @@ namespace GitUI
                 var cmdLineSafe = GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(filter);
                 revListArgs = " --regexp-ignore-case ";
                 if (parameters[0])
-                    if (cmdLineSafe)
+                    if (cmdLineSafe && !MessageFilterCouldBeSHA(filter))
                         revListArgs += "--grep=\"" + filter + "\" ";
                     else
                         inMemMessageFilter = filter;
