@@ -841,6 +841,14 @@ namespace GitUI
             }
         }
 
+        private static readonly Regex potentialShaPattern = new Regex(@"^[a-f0-9]{5,}", RegexOptions.Compiled);
+        public static bool MessageFilterCouldBeSHA(string filter)
+        {
+            bool result = potentialShaPattern.IsMatch(filter);
+
+            return result;
+        }
+
         private void _revisionGraphCommand_Error(object sender, EventArgs e)
         {
             // This has to happen on the UI thread
