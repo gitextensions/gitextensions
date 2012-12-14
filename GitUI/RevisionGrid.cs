@@ -669,12 +669,18 @@ namespace GitUI
             private readonly Regex _CommitterFilterRegex;
             private readonly string _MessageFilter;
             private readonly Regex _MessageFilterRegex;
+            private readonly string _ShaFilter;
+            private readonly Regex _ShaFilterRegex;
 
             public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
             {
                 SetUpVars(authorFilter, ref _AuthorFilter, ref _AuthorFilterRegex, ignoreCase);
                 SetUpVars(committerFilter, ref _CommitterFilter, ref _CommitterFilterRegex, ignoreCase);
                 SetUpVars(messageFilter, ref _MessageFilter, ref _MessageFilterRegex, ignoreCase);
+                if (!string.IsNullOrEmpty(_MessageFilter) && MessageFilterCouldBeSHA(_MessageFilter))
+                {
+                    SetUpVars(messageFilter, ref _ShaFilter, ref _ShaFilterRegex, false);
+                }
             }
 
             private static void SetUpVars(string filterValue,
@@ -705,7 +711,8 @@ namespace GitUI
             {
                 return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
                        CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
-                       CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message);
+                       (CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message) ||
+                        CheckCondition(_ShaFilter, _ShaFilterRegex, rev.Guid));
             }
 
             public static RevisionGridInMemFilter CreateIfNeeded(string authorFilter,
@@ -715,7 +722,8 @@ namespace GitUI
             {
                 if (!(string.IsNullOrEmpty(authorFilter) &&
                       string.IsNullOrEmpty(committerFilter) &&
-                      string.IsNullOrEmpty(messageFilter)))
+                      string.IsNullOrEmpty(messageFilter) &&
+                      !MessageFilterCouldBeSHA(messageFilter)))
                     return new RevisionGridInMemFilter(authorFilter,
                                                        committerFilter,
                                                        messageFilter,
