@@ -24,6 +24,8 @@ namespace GitCommands
     [DebuggerDisplay("GitModule ( {_workingdir} )")]
     public sealed class GitModule : IGitModule
     {
+        /// <summary>'\n' : new-line separator</summary>
+        const char LineSeparator = '\n';
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
 
         public GitModule(string workingdir)
@@ -2450,7 +2452,7 @@ namespace GitCommands
                 {
                     var r = new GitRevision(this, head.Guid);
                     return r.CommitDate;
-                }).ToList();   
+                }).ToList();
             }
             else if (option == GetTagHeadsSortOrder.ByCommitDateDescending)
             {
@@ -2533,6 +2535,15 @@ namespace GitCommands
             heads.AddRange(defaultHeads.Values);
 
             return heads;
+        }
+
+        /// <summary>Gets the branch names. <remarks>A bit quicker than <see cref="GetHeads()"/>.</remarks></summary>
+        public IEnumerable<string> GetBranchNames()
+        {
+            return RunGitCmd("branch", SystemEncoding)
+                .Split(LineSeparator)
+                .Where(branch => !string.IsNullOrWhiteSpace(branch))// first is ""
+                .Select(line => line.TrimStart('*', ' '));// * for current branch
         }
 
         public static string GetRemoteName(string completeName, IEnumerable<string> remotes)
