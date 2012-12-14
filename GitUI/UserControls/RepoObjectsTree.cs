@@ -26,7 +26,6 @@ namespace GitUI.UserControls
 
             nodeBranches = GetNodeLazy("branches");
             nodeTags = GetNodeLazy("tags");
-
         }
 
         Lazy<TreeNode> GetNodeLazy(string node)
@@ -55,65 +54,23 @@ namespace GitUI.UserControls
 
         void ApplyBranchNodes(IEnumerable<BranchNode> branchNodes)
         {
-            TreeNodeCollection nodes = nodeBranches.Value.Nodes;
-            TreeNode previous = nodeBranches.Value;
-            var LevelLastNode = new Dictionary<int, TreeNode>();
-
-            /* 0 a-branch
-             * 0 develop/
-             * 1   features/
-             * 2      feat-next
-             * 2      feat-next2
-             * 1   issues/
-             * 2      iss444
-             * 1   wild-branch
-             * 1   wilds/
-             * 2      card
-             * 0 issues/
-             * 1     iss111
-             * 0 master
-             */
-            foreach (var node in branchNodes)
+            foreach (BranchNode node in branchNodes)
             {
-                if (node.Level == 1)
-                {// root (e.g. a-branch, develop)
-                    previous = Add(nodes, node, LevelLastNode);
-                }
-                else if (node.Level - previous.Level == 0)
-                {// sibling (e.g. feat-next and feat-next2)
-                    previous = Add(previous.Parent.Nodes, node, LevelLastNode);
-                }
-                else if (node.Level - previous.Level == 1)
-                {// child (e.g. iss444)
-                    previous = Add(previous.Nodes, node, LevelLastNode);
-                }
-                else
-                {// previous is last child (e.g. feat-next2)
-                    previous = FindParent(previous, node);
-                    previous = Add(previous.Parent.Parent.Nodes, node, LevelLastNode);
-                }
+                Add(nodeBranches.Value.Nodes, node);
             }
         }
 
-        static TreeNode FindParent(TreeNode previous, BranchNode node)
-        {
-            // 0 develop/
-            // 1   features/
-            // 2      feat-next
-            // 2      feat-next2
-            // 1   issues/
-            if (node.Level - previous.Level == -1)
-            {
-                return previous.Parent.Parent;
-            }
-            return FindParent(previous.Parent, node);
-        }
-
-        static TreeNode Add(TreeNodeCollection nodes, BranchNode node, IDictionary<int, TreeNode> levelsLastNode)
+        static void Add(TreeNodeCollection nodes, BranchNode node)
         {
             TreeNode treeNode = nodes.Add(node.FullPath, node.Name);
-            levelsLastNode[node.Level] = treeNode;
-            return treeNode;
+            BranchPath branchPath = node as BranchPath;
+            if (branchPath != null)
+            {
+                foreach (BranchNode child in branchPath.Children)
+                {// recurse children
+                    Add(treeNode.Nodes, child);
+                }
+            }
         }
 
         abstract class BranchNode
@@ -134,6 +91,8 @@ namespace GitUI.UserControls
                 }
             }
             public BranchPath Parent { get; private set; }
+            BranchPath _Root;
+            public BranchPath Root { get { return _Root ?? (_Root = GetRoot(this)); } }
             internal int Level { get; private set; }
 
             protected BranchNode(string name, int level, BranchPath parent)
@@ -146,6 +105,13 @@ namespace GitUI.UserControls
             public override string ToString()
             {
                 return Name;
+            }
+
+            protected static BranchPath GetRoot(BranchNode node)
+            {
+                return (node.Parent != null)
+                    ? GetRoot(node.Parent)
+                    : node as BranchPath;
             }
 
             protected static string GetName(string branch)
@@ -167,17 +133,18 @@ namespace GitUI.UserControls
             }
 
             /// <summary>Indicates whether the specified</summary>
-            static bool IsInFamilyTree(BranchPath parent, string branch, ref int level, out BranchPath commonAncestor)
+            static bool IsInFamilyTree(BranchPath parent, string branch, out BranchPath commonAncestor)
             {
                 if (IsParentOf(parent, branch))
                 {
-                    level = 0;
                     commonAncestor = parent;
                     return true;
                 }
                 commonAncestor = null;
-                level -= -1;
-                return parent.Parent != null && IsInFamilyTree(parent.Parent, branch, ref level, out commonAncestor);
+                return
+                    (parent.Parent != null)
+                    &&
+                    IsInFamilyTree(parent.Parent, branch, out commonAncestor);
             }
 
             //static bool HasSameParents(string branch, BranchPath other, out BranchPath newPath)
@@ -239,7 +206,6 @@ namespace GitUI.UserControls
                 branches = branches.OrderBy(branch => branch);// orderby name
 
                 BranchPath currentParent = null;
-                int level = 0;
 
                 List<BranchNode> nodes = new List<BranchNode>();
 
@@ -253,36 +219,42 @@ namespace GitUI.UserControls
 
                     else if (currentParent == null)
                     {// (has/is parent) -> return all parents and branch
-                        nodes.AddRange(GetBranchNodes(branch, out currentParent));
+                        nodes.Add(GetBranchNodes(null, branch, out currentParent));
                     }
                     // (else currentParent NOT null)
 
-                    else if (IsInFamilyTree(currentParent, branch, ref level, out currentParent))
+                    else if (IsInFamilyTree(currentParent, branch, out currentParent))
                     {
-                        nodes.AddRange(GetBranchNodes(branch, out currentParent));
+                        GetBranchNodes(currentParent, branch, out currentParent);
                     }
                     else
                     {
-                        nodes.AddRange(GetBranchNodes(branch, out currentParent));
+                        nodes.Add(GetBranchNodes(null, branch, out currentParent));
                     }
                 }
                 return nodes;
             }
 
-            static List<BranchNode> GetBranchNodes(string branch, out BranchPath currentParent)
+            static BranchPath GetBranchNodes(BranchPath parent, string branch, out BranchPath currentParent)
             {
-                currentParent = null;
-                var nodes = new List<BranchNode>();
                 var splits = branch.Split(Separator);
                 int nParents = splits.Length - 1;
-                for (int i = 0; i < nParents; i++)
-                {
-                    currentParent = new BranchPath(splits[i], i + 1, currentParent);
-                    nodes.Add(currentParent);
+
+                currentParent = parent // common ancestor
+                    ?? new BranchPath(splits[0], 0);
+                
+                // benchmarks/-main
+                // benchmarks/get-branches
+
+                // start adding children at Parent.Level +1
+                for (int i = currentParent.Level + 1; i < nParents; i++)
+                {// parent0:parentN
+                    currentParent = currentParent.AddChild(
+                        new BranchPath(splits[i], i, currentParent));
                 }
-                string last = splits.Last();
-                nodes.Add(new Branch(last, nParents + 1, currentParent));
-                return nodes;
+                // child
+                currentParent.AddChild(new Branch(splits[splits.Length - 1], nParents, currentParent));
+                return currentParent.Root;
             }
         }
 
@@ -299,15 +271,29 @@ namespace GitUI.UserControls
 
         class BranchPath : BranchNode
         {
-            public List<BranchPath> Children { get; private set; }
+            public List<BranchNode> Children { get; private set; }
+            public BranchPath AddChild(BranchPath path)
+            {
+                Children.Add(path);
+                return path;
+            }
+
+            public void AddChild(Branch branch)
+            {
+                Children.Add(branch);
+            }
+
 
             /// <summary>Root parent (has no parent).</summary>
             public BranchPath(string name, int level)
                 : this(name, level, null) { }
 
             /// <summary>Parent (has parent).</summary>
-            public BranchPath(string branch, int level, BranchPath parent)
-                : base(branch, level, parent) { }
+            public BranchPath(string name, int level, BranchPath parent)
+                : base(name, level, parent)
+            {
+                Children = new List<BranchNode>();
+            }
 
             public override bool Equals(object obj)
             {
