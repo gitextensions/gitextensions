@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -6,6 +7,7 @@ using System.Xml.Serialization;
 namespace GitUI.Hotkey
 {
     [Serializable]
+    [DebuggerDisplay("Hotkey: {CommandCode} {Name}")]
     public class HotkeyCommand
     {
         #region Properties
