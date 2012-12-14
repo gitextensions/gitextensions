@@ -663,7 +663,6 @@ namespace GitUI
 
         private class RevisionGridInMemFilter : RevisionGraphInMemFilter
         {
-            private readonly bool _IgnoreCase;
             private readonly string _AuthorFilter;
             private readonly Regex _AuthorFilterRegex;
             private readonly string _CommitterFilter;
@@ -673,18 +672,18 @@ namespace GitUI
 
             public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
             {
-                _IgnoreCase = ignoreCase;
-                SetUpVars(authorFilter, ref _AuthorFilter, ref _AuthorFilterRegex);
-                SetUpVars(committerFilter, ref _CommitterFilter, ref _CommitterFilterRegex);
-                SetUpVars(messageFilter, ref _MessageFilter, ref _MessageFilterRegex);
+                SetUpVars(authorFilter, ref _AuthorFilter, ref _AuthorFilterRegex, ignoreCase);
+                SetUpVars(committerFilter, ref _CommitterFilter, ref _CommitterFilterRegex, ignoreCase);
+                SetUpVars(messageFilter, ref _MessageFilter, ref _MessageFilterRegex, ignoreCase);
             }
 
-            private void SetUpVars(string filterValue,
+            private static void SetUpVars(string filterValue,
                                    ref string filterStr,
-                                   ref Regex filterRegEx)
+                                   ref Regex filterRegEx,
+                                   bool ignoreCase)
             {
                 RegexOptions opts = RegexOptions.None;
-                if (_IgnoreCase) opts = opts | RegexOptions.IgnoreCase;
+                if (ignoreCase) opts = opts | RegexOptions.IgnoreCase;
                 filterStr = filterValue != null ? filterValue.Trim() : string.Empty;
                 try
                 {
@@ -959,7 +958,7 @@ namespace GitUI
                 .Rows
                 .Cast<DataGridViewRow>();
             var revisions = rows
-                .Select(row => new{ Index = row.Index, Guid = GetRevision(row.Index).Guid });
+                .Select(row => new { Index = row.Index, Guid = GetRevision(row.Index).Guid });
 
             var idx = revisions.FirstOrDefault(rev => rev.Guid == initRevision);
             if (idx != null)
@@ -1895,7 +1894,7 @@ namespace GitUI
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
-            UICommands.StartCheckoutBranchDialog(this, GetRevision(LastRow).Guid, false);            
+            UICommands.StartCheckoutBranchDialog(this, GetRevision(LastRow).Guid, false);
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
