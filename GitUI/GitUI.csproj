@@ -770,6 +770,12 @@
     <Compile Include="UserControls\FolderBrowserButton.Designer.cs">
       <DependentUpon>FolderBrowserButton.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\RepoObjectsTree.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\RepoObjectsTree.Designer.cs">
+      <DependentUpon>RepoObjectsTree.cs</DependentUpon>
+    </Compile>
     <Compile Include="WarningToolStripItem.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1174,6 +1180,9 @@
     <EmbeddedResource Include="UserControls\FolderBrowserButton.resx">
       <DependentUpon>FolderBrowserButton.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\RepoObjectsTree.resx">
+      <DependentUpon>RepoObjectsTree.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
@@ -1399,6 +1408,9 @@
     <None Include="Resources\Icons\IconSubmoduleRevisionDownDirty.png" />
     <None Include="Resources\Icons\IconSubmoduleRevisionUpDirty.png" />
     <None Include="Resources\Icons\IconRevertCommit.png" />
+    <None Include="Resources\Icons\CollapseAll.png" />
+    <None Include="Resources\Icons\ExpandAll.png" />
+    <None Include="Resources\Icons\StashesClear.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

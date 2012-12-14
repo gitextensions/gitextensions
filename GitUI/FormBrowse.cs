@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -106,13 +107,10 @@ namespace GitUI
 
         private const string DiffTabPageTitleBase = "Diff";
 
-        /// <summary>
-        /// For VS designer
-        /// </summary>
+        /// <summary>For VS designer</summary>
         private FormBrowse()
             : this(null, string.Empty)
-        {
-        }
+        { }
 
 
         public FormBrowse(GitUICommands aCommands, string filter)
@@ -392,6 +390,9 @@ namespace GitUI
 
             CheckForMergeConflicts();
             UpdateStashCount();
+
+            repoObjectsTree.Reload(Module, UICommands);
+
             // load custom user menu
             LoadUserMenu();
 
@@ -1515,7 +1516,7 @@ namespace GitUI
             if (UICommands.StartSubmodulesDialog(this))
                 Initialize();
         }
-        
+
         private void UpdateSubmoduleToolStripMenuItemClick(object sender, EventArgs e)
         {
             var submodule = (sender as ToolStripMenuItem).Tag as string;
@@ -2845,7 +2846,5 @@ namespace GitUI
                 }
             }
         }
-
     }
-
 }
