@@ -142,6 +142,8 @@ namespace GitUI.UserControls
             treeNode5});
             this.treeMain.Size = new System.Drawing.Size(200, 325);
             this.treeMain.TabIndex = 3;
+            this.treeMain.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnNodeSelected);
+            this.treeMain.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.OnNodeDoubleClick);
             // 
             // menuBranch
             // 

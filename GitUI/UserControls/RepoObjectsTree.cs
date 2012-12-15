@@ -242,7 +242,7 @@ namespace GitUI.UserControls
 
                 currentParent = parent // common ancestor
                     ?? new BranchPath(splits[0], 0);
-                
+
                 // benchmarks/-main
                 // benchmarks/get-branches
 
@@ -334,5 +334,60 @@ namespace GitUI.UserControls
         {
             treeMain.CollapseAll();
         }
+
+        void OnNodeSelected(object sender, TreeViewEventArgs e)
+        {
+
+        }
+
+        /// <summary>Performed on a <see cref="TreeNode"/> double-click.
+        /// <remarks>Expand/Collapse still executes for any node with children.</remarks></summary>
+        void OnNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            TreeNode node = e.Node;
+            if (node.IsAncestorOf(nodeBranches.Value))
+            {// branches/
+                if (node.HasNoChildren())
+                {// no children -> branch
+                    uiCommands.StartCheckoutBranchDialog(base.ParentForm, node.Text, false);
+                }
+
+            }
+        }
+
+
     }
+    static class TreeExtensions
+    {
+        public static bool IsAncestorOf(this TreeNode item, TreeNode node)
+        {
+            if (item.Parent == null)
+            {// item at root
+                return false;
+            }
+            if (item.Level <= node.Level)
+            {// on same level OR item is older
+                return false;
+            }
+            if (node.Nodes.Count == 0)
+            {// node has no children
+                return false;
+            }
+            return
+                (item.Parent == node)// one last quick check
+                ||
+                item.Parent.IsAncestorOf(node);// else recurse (if Parent is an ancestor, then child is ancestor)
+        }
+
+        public static bool HasNoChildren(this TreeNode item)
+        {
+            return item.IsParent() == false;
+        }
+
+        public static bool IsParent(this TreeNode item)
+        {
+            return item.Nodes.Count != 0;
+        }
+    }
+
 }
