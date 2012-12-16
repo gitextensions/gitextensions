@@ -172,13 +172,23 @@ namespace GitUI
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             this.toolPanel.SplitterDistance = this.ToolStrip.Height;
             this._dontUpdateOnIndexChange = false;
-            GitUICommandsChanged += (a, b) => RefreshPullIcon();
+            GitUICommandsChanged += (a, oldcommands) =>
+            {
+                RefreshPullIcon();
+                oldcommands.BrowseInitialize -= UICommands_BrowseInitialize;
+                UICommands.BrowseInitialize += UICommands_BrowseInitialize;
+            };
             if (aCommands != null)
             {
                 RefreshPullIcon();
-                UICommands.BrowseInitialize += (a, b) => Initialize();
+                UICommands.BrowseInitialize += UICommands_BrowseInitialize;
             }
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+        }
+
+        void UICommands_BrowseInitialize(object sender, GitUIBaseEventArgs e)
+        {
+            Initialize();
         }
 
         private void ShowDashboard()
