@@ -154,6 +154,8 @@ namespace GitUI
         /// </summary>
         public event GitUIEventHandler PostRepositoryChanged;
 
+        public event GitUIEventHandler PostRegisterPlugin;
+
         #endregion
 
         public string GitCommand(string arguments)
@@ -1955,6 +1957,11 @@ namespace GitUI
         internal void RaisePostBrowseInitialize(IWin32Window owner)
         {
             InvokeEvent(owner, PostBrowseInitialize);
+        }
+
+        internal void RaisePostRegisterPlugin(IWin32Window owner)
+        {
+            InvokeEvent(owner, PostRegisterPlugin);
         }
 
         public void RaiseBrowseInitialize()
