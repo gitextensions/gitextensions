@@ -43,7 +43,7 @@ namespace GitCommandsTests.Patch
             patch.AppendTextLine("text2");
             patch.AppendTextLine("text3");
 
-            var expected = String.Format("text1{0}text2{0}text3{0}", Environment.NewLine);
+            var expected = "text1\ntext2\ntext3\n";
 
             Assert.AreEqual(expected, patch.Text);
         }
