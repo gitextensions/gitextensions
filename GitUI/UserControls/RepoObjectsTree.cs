@@ -29,6 +29,11 @@ namespace GitUI.UserControls
 
             nodeBranches = GetNodeLazy("branches");
             nodeTags = GetNodeLazy("tags");
+
+            foreach (TreeNode node in treeMain.Nodes)
+            {
+                ApplyTreeNodeStyle(node);
+            }
         }
 
         Lazy<TreeNode> GetNodeLazy(string node)
@@ -42,19 +47,10 @@ namespace GitUI.UserControls
             this.git = git;
             this.uiCommands = uiCommands;
 
-            #region Branches ----------------------
-
             // todo: async CancellationToken(s)
             // todo: task exception handling
-            var taskBranches = Task.Factory.
-                            StartNew(() => git.GetBranchNames()).
-                            ContinueWith(getBranchNames => GetBranchTree(getBranchNames.Result)).
-                            ContinueWith(
-                                getBranchesTree => treeMain.Update(() => ResetBranchNodes(getBranchesTree.Result)),
-                                uiScheduler
-                            );
 
-            #endregion Branches ----------------------
+            LoadBranches();
 
             // update tree little by little OR when all data retrieved?
 

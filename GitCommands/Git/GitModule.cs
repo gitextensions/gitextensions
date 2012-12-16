@@ -26,6 +26,11 @@ namespace GitCommands
     {
         /// <summary>'\n' : new-line separator</summary>
         const char LineSeparator = '\n';
+        /// <summary>"*" indicates the current branch</summary>
+        public static char ActiveBranchIndicator = '*';
+        /// <summary>"*" indicates the current branch</summary>
+        public static string ActiveBranchIndicatorStr = ActiveBranchIndicator.ToString();
+
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
 
         public GitModule(string workingdir)
@@ -2537,13 +2542,16 @@ namespace GitCommands
             return heads;
         }
 
-        /// <summary>Gets the branch names. <remarks>A bit quicker than <see cref="GetHeads()"/>.</remarks></summary>
+        /// <summary>Gets the branch names, with the active branch, if applicable, listed first.
+        /// <remarks>A bit quicker than <see cref="GetHeads()"/>.
+        /// The active branch will be indicated by a "*", so ensure to Trim before processing.</remarks></summary>
         public IEnumerable<string> GetBranchNames()
         {
             return RunGitCmd("branch", SystemEncoding)
                 .Split(LineSeparator)
                 .Where(branch => !string.IsNullOrWhiteSpace(branch))// first is ""
-                .Select(line => line.TrimStart('*', ' '));// * for current branch
+                .OrderByDescending(branch => branch.Contains(ActiveBranchIndicator))// * for current branch
+                .Select(line => line.Trim());// trim justify space
         }
 
         public static string GetRemoteName(string completeName, IEnumerable<string> remotes)

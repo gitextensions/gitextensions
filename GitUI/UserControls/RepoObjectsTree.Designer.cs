@@ -119,6 +119,7 @@ namespace GitUI.UserControls
             this.treeMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeMain.Location = new System.Drawing.Point(0, 25);
             this.treeMain.Name = "treeMain";
+            treeNode1.ContextMenuStrip = this.menuBranches;
             treeNode1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             treeNode1.Name = "branches";
             treeNode1.Text = "branches";
