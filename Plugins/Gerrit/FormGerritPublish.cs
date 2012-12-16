@@ -76,7 +76,7 @@ namespace Gerrit
                 bool hadNewChanges = false;
                 string change = null;
 
-                foreach (string line in pushCommand.CommandText.Split('\n'))
+                foreach (string line in pushCommand.CommandOutput.Split('\n'))
                 {
                     if (hadNewChanges)
                     {
