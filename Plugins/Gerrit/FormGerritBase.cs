@@ -5,11 +5,18 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI;
 using GitUIPluginInterfaces;
+using ResourceManager.Translation;
 
 namespace Gerrit
 {
     public class FormGerritBase : GitExtensionsForm
     {
+        #region Translation
+        private readonly TranslationString _cannotLoadSshKey = new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
+
+        private readonly TranslationString _settingsError = new TranslationString("Error loading .gitreview file.");
+        #endregion
+
         private const string PuttyText = "PuTTY";
 
         protected GerritSettings Settings { get; private set; }
@@ -31,7 +38,7 @@ namespace Gerrit
             if (GitCommandHelpers.Plink())
             {
                 if (!File.Exists(GitCommands.Settings.Pageant))
-                    MessageBox.Show(owner, "Cannot load SSH key. PuTTY is not configured properly.", PuttyText);
+                    MessageBox.Show(owner, _cannotLoadSshKey.Text, PuttyText);
                 else
                     Module.StartPageantForRemote(remote);
             }
@@ -42,11 +49,13 @@ namespace Gerrit
             if (DesignMode)
                 return;
 
-            Settings = GerritSettings.Load(Module);
-
-            if (Settings == null)
+            try
             {
-                MessageBox.Show(this, "There was a problem loading the .gitreview file. Please review your settings.");
+                Settings = GerritSettings.Load(Module);
+            }
+            catch (GerritSettingsException ex)
+            {
+                MessageBox.Show(this, ex.Message, _settingsError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Dispose();
                 return;
             }
@@ -56,6 +65,14 @@ namespace Gerrit
 
         protected class GerritSettings
         {
+            #region Translation
+            private static readonly TranslationString _settingsErrorFileNotFound = new TranslationString("Cannot find the \".gitreview\" file in the working directory.");
+            private static readonly TranslationString _settingsErrorPortNotNumeric = new TranslationString("The \"port\" specified in the .gitreview file may only contain digits.");
+            private static readonly TranslationString _settingsErrorHostNotEntered = new TranslationString("The \"host\" setting in the .gitreview file is mandatory.");
+            private static readonly TranslationString _settingsErrorProjectNotEntered = new TranslationString("The \"project\" setting in the .gitreview file is mandatory.");
+            private static readonly TranslationString _settingsErrorDefaultRemoteNotPresent = new TranslationString("The \"defaultremote\" setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.");
+            #endregion
+
             public string Host { get; private set; }
             public int Port { get; private set; }
             public string Project { get; private set; }
@@ -73,17 +90,17 @@ namespace Gerrit
                 DefaultRebase = true;
             }
 
-            private bool IsValid()
+            private void Validate()
             {
-                if (
-                    string.IsNullOrEmpty(Host) &&
-                    string.IsNullOrEmpty(Project)
-                )
-                    return false;
+                if (string.IsNullOrEmpty(Host))
+                    throw new GerritSettingsException(_settingsErrorHostNotEntered.Text);
+                if (string.IsNullOrEmpty(Project))
+                    throw new GerritSettingsException(_settingsErrorProjectNotEntered.Text);
 
                 var remotes = Module.GetRemotes(true);
 
-                return remotes.Contains(DefaultRemote);
+                if (!remotes.Contains(DefaultRemote))
+                    throw new GerritSettingsException(_settingsErrorDefaultRemoteNotPresent.Text);
             }
 
             public static GerritSettings Load(IGitModule aModule)
@@ -91,7 +108,7 @@ namespace Gerrit
                 string path = aModule.GitWorkingDir + ".gitreview";
 
                 if (!File.Exists(path))
-                    return null;
+                    throw new GerritSettingsException(_settingsErrorFileNotFound.Text);
 
                 bool inHeader = false;
                 var result = new GerritSettings(aModule);
@@ -135,15 +152,14 @@ namespace Gerrit
                             case "port":
                                 int value;
                                 if (!int.TryParse(parts[1], out value))
-                                    return null;
+                                    throw new GerritSettingsException(_settingsErrorPortNotNumeric.Text);
                                 result.Port = value;
                                 break;
                         }
                     }
                 }
 
-                if (!result.IsValid())
-                    return null;
+                result.Validate();
 
                 return result;
             }
