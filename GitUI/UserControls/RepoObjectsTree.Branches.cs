@@ -16,15 +16,24 @@ namespace GitUI.UserControls
         IList<BranchNode> currentBranches;
         /// <summary>aggregate hash for current branch list</summary>
         int branchesHash;
+        /// <summary>indicates whether branches state is dirty and needs to be updated</summary>
+        bool areBranchesDirty = true;
 
         /// <summary>Async loads the repo's branches into the tree.</summary>
         Task LoadBranches()
         {
-            return Task.Factory.StartNew(() => git.GetBranchNames().ToArray()).
-                                ContinueWith(getBranchNames => GetBranchTree(getBranchNames.Result)).
-                                ContinueWith(
-                                    getBranchesTree => treeMain.Update(() => ResetBranchNodes(getBranchesTree.Result)),
-                                    uiScheduler
+            return Task.Factory
+                .StartNew(() => git.GetBranchNames().ToArray())
+                .ContinueWith(getBranchNames => GetBranchTree(getBranchNames.Result))
+                .ContinueWith(
+                    getBranchesTree =>
+                    {
+                        if (areBranchesDirty)
+                        {// BranchList hash and branchesHash NOT matching
+                            treeMain.Update(() => ResetBranchNodes(getBranchesTree.Result));
+                        }
+                    },
+                    uiScheduler
             );
         }
 
@@ -36,17 +45,19 @@ namespace GitUI.UserControls
             {// already populated..
                 int hash = branches.GetHash();
                 if (branchesHash == hash)
-                {// matching hashes (same branches) -> return current nodes
+                {// matching hashes (same branches state) -> return current nodes
+                    areBranchesDirty = false;
                     return currentBranches;
                 }
                 branchesHash = hash;
             }
             else
             {
-                currentBranches = BranchNode.GetBranchTree(branches);
                 branchesHash = branches.GetHash();
             }
+            currentBranches = BranchNode.GetBranchTree(branches);
 
+            areBranchesDirty = true;
             return currentBranches;
         }
 
@@ -437,12 +448,7 @@ namespace GitUI.UserControls
             /// <summary>Gets the list of branch names from the raw output.</summary>
             public IEnumerable<string> Branches { get { return _Branches; } }
 
-            public override int GetHashCode()
-            {
-                return Active == null // detached head
-                    ? this.GetHash()
-                    : new[] { this.GetHash(), Active.GetHashCode() }.GetHash();
-            }
+            public override int GetHashCode() { return Branches.GetHash(); }
         }
 
         #endregion private classes
