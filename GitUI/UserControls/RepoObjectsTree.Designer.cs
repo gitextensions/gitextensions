@@ -101,7 +101,7 @@ namespace GitUI.UserControls
             this.toolbtnExpandAll.Size = new System.Drawing.Size(23, 22);
             this.toolbtnExpandAll.Text = "Expand All";
             this.toolbtnExpandAll.ToolTipText = "Expand All";
-            this.toolbtnExpandAll.Click += new System.EventHandler(this.treeMainExpandAll_Click);
+            this.toolbtnExpandAll.Click += new System.EventHandler(this.ExpandAll_Click);
             // 
             // toolbtnCollapseAll
             // 
@@ -112,7 +112,7 @@ namespace GitUI.UserControls
             this.toolbtnCollapseAll.Size = new System.Drawing.Size(23, 22);
             this.toolbtnCollapseAll.Text = "Collapse All";
             this.toolbtnCollapseAll.ToolTipText = "Collapse All";
-            this.toolbtnCollapseAll.Click += new System.EventHandler(this.treeMainCollapseAll_Click);
+            this.toolbtnCollapseAll.Click += new System.EventHandler(this.CollapseAll_Click);
             // 
             // treeMain
             // 

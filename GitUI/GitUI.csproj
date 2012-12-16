@@ -193,6 +193,8 @@
     </Compile>
     <Compile Include="GitUIExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\SystemExtensions.cs" />
+    <Compile Include="Helpers\TreeViewExtensions.cs" />
     <Compile Include="Hotkey\ControlHotkeys.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -769,6 +771,9 @@
     </Compile>
     <Compile Include="UserControls\FolderBrowserButton.Designer.cs">
       <DependentUpon>FolderBrowserButton.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\RepoObjectsTree.Branches.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UserControls\RepoObjectsTree.cs">
       <SubType>UserControl</SubType>
