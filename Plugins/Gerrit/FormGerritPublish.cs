@@ -118,7 +118,15 @@ namespace Gerrit
             string[] branchParts = branchName.Split('/');
 
             if (branchParts.Length >= 3 && branchParts[0] == "review")
-                return String.Join("/", branchParts.Skip(2));
+            {
+                branchName = String.Join("/", branchParts.Skip(2));
+
+                // Don't use the Gerrit change number as a topic branch.
+
+                int unused;
+                if (int.TryParse(branchName, out unused))
+                    branchName = null;
+            }
 
             return branchName;
         }
