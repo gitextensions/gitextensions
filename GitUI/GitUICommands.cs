@@ -2007,13 +2007,13 @@ namespace GitUI
                     form.ShowDialog(OwnerForm as IWin32Window);
 
                     ErrorOccurred = form.ErrorOccurred();
-                    CommandOutput = form.OutputString.ToString();
+                    CommandOutput = form.GetOutputString();
                 }
             }
 
             private bool HandleOnExit(ref bool isError, FormProcess form)
             {
-                CommandOutput = form.OutputString.ToString();
+                CommandOutput = form.GetOutputString();
 
                 var e = new GitRemoteCommandCompletedEventArgs(this, isError, false);
 
