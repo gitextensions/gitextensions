@@ -393,13 +393,11 @@ namespace GitUI.UserControls
                 Children.Add(branch);
             }
 
-
-            /// <summary>Root parent (has no parent).</summary>
-            public BranchPath(string name, int level)
-                : this(name, level, null) { }
-
-            /// <summary>Parent (has parent).</summary>
-            public BranchPath(string name, int level, BranchPath parent)
+            /// <summary>Creates a new <see cref="BranchPath"/>.</summary>
+            /// <param name="name">Short name for the path.</param>
+            /// <param name="level">Level of the node in the tree.</param>
+            /// <param name="parent">Parent node. Leave NULL if this is a Root.</param>
+            public BranchPath(string name, int level, BranchPath parent = null)
                 : base(name, level, parent)
             {
                 Children = new List<BranchNode>();
