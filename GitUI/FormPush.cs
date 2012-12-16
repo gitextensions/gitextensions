@@ -322,7 +322,7 @@ namespace GitUI
                 //auto pull only if current branch was rejected
                 Regex IsRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranch) + ".*" + Regex.Escape(" (non-fast-forward)"), RegexOptions.Compiled);
 
-                if (Settings.AutoPullOnRejected && IsRejected.IsMatch(form.OutputString.ToString()))
+                if (Settings.AutoPullOnRejected && IsRejected.IsMatch(form.GetOutputString()))
                     
                 {
                     if (Settings.PullMerge == Settings.PullAction.Fetch)
