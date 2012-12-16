@@ -32,15 +32,27 @@ namespace Gerrit
         {
             _gitUiCommands = gitUiCommands;
             gitUiCommands.PostBrowseInitialize += gitUiCommands_PostBrowseInitialize;
+            gitUiCommands.PostRegisterPlugin += gitUiCommands_PostRegisterPlugin;
         }
 
         public override void Unregister(IGitUICommands gitUiCommands)
         {
             gitUiCommands.PostBrowseInitialize -= gitUiCommands_PostBrowseInitialize;
+            gitUiCommands.PostRegisterPlugin -= gitUiCommands_PostRegisterPlugin;
             _gitUiCommands = null;
         }
 
+        void gitUiCommands_PostRegisterPlugin(object sender, GitUIBaseEventArgs e)
+        {
+            UpdateGerritMenuItems(e);
+        }
+
         void gitUiCommands_PostBrowseInitialize(object sender, GitUIBaseEventArgs e)
+        {
+            UpdateGerritMenuItems(e);
+        }
+
+        private void UpdateGerritMenuItems(GitUIBaseEventArgs e)
         {
             if (!_initialized)
                 Initialize((Form)e.OwnerForm);
