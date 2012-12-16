@@ -74,6 +74,11 @@ namespace Gerrit
                 return false;
             }
 
+            // The user can enter both the Change-Id or the number. Here we
+            // force the number to get prettier branches.
+
+            change = (string)reviewInfo["number"];
+
             string topic = _NO_TRANSLATE_TopicBranch.Text.Trim();
 
             if (string.IsNullOrEmpty(topic))
