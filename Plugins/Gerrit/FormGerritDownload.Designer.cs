@@ -38,6 +38,7 @@
             this.labelChange = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_Change = new System.Windows.Forms.TextBox();
             this.labelRemote = new System.Windows.Forms.Label();
+            this.labelEnterChangeIdOrNumber = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Download
@@ -45,10 +46,10 @@
             this.Download.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Download.Image = global::Gerrit.Properties.Resources.GerritDownload;
             this.Download.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Download.Location = new System.Drawing.Point(412, 120);
+            this.Download.Location = new System.Drawing.Point(412, 141);
             this.Download.Name = "Download";
             this.Download.Size = new System.Drawing.Size(101, 25);
-            this.Download.TabIndex = 7;
+            this.Download.TabIndex = 8;
             this.Download.Text = "&Download";
             this.Download.UseVisualStyleBackColor = true;
             this.Download.Click += new System.EventHandler(this.DownloadClick);
@@ -56,10 +57,10 @@
             // labelTopicBranch
             // 
             this.labelTopicBranch.AutoSize = true;
-            this.labelTopicBranch.Location = new System.Drawing.Point(16, 86);
+            this.labelTopicBranch.Location = new System.Drawing.Point(16, 110);
             this.labelTopicBranch.Name = "labelTopicBranch";
             this.labelTopicBranch.Size = new System.Drawing.Size(80, 15);
-            this.labelTopicBranch.TabIndex = 5;
+            this.labelTopicBranch.TabIndex = 6;
             this.labelTopicBranch.Text = "Topic branch:";
             // 
             // AddRemote
@@ -89,10 +90,10 @@
             // 
             this._NO_TRANSLATE_TopicBranch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_TopicBranch.Location = new System.Drawing.Point(116, 83);
+            this._NO_TRANSLATE_TopicBranch.Location = new System.Drawing.Point(116, 107);
             this._NO_TRANSLATE_TopicBranch.Name = "_NO_TRANSLATE_TopicBranch";
             this._NO_TRANSLATE_TopicBranch.Size = new System.Drawing.Size(397, 23);
-            this._NO_TRANSLATE_TopicBranch.TabIndex = 6;
+            this._NO_TRANSLATE_TopicBranch.TabIndex = 7;
             // 
             // labelChange
             // 
@@ -121,12 +122,22 @@
             this.labelRemote.TabIndex = 0;
             this.labelRemote.Text = "Remote:";
             // 
+            // labelEnterChangeIdOrNumber
+            // 
+            this.labelEnterChangeIdOrNumber.AutoSize = true;
+            this.labelEnterChangeIdOrNumber.Location = new System.Drawing.Point(113, 84);
+            this.labelEnterChangeIdOrNumber.Name = "labelEnterChangeIdOrNumber";
+            this.labelEnterChangeIdOrNumber.Size = new System.Drawing.Size(297, 15);
+            this.labelEnterChangeIdOrNumber.TabIndex = 5;
+            this.labelEnterChangeIdOrNumber.Text = "Enter the Change-Id or the number from the Gerrit URL";
+            // 
             // FormGerritDownload
             // 
             this.AcceptButton = this.Download;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(534, 157);
+            this.ClientSize = new System.Drawing.Size(534, 178);
+            this.Controls.Add(this.labelEnterChangeIdOrNumber);
             this.Controls.Add(this.labelRemote);
             this.Controls.Add(this._NO_TRANSLATE_Change);
             this.Controls.Add(this.AddRemote);
@@ -158,5 +169,6 @@
         private System.Windows.Forms.Label labelChange;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_Change;
         private System.Windows.Forms.Label labelRemote;
+        private System.Windows.Forms.Label labelEnterChangeIdOrNumber;
     }
 }
