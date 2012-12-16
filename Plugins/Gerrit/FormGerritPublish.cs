@@ -49,7 +49,7 @@ namespace Gerrit
                 return false;
             }
 
-            StartAgent(owner, _NO_TRANSLATE_Remotes.Text);
+            GerritUtil.StartAgent(owner, Module, _NO_TRANSLATE_Remotes.Text);
 
             string targetRef = PublishDraft.Checked ? "drafts" : "publish";
 
