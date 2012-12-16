@@ -35,7 +35,7 @@ namespace GitUI.UserControls
             if (currentBranches != null)
             {// already populated..
                 int hash = branches.GetHash();
-                if (branchesHash == hash) //! may be faulty assumption
+                if (branchesHash == hash)
                 {// matching hashes (same branches) -> return current nodes
                     return currentBranches;
                 }
@@ -268,7 +268,9 @@ namespace GitUI.UserControls
                 // 0 master
 
                 #region get active branch and scrub
-                var branchList = branches.ToList();
+
+                var rawBranches = branches.ToList();
+                var branchList = rawBranches.ToList();
                 string activeBranch =
                     branchList.FirstOrDefault(
                         branch => branch.StartsWith(GitModule.ActiveBranchIndicatorStr));
@@ -279,11 +281,9 @@ namespace GitUI.UserControls
                 }
                 branches = branchList;
                 #endregion get active branch and scrub
-         
+
                 branches = branches.OrderBy(branch => branch);// orderby name
-
                 BranchPath currentParent = null;
-
                 List<BranchNode> nodes = new List<BranchNode>();
 
                 foreach (string branch in branches)
@@ -309,7 +309,7 @@ namespace GitUI.UserControls
                         nodes.Add(GetChildren(null, branch, activeBranch, out currentParent));
                     }
                 }
-                return new BranchList(activeBranch, nodes);
+                return new BranchList(activeBranch, nodes, rawBranches);
             }
 
             /// <summary>Gets the children of the specified <paramref name="parent"/> node OR
@@ -341,6 +341,8 @@ namespace GitUI.UserControls
             public static TBranchNode Find<TBranchNode>(IEnumerable<BranchNode> nodes, string fullPath)
                   where TBranchNode : BranchNode
             {
+                if (fullPath == null) { return null; }
+
                 foreach (var branchNode in nodes)
                 {
                     if (branchNode.FullPath.Equals(fullPath))
@@ -418,22 +420,22 @@ namespace GitUI.UserControls
         /// <summary>list of <see cref="BranchNode"/>s, including the <see cref="Active"/> branch, if applicable</summary>
         class BranchList : Collection<BranchNode>
         {
-            public BranchList(BranchNode active, IList<BranchNode> nodes)
+            IEnumerable<string> _Branches;
+
+            public BranchList(BranchNode active, IList<BranchNode> nodes, IEnumerable<string> branches)
                 : base(nodes)
             {
                 Active = active;
+                _Branches = branches;
             }
-            public BranchList(string active, IList<BranchNode> nodes)
-                : base(nodes)
-            {
-                if (active != null)
-                {
-                    Active = BranchNode.Find<Branch>(nodes, active);
-                }
-            }
+            public BranchList(string active, IList<BranchNode> nodes, IEnumerable<string> branches)
+                : this(BranchNode.Find<Branch>(nodes, active), nodes, branches) { }
 
             /// <summary>Gets the current active branch. <remarks>May be null, if HEAD is detached.</remarks></summary>
             public BranchNode Active { get; private set; }
+
+            /// <summary>Gets the list of branch names from the raw output.</summary>
+            public IEnumerable<string> Branches { get { return _Branches; } }
 
             public override int GetHashCode()
             {
