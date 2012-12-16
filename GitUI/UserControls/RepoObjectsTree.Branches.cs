@@ -13,7 +13,7 @@ namespace GitUI.UserControls
     public partial class RepoObjectsTree
     {
         /// <summary>current nodes being displayed</summary>
-        IList<BranchNode> currentBranches;
+        BranchList currentBranches;
         /// <summary>aggregate hash for current branch list</summary>
         int branchesHash;
         /// <summary>indicates whether branches state is dirty and needs to be updated</summary>
@@ -39,7 +39,7 @@ namespace GitUI.UserControls
 
         /// <summary>Gets the branches hierarchical tree from the specified list of <paramref name="branches"/>.
         /// <remarks>If applicable, uses a cached tree.</remarks></summary>
-        IList<BranchNode> GetBranchTree(ICollection<string> branches)
+        BranchList GetBranchTree(ICollection<string> branches)
         {
             if (currentBranches != null)
             {// already populated..
@@ -62,10 +62,10 @@ namespace GitUI.UserControls
         }
 
         /// <summary>Applies the specified <see cref="BranchNode"/>s to the <see cref="TreeView"/>.</summary>
-        void ResetBranchNodes(ICollection<BranchNode> branches)
+        void ResetBranchNodes(BranchList branches)
         {
             nodeBranches.Value.Nodes.Clear();
-            nodeBranches.Value.Text = string.Format("branches ({0})", branches.Count);
+            nodeBranches.Value.Text = string.Format("branches ({0})", branches.Branches.Count());
 
             // todo: cache: per Repo, on BranchNode.FullPath
 
