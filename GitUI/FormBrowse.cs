@@ -319,6 +319,8 @@ namespace GitUI
         {
             foreach (var plugin in LoadedPlugins.Plugins)
                 plugin.Register(UICommands);
+
+            UICommands.RaisePostRegisterPlugin(this);
         }
 
         private void UnregisterPlugins()
