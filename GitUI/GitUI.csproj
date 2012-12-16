@@ -781,6 +781,18 @@
     <Compile Include="UserControls\RepoObjectsTree.Designer.cs">
       <DependentUpon>RepoObjectsTree.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\RepoObjectsTree.Remotes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\RepoObjectsTree.Stashes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\RepoObjectsTree.Submodules.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\RepoObjectsTree.Tags.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="WarningToolStripItem.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -9,7 +9,7 @@ using GitCommands;
 
 namespace GitUI.UserControls
 {
-    // "branches" implementation
+    // "branches"
     public partial class RepoObjectsTree
     {
         /// <summary>current nodes being displayed</summary>
