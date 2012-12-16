@@ -9,7 +9,7 @@ using ResourceManager.Translation;
 
 namespace Gerrit
 {
-    public sealed partial class FormGitReview : GitExtensionsForm
+    public sealed partial class FormGitReview : GitExtensionsForm, IGitUICommandsSource
     {
         private readonly TranslationString _gitreviewOnlyInWorkingDirSupported =
             new TranslationString(".gitreview is only supported when there is a working dir.");
@@ -27,8 +27,28 @@ namespace Gerrit
             new TranslationString("Save changes?");
 
         private string _originalGitReviewFileContent = string.Empty;
-        private readonly IGitUICommands UICommands;
         private IGitModule Module { get { return UICommands.GitModule; } }
+
+        public event GitUICommandsChangedEventHandler GitUICommandsChanged;
+
+        private void OnGitUICommandsChanged(GitUICommands oldcommands)
+        {
+            GitUICommandsChangedEventHandler handler = GitUICommandsChanged;
+            if (handler != null)
+                handler(this, oldcommands);
+        }
+
+        private GitUICommands _uiCommands;
+        public GitUICommands UICommands
+        {
+            get { return _uiCommands; }
+            set
+            {
+                var oldcommands = _uiCommands;
+                _uiCommands = value;
+                OnGitUICommandsChanged(oldcommands);
+            }
+        }
 
         public FormGitReview(IGitUICommands aUICommands)
             : base(true)
@@ -36,7 +56,7 @@ namespace Gerrit
             InitializeComponent();
             Translate();
 
-            UICommands = aUICommands;
+            UICommands = (GitUICommands)aUICommands;
             if (UICommands != null)
             {
                 LoadGitReview();
