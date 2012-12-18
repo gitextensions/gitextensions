@@ -74,9 +74,9 @@ namespace GitUI
             Stashes.Items.Clear();
             foreach (GitStash stashedItem in stashedItems)
                 Stashes.Items.Add(stashedItem);
-            if (Stashes.Items.Count > 1)
-                Stashes.SelectedIndex = 1;
-            else if (Stashes.Items.Count > 0)
+            if (Stashes.Items.Count > 1)// more than just the default ("Current working dir changes")
+                Stashes.SelectedIndex = 1;// -> auto-select first non-default
+            else if (Stashes.Items.Count > 0)// (no stashes) -> select default ("Current working dir changes")
                 Stashes.SelectedIndex = 0;
         }
 
@@ -121,9 +121,13 @@ namespace GitUI
                 gitStash == currentWorkingDirStashItem) //current working dir
             {
                 View.ViewCurrentChanges(stashedItem.Name, stashedItem.OldName, stashedItem.IsStaged, stashedItem.IsSubmodule);
+                Clear.Enabled = false; // disallow Drop  (of current working dir)
+                Apply.Enabled = false; // disallow Apply (of current working dir)
             }
             else if (stashedItem != null)
             {
+                Clear.Enabled = true; // allow Drop
+                Apply.Enabled = true; // allow Apply
                 if (stashedItem.IsNew && !stashedItem.IsTracked)
                 {
                     if (!stashedItem.IsSubmodule)
