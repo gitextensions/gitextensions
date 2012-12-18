@@ -302,6 +302,7 @@ namespace GitUI
             this.Stashes.Name = "Stashes";
             this.Stashes.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.Stashes.Size = new System.Drawing.Size(150, 25);
+            this.Stashes.ToolTipText = "Select a stash";
             this.Stashes.SelectedIndexChanged += new System.EventHandler(this.StashesSelectedIndexChanged);
             // 
             // toolStripButton_customMessage
@@ -315,7 +316,8 @@ namespace GitUI
             this.toolStripButton_customMessage.Name = "toolStripButton_customMessage";
             this.toolStripButton_customMessage.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.toolStripButton_customMessage.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton_customMessage.Text = "Custom Stashmessage";
+            this.toolStripButton_customMessage.Text = "Custom stash message";
+            this.toolStripButton_customMessage.ToolTipText = "Write custom stash message";
             this.toolStripButton_customMessage.Click += new System.EventHandler(this.toolStripButton_customMessage_Click);
             this.toolStripButton_customMessage.EnabledChanged += new System.EventHandler(this.toolStripButton_customMessage_EnabledChanged);
             // 
