@@ -43,8 +43,8 @@ namespace GitUI
             this.Clear = new System.Windows.Forms.Button();
             this.StashMessage = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.Stashed = new GitUI.FileStatusList();
             this.Loading = new System.Windows.Forms.PictureBox();
+            this.Stashed = new GitUI.FileStatusList();
             this.toolStrip1 = new GitUI.ToolStripEx();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
@@ -52,10 +52,9 @@ namespace GitUI
             this.toolStripButton_customMessage = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.View = new GitUI.Editor.FileViewer();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.gitStashBindingSource)).BeginInit();
-#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-#endif
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -122,25 +121,26 @@ namespace GitUI
             this.tableLayoutPanel1.Controls.Add(this.Apply, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.Clear, 0, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 399);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 397);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 4;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(275, 118);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(275, 120);
             this.tableLayoutPanel1.TabIndex = 5;
             // 
             // Stash
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.Stash, 2);
             this.Stash.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Stash.Location = new System.Drawing.Point(3, 28);
+            this.Stash.Location = new System.Drawing.Point(3, 30);
             this.Stash.Name = "Stash";
             this.Stash.Size = new System.Drawing.Size(269, 25);
             this.Stash.TabIndex = 2;
             this.Stash.Text = "Stash all changes";
+            this.toolTip.SetToolTip(this.Stash, "Save local changes to a new stash, then revert local changes");
             this.Stash.UseVisualStyleBackColor = true;
             this.Stash.Click += new System.EventHandler(this.StashClick);
             // 
@@ -150,9 +150,10 @@ namespace GitUI
             this.chkIncludeUntrackedFiles.AutoSize = true;
             this.chkIncludeUntrackedFiles.Location = new System.Drawing.Point(140, 3);
             this.chkIncludeUntrackedFiles.Name = "chkIncludeUntrackedFiles";
-            this.chkIncludeUntrackedFiles.Size = new System.Drawing.Size(132, 19);
+            this.chkIncludeUntrackedFiles.Size = new System.Drawing.Size(132, 21);
             this.chkIncludeUntrackedFiles.TabIndex = 14;
             this.chkIncludeUntrackedFiles.Text = "Include untracked files";
+            this.toolTip.SetToolTip(this.chkIncludeUntrackedFiles, "All untracked files are also stashed and then cleaned");
             this.chkIncludeUntrackedFiles.UseVisualStyleBackColor = true;
             // 
             // StashKeepIndex
@@ -161,20 +162,22 @@ namespace GitUI
             this.StashKeepIndex.AutoSize = true;
             this.StashKeepIndex.Location = new System.Drawing.Point(3, 3);
             this.StashKeepIndex.Name = "StashKeepIndex";
-            this.StashKeepIndex.Size = new System.Drawing.Size(83, 19);
+            this.StashKeepIndex.Size = new System.Drawing.Size(92, 21);
             this.StashKeepIndex.TabIndex = 13;
             this.StashKeepIndex.Text = "Keep index";
+            this.toolTip.SetToolTip(this.StashKeepIndex, "All changes already added to the index are left intact");
             this.StashKeepIndex.UseVisualStyleBackColor = true;
             // 
             // Apply
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.Apply, 2);
             this.Apply.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Apply.Location = new System.Drawing.Point(3, 90);
+            this.Apply.Location = new System.Drawing.Point(3, 92);
             this.Apply.Name = "Apply";
             this.Apply.Size = new System.Drawing.Size(269, 25);
             this.Apply.TabIndex = 1;
             this.Apply.Text = "Apply selected stash to working dir";
+            this.toolTip.SetToolTip(this.Apply, "Apply selected stash on top of current working tree state");
             this.Apply.UseVisualStyleBackColor = true;
             this.Apply.Click += new System.EventHandler(this.ApplyClick);
             // 
@@ -182,11 +185,12 @@ namespace GitUI
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.Clear, 2);
             this.Clear.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Clear.Location = new System.Drawing.Point(3, 59);
+            this.Clear.Location = new System.Drawing.Point(3, 61);
             this.Clear.Name = "Clear";
             this.Clear.Size = new System.Drawing.Size(269, 25);
             this.Clear.TabIndex = 0;
             this.Clear.Text = "Drop selected stash";
+            this.toolTip.SetToolTip(this.Clear, "Remove selected stash from the list");
             this.Clear.UseVisualStyleBackColor = true;
             this.Clear.Click += new System.EventHandler(this.ClearClick);
             // 
@@ -210,18 +214,8 @@ namespace GitUI
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 79);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(275, 314);
+            this.panel1.Size = new System.Drawing.Size(275, 312);
             this.panel1.TabIndex = 4;
-            // 
-            // Stashed
-            // 
-            this.Stashed.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Stashed.Location = new System.Drawing.Point(0, 0);
-            this.Stashed.Margin = new System.Windows.Forms.Padding(4);
-            this.Stashed.Name = "Stashed";
-            this.Stashed.Size = new System.Drawing.Size(275, 314);
-            this.Stashed.TabIndex = 0;
-            this.Stashed.SelectedIndexChanged += new System.EventHandler(this.StashedSelectedIndexChanged);
             // 
             // Loading
             // 
@@ -230,11 +224,21 @@ namespace GitUI
             this.Loading.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Loading.Location = new System.Drawing.Point(0, 0);
             this.Loading.Name = "Loading";
-            this.Loading.Size = new System.Drawing.Size(275, 314);
+            this.Loading.Size = new System.Drawing.Size(275, 312);
             this.Loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.Loading.TabIndex = 12;
             this.Loading.TabStop = false;
             this.Loading.Visible = false;
+            // 
+            // Stashed
+            // 
+            this.Stashed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Stashed.Location = new System.Drawing.Point(0, 0);
+            this.Stashed.Margin = new System.Windows.Forms.Padding(4);
+            this.Stashed.Name = "Stashed";
+            this.Stashed.Size = new System.Drawing.Size(275, 312);
+            this.Stashed.TabIndex = 0;
+            this.Stashed.SelectedIndexChanged += new System.EventHandler(this.StashedSelectedIndexChanged);
             // 
             // toolStrip1
             // 
@@ -328,9 +332,7 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.gitStashBindingSource)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-#endif
             this.splitContainer1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
@@ -366,5 +368,6 @@ namespace GitUI
         private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel1;
         private Panel panel1;
+        private ToolTip toolTip;
     }
 }
