@@ -94,13 +94,21 @@ namespace GitUI
             {
                 Stashed.GitItemStatuses = null;
             }
-            else if (gitStash == currentWorkingDirStashItem)
+            else if(gitStash == currentWorkingDirStashItem)
             {
                 toolStripButton_customMessage.Enabled = true;
                 AsyncLoader.DoAsync(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
+                Clear.Enabled = false; // disallow Drop  (of current working dir)
+                Apply.Enabled = false; // disallow Apply (of current working dir)
+                //Pop.Enabled = false;
             }
             else
+            {
                 AsyncLoader.DoAsync(() => Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
+                Clear.Enabled = true; // allow Drop
+                Apply.Enabled = true; // allow Apply
+                //Pop.Enabled = true;
+            }
         }
 
         private void LoadGitItemStatuses(IList<GitItemStatus> gitItemStatuses)
@@ -121,13 +129,9 @@ namespace GitUI
                 gitStash == currentWorkingDirStashItem) //current working dir
             {
                 View.ViewCurrentChanges(stashedItem.Name, stashedItem.OldName, stashedItem.IsStaged, stashedItem.IsSubmodule);
-                Clear.Enabled = false; // disallow Drop  (of current working dir)
-                Apply.Enabled = false; // disallow Apply (of current working dir)
             }
             else if (stashedItem != null)
             {
-                Clear.Enabled = true; // allow Drop
-                Apply.Enabled = true; // allow Apply
                 if (stashedItem.IsNew && !stashedItem.IsTracked)
                 {
                     if (!stashedItem.IsSubmodule)
@@ -136,7 +140,7 @@ namespace GitUI
                         View.ViewText(stashedItem.Name,
                             GitCommandHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid));
                 }
-                else 
+                else
                 {
                     string extraDiffArguments = View.GetExtraDiffArguments();
                     Encoding encoding = this.View.Encoding;
@@ -225,8 +229,6 @@ namespace GitUI
                 Initialize();
                 Cursor.Current = Cursors.Default;
             }
-            
-
         }
 
         private void ApplyClick(object sender, EventArgs e)
@@ -235,6 +237,14 @@ namespace GitUI
 
             MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
 
+            Initialize();
+        }
+
+        void PopClick(object sender, EventArgs e)
+        {// pop [--index] [-q|--quiet] [<stash>] 
+            return;
+            FormProcess.ShowDialog(this, string.Format("stash pop {0}", Stashes.Text.Quote()));
+            // MergeConflictHandler?
             Initialize();
         }
 
@@ -266,7 +276,7 @@ namespace GitUI
         }
 
         private void FormStashShown(object sender, EventArgs e)
-        {
+        {// shown when form is first displayed
             RefreshAll();
         }
 
@@ -318,6 +328,6 @@ namespace GitUI
                 StashMessage.ReadOnly = false;
             }
         }
-
+    
     }
 }
