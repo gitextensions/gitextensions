@@ -1192,8 +1192,13 @@ namespace GitUI
                 {
                     bSilent = (ModifierKeys & Keys.Shift) != 0;
                 }
-                else
+                else if (Module.LastPullAction == Settings.PullAction.FetchAll)
                 {
+                    fetchAllToolStripMenuItem_Click(sender, e);
+                    return;
+                }
+                else
+                { 
                     bSilent = true;
                     Module.LastPullActionToPullMerge();
                 }
