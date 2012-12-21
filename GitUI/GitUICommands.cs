@@ -154,6 +154,8 @@ namespace GitUI
         /// </summary>
         public event GitUIEventHandler PostRepositoryChanged;
 
+        public event GitUIEventHandler PostRegisterPlugin;
+
         #endregion
 
         public string GitCommand(string arguments)
@@ -1957,6 +1959,11 @@ namespace GitUI
             InvokeEvent(owner, PostBrowseInitialize);
         }
 
+        internal void RaisePostRegisterPlugin(IWin32Window owner)
+        {
+            InvokeEvent(owner, PostRegisterPlugin);
+        }
+
         public void RaiseBrowseInitialize()
         {
             InvokeEvent(null, BrowseInitialize);
@@ -2007,13 +2014,13 @@ namespace GitUI
                     form.ShowDialog(OwnerForm as IWin32Window);
 
                     ErrorOccurred = form.ErrorOccurred();
-                    CommandOutput = form.OutputString.ToString();
+                    CommandOutput = form.GetOutputString();
                 }
             }
 
             private bool HandleOnExit(ref bool isError, FormProcess form)
             {
-                CommandOutput = form.OutputString.ToString();
+                CommandOutput = form.GetOutputString();
 
                 var e = new GitRemoteCommandCompletedEventArgs(this, isError, false);
 
