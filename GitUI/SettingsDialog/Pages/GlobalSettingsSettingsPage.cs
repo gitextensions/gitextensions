@@ -17,9 +17,9 @@ namespace GitUI.SettingsDialog.Pages
     {
         private readonly TranslationString __diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
 
-        CommonLogic _commonLogic;
-        CheckSettingsLogic _checkSettingsLogic;
-        GitModule _gitModule;
+        readonly CommonLogic _commonLogic;
+        readonly CheckSettingsLogic _checkSettingsLogic;
+        readonly GitModule _gitModule;
 
         public GlobalSettingsSettingsPage(CommonLogic commonLogic, CheckSettingsLogic checkSettingsLogic, GitModule gitModule)
         {

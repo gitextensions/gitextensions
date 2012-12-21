@@ -19,8 +19,8 @@ namespace GitUI.SettingsDialog.Pages
         private readonly TranslationString _noDictFilesFound =
             new TranslationString("No dictionary files found in: {0}");
 
-        private Font diffFont;
-        private Font applicationFont;
+        private Font _diffFont;
+        private Font _applicationFont;
 
         public AppearanceSettingsPage()
         {
@@ -95,8 +95,8 @@ namespace GitUI.SettingsDialog.Pages
 
             Settings.Dictionary = Dictionary.Text;
 
-            Settings.DiffFont = diffFont;
-            Settings.Font = applicationFont;
+            Settings.DiffFont = _diffFont;
+            Settings.Font = _applicationFont;
         }
 
         private void Dictionary_DropDown(object sender, EventArgs e)
@@ -121,35 +121,35 @@ namespace GitUI.SettingsDialog.Pages
 
         private void diffFontChangeButton_Click(object sender, EventArgs e)
         {
-            diffFontDialog.Font = diffFont;
+            diffFontDialog.Font = _diffFont;
             DialogResult result = diffFontDialog.ShowDialog(this);
 
             if (result == DialogResult.OK || result == DialogResult.Yes)
             {
-                SetCurrentDiffFont(applicationFont, diffFontDialog.Font);
+                SetCurrentDiffFont(_applicationFont, diffFontDialog.Font);
             }
         }
 
         private void applicationFontChangeButton_Click(object sender, EventArgs e)
         {
-            applicationDialog.Font = applicationFont;
+            applicationDialog.Font = _applicationFont;
             DialogResult result = applicationDialog.ShowDialog(this);
 
             if (result == DialogResult.OK || result == DialogResult.Yes)
             {
-                SetCurrentDiffFont(applicationDialog.Font, diffFont);
+                SetCurrentDiffFont(applicationDialog.Font, _diffFont);
             }
         }
 
         private void SetCurrentDiffFont(Font applicationFont, Font diffFont)
         {
-            this.diffFont = diffFont;
-            this.applicationFont = applicationFont;
+            this._diffFont = diffFont;
+            this._applicationFont = applicationFont;
 
             diffFontChangeButton.Text =
-                string.Format("{0}, {1}", this.diffFont.FontFamily.Name, (int)(this.diffFont.Size + 0.5f));
+                string.Format("{0}, {1}", this._diffFont.FontFamily.Name, (int)(this._diffFont.Size + 0.5f));
             applicationFontChangeButton.Text =
-                string.Format("{0}, {1}", this.applicationFont.FontFamily.Name, (int)(this.applicationFont.Size + 0.5f));
+                string.Format("{0}, {1}", this._applicationFont.FontFamily.Name, (int)(this._applicationFont.Size + 0.5f));
         }
 
         private void ClearImageCache_Click(object sender, EventArgs e)

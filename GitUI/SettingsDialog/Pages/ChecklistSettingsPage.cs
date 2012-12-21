@@ -154,10 +154,10 @@ namespace GitUI.SettingsDialog.Pages
         private readonly TranslationString _noDiffToolConfiguredCaption =
             new TranslationString("Difftool");
 
-        CommonLogic _commonLogic;
-        CheckSettingsLogic _checkSettingsLogic;
+        readonly CommonLogic _commonLogic;
+        readonly CheckSettingsLogic _checkSettingsLogic;
         GitModule _gitModule;
-        ISettingsPageHost _settingsPageHost;
+        readonly ISettingsPageHost _settingsPageHost;
 
         public ChecklistSettingsPage(CommonLogic commonLogic,
             CheckSettingsLogic checkSettingsLogic,
