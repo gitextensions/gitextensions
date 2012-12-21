@@ -90,7 +90,7 @@ namespace GitUI
             _checkSettingsLogic.ChecklistSettingsPage = _checklistSettingsPage; // TODO
             _settingsPageRegistry.RegisterSettingsPage(_checklistSettingsPage);
 
-            _gitSettingsPage = new GitSettingsPage(_checkSettingsLogic);
+            _gitSettingsPage = new GitSettingsPage(_checkSettingsLogic, this);
             _settingsPageRegistry.RegisterSettingsPage(_gitSettingsPage);
 
             _gitExtensionsSettingsPage = new GitExtensionsSettingsPage();
