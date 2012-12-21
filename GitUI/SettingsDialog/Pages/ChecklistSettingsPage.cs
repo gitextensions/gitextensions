@@ -16,7 +16,6 @@ using System.Diagnostics;
 namespace GitUI.SettingsDialog.Pages
 {
     /// <summary>
-    /// TODO: search for NotImplementedException
     /// </summary>
     public partial class ChecklistSettingsPage : SettingsPageBase
     {
@@ -334,7 +333,7 @@ namespace GitUI.SettingsDialog.Pages
             if (CheckSettingsLogic.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
                 string.IsNullOrEmpty(_gitModule.GetGlobalSetting("difftool.kdiff3.path")))
             {
-                MessageBox.Show(this, ChecklistSettingsPage._kdiff3NotFoundAuto.Text);
+                MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
                 GotoPageGlobalSettings();
                 return;
             }
@@ -383,10 +382,11 @@ namespace GitUI.SettingsDialog.Pages
             SaveAndRescan_Click(null, null);
         }
 
-        private void SetGlobalMergeToolText(string text)
-        {
-            throw new NotImplementedException("GlobalMergeTool.Text = ...");
-        }
+        // TODO: needed somewhere?
+        ////private void SetGlobalMergeToolText(string text)
+        ////{
+        ////    throw new NotImplementedException("GlobalMergeTool.Text = ...");
+        ////}
 
         private void GotoPageGlobalSettings()
         {
