@@ -49,6 +49,7 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PostVerifyDatabase;
         event GitUIEventHandler PostViewPatch;
         event GitUIEventHandler PostBrowseInitialize;
+        event GitUIEventHandler PostRegisterPlugin;
         event GitUIEventHandler PreAddFiles;
         event GitUIEventHandler PreApplyPatch;
         event GitUIEventHandler PreArchive;
