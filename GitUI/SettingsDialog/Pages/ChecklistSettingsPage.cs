@@ -194,12 +194,6 @@ namespace GitUI.SettingsDialog.Pages
             CheckSettings();
         }
 
-        [Browsable(false)]
-        public GitModule Module {
-            get { return _gitModule; /* TODO: see GitModuleForm */ }
-            set { _gitModule = value; }
-        }
-
         private void gitCredentialWinStore_Fix_Click(object sender, EventArgs e)
         {
             if (_checkSettingsLogic.SolveGitCredentialStore())
@@ -317,7 +311,7 @@ namespace GitUI.SettingsDialog.Pages
             }
 
             if (CheckSettingsLogic.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
-                string.IsNullOrEmpty(Module.GetGlobalSetting("difftool.kdiff3.path")))
+                string.IsNullOrEmpty(_gitModule.GetGlobalSetting("difftool.kdiff3.path")))
             {
                 MessageBox.Show(this, ChecklistSettingsPage._kdiff3NotFoundAuto.Text);
                 GotoPageGlobalSettings();
@@ -353,12 +347,12 @@ namespace GitUI.SettingsDialog.Pages
             {
                 _checkSettingsLogic.AutoConfigMergeToolCmd(true);
 
-                Module.SetGlobalPathSetting(
+                _gitModule.SetGlobalPathSetting(
                     string.Format("mergetool.{0}.cmd", _commonLogic.GetGlobalMergeTool()), GetMergeToolCmdText());
             }
 
             if (_commonLogic.IsMergeTool("kdiff3") &&
-                string.IsNullOrEmpty(Module.GetGlobalSetting("mergetool.kdiff3.path")))
+                string.IsNullOrEmpty(_gitModule.GetGlobalSetting("mergetool.kdiff3.path")))
             {
                 MessageBox.Show(this, _kdiff3NotFoundAuto.Text);
                 GotoPageGlobalSettings();
@@ -581,7 +575,7 @@ namespace GitUI.SettingsDialog.Pages
             {
                 if (CheckSettingsLogic.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    string p = Module.GetGlobalSetting("difftool.kdiff3.path");
+                    string p = _gitModule.GetGlobalSetting("difftool.kdiff3.path");
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
                         DiffTool.BackColor = Color.LightSalmon;
@@ -617,7 +611,7 @@ namespace GitUI.SettingsDialog.Pages
             {
                 if (_commonLogic.IsMergeTool("kdiff3"))
                 {
-                    string p = Module.GetGlobalSetting("mergetool.kdiff3.path");
+                    string p = _gitModule.GetGlobalSetting("mergetool.kdiff3.path");
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
                     {
                         MergeTool.BackColor = Color.LightSalmon;
@@ -633,7 +627,7 @@ namespace GitUI.SettingsDialog.Pages
                 string mergetool = _commonLogic.GetGlobalMergeTool().ToLowerInvariant();
                 if (mergetool == "p4merge" || mergetool == "tmerge")
                 {
-                    string p = Module.GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
+                    string p = _gitModule.GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
                     if (string.IsNullOrEmpty(p))
                     {
                         MergeTool.BackColor = Color.LightSalmon;
@@ -656,8 +650,8 @@ namespace GitUI.SettingsDialog.Pages
         private bool CheckGlobalUserSettingsValid()
         {
             UserNameSet.Visible = true;
-            if (string.IsNullOrEmpty(Module.GetGlobalSetting("user.name")) ||
-                string.IsNullOrEmpty(Module.GetGlobalSetting("user.email")))
+            if (string.IsNullOrEmpty(_gitModule.GetGlobalSetting("user.name")) ||
+                string.IsNullOrEmpty(_gitModule.GetGlobalSetting("user.email")))
             {
                 UserNameSet.BackColor = Color.LightSalmon;
                 UserNameSet.Text = _noEmailSet.Text;
