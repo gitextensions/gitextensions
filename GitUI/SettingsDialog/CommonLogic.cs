@@ -26,28 +26,24 @@ namespace GitUI.SettingsDialog
         private static readonly TranslationString _selectFile =
             new TranslationString("Select file");
 
-        private GitModule _gitModule;
+        private readonly GitModule _gitModule;
+
         public CommonLogic(GitModule gitModule)
         {
             _gitModule = gitModule;
         }
-
-        /// <summary>
-        /// remove later
-        /// </summary>
-        private GitModule Module { get { return _gitModule; } }
 
         public const string GitExtensionsShellEx32Name = "GitExtensionsShellEx32.dll";
         public const string GitExtensionsShellEx64Name = "GitExtensionsShellEx64.dll";
 
         public string GetGlobalMergeTool()
         {
-            return Module.GetGlobalSetting("merge.tool");
+            return _gitModule.GetGlobalSetting("merge.tool");
         }
 
         public void SetGlobalMergeTool(string value)
         {
-            Module.SetGlobalSetting("merge.tool", value);
+            _gitModule.SetGlobalSetting("merge.tool", value);
         }
 
         public bool IsMergeTool(string toolName)
@@ -88,7 +84,7 @@ namespace GitUI.SettingsDialog
                 TextWriter tw = new StreamWriter(Path.GetTempPath() + "GitExtensions.reg", false);
                 tw.Write(reg);
                 tw.Close();
-                Module.RunCmd("regedit", "\"" + Path.GetTempPath() + "GitExtensions.reg" + "\"");
+                _gitModule.RunCmd("regedit", "\"" + Path.GetTempPath() + "GitExtensions.reg" + "\"");
             }
             catch (UnauthorizedAccessException)
             {
@@ -101,7 +97,7 @@ namespace GitUI.SettingsDialog
             string editor = Environment.GetEnvironmentVariable("GIT_EDITOR");
             if (!string.IsNullOrEmpty(editor))
                 return editor;
-            editor = Module.GetGlobalPathSetting("core.editor");
+            editor = _gitModule.GetGlobalPathSetting("core.editor");
             if (!string.IsNullOrEmpty(editor))
                 return editor;
             editor = Environment.GetEnvironmentVariable("VISUAL");
