@@ -2,21 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Config;
-using GitUI.Editor;
-using GitUI.Script;
-using Gravatar;
-using Microsoft.Win32;
 using ResourceManager.Translation;
 using GitUI.SettingsDialog;
 using GitUI.SettingsDialog.Pages;
 
+// TODO: fix namespaces
 namespace GitUI
 {
     public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
@@ -34,36 +28,40 @@ namespace GitUI
         private readonly TranslationString _cantFindGitMessageCaption =
             new TranslationString("Incorrect path");
 
+        [Obsolete("TODO: not used?")]
         private readonly TranslationString _linuxToolsShNotFound =
             new TranslationString("The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
                 "Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.");
 
+        [Obsolete("TODO: not used?")]
         private readonly TranslationString _linuxToolsShNotFoundCaption =
             new TranslationString("Locate linux tools");
 
+        [Obsolete("TODO: not used?")]
         private readonly TranslationString _shCanBeRun =
             new TranslationString("Command sh can be run using: {0}sh");
 
+        [Obsolete("TODO: not used?")]
         private readonly TranslationString _shCanBeRunCaption =
             new TranslationString("Locate linux tools");
 
         #endregion
 
-        SettingsPageRegistry _settingsPageRegistry = new SettingsPageRegistry();
-        CommonLogic _commonLogic;
-        CheckSettingsLogic _checkSettingsLogic;
-        ChecklistSettingsPage _checklistSettingsPage;
-        GitSettingsPage _gitSettingsPage;
-        GitExtensionsSettingsPage _gitExtensionsSettingsPage;
-        AppearanceSettingsPage _appearanceSettingsPage;
-        ColorsSettingsPage _colorsSettingsPage;
-        GlobalSettingsSettingsPage _globalSettingsSettingsPage;
-        HotkeysSettingsPage _hotkeysSettingsPage;
-        LocalSettingsSettingsPage _localSettingsSettingsPage;
-        ScriptsSettingsPage _scriptsSettingsPage;
-        ShellExtensionSettingsPage _shellExtensionSettingsPage;
-        SshSettingsPage _sshSettingsPage;
-        StartPageSettingsPage _startPageSettingsPage;
+        readonly SettingsPageRegistry _settingsPageRegistry = new SettingsPageRegistry();
+        readonly CommonLogic _commonLogic;
+        readonly CheckSettingsLogic _checkSettingsLogic;
+        readonly ChecklistSettingsPage _checklistSettingsPage;
+        readonly GitSettingsPage _gitSettingsPage;
+        readonly GitExtensionsSettingsPage _gitExtensionsSettingsPage;
+        readonly AppearanceSettingsPage _appearanceSettingsPage;
+        readonly ColorsSettingsPage _colorsSettingsPage;
+        readonly GlobalSettingsSettingsPage _globalSettingsSettingsPage;
+        readonly HotkeysSettingsPage _hotkeysSettingsPage;
+        readonly LocalSettingsSettingsPage _localSettingsSettingsPage;
+        readonly ScriptsSettingsPage _scriptsSettingsPage;
+        readonly ShellExtensionSettingsPage _shellExtensionSettingsPage;
+        readonly SshSettingsPage _sshSettingsPage;
+        readonly StartPageSettingsPage _startPageSettingsPage;
 
         private FormSettings()
             : this(null)
@@ -179,11 +177,13 @@ namespace GitUI
             }
         }
 
-        private bool loadingSettings;
+        // TODO: see SettingsPageBase.loadingSettings
+        ////private bool loadingSettings;
 
         public void LoadSettings()
         {
-            loadingSettings = true;
+            ////loadingSettings = true;
+
             try
             {
                 foreach (var settingsPage in _settingsPageRegistry.GetSettingsPages())
@@ -199,7 +199,8 @@ namespace GitUI
                 // and has their day ruined.
                 DialogResult = DialogResult.Abort;
             }
-            loadingSettings = false;
+
+            ////loadingSettings = false;
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -240,6 +241,7 @@ namespace GitUI
             return true;
         }
 
+        // TODO: needed?
         private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
         {
             ////Cursor.Current = Cursors.WaitCursor;
