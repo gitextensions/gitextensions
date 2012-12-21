@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using GitCommands;
 using Microsoft.Win32;
 using System.IO;
-using GitCommands.Config;
 using ResourceManager.Translation;
 using System.Reflection;
 using System.Diagnostics;
@@ -154,10 +153,21 @@ namespace GitUI.SettingsDialog.Pages
         private readonly TranslationString _noDiffToolConfiguredCaption =
             new TranslationString("Difftool");
 
+        private readonly TranslationString _puttyFoundAuto =
+            new TranslationString("All paths needed for PuTTY could be automatically found and are set.");
+
+        private readonly TranslationString _puttyFoundAutoCaption =
+            new TranslationString("PuTTY");
+
         readonly CommonLogic _commonLogic;
         readonly CheckSettingsLogic _checkSettingsLogic;
-        GitModule _gitModule;
+        readonly GitModule _gitModule;
         readonly ISettingsPageHost _settingsPageHost;
+
+        /// <summary>
+        /// TODO: remove this direct dependency to another SettingsPage later when possible
+        /// </summary>
+        public SshSettingsPage SshSettingsPage { get; set; }
 
         public ChecklistSettingsPage(CommonLogic commonLogic,
             CheckSettingsLogic checkSettingsLogic,
@@ -175,7 +185,7 @@ namespace GitUI.SettingsDialog.Pages
             Text = "Checklist";
         }
 
-        public static SettingsPageReference GetReference()
+        public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReference(typeof(ChecklistSettingsPage));
         }
@@ -222,15 +232,26 @@ namespace GitUI.SettingsDialog.Pages
 
         private void SshConfig_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException(@"
-            if (Putty.Checked)
+            if (GitCommandHelpers.Plink())
             {
-                if (AutoFindPuttyPaths())
+                if (SshSettingsPage.AutoFindPuttyPaths())
+                {
                     MessageBox.Show(this, _puttyFoundAuto.Text, _puttyFoundAutoCaption.Text);
+                }
                 else
-                    tabControl1.SelectTab(tpSsh);
+                {
+                    _settingsPageHost.GotoPage(SshSettingsPage.GetPageReference());   
+                }
             }
-");
+
+            // original
+////            if (Putty.Checked)
+////            {
+////                if (AutoFindPuttyPaths())
+////                    MessageBox.Show(this, _puttyFoundAuto.Text, _puttyFoundAutoCaption.Text);
+////                else
+////                    tabControl1.SelectTab(tpSsh);
+////            }
         }
 
         private void GitExtensionsInstall_Click(object sender, EventArgs e)
@@ -374,13 +395,13 @@ namespace GitUI.SettingsDialog.Pages
 
         private void GotoPageGlobalSettings()
         {
-            _settingsPageHost.GotoPage(GlobalSettingsSettingsPage.GetReference());
+            _settingsPageHost.GotoPage(GlobalSettingsSettingsPage.GetPageReference());
         }
 
         private void UserNameSet_Click(object sender, EventArgs e)
         {
             GotoPageGlobalSettings();
-            // TODO: bonus: jump directly to correct text box
+            // nice-to-have: jump directly to correct text box
         }
 
         private void GitFound_Click(object sender, EventArgs e)
@@ -389,13 +410,13 @@ namespace GitUI.SettingsDialog.Pages
             {
                 MessageBox.Show(this, _solveGitCommandFailed.Text, _solveGitCommandFailedCaption.Text);
 
-                _settingsPageHost.GotoPage(GitSettingsPage.GetReference());
+                _settingsPageHost.GotoPage(GitSettingsPage.GetPageReference());
                 return;
             }
 
             MessageBox.Show(this, String.Format(_gitCanBeRun.Text, Settings.GitCommand), _gitCanBeRunCaption.Text);
 
-            _settingsPageHost.GotoPage(GitSettingsPage.GetReference());
+            _settingsPageHost.GotoPage(GitSettingsPage.GetPageReference());
             SaveAndRescan_Click(null, null);
         }
 

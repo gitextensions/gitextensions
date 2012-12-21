@@ -27,6 +27,11 @@ namespace GitUI.SettingsDialog.Pages
             return "plink,putty,openssh,pageant";
         }
 
+        public static SettingsPageReference GetPageReference()
+        {
+            return new SettingsPageReference(typeof(SshSettingsPage));
+        }
+
         protected override void OnLoadSettings()
         {
             PlinkPath.Text = Settings.Plink;
@@ -100,7 +105,7 @@ namespace GitUI.SettingsDialog.Pages
             yield return Settings.GetInstallDir() + @"\PuTTY\";
         }
 
-        private bool AutoFindPuttyPaths()
+        public bool AutoFindPuttyPaths()
         {
             if (!Settings.RunningOnWindows())
                 return false;
