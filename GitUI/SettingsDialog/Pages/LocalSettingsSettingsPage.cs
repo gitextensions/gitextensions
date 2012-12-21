@@ -13,9 +13,9 @@ namespace GitUI.SettingsDialog.Pages
 {
     public partial class LocalSettingsSettingsPage : SettingsPageBase
     {
-        CommonLogic _commonLogic;
-        CheckSettingsLogic _checkSettingsLogic;
-        GitModule _gitModule;
+        readonly CommonLogic _commonLogic;
+        readonly CheckSettingsLogic _checkSettingsLogic;
+        readonly GitModule _gitModule;
 
         public LocalSettingsSettingsPage(CommonLogic commonLogic, CheckSettingsLogic checkSettingsLogic, GitModule gitModule)
         {

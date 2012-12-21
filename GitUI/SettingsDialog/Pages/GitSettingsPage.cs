@@ -17,17 +17,20 @@ namespace GitUI.SettingsDialog.Pages
         private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
 
         ////CommonLogic _commonLogic;
-        CheckSettingsLogic _checkSettingsLogic;
+        readonly CheckSettingsLogic _checkSettingsLogic;
+        private readonly ISettingsPageHost _settingsPageHost;
 
         public GitSettingsPage(
             ////CommonLogic commonLogic,
-            CheckSettingsLogic checkSettingsLogic)
+            CheckSettingsLogic checkSettingsLogic,
+            ISettingsPageHost settingsPageHost)
         {
             InitializeComponent();
             Translate();
 
             ////_commonLogic = commonLogic;
             _checkSettingsLogic = checkSettingsLogic;
+            _settingsPageHost = settingsPageHost;
 
             Text = "Git";
         }
@@ -111,6 +114,7 @@ namespace GitUI.SettingsDialog.Pages
 
         private void ChangeHomeButton_Click(object sender, EventArgs e)
         {
+            //// _settingsPageHost.SaveAll(); // TODO
             throw new NotImplementedException(@"
             Save();
             using (var frm = new FormFixHome()) frm.ShowDialog(this);
