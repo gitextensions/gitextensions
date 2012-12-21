@@ -48,7 +48,7 @@ namespace GitUI.SettingsDialog.Pages
             return "path,user,name,email,merge,tool,diff,line ending,encoding,commit template";
         }
 
-        public static SettingsPageReference GetReference()
+        public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReference(typeof(GlobalSettingsSettingsPage));
         }

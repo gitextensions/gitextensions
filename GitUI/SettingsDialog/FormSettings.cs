@@ -47,12 +47,6 @@ namespace GitUI
         private readonly TranslationString _shCanBeRunCaption =
             new TranslationString("Locate linux tools");
 
-        private readonly TranslationString _puttyFoundAuto =
-            new TranslationString("All paths needed for PuTTY could be automatically found and are set.");
-
-        private readonly TranslationString _puttyFoundAutoCaption =
-            new TranslationString("PuTTY");
-
         #endregion
 
         SettingsPageRegistry _settingsPageRegistry = new SettingsPageRegistry();
@@ -113,6 +107,7 @@ namespace GitUI
 
             _sshSettingsPage = new SshSettingsPage();
             _settingsPageRegistry.RegisterSettingsPage(_sshSettingsPage);
+            _checklistSettingsPage.SshSettingsPage = _sshSettingsPage;
 
             _scriptsSettingsPage = new ScriptsSettingsPage();
             _settingsPageRegistry.RegisterSettingsPage(_scriptsSettingsPage);
@@ -141,7 +136,7 @@ namespace GitUI
             LoadSettings();
             Cursor.Current = Cursors.Default;
 
-            GotoPage(ChecklistSettingsPage.GetReference());
+            GotoPage(ChecklistSettingsPage.GetPageReference());
         }
 
         private void settingsTreeViewUserControl1_SettingsPageSelected(object sender, SettingsPageSelectedEventArgs e)

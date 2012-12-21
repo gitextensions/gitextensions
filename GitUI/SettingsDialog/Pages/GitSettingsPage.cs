@@ -36,7 +36,7 @@ namespace GitUI.SettingsDialog.Pages
             return "path,home,environment,variable,msys,cygwin,download,git,command,linux,tools";
         }
 
-        public static SettingsPageReference GetReference()
+        public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReference(typeof(GitSettingsPage));
         }
