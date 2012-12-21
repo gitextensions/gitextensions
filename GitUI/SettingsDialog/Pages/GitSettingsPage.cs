@@ -114,13 +114,18 @@ namespace GitUI.SettingsDialog.Pages
 
         private void ChangeHomeButton_Click(object sender, EventArgs e)
         {
-            //// _settingsPageHost.SaveAll(); // TODO
-            throw new NotImplementedException(@"
-            Save();
+            _settingsPageHost.SaveAll();
             using (var frm = new FormFixHome()) frm.ShowDialog(this);
-            LoadSettings();
-            Rescan_Click(null, null);
-            ");
+            _settingsPageHost.LoadAll();
+            // TODO?: rescan
+
+            // orginal:
+////            throw new NotImplementedException(@"
+////            Save();
+////            using (var frm = new FormFixHome()) frm.ShowDialog(this);
+////            LoadSettings();
+////            Rescan_Click(null, null);
+////            ");
         }
     }
 }
