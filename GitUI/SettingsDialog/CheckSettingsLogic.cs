@@ -299,17 +299,34 @@ namespace GitUI.SettingsDialog
 
         private void SetMergetoolPathText(string text)
         {
-            throw new NotImplementedException("MergetoolPath.Text = ...");
+            ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
+            globalConfig.SetPathValue(string.Format("mergetool.{0}.path", GetGlobalMergeToolText()), text);
+            // orig (TODO: remove comment and rename method):
+            //// MergetoolPath.Text = ...
         }
 
         private void SetMergeToolCmdText(string text)
         {
-            throw new NotImplementedException("MergeToolCmd.Text = ...");
+            ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
+            globalConfig.SetPathValue(string.Format("mergetool.{0}.cmd", GetGlobalMergeToolText()), text);
+            // orig (TODO: remove comment and rename method):
+            //// MergeToolCmd.Text = ...
         }
 
         private string GetGlobalMergeToolText()
         {
-            throw new NotImplementedException("GlobalMergeTool.Text");
+            ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
+            return globalConfig.GetValue("merge.tool");
+            // orig (TODO: remove comment and rename method):
+            //// GlobalMergeTool.Text;
+        }
+
+        public string GetMergeToolCmdText()
+        {
+            ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
+            return globalConfig.GetPathValue(string.Format("mergetool.{0}.cmd", GetGlobalMergeToolText()));
+            // orig (TODO: remove comment and rename method):
+            //// MergeToolCmd.Text
         }
     }
 }
