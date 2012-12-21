@@ -369,7 +369,7 @@ namespace GitUI.SettingsDialog.Pages
                 _checkSettingsLogic.AutoConfigMergeToolCmd(true);
 
                 _gitModule.SetGlobalPathSetting(
-                    string.Format("mergetool.{0}.cmd", _commonLogic.GetGlobalMergeTool()), GetMergeToolCmdText());
+                    string.Format("mergetool.{0}.cmd", _commonLogic.GetGlobalMergeTool()), _checkSettingsLogic.GetMergeToolCmdText());
             }
 
             if (_commonLogic.IsMergeTool("kdiff3") &&
@@ -386,11 +386,6 @@ namespace GitUI.SettingsDialog.Pages
         private void SetGlobalMergeToolText(string text)
         {
             throw new NotImplementedException("GlobalMergeTool.Text = ...");
-        }
-
-        private string GetMergeToolCmdText()
-        {
-            throw new NotImplementedException("MergeToolCmd.Text");
         }
 
         private void GotoPageGlobalSettings()
