@@ -16,19 +16,15 @@ namespace GitUI.SettingsDialog.Pages
     {
         private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
 
-        ////CommonLogic _commonLogic;
         readonly CheckSettingsLogic _checkSettingsLogic;
         private readonly ISettingsPageHost _settingsPageHost;
 
-        public GitSettingsPage(
-            ////CommonLogic commonLogic,
-            CheckSettingsLogic checkSettingsLogic,
+        public GitSettingsPage(CheckSettingsLogic checkSettingsLogic,
             ISettingsPageHost settingsPageHost)
         {
             InitializeComponent();
             Translate();
 
-            ////_commonLogic = commonLogic;
             _checkSettingsLogic = checkSettingsLogic;
             _settingsPageHost = settingsPageHost;
 
@@ -100,11 +96,11 @@ namespace GitUI.SettingsDialog.Pages
         // TODO: handle the case when Checklist makes auto setting
         private void GitPath_TextChanged(object sender, EventArgs e)
         {
-        ////    if (loadingSettings)
-        ////        return;
+            ////    if (loadingSettings)
+            ////        return;
 
-        ////    Settings.GitCommand = GitPath.Text;
-        ////    OnLoadSettings();
+            ////    Settings.GitCommand = GitPath.Text;
+            ////    OnLoadSettings();
         }
 
         private void downloadMsysgit_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -120,12 +116,12 @@ namespace GitUI.SettingsDialog.Pages
             // TODO?: rescan
 
             // orginal:
-////            throw new NotImplementedException(@"
-////            Save();
-////            using (var frm = new FormFixHome()) frm.ShowDialog(this);
-////            LoadSettings();
-////            Rescan_Click(null, null);
-////            ");
+            ////            throw new NotImplementedException(@"
+            ////            Save();
+            ////            using (var frm = new FormFixHome()) frm.ShowDialog(this);
+            ////            LoadSettings();
+            ////            Rescan_Click(null, null);
+            ////            ");
         }
     }
 }

@@ -20,19 +20,16 @@ namespace GitUI.SettingsDialog
 
         public static readonly TranslationString __mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
 
-        CommonLogic _commonLogic;
-        GitModule Module; // TODO: rename to gitModule
+        readonly CommonLogic _commonLogic;
+        readonly GitModule _gitModule;
 
-        /// <summary>
-        /// TODO: remove later!
-        /// </summary>
-        [Obsolete("Remove this dependency!")]
+        [Obsolete("TODO: Remove this dependency to another Page later!")]
         public ChecklistSettingsPage ChecklistSettingsPage { get; set; } 
 
         public CheckSettingsLogic(CommonLogic commonLogic, GitModule gitModule)
         {
             _commonLogic = commonLogic;
-            Module = gitModule;
+            _gitModule = gitModule;
         }
 
         public bool AutoSolveAllSettings()
@@ -57,7 +54,7 @@ namespace GitUI.SettingsDialog
             string editor = _commonLogic.GetGlobalEditor();
             if (string.IsNullOrEmpty(editor))
             {
-                Module.SetGlobalPathSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
+                _gitModule.SetGlobalPathSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
             }
 
             return true;
@@ -185,7 +182,7 @@ namespace GitUI.SettingsDialog
             if (Settings.RunningOnWindows())
             {
                 var command = (from cmd in GetWindowsCommandLocations()
-                               let output = Module.RunCmd(cmd, string.Empty)
+                               let output = _gitModule.RunCmd(cmd, string.Empty)
                                where !string.IsNullOrEmpty(output)
                                select cmd).FirstOrDefault();
 
@@ -197,7 +194,7 @@ namespace GitUI.SettingsDialog
                 return false;
             }
             Settings.GitCommand = "git";
-            return !string.IsNullOrEmpty(Module.RunGitCmd(""));
+            return !string.IsNullOrEmpty(_gitModule.RunGitCmd(""));
         }
 
         public static bool CheckIfFileIsInPath(string fileName)
@@ -214,7 +211,7 @@ namespace GitUI.SettingsDialog
             if (string.IsNullOrEmpty(mergeTool))
             {
                 mergeTool = "kdiff3";
-                Module.SetGlobalSetting("merge.tool", mergeTool);
+                _gitModule.SetGlobalSetting("merge.tool", mergeTool);
             }
 
             if (mergeTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
@@ -259,27 +256,27 @@ namespace GitUI.SettingsDialog
 
         public bool SolveDiffToolPathForKDiff()
         {
-            string kdiff3path = MergeToolsHelper.FindPathForKDiff(Module.GetGlobalSetting("difftool.kdiff3.path"));
+            string kdiff3path = MergeToolsHelper.FindPathForKDiff(_gitModule.GetGlobalSetting("difftool.kdiff3.path"));
             if (string.IsNullOrEmpty(kdiff3path))
                 return false;
 
-            Module.SetGlobalPathSetting("difftool.kdiff3.path", kdiff3path);
+            _gitModule.SetGlobalPathSetting("difftool.kdiff3.path", kdiff3path);
             return true;
         }
 
         public bool SolveMergeToolPathForKDiff()
         {
-            string kdiff3path = MergeToolsHelper.FindPathForKDiff(Module.GetGlobalSetting("mergetool.kdiff3.path"));
+            string kdiff3path = MergeToolsHelper.FindPathForKDiff(_gitModule.GetGlobalSetting("mergetool.kdiff3.path"));
             if (string.IsNullOrEmpty(kdiff3path))
                 return false;
 
-            Module.SetGlobalPathSetting("mergetool.kdiff3.path", kdiff3path);
+            _gitModule.SetGlobalPathSetting("mergetool.kdiff3.path", kdiff3path);
             return true;
         }
 
         public bool CanFindGitCmd()
         {
-            return !string.IsNullOrEmpty(Module.RunGitCmd(""));
+            return !string.IsNullOrEmpty(_gitModule.RunGitCmd(""));
         }
 
         public void AutoConfigMergeToolCmd(bool silent)
