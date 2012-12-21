@@ -23,7 +23,7 @@ namespace GitUI.SettingsDialog
             // to be overridden
         }
 
-        // TODO: is this needed here or globally for all settings?
+        [Obsolete("TODO: is this needed here (per settingpage) or globally for all settings (as it was originally)?")]
         protected bool loadingSettings;
 
         public void LoadSettings()
