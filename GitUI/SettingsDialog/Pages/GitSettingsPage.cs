@@ -44,6 +44,7 @@ namespace GitUI.SettingsDialog.Pages
         public override void OnPageShown()
         {
             GitPath.Text = Settings.GitCommand;
+            GitBinPath.Text = Settings.GitBinDir;
         }
 
         protected override void OnLoadSettings()
@@ -93,7 +94,7 @@ namespace GitUI.SettingsDialog.Pages
             }
         }
 
-        // TODO: handle the case when Checklist makes auto setting
+        // TODO: needed anymore?
         private void GitPath_TextChanged(object sender, EventArgs e)
         {
             ////    if (loadingSettings)
