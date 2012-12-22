@@ -149,7 +149,10 @@ namespace GitUI.SettingsDialog
                     //// if (andKeywords.All(keyword => settingsPage.GetSearchKeywords().Contains(keyword))) // the whole keyword must match to have a match
                     if (andKeywords.All(keyword => settingsPage.GetSearchKeywords().Any(k => k.Contains(keyword)))) // only part of a keyword must match to have a match
                     {
-                        _nodesFoundByTextBox.Add(node);
+                        if (!_nodesFoundByTextBox.Contains(node))
+                        {
+                            _nodesFoundByTextBox.Add(node);
+                        }
                     }
                 }
 
