@@ -30,6 +30,7 @@
         {
             this.textBoxFind = new System.Windows.Forms.TextBox();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.labelNumFound = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBoxFind
@@ -38,7 +39,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxFind.Location = new System.Drawing.Point(3, 6);
             this.textBoxFind.Name = "textBoxFind";
-            this.textBoxFind.Size = new System.Drawing.Size(194, 20);
+            this.textBoxFind.Size = new System.Drawing.Size(165, 20);
             this.textBoxFind.TabIndex = 0;
             this.textBoxFind.TextChanged += new System.EventHandler(this.textBoxFind_TextChanged);
             this.textBoxFind.Enter += new System.EventHandler(this.textBoxFind_Enter);
@@ -59,9 +60,18 @@
             this.treeView1.TabIndex = 2;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
+            // labelNumFound
+            // 
+            this.labelNumFound.AutoSize = true;
+            this.labelNumFound.Location = new System.Drawing.Point(174, 9);
+            this.labelNumFound.Name = "labelNumFound";
+            this.labelNumFound.Size = new System.Drawing.Size(0, 13);
+            this.labelNumFound.TabIndex = 3;
+            // 
             // SettingsTreeViewUserControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.Controls.Add(this.labelNumFound);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.textBoxFind);
             this.MinimumSize = new System.Drawing.Size(100, 220);
@@ -76,5 +86,6 @@
 
         private System.Windows.Forms.TextBox textBoxFind;
         private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.Label labelNumFound;
     }
 }
