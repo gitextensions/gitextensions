@@ -75,7 +75,7 @@ namespace GitUI.SettingsDialog
                     _treeNodesWithSettingsPage.Add(settingsPageNode);
                     settingsPageNode.Tag = settingsPage;
                 }
-                
+
             }
         }
 
@@ -162,6 +162,8 @@ namespace GitUI.SettingsDialog
                 {
                     HighlightNode(node, true);
                 }
+
+                labelNumFound.Text = _nodesFoundByTextBox.Count.ToString();
             }
         }
 
@@ -177,6 +179,8 @@ namespace GitUI.SettingsDialog
 
         private void ResetAllNodeHighlighting()
         {
+            labelNumFound.Text = "";
+
             foreach (var node in GetNodesWithSettingsPage())
             {
                 HighlightNode(node, false);
