@@ -28,23 +28,6 @@ namespace GitUI
         private readonly TranslationString _cantFindGitMessageCaption =
             new TranslationString("Incorrect path");
 
-        [Obsolete("TODO: not used?")]
-        private readonly TranslationString _linuxToolsShNotFound =
-            new TranslationString("The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
-                "Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.");
-
-        [Obsolete("TODO: not used?")]
-        private readonly TranslationString _linuxToolsShNotFoundCaption =
-            new TranslationString("Locate linux tools");
-
-        [Obsolete("TODO: not used?")]
-        private readonly TranslationString _shCanBeRun =
-            new TranslationString("Command sh can be run using: {0}sh");
-
-        [Obsolete("TODO: not used?")]
-        private readonly TranslationString _shCanBeRunCaption =
-            new TranslationString("Locate linux tools");
-
         #endregion
 
         readonly SettingsPageRegistry _settingsPageRegistry = new SettingsPageRegistry();
