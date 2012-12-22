@@ -20,6 +20,7 @@ namespace GitUI.SettingsDialog
         private readonly IList<TreeNode> _treeNodesWithSettingsPage = new List<TreeNode>();
         private bool _isSelectionChangeTriggeredByGoto;
         private List<TreeNode> _nodesFoundByTextBox;
+        private const string FindPrompt = "Type to find";
 
         public event EventHandler<SettingsPageSelectedEventArgs> SettingsPageSelected;
 
@@ -125,7 +126,7 @@ namespace GitUI.SettingsDialog
         {
             _nodesFoundByTextBox = new List<TreeNode>();
 
-            if (textBoxFind.Text.IsNullOrEmpty() || textBoxFind.Text == "Type to find")
+            if (textBoxFind.Text.IsNullOrEmpty() || textBoxFind.Text == FindPrompt)
             {
                 ResetAllNodeHighlighting();
             }
@@ -191,7 +192,7 @@ namespace GitUI.SettingsDialog
             {
                 //textBoxFind.Font = new Font("Calibri", textBoxFind.Font.Size, FontStyle.Italic);
                 textBoxFind.Font = new Font(textBoxFind.Font, FontStyle.Italic);
-                textBoxFind.Text = "Type to find";
+                textBoxFind.Text = FindPrompt;
                 textBoxFind.ForeColor = Color.Gray;
             }
             else
@@ -205,7 +206,7 @@ namespace GitUI.SettingsDialog
         {
             SetFindPrompt(false);
 
-            if (textBoxFind.Text == "Type to find")
+            if (textBoxFind.Text == FindPrompt)
             {
                 textBoxFind.Text = "";
             }
