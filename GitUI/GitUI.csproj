@@ -491,6 +491,12 @@
     <Compile Include="SettingsDialog\Pages\StartPageSettingsPage.Designer.cs">
       <DependentUpon>StartPageSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsDialog\Plugins\PluginSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog\Plugins\PluginSettingsPage.Designer.cs">
+      <DependentUpon>PluginSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsDialog\SettingsPageBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1058,6 +1064,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsDialog\Pages\StartPageSettingsPage.resx">
       <DependentUpon>StartPageSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog\Plugins\PluginSettingsPage.resx">
+      <DependentUpon>PluginSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsDialog\SettingsTreeViewUserControl.resx">
       <DependentUpon>SettingsTreeViewUserControl.cs</DependentUpon>
