@@ -158,6 +158,19 @@ namespace GitUI.SettingsDialog.Pages
         private readonly TranslationString _puttyFoundAutoCaption =
             new TranslationString("PuTTY");
 
+        private readonly TranslationString _linuxToolsShNotFound =
+            new TranslationString("The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
+                "Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.");
+
+        private readonly TranslationString _linuxToolsShNotFoundCaption =
+            new TranslationString("Locate linux tools");
+
+        private readonly TranslationString _shCanBeRun =
+            new TranslationString("Command sh can be run using: {0}sh");
+
+        private readonly TranslationString _shCanBeRunCaption =
+            new TranslationString("Locate linux tools");
+
         readonly CommonLogic _commonLogic;
         readonly CheckSettingsLogic _checkSettingsLogic;
         readonly GitModule _gitModule;
@@ -261,7 +274,17 @@ namespace GitUI.SettingsDialog.Pages
 
         private void GitBinFound_Click(object sender, EventArgs e)
         {
-            // TODO
+            if (!_checkSettingsLogic.SolveLinuxToolsDir())
+            {
+                MessageBox.Show(this, _linuxToolsShNotFound.Text, _linuxToolsShNotFoundCaption.Text);
+                _settingsPageHost.GotoPage(GitSettingsPage.GetPageReference());
+                return;
+            }
+
+            MessageBox.Show(this, String.Format(_shCanBeRun.Text, Settings.GitBinDir), _shCanBeRunCaption.Text);
+            ////GitBinPath.Text = Settings.GitBinDir;
+            _settingsPageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
+            SaveAndRescan_Click(null, null);
         }
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
@@ -316,7 +339,7 @@ namespace GitUI.SettingsDialog.Pages
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     _checkSettingsLogic.SolveDiffToolForKDiff();
-                    _settingsPageHost.LoadAll(); // so that the save and rescan below works
+                    _settingsPageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
                 }
                 else
                 {
@@ -350,7 +373,7 @@ namespace GitUI.SettingsDialog.Pages
                         _noMergeToolConfiguredCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     _commonLogic.SetGlobalMergeTool("kdiff3");
-                    _settingsPageHost.LoadAll(); // to apply changes to dialog controls so that later the save does not overwrite it again
+                    _settingsPageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
                 }
                 else
                 {
