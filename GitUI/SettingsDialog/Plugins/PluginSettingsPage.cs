@@ -13,6 +13,7 @@ namespace GitUI.SettingsDialog.Plugins
     public partial class PluginSettingsPage : SettingsPageBase
     {
         private readonly IGitPlugin _gitPlugin;
+        private readonly IList<string> _autoGenKeywords = new List<string>();
 
         public PluginSettingsPage(IGitPlugin gitPlugin)
         {
@@ -38,6 +39,11 @@ namespace GitUI.SettingsDialog.Plugins
             {
                 base.Text = value;
             }
+        }
+
+        protected override string GetCommaSeparatedKeywordList()
+        {
+            return string.Join(",", _autoGenKeywords);
         }
 
         public override void OnPageShown()
@@ -73,12 +79,17 @@ namespace GitUI.SettingsDialog.Plugins
             var settings = _gitPlugin.Settings.GetAvailableSettings();
 
             bool hasSettings = settings.Any();
+
             labelNoSettings.Visible = !hasSettings;
             buttonSave.Visible = hasSettings;
             buttonSave.Enabled = false;
 
+            _autoGenKeywords.Clear();
+
             foreach (var setting in settings)
             {
+                _autoGenKeywords.Add(setting.ToLowerInvariant());
+
                 var label =
                     new Label
                     {
