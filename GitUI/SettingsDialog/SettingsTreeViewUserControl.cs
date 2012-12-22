@@ -7,8 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.SettingsDialog.Plugins;
-using GitUIPluginInterfaces;
 
 namespace GitUI.SettingsDialog
 {
@@ -140,14 +138,15 @@ namespace GitUI.SettingsDialog
                     var settingsPage = (ISettingsPage)node.Tag;
 
                     // search for title
-                    if (searchFor.Contains(settingsPage.Text.ToLowerInvariant()))
+                    if (settingsPage.Text.ToLowerInvariant().Contains(searchFor))
                     {
                         _nodesFoundByTextBox.Add(node);
                     }
 
                     // search for keywords (space combines as 'and')
                     var andKeywords = searchFor.Split(' ');
-                    if (andKeywords.All(keyword => settingsPage.GetSearchKeywords().Contains(keyword)))
+                    //// if (andKeywords.All(keyword => settingsPage.GetSearchKeywords().Contains(keyword))) // the whole keyword must match to have a match
+                    if (andKeywords.All(keyword => settingsPage.GetSearchKeywords().Any(k => k.Contains(keyword)))) // only part of a keyword must match to have a match
                     {
                         _nodesFoundByTextBox.Add(node);
                     }
