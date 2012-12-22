@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Plugin;
+using GitUI.SettingsDialog.Plugins;
 using ResourceManager.Translation;
 using GitUI.SettingsDialog;
 using GitUI.SettingsDialog.Pages;
@@ -99,6 +101,9 @@ namespace GitUI
             _shellExtensionSettingsPage = new ShellExtensionSettingsPage();
             _settingsPageRegistry.RegisterSettingsPage(_shellExtensionSettingsPage);
 
+            // register all plugin pages
+            _settingsPageRegistry.RegisterPluginSettingsPages();
+
             settingsTreeViewUserControl1.SetSettingsPages(_settingsPageRegistry);
         }
 
@@ -131,7 +136,13 @@ namespace GitUI
                 panelCurrentSettingsPage.Controls.Add(settingsPage.GuiControl);
                 e.SettingsPage.GuiControl.Dock = DockStyle.Fill;
 
-                labelSettingsPageTitle.Text = e.SettingsPage.Text;
+                string title = e.SettingsPage.Text;
+                if (e.SettingsPage is PluginSettingsPage)
+                {
+                    title = "Plugin: " + title;
+                }
+
+                labelSettingsPageTitle.Text = title;
                 Application.DoEvents();
 
                 Cursor.Current = Cursors.WaitCursor;
@@ -173,6 +184,12 @@ namespace GitUI
                 {
                     settingsPage.LoadSettings();
                 }
+
+                // load plugin settings (not here but OnPageShown())
+                ////foreach (var settingsPage in _settingsPageRegistry.GetPluginSettingsPages())
+                ////{
+                ////    settingsPage.LoadSettings();
+                ////}
             }
             catch (Exception ex)
             {

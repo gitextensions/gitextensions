@@ -6,9 +6,9 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using GitUI.SettingsDialog;
-using GitUI.SettingsDialog.Pages;
 using GitCommands;
+using GitUI.SettingsDialog.Plugins;
+using GitUIPluginInterfaces;
 
 namespace GitUI.SettingsDialog
 {
@@ -16,13 +16,10 @@ namespace GitUI.SettingsDialog
     {
         private TreeNode _geRootNode;
         private TreeNode _pluginsRootNode;
-        ////private ISettingsPage _blankSettingsPage = new BlankSettingsPage();
         private readonly Font _origTextBoxFont;
         private Font _nodeFontBold;
         private Font _nodeFontItalic;
-        ////private IList<SettingsPageBase> registeredSettingsPages = new List<SettingsPageBase>();
         private readonly IList<TreeNode> _treeNodesWithSettingsPage = new List<TreeNode>();
-        private ISettingsPage _firstRegisteredSettingsPage;
         private bool _isSelectionChangeTriggeredByGoto;
         private List<TreeNode> _nodesFoundByTextBox;
 
@@ -53,35 +50,44 @@ namespace GitUI.SettingsDialog
             _nodeFontItalic = new Font(nodeFond, FontStyle.Italic);
 
             _pluginsRootNode = treeView1.Nodes.Add("Plugins");
-            var pluginPlaceHolderNode = _pluginsRootNode.Nodes.Add("todo");
-            pluginPlaceHolderNode.NodeFont = _nodeFontItalic;
-            pluginPlaceHolderNode.ForeColor = Color.Gray;
         }
 
         public void SetSettingsPages(SettingsPageRegistry settingsPageRegistry)
         {
-            foreach (var settingsPage in settingsPageRegistry.GetSettingsPages())
             {
-                ////registeredSettingsPages.Add(settingsPage);
-                var settingsPageNode = _geRootNode.Nodes.Add(settingsPage.Text);
-                _treeNodesWithSettingsPage.Add(settingsPageNode);
-                settingsPageNode.Tag = settingsPage;
+                _geRootNode.Nodes.Clear();
 
-                if (_firstRegisteredSettingsPage == null)
+                foreach (var settingsPage in settingsPageRegistry.GetSettingsPages())
                 {
-                    _firstRegisteredSettingsPage = settingsPage;
+                    var settingsPageNode = _geRootNode.Nodes.Add(settingsPage.Text);
+                    _treeNodesWithSettingsPage.Add(settingsPageNode);
+                    settingsPageNode.Tag = settingsPage;
                 }
+
+                RegisteringComplete();
             }
 
-            RegisteringComplete();
+            {
+                _pluginsRootNode.Nodes.Clear();
+
+                foreach (var settingsPage in settingsPageRegistry.GetPluginSettingsPages())
+                {
+                    var settingsPageNode = _pluginsRootNode.Nodes.Add(settingsPage.Text);
+                    _treeNodesWithSettingsPage.Add(settingsPageNode);
+                    settingsPageNode.Tag = settingsPage;
+                }
+                
+            }
         }
 
         private void RegisteringComplete()
         {
             treeView1.ExpandAll();
 
-            var firstRegistered = FindNodeBySettingsPage(_firstRegisteredSettingsPage);
-            treeView1.SelectedNode = firstRegistered;
+            if (_geRootNode.Nodes.Count > 0)
+            {
+                treeView1.SelectedNode = _geRootNode.Nodes[0];
+            }
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -174,10 +180,10 @@ namespace GitUI.SettingsDialog
             }
         }
 
-        private TreeNode FindNodeBySettingsPage(ISettingsPage settingsPage)
-        {
-            return GetNodesWithSettingsPage().FirstOrDefault(te => te.Tag == settingsPage);
-        }
+        ////private TreeNode FindNodeBySettingsPage(ISettingsPage settingsPage)
+        ////{
+        ////    return GetNodesWithSettingsPage().FirstOrDefault(te => te.Tag == settingsPage);
+        ////}
 
         #region FindPrompt
         private void SetFindPrompt(bool show)
