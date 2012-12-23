@@ -87,6 +87,7 @@ namespace Github3
         {
             base.RegisterSettings();
             Settings.AddSetting("OAuth Token", "");
+            Settings.AddSetting("Icon", Convert.ToBase64String(Properties.Resources.octocat));
         }
 
         public override void Register(IGitUICommands gitUiCommands)
