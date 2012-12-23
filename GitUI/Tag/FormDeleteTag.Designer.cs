@@ -36,8 +36,9 @@
             // 
             // Ok
             // 
+            this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.ForeColor = System.Drawing.Color.Black;
-            this.Ok.Location = new System.Drawing.Point(368, 10);
+            this.Ok.Location = new System.Drawing.Point(369, 10);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
             this.Ok.TabIndex = 8;
@@ -47,12 +48,14 @@
             // 
             // Tags
             // 
+            this.Tags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.Tags.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.Tags.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.Tags.FormattingEnabled = true;
             this.Tags.Location = new System.Drawing.Point(126, 12);
             this.Tags.Name = "Tags";
-            this.Tags.Size = new System.Drawing.Size(236, 23);
+            this.Tags.Size = new System.Drawing.Size(237, 23);
             this.Tags.TabIndex = 7;
             // 
             // label1
@@ -80,14 +83,15 @@
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(453, 68);
+            this.ClientSize = new System.Drawing.Size(454, 72);
             this.Controls.Add(this.deleteTag);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.Tags);
             this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(1000, 110);
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(470, 110);
             this.Name = "FormDeleteTag";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Delete tag";
