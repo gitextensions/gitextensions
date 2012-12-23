@@ -46,6 +46,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.commitSummaryUserControl1.AutoSize = true;
             this.commitSummaryUserControl1.Location = new System.Drawing.Point(28, 32);
+            this.commitSummaryUserControl1.MinimumSize = new System.Drawing.Size(440, 160);
             this.commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             this.commitSummaryUserControl1.Revision = null;
             this.commitSummaryUserControl1.Size = new System.Drawing.Size(584, 160);
@@ -62,6 +63,8 @@
             // 
             // ParentsList
             // 
+            this.ParentsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ParentsList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ParentsList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
