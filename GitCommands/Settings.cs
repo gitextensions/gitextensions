@@ -925,18 +925,11 @@ namespace GitCommands
             set { SafeSet("CreateLocalBranchForRemote", value, ref _CreateLocalBranchForRemote); }
         }
 
-        private static bool? _ShellCascadeContextMenu;
-        public static bool ShellCascadeContextMenu
+        private static string _CascadeShellMenuItems;
+        public static string CascadeShellMenuItems
         {
-            get { return SafeGet("ShellCascadeContextMenu", true, ref _ShellCascadeContextMenu); }
-            set { SafeSet("ShellCascadeContextMenu", value, ref _ShellCascadeContextMenu); }
-        }
-
-        private static string _ShellVisibleMenuItems;
-        public static string ShellVisibleMenuItems
-        {
-            get { return SafeGet("ShellVisibleMenuItems", "11111111111111", ref _ShellVisibleMenuItems); }
-            set { SafeSet("ShellVisibleMenuItems", value, ref _ShellVisibleMenuItems); }
+            get { return SafeGet("CascadeShellMenuItems", "11011100111111", ref _CascadeShellMenuItems); }
+            set { SafeSet("CascadeShellMenuItems", value, ref _CascadeShellMenuItems); }
         }
 
         private static bool? _UseFormCommitMessage;

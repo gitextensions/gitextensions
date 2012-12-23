@@ -42,7 +42,7 @@ namespace GitUI
             AbortCallback = abort;
         }
 
-        public StringBuilder OutputString = new StringBuilder();
+        private readonly StringBuilder _outputString = new StringBuilder();
         public ProcessStart ProcessCallback;
         public ProcessAbort AbortCallback;
         private bool errorOccurred;
@@ -278,11 +278,27 @@ namespace GitUI
             try
             {
                 AbortCallback(this);
-                OutputString.Append(Environment.NewLine + "Aborted");
+                AppendToOutputString(Environment.NewLine + "Aborted");
                 Done(false);
                 DialogResult = DialogResult.Abort;
             }
             catch { }
+        }
+
+        public void AppendToOutputString(string text)
+        {
+            lock (_outputString)
+            {
+                _outputString.Append(text);
+            }
+        }
+
+        public string GetOutputString()
+        {
+            lock (_outputString)
+            {
+                return _outputString.ToString();
+            }
         }
 
         private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
