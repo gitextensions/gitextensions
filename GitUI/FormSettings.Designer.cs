@@ -3341,11 +3341,15 @@ namespace GitUI
             "Checkout revision",
             "Clone",
             "Commit",
+            "Create new repository",
+            "Open with difftool",
             "File history",
-            "Reset file changes",
             "Pull",
             "Push",
+            "Reset file changes",
+            "Revert",
             "Settings",
+            "View stash",
             "View diff"});
             this.chlMenuEntries.Location = new System.Drawing.Point(10, 38);
             this.chlMenuEntries.Name = "chlMenuEntries";
