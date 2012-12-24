@@ -16,6 +16,30 @@ typedef HRESULT (WINAPI *FN_EndBufferedPaint) (HPAINTBUFFER hBufferedPaint, BOOL
 /////////////////////////////////////////////////////////////////////////////
 // CGitExtensionsShellEx
 
+// don't change indexes because of FormSettings
+enum GitExCommands
+{
+    gcAddFiles,
+    gcApplyPatch,
+    gcBrowse,
+    gcCreateBranch,
+    gcCheckoutBranch,
+    gcCheckoutRevision,
+    gcClone,
+    gcCommit,
+    gcCreateRepository,
+    gcDiffTool,
+    gcFileHistory,
+    gcPull,
+    gcPush,
+    gcResetFileChanges,
+    gcRevert,
+    gcSettings,
+    gcStash,
+    gcViewDiff,
+    gcMaxValue
+};
+
 class ATL_NO_VTABLE CGitExtensionsShellEx : 
     public CComObjectRootEx<CComSingleThreadModel>,
     public CComCoClass<CGitExtensionsShellEx, &CLSID_GitExtensionsShellEx>,
@@ -33,23 +57,6 @@ public:
         COM_INTERFACE_ENTRY(IContextMenu2)
         COM_INTERFACE_ENTRY(IContextMenu3)
     END_COM_MAP()
-
-    int AddFilesId;
-    int ApplyPatchId;
-    int BrowseId;
-    int CreateBranchId;
-    int CheckoutBranchId;
-    int CheckoutRevisionId;
-    int CloneId;
-    int CommitId;
-    int FileHistoryId;
-    int PullId;
-    int PushId;
-    int SettingsId;
-    int ViewDiffId;
-    int ResetFileChangesId;
-
-    bool CascadeContextMenu;
 
 public:
     // IShellExtInit
@@ -74,6 +81,7 @@ protected:
     TCHAR m_szFile [MAX_PATH];
     std::map<UINT_PTR, int>	myIDMap;
     std::map<UINT, HBITMAP> bitmaps;
+    std::map<int, int> commandsId;
 
     FN_GetBufferedPaintBits pfnGetBufferedPaintBits;
     FN_BeginBufferedPaint pfnBeginBufferedPaint;
