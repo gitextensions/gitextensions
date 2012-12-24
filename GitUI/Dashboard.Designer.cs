@@ -36,7 +36,6 @@
             this.DonateCategory = new GitUI.DashboardCategory();
             this.groupLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer5)).BeginInit();
 #endif
@@ -56,7 +55,6 @@
             this.splitContainer7.Panel2.SuspendLayout();
             this.splitContainer7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer5
@@ -77,7 +75,7 @@
             // 
             this.splitContainer5.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer5.Panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.splitContainer5.Panel2.Controls.Add(this.tableLayoutPanel1);
+            this.splitContainer5.Panel2.Controls.Add(this.groupLayoutPanel);
             this.splitContainer5.Size = new System.Drawing.Size(972, 623);
             this.splitContainer5.SplitterDistance = 314;
             this.splitContainer5.SplitterWidth = 5;
@@ -111,11 +109,12 @@
             this.CommonActions.AutoSize = true;
             this.CommonActions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.CommonActions.BackColor = System.Drawing.Color.Transparent;
+            this.CommonActions.Dock = System.Windows.Forms.DockStyle.None;
             this.CommonActions.Location = new System.Drawing.Point(0, 0);
             this.CommonActions.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.CommonActions.Name = "CommonActions";
             this.CommonActions.RepositoryCategory = null;
-            this.CommonActions.Size = new System.Drawing.Size(129, 24);
+            this.CommonActions.Size = new System.Drawing.Size(314, 126);
             this.CommonActions.TabIndex = 8;
             this.CommonActions.Title = "Common Actions";
             // 
@@ -173,11 +172,12 @@
             // 
             this.groupLayoutPanel.AllowDrop = true;
             this.groupLayoutPanel.AutoScroll = true;
+            this.groupLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupLayoutPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.groupLayoutPanel.Location = new System.Drawing.Point(3, 2);
+            this.groupLayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.groupLayoutPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupLayoutPanel.Name = "groupLayoutPanel";
-            this.groupLayoutPanel.Size = new System.Drawing.Size(647, 487);
+            this.groupLayoutPanel.Size = new System.Drawing.Size(653, 623);
             this.groupLayoutPanel.TabIndex = 0;
             this.groupLayoutPanel.WrapContents = false;
             this.groupLayoutPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.groupLayoutPanel_DragDrop);
@@ -190,7 +190,7 @@
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureBox1.Image = global::GitUI.Properties.Resources.git_extensions_logo_final_128;
-            this.pictureBox1.Location = new System.Drawing.Point(522, 493);
+            this.pictureBox1.Location = new System.Drawing.Point(256, 262);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(128, 128);
@@ -199,25 +199,11 @@
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.pictureBox1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.groupLayoutPanel, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(653, 623);
-            this.tableLayoutPanel1.TabIndex = 0;
-            // 
             // Dashboard
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.SystemColors.Control;
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.splitContainer5);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Dashboard";
@@ -244,9 +230,8 @@
 #endif
             this.splitContainer7.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -260,6 +245,5 @@
         private DashboardCategory DonateCategory;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.FlowLayoutPanel groupLayoutPanel;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }
