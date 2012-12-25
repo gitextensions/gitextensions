@@ -58,9 +58,6 @@ namespace GitUI.Plugin
 
             foreach (var setting in _selectedGitPlugin.Settings.GetAvailableSettings())
             {
-                if (setting.ToLower() == "icon")
-                    continue;
-
                 var label =
                     new Label
                         {
