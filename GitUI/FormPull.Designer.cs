@@ -146,7 +146,7 @@
             // PullImage
             // 
             this.PullImage.BackColor = System.Drawing.Color.White;
-            this.PullImage.BackgroundImage = global::GitUI.Properties.Resources.merge;
+            this.PullImage.BackgroundImage = global::GitUI.Properties.Resources.HelpPullMerge;
             this.PullImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.PullImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PullImage.Location = new System.Drawing.Point(3, 3);
