@@ -236,7 +236,7 @@ namespace GitUI
 
             if (tabControl1.SelectedTab == BlameTab)
                 Blame.LoadBlame(revision.Guid, fileName, FileChanges, BlameTab, Diff.Encoding);
-            if (tabControl1.SelectedTab == ViewTab)
+            else if (tabControl1.SelectedTab == ViewTab)
             {
                 var scrollpos = View.ScrollPos;
 
@@ -244,8 +244,7 @@ namespace GitUI
                 View.ViewGitItemRevision(fileName, revision.Guid);
                 View.ScrollPos = scrollpos;
             }
-
-            if (tabControl1.SelectedTab == DiffTab)
+            else if (tabControl1.SelectedTab == DiffTab)
             {
                 GitItemStatus file = new GitItemStatus();
                 file.IsTracked = true;
