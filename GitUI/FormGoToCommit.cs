@@ -7,15 +7,17 @@ namespace GitUI
 {
     public sealed partial class FormGoToCommit : GitModuleForm
     {
-        string _selectedRevision = null;
-        private AsyncLoader tagsLoader;
+        string _selectedRevision;
+        private readonly AsyncLoader _tagsLoader;
+        private readonly AsyncLoader _branchesLoader;
 
         public FormGoToCommit(GitUICommands aCommands)
             : base(aCommands)
         {
             InitializeComponent();
             Translate();
-            tagsLoader = new AsyncLoader();
+            _tagsLoader = new AsyncLoader();
+            _branchesLoader = new AsyncLoader();
         }
 
         public string GetRevision()
@@ -26,18 +28,6 @@ namespace GitUI
         private void commitExpression_TextChanged(object sender, EventArgs e)
         {
             _selectedRevision = Module.RevParse(commitExpression.Text.Trim());
-        }
-
-        private void comboBoxTags_TextChanged(object sender, EventArgs e)
-        {
-            _selectedRevision = Module.RevParse(comboBoxTags.Text);
-        }
-
-        private void comboBoxTags_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            // does not work when using autocomplete, therefore we have the _TextChanged method
-            _selectedRevision = Module.RevParse(((GitHeaderGuiWrapper)comboBoxTags.SelectedValue).GitHead.CompleteName);
-            Go();
         }
 
         private void Go()
@@ -59,16 +49,60 @@ namespace GitUI
         private void comboBoxTags_Enter(object sender, EventArgs e)
         {
             comboBoxTags.Text = Strings.GetLoadingData();
-            tagsLoader.Load(
+            _tagsLoader.Load(
                 () => Module.GetTagHeads(GitModule.GetTagHeadsSortOrder.ByCommitDateDescending).Select(g => new GitHeaderGuiWrapper(g)).ToList(),
                 list =>
                 {
                     comboBoxTags.Text = string.Empty;
                     comboBoxTags.DataSource = list;
                     if (!comboBoxTags.Text.IsNullOrEmpty())
+                    {
                         comboBoxTags.Select(0, comboBoxTags.Text.Length);
+                    }
                 }
             );
+        }
+
+        private void comboBoxTags_TextChanged(object sender, EventArgs e)
+        {
+            // TODO: try to get GitHead and then CompleteName
+            _selectedRevision = Module.RevParse(comboBoxTags.Text);
+        }
+
+        private void comboBoxTags_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            // does not work when using autocomplete, for that we have the _TextChanged method
+            _selectedRevision = Module.RevParse(((GitHeaderGuiWrapper)comboBoxTags.SelectedValue).GitHead.CompleteName);
+            Go();
+        }
+
+        private void comboBoxBranches_Enter(object sender, EventArgs e)
+        {
+            comboBoxBranches.Text = Strings.GetLoadingData();
+            _branchesLoader.Load(
+                () => Module.GetHeads(false).Select(g => new GitHeaderGuiWrapper(g)).ToList(),
+                list =>
+                {
+                    comboBoxBranches.Text = string.Empty;
+                    comboBoxBranches.DataSource = list;
+                    if (!comboBoxBranches.Text.IsNullOrEmpty())
+                    {
+                        comboBoxBranches.Select(0, comboBoxBranches.Text.Length);
+                    }
+                }
+            );
+        }
+
+        private void comboBoxBranches_TextChanged(object sender, EventArgs e)
+        {
+            // TODO: try to get GitHead and then CompleteName
+            _selectedRevision = Module.RevParse(comboBoxBranches.Text);
+        }
+
+        private void comboBoxBranches_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            _selectedRevision = Module.RevParse(((GitHeaderGuiWrapper)comboBoxBranches.SelectedValue).GitHead.CompleteName);
+            Go();
         }
     }
 
@@ -77,7 +111,7 @@ namespace GitUI
     /// </summary>
     class GitHeaderGuiWrapper
     {
-        GitHead _gitHead;
+        readonly GitHead _gitHead;
         public GitHeaderGuiWrapper(GitHead gitHead)
         {
             _gitHead = gitHead;
