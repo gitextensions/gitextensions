@@ -29,7 +29,9 @@ namespace GitUI.Help
         public Image Image1
         {
             get { return _image1; }
-            set { _image1 = value;
+            set
+            {
+                _image1 = value;
                 UpdateImageDisplay();
             }
         }
@@ -37,7 +39,9 @@ namespace GitUI.Help
         public Image Image2
         {
             get { return _image2; }
-            set { _image2 = value;
+            set
+            {
+                _image2 = value;
                 UpdateImageDisplay();
             }
         }
@@ -45,7 +49,9 @@ namespace GitUI.Help
         public bool ShowImage2OnHover
         {
             get { return _showImage2OnHover; }
-            set { _showImage2OnHover = value;
+            set
+            {
+                _showImage2OnHover = value;
                 labelHoverText.Visible = value;
                 UpdateImageDisplay();
             }
@@ -63,9 +69,15 @@ namespace GitUI.Help
 
         private void UpdateImageDisplay()
         {
+            if (!ShowImage2OnHover)
+            {
+                pictureBox1.Image = Image1;
+                return;
+            }
+
             bool isHover = IsHovering();
 
-            if (isHover && ShowImage2OnHover)
+            if (isHover)
             {
                 pictureBox1.Image = Image2;
             }
@@ -77,14 +89,20 @@ namespace GitUI.Help
 
         private void HelpImageDisplayUserControl_MouseEnter(object sender, EventArgs e)
         {
-            _isHover = true;
-            UpdateImageDisplay();
+            if (ShowImage2OnHover)
+            {
+                _isHover = true;
+                UpdateImageDisplay();
+            }
         }
 
         private void HelpImageDisplayUserControl_MouseLeave(object sender, EventArgs e)
         {
-            _isHover = false;
-            UpdateImageDisplay();
+            if (ShowImage2OnHover)
+            {
+                _isHover = false;
+                UpdateImageDisplay();
+            }
         }
     }
 }
