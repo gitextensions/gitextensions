@@ -568,20 +568,20 @@ namespace GitUI
         {
             localBranch.Enabled = false;
             localBranch.Text = branch;
-            PullImage.BackgroundImage = Resources.HelpPullMerge;
+            helpImageDisplayUserControl1.Image1 = Resources.HelpPullMerge;
         }
 
         private void RebaseCheckedChanged(object sender, EventArgs e)
         {
             localBranch.Enabled = false;
             localBranch.Text = branch;
-            PullImage.BackgroundImage = Resources.HelpPullRebase;
+            helpImageDisplayUserControl1.Image1 = Resources.HelpPullRebase;
         }
 
         private void FetchCheckedChanged(object sender, EventArgs e)
         {
             localBranch.Enabled = true;
-            PullImage.BackgroundImage = Resources.HelpPullFetch;
+            helpImageDisplayUserControl1.Image1 = Resources.HelpPullFetch;
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)
