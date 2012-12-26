@@ -13,7 +13,8 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            tagsLoader.Cancel();
+            _tagsLoader.Cancel();
+            _branchesLoader.Cancel();
 
             if (disposing && (components != null))
             {
@@ -51,7 +52,7 @@
             this.goButton.Location = new System.Drawing.Point(521, 10);
             this.goButton.Name = "goButton";
             this.goButton.Size = new System.Drawing.Size(75, 28);
-            this.goButton.TabIndex = 2;
+            this.goButton.TabIndex = 3;
             this.goButton.Text = "Go";
             this.goButton.UseVisualStyleBackColor = true;
             this.goButton.Click += new System.EventHandler(this.goButton_Click);
@@ -84,7 +85,7 @@
             this.groupBox1.Location = new System.Drawing.Point(45, 43);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(470, 141);
-            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Help";
             // 
@@ -153,14 +154,17 @@
             this.comboBoxBranches.Location = new System.Drawing.Point(155, 258);
             this.comboBoxBranches.Name = "comboBoxBranches";
             this.comboBoxBranches.Size = new System.Drawing.Size(287, 23);
-            this.comboBoxBranches.TabIndex = 6;
+            this.comboBoxBranches.TabIndex = 2;
+            this.comboBoxBranches.SelectionChangeCommitted += new System.EventHandler(this.comboBoxBranches_SelectionChangeCommitted);
+            this.comboBoxBranches.TextChanged += new System.EventHandler(this.comboBoxBranches_TextChanged);
+            this.comboBoxBranches.Enter += new System.EventHandler(this.comboBoxBranches_Enter);
             // 
             // FormGoToCommit
             // 
             this.AcceptButton = this.goButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(604, 301);
+            this.ClientSize = new System.Drawing.Size(604, 302);
             this.Controls.Add(this.comboBoxBranches);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.comboBoxTags);
@@ -172,7 +176,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(400, 100);
+            this.MinimumSize = new System.Drawing.Size(620, 340);
             this.Name = "FormGoToCommit";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
