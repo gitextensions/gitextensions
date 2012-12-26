@@ -193,6 +193,12 @@
     </Compile>
     <Compile Include="GitUIExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Help\HelpImageDisplayUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Help\HelpImageDisplayUserControl.Designer.cs">
+      <DependentUpon>HelpImageDisplayUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Hotkey\ControlHotkeys.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -906,6 +912,9 @@
     <EmbeddedResource Include="FormRunScriptSpecify.resx">
       <DependentUpon>FormRunScriptSpecify.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Help\HelpImageDisplayUserControl.resx">
+      <DependentUpon>HelpImageDisplayUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Hotkey\ControlHotkeys.resx">
       <DependentUpon>ControlHotkeys.cs</DependentUpon>
