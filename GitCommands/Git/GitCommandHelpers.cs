@@ -771,7 +771,10 @@ namespace GitCommands
 
         public static ConfigFile GetGlobalConfig()
         {
-            return new ConfigFile(GetHomeDir() + Settings.PathSeparator.ToString() + ".gitconfig", false);
+            string configPath = Path.Combine(GetHomeDir(), ".config", "git", "config");
+            if (File.Exists(configPath))
+                return new ConfigFile(configPath, false);
+            return new ConfigFile(Path.Combine(GetHomeDir(), ".gitconfig"), false);
         }
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool untrackedFiles)
