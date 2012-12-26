@@ -71,6 +71,11 @@ namespace GitUI
 
         private void comboBoxTags_SelectionChangeCommitted(object sender, EventArgs e)
         {
+            if (comboBoxTags.SelectedValue == null)
+            {
+                return;
+            }
+
             // does not work when using autocomplete, for that we have the _TextChanged method
             _selectedRevision = Module.RevParse(((GitHeaderGuiWrapper)comboBoxTags.SelectedValue).GitHead.CompleteName);
             Go();
@@ -101,6 +106,11 @@ namespace GitUI
 
         private void comboBoxBranches_SelectionChangeCommitted(object sender, EventArgs e)
         {
+            if (comboBoxBranches.SelectedValue == null)
+            {
+                return;
+            }
+
             _selectedRevision = Module.RevParse(((GitHeaderGuiWrapper)comboBoxBranches.SelectedValue).GitHead.CompleteName);
             Go();
         }
