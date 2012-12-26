@@ -100,7 +100,7 @@ namespace GitUI
         private void SynchronizeSubmoduleClick(object sender, EventArgs e)
         {
             UseWaitCursor = true;
-            FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleSyncCmd(SubModuleName.Text));
+            FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleSyncCmd(SubModuleLocalPath.Text));
             Initialize();
             UseWaitCursor = false;
         }
@@ -108,7 +108,7 @@ namespace GitUI
         private void UpdateSubmoduleClick(object sender, EventArgs e)
         {
             UseWaitCursor = true;
-            FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleUpdateCmd(SubModuleName.Text));
+            FormProcess.ShowDialog(this, GitCommandHelpers.SubmoduleUpdateCmd(SubModuleLocalPath.Text));
             Initialize();
             UseWaitCursor = false;
         }
@@ -122,7 +122,7 @@ namespace GitUI
                 return;
 
             UseWaitCursor = true;
-            Module.UnstageFile(SubModuleName.Text);
+            Module.UnstageFile(SubModuleLocalPath.Text);
 
             var modules = Module.GetSubmoduleConfigFile();
             modules.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
