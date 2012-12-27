@@ -47,7 +47,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(100, 150);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(150, 150);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
             // pictureBox1
@@ -56,7 +56,7 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(94, 129);
+            this.pictureBox1.Size = new System.Drawing.Size(144, 129);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -75,12 +75,10 @@
             // HelpImageDisplayUserControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.tableLayoutPanel1);
             this.MinimumSize = new System.Drawing.Size(100, 150);
             this.Name = "HelpImageDisplayUserControl";
-            this.Size = new System.Drawing.Size(100, 150);
             this.Load += new System.EventHandler(this.HelpImageDisplayUserControl_Load);
             this.MouseEnter += new System.EventHandler(this.HelpImageDisplayUserControl_MouseEnter);
             this.MouseLeave += new System.EventHandler(this.HelpImageDisplayUserControl_MouseLeave);
