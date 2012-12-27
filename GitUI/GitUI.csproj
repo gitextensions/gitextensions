@@ -1408,6 +1408,7 @@
     <None Include="Resources\Icons\IconSubmoduleRevisionDownDirty.png" />
     <None Include="Resources\Icons\IconSubmoduleRevisionUpDirty.png" />
     <None Include="Resources\Icons\IconRevertCommit.png" />
+    <None Include="Resources\Icons\HelpPullMergeFastForward.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
