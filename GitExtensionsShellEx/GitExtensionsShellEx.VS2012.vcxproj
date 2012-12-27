@@ -274,9 +274,11 @@
     <None Include="Resources\IconFileHistory.ico" />
     <None Include="Resources\IconPull.ico" />
     <None Include="Resources\IconPush.ico" />
+    <None Include="Resources\IconRepoCreate.ico" />
     <None Include="Resources\IconResetFileTo.ico" />
     <None Include="Resources\IconRevisionCheckout.ico" />
     <None Include="Resources\IconSettings.ico" />
+    <None Include="Resources\IconStash.ico" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\GitExtensionsShellEx.rc">

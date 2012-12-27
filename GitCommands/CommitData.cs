@@ -215,6 +215,23 @@ namespace GitCommands
             return commitInformation;
         }
 
+        /// <summary>
+        /// Creates a CommitData object from Git revision.
+        /// </summary>
+        /// <param name="revision">Git commit.</param>
+        /// <returns>CommitData object populated with parsed info from git string.</returns>
+        public static CommitData CreateFromRevision(GitRevision revision)
+        {
+            if (revision == null)
+                throw new ArgumentNullException("revision");
+
+            CommitData data = new CommitData(revision.Guid, revision.TreeGuid, revision.ParentGuids.ToList().AsReadOnly(),
+                String.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
+                String.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
+                revision.Message);
+            return data;
+        }
+
         private static string FillToLength(string input, int length)
         {
             return FillToLength(input, length, 0);
