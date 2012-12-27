@@ -72,7 +72,7 @@
             this.PullFromUrl.AutoSize = true;
             this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
             this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(40, 19);
+            this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
             this.PullFromUrl.TabIndex = 1;
             this.PullFromUrl.Text = "Url";
             this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
@@ -85,7 +85,7 @@
             this.PullFromRemote.Checked = true;
             this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
             this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(66, 19);
+            this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
             this.PullFromRemote.TabIndex = 0;
             this.PullFromRemote.TabStop = true;
             this.PullFromRemote.Text = "Remote";
@@ -119,6 +119,7 @@
             this.Pull.Image = global::GitUI.Properties.Resources.ArrowDown;
             this.Pull.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Pull.Location = new System.Drawing.Point(455, 8);
+            this.Pull.MinimumSize = new System.Drawing.Size(120, 25);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(124, 25);
             this.Pull.TabIndex = 40;
@@ -139,7 +140,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(700, 362);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(890, 362);
             this.tableLayoutPanel1.TabIndex = 16;
             // 
             // helpImageDisplayUserControl1
@@ -150,18 +151,18 @@
             this.helpImageDisplayUserControl1.Image1 = null;
             this.helpImageDisplayUserControl1.Image2 = null;
             this.helpImageDisplayUserControl1.Location = new System.Drawing.Point(3, 3);
-            this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(100, 150);
+            this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(290, 150);
             this.helpImageDisplayUserControl1.Name = "helpImageDisplayUserControl1";
             this.helpImageDisplayUserControl1.ShowImage2HoverText = "Hover to see scenario when fast forward is possible.";
             this.helpImageDisplayUserControl1.ShowImage2OnHover = false;
-            this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(100, 356);
+            this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(290, 356);
             this.helpImageDisplayUserControl1.TabIndex = 10;
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.tableLayoutPanel2);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(109, 3);
+            this.panel2.Location = new System.Drawing.Point(299, 3);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(588, 356);
             this.panel2.TabIndex = 19;
@@ -421,7 +422,7 @@
             this.AcceptButton = this.Pull;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(700, 362);
+            this.ClientSize = new System.Drawing.Size(890, 362);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
