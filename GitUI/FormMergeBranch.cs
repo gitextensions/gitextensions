@@ -84,5 +84,15 @@ namespace GitUI
                 noCommit.Checked = false;
             }
         }
+
+        private void fastForward_CheckedChanged(object sender, EventArgs e)
+        {
+            helpImageDisplayUserControl1.ShowImage2OnHover = true;
+        }
+
+        private void noFastForward_CheckedChanged(object sender, EventArgs e)
+        {
+            helpImageDisplayUserControl1.ShowImage2OnHover = false;
+        }
     }
 }

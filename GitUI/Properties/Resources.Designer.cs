@@ -401,6 +401,13 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap HelpCommandMergeFastForward {
+            get {
+                object obj = ResourceManager.GetObject("HelpCommandMergeFastForward", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         public static System.Drawing.Bitmap HelpCommandRebase {
             get {
                 object obj = ResourceManager.GetObject("HelpCommandRebase", resourceCulture);
