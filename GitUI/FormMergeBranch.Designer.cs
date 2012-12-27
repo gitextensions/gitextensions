@@ -70,7 +70,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(279, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(492, 396);
+            this.groupBox1.Size = new System.Drawing.Size(492, 420);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge";
@@ -177,6 +177,7 @@
             this.noFastForward.TabIndex = 7;
             this.noFastForward.Text = "Always create a new merge commit";
             this.noFastForward.UseVisualStyleBackColor = true;
+            this.noFastForward.CheckedChanged += new System.EventHandler(this.noFastForward_CheckedChanged);
             // 
             // fastForward
             // 
@@ -189,11 +190,12 @@
             this.fastForward.TabStop = true;
             this.fastForward.Text = "Keep a single branch line if possible (fast forward)";
             this.fastForward.UseVisualStyleBackColor = true;
+            this.fastForward.CheckedChanged += new System.EventHandler(this.fastForward_CheckedChanged);
             // 
             // Ok
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Ok.Location = new System.Drawing.Point(376, 361);
+            this.Ok.Location = new System.Drawing.Point(376, 385);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(108, 25);
             this.Ok.TabIndex = 4;
@@ -250,7 +252,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(774, 402);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(774, 426);
             this.tableLayoutPanel1.TabIndex = 6;
             // 
             // helpImageDisplayUserControl1
@@ -258,13 +260,13 @@
             this.helpImageDisplayUserControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.helpImageDisplayUserControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.helpImageDisplayUserControl1.Image1 = global::GitUI.Properties.Resources.HelpCommandMerge;
-            this.helpImageDisplayUserControl1.Image2 = null;
+            this.helpImageDisplayUserControl1.Image2 = global::GitUI.Properties.Resources.HelpCommandMergeFastForward;
             this.helpImageDisplayUserControl1.Location = new System.Drawing.Point(3, 3);
             this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(100, 150);
             this.helpImageDisplayUserControl1.Name = "helpImageDisplayUserControl1";
             this.helpImageDisplayUserControl1.ShowImage2HoverText = "Hover to see scenario when fast forward is possible.";
-            this.helpImageDisplayUserControl1.ShowImage2OnHover = false;
-            this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(270, 396);
+            this.helpImageDisplayUserControl1.ShowImage2OnHover = true;
+            this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(270, 420);
             this.helpImageDisplayUserControl1.TabIndex = 18;
             // 
             // FormMergeBranch
@@ -272,7 +274,7 @@
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(774, 402);
+            this.ClientSize = new System.Drawing.Size(774, 426);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
