@@ -33,6 +33,7 @@ namespace GitUI.Help
             {
                 _image1 = value;
                 UpdateImageDisplay();
+                UpdateControlSize();
             }
         }
 
@@ -43,6 +44,7 @@ namespace GitUI.Help
             {
                 _image2 = value;
                 UpdateImageDisplay();
+                UpdateControlSize();
             }
         }
 
@@ -65,6 +67,21 @@ namespace GitUI.Help
         private bool IsHovering()
         {
             return _isHover;
+        }
+
+        private void UpdateControlSize()
+        {
+            if (_image1 != null && _image2 == null)
+            {
+                Size = Image1.Size;
+            }
+            else if (_image1 != null && Image2 != null)
+            {
+                Size = Image1.Size;
+                // TODO: more cases (e. g. max(Image1 and Image2))
+            }
+           
+            // TODO: null and null case
         }
 
         private void UpdateImageDisplay()
