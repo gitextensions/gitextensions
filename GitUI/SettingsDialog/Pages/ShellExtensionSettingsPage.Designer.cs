@@ -54,15 +54,19 @@
             "Checkout revision",
             "Clone",
             "Commit",
+            "Create new repository",
+            "Open with difftool",
             "File history",
-            "Reset file changes",
             "Pull",
             "Push",
+            "Reset file changes",
+            "Revert",
             "Settings",
+            "View stash",
             "View diff"});
             this.chlMenuEntries.Location = new System.Drawing.Point(5, 60);
             this.chlMenuEntries.Name = "chlMenuEntries";
-            this.chlMenuEntries.Size = new System.Drawing.Size(240, 328);
+            this.chlMenuEntries.Size = new System.Drawing.Size(240, 382);
             this.chlMenuEntries.TabIndex = 4;
             // 
             // ShellExtensionSettingsPage
@@ -73,7 +77,7 @@
             this.Controls.Add(this.chlMenuEntries);
             this.MinimumSize = new System.Drawing.Size(350, 320);
             this.Name = "ShellExtensionSettingsPage";
-            this.Size = new System.Drawing.Size(350, 409);
+            this.Size = new System.Drawing.Size(350, 467);
             this.ResumeLayout(false);
             this.PerformLayout();
 
