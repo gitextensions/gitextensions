@@ -223,7 +223,8 @@ namespace GitUI
 
             if (selectedRows.Count == 0) return;
 
-            IGitItem revision = selectedRows[0];
+            GitRevision revision = selectedRows[0];
+            var children = FileChanges.GetRevisionChildren(revision.Guid);
 
             var fileName = revision.Name;
 
@@ -235,7 +236,7 @@ namespace GitUI
                 Text = Text + string.Format(" ({0})", fileName);
 
             if (tabControl1.SelectedTab == BlameTab)
-                Blame.LoadBlame(revision.Guid, fileName, FileChanges, BlameTab, Diff.Encoding);
+                Blame.LoadBlame(revision, children, fileName, FileChanges, BlameTab, Diff.Encoding);
             else if (tabControl1.SelectedTab == ViewTab)
             {
                 var scrollpos = View.ScrollPos;
@@ -386,6 +387,21 @@ namespace GitUI
         {
             Settings.LoadBlameOnShow = !Settings.LoadBlameOnShow;
             loadBlameOnShowToolStripMenuItem.Checked = Settings.LoadBlameOnShow;
+        }
+
+        private void Blame_CommandClick(object sender, CommitInfo.CommandEventArgs e)
+        {
+            if (e.Command == "gotocommit")
+            {
+                FileChanges.SetSelectedRevision(new GitRevision(Module, e.Data));
+            }
+            else if (e.Command == "gotobranch" || e.Command == "gototag")
+            {
+                string error = "";
+                CommitData commit = CommitData.GetCommitData(Module, e.Data, ref error);
+                if (commit != null)
+                    FileChanges.SetSelectedRevision(new GitRevision(Module, commit.Guid));
+            }
         }
     }
 }
