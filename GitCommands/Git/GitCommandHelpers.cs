@@ -87,7 +87,7 @@ namespace GitCommands
 
         public static string GetHomeDir()
         {
-            return Environment.GetEnvironmentVariable("HOME");
+            return Environment.GetEnvironmentVariable("HOME") ?? "";
         }
 
         public static string GetDefaultHomeDir()
