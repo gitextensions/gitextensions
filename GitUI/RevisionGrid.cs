@@ -1646,8 +1646,10 @@ namespace GitUI
                 return;
 
             var frm = new FormRevertCommitSmall(UICommands, GetRevision(LastRow));
-            frm.ShowDialog(this);
-            RefreshRevisions();
+            if (frm.ShowDialog(this) == DialogResult.OK)
+            {
+                RefreshRevisions();
+            }
         }
 
         private void FilterToolStripMenuItemClick(object sender, EventArgs e)

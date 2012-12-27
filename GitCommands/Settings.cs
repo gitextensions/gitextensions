@@ -928,7 +928,7 @@ namespace GitCommands
         private static string _CascadeShellMenuItems;
         public static string CascadeShellMenuItems
         {
-            get { return SafeGet("CascadeShellMenuItems", "11011100111111", ref _CascadeShellMenuItems); }
+            get { return SafeGet("CascadeShellMenuItems", "110111000111111111", ref _CascadeShellMenuItems); }
             set { SafeSet("CascadeShellMenuItems", value, ref _CascadeShellMenuItems); }
         }
 

@@ -13,7 +13,8 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            tagsLoader.Cancel();
+            _tagsLoader.Cancel();
+            _branchesLoader.Cancel();
 
             if (disposing && (components != null))
             {
@@ -39,6 +40,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxTags = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.comboBoxBranches = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,10 +49,10 @@
             // 
             this.goButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.goButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.goButton.Location = new System.Drawing.Point(466, 10);
+            this.goButton.Location = new System.Drawing.Point(521, 10);
             this.goButton.Name = "goButton";
             this.goButton.Size = new System.Drawing.Size(75, 28);
-            this.goButton.TabIndex = 2;
+            this.goButton.TabIndex = 3;
             this.goButton.Text = "Go";
             this.goButton.UseVisualStyleBackColor = true;
             this.goButton.Click += new System.EventHandler(this.goButton_Click);
@@ -60,7 +63,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.commitExpression.Location = new System.Drawing.Point(155, 13);
             this.commitExpression.Name = "commitExpression";
-            this.commitExpression.Size = new System.Drawing.Size(305, 23);
+            this.commitExpression.Size = new System.Drawing.Size(360, 23);
             this.commitExpression.TabIndex = 0;
             this.commitExpression.TextChanged += new System.EventHandler(this.commitExpression_TextChanged);
             // 
@@ -75,15 +78,14 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.linkGitRevParse);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(12, 54);
+            this.groupBox1.Location = new System.Drawing.Point(45, 43);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(529, 141);
-            this.groupBox1.TabIndex = 3;
+            this.groupBox1.Size = new System.Drawing.Size(470, 141);
+            this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Help";
             // 
@@ -114,40 +116,67 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(12, 219);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(103, 15);
+            this.label3.Size = new System.Drawing.Size(59, 15);
             this.label3.TabIndex = 4;
-            this.label3.Text = "Quick jump to tag";
+            this.label3.Text = "Go to tag:";
             // 
             // comboBoxTags
             // 
+            this.comboBoxTags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxTags.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.comboBoxTags.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBoxTags.FormattingEnabled = true;
             this.comboBoxTags.Location = new System.Drawing.Point(155, 216);
             this.comboBoxTags.Name = "comboBoxTags";
-            this.comboBoxTags.Size = new System.Drawing.Size(232, 23);
+            this.comboBoxTags.Size = new System.Drawing.Size(287, 23);
             this.comboBoxTags.TabIndex = 1;
             this.comboBoxTags.SelectionChangeCommitted += new System.EventHandler(this.comboBoxTags_SelectionChangeCommitted);
             this.comboBoxTags.TextChanged += new System.EventHandler(this.comboBoxTags_TextChanged);
             this.comboBoxTags.Enter += new System.EventHandler(this.comboBoxTags_Enter);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(12, 261);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(79, 15);
+            this.label4.TabIndex = 5;
+            this.label4.Text = "Go to branch:";
+            // 
+            // comboBoxBranches
+            // 
+            this.comboBoxBranches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxBranches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboBoxBranches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboBoxBranches.FormattingEnabled = true;
+            this.comboBoxBranches.Location = new System.Drawing.Point(155, 258);
+            this.comboBoxBranches.Name = "comboBoxBranches";
+            this.comboBoxBranches.Size = new System.Drawing.Size(287, 23);
+            this.comboBoxBranches.TabIndex = 2;
+            this.comboBoxBranches.SelectionChangeCommitted += new System.EventHandler(this.comboBoxBranches_SelectionChangeCommitted);
+            this.comboBoxBranches.TextChanged += new System.EventHandler(this.comboBoxBranches_TextChanged);
+            this.comboBoxBranches.Enter += new System.EventHandler(this.comboBoxBranches_Enter);
             // 
             // FormGoToCommit
             // 
             this.AcceptButton = this.goButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(549, 261);
+            this.ClientSize = new System.Drawing.Size(604, 302);
+            this.Controls.Add(this.comboBoxBranches);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.comboBoxTags);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.commitExpression);
             this.Controls.Add(this.goButton);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(400, 100);
+            this.MinimumSize = new System.Drawing.Size(620, 340);
             this.Name = "FormGoToCommit";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -169,5 +198,7 @@
         private System.Windows.Forms.LinkLabel linkGitRevParse;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboBoxTags;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox comboBoxBranches;
     }
 }

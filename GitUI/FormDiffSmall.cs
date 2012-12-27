@@ -31,7 +31,7 @@ namespace GitUI
             {
                 DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.Guid + "^");
 
-                commitInfo.Revision = revision.Guid;
+                commitInfo.Revision = revision;
             }
         }
 

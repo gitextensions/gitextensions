@@ -2320,7 +2320,7 @@ namespace GitCommands
 
         public string UnstageFile(string file)
         {
-            return RunGitCmd("rm" + " --cached \"" + FixPath(file) + "\"");
+            return RunGitCmd("rm --cached \"" + FixPath(file) + "\"");
         }
 
         public string UnstageFileToRemove(string file)
