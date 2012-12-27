@@ -284,26 +284,31 @@
             // 
             this.Merge.AutoSize = true;
             this.Merge.Checked = true;
+            this.Merge.Image = global::GitUI.Properties.Resources.IconMerge;
+            this.Merge.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Merge.Location = new System.Drawing.Point(3, 3);
             this.Merge.Name = "Merge";
             this.Merge.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.Merge.Size = new System.Drawing.Size(245, 21);
+            this.Merge.Size = new System.Drawing.Size(261, 21);
             this.Merge.TabIndex = 8;
             this.Merge.TabStop = true;
             this.Merge.Text = "&Merge remote branch into current branch";
+            this.Merge.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.Merge.UseVisualStyleBackColor = true;
             this.Merge.CheckedChanged += new System.EventHandler(this.MergeCheckedChanged);
             // 
             // Rebase
             // 
             this.Rebase.AutoSize = true;
+            this.Rebase.Image = global::GitUI.Properties.Resources.IconRebase;
             this.Rebase.Location = new System.Drawing.Point(3, 30);
             this.Rebase.Name = "Rebase";
             this.Rebase.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);
-            this.Rebase.Size = new System.Drawing.Size(488, 21);
+            this.Rebase.Size = new System.Drawing.Size(504, 21);
             this.Rebase.TabIndex = 9;
             this.Rebase.Text = "&Rebase current branch on top of remote branch, creates linear history (use with " +
     "caution)";
+            this.Rebase.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.Rebase.UseVisualStyleBackColor = true;
             this.Rebase.CheckedChanged += new System.EventHandler(this.RebaseCheckedChanged);
             // 
