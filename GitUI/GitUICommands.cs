@@ -994,7 +994,12 @@ namespace GitUI
                 return true;
 
             using (var form = new FormDeleteTag(this, tag))
-                form.ShowDialog(owner);
+            {
+                if (form.ShowDialog(owner) != DialogResult.OK)
+                {
+                    return false;
+                }
+            }
 
             InvokeEvent(owner, PostDeleteTag);
 
