@@ -41,6 +41,8 @@ IDI_ICONPUSH            ICON                    "Resources\\IconPush.ico"
 IDI_ICONTRESETFILETO    ICON                    "Resources\\IconResetFileTo.ico"
 IDI_ICONSETTINGS        ICON                    "Resources\\IconSettings.ico"
 IDI_ICONVIEWCHANGES     ICON                    "Resources\\IconDiff.ico"
+IDI_ICONSTASH           ICON                    "Resources\\IconStash.ico"
+IDI_ICONCREATEREPOSITORY ICON                   "Resources\\IconRepoCreate.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -46,7 +46,7 @@ namespace GitUI.Tag
             this.label1.Location = new System.Drawing.Point(8, 10);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(60, 15);
-            this.label1.TabIndex = 8;
+            this.label1.TabIndex = 0;
             this.label1.Text = "Tag name";
             // 
             // Ok
@@ -55,7 +55,7 @@ namespace GitUI.Tag
             this.Ok.Location = new System.Drawing.Point(341, 5);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(108, 23);
-            this.Ok.TabIndex = 7;
+            this.Ok.TabIndex = 6;
             this.Ok.Text = "Create tag";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.OkClick);
@@ -67,7 +67,7 @@ namespace GitUI.Tag
             this.TName.Location = new System.Drawing.Point(108, 7);
             this.TName.Name = "TName";
             this.TName.Size = new System.Drawing.Size(227, 23);
-            this.TName.TabIndex = 6;
+            this.TName.TabIndex = 1;
             // 
             // annotate
             // 
@@ -75,7 +75,7 @@ namespace GitUI.Tag
             this.annotate.Location = new System.Drawing.Point(108, 53);
             this.annotate.Name = "annotate";
             this.annotate.Size = new System.Drawing.Size(137, 19);
-            this.annotate.TabIndex = 9;
+            this.annotate.TabIndex = 3;
             this.annotate.Text = "Create annotated tag";
             this.annotate.UseVisualStyleBackColor = true;
             this.annotate.CheckedChanged += new System.EventHandler(this.AnnotateCheckedChanged);
@@ -86,7 +86,7 @@ namespace GitUI.Tag
             this.pushTag.Location = new System.Drawing.Point(108, 34);
             this.pushTag.Name = "pushTag";
             this.pushTag.Size = new System.Drawing.Size(109, 19);
-            this.pushTag.TabIndex = 10;
+            this.pushTag.TabIndex = 2;
             this.pushTag.Text = "Push tag to \'{0}\'";
             this.pushTag.UseVisualStyleBackColor = true;
             // 
@@ -100,7 +100,7 @@ namespace GitUI.Tag
             this.tagMessage.Margin = new System.Windows.Forms.Padding(2);
             this.tagMessage.Name = "tagMessage";
             this.tagMessage.Size = new System.Drawing.Size(339, 82);
-            this.tagMessage.TabIndex = 11;
+            this.tagMessage.TabIndex = 5;
             // 
             // label2
             // 
@@ -108,7 +108,7 @@ namespace GitUI.Tag
             this.label2.Location = new System.Drawing.Point(8, 73);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(53, 15);
-            this.label2.TabIndex = 12;
+            this.label2.TabIndex = 4;
             this.label2.Text = "Message";
             // 
             // ForceTag

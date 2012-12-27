@@ -64,6 +64,7 @@ namespace GitCommands
             AuthorEmail,
             AuthorDate,
             CommitterName,
+            CommitterEmail,
             CommitterDate,
             CommitMessageEncoding,
             CommitMessage,
@@ -130,6 +131,7 @@ namespace GitCommands
                     /* Author Email            */ "%aE%n" +
                     /* Author Date             */ "%at%n" +
                     /* Committer Name          */ "%cN%n" +
+                    /* Committer Email         */ "%cE%n" +
                     /* Committer Date          */ "%ct%n" +
                     /* Commit message encoding */ "%e%n" + //there is a bug: git does not recode commit message when format is given
                     /* Commit Message          */ "%s";
@@ -315,6 +317,10 @@ namespace GitCommands
 
                 case ReadStep.CommitterName:
                     revision.Committer = line;
+                    break;
+
+                case ReadStep.CommitterEmail:
+                    revision.CommitterEmail = line;
                     break;
 
                 case ReadStep.CommitterDate:

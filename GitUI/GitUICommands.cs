@@ -1495,14 +1495,15 @@ namespace GitUI
 
         public bool StartBlameDialog(IWin32Window owner, string fileName)
         {
-            return StartBlameDialog(owner, fileName, null);
+            return StartBlameDialog(owner, fileName, null, null);
         }
 
-        private bool StartBlameDialog(IWin32Window owner, string fileName, GitRevision revision)
+        private bool StartBlameDialog(IWin32Window owner, string fileName, GitRevision revision, List<string> children)
         {
             return DoAction(owner, true, PreBlame, PostBlame, () =>
                 {
-                    using (var frm = new FormBlame(this, fileName, revision)) frm.ShowDialog(owner);
+                    using (var frm = new FormBlame(this, fileName, revision, children))
+                        frm.ShowDialog(owner);
 
                     return true;
                 }
@@ -1511,12 +1512,12 @@ namespace GitUI
 
         public bool StartBlameDialog(string fileName)
         {
-            return StartBlameDialog(null, fileName, null);
+            return StartBlameDialog(null, fileName, null, null);
         }
 
-        private bool StartBlameDialog(string fileName, GitRevision revision)
+        private bool StartBlameDialog(string fileName, GitRevision revision, List<string> children)
         {
-            return StartBlameDialog(null, fileName, revision);
+            return StartBlameDialog(null, fileName, revision, children);
         }
 
         private void WrapRepoHostingCall(string name, IRepositoryHostPlugin gitHoster,
