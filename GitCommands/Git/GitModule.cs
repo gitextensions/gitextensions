@@ -43,6 +43,8 @@ namespace GitCommands
             {
                 _superprojectInit = false;
                 _workingdir = value;
+                if (!_workingdir.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                    _workingdir += Path.DirectorySeparatorChar;
             }
         }
 
