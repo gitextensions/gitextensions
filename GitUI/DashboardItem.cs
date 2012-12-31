@@ -132,10 +132,10 @@ namespace GitUI
             }
         }
 
-		private void KeyDown(object sender, PreviewKeyDownEventArgs e)
+		private void OnKeyDown(object sender, PreviewKeyDownEventArgs e)
 		{
 			if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Space)
-				Title_Click(sender,e);
+				OnClick(e);
 		}
     }
 }
