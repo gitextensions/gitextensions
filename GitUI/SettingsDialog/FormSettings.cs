@@ -149,12 +149,8 @@ namespace GitUI
                 settingsPage.OnPageShown();
                 Cursor.Current = Cursors.Default;
 
-                bool isInstantSavePage = settingsPage.IsInstantSavePage;
-                buttonApply.Enabled = !isInstantSavePage;
-                buttonDiscard.Enabled = !isInstantSavePage;
                 buttonOk.Enabled = true;
                 buttonCancel.Enabled = true;
-                labelInstantSaveNotice.Visible = isInstantSavePage;
 
                 if (e.IsTriggeredByGoto)
                 {
@@ -163,10 +159,6 @@ namespace GitUI
             }
             else
             {
-                buttonApply.Enabled = false;
-                buttonDiscard.Enabled = false;
-                buttonOk.Enabled = false;
-                buttonCancel.Enabled = false;
                 labelSettingsPageTitle.Text = "[Please select another node]";
             }
         }
@@ -180,16 +172,10 @@ namespace GitUI
 
             try
             {
-                foreach (var settingsPage in _settingsPageRegistry.GetSettingsPages())
+                foreach (var settingsPage in _settingsPageRegistry.GetAllSettingsPages())
                 {
                     settingsPage.LoadSettings();
                 }
-
-                // load plugin settings (not here but OnPageShown())
-                ////foreach (var settingsPage in _settingsPageRegistry.GetPluginSettingsPages())
-                ////{
-                ////    settingsPage.LoadSettings();
-                ////}
             }
             catch (Exception ex)
             {
@@ -224,7 +210,7 @@ namespace GitUI
                 }
             }
 
-            foreach (var settingsPage in _settingsPageRegistry.GetSettingsPages())
+            foreach (var settingsPage in _settingsPageRegistry.GetAllSettingsPages())
             {
                 settingsPage.SaveSettings();
             }

@@ -51,37 +51,30 @@ namespace GitUI.SettingsDialog
             _pluginsRootNode = treeView1.Nodes.Add("Plugins");
         }
 
+        private void AddSettingsPages(IEnumerable<ISettingsPage> pages, TreeNode node)
+        {
+            node.Nodes.Clear();
+
+            foreach (var settingsPage in pages)
+            {
+                var settingsPageNode = node.Nodes.Add(settingsPage.Text);
+                _treeNodesWithSettingsPage.Add(settingsPageNode);
+                settingsPageNode.Tag = settingsPage;
+            }
+        }
+
         public void SetSettingsPages(SettingsPageRegistry settingsPageRegistry)
         {
-            {
-                _geRootNode.Nodes.Clear();
+            AddSettingsPages(settingsPageRegistry.GetSettingsPages(), _geRootNode);
+            
+            AddSettingsPages(settingsPageRegistry.GetPluginSettingsPages(), _pluginsRootNode);
 
-                foreach (var settingsPage in settingsPageRegistry.GetSettingsPages())
-                {
-                    var settingsPageNode = _geRootNode.Nodes.Add(settingsPage.Text);
-                    _treeNodesWithSettingsPage.Add(settingsPageNode);
-                    settingsPageNode.Tag = settingsPage;
-                }
-
-                RegisteringComplete();
-            }
-
-            {
-                _pluginsRootNode.Nodes.Clear();
-
-                foreach (var settingsPage in settingsPageRegistry.GetPluginSettingsPages())
-                {
-                    var settingsPageNode = _pluginsRootNode.Nodes.Add(settingsPage.Text);
-                    _treeNodesWithSettingsPage.Add(settingsPageNode);
-                    settingsPageNode.Tag = settingsPage;
-                }
-
-            }
+            RegisteringComplete();
         }
 
         private void RegisteringComplete()
         {
-            treeView1.ExpandAll();
+            _geRootNode.Expand();
 
             if (_geRootNode.Nodes.Count > 0)
             {
