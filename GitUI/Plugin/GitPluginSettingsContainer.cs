@@ -33,7 +33,7 @@ namespace GitUI
         public void SetSetting(string name, string value)
         {
             if (!settings.ContainsKey(name))
-                throw new ArgumentOutOfRangeException("name", "Cannot find setting. Dit you add the setting in the Register() function of the plugin?");
+                throw new ArgumentOutOfRangeException("name", "Cannot find setting. Did you add the setting in the Register() function of the plugin?");
 
             settings[name] = value;
 
