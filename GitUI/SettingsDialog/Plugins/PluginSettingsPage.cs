@@ -14,17 +14,13 @@ namespace GitUI.SettingsDialog.Plugins
     {
         private readonly IGitPlugin _gitPlugin;
         private readonly IList<string> _autoGenKeywords = new List<string>();
+        private bool pageInited = false;
 
         public PluginSettingsPage(IGitPlugin gitPlugin)
         {
             InitializeComponent();
             Translate();
             _gitPlugin = gitPlugin;
-        }
-
-        public override bool IsInstantSavePage
-        {
-            get { return true; }
         }
 
         public static PluginSettingsPage CreateSettingsPageFromPlugin(IGitPlugin gitPlugin)
@@ -48,17 +44,31 @@ namespace GitUI.SettingsDialog.Plugins
 
         public override void OnPageShown()
         {
+            if (pageInited)
+                return;
+
+            pageInited = true;
             CreateAndInitPluginSettingsControls();
         }
 
         protected override void OnLoadSettings()
         {
-            // not here
+            if (_gitPlugin == null)
+                throw new ApplicationException();
+
+            foreach (Control control in panelAutoGenControls.Controls)
+            {
+                var textBox = control as TextBox;
+
+                if (textBox != null)
+                    if (_gitPlugin.Settings.GetAvailableSettings().Contains(textBox.Name))
+                        textBox.Text = _gitPlugin.Settings.GetSetting(textBox.Name);
+            }
         }
 
         public override void SaveSettings()
         {
-            // done via separate button
+            SavePluginSettingsFromGeneratedControls();
         }
 
         /// <summary>
@@ -81,8 +91,6 @@ namespace GitUI.SettingsDialog.Plugins
             bool hasSettings = settings.Any();
 
             labelNoSettings.Visible = !hasSettings;
-            buttonSave.Visible = hasSettings;
-            buttonSave.Enabled = false;
 
             _autoGenKeywords.Clear();
 
@@ -133,16 +141,6 @@ namespace GitUI.SettingsDialog.Plugins
                     if (_gitPlugin.Settings.GetAvailableSettings().Contains(textBox.Name))
                         _gitPlugin.Settings.SetSetting(textBox.Name, textBox.Text);
             }
-        }
-
-        private void buttonSave_Click(object sender, EventArgs e)
-        {
-            SavePluginSettingsFromGeneratedControls();
-        }
-
-        private void panelAutoGenControls_Enter(object sender, EventArgs e)
-        {
-            buttonSave.Enabled = true;
         }
     }
 }

@@ -30,7 +30,6 @@
         {
             this.labelNoSettings = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.buttonSave = new System.Windows.Forms.Button();
             this.panelAutoGenControls = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -52,7 +51,6 @@
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.buttonSave, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.panelAutoGenControls, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.labelNoSettings, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -65,25 +63,12 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(600, 301);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
-            // buttonSave
-            // 
-            this.buttonSave.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.buttonSave.Location = new System.Drawing.Point(3, 268);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(172, 25);
-            this.buttonSave.TabIndex = 0;
-            this.buttonSave.Text = "Save plugin settings";
-            this.buttonSave.UseVisualStyleBackColor = true;
-            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
-            // 
-            // panelAutoGenControls
             // 
             this.panelAutoGenControls.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelAutoGenControls.Location = new System.Drawing.Point(3, 33);
             this.panelAutoGenControls.Name = "panelAutoGenControls";
             this.panelAutoGenControls.Size = new System.Drawing.Size(594, 225);
             this.panelAutoGenControls.TabIndex = 2;
-            this.panelAutoGenControls.Enter += new System.EventHandler(this.panelAutoGenControls_Enter);
             // 
             // PluginSettingsPage
             // 

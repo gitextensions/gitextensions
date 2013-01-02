@@ -41,5 +41,11 @@ namespace GitUI.SettingsDialog
         {
             return _pluginSettingsPageCollection;
         }
+
+        public IEnumerable<ISettingsPage> GetAllSettingsPages()
+        {
+            return GetSettingsPages().Concat(GetPluginSettingsPages());
+        }
+
     }
 }
