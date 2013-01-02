@@ -33,7 +33,7 @@ namespace ReleaseNotesGenerator
         static public HtmlFragment FromClipboard()
         {
             string rawClipboardText = Clipboard.GetText(TextDataFormat.Html);
-            HtmlFragment h = new HtmlFragment(rawClipboardText);
+            var h = new HtmlFragment(rawClipboardText);
             return h;
         }
 
@@ -52,17 +52,13 @@ namespace ReleaseNotesGenerator
             // may be the same as character counts (since sizeof(char) == 1).
             // But System.String is unicode, and so byte couns are no longer the same as character counts,
             // (since sizeof(wchar) == 2). 
-            int startHMTL = 0;
-            int endHTML = 0;
-
+            int startHmtl = 0;
             int startFragment = 0;
-            int endFragment = 0;
 
-            Regex r;
             Match m;
 
-            r = new Regex("([a-zA-Z]+):(.+?)[\r\n]",
-                RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            var r = new Regex("([a-zA-Z]+):(.+?)[\r\n]",
+                                RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
             for (m = r.Match(rawClipboardText); m.Success; m = m.NextMatch())
             {
@@ -73,21 +69,21 @@ namespace ReleaseNotesGenerator
                 {
                     // Version number of the clipboard. Starting version is 0.9. 
                     case "version":
-                        m_version = val;
+                        _version = val;
                         break;
 
                     // Byte count from the beginning of the clipboard to the start of the context, or -1 if no context
                     case "starthtml":
-                        if (startHMTL != 0) throw new FormatException("StartHtml is already declared");
-                        startHMTL = int.Parse(val);
+                        if (startHmtl != 0) throw new FormatException("StartHtml is already declared");
+                        startHmtl = int.Parse(val);
                         break;
 
                     // Byte count from the beginning of the clipboard to the end of the context, or -1 if no context.
                     case "endhtml":
-                        if (startHMTL == 0) throw new FormatException("StartHTML must be declared before endHTML");
-                        endHTML = int.Parse(val);
+                        if (startHmtl == 0) throw new FormatException("StartHTML must be declared before endHTML");
+                        int endHtml = int.Parse(val);
 
-                        m_fullText = rawClipboardText.Substring(startHMTL, endHTML - startHMTL);
+                        _fullText = rawClipboardText.Substring(startHmtl, endHtml - startHmtl);
                         break;
 
                     //  Byte count from the beginning of the clipboard to the start of the fragment.
@@ -99,18 +95,18 @@ namespace ReleaseNotesGenerator
                     // Byte count from the beginning of the clipboard to the end of the fragment.
                     case "endfragment":
                         if (startFragment == 0) throw new FormatException("StartFragment must be declared before EndFragment");
-                        endFragment = int.Parse(val);
-                        m_fragment = rawClipboardText.Substring(startFragment, endFragment - startFragment);
+                        int endFragment = int.Parse(val);
+                        _fragment = rawClipboardText.Substring(startFragment, endFragment - startFragment);
                         break;
 
                     // Optional Source URL, used for resolving relative links.
                     case "sourceurl":
-                        m_source = new System.Uri(val);
+                        _source = new System.Uri(val);
                         break;
                 }
             } // end for
 
-            if (m_fullText == null && m_fragment == null)
+            if (_fullText == null && _fragment == null)
             {
                 throw new FormatException("No data specified");
             }
@@ -118,17 +114,17 @@ namespace ReleaseNotesGenerator
 
 
         // Data. See properties for descriptions.
-        string m_version;
-        string m_fullText;
-        string m_fragment;
-        System.Uri m_source;
+        readonly string _version;
+        readonly string _fullText;
+        readonly string _fragment;
+        readonly System.Uri _source;
 
         /// <summary>
         /// Get the Version of the html. Usually something like "1.0".
         /// </summary>
         public string Version
         {
-            get { return m_version; }
+            get { return _version; }
         }
 
 
@@ -138,7 +134,7 @@ namespace ReleaseNotesGenerator
         /// </summary>
         public string Context
         {
-            get { return m_fullText; }
+            get { return _fullText; }
         }
 
 
@@ -147,7 +143,7 @@ namespace ReleaseNotesGenerator
         /// </summary>
         public string Fragment
         {
-            get { return m_fragment; }
+            get { return _fragment; }
         }
 
 
@@ -156,7 +152,7 @@ namespace ReleaseNotesGenerator
         /// </summary>
         public System.Uri SourceUrl
         {
-            get { return m_source; }
+            get { return _source; }
         }
 
         #endregion // Read and decode from clipboard
@@ -202,41 +198,35 @@ namespace ReleaseNotesGenerator
             // The string layout (<<<) also ensures that it can't appear in the body of the html because the <
             // character must be escaped.
             string header =
-    @"Format:HTML Format
-Version:1.0
+    @"Version:0.9
 StartHTML:<<<<<<<1
 EndHTML:<<<<<<<2
 StartFragment:<<<<<<<3
 EndFragment:<<<<<<<4
-StartSelection:<<<<<<<3
-EndSelection:<<<<<<<3
 ";
 
-            string pre =
-    @"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">
-<HTML><HEAD><TITLE>" + title + @"</TITLE></HEAD><BODY><!--StartFragment-->";
-
-            string post = @"<!--EndFragment--></BODY></HTML>";
-
             sb.Append(header);
+
             if (sourceUrl != null)
             {
                 sb.AppendFormat("SourceURL:{0}", sourceUrl);
             }
-            int startHTML = sb.Length;
+            int startHtml = sb.Length;
 
+            const string pre = @"<html><body><!--StartFragment-->";
             sb.Append(pre);
             int fragmentStart = sb.Length;
 
             sb.Append(htmlFragment);
             int fragmentEnd = sb.Length;
 
+            const string post = @"<!--EndFragment--></body></html>";
             sb.Append(post);
-            int endHTML = sb.Length;
+            int endHtml = sb.Length;
 
             // Backpatch offsets
-            sb.Replace("<<<<<<<1", To8DigitString(startHTML));
-            sb.Replace("<<<<<<<2", To8DigitString(endHTML));
+            sb.Replace("<<<<<<<1", To8DigitString(startHtml));
+            sb.Replace("<<<<<<<2", To8DigitString(endHtml));
             sb.Replace("<<<<<<<3", To8DigitString(fragmentStart));
             sb.Replace("<<<<<<<4", To8DigitString(fragmentEnd));
 
