@@ -45,7 +45,6 @@ namespace GitUI
             this.buttonApply = new System.Windows.Forms.Button();
             this.buttonDiscard = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.labelInstantSaveNotice = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.labelSettingsPageTitle = new System.Windows.Forms.Label();
             this.panelCurrentSettingsPage = new System.Windows.Forms.Panel();
@@ -144,7 +143,6 @@ namespace GitUI
             this.flowLayoutPanel4.Controls.Add(this.buttonDiscard);
             this.flowLayoutPanel4.Controls.Add(this.buttonCancel);
             this.flowLayoutPanel4.Controls.Add(this.buttonOk);
-            this.flowLayoutPanel4.Controls.Add(this.labelInstantSaveNotice);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(203, 586);
@@ -182,16 +180,6 @@ namespace GitUI
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            // 
-            // labelInstantSaveNotice
-            // 
-            this.labelInstantSaveNotice.AutoSize = true;
-            this.labelInstantSaveNotice.Location = new System.Drawing.Point(146, 8);
-            this.labelInstantSaveNotice.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
-            this.labelInstantSaveNotice.Name = "labelInstantSaveNotice";
-            this.labelInstantSaveNotice.Size = new System.Drawing.Size(275, 15);
-            this.labelInstantSaveNotice.TabIndex = 4;
-            this.labelInstantSaveNotice.Text = "Changes made on this page will be saved instantly.";
             // 
             // panel2
             // 
@@ -274,7 +262,6 @@ namespace GitUI
         private Button buttonCancel;
         private Panel panel2;
         private Panel panelCurrentSettingsPage;
-        private Label labelInstantSaveNotice;
 
     }
 }
