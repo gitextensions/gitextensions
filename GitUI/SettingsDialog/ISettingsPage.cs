@@ -8,7 +8,7 @@ namespace GitUI.SettingsDialog
 {
     public interface ISettingsPage
     {
-        string Text { get; }
+        string Title { get; }
 
         Control GuiControl { get; }
 
