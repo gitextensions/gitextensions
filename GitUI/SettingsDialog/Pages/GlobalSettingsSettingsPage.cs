@@ -21,11 +21,15 @@ namespace GitUI.SettingsDialog.Pages
         readonly CheckSettingsLogic _checkSettingsLogic;
         readonly GitModule _gitModule;
 
-        public GlobalSettingsSettingsPage(CommonLogic commonLogic, CheckSettingsLogic checkSettingsLogic, GitModule gitModule)
+        private GlobalSettingsSettingsPage()
         {
             InitializeComponent();
             Translate();
+        }
 
+        public GlobalSettingsSettingsPage(CommonLogic commonLogic, CheckSettingsLogic checkSettingsLogic, GitModule gitModule)
+            : this()
+        {
             _commonLogic = commonLogic;
             _checkSettingsLogic = checkSettingsLogic;
             _gitModule = gitModule;

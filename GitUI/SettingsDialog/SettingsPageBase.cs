@@ -12,6 +12,8 @@ namespace GitUI.SettingsDialog
     /// </summary>
     public class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
+        public virtual string Title { get { return Text; } }
+
         public Control GuiControl { get { return this; } }
 
         /// <summary>
