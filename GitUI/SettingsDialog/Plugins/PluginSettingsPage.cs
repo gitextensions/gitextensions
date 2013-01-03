@@ -28,14 +28,7 @@ namespace GitUI.SettingsDialog.Plugins
             return new PluginSettingsPage(gitPlugin);
         }
 
-        public override string Text
-        {
-            get { return _gitPlugin.Description; }
-            set
-            {
-                base.Text = value;
-            }
-        }
+        public override string Title { get { return _gitPlugin.Description; } }
 
         protected override string GetCommaSeparatedKeywordList()
         {

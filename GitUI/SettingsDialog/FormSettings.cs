@@ -58,6 +58,10 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
+            //if form is created for translation purpose
+            if (aCommands == null)
+                return;
+            
             // NEW:
 
             _commonLogic = new CommonLogic(Module);
@@ -136,7 +140,7 @@ namespace GitUI
                 panelCurrentSettingsPage.Controls.Add(settingsPage.GuiControl);
                 e.SettingsPage.GuiControl.Dock = DockStyle.Fill;
 
-                string title = e.SettingsPage.Text;
+                string title = e.SettingsPage.Title;
                 if (e.SettingsPage is PluginSettingsPage)
                 {
                     title = "Plugin: " + title;

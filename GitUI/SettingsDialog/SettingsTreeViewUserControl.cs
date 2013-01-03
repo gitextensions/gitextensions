@@ -57,7 +57,7 @@ namespace GitUI.SettingsDialog
 
             foreach (var settingsPage in pages)
             {
-                var settingsPageNode = node.Nodes.Add(settingsPage.Text);
+                var settingsPageNode = node.Nodes.Add(settingsPage.Title);
                 _treeNodesWithSettingsPage.Add(settingsPageNode);
                 settingsPageNode.Tag = settingsPage;
             }
@@ -132,7 +132,7 @@ namespace GitUI.SettingsDialog
                     var settingsPage = (ISettingsPage)node.Tag;
 
                     // search for title
-                    if (settingsPage.Text.ToLowerInvariant().Contains(searchFor))
+                    if (settingsPage.Title.ToLowerInvariant().Contains(searchFor))
                     {
                         _nodesFoundByTextBox.Add(node);
                     }

@@ -181,14 +181,18 @@ namespace GitUI.SettingsDialog.Pages
         /// </summary>
         public SshSettingsPage SshSettingsPage { get; set; }
 
+        private ChecklistSettingsPage()
+        {
+            InitializeComponent();
+            Translate();        
+        }
+
         public ChecklistSettingsPage(CommonLogic commonLogic,
             CheckSettingsLogic checkSettingsLogic,
             GitModule gitModule,
             ISettingsPageHost settingsPageHost)
+            : this()
         {
-            InitializeComponent();
-            Translate();
-
             _commonLogic = commonLogic;
             _checkSettingsLogic = checkSettingsLogic;
             _gitModule = gitModule;
