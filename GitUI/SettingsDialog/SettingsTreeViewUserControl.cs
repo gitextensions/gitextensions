@@ -252,11 +252,12 @@ namespace GitUI.SettingsDialog
                     {
                         _isSelectionChangeTriggeredByGoto = true;
                         treeView1.SelectedNode = node;
-                        FireSettingsPageSelectedEvent(node);
-                        return;
+                        break;
                     }
                 }
             }
+
+            FireSettingsPageSelectedEvent(treeView1.SelectedNode);
         }
 
         private void textBoxFind_KeyUp(object sender, KeyEventArgs e)
