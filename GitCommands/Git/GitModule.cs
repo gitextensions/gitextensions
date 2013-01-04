@@ -42,9 +42,7 @@ namespace GitCommands
             private set
             {
                 _superprojectInit = false;
-                _workingdir = value;
-                if (!_workingdir.IsNullOrEmpty() && !_workingdir.EndsWith(Path.DirectorySeparatorChar.ToString()))
-                    _workingdir += Path.DirectorySeparatorChar;
+                _workingdir = PathUtil.EnsureTrailingPathSeparator(value);
             }
         }
 
