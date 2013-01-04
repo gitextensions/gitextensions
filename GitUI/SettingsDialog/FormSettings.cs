@@ -153,6 +153,8 @@ namespace GitUI
                 settingsPage.OnPageShown();
                 Cursor.Current = Cursors.Default;
 
+                bool isInstantSavePage = settingsPage.IsInstantSavePage;
+                labelInstantSaveNotice.Visible = isInstantSavePage;
                 buttonOk.Enabled = true;
                 buttonCancel.Enabled = true;
 
