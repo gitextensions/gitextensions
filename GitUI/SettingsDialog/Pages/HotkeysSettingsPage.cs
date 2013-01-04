@@ -19,17 +19,14 @@ namespace GitUI.SettingsDialog.Pages
             Text = "Hotkeys";
         }
 
-        public override bool IsInstantSavePage
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-        public override void OnPageShown()
+        protected override void OnLoadSettings()
         {
             controlHotkeys.ReloadSettings();
+        }
+
+        public override void SaveSettings()
+        {
+            controlHotkeys.SaveSettings();
         }
     }
 }
