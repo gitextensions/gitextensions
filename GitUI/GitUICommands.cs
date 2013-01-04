@@ -14,6 +14,7 @@ using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
 using PatchApply;
 using Settings = GitCommands.Settings;
+using GitUI.SettingsDialog;
 
 namespace GitUI
 {
@@ -1058,13 +1059,15 @@ namespace GitUI
             return false;
         }
 
-        public bool StartSettingsDialog(IWin32Window owner)
+        public bool StartSettingsDialog(IWin32Window owner, SettingsPageReference initalPage = null)
         {
             if (!InvokeEvent(owner, PreSettings))
                 return true;
 
-            using (var form = new FormSettings(this))
+            using (var form = new FormSettings(this, initalPage))
+            {
                 form.ShowDialog(owner);
+            }
 
             InvokeEvent(owner, PostSettings);
 
@@ -1304,8 +1307,7 @@ namespace GitUI
 
         public bool StartPluginSettingsDialog(IWin32Window owner)
         {
-            using (var frm = new FormPluginSettings()) frm.ShowDialog(owner);
-            return true;
+            return StartSettingsDialog(owner, new SettingsPageReference(SettingsPageReference.Section.PluginsSettings));
         }
 
         public bool StartPluginSettingsDialog()
@@ -1315,7 +1317,6 @@ namespace GitUI
 
         public bool StartBrowseDialog(IWin32Window owner, string filter)
         {
-
             return DoAction(owner, false, PreBrowse, PostBrowse, () =>
                 {
                     using (var form = new FormBrowse(this, filter))
