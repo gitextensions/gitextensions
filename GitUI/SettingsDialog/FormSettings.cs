@@ -48,15 +48,19 @@ namespace GitUI
         readonly SshSettingsPage _sshSettingsPage;
         readonly StartPageSettingsPage _startPageSettingsPage;
 
+        readonly SettingsPageReference _initalPage;
+
         private FormSettings()
             : this(null)
         { }
 
-        public FormSettings(GitUICommands aCommands)
+        public FormSettings(GitUICommands aCommands, SettingsPageReference initalPage = null)
             : base(aCommands)
         {
             InitializeComponent();
             Translate();
+
+            _initalPage = initalPage;
 
             //if form is created for translation purpose
             if (aCommands == null)
@@ -108,7 +112,7 @@ namespace GitUI
             // register all plugin pages
             _settingsPageRegistry.RegisterPluginSettingsPages();
 
-            settingsTreeViewUserControl1.SetSettingsPages(_settingsPageRegistry);
+            settingsTreeViewUserControl1.SetSettingsPages(_settingsPageRegistry, _initalPage);
         }
 
         private void FormSettings_Load(object sender, EventArgs e)
@@ -122,11 +126,8 @@ namespace GitUI
         private void FormSettings_Shown(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            WindowState = FormWindowState.Normal; // TODO: is that needed?
             LoadSettings();
             Cursor.Current = Cursors.Default;
-
-            GotoPage(ChecklistSettingsPage.GetPageReference());
         }
 
         private void settingsTreeViewUserControl1_SettingsPageSelected(object sender, SettingsPageSelectedEventArgs e)
