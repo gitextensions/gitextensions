@@ -29,8 +29,13 @@ namespace GitUI.SettingsDialog
             _settingsPageType = settingsPageType;
         }
 
+        public Section SettingsSection { get { return _section; } }
+
         public Type SettingsPageType { get { return _settingsPageType; } }
 
+        /// <summary>
+        /// references a root node from the settings tree
+        /// </summary>
         public enum Section
         {
             GitExtensionsSettings,
