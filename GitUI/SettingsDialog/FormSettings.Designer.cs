@@ -45,6 +45,7 @@ namespace GitUI
             this.buttonApply = new System.Windows.Forms.Button();
             this.buttonDiscard = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.labelInstantSaveNotice = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.labelSettingsPageTitle = new System.Windows.Forms.Label();
             this.panelCurrentSettingsPage = new System.Windows.Forms.Panel();
@@ -97,7 +98,7 @@ namespace GitUI
             // 
             // buttonOk
             // 
-            this.buttonOk.Location = new System.Drawing.Point(427, 3);
+            this.buttonOk.Location = new System.Drawing.Point(352, 3);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(88, 25);
             this.buttonOk.TabIndex = 0;
@@ -121,7 +122,7 @@ namespace GitUI
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(1006, 620);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(931, 620);
             this.tableLayoutPanel3.TabIndex = 2;
             // 
             // settingsTreeViewUserControl1
@@ -143,17 +144,18 @@ namespace GitUI
             this.flowLayoutPanel4.Controls.Add(this.buttonDiscard);
             this.flowLayoutPanel4.Controls.Add(this.buttonCancel);
             this.flowLayoutPanel4.Controls.Add(this.buttonOk);
+            this.flowLayoutPanel4.Controls.Add(this.labelInstantSaveNotice);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(203, 586);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(800, 31);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(725, 31);
             this.flowLayoutPanel4.TabIndex = 3;
             this.flowLayoutPanel4.WrapContents = false;
             // 
             // buttonApply
             // 
-            this.buttonApply.Location = new System.Drawing.Point(709, 3);
+            this.buttonApply.Location = new System.Drawing.Point(634, 3);
             this.buttonApply.Name = "buttonApply";
             this.buttonApply.Size = new System.Drawing.Size(88, 25);
             this.buttonApply.TabIndex = 3;
@@ -163,7 +165,7 @@ namespace GitUI
             // 
             // buttonDiscard
             // 
-            this.buttonDiscard.Location = new System.Drawing.Point(615, 3);
+            this.buttonDiscard.Location = new System.Drawing.Point(540, 3);
             this.buttonDiscard.Name = "buttonDiscard";
             this.buttonDiscard.Size = new System.Drawing.Size(88, 25);
             this.buttonDiscard.TabIndex = 2;
@@ -173,7 +175,7 @@ namespace GitUI
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(521, 3);
+            this.buttonCancel.Location = new System.Drawing.Point(446, 3);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(88, 25);
             this.buttonCancel.TabIndex = 1;
@@ -181,13 +183,24 @@ namespace GitUI
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // labelInstantSaveNotice
+            // 
+            this.labelInstantSaveNotice.AutoSize = true;
+            this.labelInstantSaveNotice.Location = new System.Drawing.Point(9, 2);
+            this.labelInstantSaveNotice.Margin = new System.Windows.Forms.Padding(3, 2, 3, 0);
+            this.labelInstantSaveNotice.Name = "labelInstantSaveNotice";
+            this.labelInstantSaveNotice.Size = new System.Drawing.Size(337, 26);
+            this.labelInstantSaveNotice.TabIndex = 4;
+            this.labelInstantSaveNotice.Text = "Changes made on this page will be saved instantly. \r\nThus the Cancel and Discard " +
+    "button will have no effect for this page.";
+            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.labelSettingsPageTitle);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(203, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(800, 34);
+            this.panel2.Size = new System.Drawing.Size(725, 34);
             this.panel2.TabIndex = 4;
             // 
             // labelSettingsPageTitle
@@ -211,18 +224,18 @@ namespace GitUI
             this.panelCurrentSettingsPage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelCurrentSettingsPage.Location = new System.Drawing.Point(203, 43);
             this.panelCurrentSettingsPage.Name = "panelCurrentSettingsPage";
-            this.panelCurrentSettingsPage.Size = new System.Drawing.Size(800, 537);
+            this.panelCurrentSettingsPage.Size = new System.Drawing.Size(725, 537);
             this.panelCurrentSettingsPage.TabIndex = 5;
             // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1006, 620);
+            this.ClientSize = new System.Drawing.Size(931, 620);
             this.Controls.Add(this.tableLayoutPanel3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(760, 605);
+            this.MinimumSize = new System.Drawing.Size(939, 605);
             this.Name = "FormSettings";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -262,6 +275,7 @@ namespace GitUI
         private Button buttonCancel;
         private Panel panel2;
         private Panel panelCurrentSettingsPage;
+        private Label labelInstantSaveNotice;
 
     }
 }
