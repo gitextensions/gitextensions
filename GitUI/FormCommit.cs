@@ -839,6 +839,8 @@ namespace GitUI
                 if (errorOccurred)
                     return;
 
+                Amend.Checked = false;
+
                 if (Module.SuperprojectModule != null && Settings.StageInSuperprojectAfterCommit)
                     Module.SuperprojectModule.StageFile(Module.SubmoduleName);
 
@@ -857,8 +859,6 @@ namespace GitUI
                     Close();
                     return;
                 }
-
-                Amend.Checked = false;
 
                 if (Unstaged.GitItemStatuses.Any(gitItemStatus => gitItemStatus.IsTracked))
                 {
@@ -2077,7 +2077,7 @@ namespace GitUI
 
         private void Amend_CheckedChanged(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(Message.Text))
+            if (string.IsNullOrEmpty(Message.Text) && Amend.Checked)
             {
                 Message.Text = Module.GetPreviousCommitMessage(0).Trim();
                 return;
