@@ -44,7 +44,7 @@
             this.labelNoSettings.Name = "labelNoSettings";
             this.labelNoSettings.Size = new System.Drawing.Size(594, 30);
             this.labelNoSettings.TabIndex = 1;
-            this.labelNoSettings.Text = "There are no settings availabe for this plugin.";
+            this.labelNoSettings.Text = "There are no settings available for this plugin.";
             this.labelNoSettings.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel1
