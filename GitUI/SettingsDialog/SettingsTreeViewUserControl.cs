@@ -63,23 +63,17 @@ namespace GitUI.SettingsDialog
             }
         }
 
-        public void SetSettingsPages(SettingsPageRegistry settingsPageRegistry)
+        public void SetSettingsPages(SettingsPageRegistry settingsPageRegistry, SettingsPageReference initalPage)
         {
             AddSettingsPages(settingsPageRegistry.GetSettingsPages(), _geRootNode);
-            
+
             AddSettingsPages(settingsPageRegistry.GetPluginSettingsPages(), _pluginsRootNode);
 
-            RegisteringComplete();
-        }
-
-        private void RegisteringComplete()
-        {
-            _geRootNode.Expand();
-
-            if (_geRootNode.Nodes.Count > 0)
+            if (initalPage == null)
             {
-                treeView1.SelectedNode = _geRootNode.Nodes[0];
+                initalPage = new SettingsPageReference(SettingsPageReference.Section.GitExtensionsSettings);
             }
+            GotoPage(initalPage);
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -220,16 +214,47 @@ namespace GitUI.SettingsDialog
 
         public void GotoPage(SettingsPageReference settingsPageReference)
         {
-            foreach (var node in GetNodesWithSettingsPage())
+            if (settingsPageReference.SettingsSection != null)
             {
-                var settingsPage = (ISettingsPage)node.Tag;
-
-                if (settingsPage.GetType() == settingsPageReference.SettingsPageType)
+                if (settingsPageReference.SettingsSection == SettingsPageReference.Section.GitExtensionsSettings)
                 {
-                    _isSelectionChangeTriggeredByGoto = true;
-                    treeView1.SelectedNode = node;
-                    FireSettingsPageSelectedEvent(node);
-                    return;
+                    _geRootNode.Expand();
+                    _pluginsRootNode.Collapse();
+
+                    if (_geRootNode.Nodes.Count > 0)
+                    {
+                        treeView1.SelectedNode = _geRootNode.Nodes[0];
+                    }
+                }
+                else if (settingsPageReference.SettingsSection == SettingsPageReference.Section.PluginsSettings)
+                {
+                    _geRootNode.Collapse();
+                    _pluginsRootNode.Expand();
+
+                    if (_pluginsRootNode.Nodes.Count > 0)
+                    {
+                        treeView1.SelectedNode = _pluginsRootNode.Nodes[0];
+                    }
+                }
+                else
+                {
+                    // programming error: forgot to handle a case
+                }
+            }
+
+            if (settingsPageReference.SettingsPageType != null)
+            {
+                foreach (var node in GetNodesWithSettingsPage())
+                {
+                    var settingsPage = (ISettingsPage)node.Tag;
+
+                    if (settingsPage.GetType() == settingsPageReference.SettingsPageType)
+                    {
+                        _isSelectionChangeTriggeredByGoto = true;
+                        treeView1.SelectedNode = node;
+                        FireSettingsPageSelectedEvent(node);
+                        return;
+                    }
                 }
             }
         }
