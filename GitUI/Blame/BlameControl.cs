@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.CommitInfo;
 
 namespace GitUI.Blame
 {
@@ -31,7 +33,17 @@ namespace GitUI.Blame
             BlameFile.SelectedLineChanged += BlameFile_SelectedLineChanged;
             BlameFile.RequestDiffView += ActiveTextAreaControlDoubleClick;
             BlameFile.MouseMove += BlameFile_MouseMove;
+
+            CommitInfo.CommandClick += commitInfo_CommandClick;
         }
+
+        private void commitInfo_CommandClick(object sender, CommandEventArgs e)
+        {
+            if (CommandClick != null)
+                CommandClick(sender, e);
+        }
+
+        public event EventHandler<CommandEventArgs> CommandClick;
 
         void BlameCommitter_MouseLeave(object sender, EventArgs e)
         {
@@ -122,13 +134,14 @@ namespace GitUI.Blame
             if (_blame == null || selectedLine >= _blame.Lines.Count)
                 return;
 
+            //TODO: Request GitRevision from RevisionGrid that contain all commits
             var newRevision = _blame.Lines[selectedLine].CommitGuid;
 
             if (_lastRevision == newRevision)
                 return;
 
             _lastRevision = newRevision;
-            commitInfo.Revision = _lastRevision;
+            CommitInfo.RevisionGuid = _lastRevision;
         }
 
         bool bChangeScrollPosition;
@@ -172,10 +185,11 @@ namespace GitUI.Blame
         
         private AsyncLoader blameLoader = new AsyncLoader();
 
-        public void LoadBlame(string guid, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding)
+        public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding)
         {
+            string guid = revision.Guid;
             //refresh only when something changed
-            if (guid.Equals(commitInfo.Revision) && fileName.Equals(fileName) && revGrid == _revGrid && encoding == _encoding)
+            if (guid.Equals(CommitInfo.Revision) && fileName.Equals(fileName) && revGrid == _revGrid && encoding == _encoding)
                 return;
 
             if (controlToMask != null)
@@ -218,7 +232,7 @@ namespace GitUI.Blame
                 BlameFile.ViewText(fileName, blameFile.ToString());
                 BlameFile.ScrollPos = scrollpos;
 
-                commitInfo.Revision = guid;
+                CommitInfo.SetRevisionWithChildren(revision, children);
 
                 if (controlToMask != null)
                     controlToMask.UnMask();

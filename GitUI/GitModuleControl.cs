@@ -78,8 +78,14 @@ namespace GitUI
 
         private void SearchForUICommandsSource()
         {
-            if (UICommandsSourceParentSearch)
+            if (!UICommandsSourceParentSearch)
+                return;
+
+            lock (this)
             {
+                if (_UICommandsSource != null)
+                    return;
+
                 IGitUICommandsSource cs = null;
                 Control p = Parent;
                 while (p != null && cs == null)

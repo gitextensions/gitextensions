@@ -159,7 +159,7 @@ namespace GitUI
             return ColorIndex.Unknown;
         }
 
-        protected static Icon GetApplicationIcon(string iconStyle, string iconColor)
+        public static Icon GetApplicationIcon(string iconStyle, string iconColor)
         {
             var colorIndex = (int)GetColorIndexByName(iconColor);
             if (colorIndex == (int) ColorIndex.Unknown)
