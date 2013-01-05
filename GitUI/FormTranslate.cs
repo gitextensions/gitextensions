@@ -249,7 +249,12 @@ namespace GitUI
             translateCategories.Items.Clear();
             allCategories.Name = allText.Text;
             translateCategories.Items.Add(allCategories);
+            FillNeutralTranslation(neutralTranslation);
+            translateCategories.Items.AddRange(neutralTranslation.GetTranslationCategories().ToArray());
+        }
 
+        private void FillNeutralTranslation(Translation neutralTranslation)
+        {
             string currentTranslation = GitCommands.Settings.Translation;
 
             try
@@ -263,13 +268,12 @@ namespace GitUI
                 {
                     ITranslate obj = CreateInstanceOfClass(type) as ITranslate;
                     if (obj != null)
-                        obj.AddTranslationItems(neutralTranslation);                                                                  
+                        obj.AddTranslationItems(neutralTranslation);
                 }
             }
             finally
             {
                 neutralTranslation.Sort();
-                translateCategories.Items.AddRange(neutralTranslation.GetTranslationCategories().ToArray());
                 //Restore translation
                 GitCommands.Settings.Translation = currentTranslation;
             }
@@ -291,6 +295,101 @@ namespace GitUI
 
             SaveAs();
         }
+
+        #region Move translations
+        /*
+        //methods used to move translations from FormSettings to new settings pages
+        private void MoveTranslations()
+        {
+            string[] translationsNames = Translator.GetAllTranslations();
+            foreach (string translationName in translationsNames)
+            {
+                translation = Translator.GetTranslation(translationName);
+                if (translation == null)
+                    continue;
+
+                LoadTranslation();
+
+                MoveTranslationItems("FormSettings", "AppearanceSettingsPage");
+                MoveTranslationItems("FormSettings", "ChecklistSettingsPage");
+                MoveTranslationItems("FormSettings", "ColorsSettingsPage");
+                MoveTranslationItems("FormSettings", "GitExtensionsSettingsPage");
+                MoveTranslationItems("FormSettings", "GitSettingsPage");
+                MoveTranslationItems("FormSettings", "GlobalSettingsSettingsPage");
+                MoveTranslationItems("FormSettings", "HotkeysSettingsPage");
+                MoveTranslationItems("FormSettings", "LocalSettingsSettingsPage");
+                MoveTranslationItems("FormSettings", "ScriptsSettingsPage");
+                MoveTranslationItems("FormSettings", "ShellExtensionSettingsPage");
+                MoveTranslationItems("FormSettings", "SshSettingsPage");
+                MoveTranslationItems("FormSettings", "StartPageSettingsPage");
+                MoveTranslationItems("FormSettings", "CommonLogic");
+                MoveTranslationItems("FormSettings", "CheckSettingsLogic");
+
+                SaveAs();
+            }
+        }
+
+        private void MoveTranslationItems(string fromCategoryName, string toCategoryName)
+        {
+
+                TranslationCategory fromCategory = translation.GetTranslationCategory(fromCategoryName);
+                
+                if (fromCategory == null)
+                    return;
+
+                Dictionary<string, TranslationItem> exactMatch = new Dictionary<string, TranslationItem>();
+                Dictionary<string, TranslationItem> byNeutralValueMatch = new Dictionary<string, TranslationItem>();
+                Dictionary<string, TranslationItem> ambiguous = new Dictionary<string, TranslationItem>();
+
+                foreach (var item in fromCategory.GetTranslationItems())
+                {
+                    if (!item.Value.IsNullOrEmpty())
+                    {
+                        string neutralValue = item.Source;
+                        if (neutralValue != null)
+                        {
+                            string neutralValueKey = neutralValue + ":" + item.Property;
+                            TranslationItem foo;
+                            if (byNeutralValueMatch.TryGetValue(neutralValueKey, out foo))
+                                ambiguous[neutralValueKey] = item;
+                            else
+                                byNeutralValueMatch.Add(neutralValueKey, item);
+
+                            var exactKey = item.Name + ":" + neutralValueKey;
+                            exactMatch.Add(exactKey, item);
+                        }
+                    }
+                }
+
+                foreach (var key in ambiguous.Keys)
+                    byNeutralValueMatch.Remove(key);
+
+                foreach (var item in translate.Where(itm => itm.Category.Equals(toCategoryName)))
+                {
+                    if (item.Status != TranslationType.Translated)
+                    {
+                        string neutralValueKey = item.NeutralValue + ":" + item.Property;
+                        string exactKey = item.Name + ":" + neutralValueKey;
+                        TranslationItem fromItem;
+                        if (exactMatch.TryGetValue(exactKey, out fromItem))
+                        {
+                            item.TranslatedValue = fromItem.Value;
+                            item.Status = fromItem.Status;
+                        }
+                        else
+                        {
+                            if (byNeutralValueMatch.TryGetValue(neutralValueKey, out fromItem))
+                            {
+                                item.TranslatedValue = fromItem.Value;
+                                item.Status = fromItem.Status;
+                            }
+                        }
+                    }
+                }
+        }
+
+        */
+        #endregion
 
         private string GetSelectedLanguageCode()
         {
