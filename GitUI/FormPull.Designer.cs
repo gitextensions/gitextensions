@@ -73,7 +73,7 @@
             this.PullFromUrl.AutoSize = true;
             this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
             this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
+            this.PullFromUrl.Size = new System.Drawing.Size(40, 19);
             this.PullFromUrl.TabIndex = 1;
             this.PullFromUrl.Text = "Url";
             this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
@@ -86,7 +86,7 @@
             this.PullFromRemote.Checked = true;
             this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
             this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
+            this.PullFromRemote.Size = new System.Drawing.Size(66, 19);
             this.PullFromRemote.TabIndex = 0;
             this.PullFromRemote.TabStop = true;
             this.PullFromRemote.Text = "Remote";
@@ -140,7 +140,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(724, 362);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(724, 446);
             this.tableLayoutPanel1.TabIndex = 16;
             // 
             // PullImage
@@ -151,7 +151,7 @@
             this.PullImage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PullImage.Location = new System.Drawing.Point(3, 3);
             this.PullImage.Name = "PullImage";
-            this.PullImage.Size = new System.Drawing.Size(80, 356);
+            this.PullImage.Size = new System.Drawing.Size(80, 440);
             this.PullImage.TabIndex = 18;
             this.PullImage.TabStop = false;
             // 
@@ -161,7 +161,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(89, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(632, 356);
+            this.panel2.Size = new System.Drawing.Size(632, 440);
             this.panel2.TabIndex = 19;
             // 
             // tableLayoutPanel2
@@ -182,7 +182,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(632, 356);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(632, 440);
             this.tableLayoutPanel2.TabIndex = 42;
             // 
             // groupBox2
@@ -255,10 +255,11 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.AutoSize = true;
             this.groupBox1.Controls.Add(this.flowLayoutPanel1);
             this.groupBox1.Location = new System.Drawing.Point(3, 180);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(626, 102);
+            this.groupBox1.Size = new System.Drawing.Size(626, 103);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge options";
@@ -273,7 +274,7 @@
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 19);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(620, 80);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(620, 81);
             this.flowLayoutPanel1.TabIndex = 11;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -362,7 +363,7 @@
             this.tableLayoutPanel3.Controls.Add(this.Stash, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.AutoStash, 2, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 312);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 396);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             this.tableLayoutPanel3.RowCount = 1;
@@ -419,7 +420,7 @@
             this.AcceptButton = this.Pull;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(724, 362);
+            this.ClientSize = new System.Drawing.Size(724, 446);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
