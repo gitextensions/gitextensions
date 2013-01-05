@@ -2,6 +2,7 @@
 _UpgradeReport_Files/
 [Dd]ebug*/
 [Rr]elease*/
+!ReleaseNotesGenerator
 ipch/
 _ReSharper*/
 TestResults/
