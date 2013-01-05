@@ -74,7 +74,7 @@
             this.label60.AutoSize = true;
             this.label60.Location = new System.Drawing.Point(3, 434);
             this.label60.Name = "label60";
-            this.label60.Size = new System.Drawing.Size(114, 13);
+            this.label60.Size = new System.Drawing.Size(127, 15);
             this.label60.TabIndex = 79;
             this.label60.Text = "Files content encoding";
             // 
@@ -83,7 +83,7 @@
             this.Global_FilesEncoding.FormattingEnabled = true;
             this.Global_FilesEncoding.Location = new System.Drawing.Point(167, 432);
             this.Global_FilesEncoding.Name = "Global_FilesEncoding";
-            this.Global_FilesEncoding.Size = new System.Drawing.Size(231, 21);
+            this.Global_FilesEncoding.Size = new System.Drawing.Size(231, 23);
             this.Global_FilesEncoding.TabIndex = 78;
             // 
             // BrowseCommitTemplate
@@ -101,7 +101,7 @@
             this.label57.AutoSize = true;
             this.label57.Location = new System.Drawing.Point(4, 288);
             this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(120, 13);
+            this.label57.Size = new System.Drawing.Size(140, 15);
             this.label57.TabIndex = 76;
             this.label57.Text = "Path to commit template";
             // 
@@ -109,7 +109,7 @@
             // 
             this.CommitTemplatePath.Location = new System.Drawing.Point(198, 284);
             this.CommitTemplatePath.Name = "CommitTemplatePath";
-            this.CommitTemplatePath.Size = new System.Drawing.Size(297, 20);
+            this.CommitTemplatePath.Size = new System.Drawing.Size(297, 23);
             this.CommitTemplatePath.TabIndex = 75;
             // 
             // DiffToolCmdSuggest
@@ -127,7 +127,7 @@
             this.DifftoolCmd.FormattingEnabled = true;
             this.DifftoolCmd.Location = new System.Drawing.Point(157, 257);
             this.DifftoolCmd.Name = "DifftoolCmd";
-            this.DifftoolCmd.Size = new System.Drawing.Size(338, 21);
+            this.DifftoolCmd.Size = new System.Drawing.Size(338, 23);
             this.DifftoolCmd.TabIndex = 73;
             // 
             // label48
@@ -135,7 +135,7 @@
             this.label48.AutoSize = true;
             this.label48.Location = new System.Drawing.Point(4, 261);
             this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(89, 13);
+            this.label48.Size = new System.Drawing.Size(105, 15);
             this.label48.TabIndex = 72;
             this.label48.Text = "Difftool command";
             // 
@@ -154,7 +154,7 @@
             this.label42.AutoSize = true;
             this.label42.Location = new System.Drawing.Point(4, 234);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(75, 13);
+            this.label42.Size = new System.Drawing.Size(87, 15);
             this.label42.TabIndex = 70;
             this.label42.Text = "Path to difftool";
             // 
@@ -162,7 +162,7 @@
             // 
             this.DifftoolPath.Location = new System.Drawing.Point(157, 230);
             this.DifftoolPath.Name = "DifftoolPath";
-            this.DifftoolPath.Size = new System.Drawing.Size(338, 20);
+            this.DifftoolPath.Size = new System.Drawing.Size(338, 23);
             this.DifftoolPath.TabIndex = 69;
             // 
             // GlobalDiffTool
@@ -186,7 +186,7 @@
             "xxdiff"});
             this.GlobalDiffTool.Location = new System.Drawing.Point(157, 203);
             this.GlobalDiffTool.Name = "GlobalDiffTool";
-            this.GlobalDiffTool.Size = new System.Drawing.Size(155, 21);
+            this.GlobalDiffTool.Size = new System.Drawing.Size(155, 23);
             this.GlobalDiffTool.TabIndex = 68;
             this.GlobalDiffTool.TextChanged += new System.EventHandler(this.GlobalDiffTool_TextChanged);
             // 
@@ -195,7 +195,7 @@
             this.label41.AutoSize = true;
             this.label41.Location = new System.Drawing.Point(5, 206);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(40, 13);
+            this.label41.Size = new System.Drawing.Size(47, 15);
             this.label41.TabIndex = 67;
             this.label41.Text = "Difftool";
             // 
@@ -204,7 +204,7 @@
             this.label28.AutoSize = true;
             this.label28.Location = new System.Drawing.Point(5, 177);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(156, 13);
+            this.label28.Size = new System.Drawing.Size(174, 15);
             this.label28.TabIndex = 66;
             this.label28.Text = "Keep backup (.orig) after merge";
             // 
@@ -214,18 +214,18 @@
             this.InvalidGitPathGlobal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.InvalidGitPathGlobal.Controls.Add(this.label9);
             this.InvalidGitPathGlobal.Controls.Add(this.pictureBox1);
-            this.InvalidGitPathGlobal.Location = new System.Drawing.Point(390, 6);
+            this.InvalidGitPathGlobal.Location = new System.Drawing.Point(433, 6);
             this.InvalidGitPathGlobal.Name = "InvalidGitPathGlobal";
-            this.InvalidGitPathGlobal.Size = new System.Drawing.Size(296, 68);
+            this.InvalidGitPathGlobal.Size = new System.Drawing.Size(263, 59);
             this.InvalidGitPathGlobal.TabIndex = 65;
             this.InvalidGitPathGlobal.Visible = false;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(63, 9);
+            this.label9.Location = new System.Drawing.Point(63, 6);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(175, 39);
+            this.label9.Size = new System.Drawing.Size(193, 45);
             this.label9.TabIndex = 19;
             this.label9.Text = "You need to set the correct path to \r\ngit before you can change\r\nglobal settings." +
     "\r\n";
@@ -236,6 +236,7 @@
             this.pictureBox1.Location = new System.Drawing.Point(3, 4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(54, 50);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 18;
             this.pictureBox1.TabStop = false;
             // 
@@ -254,7 +255,7 @@
             this.MergeToolCmd.FormattingEnabled = true;
             this.MergeToolCmd.Location = new System.Drawing.Point(157, 145);
             this.MergeToolCmd.Name = "MergeToolCmd";
-            this.MergeToolCmd.Size = new System.Drawing.Size(338, 21);
+            this.MergeToolCmd.Size = new System.Drawing.Size(338, 23);
             this.MergeToolCmd.TabIndex = 63;
             // 
             // label19
@@ -262,7 +263,7 @@
             this.label19.AutoSize = true;
             this.label19.Location = new System.Drawing.Point(4, 149);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(103, 13);
+            this.label19.Size = new System.Drawing.Size(120, 15);
             this.label19.TabIndex = 62;
             this.label19.Text = "Mergetool command";
             // 
@@ -288,7 +289,7 @@
             "TortoiseMerge"});
             this.GlobalMergeTool.Location = new System.Drawing.Point(157, 90);
             this.GlobalMergeTool.Name = "GlobalMergeTool";
-            this.GlobalMergeTool.Size = new System.Drawing.Size(155, 21);
+            this.GlobalMergeTool.Size = new System.Drawing.Size(155, 23);
             this.GlobalMergeTool.TabIndex = 60;
             this.GlobalMergeTool.TextChanged += new System.EventHandler(this.GlobalMergeTool_TextChanged);
             // 
@@ -297,7 +298,7 @@
             this.PathToKDiff3.AutoSize = true;
             this.PathToKDiff3.Location = new System.Drawing.Point(4, 122);
             this.PathToKDiff3.Name = "PathToKDiff3";
-            this.PathToKDiff3.Size = new System.Drawing.Size(90, 13);
+            this.PathToKDiff3.Size = new System.Drawing.Size(103, 15);
             this.PathToKDiff3.TabIndex = 59;
             this.PathToKDiff3.Text = "Path to mergetool";
             // 
@@ -305,7 +306,7 @@
             // 
             this.MergetoolPath.Location = new System.Drawing.Point(157, 118);
             this.MergetoolPath.Name = "MergetoolPath";
-            this.MergetoolPath.Size = new System.Drawing.Size(338, 20);
+            this.MergetoolPath.Size = new System.Drawing.Size(338, 23);
             this.MergetoolPath.TabIndex = 58;
             // 
             // GlobalKeepMergeBackup
@@ -325,7 +326,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(5, 93);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(54, 13);
+            this.label7.Size = new System.Drawing.Size(62, 15);
             this.label7.TabIndex = 56;
             this.label7.Text = "Mergetool";
             // 
@@ -333,7 +334,7 @@
             // 
             this.GlobalEditor.Location = new System.Drawing.Point(157, 63);
             this.GlobalEditor.Name = "GlobalEditor";
-            this.GlobalEditor.Size = new System.Drawing.Size(338, 21);
+            this.GlobalEditor.Size = new System.Drawing.Size(260, 23);
             this.GlobalEditor.TabIndex = 55;
             // 
             // label6
@@ -341,7 +342,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(4, 66);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(34, 13);
+            this.label6.Size = new System.Drawing.Size(38, 15);
             this.label6.TabIndex = 54;
             this.label6.Text = "Editor";
             // 
@@ -349,14 +350,14 @@
             // 
             this.GlobalUserEmail.Location = new System.Drawing.Point(157, 35);
             this.GlobalUserEmail.Name = "GlobalUserEmail";
-            this.GlobalUserEmail.Size = new System.Drawing.Size(227, 20);
+            this.GlobalUserEmail.Size = new System.Drawing.Size(241, 23);
             this.GlobalUserEmail.TabIndex = 53;
             // 
             // GlobalUserName
             // 
             this.GlobalUserName.Location = new System.Drawing.Point(157, 6);
             this.GlobalUserName.Name = "GlobalUserName";
-            this.GlobalUserName.Size = new System.Drawing.Size(227, 20);
+            this.GlobalUserName.Size = new System.Drawing.Size(241, 23);
             this.GlobalUserName.TabIndex = 52;
             // 
             // label4
@@ -364,7 +365,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(3, 37);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(56, 13);
+            this.label4.Size = new System.Drawing.Size(62, 15);
             this.label4.TabIndex = 51;
             this.label4.Text = "User email";
             // 
@@ -373,7 +374,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(3, 10);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(58, 13);
+            this.label3.Size = new System.Drawing.Size(63, 15);
             this.label3.TabIndex = 50;
             this.label3.Text = "User name";
             // 
@@ -396,7 +397,7 @@
             this.globalAutoCrlfFalse.AutoSize = true;
             this.globalAutoCrlfFalse.Location = new System.Drawing.Point(5, 74);
             this.globalAutoCrlfFalse.Name = "globalAutoCrlfFalse";
-            this.globalAutoCrlfFalse.Size = new System.Drawing.Size(313, 17);
+            this.globalAutoCrlfFalse.Size = new System.Drawing.Size(349, 19);
             this.globalAutoCrlfFalse.TabIndex = 2;
             this.globalAutoCrlfFalse.TabStop = true;
             this.globalAutoCrlfFalse.Text = "Checkout as-is, commit as-is (\"core.autocrlf\"  is set to \"false\")";
@@ -407,7 +408,7 @@
             this.globalAutoCrlfInput.AutoSize = true;
             this.globalAutoCrlfInput.Location = new System.Drawing.Point(5, 48);
             this.globalAutoCrlfInput.Name = "globalAutoCrlfInput";
-            this.globalAutoCrlfInput.Size = new System.Drawing.Size(397, 17);
+            this.globalAutoCrlfInput.Size = new System.Drawing.Size(448, 19);
             this.globalAutoCrlfInput.TabIndex = 1;
             this.globalAutoCrlfInput.TabStop = true;
             this.globalAutoCrlfInput.Text = "Checkout as-is, commit Unix-style line endings (\"core.autocrlf\"  is set to \"input" +
@@ -419,7 +420,7 @@
             this.globalAutoCrlfTrue.AutoSize = true;
             this.globalAutoCrlfTrue.Location = new System.Drawing.Point(5, 22);
             this.globalAutoCrlfTrue.Name = "globalAutoCrlfTrue";
-            this.globalAutoCrlfTrue.Size = new System.Drawing.Size(439, 17);
+            this.globalAutoCrlfTrue.Size = new System.Drawing.Size(495, 19);
             this.globalAutoCrlfTrue.TabIndex = 0;
             this.globalAutoCrlfTrue.TabStop = true;
             this.globalAutoCrlfTrue.Text = "Checkout Windows-style, commit Unix-style line endings (\"core.autocrlf\"  is set t" +
