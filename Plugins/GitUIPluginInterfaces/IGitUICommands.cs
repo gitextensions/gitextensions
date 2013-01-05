@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 namespace GitUIPluginInterfaces
 {
@@ -98,6 +99,7 @@ namespace GitUIPluginInterfaces
         IGitRemoteCommand CreateRemoteCommand();
         void RaiseBrowseInitialize();
         void CacheAvatar(string email);
+        Icon FormIcon { get; }
 
         bool StartCommandLineProcessDialog(object ownerForm, string command, string arguments);
         bool StartCommandLineProcessDialog(string command, string arguments);

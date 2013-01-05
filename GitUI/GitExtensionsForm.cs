@@ -17,7 +17,7 @@ namespace GitUI
 {
     public class GitExtensionsForm : Form, ITranslate
     {
-        private static Icon ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
+        internal static Icon ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
 
         private bool _translated;
         private bool _enablePositionRestore;

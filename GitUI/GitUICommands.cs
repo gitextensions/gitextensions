@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -215,6 +216,8 @@ namespace GitUI
             GravatarService.CacheImage(email + ".png", email, Settings.AuthorImageSize,
                 gravatarFallBack);
         }
+
+        public Icon FormIcon { get { return GitExtensionsForm.ApplicationIcon; } } 
 
         public bool StartBatchFileProcessDialog(object owner, string batchFile)
         {
