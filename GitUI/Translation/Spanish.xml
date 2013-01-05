@@ -34,17 +34,17 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
           <Source>Copy log message to clipboard</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="showChangesToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="showChangesToolStripMenuItem" Property="Text">
           <Source>Show changes</Source>
-          <Value />
+          <Value>Mostrar cambios</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="BranchComboBox">
       <translationItems>
-        <TranslationItem Name="_branchCheckoutError" Property="Text" type="unfinished">
+        <TranslationItem Name="_branchCheckoutError" Property="Text">
           <Source>Branch '{0}' is not selectable, this branch has been removed from the selection.</Source>
-          <Value />
+          <Value>La rama '{0}' no se puede seleccionar, esta rama ha sido retirado de la selección.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -183,9 +183,9 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
           <Source>Pull request</Source>
           <Value>Pedido de Pull</Value>
         </TranslationItem>
-        <TranslationItem Name="_strYouMustSpecifyATitle" Property="Text" type="unfinished">
+        <TranslationItem Name="_strYouMustSpecifyATitle" Property="Text">
           <Source>You must specify a title.</Source>
-          <Value />
+          <Value>Debe especificar un título.</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Pull request data</Source>
@@ -227,9 +227,9 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
           <Source>Clone repository</Source>
           <Value>Clonar repositorio</Value>
         </TranslationItem>
-        <TranslationItem Name="cloneSvnRepository" Property="Text" type="unfinished">
+        <TranslationItem Name="cloneSvnRepository" Property="Text">
           <Source>Clone SVN repository</Source>
-          <Value />
+          <Value>Clonar repositorio SVN</Value>
         </TranslationItem>
         <TranslationItem Name="CommonActions" Property="Title">
           <Source>Common Actions</Source>
@@ -295,21 +295,21 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Move up</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_moveToCategory" Property="Text" type="unfinished">
+        <TranslationItem Name="_moveToCategory" Property="Text">
           <Source>Move to category</Source>
-          <Value />
+          <Value>Mover a categoría</Value>
         </TranslationItem>
-        <TranslationItem Name="_newCategory" Property="Text" type="unfinished">
+        <TranslationItem Name="_newCategory" Property="Text">
           <Source>New category</Source>
-          <Value />
+          <Value>Nueva categoría</Value>
         </TranslationItem>
         <TranslationItem Name="_removeCategory" Property="Text">
           <Source>Remove</Source>
           <Value>Quitar</Value>
         </TranslationItem>
-        <TranslationItem Name="_showCurrentBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="_showCurrentBranch" Property="Text">
           <Source>Show current branch</Source>
-          <Value />
+          <Value>Mostrar rama actual</Value>
         </TranslationItem>
         <TranslationItem Name="editToolStripMenuItem" Property="Text">
           <Source>Edit</Source>
@@ -387,9 +387,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Copy</Source>
           <Value>Copiar</Value>
         </TranslationItem>
-        <TranslationItem Name="cutMenuItemText" Property="Text" type="unfinished">
+        <TranslationItem Name="cutMenuItemText" Property="Text">
           <Source>Cut</Source>
-          <Value />
+          <Value>Cortar</Value>
         </TranslationItem>
         <TranslationItem Name="deleteMenuItemText" Property="Text">
           <Source>Delete</Source>
@@ -407,21 +407,21 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Mark ill formed lines</Source>
           <Value>Marcar líneas mal formadas</Value>
         </TranslationItem>
-        <TranslationItem Name="pasteMenuItemText" Property="Text" type="unfinished">
+        <TranslationItem Name="pasteMenuItemText" Property="Text">
           <Source>Paste</Source>
-          <Value />
+          <Value>Pegar</Value>
         </TranslationItem>
-        <TranslationItem Name="redoMenuItemText" Property="Text" type="unfinished">
+        <TranslationItem Name="redoMenuItemText" Property="Text">
           <Source>Redo</Source>
-          <Value />
+          <Value>Rehacer</Value>
         </TranslationItem>
         <TranslationItem Name="removeWordText" Property="Text">
           <Source>Remove word</Source>
           <Value>Eliminar palabra</Value>
         </TranslationItem>
-        <TranslationItem Name="selectAllMenuItemText" Property="Text" type="unfinished">
+        <TranslationItem Name="selectAllMenuItemText" Property="Text">
           <Source>Select all</Source>
-          <Value />
+          <Value>Seleccionar todo</Value>
         </TranslationItem>
         <TranslationItem Name="translateCurrentWord" Property="Text">
           <Source>Translate '{0}' to {1}</Source>
@@ -431,9 +431,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Translate entire text to {0}</Source>
           <Value>Traducir todo el texto a {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="undoMenuItemText" Property="Text" type="unfinished">
+        <TranslationItem Name="undoMenuItemText" Property="Text">
           <Source>Undo</Source>
-          <Value />
+          <Value>Deshacer</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -467,13 +467,13 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Find</Source>
           <Value>Buscar</Value>
         </TranslationItem>
-        <TranslationItem Name="goToLineToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="goToLineToolStripMenuItem" Property="Text">
           <Source>Go to line</Source>
-          <Value />
+          <Value>Ir a la línea</Value>
         </TranslationItem>
         <TranslationItem Name="ignoreWhitespaceChangesToolStripMenuItem" Property="Text">
           <Source>Ignore whitespace changes</Source>
-          <Value>No haga caso de cambios de espacio en blanco</Value>
+          <Value>Ignorar cambios de espacio en blanco</Value>
         </TranslationItem>
         <TranslationItem Name="ignoreWhiteSpaces" Property="ToolTipText">
           <Source>Ignore whitespaces</Source>
@@ -489,11 +489,11 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="nextChangeButton" Property="ToolTipText">
           <Source>Next change</Source>
-          <Value>cambio Siguiente</Value>
+          <Value>Cambio siguiente</Value>
         </TranslationItem>
         <TranslationItem Name="previousChangeButton" Property="ToolTipText">
           <Source>Previous change</Source>
-          <Value>cambio anterior</Value>
+          <Value>Cambio anterior</Value>
         </TranslationItem>
         <TranslationItem Name="showEntireFileButton" Property="ToolTipText">
           <Source>Show entire file</Source>
@@ -1044,13 +1044,13 @@ Tendrá acceso para hacer Push. {2}</Value>
           <Source>Create branch</Source>
           <Value>Crear rama</Value>
         </TranslationItem>
-        <TranslationItem Name="_branchNameIsEmpty" Property="Text" type="unfinished">
+        <TranslationItem Name="_branchNameIsEmpty" Property="Text">
           <Source>Enter branch name.</Source>
-          <Value />
+          <Value>Ingrese nombre de rama.</Value>
         </TranslationItem>
-        <TranslationItem Name="_branchNameIsNotValud" Property="Text" type="unfinished">
+        <TranslationItem Name="_branchNameIsNotValud" Property="Text">
           <Source>“{0}” is not valid branch name.</Source>
-          <Value />
+          <Value>“{0}” no es un nombre válido de rama.</Value>
         </TranslationItem>
         <TranslationItem Name="_noRevisionSelected" Property="Text">
           <Source>Select 1 revision to create the branch on.</Source>
@@ -1076,9 +1076,9 @@ Tendrá acceso para hacer Push. {2}</Value>
           <Source>Git Extensions</Source>
           <Value>Git Extensiones</Value>
         </TranslationItem>
-        <TranslationItem Name="_configureWorkingDirMenu" Property="Text" type="unfinished">
+        <TranslationItem Name="_configureWorkingDirMenu" Property="Text">
           <Source>Configure this menu</Source>
-          <Value />
+          <Value>Configurar este menú</Value>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
           <Source>Create pull requests</Source>
@@ -1149,9 +1149,9 @@ Tendrá acceso para hacer Push. {2}</Value>
           <Source>stash</Source>
           <Value>pila</Value>
         </TranslationItem>
-        <TranslationItem Name="_UnsupportedMultiselectAction" Property="Text" type="unfinished">
+        <TranslationItem Name="_UnsupportedMultiselectAction" Property="Text">
           <Source>Operation not supported</Source>
-          <Value />
+          <Value>Operación no soportada</Value>
         </TranslationItem>
         <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text">
           <Source>View pull requests</Source>
@@ -1229,9 +1229,9 @@ Tendrá acceso para hacer Push. {2}</Value>
           <Source>Cleanup repository</Source>
           <Value>Limpiar</Value>
         </TranslationItem>
-        <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
           <Source>Clone SVN repository</Source>
-          <Value />
+          <Value>Clonar repositorio SVN</Value>
         </TranslationItem>
         <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
           <Source>Clone repository</Source>
@@ -1241,9 +1241,9 @@ Tendrá acceso para hacer Push. {2}</Value>
           <Source>Close</Source>
           <Value>Cerrar</Value>
         </TranslationItem>
-        <TranslationItem Name="collapseAllToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="collapseAllToolStripMenuItem" Property="Text">
           <Source>Collapse all</Source>
-          <Value />
+          <Value>Contraer todo</Value>
         </TranslationItem>
         <TranslationItem Name="commandsToolStripMenuItem" Property="Text">
           <Source>Commands</Source>
@@ -1341,9 +1341,9 @@ Tendrá acceso para hacer Push. {2}</Value>
           <Source>Exit</Source>
           <Value>Salir</Value>
         </TranslationItem>
-        <TranslationItem Name="expandAllToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="expandAllToolStripMenuItem" Property="Text">
           <Source>Expand all</Source>
-          <Value />
+          <Value>Expandir todo</Value>
         </TranslationItem>
         <TranslationItem Name="fetchAllToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Fetch all</Source>
@@ -1449,9 +1449,9 @@ Tendrá acceso para hacer Push. {2}</Value>
           <Source>Merge</Source>
           <Value>Fusionar</Value>
         </TranslationItem>
-        <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text">
           <Source>Open containing folder</Source>
-          <Value />
+          <Value>Abrir carpeta contenedora</Value>
         </TranslationItem>
         <TranslationItem Name="openFileToolStripMenuItem" Property="Text">
           <Source>Open this revision (temp file)</Source>
@@ -1613,9 +1613,9 @@ Tendrá acceso para hacer Push. {2}</Value>
           <Source>SVN Rebase</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="synchronizeAllSubmodulesToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="synchronizeAllSubmodulesToolStripMenuItem" Property="Text">
           <Source>Synchronize all submodules</Source>
-          <Value />
+          <Value>Sincronizar todos los submódulos</Value>
         </TranslationItem>
         <TranslationItem Name="tagToolStripMenuItem" Property="Text">
           <Source>Create tag</Source>
@@ -1755,25 +1755,25 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Local branch</Source>
           <Value>Rama local</Value>
         </TranslationItem>
-        <TranslationItem Name="localChangesGB" Property="Text" type="unfinished">
+        <TranslationItem Name="localChangesGB" Property="Text">
           <Source>Local changes</Source>
-          <Value />
+          <Value>Cambios locales</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Checkout</Source>
           <Value>Checkout</Value>
         </TranslationItem>
-        <TranslationItem Name="rbCreateBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="rbCreateBranch" Property="Text">
           <Source>Create local branch with the name '{0}'</Source>
-          <Value />
+          <Value>Crear rama local con el nombre '{0}'</Value>
         </TranslationItem>
         <TranslationItem Name="rbCreateBranchWithCustomName" Property="Text" type="unfinished">
           <Source>Create local branch with custom name:</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="rbDontChange" Property="Text" type="unfinished">
+        <TranslationItem Name="rbDontChange" Property="Text">
           <Source>Don't change</Source>
-          <Value />
+          <Value>No cambiar</Value>
         </TranslationItem>
         <TranslationItem Name="rbDontCreate" Property="Text" type="unfinished">
           <Source>Checkout remote branch</Source>
@@ -7059,9 +7059,9 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
           <Source>Rebase current branch on</Source>
           <Value>Rebase en</Value>
         </TranslationItem>
-        <TranslationItem Name="renameBranchToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="renameBranchToolStripMenuItem" Property="Text">
           <Source>Rename branch</Source>
-          <Value />
+          <Value>Renombrar rama</Value>
         </TranslationItem>
         <TranslationItem Name="resetCurrentBranchToHereToolStripMenuItem" Property="Text">
           <Source>Reset current branch to here</Source>
@@ -7153,11 +7153,11 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
         </TranslationItem>
         <TranslationItem Name="_dayAgo" Property="Text">
           <Source>{0} day ago</Source>
-          <Value>hace {0} dia</Value>
+          <Value>hace {0} día</Value>
         </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
           <Source>{0} days ago</Source>
-          <Value>hace {0} dias</Value>
+          <Value>hace {0} días</Value>
         </TranslationItem>
         <TranslationItem Name="_hourAgo" Property="Text">
           <Source>{0} hour ago</Source>
@@ -7195,13 +7195,13 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
           <Source>{0} seconds ago</Source>
           <Value>hace {0} segundos</Value>
         </TranslationItem>
-        <TranslationItem Name="_weekAgo" Property="Text" type="unfinished">
+        <TranslationItem Name="_weekAgo" Property="Text">
           <Source>{0} week ago</Source>
-          <Value />
+          <Value>hace {0} semana</Value>
         </TranslationItem>
-        <TranslationItem Name="_weeksAgo" Property="Text" type="unfinished">
+        <TranslationItem Name="_weeksAgo" Property="Text">
           <Source>{0} weeks ago</Source>
-          <Value />
+          <Value>hace {0} semanas</Value>
         </TranslationItem>
         <TranslationItem Name="_yearAgo" Property="Text">
           <Source>{0} year ago</Source>
@@ -7279,13 +7279,12 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
           <Source>Refresh</Source>
           <Value>Actualizar</Value>
         </TranslationItem>
-        <TranslationItem Name="_strCouldNotAddRemote" Property="Text" type="unfinished">
+        <TranslationItem Name="_strCouldNotAddRemote" Property="Text">
           <Source>Could not add remote with name {0} and URL {1}</Source>
-          <Value />
+          <Value>No se pudo agregar el remoto con nombre {0} y URL {1}</Value>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text">
-          <Source>Could not load discussion!
-</Source>
+          <Source>Could not load discussion!</Source>
           <Value>No se pudo cargar la discusion!</Value>
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
@@ -7293,23 +7292,19 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
           <Value>Error</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToClosePullRequest" Property="Text">
-          <Source>Failed to close pull request!
-</Source>
+          <Source>Failed to close pull request!</Source>
           <Value>Fallo al cerrar pedido de Pull!</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToFetchPullData" Property="Text">
-          <Source>Failed to fetch pull data!
-</Source>
+          <Source>Failed to fetch pull data!</Source>
           <Value>Fallo al obtener datos de Pull!</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiffData" Property="Text">
-          <Source>Failed to load diff data!
-</Source>
+          <Source>Failed to load diff data!</Source>
           <Value>Fallo al cargar datos diff!</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiscussionItem" Property="Text">
-          <Source>Failed to post discussion item!
-</Source>
+          <Source>Failed to post discussion item!</Source>
           <Value>Fallo al enviar item de discusión!</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">
@@ -7321,9 +7316,9 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
 Details: Is {1} expected {2}</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_strUnableUnderstandPatch" Property="Text" type="unfinished">
+        <TranslationItem Name="_strUnableUnderstandPatch" Property="Text">
           <Source>Error: Unable to understand patch</Source>
-          <Value />
+          <Value>Error: No es posible entender el parche</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader2" Property="Text">
           <Source>Heading</Source>
