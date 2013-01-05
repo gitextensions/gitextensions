@@ -59,7 +59,7 @@
             this.label61.AutoSize = true;
             this.label61.Location = new System.Drawing.Point(9, 258);
             this.label61.Name = "label61";
-            this.label61.Size = new System.Drawing.Size(114, 13);
+            this.label61.Size = new System.Drawing.Size(127, 15);
             this.label61.TabIndex = 61;
             this.label61.Text = "Files content encoding";
             // 
@@ -68,7 +68,7 @@
             this.Local_FilesEncoding.FormattingEnabled = true;
             this.Local_FilesEncoding.Location = new System.Drawing.Point(173, 255);
             this.Local_FilesEncoding.Name = "Local_FilesEncoding";
-            this.Local_FilesEncoding.Size = new System.Drawing.Size(262, 21);
+            this.Local_FilesEncoding.Size = new System.Drawing.Size(262, 23);
             this.Local_FilesEncoding.TabIndex = 60;
             // 
             // groupBox10
@@ -90,7 +90,7 @@
             this.localAutoCrlfFalse.AutoSize = true;
             this.localAutoCrlfFalse.Location = new System.Drawing.Point(5, 74);
             this.localAutoCrlfFalse.Name = "localAutoCrlfFalse";
-            this.localAutoCrlfFalse.Size = new System.Drawing.Size(313, 17);
+            this.localAutoCrlfFalse.Size = new System.Drawing.Size(349, 19);
             this.localAutoCrlfFalse.TabIndex = 2;
             this.localAutoCrlfFalse.TabStop = true;
             this.localAutoCrlfFalse.Text = "Checkout as-is, commit as-is (\"core.autocrlf\"  is set to \"false\")";
@@ -101,7 +101,7 @@
             this.localAutoCrlfInput.AutoSize = true;
             this.localAutoCrlfInput.Location = new System.Drawing.Point(5, 48);
             this.localAutoCrlfInput.Name = "localAutoCrlfInput";
-            this.localAutoCrlfInput.Size = new System.Drawing.Size(397, 17);
+            this.localAutoCrlfInput.Size = new System.Drawing.Size(448, 19);
             this.localAutoCrlfInput.TabIndex = 1;
             this.localAutoCrlfInput.TabStop = true;
             this.localAutoCrlfInput.Text = "Checkout as-is, commit Unix-style line endings (\"core.autocrlf\"  is set to \"input" +
@@ -113,7 +113,7 @@
             this.localAutoCrlfTrue.AutoSize = true;
             this.localAutoCrlfTrue.Location = new System.Drawing.Point(5, 22);
             this.localAutoCrlfTrue.Name = "localAutoCrlfTrue";
-            this.localAutoCrlfTrue.Size = new System.Drawing.Size(439, 17);
+            this.localAutoCrlfTrue.Size = new System.Drawing.Size(495, 19);
             this.localAutoCrlfTrue.TabIndex = 0;
             this.localAutoCrlfTrue.TabStop = true;
             this.localAutoCrlfTrue.Text = "Checkout Windows-style, commit Unix-style line endings (\"core.autocrlf\"  is set t" +
@@ -125,7 +125,7 @@
             this.label30.AutoSize = true;
             this.label30.Location = new System.Drawing.Point(3, 124);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(156, 13);
+            this.label30.Size = new System.Drawing.Size(174, 15);
             this.label30.TabIndex = 58;
             this.label30.Text = "Keep backup (.orig) after merge";
             // 
@@ -135,18 +135,18 @@
             this.InvalidGitPathLocal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.InvalidGitPathLocal.Controls.Add(this.label21);
             this.InvalidGitPathLocal.Controls.Add(this.pictureBox3);
-            this.InvalidGitPathLocal.Location = new System.Drawing.Point(418, 5);
+            this.InvalidGitPathLocal.Location = new System.Drawing.Point(433, 6);
             this.InvalidGitPathLocal.Name = "InvalidGitPathLocal";
-            this.InvalidGitPathLocal.Size = new System.Drawing.Size(279, 65);
+            this.InvalidGitPathLocal.Size = new System.Drawing.Size(262, 65);
             this.InvalidGitPathLocal.TabIndex = 57;
             this.InvalidGitPathLocal.Visible = false;
             // 
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(74, 6);
+            this.label21.Location = new System.Drawing.Point(61, 7);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(175, 39);
+            this.label21.Size = new System.Drawing.Size(193, 45);
             this.label21.TabIndex = 19;
             this.label21.Text = "You need to set the correct path to \r\ngit before you can change\r\nlocal settings.\r" +
     "\n";
@@ -157,6 +157,7 @@
             this.pictureBox3.Location = new System.Drawing.Point(3, 4);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(54, 50);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox3.TabIndex = 18;
             this.pictureBox3.TabStop = false;
             // 
@@ -164,9 +165,9 @@
             // 
             this.NoGitRepo.AutoSize = true;
             this.NoGitRepo.ForeColor = System.Drawing.Color.Red;
-            this.NoGitRepo.Location = new System.Drawing.Point(455, 73);
+            this.NoGitRepo.Location = new System.Drawing.Point(430, 72);
             this.NoGitRepo.Name = "NoGitRepo";
-            this.NoGitRepo.Size = new System.Drawing.Size(106, 13);
+            this.NoGitRepo.Size = new System.Drawing.Size(122, 15);
             this.NoGitRepo.TabIndex = 56;
             this.NoGitRepo.Text = "Not in a git repository";
             // 
@@ -175,9 +176,9 @@
             this.label20.AutoSize = true;
             this.label20.BackColor = System.Drawing.SystemColors.Info;
             this.label20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label20.Location = new System.Drawing.Point(435, 3);
+            this.label20.Location = new System.Drawing.Point(433, 9);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(145, 54);
+            this.label20.Size = new System.Drawing.Size(165, 62);
             this.label20.TabIndex = 55;
             this.label20.Text = "You only need local settings\r\nif you want to override the \r\nglobal settings for t" +
     "he current\r\nrepository.";
@@ -194,7 +195,7 @@
             "TortoiseMerge"});
             this.LocalMergeTool.Location = new System.Drawing.Point(145, 91);
             this.LocalMergeTool.Name = "LocalMergeTool";
-            this.LocalMergeTool.Size = new System.Drawing.Size(159, 21);
+            this.LocalMergeTool.Size = new System.Drawing.Size(159, 23);
             this.LocalMergeTool.TabIndex = 54;
             // 
             // KeepMergeBackup
@@ -214,7 +215,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(3, 94);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(54, 13);
+            this.label8.Size = new System.Drawing.Size(62, 15);
             this.label8.TabIndex = 52;
             this.label8.Text = "Mergetool";
             // 
@@ -222,7 +223,7 @@
             // 
             this.Editor.Location = new System.Drawing.Point(145, 64);
             this.Editor.Name = "Editor";
-            this.Editor.Size = new System.Drawing.Size(304, 20);
+            this.Editor.Size = new System.Drawing.Size(280, 23);
             this.Editor.TabIndex = 51;
             // 
             // label5
@@ -230,7 +231,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(3, 67);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(34, 13);
+            this.label5.Size = new System.Drawing.Size(38, 15);
             this.label5.TabIndex = 50;
             this.label5.Text = "Editor";
             // 
@@ -238,14 +239,14 @@
             // 
             this.UserEmail.Location = new System.Drawing.Point(145, 37);
             this.UserEmail.Name = "UserEmail";
-            this.UserEmail.Size = new System.Drawing.Size(280, 20);
+            this.UserEmail.Size = new System.Drawing.Size(280, 23);
             this.UserEmail.TabIndex = 49;
             // 
             // UserName
             // 
             this.UserName.Location = new System.Drawing.Point(145, 9);
             this.UserName.Name = "UserName";
-            this.UserName.Size = new System.Drawing.Size(280, 20);
+            this.UserName.Size = new System.Drawing.Size(280, 23);
             this.UserName.TabIndex = 47;
             // 
             // label2
@@ -253,7 +254,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(3, 37);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 13);
+            this.label2.Size = new System.Drawing.Size(62, 15);
             this.label2.TabIndex = 48;
             this.label2.Text = "User email";
             // 
@@ -262,7 +263,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 13);
+            this.label1.Size = new System.Drawing.Size(63, 15);
             this.label1.TabIndex = 46;
             this.label1.Text = "User name";
             // 
@@ -273,8 +274,8 @@
             this.Controls.Add(this.label61);
             this.Controls.Add(this.Local_FilesEncoding);
             this.Controls.Add(this.groupBox10);
-            this.Controls.Add(this.label30);
             this.Controls.Add(this.InvalidGitPathLocal);
+            this.Controls.Add(this.label30);
             this.Controls.Add(this.NoGitRepo);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.LocalMergeTool);
