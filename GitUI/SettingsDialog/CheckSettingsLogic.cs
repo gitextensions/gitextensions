@@ -13,7 +13,7 @@ using ResourceManager.Translation;
 
 namespace GitUI.SettingsDialog
 {
-    public class CheckSettingsLogic
+    public class CheckSettingsLogic : Translate
     {
         public static readonly TranslationString _toolSuggestPath =
             new TranslationString("Please enter the path to {0} and press suggest.");
