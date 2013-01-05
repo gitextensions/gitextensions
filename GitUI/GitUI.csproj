@@ -193,6 +193,12 @@
     </Compile>
     <Compile Include="GitUIExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Help\HelpImageDisplayUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Help\HelpImageDisplayUserControl.Designer.cs">
+      <DependentUpon>HelpImageDisplayUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Hotkey\ControlHotkeys.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1000,6 +1006,9 @@
       <DependentUpon>FormRunScriptSpecify.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Help\HelpImageDisplayUserControl.resx">
+      <DependentUpon>HelpImageDisplayUserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Hotkey\ControlHotkeys.resx">
       <DependentUpon>ControlHotkeys.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1533,6 +1542,8 @@
     <None Include="Resources\Icons\IconSubmoduleRevisionDownDirty.png" />
     <None Include="Resources\Icons\IconSubmoduleRevisionUpDirty.png" />
     <None Include="Resources\Icons\IconRevertCommit.png" />
+    <None Include="Resources\Icons\HelpPullMergeFastForward.png" />
+    <None Include="Resources\Icons\HelpCommandMergeFastForward.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
