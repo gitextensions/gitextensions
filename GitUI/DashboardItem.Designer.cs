@@ -108,6 +108,7 @@
             this._NO_TRANSLATE_Title.Text = "##label1";
             this._NO_TRANSLATE_Title.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
             this._NO_TRANSLATE_Title.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
+            this._NO_TRANSLATE_Title.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.OnKeyDown);			
             // 
             // _NO_TRANSLATE_Description
             // 

@@ -1146,7 +1146,7 @@ namespace GitUI
             this.Amend.Name = "Amend";
             this.Amend.Size = new System.Drawing.Size(112, 19);
             this.Amend.TabIndex = 12;
-            this.Amend.Text = "Amend Commit";
+            this.Amend.Text = "&Amend Commit";
             this.Amend.UseVisualStyleBackColor = true;
             this.Amend.CheckedChanged += new System.EventHandler(this.Amend_CheckedChanged);
             // 

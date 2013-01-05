@@ -1810,9 +1810,10 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            UICommands.StartDeleteTagDialog(this, toolStripItem.Text);
-
-            ForceRefreshRevisions();
+            if (UICommands.StartDeleteTagDialog(this, toolStripItem.Text))
+            {
+                ForceRefreshRevisions();
+            }
         }
 
         private void ToolStripItemClickDeleteBranch(object sender, EventArgs e)

@@ -14,6 +14,7 @@ using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
 using PatchApply;
 using Settings = GitCommands.Settings;
+using GitUI.SettingsDialog;
 
 namespace GitUI
 {
@@ -994,7 +995,12 @@ namespace GitUI
                 return true;
 
             using (var form = new FormDeleteTag(this, tag))
-                form.ShowDialog(owner);
+            {
+                if (form.ShowDialog(owner) != DialogResult.OK)
+                {
+                    return false;
+                }
+            }
 
             InvokeEvent(owner, PostDeleteTag);
 
@@ -1053,13 +1059,15 @@ namespace GitUI
             return false;
         }
 
-        public bool StartSettingsDialog(IWin32Window owner)
+        public bool StartSettingsDialog(IWin32Window owner, SettingsPageReference initalPage = null)
         {
             if (!InvokeEvent(owner, PreSettings))
                 return true;
 
-            using (var form = new FormSettings(this))
+            using (var form = new FormSettings(this, initalPage))
+            {
                 form.ShowDialog(owner);
+            }
 
             InvokeEvent(owner, PostSettings);
 
@@ -1299,8 +1307,7 @@ namespace GitUI
 
         public bool StartPluginSettingsDialog(IWin32Window owner)
         {
-            using (var frm = new FormPluginSettings()) frm.ShowDialog(owner);
-            return true;
+            return StartSettingsDialog(owner, new SettingsPageReference(SettingsPageReference.Section.PluginsSettings));
         }
 
         public bool StartPluginSettingsDialog()
@@ -1310,7 +1317,6 @@ namespace GitUI
 
         public bool StartBrowseDialog(IWin32Window owner, string filter)
         {
-
             return DoAction(owner, false, PreBrowse, PostBrowse, () =>
                 {
                     using (var form = new FormBrowse(this, filter))
@@ -1495,14 +1501,15 @@ namespace GitUI
 
         public bool StartBlameDialog(IWin32Window owner, string fileName)
         {
-            return StartBlameDialog(owner, fileName, null);
+            return StartBlameDialog(owner, fileName, null, null);
         }
 
-        private bool StartBlameDialog(IWin32Window owner, string fileName, GitRevision revision)
+        private bool StartBlameDialog(IWin32Window owner, string fileName, GitRevision revision, List<string> children)
         {
             return DoAction(owner, true, PreBlame, PostBlame, () =>
                 {
-                    using (var frm = new FormBlame(this, fileName, revision)) frm.ShowDialog(owner);
+                    using (var frm = new FormBlame(this, fileName, revision, children))
+                        frm.ShowDialog(owner);
 
                     return true;
                 }
@@ -1511,12 +1518,12 @@ namespace GitUI
 
         public bool StartBlameDialog(string fileName)
         {
-            return StartBlameDialog(null, fileName, null);
+            return StartBlameDialog(null, fileName, null, null);
         }
 
-        private bool StartBlameDialog(string fileName, GitRevision revision)
+        private bool StartBlameDialog(string fileName, GitRevision revision, List<string> children)
         {
-            return StartBlameDialog(null, fileName, revision);
+            return StartBlameDialog(null, fileName, revision, children);
         }
 
         private void WrapRepoHostingCall(string name, IRepositoryHostPlugin gitHoster,
