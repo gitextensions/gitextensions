@@ -60,7 +60,7 @@ namespace GitUI.Hotkey
 
         #region Methods
 
-        private void SaveSettings()
+        public void SaveSettings()
         {
             HotkeySettingsManager.SaveSettings(this.Settings);
         }
@@ -131,20 +131,24 @@ namespace GitUI.Hotkey
                 // Refresh the ListView
                 UpdateListViewItems(this.SelectedHotkeySettings);
             }
-
-            SaveSettings();
         }
 
         private void bClear_Click(object sender, EventArgs e)
         {
-            this.txtHotkey.KeyData = Keys.None;
-            SaveSettings();
+            var hotkey = this.SelectedHotkeyCommand;
+            if (hotkey != null)
+            {
+                // Update the KeyData with the chosen one
+                hotkey.KeyData = Keys.None;
+                // Refresh the ListView
+                UpdateListViewItems(this.SelectedHotkeySettings);
+                txtHotkey.KeyData = hotkey.KeyData;
+            }
         }
 
         private void bResetToDefaults_Click(object sender, EventArgs e)
         {
             this.Settings = HotkeySettingsManager.CreateDefaultSettings();
-            SaveSettings();
         }
 
         #endregion

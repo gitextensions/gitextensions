@@ -33,6 +33,7 @@ namespace GitCommands
         public string AuthorEmail { get; set; }
         public DateTime AuthorDate { get; set; }
         public string Committer { get; set; }
+        public string CommitterEmail { get; set; }
         public DateTime CommitDate { get; set; }
 
         public string Message { get; set; }

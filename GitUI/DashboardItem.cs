@@ -131,5 +131,11 @@ namespace GitUI
                     throw new ArgumentException("Repository type is not supported.", "repository");
             }
         }
+
+		private void OnKeyDown(object sender, PreviewKeyDownEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Space)
+				OnClick(e);
+		}
     }
 }

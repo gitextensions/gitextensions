@@ -922,7 +922,7 @@ namespace GitUI
             var children = RevisionGrid.GetRevisionChildren(revision.Guid);
 
             if (revision != null)
-                RevisionInfo.SetRevisionWithChildren(revision.Guid, children);
+                RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
         public void FileHistoryOnClick(object sender, EventArgs e)
