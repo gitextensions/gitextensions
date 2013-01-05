@@ -12,7 +12,7 @@ using GitCommands.Config;
 
 namespace GitUI.SettingsDialog
 {
-    public class CommonLogic
+    public class CommonLogic : Translate
     {
         private static readonly TranslationString _cantReadRegistry =
             new TranslationString("GitExtensions has insufficient permissions to check the registry.");
