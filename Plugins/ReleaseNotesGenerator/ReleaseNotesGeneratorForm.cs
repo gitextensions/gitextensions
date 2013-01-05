@@ -12,10 +12,14 @@ using System.Net;
 
 namespace ReleaseNotesGenerator
 {
+    /// <summary>
+    /// Test on GE repository from "2.00" to "2.10". Should display 687 items.
+    /// </summary>
     public partial class ReleaseNotesGeneratorForm : Form
     {
         private readonly IGitPluginSettingsContainer _settings;
         private readonly GitUIBaseEventArgs _gitUiCommands;
+        private IEnumerable<LogLine> _lastGeneratedLogLines;
 
         public ReleaseNotesGeneratorForm(IGitPluginSettingsContainer settings, GitUIBaseEventArgs gitUiCommands)
         {
@@ -35,27 +39,49 @@ namespace ReleaseNotesGenerator
             int exitCode;
             string logArgs = string.Format(textBoxGitLogArguments.Text, textBoxRevFrom.Text, textBoxRevTo.Text);
             string result = _gitUiCommands.GitModule.RunGit("log " + logArgs, out exitCode);
+
             textBoxResult.Text = result;
+
+            try
+            {
+                _lastGeneratedLogLines = CreateLogLinesFromGitOutput(textBoxResult.Lines);
+                labelRevCount.Text = _lastGeneratedLogLines.Count().ToString();
+            }
+            catch
+            {
+                labelRevCount.Text = "n/a";
+            }
+
+            textBoxResult_TextChanged(null, null);
         }
 
         private void textBoxResult_TextChanged(object sender, EventArgs e)
         {
-            groupBoxCopy.Enabled = textBoxResult.Text.Length != 0;
+            groupBoxCopy.Enabled = _lastGeneratedLogLines != null && _lastGeneratedLogLines.Any();
+        }
+
+        private void buttonCopyOrigOutput_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(textBoxResult.Text);
         }
 
         private void buttonCopyAsPlainText_Click(object sender, EventArgs e)
         {
-            textBoxResult.SelectAll();
-            textBoxResult.Copy();
-            textBoxResult.SelectionStart = 0;
-            textBoxResult.SelectionLength = 0;
+            string result = CreateTextTable(_lastGeneratedLogLines, true, true);
+            Clipboard.SetText(result);
+        }
+
+        private void buttonCopyAsTextTableSpace_Click(object sender, EventArgs e)
+        {
+            string result = CreateTextTable(_lastGeneratedLogLines, true, false);
+            Clipboard.SetText(result);
         }
 
         private void buttonCopyAsHtml_Click(object sender, EventArgs e)
         {
-            var logLines = CreateLogLinesFromGitOutput(textBoxResult.Lines);
-            string html = CreateHtmlTable(logLines);
-            HtmlFragment.CopyToClipboard(html);
+            string headerHtml = string.Format("<p>Commit log from '{0}' to '{1}':</p>", textBoxRevFrom.Text, textBoxRevTo.Text);
+            string tableHtml = CreateHtmlTable(_lastGeneratedLogLines);
+            HtmlFragment.CopyToClipboard(headerHtml + tableHtml);
             ////HtmlFragment.CopyToClipboard("<table><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></table>");
         }
 
@@ -92,6 +118,27 @@ namespace ReleaseNotesGenerator
             }
 
             return resultList;
+        }
+
+        private string CreateTextTable(IEnumerable<LogLine> logLines, bool suppressEmptyLines = true, bool separateColumnWithTabInsteadOfSpaces = true)
+        {
+            string headerText = string.Format("Commit log from '{0}' to '{1}':", textBoxRevFrom.Text, textBoxRevTo.Text);
+
+            string colSeparatorFirstLine = separateColumnWithTabInsteadOfSpaces ? "\t" : " ";
+            string colSeparatorRestLines = separateColumnWithTabInsteadOfSpaces ? "\t" : "        ";
+
+            var stringBuilder = new StringBuilder();
+
+            foreach (var logLine in logLines)
+            {
+                string message = string.Join(Environment.NewLine + colSeparatorRestLines,
+                    logLine.MessageLines.Where(
+                    a => suppressEmptyLines ? !string.IsNullOrWhiteSpace(a) : true));
+                stringBuilder.AppendFormat("{0}{1}{2}{3}", logLine.Commit, colSeparatorFirstLine, message, Environment.NewLine);
+            }
+
+            string result = headerText + Environment.NewLine + stringBuilder.ToString();
+            return result;
         }
 
         private string CreateHtmlTable(IEnumerable<LogLine> logLines)
