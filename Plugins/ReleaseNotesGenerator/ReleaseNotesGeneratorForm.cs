@@ -27,6 +27,7 @@ namespace ReleaseNotesGenerator
 
             _settings = settings;
             _gitUiCommands = gitUiCommands;
+            Icon = _gitUiCommands.GitUICommands.FormIcon;
         }
 
         private void ReleaseNotesGeneratorForm_Load(object sender, EventArgs e)
