@@ -272,6 +272,7 @@
             this.helpImageDisplayUserControl1.ShowImage2OnHover = true;
             this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(30, 311);
             this.helpImageDisplayUserControl1.TabIndex = 18;
+            this.helpImageDisplayUserControl1.UniqueIsExpandedSettingsId = "MergeBranches";
             // 
             // FormMergeBranch
             // 
