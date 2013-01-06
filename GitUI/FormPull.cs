@@ -570,7 +570,7 @@ namespace GitUI
             localBranch.Text = branch;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullMerge;
             helpImageDisplayUserControl1.Image2 = Resources.HelpPullMergeFastForward;
-            helpImageDisplayUserControl1.ShowImage2OnHover = true;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
         }
 
         private void RebaseCheckedChanged(object sender, EventArgs e)
@@ -578,14 +578,14 @@ namespace GitUI
             localBranch.Enabled = false;
             localBranch.Text = branch;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullRebase;
-            helpImageDisplayUserControl1.ShowImage2OnHover = false;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
         }
 
         private void FetchCheckedChanged(object sender, EventArgs e)
         {
             localBranch.Enabled = true;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullFetch;
-            helpImageDisplayUserControl1.ShowImage2OnHover = false;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)

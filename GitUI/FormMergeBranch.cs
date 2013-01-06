@@ -87,12 +87,12 @@ namespace GitUI
 
         private void fastForward_CheckedChanged(object sender, EventArgs e)
         {
-            helpImageDisplayUserControl1.ShowImage2OnHover = true;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
         }
 
         private void noFastForward_CheckedChanged(object sender, EventArgs e)
         {
-            helpImageDisplayUserControl1.ShowImage2OnHover = false;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
         }
     }
 }
