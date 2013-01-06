@@ -72,7 +72,7 @@
             this.PullFromUrl.AutoSize = true;
             this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
             this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
+            this.PullFromUrl.Size = new System.Drawing.Size(40, 19);
             this.PullFromUrl.TabIndex = 1;
             this.PullFromUrl.Text = "Url";
             this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
@@ -85,7 +85,7 @@
             this.PullFromRemote.Checked = true;
             this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
             this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
+            this.PullFromRemote.Size = new System.Drawing.Size(66, 19);
             this.PullFromRemote.TabIndex = 0;
             this.PullFromRemote.TabStop = true;
             this.PullFromRemote.Text = "Remote";
@@ -118,7 +118,7 @@
             this.Pull.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.Pull.Image = global::GitUI.Properties.Resources.ArrowDown;
             this.Pull.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Pull.Location = new System.Drawing.Point(455, 8);
+            this.Pull.Location = new System.Drawing.Point(467, 8);
             this.Pull.MinimumSize = new System.Drawing.Size(120, 25);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(124, 25);
@@ -140,7 +140,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(890, 362);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(902, 362);
             this.tableLayoutPanel1.TabIndex = 16;
             // 
             // helpImageDisplayUserControl1
@@ -164,7 +164,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(299, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(588, 356);
+            this.panel2.Size = new System.Drawing.Size(600, 356);
             this.panel2.TabIndex = 19;
             // 
             // tableLayoutPanel2
@@ -185,7 +185,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(588, 356);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(600, 356);
             this.tableLayoutPanel2.TabIndex = 42;
             // 
             // groupBox2
@@ -200,7 +200,7 @@
             this.groupBox2.Controls.Add(this.comboBoxPullSource);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(582, 87);
+            this.groupBox2.Size = new System.Drawing.Size(594, 87);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pull from";
@@ -209,10 +209,10 @@
             // 
             this.folderBrowserButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.folderBrowserButton1.Enabled = false;
-            this.folderBrowserButton1.Location = new System.Drawing.Point(442, 45);
+            this.folderBrowserButton1.Location = new System.Drawing.Point(438, 45);
             this.folderBrowserButton1.Name = "folderBrowserButton1";
             this.folderBrowserButton1.PathShowingControl = this.comboBoxPullSource;
-            this.folderBrowserButton1.Size = new System.Drawing.Size(131, 25);
+            this.folderBrowserButton1.Size = new System.Drawing.Size(147, 25);
             this.folderBrowserButton1.TabIndex = 5;
             // 
             // comboBoxPullSource
@@ -223,7 +223,7 @@
             this.comboBoxPullSource.FormattingEnabled = true;
             this.comboBoxPullSource.Location = new System.Drawing.Point(148, 46);
             this.comboBoxPullSource.Name = "comboBoxPullSource";
-            this.comboBoxPullSource.Size = new System.Drawing.Size(288, 23);
+            this.comboBoxPullSource.Size = new System.Drawing.Size(284, 23);
             this.comboBoxPullSource.TabIndex = 4;
             this.comboBoxPullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             // 
@@ -232,9 +232,9 @@
             this.AddRemote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.AddRemote.Image = global::GitUI.Properties.Resources.IconRemotes;
             this.AddRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.AddRemote.Location = new System.Drawing.Point(442, 14);
+            this.AddRemote.Location = new System.Drawing.Point(438, 14);
             this.AddRemote.Name = "AddRemote";
-            this.AddRemote.Size = new System.Drawing.Size(131, 25);
+            this.AddRemote.Size = new System.Drawing.Size(147, 25);
             this.AddRemote.TabIndex = 2;
             this.AddRemote.Text = "Manage";
             this.AddRemote.UseVisualStyleBackColor = true;
@@ -249,7 +249,7 @@
             this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
             this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(148, 16);
             this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
-            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(288, 23);
+            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(284, 23);
             this._NO_TRANSLATE_Remotes.TabIndex = 1;
             this._NO_TRANSLATE_Remotes.TextChanged += new System.EventHandler(this.Remotes_TextChanged);
             this._NO_TRANSLATE_Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
@@ -258,10 +258,11 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.AutoSize = true;
             this.groupBox1.Controls.Add(this.flowLayoutPanel1);
             this.groupBox1.Location = new System.Drawing.Point(3, 180);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(582, 102);
+            this.groupBox1.Size = new System.Drawing.Size(594, 103);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge options";
@@ -276,7 +277,7 @@
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 19);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(576, 80);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(588, 81);
             this.flowLayoutPanel1.TabIndex = 11;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -334,7 +335,7 @@
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Location = new System.Drawing.Point(3, 96);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(582, 78);
+            this.groupBox3.Size = new System.Drawing.Size(594, 78);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Branch";
@@ -375,7 +376,7 @@
             this.tableLayoutPanel3.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(582, 41);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(594, 41);
             this.tableLayoutPanel3.TabIndex = 42;
             // 
             // NoTags
@@ -427,11 +428,11 @@
             this.AcceptButton = this.Pull;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(890, 362);
+            this.ClientSize = new System.Drawing.Size(902, 362);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(690, 400);
+            this.MinimumSize = new System.Drawing.Size(918, 400);
             this.Name = "FormPull";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Pull";
