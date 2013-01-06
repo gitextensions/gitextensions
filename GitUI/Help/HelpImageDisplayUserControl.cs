@@ -13,6 +13,9 @@ namespace GitUI.Help
     {
         private Image _image1;
         private Image _image2;
+        private bool _isExpanded;
+
+        public const string fastForwardHoverText = "Hover to see scenario when fast forward is possible.";
 
         public HelpImageDisplayUserControl()
         {
@@ -22,8 +25,45 @@ namespace GitUI.Help
 
         private void HelpImageDisplayUserControl_Load(object sender, EventArgs e)
         {
-            ShowImage2HoverText = "Hover to see scenario when fast forward is possible.";
+            UpdateIsExpandedState();
             UpdateImageDisplay();
+            UpdateControlSize();
+        }
+
+        public bool IsExpanded
+        {
+            get { return _isExpanded; }
+            set
+            {
+                _isExpanded = value;
+                UpdateIsExpandedState();
+            }
+        }
+
+        private void UpdateIsExpandedState()
+        {
+            if (_isExpanded)
+            {
+                linkLabelHide.Visible = true;
+                
+                buttonShowHelp.Visible = false;
+                //// linkLabelShowHelp.Visible = false; // Why use button instead of label? Because button has constant width independent of language!
+                
+                pictureBox1.Visible = true;
+                labelHoverText.Visible = ShowImage2OnHover;
+            }
+            else
+            {
+                linkLabelHide.Visible = false;
+                
+                buttonShowHelp.Visible = true;
+                ////linkLabelShowHelp.Visible = true;
+                
+                pictureBox1.Visible = false;
+                labelHoverText.Visible = false;
+            }
+
+            UpdateControlSize();
         }
 
         public Image Image1
@@ -71,17 +111,34 @@ namespace GitUI.Help
 
         private void UpdateControlSize()
         {
-            if (_image1 != null && _image2 == null)
+            var size = new Size(40, 40); // default size
+
+            if (IsExpanded)
             {
-                Size = Image1.Size;
+                if (_image1 != null && _image2 == null)
+                {
+                    size = Image1.Size;
+                }
+                else if (_image1 != null && Image2 != null)
+                {
+                    int w = Math.Max(_image1.Size.Width, _image2.Width);
+                    int h = Math.Max(_image1.Size.Height, _image2.Height);
+                    size = new Size(w, h);
+                }
+
+                // add vertical space of other controls
+                size.Height +=
+                    /*labelHoverText.Height too much because when collapsed there is much wordwrap, use fixed value 30*/ 30
+                    + flowLayoutPanel1.Height;
             }
-            else if (_image1 != null && Image2 != null)
+            else
             {
-                Size = Image1.Size;
-                // TODO: more cases (e. g. max(Image1 and Image2))
+                size = new Size(30, 50); // size for "show help" button
             }
-           
-            // TODO: null and null case
+
+            // apply size to control
+            Size = size;
+            MinimumSize = size;
         }
 
         private void UpdateImageDisplay()
@@ -120,6 +177,21 @@ namespace GitUI.Help
                 _isHover = false;
                 UpdateImageDisplay();
             }
+        }
+
+        private void linkLabelHide_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            IsExpanded = false;
+        }
+
+        private void buttonShowHelp_Click(object sender, EventArgs e)
+        {
+            IsExpanded = true;
+        }
+
+        private void linkLabelShowHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            IsExpanded = true;
         }
     }
 }
