@@ -73,7 +73,7 @@
             this.PullFromUrl.AutoSize = true;
             this.PullFromUrl.Location = new System.Drawing.Point(7, 47);
             this.PullFromUrl.Name = "PullFromUrl";
-            this.PullFromUrl.Size = new System.Drawing.Size(38, 17);
+            this.PullFromUrl.Size = new System.Drawing.Size(40, 19);
             this.PullFromUrl.TabIndex = 1;
             this.PullFromUrl.Text = "Url";
             this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
@@ -86,7 +86,7 @@
             this.PullFromRemote.Checked = true;
             this.PullFromRemote.Location = new System.Drawing.Point(7, 19);
             this.PullFromRemote.Name = "PullFromRemote";
-            this.PullFromRemote.Size = new System.Drawing.Size(62, 17);
+            this.PullFromRemote.Size = new System.Drawing.Size(66, 19);
             this.PullFromRemote.TabIndex = 0;
             this.PullFromRemote.TabStop = true;
             this.PullFromRemote.Text = "Remote";
@@ -206,10 +206,10 @@
             // 
             this.folderBrowserButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.folderBrowserButton1.Enabled = false;
-            this.folderBrowserButton1.Location = new System.Drawing.Point(486, 45);
+            this.folderBrowserButton1.Location = new System.Drawing.Point(472, 45);
             this.folderBrowserButton1.Name = "folderBrowserButton1";
             this.folderBrowserButton1.PathShowingControl = this.comboBoxPullSource;
-            this.folderBrowserButton1.Size = new System.Drawing.Size(131, 25);
+            this.folderBrowserButton1.Size = new System.Drawing.Size(145, 25);
             this.folderBrowserButton1.TabIndex = 5;
             // 
             // comboBoxPullSource
@@ -220,7 +220,7 @@
             this.comboBoxPullSource.FormattingEnabled = true;
             this.comboBoxPullSource.Location = new System.Drawing.Point(148, 46);
             this.comboBoxPullSource.Name = "comboBoxPullSource";
-            this.comboBoxPullSource.Size = new System.Drawing.Size(332, 23);
+            this.comboBoxPullSource.Size = new System.Drawing.Size(318, 23);
             this.comboBoxPullSource.TabIndex = 4;
             this.comboBoxPullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             // 
@@ -229,9 +229,9 @@
             this.AddRemote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.AddRemote.Image = global::GitUI.Properties.Resources.IconRemotes;
             this.AddRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.AddRemote.Location = new System.Drawing.Point(486, 14);
+            this.AddRemote.Location = new System.Drawing.Point(472, 14);
             this.AddRemote.Name = "AddRemote";
-            this.AddRemote.Size = new System.Drawing.Size(131, 25);
+            this.AddRemote.Size = new System.Drawing.Size(145, 25);
             this.AddRemote.TabIndex = 2;
             this.AddRemote.Text = "Manage";
             this.AddRemote.UseVisualStyleBackColor = true;
@@ -246,7 +246,7 @@
             this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
             this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(148, 16);
             this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
-            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(332, 23);
+            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(318, 23);
             this._NO_TRANSLATE_Remotes.TabIndex = 1;
             this._NO_TRANSLATE_Remotes.TextChanged += new System.EventHandler(this.Remotes_TextChanged);
             this._NO_TRANSLATE_Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);

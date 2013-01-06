@@ -52,11 +52,13 @@ namespace GitUI.CommitInfo
             this.tableLayout.AutoSize = true;
             this.tableLayout.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayout.BackColor = System.Drawing.SystemColors.Window;
+            this.tableLayout.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.tableLayout.ColumnCount = 2;
             this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayout.Controls.Add(this.gravatar1, 0, 0);
-            this.tableLayout.Controls.Add(this.RevisionInfo, 1, 1);
+            this.tableLayout.Controls.Add(this.RevisionInfo, 0, 1);
             this.tableLayout.Controls.Add(this._RevisionHeader, 1, 0);
             this.tableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
@@ -73,25 +75,26 @@ namespace GitUI.CommitInfo
             // gravatar1
             // 
             this.gravatar1.BackColor = System.Drawing.SystemColors.Window;
+            this.gravatar1.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.gravatar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gravatar1.Location = new System.Drawing.Point(0, 0);
-            this.gravatar1.Margin = new System.Windows.Forms.Padding(0);
+            this.gravatar1.Location = new System.Drawing.Point(4, 2);
+            this.gravatar1.Margin = new System.Windows.Forms.Padding(4, 2, 2, 2);
             this.gravatar1.Name = "gravatar1";
-            this.tableLayout.SetRowSpan(this.gravatar1, 2);
-            this.gravatar1.Size = new System.Drawing.Size(105, 386);
+            this.gravatar1.Size = new System.Drawing.Size(105, 97);
             this.gravatar1.TabIndex = 1;
             // 
             // RevisionInfo
             // 
             this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
             this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.tableLayout.SetColumnSpan(this.RevisionInfo, 2);
             this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;
             this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionInfo.Location = new System.Drawing.Point(110, 102);
+            this.RevisionInfo.Location = new System.Drawing.Point(5, 106);
             this.RevisionInfo.Margin = new System.Windows.Forms.Padding(5);
             this.RevisionInfo.Name = "RevisionInfo";
             this.RevisionInfo.ReadOnly = true;
-            this.RevisionInfo.Size = new System.Drawing.Size(778, 279);
+            this.RevisionInfo.Size = new System.Drawing.Size(883, 275);
             this.RevisionInfo.TabIndex = 0;
             this.RevisionInfo.Text = "";
             this.RevisionInfo.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfoLinkClicked);
@@ -168,11 +171,11 @@ namespace GitUI.CommitInfo
             this._RevisionHeader.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this._RevisionHeader.ContextMenuStrip = this.commitInfoContextMenuStrip;
             this._RevisionHeader.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._RevisionHeader.Location = new System.Drawing.Point(109, 2);
+            this._RevisionHeader.Location = new System.Drawing.Point(115, 2);
             this._RevisionHeader.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this._RevisionHeader.Name = "_RevisionHeader";
             this._RevisionHeader.ReadOnly = true;
-            this._RevisionHeader.Size = new System.Drawing.Size(780, 93);
+            this._RevisionHeader.Size = new System.Drawing.Size(774, 97);
             this._RevisionHeader.TabIndex = 0;
             this._RevisionHeader.Text = "";
             this._RevisionHeader.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfoLinkClicked);
@@ -195,7 +198,6 @@ namespace GitUI.CommitInfo
 
         private System.Windows.Forms.TableLayoutPanel tableLayout;
         private GravatarControl gravatar1;
-        private System.Windows.Forms.RichTextBox RevisionInfo;
         private System.Windows.Forms.ContextMenuStrip commitInfoContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showContainedInTagsToolStripMenuItem;
@@ -206,5 +208,6 @@ namespace GitUI.CommitInfo
         private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesRemoteIfNoLocalToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem addNoteToolStripMenuItem;
+        private RichTextBox RevisionInfo;
     }
 }
