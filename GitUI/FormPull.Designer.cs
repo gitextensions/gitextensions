@@ -160,6 +160,7 @@
             this.helpImageDisplayUserControl1.ShowImage2OnHover = false;
             this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(30, 356);
             this.helpImageDisplayUserControl1.TabIndex = 10;
+            this.helpImageDisplayUserControl1.UniqueIsExpandedSettingsId = "Pull";
             // 
             // panel2
             // 

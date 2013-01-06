@@ -32,9 +32,9 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.labelHoverText = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.linkLabelHide = new System.Windows.Forms.LinkLabel();
-            this.buttonShowHelp = new System.Windows.Forms.Button();
             this.linkLabelShowHelp = new System.Windows.Forms.LinkLabel();
+            this.buttonShowHelp = new System.Windows.Forms.Button();
+            this.linkLabelHide = new System.Windows.Forms.LinkLabel();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
@@ -92,35 +92,10 @@
             this.flowLayoutPanel1.Controls.Add(this.buttonShowHelp);
             this.flowLayoutPanel1.Controls.Add(this.linkLabelHide);
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(150, 30);
             this.flowLayoutPanel1.TabIndex = 2;
-            // 
-            // linkLabelHide
-            // 
-            this.linkLabelHide.AutoSize = true;
-            this.linkLabelHide.Location = new System.Drawing.Point(71, 0);
-            this.linkLabelHide.Name = "linkLabelHide";
-            this.linkLabelHide.Size = new System.Drawing.Size(58, 15);
-            this.linkLabelHide.TabIndex = 1;
-            this.linkLabelHide.TabStop = true;
-            this.linkLabelHide.Text = "Hide help";
-            this.linkLabelHide.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHide_LinkClicked);
-            // 
-            // buttonShowHelp
-            // 
-            this.buttonShowHelp.AutoSize = true;
-            this.buttonShowHelp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonShowHelp.Image = global::GitUI.Properties.Resources.Info;
-            this.buttonShowHelp.Location = new System.Drawing.Point(42, 0);
-            this.buttonShowHelp.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.buttonShowHelp.Name = "buttonShowHelp";
-            this.buttonShowHelp.Padding = new System.Windows.Forms.Padding(2);
-            this.buttonShowHelp.Size = new System.Drawing.Size(26, 26);
-            this.buttonShowHelp.TabIndex = 2;
-            this.buttonShowHelp.UseVisualStyleBackColor = true;
-            this.buttonShowHelp.Click += new System.EventHandler(this.buttonShowHelp_Click);
             // 
             // linkLabelShowHelp
             // 
@@ -133,6 +108,31 @@
             this.linkLabelShowHelp.Text = "Show\r\nhelp";
             this.linkLabelShowHelp.Visible = false;
             this.linkLabelShowHelp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelShowHelp_LinkClicked);
+            // 
+            // buttonShowHelp
+            // 
+            this.buttonShowHelp.AutoSize = true;
+            this.buttonShowHelp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonShowHelp.Image = global::GitUI.Properties.Resources.Info;
+            this.buttonShowHelp.Location = new System.Drawing.Point(42, 0);
+            this.buttonShowHelp.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonShowHelp.Name = "buttonShowHelp";
+            this.buttonShowHelp.Padding = new System.Windows.Forms.Padding(2);
+            this.buttonShowHelp.Size = new System.Drawing.Size(26, 26);
+            this.buttonShowHelp.TabIndex = 2;
+            this.buttonShowHelp.UseVisualStyleBackColor = true;
+            this.buttonShowHelp.Click += new System.EventHandler(this.buttonShowHelp_Click);
+            // 
+            // linkLabelHide
+            // 
+            this.linkLabelHide.AutoSize = true;
+            this.linkLabelHide.Location = new System.Drawing.Point(71, 0);
+            this.linkLabelHide.Name = "linkLabelHide";
+            this.linkLabelHide.Size = new System.Drawing.Size(58, 15);
+            this.linkLabelHide.TabIndex = 1;
+            this.linkLabelHide.TabStop = true;
+            this.linkLabelHide.Text = "Hide help";
+            this.linkLabelHide.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHide_LinkClicked);
             // 
             // HelpImageDisplayUserControl
             // 
