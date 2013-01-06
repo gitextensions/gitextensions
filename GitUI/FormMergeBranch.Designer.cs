@@ -268,8 +268,8 @@
             this.helpImageDisplayUserControl1.Location = new System.Drawing.Point(3, 3);
             this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(30, 50);
             this.helpImageDisplayUserControl1.Name = "helpImageDisplayUserControl1";
-            this.helpImageDisplayUserControl1.ShowImage2HoverText = "Hover to see scenario when fast forward is possible.";
-            this.helpImageDisplayUserControl1.ShowImage2OnHover = true;
+            this.helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = "Hover to see scenario when fast forward is possible.";
+            this.helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
             this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(30, 311);
             this.helpImageDisplayUserControl1.TabIndex = 18;
             this.helpImageDisplayUserControl1.UniqueIsExpandedSettingsId = "MergeBranches";

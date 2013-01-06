@@ -78,7 +78,7 @@ namespace GitUI.Help
                 //// linkLabelShowHelp.Visible = false; // Why use button instead of label? Because button has constant width independent of language!
 
                 pictureBox1.Visible = true;
-                labelHoverText.Visible = ShowImage2OnHover;
+                labelHoverText.Visible = IsOnHoverShowImage2;
             }
             else
             {
@@ -116,7 +116,10 @@ namespace GitUI.Help
             }
         }
 
-        public bool ShowImage2OnHover
+        /// <summary>
+        /// see also IsOnHoverShowImage2NoticeText
+        /// </summary>
+        public bool IsOnHoverShowImage2
         {
             get { return _showImage2OnHover; }
             set
@@ -130,7 +133,10 @@ namespace GitUI.Help
             }
         }
 
-        public string ShowImage2HoverText { get { return labelHoverText.Text; } set { labelHoverText.Text = value; } }
+        /// <summary>
+        /// only shown when IsOnHoverShowImage2 is true
+        /// </summary>
+        public string IsOnHoverShowImage2NoticeText { get { return labelHoverText.Text; } set { labelHoverText.Text = value; } }
 
         private bool _isHover;
         private bool _showImage2OnHover;
@@ -204,7 +210,7 @@ namespace GitUI.Help
 
         private void UpdateImageDisplay()
         {
-            if (!ShowImage2OnHover)
+            if (!IsOnHoverShowImage2)
             {
                 pictureBox1.Image = Image1;
                 return;
@@ -224,7 +230,7 @@ namespace GitUI.Help
 
         private void HelpImageDisplayUserControl_MouseEnter(object sender, EventArgs e)
         {
-            if (ShowImage2OnHover)
+            if (IsOnHoverShowImage2)
             {
                 _isHover = true;
                 UpdateImageDisplay();
@@ -233,7 +239,7 @@ namespace GitUI.Help
 
         private void HelpImageDisplayUserControl_MouseLeave(object sender, EventArgs e)
         {
-            if (ShowImage2OnHover)
+            if (IsOnHoverShowImage2)
             {
                 _isHover = false;
                 UpdateImageDisplay();
