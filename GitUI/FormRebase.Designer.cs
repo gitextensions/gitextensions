@@ -435,6 +435,7 @@ namespace GitUI
             this.helpImageDisplayUserControl1.ShowImage2OnHover = false;
             this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(30, 466);
             this.helpImageDisplayUserControl1.TabIndex = 20;
+            this.helpImageDisplayUserControl1.UniqueIsExpandedSettingsId = "Rebase";
             // 
             // flowLayoutPanel1
             // 

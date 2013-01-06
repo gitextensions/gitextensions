@@ -15,7 +15,10 @@ namespace GitUI.Help
         private Image _image2;
         private bool _isExpanded;
 
-        public const string fastForwardHoverText = "Hover to see scenario when fast forward is possible.";
+        ////public const string fastForwardHoverText = "Hover to see scenario when fast forward is possible.";
+
+        private static Dictionary<string, bool> _TMP_isExpandedState = new Dictionary<string, bool>();
+        private bool _isLoaded;
 
         public HelpImageDisplayUserControl()
         {
@@ -23,11 +26,19 @@ namespace GitUI.Help
             Translate();
         }
 
+        /// <summary>
+        /// NOTE: will also be called if designer code calls "this.helpImageDisplayUserControl1.ShowImage2OnHover = true;"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void HelpImageDisplayUserControl_Load(object sender, EventArgs e)
         {
+            IsExpanded = LoadIsExandedValueFromSettings(IsExpanded);
             UpdateIsExpandedState();
             UpdateImageDisplay();
             UpdateControlSize();
+
+            _isLoaded = true;
         }
 
         public bool IsExpanded
@@ -37,28 +48,45 @@ namespace GitUI.Help
             {
                 _isExpanded = value;
                 UpdateIsExpandedState();
+
+                if (_isLoaded) // to avoid calling this when InitializeComponents is called
+                {
+                    /*
+                     * ...
+                                this.helpImageDisplayUserControl1.IsExpanded = false;                       // this before...
+                                this.helpImageDisplayUserControl1.Location = new System.Drawing.Point(3, 3);
+                                this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(30, 50);
+                                this.helpImageDisplayUserControl1.Name = "helpImageDisplayUserControl1";    // ...this gives wrong id!!!
+                     * ...
+
+                     */
+
+                    SaveIsExandedValueInSettings(value);
+                }                
             }
         }
+
+        public string UniqueIsExpandedSettingsId { get; set; }
 
         private void UpdateIsExpandedState()
         {
             if (_isExpanded)
             {
                 linkLabelHide.Visible = true;
-                
+
                 buttonShowHelp.Visible = false;
                 //// linkLabelShowHelp.Visible = false; // Why use button instead of label? Because button has constant width independent of language!
-                
+
                 pictureBox1.Visible = true;
                 labelHoverText.Visible = ShowImage2OnHover;
             }
             else
             {
                 linkLabelHide.Visible = false;
-                
+
                 buttonShowHelp.Visible = true;
                 ////linkLabelShowHelp.Visible = true;
-                
+
                 pictureBox1.Visible = false;
                 labelHoverText.Visible = false;
             }
@@ -94,8 +122,11 @@ namespace GitUI.Help
             set
             {
                 _showImage2OnHover = value;
-                labelHoverText.Visible = value;
-                UpdateImageDisplay();
+                if (_isLoaded)
+                {
+                    UpdateIsExpandedState();
+                    ////labelHoverText.Visible = value; // NOTE: would trigger OnLoad
+                }
             }
         }
 
@@ -107,6 +138,36 @@ namespace GitUI.Help
         private bool IsHovering()
         {
             return _isHover;
+        }
+
+        private string GetId()
+        {
+            ////return Name + Parent.Name + Parent.Parent.Name;
+            return UniqueIsExpandedSettingsId ?? "MUST_BE_SET";
+        }
+
+        private void SaveIsExandedValueInSettings(bool value)
+        {
+            if (!_TMP_isExpandedState.Keys.Contains(GetId()))
+            {
+                _TMP_isExpandedState.Add(GetId(), value);
+            }
+            else
+            {
+                _TMP_isExpandedState[GetId()] = value;
+            }
+        }
+
+        private bool LoadIsExandedValueFromSettings(bool defaultValue)
+        {
+            if (_TMP_isExpandedState.Keys.Contains(GetId()))
+            {
+                return _TMP_isExpandedState[GetId()];
+            }
+            else
+            {
+                return defaultValue;
+            }
         }
 
         private void UpdateControlSize()
