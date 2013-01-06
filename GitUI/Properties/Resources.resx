@@ -133,8 +133,11 @@
   <data name="Icon_71" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\71.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Rebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\Rebase.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="HelpPullRebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\HelpPullRebase.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HelpCommandRebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\HelpCommandRebase.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="puttygen" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\puttygen.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -148,8 +151,8 @@
   <data name="IconSaveAs" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\IconSaveAs.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="fetch" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\fetch.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="HelpPullFetch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\HelpPullFetch.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="EditItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\24.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -175,8 +178,11 @@
   <data name="bug" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\bug.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="merge" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\merge.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="HelpCommandMerge" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\HelpCommandMerge.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HelpPullMerge" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\HelpPullMerge.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SplitViewLayout" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\SplitViewLayout.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -594,5 +600,11 @@
   </data>
   <data name="IconRevertCommit" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\IconRevertCommit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HelpCommandMergeFastForward" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\HelpCommandMergeFastForward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HelpPullMergeFastForward" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\HelpPullMergeFastForward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
