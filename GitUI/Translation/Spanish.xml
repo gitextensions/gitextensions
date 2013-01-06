@@ -15,7 +15,8 @@
           <Source>Git extensions - Visual Studio and Shell Explorer Extensions for Git
 
 This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
-          <Value>Git Extensions - Extensiones de Visual Studio y Explorador Shell para Git 
+          <Value>Git Extensions - Extensiones de Visual Studio y Explorador Shell para Git
+
 Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA GARANTÍA; incluso sin la garantía implícita de COMERCIABILIDAD o IDONEIDAD PARA UN PROPÓSITO PARTICULAR.</Value>
         </TranslationItem>
         <TranslationItem Name="thanksTo" Property="Text">
@@ -30,9 +31,9 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
           <Source>Blame previous revision</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="copyLogMessageToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="copyLogMessageToolStripMenuItem" Property="Text">
           <Source>Copy log message to clipboard</Source>
-          <Value />
+          <Value>Copiar registro de mensajes al portapapeles</Value>
         </TranslationItem>
         <TranslationItem Name="showChangesToolStripMenuItem" Property="Text">
           <Source>Show changes</Source>
@@ -76,15 +77,15 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
         </TranslationItem>
         <TranslationItem Name="containedInNoBranch" Property="Text">
           <Source>Contained in no branch</Source>
-          <Value>Incluida en ninguna de las ramas</Value>
+          <Value>Incluida en ninguna rama</Value>
         </TranslationItem>
         <TranslationItem Name="containedInNoTag" Property="Text">
           <Source>Contained in no tag</Source>
-          <Value>Incluida en ningún etiquetas</Value>
+          <Value>Incluida en ninguna etiqueta</Value>
         </TranslationItem>
         <TranslationItem Name="containedInTags" Property="Text">
           <Source>Contained in tags:</Source>
-          <Value>Contenida en las etiquetas:</Value>
+          <Value>Incluida en las etiquetas:</Value>
         </TranslationItem>
         <TranslationItem Name="copyCommitInfoToolStripMenuItem" Property="Text">
           <Source>Copy commit info</Source>
@@ -287,13 +288,13 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Edit</Source>
           <Value>Editar</Value>
         </TranslationItem>
-        <TranslationItem Name="_moveCategoryDown" Property="Text" type="unfinished">
+        <TranslationItem Name="_moveCategoryDown" Property="Text">
           <Source>Move down</Source>
-          <Value />
+          <Value>Bajar</Value>
         </TranslationItem>
-        <TranslationItem Name="_moveCategoryUp" Property="Text" type="unfinished">
+        <TranslationItem Name="_moveCategoryUp" Property="Text">
           <Source>Move up</Source>
-          <Value />
+          <Value>Subir</Value>
         </TranslationItem>
         <TranslationItem Name="_moveToCategory" Property="Text">
           <Source>Move to category</Source>
@@ -677,8 +678,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotAddRemote" Property="Text">
           <Source>Could not add remote</Source>
-          <Value>No se pudo agregar el remoto
-</Value>
+          <Value>No se pudo agregar el remoto</Value>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotFetchReposOfUser" Property="Text">
           <Source>Could not fetch repositories of user!
@@ -717,7 +717,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="_strSearching" Property="Text">
           <Source> : SEARCHING : </Source>
-          <Value>: BUSCANDO :</Value>
+          <Value> : BUSCANDO : </Value>
         </TranslationItem>
         <TranslationItem Name="_strSelectOneItem" Property="Text">
           <Source>You must select exactly one item</Source>
@@ -1002,7 +1002,7 @@ Tendrá acceso para hacer Push. {2}</Value>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>File History</Source>
-          <Value>Archivo de Historia</Value>
+          <Value>Historial de Archivo</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1126,8 +1126,7 @@ Tendrá acceso para hacer Push. {2}</Value>
         </TranslationItem>
         <TranslationItem Name="_repositoryHostsToolStripMenuItem" Property="Text">
           <Source>Repository hosts</Source>
-          <Value>Hosts de repositorio
-</Value>
+          <Value>Hosts de repositorio</Value>
         </TranslationItem>
         <TranslationItem Name="_saveFileFilterAllFiles" Property="Text">
           <Source>All files</Source>
@@ -1179,7 +1178,7 @@ Tendrá acceso para hacer Push. {2}</Value>
         </TranslationItem>
         <TranslationItem Name="archiveToolStripMenuItem" Property="Text">
           <Source>Archive revision</Source>
-          <Value>Archivo</Value>
+          <Value>Archivar revisión</Value>
         </TranslationItem>
         <TranslationItem Name="authorToolStripMenuItem" Property="Text">
           <Source>Author</Source>
@@ -1297,17 +1296,17 @@ Tendrá acceso para hacer Push. {2}</Value>
           <Source>Diff</Source>
           <Value>Diff</Value>
         </TranslationItem>
-        <TranslationItem Name="diffBaseLocalToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="diffBaseLocalToolStripMenuItem" Property="Text">
           <Source>Difftool base &lt; - &gt; local</Source>
-          <Value />
+          <Source>Difftool base &lt; - &gt; local</Source>
         </TranslationItem>
         <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
           <Source>Diff contains (SLOW)</Source>
           <Value>Diff contiene (LENTO)</Value>
         </TranslationItem>
-        <TranslationItem Name="difftoolRemoteLocalToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="difftoolRemoteLocalToolStripMenuItem" Property="Text">
           <Source>Difftool remote &lt; - &gt; local </Source>
-          <Value />
+          <Source>Difftool remoto &lt; - &gt; local </Source>
         </TranslationItem>
         <TranslationItem Name="donateToolStripMenuItem" Property="Text">
           <Source>Donate</Source>
@@ -1475,7 +1474,7 @@ Tendrá acceso para hacer Push. {2}</Value>
         </TranslationItem>
         <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
           <Source>Open checked out file with...</Source>
-          <Value>Abrir archivo checked out con ...</Value>
+          <Value>Abrir archivo seleccionado con ...</Value>
         </TranslationItem>
         <TranslationItem Name="patchToolStripMenuItem" Property="Text">
           <Source>View patch file</Source>
@@ -1537,9 +1536,9 @@ Tendrá acceso para hacer Push. {2}</Value>
           <Source>Remote</Source>
           <Value>Remoto</Value>
         </TranslationItem>
-        <TranslationItem Name="resetFileToToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="resetFileToToolStripMenuItem" Property="Text">
           <Source>Reset file to</Source>
-          <Value />
+          <Value>Restaurar archivo a</Value>
         </TranslationItem>
         <TranslationItem Name="resetToolStripMenuItem" Property="Text">
           <Source>Reset changes</Source>
@@ -1743,9 +1742,9 @@ Enter valid branch name or select predefined value.</Source>
 Enter valid branch name or select predefined value.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="defaultActionChx" Property="Text" type="unfinished">
+        <TranslationItem Name="defaultActionChx" Property="Text">
           <Source>Remember as default action</Source>
-          <Value />
+          <Value>Recordar como acción por defecto</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select branch</Source>
@@ -1775,21 +1774,21 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Don't change</Source>
           <Value>No cambiar</Value>
         </TranslationItem>
-        <TranslationItem Name="rbDontCreate" Property="Text" type="unfinished">
+        <TranslationItem Name="rbDontCreate" Property="Text">
           <Source>Checkout remote branch</Source>
-          <Value />
+          <Value>Checkout rama remota</Value>
         </TranslationItem>
         <TranslationItem Name="rbMerge" Property="Text">
           <Source>Merge</Source>
           <Value>Fusionar</Value>
         </TranslationItem>
-        <TranslationItem Name="rbReset" Property="Text" type="unfinished">
+        <TranslationItem Name="rbReset" Property="Text">
           <Source>Reset</Source>
-          <Value />
+          <Value>Restablecer</Value>
         </TranslationItem>
-        <TranslationItem Name="rbResetBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="rbResetBranch" Property="Text">
           <Source>Reset local branch with the name '{0}'</Source>
-          <Value />
+          <Value>Restablecer rama local con el nombre '{0}'</Value>
         </TranslationItem>
         <TranslationItem Name="rbStash" Property="Text">
           <Source>Stash</Source>
@@ -2080,11 +2079,11 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="brachLabel" Property="Text">
           <Source>&amp;Branch:</Source>
-          <Value>Rama</Value>
+          <Value>Rama:</Value>
         </TranslationItem>
-        <TranslationItem Name="cbIntializeAllSubmodules" Property="Text" type="unfinished">
+        <TranslationItem Name="cbIntializeAllSubmodules" Property="Text">
           <Source>Initialize all submodules</Source>
-          <Value />
+          <Value>Inicializar todos los submódulos</Value>
         </TranslationItem>
         <TranslationItem Name="Central" Property="Text">
           <Source>Central repository, no working dir  (--bare --shared=all)</Source>
@@ -2104,15 +2103,15 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>&amp;Repository to clone:</Source>
-          <Value>Repositorio a clonar</Value>
+          <Value>Repositorio a clonar:</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>&amp;Destination:</Source>
-          <Value>Destino</Value>
+          <Value>Destino:</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>&amp;Subdirectory to create:</Source>
-          <Value>Subdirectorio a crear</Value>
+          <Value>Subdirectorio a crear:</Value>
         </TranslationItem>
         <TranslationItem Name="LoadSSHKey" Property="Text">
           <Source>&amp;Load SSH key</Source>
@@ -2329,11 +2328,11 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
         </TranslationItem>
         <TranslationItem Name="_resetSelectedLinesConfirmation" Property="Text">
           <Source>Are you sure you want to reset the changes to the selected lines?</Source>
-          <Value>¿Está seguro que desea resetear los cambios de las líneas seleccionadas?</Value>
+          <Value>¿Está seguro que desea restablecer los cambios de las líneas seleccionadas?</Value>
         </TranslationItem>
         <TranslationItem Name="_ResetSelectedLinesToolStripMenuItem" Property="Text">
           <Source>Reset selected line(s)</Source>
-          <Value>Resetear líneas seleccionadas</Value>
+          <Value>Restablecer líneas seleccionadas</Value>
         </TranslationItem>
         <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
           <Source>Unstage chunk of file</Source>
@@ -2511,9 +2510,9 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
           <Source>Reset all (tracked) changes</Source>
           <Value>Restablecer todos los cambios (con seguimiento)</Value>
         </TranslationItem>
-        <TranslationItem Name="resetChanges" Property="Text" type="unfinished">
+        <TranslationItem Name="resetChanges" Property="Text">
           <Source>Reset file changes</Source>
-          <Value />
+          <Value>Restablecer los cambios de archivos</Value>
         </TranslationItem>
         <TranslationItem Name="resetPartOfFileToolStripMenuItem" Property="Text">
           <Source>Reset chunk of file</Source>
@@ -2523,9 +2522,9 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
           <Source>Reset selected files</Source>
           <Value>Restablecer los archivos seleccionados</Value>
         </TranslationItem>
-        <TranslationItem Name="resetSubmoduleChanges" Property="Text" type="unfinished">
+        <TranslationItem Name="resetSubmoduleChanges" Property="Text">
           <Source>Reset submodule changes</Source>
-          <Value />
+          <Value>Restablecer cambios del submódulo</Value>
         </TranslationItem>
         <TranslationItem Name="selectionFilterToolStripMenuItem" Property="Text">
           <Source>Selection filter</Source>
@@ -4384,7 +4383,7 @@ Do you want to automatically configure the default push and pull behavior for th
           <Source>Invalid ´{1}´ found for branch ´{0}´.
 Value has been reset to empty value.</Source>
           <Value>´{1}´ inválido encontrado para rama ´{0}´.
-El valor se ha reseteado a un valor vacío.</Value>
+El valor se ha restablecido a un valor vacío.</Value>
         </TranslationItem>
         <TranslationItem Name="_sshKeyOpenCaption" Property="Text">
           <Source>Select ssh key file</Source>
@@ -4560,7 +4559,7 @@ El valor se ha reseteado a un valor vacío.</Value>
         </TranslationItem>
         <TranslationItem Name="btnReset" Property="Text" type="unfinished">
           <Source>Reset</Source>
-          <Value />
+          <Value>Restablecer</Value>
         </TranslationItem>
         <TranslationItem Name="cbDeleteNewFiles" Property="Text" type="unfinished">
           <Source>Also delete new files</Source>
@@ -5033,7 +5032,7 @@ Do you want to use this custom merge script?</Source>
         </TranslationItem>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Source>Reset changes</Source>
-          <Value>Resetear cambios</Value>
+          <Value>Restablecer cambios</Value>
         </TranslationItem>
         <TranslationItem Name="_undoChangesIn" Property="Text">
           <Source>Undo changes in:
