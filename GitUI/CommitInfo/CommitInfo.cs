@@ -141,10 +141,10 @@ namespace GitUI.CommitInfo
 
             string error = "";
             CommitData data = null;
-            if (_revision != null)
-                data = CommitData.CreateFromRevision(_revision);
-            else if (!string.IsNullOrEmpty(_revisionGuid))
+            if (!string.IsNullOrEmpty(_revisionGuid))
                 data = CommitData.GetCommitData(Module, _revisionGuid, ref error);
+            else
+                return;//is it regular case or should throw an exception
             data.ChildrenGuids = _children;
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(data);
 
