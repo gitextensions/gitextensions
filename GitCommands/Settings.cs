@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -1153,10 +1154,12 @@ namespace GitCommands
 
     public static class FontParser
     {
+
+        private static readonly string InvariantCultureId = "_IC_";
         public static string AsString(this Font value)
         {
-            return String.Format(System.Globalization.CultureInfo.InstalledUICulture,
-                "{0};{1}", value.FontFamily.Name, value.Size);
+            return String.Format(CultureInfo.InvariantCulture,
+                "{0};{1};{2}", value.FontFamily.Name, value.Size, InvariantCultureId);
         }
 
         public static Font Parse(this string value, Font defaultValue)
@@ -1169,10 +1172,15 @@ namespace GitCommands
             if (parts.Length < 2)
                 return defaultValue;
 
+            CultureInfo ci;
+            if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
+                ci = CultureInfo.InvariantCulture;
+            else
+                ci = CultureInfo.InstalledUICulture;
+
             try
             {
-                return new Font(parts[0], Single.Parse(parts[1],
-                  System.Globalization.CultureInfo.InstalledUICulture));
+                return new Font(parts[0], Single.Parse(parts[1], ci));
             }
             catch (Exception)
             {
