@@ -14,9 +14,8 @@ namespace GitUI.SettingsDialog.Pages
         public StartPageSettingsPage()
         {
             InitializeComponent();
-            Translate();
-
             Text = "Start Page";
+            Translate();
         }
 
         public override bool IsInstantSavePage

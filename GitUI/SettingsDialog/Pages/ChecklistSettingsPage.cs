@@ -184,6 +184,7 @@ namespace GitUI.SettingsDialog.Pages
         private ChecklistSettingsPage()
         {
             InitializeComponent();
+            Text = "Checklist";
             Translate();        
         }
 
@@ -197,8 +198,6 @@ namespace GitUI.SettingsDialog.Pages
             _checkSettingsLogic = checkSettingsLogic;
             _gitModule = gitModule;
             _settingsPageHost = settingsPageHost;
-
-            Text = "Checklist";
         }
 
         public static SettingsPageReference GetPageReference()

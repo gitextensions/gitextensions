@@ -15,9 +15,8 @@ namespace GitUI.SettingsDialog.Pages
         public ShellExtensionSettingsPage()
         {
             InitializeComponent();
+            Text = "Shell extension";
             Translate();
-
-            Text = "Shell Extension";
         }
 
         protected override void OnLoadSettings()

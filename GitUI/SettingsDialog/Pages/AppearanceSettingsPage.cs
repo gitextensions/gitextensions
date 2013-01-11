@@ -25,9 +25,8 @@ namespace GitUI.SettingsDialog.Pages
         public AppearanceSettingsPage()
         {
             InitializeComponent();
-            Translate();
-
             Text = "Appearance";
+            Translate();
 
             noImageService.Items.AddRange(GravatarService.DynamicServices.Cast<object>().ToArray());
         }
