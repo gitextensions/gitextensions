@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Translation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="2.43">
+<Translation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" GitExVersion="2.43">
   <translationCategories>
     <TranslationCategory Name="AboutBox">
       <translationItems>
@@ -24,6 +24,106 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
         <TranslationItem Name="thanksTo" Property="Text">
           <Source>Thanks to:</Source>
           <Value>感谢：</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="AppearanceSettingsPage">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Appearance</Source>
+          <Value>外观</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noDictFilesFound" Property="Text" type="unfinished">
+          <Source>No dictionary files found in: {0}</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="applicationFontChangeButton" Property="Text" type="unfinished">
+          <Source>font name</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkEnableAutoScale" Property="Text" type="unfinished">
+          <Source>Auto scale user interface when high dpi is used</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text" type="unfinished">
+          <Source>Show current branch in Visual Studio</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkShowRelativeDate" Property="Text">
+          <Source>Show relative date instead of full date</Source>
+          <Value>显示相对日期，而不是完整的日期</Value>
+        </TranslationItem>
+        <TranslationItem Name="ClearImageCache" Property="Text">
+          <Source>Clear image cache</Source>
+          <Value>清除图像缓存</Value>
+        </TranslationItem>
+        <TranslationItem Name="diffFontChangeButton" Property="Text" type="unfinished">
+          <Source>font name</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="downloadDictionary" Property="Text" type="unfinished">
+          <Source>Download dictionary</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="groupBox13" Property="Text" type="unfinished">
+          <Source>Language</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="groupBox14" Property="Text" type="unfinished">
+          <Source>General</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="groupBox15" Property="Text" type="unfinished">
+          <Source>Fonts</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="groupBox6" Property="Text">
+          <Source>Author images</Source>
+          <Value>作者图像</Value>
+        </TranslationItem>
+        <TranslationItem Name="helpTranslate" Property="Text">
+          <Source>Help translate</Source>
+          <Value>帮忙翻译~~~</Value>
+        </TranslationItem>
+        <TranslationItem Name="label22" Property="Text" type="unfinished">
+          <Source>Dictionary for spelling checker</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label26" Property="Text" type="unfinished">
+          <Source>Application font</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label44" Property="Text">
+          <Source>Image size</Source>
+          <Value>图像尺寸</Value>
+        </TranslationItem>
+        <TranslationItem Name="label46" Property="Text">
+          <Source>Cache images</Source>
+          <Value>缓存图像</Value>
+        </TranslationItem>
+        <TranslationItem Name="label47" Property="Text">
+          <Source>days</Source>
+          <Value>天</Value>
+        </TranslationItem>
+        <TranslationItem Name="label49" Property="Text">
+          <Source>Language (restart required)</Source>
+          <Value>语言（需要重新启动）</Value>
+        </TranslationItem>
+        <TranslationItem Name="label53" Property="Text" type="unfinished">
+          <Source>No image service</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label56" Property="Text" type="unfinished">
+          <Source>Code font</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="ShowAuthorGravatar" Property="Text">
+          <Source>Get author image from gravatar.com</Source>
+          <Value>从gravatar.com获得作者图像</Value>
+        </TranslationItem>
+        <TranslationItem Name="truncatePathMethod" Property="Text" type="unfinished">
+          <Source>Truncate long filenames</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -64,6 +164,374 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
         <TranslationItem Name="_loadKeyFailedCaption" Property="Text" type="obsolete">
           <Source>PuTTY</Source>
           <Value>PuTTY</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ChecklistSettingsPage">
+      <translationItems>
+        <TranslationItem Name="_adviceDiffToolConfiguration" Property="Text" type="unfinished">
+          <Source>You should configure a diff tool to show file diff in external program (kdiff3 for example).</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_cantRegisterShellExtension" Property="Text" type="unfinished">
+          <Source>Could not register the shell extension because '{0}' could not be found.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_configureMergeTool" Property="Text" type="unfinished">
+          <Source>You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_credentialHelperInstalled" Property="Text" type="unfinished">
+          <Source>Git credential helper is installed.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_customMergeToolXConfigured" Property="Text" type="unfinished">
+          <Source>There is a custom mergetool configured: {0}</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_diffToolXConfigured" Property="Text" type="unfinished">
+          <Source>There is a difftool configured: {0}</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_emailSet" Property="Text" type="unfinished">
+          <Source>A username and an email address are configured.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_gitCanBeRun" Property="Text" type="unfinished">
+          <Source>Git can be run using: {0}</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_gitCanBeRunCaption" Property="Text" type="unfinished">
+          <Source>Locate git</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_gitCredentialWinStoreHelperInstalled" Property="Text" type="unfinished">
+          <Source>Git Credential Win Store is installed as credential helper.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_gitNotFound" Property="Text" type="unfinished">
+          <Source>Git not found. To solve this problem you can set the correct path in settings.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_gitVersionFound" Property="Text" type="unfinished">
+          <Source>Git {0} is found on your computer.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_kdiffAsDiffConfigured" Property="Text" type="unfinished">
+          <Source>KDiff3 is configured as difftool.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_kdiffAsDiffConfiguredButNotFound" Property="Text" type="unfinished">
+          <Source>KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_kdiffAsMergeConfigured" Property="Text" type="unfinished">
+          <Source>KDiff3 is configured as mergetool.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_kdiffAsMergeConfiguredButNotFound" Property="Text" type="unfinished">
+          <Source>KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_languageConfigured" Property="Text" type="unfinished">
+          <Source>The configured language is {0}.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_linuxToolsShNotFound" Property="Text" type="unfinished">
+          <Source>The path to linux tools (sh) could not be found automatically.
+Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_linuxToolsShNotFoundCaption" Property="Text" type="unfinished">
+          <Source>Locate linux tools</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_linuxToolsSshFound" Property="Text" type="unfinished">
+          <Source>Linux tools (sh) found on your computer.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_linuxToolsSshNotFound" Property="Text" type="unfinished">
+          <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in settings.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_mergeToolXConfigured" Property="Text" type="unfinished">
+          <Source>There is a custom mergetool configured.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_mergeToolXConfiguredNeedsCmd" Property="Text" type="unfinished">
+          <Source>{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_noCredentialsHelperInstalled" Property="Text" type="unfinished">
+          <Source>No credential helper installed.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_noCredentialsHelperInstalledTryGCS" Property="Text" type="unfinished">
+          <Source>No credential helper could be installed. Try to install git-credential-winstore.exe.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_noDiffToolConfigured" Property="Text" type="unfinished">
+          <Source>There is no difftool configured. Do you want to configure kdiff3 as your difftool?
+Select no if you want to configure a different difftool yourself.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_noDiffToolConfiguredCaption" Property="Text">
+          <Source>Difftool</Source>
+          <Value>Difftool</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noEmailSet" Property="Text" type="unfinished">
+          <Source>You need to configure a username and an email address.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_noLanguageConfigured" Property="Text" type="unfinished">
+          <Source>There is no language configured for Git Extensions.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_noMergeToolConfigured" Property="Text" type="unfinished">
+          <Source>There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?
+Select no if you want to configure a different mergetool yourself.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_noMergeToolConfiguredCaption" Property="Text">
+          <Source>Mergetool</Source>
+          <Value>合并工具</Value>
+        </TranslationItem>
+        <TranslationItem Name="_opensshUsed" Property="Text" type="unfinished">
+          <Source>Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_plinkputtyGenpageantNotFound" Property="Text" type="unfinished">
+          <Source>PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_puttyConfigured" Property="Text" type="unfinished">
+          <Source>SSH client PuTTY is configured properly.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_puttyFoundAuto" Property="Text" type="unfinished">
+          <Source>All paths needed for PuTTY could be automatically found and are set.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_puttyFoundAutoCaption" Property="Text">
+          <Source>PuTTY</Source>
+          <Value>PuTTY</Value>
+        </TranslationItem>
+        <TranslationItem Name="_registryKeyGitExtensionsCorrect" Property="Text" type="unfinished">
+          <Source>GitExtensions is properly registered.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_registryKeyGitExtensionsFaulty" Property="Text" type="unfinished">
+          <Source>Invalid installation directory stored in [Software\GitExtensions\GitExtensions\InstallDir].</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text" type="unfinished">
+          <Source>Registry entry missing [Software\GitExtensions\GitExtensions\InstallDir].</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_shCanBeRun" Property="Text" type="unfinished">
+          <Source>Command sh can be run using: {0}sh</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_shCanBeRunCaption" Property="Text" type="unfinished">
+          <Source>Locate linux tools</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_shellExtNeedsToBeRegistered" Property="Text" type="unfinished">
+          <Source>{0} needs to be registered in order to use the shell extensions.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_shellExtNoInstalled" Property="Text" type="unfinished">
+          <Source>Shell extensions are not installed. Run the installer to install the shell extensions.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_shellExtRegistered" Property="Text" type="unfinished">
+          <Source>Shell extensions registered properly.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_solveGitCommandFailed" Property="Text" type="unfinished">
+          <Source>The command to run git could not be determined automatically.
+Please make sure git (msysgit or cygwin) is installed or set the correct command manually.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_solveGitCommandFailedCaption" Property="Text" type="unfinished">
+          <Source>Locate git</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_unknownSshClient" Property="Text" type="unfinished">
+          <Source>Unknown SSH client configured: {0}.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_wrongGitVersion" Property="Text" type="unfinished">
+          <Source>Git found but version {0} is not supported. Upgrage to version {1} or later</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="CheckAtStartup" Property="Text">
+          <Source>Check settings at startup (disables automatically if all settings are correct)</Source>
+          <Value>在启动时检查设置（如果所有设置均正确则自动禁用）</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffTool_Fix" Property="Text" type="unfinished">
+          <Source>Repair</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="GitBinFound_Fix" Property="Text" type="unfinished">
+          <Source>Repair</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="gitCredentialWinStore_Fix" Property="Text" type="unfinished">
+          <Source>Repair</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="GitExtensionsInstall_Fix" Property="Text" type="unfinished">
+          <Source>Repair</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="GitFound_Fix" Property="Text" type="unfinished">
+          <Source>Repair</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label11" Property="Text">
+          <Source>The checklist below validates the basic settings needed for GitExtensions to work properly.</Source>
+          <Value>下面的检查列表表示保证GitExtensions正常工作所需的基本设置。</Value>
+        </TranslationItem>
+        <TranslationItem Name="MergeTool_Fix" Property="Text" type="unfinished">
+          <Source>Repair</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="Rescan" Property="Text">
+          <Source>Save and rescan</Source>
+          <Value>保存并重新扫描</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShellExtensionsRegistered_Fix" Property="Text" type="unfinished">
+          <Source>Repair</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="SshConfig_Fix" Property="Text" type="unfinished">
+          <Source>Repair</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="translationConfig_Fix" Property="Text" type="unfinished">
+          <Source>Repair</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="UserNameSet_Fix" Property="Text" type="unfinished">
+          <Source>Repair</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ColorsSettingsPage">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Colors</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="BlueIcon" Property="Text">
+          <Source>Blue</Source>
+          <Value>蓝色</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchBorders" Property="Text">
+          <Source>Draw branch borders</Source>
+          <Value>画出分支的边界</Value>
+        </TranslationItem>
+        <TranslationItem Name="DefaultIcon" Property="Text">
+          <Source>Default</Source>
+          <Value>默认</Value>
+        </TranslationItem>
+        <TranslationItem Name="DrawNonRelativesGray" Property="Text">
+          <Source>Draw non relatives graph gray</Source>
+          <Value>把无关者变灰</Value>
+        </TranslationItem>
+        <TranslationItem Name="DrawNonRelativesTextGray" Property="Text" type="unfinished">
+          <Source>Draw non relatives text gray</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="GreenIcon" Property="Text">
+          <Source>Green</Source>
+          <Value>绿色</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox3" Property="Text">
+          <Source>Difference view</Source>
+          <Value>差异视图</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox4" Property="Text">
+          <Source>Revision graph</Source>
+          <Value>版本图</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox5" Property="Text">
+          <Source>Application Icon</Source>
+          <Value>应用程序图标</Value>
+        </TranslationItem>
+        <TranslationItem Name="label25" Property="Text">
+          <Source>Color tag</Source>
+          <Value>颜色标记</Value>
+        </TranslationItem>
+        <TranslationItem Name="label27" Property="Text">
+          <Source>Color removed line</Source>
+          <Value>给删除的线上色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label29" Property="Text">
+          <Source>Color added line</Source>
+          <Value>给添加的行上色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label31" Property="Text">
+          <Source>Color section</Source>
+          <Value>给区(setion)上色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label32" Property="Text">
+          <Source>Color branch</Source>
+          <Value>给分支上色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label33" Property="Text">
+          <Source>Color remote branch</Source>
+          <Value>给远程分支上色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label36" Property="Text">
+          <Source>Color other label</Source>
+          <Value>给其他标签上色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label43" Property="Text">
+          <Source>Color removed line highlighting</Source>
+          <Value>给去除的行上色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label45" Property="Text">
+          <Source>Color added line highlighting</Source>
+          <Value>给新增的行上色</Value>
+        </TranslationItem>
+        <TranslationItem Name="label54" Property="Text" type="unfinished">
+          <Source>Icon style</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label55" Property="Text" type="unfinished">
+          <Source>Icon color</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="LightblueIcon" Property="Text" type="unfinished">
+          <Source>Light blue</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="MulticolorBranches" Property="Text">
+          <Source>Multicolor branches</Source>
+          <Value>给分支上多种颜色</Value>
+        </TranslationItem>
+        <TranslationItem Name="PurpleIcon" Property="Text">
+          <Source>Purple</Source>
+          <Value>紫色</Value>
+        </TranslationItem>
+        <TranslationItem Name="RandomIcon" Property="Text">
+          <Source>Random</Source>
+          <Value>随机</Value>
+        </TranslationItem>
+        <TranslationItem Name="RedIcon" Property="Text">
+          <Source>Red</Source>
+          <Value>红色</Value>
+        </TranslationItem>
+        <TranslationItem Name="StripedBanchChange" Property="Text">
+          <Source>Striped branch change</Source>
+          <Value>条纹化表示分支的改变</Value>
+        </TranslationItem>
+        <TranslationItem Name="YellowIcon" Property="Text">
+          <Source>Yellow</Source>
+          <Value>黄色</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -108,6 +576,25 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
         <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text">
           <Source>Show tags containing this commit</Source>
           <Value>显示包含此提交的标签</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="CommonLogic">
+      <translationItems>
+        <TranslationItem Name="_cantReadRegistry" Property="Text" type="unfinished">
+          <Source>GitExtensions has insufficient permissions to check the registry.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_cantReadRegistryAddEntryManually" Property="Text" type="unfinished">
+          <Source>GitExtensions has insufficient permissions to modify the registry.
+Please add this key to the registry manually.
+Path:  {0}\{1}
+Value:  {2} = {3}</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_selectFile" Property="Text" type="unfinished">
+          <Source>Select file</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -241,12 +728,6 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
         <TranslationItem Name="develop" Property="Text">
           <Source>Develop</Source>
           <Value>开发</Value>
-        </TranslationItem>
-        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text" type="unfinished">
-          <Source>The selected item is not a valid git repository.
-
-Do you want to abort and remove it from the recent repositories list?</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="directoryIsNotAValidRepositoryCaption" Property="Text">
           <Source>Open</Source>
@@ -408,10 +889,6 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Paste</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="redoMenuItemText" Property="Text" type="unfinished">
-          <Source>Redo</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="removeWordText" Property="Text" type="unfinished">
           <Source>Remove word</Source>
           <Value />
@@ -428,14 +905,14 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Translate entire text to {0}</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="undoMenuItemText" Property="Text" type="unfinished">
-          <Source>Undo</Source>
-          <Value />
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FileStatusList">
       <translationItems>
+        <TranslationItem Name="_UnsupportedMultiselectAction" Property="Text" type="unfinished">
+          <Source>Operation not supported</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="NoFiles" Property="Text">
           <Source>No changes</Source>
           <Value>没有变化</Value>
@@ -938,23 +1415,44 @@ You will have push access. {2}</Source>
           <Source>Archive</Source>
           <Value>存档</Value>
         </TranslationItem>
-        <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text" type="unfinished">
-          <Source>Select 1 revision to archive</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="_saveFileDialogCaption" Property="Text" type="unfinished">
           <Source>Save archive as</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_saveFileDialogFilter" Property="Text" type="unfinished">
+        <TranslationItem Name="_saveFileDialogFilterTar" Property="Text" type="unfinished">
+          <Source>Tar file (*.tar)</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_saveFileDialogFilterZip" Property="Text" type="unfinished">
           <Source>Zip file (*.zip)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Source>Select a revision to zip</Source>
+        <TranslationItem Name="buttonArchiveRevision" Property="Text">
+          <Source>Save as...</Source>
+          <Value>另存为</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
+          <Source>Archive format</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text" type="obsolete">
+          <Source>Selected revision to archive:</Source>
           <Value>选择一个版本进行zip压缩</Value>
         </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
+        <TranslationItem Name="label2" Property="Text" type="unfinished">
+          <Source>Choose another
+revision:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="radioButtonFormatTar" Property="Text" type="unfinished">
+          <Source>tar</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="radioButtonFormatZip" Property="Text" type="unfinished">
+          <Source>zip</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text" type="obsolete">
           <Source>Save</Source>
           <Value>保存</Value>
         </TranslationItem>
@@ -1070,6 +1568,10 @@ You will have push access. {2}</Source>
           <Source>Git Extensions</Source>
           <Value>Git Extensions</Value>
         </TranslationItem>
+        <TranslationItem Name="_alwaysShowCheckoutDlgStr" Property="Text" type="unfinished">
+          <Source>Always show checkout dialog</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_configureWorkingDirMenu" Property="Text" type="unfinished">
           <Source>Configure this menu</Source>
           <Value />
@@ -1142,8 +1644,12 @@ You will have push access. {2}</Source>
           <Source>stash</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_UnsupportedMultiselectAction" Property="Text" type="unfinished">
-          <Source>Operation not supported</Source>
+        <TranslationItem Name="_updateAllSuperprojectSubmodules" Property="Text" type="unfinished">
+          <Source>Update all superproject submodules</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_updateCurrentSubmodule" Property="Text" type="unfinished">
+          <Source>Update current submodule</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text" type="unfinished">
@@ -1165,6 +1671,14 @@ You will have push access. {2}</Source>
         <TranslationItem Name="aboutToolStripMenuItem" Property="Text">
           <Source>About</Source>
           <Value>关于</Value>
+        </TranslationItem>
+        <TranslationItem Name="aBToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>A &lt;--&gt; B</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="aLocalToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>A &lt;--&gt; Working dir</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
           <Source>Apply patch</Source>
@@ -1189,6 +1703,10 @@ You will have push access. {2}</Source>
         <TranslationItem Name="blameToolStripMenuItem1" Property="Text">
           <Source>Blame</Source>
           <Value>文件记录</Value>
+        </TranslationItem>
+        <TranslationItem Name="bLocalToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>B &lt;--&gt; Working dir</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="branchSelect" Property="Text">
           <Source>Branch</Source>
@@ -1246,7 +1764,7 @@ You will have push access. {2}</Source>
           <Source>Commits per user</Source>
           <Value>每个用户提交</Value>
         </TranslationItem>
-        <TranslationItem Name="CommitInfo" Property="Text">
+        <TranslationItem Name="CommitInfoTabPage" Property="Text">
           <Source>Commit</Source>
           <Value>提交</Value>
         </TranslationItem>
@@ -1266,12 +1784,12 @@ You will have push access. {2}</Source>
           <Source>Compress git database</Source>
           <Value>压缩Git数据库</Value>
         </TranslationItem>
-        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem" Property="Text">
-          <Source>Copy filename to clipboard</Source>
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem" Property="Text" type="obsolete">
+          <Source>Copy full path</Source>
           <Value>把文件名复制到剪贴板</Value>
         </TranslationItem>
-        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text">
-          <Source>Copy filename to clipboard</Source>
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text" type="obsolete">
+          <Source>Copy full path</Source>
           <Value>把文件名复制到剪贴板</Value>
         </TranslationItem>
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
@@ -1286,21 +1804,13 @@ You will have push access. {2}</Source>
           <Source>Delete tag</Source>
           <Value>删除标签</Value>
         </TranslationItem>
-        <TranslationItem Name="Diff" Property="Text">
-          <Source>Diff</Source>
-          <Value>差异</Value>
-        </TranslationItem>
-        <TranslationItem Name="diffBaseLocalToolStripMenuItem" Property="Text" type="unfinished">
-          <Source>Difftool base &lt; - &gt; local</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Diff contains (SLOW)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="difftoolRemoteLocalToolStripMenuItem" Property="Text" type="unfinished">
-          <Source>Difftool remote &lt; - &gt; local </Source>
-          <Value />
+        <TranslationItem Name="DiffTabPage" Property="Text">
+          <Source>Diff</Source>
+          <Value>差异</Value>
         </TranslationItem>
         <TranslationItem Name="donateToolStripMenuItem" Property="Text">
           <Source>Donate</Source>
@@ -1308,10 +1818,6 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="dontSetAsDefaultToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Don't set as default</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="editCheckedOutFileToolStripMenuItem" Property="Text" type="unfinished">
-          <Source>Edit checked out file</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="editgitattributesToolStripMenuItem" Property="Text">
@@ -1333,10 +1839,6 @@ You will have push access. {2}</Source>
         <TranslationItem Name="exitToolStripMenuItem" Property="Text">
           <Source>Exit</Source>
           <Value>退出</Value>
-        </TranslationItem>
-        <TranslationItem Name="expandAllToolStripMenuItem" Property="Text" type="unfinished">
-          <Source>Expand all</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="fetchAllToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Fetch all</Source>
@@ -1361,6 +1863,10 @@ You will have push access. {2}</Source>
         <TranslationItem Name="fileToolStripMenuItem" Property="Text">
           <Source>File</Source>
           <Value>文件</Value>
+        </TranslationItem>
+        <TranslationItem Name="fileTreeOpenContainingFolderToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Open containing folder</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="findInDiffToolStripMenuItem" Property="Text">
           <Source>Find</Source>
@@ -1454,10 +1960,6 @@ You will have push access. {2}</Source>
           <Source>Open this revision with... (temp file)</Source>
           <Value>用工具打开这个版本（临时文件）</Value>
         </TranslationItem>
-        <TranslationItem Name="openSubmoduleToolStripMenuItem" Property="Text">
-          <Source>Browse submodule</Source>
-          <Value>浏览子模块</Value>
-        </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
           <Source>Open</Source>
           <Value>打开</Value>
@@ -1466,9 +1968,17 @@ You will have push access. {2}</Source>
           <Source>Open with difftool</Source>
           <Value>用difftool打开</Value>
         </TranslationItem>
-        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
-          <Source>Open checked out file with...</Source>
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text" type="obsolete">
+          <Source>Open working dir file with...</Source>
           <Value>用工具打开签出的文件</Value>
+        </TranslationItem>
+        <TranslationItem Name="parentOfALocalToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>A's parent &lt;--&gt; Working dir</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="parentOfBLocalToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>B's parent &lt;--&gt; Working dir</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="patchToolStripMenuItem" Property="Text">
           <Source>View patch file</Source>
@@ -1522,21 +2032,21 @@ You will have push access. {2}</Source>
           <Source>Remote</Source>
           <Value>远程</Value>
         </TranslationItem>
-        <TranslationItem Name="resetFileToBaseToolStripMenuItem" Property="Text" type="unfinished">
-          <Source>Base</Source>
+        <TranslationItem Name="resetFileToAToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>A</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="resetFileToRemoteToolStripMenuItem" Property="Text">
-          <Source>Remote</Source>
+        <TranslationItem Name="resetFileToRemoteToolStripMenuItem" Property="Text" type="obsolete">
+          <Source>B</Source>
           <Value>远程</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetFileToToolStripMenuItem" Property="Text" type="unfinished">
-          <Source>Reset file to</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="resetToolStripMenuItem" Property="Text">
           <Source>Reset changes</Source>
           <Value>复位变化</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetToThisRevisionToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Reset to selected revision</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
           <Source>Solve mergeconflicts</Source>
@@ -1546,8 +2056,8 @@ You will have push access. {2}</Source>
           <Source>Save as...</Source>
           <Value>另存为</Value>
         </TranslationItem>
-        <TranslationItem Name="saveAsToolStripMenuItem1" Property="Text">
-          <Source>Save as</Source>
+        <TranslationItem Name="saveAsToolStripMenuItem1" Property="Text" type="obsolete">
+          <Source>Save (B) as...</Source>
           <Value>另存为</Value>
         </TranslationItem>
         <TranslationItem Name="saveToolStripMenuItem" Property="Text">
@@ -1622,6 +2132,10 @@ You will have push access. {2}</Source>
           <Source>Commit</Source>
           <Value>提交</Value>
         </TranslationItem>
+        <TranslationItem Name="toolStripButtonLevelUp" Property="Text" type="unfinished">
+          <Source>Go to superproject</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="toolStripButtonPull" Property="Text">
           <Source>Pull</Source>
           <Value>拉取</Value>
@@ -1650,7 +2164,7 @@ You will have push access. {2}</Source>
           <Source>Translate</Source>
           <Value>翻译</Value>
         </TranslationItem>
-        <TranslationItem Name="Tree" Property="Text">
+        <TranslationItem Name="TreeTabPage" Property="Text">
           <Source>File tree</Source>
           <Value>文件树</Value>
         </TranslationItem>
@@ -1673,6 +2187,22 @@ You will have push access. {2}</Source>
         <TranslationItem Name="viewStashToolStripMenuItem" Property="Text">
           <Source>View stash</Source>
           <Value>查看Git缓冲区</Value>
+        </TranslationItem>
+        <TranslationItem Name="CommitInfo" Property="Text" type="obsolete">
+          <Source>Commit</Source>
+          <Value>提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="Diff" Property="Text" type="obsolete">
+          <Source>Diff</Source>
+          <Value>差异</Value>
+        </TranslationItem>
+        <TranslationItem Name="openSubmoduleToolStripMenuItem" Property="Text" type="obsolete">
+          <Source>Browse submodule</Source>
+          <Value>浏览子模块</Value>
+        </TranslationItem>
+        <TranslationItem Name="Tree" Property="Text" type="obsolete">
+          <Source>File tree</Source>
+          <Value>文件树</Value>
         </TranslationItem>
         <TranslationItem Name="_toolStripGitStatus" Property="Text" type="obsolete">
           <Source>Commit</Source>
@@ -1718,22 +2248,8 @@ You will have push access. {2}</Source>
           <Source>Checkout branch</Source>
           <Value>签出分支</Value>
         </TranslationItem>
-        <TranslationItem Name="_applyShashedItemsAgain" Property="Text">
-          <Source>Apply stashed items to working dir again?</Source>
-          <Value>要把缓冲区的对象再次应用到工作目录吗？</Value>
-        </TranslationItem>
-        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text">
-          <Source>Auto stash</Source>
-          <Value>自动缓冲</Value>
-        </TranslationItem>
-        <TranslationItem Name="_customBranchNameIsEmpty" Property="Text" type="unfinished">
-          <Source>Custom branch name is empty.
-Enter valid branch name or select predefined value.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_customBranchNameIsNotValid" Property="Text" type="unfinished">
-          <Source>“{0}” is not valid branch name.
-Enter valid branch name or select predefined value.</Source>
+        <TranslationItem Name="_createBranch" Property="Text" type="unfinished">
+          <Source>Create local branch with the name:</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="defaultActionChx" Property="Text" type="unfinished">
@@ -1756,10 +2272,6 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Checkout</Source>
           <Value>签出</Value>
         </TranslationItem>
-        <TranslationItem Name="rbCreateBranch" Property="Text" type="unfinished">
-          <Source>Create local branch with the name '{0}'</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="rbCreateBranchWithCustomName" Property="Text" type="unfinished">
           <Source>Create local branch with custom name:</Source>
           <Value />
@@ -1780,10 +2292,6 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Reset</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="rbResetBranch" Property="Text" type="unfinished">
-          <Source>Reset local branch with the name '{0}'</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="rbStash" Property="Text">
           <Source>Stash</Source>
           <Value>暂存</Value>
@@ -1791,6 +2299,14 @@ Enter valid branch name or select predefined value.</Source>
         <TranslationItem Name="Remotebranch" Property="Text">
           <Source>Remote branch</Source>
           <Value>远程分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="_applyShashedItemsAgain" Property="Text" type="obsolete">
+          <Source>Apply stashed items to working dir again?</Source>
+          <Value>要把缓冲区的对象再次应用到工作目录吗？</Value>
+        </TranslationItem>
+        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text" type="obsolete">
+          <Source>Auto stash</Source>
+          <Value>自动缓冲</Value>
         </TranslationItem>
         <TranslationItem Name="Force" Property="Text" type="obsolete">
           <Source>Force</Source>
@@ -1800,53 +2316,9 @@ Enter valid branch name or select predefined value.</Source>
     </TranslationCategory>
     <TranslationCategory Name="FormCherryPick">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Cherry pick</Source>
-          <Value>优选</Value>
-        </TranslationItem>
-        <TranslationItem Name="_cmdExecutedMsgBox" Property="Text" type="unfinished">
-          <Source>Command executed</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_cmdExecutedMsgBoxCaption" Property="Text">
-          <Source>Cherry pick</Source>
-          <Value>选最好的</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text" type="unfinished">
-          <Source>Select 1 revision to pick.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_noRevisionSelectedMsgBoxCaption" Property="Text">
-          <Source>Cherry pick</Source>
-          <Value>选最好的</Value>
-        </TranslationItem>
-        <TranslationItem Name="AutoCommit" Property="Text">
-          <Source>Automatically create a commit  when there are no merge conflicts</Source>
-          <Value>当没有任何合并冲突，自动创建提交。</Value>
-        </TranslationItem>
-        <TranslationItem Name="autoParent" Property="Text">
-          <Source>Automatically set parent to 1 when commit is a merge</Source>
-          <Value>当提交是一个合并时，自动设置父亲为1</Value>
-        </TranslationItem>
-        <TranslationItem Name="checkAddReference" Property="Text" type="unfinished">
-          <Source>Add commit reference</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="CherryPick" Property="Text">
-          <Source>Cherry pick</Source>
-          <Value>优选</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Source>Select a commit you want to cherry pick. The commit will be recommitted on top of the current head.</Source>
-          <Value>选择您要优选的提交。该提交将在当前的头部重新提交。</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCherryPickCommitSmall">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
           <Source>Cherry pick commit</Source>
-          <Value>最优化提交（Cherry pick commit）</Value>
+          <Value>优选</Value>
         </TranslationItem>
         <TranslationItem Name="_noneParentSelectedText" Property="Text" type="unfinished">
           <Source>None parent is selected!</Source>
@@ -1856,21 +2328,13 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Error</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="Author" Property="Text">
-          <Source>Author:</Source>
-          <Value>作者：</Value>
-        </TranslationItem>
-        <TranslationItem Name="AutoCommit" Property="Text">
-          <Source>Automatically creates a commit</Source>
-          <Value>自动创建一个提交</Value>
+        <TranslationItem Name="AutoCommit" Property="Text" type="obsolete">
+          <Source>Automatically create a commit</Source>
+          <Value>当没有任何合并冲突，自动创建提交。</Value>
         </TranslationItem>
         <TranslationItem Name="BranchInfo" Property="Text">
           <Source>Cherry pick this commit:</Source>
           <Value>优化(Cherry pick)此提交：</Value>
-        </TranslationItem>
-        <TranslationItem Name="checkAddReference" Property="Text" type="unfinished">
-          <Source>Add commit reference</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="columnHeader1" Property="Text">
           <Source>No.</Source>
@@ -1888,81 +2352,38 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Date</Source>
           <Value>日期</Value>
         </TranslationItem>
-        <TranslationItem Name="Commit" Property="Text">
-          <Source>Commit:</Source>
-          <Value>提交：</Value>
-        </TranslationItem>
-        <TranslationItem Name="Date" Property="Text">
-          <Source>Commit date:</Source>
-          <Value>提交日期：</Value>
-        </TranslationItem>
-        <TranslationItem Name="Message" Property="Text">
-          <Source>Message:</Source>
-          <Value>消息：</Value>
+        <TranslationItem Name="label2" Property="Text" type="unfinished">
+          <Source>Choose another
+revision:</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="ParentsLabel" Property="Text">
           <Source>This commit is a merge, select parent:</Source>
           <Value>这提交是一个合并，选择合并的上一代：</Value>
         </TranslationItem>
         <TranslationItem Name="Pick" Property="Text">
-          <Source>Pick this commit</Source>
-          <Value>挑选本提交</Value>
+          <Source>Cherry pick</Source>
+          <Value>选最好的</Value>
         </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCherryPickMerge">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Choose parent</Source>
-          <Value />
+        <TranslationItem Name="_cmdExecutedMsgBoxCaption" Property="Text" type="obsolete">
+          <Source>Cherry pick</Source>
+          <Value>选最好的</Value>
         </TranslationItem>
-        <TranslationItem Name="_noneParentSelectedText" Property="Text" type="unfinished">
-          <Source>None parent is selected!</Source>
-          <Value />
+        <TranslationItem Name="_noRevisionSelectedMsgBoxCaption" Property="Text" type="obsolete">
+          <Source>Cherry pick</Source>
+          <Value>选最好的</Value>
         </TranslationItem>
-        <TranslationItem Name="_noneParentSelectedTextCaption" Property="Text" type="unfinished">
-          <Source>Error</Source>
-          <Value />
+        <TranslationItem Name="autoParent" Property="Text" type="obsolete">
+          <Source>Automatically set parent to 1 when commit is a merge</Source>
+          <Value>当提交是一个合并时，自动设置父亲为1</Value>
         </TranslationItem>
-        <TranslationItem Name="Author" Property="Text">
-          <Source>Author</Source>
-          <Value>作者</Value>
+        <TranslationItem Name="CherryPick" Property="Text" type="obsolete">
+          <Source>Cherry pick</Source>
+          <Value>优选</Value>
         </TranslationItem>
-        <TranslationItem Name="Column1" Property="HeaderText">
-          <Source>No.</Source>
-          <Value>序号</Value>
-        </TranslationItem>
-        <TranslationItem Name="Column2" Property="HeaderText">
-          <Source>Message</Source>
-          <Value>消息</Value>
-        </TranslationItem>
-        <TranslationItem Name="Column3" Property="HeaderText">
-          <Source>Author</Source>
-          <Value>作者</Value>
-        </TranslationItem>
-        <TranslationItem Name="Column4" Property="HeaderText">
-          <Source>Date</Source>
-          <Value>日期</Value>
-        </TranslationItem>
-        <TranslationItem Name="CommitDate" Property="Text">
-          <Source>Date</Source>
-          <Value>日期</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
-          <Source>This commit is a merge, please select the parent</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="Message" Property="Text">
-          <Source>Message</Source>
-          <Value>消息</Value>
-        </TranslationItem>
-        <TranslationItem Name="No" Property="Text">
-          <Source>No.</Source>
-          <Value>序号</Value>
-        </TranslationItem>
-        <TranslationItem Name="OK" Property="Text">
-          <Source>OK</Source>
-          <Value>确定</Value>
+        <TranslationItem Name="label1" Property="Text" type="obsolete">
+          <Source>Select a commit you want to cherry pick. The commit will be recommitted on top of the current head.</Source>
+          <Value>选择您要优选的提交。该提交将在当前的头部重新提交。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2152,18 +2573,6 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Commit</Source>
           <Value>提交</Value>
         </TranslationItem>
-        <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text">
-          <Source>Do you also want to delete the new files that are in the selection?
-
-Choose 'No' to keep all new files.</Source>
-          <Value>你也要删除选中文件中的新文件吗？
-
-选“否”保留所有新文件。</Value>
-        </TranslationItem>
-        <TranslationItem Name="_alsoDeleteUntrackedFilesCaption" Property="Text">
-          <Source>Delete</Source>
-          <Value>删除</Value>
-        </TranslationItem>
         <TranslationItem Name="_amendCommit" Property="Text">
           <Source>You are about to rewrite history.
 Only use amend if the commit is not published yet!
@@ -2257,7 +2666,7 @@ Do you want to continue?</Source>
           <Source>Merge conflicts</Source>
           <Value>合并冲突</Value>
         </TranslationItem>
-        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
+        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text" type="obsolete">
           <Source>There are no files staged for this commit.
 Are you sure you want to commit?</Source>
           <Value>此次提交没有载入任何文件。您确认要提交吗？</Value>
@@ -2306,11 +2715,6 @@ Do you want to continue?</Source>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Source>Reset changes</Source>
           <Value>复位变化</Value>
-        </TranslationItem>
-        <TranslationItem Name="_resetChangesText" Property="Text">
-          <Source>Are you sure you want to reset the changes to the selected files?</Source>
-          <Value>您确定要重置对选定文件的更改？
-</Value>
         </TranslationItem>
         <TranslationItem Name="_resetSelectedChangesText" Property="Text">
           <Source>Are you sure you want to reset all selected files?</Source>
@@ -2372,8 +2776,8 @@ Do you want to continue?</Source>
           <Source>Add file to .gitignore</Source>
           <Value>添加文件到.gitignore</Value>
         </TranslationItem>
-        <TranslationItem Name="Amend" Property="Text">
-          <Source>Amend Commit</Source>
+        <TranslationItem Name="Amend" Property="Text" type="obsolete">
+          <Source>&amp;Amend Commit</Source>
           <Value>更改最后一次提交(&amp;A)</Value>
         </TranslationItem>
         <TranslationItem Name="Cancel" Property="Text">
@@ -2448,12 +2852,16 @@ Do you want to continue?</Source>
           <Source>Edit ignored files</Source>
           <Value>编辑忽略的文件</Value>
         </TranslationItem>
-        <TranslationItem Name="filenameToClipboardToolStripMenuItem" Property="Text">
-          <Source>Copy filename</Source>
+        <TranslationItem Name="filenameToClipboardToolStripMenuItem" Property="Text" type="obsolete">
+          <Source>Copy full path</Source>
           <Value>文件名复制到剪贴板</Value>
         </TranslationItem>
         <TranslationItem Name="generateListOfChangesInSubmodulesChangesToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Generate a list of changes in submodules</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="interactiveAddtoolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Interactive Add</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="llShowPreview" Property="Text" type="unfinished">
@@ -2504,8 +2912,8 @@ Do you want to continue?</Source>
           <Source>Reset all (tracked) changes</Source>
           <Value>复位所有（跟踪的）的变化</Value>
         </TranslationItem>
-        <TranslationItem Name="resetChanges" Property="Text">
-          <Source>Reset file changes</Source>
+        <TranslationItem Name="resetChanges" Property="Text" type="obsolete">
+          <Source>Reset file or directory changes</Source>
           <Value>重置文件的更改</Value>
         </TranslationItem>
         <TranslationItem Name="resetPartOfFileToolStripMenuItem" Property="Text">
@@ -2540,6 +2948,10 @@ Do you want to continue?</Source>
           <Source>There are unresolved mergeconflicts
 </Source>
           <Value>有未解决的合并冲突</Value>
+        </TranslationItem>
+        <TranslationItem Name="StageInSuperproject" Property="Text" type="unfinished">
+          <Source>Stage in Superproject</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="stashSubmoduleChangesToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Stash submodule changes</Source>
@@ -2577,16 +2989,12 @@ Do you want to continue?</Source>
           <Source>Edit file</Source>
           <Value>编辑文件</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripMenuItem14" Property="Text">
-          <Source>Copy filename</Source>
+        <TranslationItem Name="toolStripMenuItem14" Property="Text" type="obsolete">
+          <Source>Copy full path</Source>
           <Value>文件名复制到剪贴板</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripMenuItem3" Property="Text" type="unfinished">
           <Source>Options</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="toolStripMenuItem4" Property="Text" type="unfinished">
-          <Source>Interactive Add</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="toolStripMenuItem6" Property="Text" type="unfinished">
@@ -2628,6 +3036,23 @@ Do you want to continue?</Source>
         <TranslationItem Name="workingToolStripMenuItem" Property="Text">
           <Source>Working dir changes</Source>
           <Value>工作目录更改</Value>
+        </TranslationItem>
+        <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text" type="obsolete">
+          <Source>Do you also want to delete the new files that are in the selection?
+
+Choose 'No' to keep all new files.</Source>
+          <Value>你也要删除选中文件中的新文件吗？
+
+选“否”保留所有新文件。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_alsoDeleteUntrackedFilesCaption" Property="Text" type="obsolete">
+          <Source>Delete</Source>
+          <Value>删除</Value>
+        </TranslationItem>
+        <TranslationItem Name="_resetChangesText" Property="Text" type="obsolete">
+          <Source>Are you sure you want to reset the changes to the selected files?</Source>
+          <Value>您确定要重置对选定文件的更改？
+</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2813,8 +3238,12 @@ this using `force delete´.
           <Source>Delete tag</Source>
           <Value>删除标签</Value>
         </TranslationItem>
-        <TranslationItem Name="_deleteTagMessageBoxCaption" Property="Text" type="unfinished">
-          <Source>Delete Tag</Source>
+        <TranslationItem Name="_deleteFromCaption" Property="Text" type="unfinished">
+          <Source>Delete from '{0}'</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="deleteTag" Property="Text" type="unfinished">
+          <Source>Delete tag from '{0}'</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
@@ -2918,10 +3347,6 @@ Click on the "Support this project" button to get more information about making 
         <TranslationItem Name="DiffTab" Property="Text">
           <Source>Diff</Source>
           <Value>差异</Value>
-        </TranslationItem>
-        <TranslationItem Name="diffToolremotelocalStripMenuItem" Property="Text" type="unfinished">
-          <Source>Difftool remote &lt; - &gt; local</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="followFileHistoryToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Detect and follow renames</Source>
@@ -3087,18 +3512,6 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="_patchResultCaption" Property="Text" type="unfinished">
           <Source>Patch result</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_sendMailResult" Property="Text" type="unfinished">
-          <Source>
-
-Send to:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_sendMailResultFailed" Property="Text" type="unfinished">
-          <Source>
-
-Failed to send mail.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_twoRevisionsNeededCaption" Property="Text" type="unfinished">
@@ -3496,8 +3909,32 @@ defaultrebase=0</Source>
           <Source>Go</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Source>Help</Source>
+          <Value>帮助</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="unfinished">
           <Source>Commit expression:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text" type="unfinished">
+          <Source>Commit expression examples:
+- complete commit hash: e. g.: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9
+- partial commit hash (if unique): e. g.: 8eab51fcb9c453
+- tag name
+- branch name</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text" type="unfinished">
+          <Source>Go to tag:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text" type="unfinished">
+          <Source>Go to branch:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="linkGitRevParse" Property="Text" type="unfinished">
+          <Source>More (git-rev-parse, section SPECIFYING REVISIONS)</Source>
           <Value />
         </TranslationItem>
       </translationItems>
@@ -3544,7 +3981,7 @@ defaultrebase=0</Source>
           <Source>Choose directory</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
+        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text" type="obsolete">
           <Source>Cannot initialize a new repository on a file.
 Please choose a directory.</Source>
           <Value>不能初始化一个新的档案库。请选择一个目录。</Value>
@@ -3764,14 +4201,6 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormPluginSettings">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Plugin settings</Source>
-          <Value>插件设置</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="FormPull">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -3839,10 +4268,6 @@ This will initialize and update all submodules recursive.</Source>
           <Source>Auto stash</Source>
           <Value>自动缓冲</Value>
         </TranslationItem>
-        <TranslationItem Name="BrowseSource" Property="Text">
-          <Source>Browse</Source>
-          <Value>浏览</Value>
-        </TranslationItem>
         <TranslationItem Name="Fetch" Property="Text">
           <Source>Do not merge, only &amp;fetch remote changes</Source>
           <Value>不合并，只获取远程分支</Value>
@@ -3867,10 +4292,6 @@ This will initialize and update all submodules recursive.</Source>
           <Source>Remote branch</Source>
           <Value>远程分支</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
-          <Source>Url</Source>
-          <Value>Url地址</Value>
-        </TranslationItem>
         <TranslationItem Name="Merge" Property="Text">
           <Source>&amp;Merge remote branch into current branch</Source>
           <Value>远程分支合并到当前分支(&amp;M)</Value>
@@ -3878,6 +4299,10 @@ This will initialize and update all submodules recursive.</Source>
         <TranslationItem Name="Mergetool" Property="Text">
           <Source>Solve conflicts</Source>
           <Value>解决冲突</Value>
+        </TranslationItem>
+        <TranslationItem Name="NoTags" Property="Text" type="unfinished">
+          <Source>No tags</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="Pull" Property="Text">
           <Source>&amp;Pull</Source>
@@ -3899,6 +4324,14 @@ This will initialize and update all submodules recursive.</Source>
         <TranslationItem Name="Stash" Property="Text">
           <Source>Stash changes</Source>
           <Value>缓冲更改</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseSource" Property="Text" type="obsolete">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text" type="obsolete">
+          <Source>Url</Source>
+          <Value>Url地址</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3946,6 +4379,10 @@ Are you sure you want to push this branch?</Source>
           <Source>You need to select a tag to push or select "Push all tags".</Source>
           <Value>您需要选择一个标签来推送，或者您可以选择“推送所有标签。”</Value>
         </TranslationItem>
+        <TranslationItem Name="_updateTrackingReference" Property="Text" type="unfinished">
+          <Source>The branch {0} does not have a tracking reference. Do you want to add a tracking reference to {1}?</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_yes" Property="Text" type="unfinished">
           <Source>Yes</Source>
           <Value />
@@ -3965,10 +4402,6 @@ Are you sure you want to push this branch?</Source>
         <TranslationItem Name="BranchTab" Property="ToolTipText">
           <Source>Push branches and commits to remote repository.</Source>
           <Value>推送分支然后提交到远程档案库</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseSource" Property="Text">
-          <Source>Browse</Source>
-          <Value>浏览</Value>
         </TranslationItem>
         <TranslationItem Name="DeleteColumn" Property="HeaderText" type="unfinished">
           <Source>Delete Remote Branch</Source>
@@ -4006,6 +4439,10 @@ Are you sure you want to push this branch?</Source>
           <Source>Tag to push</Source>
           <Value>要推送的标签</Value>
         </TranslationItem>
+        <TranslationItem Name="label2" Property="Text" type="unfinished">
+          <Source>Recursive submodules</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="labelFrom" Property="Text">
           <Source>Branch to push</Source>
           <Value>要推送的分支</Value>
@@ -4034,14 +4471,6 @@ Are you sure you want to push this branch?</Source>
           <Source>Pull</Source>
           <Value>拉取</Value>
         </TranslationItem>
-        <TranslationItem Name="PullFromRemote" Property="Text">
-          <Source>Remote</Source>
-          <Value>远程</Value>
-        </TranslationItem>
-        <TranslationItem Name="PullFromUrl" Property="Text">
-          <Source>Url</Source>
-          <Value>Url地址</Value>
-        </TranslationItem>
         <TranslationItem Name="Push" Property="Text">
           <Source>&amp;Push</Source>
           <Value>推送(&amp;P)</Value>
@@ -4058,9 +4487,13 @@ Are you sure you want to push this branch?</Source>
           <Source>Push</Source>
           <Value>推送</Value>
         </TranslationItem>
-        <TranslationItem Name="RecursiveSubmodulesCheck" Property="Text" type="unfinished">
-          <Source>Recursive submodules check</Source>
-          <Value />
+        <TranslationItem Name="PushToRemote" Property="Text">
+          <Source>Remote</Source>
+          <Value>远程</Value>
+        </TranslationItem>
+        <TranslationItem Name="PushToUrl" Property="Text">
+          <Source>Url</Source>
+          <Value>Url地址</Value>
         </TranslationItem>
         <TranslationItem Name="RemoteColumn" Property="HeaderText" type="unfinished">
           <Source>Remote Branch</Source>
@@ -4085,6 +4518,18 @@ Are you sure you want to push this branch?</Source>
         <TranslationItem Name="TagTab" Property="ToolTipText">
           <Source>Push tags to remote repository</Source>
           <Value>推送标签到远程档案库</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseSource" Property="Text" type="obsolete">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="PullFromRemote" Property="Text" type="obsolete">
+          <Source>Remote</Source>
+          <Value>远程</Value>
+        </TranslationItem>
+        <TranslationItem Name="PullFromUrl" Property="Text" type="obsolete">
+          <Source>Url</Source>
+          <Value>Url地址</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4370,14 +4815,6 @@ Value has been reset to empty value.</Source>
           <Source>Local branch name</Source>
           <Value>本地分支名称</Value>
         </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Source>Browse</Source>
-          <Value>浏览</Value>
-        </TranslationItem>
-        <TranslationItem Name="buttonBrowsePushUrl" Property="Text">
-          <Source>Browse</Source>
-          <Value>浏览</Value>
-        </TranslationItem>
         <TranslationItem Name="buttonClose" Property="Text">
           <Source>Close</Source>
           <Value>关闭</Value>
@@ -4454,8 +4891,8 @@ Value has been reset to empty value.</Source>
           <Source>Remote repository</Source>
           <Value>远程档案库</Value>
         </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
-          <Source>Save</Source>
+        <TranslationItem Name="Save" Property="Text" type="obsolete">
+          <Source>Save changes</Source>
           <Value>保存</Value>
         </TranslationItem>
         <TranslationItem Name="SaveDefaultPushPull" Property="Text">
@@ -4481,6 +4918,14 @@ Value has been reset to empty value.</Source>
         <TranslationItem Name="UpdateBranch" Property="Text">
           <Source>Update all remote branch info</Source>
           <Value>更新所有远程分支信息</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text" type="obsolete">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="buttonBrowsePushUrl" Property="Text" type="obsolete">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4518,8 +4963,8 @@ Value has been reset to empty value.</Source>
           <Source>Reset</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="cbDeleteNewFiles" Property="Text" type="unfinished">
-          <Source>Also delete new files</Source>
+        <TranslationItem Name="cbDeleteNewFilesAndDirectories" Property="Text" type="unfinished">
+          <Source>Also delete new files and/or directories</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="unfinished">
@@ -4780,11 +5225,6 @@ Is the mergeconflict solved?</Source>
           <Source>Delete file</Source>
           <Value>删除文件</Value>
         </TranslationItem>
-        <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text" type="unfinished">
-          <Source>File ({0}) appears to be a binairy file.
-Choose to keep the local({1}), remote({2}) or base file.</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="fileChangeLocallyAndRemotely" Property="Text" type="unfinished">
           <Source>The file has been changed both locally({0}) and remotely({1}). Merge the changes.</Source>
           <Value />
@@ -4793,22 +5233,8 @@ Choose to keep the local({1}), remote({2}) or base file.</Source>
           <Source>A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text" type="unfinished">
-          <Source>File {0} does not have a base revision.
-A file with the same name has been created locally({1}) and remotely({2}) causing this conflict.
-
-Choose the file you want to keep, merge the files or delete the file?</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="fileDeletedLocallyAndModifiedRemotely" Property="Text" type="unfinished">
           <Source>The file has been deleted locally({0}) and modified remotely({1}). Choose to delete the file or keep the modified version.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text" type="unfinished">
-          <Source>File {0} does not have a local revision.
-The file has been deleted locally({1}) but modified remotely({2}).
-
-Choose to delete the file or keep the modified version.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
@@ -4822,13 +5248,6 @@ Are you sure you want to open this file in {0}?</Source>
         </TranslationItem>
         <TranslationItem Name="fileModifiedLocallyAndDelededRemotely" Property="Text" type="unfinished">
           <Source>The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text" type="unfinished">
-          <Source>File {0} does not have a remote revision.
-The file has been modified locally({1}) but deleted remotely({2}).
-
-Choose to delete the file or keep the modified version.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="FileName" Property="HeaderText" type="unfinished">
@@ -4901,11 +5320,6 @@ The merge conflict will not be marked as solved. Please try again.</Source>
           <Source>no base</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="noBaseRevision" Property="Text" type="unfinished">
-          <Source>There is no base revision for {0}.
-Fall back to 2-way merge?</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="noMergeTool" Property="Text">
           <Source>There is no mergetool configured. Please go to settings and set a mergetool!</Source>
           <Value>没有配置mergetool。请到设置菜单设置mergetool！</Value>
@@ -4950,12 +5364,6 @@ Fall back to 2-way merge?</Source>
           <Source>theirs</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="uskUseCustomMergeScript" Property="Text" type="unfinished">
-          <Source>There is a custom merge script({0}) for this file type.
-
-Do you want to use this custom merge script?</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="uskUseCustomMergeScriptCaption" Property="Text" type="unfinished">
           <Source>Custom merge script</Source>
           <Value />
@@ -4971,11 +5379,6 @@ Do you want to use this custom merge script?</Source>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Source>Reset changes</Source>
           <Value>复位变化</Value>
-        </TranslationItem>
-        <TranslationItem Name="_undoChangesIn" Property="Text" type="unfinished">
-          <Source>Undo changes in:
-{0}?</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="btnCancel" Property="Text">
           <Source>Cancel</Source>
@@ -4993,22 +5396,6 @@ Do you want to use this custom merge script?</Source>
           <Source>Revert commit</Source>
           <Value>还原提交</Value>
         </TranslationItem>
-        <TranslationItem Name="_authorInfo" Property="Text">
-          <Source>Author: {0}</Source>
-          <Value>作者：{0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="_commitInfo" Property="Text">
-          <Source>Commit: {0}</Source>
-          <Value>提交：{0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="_commitMessage" Property="Text">
-          <Source>Message: {0}</Source>
-          <Value>消息：{0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="_dateInfo" Property="Text">
-          <Source>Commit date: {0}</Source>
-          <Value>提交日期：{0}</Value>
-        </TranslationItem>
         <TranslationItem Name="_noneParentSelectedText" Property="Text" type="unfinished">
           <Source>None parent is selected!</Source>
           <Value />
@@ -5017,12 +5404,8 @@ Do you want to use this custom merge script?</Source>
           <Source>Error</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="Author" Property="Text">
-          <Source>Author: {0}</Source>
-          <Value>作者：</Value>
-        </TranslationItem>
-        <TranslationItem Name="AutoCommit" Property="Text">
-          <Source>Automatically creates a commit</Source>
+        <TranslationItem Name="AutoCommit" Property="Text" type="obsolete">
+          <Source>Automatically create a commit</Source>
           <Value>自动创建一个提交</Value>
         </TranslationItem>
         <TranslationItem Name="BranchInfo" Property="Text">
@@ -5045,18 +5428,6 @@ Do you want to use this custom merge script?</Source>
           <Source>Date</Source>
           <Value>日期</Value>
         </TranslationItem>
-        <TranslationItem Name="Commit" Property="Text">
-          <Source>Commit: {0}</Source>
-          <Value>提交：</Value>
-        </TranslationItem>
-        <TranslationItem Name="Date" Property="Text">
-          <Source>Commit date: {0}</Source>
-          <Value>提交日期：</Value>
-        </TranslationItem>
-        <TranslationItem Name="Message" Property="Text">
-          <Source>Message: {0}</Source>
-          <Value>消息：</Value>
-        </TranslationItem>
         <TranslationItem Name="ParentsLabel" Property="Text">
           <Source>This commit is a merge, select parent:</Source>
           <Value>这提交是一个合并，选择合并的上一代：</Value>
@@ -5064,6 +5435,38 @@ Do you want to use this custom merge script?</Source>
         <TranslationItem Name="Revert" Property="Text">
           <Source>Revert this commit</Source>
           <Value>还原此提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="_authorInfo" Property="Text" type="obsolete">
+          <Source>Author: {0}</Source>
+          <Value>作者：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitInfo" Property="Text" type="obsolete">
+          <Source>Commit: {0}</Source>
+          <Value>提交：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitMessage" Property="Text" type="obsolete">
+          <Source>Message: {0}</Source>
+          <Value>消息：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_dateInfo" Property="Text" type="obsolete">
+          <Source>Commit date: {0}</Source>
+          <Value>提交日期：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="Author" Property="Text" type="obsolete">
+          <Source>Author: {0}</Source>
+          <Value>作者：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text" type="obsolete">
+          <Source>Commit: {0}</Source>
+          <Value>提交：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Date" Property="Text" type="obsolete">
+          <Source>Commit date: {0}</Source>
+          <Value>提交日期：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Message" Property="Text" type="obsolete">
+          <Source>Message: {0}</Source>
+          <Value>消息：</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -5141,529 +5544,29 @@ Do you want to use this custom merge script?</Source>
           <Source>Settings</Source>
           <Value>设置</Value>
         </TranslationItem>
-        <TranslationItem Name="__diffToolSuggestCaption" Property="Text" type="unfinished">
-          <Source>Suggest difftool cmd</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="__mergeToolSuggestCaption" Property="Text" type="unfinished">
-          <Source>Suggest mergetool cmd</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_adviceDiffToolConfiguration" Property="Text" type="unfinished">
-          <Source>You should configure a diff tool to show file diff in external program (kdiff3 for example).</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_cantFindGitMessage" Property="Text" type="unfinished">
-          <Source>The command to run git is not configured correct.
-You need to set the correct path to be able to use GitExtensions.
-
-Do you want to set the correct command now?</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="_cantFindGitMessageCaption" Property="Text" type="unfinished">
           <Source>Incorrect path</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_cantReadRegistry" Property="Text" type="unfinished">
-          <Source>GitExtensions has insufficient permissions to check the registry.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_cantReadRegistryAddEntryManually" Property="Text" type="unfinished">
-          <Source>GitExtensions has insufficient permissions to modify the registry.
-Please add this key to the registry manually.
-Path:  {0}\{1}
-Value:  {2} = {3}</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_cantRegisterShellExtension" Property="Text" type="unfinished">
-          <Source>Could not register the shell extension because '{0}' could not be found.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_configureMergeTool" Property="Text" type="unfinished">
-          <Source>You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_customMergeToolXConfigured" Property="Text" type="unfinished">
-          <Source>There is a custom mergetool configured: {0}</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_diffToolXConfigured" Property="Text" type="unfinished">
-          <Source>There is a difftool configured: {0}</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_emailSet" Property="Text" type="unfinished">
-          <Source>A username and an email address are configured.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_gitCanBeRun" Property="Text" type="unfinished">
-          <Source>Git can be run using: {0}</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_gitCanBeRunCaption" Property="Text" type="unfinished">
-          <Source>Locate git</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_gitNotFound" Property="Text" type="unfinished">
-          <Source>Git not found. To solve this problem you can set the correct path in settings.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_gitVersionFound" Property="Text" type="unfinished">
-          <Source>Git {0} is found on your computer.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_homeIsSetToString" Property="Text" type="unfinished">
-          <Source>HOME is set to:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_kdiff3NotFoundAuto" Property="Text" type="unfinished">
-          <Source>Path to kdiff3 could not be found automatically.
-Please make sure KDiff3 is installed or set path manually.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_kdiffAsDiffConfigured" Property="Text" type="unfinished">
-          <Source>KDiff3 is configured as difftool.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_kdiffAsDiffConfiguredButNotFound" Property="Text" type="unfinished">
-          <Source>KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_kdiffAsMergeConfigured" Property="Text" type="unfinished">
-          <Source>KDiff3 is configured as mergetool.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_kdiffAsMergeConfiguredButNotFound" Property="Text" type="unfinished">
-          <Source>KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_languageConfigured" Property="Text" type="unfinished">
-          <Source>The configured language is {0}.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_linuxToolsShNotFound" Property="Text" type="unfinished">
-          <Source>The path to linux tools (sh) could not be found automatically.
-Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_linuxToolsShNotFoundCaption" Property="Text" type="unfinished">
-          <Source>Locate linux tools</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_linuxToolsSshFound" Property="Text" type="unfinished">
-          <Source>Linux tools (sh) found on your computer.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_linuxToolsSshNotFound" Property="Text" type="unfinished">
-          <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in settings.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_loadingSettingsFailed" Property="Text" type="unfinished">
           <Source>Could not load settings.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_mergeToolXConfigured" Property="Text" type="unfinished">
-          <Source>There is a custom mergetool configured.</Source>
+        <TranslationItem Name="buttonApply" Property="Text" type="unfinished">
+          <Source>Apply</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_mergeToolXConfiguredNeedsCmd" Property="Text" type="unfinished">
-          <Source>{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.</Source>
+        <TranslationItem Name="buttonCancel" Property="Text">
+          <Source>Cancel</Source>
+          <Value>取消</Value>
+        </TranslationItem>
+        <TranslationItem Name="buttonDiscard" Property="Text" type="unfinished">
+          <Source>Discard</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_noDictFilesFound" Property="Text" type="unfinished">
-          <Source>No dictionary files found in: {0}</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_noDiffToolConfigured" Property="Text" type="unfinished">
-          <Source>There is no difftool configured. Do you want to configure kdiff3 as your difftool?
-Select no if you want to configure a different difftool yourself.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_noDiffToolConfiguredCaption" Property="Text">
-          <Source>Difftool</Source>
-          <Value>Difftool</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noEmailSet" Property="Text" type="unfinished">
-          <Source>You need to configure a username and an email address.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_noLanguageConfigured" Property="Text" type="unfinished">
-          <Source>There is no language configured for Git Extensions.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_noMergeToolConfigured" Property="Text" type="unfinished">
-          <Source>There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?
-Select no if you want to configure a different mergetool yourself.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_noMergeToolConfiguredCaption" Property="Text">
-          <Source>Mergetool</Source>
-          <Value>合并工具</Value>
-        </TranslationItem>
-        <TranslationItem Name="_opensshUsed" Property="Text" type="unfinished">
-          <Source>Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_plinkputtyGenpageantNotFound" Property="Text" type="unfinished">
-          <Source>PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_puttyConfigured" Property="Text" type="unfinished">
-          <Source>SSH client PuTTY is configured properly.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_puttyFoundAuto" Property="Text" type="unfinished">
-          <Source>All paths needed for PuTTY could be automatically found and are set.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_puttyFoundAutoCaption" Property="Text">
-          <Source>PuTTY</Source>
-          <Value>PuTTY</Value>
-        </TranslationItem>
-        <TranslationItem Name="_registryKeyGitExtensionsCorrect" Property="Text" type="unfinished">
-          <Source>GitExtensions is properly registered.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_registryKeyGitExtensionsFaulty" Property="Text" type="unfinished">
-          <Source>Invalid installation directory stored in [Software\GitExtensions\GitExtensions\InstallDir].</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text" type="unfinished">
-          <Source>Registry entry missing [Software\GitExtensions\GitExtensions\InstallDir].</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_selectFile" Property="Text" type="unfinished">
-          <Source>Select file</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_shCanBeRun" Property="Text" type="unfinished">
-          <Source>Command sh can be run using: {0}sh</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_shCanBeRunCaption" Property="Text" type="unfinished">
-          <Source>Locate linux tools</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_shellExtNeedsToBeRegistered" Property="Text" type="unfinished">
-          <Source>{0} needs to be registered in order to use the shell extensions.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_shellExtNoInstalled" Property="Text" type="unfinished">
-          <Source>Shell extensions are not installed. Run the installer to install the shell extensions.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_shellExtRegistered" Property="Text" type="unfinished">
-          <Source>Shell extensions registered properly.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_solveGitCommandFailed" Property="Text" type="unfinished">
-          <Source>The command to run git could not be determined automatically.
-Please make sure git (msysgit or cygwin) is installed or set the correct command manually.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_solveGitCommandFailedCaption" Property="Text" type="unfinished">
-          <Source>Locate git</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_toolSuggestPath" Property="Text" type="unfinished">
-          <Source>Please enter the path to {0} and press suggest.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_unknownSshClient" Property="Text" type="unfinished">
-          <Source>Unknown SSH client configured: {0}.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_wrongGitVersion" Property="Text" type="unfinished">
-          <Source>Git found but version {0} is not supported. Upgrage to version {1} or later</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="addScriptButton" Property="Text">
-          <Source>Add</Source>
-          <Value>新增</Value>
-        </TranslationItem>
-        <TranslationItem Name="addToRevisionGridContextMenuDataGridViewCheckBoxColumn" Property="HeaderText" type="unfinished">
-          <Source>Context menu</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="applicationFontChangeButton" Property="Text" type="unfinished">
-          <Source>Segoe UI, 9</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="argumentsLabel" Property="Text" type="unfinished">
-          <Source>Arguments:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="AskConfirmation" Property="HeaderText" type="unfinished">
-          <Source>Confirmation</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="AutostartPageant" Property="Text">
-          <Source>Automatically start authentication client when a private key is configured for a remote</Source>
-          <Value>当远程端配置了私钥后，自动启动认证客户端</Value>
-        </TranslationItem>
-        <TranslationItem Name="BlueIcon" Property="Text">
-          <Source>Blue</Source>
-          <Value>蓝色</Value>
-        </TranslationItem>
-        <TranslationItem Name="BranchBorders" Property="Text">
-          <Source>Draw branch borders</Source>
-          <Value>画出分支的边界</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseCommitTemplate" Property="Text">
-          <Source>Browse</Source>
-          <Value>浏览</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseDiffTool" Property="Text">
-          <Source>Browse</Source>
-          <Value>浏览</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseGitBinPath" Property="Text">
-          <Source>Browse</Source>
-          <Value>浏览</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseGitPath" Property="Text">
-          <Source>Browse</Source>
-          <Value>浏览</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseMergeTool" Property="Text">
-          <Source>Browse</Source>
-          <Value>浏览</Value>
-        </TranslationItem>
-        <TranslationItem Name="browseScriptButton" Property="Text">
-          <Source>Browse</Source>
-          <Value>浏览</Value>
-        </TranslationItem>
-        <TranslationItem Name="ChangeHomeButton" Property="Text" type="unfinished">
-          <Source>Change HOME</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="CheckAtStartup" Property="Text">
-          <Source>Check settings at startup (disables automatically if all settings are correct)</Source>
-          <Value>在启动时检查设置（如果所有设置均正确则自动禁用）</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkCascadedContextMenu" Property="Text" type="unfinished">
-          <Source>Cascaded context menu</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="chkCheckForUncommittedChangesInCheckoutBranch" Property="Text" type="unfinished">
-          <Source>Check for uncommitted changes in checkout branch dialog</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="chkCloseProcessDialog" Property="Text">
-          <Source>Close process dialog automatically when process is succeeded</Source>
-          <Value>对话框时自动关闭进程的过程是成功</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkEnableAutoScale" Property="Text" type="unfinished">
-          <Source>Auto scale user interface when high dpi is used</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
-          <Source>Follow renames in file history (experimental)</Source>
-          <Value>按照文件的历史重命名（实验）</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkPlaySpecialStartupSound" Property="Text" type="unfinished">
-          <Source>Play Special Startup Sound</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text" type="unfinished">
-          <Source>Show current branch in Visual Studio</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text">
-          <Source>Show current working dir changes in revision graph (slow!)</Source>
-          <Value>在版本图里显示工作目录的改变（慢!）</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text">
-          <Source>Show errors when staging files</Source>
-          <Value>在暂存文件时显示错误</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkShowGitCommandLine" Property="Text">
-          <Source>Show Git commandline dialog when executing process</Source>
-          <Value>Git的命令行对话框显示在执行过程</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text">
-          <Source>Show repository status in browse dialog (number of changes in toolbar, restart required)</Source>
-          <Value>在浏览对话框中显示档案库的状态（在工具栏上会产生一些变化，需要重新启动）</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkShowRelativeDate" Property="Text">
-          <Source>Show relative date instead of full date</Source>
-          <Value>显示相对日期，而不是完整的日期</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
-          <Source>Show stash count on status bar in browse window</Source>
-          <Value>在浏览窗口的状态栏中显示暂存缓冲区计数</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkStartWithRecentWorkingDir" Property="Text" type="unfinished">
-          <Source>Open last working dir on startup</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="chkStashUntrackedFiles" Property="Text" type="unfinished">
-          <Source>Include untracked files in stash</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="chkUseFastChecks" Property="Text">
-          <Source>Use FileSystemWatcher to check if index is changed</Source>
-          <Value>使用FileSystemWatcher检查索引是否改变了</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkUsePatienceDiffAlgorithm" Property="Text">
-          <Source>Use patience diff algorithm</Source>
-          <Value>在提交日志中显示版本图</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkWriteCommitMessageInCommitWindow" Property="Text" type="unfinished">
-          <Source>Write Commit Messages in Commit Dialog</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="ClearImageCache" Property="Text">
-          <Source>Clear image cache</Source>
-          <Value>清除图像缓存</Value>
-        </TranslationItem>
-        <TranslationItem Name="commandLabel" Property="Text" type="unfinished">
-          <Source>Command:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="DefaultIcon" Property="Text">
-          <Source>Default</Source>
-          <Value>默认</Value>
-        </TranslationItem>
-        <TranslationItem Name="diffFontChangeButton" Property="Text" type="unfinished">
-          <Source>Courier New, 9</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="DiffTool_Fix" Property="Text" type="unfinished">
-          <Source>Repair</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="DiffToolCmdSuggest" Property="Text">
-          <Source>Suggest command</Source>
-          <Value>建议命令</Value>
-        </TranslationItem>
-        <TranslationItem Name="downloadDictionary" Property="Text" type="unfinished">
-          <Source>Download dictionary</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="downloadMsysgit" Property="Text" type="unfinished">
-          <Source>Download msysgit</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="DrawNonRelativesGray" Property="Text">
-          <Source>Draw non relatives graph gray</Source>
-          <Value>把无关者变灰</Value>
-        </TranslationItem>
-        <TranslationItem Name="DrawNonRelativesTextGray" Property="Text" type="unfinished">
-          <Source>Draw non relatives text gray</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="EnabledColumn" Property="HeaderText" type="unfinished">
-          <Source>Enabled</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="GitBinFound_Fix" Property="Text" type="unfinished">
-          <Source>Repair</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="GitExtensionsInstall_Fix" Property="Text" type="unfinished">
-          <Source>Repair</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="GitFound_Fix" Property="Text" type="unfinished">
-          <Source>Repair</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="globalAutoCrlfFalse" Property="Text">
-          <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
-          <Value>保持原样签出，保持原样提交（"core.autocrlf"设置为"false"）</Value>
-        </TranslationItem>
-        <TranslationItem Name="globalAutoCrlfInput" Property="Text">
-          <Source>Checkout as-is, commit Unix-style line endings ("core.autocrlf"  is set to "input")</Source>
-          <Value>保持原样签出，用Unix风格的换行符提交（"core.autocrlf"设置为"input"）</Value>
-        </TranslationItem>
-        <TranslationItem Name="globalAutoCrlfTrue" Property="Text">
-          <Source>Checkout Windows-style, commit Unix-style line endings ("core.autocrlf"  is set to "true")</Source>
-          <Value>以windows风格签出，用Unix风格的换行符提交（"core.autocrlf"设置为"true"）
-</Value>
-        </TranslationItem>
-        <TranslationItem Name="GreenIcon" Property="Text">
-          <Source>Green</Source>
-          <Value>绿色</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text">
-          <Source>Specify which ssh client to use</Source>
-          <Value>指定SSH客户端</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox10" Property="Text">
-          <Source>Line endings</Source>
-          <Value>换行符</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox11" Property="Text" type="unfinished">
-          <Source>Performance</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="groupBox12" Property="Text" type="unfinished">
-          <Source>Behaviour</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="groupBox13" Property="Text" type="unfinished">
-          <Source>Language</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="groupBox14" Property="Text" type="unfinished">
-          <Source>General</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="groupBox15" Property="Text" type="unfinished">
-          <Source>Fonts</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="groupBox2" Property="Text">
-          <Source>Configure PuTTY</Source>
-          <Value>配置PuTTY</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox3" Property="Text">
-          <Source>Difference view</Source>
-          <Value>差异视图</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox4" Property="Text">
-          <Source>Revision graph</Source>
-          <Value>版本图</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox5" Property="Text">
-          <Source>Application Icon</Source>
-          <Value>应用程序图标</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox6" Property="Text">
-          <Source>Author images</Source>
-          <Value>作者图像</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox7" Property="Text">
-          <Source>Git</Source>
-          <Value>Git</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox8" Property="Text">
-          <Source>Environment</Source>
-          <Value>环境</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox9" Property="Text">
-          <Source>Line endings</Source>
-          <Value>换行符</Value>
-        </TranslationItem>
-        <TranslationItem Name="helpLabel" Property="Text" type="unfinished">
-          <Source>Press F1 to see available options</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="helpTranslate" Property="Text">
-          <Source>Help translate</Source>
-          <Value>帮忙翻译~~~</Value>
-        </TranslationItem>
-        <TranslationItem Name="homeIsSetToLabel" Property="Text" type="unfinished">
-          <Source>HOME is set to: {0}</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="inMenuCheckBox" Property="Text" type="unfinished">
-          <Source>Add to revision grid context menu</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Source>User name</Source>
-          <Value>用户名</Value>
+        <TranslationItem Name="buttonOk" Property="Text">
+          <Source>OK</Source>
+          <Value>确定</Value>
         </TranslationItem>
         <TranslationItem Name="label10" Property="Text">
           <Source>You need to set the correct path to 
@@ -5672,35 +5575,221 @@ any global setting.
 </Source>
           <Value>您需要设置git.cmd正确的路径，才能更改全局设置。</Value>
         </TranslationItem>
-        <TranslationItem Name="label11" Property="Text">
+        <TranslationItem Name="labelInstantSaveNotice" Property="Text" type="unfinished">
+          <Source>Changes made on this page will be saved instantly. 
+Thus the Cancel and Discard button will have no effect for this page.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="labelSettingsPageTitle" Property="Text" type="unfinished">
+          <Source>...title...</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_noDiffToolConfiguredCaption" Property="Text" type="obsolete">
+          <Source>Difftool</Source>
+          <Value>Difftool</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noMergeToolConfiguredCaption" Property="Text" type="obsolete">
+          <Source>Mergetool</Source>
+          <Value>合并工具</Value>
+        </TranslationItem>
+        <TranslationItem Name="_puttyFoundAutoCaption" Property="Text" type="obsolete">
+          <Source>PuTTY</Source>
+          <Value>PuTTY</Value>
+        </TranslationItem>
+        <TranslationItem Name="addScriptButton" Property="Text" type="obsolete">
+          <Source>Add</Source>
+          <Value>新增</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutostartPageant" Property="Text" type="obsolete">
+          <Source>Automatically start authentication client when a private key is configured for a remote</Source>
+          <Value>当远程端配置了私钥后，自动启动认证客户端</Value>
+        </TranslationItem>
+        <TranslationItem Name="BlueIcon" Property="Text" type="obsolete">
+          <Source>Blue</Source>
+          <Value>蓝色</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchBorders" Property="Text" type="obsolete">
+          <Source>Draw branch borders</Source>
+          <Value>画出分支的边界</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseCommitTemplate" Property="Text" type="obsolete">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseDiffTool" Property="Text" type="obsolete">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseGitBinPath" Property="Text" type="obsolete">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseGitPath" Property="Text" type="obsolete">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseMergeTool" Property="Text" type="obsolete">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="browseScriptButton" Property="Text" type="obsolete">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="CheckAtStartup" Property="Text" type="obsolete">
+          <Source>Check settings at startup (disables automatically if all settings are correct)</Source>
+          <Value>在启动时检查设置（如果所有设置均正确则自动禁用）</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="obsolete">
+          <Source>Close process dialog automatically when process is succeeded</Source>
+          <Value>对话框时自动关闭进程的过程是成功</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text" type="obsolete">
+          <Source>Follow renames in file history (experimental)</Source>
+          <Value>按照文件的历史重命名（实验）</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text" type="obsolete">
+          <Source>Show current working dir changes in revision graph (slow!)</Source>
+          <Value>在版本图里显示工作目录的改变（慢!）</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text" type="obsolete">
+          <Source>Show errors when staging files</Source>
+          <Value>在暂存文件时显示错误</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowGitCommandLine" Property="Text" type="obsolete">
+          <Source>Show Git commandline dialog when executing process</Source>
+          <Value>Git的命令行对话框显示在执行过程</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text" type="obsolete">
+          <Source>Show repository status in browse dialog (number of changes in toolbar, restart required)</Source>
+          <Value>在浏览对话框中显示档案库的状态（在工具栏上会产生一些变化，需要重新启动）</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowRelativeDate" Property="Text" type="obsolete">
+          <Source>Show relative date instead of full date</Source>
+          <Value>显示相对日期，而不是完整的日期</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text" type="obsolete">
+          <Source>Show stash count on status bar in browse window</Source>
+          <Value>在浏览窗口的状态栏中显示暂存缓冲区计数</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkUseFastChecks" Property="Text" type="obsolete">
+          <Source>Use FileSystemWatcher to check if index is changed</Source>
+          <Value>使用FileSystemWatcher检查索引是否改变了</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkUsePatienceDiffAlgorithm" Property="Text" type="obsolete">
+          <Source>Use patience diff algorithm</Source>
+          <Value>在提交日志中显示版本图</Value>
+        </TranslationItem>
+        <TranslationItem Name="ClearImageCache" Property="Text" type="obsolete">
+          <Source>Clear image cache</Source>
+          <Value>清除图像缓存</Value>
+        </TranslationItem>
+        <TranslationItem Name="DefaultIcon" Property="Text" type="obsolete">
+          <Source>Default</Source>
+          <Value>默认</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffToolCmdSuggest" Property="Text" type="obsolete">
+          <Source>Suggest command</Source>
+          <Value>建议命令</Value>
+        </TranslationItem>
+        <TranslationItem Name="DrawNonRelativesGray" Property="Text" type="obsolete">
+          <Source>Draw non relatives graph gray</Source>
+          <Value>把无关者变灰</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfFalse" Property="Text" type="obsolete">
+          <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
+          <Value>保持原样签出，保持原样提交（"core.autocrlf"设置为"false"）</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfInput" Property="Text" type="obsolete">
+          <Source>Checkout as-is, commit Unix-style line endings ("core.autocrlf"  is set to "input")</Source>
+          <Value>保持原样签出，用Unix风格的换行符提交（"core.autocrlf"设置为"input"）</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfTrue" Property="Text" type="obsolete">
+          <Source>Checkout Windows-style, commit Unix-style line endings ("core.autocrlf"  is set to "true")</Source>
+          <Value>以windows风格签出，用Unix风格的换行符提交（"core.autocrlf"设置为"true"）
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="GreenIcon" Property="Text" type="obsolete">
+          <Source>Green</Source>
+          <Value>绿色</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text" type="obsolete">
+          <Source>Specify which ssh client to use</Source>
+          <Value>指定SSH客户端</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox10" Property="Text" type="obsolete">
+          <Source>Line endings</Source>
+          <Value>换行符</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox2" Property="Text" type="obsolete">
+          <Source>Configure PuTTY</Source>
+          <Value>配置PuTTY</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox3" Property="Text" type="obsolete">
+          <Source>Difference view</Source>
+          <Value>差异视图</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox4" Property="Text" type="obsolete">
+          <Source>Revision graph</Source>
+          <Value>版本图</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox5" Property="Text" type="obsolete">
+          <Source>Application Icon</Source>
+          <Value>应用程序图标</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox6" Property="Text" type="obsolete">
+          <Source>Author images</Source>
+          <Value>作者图像</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox7" Property="Text" type="obsolete">
+          <Source>Git</Source>
+          <Value>Git</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox8" Property="Text" type="obsolete">
+          <Source>Environment</Source>
+          <Value>环境</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox9" Property="Text" type="obsolete">
+          <Source>Line endings</Source>
+          <Value>换行符</Value>
+        </TranslationItem>
+        <TranslationItem Name="helpTranslate" Property="Text" type="obsolete">
+          <Source>Help translate</Source>
+          <Value>帮忙翻译~~~</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text" type="obsolete">
+          <Source>User name</Source>
+          <Value>用户名</Value>
+        </TranslationItem>
+        <TranslationItem Name="label11" Property="Text" type="obsolete">
           <Source>The checklist below validates the basic settings needed for GitExtensions to work properly.</Source>
           <Value>下面的检查列表表示保证GitExtensions正常工作所需的基本设置。</Value>
         </TranslationItem>
-        <TranslationItem Name="label12" Property="Text">
+        <TranslationItem Name="label12" Property="Text" type="obsolete">
           <Source>Limit number of commits that will be loaded at startup.</Source>
           <Value>限制将在启动时加载的提交次数。</Value>
         </TranslationItem>
-        <TranslationItem Name="label13" Property="Text">
+        <TranslationItem Name="label13" Property="Text" type="obsolete">
           <Source>Command used to run git (git.cmd or git.exe)</Source>
           <Value>用于运行git的命令（git.cmd或git.exe）</Value>
         </TranslationItem>
-        <TranslationItem Name="label14" Property="Text">
+        <TranslationItem Name="label14" Property="Text" type="obsolete">
           <Source>Path to linux tools (sh). Leave empty when it is in the path.</Source>
           <Value>Linux工具（sh）的路径。如果已在路径中则留空。</Value>
         </TranslationItem>
-        <TranslationItem Name="label15" Property="Text">
+        <TranslationItem Name="label15" Property="Text" type="obsolete">
           <Source>Path to plink.exe</Source>
           <Value>plink.exe路径</Value>
         </TranslationItem>
-        <TranslationItem Name="label16" Property="Text">
+        <TranslationItem Name="label16" Property="Text" type="obsolete">
           <Source>Path to puttygen</Source>
           <Value>puttygen路径</Value>
         </TranslationItem>
-        <TranslationItem Name="label17" Property="Text">
+        <TranslationItem Name="label17" Property="Text" type="obsolete">
           <Source>Path to pageant</Source>
           <Value>pageant路径</Value>
         </TranslationItem>
-        <TranslationItem Name="label18" Property="Text">
+        <TranslationItem Name="label18" Property="Text" type="obsolete">
           <Source>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
 but requires the PuTTY authentication client to run  in the background.
 When OpenSSH is used, command line dialogs are shown!
@@ -5709,15 +5798,15 @@ When OpenSSH is used, command line dialogs are shown!
 对于Windows用户来说，PuTTY用起来更方便，但需要在后台运行PuTTY验证客户端。
 当使用OpenSSH时，会显示命令行对话框！</Value>
         </TranslationItem>
-        <TranslationItem Name="label19" Property="Text">
+        <TranslationItem Name="label19" Property="Text" type="obsolete">
           <Source>Mergetool command</Source>
           <Value>Mergetool命令</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
+        <TranslationItem Name="label2" Property="Text" type="obsolete">
           <Source>User email</Source>
           <Value>用户电子邮件</Value>
         </TranslationItem>
-        <TranslationItem Name="label20" Property="Text">
+        <TranslationItem Name="label20" Property="Text" type="obsolete">
           <Source>You only need local settings
 if you want to override the 
 global settings for the current
@@ -5725,372 +5814,260 @@ repository.</Source>
           <Value>如果你想覆盖本档案库的全局设置，
 你只需要做本地设置就够了。</Value>
         </TranslationItem>
-        <TranslationItem Name="label21" Property="Text">
+        <TranslationItem Name="label21" Property="Text" type="obsolete">
           <Source>You need to set the correct path to 
 git before you can change
 local settings.
 </Source>
           <Value>您需要设置git正确的路径，才能更改本地设置。</Value>
         </TranslationItem>
-        <TranslationItem Name="label22" Property="Text">
+        <TranslationItem Name="label22" Property="Text" type="obsolete">
           <Source>Dictionary for spelling checker.</Source>
           <Value>拼写检查器所用的词典。</Value>
         </TranslationItem>
-        <TranslationItem Name="label23" Property="Text">
+        <TranslationItem Name="label23" Property="Text" type="obsolete">
           <Source>Smtp server for sending patches by email</Source>
           <Value>发送补丁到电子邮件所用的SMTP服务器</Value>
         </TranslationItem>
-        <TranslationItem Name="label24" Property="Text">
+        <TranslationItem Name="label24" Property="Text" type="obsolete">
           <Source>Revision grid quick search timeout [ms]</Source>
           <Value>版本网格快速搜索超时[毫秒]</Value>
         </TranslationItem>
-        <TranslationItem Name="label25" Property="Text">
+        <TranslationItem Name="label25" Property="Text" type="obsolete">
           <Source>Color tag</Source>
           <Value>颜色标记</Value>
         </TranslationItem>
-        <TranslationItem Name="label26" Property="Text" type="unfinished">
-          <Source>Application font</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="label27" Property="Text">
+        <TranslationItem Name="label27" Property="Text" type="obsolete">
           <Source>Color removed line</Source>
           <Value>给删除的线上色</Value>
         </TranslationItem>
-        <TranslationItem Name="label28" Property="Text">
+        <TranslationItem Name="label28" Property="Text" type="obsolete">
           <Source>Keep backup (.orig) after merge</Source>
           <Value>合并后保留备份（.orig）</Value>
         </TranslationItem>
-        <TranslationItem Name="label29" Property="Text">
+        <TranslationItem Name="label29" Property="Text" type="obsolete">
           <Source>Color added line</Source>
           <Value>给添加的行上色</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text">
+        <TranslationItem Name="label3" Property="Text" type="obsolete">
           <Source>User name</Source>
           <Value>用户名</Value>
         </TranslationItem>
-        <TranslationItem Name="label30" Property="Text">
+        <TranslationItem Name="label30" Property="Text" type="obsolete">
           <Source>Keep backup (.orig) after merge</Source>
           <Value>合并后保留备份（.orig）</Value>
         </TranslationItem>
-        <TranslationItem Name="label31" Property="Text">
+        <TranslationItem Name="label31" Property="Text" type="obsolete">
           <Source>Color section</Source>
           <Value>给区(setion)上色</Value>
         </TranslationItem>
-        <TranslationItem Name="label32" Property="Text">
+        <TranslationItem Name="label32" Property="Text" type="obsolete">
           <Source>Color branch</Source>
           <Value>给分支上色</Value>
         </TranslationItem>
-        <TranslationItem Name="label33" Property="Text">
+        <TranslationItem Name="label33" Property="Text" type="obsolete">
           <Source>Color remote branch</Source>
           <Value>给远程分支上色</Value>
         </TranslationItem>
-        <TranslationItem Name="label36" Property="Text">
+        <TranslationItem Name="label36" Property="Text" type="obsolete">
           <Source>Color other label</Source>
           <Value>给其他标签上色</Value>
         </TranslationItem>
-        <TranslationItem Name="label4" Property="Text">
+        <TranslationItem Name="label4" Property="Text" type="obsolete">
           <Source>User email</Source>
           <Value>用户电子邮件</Value>
         </TranslationItem>
-        <TranslationItem Name="label41" Property="Text">
+        <TranslationItem Name="label41" Property="Text" type="obsolete">
           <Source>Difftool</Source>
           <Value>Difftool</Value>
         </TranslationItem>
-        <TranslationItem Name="label42" Property="Text">
+        <TranslationItem Name="label42" Property="Text" type="obsolete">
           <Source>Path to difftool</Source>
           <Value>路径difftool</Value>
         </TranslationItem>
-        <TranslationItem Name="label43" Property="Text">
+        <TranslationItem Name="label43" Property="Text" type="obsolete">
           <Source>Color removed line highlighting</Source>
           <Value>给去除的行上色</Value>
         </TranslationItem>
-        <TranslationItem Name="label44" Property="Text">
+        <TranslationItem Name="label44" Property="Text" type="obsolete">
           <Source>Image size</Source>
           <Value>图像尺寸</Value>
         </TranslationItem>
-        <TranslationItem Name="label45" Property="Text">
+        <TranslationItem Name="label45" Property="Text" type="obsolete">
           <Source>Color added line highlighting</Source>
           <Value>给新增的行上色</Value>
         </TranslationItem>
-        <TranslationItem Name="label46" Property="Text">
+        <TranslationItem Name="label46" Property="Text" type="obsolete">
           <Source>Cache images</Source>
           <Value>缓存图像</Value>
         </TranslationItem>
-        <TranslationItem Name="label47" Property="Text">
+        <TranslationItem Name="label47" Property="Text" type="obsolete">
           <Source>days</Source>
           <Value>天</Value>
         </TranslationItem>
-        <TranslationItem Name="label48" Property="Text">
+        <TranslationItem Name="label48" Property="Text" type="obsolete">
           <Source>Difftool command</Source>
           <Value>Difftool命令</Value>
         </TranslationItem>
-        <TranslationItem Name="label49" Property="Text">
+        <TranslationItem Name="label49" Property="Text" type="obsolete">
           <Source>Language (restart required)</Source>
           <Value>语言（需要重新启动）</Value>
         </TranslationItem>
-        <TranslationItem Name="label5" Property="Text">
+        <TranslationItem Name="label5" Property="Text" type="obsolete">
           <Source>Editor</Source>
           <Value>编辑</Value>
         </TranslationItem>
-        <TranslationItem Name="label50" Property="Text">
+        <TranslationItem Name="label50" Property="Text" type="obsolete">
           <Source>Git Extensions can use msysgit or cygwin to access git repositories. Set the correct paths below.</Source>
           <Value>Git Extensions可以使用msysgit或cygwin访问git档案库库。在下面的设置它们正确的路径。</Value>
         </TranslationItem>
-        <TranslationItem Name="label51" Property="Text">
+        <TranslationItem Name="label51" Property="Text" type="obsolete">
           <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
 to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
           <Value>全局配置文件位于%HOME%的位置。默认设置下，如果%HOME%为空，%HOME%将被设置为%HOMEDRIVE%%HOMEPATH%。
 你应该只在遇到问题的时候才考虑改变默认设置。</Value>
         </TranslationItem>
-        <TranslationItem Name="label53" Property="Text" type="unfinished">
-          <Source>No image service</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="label54" Property="Text" type="unfinished">
-          <Source>Icon style</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="label55" Property="Text" type="unfinished">
-          <Source>Icon color</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="label56" Property="Text" type="unfinished">
-          <Source>Code font</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="label57" Property="Text" type="unfinished">
-          <Source>Path to commit template</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="label6" Property="Text">
+        <TranslationItem Name="label6" Property="Text" type="obsolete">
           <Source>Editor</Source>
           <Value>编辑</Value>
         </TranslationItem>
-        <TranslationItem Name="label60" Property="Text" type="unfinished">
-          <Source>Files content encoding</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="label61" Property="Text" type="unfinished">
-          <Source>Files content encoding</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="label7" Property="Text">
+        <TranslationItem Name="label7" Property="Text" type="obsolete">
           <Source>Mergetool</Source>
           <Value>合并工具</Value>
         </TranslationItem>
-        <TranslationItem Name="label8" Property="Text">
+        <TranslationItem Name="label8" Property="Text" type="obsolete">
           <Source>Mergetool</Source>
           <Value>合并工具</Value>
         </TranslationItem>
-        <TranslationItem Name="label9" Property="Text">
+        <TranslationItem Name="label9" Property="Text" type="obsolete">
           <Source>You need to set the correct path to 
 git before you can change
 global settings.
 </Source>
           <Value>您需要设置git正确的路径，才能更改全局设置。</Value>
         </TranslationItem>
-        <TranslationItem Name="labelOnEvent" Property="Text" type="unfinished">
-          <Source>On event:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="lbl_icon" Property="Text" type="unfinished">
-          <Source>Icon:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="lblMenuEntries" Property="Text" type="unfinished">
-          <Source>Visible context menu entries:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="LightblueIcon" Property="Text" type="unfinished">
-          <Source>Light blue</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="localAutoCrlfFalse" Property="Text">
+        <TranslationItem Name="localAutoCrlfFalse" Property="Text" type="obsolete">
           <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
           <Value>保持原样签出，保持原样提交（"core.autocrlf"设置为"false"）</Value>
         </TranslationItem>
-        <TranslationItem Name="localAutoCrlfInput" Property="Text">
+        <TranslationItem Name="localAutoCrlfInput" Property="Text" type="obsolete">
           <Source>Checkout as-is, commit Unix-style line endings ("core.autocrlf"  is set to "input")</Source>
           <Value>保持原样签出，用Unix风格的换行符提交（"core.autocrlf"设置为"input"）</Value>
         </TranslationItem>
-        <TranslationItem Name="localAutoCrlfTrue" Property="Text">
+        <TranslationItem Name="localAutoCrlfTrue" Property="Text" type="obsolete">
           <Source>Checkout Windows-style, commit Unix-style line endings ("core.autocrlf"  is set to "true")</Source>
           <Value>以windows风格签出，用Unix风格的换行符提交（"core.autocrlf"设置为"true"）
 </Value>
         </TranslationItem>
-        <TranslationItem Name="MergeTool_Fix" Property="Text" type="unfinished">
-          <Source>Repair</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="MergeToolCmdSuggest" Property="Text">
+        <TranslationItem Name="MergeToolCmdSuggest" Property="Text" type="obsolete">
           <Source>Suggest command</Source>
           <Value>建议命令</Value>
         </TranslationItem>
-        <TranslationItem Name="MulticolorBranches" Property="Text">
+        <TranslationItem Name="MulticolorBranches" Property="Text" type="obsolete">
           <Source>Multicolor branches</Source>
           <Value>给分支上多种颜色</Value>
         </TranslationItem>
-        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
           <Source>Name</Source>
           <Value>名称</Value>
         </TranslationItem>
-        <TranslationItem Name="nameLabel" Property="Text" type="unfinished">
-          <Source>Name:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="NoGitRepo" Property="Text">
+        <TranslationItem Name="NoGitRepo" Property="Text" type="obsolete">
           <Source>Not in a git repository</Source>
           <Value>不在一个git档案库中</Value>
         </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
+        <TranslationItem Name="Ok" Property="Text" type="obsolete">
           <Source>OK</Source>
           <Value>确定</Value>
         </TranslationItem>
-        <TranslationItem Name="OnEvent" Property="HeaderText" type="unfinished">
-          <Source>OnEvent</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="OpenSSH" Property="Text">
+        <TranslationItem Name="OpenSSH" Property="Text" type="obsolete">
           <Source>OpenSSH</Source>
           <Value>OpenSSH</Value>
         </TranslationItem>
-        <TranslationItem Name="Other" Property="Text">
+        <TranslationItem Name="Other" Property="Text" type="obsolete">
           <Source>Other ssh client</Source>
           <Value>其它的SSH客户端</Value>
         </TranslationItem>
-        <TranslationItem Name="OtherSshBrowse" Property="Text">
+        <TranslationItem Name="OtherSshBrowse" Property="Text" type="obsolete">
           <Source>Browse</Source>
           <Value>浏览</Value>
         </TranslationItem>
-        <TranslationItem Name="PageantBrowse" Property="Text">
+        <TranslationItem Name="PageantBrowse" Property="Text" type="obsolete">
           <Source>Browse</Source>
           <Value>浏览</Value>
         </TranslationItem>
-        <TranslationItem Name="PathToKDiff3" Property="Text">
+        <TranslationItem Name="PathToKDiff3" Property="Text" type="obsolete">
           <Source>Path to mergetool</Source>
           <Value>mergetool路径</Value>
         </TranslationItem>
-        <TranslationItem Name="PlinkBrowse" Property="Text">
+        <TranslationItem Name="PlinkBrowse" Property="Text" type="obsolete">
           <Source>Browse</Source>
           <Value>浏览</Value>
         </TranslationItem>
-        <TranslationItem Name="PurpleIcon" Property="Text">
+        <TranslationItem Name="PurpleIcon" Property="Text" type="obsolete">
           <Source>Purple</Source>
           <Value>紫色</Value>
         </TranslationItem>
-        <TranslationItem Name="Putty" Property="Text">
+        <TranslationItem Name="Putty" Property="Text" type="obsolete">
           <Source>PuTTY</Source>
           <Value>PuTTY</Value>
         </TranslationItem>
-        <TranslationItem Name="PuttygenBrowse" Property="Text">
+        <TranslationItem Name="PuttygenBrowse" Property="Text" type="obsolete">
           <Source>Browse</Source>
           <Value>浏览</Value>
         </TranslationItem>
-        <TranslationItem Name="RandomIcon" Property="Text">
+        <TranslationItem Name="RandomIcon" Property="Text" type="obsolete">
           <Source>Random</Source>
           <Value>随机</Value>
         </TranslationItem>
-        <TranslationItem Name="RedIcon" Property="Text">
+        <TranslationItem Name="RedIcon" Property="Text" type="obsolete">
           <Source>Red</Source>
           <Value>红色</Value>
         </TranslationItem>
-        <TranslationItem Name="removeScriptButton" Property="Text">
+        <TranslationItem Name="removeScriptButton" Property="Text" type="obsolete">
           <Source>Remove</Source>
           <Value>删除</Value>
         </TranslationItem>
-        <TranslationItem Name="Rescan" Property="Text">
+        <TranslationItem Name="Rescan" Property="Text" type="obsolete">
           <Source>Save and rescan</Source>
           <Value>保存并重新扫描</Value>
         </TranslationItem>
-        <TranslationItem Name="sbtn_icon" Property="Text" type="unfinished">
-          <Source>Select icon</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="scriptEnabled" Property="Text" type="unfinished">
-          <Source>Enabled</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="scriptNeedsConfirmation" Property="Text" type="unfinished">
-          <Source>Ask for confirmation</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="ShellExtensionsRegistered_Fix" Property="Text" type="unfinished">
-          <Source>Repair</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="ShowAuthorGravatar" Property="Text">
+        <TranslationItem Name="ShowAuthorGravatar" Property="Text" type="obsolete">
           <Source>Get author image from gravatar.com</Source>
           <Value>从gravatar.com获得作者图像</Value>
         </TranslationItem>
-        <TranslationItem Name="SshConfig_Fix" Property="Text" type="unfinished">
-          <Source>Repair</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="StripedBanchChange" Property="Text">
+        <TranslationItem Name="StripedBanchChange" Property="Text" type="obsolete">
           <Source>Striped branch change</Source>
           <Value>条纹化表示分支的改变</Value>
         </TranslationItem>
-        <TranslationItem Name="tpAppearance" Property="Text">
+        <TranslationItem Name="tpAppearance" Property="Text" type="obsolete">
           <Source>Appearance</Source>
           <Value>外观</Value>
         </TranslationItem>
-        <TranslationItem Name="tpChecklist" Property="Text">
+        <TranslationItem Name="tpChecklist" Property="Text" type="obsolete">
           <Source>Checklist</Source>
           <Value>清单</Value>
         </TranslationItem>
-        <TranslationItem Name="tpColors" Property="Text" type="unfinished">
-          <Source>Colors</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="tpGit" Property="Text">
+        <TranslationItem Name="tpGit" Property="Text" type="obsolete">
           <Source>Git</Source>
           <Value>Git</Value>
         </TranslationItem>
-        <TranslationItem Name="tpGitExtensions" Property="Text">
+        <TranslationItem Name="tpGitExtensions" Property="Text" type="obsolete">
           <Source>Git extensions</Source>
           <Value>Git extensions</Value>
         </TranslationItem>
-        <TranslationItem Name="tpGlobalSettings" Property="Text">
+        <TranslationItem Name="tpGlobalSettings" Property="Text" type="obsolete">
           <Source>Global settings</Source>
           <Value>全局设置</Value>
         </TranslationItem>
-        <TranslationItem Name="tpHotkeys" Property="Text" type="unfinished">
-          <Source>Hotkeys</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="tpLocalSettings" Property="Text">
+        <TranslationItem Name="tpLocalSettings" Property="Text" type="obsolete">
           <Source>Local settings</Source>
           <Value>本地设置</Value>
         </TranslationItem>
-        <TranslationItem Name="tpScriptsTab" Property="Text" type="unfinished">
-          <Source>Scripts</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="tpShellExt" Property="Text" type="unfinished">
-          <Source>Shell extension</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="tpSsh" Property="Text">
+        <TranslationItem Name="tpSsh" Property="Text" type="obsolete">
           <Source>Ssh</Source>
           <Value>Ssh</Value>
         </TranslationItem>
-        <TranslationItem Name="tpStart" Property="Text" type="unfinished">
-          <Source>Start page</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="translationConfig_Fix" Property="Text" type="unfinished">
-          <Source>Repair</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="truncatePathMethod" Property="Text" type="unfinished">
-          <Source>Truncate long filenames</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="UserNameSet_Fix" Property="Text" type="unfinished">
-          <Source>Repair</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="YellowIcon" Property="Text">
+        <TranslationItem Name="YellowIcon" Property="Text" type="obsolete">
           <Source>Yellow</Source>
           <Value>黄色</Value>
         </TranslationItem>
@@ -6102,8 +6079,8 @@ global settings.
           <Source>Stash</Source>
           <Value>缓冲区</Value>
         </TranslationItem>
-        <TranslationItem Name="Apply" Property="Text">
-          <Source>Apply selected stash to working dir</Source>
+        <TranslationItem Name="Apply" Property="Text" type="obsolete">
+          <Source>Apply Selected</Source>
           <Value>把所选缓冲区应用到工作目录</Value>
         </TranslationItem>
         <TranslationItem Name="areYouSure" Property="Text" type="unfinished">
@@ -6118,8 +6095,8 @@ global settings.
           <Source>Include untracked files</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="Clear" Property="Text">
-          <Source>Drop selected stash</Source>
+        <TranslationItem Name="Clear" Property="Text" type="obsolete">
+          <Source>Delete Selected</Source>
           <Value>丢弃所选缓冲内容</Value>
         </TranslationItem>
         <TranslationItem Name="currentWorkingDirChanges" Property="Text" type="unfinished">
@@ -6134,12 +6111,16 @@ global settings.
           <Source>There are no stashes.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="Stash" Property="Text">
-          <Source>Stash all changes</Source>
+        <TranslationItem Name="Stash" Property="Text" type="obsolete">
+          <Source>Save Changes</Source>
           <Value>暂存所有更改</Value>
         </TranslationItem>
         <TranslationItem Name="stashDropConfirmTitle" Property="Text" type="unfinished">
           <Source>Drop Stash Confirmation</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="Stashes" Property="ToolTipText" type="unfinished">
+          <Source>Select a stash</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="StashKeepIndex" Property="Text" type="unfinished">
@@ -6154,8 +6135,8 @@ global settings.
           <Source>Stash untracked files</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="toolStripButton_customMessage" Property="Text" type="unfinished">
-          <Source>Custom Stashmessage</Source>
+        <TranslationItem Name="toolStripButton_customMessage" Property="ToolTipText" type="unfinished">
+          <Source>Write custom stash message</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="toolStripButton1" Property="Text">
@@ -6186,12 +6167,6 @@ Do you want to register the host's fingerprint and restart the process?</Source>
         </TranslationItem>
         <TranslationItem Name="_fingerprintNotRegistredTextCaption" Property="Text" type="unfinished">
           <Source>Host Fingerprint not registered</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text" type="unfinished">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
@@ -6307,6 +6282,22 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Browse</Source>
           <Value>浏览</Value>
         </TranslationItem>
+        <TranslationItem Name="cbBranches" Property="Text">
+          <Source>Branches:</Source>
+          <Value>分支：</Value>
+        </TranslationItem>
+        <TranslationItem Name="cbTags" Property="Text" type="unfinished">
+          <Source>Tags:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="cbTrunk" Property="Text" type="unfinished">
+          <Source>Trunk:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
+          <Source>Advanced settings</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="unfinished">
           <Source>Svn repository to clone</Source>
           <Value />
@@ -6323,9 +6314,29 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Authors file</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="label5" Property="Text" type="unfinished">
+          <Source>From:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text" type="unfinished">
+          <Source>Username</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="okButton" Property="Text">
           <Source>Clone</Source>
           <Value>克隆</Value>
+        </TranslationItem>
+        <TranslationItem Name="tbBranches" Property="Text" type="unfinished">
+          <Source>branches</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="tbTags" Property="Text" type="unfinished">
+          <Source>tags</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="tbTrunk" Property="Text" type="unfinished">
+          <Source>trunk</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6347,8 +6358,8 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Please enter a tag message</Source>
           <Value>请输入标签的信息</Value>
         </TranslationItem>
-        <TranslationItem Name="_pushToCaption" Property="Text">
-          <Source>Push tag to {0}</Source>
+        <TranslationItem Name="_pushToCaption" Property="Text" type="obsolete">
+          <Source>Push tag to '{0}'</Source>
           <Value>推送到{0}</Value>
         </TranslationItem>
         <TranslationItem Name="annotate" Property="Text">
@@ -6371,8 +6382,8 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Message</Source>
           <Value>消息</Value>
         </TranslationItem>
-        <TranslationItem Name="pushTag" Property="Text">
-          <Source>Push tag</Source>
+        <TranslationItem Name="pushTag" Property="Text" type="obsolete">
+          <Source>Push tag to '{0}'</Source>
           <Value>推标签</Value>
         </TranslationItem>
       </translationItems>
@@ -6395,8 +6406,8 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Please enter a tag message</Source>
           <Value>请输入标签的信息</Value>
         </TranslationItem>
-        <TranslationItem Name="_pushToCaption" Property="Text">
-          <Source>Push tag to {0}</Source>
+        <TranslationItem Name="_pushToCaption" Property="Text" type="obsolete">
+          <Source>Push tag to '{0}'</Source>
           <Value>推送到{0}</Value>
         </TranslationItem>
         <TranslationItem Name="annotate" Property="Text">
@@ -6419,8 +6430,8 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Create tag</Source>
           <Value>创建标签</Value>
         </TranslationItem>
-        <TranslationItem Name="pushTag" Property="Text">
-          <Source>Push tag</Source>
+        <TranslationItem Name="pushTag" Property="Text" type="obsolete">
+          <Source>Push tag to '{0}'</Source>
           <Value>推标签</Value>
         </TranslationItem>
       </translationItems>
@@ -6650,6 +6661,91 @@ nodes.
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="GitExtensionsSettingsPage">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Git Extensions</Source>
+          <Value>Git Extensions</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkCheckForUncommittedChangesInCheckoutBranch" Property="Text" type="unfinished">
+          <Source>Check for uncommitted changes in checkout branch dialog</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="unfinished">
+          <Source>Close Process dialog when process is succeeded</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
+          <Source>Follow renames in file history (experimental)</Source>
+          <Value>按照文件的历史重命名（实验）</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkPlaySpecialStartupSound" Property="Text" type="unfinished">
+          <Source>Play Special Startup Sound</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text">
+          <Source>Show current working dir changes in revision graph (slow!)</Source>
+          <Value>在版本图里显示工作目录的改变（慢!）</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text">
+          <Source>Show errors when staging files</Source>
+          <Value>在暂存文件时显示错误</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowGitCommandLine" Property="Text" type="unfinished">
+          <Source>Show console window when executing git process</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text">
+          <Source>Show repository status in browse dialog (number of changes in toolbar, restart required)</Source>
+          <Value>在浏览对话框中显示档案库的状态（在工具栏上会产生一些变化，需要重新启动）</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
+          <Source>Show stash count on status bar in browse window</Source>
+          <Value>在浏览窗口的状态栏中显示暂存缓冲区计数</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkStartWithRecentWorkingDir" Property="Text" type="unfinished">
+          <Source>Open last working dir on startup</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkStashUntrackedFiles" Property="Text" type="unfinished">
+          <Source>Include untracked files in stash</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkUseFastChecks" Property="Text">
+          <Source>Use FileSystemWatcher to check if index is changed</Source>
+          <Value>使用FileSystemWatcher检查索引是否改变了</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkUsePatienceDiffAlgorithm" Property="Text">
+          <Source>Use patience diff algorithm</Source>
+          <Value>在提交日志中显示版本图</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkWriteCommitMessageInCommitWindow" Property="Text" type="unfinished">
+          <Source>Compose commit messages in Commit dialog
+(otherwise the message will be requested during commit)</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="groupBox11" Property="Text" type="unfinished">
+          <Source>Performance</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="groupBox12" Property="Text" type="unfinished">
+          <Source>Behaviour</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label12" Property="Text" type="unfinished">
+          <Source>Limit number of commits that will be loaded at startup</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label23" Property="Text">
+          <Source>Smtp server for sending patches by email</Source>
+          <Value>发送补丁到电子邮件所用的SMTP服务器</Value>
+        </TranslationItem>
+        <TranslationItem Name="label24" Property="Text">
+          <Source>Revision grid quick search timeout [ms]</Source>
+          <Value>版本网格快速搜索超时[毫秒]</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="GitLogForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -6667,6 +6763,164 @@ nodes.
         <TranslationItem Name="tabPageCommandLog" Property="Text" type="unfinished">
           <Source>Command log</Source>
           <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GitSettingsPage">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Git</Source>
+          <Value>Git</Value>
+        </TranslationItem>
+        <TranslationItem Name="_homeIsSetToString" Property="Text" type="unfinished">
+          <Source>HOME is set to:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="BrowseGitBinPath" Property="Text">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseGitPath" Property="Text">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="ChangeHomeButton" Property="Text" type="unfinished">
+          <Source>Change HOME</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="downloadMsysgit" Property="Text" type="unfinished">
+          <Source>Download msysgit</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="groupBox7" Property="Text">
+          <Source>Git</Source>
+          <Value>Git</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox8" Property="Text">
+          <Source>Environment</Source>
+          <Value>环境</Value>
+        </TranslationItem>
+        <TranslationItem Name="homeIsSetToLabel" Property="Text" type="unfinished">
+          <Source>HOME is set to: {0}</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label13" Property="Text">
+          <Source>Command used to run git (git.cmd or git.exe)</Source>
+          <Value>用于运行git的命令（git.cmd或git.exe）</Value>
+        </TranslationItem>
+        <TranslationItem Name="label14" Property="Text">
+          <Source>Path to linux tools (sh). Leave empty when it is in the path.</Source>
+          <Value>Linux工具（sh）的路径。如果已在路径中则留空。</Value>
+        </TranslationItem>
+        <TranslationItem Name="label50" Property="Text">
+          <Source>Git Extensions can use msysgit or cygwin to access git repositories. Set the correct paths below.</Source>
+          <Value>Git Extensions可以使用msysgit或cygwin访问git档案库库。在下面的设置它们正确的路径。</Value>
+        </TranslationItem>
+        <TranslationItem Name="label51" Property="Text">
+          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
+to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
+          <Value>全局配置文件位于%HOME%的位置。默认设置下，如果%HOME%为空，%HOME%将被设置为%HOMEDRIVE%%HOMEPATH%。
+你应该只在遇到问题的时候才考虑改变默认设置。</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GlobalSettingsSettingsPage">
+      <translationItems>
+        <TranslationItem Name="__diffToolSuggestCaption" Property="Text" type="unfinished">
+          <Source>Suggest difftool cmd</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="BrowseCommitTemplate" Property="Text">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseDiffTool" Property="Text">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowseMergeTool" Property="Text">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="DiffToolCmdSuggest" Property="Text">
+          <Source>Suggest command</Source>
+          <Value>建议命令</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfFalse" Property="Text">
+          <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
+          <Value>保持原样签出，保持原样提交（"core.autocrlf"设置为"false"）</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfInput" Property="Text">
+          <Source>Checkout as-is, commit Unix-style line endings ("core.autocrlf"  is set to "input")</Source>
+          <Value>保持原样签出，用Unix风格的换行符提交（"core.autocrlf"设置为"input"）</Value>
+        </TranslationItem>
+        <TranslationItem Name="globalAutoCrlfTrue" Property="Text">
+          <Source>Checkout Windows-style, commit Unix-style line endings ("core.autocrlf"  is set to "true")</Source>
+          <Value>以windows风格签出，用Unix风格的换行符提交（"core.autocrlf"设置为"true"）
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox9" Property="Text">
+          <Source>Line endings</Source>
+          <Value>换行符</Value>
+        </TranslationItem>
+        <TranslationItem Name="label19" Property="Text">
+          <Source>Mergetool command</Source>
+          <Value>Mergetool命令</Value>
+        </TranslationItem>
+        <TranslationItem Name="label28" Property="Text">
+          <Source>Keep backup (.orig) after merge</Source>
+          <Value>合并后保留备份（.orig）</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text">
+          <Source>User name</Source>
+          <Value>用户名</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text">
+          <Source>User email</Source>
+          <Value>用户电子邮件</Value>
+        </TranslationItem>
+        <TranslationItem Name="label41" Property="Text">
+          <Source>Difftool</Source>
+          <Value>Difftool</Value>
+        </TranslationItem>
+        <TranslationItem Name="label42" Property="Text">
+          <Source>Path to difftool</Source>
+          <Value>路径difftool</Value>
+        </TranslationItem>
+        <TranslationItem Name="label48" Property="Text">
+          <Source>Difftool command</Source>
+          <Value>Difftool命令</Value>
+        </TranslationItem>
+        <TranslationItem Name="label57" Property="Text" type="unfinished">
+          <Source>Path to commit template</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label6" Property="Text">
+          <Source>Editor</Source>
+          <Value>编辑</Value>
+        </TranslationItem>
+        <TranslationItem Name="label60" Property="Text" type="unfinished">
+          <Source>Files content encoding</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label7" Property="Text">
+          <Source>Mergetool</Source>
+          <Value>合并工具</Value>
+        </TranslationItem>
+        <TranslationItem Name="label9" Property="Text">
+          <Source>You need to set the correct path to 
+git before you can change
+global settings.
+</Source>
+          <Value>您需要设置git正确的路径，才能更改全局设置。</Value>
+        </TranslationItem>
+        <TranslationItem Name="MergeToolCmdSuggest" Property="Text">
+          <Source>Suggest command</Source>
+          <Value>建议命令</Value>
+        </TranslationItem>
+        <TranslationItem Name="PathToKDiff3" Property="Text">
+          <Source>Path to mergetool</Source>
+          <Value>mergetool路径</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6711,6 +6965,86 @@ nodes.
         <TranslationItem Name="wavatarToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Wavatar</Source>
           <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="HelpImageDisplayUserControl">
+      <translationItems>
+        <TranslationItem Name="labelHoverText" Property="Text" type="unfinished">
+          <Source>label1</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="HotkeysSettingsPage">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Hotkeys</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="LocalSettingsSettingsPage">
+      <translationItems>
+        <TranslationItem Name="groupBox10" Property="Text">
+          <Source>Line endings</Source>
+          <Value>换行符</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Source>User name</Source>
+          <Value>用户名</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Source>User email</Source>
+          <Value>用户电子邮件</Value>
+        </TranslationItem>
+        <TranslationItem Name="label20" Property="Text">
+          <Source>You only need local settings
+if you want to override the 
+global settings for the current
+repository.</Source>
+          <Value>如果你想覆盖本档案库的全局设置，
+你只需要做本地设置就够了。</Value>
+        </TranslationItem>
+        <TranslationItem Name="label21" Property="Text">
+          <Source>You need to set the correct path to 
+git before you can change
+local settings.
+</Source>
+          <Value>您需要设置git正确的路径，才能更改本地设置。</Value>
+        </TranslationItem>
+        <TranslationItem Name="label30" Property="Text">
+          <Source>Keep backup (.orig) after merge</Source>
+          <Value>合并后保留备份（.orig）</Value>
+        </TranslationItem>
+        <TranslationItem Name="label5" Property="Text">
+          <Source>Editor</Source>
+          <Value>编辑</Value>
+        </TranslationItem>
+        <TranslationItem Name="label61" Property="Text" type="unfinished">
+          <Source>Files content encoding</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label8" Property="Text">
+          <Source>Mergetool</Source>
+          <Value>合并工具</Value>
+        </TranslationItem>
+        <TranslationItem Name="localAutoCrlfFalse" Property="Text">
+          <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
+          <Value>保持原样签出，保持原样提交（"core.autocrlf"设置为"false"）</Value>
+        </TranslationItem>
+        <TranslationItem Name="localAutoCrlfInput" Property="Text">
+          <Source>Checkout as-is, commit Unix-style line endings ("core.autocrlf"  is set to "input")</Source>
+          <Value>保持原样签出，用Unix风格的换行符提交（"core.autocrlf"设置为"input"）</Value>
+        </TranslationItem>
+        <TranslationItem Name="localAutoCrlfTrue" Property="Text">
+          <Source>Checkout Windows-style, commit Unix-style line endings ("core.autocrlf"  is set to "true")</Source>
+          <Value>以windows风格签出，用Unix风格的换行符提交（"core.autocrlf"设置为"true"）
+</Value>
+        </TranslationItem>
+        <TranslationItem Name="NoGitRepo" Property="Text">
+          <Source>Not in a git repository</Source>
+          <Value>不在一个git档案库中</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6760,8 +7094,8 @@ nodes.
     </TranslationCategory>
     <TranslationCategory Name="Open">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Open repository</Source>
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
+          <Source>Open local repository</Source>
           <Value>开启档案库</Value>
         </TranslationItem>
         <TranslationItem Name="_warningOpenFailed" Property="Text" type="unfinished">
@@ -6772,10 +7106,6 @@ nodes.
           <Source>Error</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text">
-          <Source>Browse</Source>
-          <Value>浏览</Value>
-        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Directory</Source>
           <Value>目录</Value>
@@ -6783,6 +7113,10 @@ nodes.
         <TranslationItem Name="Load" Property="Text">
           <Source>Open</Source>
           <Value>打开</Value>
+        </TranslationItem>
+        <TranslationItem Name="Browse" Property="Text" type="obsolete">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6810,6 +7144,14 @@ nodes.
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="PluginSettingsPage">
+      <translationItems>
+        <TranslationItem Name="labelNoSettings" Property="Text" type="unfinished">
+          <Source>There are no settings available for this plugin.</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="RevisionGrid">
       <translationItems>
         <TranslationItem Name="_areYouSureYouWantCheckout" Property="Text" type="unfinished">
@@ -6820,14 +7162,6 @@ nodes.
           <Source>Checkout revision</Source>
           <Value>登出版本</Value>
         </TranslationItem>
-        <TranslationItem Name="_currentIndex" Property="Text">
-          <Source>Commit index</Source>
-          <Value>提交索引</Value>
-        </TranslationItem>
-        <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
-          <Source>Current uncommitted changes</Source>
-          <Value>当前未提交的更改</Value>
-        </TranslationItem>
         <TranslationItem Name="_droppingFilesBlocked" Property="Text" type="unfinished">
           <Source>For you own protection dropping more than 10 patch files at once is blocked!</Source>
           <Value />
@@ -6835,6 +7169,10 @@ nodes.
         <TranslationItem Name="_revisionFilter" Property="Text">
           <Source>Filter</Source>
           <Value>过滤器</Value>
+        </TranslationItem>
+        <TranslationItem Name="archiveRevisionToolStripMenuItem" Property="Text">
+          <Source>Archive revision</Source>
+          <Value>存档</Value>
         </TranslationItem>
         <TranslationItem Name="Author" Property="HeaderText">
           <Source>Author</Source>
@@ -6916,10 +7254,6 @@ nodes.
           <Source>Edit .gitignore</Source>
           <Value>编辑.gitignore</Value>
         </TranslationItem>
-        <TranslationItem Name="goToParentToolStripMenuItem" Property="Text" type="unfinished">
-          <Source>Go to parent</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="hashToolStripMenuItem" Property="Text">
           <Source>Commit hash</Source>
           <Value>提交哈希</Value>
@@ -6948,10 +7282,6 @@ If this is a central repository (bare repository without a working dir):
         <TranslationItem Name="label2" Property="Text">
           <Source>The current working dir is not a git repository.</Source>
           <Value>当前的工作目录不是一个git档案库。</Value>
-        </TranslationItem>
-        <TranslationItem Name="manipulateCommitToolStripMenuItem" Property="Text" type="unfinished">
-          <Source>Manipulate commit</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="markRevisionAsBadToolStripMenuItem" Property="Text">
           <Source>Mark revision as bad</Source>
@@ -7045,6 +7375,176 @@ If this is a central repository (bare repository without a working dir):
           <Source>Tag</Source>
           <Value>标签</Value>
         </TranslationItem>
+        <TranslationItem Name="_currentIndex" Property="Text" type="obsolete">
+          <Source>Commit index</Source>
+          <Value>提交索引</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentWorkingDirChanges" Property="Text" type="obsolete">
+          <Source>Current uncommitted changes</Source>
+          <Value>当前未提交的更改</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ScriptsSettingsPage">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Scripts</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="addScriptButton" Property="Text">
+          <Source>Add</Source>
+          <Value>新增</Value>
+        </TranslationItem>
+        <TranslationItem Name="argumentsLabel" Property="Text" type="unfinished">
+          <Source>Arguments:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="AskConfirmation" Property="HeaderText" type="unfinished">
+          <Source>Confirmation</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="browseScriptButton" Property="Text">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="buttonShowArgumentsHelp" Property="Text">
+          <Source>Help</Source>
+          <Value>帮助</Value>
+        </TranslationItem>
+        <TranslationItem Name="commandLabel" Property="Text" type="unfinished">
+          <Source>Command:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="EnabledColumn" Property="HeaderText" type="unfinished">
+          <Source>Enabled</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="inMenuCheckBox" Property="Text" type="unfinished">
+          <Source>Add to revision grid context menu</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="labelOnEvent" Property="Text" type="unfinished">
+          <Source>On event:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="lbl_icon" Property="Text" type="unfinished">
+          <Source>Icon:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="nameLabel" Property="Text" type="unfinished">
+          <Source>Name:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="OnEvent" Property="HeaderText" type="unfinished">
+          <Source>OnEvent</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="removeScriptButton" Property="Text">
+          <Source>Remove</Source>
+          <Value>删除</Value>
+        </TranslationItem>
+        <TranslationItem Name="sbtn_icon" Property="Text" type="unfinished">
+          <Source>Select icon</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="scriptEnabled" Property="Text" type="unfinished">
+          <Source>Enabled</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="scriptNeedsConfirmation" Property="Text" type="unfinished">
+          <Source>Ask for confirmation</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ShellExtensionSettingsPage">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Shell Extension</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="lblMenuEntries" Property="Text" type="unfinished">
+          <Source>Select items to be shown in
+the cascaded context menu:</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="SshSettingsPage">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>SSH</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="AutostartPageant" Property="Text">
+          <Source>Automatically start authentication client when a private key is configured for a remote</Source>
+          <Value>当远程端配置了私钥后，自动启动认证客户端</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text">
+          <Source>Specify which ssh client to use</Source>
+          <Value>指定SSH客户端</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox2" Property="Text">
+          <Source>Configure PuTTY</Source>
+          <Value>配置PuTTY</Value>
+        </TranslationItem>
+        <TranslationItem Name="label15" Property="Text">
+          <Source>Path to plink.exe</Source>
+          <Value>plink.exe路径</Value>
+        </TranslationItem>
+        <TranslationItem Name="label16" Property="Text">
+          <Source>Path to puttygen</Source>
+          <Value>puttygen路径</Value>
+        </TranslationItem>
+        <TranslationItem Name="label17" Property="Text">
+          <Source>Path to pageant</Source>
+          <Value>pageant路径</Value>
+        </TranslationItem>
+        <TranslationItem Name="label18" Property="Text">
+          <Source>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
+but requires the PuTTY authentication client to run  in the background.
+When OpenSSH is used, command line dialogs are shown!
+</Source>
+          <Value>OpenSSH是一个命令行工具。 
+对于Windows用户来说，PuTTY用起来更方便，但需要在后台运行PuTTY验证客户端。
+当使用OpenSSH时，会显示命令行对话框！</Value>
+        </TranslationItem>
+        <TranslationItem Name="OpenSSH" Property="Text">
+          <Source>OpenSSH</Source>
+          <Value>OpenSSH</Value>
+        </TranslationItem>
+        <TranslationItem Name="Other" Property="Text">
+          <Source>Other ssh client</Source>
+          <Value>其它的SSH客户端</Value>
+        </TranslationItem>
+        <TranslationItem Name="OtherSshBrowse" Property="Text">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="PageantBrowse" Property="Text">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="PlinkBrowse" Property="Text">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="Putty" Property="Text">
+          <Source>PuTTY</Source>
+          <Value>PuTTY</Value>
+        </TranslationItem>
+        <TranslationItem Name="PuttygenBrowse" Property="Text">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="StartPageSettingsPage">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Start Page</Source>
+          <Value>起始页</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="Strings">
@@ -7057,6 +7557,10 @@ If this is a central repository (bare repository without a working dir):
           <Source>Author</Source>
           <Value>作者</Value>
         </TranslationItem>
+        <TranslationItem Name="_childrenText" Property="Text" type="unfinished">
+          <Source>Children</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_commitDateText" Property="Text">
           <Source>Commit date</Source>
           <Value>提交日期</Value>
@@ -7068,6 +7572,14 @@ If this is a central repository (bare repository without a working dir):
         <TranslationItem Name="_committerText" Property="Text">
           <Source>Committer</Source>
           <Value>提交者</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentIndex" Property="Text">
+          <Source>Commit index</Source>
+          <Value>提交索引</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
+          <Source>Current uncommitted changes</Source>
+          <Value>当前未提交的更改</Value>
         </TranslationItem>
         <TranslationItem Name="_dateText" Property="Text">
           <Source>Date</Source>
@@ -7089,6 +7601,10 @@ If this is a central repository (bare repository without a working dir):
           <Source>{0} hours ago</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="_LoadingData" Property="Text" type="unfinished">
+          <Source>Loading data...</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_messageText" Property="Text">
           <Source>Message</Source>
           <Value>消息</Value>
@@ -7107,6 +7623,10 @@ If this is a central repository (bare repository without a working dir):
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text" type="unfinished">
           <Source>{0} months ago</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_parentsText" Property="Text" type="unfinished">
+          <Source>Parent(s)</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_secondAgo" Property="Text" type="unfinished">
@@ -7261,6 +7781,110 @@ Details: Is {1} expected {2}</Source>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormCherryPickCommitSmall">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
+          <Source>Cherry pick commit</Source>
+          <Value>最优化提交（Cherry pick commit）</Value>
+        </TranslationItem>
+        <TranslationItem Name="Author" Property="Text" type="obsolete">
+          <Source>Author:</Source>
+          <Value>作者：</Value>
+        </TranslationItem>
+        <TranslationItem Name="AutoCommit" Property="Text" type="obsolete">
+          <Source>Automatically creates a commit</Source>
+          <Value>自动创建一个提交</Value>
+        </TranslationItem>
+        <TranslationItem Name="BranchInfo" Property="Text" type="obsolete">
+          <Source>Cherry pick this commit:</Source>
+          <Value>优化(Cherry pick)此提交：</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader1" Property="Text" type="obsolete">
+          <Source>No.</Source>
+          <Value>序号</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader2" Property="Text" type="obsolete">
+          <Source>Message</Source>
+          <Value>消息</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader3" Property="Text" type="obsolete">
+          <Source>Author</Source>
+          <Value>作者</Value>
+        </TranslationItem>
+        <TranslationItem Name="columnHeader4" Property="Text" type="obsolete">
+          <Source>Date</Source>
+          <Value>日期</Value>
+        </TranslationItem>
+        <TranslationItem Name="Commit" Property="Text" type="obsolete">
+          <Source>Commit:</Source>
+          <Value>提交：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Date" Property="Text" type="obsolete">
+          <Source>Commit date:</Source>
+          <Value>提交日期：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Message" Property="Text" type="obsolete">
+          <Source>Message:</Source>
+          <Value>消息：</Value>
+        </TranslationItem>
+        <TranslationItem Name="ParentsLabel" Property="Text" type="obsolete">
+          <Source>This commit is a merge, select parent:</Source>
+          <Value>这提交是一个合并，选择合并的上一代：</Value>
+        </TranslationItem>
+        <TranslationItem Name="Pick" Property="Text" type="obsolete">
+          <Source>Pick this commit</Source>
+          <Value>挑选本提交</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCherryPickMerge">
+      <translationItems>
+        <TranslationItem Name="Author" Property="Text" type="obsolete">
+          <Source>Author</Source>
+          <Value>作者</Value>
+        </TranslationItem>
+        <TranslationItem Name="Column1" Property="HeaderText" type="obsolete">
+          <Source>No.</Source>
+          <Value>序号</Value>
+        </TranslationItem>
+        <TranslationItem Name="Column2" Property="HeaderText" type="obsolete">
+          <Source>Message</Source>
+          <Value>消息</Value>
+        </TranslationItem>
+        <TranslationItem Name="Column3" Property="HeaderText" type="obsolete">
+          <Source>Author</Source>
+          <Value>作者</Value>
+        </TranslationItem>
+        <TranslationItem Name="Column4" Property="HeaderText" type="obsolete">
+          <Source>Date</Source>
+          <Value>日期</Value>
+        </TranslationItem>
+        <TranslationItem Name="CommitDate" Property="Text" type="obsolete">
+          <Source>Date</Source>
+          <Value>日期</Value>
+        </TranslationItem>
+        <TranslationItem Name="Message" Property="Text" type="obsolete">
+          <Source>Message</Source>
+          <Value>消息</Value>
+        </TranslationItem>
+        <TranslationItem Name="No" Property="Text" type="obsolete">
+          <Source>No.</Source>
+          <Value>序号</Value>
+        </TranslationItem>
+        <TranslationItem Name="OK" Property="Text" type="obsolete">
+          <Source>OK</Source>
+          <Value>确定</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormPluginSettings">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
+          <Source>Plugin settings</Source>
+          <Value>插件设置</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="Abort">
       <translationItems>
         <TranslationItem Name="_abortCurrentOpperationCaption" Property="Text" type="obsolete">
@@ -7306,5 +7930,4 @@ Details: Is {1} expected {2}</Source>
       </translationItems>
     </TranslationCategory>
   </translationCategories>
-  <LanguageCode>zh</LanguageCode>
 </Translation>
