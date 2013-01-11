@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI.Help
 {
@@ -17,7 +18,6 @@ namespace GitUI.Help
 
         ////public const string fastForwardHoverText = "Hover to see scenario when fast forward is possible.";
 
-        private static Dictionary<string, bool> _TMP_isExpandedState = new Dictionary<string, bool>();
         private bool _isLoaded;
 
         public HelpImageDisplayUserControl()
@@ -33,7 +33,7 @@ namespace GitUI.Help
         /// <param name="e"></param>
         private void HelpImageDisplayUserControl_Load(object sender, EventArgs e)
         {
-            IsExpanded = LoadIsExandedValueFromSettings(IsExpanded);
+            IsExpanded = LoadIsExpandedValueFromSettings(IsExpanded);
             UpdateIsExpandedState();
             UpdateImageDisplay();
             UpdateControlSize();
@@ -61,7 +61,7 @@ namespace GitUI.Help
 
                      */
 
-                    SaveIsExandedValueInSettings(value);
+                    SaveIsExpandedValueInSettings(value);
                 }                
             }
         }
@@ -148,32 +148,17 @@ namespace GitUI.Help
 
         private string GetId()
         {
-            ////return Name + Parent.Name + Parent.Parent.Name;
             return UniqueIsExpandedSettingsId ?? "MUST_BE_SET";
         }
 
-        private void SaveIsExandedValueInSettings(bool value)
+        private void SaveIsExpandedValueInSettings(bool value)
         {
-            if (!_TMP_isExpandedState.Keys.Contains(GetId()))
-            {
-                _TMP_isExpandedState.Add(GetId(), value);
-            }
-            else
-            {
-                _TMP_isExpandedState[GetId()] = value;
-            }
+            Settings.SetBool("HelpIsExpanded" + GetId(), value);
         }
 
-        private bool LoadIsExandedValueFromSettings(bool defaultValue)
+        private bool LoadIsExpandedValueFromSettings(bool defaultValue)
         {
-            if (_TMP_isExpandedState.Keys.Contains(GetId()))
-            {
-                return _TMP_isExpandedState[GetId()];
-            }
-            else
-            {
-                return defaultValue;
-            }
+            return Settings.GetBool("HelpIsExpanded" + GetId(), defaultValue).Value;
         }
 
         private void UpdateControlSize()

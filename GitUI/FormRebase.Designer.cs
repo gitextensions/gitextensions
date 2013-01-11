@@ -427,7 +427,7 @@ namespace GitUI
             this.helpImageDisplayUserControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.helpImageDisplayUserControl1.Image1 = global::GitUI.Properties.Resources.HelpCommandRebase;
             this.helpImageDisplayUserControl1.Image2 = null;
-            this.helpImageDisplayUserControl1.IsExpanded = false;
+            this.helpImageDisplayUserControl1.IsExpanded = true;
             this.helpImageDisplayUserControl1.Location = new System.Drawing.Point(3, 3);
             this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(30, 50);
             this.helpImageDisplayUserControl1.Name = "helpImageDisplayUserControl1";
