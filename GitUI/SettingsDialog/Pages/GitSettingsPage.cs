@@ -23,12 +23,11 @@ namespace GitUI.SettingsDialog.Pages
             ISettingsPageHost settingsPageHost)
         {
             InitializeComponent();
+            Text = "Git";
             Translate();
 
             _checkSettingsLogic = checkSettingsLogic;
             _settingsPageHost = settingsPageHost;
-
-            Text = "Git";
         }
 
         protected override string GetCommaSeparatedKeywordList()

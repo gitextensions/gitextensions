@@ -24,6 +24,7 @@ namespace GitUI.SettingsDialog.Pages
         private GlobalSettingsSettingsPage()
         {
             InitializeComponent();
+            Text = "Global settings";
             Translate();
         }
 
@@ -33,8 +34,6 @@ namespace GitUI.SettingsDialog.Pages
             _commonLogic = commonLogic;
             _checkSettingsLogic = checkSettingsLogic;
             _gitModule = gitModule;
-
-            Text = "Global Settings";
 
             _commonLogic.FillEncodings(Global_FilesEncoding);
 

@@ -14,9 +14,8 @@ namespace GitUI.SettingsDialog.Pages
         public HotkeysSettingsPage()
         {
             InitializeComponent();
-            Translate();
-
             Text = "Hotkeys";
+            Translate();
         }
 
         protected override void OnLoadSettings()

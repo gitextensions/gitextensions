@@ -17,9 +17,8 @@ namespace GitUI.SettingsDialog.Pages
         public SshSettingsPage()
         {
             InitializeComponent();
-            Translate();
-
             Text = "SSH";
+            Translate();
         }
 
         protected override string GetCommaSeparatedKeywordList()
