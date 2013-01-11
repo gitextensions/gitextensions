@@ -20,6 +20,7 @@ namespace GitUI.SettingsDialog.Pages
         private LocalSettingsSettingsPage()
         {
             InitializeComponent();
+            Text = "Local settings";
             Translate();
         }
 
@@ -29,8 +30,6 @@ namespace GitUI.SettingsDialog.Pages
             _commonLogic = commonLogic;
             _checkSettingsLogic = checkSettingsLogic;
             _gitModule = gitModule;
-
-            Text = "Local Settings";
 
             _commonLogic.FillEncodings(Local_FilesEncoding);
         }
