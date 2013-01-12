@@ -136,6 +136,7 @@ namespace GitUI.CommitInfo
 
             if (string.IsNullOrEmpty(_revisionGuid))
                 return;
+            _RevisionHeader.SelectionTabs = GetRevisionHeaderTabStops(); 
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
 
@@ -159,6 +160,21 @@ namespace GitUI.CommitInfo
 
             if (Settings.CommitInfoShowContainedInTags)
                 ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revisionGuid));
+        }
+
+        private int[] _revisionHeaderTabStops;
+        private int[] GetRevisionHeaderTabStops()
+        {
+            if (_revisionHeaderTabStops != null)
+                return _revisionHeaderTabStops;
+            int tabStop = 0;
+            foreach (string s in CommitData.GetPossibleHeaders())
+            {
+                tabStop = Math.Max(tabStop, TextRenderer.MeasureText(s + "  ", _RevisionHeader.Font).Width);
+            }
+            // simulate a two column layout even when there's more then one tab used
+            _revisionHeaderTabStops = new int[] { tabStop, tabStop + 1, tabStop + 2, tabStop + 3 };
+            return _revisionHeaderTabStops;
         }
 
         private void loadTagInfo(string revision)
