@@ -84,6 +84,18 @@ namespace GitCommands
         }
 
         /// <summary>
+        /// Returns an array of strings containg titles of fields field returned by GetHeader.
+        /// Used to calculate layout in advance
+        /// </summary>
+        /// <returns></returns>
+        public static string[] GetPossibleHeaders()
+        {
+            return new string[] {Strings.GetAuthorText(), Strings.GetAuthorDateText(), Strings.GetCommitterText(),
+                                 Strings.GetCommitDateText(), Strings.GetCommitHashText(), Strings.GetChildrenText(),
+                                 Strings.GetParentsText()};
+        }
+
+        /// <summary>
         /// Generate header.
         /// </summary>
         /// <returns></returns>
