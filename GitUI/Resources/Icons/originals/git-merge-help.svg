@@ -90,9 +90,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.4155776"
-     inkscape:cx="500.67557"
-     inkscape:cy="277.37939"
+     inkscape:zoom="0.45283937"
+     inkscape:cx="442.8767"
+     inkscape:cy="618.21339"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -125,16 +125,6 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       y="247.16742"
-       x="40.344582"
-       height="842.61633"
-       width="688"
-       id="rect5932"
-       style="color:#000000;fill:#ffffff;stroke:#ffffff;stroke-width:1.99999976;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       inkscape:export-filename="D:\data2\projects\gitextensions\GitUI\Resources\Icons\originals\git-merge-help_pull_merge_40dpi.png"
-       inkscape:export-xdpi="40"
-       inkscape:export-ydpi="40" />
     <text
        xml:space="preserve"
        style="font-size:40.04507446px;font-style:normal;font-weight:normal;line-height:100%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -3897,10 +3887,20 @@
       </g>
     </g>
     <g
-       id="g4472"
-       inkscape:export-filename="D:\data2\projects\gitextensions\GitUI\Resources\Icons\originals\git-merge-help_pull_merge_40dpi.png"
+       id="g3773"
+       inkscape:export-filename="D:\data2\projects\gitextensions\GitUI\Resources\Icons\HelpPullMerge.png"
        inkscape:export-xdpi="40"
        inkscape:export-ydpi="40">
+      <rect
+         inkscape:export-ydpi="40"
+         inkscape:export-xdpi="40"
+         inkscape:export-filename="D:\data2\projects\gitextensions\GitUI\Resources\Icons\originals\git-merge-help_pull_merge_40dpi.png"
+         style="color:#000000;fill:#ffffff;stroke:#ffffff;stroke-width:1.99999976;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         id="rect5932"
+         width="688"
+         height="842.61633"
+         x="40.344582"
+         y="247.16742" />
       <g
          id="g3742"
          transform="translate(-20,1032.3946)">
