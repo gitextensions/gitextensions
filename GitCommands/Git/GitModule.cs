@@ -2453,7 +2453,7 @@ namespace GitCommands
                 {
                     var r = new GitRevision(this, head.Guid);
                     return r.CommitDate;
-                }).ToList();   
+                }).ToList();
             }
             else if (option == GetTagHeadsSortOrder.ByCommitDateDescending)
             {
@@ -2463,6 +2463,8 @@ namespace GitCommands
                     return r.CommitDate;
                 }).ToList();
             }
+            else
+                sortedList = new List<GitHead>(list);
 
             return sortedList;
         }
