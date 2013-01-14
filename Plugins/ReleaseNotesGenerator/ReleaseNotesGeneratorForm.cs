@@ -78,9 +78,12 @@ namespace ReleaseNotesGenerator
             Clipboard.SetText(result);
         }
 
+        const string mostRecentHint = "most recent changes are listed on top";
+
         private void buttonCopyAsHtml_Click(object sender, EventArgs e)
         {
-            string headerHtml = string.Format("<p>Commit log from '{0}' to '{1}':</p>", textBoxRevFrom.Text, textBoxRevTo.Text);
+            string headerHtml = string.Format("<p>Commit log from '{0}' to '{1}' ({2}):</p>",
+                textBoxRevFrom.Text, textBoxRevTo.Text, mostRecentHint);
             string tableHtml = CreateHtmlTable(_lastGeneratedLogLines);
             HtmlFragment.CopyToClipboard(headerHtml + tableHtml);
             ////HtmlFragment.CopyToClipboard("<table><tr><td>A</td><td>B</td></tr><tr><td>C</td><td>D</td></tr></table>");
@@ -123,7 +126,8 @@ namespace ReleaseNotesGenerator
 
         private string CreateTextTable(IEnumerable<LogLine> logLines, bool suppressEmptyLines = true, bool separateColumnWithTabInsteadOfSpaces = true)
         {
-            string headerText = string.Format("Commit log from '{0}' to '{1}':", textBoxRevFrom.Text, textBoxRevTo.Text);
+            string headerText = string.Format("Commit log from '{0}' to '{1}' ({2}):",
+                textBoxRevFrom.Text, textBoxRevTo.Text, mostRecentHint);
 
             string colSeparatorFirstLine = separateColumnWithTabInsteadOfSpaces ? "\t" : " ";
             string colSeparatorRestLines = separateColumnWithTabInsteadOfSpaces ? "\t" : "        ";

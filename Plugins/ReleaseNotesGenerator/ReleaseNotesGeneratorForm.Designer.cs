@@ -125,7 +125,7 @@
             this.groupBox1.Controls.Add(this.textBoxResult);
             this.groupBox1.Location = new System.Drawing.Point(15, 156);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(587, 263);
+            this.groupBox1.Size = new System.Drawing.Size(587, 264);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Result";
@@ -176,7 +176,7 @@
             this.groupBoxCopy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxCopy.Controls.Add(this.flowLayoutPanel2);
-            this.groupBoxCopy.Location = new System.Drawing.Point(6, 197);
+            this.groupBoxCopy.Location = new System.Drawing.Point(6, 198);
             this.groupBoxCopy.Name = "groupBoxCopy";
             this.groupBoxCopy.Size = new System.Drawing.Size(575, 60);
             this.groupBoxCopy.TabIndex = 1;
@@ -245,7 +245,7 @@
             this.textBoxResult.Name = "textBoxResult";
             this.textBoxResult.ReadOnly = true;
             this.textBoxResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxResult.Size = new System.Drawing.Size(575, 136);
+            this.textBoxResult.Size = new System.Drawing.Size(575, 137);
             this.textBoxResult.TabIndex = 0;
             this.textBoxResult.WordWrap = false;
             this.textBoxResult.TextChanged += new System.EventHandler(this.textBoxResult_TextChanged);
@@ -265,7 +265,7 @@
             this.AcceptButton = this.buttonGenerate;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(614, 431);
+            this.ClientSize = new System.Drawing.Size(614, 432);
             this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label4);
@@ -275,6 +275,8 @@
             this.Controls.Add(this.textBoxRevTo);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(630, 470);
             this.Name = "ReleaseNotesGeneratorForm";
             this.Text = "Release Notes Generator";
             this.Load += new System.EventHandler(this.ReleaseNotesGeneratorForm_Load);
