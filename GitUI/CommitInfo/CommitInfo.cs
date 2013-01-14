@@ -135,17 +135,21 @@ namespace GitUI.CommitInfo
             ResetTextAndImage();
 
             if (string.IsNullOrEmpty(_revisionGuid))
-                return;
+                return; //is it regular case or should throw an exception
+
             _RevisionHeader.SelectionTabs = GetRevisionHeaderTabStops(); 
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
 
             string error = "";
             CommitData data = null;
-            if (!string.IsNullOrEmpty(_revisionGuid))
-                data = CommitData.GetCommitData(Module, _revisionGuid, ref error);
+            if (_revision != null)
+            {
+                data = CommitData.CreateFromRevision(_revision);
+                CommitData.UpdateCommitMessage(data, Module, _revisionGuid, ref error);
+            }
             else
-                return;//is it regular case or should throw an exception
+                data = CommitData.GetCommitData(Module, _revisionGuid, ref error);
             data.ChildrenGuids = _children;
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(data);
 

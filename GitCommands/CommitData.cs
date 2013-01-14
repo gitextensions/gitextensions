@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Net;
+using System.Diagnostics;
 
 namespace GitCommands
 {
@@ -128,6 +129,48 @@ namespace GitCommands
         /// <summary>
         /// Gets the commit info for submodule.
         /// </summary>
+        public static void UpdateCommitMessage(CommitData data, GitModule module, string sha1, ref string error)
+        {
+            if (module == null)
+                throw new ArgumentNullException("module");
+            if (sha1 == null)
+                throw new ArgumentNullException("sha1");
+
+            //Do not cache this command, since notes can be added
+            string arguments = string.Format(CultureInfo.InvariantCulture,
+                    "log -1 --pretty=\"format:" + ShortLogFormat + "\" {0}", sha1);
+            var info =
+                module.RunCmd(
+                    Settings.GitCommand,
+                    arguments,
+                    GitModule.LosslessEncoding
+                    );
+
+            if (info.Trim().StartsWith("fatal"))
+            {
+                error = "Cannot find commit " + sha1;
+                return;
+            }
+
+            int index = info.IndexOf(sha1) + sha1.Length;
+
+            if (index < 0)
+            {
+                error = "Cannot find commit " + sha1;
+                return;
+            }
+            if (index >= info.Length)
+            {
+                error = info;
+                return;
+            }
+
+            UpdateBodyInCommitData(data, info, module);
+        }
+
+        /// <summary>
+        /// Gets the commit info for submodule.
+        /// </summary>
         public static CommitData GetCommitData(GitModule module, string sha1, ref string error)
         {
             if (module == null)
@@ -169,7 +212,7 @@ namespace GitCommands
             return commitInformation;
         }
 
-        public const string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N"; 
+        public const string LogFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
 
         /// <summary>
         /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
@@ -225,6 +268,47 @@ namespace GitCommands
                 committer, commitDate, body);
 
             return commitInformation;
+        }
+
+        public const string ShortLogFormat = "%H%n%e%n%B%nNotes:%n%-N";
+
+        /// <summary>
+        /// Creates a CommitData object from formated commit info data from git.  The string passed in should be
+        /// exact output of a log or show command using --format=LogFormat.
+        /// </summary>
+        /// <param name="data">Formated commit data from git.</param>
+        /// <returns>CommitData object populated with parsed info from git string.</returns>
+        public static void UpdateBodyInCommitData(CommitData commitData, string data, GitModule aModule)
+        {
+            if (data == null)
+                throw new ArgumentNullException("Data");
+
+            var lines = data.Split('\n');
+
+            var guid = lines[0];
+
+            string commitEncoding = lines[1];
+
+            int startIndex = 2;
+            int endIndex = lines.Length - 1;
+            if (lines[endIndex] == "Notes:")
+                endIndex--;
+
+            var message = new StringBuilder();
+            bool bNotesStart = false;
+            for (int i = startIndex; i <= endIndex; i++)
+            {
+                string line = lines[i];
+                if (bNotesStart)
+                    line = "    " + line;
+                message.AppendLine(line);
+                if (lines[i] == "Notes:")
+                    bNotesStart = true;
+            }
+
+            //commit message is not reencoded by git when format is given
+            Debug.Assert(commitData.Guid == guid);
+            commitData.Body = aModule.ReEncodeCommitMessage(message.ToString(), commitEncoding);
         }
 
         /// <summary>
