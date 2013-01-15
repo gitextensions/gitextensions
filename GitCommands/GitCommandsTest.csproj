@@ -40,7 +40,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="CommitInformationTest.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
