@@ -139,6 +139,7 @@ fileeditor filename
 formatpatch
 gitbash
 gitignore
+help (shows this dialog)
 init [path]
 merge [--branch name]
 mergeconflicts [--quiet]
