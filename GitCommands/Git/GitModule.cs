@@ -1601,11 +1601,12 @@ namespace GitCommands
             return output;
         }
 
-        public string StageFiles(IList<GitItemStatus> files)
+        public string StageFiles(IList<GitItemStatus> files, out bool wereErrors)
         {
             var gitCommand = new GitCommandsInstance(this);
 
             var output = "";
+            wereErrors = false;
 
             Process process1 = null;
             foreach (var file in files)
@@ -1623,6 +1624,7 @@ namespace GitCommands
             {
                 process1.StandardInput.Close();
                 process1.WaitForExit();
+                wereErrors = process1.ExitCode != 0;
 
                 if (gitCommand.Output != null)
                     output = gitCommand.Output.ToString().Trim();
@@ -1643,6 +1645,7 @@ namespace GitCommands
             {
                 process2.StandardInput.Close();
                 process2.WaitForExit();
+                wereErrors = wereErrors || process2.ExitCode != 0;
 
                 if (gitCommand.Output != null)
                 {
