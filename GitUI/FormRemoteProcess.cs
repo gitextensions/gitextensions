@@ -91,7 +91,7 @@ namespace GitUI
             {
                 //there might be an other error, this condition is too weak
                 /*
-                if (OutputString.ToString().Contains("successfully authenticated"))
+                if (GetOutputString().Contains("successfully authenticated"))
                 {
                     isError = false;
                     return false;
@@ -99,7 +99,7 @@ namespace GitUI
                 */
 
                 // If the authentication failed because of a missing key, ask the user to supply one. 
-                if (OutputString.ToString().Contains("FATAL ERROR") && OutputString.ToString().Contains("authentication"))
+                if (GetOutputString().Contains("FATAL ERROR") && GetOutputString().Contains("authentication"))
                 {
                     string loadedKey;
                     if (FormPuttyError.AskForKey(this, out loadedKey))
@@ -114,7 +114,7 @@ namespace GitUI
                         return true;
                     }
                 }
-                if (OutputString.ToString().ToLower().Contains("the server's host key is not cached in the registry"))
+                if (GetOutputString().ToLower().Contains("the server's host key is not cached in the registry"))
                 {
                     string remoteUrl;
 

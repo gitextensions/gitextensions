@@ -239,7 +239,7 @@ namespace GitUI
                         if (result == DialogResult.Cancel)
                             return false;
 
-                        track = result == DialogResult.OK;
+                        track = result == DialogResult.Yes;
                     }
                 }
 
@@ -322,7 +322,7 @@ namespace GitUI
                 //auto pull only if current branch was rejected
                 Regex IsRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranch) + ".*" + Regex.Escape(" (non-fast-forward)"), RegexOptions.Compiled);
 
-                if (Settings.AutoPullOnRejected && IsRejected.IsMatch(form.OutputString.ToString()))
+                if (Settings.AutoPullOnRejected && IsRejected.IsMatch(form.GetOutputString()))
                     
                 {
                     if (Settings.PullMerge == Settings.PullAction.Fetch)
@@ -332,16 +332,13 @@ namespace GitUI
                                             + "and one of the commits that are about to be rebased is a merge.");
                     else
                     {
-                        form.Visible = false;
                         bool pullCompleted;
-                        UICommands.StartPullDialog(form, true, out pullCompleted);
+                        UICommands.StartPullDialog(form.Owner ?? form, true, out pullCompleted);
                         if (pullCompleted)
                         {
-                            form.Visible = true;
                             form.Retry();
                             return true;
                         }
-                        form.Visible = true;
                     }
                 }
             }
