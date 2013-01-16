@@ -32,20 +32,17 @@ namespace GitCommandsTests.Helpers
             {
                 byte[] currentFileBytes = File.ReadAllBytes(currentFile.FullName);
                 byte[] otherFileBytes = File.ReadAllBytes(otherFilePath);
-
-                bool areEqual = true;
-
-                Parallel.For(0, currentFileBytes.LongLength, (i, state) =>
-                    {
-                        if (currentFileBytes[i] != otherFileBytes[i])
-                        {
-                            areEqual = false;
-                            state.Stop();
-                            return;
-                        }
-                    });
-
-                return areEqual;
+				
+				if(currentFileBytes.Length != otherFileBytes.Length)
+					return false;
+				
+				for(long i = 0;i<currentFileBytes.Length;i++)
+				{
+					if(!currentFileBytes[i].Equals(otherFileBytes[i]))
+						return false;
+				}
+				
+				return true;
             }
             catch (NullReferenceException)
             {
