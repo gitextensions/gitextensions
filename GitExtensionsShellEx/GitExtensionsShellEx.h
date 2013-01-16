@@ -66,10 +66,9 @@ public:
     // IContextMenu3
     STDMETHODIMP	HandleMenuMsg2(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT *pResult);
 
-    void RunGitEx(const char * command);
+    void RunGitEx(const TCHAR * command);
 
-    int PopulateMenu(HMENU hMenu, int firstId, int id, bool isSubMenu);
-    void AddMenuItem(HMENU hmenu, LPSTR text, int resource, int firstId, int id, UINT position);
+    UINT AddMenuItem(HMENU hmenu, LPTSTR text, int resource, UINT firstId, UINT id, UINT position, bool isSubMenu);
 
 protected:
     TCHAR m_szFile [MAX_PATH];
@@ -81,13 +80,16 @@ protected:
     FN_EndBufferedPaint pfnEndBufferedPaint;
 
     CString  GetRegistryValue(HKEY	hOpenKey, LPCTSTR szKey, LPCTSTR path);
-    bool IsMenuItemVisible(CString settings, int id);
+    bool DisplayInSubmenu(CString settings, int id);
 
     HBITMAP IconToBitmapPARGB32(UINT uIcon);
     HRESULT Create32BitHBITMAP(HDC hdc, const SIZE *psize, __deref_opt_out void **ppvBits, __out HBITMAP* phBmp);
     HRESULT ConvertBufferToPARGB32(HPAINTBUFFER hPaintBuffer, HDC hdc, HICON hicon, SIZE& sizIcon);
     bool HasAlpha(__in ARGB *pargb, SIZE& sizImage, int cxRow);
     HRESULT ConvertToPARGB32(HDC hdc, __inout ARGB *pargb, HBITMAP hbmp, SIZE& sizImage, int cxRow);
+
+    bool ValidWorkingDir(const std::wstring& dir);
+    bool IsValidGitDir(TCHAR m_szFile[]);
 };
 
 #endif //__GITEXTENSIONSSHELLEX_H_

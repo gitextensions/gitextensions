@@ -424,7 +424,7 @@ namespace GitUI
                 var cmdLineSafe = GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(filter);
                 revListArgs = " --regexp-ignore-case ";
                 if (parameters[0])
-                    if (cmdLineSafe)
+                    if (cmdLineSafe && !MessageFilterCouldBeSHA(filter))
                         revListArgs += "--grep=\"" + filter + "\" ";
                     else
                         inMemMessageFilter = filter;
@@ -663,28 +663,33 @@ namespace GitUI
 
         private class RevisionGridInMemFilter : RevisionGraphInMemFilter
         {
-            private readonly bool _IgnoreCase;
             private readonly string _AuthorFilter;
             private readonly Regex _AuthorFilterRegex;
             private readonly string _CommitterFilter;
             private readonly Regex _CommitterFilterRegex;
             private readonly string _MessageFilter;
             private readonly Regex _MessageFilterRegex;
+            private readonly string _ShaFilter;
+            private readonly Regex _ShaFilterRegex;
 
             public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
             {
-                _IgnoreCase = ignoreCase;
-                SetUpVars(authorFilter, ref _AuthorFilter, ref _AuthorFilterRegex);
-                SetUpVars(committerFilter, ref _CommitterFilter, ref _CommitterFilterRegex);
-                SetUpVars(messageFilter, ref _MessageFilter, ref _MessageFilterRegex);
+                SetUpVars(authorFilter, ref _AuthorFilter, ref _AuthorFilterRegex, ignoreCase);
+                SetUpVars(committerFilter, ref _CommitterFilter, ref _CommitterFilterRegex, ignoreCase);
+                SetUpVars(messageFilter, ref _MessageFilter, ref _MessageFilterRegex, ignoreCase);
+                if (!string.IsNullOrEmpty(_MessageFilter) && MessageFilterCouldBeSHA(_MessageFilter))
+                {
+                    SetUpVars(messageFilter, ref _ShaFilter, ref _ShaFilterRegex, false);
+                }
             }
 
-            private void SetUpVars(string filterValue,
+            private static void SetUpVars(string filterValue,
                                    ref string filterStr,
-                                   ref Regex filterRegEx)
+                                   ref Regex filterRegEx,
+                                   bool ignoreCase)
             {
                 RegexOptions opts = RegexOptions.None;
-                if (_IgnoreCase) opts = opts | RegexOptions.IgnoreCase;
+                if (ignoreCase) opts = opts | RegexOptions.IgnoreCase;
                 filterStr = filterValue != null ? filterValue.Trim() : string.Empty;
                 try
                 {
@@ -706,7 +711,8 @@ namespace GitUI
             {
                 return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
                        CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
-                       CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message);
+                       (CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message) ||
+                        CheckCondition(_ShaFilter, _ShaFilterRegex, rev.Guid));
             }
 
             public static RevisionGridInMemFilter CreateIfNeeded(string authorFilter,
@@ -716,7 +722,8 @@ namespace GitUI
             {
                 if (!(string.IsNullOrEmpty(authorFilter) &&
                       string.IsNullOrEmpty(committerFilter) &&
-                      string.IsNullOrEmpty(messageFilter)))
+                      string.IsNullOrEmpty(messageFilter) &&
+                      !MessageFilterCouldBeSHA(messageFilter)))
                     return new RevisionGridInMemFilter(authorFilter,
                                                        committerFilter,
                                                        messageFilter,
@@ -841,6 +848,14 @@ namespace GitUI
             }
         }
 
+        private static readonly Regex potentialShaPattern = new Regex(@"^[a-f0-9]{5,}", RegexOptions.Compiled);
+        public static bool MessageFilterCouldBeSHA(string filter)
+        {
+            bool result = potentialShaPattern.IsMatch(filter);
+
+            return result;
+        }
+
         private void _revisionGraphCommand_Error(object sender, EventArgs e)
         {
             // This has to happen on the UI thread
@@ -951,7 +966,7 @@ namespace GitUI
                 .Rows
                 .Cast<DataGridViewRow>();
             var revisions = rows
-                .Select(row => new{ Index = row.Index, Guid = GetRevision(row.Index).Guid });
+                .Select(row => new { Index = row.Index, Guid = GetRevision(row.Index).Guid });
 
             var idx = revisions.FirstOrDefault(rev => rev.Guid == initRevision);
             if (idx != null)
@@ -1887,7 +1902,7 @@ namespace GitUI
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
-            UICommands.StartCheckoutBranchDialog(this, GetRevision(LastRow).Guid, false);            
+            UICommands.StartCheckoutBranchDialog(this, GetRevision(LastRow).Guid, false);
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }

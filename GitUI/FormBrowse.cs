@@ -76,9 +76,6 @@ namespace GitUI
         private readonly TranslationString _configureWorkingDirMenu =
             new TranslationString("Configure this menu");
 
-        private readonly TranslationString _UnsupportedMultiselectAction =
-            new TranslationString("Operation not supported");
-
         private readonly TranslationString _alwaysShowCheckoutDlgStr =
             new TranslationString("Always show checkout dialog");
 
@@ -89,8 +86,6 @@ namespace GitUI
             new TranslationString("Update all superproject submodules");
 
         #endregion
-
-        private string _NoDiffFilesChangesText;
 
         private readonly SynchronizationContext syncContext;
         private Dashboard _dashboard;
@@ -146,7 +141,6 @@ namespace GitUI
             filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
             _FilterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, RevisionGrid);
             Translate();
-            _NoDiffFilesChangesText = DiffFiles.GetNoFilesText();
 
             if (Settings.ShowGitStatusInBrowseToolbar)
             {
@@ -178,13 +172,23 @@ namespace GitUI
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             this.toolPanel.SplitterDistance = this.ToolStrip.Height;
             this._dontUpdateOnIndexChange = false;
-            GitUICommandsChanged += (a, b) => RefreshPullIcon();
+            GitUICommandsChanged += (a, oldcommands) =>
+            {
+                RefreshPullIcon();
+                oldcommands.BrowseInitialize -= UICommands_BrowseInitialize;
+                UICommands.BrowseInitialize += UICommands_BrowseInitialize;
+            };
             if (aCommands != null)
             {
                 RefreshPullIcon();
-                UICommands.BrowseInitialize += (a, b) => Initialize();
+                UICommands.BrowseInitialize += UICommands_BrowseInitialize;
             }
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+        }
+
+        void UICommands_BrowseInitialize(object sender, GitUIBaseEventArgs e)
+        {
+            Initialize();
         }
 
         private void ShowDashboard()
@@ -325,6 +329,8 @@ namespace GitUI
         {
             foreach (var plugin in LoadedPlugins.Plugins)
                 plugin.Register(UICommands);
+
+            UICommands.RaisePostRegisterPlugin(this);
         }
 
         private void UnregisterPlugins()
@@ -878,70 +884,27 @@ namespace GitUI
 
             DiffText.SaveCurrentScrollPos();
 
-            DiffFiles.SetNoFilesText(_NoDiffFilesChangesText);
+            DiffFiles.SetDiffs(revisions);
 
             switch (revisions.Count)
             {
                 case 0:
-                    DiffFiles.GitItemStatuses = null;
                     DiffTabPage.Text = string.Format("{0} (no selection)", DiffTabPageTitleBase);
                     break;
 
                 case 1: // diff "parent" --> "selected revision"
                     var revision = revisions[0];
-
-                    DiffFiles.Revision = revision;
-
-                    if (revision == null)
-                    {
-                        DiffFiles.GitItemStatuses = null;
-                    }
-                    else if (revision.ParentGuids == null || revision.ParentGuids.Length == 0)
-                    {
-                        DiffFiles.GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
-                    }
-                    else
-                    {
-                        if (revision.Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
-                        {
-                            DiffFiles.GitItemStatuses = Module.GetUnstagedFiles();
-                        }
-                        else if (revision.Guid == GitRevision.IndexGuid) //index
-                        {
-                            DiffFiles.GitItemStatuses = Module.GetStagedFiles();
-                        }
-                        else
-                        {
-                            DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
-                        }
-
+                    if (revision != null && revision.ParentGuids != null && revision.ParentGuids.Length != 0)
                         DiffTabPage.Text = string.Format("{0} (A: parent --> B: selection)", DiffTabPageTitleBase);
-                    }
                     break;
 
                 case 2: // diff "first clicked revision" --> "second clicked revision"
                     bool artificialRevSelected = revisions[0].IsArtificial() || revisions[1].IsArtificial();
-                    if (artificialRevSelected)
-                    {
-                        DiffFiles.SetNoFilesText(_UnsupportedMultiselectAction.Text);
-                        DiffFiles.GitItemStatuses = null;
-                    }
-                    else
-                    {
-                        // TODO: depending on which commit was selected first (how to determine this?)
-                        // show either
-                        // "{0} (A: lower --> B: upper)" or
-                        // "{0} (A: upper --> B: lower)"
-                        // Alternatively: Make A and B somehow visible in the revision grid as soon as the Diff Tab is visible
-                        //
-                        DiffFiles.GitItemStatuses = Module.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
+                    if (!artificialRevSelected)
                         DiffTabPage.Text = string.Format("{0} (A: first --> B: second)", DiffTabPageTitleBase);
-                    }
                     break;
 
                 default: // more than 2 revisions selected => no diff
-                    DiffFiles.SetNoFilesText(_UnsupportedMultiselectAction.Text);
-                    DiffFiles.GitItemStatuses = null;
                     DiffTabPage.Text = string.Format("{0} (not supported)", DiffTabPageTitleBase);
                     break;
             }
@@ -1229,8 +1192,13 @@ namespace GitUI
                 {
                     bSilent = (ModifierKeys & Keys.Shift) != 0;
                 }
-                else
+                else if (Module.LastPullAction == Settings.PullAction.FetchAll)
                 {
+                    fetchAllToolStripMenuItem_Click(sender, e);
+                    return;
+                }
+                else
+                { 
                     bSilent = true;
                     Module.LastPullActionToPullMerge();
                 }
@@ -1536,9 +1504,7 @@ namespace GitUI
                 return;
             }
 
-            GitItemStatus selectedItem = DiffFiles.SelectedItem;
-
-            DiffText.ViewPatch(RevisionGrid, selectedItem, String.Empty);
+            DiffText.ViewPatch(RevisionGrid, DiffFiles.SelectedItem, String.Empty);
         }
 
 

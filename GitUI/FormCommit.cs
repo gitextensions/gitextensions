@@ -973,6 +973,7 @@ namespace GitUI
                     files.Add(gitItemStatus);
                 }
 
+                bool wereErrors = false;
                 if (Settings.ShowErrorsWhenStagingFiles)
                 {
                     FormStatus.ProcessStart processStart =
@@ -980,7 +981,7 @@ namespace GitUI
                         {
                             form.AddMessageLine(string.Format(_stageFiles.Text,
                                                          files.Count));
-                            var output = Module.StageFiles(files);
+                            var output = Module.StageFiles(files, out wereErrors);
                             form.AddMessageLine(output);
                             form.Done(string.IsNullOrEmpty(output));
                         };
@@ -989,18 +990,21 @@ namespace GitUI
                 }
                 else
                 {
-                    Module.StageFiles(files);
+                    Module.StageFiles(files, out wereErrors);
                 }
+                if (wereErrors)
+                    RescanChanges();
+                else
+                {
+                    InitializedStaged();
+                    var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatuses;
+                    Unstaged.GitItemStatuses = null;
 
-                InitializedStaged();
-                var stagedFiles = (List<GitItemStatus>)Staged.GitItemStatuses;
-                var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatuses;
-                Unstaged.GitItemStatuses = null;
+                    unStagedFiles.RemoveAll(item => files.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
 
-                unStagedFiles.RemoveAll(item => stagedFiles.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
-
-                Unstaged.GitItemStatuses = unStagedFiles;
-                Unstaged.SelectStoredNextIndex();
+                    Unstaged.GitItemStatuses = unStagedFiles;
+                    Unstaged.SelectStoredNextIndex();
+                }                
 
                 toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
 
