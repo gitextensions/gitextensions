@@ -158,7 +158,7 @@ namespace GitUI.SettingsDialog.Pages
 
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            using (var frm = new FormTranslate()) frm.ShowDialog(this);
+            Process.Start(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TranslationApp.exe"));
         }
 
         private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
