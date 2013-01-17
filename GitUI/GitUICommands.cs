@@ -758,7 +758,7 @@ namespace GitUI
             if (!InvokeEvent(owner, PreViewPatch))
                 return true;
 
-            using (var viewPatch = new ViewPatch(this))
+            using (var viewPatch = new FormViewPatch(this))
             {
                 if (!String.IsNullOrEmpty(patchFile))
                     viewPatch.LoadPatch(patchFile);
