@@ -271,7 +271,7 @@ namespace GitUI
 
         private void TranslateItem_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormTranslate()) frm.ShowDialog(this);
+            Process.Start(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TranslationApp.exe"));
         }
 
         private static void GitHubItem_Click(object sender, EventArgs e)

@@ -6,9 +6,10 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using GitUI;
 using ResourceManager.Translation;
 
-namespace GitUI
+namespace TranslationApp
 {
     public partial class FormTranslate : GitExtensionsForm
     {
@@ -274,6 +275,7 @@ namespace GitUI
             finally
             {
                 neutralTranslation.Sort();
+                
                 //Restore translation
                 GitCommands.Settings.Translation = currentTranslation;
             }

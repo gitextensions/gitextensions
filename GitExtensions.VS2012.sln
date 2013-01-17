@@ -57,6 +57,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitCommandsTest", "GitExten
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseNotesGenerator", "Plugins\ReleaseNotesGenerator\ReleaseNotesGenerator.csproj", "{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslationApp", "TranslationApp\TranslationApp.csproj", "{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -343,6 +345,18 @@ Global
 		{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8}.Release|x64.ActiveCfg = Release|Any CPU
 		{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8}.Release|x86.ActiveCfg = Release|Any CPU
+		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Release|x64.ActiveCfg = Release|Any CPU
+		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
