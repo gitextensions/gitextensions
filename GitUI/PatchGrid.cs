@@ -39,7 +39,7 @@ namespace GitUI
 
             var patchFile = (PatchFile)Patches.SelectedRows[0].DataBoundItem;
 
-            using (var viewPatch = new ViewPatch(UICommands))
+            using (var viewPatch = new FormViewPatch(UICommands))
             {
                 viewPatch.LoadPatch(patchFile.FullName);
                 viewPatch.ShowDialog(this);

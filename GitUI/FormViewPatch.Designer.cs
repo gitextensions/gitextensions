@@ -2,7 +2,7 @@
 
 namespace PatchApply
 {
-    partial class ViewPatch
+    partial class FormViewPatch
     {
         /// <summary>
         /// Required designer variable.
@@ -200,13 +200,13 @@ namespace PatchApply
             this.tableLayoutPanel2.Size = new System.Drawing.Size(683, 31);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
-            // ViewPatch
+            // FormViewPatch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(689, 501);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "ViewPatch";
+            this.Name = "FormViewPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "View patch file";
             this.Load += new System.EventHandler(this.ViewPatch_Load);
