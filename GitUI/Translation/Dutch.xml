@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Translation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" GitExVersion="2.43">
+<Translation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="2.43">
   <translationCategories>
     <TranslationCategory Name="AboutBox">
       <translationItems>
@@ -167,6 +167,10 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
     </TranslationCategory>
     <TranslationCategory Name="ChecklistSettingsPage">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Checklist</Source>
+          <Value>Check lijst</Value>
+        </TranslationItem>
         <TranslationItem Name="_adviceDiffToolConfiguration" Property="Text" type="unfinished">
           <Source>You should configure a diff tool to show file diff in external program (kdiff3 for example).</Source>
           <Value />
@@ -1453,7 +1457,7 @@ U heeft rechten om commits te verzenden. {2}
           <Source>Selected revision to archive:</Source>
           <Value>Selecteer een revisie om te archiveren</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="obsolete">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Choose another
 revision:</Source>
           <Value>Kies een andere revisie</Value>
@@ -1622,7 +1626,7 @@ revision:</Source>
           <Source>index.lock not found at:</Source>
           <Value>index.lock niet gevonden in:</Value>
         </TranslationItem>
-        <TranslationItem Name="_noBranchTitle" Property="Text" type="obsolete">
+        <TranslationItem Name="_noBranchTitle" Property="Text">
           <Source>no branch</Source>
           <Value>geen vertakking</Value>
         </TranslationItem>
@@ -1806,11 +1810,11 @@ revision:</Source>
           <Source>Compress git database</Source>
           <Value>Comprimeer git database</Value>
         </TranslationItem>
-        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem" Property="Text" type="obsolete">
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem" Property="Text">
           <Source>Copy full path</Source>
           <Value>Kopieer bestandsnaam naar klembord</Value>
         </TranslationItem>
-        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text" type="obsolete">
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text">
           <Source>Copy full path</Source>
           <Value>Kopieer bestandsnaam naar klembord</Value>
         </TranslationItem>
@@ -1842,7 +1846,7 @@ revision:</Source>
           <Source>Don't set as default</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="editCheckedOutFileToolStripMenuItem" Property="Text" type="obsolete">
+        <TranslationItem Name="editCheckedOutFileToolStripMenuItem" Property="Text">
           <Source>Edit working dir file</Source>
           <Value>Wijzig uitgecheckt bestand</Value>
         </TranslationItem>
@@ -1998,7 +2002,7 @@ revision:</Source>
           <Source>Open with difftool</Source>
           <Value>Openen met Difftool</Value>
         </TranslationItem>
-        <TranslationItem Name="openWithToolStripMenuItem" Property="Text" type="obsolete">
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
           <Source>Open working dir file with...</Source>
           <Value>Open uitgecheckt bestand  met...</Value>
         </TranslationItem>
@@ -2062,7 +2066,11 @@ revision:</Source>
           <Source>Remote</Source>
           <Value>Extern</Value>
         </TranslationItem>
-        <TranslationItem Name="resetFileToRemoteToolStripMenuItem" Property="Text" type="obsolete">
+        <TranslationItem Name="resetFileToAToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>A</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="resetFileToRemoteToolStripMenuItem" Property="Text">
           <Source>B</Source>
           <Value>Extern</Value>
         </TranslationItem>
@@ -2073,6 +2081,10 @@ revision:</Source>
         <TranslationItem Name="resetToolStripMenuItem" Property="Text">
           <Source>Reset changes</Source>
           <Value>Alle wijzigingen ongedaan maken</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetToThisRevisionToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Reset to selected revision</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
           <Source>Solve mergeconflicts</Source>
@@ -2366,7 +2378,7 @@ Voer een geldige naam in of selecteeer een voorgedefinieerde keuze.</Value>
     </TranslationCategory>
     <TranslationCategory Name="FormCherryPick">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Cherry pick commit</Source>
           <Value>Cherry pick</Value>
         </TranslationItem>
@@ -2378,13 +2390,17 @@ Voer een geldige naam in of selecteeer een voorgedefinieerde keuze.</Value>
           <Source>Error</Source>
           <Value>Error</Value>
         </TranslationItem>
-        <TranslationItem Name="AutoCommit" Property="Text" type="obsolete">
+        <TranslationItem Name="AutoCommit" Property="Text">
           <Source>Automatically create a commit</Source>
           <Value>Maak automatisch een nieuwe commit aan wanneer er geen samenvoeg problemen zijn.</Value>
         </TranslationItem>
         <TranslationItem Name="BranchInfo" Property="Text">
           <Source>Cherry pick this commit:</Source>
           <Value>Cerrypick deze commit:</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkAddReference" Property="Text" type="unfinished">
+          <Source>Add commit reference to commit message</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="columnHeader1" Property="Text">
           <Source>No.</Source>
@@ -2617,8 +2633,9 @@ Wilt u de nieuwe repository "{0}" openen?</Value>
           <Source>Commandline usage</Source>
           <Value>Commandline opties</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Source>Supported commandline arguments:</Source>
+        <TranslationItem Name="label1" Property="Text" type="obsolete">
+          <Source>Supported commandline arguments for
+gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
           <Value>Ondersteunde commandline argumenten:</Value>
         </TranslationItem>
       </translationItems>
@@ -2832,7 +2849,7 @@ Weet u zeker dat u wilt doorgaan?</Value>
           <Source>Add file to .gitignore</Source>
           <Value>Voeg bestand toe aan .gitignore</Value>
         </TranslationItem>
-        <TranslationItem Name="Amend" Property="Text" type="obsolete">
+        <TranslationItem Name="Amend" Property="Text">
           <Source>&amp;Amend Commit</Source>
           <Value>&amp;Wijzig laatste commit</Value>
         </TranslationItem>
@@ -2908,7 +2925,7 @@ Weet u zeker dat u wilt doorgaan?</Value>
           <Source>Edit ignored files</Source>
           <Value>Wijzig genegeerde bestanden</Value>
         </TranslationItem>
-        <TranslationItem Name="filenameToClipboardToolStripMenuItem" Property="Text" type="obsolete">
+        <TranslationItem Name="filenameToClipboardToolStripMenuItem" Property="Text">
           <Source>Copy full path</Source>
           <Value>Bestandsnaam naar clipbord</Value>
         </TranslationItem>
@@ -2968,7 +2985,7 @@ Weet u zeker dat u wilt doorgaan?</Value>
           <Source>Reset all (tracked) changes</Source>
           <Value>Wijzigingen in alle bestanden ongedaan maken.</Value>
         </TranslationItem>
-        <TranslationItem Name="resetChanges" Property="Text" type="obsolete">
+        <TranslationItem Name="resetChanges" Property="Text">
           <Source>Reset file or directory changes</Source>
           <Value>Wijzigingen ongedaan maken</Value>
         </TranslationItem>
@@ -3045,7 +3062,7 @@ Weet u zeker dat u wilt doorgaan?</Value>
           <Source>Edit file</Source>
           <Value>Wijzig bestand</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripMenuItem14" Property="Text" type="obsolete">
+        <TranslationItem Name="toolStripMenuItem14" Property="Text">
           <Source>Copy full path</Source>
           <Value>Bestandsnaam naar clipbord</Value>
         </TranslationItem>
@@ -3410,6 +3427,10 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
           <Source>Diff</Source>
           <Value>Verschillen</Value>
         </TranslationItem>
+        <TranslationItem Name="diffToolremotelocalStripMenuItem" Property="Text" type="unfinished">
+          <Source>Difftool selected &lt; - &gt; local</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="followFileHistoryToolStripMenuItem" Property="Text">
           <Source>Detect and follow renames</Source>
           <Value>Detecteer hernoemen van bestand</Value>
@@ -3586,12 +3607,6 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
 Send to:</Source>
           <Value>Verzenden naar:</Value>
         </TranslationItem>
-        <TranslationItem Name="_sendMailResultFailed" Property="Text" type="unfinished">
-          <Source>
-
-Failed to send mail.</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="_twoRevisionsNeededCaption" Property="Text" type="unfinished">
           <Source>Patch error</Source>
           <Value />
@@ -3631,118 +3646,6 @@ Failed to send mail.</Source>
         <TranslationItem Name="SendToMail" Property="Text">
           <Source>Mail patches to</Source>
           <Value>Mail patches naar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormGerritChangeSubmitted">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Change Submitted</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="btnClose" Property="Text">
-          <Source>Close</Source>
-          <Value>Sluiten</Value>
-        </TranslationItem>
-        <TranslationItem Name="labelSubmitted" Property="Text" type="unfinished">
-          <Source>Your change has been submitted for review at the following location:</Source>
-          <Value />
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormGerritDownload">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Download Gerrit Change</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_cannotGetChangeDetails" Property="Text" type="unfinished">
-          <Source>Could not retrieve the change details</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_downloadCaption" Property="Text" type="unfinished">
-          <Source>Download change {0}</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text" type="unfinished">
-          <Source>Download Gerrit Change</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_selectChange" Property="Text" type="unfinished">
-          <Source>Please enter a change</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_selectRemote" Property="Text">
-          <Source>Please select a remote repository</Source>
-          <Value>Selecteer een doel directory</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddRemote" Property="Text">
-          <Source>Manage remotes</Source>
-          <Value>Beheer externe opslagplaatsen</Value>
-        </TranslationItem>
-        <TranslationItem Name="Download" Property="Text" type="unfinished">
-          <Source>&amp;Download</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="labelChange" Property="Text" type="unfinished">
-          <Source>Change:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="labelRemote" Property="Text" type="unfinished">
-          <Source>Remote:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="labelTopicBranch" Property="Text" type="unfinished">
-          <Source>Topic branch:</Source>
-          <Value />
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormGerritPublish">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Publish Gerrit Change</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text" type="unfinished">
-          <Source>Download Gerrit Change</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_publishCaption" Property="Text" type="unfinished">
-          <Source>Publish change</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_selectBranch" Property="Text" type="unfinished">
-          <Source>Please enter a branch</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_selectRemote" Property="Text">
-          <Source>Please select a remote repository</Source>
-          <Value>Selecteer een doel directory</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddRemote" Property="Text">
-          <Source>Manage remotes</Source>
-          <Value>Beheer externe opslagplaatsen</Value>
-        </TranslationItem>
-        <TranslationItem Name="labelBranch" Property="Text" type="unfinished">
-          <Source>Branch:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="labelRemote" Property="Text" type="unfinished">
-          <Source>Remote:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="labelTopic" Property="Text" type="unfinished">
-          <Source>Topic:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="Publish" Property="Text" type="unfinished">
-          <Source>&amp;Publish</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="PublishDraft" Property="Text" type="unfinished">
-          <Source>Submit review as draft</Source>
-          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3914,62 +3817,6 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="lnkGitIgnorePatterns" Property="Text" type="unfinished">
           <Source>More gitignore patterns</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
-          <Source>Save</Source>
-          <Value>Opslaan</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormGitReview">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Edit .gitreview</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_cannotAccessGitreview" Property="Text" type="unfinished">
-          <Source>Failed to save .gitreview.
-Check if file is accessible.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_cannotAccessGitreviewCaption" Property="Text" type="unfinished">
-          <Source>Failed to save .gitreview</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_gitreviewOnlyInWorkingDirSupported" Property="Text" type="unfinished">
-          <Source>.gitreview is only supported when there is a working dir.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_gitreviewOnlyInWorkingDirSupportedCaption" Property="Text">
-          <Source>No working dir</Source>
-          <Value>Geen werk directory</Value>
-        </TranslationItem>
-        <TranslationItem Name="_saveFileQuestion" Property="Text" type="unfinished">
-          <Source>Save changes to .gitreview?</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_saveFileQuestionCaption" Property="Text">
-          <Source>Save changes?</Source>
-          <Value>Wijzigingen opslaan?</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
-          <Source>Provide the configuration for
-.gitreview to setup Gerrit.
-
-Example configuration:
-
-[gerrit]
-host=review.example.com
-port=29418
-project=department/project.git
-defaultbranch=master
-defaultremote=review
-defaultrebase=0</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="lnkGitReviewHelp" Property="Text" type="unfinished">
-          <Source>GitHub page for git-review</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
@@ -4270,24 +4117,6 @@ De aanpassingen worden ook in gemeenschappelijke oorspronkelijke vertakking uitg
         <TranslationItem Name="Abort" Property="Text">
           <Source>Abort</Source>
           <Value>Afbreken</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormPluginInformation">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Gerrit Plugin</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="btnClose" Property="Text">
-          <Source>Close</Source>
-          <Value>Sluiten</Value>
-        </TranslationItem>
-        <TranslationItem Name="informationLabel" Property="Text" type="unfinished">
-          <Source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
-
-To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Settings | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</Source>
-          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4989,7 +4818,7 @@ De waarde is teruggezet naar een lege waarde.</Value>
           <Source>Remote repository</Source>
           <Value>Externe opslagplaats</Value>
         </TranslationItem>
-        <TranslationItem Name="Save" Property="Text" type="obsolete">
+        <TranslationItem Name="Save" Property="Text">
           <Source>Save changes</Source>
           <Value>Opslaan</Value>
         </TranslationItem>
@@ -5565,7 +5394,7 @@ Wilt u dit script gebruiken om samen te voegen?</Value>
           <Source>Error</Source>
           <Value>Error</Value>
         </TranslationItem>
-        <TranslationItem Name="AutoCommit" Property="Text" type="obsolete">
+        <TranslationItem Name="AutoCommit" Property="Text">
           <Source>Automatically create a commit</Source>
           <Value>Maak automatisch een commit aan</Value>
         </TranslationItem>
@@ -5704,6 +5533,13 @@ Wilt u dit script gebruiken om samen te voegen?</Value>
         <TranslationItem Name="$this" Property="Text">
           <Source>Settings</Source>
           <Value>Instellingen</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cantFindGitMessage" Property="Text" type="unfinished">
+          <Source>The command to run git is not configured correct.
+You need to set the correct path to be able to use GitExtensions.
+
+Do you want to set the correct command now? If not Global and Local Settings will not be saved.</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_cantFindGitMessageCaption" Property="Text" type="unfinished">
           <Source>Incorrect path</Source>
@@ -6434,7 +6270,7 @@ te kunnen wijzigen.</Value>
           <Source>Stash</Source>
           <Value>Stash</Value>
         </TranslationItem>
-        <TranslationItem Name="Apply" Property="Text" type="obsolete">
+        <TranslationItem Name="Apply" Property="Text">
           <Source>Apply Selected</Source>
           <Value>Zet geselecteerde stash terug op de werk directorie</Value>
         </TranslationItem>
@@ -6450,7 +6286,7 @@ te kunnen wijzigen.</Value>
           <Source>Include untracked files</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="Clear" Property="Text" type="obsolete">
+        <TranslationItem Name="Clear" Property="Text">
           <Source>Delete Selected</Source>
           <Value>Verwijder geselecteerde stash</Value>
         </TranslationItem>
@@ -6466,7 +6302,7 @@ te kunnen wijzigen.</Value>
           <Source>There are no stashes.</Source>
           <Value>Er zijn geen weggezette wijzigingen</Value>
         </TranslationItem>
-        <TranslationItem Name="Stash" Property="Text" type="obsolete">
+        <TranslationItem Name="Stash" Property="Text">
           <Source>Save Changes</Source>
           <Value>Stash alle wijzigingen</Value>
         </TranslationItem>
@@ -6490,7 +6326,7 @@ te kunnen wijzigen.</Value>
           <Source>Stash untracked files</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="toolStripButton_customMessage" Property="Text" type="obsolete">
+        <TranslationItem Name="toolStripButton_customMessage" Property="Text">
           <Source>Custom stash message</Source>
           <Value>Aangepast bericht</Value>
         </TranslationItem>
@@ -6526,12 +6362,6 @@ Do you want to register the host's fingerprint and restart the process?</Source>
         </TranslationItem>
         <TranslationItem Name="_fingerprintNotRegistredTextCaption" Property="Text" type="unfinished">
           <Source>Host Fingerprint not registered</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text" type="unfinished">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
@@ -6804,15 +6634,15 @@ Wilt u de nieuwe repository "{0}" openen?</Value>
     </TranslationCategory>
     <TranslationCategory Name="FormTranslate">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Translate</Source>
           <Value>Vertaal</Value>
         </TranslationItem>
-        <TranslationItem Name="allText" Property="Text" type="obsolete">
+        <TranslationItem Name="allText" Property="Text">
           <Source>All</Source>
           <Value>Alles</Value>
         </TranslationItem>
-        <TranslationItem Name="categoryDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
+        <TranslationItem Name="categoryDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Category</Source>
           <Value>Categorie</Value>
         </TranslationItem>
@@ -6820,49 +6650,49 @@ Wilt u de nieuwe repository "{0}" openen?</Value>
           <Source>[EDITING]</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="googleAll" Property="Text" type="obsolete">
+        <TranslationItem Name="googleAll" Property="Text">
           <Source>Google all empty</Source>
           <Value>Google ontbrekende</Value>
         </TranslationItem>
-        <TranslationItem Name="googleTranslate" Property="Text" type="obsolete">
+        <TranslationItem Name="googleTranslate" Property="Text">
           <Source>Google translate</Source>
           <Value>Google Translate</Value>
         </TranslationItem>
-        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Name</Source>
           <Value>Naam</Value>
         </TranslationItem>
-        <TranslationItem Name="neutralValueDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
+        <TranslationItem Name="neutralValueDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>NeutralValue</Source>
           <Value>Neutrale waarde</Value>
         </TranslationItem>
-        <TranslationItem Name="nextButton" Property="Text" type="obsolete">
+        <TranslationItem Name="nextButton" Property="Text">
           <Source>&amp;Next</Source>
           <Value>&amp;Volgende</Value>
         </TranslationItem>
-        <TranslationItem Name="noLanguageCodeSelected" Property="Text" type="obsolete">
+        <TranslationItem Name="noLanguageCodeSelected" Property="Text">
           <Source>There is no languagecode selected.
 Do you want to select a language code first?</Source>
           <Value>Er is geen taalcode geselecteerd.
 Wilt u eerst een taalcode selecteren?</Value>
         </TranslationItem>
-        <TranslationItem Name="noLanguageCodeSelectedCaption" Property="Text" type="obsolete">
+        <TranslationItem Name="noLanguageCodeSelectedCaption" Property="Text">
           <Source>Language code</Source>
           <Value>Taalcode</Value>
         </TranslationItem>
-        <TranslationItem Name="previousButton" Property="Text" type="obsolete">
+        <TranslationItem Name="previousButton" Property="Text">
           <Source>&amp;Previous</Source>
           <Value>&amp;Vorige</Value>
         </TranslationItem>
-        <TranslationItem Name="propertyDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
+        <TranslationItem Name="propertyDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Property</Source>
           <Value>Eigenschap</Value>
         </TranslationItem>
-        <TranslationItem Name="saveAs" Property="ToolTipText" type="obsolete">
+        <TranslationItem Name="saveAs" Property="ToolTipText">
           <Source>Save translation</Source>
           <Value>Bewaar vertaling</Value>
         </TranslationItem>
-        <TranslationItem Name="saveAsText" Property="Text" type="obsolete">
+        <TranslationItem Name="saveAsText" Property="Text">
           <Source>Save as</Source>
           <Value>Opslaan als</Value>
         </TranslationItem>
@@ -6870,39 +6700,39 @@ Wilt u eerst een taalcode selecteren?</Value>
           <Source>Translation file (*.xml)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="saveCurrentChangesCaption" Property="Text" type="obsolete">
+        <TranslationItem Name="saveCurrentChangesCaption" Property="Text">
           <Source>Save changes</Source>
           <Value>Wijzigingen opslaan</Value>
         </TranslationItem>
-        <TranslationItem Name="saveCurrentChangesText" Property="Text" type="obsolete">
+        <TranslationItem Name="saveCurrentChangesText" Property="Text">
           <Source>Do you want to save the current changes?</Source>
           <Value>Wilt u de gemaakte wijzigingen opslaan?</Value>
         </TranslationItem>
-        <TranslationItem Name="selectLanguageCode" Property="Text" type="obsolete">
+        <TranslationItem Name="selectLanguageCode" Property="Text">
           <Source>Select a language code first.</Source>
           <Value>Selecteer eerst een taalcode.</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonNew" Property="Text" type="obsolete">
+        <TranslationItem Name="toolStripButtonNew" Property="Text">
           <Source>New</Source>
           <Value>Nieuw</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonNew" Property="ToolTipText" type="obsolete">
+        <TranslationItem Name="toolStripButtonNew" Property="ToolTipText">
           <Source>Create new translation</Source>
           <Value>Maak een nieuwe vertaling</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripTranslationLabel" Property="Text" type="obsolete">
+        <TranslationItem Name="toolStripTranslationLabel" Property="Text">
           <Source>Current translation:</Source>
           <Value>Vertaling:</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text" type="obsolete">
+        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
           <Source>Language code:</Source>
           <Value>Taalcode:</Value>
         </TranslationItem>
-        <TranslationItem Name="translatedValueDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
+        <TranslationItem Name="translatedValueDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>TranslatedValue</Source>
           <Value>Vertaalde waarde</Value>
         </TranslationItem>
-        <TranslationItem Name="translateProgressText" Property="Text" type="obsolete">
+        <TranslationItem Name="translateProgressText" Property="Text">
           <Source>Translated {0} out of {1}</Source>
           <Value>Reeds vertaald: {0} van {1}</Value>
         </TranslationItem>
@@ -7033,6 +6863,42 @@ nodes.
 </Source>
           <Value>Toon alle objecten die  wel bestaan maar niet te bereiken zijn via een 
 andere node.</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormViewPatch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>View patch file</Source>
+          <Value>Bekijk patch bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="_patchFileFilterString" Property="Text">
+          <Source>Patch file (*.Patch)</Source>
+          <Value>Patch file (*.Patch)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_patchFileFilterTitle" Property="Text">
+          <Source>Select patch file</Source>
+          <Value>Selecteer patch</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowsePatch" Property="Text">
+          <Source>Browse</Source>
+          <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="File" Property="HeaderText">
+          <Source>Type</Source>
+          <Value>Type</Value>
+        </TranslationItem>
+        <TranslationItem Name="FileNameA" Property="HeaderText">
+          <Source>Filename</Source>
+          <Value>Bestandsnaam</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelPatch" Property="Text">
+          <Source>Patch</Source>
+          <Value>Patch</Value>
+        </TranslationItem>
+        <TranslationItem Name="typeDataGridViewTextBoxColumn" Property="HeaderText">
+          <Source>Change</Source>
+          <Value>Wijziging</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7201,6 +7067,10 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
     </TranslationCategory>
     <TranslationCategory Name="GlobalSettingsSettingsPage">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Global settings</Source>
+          <Value>Globale instelingen</Value>
+        </TranslationItem>
         <TranslationItem Name="__diffToolSuggestCaption" Property="Text" type="unfinished">
           <Source>Suggest difftool cmd</Source>
           <Value />
@@ -7351,6 +7221,15 @@ te kunnen wijzigen.</Value>
           <Source>label1</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="linkLabelHide" Property="Text" type="unfinished">
+          <Source>Hide help</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="linkLabelShowHelp" Property="Text" type="unfinished">
+          <Source>Show
+help</Source>
+          <Value />
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="HotkeysSettingsPage">
@@ -7363,6 +7242,10 @@ te kunnen wijzigen.</Value>
     </TranslationCategory>
     <TranslationCategory Name="LocalSettingsSettingsPage">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Local settings</Source>
+          <Value>Lokale instellingen</Value>
+        </TranslationItem>
         <TranslationItem Name="groupBox10" Property="Text">
           <Source>Line endings</Source>
           <Value>Regel einden</Value>
@@ -7474,7 +7357,7 @@ kunnen wijzigen.</Value>
     </TranslationCategory>
     <TranslationCategory Name="Open">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Open local repository</Source>
           <Value>Open repository</Value>
         </TranslationItem>
@@ -7664,7 +7547,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
           <Source>The current working dir is not a git repository.</Source>
           <Value>De huidige werk directorie is geen git opslagplaats</Value>
         </TranslationItem>
-        <TranslationItem Name="manipulateCommitToolStripMenuItem" Property="Text" type="obsolete">
+        <TranslationItem Name="manipulateCommitToolStripMenuItem" Property="Text">
           <Source>Advanced</Source>
           <Value>Manipuleer commit</Value>
         </TranslationItem>
@@ -7844,10 +7727,6 @@ Als dit een centrale opslagplaats is (zonder werk directory)
     </TranslationCategory>
     <TranslationCategory Name="ShellExtensionSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Shell Extension</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="lblMenuEntries" Property="Text" type="unfinished">
           <Source>Select items to be shown in
 the cascaded context menu:</Source>
@@ -8039,42 +7918,6 @@ voor windows gebruikers.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="ViewPatch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>View patch file</Source>
-          <Value>Bekijk patch bestand</Value>
-        </TranslationItem>
-        <TranslationItem Name="_patchFileFilterString" Property="Text">
-          <Source>Patch file (*.Patch)</Source>
-          <Value>Patch file (*.Patch)</Value>
-        </TranslationItem>
-        <TranslationItem Name="_patchFileFilterTitle" Property="Text">
-          <Source>Select patch file</Source>
-          <Value>Selecteer patch bestand</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowsePatch" Property="Text">
-          <Source>Browse</Source>
-          <Value>Bladeren</Value>
-        </TranslationItem>
-        <TranslationItem Name="File" Property="HeaderText">
-          <Source>Type</Source>
-          <Value>Type</Value>
-        </TranslationItem>
-        <TranslationItem Name="FileNameA" Property="HeaderText">
-          <Source>Filename</Source>
-          <Value>Bestandsnaam</Value>
-        </TranslationItem>
-        <TranslationItem Name="labelPatch" Property="Text">
-          <Source>Patch</Source>
-          <Value>Patch</Value>
-        </TranslationItem>
-        <TranslationItem Name="typeDataGridViewTextBoxColumn" Property="HeaderText">
-          <Source>Change</Source>
-          <Value>Wijziging</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="ViewPullRequestsForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -8162,6 +8005,98 @@ Details: Is {1} expected {2}</Source>
         <TranslationItem Name="columnHeader4" Property="Text">
           <Source>Created</Source>
           <Value>Aangemaakt</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGerritChangeSubmitted">
+      <translationItems>
+        <TranslationItem Name="btnClose" Property="Text" type="obsolete">
+          <Source>Close</Source>
+          <Value>Sluiten</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGerritDownload">
+      <translationItems>
+        <TranslationItem Name="_selectRemote" Property="Text" type="obsolete">
+          <Source>Please select a remote repository</Source>
+          <Value>Selecteer een doel directory</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddRemote" Property="Text" type="obsolete">
+          <Source>Manage remotes</Source>
+          <Value>Beheer externe opslagplaatsen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGerritPublish">
+      <translationItems>
+        <TranslationItem Name="_selectRemote" Property="Text" type="obsolete">
+          <Source>Please select a remote repository</Source>
+          <Value>Selecteer een doel directory</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddRemote" Property="Text" type="obsolete">
+          <Source>Manage remotes</Source>
+          <Value>Beheer externe opslagplaatsen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGitReview">
+      <translationItems>
+        <TranslationItem Name="_gitreviewOnlyInWorkingDirSupportedCaption" Property="Text" type="obsolete">
+          <Source>No working dir</Source>
+          <Value>Geen werk directory</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveFileQuestionCaption" Property="Text" type="obsolete">
+          <Source>Save changes?</Source>
+          <Value>Wijzigingen opslaan?</Value>
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text" type="obsolete">
+          <Source>Save</Source>
+          <Value>Opslaan</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormPluginInformation">
+      <translationItems>
+        <TranslationItem Name="btnClose" Property="Text" type="obsolete">
+          <Source>Close</Source>
+          <Value>Sluiten</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ViewPatch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
+          <Source>View patch file</Source>
+          <Value>Bekijk patch bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="_patchFileFilterString" Property="Text" type="obsolete">
+          <Source>Patch file (*.Patch)</Source>
+          <Value>Patch file (*.Patch)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_patchFileFilterTitle" Property="Text" type="obsolete">
+          <Source>Select patch file</Source>
+          <Value>Selecteer patch bestand</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowsePatch" Property="Text" type="obsolete">
+          <Source>Browse</Source>
+          <Value>Bladeren</Value>
+        </TranslationItem>
+        <TranslationItem Name="File" Property="HeaderText" type="obsolete">
+          <Source>Type</Source>
+          <Value>Type</Value>
+        </TranslationItem>
+        <TranslationItem Name="FileNameA" Property="HeaderText" type="obsolete">
+          <Source>Filename</Source>
+          <Value>Bestandsnaam</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelPatch" Property="Text" type="obsolete">
+          <Source>Patch</Source>
+          <Value>Patch</Value>
+        </TranslationItem>
+        <TranslationItem Name="typeDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
+          <Source>Change</Source>
+          <Value>Wijziging</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -8354,4 +8289,5 @@ Details: Is {1} expected {2}</Source>
       </translationItems>
     </TranslationCategory>
   </translationCategories>
+  <LanguageCode>nl</LanguageCode>
 </Translation>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Translation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" GitExVersion="2.43">
+<Translation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="2.43">
   <translationCategories>
     <TranslationCategory Name="AboutBox">
       <translationItems>
@@ -169,6 +169,10 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
     </TranslationCategory>
     <TranslationCategory Name="ChecklistSettingsPage">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Checklist</Source>
+          <Value>清单</Value>
+        </TranslationItem>
         <TranslationItem Name="_adviceDiffToolConfiguration" Property="Text" type="unfinished">
           <Source>You should configure a diff tool to show file diff in external program (kdiff3 for example).</Source>
           <Value />
@@ -728,6 +732,12 @@ Value:  {2} = {3}</Source>
         <TranslationItem Name="develop" Property="Text">
           <Source>Develop</Source>
           <Value>开发</Value>
+        </TranslationItem>
+        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text" type="unfinished">
+          <Source>The selected item is not a valid git repository.
+
+Do you want to abort and remove it from the recent repositories list?</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="directoryIsNotAValidRepositoryCaption" Property="Text">
           <Source>Open</Source>
@@ -1435,7 +1445,7 @@ You will have push access. {2}</Source>
           <Source>Archive format</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="obsolete">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Selected revision to archive:</Source>
           <Value>选择一个版本进行zip压缩</Value>
         </TranslationItem>
@@ -1784,11 +1794,11 @@ revision:</Source>
           <Source>Compress git database</Source>
           <Value>压缩Git数据库</Value>
         </TranslationItem>
-        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem" Property="Text" type="obsolete">
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem" Property="Text">
           <Source>Copy full path</Source>
           <Value>把文件名复制到剪贴板</Value>
         </TranslationItem>
-        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text" type="obsolete">
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text">
           <Source>Copy full path</Source>
           <Value>把文件名复制到剪贴板</Value>
         </TranslationItem>
@@ -1820,6 +1830,10 @@ revision:</Source>
           <Source>Don't set as default</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="editCheckedOutFileToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Edit working dir file</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="editgitattributesToolStripMenuItem" Property="Text">
           <Source>Edit .gitattributes</Source>
           <Value>编辑.gitattributes</Value>
@@ -1839,6 +1853,10 @@ revision:</Source>
         <TranslationItem Name="exitToolStripMenuItem" Property="Text">
           <Source>Exit</Source>
           <Value>退出</Value>
+        </TranslationItem>
+        <TranslationItem Name="expandAllToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Expand all (takes a while on large trees)</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="fetchAllToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Fetch all</Source>
@@ -1968,7 +1986,7 @@ revision:</Source>
           <Source>Open with difftool</Source>
           <Value>用difftool打开</Value>
         </TranslationItem>
-        <TranslationItem Name="openWithToolStripMenuItem" Property="Text" type="obsolete">
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
           <Source>Open working dir file with...</Source>
           <Value>用工具打开签出的文件</Value>
         </TranslationItem>
@@ -2036,9 +2054,13 @@ revision:</Source>
           <Source>A</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="resetFileToRemoteToolStripMenuItem" Property="Text" type="obsolete">
+        <TranslationItem Name="resetFileToRemoteToolStripMenuItem" Property="Text">
           <Source>B</Source>
           <Value>远程</Value>
+        </TranslationItem>
+        <TranslationItem Name="resetFileToToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Reset file(s) to</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="resetToolStripMenuItem" Property="Text">
           <Source>Reset changes</Source>
@@ -2056,7 +2078,7 @@ revision:</Source>
           <Source>Save as...</Source>
           <Value>另存为</Value>
         </TranslationItem>
-        <TranslationItem Name="saveAsToolStripMenuItem1" Property="Text" type="obsolete">
+        <TranslationItem Name="saveAsToolStripMenuItem1" Property="Text">
           <Source>Save (B) as...</Source>
           <Value>另存为</Value>
         </TranslationItem>
@@ -2252,6 +2274,16 @@ revision:</Source>
           <Source>Create local branch with the name:</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="_customBranchNameIsEmpty" Property="Text" type="unfinished">
+          <Source>Custom branch name is empty.
+Enter valid branch name or select predefined value.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_customBranchNameIsNotValid" Property="Text" type="unfinished">
+          <Source>“{0}” is not valid branch name.
+Enter valid branch name or select predefined value.</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="defaultActionChx" Property="Text" type="unfinished">
           <Source>Remember as default action</Source>
           <Value />
@@ -2292,6 +2324,10 @@ revision:</Source>
           <Source>Reset</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="rbResetBranch" Property="Text" type="unfinished">
+          <Source>Reset local branch with the name:</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="rbStash" Property="Text">
           <Source>Stash</Source>
           <Value>暂存</Value>
@@ -2316,7 +2352,7 @@ revision:</Source>
     </TranslationCategory>
     <TranslationCategory Name="FormCherryPick">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Cherry pick commit</Source>
           <Value>优选</Value>
         </TranslationItem>
@@ -2328,13 +2364,17 @@ revision:</Source>
           <Source>Error</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="AutoCommit" Property="Text" type="obsolete">
+        <TranslationItem Name="AutoCommit" Property="Text">
           <Source>Automatically create a commit</Source>
           <Value>当没有任何合并冲突，自动创建提交。</Value>
         </TranslationItem>
         <TranslationItem Name="BranchInfo" Property="Text">
           <Source>Cherry pick this commit:</Source>
           <Value>优化(Cherry pick)此提交：</Value>
+        </TranslationItem>
+        <TranslationItem Name="checkAddReference" Property="Text" type="unfinished">
+          <Source>Add commit reference to commit message</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="columnHeader1" Property="Text">
           <Source>No.</Source>
@@ -2561,8 +2601,9 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Commandline usage</Source>
           <Value>命令行使用</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Source>Supported commandline arguments:</Source>
+        <TranslationItem Name="label1" Property="Text" type="obsolete">
+          <Source>Supported commandline arguments for
+gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
           <Value>支持的命令行参数：</Value>
         </TranslationItem>
       </translationItems>
@@ -2776,7 +2817,7 @@ Do you want to continue?</Source>
           <Source>Add file to .gitignore</Source>
           <Value>添加文件到.gitignore</Value>
         </TranslationItem>
-        <TranslationItem Name="Amend" Property="Text" type="obsolete">
+        <TranslationItem Name="Amend" Property="Text">
           <Source>&amp;Amend Commit</Source>
           <Value>更改最后一次提交(&amp;A)</Value>
         </TranslationItem>
@@ -2852,7 +2893,7 @@ Do you want to continue?</Source>
           <Source>Edit ignored files</Source>
           <Value>编辑忽略的文件</Value>
         </TranslationItem>
-        <TranslationItem Name="filenameToClipboardToolStripMenuItem" Property="Text" type="obsolete">
+        <TranslationItem Name="filenameToClipboardToolStripMenuItem" Property="Text">
           <Source>Copy full path</Source>
           <Value>文件名复制到剪贴板</Value>
         </TranslationItem>
@@ -2912,7 +2953,7 @@ Do you want to continue?</Source>
           <Source>Reset all (tracked) changes</Source>
           <Value>复位所有（跟踪的）的变化</Value>
         </TranslationItem>
-        <TranslationItem Name="resetChanges" Property="Text" type="obsolete">
+        <TranslationItem Name="resetChanges" Property="Text">
           <Source>Reset file or directory changes</Source>
           <Value>重置文件的更改</Value>
         </TranslationItem>
@@ -2989,7 +3030,7 @@ Do you want to continue?</Source>
           <Source>Edit file</Source>
           <Value>编辑文件</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripMenuItem14" Property="Text" type="obsolete">
+        <TranslationItem Name="toolStripMenuItem14" Property="Text">
           <Source>Copy full path</Source>
           <Value>文件名复制到剪贴板</Value>
         </TranslationItem>
@@ -3348,6 +3389,10 @@ Click on the "Support this project" button to get more information about making 
           <Source>Diff</Source>
           <Value>差异</Value>
         </TranslationItem>
+        <TranslationItem Name="diffToolremotelocalStripMenuItem" Property="Text" type="unfinished">
+          <Source>Difftool selected &lt; - &gt; local</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="followFileHistoryToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Detect and follow renames</Source>
           <Value />
@@ -3514,6 +3559,18 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Patch result</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="_sendMailResult" Property="Text" type="unfinished">
+          <Source>
+
+Send to:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_sendMailResultFailed" Property="Text" type="unfinished">
+          <Source>
+
+Failed to send mail.</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_twoRevisionsNeededCaption" Property="Text" type="unfinished">
           <Source>Patch error</Source>
           <Value />
@@ -3552,118 +3609,6 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="SendToMail" Property="Text" type="unfinished">
           <Source>Mail patches to</Source>
-          <Value />
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormGerritChangeSubmitted">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Change Submitted</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="btnClose" Property="Text">
-          <Source>Close</Source>
-          <Value>关闭</Value>
-        </TranslationItem>
-        <TranslationItem Name="labelSubmitted" Property="Text" type="unfinished">
-          <Source>Your change has been submitted for review at the following location:</Source>
-          <Value />
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormGerritDownload">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Download Gerrit Change</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_cannotGetChangeDetails" Property="Text" type="unfinished">
-          <Source>Could not retrieve the change details</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_downloadCaption" Property="Text" type="unfinished">
-          <Source>Download change {0}</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text" type="unfinished">
-          <Source>Download Gerrit Change</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_selectChange" Property="Text" type="unfinished">
-          <Source>Please enter a change</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_selectRemote" Property="Text">
-          <Source>Please select a remote repository</Source>
-          <Value>请选择一个远程档案库</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddRemote" Property="Text">
-          <Source>Manage remotes</Source>
-          <Value>管理远程</Value>
-        </TranslationItem>
-        <TranslationItem Name="Download" Property="Text" type="unfinished">
-          <Source>&amp;Download</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="labelChange" Property="Text" type="unfinished">
-          <Source>Change:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="labelRemote" Property="Text" type="unfinished">
-          <Source>Remote:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="labelTopicBranch" Property="Text" type="unfinished">
-          <Source>Topic branch:</Source>
-          <Value />
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormGerritPublish">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Publish Gerrit Change</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text" type="unfinished">
-          <Source>Download Gerrit Change</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_publishCaption" Property="Text" type="unfinished">
-          <Source>Publish change</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_selectBranch" Property="Text" type="unfinished">
-          <Source>Please enter a branch</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_selectRemote" Property="Text">
-          <Source>Please select a remote repository</Source>
-          <Value>请选择一个远程档案库</Value>
-        </TranslationItem>
-        <TranslationItem Name="AddRemote" Property="Text">
-          <Source>Manage remotes</Source>
-          <Value>管理远程</Value>
-        </TranslationItem>
-        <TranslationItem Name="labelBranch" Property="Text" type="unfinished">
-          <Source>Branch:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="labelRemote" Property="Text" type="unfinished">
-          <Source>Remote:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="labelTopic" Property="Text" type="unfinished">
-          <Source>Topic:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="Publish" Property="Text" type="unfinished">
-          <Source>&amp;Publish</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="PublishDraft" Property="Text" type="unfinished">
-          <Source>Submit review as draft</Source>
           <Value />
         </TranslationItem>
       </translationItems>
@@ -3835,62 +3780,6 @@ _ReSharper*/</Value>
         </TranslationItem>
         <TranslationItem Name="lnkGitIgnorePatterns" Property="Text" type="unfinished">
           <Source>More gitignore patterns</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="Save" Property="Text">
-          <Source>Save</Source>
-          <Value>保存</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormGitReview">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Edit .gitreview</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_cannotAccessGitreview" Property="Text" type="unfinished">
-          <Source>Failed to save .gitreview.
-Check if file is accessible.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_cannotAccessGitreviewCaption" Property="Text" type="unfinished">
-          <Source>Failed to save .gitreview</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_gitreviewOnlyInWorkingDirSupported" Property="Text" type="unfinished">
-          <Source>.gitreview is only supported when there is a working dir.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_gitreviewOnlyInWorkingDirSupportedCaption" Property="Text" type="unfinished">
-          <Source>No working dir</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_saveFileQuestion" Property="Text" type="unfinished">
-          <Source>Save changes to .gitreview?</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_saveFileQuestionCaption" Property="Text" type="unfinished">
-          <Source>Save changes?</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
-          <Source>Provide the configuration for
-.gitreview to setup Gerrit.
-
-Example configuration:
-
-[gerrit]
-host=review.example.com
-port=29418
-project=department/project.git
-defaultbranch=master
-defaultremote=review
-defaultrebase=0</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="lnkGitReviewHelp" Property="Text" type="unfinished">
-          <Source>GitHub page for git-review</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
@@ -4180,24 +4069,6 @@ ancestor tree. </Source>
         <TranslationItem Name="Abort" Property="Text">
           <Source>Abort</Source>
           <Value>终止</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormPluginInformation">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Gerrit Plugin</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="btnClose" Property="Text">
-          <Source>Close</Source>
-          <Value>关闭</Value>
-        </TranslationItem>
-        <TranslationItem Name="informationLabel" Property="Text" type="unfinished">
-          <Source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
-
-To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Settings | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</Source>
-          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4891,7 +4762,7 @@ Value has been reset to empty value.</Source>
           <Source>Remote repository</Source>
           <Value>远程档案库</Value>
         </TranslationItem>
-        <TranslationItem Name="Save" Property="Text" type="obsolete">
+        <TranslationItem Name="Save" Property="Text">
           <Source>Save changes</Source>
           <Value>保存</Value>
         </TranslationItem>
@@ -5225,6 +5096,11 @@ Is the mergeconflict solved?</Source>
           <Source>Delete file</Source>
           <Value>删除文件</Value>
         </TranslationItem>
+        <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text" type="unfinished">
+          <Source>File ({0}) appears to be a binairy file.
+Choose to keep the local({1}), remote({2}) or base file.</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="fileChangeLocallyAndRemotely" Property="Text" type="unfinished">
           <Source>The file has been changed both locally({0}) and remotely({1}). Merge the changes.</Source>
           <Value />
@@ -5233,8 +5109,22 @@ Is the mergeconflict solved?</Source>
           <Source>A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text" type="unfinished">
+          <Source>File {0} does not have a base revision.
+A file with the same name has been created locally({1}) and remotely({2}) causing this conflict.
+
+Choose the file you want to keep, merge the files or delete the file?</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="fileDeletedLocallyAndModifiedRemotely" Property="Text" type="unfinished">
           <Source>The file has been deleted locally({0}) and modified remotely({1}). Choose to delete the file or keep the modified version.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text" type="unfinished">
+          <Source>File {0} does not have a local revision.
+The file has been deleted locally({1}) but modified remotely({2}).
+
+Choose to delete the file or keep the modified version.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
@@ -5248,6 +5138,13 @@ Are you sure you want to open this file in {0}?</Source>
         </TranslationItem>
         <TranslationItem Name="fileModifiedLocallyAndDelededRemotely" Property="Text" type="unfinished">
           <Source>The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text" type="unfinished">
+          <Source>File {0} does not have a remote revision.
+The file has been modified locally({1}) but deleted remotely({2}).
+
+Choose to delete the file or keep the modified version.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="FileName" Property="HeaderText" type="unfinished">
@@ -5320,6 +5217,11 @@ The merge conflict will not be marked as solved. Please try again.</Source>
           <Source>no base</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="noBaseRevision" Property="Text" type="unfinished">
+          <Source>There is no base revision for {0}.
+Fall back to 2-way merge?</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="noMergeTool" Property="Text">
           <Source>There is no mergetool configured. Please go to settings and set a mergetool!</Source>
           <Value>没有配置mergetool。请到设置菜单设置mergetool！</Value>
@@ -5364,6 +5266,12 @@ The merge conflict will not be marked as solved. Please try again.</Source>
           <Source>theirs</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="uskUseCustomMergeScript" Property="Text" type="unfinished">
+          <Source>There is a custom merge script ({0}) for this file type.
+
+Do you want to use this custom merge script?</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="uskUseCustomMergeScriptCaption" Property="Text" type="unfinished">
           <Source>Custom merge script</Source>
           <Value />
@@ -5379,6 +5287,11 @@ The merge conflict will not be marked as solved. Please try again.</Source>
         <TranslationItem Name="_resetChangesCaption" Property="Text">
           <Source>Reset changes</Source>
           <Value>复位变化</Value>
+        </TranslationItem>
+        <TranslationItem Name="_undoChangesIn" Property="Text" type="unfinished">
+          <Source>Undo changes in:
+{0}?</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="btnCancel" Property="Text">
           <Source>Cancel</Source>
@@ -5404,7 +5317,7 @@ The merge conflict will not be marked as solved. Please try again.</Source>
           <Source>Error</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="AutoCommit" Property="Text" type="obsolete">
+        <TranslationItem Name="AutoCommit" Property="Text">
           <Source>Automatically create a commit</Source>
           <Value>自动创建一个提交</Value>
         </TranslationItem>
@@ -5543,6 +5456,13 @@ The merge conflict will not be marked as solved. Please try again.</Source>
         <TranslationItem Name="$this" Property="Text">
           <Source>Settings</Source>
           <Value>设置</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cantFindGitMessage" Property="Text" type="unfinished">
+          <Source>The command to run git is not configured correct.
+You need to set the correct path to be able to use GitExtensions.
+
+Do you want to set the correct command now? If not Global and Local Settings will not be saved.</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_cantFindGitMessageCaption" Property="Text" type="unfinished">
           <Source>Incorrect path</Source>
@@ -6079,7 +5999,7 @@ global settings.
           <Source>Stash</Source>
           <Value>缓冲区</Value>
         </TranslationItem>
-        <TranslationItem Name="Apply" Property="Text" type="obsolete">
+        <TranslationItem Name="Apply" Property="Text">
           <Source>Apply Selected</Source>
           <Value>把所选缓冲区应用到工作目录</Value>
         </TranslationItem>
@@ -6095,7 +6015,7 @@ global settings.
           <Source>Include untracked files</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="Clear" Property="Text" type="obsolete">
+        <TranslationItem Name="Clear" Property="Text">
           <Source>Delete Selected</Source>
           <Value>丢弃所选缓冲内容</Value>
         </TranslationItem>
@@ -6111,7 +6031,7 @@ global settings.
           <Source>There are no stashes.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="Stash" Property="Text" type="obsolete">
+        <TranslationItem Name="Stash" Property="Text">
           <Source>Save Changes</Source>
           <Value>暂存所有更改</Value>
         </TranslationItem>
@@ -6133,6 +6053,10 @@ global settings.
         </TranslationItem>
         <TranslationItem Name="stashUntrackedFilesNotSupportedCaption" Property="Text" type="unfinished">
           <Source>Stash untracked files</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="toolStripButton_customMessage" Property="Text" type="unfinished">
+          <Source>Custom stash message</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="toolStripButton_customMessage" Property="ToolTipText" type="unfinished">
@@ -6167,6 +6091,12 @@ Do you want to register the host's fingerprint and restart the process?</Source>
         </TranslationItem>
         <TranslationItem Name="_fingerprintNotRegistredTextCaption" Property="Text" type="unfinished">
           <Source>Host Fingerprint not registered</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text" type="unfinished">
+          <Source>The server's host key is not cached in the registry.
+
+Do you want to trust this host key and then try again?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
@@ -6358,7 +6288,7 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Please enter a tag message</Source>
           <Value>请输入标签的信息</Value>
         </TranslationItem>
-        <TranslationItem Name="_pushToCaption" Property="Text" type="obsolete">
+        <TranslationItem Name="_pushToCaption" Property="Text">
           <Source>Push tag to '{0}'</Source>
           <Value>推送到{0}</Value>
         </TranslationItem>
@@ -6382,7 +6312,7 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Message</Source>
           <Value>消息</Value>
         </TranslationItem>
-        <TranslationItem Name="pushTag" Property="Text" type="obsolete">
+        <TranslationItem Name="pushTag" Property="Text">
           <Source>Push tag to '{0}'</Source>
           <Value>推标签</Value>
         </TranslationItem>
@@ -6406,7 +6336,7 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Please enter a tag message</Source>
           <Value>请输入标签的信息</Value>
         </TranslationItem>
-        <TranslationItem Name="_pushToCaption" Property="Text" type="obsolete">
+        <TranslationItem Name="_pushToCaption" Property="Text">
           <Source>Push tag to '{0}'</Source>
           <Value>推送到{0}</Value>
         </TranslationItem>
@@ -6430,7 +6360,7 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Create tag</Source>
           <Value>创建标签</Value>
         </TranslationItem>
-        <TranslationItem Name="pushTag" Property="Text" type="obsolete">
+        <TranslationItem Name="pushTag" Property="Text">
           <Source>Push tag to '{0}'</Source>
           <Value>推标签</Value>
         </TranslationItem>
@@ -6661,6 +6591,42 @@ nodes.
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormViewPatch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>View patch file</Source>
+          <Value>查看补丁文件</Value>
+        </TranslationItem>
+        <TranslationItem Name="_patchFileFilterString" Property="Text" type="unfinished">
+          <Source>Patch file (*.Patch)</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_patchFileFilterTitle" Property="Text" type="unfinished">
+          <Source>Select patch file</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="BrowsePatch" Property="Text">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="File" Property="HeaderText">
+          <Source>Type</Source>
+          <Value>类型</Value>
+        </TranslationItem>
+        <TranslationItem Name="FileNameA" Property="HeaderText" type="unfinished">
+          <Source>Filename</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="labelPatch" Property="Text">
+          <Source>Patch</Source>
+          <Value>补丁</Value>
+        </TranslationItem>
+        <TranslationItem Name="typeDataGridViewTextBoxColumn" Property="HeaderText" type="unfinished">
+          <Source>Change</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="GitExtensionsSettingsPage">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -6826,6 +6792,10 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
     </TranslationCategory>
     <TranslationCategory Name="GlobalSettingsSettingsPage">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Global settings</Source>
+          <Value>全局设置</Value>
+        </TranslationItem>
         <TranslationItem Name="__diffToolSuggestCaption" Property="Text" type="unfinished">
           <Source>Suggest difftool cmd</Source>
           <Value />
@@ -6974,6 +6944,15 @@ global settings.
           <Source>label1</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="linkLabelHide" Property="Text" type="unfinished">
+          <Source>Hide help</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="linkLabelShowHelp" Property="Text" type="unfinished">
+          <Source>Show
+help</Source>
+          <Value />
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="HotkeysSettingsPage">
@@ -6986,6 +6965,10 @@ global settings.
     </TranslationCategory>
     <TranslationCategory Name="LocalSettingsSettingsPage">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Local settings</Source>
+          <Value>本地设置</Value>
+        </TranslationItem>
         <TranslationItem Name="groupBox10" Property="Text">
           <Source>Line endings</Source>
           <Value>换行符</Value>
@@ -7094,7 +7077,7 @@ local settings.
     </TranslationCategory>
     <TranslationCategory Name="Open">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Open local repository</Source>
           <Value>开启档案库</Value>
         </TranslationItem>
@@ -7283,6 +7266,10 @@ If this is a central repository (bare repository without a working dir):
           <Source>The current working dir is not a git repository.</Source>
           <Value>当前的工作目录不是一个git档案库。</Value>
         </TranslationItem>
+        <TranslationItem Name="manipulateCommitToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Advanced</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="markRevisionAsBadToolStripMenuItem" Property="Text">
           <Source>Mark revision as bad</Source>
           <Value>标记版本为“坏”</Value>
@@ -7459,10 +7446,6 @@ If this is a central repository (bare repository without a working dir):
     </TranslationCategory>
     <TranslationCategory Name="ShellExtensionSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Shell Extension</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="lblMenuEntries" Property="Text" type="unfinished">
           <Source>Select items to be shown in
 the cascaded context menu:</Source>
@@ -7655,42 +7638,6 @@ When OpenSSH is used, command line dialogs are shown!
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="ViewPatch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>View patch file</Source>
-          <Value>查看补丁文件</Value>
-        </TranslationItem>
-        <TranslationItem Name="_patchFileFilterString" Property="Text" type="unfinished">
-          <Source>Patch file (*.Patch)</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_patchFileFilterTitle" Property="Text" type="unfinished">
-          <Source>Select patch file</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="BrowsePatch" Property="Text">
-          <Source>Browse</Source>
-          <Value>浏览</Value>
-        </TranslationItem>
-        <TranslationItem Name="File" Property="HeaderText">
-          <Source>Type</Source>
-          <Value>类型</Value>
-        </TranslationItem>
-        <TranslationItem Name="FileNameA" Property="HeaderText" type="unfinished">
-          <Source>Filename</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="labelPatch" Property="Text">
-          <Source>Patch</Source>
-          <Value>补丁</Value>
-        </TranslationItem>
-        <TranslationItem Name="typeDataGridViewTextBoxColumn" Property="HeaderText" type="unfinished">
-          <Source>Change</Source>
-          <Value />
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="ViewPullRequestsForm">
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
@@ -7778,6 +7725,74 @@ Details: Is {1} expected {2}</Source>
         <TranslationItem Name="columnHeader4" Property="Text" type="unfinished">
           <Source>Created</Source>
           <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGerritChangeSubmitted">
+      <translationItems>
+        <TranslationItem Name="btnClose" Property="Text" type="obsolete">
+          <Source>Close</Source>
+          <Value>关闭</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGerritDownload">
+      <translationItems>
+        <TranslationItem Name="_selectRemote" Property="Text" type="obsolete">
+          <Source>Please select a remote repository</Source>
+          <Value>请选择一个远程档案库</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddRemote" Property="Text" type="obsolete">
+          <Source>Manage remotes</Source>
+          <Value>管理远程</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGerritPublish">
+      <translationItems>
+        <TranslationItem Name="_selectRemote" Property="Text" type="obsolete">
+          <Source>Please select a remote repository</Source>
+          <Value>请选择一个远程档案库</Value>
+        </TranslationItem>
+        <TranslationItem Name="AddRemote" Property="Text" type="obsolete">
+          <Source>Manage remotes</Source>
+          <Value>管理远程</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGitReview">
+      <translationItems>
+        <TranslationItem Name="Save" Property="Text" type="obsolete">
+          <Source>Save</Source>
+          <Value>保存</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormPluginInformation">
+      <translationItems>
+        <TranslationItem Name="btnClose" Property="Text" type="obsolete">
+          <Source>Close</Source>
+          <Value>关闭</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="ViewPatch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
+          <Source>View patch file</Source>
+          <Value>查看补丁文件</Value>
+        </TranslationItem>
+        <TranslationItem Name="BrowsePatch" Property="Text" type="obsolete">
+          <Source>Browse</Source>
+          <Value>浏览</Value>
+        </TranslationItem>
+        <TranslationItem Name="File" Property="HeaderText" type="obsolete">
+          <Source>Type</Source>
+          <Value>类型</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelPatch" Property="Text" type="obsolete">
+          <Source>Patch</Source>
+          <Value>补丁</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7930,4 +7945,5 @@ Details: Is {1} expected {2}</Source>
       </translationItems>
     </TranslationCategory>
   </translationCategories>
+  <LanguageCode>zh</LanguageCode>
 </Translation>
