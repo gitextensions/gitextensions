@@ -33,8 +33,12 @@ namespace GitCommandsTests.Helpers
                 byte[] currentFileBytes = File.ReadAllBytes(currentFile.FullName);
                 byte[] otherFileBytes = File.ReadAllBytes(otherFilePath);
 
-                bool areEqual = true;
+                bool areEqual = true; //we need this as Parallel.For does not allow return value
 
+				if(currentFileBytes.Length != otherFileBytes.Length)
+					return false;
+
+#if !__MonoCS__ //Mono does not implement parallel.for
                 Parallel.For(0, currentFileBytes.LongLength, (i, state) =>
                     {
                         if (currentFileBytes[i] != otherFileBytes[i])
@@ -44,7 +48,13 @@ namespace GitCommandsTests.Helpers
                             return;
                         }
                     });
-
+#else
+				for(long i = 0;i<currentFileBytes.Length;i++)
+				{
+					if(!currentFileBytes[i].Equals(otherFileBytes[i]))
+						return false;
+				}
+#endif
                 return areEqual;
             }
             catch (NullReferenceException)
