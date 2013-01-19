@@ -105,7 +105,7 @@ namespace GitCommandsTest.Config
             Assert.IsTrue(File.Exists(GetConfigFileName()));
             byte[] fileContent = File.ReadAllBytes(GetConfigFileName());
 
-            Assert.AreEqual(43, fileContent.Length);
+            Assert.AreEqual(expectedFileContent.Length, fileContent.Length);
             for (int index = 0; index < fileContent.Length; index++)
             {
                 Assert.AreEqual(expectedFileContent[index], fileContent[index]);
