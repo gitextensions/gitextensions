@@ -78,7 +78,7 @@ namespace GitCommandsTest.Git
         [ExpectedException(typeof(ArgumentNullException))]
         public void ConvertToTestEncodingNull()
         {
-            byte[] convertedBytes = EncodingHelper.ConvertTo(null, "abcd");
+            EncodingHelper.ConvertTo(null, "abcd");
         }
 
         [TestMethod]
