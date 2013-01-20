@@ -79,6 +79,12 @@ namespace GitUI
         private readonly TranslationString _alwaysShowCheckoutDlgStr =
             new TranslationString("Always show checkout dialog");
 
+        private readonly TranslationString directoryIsNotAValidRepositoryCaption =
+            new TranslationString("Open");
+
+        private readonly TranslationString directoryIsNotAValidRepository =
+            new TranslationString("The selected item is not a valid git repository.\n\nDo you want to abort and remove it from the recent repositories list?");
+
         private readonly TranslationString _updateCurrentSubmodule =
             new TranslationString("Update current submodule");
 
@@ -1608,6 +1614,27 @@ namespace GitUI
             }
         }
 
+        private void ChangeWorkingDir(string path)
+        {
+            GitModule module = new GitModule(path);
+
+            if (!module.ValidWorkingDir())
+            {
+                DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text,
+                    directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    Repositories.RepositoryHistory.RemoveRecentRepository(path);
+                    return;
+                }
+                else if (dialogResult == DialogResult.Cancel)
+                    return;
+            }
+
+            SetGitModule(module);
+        }
+
         private void HistoryItemMenuClick(object sender, EventArgs e)
         {
             var button = sender as ToolStripMenuItem;
@@ -1615,7 +1642,7 @@ namespace GitUI
             if (button == null)
                 return;
 
-            SetWorkingDir(button.Text);
+            ChangeWorkingDir(button.Text);
         }
 
         private void SettingsToolStripMenuItemClick(object sender, EventArgs e)
@@ -1696,12 +1723,11 @@ namespace GitUI
             ToolStripMenuItem toolStripItem = new ToolStripMenuItem(caption);
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
 
-            toolStripItem.Click += (hs, he) => SetWorkingDir(repo.Path);
+            toolStripItem.Click += (hs, he) => ChangeWorkingDir(repo.Path);
 
             if (repo.Title != null || !repo.Path.Equals(caption))
                 toolStripItem.ToolTipText = repo.Path;
         }
-
 
         private void WorkingdirDropDownOpening(object sender, EventArgs e)
         {

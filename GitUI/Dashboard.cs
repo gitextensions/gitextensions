@@ -28,6 +28,7 @@ namespace GitUI
         private readonly TranslationString translate = new TranslationString("Translate");
         private readonly TranslationString directoryIsNotAValidRepositoryCaption = new TranslationString("Open");
         private readonly TranslationString directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to abort and remove it from the recent repositories list?");
+        private readonly TranslationString directoryIsNotAValidRepositoryOpenIt = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to open it?");
         private bool initialized;
 
         public Dashboard()
@@ -308,7 +309,9 @@ namespace GitUI
 
             if (!module.ValidWorkingDir())
             {
-                DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text, directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text, 
+                    directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (dialogResult == DialogResult.Cancel)
                 {
                     return;
@@ -370,7 +373,19 @@ namespace GitUI
                 string dir = fileNameArray[0];
                 if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
                 {
-                    OpenPath(dir);
+                    GitModule module = new GitModule(dir);
+
+                    if (!module.ValidWorkingDir())
+                    {
+                        DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepositoryOpenIt.Text, 
+                            directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
+                        if (dialogResult == DialogResult.No)
+                            return;
+                    }
+
+                    Repositories.AddMostRecentRepository(module.WorkingDir);
+                    OnModuleChanged(module);
                 }
                 return;
             }
