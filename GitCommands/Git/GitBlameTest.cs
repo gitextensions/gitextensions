@@ -11,7 +11,7 @@ using System.Text;
 using GitCommands;
 using System.Collections.Generic;
 
-namespace GitCommandsTests
+namespace GitCommandsTest.Git
 {
 	[TestClass]
 	public class GitBlameTest

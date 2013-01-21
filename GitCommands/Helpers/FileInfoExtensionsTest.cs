@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GitCommandsTests.Helpers
+namespace GitCommandsTest.Helpers
 {
     [TestClass]
     public class FileInfoExtensionsTest

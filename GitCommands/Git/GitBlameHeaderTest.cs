@@ -12,7 +12,7 @@ using GitCommands;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace GitCommandsTests
+namespace GitCommandsTest.Git
 {
 	[TestClass]
 	public class GitBlameHeaderTest

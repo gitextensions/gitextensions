@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GitCommandsTests.Patch
+namespace GitCommandsTest.Patch
 {
     [TestClass]
     class PatchManagerTest

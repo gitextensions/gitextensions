@@ -16,7 +16,7 @@ using System.Drawing;
 using System.Linq;
 using GitCommands.Git;
 
-namespace GitCommandsTests
+namespace GitCommandsTest.Git
 {
 	[TestClass]
 	public class GitCheckoutBranchCmdTest

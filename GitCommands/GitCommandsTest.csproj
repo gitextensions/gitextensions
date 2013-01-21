@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{AC8FDEDF-6390-4F87-BBC3-1A974810B589}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>GitCommandsTests</RootNamespace>
+    <RootNamespace>GitCommandsTest</RootNamespace>
     <AssemblyName>GitCommandsTests</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

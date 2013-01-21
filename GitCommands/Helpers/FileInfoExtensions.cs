@@ -7,7 +7,7 @@ using System.Text;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
-namespace GitCommandsTests.Helpers
+namespace GitCommandsTest.Helpers
 {
     public static class FileInfoExtensions
     {
