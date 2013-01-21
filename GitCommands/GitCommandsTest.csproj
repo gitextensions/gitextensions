@@ -54,6 +54,7 @@
     <Compile Include="Git\GitBlameTest.cs" />
     <Compile Include="Git\GitBlameHeaderTest.cs" />
     <Compile Include="Git\GitCheckoutBranchCmdTest.cs" />
+    <Compile Include="Git\GitCommandCacheTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
