@@ -53,6 +53,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Git\GitBlameTest.cs" />
     <Compile Include="Git\GitBlameHeaderTest.cs" />
+    <Compile Include="Git\GitCheckoutBranchCmdTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
