@@ -1170,6 +1170,11 @@ namespace GitCommands
             return null;
         }
 
+		private static DateTime RoundDateTime (DateTime dateTime)
+		{
+			return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
+		}
+
         /// <summary>
         /// Takes a date/time which and determines a friendly string for time from now to be displayed for the relative time from the date.
         /// It is important to note that times are compared using the current timezone, so the date that is passed in should be converted 
@@ -1181,7 +1186,7 @@ namespace GitCommands
         /// <see cref="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
         public static string GetRelativeDateString(DateTime originDate, DateTime previousDate, bool displayWeeks)
         {
-            var ts = new TimeSpan(originDate.Ticks - previousDate.Ticks);
+			var ts = new TimeSpan(RoundDateTime(originDate).Ticks - RoundDateTime(previousDate).Ticks);
             double delta = Math.Abs(ts.TotalSeconds);
 
             if (delta < 60)
