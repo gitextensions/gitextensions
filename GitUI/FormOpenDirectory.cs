@@ -38,7 +38,6 @@ namespace GitUI
                 open.ShowDialog(owner);
                 return open.choosenModule;
             }
-
         }
 
         private void LoadClick(object sender, EventArgs e)

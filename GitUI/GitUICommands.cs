@@ -1380,8 +1380,9 @@ namespace GitUI
             return StartFileHistoryDialog(fileName, null);
         }
 
-        public bool StartPushDialog(IWin32Window owner, bool pushOnShow)
+        public bool StartPushDialog(IWin32Window owner, bool pushOnShow, out bool pushCompleted)
         {
+            pushCompleted = false;
             if (!RequiresValidWorkingDir(owner))
                 return false;
 
@@ -1390,15 +1391,25 @@ namespace GitUI
 
             using (var form = new FormPush(this))
             {
+                DialogResult dlgResult;
                 if (pushOnShow)
-                    form.PushAndShowDialogWhenFailed(owner);
+                    dlgResult = form.PushAndShowDialogWhenFailed(owner);
                 else
-                    form.ShowDialog(owner);
+                    dlgResult = form.ShowDialog(owner);
+
+                if (dlgResult == DialogResult.OK)
+                    pushCompleted = !form.ErrorOccurred;
             }
 
             InvokeEvent(owner, PostPush);
 
             return true;
+        }
+
+        public bool StartPushDialog(IWin32Window owner, bool pushOnShow)
+        {
+            bool pushCompleted;
+            return StartPushDialog(owner, pushOnShow, out pushCompleted);
         }
 
         public bool StartPushDialog(bool pushOnShow)
