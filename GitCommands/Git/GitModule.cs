@@ -17,6 +17,17 @@ namespace GitCommands
 {
     public delegate void GitModuleChangedEventHandler(GitModule module);
 
+    public enum SubmoduleStatus
+    {
+        Unknown,
+        NewSubmodule,
+        FastForward,
+        Rewind,
+        NewerTime,
+        OlderTime,
+        SameTime
+    }
+
     /// <summary>
     /// Class provide non-static methods for manipulation with git module.
     /// You can create several instances for submodules.
@@ -2201,7 +2212,7 @@ namespace GitCommands
                     if (item.SubmoduleStatus.Commit != item.SubmoduleStatus.OldCommit)
                     {
                         var submodule = item.SubmoduleStatus.GetSubmodule(this);
-                        item.SubmoduleStatus.CheckIsCommitNewer(submodule);
+                        item.SubmoduleStatus.CheckSubmoduleStatus(submodule);
                     }
                 }
         }
@@ -2878,6 +2889,43 @@ namespace GitCommands
         public string GetMergeBase(string a, string b)
         {
             return RunGitCmd("merge-base " + a + " " + b).TrimEnd();
+        }
+
+        public SubmoduleStatus CheckSubmoduleStatus(string commit, string oldCommit, CommitData data, CommitData olddata, bool loaddata = false)
+        {
+            if (!ValidWorkingDir())
+                return SubmoduleStatus.NewSubmodule;
+
+            if (commit == oldCommit)
+                return SubmoduleStatus.Unknown;
+
+            string baseCommit = GetMergeBase(commit, oldCommit);
+            if (baseCommit == oldCommit)
+                return SubmoduleStatus.FastForward;
+            else if (baseCommit == commit)
+                return SubmoduleStatus.Rewind;
+
+            string error = "";
+            if (loaddata)
+                olddata = CommitData.GetCommitData(this, oldCommit, ref error);
+            if (olddata == null)
+                return SubmoduleStatus.NewSubmodule;
+            if (loaddata)
+                data = CommitData.GetCommitData(this, commit, ref error);
+            if (data == null)
+                return SubmoduleStatus.Unknown;
+            if (data.CommitDate > olddata.CommitDate)
+                return SubmoduleStatus.NewerTime;
+            else if (data.CommitDate < olddata.CommitDate)
+                return SubmoduleStatus.OlderTime;
+            else if (data.CommitDate == olddata.CommitDate)
+                return SubmoduleStatus.SameTime;
+            return SubmoduleStatus.Unknown;
+        }
+
+        public SubmoduleStatus CheckSubmoduleStatus(string commit, string oldCommit)
+        {
+            return CheckSubmoduleStatus(commit, oldCommit, null, null, true);
         }
 
         public static string WorkingDirGitDir(string repositoryPath)

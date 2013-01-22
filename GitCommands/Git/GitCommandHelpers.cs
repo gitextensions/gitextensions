@@ -1069,17 +1069,17 @@ namespace GitCommands
 
             sb.AppendLine();
             sb.AppendLine("From:\t" + (status.OldCommit ?? "null"));
+            CommitData oldCommitData = null;
             if (gitmodule.ValidWorkingDir())
             {
                 string error = "";
-                CommitData commitData = null;
                 if (status.OldCommit != null)
-                    commitData = CommitData.GetCommitData(gitmodule, status.OldCommit, ref error);
-                if (commitData != null)
+                    oldCommitData = CommitData.GetCommitData(gitmodule, status.OldCommit, ref error);
+                if (oldCommitData != null)
                 {
-                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + oldCommitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
                     var delim = new char[] { '\n', '\r' };
-                    var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
+                    var lines = oldCommitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
                     foreach (var curline in lines)
                         sb.AppendLine("\t\t" + curline);
                 }
@@ -1090,10 +1090,10 @@ namespace GitCommands
             sb.AppendLine();
             string dirty = !status.IsDirty ? "" : " (dirty)";
             sb.AppendLine("To:\t\t" + (status.Commit ?? "null") + dirty);
+            CommitData commitData = null;
             if (gitmodule.ValidWorkingDir())
             {
                 string error = "";
-                CommitData commitData = null;
                 if (status.Commit != null)
                     commitData = CommitData.GetCommitData(gitmodule, status.Commit, ref error);
                 if (commitData != null)
@@ -1107,6 +1107,34 @@ namespace GitCommands
             }
             else
                 sb.AppendLine();
+
+            sb.AppendLine();
+            var submoduleStatus = gitmodule.CheckSubmoduleStatus(status.Commit, status.OldCommit, commitData, oldCommitData);
+            sb.Append("Type: ");
+            switch (submoduleStatus)
+            {
+                case SubmoduleStatus.NewSubmodule:
+                    sb.AppendLine("New submodule");
+                    break;
+                case SubmoduleStatus.FastForward:
+                    sb.AppendLine("Fast Forward");
+                    break;
+                case SubmoduleStatus.Rewind:
+                    sb.AppendLine("Rewind");
+                    break;
+                case SubmoduleStatus.NewerTime:
+                    sb.AppendLine("Newer commit time");
+                    break;
+                case SubmoduleStatus.OlderTime:
+                    sb.AppendLine("Older commit time");
+                    break;
+                case SubmoduleStatus.SameTime:
+                    sb.AppendLine("Same commit time");
+                    break;
+                default:
+                    sb.AppendLine("Unknown");
+                    break;
+            }
 
             if (status.Commit != null && status.OldCommit != null)
             {
