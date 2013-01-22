@@ -355,9 +355,9 @@ namespace GitUI
                     var status = gitItemStatus.SubmoduleStatus;
                     if (status.IsDirty && status.Commit == status.OldCommit)
                         image = Resources.IconSubmoduleDirty;
-                    else if (status.IsCommitNewer)
+                    else if (status.Status == SubmoduleStatus.FastForward || status.Status == SubmoduleStatus.NewerTime)
                         image = status.IsDirty ? Resources.IconSubmoduleRevisionUpDirty : Resources.IconSubmoduleRevisionUp;
-                    else
+                    else if (status.Status == SubmoduleStatus.Rewind || status.Status == SubmoduleStatus.OlderTime)
                         image = status.IsDirty ? Resources.IconSubmoduleRevisionDownDirty : Resources.IconSubmoduleRevisionDown;
                 }                
             }
