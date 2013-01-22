@@ -841,18 +841,19 @@ namespace GitUI
 
                 Amend.Checked = false;
 
-                if (Module.SuperprojectModule != null && Settings.StageInSuperprojectAfterCommit)
-                    Module.SuperprojectModule.StageFile(Module.SubmoduleName);
-
                 ScriptManager.RunEventScripts(Module, ScriptEvent.AfterCommit);
 
                 Message.Text = string.Empty;
                 GitCommands.Commit.SetCommitMessage(Module, string.Empty);
 
+                bool pushCompleted = true;
                 if (push)
                 {
-                    UICommands.StartPushDialog(this, true);
+                    UICommands.StartPushDialog(this, true, out pushCompleted);
                 }
+
+                if (pushCompleted && Module.SuperprojectModule != null && Settings.StageInSuperprojectAfterCommit)
+                    Module.SuperprojectModule.StageFile(Module.SubmodulePath);
 
                 if (Settings.CloseCommitDialogAfterCommit)
                 {

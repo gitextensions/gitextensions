@@ -25,6 +25,7 @@ namespace GitUI
         private string selectedBranchRemote;
         private string selectedRemoteBranchName;
 
+        public bool ErrorOccurred { get; private set; }
 
         #region Translation
         private readonly TranslationString _branchNewForRemote =
@@ -107,15 +108,16 @@ namespace GitUI
             RemotesUpdated(null, null);
         }
 
-        public void PushAndShowDialogWhenFailed(IWin32Window owner)
+        public DialogResult PushAndShowDialogWhenFailed(IWin32Window owner)
         {
             if (!PushChanges(owner))
-                ShowDialog(owner);
+                return ShowDialog(owner);
+            return DialogResult.OK;
         }
 
-        public void PushAndShowDialogWhenFailed()
+        public DialogResult PushAndShowDialogWhenFailed()
         {
-            PushAndShowDialogWhenFailed(null);
+            return PushAndShowDialogWhenFailed(null);
         }
 
         private void PushClick(object sender, EventArgs e)
@@ -157,6 +159,7 @@ namespace GitUI
 
         private bool PushChanges(IWin32Window owner)
         {
+            ErrorOccurred = false;
             if (PushToUrl.Checked && string.IsNullOrEmpty(PushDestination.Text))
             {
                 MessageBox.Show(owner, _selectDestinationDirectory.Text);
@@ -284,6 +287,7 @@ namespace GitUI
             {
 
                 form.ShowDialog(owner);
+                ErrorOccurred = form.ErrorOccurred();
 
                 if (!Module.InTheMiddleOfConflictedMerge() &&
                     !Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
@@ -317,28 +321,27 @@ namespace GitUI
 
         private bool HandlePushOnExit(ref bool isError, FormProcess form)
         {
-            if (isError)
-            {
-                //auto pull only if current branch was rejected
-                Regex IsRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranch) + ".*" + Regex.Escape(" (non-fast-forward)"), RegexOptions.Compiled);
+            if (!isError)
+                return false;
 
-                if (Settings.AutoPullOnRejected && IsRejected.IsMatch(form.GetOutputString()))
-                    
+            //auto pull only if current branch was rejected
+            Regex IsRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranch) + ".*" + Regex.Escape(" (non-fast-forward)"), RegexOptions.Compiled);
+
+            if (Settings.AutoPullOnRejected && IsRejected.IsMatch(form.GetOutputString()))
+            {
+                if (Settings.PullMerge == Settings.PullAction.Fetch)
+                    form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to fetch.");
+                else if (IsRebasingMergeCommit())
+                    form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine
+                                        + "and one of the commits that are about to be rebased is a merge.");
+                else
                 {
-                    if (Settings.PullMerge == Settings.PullAction.Fetch)
-                        form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to fetch.");
-                    else if (IsRebasingMergeCommit())
-                        form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine
-                                            + "and one of the commits that are about to be rebased is a merge.");
-                    else
+                    bool pullCompleted;
+                    UICommands.StartPullDialog(form.Owner ?? form, true, out pullCompleted);
+                    if (pullCompleted)
                     {
-                        bool pullCompleted;
-                        UICommands.StartPullDialog(form.Owner ?? form, true, out pullCompleted);
-                        if (pullCompleted)
-                        {
-                            form.Retry();
-                            return true;
-                        }
+                        form.Retry();
+                        return true;
                     }
                 }
             }
