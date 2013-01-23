@@ -93,13 +93,14 @@ namespace GitCommands
             CachedCommandsChanged();
         }
 
-		public static void CleanCache ()
-		{
-			lock (queue) {
-				if(queue != null)
-					queue.Clear();
-			}
-			CachedCommandsChanged();
-		}
+        public static void CleanCache()
+        {
+            lock (queue)
+            {
+                if (queue != null)
+                    queue.Clear();
+            }
+            CachedCommandsChanged();
+        }
     }
 }
