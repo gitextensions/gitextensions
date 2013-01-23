@@ -773,7 +773,7 @@ namespace GitUI
                 return null;
             try
             {
-                var repositoryDescription = File.ReadAllLines(repositoryDescriptionFilePath).FirstOrDefault();
+                var repositoryDescription = File.ReadLines(repositoryDescriptionFilePath).FirstOrDefault();
                 return string.Equals(repositoryDescription, defaultDescription, StringComparison.CurrentCulture)
                            ? null
                            : repositoryDescription;
