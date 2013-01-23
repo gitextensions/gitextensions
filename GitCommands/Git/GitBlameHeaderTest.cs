@@ -14,78 +14,80 @@ using System.Drawing;
 
 namespace GitCommandsTest.Git
 {
-	[TestClass]
-	public class GitBlameHeaderTest
-	{
-		private const string _testGuid = "b35a3233-8345-43aa-a618-2ca0de12000c";
+    
+    [TestClass]
+    public class GitBlameHeaderTest
+    {
+        private const string _testGuid = "b35a3233-8345-43aa-a618-2ca0de12000c";
 
-		[TestMethod]
-		public void TestConstructor()
-		{
-			GitBlameHeader header = new GitBlameHeader();
-			Assert.IsNotNull(header);
-		}
+        [TestMethod]
+        public void TestConstructor()
+        {
+            GitBlameHeader header = new GitBlameHeader();
+            Assert.IsNotNull(header);
+        }
 
-		[TestMethod]
-		public void TestGetColor()
-		{
-			string randomGuid = "b35a3233-8345-43aa-a618-2ca0de12000c";
+        [TestMethod]
+        public void TestGetColor()
+        {
+            string randomGuid = "b35a3233-8345-43aa-a618-2ca0de12000c";
 
-			GitBlameHeader header = new GitBlameHeader { CommitGuid = randomGuid };
+            GitBlameHeader header = new GitBlameHeader { CommitGuid = randomGuid };
 
-			Color expectedColor = Color.FromArgb(255, 246, 226, 238);
+            Color expectedColor = Color.FromArgb(255, 246, 226, 238);
 
-			Assert.AreEqual(expectedColor, header.GetColor());
+            Assert.AreEqual(expectedColor, header.GetColor());
 
-		}
+        }
 
-		[TestMethod]
-		public void TestEquals()
-		{
-			GitBlameHeader header1 = new GitBlameHeader { Author = "Author" };
-			GitBlameHeader header2 = new GitBlameHeader { Author = "Author" };
+        [TestMethod]
+        public void TestEquals()
+        {
+            GitBlameHeader header1 = new GitBlameHeader { Author = "Author" };
+            GitBlameHeader header2 = new GitBlameHeader { Author = "Author" };
 
-			Assert.IsTrue(header1.Equals(header2));
-			Assert.IsFalse(header1.Equals(null));
-		}
+            Assert.IsTrue(header1.Equals(header2));
+            Assert.IsFalse(header1.Equals(null));
+        }
 
-		[TestMethod]
-		public void TestEqualsFails()
-		{
-			GitBlameHeader header1 = new GitBlameHeader { Author = "Author" };
-			GitBlameHeader header2 = new GitBlameHeader();
-			
-			Assert.IsFalse(header1.Equals(header2));
-		}
+        [TestMethod]
+        public void TestEqualsFails()
+        {
+            GitBlameHeader header1 = new GitBlameHeader { Author = "Author" };
+            GitBlameHeader header2 = new GitBlameHeader();
 
-		[TestMethod]
-		public void TestToString()
-		{
-			DateTime committerTime = DateTime.Now;
-			DateTime authorTime = DateTime.Now;
+            Assert.IsFalse(header1.Equals(header2));
+        }
 
-			StringBuilder expectedHeader = new StringBuilder();
+        [TestMethod]
+        public void TestToString()
+        {
+            DateTime committerTime = DateTime.Now;
+            DateTime authorTime = DateTime.Now;
 
-			expectedHeader.AppendLine("Author: Author");
-			expectedHeader.AppendLine("AuthorTime: " + authorTime.ToString());
-			expectedHeader.AppendLine("Committer: committer");
-			expectedHeader.AppendLine("CommitterTime: " + committerTime.ToString());
-			expectedHeader.AppendLine("Summary: test summary");
-			expectedHeader.AppendLine();
-			expectedHeader.Append("FileName: fileName.txt");
+            StringBuilder expectedHeader = new StringBuilder();
 
-			GitBlameHeader header = new GitBlameHeader {
-				Author = "Author",
-				AuthorMail = "author@authormail.com",
-				AuthorTime = authorTime,
-				Committer = "committer",
-				CommitterTime = committerTime,
-				Summary = "test summary",
-				FileName = "fileName.txt"
-			};
+            expectedHeader.AppendLine("Author: Author");
+            expectedHeader.AppendLine("AuthorTime: " + authorTime.ToString());
+            expectedHeader.AppendLine("Committer: committer");
+            expectedHeader.AppendLine("CommitterTime: " + committerTime.ToString());
+            expectedHeader.AppendLine("Summary: test summary");
+            expectedHeader.AppendLine();
+            expectedHeader.Append("FileName: fileName.txt");
 
-			Assert.AreEqual(expectedHeader.ToString(), header.ToString());
-		}
-	}
+            GitBlameHeader header = new GitBlameHeader
+            {
+                Author = "Author",
+                AuthorMail = "author@authormail.com",
+                AuthorTime = authorTime,
+                Committer = "committer",
+                CommitterTime = committerTime,
+                Summary = "test summary",
+                FileName = "fileName.txt"
+            };
+
+            Assert.AreEqual(expectedHeader.ToString(), header.ToString());
+        }
+    }
 }
 
