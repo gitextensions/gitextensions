@@ -83,7 +83,7 @@ namespace Gerrit
             bool inHeader = false;
             var result = new GerritSettings(aModule);
 
-            foreach (string line in File.ReadAllLines(path))
+            foreach (string line in File.ReadLines(path))
             {
                 string trimmed = line.Trim();
 

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -926,7 +927,7 @@ namespace GitCommands
         {
             if (File.Exists(repositoryPath + ".git"))
             {
-                var lines = File.ReadAllLines(repositoryPath + ".git");
+                var lines = File.ReadLines(repositoryPath + ".git");
                 foreach (string line in lines)
                 {
                     if (line.StartsWith("gitdir:"))
@@ -1253,7 +1254,7 @@ namespace GitCommands
             if (File.Exists(_workingdir + ".git") &&
                 superprojectPath == null)
             {
-                var lines = File.ReadAllLines(_workingdir + ".git");
+                var lines = File.ReadLines(_workingdir + ".git");
                 foreach (string line in lines)
                 {
                     if (line.StartsWith("gitdir:"))
@@ -1754,6 +1755,26 @@ namespace GitCommands
             return File.Exists(file) ? File.ReadAllText(file).Trim() : "";
         }
 
+        private string AppendQuotedString(string str1, string str2)
+        {
+            var m1 = QuotedText.Match(str1);
+            var m2 = QuotedText.Match(str2);
+            if (!m1.Success || !m2.Success)
+                return str1 + str2;
+            Debug.Assert(m1.Groups[1].Value == m2.Groups[1].Value);
+            return str1.Substring(0, str1.Length - 2) + m2.Groups[2].Value + "?=";
+        }
+
+        private string DecodeString(string str)
+        {
+            // decode QuotedPrintable text using .NET internal decoder 
+            Attachment attachment = Attachment.CreateAttachmentFromString("", str);
+            return attachment.Name;
+        }
+
+        private static Regex HeadersMatch = new Regex(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$", RegexOptions.Compiled);
+        private static Regex QuotedText = new Regex(@"=\?([\w-]+)\?q\?(.*)\?=$", RegexOptions.Compiled);
+
         public IList<PatchFile> GetRebasePatchFiles()
         {
             var patchFiles = new List<PatchFile>();
@@ -1786,23 +1807,48 @@ namespace GitCommands
 
                 if (File.Exists(GetRebaseDir() + file))
                 {
-                    foreach (var line in File.ReadAllLines(GetRebaseDir() + file))
+                    string key = null;
+                    string value = null;
+                    foreach (var line in File.ReadLines(GetRebaseDir() + file))
                     {
-                        if (line.StartsWith("From: "))
-                            if (line.IndexOf('<') > 0 && line.IndexOf('<') < line.Length)
-                                patchFile.Author = line.Substring(6, line.IndexOf('<') - 6).Trim();
-                            else
-                                patchFile.Author = line.Substring(6).Trim();
+                        var m = HeadersMatch.Match(line);
+                        if (key == null)
+                        {
+                            if (!String.IsNullOrWhiteSpace(line) && !m.Success)
+                                continue;
+                        }
+                        else if (String.IsNullOrWhiteSpace(line) || m.Success)
+                        {
+                            value = DecodeString(value);
+                            switch (key)
+                            {
+                                case "From":
+                                    if (value.IndexOf('<') > 0 && value.IndexOf('<') < value.Length)
+                                        patchFile.Author = value.Substring(0, value.IndexOf('<')).Trim();
+                                    else
+                                        patchFile.Author = value;
+                                    break;
+                                case "Date":
+                                    if (value.IndexOf('+') > 0 && value.IndexOf('<') < value.Length)
+                                        patchFile.Date = value.Substring(0, value.IndexOf('+')).Trim();
+                                    else
+                                        patchFile.Date = value;
+                                    break;
+                                case "Subject":
+                                    patchFile.Subject = value;
+                                    break;
+                            }
+                        }
+                        if (m.Success)
+                        {
+                            key = m.Groups[1].Value;
+                            value = m.Groups[2].Value;
+                        }
+                        else
+                            value = AppendQuotedString(value, line.Trim());
 
-                        if (line.StartsWith("Date: "))
-                            if (line.IndexOf('+') > 0 && line.IndexOf('<') < line.Length)
-                                patchFile.Date = line.Substring(6, line.IndexOf('+') - 6).Trim();
-                            else
-                                patchFile.Date = line.Substring(6).Trim();
-
-                        if (line.StartsWith("Subject: ")) patchFile.Subject = line.Substring(9).Trim();
-
-                        if (!string.IsNullOrEmpty(patchFile.Author) &&
+                        if (string.IsNullOrEmpty(line) ||
+                            !string.IsNullOrEmpty(patchFile.Author) &&
                             !string.IsNullOrEmpty(patchFile.Date) &&
                             !string.IsNullOrEmpty(patchFile.Subject))
                             break;
