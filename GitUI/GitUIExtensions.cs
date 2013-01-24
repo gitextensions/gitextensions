@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
@@ -155,7 +156,7 @@ namespace GitUI
                             diffViewer.GetExtraDiffArguments(), diffViewer.Encoding), file.IsSubmodule);
                     }
 
-                    return FileReader.ReadFileContent(grid.Module.WorkingDir + file.Name, diffViewer.Encoding);
+                    return FileReader.ReadFileContent(Path.Combine(grid.Module.WorkingDir, file.Name), diffViewer.Encoding);
                 }
                 else
                 {
