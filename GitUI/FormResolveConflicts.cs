@@ -262,7 +262,7 @@ namespace GitUI
 
             int exitCode;
             Module.RunCmd("wscript", "\"" + mergeScript + "\" \"" +
-                FixPath(Module.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +
+                FixPath(Module.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +//
                 FixPath(localFileName) + "\" \"" + FixPath(baseFileName) + "\"", out exitCode);
 
             if (MessageBox.Show(this, string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text,

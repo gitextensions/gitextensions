@@ -1187,7 +1187,7 @@ namespace GitCommands
 
         public string GetSubmoduleFullPath(string localPath)
         {
-            string dir = _workingdir + localPath + Settings.PathSeparator.ToString();
+            string dir = _workingdir + localPath + Settings.PathSeparator.ToString();//
             return Path.GetFullPath(dir); // fix slashes
         }
 
