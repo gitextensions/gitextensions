@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -180,7 +181,7 @@ namespace GitUI
 
                     foreach (GitItemStatus item in SelectedItems)
                     {
-                        string fileName = Module.WorkingDir + item.Name;
+                        string fileName = Path.Combine(Module.WorkingDir, item.Name);
 
                         fileList.Add(fileName.Replace('/', '\\'));
                     }

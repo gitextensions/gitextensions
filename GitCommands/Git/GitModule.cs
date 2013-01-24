@@ -1263,7 +1263,7 @@ namespace GitCommands
                         if (pos != -1)
                         {
                             gitpath = gitpath.Substring(0, pos + 1).Replace('/', '\\');
-                            gitpath = Path.GetFullPath(_workingdir + gitpath);
+                            gitpath = Path.GetFullPath(Path.Combine(_workingdir, gitpath));
                             if (File.Exists(gitpath + ".gitmodules") && ValidWorkingDir(gitpath))
                                 superprojectPath = gitpath;
                         }
