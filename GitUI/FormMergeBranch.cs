@@ -14,6 +14,7 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+            helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
             _defaultBranch = defaultBranch;
 
             if (Settings.NoFastForwardMerge)

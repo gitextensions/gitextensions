@@ -87,9 +87,10 @@ namespace GitUI
 
             settingsTreeView.AddSettingsPage(new ShellExtensionSettingsPage(), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new AdvancedSettingsGroup(), gitExtPageRef);
-            //SettingsPageReference advancedPageRef = AdvancedSettingsGroup.GetPageReference();
+            settingsTreeView.AddSettingsPage(new AdvancedSettingsPage(), gitExtPageRef);
+            SettingsPageReference advancedPageRef = AdvancedSettingsPage.GetPageReference();
 
+            settingsTreeView.AddSettingsPage(new ConfirmationsSettingsPage(), advancedPageRef);
 
             settingsTreeView.AddSettingsPage(new PluginsSettingsGroup(), null);
             SettingsPageReference pluginsPageRef = PluginsSettingsGroup.GetPageReference();
