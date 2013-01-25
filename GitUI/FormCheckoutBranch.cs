@@ -89,7 +89,6 @@ namespace GitUI
 
                 localChangesGB.Visible = ShowLocalChangesGB();
                 ChangesMode = Settings.CheckoutBranchAction;
-                defaultActionChx.Checked = Settings.UseDefaultCheckoutBranchAction;
             }
             finally
             {
@@ -206,7 +205,6 @@ namespace GitUI
 
             Settings.LocalChanges changes = ChangesMode;
             Settings.CheckoutBranchAction = changes;
-            Settings.UseDefaultCheckoutBranchAction = defaultActionChx.Checked;
 
             if (ShowLocalChangesGB())
                 cmd.SetLocalChangesFromSettings(changes);

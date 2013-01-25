@@ -2052,15 +2052,6 @@ namespace GitUI
             item.ShortcutKeyDisplayString = checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString;
             branchSelect.DropDownItems.Add(item);
             item.Click += (hs, he) => CheckoutBranchToolStripMenuItemClick(hs, he);
-
-            ToolStripMenuItem alwaysShowCheckoutDlg = new ToolStripMenuItem(_alwaysShowCheckoutDlgStr.Text);
-            alwaysShowCheckoutDlg.Checked = Settings.AlwaysShowCheckoutBranchDlg;
-            branchSelect.DropDownItems.Add(alwaysShowCheckoutDlg);
-            alwaysShowCheckoutDlg.Click += (hs, he) =>
-                {
-                    Settings.AlwaysShowCheckoutBranchDlg = !alwaysShowCheckoutDlg.Checked;
-                    alwaysShowCheckoutDlg.Checked = Settings.AlwaysShowCheckoutBranchDlg;
-                };
         }
 
         void BranchSelectToolStripItem_Click(object sender, EventArgs e)
