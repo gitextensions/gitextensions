@@ -53,7 +53,7 @@ namespace GitUI.SettingsDialog.Pages
 
         public static SettingsPageReference GetPageReference()
         {
-            return new SettingsPageReference(typeof(GlobalSettingsSettingsPage));
+            return new SettingsPageReferenceByType(typeof(GlobalSettingsSettingsPage));
         }
 
         public override void OnPageShown()

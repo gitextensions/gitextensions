@@ -16,6 +16,7 @@ using Gravatar;
 using PatchApply;
 using Settings = GitCommands.Settings;
 using GitUI.SettingsDialog;
+using GitUI.SettingsDialog.Pages;
 
 namespace GitUI
 {
@@ -1310,7 +1311,7 @@ namespace GitUI
 
         public bool StartPluginSettingsDialog(IWin32Window owner)
         {
-            return StartSettingsDialog(owner, new SettingsPageReference(SettingsPageReference.Section.PluginsSettings));
+            return StartSettingsDialog(owner, PluginsSettingsGroup.GetPageReference());
         }
 
         public bool StartPluginSettingsDialog()

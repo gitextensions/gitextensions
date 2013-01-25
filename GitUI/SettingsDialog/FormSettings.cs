@@ -32,23 +32,9 @@ namespace GitUI
 
         #endregion
 
-        readonly SettingsPageRegistry _settingsPageRegistry = new SettingsPageRegistry();
         readonly CommonLogic _commonLogic;
         readonly CheckSettingsLogic _checkSettingsLogic;
-        readonly ChecklistSettingsPage _checklistSettingsPage;
-        readonly GitSettingsPage _gitSettingsPage;
-        readonly GitExtensionsSettingsPage _gitExtensionsSettingsPage;
-        readonly AppearanceSettingsPage _appearanceSettingsPage;
-        readonly ColorsSettingsPage _colorsSettingsPage;
-        readonly GlobalSettingsSettingsPage _globalSettingsSettingsPage;
-        readonly HotkeysSettingsPage _hotkeysSettingsPage;
-        readonly LocalSettingsSettingsPage _localSettingsSettingsPage;
-        readonly ScriptsSettingsPage _scriptsSettingsPage;
-        readonly ShellExtensionSettingsPage _shellExtensionSettingsPage;
-        readonly SshSettingsPage _sshSettingsPage;
-        readonly StartPageSettingsPage _startPageSettingsPage;
-
-        readonly SettingsPageReference _initalPage;
+        private IEnumerable<ISettingsPage> SettingsPages { get { return settingsTreeView.SettingsPages; } }
 
         private FormSettings()
             : this(null)
@@ -60,60 +46,61 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
-            _initalPage = initalPage;
-
             //if form is created for translation purpose
             if (aCommands == null)
                 return;
             
             // NEW:
+            settingsTreeView.AddSettingsPage(new GitExtensionsSettingsGroup(), null);
+            SettingsPageReference gitExtPageRef = GitExtensionsSettingsGroup.GetPageReference();
 
             _commonLogic = new CommonLogic(Module);
 
             _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module);
-            _checklistSettingsPage = new ChecklistSettingsPage(_commonLogic, _checkSettingsLogic, Module, this);
-            _checkSettingsLogic.ChecklistSettingsPage = _checklistSettingsPage; // TODO
-            _settingsPageRegistry.RegisterSettingsPage(_checklistSettingsPage);
+            var checklistSettingsPage = new ChecklistSettingsPage(_commonLogic, _checkSettingsLogic, Module, this);
+            _checkSettingsLogic.ChecklistSettingsPage = checklistSettingsPage; // TODO
+            settingsTreeView.AddSettingsPage(checklistSettingsPage, gitExtPageRef);
 
-            _gitSettingsPage = new GitSettingsPage(_checkSettingsLogic, this);
-            _settingsPageRegistry.RegisterSettingsPage(_gitSettingsPage);
+            settingsTreeView.AddSettingsPage(new GitSettingsPage(_checkSettingsLogic, this), gitExtPageRef);
+            
+            settingsTreeView.AddSettingsPage(new GitExtensionsSettingsPage(), gitExtPageRef);
+            
+            settingsTreeView.AddSettingsPage(new AppearanceSettingsPage(), gitExtPageRef);
+            
+            settingsTreeView.AddSettingsPage(new ColorsSettingsPage(), gitExtPageRef);
+            
+            settingsTreeView.AddSettingsPage(new StartPageSettingsPage(), gitExtPageRef);
+            
+            var globalSettingsSettingsPage = new GlobalSettingsSettingsPage(_commonLogic, _checkSettingsLogic, Module);
+            settingsTreeView.AddSettingsPage(globalSettingsSettingsPage, gitExtPageRef);
 
-            _gitExtensionsSettingsPage = new GitExtensionsSettingsPage();
-            _settingsPageRegistry.RegisterSettingsPage(_gitExtensionsSettingsPage);
+            var localSettingsSettingsPage = new LocalSettingsSettingsPage(_commonLogic, _checkSettingsLogic, Module);
+            settingsTreeView.AddSettingsPage(localSettingsSettingsPage, gitExtPageRef);
 
-            _appearanceSettingsPage = new AppearanceSettingsPage();
-            _settingsPageRegistry.RegisterSettingsPage(_appearanceSettingsPage);
+            var _sshSettingsPage = new SshSettingsPage();
+            settingsTreeView.AddSettingsPage(_sshSettingsPage, gitExtPageRef);
+            checklistSettingsPage.SshSettingsPage = _sshSettingsPage;
 
-            _colorsSettingsPage = new ColorsSettingsPage();
-            _settingsPageRegistry.RegisterSettingsPage(_colorsSettingsPage);
+            settingsTreeView.AddSettingsPage(new ScriptsSettingsPage(), gitExtPageRef);
 
-            _startPageSettingsPage = new StartPageSettingsPage();
-            _settingsPageRegistry.RegisterSettingsPage(_startPageSettingsPage);
+            settingsTreeView.AddSettingsPage(new HotkeysSettingsPage(), gitExtPageRef);
 
-            _globalSettingsSettingsPage = new GlobalSettingsSettingsPage(_commonLogic, _checkSettingsLogic, Module);
-            _settingsPageRegistry.RegisterSettingsPage(_globalSettingsSettingsPage);
+            settingsTreeView.AddSettingsPage(new ShellExtensionSettingsPage(), gitExtPageRef);
 
-            _localSettingsSettingsPage = new LocalSettingsSettingsPage(_commonLogic, _checkSettingsLogic, Module);
-            _settingsPageRegistry.RegisterSettingsPage(_localSettingsSettingsPage);
+            settingsTreeView.AddSettingsPage(new AdvancedSettingsGroup(), gitExtPageRef);
+            //SettingsPageReference advancedPageRef = AdvancedSettingsGroup.GetPageReference();
 
-            _sshSettingsPage = new SshSettingsPage();
-            _settingsPageRegistry.RegisterSettingsPage(_sshSettingsPage);
-            _checklistSettingsPage.SshSettingsPage = _sshSettingsPage;
 
-            _scriptsSettingsPage = new ScriptsSettingsPage();
-            _settingsPageRegistry.RegisterSettingsPage(_scriptsSettingsPage);
+            settingsTreeView.AddSettingsPage(new PluginsSettingsGroup(), null);
+            SettingsPageReference pluginsPageRef = PluginsSettingsGroup.GetPageReference();
+            foreach (var gitPlugin in LoadedPlugins.Plugins)
+            {
+                var settingsPage = PluginSettingsPage.CreateSettingsPageFromPlugin(gitPlugin);
+                settingsTreeView.AddSettingsPage(settingsPage, pluginsPageRef);
+            }            
 
-            _hotkeysSettingsPage = new HotkeysSettingsPage();
-            _settingsPageRegistry.RegisterSettingsPage(_hotkeysSettingsPage);
-
-            _shellExtensionSettingsPage = new ShellExtensionSettingsPage();
-            _settingsPageRegistry.RegisterSettingsPage(_shellExtensionSettingsPage);
-
-            // register all plugin pages
-            _settingsPageRegistry.RegisterPluginSettingsPages();
-
-            settingsTreeViewUserControl1.SetSettingsPages(_settingsPageRegistry, _initalPage);
-        }
+            settingsTreeView.GotoPage(initalPage);
+        }        
 
         private void FormSettings_Load(object sender, EventArgs e)
         {
@@ -136,12 +123,12 @@ namespace GitUI
 
             var settingsPage = e.SettingsPage;
 
-            if (settingsPage != null)
+            if (settingsPage != null && settingsPage.GuiControl != null)
             {
                 panelCurrentSettingsPage.Controls.Add(settingsPage.GuiControl);
                 e.SettingsPage.GuiControl.Dock = DockStyle.Fill;
 
-                string title = e.SettingsPage.Title;
+                string title = e.SettingsPage.GetTitle();
                 if (e.SettingsPage is PluginSettingsPage)
                 {
                     title = "Plugin: " + title;
@@ -179,7 +166,7 @@ namespace GitUI
 
             try
             {
-                foreach (var settingsPage in _settingsPageRegistry.GetAllSettingsPages())
+                foreach (var settingsPage in SettingsPages)
                 {
                     settingsPage.LoadSettings();
                 }
@@ -217,7 +204,7 @@ namespace GitUI
                 }
             }
 
-            foreach (var settingsPage in _settingsPageRegistry.GetAllSettingsPages())
+            foreach (var settingsPage in SettingsPages)
             {
                 settingsPage.SaveSettings();
             }
@@ -277,7 +264,7 @@ namespace GitUI
 
         public void GotoPage(SettingsPageReference settingsPageReference)
         {
-            settingsTreeViewUserControl1.GotoPage(settingsPageReference);
+            settingsTreeView.GotoPage(settingsPageReference);
         }
 
         public void SaveAll()

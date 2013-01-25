@@ -12,7 +12,10 @@ namespace GitUI.SettingsDialog
     /// </summary>
     public class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
-        public virtual string Title { get { return Text; } }
+        public virtual string GetTitle()
+        {
+            return Text;
+        }
 
         public Control GuiControl { get { return this; } }
 
@@ -75,6 +78,11 @@ namespace GitUI.SettingsDialog
         public virtual bool IsInstantSavePage
         {
             get { return false; }
+        }
+
+        public virtual SettingsPageReference PageReference
+        {
+            get { return new SettingsPageReferenceByType(GetType()); }
         }
     }
 }
