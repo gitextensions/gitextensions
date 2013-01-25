@@ -21,7 +21,7 @@ namespace GitUI.UserControls
         }
 
         void GetStashes(IList<GitStash> stashes)
-        {
+        {//
             throw new NotImplementedException();
         }
     }
