@@ -20,15 +20,17 @@ namespace GitUI.UserControls
 
         Lazy<TreeNode> nodeTags;
         Lazy<TreeNode> nodeBranches;
+        Lazy<TreeNode> nodeStashes;
 
         TaskScheduler uiScheduler = TaskScheduler.FromCurrentSynchronizationContext();
-
+        
         public RepoObjectsTree()
         {
             InitializeComponent();
 
             nodeBranches = GetNodeLazy("branches");
             nodeTags = GetNodeLazy("tags");
+            nodeStashes = GetNodeLazy("stashes");
 
             foreach (TreeNode node in treeMain.Nodes)
             {
@@ -51,6 +53,7 @@ namespace GitUI.UserControls
             // todo: task exception handling
 
             LoadBranches();
+            LoadStashes();
 
             // update tree little by little OR when all data retrieved?
 
