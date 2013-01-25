@@ -8,7 +8,7 @@ namespace GitUI.SettingsDialog
 {
     public interface ISettingsPage
     {
-        string Title { get; }
+        string GetTitle();
 
         Control GuiControl { get; }
 
@@ -24,5 +24,7 @@ namespace GitUI.SettingsDialog
         bool IsInstantSavePage { get; }
 
         IEnumerable<string> GetSearchKeywords();
+
+        SettingsPageReference PageReference { get; }
     }
 }

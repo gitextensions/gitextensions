@@ -202,7 +202,7 @@ namespace GitUI.SettingsDialog.Pages
 
         public static SettingsPageReference GetPageReference()
         {
-            return new SettingsPageReference(typeof(ChecklistSettingsPage));
+            return new SettingsPageReferenceByType(typeof(ChecklistSettingsPage));
         }
 
         public override bool IsInstantSavePage

@@ -10,36 +10,34 @@ namespace GitUI.SettingsDialog
     /// 
     /// TODO: extend with attributes to jump to specific control on settingspage
     /// </summary>
-    public class SettingsPageReference
+    public abstract class SettingsPageReference
+    { 
+    }
+
+    public class SettingsPageReferenceByType : SettingsPageReference
     {
-        private readonly Section _section;
         private readonly Type _settingsPageType;
 
-        /// <summary>
-        /// Jump to first page of GitExt settings or Plugin settings
-        /// </summary>
-        /// <param name="section"></param>
-        public SettingsPageReference(Section section)
-        {
-            _section = section;
-        }
-
-        public SettingsPageReference(Type settingsPageType)
+        public SettingsPageReferenceByType(Type settingsPageType)
         {
             _settingsPageType = settingsPageType;
         }
 
-        public Section SettingsSection { get { return _section; } }
-
         public Type SettingsPageType { get { return _settingsPageType; } }
 
-        /// <summary>
-        /// references a root node from the settings tree
-        /// </summary>
-        public enum Section
+        public override bool Equals(object obj)
         {
-            GitExtensionsSettings,
-            PluginsSettings
+            return obj is SettingsPageReferenceByType && ((SettingsPageReferenceByType)obj).SettingsPageType.Equals(SettingsPageType);
+        }
+
+        public override int GetHashCode()
+        {
+            return SettingsPageType.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return SettingsPageType.ToString();
         }
     }
 }
