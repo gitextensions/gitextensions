@@ -420,14 +420,11 @@ namespace GitUI
 
         public virtual void AddTranslationItems(Translation translation)
         {
-            if (!string.IsNullOrEmpty(Text))
-                translation.AddTranslationItem(Name, "$this", "Text", Text);
             TranslationUtl.AddTranslationItemsFromFields(Name, this, translation);
         }
 
         public virtual void TranslateItems(Translation translation)
         {
-            Text = translation.TranslateItem(Name, "$this", "Text", Text);
             TranslationUtl.TranslateItemsFromFields(Name, this, translation);
         }
 

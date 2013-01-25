@@ -274,5 +274,22 @@ namespace GitUI
                 BackColor = SystemColors.AppWorkspace;
             }
         }
+
+        public static IEnumerable<TreeNode> AllNodes(this TreeView tree)
+        {
+            return tree.Nodes.AllNodes();
+        }
+
+        public static IEnumerable<TreeNode> AllNodes(this TreeNodeCollection nodes)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                yield return node;
+
+                foreach(TreeNode subNode in node.Nodes.AllNodes())
+                    yield return subNode;
+            }
+        }
+
     }
 }

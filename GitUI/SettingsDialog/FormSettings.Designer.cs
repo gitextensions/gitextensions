@@ -40,7 +40,7 @@ namespace GitUI
             this.scriptInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.buttonOk = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.settingsTreeViewUserControl1 = new GitUI.SettingsDialog.SettingsTreeViewUserControl();
+            this.settingsTreeView = new GitUI.SettingsDialog.SettingsTreeViewUserControl();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonApply = new System.Windows.Forms.Button();
             this.buttonDiscard = new System.Windows.Forms.Button();
@@ -111,7 +111,7 @@ namespace GitUI
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.settingsTreeViewUserControl1, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.settingsTreeView, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel4, 1, 2);
             this.tableLayoutPanel3.Controls.Add(this.panel2, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.panelCurrentSettingsPage, 1, 1);
@@ -127,15 +127,15 @@ namespace GitUI
             // 
             // settingsTreeViewUserControl1
             // 
-            this.settingsTreeViewUserControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settingsTreeViewUserControl1.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.settingsTreeViewUserControl1.Location = new System.Drawing.Point(3, 3);
-            this.settingsTreeViewUserControl1.MinimumSize = new System.Drawing.Size(100, 220);
-            this.settingsTreeViewUserControl1.Name = "settingsTreeViewUserControl1";
-            this.tableLayoutPanel3.SetRowSpan(this.settingsTreeViewUserControl1, 2);
-            this.settingsTreeViewUserControl1.Size = new System.Drawing.Size(194, 558);
-            this.settingsTreeViewUserControl1.TabIndex = 1;
-            this.settingsTreeViewUserControl1.SettingsPageSelected += new System.EventHandler<GitUI.SettingsDialog.SettingsPageSelectedEventArgs>(this.settingsTreeViewUserControl1_SettingsPageSelected);
+            this.settingsTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settingsTreeView.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.settingsTreeView.Location = new System.Drawing.Point(3, 3);
+            this.settingsTreeView.MinimumSize = new System.Drawing.Size(100, 220);
+            this.settingsTreeView.Name = "settingsTreeViewUserControl1";
+            this.tableLayoutPanel3.SetRowSpan(this.settingsTreeView, 2);
+            this.settingsTreeView.Size = new System.Drawing.Size(194, 558);
+            this.settingsTreeView.TabIndex = 1;
+            this.settingsTreeView.SettingsPageSelected += new System.EventHandler<GitUI.SettingsDialog.SettingsPageSelectedEventArgs>(this.settingsTreeViewUserControl1_SettingsPageSelected);
             // 
             // flowLayoutPanel4
             // 
@@ -267,7 +267,7 @@ namespace GitUI
         private System.Windows.Forms.HelpProvider helpProvider1;
         private BindingSource scriptInfoBindingSource;
         private TableLayoutPanel tableLayoutPanel3;
-        private SettingsDialog.SettingsTreeViewUserControl settingsTreeViewUserControl1;
+        private SettingsDialog.SettingsTreeViewUserControl settingsTreeView;
         private Label labelSettingsPageTitle;
         private FlowLayoutPanel flowLayoutPanel4;
         private Button buttonApply;

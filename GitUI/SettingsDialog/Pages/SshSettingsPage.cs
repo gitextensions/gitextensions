@@ -28,7 +28,7 @@ namespace GitUI.SettingsDialog.Pages
 
         public static SettingsPageReference GetPageReference()
         {
-            return new SettingsPageReference(typeof(SshSettingsPage));
+            return new SettingsPageReferenceByType(typeof(SshSettingsPage));
         }
 
         protected override void OnLoadSettings()

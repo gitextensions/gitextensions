@@ -28,7 +28,10 @@ namespace GitUI.SettingsDialog.Plugins
             return new PluginSettingsPage(gitPlugin);
         }
 
-        public override string Title { get { return _gitPlugin.Description; } }
+        public override string GetTitle()
+        {
+            return _gitPlugin == null ? string.Empty : _gitPlugin.Description;
+        }
 
         protected override string GetCommaSeparatedKeywordList()
         {
@@ -62,6 +65,11 @@ namespace GitUI.SettingsDialog.Plugins
         public override void SaveSettings()
         {
             SavePluginSettingsFromGeneratedControls();
+        }
+
+        public override SettingsPageReference PageReference
+        {
+            get { return new SettingsPageReferenceByType(_gitPlugin.GetType()); }
         }
 
         /// <summary>

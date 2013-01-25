@@ -437,6 +437,7 @@
     <Compile Include="SettingsDialog\Pages\ColorsSettingsPage.Designer.cs">
       <DependentUpon>ColorsSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsDialog\Pages\SettingsGroupPages.cs" />
     <Compile Include="SettingsDialog\Pages\GitExtensionsSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -455,6 +456,7 @@
     <Compile Include="SettingsDialog\Pages\GlobalSettingsSettingsPage.Designer.cs">
       <DependentUpon>GlobalSettingsSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingsDialog\GroupSettingsPage.cs" />
     <Compile Include="SettingsDialog\Pages\HotkeysSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -501,7 +503,6 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SettingsDialog\SettingsPageReference.cs" />
-    <Compile Include="SettingsDialog\SettingsPageRegistry.cs" />
     <Compile Include="SettingsDialog\SettingsTreeViewUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
