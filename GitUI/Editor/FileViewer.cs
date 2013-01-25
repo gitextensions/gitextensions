@@ -556,11 +556,6 @@ namespace GitUI.Editor
             _internalFileViewer.SetHighlighting("Default");
         }
 
-        public void SetSyntax(string fileName)
-        {
-            EditorOptions.SetSyntax(_internalFileViewer, fileName);
-        }
-
         private void ResetForText(string fileName)
         {
             Reset(false, true);
@@ -568,7 +563,7 @@ namespace GitUI.Editor
             if (fileName == null)
                 _internalFileViewer.SetHighlighting("Default");
             else
-                EditorOptions.SetSyntax(_internalFileViewer, fileName);
+                _internalFileViewer.SetHighlightingForFile(fileName);
 
             if (!string.IsNullOrEmpty(fileName) &&
                 (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase) ||
@@ -577,6 +572,7 @@ namespace GitUI.Editor
                 ResetForDiff();
             }
         }
+
         private bool patchHighlighting;
         private void ResetForDiff()
         {
