@@ -849,7 +849,7 @@ namespace GitUI
                 {
                     try
                     {
-                        string path = Module.WorkingDir + item.Name;
+                        string path = Path.Combine(Module.WorkingDir, item.Name);
                         if (File.Exists(path))
                             File.Delete(path);
                         else
@@ -1812,7 +1812,7 @@ namespace GitUI
             var searchWindow = new SearchWindow<string>(FindFileMatches);
             Application.Run(searchWindow);
             if (searchWindow.SelectedItem != null)
-                Console.WriteLine(Module.WorkingDir + searchWindow.SelectedItem);
+                Console.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
         }
 
         private void RunBrowseCommand(string[] args)

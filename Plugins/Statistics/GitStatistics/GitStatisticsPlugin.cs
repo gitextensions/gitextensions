@@ -43,7 +43,7 @@ namespace GitStatistics
                     foreach (var submodule in gitUIEventArgs.GitModule.GetSubmodules())
                     {
                         formGitStatistics.DirectoriesToIgnore += ";";
-                        formGitStatistics.DirectoriesToIgnore += gitUIEventArgs.GitModule.GitWorkingDir + submodule.LocalPath;
+                        formGitStatistics.DirectoriesToIgnore += Path.Combine(gitUIEventArgs.GitModule.GitWorkingDir, submodule.LocalPath);
                     }
                 }
 

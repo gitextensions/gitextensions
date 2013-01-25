@@ -1188,7 +1188,7 @@ namespace GitCommands
 
         public string GetSubmoduleFullPath(string localPath)
         {
-            string dir = _workingdir + localPath + Settings.PathSeparator.ToString();
+            string dir = _workingdir + localPath + Settings.PathSeparator.ToString();//
             return Path.GetFullPath(dir); // fix slashes
         }
 
@@ -1264,7 +1264,7 @@ namespace GitCommands
                         if (pos != -1)
                         {
                             gitpath = gitpath.Substring(0, pos + 1).Replace('/', '\\');
-                            gitpath = Path.GetFullPath(_workingdir + gitpath);
+                            gitpath = Path.GetFullPath(Path.Combine(_workingdir, gitpath));
                             if (File.Exists(gitpath + ".gitmodules") && ValidWorkingDir(gitpath))
                                 superprojectPath = gitpath;
                         }

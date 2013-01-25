@@ -510,7 +510,7 @@ namespace GitUI.Editor
         {
             try
             {
-                using (Stream stream = File.OpenRead(Module.WorkingDir + fileName))
+                using (Stream stream = File.OpenRead(Path.Combine(Module.WorkingDir, fileName)))
                 {
                     return CreateImage(fileName, stream);
                 }
@@ -545,7 +545,7 @@ namespace GitUI.Editor
             if (File.Exists(fileName))
                 path = fileName;
             else
-                path = Module.WorkingDir + fileName;
+                path = Path.Combine(Module.WorkingDir, fileName);
 
             return !File.Exists(path) ? null : FileReader.ReadFileContent(path, Module.FilesEncoding);
         }
