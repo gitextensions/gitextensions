@@ -233,13 +233,13 @@ namespace GitUI
                 {
                     string mergeScript = "";
                     if (_mergeScripts.TryGetValue(extension, out mergeScript) &&
-                        File.Exists(dir + mergeScript))
+                        File.Exists(Path.Combine(dir, mergeScript)))
                     {
                         if (MessageBox.Show(this, string.Format(uskUseCustomMergeScript.Text, mergeScript),
                                             uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
                             DialogResult.Yes)
                         {
-                            UseMergeWithScript(fileName, dir + mergeScript, baseFileName, remoteFileName, localFileName);
+                            UseMergeWithScript(fileName, Path.Combine(dir, mergeScript), baseFileName, remoteFileName, localFileName);
 
                             return true;
                         }
@@ -257,22 +257,22 @@ namespace GitUI
         {
             //get timestamp of file before merge. This is an extra check to verify if merge was successfully
             DateTime lastWriteTimeBeforeMerge = DateTime.Now;
-            if (File.Exists(Module.WorkingDir + fileName))
-                lastWriteTimeBeforeMerge = File.GetLastWriteTime(Module.WorkingDir + fileName);
+            if (File.Exists(Path.Combine(Module.WorkingDir, fileName)))
+                lastWriteTimeBeforeMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, fileName));
 
             int exitCode;
             Module.RunCmd("wscript", "\"" + mergeScript + "\" \"" +
-                FixPath(Module.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +
+                FixPath(Module.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +//
                 FixPath(localFileName) + "\" \"" + FixPath(baseFileName) + "\"", out exitCode);
 
             if (MessageBox.Show(this, string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text,
-                FixPath(Module.WorkingDir + fileName)), askMergeConflictSolvedCaption.Text,
+                FixPath(Path.Combine(Module.WorkingDir, fileName))), askMergeConflictSolvedCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
 
                 DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
-                if (File.Exists(Module.WorkingDir + fileName))
-                    lastWriteTimeAfterMerge = File.GetLastWriteTime(Module.WorkingDir + fileName);
+                if (File.Exists(Path.Combine(Module.WorkingDir, fileName)))
+                    lastWriteTimeAfterMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, fileName));
 
                 //The file is not modified, do not stage file and present warning
                 if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
@@ -387,15 +387,15 @@ namespace GitUI
 
                     //get timestamp of file before merge. This is an extra check to verify if merge was successful
                     DateTime lastWriteTimeBeforeMerge = DateTime.Now;
-                    if (File.Exists(Module.WorkingDir + filename))
-                        lastWriteTimeBeforeMerge = File.GetLastWriteTime(Module.WorkingDir + filename);
+                    if (File.Exists(Path.Combine(Module.WorkingDir, filename)))
+                        lastWriteTimeBeforeMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, filename));
 
                     int exitCode;
                     Module.RunCmd(mergetoolPath, "" + arguments + "", out exitCode);
 
                     DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
-                    if (File.Exists(Module.WorkingDir + filename))
-                        lastWriteTimeAfterMerge = File.GetLastWriteTime(Module.WorkingDir + filename);
+                    if (File.Exists(Path.Combine(Module.WorkingDir, filename)))
+                        lastWriteTimeAfterMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, filename));
 
                     //Check exitcode AND timestamp of the file. If exitcode is success and
                     //time timestamp is changed, we are pretty sure the merge was done.
@@ -814,13 +814,13 @@ namespace GitUI
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = GetFileName();
-            System.Diagnostics.Process.Start(Module.WorkingDir + fileName);
+            System.Diagnostics.Process.Start(Path.Combine(Module.WorkingDir, fileName));
         }
 
         private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = GetFileName();
-            OsShellUtil.OpenAs(Module.WorkingDir + fileName);
+            OsShellUtil.OpenAs(Path.Combine(Module.WorkingDir, fileName));
         }
 
         private void stageFile(string filename)
