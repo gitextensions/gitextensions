@@ -202,7 +202,7 @@ namespace GitUI.SettingsDialog
             string path = string.Concat(Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.User), ";",
                                         Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Machine));
 
-            return path.Split(';').Any(dir => File.Exists(dir + " \\" + fileName) || File.Exists(dir + fileName));
+            return path.Split(';').Any(dir => File.Exists(dir + " \\" + fileName) || File.Exists(Path.Combine(dir, fileName)));
         }
 
         public bool SolveMergeToolForKDiff()

@@ -1836,7 +1836,7 @@ namespace GitUI
             if (!item.IsBlob)
                 return;
 
-            var fullName = Module.WorkingDir + item.FileName;
+            var fullName = Path.Combine(Module.WorkingDir, item.FileName);
             using (var fileDialog =
                 new SaveFileDialog
                     {
@@ -1923,7 +1923,7 @@ namespace GitUI
             if (gitItem == null)
                 return;
 
-            var fileName = Module.WorkingDir + (gitItem).FileName;
+            var fileName = Path.Combine(Module.WorkingDir, (gitItem).FileName);
             Clipboard.SetText(fileName.Replace('/', '\\'));
         }
 
@@ -1940,7 +1940,7 @@ namespace GitUI
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
-                fileNames.Append((Module.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
             }
             Clipboard.SetText(fileNames.ToString());
         }
@@ -1970,7 +1970,7 @@ namespace GitUI
 
             GitItemStatus item = DiffFiles.SelectedItem;
 
-            var fullName = Module.WorkingDir + item.Name;
+            var fullName = Path.Combine(Module.WorkingDir, item.Name);
             using (var fileDialog =
                 new SaveFileDialog
                 {
@@ -2006,7 +2006,7 @@ namespace GitUI
             if (gitItem == null || !(gitItem).IsBlob)
                 return;
 
-            var fileName = Module.WorkingDir + (gitItem).FileName;
+            var fileName = Path.Combine(Module.WorkingDir, (gitItem).FileName);
             OsShellUtil.OpenAs(fileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
         }
 
@@ -2218,7 +2218,7 @@ namespace GitUI
             if (gitItem == null || !gitItem.IsBlob)
                 return;
 
-            var fileName = Module.WorkingDir + (gitItem).FileName;
+            var fileName = Path.Combine(Module.WorkingDir, (gitItem).FileName);
             using (var frm = new FormEditor(UICommands, fileName)) frm.ShowDialog(this);
         }
 
@@ -2260,7 +2260,7 @@ namespace GitUI
                     GitItem item = gitTree.SelectedNode.Tag as GitItem;
                     if (item != null)
                     {
-                        string fileName = Module.WorkingDir + item.FileName;
+                        string fileName = Path.Combine(Module.WorkingDir, item.FileName);
 
                         fileList.Add(fileName.Replace('/', '\\'));
                     }
@@ -2327,7 +2327,7 @@ namespace GitUI
             foreach (var item in DiffFiles.SelectedItems)
             {
                 var fileNames = new StringBuilder();
-                fileNames.Append((Module.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
 
                 string filePath = fileNames.ToString();
                 if (File.Exists(filePath))
@@ -2345,7 +2345,7 @@ namespace GitUI
                 return;
             }
 
-            var filePath = Module.WorkingDir + gitItem.FileName;
+            var filePath = Path.Combine(Module.WorkingDir, gitItem.FileName);
             // needed?
             ////    var fileNames = new StringBuilder();
             ////    fileNames.Append((Module.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
@@ -2375,7 +2375,7 @@ namespace GitUI
             foreach (var item in DiffFiles.SelectedItems)
             {
                 var fileNames = new StringBuilder();
-                fileNames.Append((Module.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
 
                 if (File.Exists(fileNames.ToString()))
                 {
@@ -2867,7 +2867,7 @@ namespace GitUI
             foreach (var item in DiffFiles.SelectedItems)
             {
                 var fileNames = new StringBuilder();
-                fileNames.Append((Module.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
 
                 if (File.Exists(fileNames.ToString()))
                 {
