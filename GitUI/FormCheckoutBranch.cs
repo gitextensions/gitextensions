@@ -311,7 +311,8 @@ namespace GitUI
         {
             return CommitInformation
                         .GetAllBranchesWhichContainGivenCommit(Module, _containRevison, LocalBranch.Checked, !LocalBranch.Checked)
-                        .Where(a => !a.Equals("(no branch)", StringComparison.OrdinalIgnoreCase)).ToList();
+                        .Where(a => !a.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) && 
+                            !a.EndsWith("/HEAD")).ToList();
         }
 
         private void FormCheckoutBranch_Activated(object sender, EventArgs e)
