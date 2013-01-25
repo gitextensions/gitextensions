@@ -78,6 +78,8 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
+            helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
+
             if (aCommands != null)
                 Init();
 
@@ -288,7 +290,7 @@ namespace GitUI
             {
                 if (stashed)
                 {
-                    bool messageBoxResult =
+                    bool messageBoxResult = Settings.AutoPopStashAfterPull ||
                         MessageBox.Show(owner, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
                     if (ShouldStashPop(messageBoxResult, process, true))

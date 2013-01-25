@@ -419,6 +419,12 @@
     <Compile Include="SettingsDialog\CommonLogic.cs" />
     <Compile Include="SettingsDialog\ISettingsPage.cs" />
     <Compile Include="SettingsDialog\ISettingsPageHost.cs" />
+    <Compile Include="SettingsDialog\Pages\AdvancedSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\AdvancedSettingsPage.Designer.cs">
+      <DependentUpon>AdvancedSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsDialog\Pages\AppearanceSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -436,6 +442,12 @@
     </Compile>
     <Compile Include="SettingsDialog\Pages\ColorsSettingsPage.Designer.cs">
       <DependentUpon>ColorsSettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\ConfirmationsSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingsDialog\Pages\ConfirmationsSettingsPage.Designer.cs">
+      <DependentUpon>ConfirmationsSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="SettingsDialog\Pages\SettingsGroupPages.cs" />
     <Compile Include="SettingsDialog\Pages\GitExtensionsSettingsPage.cs">
@@ -1026,6 +1038,9 @@
     <EmbeddedResource Include="Script\SimplePrompt.resx">
       <DependentUpon>SimplePrompt.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog\Pages\AdvancedSettingsPage.resx">
+      <DependentUpon>AdvancedSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SettingsDialog\Pages\AppearanceSettingsPage.resx">
       <DependentUpon>AppearanceSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
@@ -1034,6 +1049,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsDialog\Pages\ColorsSettingsPage.resx">
       <DependentUpon>ColorsSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SettingsDialog\Pages\ConfirmationsSettingsPage.resx">
+      <DependentUpon>ConfirmationsSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SettingsDialog\Pages\GitExtensionsSettingsPage.resx">
       <DependentUpon>GitExtensionsSettingsPage.cs</DependentUpon>

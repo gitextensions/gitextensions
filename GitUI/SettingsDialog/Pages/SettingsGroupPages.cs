@@ -30,17 +30,4 @@ namespace GitUI.SettingsDialog.Pages
             return new SettingsPageReferenceByType(typeof(PluginsSettingsGroup));
         }
     }
-
-    public class AdvancedSettingsGroup : GroupSettingsPage
-    {
-        public AdvancedSettingsGroup()
-            : base("Advanced")
-        {
-        }
-
-        public static SettingsPageReference GetPageReference()
-        {
-            return new SettingsPageReferenceByType(typeof(AdvancedSettingsGroup));
-        }
-    }
 }

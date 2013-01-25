@@ -387,6 +387,24 @@ namespace GitCommands
             set { SetBool("UseDefaultCheckoutBranchAction", value); }
         }
 
+        public static bool DontShowHelpImages
+        {
+            get { return GetBool("DontShowHelpImages", false).Value; }
+            set { SetBool("DontShowHelpImages", value); }
+        }
+
+        public static bool DontConfirmAmmend
+        {
+            get { return GetBool("DontConfirmAmmend", false).Value; }
+            set { SetBool("DontConfirmAmmend", value); }
+        }
+
+        public static bool AutoPopStashAfterPull
+        {
+            get { return GetBool("AutoPopStashAfterPull", false).Value; }
+            set { SetBool("AutoPopStashAfterPull", value); }
+        }
+
         private static bool? _includeUntrackedFilesInAutoStash;
         public static bool IncludeUntrackedFilesInAutoStash
         {
