@@ -675,7 +675,7 @@ namespace GitUI
             long length = -1;
             string path = fileName;
             if (!File.Exists(fileName))
-                path = Module.WorkingDir + fileName;
+                path = Path.Combine(Module.WorkingDir, fileName);
             if (File.Exists(path))
             {
                 FileInfo fi = new FileInfo(path);
@@ -1161,7 +1161,7 @@ namespace GitUI
                         {
                             try
                             {
-                                string path = Module.WorkingDir + item.Name;
+                                string path = Path.Combine(Module.WorkingDir, item.Name);
                                 if (File.Exists(path))
                                     File.Delete(path);
                                 else
@@ -1206,7 +1206,7 @@ namespace GitUI
                     return;
                 Unstaged.StoreNextIndexToSelect();
                 foreach (var item in Unstaged.SelectedItems)
-                    File.Delete(Module.WorkingDir + item.Name);
+                    File.Delete(Path.Combine(Module.WorkingDir, item.Name));
 
                 Initialize();
             }
@@ -1231,7 +1231,7 @@ namespace GitUI
             try
             {
                 foreach (var gitItemStatus in Unstaged.SelectedItems)
-                    File.Delete(Module.WorkingDir + gitItemStatus.Name);
+                    File.Delete(Path.Combine(Module.WorkingDir, gitItemStatus.Name));
             }
             catch (Exception ex)
             {
@@ -1432,7 +1432,7 @@ namespace GitUI
                 if (!String.IsNullOrEmpty(from) && !String.IsNullOrEmpty(to))
                 {
                     sb.AppendLine("Submodule " + item + ":");
-                    GitModule module = new GitModule(Module.WorkingDir + item + Settings.PathSeparator.ToString());
+                    GitModule module = new GitModule(Module.WorkingDir + item + Settings.PathSeparator.ToString());//
                     string log = module.RunGitCmd(
                          string.Format("log --pretty=format:\"    %m %h - %s\" --no-merges {0}...{1}", from, to));
                     if (log.Length != 0)
@@ -1478,7 +1478,7 @@ namespace GitUI
             var item = list.SelectedItem;
             var fileName = item.Name;
 
-            Process.Start((Module.WorkingDir + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+            Process.Start((Path.Combine(Module.WorkingDir, fileName)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
         }
 
         private void OpenWithToolStripMenuItemClick(object sender, EventArgs e)
@@ -1513,7 +1513,7 @@ namespace GitUI
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
 
-                fileNames.Append((Module.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
             }
             Clipboard.SetText(fileNames.ToString());
         }
@@ -1568,7 +1568,7 @@ namespace GitUI
                 {
                     try
                     {
-                        string path = Module.WorkingDir + item.Name;
+                        string path = Path.Combine(Module.WorkingDir, item.Name);
                         if (File.Exists(path))
                             File.Delete(path);
                         else
@@ -1596,7 +1596,7 @@ namespace GitUI
                 return;
 
             var item = list.SelectedItem;
-            var fileName = Module.WorkingDir + item.Name;
+            var fileName = Path.Combine(Module.WorkingDir, item.Name);
 
             using (var frm = new FormEditor(UICommands, fileName)) frm.ShowDialog(this);
 
@@ -1828,7 +1828,7 @@ namespace GitUI
             Process process = new Process();
             process.StartInfo.FileName = Application.ExecutablePath;
             process.StartInfo.Arguments = "commit";
-            process.StartInfo.WorkingDirectory = Module.WorkingDir + _currentItem.Name + Settings.PathSeparator.ToString();
+            process.StartInfo.WorkingDirectory = Module.WorkingDir + _currentItem.Name + Settings.PathSeparator.ToString();//
             if (process.Start())
             {
                 process.WaitForExit();
@@ -1841,7 +1841,7 @@ namespace GitUI
             Process process = new Process();
             process.StartInfo.FileName = Application.ExecutablePath;
             process.StartInfo.Arguments = "browse";
-            process.StartInfo.WorkingDirectory = Module.WorkingDir + _currentItem.Name + Settings.PathSeparator.ToString();
+            process.StartInfo.WorkingDirectory = Module.WorkingDir + _currentItem.Name + Settings.PathSeparator.ToString();//
             process.Start();
         }
 
@@ -1871,7 +1871,7 @@ namespace GitUI
                     {
                         try
                         {
-                            string path = module.WorkingDir + file.Name;
+                            string path = Path.Combine(module.WorkingDir, file.Name);
                             if (File.Exists(path))
                                 File.Delete(path);
                             else
@@ -2022,7 +2022,7 @@ namespace GitUI
             foreach (var item in list.SelectedItems)
             {
                 var fileNames = new StringBuilder();
-                fileNames.Append((Module.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
 
                 string filePath = fileNames.ToString();
                 if (File.Exists(filePath))
