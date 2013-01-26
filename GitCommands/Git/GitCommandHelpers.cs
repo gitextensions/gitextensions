@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
@@ -257,13 +258,15 @@ namespace GitCommands
                 process.Start();
 
                 string line = null;
-                do{
+                do
+                {
                     line = process.StandardOutput.ReadLine();
                     if (line != null)
                         yield return line;
                 } while (line != null);
 
-                do{
+                do
+                {
                     line = process.StandardError.ReadLine();
                     if (line != null)
                         yield return line;
@@ -467,6 +470,29 @@ namespace GitCommands
             return string.Format("checkout{0} \"{1}\"", args, branchOrRevisionName);
         }
 
+        /// <summary>Create a new orphan branch from <paramref name="startPoint"/> and switch to it.</summary>
+        public static string CreateOrphanCmd(string newBranchName, string startPoint = null)
+        {
+            return string.Format("checkout --orphan {0} {1}", newBranchName, startPoint);
+        }
+
+        /// <summary>Remove files from the working tree and from the index. <remarks>git rm</remarks></summary>
+        /// <param name="force">Override the up-to-date check.</param>
+        /// <param name="isRecursive">Allow recursive removal when a leading directory name is given.</param>
+        /// <param name="files">Files to remove. Fileglobs can be given to remove matching files.</param>
+        public static string RemoveCmd(bool force = true, bool isRecursive = true, params string[] files)
+        {
+            string file = files.Any()
+                              ? string.Join(" ", files)
+                              : ".";
+
+            return string.Format("rm {0} {1} {2}",
+                force ? "--force" : string.Empty,
+                isRecursive ? "-r" : string.Empty,
+                file
+            );
+        }
+
         public static string BranchCmd(string branchName, string revision, bool checkout)
         {
             if (checkout)
@@ -663,12 +689,12 @@ namespace GitCommands
                 sb.Append("--preserve-merges ");
             }
 
-            
+
             sb.Append('"');
             sb.Append(branch);
             sb.Append('"');
 
-            
+
             return sb.ToString();
         }
 
@@ -1201,7 +1227,7 @@ namespace GitCommands
             return null;
         }
 
-        private static DateTime RoundDateTime (DateTime dateTime)
+        private static DateTime RoundDateTime(DateTime dateTime)
         {
             return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
         }
@@ -1230,7 +1256,7 @@ namespace GitCommands
             }
             if (delta < 24 * 60 * 60)
             {
-                int hours = delta < 60*60 ? Math.Sign(ts.Minutes) * 1 : ts.Hours;
+                int hours = delta < 60 * 60 ? Math.Sign(ts.Minutes) * 1 : ts.Hours;
                 return Strings.GetNHoursAgoText(hours);
             }
             // 30.417 = 365 days / 12 months - note that the if statement only bothers with 30 days for "1 month ago" because ts.Days is int
@@ -1254,7 +1280,7 @@ namespace GitCommands
 
         public static string GetRelativeDateString(DateTime originDate, DateTime previousDate)
         {
-            return  GetRelativeDateString(originDate, previousDate, true);
+            return GetRelativeDateString(originDate, previousDate, true);
         }
 
         // look into patch file and try to figure out if it's a raw diff (i.e from git diff -p)
@@ -1274,7 +1300,7 @@ namespace GitCommands
                 return false;
             }
         }
-        
+
 #if !MONO
         [DllImport("kernel32.dll")]
         static extern bool SetConsoleCtrlHandler(IntPtr HandlerRoutine,
