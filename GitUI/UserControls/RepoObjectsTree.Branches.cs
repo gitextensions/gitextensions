@@ -36,14 +36,14 @@ namespace GitUI.UserControls
         /// <summary>Applies the specified <see cref="BranchNode"/>s to the <see cref="TreeView"/>.</summary>
         void ResetBranchNodes(ICollection<BranchNode> branches)
         {
-            nodeBranches.Value.Nodes.Clear();
-            nodeBranches.Value.Text = string.Format("branches ({0})", branches.Count);
+            nodeBranches.Nodes.Clear();
+            nodeBranches.Text = string.Format("branches ({0})", branches.Count);
 
             // todo: cache: per Repo, on BranchNode.FullPath
 
             foreach (BranchNode node in branches)
             {
-                AddBranchNode(nodeBranches.Value.Nodes, node);
+                AddBranchNode(nodeBranches.Nodes, node);
             }
         }
 

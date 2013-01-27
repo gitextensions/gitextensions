@@ -177,8 +177,6 @@ namespace GitUI
                 UICommands.BrowseInitialize += (a, b) => Initialize();
             }
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
-
-            repoObjectsTree.Reload();
         }
 
         private void ShowDashboard()
@@ -393,13 +391,12 @@ namespace GitUI
             CheckForMergeConflicts();
             UpdateStashCount();
 
-            repoObjectsTree.NewRepo(Module, UICommands);
-
             // load custom user menu
             LoadUserMenu();
 
             UICommands.RaisePostBrowseInitialize(this);
-
+            repoObjectsTree.Reload();
+       
             Cursor.Current = Cursors.Default;
         }
 
@@ -1759,6 +1756,7 @@ namespace GitUI
 #endif
             }
 
+            repoObjectsTree.NewRepo(module, UICommands);
             Initialize();
             RevisionGrid.IndexWatcher.Reset();
             RegisterPlugins();
