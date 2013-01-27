@@ -27,8 +27,6 @@ namespace GitUI.UserControls
             {
                 AddStash(nodeStashes.Value.Nodes, stash);
             }
-
-            throw new NotImplementedException();
         }
 
         void AddStash(TreeNodeCollection nodes, GitStash stash)
@@ -41,6 +39,7 @@ namespace GitUI.UserControls
 
         void ApplyStashStyle(TreeNode treeNode)
         {
+            ApplyTreeNodeStyle(treeNode);
             // style
         }
 
