@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -28,8 +29,19 @@ namespace GitUI.UserControls
             nodeTags = GetNode("tags");
             nodeStashes = GetNode("stashes");
 
-            //AddTreeSet(new EasyRepoTreeSet<BranchNode>(git,nodeBranches,));
-            AddTreeSet(nodeStashes, (git) => git.GetStashes(), ReloadStashes, AddStash);
+            AddTreeSet(nodeStashes, (git) => git.GetStashes(), ReloadStashes, AddStash, ApplyStashStyle);
+            AddTreeSet(
+                nodeBranches,
+                git =>
+                {
+                    var branchNames = git.GetBranchNames().ToArray();
+                    return BranchNode.GetBranchTree(branchNames);
+                },
+                ReloadBranchNodes,
+                AddBranchNode,
+                null// taken care of in AddBranchNode
+            );
+            //AddTreeSet(nodeTags, ...);
 
             foreach (TreeNode node in treeMain.Nodes)
             {
@@ -41,9 +53,10 @@ namespace GitUI.UserControls
             TreeNode rootNode,
             Func<GitModule, ICollection<T>> getValues,
             Action<ICollection<T>> onReset,
-            Func<TreeNodeCollection, T, TreeNode> onAddChild)
+            Func<TreeNodeCollection, T, TreeNode> itemToTreeNode,
+            Action<TreeNode> applyStyle)
         {
-            AddTreeSet(new EasyRepoTreeSet<T>(git, rootNode, getValues, onReset, onAddChild));
+            AddTreeSet(new RepoObjectsTreeSet<T>(git, rootNode, getValues, onReset, itemToTreeNode, applyStyle));
         }
 
         void AddTreeSet(RepoObjectsTreeSet treeSet)

@@ -1,24 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 
 namespace GitUI.UserControls
 {
+    /* readme
+     * Ok, so this may look a bit confusing, but here's the gist:
+     * On FormBrowse init or repo change, NewRepo is called:
+     *      basically sets the new git module and creates a new ListWatcher
+     * ListWatcher holds the previous value of the nodes
+     * When FormBrowse is refreshed/reloaded, ReloadAsync is invoked
+     * ReloadAsync calls ListWatcher.CheckUpdateAsync which will async get current values for the nodes
+     *      if the current values don't equal previous values, the UI is updated via ReloadNodes
+     * When the UI is updated, the root node's children are cleared and new nodes are created
+     */
+
     public partial class RepoObjectsTree
     {
+        /// <summary>Base class for a <see cref="RepoObjectsTree"/> set of nodes.</summary>
         abstract class RepoObjectsTreeSet
         {
+            /// <summary>current git repo</summary>
             protected GitModule git;
+            /// <summary>root <see cref="TreeNode"/></summary>
             protected readonly TreeNode _treeNode;
+            readonly Action<TreeNode> _applyStyle;
+            protected ValueWatcher _Watcher;
 
-            protected RepoObjectsTreeSet(GitModule git, TreeNode treeNode)
+            protected RepoObjectsTreeSet(GitModule git, TreeNode treeNode, Action<TreeNode> applyStyle)
             {
                 this.git = git;
                 _treeNode = treeNode;
+                _applyStyle = applyStyle ?? (node => { });
             }
 
             /// <summary>Readies the tree set for a new repo.</summary>
@@ -26,84 +41,81 @@ namespace GitUI.UserControls
             {
                 this.git = git;
             }
-            public abstract Task ReloadAsync();
 
-            public virtual void ApplyTreeNodeStyle(TreeNode treeNode)
+            /// <summary>Async reloads the set of nodes.</summary>
+            public virtual Task ReloadAsync()
             {
-               RepoObjectsTree.ApplyTreeNodeStyle(treeNode);
+                return _Watcher.CheckUpdateAsync();
             }
 
+            /// <summary>Applies a style to the specified <see cref="TreeNode"/>.</summary>
+            public virtual void ApplyTreeNodeStyle(TreeNode treeNode)
+            {
+                RepoObjectsTree.ApplyTreeNodeStyle(treeNode);
+                _applyStyle(treeNode);
+            }
         }
 
-        abstract class RepoObjectsTreeSet<T> : RepoObjectsTreeSet
+        /// <summary><see cref="RepoObjectsTree"/> set of nodes, with an underlying type T.</summary>
+        class RepoObjectsTreeSet<T> : RepoObjectsTreeSet
         {
             protected readonly Func<GitModule, ICollection<T>> _getValues;
             protected readonly Action<ICollection<T>> _onReload;
-            protected ListWatcher<T> _Watcher;
+            protected ListWatcher<T> _WatcherT;
+            readonly Func<TreeNodeCollection, T, TreeNode> _addChild;
 
-            protected RepoObjectsTreeSet(
+            public RepoObjectsTreeSet(
                 GitModule git,
                 TreeNode treeNode,
                 Func<GitModule, ICollection<T>> getValues,
-                Action<ICollection<T>> onReload)
-                : base(git, treeNode)
+                Action<ICollection<T>> onReload,
+                Func<TreeNodeCollection, T, TreeNode> addChild, Action<TreeNode> applyStyle
+                )
+                : base(git, treeNode, applyStyle)
             {
                 _getValues = getValues;
                 _onReload = onReload;
+                _addChild = addChild;
             }
 
             /// <summary>Readies the tree set for a new repo.</summary>
             public override void NewRepo(GitModule git)
             {
-                _Watcher = new ListWatcher<T>(() => _getValues(git), ReloadNodes);
+                base.NewRepo(git);
+                _Watcher = _WatcherT = new ListWatcher<T>(() => _getValues(git), ReloadNodes);
             }
 
-            public override Task ReloadAsync()
-            {
-                return _Watcher.CheckUpdateAsync();
-            }
-
+            /// <summary>Reloads the set of nodes based on the specified <paramref name="items"/>.</summary>
             protected virtual void ReloadNodes(ICollection<T> items)
             {
-                _treeNode.Nodes.Clear();
-
-                foreach (T item in items)
+                _treeNode.TreeView.Update(() =>
                 {
-                    TreeNode child = AddChild(_treeNode.Nodes, item);
-                    ApplyStyle(child);
-                }
+                    _treeNode.Nodes.Clear();
 
-                _onReload(items);
+                    foreach (T item in items)
+                    {
+                        TreeNode child = AddChild(_treeNode.Nodes, item);
+                        if (child != null)
+                        {
+                            ApplyStyle(child);
+                        }
+                    }
+
+                    _onReload(items);
+                });
             }
 
-            protected abstract TreeNode AddChild(TreeNodeCollection nodes, T item);
+            /// <summary>Adds a child <see cref="TreeNode"/> based on the specified <paramref name="item"/>.</summary>
+            protected virtual TreeNode AddChild(TreeNodeCollection nodes, T item)
+            {
+                return _addChild(nodes, item);
+            }
 
+            /// <summary>Applies a style to the specified <see cref="TreeNode"/>.</summary>
             protected virtual void ApplyStyle(TreeNode treeNode)
             {
                 base.ApplyTreeNodeStyle(treeNode);
             }
         }
-
-        class EasyRepoTreeSet<T> : RepoObjectsTreeSet<T>
-        {
-            readonly Func<TreeNodeCollection, T, TreeNode> _onAddChild;
-
-            public EasyRepoTreeSet(
-                GitModule git,
-                TreeNode treeNode,
-                Func<GitModule, ICollection<T>> getValues,
-                Action<ICollection<T>> onReload,
-                Func<TreeNodeCollection, T, TreeNode> onAddChild)
-                : base(git, treeNode, getValues, onReload)
-            {
-                _onAddChild = onAddChild;
-            }
-
-            protected override TreeNode AddChild(TreeNodeCollection nodes, T item)
-            {
-                return _onAddChild(nodes, item);
-            }
-        }
-
     }
 }

@@ -5,14 +5,6 @@ using System.Threading.Tasks;
 
 namespace GitUI.UserControls
 {
-    /// <summary>Watches a collection's dirty status. 
-    /// Values are retrieved async, while updates are run on the UI thread.</summary>
-    class ListWatcher<T> : ValueWatcher<ICollection<T>>
-    {
-        public ListWatcher(Func<ICollection<T>> getValues, Action<ICollection<T>> onChanged)
-            : base(null, getValues, onChanged, (olds, news) => olds.SequenceEqual(news)) { }
-    }
-
     /// <summary>Base class for watching a variable's dirty status. 
     /// Value is retrieved async, while updates are run on the UI thread.</summary>
     internal abstract class ValueWatcher
@@ -96,4 +88,11 @@ namespace GitUI.UserControls
         }
     }
 
+    /// <summary>Watches a collection's dirty status. 
+    /// Values are retrieved async, while updates are run on the UI thread.</summary>
+    class ListWatcher<T> : ValueWatcher<ICollection<T>>
+    {
+        public ListWatcher(Func<ICollection<T>> getValues, Action<ICollection<T>> onChanged)
+            : base(null, getValues, onChanged, (olds, news) => olds.SequenceEqual(news)) { }
+    }
 }
