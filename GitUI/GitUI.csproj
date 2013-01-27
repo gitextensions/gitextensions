@@ -772,6 +772,9 @@
     <Compile Include="UserControls\FolderBrowserButton.Designer.cs">
       <DependentUpon>FolderBrowserButton.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\RepoObjectsTreeDragDrops.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UserControls\ValueWatcher.cs" />
     <Compile Include="UserControls\RepoObjectsTree.Branches.cs">
       <SubType>UserControl</SubType>
