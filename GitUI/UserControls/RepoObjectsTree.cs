@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -23,12 +22,14 @@ namespace GitUI.UserControls
         {
             InitializeComponent();
 
+            treeMain.ShowNodeToolTips = true;
+
             nodeBranches = GetNode("branches");
             nodeTags = GetNode("tags");
             nodeStashes = GetNode("stashes");
 
             //AddTreeSet(new EasyRepoTreeSet<BranchNode>(git,nodeBranches,));
-            AddTreeSet(nodeStashes, (git) => git.GetStashes(), ResetStashes, AddStash);
+            AddTreeSet(nodeStashes, (git) => git.GetStashes(), ReloadStashes, AddStash);
 
             foreach (TreeNode node in treeMain.Nodes)
             {
@@ -77,7 +78,7 @@ namespace GitUI.UserControls
 
             foreach (RepoObjectsTreeSet treeSet in treeSets)
             {
-                treeSet.ResetAsync();
+                treeSet.ReloadAsync();
             }
 
             // update tree little by little OR when all data retrieved?
