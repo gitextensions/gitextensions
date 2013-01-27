@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -11,8 +7,8 @@ namespace GitUI.UserControls
     // "stashes"
     public partial class RepoObjectsTree
     {
-        void ResetStashes(ICollection<GitStash> stashes)
-        {//
+        void ReloadStashes(ICollection<GitStash> stashes)
+        {
             nodeStashes.Text = string.Format("stashes ({0})", stashes.Count);
         }
 

@@ -26,7 +26,7 @@ namespace GitUI.UserControls
             {
                 this.git = git;
             }
-            public abstract Task ResetAsync();
+            public abstract Task ReloadAsync();
 
             public virtual void ApplyTreeNodeStyle(TreeNode treeNode)
             {
@@ -38,32 +38,32 @@ namespace GitUI.UserControls
         abstract class RepoObjectsTreeSet<T> : RepoObjectsTreeSet
         {
             protected readonly Func<GitModule, ICollection<T>> _getValues;
-            protected readonly Action<ICollection<T>> _onReset;
+            protected readonly Action<ICollection<T>> _onReload;
             protected ListWatcher<T> _Watcher;
 
             protected RepoObjectsTreeSet(
                 GitModule git,
                 TreeNode treeNode,
                 Func<GitModule, ICollection<T>> getValues,
-                Action<ICollection<T>> onReset)
+                Action<ICollection<T>> onReload)
                 : base(git, treeNode)
             {
                 _getValues = getValues;
-                _onReset = onReset;
+                _onReload = onReload;
             }
 
             /// <summary>Readies the tree set for a new repo.</summary>
             public override void NewRepo(GitModule git)
             {
-                _Watcher = new ListWatcher<T>(() => _getValues(git), _onReset);
+                _Watcher = new ListWatcher<T>(() => _getValues(git), ReloadNodes);
             }
 
-            public override Task ResetAsync()
+            public override Task ReloadAsync()
             {
                 return _Watcher.CheckUpdateAsync();
             }
 
-            protected virtual void ResetNodes(ICollection<T> items)
+            protected virtual void ReloadNodes(ICollection<T> items)
             {
                 _treeNode.Nodes.Clear();
 
@@ -72,6 +72,8 @@ namespace GitUI.UserControls
                     TreeNode child = AddChild(_treeNode.Nodes, item);
                     ApplyStyle(child);
                 }
+
+                _onReload(items);
             }
 
             protected abstract TreeNode AddChild(TreeNodeCollection nodes, T item);
@@ -90,9 +92,9 @@ namespace GitUI.UserControls
                 GitModule git,
                 TreeNode treeNode,
                 Func<GitModule, ICollection<T>> getValues,
-                Action<ICollection<T>> onReset,
+                Action<ICollection<T>> onReload,
                 Func<TreeNodeCollection, T, TreeNode> onAddChild)
-                : base(git, treeNode, getValues, onReset)
+                : base(git, treeNode, getValues, onReload)
             {
                 _onAddChild = onAddChild;
             }
