@@ -109,9 +109,7 @@ namespace GitUI
 
         /// <summary>For VS designer</summary>
         private FormBrowse()
-            : this(null, string.Empty)
-        { }
-
+            : this(null, string.Empty) { }
 
         public FormBrowse(GitUICommands aCommands, string filter)
             : base(true, aCommands)
@@ -119,6 +117,8 @@ namespace GitUI
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
+
+            repoObjectsTree.NewRepo(Module, UICommands);
 
             // set tab page images
             {
@@ -144,7 +144,7 @@ namespace GitUI
             {
                 _toolStripGitStatus = new ToolStripGitStatus
                                  {
-                                     ImageTransparentColor = System.Drawing.Color.Magenta
+                                     ImageTransparentColor = Color.Magenta
                                  };
                 if (aCommands != null)
                     _toolStripGitStatus.UICommandsSource = this;
@@ -242,7 +242,6 @@ namespace GitUI
             RevisionGrid.IndexWatcher.Changed += _indexWatcher_Changed;
 
             Cursor.Current = Cursors.Default;
-
 
             try
             {
@@ -396,7 +395,7 @@ namespace GitUI
 
             UICommands.RaisePostBrowseInitialize(this);
             repoObjectsTree.Reload();
-       
+
             Cursor.Current = Cursors.Default;
         }
 
