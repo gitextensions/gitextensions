@@ -12,29 +12,8 @@ namespace GitUI.UserControls
     // "branches"
     public partial class RepoObjectsTree
     {
-        /// <summary>branches tracker</summary>
-        ListWatcher<BranchNode> _branchesWatcher;
-
-        /// <summary>Readies branches for a new repo.</summary>
-        void NewRepoBranches()
-        {
-            _branchesWatcher = new ListWatcher<BranchNode>(() =>
-                {
-                    var branchNames = git.GetBranchNames().ToArray();
-                    return BranchNode.GetBranchTree(branchNames);
-                },
-                branches => treeMain.Update(() => ResetBranchNodes(branches))
-            );
-        }
-
-        /// <summary>Async loads the repo's branches into the tree.</summary>
-        Task LoadBranches()
-        {
-            return _branchesWatcher.CheckUpdateAsync();
-        }
-
         /// <summary>Applies the specified <see cref="BranchNode"/>s to the <see cref="TreeView"/>.</summary>
-        void ResetBranchNodes(ICollection<BranchNode> branches)
+        void ReloadBranchNodes(ICollection<BranchNode> branches)
         {
             nodeBranches.Nodes.Clear();
             nodeBranches.Text = string.Format("branches ({0})", branches.Count);
@@ -48,7 +27,7 @@ namespace GitUI.UserControls
         }
 
         /// <summary>Adds a <see cref="BranchNode"/>, and recursivley, its children.</summary>
-        void AddBranchNode(TreeNodeCollection nodes, BranchNode branchNode)
+        TreeNode AddBranchNode(TreeNodeCollection nodes, BranchNode branchNode)
         {
             TreeNode treeNode = nodes.Add(branchNode.FullPath, branchNode.Name);
             treeNode.Tag = branchNode;
@@ -65,6 +44,7 @@ namespace GitUI.UserControls
             {
                 ApplyBranchStyle(treeNode);
             }
+            return null;
         }
 
         #region Styles
