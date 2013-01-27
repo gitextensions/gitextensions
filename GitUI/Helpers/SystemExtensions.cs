@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,13 @@ namespace GitUI
         public static int GetHash(this IEnumerable<int> hashes)
         {
             return hashes.Aggregate((prev, curr) => (prev * 397) ^ curr);
+        }
+
+        /// <summary>Gets an aggregate hash code from a list of <paramref name="items"/>, 
+        /// using each item's <see cref="object.GetHashCode"/> method.</summary>
+        public static int GetHash(this IEnumerable items)
+        {
+            return GetHash(items.OfType<object>());
         }
 
         /// <summary>Gets an aggregate hash code from a list of <paramref name="items"/>, 
