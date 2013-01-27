@@ -177,6 +177,8 @@ namespace GitUI
                 UICommands.BrowseInitialize += (a, b) => Initialize();
             }
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+
+            repoObjectsTree.Reload();
         }
 
         private void ShowDashboard()
@@ -391,7 +393,7 @@ namespace GitUI
             CheckForMergeConflicts();
             UpdateStashCount();
 
-            repoObjectsTree.Reload(Module, UICommands);
+            repoObjectsTree.NewRepo(Module, UICommands);
 
             // load custom user menu
             LoadUserMenu();

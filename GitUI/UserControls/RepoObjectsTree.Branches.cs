@@ -12,71 +12,43 @@ namespace GitUI.UserControls
     // "branches"
     public partial class RepoObjectsTree
     {
-        /// <summary>current nodes being displayed</summary>
-        BranchList currentBranches;
-        /// <summary>aggregate hash for current branch list</summary>
-        int branchesHash;
-        /// <summary>indicates whether branches state is dirty and needs to be updated</summary>
-        bool areBranchesDirty = true;
+        /// <summary>branches tracker</summary>
+        ListWatcher<BranchNode> _branchesWatcher;
+
+        /// <summary>Readies branches for a new repo.</summary>
+        void NewRepoBranches()
+        {
+            _branchesWatcher = new ListWatcher<BranchNode>(() =>
+                {
+                    var branchNames = git.GetBranchNames().ToArray();
+                    return BranchNode.GetBranchTree(branchNames);
+                },
+                branches => treeMain.Update(() => ResetBranchNodes(branches))
+            );
+        }
 
         /// <summary>Async loads the repo's branches into the tree.</summary>
         Task LoadBranches()
         {
-            return Task.Factory
-                .StartNew(() => git.GetBranchNames().ToArray())
-                .ContinueWith(getBranchNames => GetBranchTree(getBranchNames.Result))
-                .ContinueWith(
-                    getBranchesTree =>
-                    {
-                        if (areBranchesDirty)
-                        {// BranchList hash and branchesHash NOT matching
-                            treeMain.Update(() => ResetBranchNodes(getBranchesTree.Result));
-                        }
-                    },
-                    uiScheduler
-            );
-        }
-
-        /// <summary>Gets the branches hierarchical tree from the specified list of <paramref name="branches"/>.
-        /// <remarks>If applicable, uses a cached tree.</remarks></summary>
-        BranchList GetBranchTree(ICollection<string> branches)
-        {
-            if (currentBranches != null)
-            {// already populated..
-                int hash = branches.GetHash();
-                if (branchesHash == hash)
-                {// matching hashes (same branches state) -> return current nodes
-                    areBranchesDirty = false;
-                    return currentBranches;
-                }
-                branchesHash = hash;
-            }
-            else
-            {
-                branchesHash = branches.GetHash();
-            }
-            currentBranches = BranchNode.GetBranchTree(branches);
-
-            areBranchesDirty = true;
-            return currentBranches;
+            return _branchesWatcher.CheckUpdateAsync();
         }
 
         /// <summary>Applies the specified <see cref="BranchNode"/>s to the <see cref="TreeView"/>.</summary>
-        void ResetBranchNodes(BranchList branches)
+        void ResetBranchNodes(ICollection<BranchNode> branches)
         {
             nodeBranches.Value.Nodes.Clear();
-            nodeBranches.Value.Text = string.Format("branches ({0})", branches.Branches.Count());
+            nodeBranches.Value.Text = string.Format("branches ({0})", branches.Count);
 
             // todo: cache: per Repo, on BranchNode.FullPath
 
             foreach (BranchNode node in branches)
             {
-                Add(nodeBranches.Value.Nodes, node);
+                AddBranchNode(nodeBranches.Value.Nodes, node);
             }
         }
 
         /// <summary>Adds a <see cref="BranchNode"/>, and recursivley, its children.</summary>
-        void Add(TreeNodeCollection nodes, BranchNode branchNode)
+        void AddBranchNode(TreeNodeCollection nodes, BranchNode branchNode)
         {
             TreeNode treeNode = nodes.Add(branchNode.FullPath, branchNode.Name);
             treeNode.Tag = branchNode;
@@ -86,7 +58,7 @@ namespace GitUI.UserControls
                 ApplyBranchPathStyle(treeNode);
                 foreach (BranchNode child in branchPath.Children)
                 {// recurse children
-                    Add(treeNode.Nodes, child);
+                    AddBranchNode(treeNode.Nodes, child);
                 }
             }
             else
@@ -159,7 +131,8 @@ namespace GitUI.UserControls
 
             protected bool Equals(BranchNode other)
             {
-                return ReferenceEquals(this, other) || string.Equals(_FullPath, other._FullPath);
+                if (other == null) { return false; }
+                return other == this || string.Equals(_FullPath, other._FullPath);
             }
 
             public override bool Equals(object obj)
@@ -452,5 +425,7 @@ namespace GitUI.UserControls
         }
 
         #endregion private classes
+
+
     }
 }
