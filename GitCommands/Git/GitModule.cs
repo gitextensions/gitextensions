@@ -177,7 +177,6 @@ namespace GitCommands
             //storing to config file is handled by FormSettings
         }
 
-
         //Encoding that let us read all bytes without replacing any char
         //It is using to read output of commands, which may consist of:
         //1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of 
@@ -1998,22 +1997,14 @@ namespace GitCommands
             var list = RunGitCmd("stash list").Split('\n');
 
             var stashes = new List<GitStash>();
-            foreach (var stashString in list)
+            for (int i = 0; i < list.Length; i++)
             {
-                if (stashString.IndexOf(':') <= 0)
-                    continue;
-
-                var stash = new GitStash
-                        {
-                            Name = stashString.Substring(0, stashString.IndexOf(':')).Trim()
-                        };
-
-                if (stashString.IndexOf(':') + 1 < stashString.Length)
-                    stash.Message = stashString.Substring(stashString.IndexOf(':') + 1).Trim();
-
-                stashes.Add(stash);
+                string stashString = list[i];
+                if (stashString.IndexOf(':') > 0)
+                {
+                    stashes.Add(new GitStash(stashString, i));
+                }
             }
-
             return stashes;
         }
 
