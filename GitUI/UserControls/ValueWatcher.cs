@@ -72,8 +72,8 @@ namespace GitUI.UserControls
                                 )
                             {// XOR null/not null OR not equal -> update
                                 return new DirtyResults<T> { IsDirty = true, NewValue = newValue };
-                            }
-                            return null;
+                            }// ... else equal
+                            return new DirtyResults<T> { IsDirty = false };
                         })
                     .ContinueWith(
                         dirtyResults =>
