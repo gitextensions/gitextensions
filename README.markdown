@@ -13,3 +13,4 @@
 * branches  
 	* population
 	* minor caching
+* stashes
