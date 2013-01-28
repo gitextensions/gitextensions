@@ -439,7 +439,7 @@ namespace GitUI
             return StartAddFilesDialog(null, null);
         }
 
-        public bool StartCreateBranchDialog(IWin32Window owner)
+        public bool StartCreateBranchDialog(IWin32Window owner, string newBranchName)
         {
             if (!RequiresValidWorkingDir(owner))
                 return false;
@@ -457,7 +457,7 @@ namespace GitUI
 
         public bool StartCreateBranchDialog()
         {
-            return StartCreateBranchDialog(null);
+            return StartCreateBranchDialog(null, null);
         }
 
         public bool StartCloneDialog(IWin32Window owner, string url, bool openedFromProtocolHandler, GitModuleChangedEventHandler GitModuleChanged)
@@ -654,11 +654,6 @@ namespace GitUI
         public bool StartInitializeDialog(string dir)
         {
             return StartInitializeDialog(null, dir, null);
-        }
-
-        public bool StartPushDialog()
-        {
-            return StartPushDialog(false);
         }
 
         /// <summary>
@@ -928,7 +923,7 @@ namespace GitUI
                 {
                     return false;
                 }
-            }            
+            }
         }
 
         public bool StartCherryPickDialog(IWin32Window owner)
@@ -941,6 +936,9 @@ namespace GitUI
             return StartCherryPickDialog(null);
         }
 
+        /// <summary>Start Merge dialog, using the specified branch.</summary>
+        /// <param name="owner">Owner of the dialog.</param>
+        /// <param name="branch">Branch to merge into the current branch.</param>
         public bool StartMergeBranchDialog(IWin32Window owner, string branch)
         {
             if (!RequiresValidWorkingDir(owner))
@@ -957,6 +955,8 @@ namespace GitUI
             return true;
         }
 
+        /// <summary>Start Merge dialog, using the specified branch.</summary>
+        /// <param name="branch">Branch to merge into the current branch.</param>
         public bool StartMergeBranchDialog(string branch)
         {
             return StartMergeBranchDialog(null, branch);
@@ -1369,7 +1369,12 @@ namespace GitUI
             return StartFileHistoryDialog(fileName, null);
         }
 
-        public bool StartPushDialog(IWin32Window owner, bool pushOnShow)
+        public bool StartPushDialog()
+        {
+            return StartPushDialog(false);
+        }
+
+        public bool StartPushDialog(IWin32Window owner, bool pushOnShow, GitPushAction push = null)
         {
             if (!RequiresValidWorkingDir(owner))
                 return false;
@@ -1390,9 +1395,14 @@ namespace GitUI
             return true;
         }
 
-        public bool StartPushDialog(bool pushOnShow)
+        public bool StartPushDialog(bool pushOnShow, GitPushAction push = null)
         {
-            return StartPushDialog(null, pushOnShow);
+            return StartPushDialog(null, pushOnShow, push);
+        }
+
+        public bool StartPushDialog(GitPushAction push)
+        {
+            return StartPushDialog(true, push);
         }
 
         public bool StartApplyPatchDialog(IWin32Window owner, string patchFile)

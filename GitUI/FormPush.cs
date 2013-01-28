@@ -54,8 +54,7 @@ namespace GitUI
         #endregion
 
         private FormPush()
-            : this(null)
-        { }
+            : this(null as GitUICommands) { }
 
         public FormPush(GitUICommands aCommands)
             : base(aCommands)
@@ -69,6 +68,11 @@ namespace GitUI
             AutoPullOnRejected.Checked = Settings.AutoPullOnRejected;
             if (aCommands != null)
                 Init();
+        }
+
+        public FormPush(GitPushAction pushAction)
+        {
+            
         }
 
         private void Init()
@@ -182,7 +186,7 @@ namespace GitUI
                 //If the current branch is not the default push, and not known by the remote 
                 //(as far as we know since we are disconnected....)
                 if (RemoteBranch.Text != GetDefaultPushRemote(_NO_TRANSLATE_Remotes.Text) &&
-                    !Module.GetHeads(true, true).Any(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text) )
+                    !Module.GetHeads(true, true).Any(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text))
                     //Ask if this is really what the user wants
                     if (MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
                         DialogResult.No)
@@ -323,7 +327,6 @@ namespace GitUI
                 Regex IsRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranch) + ".*" + Regex.Escape(" (non-fast-forward)"), RegexOptions.Compiled);
 
                 if (Settings.AutoPullOnRejected && IsRejected.IsMatch(form.OutputString.ToString()))
-                    
                 {
                     if (Settings.PullMerge == Settings.PullAction.Fetch)
                         form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to fetch.");
@@ -558,14 +561,14 @@ namespace GitUI
         private void UpdateMultiBranchView()
         {
             _branchTable = new DataTable();
-            _branchTable.Columns.Add("Local", typeof (string));
-            _branchTable.Columns.Add("Remote", typeof (string));
-            _branchTable.Columns.Add("New", typeof (string));
+            _branchTable.Columns.Add("Local", typeof(string));
+            _branchTable.Columns.Add("Remote", typeof(string));
+            _branchTable.Columns.Add("New", typeof(string));
             _branchTable.Columns.Add("Push", typeof(bool));
             _branchTable.Columns.Add("Force", typeof(bool));
             _branchTable.Columns.Add("Delete", typeof(bool));
             _branchTable.ColumnChanged += BranchTable_ColumnChanged;
-            var bs = new BindingSource {DataSource = _branchTable};
+            var bs = new BindingSource { DataSource = _branchTable };
             BranchGrid.DataSource = bs;
 
             string remote = _NO_TRANSLATE_Remotes.Text.Trim();
@@ -591,7 +594,7 @@ namespace GitUI
 
                 row["Remote"] = remoteName;
                 bool newAtRemote = remoteHeads.Any(h => h.Name == remoteName);
-                row["New"] =  newAtRemote ? _no.Text : _yes.Text;
+                row["New"] = newAtRemote ? _no.Text : _yes.Text;
                 row["Push"] = newAtRemote;
 
                 _branchTable.Rows.Add(row);

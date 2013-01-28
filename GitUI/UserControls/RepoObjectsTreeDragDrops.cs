@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI.UserControls
 {
@@ -24,6 +25,8 @@ namespace GitUI.UserControls
         {
             // example from: http://msdn.microsoft.com/en-us/library/system.windows.forms.treeview.itemdrag.aspx
 
+            treeMain.SelectedNode = (TreeNode)e.Item;
+
             if (e.Button == MouseButtons.Left)
             {// left mouse button -> move dragged node
                 DoDragDrop(e.Item, DragDropEffects.Move);
@@ -39,7 +42,14 @@ namespace GitUI.UserControls
         /// <summary>Set the target drop effect to the effect specified in the ItemDrag event handler.</summary>
         void OnTreeDragEnter(object sender, DragEventArgs e)
         {
-            e.Effect = e.AllowedEffect;
+            e.Effect = IsValidData(e.Data)
+                ? e.AllowedEffect
+                : DragDropEffects.None;
+        }
+
+        bool IsValidData(IDataObject data)
+        {
+            return data.GetData(typeof(TreeNode)) is TreeNode;
         }
 
         /// <summary>Select the node under the mouse pointer to indicate the expected drop location.</summary>
@@ -63,21 +73,13 @@ namespace GitUI.UserControls
             // get node at drop location
             TreeNode targetNode = treeMain.GetNodeAt(targetPoint);
 
-
-            if (draggedNode != targetNode && IsValidDrop(draggedNode, targetNode))
-            {// dragged node NOT node at drop location AND valid drop
-                if (e.Effect == DragDropEffects.Move)
-                {// move -> remove the node from its current location; add it to node at drop location.
-                    draggedNode.Remove();
-                    targetNode.Nodes.Add(draggedNode);
+            if (draggedNode != targetNode)
+            {// dragged node NOT node at drop location
+                var dragDropAction = DragDropAction.GetFirstOrDefault(draggedNode, targetNode);
+                if (dragDropAction != null)
+                {
+                    dragDropAction.Action(draggedNode, targetNode, uiCommands);
                 }
-                else if (e.Effect == DragDropEffects.Copy)
-                {// copy -> clone the dragged node; add it to node at drop location 
-                    targetNode.Nodes.Add((TreeNode)draggedNode.Clone());
-                }
-
-                // Expand the node at the location to show dropped node
-                targetNode.Expand();
             }
 
             throw new NotImplementedException();
@@ -85,7 +87,49 @@ namespace GitUI.UserControls
 
         bool IsValidDrop(TreeNode draggedNode, TreeNode targetNode)
         {
-            // branch onto branch
+            GitStash stash = draggedNode.Tag as GitStash;
+            if (stash != null)
+            {// stash -> local branch = apply stash
+
+
+                return true;
+            }
+
+            Branch draggedBranch = draggedNode.Tag as Branch;
+            if (draggedBranch != null)
+            {
+                if (draggedBranch.IsLocal)
+                {// local branch
+                    // local branch -> branches header = new branch
+                    // local branch -> remotes header = publish new
+
+                    Branch targetBranch = targetNode.Tag as Branch;
+                    if (targetBranch != null)
+                    {
+                        if (targetBranch.IsRemote)
+                        {// local branch -> remote branch = push
+                            uiCommands.StartPushDialog(
+                                new GitPushAction(
+                                    ((RemoteBranch)targetBranch).Remote,
+                                    draggedBranch.FullPath,
+                                    targetBranch.FullPath));
+                        }
+                        else if (targetBranch.IsLocal && Equals(git.GetSelectedBranch(), targetBranch.FullPath))
+                        {// local branch -> current local branch
+                            // TODO: rebase on Alt+Drag
+                            uiCommands.StartMergeBranchDialog(draggedBranch.FullPath);
+                        }
+                    }
+                }
+                else
+                {// remote
+                    // remote branch -> branch = pull/fetch
+                    // remote branch -> branches header = new local tracking branch
+
+
+                    throw new NotImplementedException();
+                }
+            }
 
             throw new NotImplementedException();
         }
@@ -112,5 +156,110 @@ namespace GitUI.UserControls
             }
         }
 
+        /// <summary>Represents a valid drag-drop action.</summary>
+        class DragDropAction
+        {
+            static DragDropAction<TDragged, TTarget> New<TDragged, TTarget>(
+                Func<TDragged, TTarget, GitUICommands, bool> action)
+                where TDragged : class
+                where TTarget : class
+            {
+                return new DragDropAction<TDragged, TTarget>(action);
+            }
+
+            /// <summary>Gets the type of the dragged object.</summary>
+            public Type DraggedType { get; private set; }
+            /// <summary>Gets the type of the target object.</summary>
+            public Type TargetType { get; private set; }
+            /// <summary>Gets the action to perform on the drag-drop. 
+            /// <remarks>Returns true if both the dragged and target objects are compatible.</remarks></summary>
+            public Func<object, object, GitUICommands, bool> Action { get; private set; }
+
+            public DragDropAction(Type draggedType, Type targetType, Func<object, object, GitUICommands, bool> action)
+            {
+                DraggedType = draggedType;
+                TargetType = targetType;
+                Action = action;
+            }
+
+            public static DragDropAction GetFirstOrDefault(TreeNode dragged, TreeNode target)
+            {
+                return AcceptableDragDrops
+                    .FirstOrDefault(
+                        dda =>
+                            dda.DraggedType == dragged.Tag.GetType() &&
+                            dda.TargetType == target.Tag.GetType());
+            }
+
+            public static bool IsValidDragDrop(TreeNode dragged, TreeNode target)
+            {
+                return GetFirstOrDefault(dragged, target) != null;
+            }
+
+            public static DragDropAction<TDragged, TTarget> GetDragDropAction<TDragged, TTarget>(
+                TreeNode dragged, TreeNode target)
+                where TDragged : class
+                where TTarget : class
+            {
+                return GetFirstOrDefault(dragged, target) as DragDropAction<TDragged, TTarget>;
+            }
+
+            static List<DragDropAction> AcceptableDragDrops;
+            static DragDropAction()
+            {
+                AcceptableDragDrops = new List<DragDropAction>();
+                AcceptableDragDrops.Add(New<Branch, Branch>((dragged, target, cmds) =>
+                {
+                    if (Equals(dragged, target)) { return false; }// disallow merge into same exact branch
+
+                    string currentBranch = cmds.GitModule.GetSelectedBranch();
+                    if (Equals(dragged.FullPath, currentBranch))
+                    {// current branch -> local branch = merge
+                        cmds.StartMergeBranchDialog(target.FullPath);
+                        return true;
+                    }
+
+                    if (Equals(target.FullPath, currentBranch))
+                    {// local branch -> current branch = merge
+                        cmds.StartMergeBranchDialog(dragged.FullPath);
+                        return true;
+                    }
+                    return false;
+                }));
+                AcceptableDragDrops.Add(New<RemoteBranch, BranchList>((dragged, target, cmds) =>
+                {
+                   //cmds.Module.GetLocalConfig().
+                    var parents = dragged.Parents.ToList();
+                    GitCommandHelpers.BranchCmd(parents.Take())
+
+                    return true;
+                }));
+                //AcceptableDragDrops.Add(New<Branch,RemotesList>());
+                AcceptableDragDrops.Add(New<Branch, BranchList>((dragged, target, cmds) =>
+                {// local branch -> branches header = new branch
+                    using (FormBranchSmall branchForm = new FormBranchSmall(cmds, dragged.FullPath))
+                    {
+                        branchForm.ShowDialog();
+                    }
+                    return true;
+                }));
+            }
+        }
+
+        /// <summary>Provides a strong-type, generic implementation of <see cref="DragDropAction"/>.</summary>
+        class DragDropAction<TDragged, TTarget> : DragDropAction
+            where TDragged : class
+            where TTarget : class
+        {
+            public Func<TDragged, TTarget, GitUICommands, bool> Action { get; private set; }
+
+            public DragDropAction(
+                Func<TDragged, TTarget, GitUICommands, bool> action)
+                : base(typeof(TDragged), typeof(TTarget),
+                (dragged, target, cmds) => action(dragged as TDragged, target as TTarget, cmds))
+            {
+                Action = action;
+            }
+        }
     }
 }
