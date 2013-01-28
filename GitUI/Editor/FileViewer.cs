@@ -443,7 +443,12 @@ namespace GitUI.Editor
 
         private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText)
         {
-            if (IsImage(fileName))
+            if (!File.Exists(fileName))
+            {
+                ViewText(fileName,
+                            GitCommandHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""));
+            }
+            else if (IsImage(fileName))
             {
                 _async.Load(getImage,
                             image =>
