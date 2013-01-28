@@ -405,6 +405,18 @@ namespace GitCommands
             set { SetBool("AutoPopStashAfterPull", value); }
         }
 
+        public static bool DontConfirmPushNewBranch
+        {
+            get { return GetBool("DontConfirmPushNewBranch", false).Value; }
+            set { SetBool("DontConfirmPushNewBranch", value); }
+        }
+
+        public static bool DontConfirmAddTrackingRef
+        {
+            get { return GetBool("DontConfirmAddTrackingRef", false).Value; }
+            set { SetBool("DontConfirmAddTrackingRef", value); }
+        }
+        
         private static bool? _includeUntrackedFilesInAutoStash;
         public static bool IncludeUntrackedFilesInAutoStash
         {
