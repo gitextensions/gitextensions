@@ -12,10 +12,10 @@ Building installers for Git Extensions
 
       [assembly: AssemblyVersion("2.33")]  
       [assembly: AssemblyFileVersion("2.33")]
-   * SimpleExt\SimpleExt.rc
+   * GitExtensionsShellEx\GitExtensionsShellEx.rc
 
-      FILEVERSION 2,30  
-      PRODUCTVERSION 2,30  
+      FILEVERSION 2,33  
+      PRODUCTVERSION 2,33  
       VALUE "FileVersion", "2, 33\0"  
       VALUE "ProductVersion", "2, 33\0"
    * MakeInstallers.bat
