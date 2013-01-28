@@ -333,7 +333,7 @@ namespace TranslationApp
             // 
             // translateItemBindingSource
             // 
-            this.translateItemBindingSource.DataSource = typeof(TranslationApp.FormTranslate.TranslateItem);
+            this.translateItemBindingSource.DataSource = typeof(TranslationApp.TranslateItem);
             // 
             // splitContainer3
             // 
