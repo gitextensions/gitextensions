@@ -23,12 +23,16 @@ namespace GitUI.SettingsDialog.Pages
         {
             chkAmmend.Checked = Settings.DontConfirmAmmend;
             chkAutoPopStashAfterPull.Checked = Settings.AutoPopStashAfterPull;
+            chkPushNewBranch.Checked = Settings.DontConfirmPushNewBranch;
+            chkAddTrackingRef.Checked = Settings.DontConfirmAddTrackingRef;
         }
 
         public override void SaveSettings()
         {
             Settings.DontConfirmAmmend = chkAmmend.Checked;
             Settings.AutoPopStashAfterPull = chkAutoPopStashAfterPull.Checked;
+            Settings.DontConfirmPushNewBranch = chkPushNewBranch.Checked;
+            Settings.DontConfirmAddTrackingRef = chkAddTrackingRef.Checked;
         }
 
         public static SettingsPageReference GetPageReference()
