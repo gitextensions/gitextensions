@@ -26,39 +26,7 @@ namespace TranslationApp
         readonly TranslationString noLanguageCodeSelectedCaption = new TranslationString("Language code");
         readonly TranslationString editingCellPrefixText = new TranslationString("[EDITING]");
 
-        [DebuggerDisplay("{DebuggerDisplay,nq}")]
-        public class TranslateItem : INotifyPropertyChanged
-        {
-            public string Category { get; set; }
-            public string Name { get; set; }
-            public string Property { get; set; }
-            public string NeutralValue { get; set; }
-            private string _translatedValue;
-            public string TranslatedValue
-            {
-                get { return _translatedValue; }
-                set
-                {
-                    var pc = PropertyChanged;
-                    if (pc != null)
-                    {
-                        pc(this, new PropertyChangedEventArgs("TranslatedValue"));
-                    }
-                    _translatedValue = value;
-                }
-            }
-            public TranslationType Status { get; set; }
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            private string DebuggerDisplay
-            {
-                get { return string.Format("\"{0}\" - \"{1}\"{2}", Category, NeutralValue, 
-                    Status == TranslationType.Translated ? "" : " " + Status.ToString()); }
-            }
-        }
-
-        private List<TranslateItem> translate;
+        private List<TranslateItem> translationItems;
 
         readonly Translation neutralTranslation = new Translation();
         Translation translation;
@@ -98,8 +66,10 @@ namespace TranslationApp
 
         private void UpdateProgress()
         {
-            int translatedCount = translate.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue));
-            var progresMsg = string.Format(translateProgressText.Text, translatedCount.ToString(), translate.Count.ToString());
+            int translatedCount = translationItems.Count(translateItem => translateItem.Status != TranslationType.Obsolete && 
+                !string.IsNullOrEmpty(translateItem.TranslatedValue));
+            int totalCount = translationItems.Count(translateItem => translateItem.Status != TranslationType.Obsolete);
+            var progresMsg = string.Format(translateProgressText.Text, translatedCount.ToString(), totalCount.ToString());
             if (translateProgress.Text != progresMsg)
             {
                 translateProgress.Text = progresMsg;
@@ -117,7 +87,7 @@ namespace TranslationApp
 
         private void LoadTranslation()
         {
-            translate = new List<TranslateItem>();
+            translationItems = new List<TranslateItem>();
 
             var neutralItems =
                 from translationCategory in neutralTranslation.GetTranslationCategories()
@@ -130,7 +100,7 @@ namespace TranslationApp
                     Source = translationItem.Source,
                     Value = translationItem.Value
                 };
-            var translationItems = translation != null ? 
+            var allItems = translation != null ? 
                 (from translationCategory in translation.GetTranslationCategories()
                  from translationItem in translationCategory.GetTranslationItems()
                  select new
@@ -157,7 +127,7 @@ namespace TranslationApp
                 if (translation != null)
                 {
                     var curItem =
-                        (from trItem in translationItems
+                        (from trItem in allItems
                          where trItem.Category.TrimStart('_') == item.Category.TrimStart('_') &&
                          trItem.Name.TrimStart('_') == item.Name.TrimStart('_') &&
                          trItem.Property == item.Property
@@ -175,19 +145,19 @@ namespace TranslationApp
                         }
                         else
                             translateItem.Status = TranslationType.Obsolete;
-                        translationItems.Remove(curItem);
+                        allItems.Remove(curItem);
                         string source = curItem.Source ?? item.Value;
                         if (!String.IsNullOrEmpty(curItem.Value) && !dict.ContainsKey(source))
                             dict.Add(source, curItem.Value);
                     }
                 }
 
-                translate.Add(translateItem);
+                translationItems.Add(translateItem);
             }
 
-            if (translationItems != null)
+            if (allItems != null)
             {
-                foreach (var item in translationItems)
+                foreach (var item in allItems)
                 {
                     if (!String.IsNullOrEmpty(item.Value))
                     {
@@ -201,14 +171,14 @@ namespace TranslationApp
                                 Status = TranslationType.Obsolete
                             };
 
-                        translate.Add(translateItem);
+                        translationItems.Add(translateItem);
                         if (item.Source != null && !dict.ContainsKey(item.Source))
                             dict.Add(item.Source, item.Value);
                     }
                 }
             }
 
-            var untranlatedItems = from trItem in translate
+            var untranlatedItems = from trItem in translationItems
                                    where trItem.Status == TranslationType.New &&
                                    dict.ContainsKey(trItem.NeutralValue)
                                    select trItem;
@@ -224,13 +194,16 @@ namespace TranslationApp
 
         private void FillTranslateGrid(TranslationCategory filter)
         {
-            if (translate == null)
+            if (translationItems == null)
                 return;
 
             translateItemBindingSource.DataSource = null;
 
+            if (filter == allCategories)
+                filter = null;
 
-            var filterTranslate = translate.Where(translateItem => filter == null || filter == allCategories || filter.Name.Equals(translateItem.Category)).Where(translateItem => !hideTranslatedItems.Checked || string.IsNullOrEmpty(translateItem.TranslatedValue)).ToList();
+            var filterTranslate = translationItems.Where(translateItem => filter == null || filter.Name.Equals(translateItem.Category)).
+                Where(translateItem => translateItem.Status != TranslationType.Obsolete && (!hideTranslatedItems.Checked || string.IsNullOrEmpty(translateItem.TranslatedValue))).ToList();
 
             translateItemBindingSource.DataSource = filterTranslate;
 
@@ -262,6 +235,7 @@ namespace TranslationApp
             {
                 //Set language to neutral to get neutral translations
                 GitCommands.Settings.Translation = "";
+                Translate();
 
                 List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
 
@@ -278,6 +252,7 @@ namespace TranslationApp
                 
                 //Restore translation
                 GitCommands.Settings.Translation = currentTranslation;
+                Translate();
             }
         }
 
@@ -404,7 +379,7 @@ namespace TranslationApp
         private void SaveAs()
         {
             var foreignTranslation = new Translation { GitExVersion = GitCommands.Settings.GitExtensionsVersionString, LanguageCode = GetSelectedLanguageCode() };
-            foreach (TranslateItem translateItem in translate)
+            foreach (TranslateItem translateItem in translationItems)
             {
                 string value = translateItem.TranslatedValue ?? String.Empty;
                 TranslationItem ti = new TranslationItem(translateItem.Name, translateItem.Property,
@@ -630,7 +605,7 @@ namespace TranslationApp
                 return;
             }
 
-            foreach (TranslateItem translateItem in translate)
+            foreach (TranslateItem translateItem in translationItems)
             {
                 if (string.IsNullOrEmpty(translateItem.TranslatedValue))
                     translateItem.TranslatedValue = Google.TranslateText(translateItem.NeutralValue, "en", GetSelectedLanguageCode());
