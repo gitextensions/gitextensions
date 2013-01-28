@@ -156,7 +156,10 @@ namespace GitUI
                             diffViewer.GetExtraDiffArguments(), diffViewer.Encoding), file.IsSubmodule);
                     }
 
-                    return FileReader.ReadFileContent(Path.Combine(grid.Module.WorkingDir, file.Name), diffViewer.Encoding);
+                    var fullPath = Path.Combine(grid.Module.WorkingDir, file.Name);
+                    if (File.Exists(fullPath))
+                        return FileReader.ReadFileContent(fullPath, diffViewer.Encoding);
+                    return GitCommandHelpers.GetSubmoduleText(grid.Module, file.Name.TrimEnd('/'), "");
                 }
                 else
                 {
