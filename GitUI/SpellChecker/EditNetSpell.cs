@@ -32,7 +32,9 @@ namespace GitUI.SpellChecker
         private readonly SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
         private static WordDictionary _wordDictionary;
-        private Font TextBoxFont;
+
+        public Font TextBoxFont { get; set; }
+        public EventHandler TextAssigned;
 
         public EditNetSpell()
         {
@@ -60,7 +62,26 @@ namespace GitUI.SpellChecker
                 HideWatermark();
                 TextBox.Text = value;
                 ShowWatermark();
+                OnTextAssigned();
             }
+        }
+
+        private void OnTextAssigned()
+        {
+            if (TextAssigned != null)
+            {
+                TextAssigned(this, EventArgs.Empty);
+            }
+        }
+
+        public int LineLength(int line)
+        {
+            return LineCount() <= line ? 0 : TextBox.Lines[line].Length;
+        }
+
+        public int LineCount()
+        {
+            return TextBox.Lines.Length;
         }
 
         [Browsable(false)]
@@ -472,6 +493,10 @@ namespace GitUI.SpellChecker
             SpellCheckTimer.Enabled = false;
             SpellCheckTimer.Interval = 250;
             SpellCheckTimer.Enabled = true;
+            if (!IsWatermarkShowing)
+            {
+                OnTextChanged(e);
+            }
         }
 
         private void TextBoxSizeChanged(object sender, EventArgs e)
@@ -527,8 +552,8 @@ namespace GitUI.SpellChecker
             {
                 TextBox.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
                 TextBox.ForeColor = SystemColors.InactiveCaption;
-                TextBox.Text = WatermarkText;
                 IsWatermarkShowing = true;
+                TextBox.Text = WatermarkText;
             }
         }
 
@@ -537,10 +562,10 @@ namespace GitUI.SpellChecker
             if (IsWatermarkShowing && TextBoxFont != null)
             {
                 TextBox.Font = TextBoxFont;
+                IsWatermarkShowing = false;
                 TextBox.Text = string.Empty;
                 TextBox.ForeColor = SystemColors.WindowText;
             }
-            IsWatermarkShowing = false;
         }
 
         public new bool Focus()
@@ -582,7 +607,7 @@ namespace GitUI.SpellChecker
             TextBox.SelectAll();
         }
 
-        public void WrapWord()
+        public void WrapWord(string indent)
         {
             var text = TextBox.Text;
             var originalCursorPosition = TextBox.SelectionStart;
@@ -591,11 +616,12 @@ namespace GitUI.SpellChecker
             int endOfPreviousWord;
 
             // Find the beginning of current word
-            while (!char.IsWhiteSpace(text[cursor])) cursor--;
+            while (cursor >= 0 && !char.IsWhiteSpace(text[cursor])) cursor--;
             endOfPreviousWord = cursor;
 
             // Find the end of the previous word
-            while (char.IsWhiteSpace(text[endOfPreviousWord])) endOfPreviousWord--;
+            while (endOfPreviousWord >= 0 && char.IsWhiteSpace(text[endOfPreviousWord]))
+                endOfPreviousWord--;
 
             // Calculate the new cursor position which would keep the cursor
             // at the same spot in the word being typed.
@@ -603,26 +629,39 @@ namespace GitUI.SpellChecker
 
             string textBefore = text.Substring(0, endOfPreviousWord + 1);
             string textAfter = text.Substring(cursor + 1);
-            TextBox.Text = textBefore + "\n   " + textAfter;
+            TextBox.Text = textBefore + Environment.NewLine + indent + textAfter;
 
             TextBox.SelectionStart = newCursorPosition;
+        }
+
+        public void ChangeTextColor(int line, int offset, int length, Color color)
+        {
+            var oldColor = TextBox.SelectionColor;
+            var oldPos = TextBox.SelectionStart;
+            var lineIndex = TextBox.GetFirstCharIndexFromLine(line);
+            TextBox.SelectionStart = lineIndex + offset;
+            TextBox.SelectionLength = length;
+            TextBox.SelectionColor = color;
+
+            TextBox.SelectionLength = 0;
+            TextBox.SelectionStart = oldPos;
+            TextBox.SelectionColor = oldColor;
         }
 
         /// <summary>
         /// Make sure this line is empty by inserting a newline at its start.
         /// </summary>
-        public void ForceNextLine(bool addBullet)
+        public void EnsureEmptyLine(bool addBullet, int afterLine)
         {
             var bullet = addBullet ? " - " : "";
-            var text = TextBox.Text;
-            var originalCursorPosition = TextBox.SelectionStart;
-            var cursor = originalCursorPosition - (CurrentColumn - 1);
-
-            string textBefore = text.Substring(0, cursor);
-            string textAfter = text.Substring(cursor);
-            TextBox.Text = textBefore + "\n" + bullet + textAfter;
-
-            TextBox.SelectionStart = originalCursorPosition + 1 + bullet.Length;
+            var indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
+            var lineLength = LineLength(afterLine);
+            var newLine = (lineLength > 0) ? Environment.NewLine : String.Empty;
+            var lastIndexOfLine = indexOfLine + lineLength;
+            TextBox.SelectionLength = 0;
+            TextBox.SelectionStart = lastIndexOfLine;
+            TextBox.SelectedText = newLine + bullet;
+            TextBox.SelectionLength = 0;
         }
     }
 }

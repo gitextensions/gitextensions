@@ -34,6 +34,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxCommitValidation = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.labelUseIndent = new System.Windows.Forms.Label();
             this.labelMaxLineLength = new System.Windows.Forms.Label();
             this.labelMaxFirstLineLength = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_numericMaxLineLength = new System.Windows.Forms.NumericUpDown();
@@ -42,6 +43,7 @@
             this.checkBoxSecondLineEmpty = new System.Windows.Forms.CheckBox();
             this.labelRegExCheck = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_textBoxCommitValidationRegex = new System.Windows.Forms.TextBox();
+            this.checkBoxUseIndent = new System.Windows.Forms.CheckBox();
             this.groupBoxCommitTemplates = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
@@ -132,6 +134,7 @@
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel3.Controls.Add(this.labelUseIndent, 0, 4);
             this.tableLayoutPanel3.Controls.Add(this.labelMaxLineLength, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.labelMaxFirstLineLength, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this._NO_TRANSLATE_numericMaxLineLength, 1, 1);
@@ -140,6 +143,7 @@
             this.tableLayoutPanel3.Controls.Add(this.checkBoxSecondLineEmpty, 1, 2);
             this.tableLayoutPanel3.Controls.Add(this.labelRegExCheck, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this._NO_TRANSLATE_textBoxCommitValidationRegex, 1, 3);
+            this.tableLayoutPanel3.Controls.Add(this.checkBoxUseIndent, 1, 4);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 19);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -152,6 +156,16 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(686, 135);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
+            // labelUseIndent
+            //
+            this.labelUseIndent.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.labelUseIndent.AutoSize = true;
+            this.labelUseIndent.Location = new System.Drawing.Point(3, 114);
+            this.labelUseIndent.Name = "labelUseIndent";
+            this.labelUseIndent.Size = new System.Drawing.Size(144, 17);
+            this.labelUseIndent.TabIndex = 11;
+            this.labelUseIndent.Text = "Indent lines after first line:";
+            //
             // labelMaxLineLength
             // 
             this.labelMaxLineLength.Anchor = System.Windows.Forms.AnchorStyles.Left;
@@ -226,6 +240,16 @@
             this._NO_TRANSLATE_textBoxCommitValidationRegex.Size = new System.Drawing.Size(233, 23);
             this._NO_TRANSLATE_textBoxCommitValidationRegex.TabIndex = 8;
             // 
+            // checkBoxUseIndent
+            //
+            this.checkBoxUseIndent.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.checkBoxUseIndent.AutoSize = true;
+            this.checkBoxUseIndent.Location = new System.Drawing.Point(668, 115);
+            this.checkBoxUseIndent.Name = "checkBoxUseIndent";
+            this.checkBoxUseIndent.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxUseIndent.TabIndex = 10;
+            this.checkBoxUseIndent.UseVisualStyleBackColor = true;
+            //
             // groupBoxCommitTemplates
             // 
             this.groupBoxCommitTemplates.Controls.Add(this.tableLayoutPanel4);
@@ -374,5 +398,7 @@
         private System.Windows.Forms.TextBox _NO_TRANSLATE_textBoxCommitTemplateName;
         private System.Windows.Forms.Label labelRegExCheck;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_textBoxCommitValidationRegex;
+        private System.Windows.Forms.Label labelUseIndent;
+        private System.Windows.Forms.CheckBox checkBoxUseIndent;
     }
 }
