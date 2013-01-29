@@ -25,7 +25,6 @@ namespace ResourceManager.Translation
             using (XmlTextReader xmlReader = new XmlTextReader(stringReader))
             {
                 return (Translation)serializer.Deserialize(xmlReader);
-
             }
         }
     }

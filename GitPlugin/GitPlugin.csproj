@@ -69,6 +69,10 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Commands\FindFile.cs" />
+    <Compile Include="Commands\OpenWithDifftool.cs" />
+    <Compile Include="Commands\ViewChanges.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Git\GitCommands.cs" />
     <Compile Include="Commands\About.cs" />
     <Compile Include="Commands\ApplyPatch.cs" />
@@ -95,7 +99,6 @@
     <Compile Include="Commands\Stash.cs" />
     <Compile Include="Commands\SwitchBranch.cs" />
     <Compile Include="Commands\ToolbarCommand.cs" />
-    <Compile Include="Commands\ViewDiff.cs" />
     <Compile Include="Connect.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -175,6 +178,7 @@
     <Content Include="GitPlugin.AddIn">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\IconDiff.bmp" />
     <None Include="Resources\IconFind.bmp" />
     <None Include="Resources\IconEditGitIgnore.bmp" />
     <None Include="Resources\IconBranchCreate.bmp" />

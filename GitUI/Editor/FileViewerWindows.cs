@@ -136,6 +136,16 @@ namespace GitUI.Editor
             TextEditor.Refresh();
         }
 
+        public void SetHighlightingForFile(string filename)
+        {
+            IHighlightingStrategy highlightingStrategy = HighlightingManager.Manager.FindHighlighterForFile(filename);
+            if (highlightingStrategy != null)
+                TextEditor.Document.HighlightingStrategy = highlightingStrategy;
+            else
+                TextEditor.SetHighlighting("XML");
+            TextEditor.Refresh();
+        }
+
         public string GetSelectedText()
         {
             return TextEditor.ActiveTextAreaControl.SelectionManager.SelectedText;

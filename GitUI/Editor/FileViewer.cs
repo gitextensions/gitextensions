@@ -346,20 +346,30 @@ namespace GitUI.Editor
             return _internalFileViewer.GetText();
         }
 
-        public void ViewCurrentChanges(string fileName, string oldFileName, bool staged)
+        public void ViewCurrentChanges(GitItemStatus item)
         {
-            _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewStagingPatch);
+            ViewCurrentChanges(item.Name, item.OldName, item.IsStaged, item.IsSubmodule);
+        }
+
+        public void ViewCurrentChanges(GitItemStatus item, bool isStaged)
+        {
+            ViewCurrentChanges(item.Name, item.OldName, isStaged, item.IsSubmodule);
+        }
+
+        public void ViewCurrentChanges(string fileName, string oldFileName, bool staged, bool isSubmodule)
+        {
+            if (!isSubmodule)
+                _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
+                    ViewStagingPatch);
+            else
+                _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
+                    ViewSubmodulePatch);
         }
 
         public void ViewStagingPatch(string text)
         {
             ViewPatch(text);
             Reset(true, true, true);
-        }
-
-        public void ViewSubmoduleChanges(string fileName, string oldFileName, bool staged)
-        {
-            _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), ViewSubmodulePatch);
         }
 
         public void ViewSubmodulePatch(string text)
@@ -415,7 +425,7 @@ namespace GitUI.Editor
 
         public void ViewGitItemRevision(string fileName, string guid)
         {
-            if (guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+            if (guid == GitRevision.UnstagedGuid) //working dir changes
             {
                 ViewFile(fileName);
             }
@@ -433,7 +443,20 @@ namespace GitUI.Editor
 
         private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText)
         {
-            if (IsImage(fileName))
+            if (fileName.EndsWith("/"))
+            {
+                string fullPath = Path.GetFullPath(Path.Combine(Module.WorkingDir, fileName));
+                if (GitModule.ValidWorkingDir(fullPath))
+                {
+                    ViewText(fileName,
+                             GitCommandHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""));
+                }
+                else
+                {
+                    ViewText(null, "Directory: " + fileName);
+                }
+            }
+            else if (IsImage(fileName))
             {
                 _async.Load(getImage,
                             image =>
@@ -500,7 +523,7 @@ namespace GitUI.Editor
         {
             try
             {
-                using (Stream stream = File.OpenRead(Module.WorkingDir + fileName))
+                using (Stream stream = File.OpenRead(Path.Combine(Module.WorkingDir, fileName)))
                 {
                     return CreateImage(fileName, stream);
                 }
@@ -535,7 +558,7 @@ namespace GitUI.Editor
             if (File.Exists(fileName))
                 path = fileName;
             else
-                path = Module.WorkingDir + fileName;
+                path = Path.Combine(Module.WorkingDir, fileName);
 
             return !File.Exists(path) ? null : FileReader.ReadFileContent(path, Module.FilesEncoding);
         }
@@ -546,11 +569,6 @@ namespace GitUI.Editor
             _internalFileViewer.SetHighlighting("Default");
         }
 
-        public void SetSyntax(string fileName)
-        {
-            EditorOptions.SetSyntax(_internalFileViewer, fileName);
-        }
-
         private void ResetForText(string fileName)
         {
             Reset(false, true);
@@ -558,7 +576,7 @@ namespace GitUI.Editor
             if (fileName == null)
                 _internalFileViewer.SetHighlighting("Default");
             else
-                EditorOptions.SetSyntax(_internalFileViewer, fileName);
+                _internalFileViewer.SetHighlightingForFile(fileName);
 
             if (!string.IsNullOrEmpty(fileName) &&
                 (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase) ||
@@ -567,6 +585,7 @@ namespace GitUI.Editor
                 ResetForDiff();
             }
         }
+
         private bool patchHighlighting;
         private void ResetForDiff()
         {

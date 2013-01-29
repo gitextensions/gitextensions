@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
@@ -44,7 +45,7 @@ namespace GitUI
                 var secondRevision = revisions.Count == 2 ? revisions[1].Guid : null;
 
                 //to simplify if-ology
-                if (GitRevision.IsArtificial(secondRevision) && firstRevision != GitRevision.UncommittedWorkingDirGuid)
+                if (GitRevision.IsArtificial(secondRevision) && firstRevision != GitRevision.UnstagedGuid)
                 {
                     firstRevision = secondRevision;
                     secondRevision = revisions[0].Guid;
@@ -52,7 +53,7 @@ namespace GitUI
 
                 string extraDiffArgs = "-M -C";
 
-                if (firstRevision == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+                if (firstRevision == GitRevision.UnstagedGuid) //working dir changes
                 {
                     if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
                     {
@@ -137,7 +138,7 @@ namespace GitUI
             var secondRevision = revisions.Count == 2 ? revisions[1].Guid : null;
 
             //to simplify if-ology
-            if (GitRevision.IsArtificial(secondRevision) && firstRevision != GitRevision.UncommittedWorkingDirGuid)
+            if (GitRevision.IsArtificial(secondRevision) && firstRevision != GitRevision.UnstagedGuid)
             {
                 firstRevision = secondRevision;
                 secondRevision = revisions[0].Guid;
@@ -145,7 +146,7 @@ namespace GitUI
 
             string extraDiffArgs = null;
 
-            if (firstRevision == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+            if (firstRevision == GitRevision.UnstagedGuid) //working dir changes
             {
                 if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
                 {
@@ -155,7 +156,10 @@ namespace GitUI
                             diffViewer.GetExtraDiffArguments(), diffViewer.Encoding), file.IsSubmodule);
                     }
 
-                    return FileReader.ReadFileContent(grid.Module.WorkingDir + file.Name, diffViewer.Encoding);
+                    var fullPath = Path.Combine(grid.Module.WorkingDir, file.Name);
+                    if (Directory.Exists(fullPath) && GitModule.ValidWorkingDir(fullPath))
+                        return GitCommandHelpers.GetSubmoduleText(grid.Module, file.Name.TrimEnd('/'), "");
+                    return FileReader.ReadFileContent(fullPath, diffViewer.Encoding);
                 }
                 else
                 {
@@ -274,5 +278,22 @@ namespace GitUI
                 BackColor = SystemColors.AppWorkspace;
             }
         }
+
+        public static IEnumerable<TreeNode> AllNodes(this TreeView tree)
+        {
+            return tree.Nodes.AllNodes();
+        }
+
+        public static IEnumerable<TreeNode> AllNodes(this TreeNodeCollection nodes)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                yield return node;
+
+                foreach(TreeNode subNode in node.Nodes.AllNodes())
+                    yield return subNode;
+            }
+        }
+
     }
 }

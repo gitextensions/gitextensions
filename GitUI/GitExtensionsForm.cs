@@ -17,7 +17,7 @@ namespace GitUI
 {
     public class GitExtensionsForm : Form, ITranslate
     {
-        private static Icon ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
+        internal static Icon ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
 
         private bool _translated;
         private bool _enablePositionRestore;
@@ -159,7 +159,7 @@ namespace GitUI
             return ColorIndex.Unknown;
         }
 
-        protected static Icon GetApplicationIcon(string iconStyle, string iconColor)
+        public static Icon GetApplicationIcon(string iconStyle, string iconColor)
         {
             var colorIndex = (int)GetColorIndexByName(iconColor);
             if (colorIndex == (int) ColorIndex.Unknown)
@@ -420,14 +420,11 @@ namespace GitUI
 
         public virtual void AddTranslationItems(Translation translation)
         {
-            if (!string.IsNullOrEmpty(Text))
-                translation.AddTranslationItem(Name, "$this", "Text", Text);
             TranslationUtl.AddTranslationItemsFromFields(Name, this, translation);
         }
 
         public virtual void TranslateItems(Translation translation)
         {
-            Text = translation.TranslateItem(Name, "$this", "Text", Text);
             TranslationUtl.TranslateItemsFromFields(Name, this, translation);
         }
 

@@ -105,7 +105,7 @@ namespace GitUI.Script
             updateSubmodulesAfterPullScript.HotkeyCommandIdentifier = 9001;
             updateSubmodulesAfterPullScript.Name = "Update submodules after pull";
             updateSubmodulesAfterPullScript.Command = "git";
-            updateSubmodulesAfterPullScript.Arguments = "submodule update";
+            updateSubmodulesAfterPullScript.Arguments = "submodule update --init --recursive";
             updateSubmodulesAfterPullScript.AskConfirmation = true;
             updateSubmodulesAfterPullScript.OnEvent = ScriptEvent.AfterPull;
             updateSubmodulesAfterPullScript.AddToRevisionGridContextMenu = false;

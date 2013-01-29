@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
@@ -87,7 +88,7 @@ namespace GitCommands
 
         public static string GetHomeDir()
         {
-            return Environment.GetEnvironmentVariable("HOME");
+            return Environment.GetEnvironmentVariable("HOME") ?? "";
         }
 
         public static string GetDefaultHomeDir()
@@ -257,13 +258,15 @@ namespace GitCommands
                 process.Start();
 
                 string line = null;
-                do{
+                do
+                {
                     line = process.StandardOutput.ReadLine();
                     if (line != null)
                         yield return line;
                 } while (line != null);
 
-                do{
+                do
+                {
                     line = process.StandardError.ReadLine();
                     if (line != null)
                         yield return line;
@@ -467,6 +470,29 @@ namespace GitCommands
             return string.Format("checkout{0} \"{1}\"", args, branchOrRevisionName);
         }
 
+        /// <summary>Create a new orphan branch from <paramref name="startPoint"/> and switch to it.</summary>
+        public static string CreateOrphanCmd(string newBranchName, string startPoint = null)
+        {
+            return string.Format("checkout --orphan {0} {1}", newBranchName, startPoint);
+        }
+
+        /// <summary>Remove files from the working tree and from the index. <remarks>git rm</remarks></summary>
+        /// <param name="force">Override the up-to-date check.</param>
+        /// <param name="isRecursive">Allow recursive removal when a leading directory name is given.</param>
+        /// <param name="files">Files to remove. Fileglobs can be given to remove matching files.</param>
+        public static string RemoveCmd(bool force = true, bool isRecursive = true, params string[] files)
+        {
+            string file = files.Any()
+                              ? string.Join(" ", files)
+                              : ".";
+
+            return string.Format("rm {0} {1} {2}",
+                force ? "--force" : string.Empty,
+                isRecursive ? "-r" : string.Empty,
+                file
+            );
+        }
+
         public static string BranchCmd(string branchName, string revision, bool checkout)
         {
             if (checkout)
@@ -506,11 +532,11 @@ namespace GitCommands
 
         public static string PushCmd(string path, string branch, bool all)
         {
-            return PushCmd(path, null, branch, all, false, true, false);
+            return PushCmd(path, null, branch, all, false, true, 0);
         }
 
         public static string PushCmd(string path, string fromBranch, string toBranch,
-            bool all, bool force, bool track, bool recursiveSubmodulesCheck)
+            bool all, bool force, bool track, int recursiveSubmodules)
         {
             path = FixPath(path);
 
@@ -527,15 +553,17 @@ namespace GitCommands
             if (track)
                 strack = "-u ";
 
-            var srecursiveSubmodulesCheck = "";
-            if (recursiveSubmodulesCheck)
-                srecursiveSubmodulesCheck = "--recurse-submodules=check ";
+            var srecursiveSubmodules = "";
+            if (recursiveSubmodules == 1)
+                srecursiveSubmodules = "--recurse-submodules=check ";
+            if (recursiveSubmodules == 2)
+                srecursiveSubmodules = "--recurse-submodules=on-demand ";
 
             var sprogressOption = "";
             if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
                 sprogressOption = "--progress ";
 
-            var options = String.Concat(sforce, strack, srecursiveSubmodulesCheck, sprogressOption);
+            var options = String.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
             if (all)
                 return string.Format("push {0}--all \"{1}\"", options, path.Trim());
 
@@ -661,12 +689,12 @@ namespace GitCommands
                 sb.Append("--preserve-merges ");
             }
 
-            
+
             sb.Append('"');
             sb.Append(branch);
             sb.Append('"');
 
-            
+
             return sb.ToString();
         }
 
@@ -769,7 +797,10 @@ namespace GitCommands
 
         public static ConfigFile GetGlobalConfig()
         {
-            return new ConfigFile(GetHomeDir() + Settings.PathSeparator.ToString() + ".gitconfig", false);
+            string configPath = Path.Combine(GetHomeDir(), ".config", "git", "config");
+            if (File.Exists(configPath))
+                return new ConfigFile(configPath, false);
+            return new ConfigFile(Path.Combine(GetHomeDir(), ".gitconfig"), false);
         }
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool untrackedFiles)
@@ -847,6 +878,7 @@ namespace GitCommands
             using (StringReader reader = new StringReader(text))
             {
                 string line = reader.ReadLine();
+
                 if (line != null)
                 {
                     var match = Regex.Match(line, @"diff --git a/(\S+) b/(\S+)");
@@ -856,6 +888,7 @@ namespace GitCommands
                         status.OldName = match.Groups[2].Value;
                     }
                 }
+
                 while ((line = reader.ReadLine()) != null)
                 {
                     if (!line.Contains("Subproject"))
@@ -1061,14 +1094,37 @@ namespace GitCommands
             sb.AppendLine("Submodule " + status.Name + " Change");
 
             sb.AppendLine();
-            sb.AppendLine("From:\t" + status.OldCommit);
+            sb.AppendLine("From:\t" + (status.OldCommit ?? "null"));
+            CommitData oldCommitData = null;
             if (gitmodule.ValidWorkingDir())
             {
                 string error = "";
-                CommitData commitData = CommitData.GetCommitData(gitmodule, status.OldCommit, ref error);
+                if (status.OldCommit != null)
+                    oldCommitData = CommitData.GetCommitData(gitmodule, status.OldCommit, ref error);
+                if (oldCommitData != null)
+                {
+                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + oldCommitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                    var delim = new char[] { '\n', '\r' };
+                    var lines = oldCommitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
+                    foreach (var curline in lines)
+                        sb.AppendLine("\t\t" + curline);
+                }
+            }
+            else
+                sb.AppendLine();
+
+            sb.AppendLine();
+            string dirty = !status.IsDirty ? "" : " (dirty)";
+            sb.AppendLine("To:\t\t" + (status.Commit ?? "null") + dirty);
+            CommitData commitData = null;
+            if (gitmodule.ValidWorkingDir())
+            {
+                string error = "";
+                if (status.Commit != null)
+                    commitData = CommitData.GetCommitData(gitmodule, status.Commit, ref error);
                 if (commitData != null)
                 {
-                    sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
                     var delim = new char[] { '\n', '\r' };
                     var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
                     foreach (var curline in lines)
@@ -1079,23 +1135,32 @@ namespace GitCommands
                 sb.AppendLine();
 
             sb.AppendLine();
-            string dirty = !status.IsDirty ? "" : " (dirty)";
-            sb.AppendLine("To:\t\t" + status.Commit + dirty);
-            if (gitmodule.ValidWorkingDir())
+            var submoduleStatus = gitmodule.CheckSubmoduleStatus(status.Commit, status.OldCommit, commitData, oldCommitData);
+            sb.Append("Type: ");
+            switch (submoduleStatus)
             {
-                string error = "";
-                CommitData commitData = CommitData.GetCommitData(gitmodule, status.Commit, ref error);
-                if (commitData != null)
-                {
-                    sb.AppendLine("\t\t\t\t\t" + GitCommandHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
-                    var delim = new char[] { '\n', '\r' };
-                    var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
-                    foreach (var curline in lines)
-                        sb.AppendLine("\t\t" + curline);
-                }
+                case SubmoduleStatus.NewSubmodule:
+                    sb.AppendLine("New submodule");
+                    break;
+                case SubmoduleStatus.FastForward:
+                    sb.AppendLine("Fast Forward");
+                    break;
+                case SubmoduleStatus.Rewind:
+                    sb.AppendLine("Rewind");
+                    break;
+                case SubmoduleStatus.NewerTime:
+                    sb.AppendLine("Newer commit time");
+                    break;
+                case SubmoduleStatus.OlderTime:
+                    sb.AppendLine("Older commit time");
+                    break;
+                case SubmoduleStatus.SameTime:
+                    sb.AppendLine("Same commit time");
+                    break;
+                default:
+                    sb.AppendLine("Unknown");
+                    break;
             }
-            else
-                sb.AppendLine();
 
             if (status.Commit != null && status.OldCommit != null)
             {
@@ -1162,6 +1227,11 @@ namespace GitCommands
             return null;
         }
 
+        private static DateTime RoundDateTime(DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute, dateTime.Second);
+        }
+
         /// <summary>
         /// Takes a date/time which and determines a friendly string for time from now to be displayed for the relative time from the date.
         /// It is important to note that times are compared using the current timezone, so the date that is passed in should be converted 
@@ -1173,7 +1243,7 @@ namespace GitCommands
         /// <see cref="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
         public static string GetRelativeDateString(DateTime originDate, DateTime previousDate, bool displayWeeks)
         {
-            var ts = new TimeSpan(originDate.Ticks - previousDate.Ticks);
+            var ts = new TimeSpan(RoundDateTime(originDate).Ticks - RoundDateTime(previousDate).Ticks);
             double delta = Math.Abs(ts.TotalSeconds);
 
             if (delta < 60)
@@ -1186,7 +1256,8 @@ namespace GitCommands
             }
             if (delta < 24 * 60 * 60)
             {
-                return Strings.GetNHoursAgoText(ts.Hours);
+                int hours = delta < 60 * 60 ? Math.Sign(ts.Minutes) * 1 : ts.Hours;
+                return Strings.GetNHoursAgoText(hours);
             }
             // 30.417 = 365 days / 12 months - note that the if statement only bothers with 30 days for "1 month ago" because ts.Days is int
             if (delta < (displayWeeks ? 7 : 30) * 24 * 60 * 60)
@@ -1209,7 +1280,7 @@ namespace GitCommands
 
         public static string GetRelativeDateString(DateTime originDate, DateTime previousDate)
         {
-            return  GetRelativeDateString(originDate, previousDate, true);
+            return GetRelativeDateString(originDate, previousDate, true);
         }
 
         // look into patch file and try to figure out if it's a raw diff (i.e from git diff -p)
@@ -1229,7 +1300,7 @@ namespace GitCommands
                 return false;
             }
         }
-        
+
 #if !MONO
         [DllImport("kernel32.dll")]
         static extern bool SetConsoleCtrlHandler(IntPtr HandlerRoutine,

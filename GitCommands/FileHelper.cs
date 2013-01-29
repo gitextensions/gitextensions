@@ -69,7 +69,7 @@ namespace GitCommands
             string gitAttributesPath = Path.Combine(aModule.WorkingDir, ".gitattributes");
             if (File.Exists(gitAttributesPath))
             {
-                string[] lines = File.ReadAllLines(gitAttributesPath);
+                var lines = File.ReadLines(gitAttributesPath);
                 bool? lastMatchResult = null;
                 foreach (var parts in lines.Select(line => line.Trim().Split(' ')))
                 {

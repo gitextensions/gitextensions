@@ -58,33 +58,15 @@ namespace GitUI
             if (string.IsNullOrEmpty(_NO_TRANSLATE_Title.Text))
                 _NO_TRANSLATE_Title.Text = Path;
 
-            _NO_TRANSLATE_Description.Visible = !string.IsNullOrEmpty(text);
+            bool hasDescription = !string.IsNullOrEmpty(text);
+            _NO_TRANSLATE_Description.Visible = hasDescription;
             _NO_TRANSLATE_Description.Text = text;
-
-            //if (Description.Visible)
-            //{
-            //    SizeF size = Description.CreateGraphics().MeasureString(Description.Text, Description.Font);
-            //    int lines = ((int)size.Width / (int)Description.Width) + 1;
-            //    Description.Height = ((int)size.Height) * lines;
-            //}
 
             _NO_TRANSLATE_BranchName.Visible = !string.IsNullOrEmpty(branchName);
             _NO_TRANSLATE_BranchName.Text = branchName;
 
-            Height = _NO_TRANSLATE_Title.Height + 6;
-
-            //The description is not on the panel. Do not add the description height.prr
-            _NO_TRANSLATE_Panel.MinimumSize = new Size(0, Height);
-            
-            if (_NO_TRANSLATE_Description.Visible)
-            {
-                _NO_TRANSLATE_Description.Top = _NO_TRANSLATE_Title.Height + 4;
-                Height += _NO_TRANSLATE_Description.Height + 4;
-            }
-
-           if (icon != null)
+            if (icon != null)
                 Icon.Image = icon;
-
 
             toolTip = new ToolTip
                               {
@@ -121,8 +103,8 @@ namespace GitUI
 
         private void DashboardItem_SizeChanged(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_Title.Width = Width - _NO_TRANSLATE_Title.Location.X;
-            _NO_TRANSLATE_Description.Width = Width - _NO_TRANSLATE_Title.Location.X;
+            ////_NO_TRANSLATE_Title.Width = Width - _NO_TRANSLATE_Title.Location.X;
+            ////_NO_TRANSLATE_Description.Width = Width - _NO_TRANSLATE_Title.Location.X;
         }
 
         private void DashboardItem_MouseEnter(object sender, EventArgs e)
@@ -149,5 +131,11 @@ namespace GitUI
                     throw new ArgumentException("Repository type is not supported.", "repository");
             }
         }
+
+		private void OnKeyDown(object sender, PreviewKeyDownEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Space)
+				OnClick(e);
+		}
     }
 }

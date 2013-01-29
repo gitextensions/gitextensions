@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using GitCommands;
 using GitUI.Script;
 using ResourceManager.Translation;
 
@@ -38,6 +37,7 @@ namespace GitUI.Tag
                 if (deleteTag.Checked && !string.IsNullOrEmpty(Tags.Text))
                     RemoveRemoteTag(Tags.Text);
 
+                DialogResult = DialogResult.OK;
                 Close();
             }
             catch (Exception ex)

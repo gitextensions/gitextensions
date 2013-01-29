@@ -3,21 +3,27 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
     public sealed partial class FileStatusList : GitModuleControl
     {
+        private readonly TranslationString _UnsupportedMultiselectAction =
+            new TranslationString("Operation not supported");
+
         private const int ImageSize = 16;
 
         public FileStatusList()
         {
             InitializeComponent(); Translate();
+            _NoDiffFilesChangesText = NoFiles.Text;
             SizeChanged += FileStatusList_SizeChanged;
             FileStatusListBox.DrawMode = DrawMode.OwnerDrawVariable;
             FileStatusListBox.MeasureItem += FileStatusListBox_MeasureItem;
@@ -35,6 +41,18 @@ namespace GitUI
 
             NoFiles.Visible = false;
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
+        }
+
+        private string _NoDiffFilesChangesText;
+
+        public void SetNoFilesText(string text)
+        {
+            NoFiles.Text = text;
+        }
+
+        public string GetNoFilesText()
+        {
+            return NoFiles.Text;
         }
 
         void FileStatusList_SizeChanged(object sender, EventArgs e)
@@ -74,16 +92,6 @@ namespace GitUI
 
             return pathFormatter.FormatTextForDrawing(FileStatusListBox.ClientSize.Width - ImageSize,
                                                       gitItemStatus.Name, gitItemStatus.OldName);
-        }
-
-        public void SetNoFilesText(string text)
-        {
-            NoFiles.Text = text;
-        }
-
-        public string GetNoFilesText()
-        {
-            return NoFiles.Text;
         }
 
 #if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
@@ -173,7 +181,7 @@ namespace GitUI
 
                     foreach (GitItemStatus item in SelectedItems)
                     {
-                        string fileName = Module.WorkingDir + item.Name;
+                        string fileName = Path.Combine(Module.WorkingDir, item.Name);
 
                         fileList.Add(fileName.Replace('/', '\\'));
                     }
@@ -348,9 +356,9 @@ namespace GitUI
                     var status = gitItemStatus.SubmoduleStatus;
                     if (status.IsDirty && status.Commit == status.OldCommit)
                         image = Resources.IconSubmoduleDirty;
-                    else if (status.IsCommitNewer)
+                    else if (status.Status == SubmoduleStatus.FastForward || status.Status == SubmoduleStatus.NewerTime)
                         image = status.IsDirty ? Resources.IconSubmoduleRevisionUpDirty : Resources.IconSubmoduleRevisionUp;
-                    else
+                    else if (status.Status == SubmoduleStatus.Rewind || status.Status == SubmoduleStatus.OlderTime)
                         image = status.IsDirty ? Resources.IconSubmoduleRevisionDownDirty : Resources.IconSubmoduleRevisionDown;
                 }                
             }
@@ -379,7 +387,7 @@ namespace GitUI
         [DefaultValue(true)]
         public bool IsEmpty
         {
-            get { return GitItemStatuses == null || GitItemStatuses.Count == 0; }
+            get { return GitItemStatuses == null || !GitItemStatuses.Any(); }
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -392,7 +400,7 @@ namespace GitUI
             }
             set
             {
-                if (value == null || value.Count == 0)
+                if (value == null || !value.Any())
                     NoFiles.Visible = true;
                 else
                     NoFiles.Visible = false;
@@ -400,7 +408,7 @@ namespace GitUI
                 FileStatusListBox.HorizontalExtent = 0;
                 int prevSelectedIndex = FileStatusListBox.SelectedIndex;
                 FileStatusListBox.DataSource = value;
-                if (value != null && value.Count == 0 && prevSelectedIndex >= 0)
+                if (value != null && !value.Any() && prevSelectedIndex >= 0)
                 {
                     //bug in the ListBox control where supplying an empty list will not trigger a SelectedIndexChanged event, so we force it to trigger
                     FileStatusListBox_SelectedIndexChanged(this, EventArgs.Empty);
@@ -481,6 +489,53 @@ namespace GitUI
             finally
             {
                 ResumeLayout(true);
+            }
+        }
+
+        public void SetDiffs(List<GitRevision> revisions)
+        {
+            NoFiles.Text = _NoDiffFilesChangesText;
+            switch (revisions.Count)
+            {
+                case 0:
+                    GitItemStatuses = null;
+                    break;
+
+                case 1: // diff "parent" --> "selected revision"
+                    var revision = revisions[0];
+
+                    Revision = revision;
+
+                    if (revision == null)
+                        GitItemStatuses = null;
+                    else if (revision.ParentGuids == null || revision.ParentGuids.Length == 0)
+                        GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
+                    else
+                    {
+                        if (revision.Guid == GitRevision.UnstagedGuid) //working dir changes
+                            GitItemStatuses = Module.GetUnstagedFiles();
+                        else if (revision.Guid == GitRevision.IndexGuid) //index
+                            GitItemStatuses = Module.GetStagedFiles();
+                        else
+                            GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                    }
+                    break;
+
+                case 2: // diff "first clicked revision" --> "second clicked revision"
+                    bool artificialRevSelected = revisions[0].IsArtificial() || revisions[1].IsArtificial();
+                    if (artificialRevSelected)
+                    {
+                        NoFiles.Text = _UnsupportedMultiselectAction.Text;
+                        GitItemStatuses = null;
+                    }
+                    else
+                        GitItemStatuses = Module.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
+                    break;
+
+                default: // more than 2 revisions selected => no diff
+                    NoFiles.Text = _UnsupportedMultiselectAction.Text;
+                    GitItemStatuses = null;
+                    break;
             }
         }
     }

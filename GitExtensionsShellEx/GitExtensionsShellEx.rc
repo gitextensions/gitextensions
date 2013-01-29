@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -13,48 +13,45 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// Neutral resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
-#endif //_WIN32
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+#pragma code_page(1251)
 
-#ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
-// TEXTINCLUDE
+// Icon
 //
 
-1 TEXTINCLUDE DISCARDABLE 
-BEGIN
-    "resource.h\0"
-END
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_GITEXTENSIONS       ICON                    "Resources\\git-extensions-logo.ico"
+IDI_ICONADDED           ICON                    "Resources\\IconAdded.ico"
+IDI_ICONBROWSEFILEEXPLORER ICON                    "Resources\\IconBrowseFileExplorer.ico"
+IDI_ICONBRANCHCREATE    ICON                    "Resources\\IconBranchCreate.ico"
+IDI_ICONBRANCHCHECKOUT  ICON                    "Resources\\IconBranchCheckout.ico"
+IDI_ICONREVISIONCHECKOUT ICON                    "Resources\\IconRevisionCheckout.ico"
+IDI_ICONABOUT           ICON                    "Resources\\IconAbout.ico"
+IDI_ICONCLONEREPOGIT    ICON                    "Resources\\IconCloneRepoGit.ico"
+IDI_ICONCOMMIT          ICON                    "Resources\\IconCommit.ico"
+IDI_ICONFILEHISTORY     ICON                    "Resources\\IconFileHistory.ico"
+IDI_ICONPULL            ICON                    "Resources\\IconPull.ico"
+IDI_ICONPUSH            ICON                    "Resources\\IconPush.ico"
+IDI_ICONTRESETFILETO    ICON                    "Resources\\IconResetFileTo.ico"
+IDI_ICONSETTINGS        ICON                    "Resources\\IconSettings.ico"
+IDI_ICONVIEWCHANGES     ICON                    "Resources\\IconDiff.ico"
+IDI_ICONSTASH           ICON                    "Resources\\IconStash.ico"
+IDI_ICONCREATEREPOSITORY ICON                   "Resources\\IconRepoCreate.ico"
 
-2 TEXTINCLUDE DISCARDABLE 
-BEGIN
-    "#include ""winres.h""\r\n"
-    "\0"
-END
-
-3 TEXTINCLUDE DISCARDABLE 
-BEGIN
-    "\0"
-END
-
-#endif    // APSTUDIO_INVOKED
-
-
-#ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,42
- PRODUCTVERSION 2,42
+ FILEVERSION 2,44,0,0
+ PRODUCTVERSION 2,44,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,15 +66,13 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "Git Extensions", "\0"
-            VALUE "FileDescription", "Git Extensions\0"
-            VALUE "FileVersion", "2, 42\0"
-            VALUE "InternalName", "Git Extensions\0"
-            VALUE "LegalCopyright", "Copyright 2012\0"
-            VALUE "OriginalFilename", "GitExtensionsShellEx.dll\0"
-            VALUE "ProductName", "Git Extensions\0"
-            VALUE "ProductVersion", "2, 42\0"
-            VALUE "OLESelfRegister", "\0"
+            VALUE "FileDescription", "Git Extensions"
+            VALUE "FileVersion", "2, 44"
+            VALUE "InternalName", "Git Extensions"
+            VALUE "LegalCopyright", "Copyright 2013"
+            VALUE "OriginalFilename", "GitExtensionsShellEx.dll"
+            VALUE "ProductName", "Git Extensions"
+            VALUE "ProductVersion", "2, 44"
         END
     END
     BLOCK "VarFileInfo"
@@ -86,27 +81,60 @@ BEGIN
     END
 END
 
-#endif    // !_MAC
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // REGISTRY
 //
 
-IDR_GITEXTENSIONSSHELLEX    REGISTRY DISCARDABLE    "GitExtensionsShellEx.rgs"
+IDR_GITEXTENSIONSSHELLEX REGISTRY                "GitExtensionsShellEx.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table
 //
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE
 BEGIN
     IDS_PROJNAME            "GitExtensionsShellEx"
 END
 
-#endif    // English (U.S.) resources
+#endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

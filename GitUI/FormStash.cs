@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -73,9 +74,9 @@ namespace GitUI
             Stashes.Items.Clear();
             foreach (GitStash stashedItem in stashedItems)
                 Stashes.Items.Add(stashedItem);
-            if (Stashes.Items.Count > 1)
-                Stashes.SelectedIndex = 1;
-            else if (Stashes.Items.Count > 0)
+            if (Stashes.Items.Count > 1)// more than just the default ("Current working dir changes")
+                Stashes.SelectedIndex = 1;// -> auto-select first non-default
+            else if (Stashes.Items.Count > 0)// (no stashes) -> select default ("Current working dir changes")
                 Stashes.SelectedIndex = 0;
         }
 
@@ -93,13 +94,19 @@ namespace GitUI
             {
                 Stashed.GitItemStatuses = null;
             }
-            else if (gitStash == currentWorkingDirStashItem)
+            else if(gitStash == currentWorkingDirStashItem)
             {
                 toolStripButton_customMessage.Enabled = true;
                 AsyncLoader.DoAsync(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
+                Clear.Enabled = false; // disallow Drop  (of current working dir)
+                Apply.Enabled = false; // disallow Apply (of current working dir)
             }
             else
+            {
                 AsyncLoader.DoAsync(() => Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
+                Clear.Enabled = true; // allow Drop
+                Apply.Enabled = true; // allow Apply
+            }
         }
 
         private void LoadGitItemStatuses(IList<GitItemStatus> gitItemStatuses)
@@ -119,21 +126,29 @@ namespace GitUI
             if (stashedItem != null &&
                 gitStash == currentWorkingDirStashItem) //current working dir
             {
-                View.ViewCurrentChanges(stashedItem.Name, stashedItem.OldName, stashedItem.IsStaged);
+                View.ViewCurrentChanges(stashedItem.Name, stashedItem.OldName, stashedItem.IsStaged, stashedItem.IsSubmodule);
             }
             else if (stashedItem != null)
             {
                 if (stashedItem.IsNew && !stashedItem.IsTracked)
-                    View.ViewGitItem(stashedItem.Name, stashedItem.TreeGuid);
+                {
+                    if (!stashedItem.IsSubmodule)
+                        View.ViewGitItem(stashedItem.Name, stashedItem.TreeGuid);
+                    else
+                        View.ViewText(stashedItem.Name,
+                            GitCommandHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid));
+                }
                 else
                 {
                     string extraDiffArguments = View.GetExtraDiffArguments();
                     Encoding encoding = this.View.Encoding;
                     View.ViewPatch(() =>
                     {
-                        PatchApply.Patch patch = Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding);
+                        Patch patch = Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding);
                         if (patch == null)
                             return String.Empty;
+                        if (stashedItem.IsSubmodule)
+                            return GitCommandHelpers.ProcessSubmodulePatch(Module, patch.Text);
                         return patch.Text;
                     });
                 }
@@ -212,8 +227,6 @@ namespace GitUI
                 Initialize();
                 Cursor.Current = Cursors.Default;
             }
-            
-
         }
 
         private void ApplyClick(object sender, EventArgs e)
@@ -254,6 +267,7 @@ namespace GitUI
 
         private void FormStashShown(object sender, EventArgs e)
         {
+            // shown when form is first displayed
             RefreshAll();
         }
 
@@ -305,6 +319,6 @@ namespace GitUI
                 StashMessage.ReadOnly = false;
             }
         }
-
+    
     }
 }
