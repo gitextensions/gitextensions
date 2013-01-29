@@ -2470,6 +2470,11 @@ namespace GitCommands
             return GetSelectedBranch(_workingdir);
         }
 
+        public bool IsDetachedHead()
+        {
+            return GetSelectedBranch().Equals(DetachedBranch, StringComparison.Ordinal);
+        }
+
         public string GetCurrentRemote()
         {
             string remote = GetSetting(string.Format("branch.{0}.remote", GetSelectedBranch()));
