@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Translation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="2.43">
+<Translation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="2.44">
   <translationCategories>
     <TranslationCategory Name="AboutBox">
       <translationItems>
@@ -22,6 +22,35 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
         <TranslationItem Name="thanksTo" Property="Text">
           <Source>Thanks to:</Source>
           <Value>Gracias a:</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="AdvancedSettingsPage">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Advanced</Source>
+          <Value>Manipular commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="CheckoutGB" Property="Text">
+          <Source>Checkout</Source>
+          <Value>Checkout</Value>
+        </TranslationItem>
+        <TranslationItem Name="chkAlwaysShowCheckoutDlg" Property="Text" type="unfinished">
+          <Source>Always show checkout dialog</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkDontSHowHelpImages" Property="Text" type="unfinished">
+          <Source>Don't show help images</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkUseLocalChangesAction" Property="Text" type="unfinished">
+          <Source>Use last chosen "local changes" action as default action.
+This action will be performed without warning while checking out branch.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="GeneralGB" Property="Text" type="unfinished">
+          <Source>General</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -54,6 +83,10 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
         <TranslationItem Name="ClearImageCache" Property="Text">
           <Source>Clear image cache</Source>
           <Value>Borrar caché</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitFontChangeButton" Property="Text" type="unfinished">
+          <Source>font name</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="diffFontChangeButton" Property="Text" type="unfinished">
           <Source>font name</Source>
@@ -89,6 +122,10 @@ Este programa es distribuido con la esperanza de que sea útil, pero SIN NINGUNA
         </TranslationItem>
         <TranslationItem Name="label26" Property="Text" type="unfinished">
           <Source>Application font</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label34" Property="Text" type="unfinished">
+          <Source>Commit font</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label44" Property="Text">
@@ -600,6 +637,34 @@ Value:  {2} = {3}</Source>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="ConfirmationsSettingsPage">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Confirmations</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="CheckoutGB" Property="Text" type="unfinished">
+          <Source>Don't ask to confirm to (use with caution)</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkAddTrackingRef" Property="Text" type="unfinished">
+          <Source>Add a tracking reference for newly pushed branch.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkAmmend" Property="Text" type="unfinished">
+          <Source>Ammend last commit.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
+          <Source>Apply automatically stashed changes.  Stash will be automatically poped after successful pull.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="chkPushNewBranch" Property="Text" type="unfinished">
+          <Source>Push a new branch for the remote.</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="ControlHotkeys">
       <translationItems>
         <TranslationItem Name="bApply" Property="Text">
@@ -747,6 +812,12 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Open</Source>
           <Value>Abrir</Value>
         </TranslationItem>
+        <TranslationItem Name="directoryIsNotAValidRepositoryOpenIt" Property="Text" type="unfinished">
+          <Source>The selected item is not a valid git repository.
+
+Do you want to open it?</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="donate" Property="Text">
           <Source>Donate</Source>
           <Value>Donar</Value>
@@ -775,6 +846,10 @@ Do you want to abort and remove it from the recent repositories list?</Source>
     </TranslationCategory>
     <TranslationCategory Name="DashboardCategory">
       <translationItems>
+        <TranslationItem Name="$this" Property="Title" type="unfinished">
+          <Source>##Title</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_editCategory" Property="Text">
           <Source>Edit</Source>
           <Value>Editar</Value>
@@ -1584,6 +1659,10 @@ revision:</Source>
           <Source>Checkout after create</Source>
           <Value>Checkout después de crear</Value>
         </TranslationItem>
+        <TranslationItem Name="ClearOrphan" Property="Text">
+          <Source>Clear</Source>
+          <Value>Limpiar</Value>
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Branch name</Source>
           <Value>Nombre de rama</Value>
@@ -1591,6 +1670,10 @@ revision:</Source>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Create branch</Source>
           <Value>Crear rama</Value>
+        </TranslationItem>
+        <TranslationItem Name="Orphan" Property="Text" type="unfinished">
+          <Source>Orphan</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1843,6 +1926,16 @@ revision:</Source>
         <TranslationItem Name="DiffTabPage" Property="Text">
           <Source>Diff</Source>
           <Value>Diff</Value>
+        </TranslationItem>
+        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text" type="unfinished">
+          <Source>The selected item is not a valid git repository.
+
+Do you want to abort and remove it from the recent repositories list?</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="directoryIsNotAValidRepositoryCaption" Property="Text">
+          <Source>Open</Source>
+          <Value>Abrir</Value>
         </TranslationItem>
         <TranslationItem Name="donateToolStripMenuItem" Property="Text">
           <Source>Donate</Source>
@@ -2304,20 +2397,6 @@ revision:</Source>
           <Source>Create local branch with the name:</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_customBranchNameIsEmpty" Property="Text" type="unfinished">
-          <Source>Custom branch name is empty.
-Enter valid branch name or select predefined value.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_customBranchNameIsNotValid" Property="Text" type="unfinished">
-          <Source>“{0}” is not valid branch name.
-Enter valid branch name or select predefined value.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="defaultActionChx" Property="Text">
-          <Source>Remember as default action</Source>
-          <Value>Recordar como acción por defecto</Value>
-        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select branch</Source>
           <Value>Seleccione rama</Value>
@@ -2365,6 +2444,10 @@ Enter valid branch name or select predefined value.</Source>
         <TranslationItem Name="Remotebranch" Property="Text">
           <Source>Remote branch</Source>
           <Value>Rama remota</Value>
+        </TranslationItem>
+        <TranslationItem Name="defaultActionChx" Property="Text" type="obsolete">
+          <Source>Remember as default action</Source>
+          <Value>Recordar como acción por defecto</Value>
         </TranslationItem>
         <TranslationItem Name="_applyShashedItemsAgain" Property="Text" type="obsolete">
           <Source>Apply stashed items to working dir again?</Source>
@@ -2644,7 +2727,7 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Commandline usage</Source>
           <Value>Uso de línea de comandos</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="obsolete">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Supported commandline arguments for
 gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
           <Value>Argumentos de línea de comandos soportados:</Value>
@@ -2670,6 +2753,10 @@ Utilice sólo modificar si el commit no está publicado todavía!
         <TranslationItem Name="_amendCommitCaption" Property="Text">
           <Source>Amend commit</Source>
           <Value>Modificar commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="_checkBoxAutoWrap" Property="Text" type="unfinished">
+          <Source>Auto-wrap</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text" type="unfinished">
           <Source>Commit Message is requested during commit</Source>
@@ -3199,6 +3286,10 @@ Elija "No" para mantener todos los archivos nuevos.</Value>
         </TranslationItem>
         <TranslationItem Name="labelSecondLineEmpty" Property="Text" type="unfinished">
           <Source>Second line must be empty:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="labelUseIndent" Property="Text" type="unfinished">
+          <Source>Indent lines after first line:</Source>
           <Value />
         </TranslationItem>
       </translationItems>
@@ -4189,6 +4280,24 @@ If you want to fetch and merge a branch, choose a specific branch.</Source>
 Si desea obtener todas las ramas remotas, elija buscar. 
 Si desea obtener y fusionar una rama, elija una rama específica.</Value>
         </TranslationItem>
+        <TranslationItem Name="_notOnBranch" Property="Text" type="unfinished">
+          <Source>You cannot "pull" when git head detached.
+
+Do you want to continue?</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_notOnBranchButtons" Property="Text" type="unfinished">
+          <Source>Checkout branch|Continue</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_notOnBranchCaption" Property="Text">
+          <Source>Not on a branch</Source>
+          <Value>No en una rama.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_notOnBranchMainInstruction" Property="Text" type="unfinished">
+          <Source>You are not working on a branch</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_questionInitSubmodules" Property="Text" type="unfinished">
           <Source>The pulled has submodules configured.
 Do you want to initialize the submodules?
@@ -5065,6 +5174,14 @@ This action cannot be made undone.</Source>
         <TranslationItem Name="_currentFormatFilter" Property="Text">
           <Source>Current format (*.{0})</Source>
           <Value>Formato actual (*.{0})</Value>
+        </TranslationItem>
+        <TranslationItem Name="_failureWhileOpenFile" Property="Text" type="unfinished">
+          <Source>Open temporary file failed.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_failureWhileSaveFile" Property="Text" type="unfinished">
+          <Source>Save file failed.</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_noBaseFileMergeCaption" Property="Text">
           <Source>Merge</Source>
@@ -6357,12 +6474,6 @@ Do you want to register the host's fingerprint and restart the process?</Source>
           <Source>Host Fingerprint not registered</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text" type="unfinished">
-          <Source>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
           <Source>Abort</Source>
           <Value>Abortar</Value>
@@ -6899,6 +7010,14 @@ nodos de referencia.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="GitExtensionsSettingsGroup">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Title">
+          <Source>Git Extensions</Source>
+          <Value>Git Extensiones</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="GitExtensionsSettingsPage">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -7410,6 +7529,14 @@ la configuración local.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="PluginsSettingsGroup">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Title">
+          <Source>Plugins</Source>
+          <Value>Plugins</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="RevisionGrid">
       <translationItems>
         <TranslationItem Name="_areYouSureYouWantCheckout" Property="Text" type="unfinished">
@@ -7722,6 +7849,10 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
     </TranslationCategory>
     <TranslationCategory Name="ShellExtensionSettingsPage">
       <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Shell extension</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="lblMenuEntries" Property="Text" type="unfinished">
           <Source>Select items to be shown in
 the cascaded context menu:</Source>
@@ -7836,9 +7967,9 @@ en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea d
           <Source>Commit index</Source>
           <Value>Comprometerse en el indice</Value>
         </TranslationItem>
-        <TranslationItem Name="_currentWorkingDirChanges" Property="Text">
-          <Source>Current uncommitted changes</Source>
-          <Value>Actuales cambios no confirmados</Value>
+        <TranslationItem Name="_currentUnstagedChanges" Property="Text" type="unfinished">
+          <Source>Current unstaged changes</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_dateText" Property="Text">
           <Source>Date</Source>
@@ -7911,6 +8042,10 @@ en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea d
         <TranslationItem Name="_yearsAgo" Property="Text">
           <Source>{0} years ago</Source>
           <Value>hace {0} años</Value>
+        </TranslationItem>
+        <TranslationItem Name="_currentWorkingDirChanges" Property="Text" type="obsolete">
+          <Source>Current uncommitted changes</Source>
+          <Value>Actuales cambios no confirmados</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
