@@ -41,20 +41,20 @@ namespace GitUI
             this.buttonOk = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.settingsTreeView = new GitUI.SettingsDialog.SettingsTreeViewUserControl();
+            this.panelCurrentSettingsPage = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.labelSettingsPageTitle = new System.Windows.Forms.Label();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonApply = new System.Windows.Forms.Button();
             this.buttonDiscard = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelInstantSaveNotice = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.labelSettingsPageTitle = new System.Windows.Forms.Label();
-            this.panelCurrentSettingsPage = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
-            this.flowLayoutPanel4.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.flowLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // directorySearcher1
@@ -98,7 +98,7 @@ namespace GitUI
             // 
             // buttonOk
             // 
-            this.buttonOk.Location = new System.Drawing.Point(371, 3);
+            this.buttonOk.Location = new System.Drawing.Point(414, 3);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(88, 25);
             this.buttonOk.TabIndex = 0;
@@ -112,87 +112,39 @@ namespace GitUI
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.Controls.Add(this.settingsTreeView, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel4, 1, 2);
-            this.tableLayoutPanel3.Controls.Add(this.panel2, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.panelCurrentSettingsPage, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.panel2, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel4, 2, 2);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 3;
+            this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.Size = new System.Drawing.Size(950, 602);
             this.tableLayoutPanel3.TabIndex = 2;
             // 
-            // settingsTreeViewUserControl1
+            // settingsTreeView
             // 
             this.settingsTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.settingsTreeView.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.settingsTreeView.Location = new System.Drawing.Point(3, 3);
             this.settingsTreeView.MinimumSize = new System.Drawing.Size(100, 220);
-            this.settingsTreeView.Name = "settingsTreeViewUserControl1";
+            this.settingsTreeView.Name = "settingsTreeView";
             this.tableLayoutPanel3.SetRowSpan(this.settingsTreeView, 2);
-            this.settingsTreeView.Size = new System.Drawing.Size(194, 558);
+            this.settingsTreeView.Size = new System.Drawing.Size(194, 554);
             this.settingsTreeView.TabIndex = 1;
             this.settingsTreeView.SettingsPageSelected += new System.EventHandler<GitUI.SettingsDialog.SettingsPageSelectedEventArgs>(this.settingsTreeViewUserControl1_SettingsPageSelected);
             // 
-            // flowLayoutPanel4
+            // panelCurrentSettingsPage
             // 
-            this.flowLayoutPanel4.AutoSize = true;
-            this.flowLayoutPanel4.Controls.Add(this.buttonApply);
-            this.flowLayoutPanel4.Controls.Add(this.buttonDiscard);
-            this.flowLayoutPanel4.Controls.Add(this.buttonCancel);
-            this.flowLayoutPanel4.Controls.Add(this.buttonOk);
-            this.flowLayoutPanel4.Controls.Add(this.labelInstantSaveNotice);
-            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(203, 567);
-            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(744, 32);
-            this.flowLayoutPanel4.TabIndex = 3;
-            this.flowLayoutPanel4.WrapContents = false;
-            // 
-            // buttonApply
-            // 
-            this.buttonApply.Location = new System.Drawing.Point(653, 3);
-            this.buttonApply.Name = "buttonApply";
-            this.buttonApply.Size = new System.Drawing.Size(88, 25);
-            this.buttonApply.TabIndex = 3;
-            this.buttonApply.Text = "Apply";
-            this.buttonApply.UseVisualStyleBackColor = true;
-            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
-            // 
-            // buttonDiscard
-            // 
-            this.buttonDiscard.Location = new System.Drawing.Point(559, 3);
-            this.buttonDiscard.Name = "buttonDiscard";
-            this.buttonDiscard.Size = new System.Drawing.Size(88, 25);
-            this.buttonDiscard.TabIndex = 2;
-            this.buttonDiscard.Text = "Discard";
-            this.buttonDiscard.UseVisualStyleBackColor = true;
-            this.buttonDiscard.Click += new System.EventHandler(this.buttonDiscard_Click);
-            // 
-            // buttonCancel
-            // 
-            this.buttonCancel.Location = new System.Drawing.Point(465, 3);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(88, 25);
-            this.buttonCancel.TabIndex = 1;
-            this.buttonCancel.Text = "Cancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            // 
-            // labelInstantSaveNotice
-            // 
-            this.labelInstantSaveNotice.AutoSize = true;
-            this.labelInstantSaveNotice.Location = new System.Drawing.Point(-2, 2);
-            this.labelInstantSaveNotice.Margin = new System.Windows.Forms.Padding(3, 2, 3, 0);
-            this.labelInstantSaveNotice.Name = "labelInstantSaveNotice";
-            this.labelInstantSaveNotice.Size = new System.Drawing.Size(367, 30);
-            this.labelInstantSaveNotice.TabIndex = 4;
-            this.labelInstantSaveNotice.Text = "Changes made on this page will be saved instantly. \r\nThus the Cancel and Discard " +
-    "button will have no effect for this page.";
+            this.panelCurrentSettingsPage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelCurrentSettingsPage.Location = new System.Drawing.Point(203, 43);
+            this.panelCurrentSettingsPage.Name = "panelCurrentSettingsPage";
+            this.panelCurrentSettingsPage.Size = new System.Drawing.Size(744, 514);
+            this.panelCurrentSettingsPage.TabIndex = 5;
             // 
             // panel2
             // 
@@ -219,13 +171,64 @@ namespace GitUI
             this.labelSettingsPageTitle.Text = "...title...";
             this.labelSettingsPageTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // panelCurrentSettingsPage
+            // flowLayoutPanel4
             // 
-            this.panelCurrentSettingsPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelCurrentSettingsPage.Location = new System.Drawing.Point(203, 43);
-            this.panelCurrentSettingsPage.Name = "panelCurrentSettingsPage";
-            this.panelCurrentSettingsPage.Size = new System.Drawing.Size(744, 518);
-            this.panelCurrentSettingsPage.TabIndex = 5;
+            this.flowLayoutPanel4.AutoSize = true;
+            this.tableLayoutPanel3.SetColumnSpan(this.flowLayoutPanel4, 2);
+            this.flowLayoutPanel4.Controls.Add(this.buttonApply);
+            this.flowLayoutPanel4.Controls.Add(this.buttonDiscard);
+            this.flowLayoutPanel4.Controls.Add(this.buttonCancel);
+            this.flowLayoutPanel4.Controls.Add(this.buttonOk);
+            this.flowLayoutPanel4.Controls.Add(this.labelInstantSaveNotice);
+            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Right;
+            this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(160, 563);
+            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(787, 36);
+            this.flowLayoutPanel4.TabIndex = 3;
+            this.flowLayoutPanel4.WrapContents = false;
+            // 
+            // buttonApply
+            // 
+            this.buttonApply.Location = new System.Drawing.Point(696, 3);
+            this.buttonApply.Name = "buttonApply";
+            this.buttonApply.Size = new System.Drawing.Size(88, 25);
+            this.buttonApply.TabIndex = 3;
+            this.buttonApply.Text = "Apply";
+            this.buttonApply.UseVisualStyleBackColor = true;
+            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
+            // 
+            // buttonDiscard
+            // 
+            this.buttonDiscard.Location = new System.Drawing.Point(602, 3);
+            this.buttonDiscard.Name = "buttonDiscard";
+            this.buttonDiscard.Size = new System.Drawing.Size(88, 25);
+            this.buttonDiscard.TabIndex = 2;
+            this.buttonDiscard.Text = "Discard";
+            this.buttonDiscard.UseVisualStyleBackColor = true;
+            this.buttonDiscard.Click += new System.EventHandler(this.buttonDiscard_Click);
+            // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Location = new System.Drawing.Point(508, 3);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(88, 25);
+            this.buttonCancel.TabIndex = 1;
+            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
+            // labelInstantSaveNotice
+            // 
+            this.labelInstantSaveNotice.AutoSize = true;
+            this.labelInstantSaveNotice.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelInstantSaveNotice.Location = new System.Drawing.Point(3, 2);
+            this.labelInstantSaveNotice.Margin = new System.Windows.Forms.Padding(3, 2, 3, 0);
+            this.labelInstantSaveNotice.Name = "labelInstantSaveNotice";
+            this.labelInstantSaveNotice.Size = new System.Drawing.Size(405, 34);
+            this.labelInstantSaveNotice.TabIndex = 4;
+            this.labelInstantSaveNotice.Text = "Changes made on this page will be saved instantly. \r\nThus the Cancel and Discard " +
+    "button will have no effect for this page.";
             // 
             // FormSettings
             // 
@@ -248,10 +251,10 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).EndInit();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
-            this.flowLayoutPanel4.ResumeLayout(false);
-            this.flowLayoutPanel4.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.flowLayoutPanel4.ResumeLayout(false);
+            this.flowLayoutPanel4.PerformLayout();
             this.ResumeLayout(false);
 
         }
