@@ -822,7 +822,7 @@ namespace GitUI
             if (_useFormCommitMessage && !ValidCommitMessage())
                 return;
 
-            if (Module.GetSelectedBranch().Equals("(no branch)", StringComparison.OrdinalIgnoreCase))
+            if (Module.GetSelectedBranch().Equals(GitModule.DetachedBranch, StringComparison.Ordinal))
             {
                 int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
                                                         _notOnBranchCaption.Text,
