@@ -21,7 +21,7 @@ namespace TranslationApp
         readonly TranslationString saveAsText = new TranslationString("Save as");
         readonly TranslationString saveAsTextFilter = new TranslationString("Translation file (*.xml)");
         readonly TranslationString selectLanguageCode = new TranslationString("Select a language code first.");
-        readonly TranslationString noLanguageCodeSelected = new TranslationString("There is no languagecode selected." + 
+        readonly TranslationString noLanguageCodeSelected = new TranslationString("There is no language code selected." + 
             Environment.NewLine + "Do you want to select a language code first?");
         readonly TranslationString noLanguageCodeSelectedCaption = new TranslationString("Language code");
         readonly TranslationString editingCellPrefixText = new TranslationString("[EDITING]");
