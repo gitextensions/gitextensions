@@ -57,8 +57,8 @@ namespace GitUI
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.ContinuePanel = new System.Windows.Forms.Panel();
             this.MergeToolPanel = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.helpImageDisplayUserControl1 = new GitUI.Help.HelpImageDisplayUserControl();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.Ok = new System.Windows.Forms.Button();
@@ -73,7 +73,6 @@ namespace GitUI
             this.flowLayoutPanel5.SuspendLayout();
             this.ContinuePanel.SuspendLayout();
             this.MergeToolPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -180,7 +179,7 @@ namespace GitUI
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(586, 25);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(768, 25);
             this.flowLayoutPanel2.TabIndex = 31;
             this.flowLayoutPanel2.WrapContents = false;
             // 
@@ -205,7 +204,7 @@ namespace GitUI
             this.OptionsPanel.RowCount = 2;
             this.OptionsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.OptionsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.OptionsPanel.Size = new System.Drawing.Size(580, 72);
+            this.OptionsPanel.Size = new System.Drawing.Size(762, 72);
             this.OptionsPanel.TabIndex = 30;
             this.OptionsPanel.Visible = false;
             // 
@@ -217,7 +216,7 @@ namespace GitUI
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(574, 25);
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(756, 25);
             this.flowLayoutPanel4.TabIndex = 0;
             this.flowLayoutPanel4.WrapContents = false;
             // 
@@ -270,7 +269,7 @@ namespace GitUI
             this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 34);
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(574, 35);
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(756, 35);
             this.flowLayoutPanel5.TabIndex = 1;
             this.flowLayoutPanel5.WrapContents = false;
             // 
@@ -334,7 +333,7 @@ namespace GitUI
             this.cboTo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cboTo.Enabled = false;
             this.cboTo.FormattingEnabled = true;
-            this.cboTo.Location = new System.Drawing.Point(325, 3);
+            this.cboTo.Location = new System.Drawing.Point(325, 4);
             this.cboTo.Name = "cboTo";
             this.cboTo.Size = new System.Drawing.Size(184, 23);
             this.cboTo.TabIndex = 29;
@@ -357,7 +356,7 @@ namespace GitUI
             this.patchGrid1.Location = new System.Drawing.Point(3, 180);
             this.patchGrid1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.patchGrid1.Name = "patchGrid1";
-            this.patchGrid1.Size = new System.Drawing.Size(580, 423);
+            this.patchGrid1.Size = new System.Drawing.Size(762, 284);
             this.patchGrid1.TabIndex = 16;
             // 
             // label3
@@ -401,25 +400,13 @@ namespace GitUI
             this.MergeToolPanel.Size = new System.Drawing.Size(161, 34);
             this.MergeToolPanel.TabIndex = 8;
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.White;
-            this.pictureBox1.BackgroundImage = global::GitUI.Properties.Resources.Rebase;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox1.Location = new System.Drawing.Point(3, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(80, 605);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.pictureBox1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.helpImageDisplayUserControl1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -427,9 +414,28 @@ namespace GitUI
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 611F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(852, 611);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 472F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(984, 472);
             this.tableLayoutPanel1.TabIndex = 19;
+            // 
+            // helpImageDisplayUserControl1
+            // 
+            this.helpImageDisplayUserControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.helpImageDisplayUserControl1.AutoSize = true;
+            this.helpImageDisplayUserControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.helpImageDisplayUserControl1.Image1 = global::GitUI.Properties.Resources.HelpCommandRebase;
+            this.helpImageDisplayUserControl1.Image2 = null;
+            this.helpImageDisplayUserControl1.IsExpanded = true;
+            this.helpImageDisplayUserControl1.Location = new System.Drawing.Point(3, 3);
+            this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(30, 50);
+            this.helpImageDisplayUserControl1.Name = "helpImageDisplayUserControl1";
+            this.helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = "Hover to see scenario when fast forward is possible.";
+            this.helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
+            this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(30, 466);
+            this.helpImageDisplayUserControl1.TabIndex = 20;
+            this.helpImageDisplayUserControl1.UniqueIsExpandedSettingsId = "Rebase";
             // 
             // flowLayoutPanel1
             // 
@@ -447,9 +453,9 @@ namespace GitUI
             this.flowLayoutPanel1.Controls.Add(this.SolveMergeconflicts);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(681, 3);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(813, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(168, 605);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(168, 466);
             this.flowLayoutPanel1.TabIndex = 1;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -502,7 +508,7 @@ namespace GitUI
             this.tableLayoutPanel3.Controls.Add(this.patchGrid1, 0, 5);
             this.tableLayoutPanel3.Controls.Add(this.label3, 0, 4);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(89, 3);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(39, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 6;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -511,7 +517,7 @@ namespace GitUI
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(586, 605);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(768, 466);
             this.tableLayoutPanel3.TabIndex = 32;
             // 
             // rebasePanel
@@ -523,7 +529,7 @@ namespace GitUI
             this.rebasePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rebasePanel.Location = new System.Drawing.Point(3, 43);
             this.rebasePanel.Name = "rebasePanel";
-            this.rebasePanel.Size = new System.Drawing.Size(580, 29);
+            this.rebasePanel.Size = new System.Drawing.Size(762, 29);
             this.rebasePanel.TabIndex = 32;
             // 
             // FormRebase
@@ -532,8 +538,9 @@ namespace GitUI
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(852, 611);
+            this.ClientSize = new System.Drawing.Size(984, 472);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.MinimumSize = new System.Drawing.Size(1000, 510);
             this.Name = "FormRebase";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rebase";
@@ -548,7 +555,6 @@ namespace GitUI
             this.flowLayoutPanel5.PerformLayout();
             this.ContinuePanel.ResumeLayout(false);
             this.MergeToolPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
@@ -573,7 +579,6 @@ namespace GitUI
         private System.Windows.Forms.ComboBox Branches;
         private PatchGrid patchGrid1;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button SolveMergeconflicts;
         private System.Windows.Forms.Panel ContinuePanel;
         private System.Windows.Forms.Panel MergeToolPanel;
@@ -600,6 +605,7 @@ namespace GitUI
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.Label Currentbranch;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.FlowLayoutPanel rebasePanel;		
+        private System.Windows.Forms.FlowLayoutPanel rebasePanel;
+        private Help.HelpImageDisplayUserControl helpImageDisplayUserControl1;		
     }
 }

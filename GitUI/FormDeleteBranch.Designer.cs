@@ -44,7 +44,7 @@
             this.Ok.Location = new System.Drawing.Point(355, 125);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 25);
-            this.Ok.TabIndex = 3;
+            this.Ok.TabIndex = 4;
             this.Ok.Text = "Delete";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.OkClick);
@@ -56,7 +56,7 @@
             this.label1.Location = new System.Drawing.Point(7, 98);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(89, 15);
-            this.label1.TabIndex = 3;
+            this.label1.TabIndex = 1;
             this.label1.Text = "Select branches";
             // 
             // label2
@@ -66,7 +66,7 @@
             this.label2.Location = new System.Drawing.Point(37, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(449, 60);
-            this.label2.TabIndex = 6;
+            this.label2.TabIndex = 0;
             this.label2.Text = resources.GetString("label2.Text");
             // 
             // pictureBox1
@@ -85,7 +85,7 @@
             this.ForceDelete.Location = new System.Drawing.Point(146, 130);
             this.ForceDelete.Name = "ForceDelete";
             this.ForceDelete.Size = new System.Drawing.Size(90, 19);
-            this.ForceDelete.TabIndex = 2;
+            this.ForceDelete.TabIndex = 3;
             this.ForceDelete.Text = "Force delete";
             this.ForceDelete.UseVisualStyleBackColor = true;
             // 
@@ -96,7 +96,7 @@
             this.Branches.Margin = new System.Windows.Forms.Padding(0);
             this.Branches.Name = "Branches";
             this.Branches.Size = new System.Drawing.Size(284, 21);
-            this.Branches.TabIndex = 8;
+            this.Branches.TabIndex = 2;
             // 
             // FormDeleteBranch
             // 

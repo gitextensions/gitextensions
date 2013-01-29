@@ -222,7 +222,8 @@ namespace GitUI
                 case "araxis":
                     exeName = "Compare.exe";
                     return FindFileInFolders(exeName, @"Araxis\Araxis Merge\",
-                                                        @"Araxis 6.5\Araxis Merge\");
+                                                        @"Araxis 6.5\Araxis Merge\",
+                                                        @"Araxis\Araxis Merge v6.5\");
                 case "beyondcompare3":
                     string bcomppath = UnquoteString(GetGlobalSetting("mergetool.beyondcompare3.path"));
 
@@ -278,9 +279,6 @@ namespace GitUI
             string mergeTool = mergetoolText.ToLowerInvariant();
             switch (mergeTool)
             {
-                case "araxis":
-                    return "\"" + exeFile +
-                                        "\" -wait -merge -3 -a1 \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
                 case "beyondcompare3":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
                 case "diffmerge":
@@ -294,6 +292,7 @@ namespace GitUI
 
                     return String.Format(command, exeFile);
             }
+			// other commands supported natively by msysgit
             return "";
         }
 

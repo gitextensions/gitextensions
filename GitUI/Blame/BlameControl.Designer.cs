@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.commitInfo = new GitUI.CommitInfo.CommitInfo();
+            this.CommitInfo = new GitUI.CommitInfo.CommitInfo();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.BlameCommitter = new GitUI.Editor.FileViewer();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -66,7 +66,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.commitInfo);
+            this.splitContainer1.Panel1.Controls.Add(this.CommitInfo);
             // 
             // splitContainer1.Panel2
             // 
@@ -75,15 +75,15 @@
             this.splitContainer1.SplitterDistance = 180;
             this.splitContainer1.TabIndex = 7;
             // 
-            // commitInfo
+            // CommitInfo
             // 
-            this.commitInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.commitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.commitInfo.Location = new System.Drawing.Point(0, 0);
-            this.commitInfo.Margin = new System.Windows.Forms.Padding(4);
-            this.commitInfo.Name = "commitInfo";
-            this.commitInfo.Size = new System.Drawing.Size(858, 180);
-            this.commitInfo.TabIndex = 5;
+            this.CommitInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CommitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CommitInfo.Location = new System.Drawing.Point(0, 0);
+            this.CommitInfo.Margin = new System.Windows.Forms.Padding(4);
+            this.CommitInfo.Name = "CommitInfo";
+            this.CommitInfo.Size = new System.Drawing.Size(858, 180);
+            this.CommitInfo.TabIndex = 5;
             // 
             // splitContainer2
             // 
@@ -190,7 +190,7 @@
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private CommitInfo.CommitInfo commitInfo;
+        private CommitInfo.CommitInfo CommitInfo;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private GitUI.Editor.FileViewer BlameCommitter;
         private GitUI.Editor.FileViewer BlameFile;

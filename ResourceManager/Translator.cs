@@ -71,7 +71,7 @@ namespace ResourceManager.Translation
             Translation translation = GetTranslation(translationName);
             if (translation == null)
                 return;
-            obj.TranslateItems(Translator._translation);
+            obj.TranslateItems(translation);
         }
     }
 }

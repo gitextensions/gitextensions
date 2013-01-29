@@ -83,6 +83,9 @@ namespace GitUI
                 Environment.NewLine + "This action cannot be made undone.");
 
         private readonly TranslationString _areYouSureYouWantDeleteFilesCaption = new TranslationString("WARNING!");
+
+        private readonly TranslationString _failureWhileOpenFile = new TranslationString("Open temporary file failed.");
+        private readonly TranslationString _failureWhileSaveFile = new TranslationString("Save file failed.");
         #endregion
 
         public FormResolveConflicts(GitUICommands aCommands)
@@ -233,13 +236,13 @@ namespace GitUI
                 {
                     string mergeScript = "";
                     if (_mergeScripts.TryGetValue(extension, out mergeScript) &&
-                        File.Exists(dir + mergeScript))
+                        File.Exists(Path.Combine(dir, mergeScript)))
                     {
                         if (MessageBox.Show(this, string.Format(uskUseCustomMergeScript.Text, mergeScript),
                                             uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
                             DialogResult.Yes)
                         {
-                            UseMergeWithScript(fileName, dir + mergeScript, baseFileName, remoteFileName, localFileName);
+                            UseMergeWithScript(fileName, Path.Combine(dir, mergeScript), baseFileName, remoteFileName, localFileName);
 
                             return true;
                         }
@@ -257,22 +260,22 @@ namespace GitUI
         {
             //get timestamp of file before merge. This is an extra check to verify if merge was successfully
             DateTime lastWriteTimeBeforeMerge = DateTime.Now;
-            if (File.Exists(Module.WorkingDir + fileName))
-                lastWriteTimeBeforeMerge = File.GetLastWriteTime(Module.WorkingDir + fileName);
+            if (File.Exists(Path.Combine(Module.WorkingDir, fileName)))
+                lastWriteTimeBeforeMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, fileName));
 
             int exitCode;
             Module.RunCmd("wscript", "\"" + mergeScript + "\" \"" +
-                FixPath(Module.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +
+                FixPath(Module.WorkingDir + fileName) + "\" \"" + FixPath(remoteFileName) + "\" \"" +//
                 FixPath(localFileName) + "\" \"" + FixPath(baseFileName) + "\"", out exitCode);
 
             if (MessageBox.Show(this, string.Format(askMergeConflictSolvedAfterCustomMergeScript.Text,
-                FixPath(Module.WorkingDir + fileName)), askMergeConflictSolvedCaption.Text,
+                FixPath(Path.Combine(Module.WorkingDir, fileName))), askMergeConflictSolvedCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
 
                 DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
-                if (File.Exists(Module.WorkingDir + fileName))
-                    lastWriteTimeAfterMerge = File.GetLastWriteTime(Module.WorkingDir + fileName);
+                if (File.Exists(Path.Combine(Module.WorkingDir, fileName)))
+                    lastWriteTimeAfterMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, fileName));
 
                 //The file is not modified, do not stage file and present warning
                 if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
@@ -387,15 +390,15 @@ namespace GitUI
 
                     //get timestamp of file before merge. This is an extra check to verify if merge was successful
                     DateTime lastWriteTimeBeforeMerge = DateTime.Now;
-                    if (File.Exists(Module.WorkingDir + filename))
-                        lastWriteTimeBeforeMerge = File.GetLastWriteTime(Module.WorkingDir + filename);
+                    if (File.Exists(Path.Combine(Module.WorkingDir, filename)))
+                        lastWriteTimeBeforeMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, filename));
 
                     int exitCode;
                     Module.RunCmd(mergetoolPath, "" + arguments + "", out exitCode);
 
                     DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
-                    if (File.Exists(Module.WorkingDir + filename))
-                        lastWriteTimeAfterMerge = File.GetLastWriteTime(Module.WorkingDir + filename);
+                    if (File.Exists(Path.Combine(Module.WorkingDir, filename)))
+                        lastWriteTimeAfterMerge = File.GetLastWriteTime(Path.Combine(Module.WorkingDir, filename));
 
                     //Check exitcode AND timestamp of the file. If exitcode is success and
                     //time timestamp is changed, we are pretty sure the merge was done.
@@ -536,43 +539,59 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            string filename = GetFileName();
+            string fileName = GetFileName();
 
-            if (CheckForBaseRevision(filename))
+            if (CheckForBaseRevision(fileName))
             {
-                if (!Module.HandleConflictSelectBase(filename))
-                    MessageBox.Show(this, _chooseBaseFileFailedText.Text);
+                ChooseBaseOnConflict(fileName);
             }
             Initialize();
             Cursor.Current = Cursors.Default;
+        }
+
+        private void ChooseBaseOnConflict(string fileName)
+        {
+            if (!Module.HandleConflictSelectSide(fileName, "BASE"))
+                MessageBox.Show(this, _chooseBaseFileFailedText.Text);
         }
 
         private void ContextChooseLocal_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            string filename = GetFileName();
-            if (CheckForLocalRevision(filename))
+            string fileName = GetFileName();
+            if (CheckForLocalRevision(fileName))
             {
-                if (!Module.HandleConflictSelectLocal(GetFileName()))
-                    MessageBox.Show(this, _chooseLocalFileFailedText.Text);
+                ChooseLocalOnConflict(fileName);
             }
             Initialize();
             Cursor.Current = Cursors.Default;
         }
 
+        private void ChooseLocalOnConflict(string fileName)
+        {
+            if (!Module.HandleConflictSelectSide(fileName, "LOCAL"))
+                MessageBox.Show(this, _chooseLocalFileFailedText.Text);
+        }
+
         private void ContextChooseRemote_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            string filename = GetFileName();
-            if (CheckForRemoteRevision(filename))
+
+            string fileName = GetFileName();
+            if (CheckForRemoteRevision(fileName))
             {
-                if (!Module.HandleConflictSelectRemote(GetFileName()))
-                    MessageBox.Show(this, _chooseRemoteFileFailedText.Text);
+                ChooseRemoteOnConflict(fileName);
             }
             Initialize();
 
             Cursor.Current = Cursors.Default;
+        }
+
+        private void ChooseRemoteOnConflict(string fileName)
+        {
+            if (!Module.HandleConflictSelectSide(fileName, "REMOTE"))
+                MessageBox.Show(this, _chooseRemoteFileFailedText.Text);
         }
 
         private void BinairyFilesChooseLocalBaseRemote(string filename)
@@ -589,11 +608,11 @@ namespace GitUI
             {
                 frm.ShowDialog(this);
                 if (frm.KeepBase) //base
-                    Module.HandleConflictSelectBase(GetFileName());
+                    ChooseBaseOnConflict(GetFileName());
                 if (frm.KeepLocal) //local
-                    Module.HandleConflictSelectLocal(GetFileName());
+                    ChooseLocalOnConflict(GetFileName());
                 if (frm.KeepRemote) //remote
-                    Module.HandleConflictSelectRemote(GetFileName());
+                    ChooseRemoteOnConflict(GetFileName());
             }
         }
 
@@ -615,9 +634,9 @@ namespace GitUI
                     if (frm.KeepBase) //delete
                         Module.RunGitCmd("rm -- \"" + filename + "\"");
                     if (frm.KeepLocal) //local
-                        Module.HandleConflictSelectLocal(GetFileName());
+                        ChooseLocalOnConflict(GetFileName());
                     if (frm.KeepRemote) //remote
-                        Module.HandleConflictSelectRemote(GetFileName());
+                        ChooseRemoteOnConflict(GetFileName());
                 }
                 return false;
             }
@@ -640,11 +659,11 @@ namespace GitUI
                 {
                     frm.ShowDialog(this);
                     if (frm.KeepBase) //base
-                        Module.HandleConflictSelectBase(GetFileName());
+                        ChooseBaseOnConflict(GetFileName());
                     if (frm.KeepLocal) //delete
                         Module.RunGitCmd("rm -- \"" + filename + "\"");
                     if (frm.KeepRemote) //remote
-                        Module.HandleConflictSelectRemote(GetFileName());
+                        ChooseRemoteOnConflict(GetFileName());
                 }
                 return false;
             }
@@ -667,9 +686,9 @@ namespace GitUI
                 {
                     frm.ShowDialog(this);
                     if (frm.KeepBase) //base
-                        Module.HandleConflictSelectBase(GetFileName());
+                        ChooseBaseOnConflict(GetFileName());
                     if (frm.KeepLocal) //delete
-                        Module.HandleConflictSelectLocal(GetFileName());
+                        ChooseLocalOnConflict(GetFileName());
                     if (frm.KeepRemote) //remote
                         Module.RunGitCmd("rm -- \"" + filename + "\"");
                 }
@@ -687,19 +706,15 @@ namespace GitUI
 
         private void ContextOpenBaseWith_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            string fileName = GetFileName();
-            fileName = GetShortFileName(fileName);
-
-            fileName = Path.GetTempPath() + fileName;
-
-            Module.HandleConflictsSaveSide(GetFileName(), fileName, "BASE");
-
-            OpenWith.OpenAs(fileName);
-            Cursor.Current = Cursors.Default;
+            OpenSideWith("BASE");
         }
 
         private void ContextOpenLocalWith_Click(object sender, EventArgs e)
+        {
+            OpenSideWith("LOCAL");
+        }
+
+        private void OpenSideWith(string side)
         {
             Cursor.Current = Cursors.WaitCursor;
             string fileName = GetFileName();
@@ -707,12 +722,14 @@ namespace GitUI
 
             fileName = Path.GetTempPath() + fileName;
 
-            Module.HandleConflictsSaveSide(GetFileName(), fileName, "LOCAL");
+            if (!Module.HandleConflictsSaveSide(GetFileName(), fileName, side))
+                MessageBox.Show(this, _failureWhileOpenFile.Text);
 
-            OpenWith.OpenAs(fileName);
+            OsShellUtil.OpenAs(fileName);
             Cursor.Current = Cursors.Default;
         }
 
+        
         private static string GetShortFileName(string fileName)
         {
             if (fileName.Contains(Settings.PathSeparator.ToString()) && fileName.LastIndexOf(Settings.PathSeparator.ToString()) < fileName.Length)
@@ -733,16 +750,7 @@ namespace GitUI
 
         private void ContextOpenRemoteWith_Click(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            string fileName = GetFileName();
-            fileName = GetShortFileName(fileName);
-
-            fileName = Path.GetTempPath() + fileName;
-
-            Module.HandleConflictsSaveSide(GetFileName(), fileName, "REMOTE");
-
-            OpenWith.OpenAs(fileName);
-            Cursor.Current = Cursors.Default;
+            OpenSideWith("REMOTE");
         }
 
         private void ConflictedFiles_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
@@ -777,7 +785,8 @@ namespace GitUI
 
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    Module.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side);
+                    if (!Module.HandleConflictsSaveSide(GetFileName(), fileDialog.FileName, side))
+                        MessageBox.Show(this, _failureWhileSaveFile.Text);
                 }
             }
             Cursor.Current = Cursors.Default;
@@ -808,19 +817,59 @@ namespace GitUI
 
         private void ConflictedFilesContextMenu_Opening(object sender, CancelEventArgs e)
         {
-            ConflictedFilesContextMenu.Enabled = !string.IsNullOrEmpty(GetFileName());
+            var fileName = GetFileName();
+            ConflictedFilesContextMenu.Enabled = !string.IsNullOrEmpty(fileName);
+
+            if (ConflictedFilesContextMenu.Enabled)
+            {
+                EnableAllEntriesInConflictedFilesContextMenu();
+                DisableInvalidEntriesInCoflictedFilesContextMenu(fileName);
+            }
         }
+
+        private void EnableAllEntriesInConflictedFilesContextMenu()
+        {
+            ContextOpenLocalWith.Enabled = true;
+            ContextSaveLocalAs.Enabled = true;
+
+            ContextOpenRemoteWith.Enabled = true;
+            ContextSaveRemoteAs.Enabled = true;
+
+            ContextOpenBaseWith.Enabled = true;
+            ContextSaveBaseAs.Enabled = true;
+        }
+
+        private void DisableInvalidEntriesInCoflictedFilesContextMenu(string fileName)
+        {
+            var conflictedFileNames = Module.GetConflictedFileNames(fileName);
+            if (conflictedFileNames[1].IsNullOrEmpty())
+            {
+                ContextSaveLocalAs.Enabled = false;
+                ContextOpenLocalWith.Enabled = false;
+            }
+            if (conflictedFileNames[2].IsNullOrEmpty())
+            {
+                ContextSaveRemoteAs.Enabled = false;
+                ContextOpenRemoteWith.Enabled = false;
+            }
+            if (conflictedFileNames[0].IsNullOrEmpty())
+            {
+                ContextSaveBaseAs.Enabled = false;
+                ContextOpenBaseWith.Enabled = false;
+            }
+        }
+
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = GetFileName();
-            System.Diagnostics.Process.Start(Module.WorkingDir + fileName);
+            System.Diagnostics.Process.Start(Path.Combine(Module.WorkingDir, fileName));
         }
 
         private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = GetFileName();
-            OpenWith.OpenAs(Module.WorkingDir + fileName);
+            OsShellUtil.OpenAs(Path.Combine(Module.WorkingDir, fileName));
         }
 
         private void stageFile(string filename)

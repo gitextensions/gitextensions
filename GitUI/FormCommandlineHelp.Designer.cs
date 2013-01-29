@@ -38,10 +38,10 @@
             // _NO_TRANSLATE_commands
             // 
             this._NO_TRANSLATE_commands.AutoSize = true;
-            this._NO_TRANSLATE_commands.Location = new System.Drawing.Point(3, 35);
+            this._NO_TRANSLATE_commands.Location = new System.Drawing.Point(3, 50);
             this._NO_TRANSLATE_commands.Name = "_NO_TRANSLATE_commands";
             this._NO_TRANSLATE_commands.Padding = new System.Windows.Forms.Padding(10, 0, 10, 10);
-            this._NO_TRANSLATE_commands.Size = new System.Drawing.Size(382, 580);
+            this._NO_TRANSLATE_commands.Size = new System.Drawing.Size(382, 610);
             this._NO_TRANSLATE_commands.TabIndex = 0;
             this._NO_TRANSLATE_commands.Text = resources.GetString("_NO_TRANSLATE_commands.Text");
             // 
@@ -51,9 +51,10 @@
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
             this.label1.Padding = new System.Windows.Forms.Padding(10);
-            this.label1.Size = new System.Drawing.Size(222, 35);
+            this.label1.Size = new System.Drawing.Size(373, 50);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Supported commandline arguments:";
+            this.label1.Text = "Supported commandline arguments for\r\ngitex.cmd / gitex (located in the same folde" +
+    "r as GitExtensions.exe):";
             // 
             // flowLayoutPanel1
             // 
@@ -64,7 +65,7 @@
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(393, 630);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(394, 662);
             this.flowLayoutPanel1.TabIndex = 2;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -72,8 +73,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(393, 630);
+            this.ClientSize = new System.Drawing.Size(394, 662);
             this.Controls.Add(this.flowLayoutPanel1);
+            this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(410, 700);
             this.Name = "FormCommandlineHelp";
             this.Text = "Commandline usage";
             this.flowLayoutPanel1.ResumeLayout(false);

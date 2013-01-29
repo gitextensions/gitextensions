@@ -7,14 +7,14 @@ namespace GitCommands
 {
     public sealed class GitRevision : IGitItem
     {
-        public const string UncommittedWorkingDirGuid = "0000000000000000000000000000000000000000";
+        public const string UnstagedGuid = "0000000000000000000000000000000000000000";
         public const string IndexGuid = "1111111111111111111111111111111111111111";
         public const string Sha1HashPattern = @"[a-f\d]{40}";
         public static readonly Regex Sha1HashRegex = new Regex("^" + GitRevision.Sha1HashPattern + "$", RegexOptions.Compiled);
 
 
         public String[] ParentGuids;
-        private List<IGitItem> _subItems;
+        private IList<IGitItem> _subItems;
         private readonly List<GitHead> heads = new List<GitHead>();
         private readonly GitModule Module;
 
@@ -33,6 +33,7 @@ namespace GitCommands
         public string AuthorEmail { get; set; }
         public DateTime AuthorDate { get; set; }
         public string Committer { get; set; }
+        public string CommitterEmail { get; set; }
         public DateTime CommitDate { get; set; }
 
         public string Message { get; set; }
@@ -44,7 +45,7 @@ namespace GitCommands
         public string Guid { get; set; }
         public string Name { get; set; }
 
-        public List<IGitItem> SubItems
+        public IEnumerable<IGitItem> SubItems
         {
             get { return _subItems ?? (_subItems = Module.GetTree(TreeGuid, false)); }
         }
@@ -81,7 +82,7 @@ namespace GitCommands
 
         public static bool IsArtificial(string guid)
         {
-            return guid == UncommittedWorkingDirGuid ||
+            return guid == UnstagedGuid ||
                     guid == IndexGuid;
         }
 
