@@ -157,9 +157,9 @@ namespace GitUI
                     }
 
                     var fullPath = Path.Combine(grid.Module.WorkingDir, file.Name);
-                    if (File.Exists(fullPath))
-                        return FileReader.ReadFileContent(fullPath, diffViewer.Encoding);
-                    return GitCommandHelpers.GetSubmoduleText(grid.Module, file.Name.TrimEnd('/'), "");
+                    if (Directory.Exists(fullPath) && GitModule.ValidWorkingDir(fullPath))
+                        return GitCommandHelpers.GetSubmoduleText(grid.Module, file.Name.TrimEnd('/'), "");
+                    return FileReader.ReadFileContent(fullPath, diffViewer.Encoding);
                 }
                 else
                 {
