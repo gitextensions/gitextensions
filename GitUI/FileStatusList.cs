@@ -512,7 +512,7 @@ namespace GitUI
                         GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
                     else
                     {
-                        if (revision.Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+                        if (revision.Guid == GitRevision.UnstagedGuid) //working dir changes
                             GitItemStatuses = Module.GetUnstagedFiles();
                         else if (revision.Guid == GitRevision.IndexGuid) //index
                             GitItemStatuses = Module.GetStagedFiles();

@@ -45,7 +45,7 @@ namespace GitUI
                 var secondRevision = revisions.Count == 2 ? revisions[1].Guid : null;
 
                 //to simplify if-ology
-                if (GitRevision.IsArtificial(secondRevision) && firstRevision != GitRevision.UncommittedWorkingDirGuid)
+                if (GitRevision.IsArtificial(secondRevision) && firstRevision != GitRevision.UnstagedGuid)
                 {
                     firstRevision = secondRevision;
                     secondRevision = revisions[0].Guid;
@@ -53,7 +53,7 @@ namespace GitUI
 
                 string extraDiffArgs = "-M -C";
 
-                if (firstRevision == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+                if (firstRevision == GitRevision.UnstagedGuid) //working dir changes
                 {
                     if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
                     {
@@ -138,7 +138,7 @@ namespace GitUI
             var secondRevision = revisions.Count == 2 ? revisions[1].Guid : null;
 
             //to simplify if-ology
-            if (GitRevision.IsArtificial(secondRevision) && firstRevision != GitRevision.UncommittedWorkingDirGuid)
+            if (GitRevision.IsArtificial(secondRevision) && firstRevision != GitRevision.UnstagedGuid)
             {
                 firstRevision = secondRevision;
                 secondRevision = revisions[0].Guid;
@@ -146,7 +146,7 @@ namespace GitUI
 
             string extraDiffArgs = null;
 
-            if (firstRevision == GitRevision.UncommittedWorkingDirGuid) //working dir changes
+            if (firstRevision == GitRevision.UnstagedGuid) //working dir changes
             {
                 if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
                 {
