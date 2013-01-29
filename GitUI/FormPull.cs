@@ -401,7 +401,7 @@ namespace GitUI
 
         private string CalculateLocalBranch()
         {
-            if (branch.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(Branches.Text))
+            if (branch.Equals(GitModule.DetachedBranch, StringComparison.Ordinal) || string.IsNullOrEmpty(Branches.Text))
                 branch = null;
             return branch;
         }

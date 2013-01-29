@@ -2698,7 +2698,7 @@ namespace GitUI
         private string GetModuleBranch(string path)
         {
             string branch = GitModule.GetSelectedBranchFast(path);
-            if (branch == "(no branch)")
+            if (branch == GitModule.DetachedBranch)
                 return "[no branch]";
             return "[" + branch + "]";
         }
