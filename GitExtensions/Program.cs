@@ -3,6 +3,8 @@ using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI;
+using GitUI.SettingsDialog.Pages;
+using GitUI.SettingsDialog;
 
 namespace GitExtensions
 {
@@ -66,11 +68,14 @@ namespace GitExtensions
                     Application.DoEvents();
 
                     GitUICommands uiCommands = new GitUICommands(string.Empty);
-                    using (var settings = new FormSettings(uiCommands))
+                    var commonLogic = new CommonLogic(uiCommands.Module);
+                    var checkSettingsLogic = new CheckSettingsLogic(commonLogic, uiCommands.Module);
+                    using (var checklistSettingsPage = new ChecklistSettingsPage(commonLogic, checkSettingsLogic, uiCommands.Module, null))
                     {
-                        if (!settings.CheckSettings())
+                        checkSettingsLogic.ChecklistSettingsPage = checklistSettingsPage;
+                        if (!checklistSettingsPage.CheckSettings())
                         {
-                            settings.AutoSolveAllSettings();
+                            checkSettingsLogic.AutoSolveAllSettings();
                             uiCommands.StartSettingsDialog();
                         }
                     }
@@ -80,7 +85,6 @@ namespace GitExtensions
             {
                 // TODO: remove catch-all
             }
-
 
             FormSplash.HideSplash();
 
@@ -107,12 +111,11 @@ namespace GitExtensions
             if (args.Length >= 3)
             {
                 if (Directory.Exists(args[2]))
-                    workingDir = args[2];
-
-                if (string.IsNullOrEmpty(workingDir))
+                    workingDir = GitModule.FindGitWorkingDir(args[2]);
+                else
                 {
-                    if (args[2].Contains(Settings.PathSeparator.ToString()))
-                        workingDir = args[2].Substring(0, args[2].LastIndexOf(Settings.PathSeparator));
+                    workingDir = Path.GetDirectoryName(args[2]);
+                    workingDir = GitModule.FindGitWorkingDir(workingDir);
                 }
 
                 //Do not add this working dir to the recent repositories. It is a nice feature, but it

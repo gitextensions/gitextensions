@@ -41,6 +41,7 @@
             // 
             // Add
             // 
+            this.Add.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Add.Location = new System.Drawing.Point(378, 96);
             this.Add.Name = "Add";
             this.Add.Size = new System.Drawing.Size(102, 25);
@@ -51,6 +52,7 @@
             // 
             // Browse
             // 
+            this.Browse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Browse.Location = new System.Drawing.Point(378, 12);
             this.Browse.Name = "Browse";
             this.Browse.Size = new System.Drawing.Size(102, 25);
@@ -61,6 +63,8 @@
             // 
             // Directory
             // 
+            this.Directory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.Directory.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.Directory.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.Directory.FormattingEnabled = true;
@@ -91,6 +95,8 @@
             // 
             // LocalPath
             // 
+            this.LocalPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.LocalPath.Location = new System.Drawing.Point(144, 41);
             this.LocalPath.Name = "LocalPath";
             this.LocalPath.Size = new System.Drawing.Size(228, 23);
@@ -107,6 +113,8 @@
             // 
             // Branch
             // 
+            this.Branch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.Branch.FormattingEnabled = true;
             this.Branch.Location = new System.Drawing.Point(144, 68);
             this.Branch.Name = "Branch";
@@ -138,7 +146,7 @@
             this.Controls.Add(this.Browse);
             this.Controls.Add(this.Directory);
             this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormAddSubmodule";

@@ -47,15 +47,42 @@ namespace GitUI
                     MessageBox.Show(this, _noRevisionSelected.Text, Text);
                     return;
                 }
-                var branchCmd = GitCommandHelpers.BranchCmd(branchName, Revision.Guid,
-                                                                  CheckoutAfterCreate.Checked);
-                FormProcess.ShowDialog(this, branchCmd);
+
+                string cmd;
+                if (Orphan.Checked)
+                {
+                    cmd = GitCommandHelpers.CreateOrphanCmd(branchName, Revision.Guid);
+                }
+                else
+                {
+                    cmd = GitCommandHelpers.BranchCmd(branchName, Revision.Guid,
+                                                                         CheckoutAfterCreate.Checked);
+                }
+
+                bool wasSuccessFul = FormProcess.ShowDialog(this, cmd);
+                if (Orphan.Checked && wasSuccessFul && ClearOrphan.Checked)
+                {// orphan AND orphan creation success AND clear
+                    cmd = GitCommandHelpers.RemoveCmd();
+                    FormProcess.ShowDialog(this, cmd);
+                }
 
                 DialogResult = DialogResult.OK;
             }
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.Message);
+            }
+        }
+
+        void Orphan_CheckedChanged(object sender, EventArgs e)
+        {
+            bool isOrphan = Orphan.Checked;
+            ClearOrphan.Enabled = isOrphan;
+            
+            CheckoutAfterCreate.Enabled = (isOrphan == false);// auto-checkout for orphan
+            if (isOrphan)
+            {
+                CheckoutAfterCreate.Checked = true;
             }
         }
     }

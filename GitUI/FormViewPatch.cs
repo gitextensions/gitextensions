@@ -6,7 +6,7 @@ using ResourceManager.Translation;
 
 namespace PatchApply
 {
-    public partial class ViewPatch : GitModuleForm
+    public partial class FormViewPatch : GitModuleForm
     {
         private readonly TranslationString _patchFileFilterString =
             new TranslationString("Patch file (*.Patch)");
@@ -14,7 +14,7 @@ namespace PatchApply
         private readonly TranslationString _patchFileFilterTitle =
             new TranslationString("Select patch file");
 
-        public ViewPatch(GitUICommands aCommands)
+        public FormViewPatch(GitUICommands aCommands)
             : base(aCommands)
         {
             InitializeComponent(); Translate();

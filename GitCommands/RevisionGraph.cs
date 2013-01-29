@@ -64,6 +64,7 @@ namespace GitCommands
             AuthorEmail,
             AuthorDate,
             CommitterName,
+            CommitterEmail,
             CommitterDate,
             CommitMessageEncoding,
             CommitMessage,
@@ -130,6 +131,7 @@ namespace GitCommands
                     /* Author Email            */ "%aE%n" +
                     /* Author Date             */ "%at%n" +
                     /* Committer Name          */ "%cN%n" +
+                    /* Committer Email         */ "%cE%n" +
                     /* Committer Date          */ "%ct%n" +
                     /* Commit message encoding */ "%e%n" + //there is a bug: git does not recode commit message when format is given
                     /* Commit Message          */ "%s";
@@ -203,21 +205,21 @@ namespace GitCommands
                 Exited(this, EventArgs.Empty);            
         }
 
-        private List<GitHead> GetHeads()
+        private IList<GitHead> GetHeads()
         {
             var result = Module.GetHeads(true);
             bool validWorkingDir = Module.ValidWorkingDir();
             selectedBranchName = validWorkingDir ? Module.GetSelectedBranch() : string.Empty;
-            GitHead selectedHead = result.Find(head => head.Name == selectedBranchName);
+            GitHead selectedHead = result.FirstOrDefault(head => head.Name == selectedBranchName);
 
             if (selectedHead != null)
             {
                 selectedHead.Selected = true;
 
-                ConfigFile localConfigFile = Module.GetLocalConfig();
+                var localConfigFile = Module.GetLocalConfig();
 
-                GitHead selectedHeadMergeSource =
-                    result.Find(head => head.IsRemote
+                var selectedHeadMergeSource =
+                    result.FirstOrDefault(head => head.IsRemote
                                         && selectedHead.GetTrackingRemote(localConfigFile) == head.Remote
                                         && selectedHead.GetMergeWith(localConfigFile) == head.LocalName);
 
@@ -315,6 +317,10 @@ namespace GitCommands
 
                 case ReadStep.CommitterName:
                     revision.Committer = line;
+                    break;
+
+                case ReadStep.CommitterEmail:
+                    revision.CommitterEmail = line;
                     break;
 
                 case ReadStep.CommitterDate:

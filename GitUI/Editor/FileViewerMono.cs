@@ -363,7 +363,11 @@ namespace GitUI.Editor
             }*/
         }
 
-        public void SetHighlighting(string  s)
+        public void SetHighlighting(string s)
+        {
+        }
+
+        public void SetHighlightingForFile(string filename)
         {
         }
 

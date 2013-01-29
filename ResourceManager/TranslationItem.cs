@@ -108,6 +108,16 @@ namespace ResourceManager.Translation
             }
         }
 
+        public bool CompareWithSource(string source)
+        {
+            if (source == null)
+                return true;
+            bool equal = (value == source);
+            if (!equal)
+                return value == source.Replace("\n", Environment.NewLine);
+            return equal;
+        }
+
         public int CompareTo(TranslationItem other)
         {
             int val = Name.CompareTo(other.Name);

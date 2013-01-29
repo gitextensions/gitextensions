@@ -64,7 +64,7 @@ namespace GitUI
 
         private const string PuttyCaption = "PuTTY";
 
-        private List<GitHead> _heads;
+        private IList<GitHead> _heads;
         public bool ErrorOccurred { get; private set; }
         private string branch;
 
@@ -77,6 +77,8 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+
+            helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
 
             if (aCommands != null)
                 Init();
@@ -133,15 +135,6 @@ namespace GitUI
                 Close();
 
             return result;
-        }
-
-        private void BrowseSourceClick(object sender, EventArgs e)
-        {
-            using (var dialog = new FolderBrowserDialog { SelectedPath = comboBoxPullSource.Text })
-            {
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                    comboBoxPullSource.Text = dialog.SelectedPath;
-            }
         }
 
         private void MergetoolClick(object sender, EventArgs e)
@@ -297,7 +290,7 @@ namespace GitUI
             {
                 if (stashed)
                 {
-                    bool messageBoxResult =
+                    bool messageBoxResult = Settings.AutoPopStashAfterPull ||
                         MessageBox.Show(owner, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
                     if (ShouldStashPop(messageBoxResult, process, true))
@@ -511,7 +504,7 @@ namespace GitUI
             ResetRemoteHeads();
 
             comboBoxPullSource.Enabled = false;
-            BrowseSource.Enabled = false;
+            folderBrowserButton1.Enabled = false;
             _NO_TRANSLATE_Remotes.Enabled = true;
             AddRemote.Enabled = true;
 
@@ -539,7 +532,7 @@ namespace GitUI
             ResetRemoteHeads();
 
             comboBoxPullSource.Enabled = true;
-            BrowseSource.Enabled = true;
+            folderBrowserButton1.Enabled = true;
             _NO_TRANSLATE_Remotes.Enabled = false;
             AddRemote.Enabled = false;
 
@@ -577,20 +570,24 @@ namespace GitUI
         {
             localBranch.Enabled = false;
             localBranch.Text = branch;
-            PullImage.BackgroundImage = Resources.merge;
+            helpImageDisplayUserControl1.Image1 = Resources.HelpPullMerge;
+            helpImageDisplayUserControl1.Image2 = Resources.HelpPullMergeFastForward;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
         }
 
         private void RebaseCheckedChanged(object sender, EventArgs e)
         {
             localBranch.Enabled = false;
             localBranch.Text = branch;
-            PullImage.BackgroundImage = Resources.Rebase;
+            helpImageDisplayUserControl1.Image1 = Resources.HelpPullRebase;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
         }
 
         private void FetchCheckedChanged(object sender, EventArgs e)
         {
             localBranch.Enabled = true;
-            PullImage.BackgroundImage = Resources.fetch;
+            helpImageDisplayUserControl1.Image1 = Resources.HelpPullFetch;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)

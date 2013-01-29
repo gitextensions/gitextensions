@@ -24,9 +24,16 @@ namespace GitUI
         public CommitSummaryUserControl()
         {
             InitializeComponent();
+
+            messageY = labelMessage.Location.Y;
+            messageHeight = labelMessage.Height;
+            labelMessage.AutoSize = true;
         }
 
         private GitRevision _revision;
+
+        private int messageY;
+        private int messageHeight;
 
         public GitRevision Revision
         {
@@ -39,15 +46,14 @@ namespace GitUI
             {
                 _revision = value;
 
-                labelCommitCaption.Text = Strings.GetCommitHashText() + ":";
+                groupBox1.Text = Strings.GetCommitHashText() + ": ";
                 labelAuthorCaption.Text = Strings.GetAuthorText() + ":";
-                labelMessageCaption.Text = Strings.GetMessageText() + ":";
                 labelTagsCaption.Text = tagsCaption + ":";
                 labelBranchesCaption.Text = branchesCaption + ":";
 
                 if (Revision != null)
                 {
-                    labelCommit.Text = string.Format("{0}", Revision.Guid);
+                    groupBox1.Text += string.Format("{0}", Revision.Guid);
                     labelAuthor.Text = string.Format("{0}", Revision.Author);
                     labelDate.Text = string.Format(Strings.GetCommitDateText() + ": {0}", Revision.CommitDate);
                     labelMessage.Text = string.Format("{0}", Revision.Message);
@@ -64,7 +70,7 @@ namespace GitUI
                 }
                 else
                 {
-                    labelCommit.Text = "No revision";
+                    groupBox1.Text += "No revision";
                     labelAuthor.Text = "---";
                     labelDate.Text = "---";
                     labelMessage.Text = "---";
@@ -75,5 +81,18 @@ namespace GitUI
                 }
             }
         }
+
+        private void labelMessage_SizeChanged(object sender, EventArgs e)
+        {
+            labelMessage.Location = new Point(
+                labelMessage.Location.X,
+                (int)(messageY + messageHeight / 2.0 - labelMessage.Height / 2.0));
+        }
+
+        private void groupBox1_Resize(object sender, EventArgs e)
+        {
+            labelMessage.MaximumSize = new Size(groupBox1.Width - 15, labelMessage.MaximumSize.Height);
+        }
+
     }
 }

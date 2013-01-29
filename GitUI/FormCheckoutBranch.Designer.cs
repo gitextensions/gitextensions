@@ -40,7 +40,6 @@ namespace GitUI
             this.branchName = new System.Windows.Forms.Label();
             this.localChangesGB = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.defaultActionChx = new System.Windows.Forms.CheckBox();
             this.rbMerge = new System.Windows.Forms.RadioButton();
             this.rbDontChange = new System.Windows.Forms.RadioButton();
             this.rbReset = new System.Windows.Forms.RadioButton();
@@ -210,7 +209,6 @@ namespace GitUI
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.defaultActionChx, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.rbMerge, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.rbDontChange, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.rbReset, 3, 0);
@@ -223,18 +221,6 @@ namespace GitUI
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(277, 51);
             this.tableLayoutPanel2.TabIndex = 20;
-            // 
-            // defaultActionChx
-            // 
-            this.defaultActionChx.AutoSize = true;
-            this.tableLayoutPanel2.SetColumnSpan(this.defaultActionChx, 4);
-            this.defaultActionChx.Location = new System.Drawing.Point(3, 29);
-            this.defaultActionChx.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
-            this.defaultActionChx.Name = "defaultActionChx";
-            this.defaultActionChx.Size = new System.Drawing.Size(174, 19);
-            this.defaultActionChx.TabIndex = 5;
-            this.defaultActionChx.Text = "Remember as default action";
-            this.defaultActionChx.UseVisualStyleBackColor = true;
             // 
             // rbMerge
             // 
@@ -405,7 +391,6 @@ namespace GitUI
         private System.Windows.Forms.RadioButton rbStash;
         private System.Windows.Forms.RadioButton rbReset;
         private System.Windows.Forms.RadioButton rbMerge;
-        private System.Windows.Forms.CheckBox defaultActionChx;
         private System.Windows.Forms.TableLayoutPanel remoteOptionsPanel;
         private System.Windows.Forms.RadioButton rbDontCreate;
         private System.Windows.Forms.RadioButton rbResetBranch;

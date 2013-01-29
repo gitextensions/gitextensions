@@ -42,13 +42,12 @@ namespace GitUI
             AbortCallback = abort;
         }
 
-        public StringBuilder OutputString = new StringBuilder();
+        private readonly StringBuilder _outputString = new StringBuilder();
         public ProcessStart ProcessCallback;
         public ProcessAbort AbortCallback;
         private bool errorOccurred;
         private bool showOnError;
 
-        private const int CP_NOCLOSE_BUTTON = 0x200;
         protected override CreateParams CreateParams
         {
 
@@ -57,7 +56,7 @@ namespace GitUI
 
                 CreateParams mdiCp = base.CreateParams;
 
-                mdiCp.ClassStyle = mdiCp.ClassStyle | CP_NOCLOSE_BUTTON;
+                mdiCp.ClassStyle = mdiCp.ClassStyle | NativeConstants.CP_NOCLOSE_BUTTON;
 
                 return mdiCp;
 
@@ -279,11 +278,27 @@ namespace GitUI
             try
             {
                 AbortCallback(this);
-                OutputString.Append(Environment.NewLine + "Aborted");
+                AppendToOutputString(Environment.NewLine + "Aborted");
                 Done(false);
                 DialogResult = DialogResult.Abort;
             }
             catch { }
+        }
+
+        public void AppendToOutputString(string text)
+        {
+            lock (_outputString)
+            {
+                _outputString.Append(text);
+            }
+        }
+
+        public string GetOutputString()
+        {
+            lock (_outputString)
+            {
+                return _outputString.ToString();
+            }
         }
 
         private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)

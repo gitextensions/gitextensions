@@ -89,7 +89,6 @@ namespace GitUI
 
                 localChangesGB.Visible = ShowLocalChangesGB();
                 ChangesMode = Settings.CheckoutBranchAction;
-                defaultActionChx.Checked = Settings.UseDefaultCheckoutBranchAction;
             }
             finally
             {
@@ -147,7 +146,7 @@ namespace GitUI
                 else if (rbMerge.Checked)
                     return Settings.LocalChanges.Merge;
                 else if (rbStash.Checked)
-                    return Settings.LocalChanges.Merge;
+                    return Settings.LocalChanges.Stash;
                 else
                     return Settings.LocalChanges.DontChange;
             }
@@ -206,7 +205,6 @@ namespace GitUI
 
             Settings.LocalChanges changes = ChangesMode;
             Settings.CheckoutBranchAction = changes;
-            Settings.UseDefaultCheckoutBranchAction = defaultActionChx.Checked;
 
             if (ShowLocalChangesGB())
                 cmd.SetLocalChangesFromSettings(changes);
@@ -275,7 +273,7 @@ namespace GitUI
             else
             {
                 _remoteName = GitModule.GetRemoteName(_branch, Module.GetRemotes(false));
-                _localBranchName = _branch.Substring(_remoteName.Length + 1);
+                _localBranchName = _remoteName.Length > 0 ? _branch.Substring(_remoteName.Length + 1) : _branch;
                 _newLocalBranchName = string.Concat(_remoteName, "_", _localBranchName);
                 int i = 2;
                 while (LocalBranchExists(_newLocalBranchName))
@@ -311,7 +309,8 @@ namespace GitUI
         {
             return CommitInformation
                         .GetAllBranchesWhichContainGivenCommit(Module, _containRevison, LocalBranch.Checked, !LocalBranch.Checked)
-                        .Where(a => !a.Equals("(no branch)", StringComparison.OrdinalIgnoreCase)).ToList();
+                        .Where(a => !a.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) && 
+                            !a.EndsWith("/HEAD")).ToList();
         }
 
         private void FormCheckoutBranch_Activated(object sender, EventArgs e)

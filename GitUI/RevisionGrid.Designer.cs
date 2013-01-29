@@ -424,6 +424,7 @@ namespace GitUI
             // 
             // revertCommitToolStripMenuItem
             // 
+            this.revertCommitToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconRevertCommit;
             this.revertCommitToolStripMenuItem.Name = "revertCommitToolStripMenuItem";
             this.revertCommitToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.revertCommitToolStripMenuItem.Text = "Revert commit";

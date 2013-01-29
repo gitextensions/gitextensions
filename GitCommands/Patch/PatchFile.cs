@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 
 namespace PatchApply
 {
+    [DebuggerDisplay("PatchFile( {Subject} )")]
     public class PatchFile
     {
         public string FullName { get; set; }

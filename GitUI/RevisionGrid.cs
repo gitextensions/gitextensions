@@ -181,6 +181,10 @@ namespace GitUI
         [Browsable(false)]
         public string CurrentCheckout { get; private set; }
         [Browsable(false)]
+        public string FiltredFileName { get; set; }
+        [Browsable(false)]
+        private string FiltredCurrentCheckout { get; set; }
+        [Browsable(false)]
         public string SuperprojectCurrentCheckout { get; private set; }
         [Browsable(false)]
         public int LastRow { get; private set; }
@@ -420,7 +424,7 @@ namespace GitUI
                 var cmdLineSafe = GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(filter);
                 revListArgs = " --regexp-ignore-case ";
                 if (parameters[0])
-                    if (cmdLineSafe)
+                    if (cmdLineSafe && !MessageFilterCouldBeSHA(filter))
                         revListArgs += "--grep=\"" + filter + "\" ";
                     else
                         inMemMessageFilter = filter;
@@ -623,11 +627,13 @@ namespace GitUI
             Revision.AuthorDate = date;
             DateTime.TryParse(Infos[4], out date);
             Revision.CommitDate = date;
-            List<GitHead> heads = Module.GetHeads(true, true);
-            foreach (GitHead head in heads)
+            var heads = Module.GetHeads(true, true);
+            foreach (var head in heads)
             {
                 if (head.Guid.Equals(Revision.Guid))
+                {
                     Revision.Heads.Add(head);
+                }
             }
             return Revision;
         }
@@ -657,28 +663,33 @@ namespace GitUI
 
         private class RevisionGridInMemFilter : RevisionGraphInMemFilter
         {
-            private readonly bool _IgnoreCase;
             private readonly string _AuthorFilter;
             private readonly Regex _AuthorFilterRegex;
             private readonly string _CommitterFilter;
             private readonly Regex _CommitterFilterRegex;
             private readonly string _MessageFilter;
             private readonly Regex _MessageFilterRegex;
+            private readonly string _ShaFilter;
+            private readonly Regex _ShaFilterRegex;
 
             public RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
             {
-                _IgnoreCase = ignoreCase;
-                SetUpVars(authorFilter, ref _AuthorFilter, ref _AuthorFilterRegex);
-                SetUpVars(committerFilter, ref _CommitterFilter, ref _CommitterFilterRegex);
-                SetUpVars(messageFilter, ref _MessageFilter, ref _MessageFilterRegex);
+                SetUpVars(authorFilter, ref _AuthorFilter, ref _AuthorFilterRegex, ignoreCase);
+                SetUpVars(committerFilter, ref _CommitterFilter, ref _CommitterFilterRegex, ignoreCase);
+                SetUpVars(messageFilter, ref _MessageFilter, ref _MessageFilterRegex, ignoreCase);
+                if (!string.IsNullOrEmpty(_MessageFilter) && MessageFilterCouldBeSHA(_MessageFilter))
+                {
+                    SetUpVars(messageFilter, ref _ShaFilter, ref _ShaFilterRegex, false);
+                }
             }
 
-            private void SetUpVars(string filterValue,
+            private static void SetUpVars(string filterValue,
                                    ref string filterStr,
-                                   ref Regex filterRegEx)
+                                   ref Regex filterRegEx,
+                                   bool ignoreCase)
             {
                 RegexOptions opts = RegexOptions.None;
-                if (_IgnoreCase) opts = opts | RegexOptions.IgnoreCase;
+                if (ignoreCase) opts = opts | RegexOptions.IgnoreCase;
                 filterStr = filterValue != null ? filterValue.Trim() : string.Empty;
                 try
                 {
@@ -700,7 +711,8 @@ namespace GitUI
             {
                 return CheckCondition(_AuthorFilter, _AuthorFilterRegex, rev.Author) &&
                        CheckCondition(_CommitterFilter, _CommitterFilterRegex, rev.Committer) &&
-                       CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message);
+                       (CheckCondition(_MessageFilter, _MessageFilterRegex, rev.Message) ||
+                        CheckCondition(_ShaFilter, _ShaFilterRegex, rev.Guid));
             }
 
             public static RevisionGridInMemFilter CreateIfNeeded(string authorFilter,
@@ -710,7 +722,8 @@ namespace GitUI
             {
                 if (!(string.IsNullOrEmpty(authorFilter) &&
                       string.IsNullOrEmpty(committerFilter) &&
-                      string.IsNullOrEmpty(messageFilter)))
+                      string.IsNullOrEmpty(messageFilter) &&
+                      !MessageFilterCouldBeSHA(messageFilter)))
                     return new RevisionGridInMemFilter(authorFilter,
                                                        committerFilter,
                                                        messageFilter,
@@ -761,6 +774,7 @@ namespace GitUI
 
                 Revisions.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
+                FiltredCurrentCheckout = CurrentCheckout;
                 SuperprojectCurrentCheckout = newSuperprojectCurrentCheckout;
                 Revisions.Clear();
                 Error.Visible = false;
@@ -832,6 +846,14 @@ namespace GitUI
                 Error.BringToFront();
                 MessageBox.Show(this, exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private static readonly Regex potentialShaPattern = new Regex(@"^[a-f0-9]{5,}", RegexOptions.Compiled);
+        public static bool MessageFilterCouldBeSHA(string filter)
+        {
+            bool result = potentialShaPattern.IsMatch(filter);
+
+            return result;
         }
 
         private void _revisionGraphCommand_Error(object sender, EventArgs e)
@@ -923,16 +945,59 @@ namespace GitUI
 
         private void SelectInitialRevision()
         {
-            if (string.IsNullOrEmpty(_initialSelectedRevision) || Revisions.SelectedRows.Count != 0)
-                return;
+            string filtredCurrentCheckout;
+            if (SearchRevision(CurrentCheckout, out filtredCurrentCheckout) >= 0)
+                FiltredCurrentCheckout = filtredCurrentCheckout;
+            else
+                FiltredCurrentCheckout = CurrentCheckout;
 
-            for (var i = 0; i < Revisions.RowCount; i++)
+            if (!string.IsNullOrEmpty(_initialSelectedRevision) && Revisions.SelectedRows.Count == 0)
             {
-                if (GetRevision(i).Guid == _initialSelectedRevision)
-                    SetSelectedIndex(i);
+                string revision;
+                int index = SearchRevision(_initialSelectedRevision, out revision);
+                if (index >= 0)
+                    SetSelectedIndex(index);
             }
         }
 
+        private int SearchRevision(string initRevision, out string graphRevision)
+        {
+            var rows = Revisions
+                .Rows
+                .Cast<DataGridViewRow>();
+            var revisions = rows
+                .Select(row => new { Index = row.Index, Guid = GetRevision(row.Index).Guid });
+
+            var idx = revisions.FirstOrDefault(rev => rev.Guid == initRevision);
+            if (idx != null)
+            {
+                graphRevision = idx.Guid;
+                return idx.Index;
+            }
+
+            var dict = rows
+                .ToDictionary(row => GetRevision(row.Index).Guid, row => row.Index);
+            var revListParams = "rev-list ";
+            if (Settings.OrderRevisionByDate)
+                revListParams += "--date-order ";
+            else
+                revListParams += "--topo-order ";
+            if (Settings.MaxRevisionGraphCommits > 0)
+                revListParams += string.Format("--max-count=\"{0}\" ", (int)Settings.MaxRevisionGraphCommits);
+
+            var allrevisions = Module.RunGitCmdAsync(revListParams + initRevision);
+            foreach (var rev in allrevisions)
+            {
+                int index;
+                if (dict.TryGetValue(rev, out index))
+                {
+                    graphRevision = rev;
+                    return index;
+                }
+            }
+            graphRevision = null;
+            return -1;
+        }
         private static string GetDateHeaderText()
         {
             return Settings.ShowAuthorDate ? Strings.GetAuthorDateText() : Strings.GetCommitDateText();
@@ -1581,8 +1646,10 @@ namespace GitUI
                 return;
 
             var frm = new FormRevertCommitSmall(UICommands, GetRevision(LastRow));
-            frm.ShowDialog(this);
-            RefreshRevisions();
+            if (frm.ShowDialog(this) == DialogResult.OK)
+            {
+                RefreshRevisions();
+            }
         }
 
         private void FilterToolStripMenuItemClick(object sender, EventArgs e)
@@ -1743,9 +1810,10 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            UICommands.StartDeleteTagDialog(this, toolStripItem.Text);
-
-            ForceRefreshRevisions();
+            if (UICommands.StartDeleteTagDialog(this, toolStripItem.Text))
+            {
+                ForceRefreshRevisions();
+            }
         }
 
         private void ToolStripItemClickDeleteBranch(object sender, EventArgs e)
@@ -1837,7 +1905,7 @@ namespace GitUI
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
 
-            UICommands.StartCheckoutBranchDialog(this, GetRevision(LastRow).Guid, false);            
+            UICommands.StartCheckoutBranchDialog(this, GetRevision(LastRow).Guid, false);
             ForceRefreshRevisions();
             OnActionOnRepositoryPerformed();
         }
@@ -1950,41 +2018,7 @@ namespace GitUI
                 Revisions.Prune();
 
                 if (Revisions.RowCount == 0 && Settings.RevisionGraphShowWorkingDirChanges)
-                {
-                    bool uncommittedChanges = false;
-                    bool stagedChanges = false;
-                    //Only check for tracked files. This usually makes more sense and it performs a lot
-                    //better then checking for untracked files.
-                    if (Module.GetTrackedChangedFiles().Count > 0)
-                        uncommittedChanges = true;
-                    if (Module.GetStagedFiles().Count > 0)
-                        stagedChanges = true;
-
-                    if (uncommittedChanges)
-                    {
-                        //Add working dir as virtual commit
-                        var workingDir = new GitRevision(Module, GitRevision.UncommittedWorkingDirGuid)
-                                             {
-                                                 Message = Strings.GetCurrentWorkingDirChanges(),
-                                                 ParentGuids =
-                                                     stagedChanges
-                                                         ? new[] { GitRevision.IndexGuid }
-                                                         : new[] { CurrentCheckout }
-                                             };
-                        Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
-                    }
-
-                    if (stagedChanges)
-                    {
-                        //Add index as virtual commit
-                        var index = new GitRevision(Module, GitRevision.IndexGuid)
-                                        {
-                                            Message = Strings.GetCurrentIndex(),
-                                            ParentGuids = new string[] { CurrentCheckout }
-                                        };
-                        Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
-                    }
-                }
+                    CheckUncommitedChanged();
                 return;
             }
 
@@ -1995,6 +2029,44 @@ namespace GitUI
                 dataType = DvcsGraph.DataType.Special;
 
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
+        }
+
+        private void CheckUncommitedChanged()
+        {
+            bool unstagedChanges = false;
+            bool stagedChanges = false;
+            //Only check for tracked files. This usually makes more sense and it performs a lot
+            //better then checking for untracked files.
+            // TODO: Check FiltredFileName
+            if (Module.GetUnstagedFiles().Count > 0)
+                unstagedChanges = true;
+            if (Module.GetStagedFiles().Count > 0)
+                stagedChanges = true;
+
+            if (unstagedChanges)
+            {
+                //Add working dir as virtual commit
+                var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
+                                     {
+                                         Message = Strings.GetCurrentUnstagedChanges(),
+                                         ParentGuids =
+                                             stagedChanges
+                                                 ? new[] { GitRevision.IndexGuid }
+                                                 : new[] { FiltredCurrentCheckout }
+                                     };
+                Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
+            }
+
+            if (stagedChanges)
+            {
+                //Add index as virtual commit
+                var index = new GitRevision(Module, GitRevision.IndexGuid)
+                                {
+                                    Message = Strings.GetCurrentIndex(),
+                                    ParentGuids = new[] { FiltredCurrentCheckout }
+                                };
+                Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
+            }
         }
 
         private void drawNonrelativesGrayToolStripMenuItem_Click(object sender, EventArgs e)

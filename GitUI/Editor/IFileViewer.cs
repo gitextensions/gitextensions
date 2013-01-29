@@ -23,6 +23,7 @@ namespace GitUI.Editor
         string GetText();
         void SetText(string text);
         void SetHighlighting(string syntax);
+        void SetHighlightingForFile(string filename);
         void HighlightLine(int line, Color color);
         void HighlightLines(int startLine, int endLine, Color color);
         void ClearHighlighting();
