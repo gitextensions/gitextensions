@@ -443,10 +443,18 @@ namespace GitUI.Editor
 
         private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText)
         {
-            if (!File.Exists(fileName))
+            if (fileName.EndsWith("/"))
             {
-                ViewText(fileName,
-                            GitCommandHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""));
+                string fullPath = Path.GetFullPath(Path.Combine(Module.WorkingDir, fileName));
+                if (GitModule.ValidWorkingDir(fullPath))
+                {
+                    ViewText(fileName,
+                             GitCommandHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""));
+                }
+                else
+                {
+                    ViewText(null, "Directory: " + fileName);
+                }
             }
             else if (IsImage(fileName))
             {
