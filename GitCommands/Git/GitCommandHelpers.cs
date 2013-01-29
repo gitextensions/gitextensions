@@ -455,15 +455,15 @@ namespace GitCommands
             return "clone " + string.Join(" ", options.ToArray());
         }
 
-        public static string CheckoutCmd(string branchOrRevisionName, Settings.LocalChanges changes)
+        public static string CheckoutCmd(string branchOrRevisionName, LocalChangesAction changesAction)
         {
             string args = "";
-            switch (changes)
+            switch (changesAction)
             {
-                case Settings.LocalChanges.Merge:
+                case LocalChangesAction.Merge:
                     args = " --merge";
                     break;
-                case Settings.LocalChanges.Reset:
+                case LocalChangesAction.Reset:
                     args = " --force";
                     break;
             }

@@ -14,6 +14,14 @@ using Microsoft.Win32;
 
 namespace GitCommands
 {
+    public enum LocalChangesAction
+    {
+        DontChange,
+        Merge,
+        Reset,
+        Stash
+    }
+
     public static class Settings
     {
         //semi-constants
@@ -22,7 +30,7 @@ namespace GitCommands
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
 
-        private static readonly Dictionary<String, object> byNameMap = new Dictionary<String, object>();
+        private static readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
         static Settings()
         {
             Version version = Assembly.GetCallingAssembly().GetName().Version;
@@ -318,17 +326,17 @@ namespace GitCommands
         internal static bool GetEncoding(string settingName, out Encoding encoding)
         {
             object o;
-            bool result = byNameMap.TryGetValue(settingName, out o);
+            bool result = ByNameMap.TryGetValue(settingName, out o);
             encoding = o as Encoding;
             return result;
         }
 
         internal static void SetEncoding(string settingName, Encoding encoding)
         {
-            var items = (from item in byNameMap.Keys where item.StartsWith(settingName) select item).ToList();
+            var items = (from item in ByNameMap.Keys where item.StartsWith(settingName) select item).ToList();
             foreach (var item in items)
-                byNameMap.Remove(item);
-            byNameMap[settingName] = encoding;
+                ByNameMap.Remove(item);
+            ByNameMap[settingName] = encoding;
         }
 
         public enum PullAction
@@ -366,19 +374,10 @@ namespace GitCommands
             set { SafeSet("autostash", value, ref _autoStash); }
         }
 
-
-        public enum LocalChanges
+        public static LocalChangesAction CheckoutBranchAction
         {
-            DontChange,
-            Merge,
-            Reset,
-            Stash
-        }
-
-        public static LocalChanges CheckoutBranchAction
-        {
-            get { return GetEnum<LocalChanges>("checkoutbranchaction", LocalChanges.Merge); }
-            set { SetEnum<LocalChanges>("checkoutbranchaction", value); }
+            get { return GetEnum("checkoutbranchaction", LocalChangesAction.DontChange); }
+            set { SetEnum("checkoutbranchaction", value); }
         }
 
         public static bool UseDefaultCheckoutBranchAction
@@ -1127,7 +1126,7 @@ namespace GitCommands
         public static T GetByName<T>(string name, T defaultValue, Func<object, T> decode)
         {
             object o;
-            if (byNameMap.TryGetValue(name, out o))
+            if (ByNameMap.TryGetValue(name, out o))
             {
                 if( o == null || o is T)
                     return (T)o;
@@ -1139,7 +1138,7 @@ namespace GitCommands
                 o = GetValue<object>(name, null);
                 T result = o == null ? defaultValue : decode(o);
 
-                byNameMap[name] = result;
+                ByNameMap[name] = result;
                 return result;
             }
         }
@@ -1147,7 +1146,7 @@ namespace GitCommands
         public static void SetByName<T>(string name, T value, Func<T, object> encode)
         {
             object o;
-            if (byNameMap.TryGetValue(name, out o))
+            if (ByNameMap.TryGetValue(name, out o))
                 if (Object.Equals(o, value))
                     return;
             if (value == null)
@@ -1155,7 +1154,7 @@ namespace GitCommands
             else
                 o = encode(value);
             SetValue<object>(name, o);
-            byNameMap[name] = value;
+            ByNameMap[name] = value;
         }
 
         public static bool? GetBool(string name, bool? defaultValue)
