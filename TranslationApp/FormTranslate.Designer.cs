@@ -29,6 +29,7 @@ namespace TranslationApp
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStrip1 = new GitUI.ToolStripEx();
             this.toolStripButtonNew = new System.Windows.Forms.ToolStripButton();
@@ -51,7 +52,7 @@ namespace TranslationApp
             this.propertyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.neutralValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.translatedValueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.translateItemBindingSource = new System.Windows.Forms.BindingSource();
+            this.translateItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.neutralTekst = new System.Windows.Forms.RichTextBox();
@@ -261,7 +262,7 @@ namespace TranslationApp
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
             this.splitContainer2.Size = new System.Drawing.Size(772, 545);
-            this.splitContainer2.SplitterDistance = 384;
+            this.splitContainer2.SplitterDistance = 383;
             this.splitContainer2.SplitterWidth = 5;
             this.splitContainer2.TabIndex = 2;
             // 
@@ -284,7 +285,7 @@ namespace TranslationApp
             this.translateGrid.Name = "translateGrid";
             this.translateGrid.RowHeadersVisible = false;
             this.translateGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.translateGrid.Size = new System.Drawing.Size(772, 384);
+            this.translateGrid.Size = new System.Drawing.Size(772, 383);
             this.translateGrid.TabIndex = 1;
             this.translateGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.translateGrid_CellEndEdit);
             this.translateGrid.SelectionChanged += new System.EventHandler(this.translateGrid_SelectionChanged);
@@ -353,8 +354,8 @@ namespace TranslationApp
             this.splitContainer3.Panel2.Controls.Add(this.googleTranslate);
             this.splitContainer3.Panel2.Controls.Add(this.previousButton);
             this.splitContainer3.Panel2.Controls.Add(this.nextButton);
-            this.splitContainer3.Size = new System.Drawing.Size(772, 156);
-            this.splitContainer3.SplitterDistance = 561;
+            this.splitContainer3.Size = new System.Drawing.Size(772, 157);
+            this.splitContainer3.SplitterDistance = 560;
             this.splitContainer3.SplitterWidth = 5;
             this.splitContainer3.TabIndex = 0;
             // 
@@ -373,7 +374,7 @@ namespace TranslationApp
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.translatedText);
-            this.splitContainer4.Size = new System.Drawing.Size(561, 156);
+            this.splitContainer4.Size = new System.Drawing.Size(560, 157);
             this.splitContainer4.SplitterDistance = 72;
             this.splitContainer4.SplitterWidth = 5;
             this.splitContainer4.TabIndex = 0;
@@ -385,7 +386,7 @@ namespace TranslationApp
             this.neutralTekst.Margin = new System.Windows.Forms.Padding(4);
             this.neutralTekst.Name = "neutralTekst";
             this.neutralTekst.ReadOnly = true;
-            this.neutralTekst.Size = new System.Drawing.Size(561, 72);
+            this.neutralTekst.Size = new System.Drawing.Size(560, 72);
             this.neutralTekst.TabIndex = 0;
             this.neutralTekst.Text = "";
             // 
@@ -395,7 +396,7 @@ namespace TranslationApp
             this.translatedText.Location = new System.Drawing.Point(0, 0);
             this.translatedText.Margin = new System.Windows.Forms.Padding(4);
             this.translatedText.Name = "translatedText";
-            this.translatedText.Size = new System.Drawing.Size(561, 79);
+            this.translatedText.Size = new System.Drawing.Size(560, 80);
             this.translatedText.TabIndex = 0;
             this.translatedText.Text = "";
             this.translatedText.TextChanged += new System.EventHandler(this.translatedText_TextChanged);
@@ -458,6 +459,7 @@ namespace TranslationApp
             this.Name = "FormTranslate";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Translate";
+            this.Load += new System.EventHandler(this.FormTranslate_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);

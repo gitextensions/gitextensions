@@ -85,6 +85,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="TranslateItem.cs" />
+    <Compile Include="TranslationHelpers.cs" />
     <EmbeddedResource Include="FormTranslate.resx">
       <DependentUpon>FormTranslate.cs</DependentUpon>
       <SubType>Designer</SubType>
