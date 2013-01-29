@@ -3,15 +3,19 @@ using System.Net;
 
 namespace GitUI
 {
+    /// <summary>Provides methods from Google services.</summary>
     public static class Google
     {
         /// <summary>
-        /// Translate Text using Google Translate API's
-        /// Google URL - http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}
+        /// Translate text using Google Translate API's
+        /// URL - http://www.google.com/translate_t?hl=en&amp;ie=UTF8&amp;text={0}&amp;langpair={1}
         /// </summary>
-        /// <returns>Translated to String</returns>
+        /// <param name="text">Source text to translate from.</param>
+        /// <param name="translateFrom">ISO 639-1 two-letter code for the language of the <paramref name="text"/>.</param>
+        /// <param name="translateTo">ISO 639-1 two-letter code for the language to translate to.</param>
+        /// <returns>Translated string.</returns>
         public static string TranslateText(
-            string input,
+            string text,
             string translateFrom,
             string translateTo)
         {
@@ -19,7 +23,7 @@ namespace GitUI
             var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy, Encoding = System.Text.Encoding.UTF8 };
 
             webClient.QueryString.Add("v", "1.0");
-            webClient.QueryString.Add("q", Uri.EscapeDataString(input));
+            webClient.QueryString.Add("q", Uri.EscapeDataString(text));
             webClient.QueryString.Add("langpair", string.Format("{0}|{1}", translateFrom, translateTo));
             webClient.QueryString.Add("ie", "UTF8");
             webClient.QueryString.Add("key", "ABQIAAAAL-jmAvZrZhQkLeK6o_JtUhSHPdD4FWU0q3SlSmtsnuxmaaTWWhRV86w05sbgIY6R6F3MqsVyCi0-Kg");
@@ -36,7 +40,7 @@ namespace GitUI
                 length = result.IndexOf(endString, startOffset) - startOffset;
 
             if (length <= 0)
-                return input;
+                return text;
 
             result = result.Substring(startOffset, length);
 
