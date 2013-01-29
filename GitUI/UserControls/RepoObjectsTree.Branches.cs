@@ -84,14 +84,16 @@ namespace GitUI.UserControls
         /// <summary>base class for a branch node</summary>
         abstract class BranchNode
         {
+            /// <summary>'/'</summary>
             protected static char Separator = '/';
+            /// <summary>"/"</summary>
             protected static string SeparatorStr = Separator.ToString();
 
-            /// <summary>Short name of the branch/branch path.</summary>
+            /// <summary>Short name of the branch/branch path. <example>"issue1344"</example></summary>
             public string Name { get; private set; }
             /// <summary>do NOT access this member directly. <remarks>use <see cref="FullPath"/></remarks></summary>
             string _FullPath;
-            /// <summary>Full path of the branch. "parent/branch"</summary>
+            /// <summary>Full path of the branch. <example>"issues/issue1344"</example></summary>
             public string FullPath
             {
                 get
@@ -383,13 +385,17 @@ namespace GitUI.UserControls
 
         class RemoteBranch : Branch
         {
+            /// <summary>Name of the remote for this remote branch. <example>"origin"</example></summary>
             public string Remote { get; private set; }
+            /// <summary>Full name of the branch, excluding the remote name. <example>"issues/issue1344"</example></summary>
+            public string FullBranchName { get; private set; }
 
             public RemoteBranch(string remote,
                 string branch, int level, string activeBranchPath = null, BranchPath parent = null)
                 : base(branch, level, activeBranchPath, parent, isLocal: false)
             {
                 Remote = remote;
+                FullBranchName = FullPath.Substring(FullPath.IndexOf(Separator));
             }
         }
 
