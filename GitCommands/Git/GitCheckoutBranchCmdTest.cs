@@ -6,13 +6,8 @@ using TestClass = NUnit.Framework.TestFixtureAttribute;
 using TestMethod = NUnit.Framework.TestAttribute;
 using TestCleanup = NUnit.Framework.TearDownAttribute;
 
-using System;
-using System.Text;
 using GitCommands;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Linq;
 using GitCommands.Git;
 
@@ -59,25 +54,6 @@ namespace GitCommandsTest.Git
         }
 
         [TestMethod]
-        public void TestSetLocalChangesFromSettings()
-        {
-            GitCheckoutBranchCmd cmd = GetInstance(true);
-            cmd.SetLocalChangesFromSettings(Settings.LocalChanges.Merge);
-            Assert.AreEqual(GitCheckoutBranchCmd.LocalChanges.Merge, cmd.LocalChangesAction);
-
-            cmd.SetLocalChangesFromSettings(Settings.LocalChanges.Reset);
-            Assert.AreEqual(GitCheckoutBranchCmd.LocalChanges.Reset, cmd.LocalChangesAction);
-
-            cmd.SetLocalChangesFromSettings(Settings.LocalChanges.Stash);
-            Assert.AreEqual(GitCheckoutBranchCmd.LocalChanges.DontChange, cmd.LocalChangesAction);
-
-            cmd.SetLocalChangesFromSettings(Settings.LocalChanges.Merge);
-            cmd.SetLocalChangesFromSettings(Settings.LocalChanges.DontChange);
-            Assert.AreEqual(GitCheckoutBranchCmd.LocalChanges.DontChange, cmd.LocalChangesAction);
-
-        }
-
-        [TestMethod]
         public void TestCollectArgumentsMergeReset()
         {
             GitCheckoutBranchCmd cmd = GetInstance(true);
@@ -92,7 +68,7 @@ namespace GitCommandsTest.Git
 
             //Merge
             {
-                cmd.LocalChangesAction = GitCheckoutBranchCmd.LocalChanges.Merge;
+                cmd.LocalChanges = LocalChangesAction.Merge;
                 cmd.Remote = false;
 
                 Assert.IsTrue(cmd.CollectArguments().SequenceEqual(whenMergeChangesOnly));
@@ -110,7 +86,7 @@ namespace GitCommandsTest.Git
 
             //Reset
             {
-                cmd.LocalChangesAction = GitCheckoutBranchCmd.LocalChanges.Reset;
+                cmd.LocalChanges = LocalChangesAction.Reset;
                 cmd.Remote = false;
 
                 Assert.IsTrue(cmd.CollectArguments().SequenceEqual(whenResetChangesOnly));

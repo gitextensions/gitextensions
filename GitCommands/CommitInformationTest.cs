@@ -75,7 +75,8 @@ namespace GitCommandsTest
         [TestMethod]
         public void GetAllBranchesWhichContainGivenCommitTestReturnsEmptyList()
         {
-            var actualResult = CommitInformation.GetAllBranchesWhichContainGivenCommit(new GitModule(""), "fakesha1", false, false);
+            var module = new GitModule("");
+            var actualResult = module.GetAllBranchesWhichContainGivenCommit("fakesha1", false, false);
 
             Assert.IsNotNull(actualResult);
             Assert.IsTrue(!actualResult.Any());
