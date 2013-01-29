@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -205,6 +204,7 @@ namespace GitUI.UserControls
             }
 
             static List<DragDropAction> AcceptableDragDrops;
+      
             static DragDropAction()
             {
                 AcceptableDragDrops = new List<DragDropAction>();
@@ -228,9 +228,10 @@ namespace GitUI.UserControls
                 }));
                 AcceptableDragDrops.Add(New<RemoteBranch, BranchList>((dragged, target, cmds) =>
                 {
-                   //cmds.Module.GetLocalConfig().
-                    var parents = dragged.Parents.ToList();
-                    GitCommandHelpers.BranchCmd(parents.Take())
+                    // TODO: check if local branch with same name already exists
+                    //cmds.Module.GetLocalConfig().
+                    var cmd = GitCommandHelpers.BranchCmd(dragged.FullBranchName, dragged.FullPath, false);
+                    FormProcess.ShowDialog(null, cmd);
 
                     return true;
                 }));
@@ -256,9 +257,25 @@ namespace GitUI.UserControls
             public DragDropAction(
                 Func<TDragged, TTarget, GitUICommands, bool> action)
                 : base(typeof(TDragged), typeof(TTarget),
-                (dragged, target, cmds) => action(dragged as TDragged, target as TTarget, cmds))
+                (dragged, target, cmds) => action(
+                    ((TreeNode)dragged).Tag as TDragged,
+                    ((TreeNode)target).Tag as TTarget,
+                    cmds))
             {
                 Action = action;
+            }
+        }
+
+        class DropNode<T>
+            where T : class
+        {
+            public TreeNode TreeNode { get; set; }
+            public T Value { get; set; }
+
+            public DropNode(TreeNode treeNode)
+            {
+                TreeNode = treeNode;
+                Value = treeNode.Tag as T;
             }
         }
     }
