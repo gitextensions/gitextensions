@@ -73,11 +73,10 @@ namespace GitUI
                 {
                     if (Branches.Items.Count == 0)
                     {
-                        Remotebranch.Checked = true;
+                        LocalBranch.Checked = remote;
+                        Remotebranch.Checked = !remote;
                         Initialize();
                     }
-                    if (Branches.Items.Count == 1)
-                        Branches.SelectedIndex = 0;
                 }
 
                 //The dirty check is very expensive on large repositories. Without this setting
@@ -98,7 +97,7 @@ namespace GitUI
 
         private bool ShowLocalChangesGB()
         {
-            return isDirtyDir || !Settings.CheckForUncommittedChangesInCheckoutBranch;
+            return (isDirtyDir || !Settings.CheckForUncommittedChangesInCheckoutBranch) && _containRevison == null;
         }
 
         public DialogResult DoDefaultActionOrShow(IWin32Window owner)
@@ -120,42 +119,45 @@ namespace GitUI
             {
                 if (LocalBranch.Checked)
                 {
-                    Branches.Items.AddRange(getLocalBranches().ToArray());
+                    Branches.Items.AddRange(GetLocalBranches().ToArray());
                 }
                 else
                 {
-                    Branches.Items.AddRange(getRemoteBranches().ToArray());
+                    Branches.Items.AddRange(GetRemoteBranches().ToArray());
                 }
             }
             else
             {
-                Branches.Items.AddRange(getContainsRevisionBranches().ToArray());
+                Branches.Items.AddRange(GetContainsRevisionBranches().ToArray());
             }
 
-            Branches.Text = null;
+            if (_containRevison != null && Branches.Items.Count == 1)
+                Branches.SelectedIndex = 0;
+            else
+                Branches.Text = null;
             remoteOptionsPanel.Visible = Remotebranch.Checked;
             rbCreateBranchWithCustomName.Checked = Settings.CreateLocalBranchForRemote;
         }
 
-        private Settings.LocalChanges ChangesMode
+        private LocalChangesAction ChangesMode
         {
             get
             {
                 if (rbReset.Checked)
-                    return Settings.LocalChanges.Reset;
+                    return LocalChangesAction.Reset;
                 else if (rbMerge.Checked)
-                    return Settings.LocalChanges.Merge;
+                    return LocalChangesAction.Merge;
                 else if (rbStash.Checked)
-                    return Settings.LocalChanges.Stash;
+                    return LocalChangesAction.Stash;
                 else
-                    return Settings.LocalChanges.DontChange;
+                    return LocalChangesAction.DontChange;
             }
             set
             {
-                rbReset.Checked = value == Settings.LocalChanges.Reset;
-                rbMerge.Checked = value == Settings.LocalChanges.Merge;
-                rbStash.Checked = value == Settings.LocalChanges.Stash;
-                rbDontChange.Checked = value == Settings.LocalChanges.DontChange;
+                rbReset.Checked = value == LocalChangesAction.Reset;
+                rbMerge.Checked = value == LocalChangesAction.Merge;
+                rbStash.Checked = value == LocalChangesAction.Stash;
+                rbDontChange.Checked = value == LocalChangesAction.DontChange;
             }
         }
 
@@ -168,7 +170,6 @@ namespace GitUI
 
         private DialogResult OkClick()
         {
-
             GitCheckoutBranchCmd cmd = new GitCheckoutBranchCmd(Branches.Text.Trim(), Remotebranch.Checked);
 
             if (Remotebranch.Checked)
@@ -200,22 +201,21 @@ namespace GitUI
                     cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.DontCreate;
                     cmd.NewBranchName = null;
                 }
-
             }
 
-            Settings.LocalChanges changes = ChangesMode;
+            LocalChangesAction changes = ChangesMode;
             Settings.CheckoutBranchAction = changes;
 
             if (ShowLocalChangesGB())
-                cmd.SetLocalChangesFromSettings(changes);
+                cmd.LocalChanges = changes;
             else
-                cmd.SetLocalChangesFromSettings(Settings.LocalChanges.DontChange);
+                cmd.LocalChanges = LocalChangesAction.DontChange;
 
             IWin32Window _owner = Visible ? this : Owner;
 
             //Stash local changes, but only if the setting CheckForUncommittedChangesInCheckoutBranch is true
             if (Settings.CheckForUncommittedChangesInCheckoutBranch &&
-                changes == Settings.LocalChanges.Stash && Module.IsDirtyDir())
+                changes == LocalChangesAction.Stash && Module.IsDirtyDir())
             {
                 UICommands.Stash(_owner);
             }
@@ -257,7 +257,7 @@ namespace GitUI
 
         private bool LocalBranchExists(string name)
         {
-            return getLocalBranches().Any(head => head.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return GetLocalBranches().Any(head => head.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
         private void Branches_SelectedIndexChanged(object sender, EventArgs e)
@@ -289,7 +289,7 @@ namespace GitUI
             txtCustomBranchName.Text = _newLocalBranchName;
         }
 
-        private IList<string> getLocalBranches()
+        private IList<string> GetLocalBranches()
         {
             if (_localBranches == null)
                 _localBranches = Module.GetHeads(false).Select(b => b.Name).ToList();
@@ -297,7 +297,7 @@ namespace GitUI
             return _localBranches;
         }
 
-        private IList<string> getRemoteBranches()
+        private IList<string> GetRemoteBranches()
         {
             if (_remoteBranches == null)
                 _remoteBranches = Module.GetHeads(true, true).Where(h => h.IsRemote && !h.IsTag).Select(b => b.Name).ToList();
@@ -305,11 +305,10 @@ namespace GitUI
             return _remoteBranches;
         }
 
-        private IList<string> getContainsRevisionBranches()
+        private IList<string> GetContainsRevisionBranches()
         {
-            return CommitInformation
-                        .GetAllBranchesWhichContainGivenCommit(Module, _containRevison, LocalBranch.Checked, !LocalBranch.Checked)
-                        .Where(a => !a.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) && 
+            return Module.GetAllBranchesWhichContainGivenCommit(_containRevison, LocalBranch.Checked, !LocalBranch.Checked)
+                        .Where(a => !a.Equals(GitModule.DetachedBranch, StringComparison.Ordinal) && 
                             !a.EndsWith("/HEAD")).ToList();
         }
 

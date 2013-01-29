@@ -316,16 +316,6 @@ namespace GitUI
             FormProcess.ShowDialog(owner, Module, arguments);
         }
 
-        public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote, string containRevison)
-        {
-            return DoAction(owner, true, PreCheckoutBranch, PostCheckoutBranch, () =>
-                {
-                    using (var form = new FormCheckoutBranch(this, branch, remote, containRevison))
-                        return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
-                }
-            );
-        }
-
         public void InvokeEventOnClose(Form form, GitUIEventHandler ev)
         {
             form.FormClosed += (object o, FormClosedEventArgs ea) =>
@@ -367,20 +357,24 @@ namespace GitUI
             return actionDone;
         }
 
+        public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote, string containRevison)
+        {
+            return DoAction(owner, true, PreCheckoutBranch, PostCheckoutBranch, () =>
+            {
+                using (var form = new FormCheckoutBranch(this, branch, remote, containRevison))
+                    return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
+            }
+            );
+        }
 
         public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote)
         {
-            return StartCheckoutBranchDialog(null, branch, remote, null);
+            return StartCheckoutBranchDialog(owner, branch, remote, null);
         }
 
-        public bool StartCheckoutBranchDialog(string branch, bool remote)
+        public bool StartCheckoutBranchDialog(IWin32Window owner, string containRevison)
         {
-            return StartCheckoutBranchDialog(null, branch, remote, null);
-        }
-
-        public bool StartCheckoutBranchDialog(string containRevison)
-        {
-            return StartCheckoutBranchDialog(null, "", false, containRevison);
+            return StartCheckoutBranchDialog(owner, "", false, containRevison);
         }
 
         public bool StartCheckoutBranchDialog(IWin32Window owner)
