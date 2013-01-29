@@ -263,6 +263,8 @@ namespace GitCommands
             }
         }
 
+        public static readonly string DetachedBranch = "(no branch)";
+
         public Settings.PullAction LastPullAction
         {
             get { return Settings.GetEnum<Settings.PullAction>("LastPullAction_" + WorkingDir, Settings.PullAction.None); }
@@ -2433,7 +2435,7 @@ namespace GitCommands
             {
                 head = File.ReadAllText(headFileName, SystemEncoding);
                 if (!head.Contains("ref:"))
-                    return "(no branch)";
+                    return DetachedBranch;
             }
             else
             {
@@ -2457,7 +2459,7 @@ namespace GitCommands
                 int exitcode;
                 head = RunGitCmd("symbolic-ref HEAD", out exitcode);
                 if (exitcode == 1)
-                    return "(no branch)";
+                    return DetachedBranch;
             }
 
             return head;
