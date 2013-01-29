@@ -1105,7 +1105,7 @@ namespace GitUI
                 var revisions = RevisionGrid.GetSelectedRevisions();
 
                 if (revisions.Count > 0 &&
-                    (revisions[0].Guid == GitRevision.UncommittedWorkingDirGuid ||
+                    (revisions[0].Guid == GitRevision.UnstagedGuid ||
                      revisions[0].Guid == GitRevision.IndexGuid))
                 {
                     CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);

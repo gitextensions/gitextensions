@@ -7,7 +7,7 @@ namespace GitCommands
 {
     public sealed class GitRevision : IGitItem
     {
-        public const string UncommittedWorkingDirGuid = "0000000000000000000000000000000000000000";
+        public const string UnstagedGuid = "0000000000000000000000000000000000000000";
         public const string IndexGuid = "1111111111111111111111111111111111111111";
         public const string Sha1HashPattern = @"[a-f\d]{40}";
         public static readonly Regex Sha1HashRegex = new Regex("^" + GitRevision.Sha1HashPattern + "$", RegexOptions.Compiled);
@@ -82,7 +82,7 @@ namespace GitCommands
 
         public static bool IsArtificial(string guid)
         {
-            return guid == UncommittedWorkingDirGuid ||
+            return guid == UnstagedGuid ||
                     guid == IndexGuid;
         }
 

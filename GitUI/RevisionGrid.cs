@@ -2018,42 +2018,7 @@ namespace GitUI
                 Revisions.Prune();
 
                 if (Revisions.RowCount == 0 && Settings.RevisionGraphShowWorkingDirChanges)
-                {
-                    bool uncommittedChanges = false;
-                    bool stagedChanges = false;
-                    //Only check for tracked files. This usually makes more sense and it performs a lot
-                    //better then checking for untracked files.
-                    // TODO: Check FiltredFileName
-                    if (Module.GetTrackedChangedFiles().Count > 0)
-                        uncommittedChanges = true;
-                    if (Module.GetStagedFiles().Count > 0)
-                        stagedChanges = true;
-
-                    if (uncommittedChanges)
-                    {
-                        //Add working dir as virtual commit
-                        var workingDir = new GitRevision(Module, GitRevision.UncommittedWorkingDirGuid)
-                                             {
-                                                 Message = Strings.GetCurrentWorkingDirChanges(),
-                                                 ParentGuids =
-                                                     stagedChanges
-                                                         ? new[] { GitRevision.IndexGuid }
-                                                         : new[] { FiltredCurrentCheckout }
-                                             };
-                        Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
-                    }
-
-                    if (stagedChanges)
-                    {
-                        //Add index as virtual commit
-                        var index = new GitRevision(Module, GitRevision.IndexGuid)
-                                        {
-                                            Message = Strings.GetCurrentIndex(),
-                                            ParentGuids = new string[] { FiltredCurrentCheckout }
-                                        };
-                        Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
-                    }
-                }
+                    CheckUncommitedChanged();
                 return;
             }
 
@@ -2064,6 +2029,44 @@ namespace GitUI
                 dataType = DvcsGraph.DataType.Special;
 
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
+        }
+
+        private void CheckUncommitedChanged()
+        {
+            bool unstagedChanges = false;
+            bool stagedChanges = false;
+            //Only check for tracked files. This usually makes more sense and it performs a lot
+            //better then checking for untracked files.
+            // TODO: Check FiltredFileName
+            if (Module.GetUnstagedFiles().Count > 0)
+                unstagedChanges = true;
+            if (Module.GetStagedFiles().Count > 0)
+                stagedChanges = true;
+
+            if (unstagedChanges)
+            {
+                //Add working dir as virtual commit
+                var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
+                                     {
+                                         Message = Strings.GetCurrentUnstagedChanges(),
+                                         ParentGuids =
+                                             stagedChanges
+                                                 ? new[] { GitRevision.IndexGuid }
+                                                 : new[] { FiltredCurrentCheckout }
+                                     };
+                Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
+            }
+
+            if (stagedChanges)
+            {
+                //Add index as virtual commit
+                var index = new GitRevision(Module, GitRevision.IndexGuid)
+                                {
+                                    Message = Strings.GetCurrentIndex(),
+                                    ParentGuids = new[] { FiltredCurrentCheckout }
+                                };
+                Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
+            }
         }
 
         private void drawNonrelativesGrayToolStripMenuItem_Click(object sender, EventArgs e)
