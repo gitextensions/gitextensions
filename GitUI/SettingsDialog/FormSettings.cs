@@ -46,14 +46,16 @@ namespace GitUI
             InitializeComponent();
             Translate();
 
+            settingsTreeView.SuspendLayout();
+
             //if form is created for translation purpose
             if (aCommands == null)
                 return;
-            
+
             // NEW:
             settingsTreeView.AddSettingsPage(new GitExtensionsSettingsGroup(), null);
             SettingsPageReference gitExtPageRef = GitExtensionsSettingsGroup.GetPageReference();
-
+            
             _commonLogic = new CommonLogic(Module);
 
             _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module);
@@ -62,15 +64,15 @@ namespace GitUI
             settingsTreeView.AddSettingsPage(checklistSettingsPage, gitExtPageRef);
 
             settingsTreeView.AddSettingsPage(new GitSettingsPage(_checkSettingsLogic, this), gitExtPageRef);
-            
+
             settingsTreeView.AddSettingsPage(new GitExtensionsSettingsPage(), gitExtPageRef);
-            
+
             settingsTreeView.AddSettingsPage(new AppearanceSettingsPage(), gitExtPageRef);
-            
+
             settingsTreeView.AddSettingsPage(new ColorsSettingsPage(), gitExtPageRef);
-            
+
             settingsTreeView.AddSettingsPage(new StartPageSettingsPage(), gitExtPageRef);
-            
+
             var globalSettingsSettingsPage = new GlobalSettingsSettingsPage(_commonLogic, _checkSettingsLogic, Module);
             settingsTreeView.AddSettingsPage(globalSettingsSettingsPage, gitExtPageRef);
 
@@ -98,10 +100,11 @@ namespace GitUI
             {
                 var settingsPage = PluginSettingsPage.CreateSettingsPageFromPlugin(gitPlugin);
                 settingsTreeView.AddSettingsPage(settingsPage, pluginsPageRef);
-            }            
+            }
 
             settingsTreeView.GotoPage(initalPage);
-        }        
+            settingsTreeView.ResumeLayout();
+        }
 
         private void FormSettings_Load(object sender, EventArgs e)
         {

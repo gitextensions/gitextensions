@@ -59,15 +59,36 @@ namespace GitUI.SettingsDialog
             // to be overridden
         }
 
+        IList<string> childrenText;
+
         /// <summary>
         /// override to provide search keywords
         /// </summary>
         public virtual IEnumerable<string> GetSearchKeywords()
         {
-            // split at comma and return a list of trimmed strings
-            return GetCommaSeparatedKeywordList()
-                .Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => s.Trim());
+            return childrenText ?? (childrenText = GetChildrenText(this));
+        }
+
+        /// <summary>Recursively gets the text from all <see cref="Control"/>s within the specified <paramref name="control"/>.</summary>
+        static IList<string> GetChildrenText(Control control)
+        {
+            if (control.HasChildren == false) { return new string[0]; }
+
+            List<string> texts = new List<string>();
+            foreach (Control child in control.Controls)
+            {
+                if (!child.Visible || child is TextBox || 
+                    child is ComboBox || child is NumericUpDown)
+                {// skip: invisible; input controls
+                    continue;
+                }
+                if (child.Enabled && !string.IsNullOrWhiteSpace(child.Text))
+                {// enabled AND not whitespace -> add
+                    texts.Add(child.Text.Trim().ToLowerInvariant());
+                }
+                texts.AddRange(GetChildrenText(child));// recurse
+            }
+            return texts;
         }
 
         protected virtual string GetCommaSeparatedKeywordList()
