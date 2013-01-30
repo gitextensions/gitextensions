@@ -24,11 +24,13 @@ namespace ResourceManager.Translation
             if (obj == null)
                 return;
 
-            Action<string, object, PropertyInfo> action = delegate(string item, object itemObj, PropertyInfo propertyInfo)
+            Action<string, object, PropertyInfo> action = (item, itemObj, propertyInfo) =>
             {
                 var value = (string)propertyInfo.GetValue(itemObj, null);
                 if (AllowTranslateProperty(value))
+                {
                     translation.AddTranslationItem(category, item, propertyInfo.Name, value);
+                }
             };
             ForEachField(obj, action);
         }
@@ -38,22 +40,27 @@ namespace ResourceManager.Translation
             if (obj == null)
                 return;
 
-            Action<string, object, PropertyInfo> action = delegate(string item, object itemObj, PropertyInfo propertyInfo)
+            Action<string, object, PropertyInfo> action = (item, itemObj, propertyInfo) =>
             {
                 string value = translation.TranslateItem(category, item, propertyInfo.Name, null);
                 if (!String.IsNullOrEmpty(value))
+                {
                     propertyInfo.SetValue(itemObj, value, null);
-                else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
+                }
+                else if (propertyInfo.Name == "ToolTipText" &&
+                         !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
                 {
                     value = translation.TranslateItem(category, item, "Text", null);
                     if (!String.IsNullOrEmpty(value))
+                    {
                         propertyInfo.SetValue(itemObj, value, null);
+                    }
                 }
             };
             ForEachField(obj, action);
         }
 
-        public static void ForEachField(object obj,  Action<string, object, PropertyInfo> action)
+        public static void ForEachField(object obj, Action<string, object, PropertyInfo> action)
         {
             if (obj == null)
                 return;
@@ -63,6 +70,8 @@ namespace ResourceManager.Translation
                 {
                     action(fieldInfo.Name, fieldInfo.GetValue(obj), propertyInfo);
                 };
+                Action<PropertyInfo> paction =
+                    propertyInfo => action(fieldInfo.Name, fieldInfo.GetValue(obj), propertyInfo);
 
                 //Skip controls with a name started with "_NO_TRANSLATE_"
                 //this is a naming convention, these are not translated
@@ -72,23 +81,16 @@ namespace ResourceManager.Translation
                 {
                     Component c = fieldInfo.GetValue(obj) as Component;
 
-                    Func<PropertyInfo, bool> IsTranslatableItem = delegate(PropertyInfo propertyInfo)
-                    {
-                        return IsTranslatableItemInComponent(propertyInfo);
-                    };
-
-                    ForEachProperty(c, paction, IsTranslatableItem);
+                    ForEachProperty(c, paction, IsTranslatableItemInComponent);
                 }
                 else if (fieldInfo.FieldType.IsSubclassOf(typeof(DataGridViewColumn)))
                 {
                     DataGridViewColumn c = fieldInfo.GetValue(obj) as DataGridViewColumn;
 
-                    Func<PropertyInfo, bool> IsTranslatableItem = delegate(PropertyInfo propertyInfo)
-                    {
-                        return IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
-                    };         
+                    Func<PropertyInfo, bool> IsTranslatableItem =
+                        propertyInfo => IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
 
-                    ForEachProperty(c, paction, IsTranslatableItem);                    
+                    ForEachProperty(c, paction, IsTranslatableItem);
                 }
             }
         }
