@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -14,14 +10,12 @@ namespace GitUI.SettingsDialog
     public sealed partial class SettingsTreeViewUserControl : UserControl
     {
         private readonly Font _origTextBoxFont;
-        private Font _nodeFontBold;
-        private Font _nodeFontItalic;
         private bool _isSelectionChangeTriggeredByGoto;
         private List<TreeNode> _nodesFoundByTextBox;
         private const string FindPrompt = "Type to find";
         private readonly Dictionary<SettingsPageReference, TreeNode> _Pages2NodeMap = new Dictionary<SettingsPageReference, TreeNode>();
         private readonly IList<ISettingsPage> _SettingsPages = new List<ISettingsPage>();
-        
+
         public event EventHandler<SettingsPageSelectedEventArgs> SettingsPageSelected;
         public IEnumerable<ISettingsPage> SettingsPages { get { return _SettingsPages; } }
 
@@ -29,12 +23,13 @@ namespace GitUI.SettingsDialog
         {
             InitializeComponent();
 
+            // if visible: when searching, if the selected node is valid, it will still have grey background
+            treeView1.HideSelection = true;
+
             Font = Settings.Font;
 
             _origTextBoxFont = textBoxFind.Font;
             SetFindPrompt(true);
-
-            SaveFonts();
         }
 
         public void AddSettingsPage(ISettingsPage page, SettingsPageReference parentPageReference)
@@ -46,7 +41,7 @@ namespace GitUI.SettingsDialog
             {
                 TreeNode parentNode;
                 if (!_Pages2NodeMap.TryGetValue(parentPageReference, out parentNode))
-                    throw new ArgumentException("You have to add parent page first: " + parentPageReference.ToString());
+                    throw new ArgumentException("You have to add parent page first: " + parentPageReference);
 
                 node = parentNode.Nodes.Add(page.GetTitle());
             }
@@ -54,17 +49,6 @@ namespace GitUI.SettingsDialog
             node.Tag = page;
             _Pages2NodeMap.Add(page.PageReference, node);
             _SettingsPages.Add(page);
-        }
-
-        /// <summary>
-        /// ... and save fonts
-        /// </summary>
-        private void SaveFonts()
-        {
-            // create fonts
-            var nodeFond = treeView1.Font;
-            _nodeFontBold = new Font(nodeFond, FontStyle.Bold);
-            _nodeFontItalic = new Font(nodeFond, FontStyle.Italic);
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -76,7 +60,7 @@ namespace GitUI.SettingsDialog
         }
 
         private void FireSettingsPageSelectedEvent(TreeNode node)
-        { 
+        {
             if (SettingsPageSelected != null)
             {
                 ISettingsPage page = node.Tag as ISettingsPage;
@@ -137,21 +121,25 @@ namespace GitUI.SettingsDialog
             }
         }
 
-        private void HighlightNode(TreeNode treeNode, bool highlight)
+        /// <summary>Highlights a <see cref="TreeNode"/> or returns it to the default colors.</summary>
+        static void HighlightNode(TreeNode treeNode, bool highlight)
         {
-            treeNode.NodeFont = highlight ? _nodeFontBold : null;
+            treeNode.ForeColor = highlight ? Color.White : Color.Black;
+            treeNode.BackColor = highlight ? Color.SeaGreen : new Color();
         }
 
         private void ResetAllNodeHighlighting()
         {
+            treeView1.BeginUpdate();
             ResetAllNodeHighlighting(treeView1.Nodes);
+            treeView1.EndUpdate();
         }
 
         private void ResetAllNodeHighlighting(TreeNodeCollection nodes)
         {
             labelNumFound.Text = "";
 
-            foreach (var node in nodes.Cast<TreeNode>())
+            foreach (TreeNode node in nodes.Cast<TreeNode>())
             {
                 HighlightNode(node, false);
                 ResetAllNodeHighlighting(node.Nodes);
