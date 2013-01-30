@@ -1387,9 +1387,8 @@ namespace GitUI
 
         private void CommitMessageToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
-            var items = commitMessageToolStripMenuItem.DropDownItems;
-            for (int i = 0; i < items.Count - 2; i++)
-                items.RemoveAt(0);
+            commitMessageToolStripMenuItem.DropDownItems.Clear();
+
             AddCommitMessageToMenu(Settings.LastCommitMessage);
 
             string localLastCommitMessage = Module.GetPreviousCommitMessage(0);
@@ -1417,7 +1416,7 @@ namespace GitUI
                 };
 
             int count = commitMessageToolStripMenuItem.DropDownItems.Count;
-            commitMessageToolStripMenuItem.DropDownItems.Insert(count - 2, toolStripItem);
+            commitMessageToolStripMenuItem.DropDownItems.Add(toolStripItem);
         }
 
         private void CommitMessageToolStripMenuItemDropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
