@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GitUI.SettingsDialog.Pages
+namespace GitUI.SettingsDialog
 {
     public class GitExtensionsSettingsGroup : GroupSettingsPage
     {
