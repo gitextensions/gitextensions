@@ -18,26 +18,28 @@ namespace ResourceManager.Translation
     }
 
     [DebuggerDisplay("{name}.{property}={value}")]
-    public class TranslationItem : IComparable<TranslationItem>
+    public class TranslationItem : IComparable<TranslationItem>, ICloneable
     {
         public TranslationItem()
         {
 
         }
 
-        public TranslationItem(string name, string property, string value)
+        public TranslationItem(string name, string property, string source)
         {
             this.name = name;
             this.property = property;
-            this.value = value;
+            this.source = source;
+            this.status = TranslationType.New;
         }
 
-        public TranslationItem(string name, string property, string source, string value)
+        public TranslationItem(string name, string property, string source, string value, TranslationType status)
         {
             this.name = name;
             this.property = property;
             this.source = source;
             this.value = value;
+            this.status = status;
         }
 
         private string name;
@@ -108,21 +110,21 @@ namespace ResourceManager.Translation
             }
         }
 
-        public bool CompareWithSource(string source)
-        {
-            if (source == null)
-                return true;
-            bool equal = (value == source);
-            if (!equal)
-                return value == source.Replace("\n", Environment.NewLine);
-            return equal;
-        }
-
         public int CompareTo(TranslationItem other)
         {
-            int val = Name.CompareTo(other.Name);
-            if (val == 0) val = Property.CompareTo(other.Property);
+            int val = String.Compare(Name, other.Name, StringComparison.Ordinal);
+            if (val == 0) val = String.Compare(Property, other.Property, StringComparison.Ordinal);
             return val;
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        public TranslationItem Clone()
+        {
+            return new TranslationItem(name, property, source, value, status);
         }
     }
 }
