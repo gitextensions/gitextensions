@@ -21,7 +21,7 @@ namespace TranslationApp
         readonly TranslationString saveAsText = new TranslationString("Save as");
         readonly TranslationString saveAsTextFilter = new TranslationString("Translation file (*.xml)");
         readonly TranslationString selectLanguageCode = new TranslationString("Select a language code first.");
-        readonly TranslationString noLanguageCodeSelected = new TranslationString("There is no languagecode selected." + 
+        readonly TranslationString noLanguageCodeSelected = new TranslationString("There is no language code selected." + 
             Environment.NewLine + "Do you want to select a language code first?");
         readonly TranslationString noLanguageCodeSelectedCaption = new TranslationString("Language code");
         readonly TranslationString editingCellPrefixText = new TranslationString("[EDITING]");
@@ -38,7 +38,10 @@ namespace TranslationApp
             : base(true)
         {
             InitializeComponent(); Translate();
+        }
 
+        private void FormTranslate_Load(object sender, EventArgs e)
+        {
             translations.Items.Clear();
             translations.Sorted = true;
             translations.Items.AddRange(Translator.GetAllTranslations());
@@ -77,116 +80,32 @@ namespace TranslationApp
             }
         }
 
-        private bool CompareSourceString(string origin, string current)
-        {
-            bool equal = (origin == current);
-            if (!equal)
-                return origin == current.Replace("\n", Environment.NewLine);
-            return equal;
-        }
-
         private void LoadTranslation()
         {
-            translationItems = new List<TranslateItem>();
-
-            var neutralItems =
-                from translationCategory in neutralTranslation.GetTranslationCategories()
-                from translationItem in translationCategory.GetTranslationItems()
-                select new
-                {
-                    Category = translationCategory.Name,
-                    Name = translationItem.Name,
-                    Property = translationItem.Property,
-                    Source = translationItem.Source,
-                    Value = translationItem.Value
-                };
-            var allItems = translation != null ? 
-                (from translationCategory in translation.GetTranslationCategories()
+            IList<Tuple<string, TranslationItem>> neutralItems =
+                (from translationCategory in neutralTranslation.GetTranslationCategories()
                  from translationItem in translationCategory.GetTranslationItems()
-                 select new
-                 {
-                     Category = translationCategory.Name,
-                     Name = translationItem.Name,
-                     Property = translationItem.Property,
-                     Source = translationItem.Source,
-                     Value = translationItem.Value
-                 }).ToList() : null;
+                 select Tuple.Create(translationCategory.Name, translationItem)).ToList();
 
-            Dictionary<string, string> dict = new Dictionary<string, string>();
-            foreach (var item in neutralItems)
+            if (translation != null)
+                translationItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
+            else
             {
-                var translateItem = new TranslateItem
-                                        {
-                                            Category = item.Category,
-                                            Name = item.Name,
-                                            Property = item.Property,
-                                            NeutralValue = item.Value,
-                                            Status = TranslationType.New
-                                        };
+                translationItems = new List<TranslateItem>();
 
-                if (translation != null)
+                foreach (var item in neutralItems)
                 {
-                    var curItem =
-                        (from trItem in allItems
-                         where trItem.Category.TrimStart('_') == item.Category.TrimStart('_') &&
-                         trItem.Name.TrimStart('_') == item.Name.TrimStart('_') &&
-                         trItem.Property == item.Property
-                         select trItem).FirstOrDefault();
+                    var translateItem = new TranslateItem
+                                            {
+                                                Category = item.Item1,
+                                                Name = item.Item2.Name,
+                                                Property = item.Item2.Property,
+                                                NeutralValue = item.Item2.Value,
+                                                Status = TranslationType.New
+                                            };
 
-                    if (curItem != null)
-                    {
-                        translateItem.TranslatedValue = curItem.Value;
-                        if (curItem.Source == null || CompareSourceString(item.Value, curItem.Source))
-                        {
-                            if (!String.IsNullOrEmpty(curItem.Value))
-                                translateItem.Status = TranslationType.Translated;
-                            else
-                                translateItem.Status = TranslationType.Unfinished;
-                        }
-                        else
-                            translateItem.Status = TranslationType.Obsolete;
-                        allItems.Remove(curItem);
-                        string source = curItem.Source ?? item.Value;
-                        if (!String.IsNullOrEmpty(curItem.Value) && !dict.ContainsKey(source))
-                            dict.Add(source, curItem.Value);
-                    }
+                    translationItems.Add(translateItem);
                 }
-
-                translationItems.Add(translateItem);
-            }
-
-            if (allItems != null)
-            {
-                foreach (var item in allItems)
-                {
-                    if (!String.IsNullOrEmpty(item.Value))
-                    {
-                        var translateItem = new TranslateItem
-                            {
-                                Category = item.Category,
-                                Name = item.Name,
-                                Property = item.Property,
-                                NeutralValue = item.Source,
-                                TranslatedValue = item.Value,
-                                Status = TranslationType.Obsolete
-                            };
-
-                        translationItems.Add(translateItem);
-                        if (item.Source != null && !dict.ContainsKey(item.Source))
-                            dict.Add(item.Source, item.Value);
-                    }
-                }
-            }
-
-            var untranlatedItems = from trItem in translationItems
-                                   where trItem.Status == TranslationType.New &&
-                                   dict.ContainsKey(trItem.NeutralValue)
-                                   select trItem;
-
-            foreach (var untranlatedItem in untranlatedItems)
-            {
-                untranlatedItem.Status = TranslationType.Unfinished;
-                untranlatedItem.TranslatedValue = dict[untranlatedItem.NeutralValue];
             }
 
             UpdateProgress();
@@ -378,30 +297,6 @@ namespace TranslationApp
 
         private void SaveAs()
         {
-            var foreignTranslation = new Translation { GitExVersion = GitCommands.Settings.GitExtensionsVersionString, LanguageCode = GetSelectedLanguageCode() };
-            foreach (TranslateItem translateItem in translationItems)
-            {
-                string value = translateItem.TranslatedValue ?? String.Empty;
-                TranslationItem ti = new TranslationItem(translateItem.Name, translateItem.Property,
-                    translateItem.NeutralValue, value);
-                ti.Status = translateItem.Status;
-                if (ti.Status == TranslationType.Obsolete && 
-                    (String.IsNullOrEmpty(value) || String.IsNullOrEmpty(translateItem.NeutralValue)))
-                    continue;
-                if (string.IsNullOrEmpty(value))
-                {
-                    if (ti.Status == TranslationType.Translated || ti.Status == TranslationType.New)
-                        ti.Status = TranslationType.Unfinished;
-                }
-                else
-                {
-                    // TODO: Support in form
-                    if (ti.Status == TranslationType.Unfinished)
-                        ti.Status = TranslationType.Translated;
-                }
-                foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).AddTranslationItem(ti);
-            }
-
             using (var fileDialog =
                 new SaveFileDialog
                     {
@@ -412,10 +307,9 @@ namespace TranslationApp
                         AddExtension = true
                     })
             {
-
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    TranslationSerializer.Serialize(foreignTranslation, fileDialog.FileName);
+                    TranslationHelpers.SaveTranslation(GetSelectedLanguageCode(), translationItems, fileDialog.FileName);
                     changesMade = false;
                 }
             }

@@ -230,7 +230,7 @@ namespace GitUI.CommitInfo
             // Include remote branches if requested
             bool getRemote = Settings.CommitInfoShowContainedInBranchesRemote ||
                              Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-            var branches = CommitInformation.GetAllBranchesWhichContainGivenCommit(Module, revision, getLocal, getRemote);
+            var branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote);
             var links = new List<string>();
             bool allowLocal = Settings.CommitInfoShowContainedInBranchesLocal;
             bool allowRemote = getRemote;
@@ -274,8 +274,7 @@ namespace GitUI.CommitInfo
 
         private string GetTagsWhichContainsThisCommit(string revision, bool showBranchesAsLinks)
         {
-            var tagString = CommitInformation
-                .GetAllTagsWhichContainGivenCommit(Module, revision)
+            var tagString = Module.GetAllTagsWhichContainGivenCommit(revision)
                 .Select(s => showBranchesAsLinks ? LinkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s)).Join(", ");
 
             if (!String.IsNullOrEmpty(tagString))

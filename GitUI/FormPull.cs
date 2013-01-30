@@ -60,6 +60,12 @@ namespace GitUI
 
         private readonly TranslationString _questionInitSubmodulesCaption =
             new TranslationString("Submodules");
+
+        private readonly TranslationString _notOnBranchMainInstruction = new TranslationString("You are not working on a branch");
+        private readonly TranslationString _notOnBranch = new TranslationString("You cannot \"pull\" when git head detached." +
+                                  Environment.NewLine + "" + Environment.NewLine + "Do you want to continue?");
+        private readonly TranslationString _notOnBranchButtons = new TranslationString("Checkout branch|Continue");
+        private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch");
         #endregion
 
         private const string PuttyCaption = "PuTTY";
@@ -223,6 +229,25 @@ namespace GitUI
             DialogResult dr = ShouldRebaseMergeCommit();
             if (dr != DialogResult.Yes)
                 return dr;
+
+            if (!Fetch.Checked && Branches.Text.IsNullOrWhiteSpace() && Module.IsDetachedHead())
+            {
+                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
+                                                        _notOnBranchCaption.Text,
+                                                        _notOnBranchMainInstruction.Text,
+                                                        _notOnBranch.Text,
+                                                        _notOnBranchButtons.Text,
+                                                        true);
+                switch (idx)
+                {
+                    case 0:
+                        if (!UICommands.StartCheckoutBranchDialog(owner, ""))
+                            return DialogResult.Cancel;
+                        break;
+                    case -1:
+                        return DialogResult.Cancel;
+                }
+            }
 
             if (PullFromUrl.Checked)
                 Repositories.RepositoryHistory.AddMostRecentRepository(comboBoxPullSource.Text);
@@ -401,7 +426,7 @@ namespace GitUI
 
         private string CalculateLocalBranch()
         {
-            if (branch.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(Branches.Text))
+            if (branch.Equals(GitModule.DetachedBranch, StringComparison.Ordinal) || string.IsNullOrEmpty(Branches.Text))
                 branch = null;
             return branch;
         }

@@ -37,7 +37,7 @@ namespace GitUI
             {
                 if (!branch.StartsWith("* "))
                     mergedBranches.Add(branch.Trim());
-                else if (branch != "* (no branch)")
+                else if (branch != "* " + GitModule.DetachedBranch)
                     _currentBranch = branch.Trim('*', ' ');
             }
 
