@@ -77,6 +77,10 @@ namespace GitUI.SettingsDialog
             List<string> texts = new List<string>();
             foreach (Control child in control.Controls)
             {
+                if (child is TextBox || child is ComboBox || child is NumericUpDown)
+                {// skip input controls
+                    continue;
+                }
                 texts.Add(child.Text);
                 texts.AddRange(GetChildrenText(child));// recurse
             }
