@@ -1895,15 +1895,9 @@ namespace GitUI
 
         private void commitSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            Process process = new Process();
-            process.StartInfo.FileName = Application.ExecutablePath;
-            process.StartInfo.Arguments = "commit";
-            process.StartInfo.WorkingDirectory = Module.WorkingDir + _currentItem.Name + Settings.PathSeparator.ToString();//
-            if (process.Start())
-            {
-                process.WaitForExit();
-                Initialize();
-            }
+            GitUICommands submodulCommands = new GitUICommands(Module.WorkingDir + _currentItem.Name + Settings.PathSeparator.ToString());
+            submodulCommands.StartCommitDialog(this, false);
+            Initialize();
         }
 
         private void openSubmoduleMenuItem_Click(object sender, EventArgs e)
