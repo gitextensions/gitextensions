@@ -1389,14 +1389,15 @@ namespace GitUI
         {
             commitMessageToolStripMenuItem.DropDownItems.Clear();
 
-            AddCommitMessageToMenu(Settings.LastCommitMessage);
+            var msg = Settings.LastCommitMessage;
 
-            string localLastCommitMessage = Module.GetPreviousCommitMessage(0);
-            if (!localLastCommitMessage.Trim().Equals(Settings.LastCommitMessage.Trim()))
-                AddCommitMessageToMenu(localLastCommitMessage);
-            AddCommitMessageToMenu(Module.GetPreviousCommitMessage(1));
-            AddCommitMessageToMenu(Module.GetPreviousCommitMessage(2));
-            AddCommitMessageToMenu(Module.GetPreviousCommitMessage(3));
+            AddCommitMessageToMenu(msg);
+
+            foreach (var localLastCommitMessage in Module.GetPreviousCommitMessages(4))
+            {
+                if (!localLastCommitMessage.Trim().Equals(msg.Trim()))
+                    AddCommitMessageToMenu(localLastCommitMessage);
+            }
         }
 
         private void AddCommitMessageToMenu(string commitMessage)
@@ -2144,7 +2145,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(Message.Text) && Amend.Checked)
             {
-                Message.Text = Module.GetPreviousCommitMessage(0).Trim();
+                Message.Text = Module.GetPreviousCommitMessages(0).FirstOrDefault().Trim();
                 return;
             }
         }

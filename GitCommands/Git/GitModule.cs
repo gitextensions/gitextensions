@@ -2947,19 +2947,29 @@ namespace GitCommands
             return null;
         }
 
-        public string GetPreviousCommitMessage(int numberBack)
+        public IEnumerable<string> GetPreviousCommitMessages(int count)
         {
-            return GetPreviousCommitMessage("HEAD", numberBack);
+            return GetPreviousCommitMessages("HEAD", count);
         }
 
-        public string GetPreviousCommitMessage(string revision, int numberBack)
+        public IEnumerable<string> GetPreviousCommitMessages(string revision, int count)
         {
-            string msg = RunCmd(Settings.GitCommand, "log -n 1 " + revision + "~" + numberBack + " --pretty=format:%e%n%s%n%n%b ", LosslessEncoding);
-            int idx = msg.IndexOf("\n");
-            string encodingName = msg.Substring(0, idx);
-            msg = msg.Substring(idx + 1, msg.Length - idx - 1);
-            msg = ReEncodeCommitMessage(msg, encodingName);
-            return msg;
+            string sep = "d3fb081b9000598e658da93657bf822cc87b2bf6";
+            string output = RunCmd(Settings.GitCommand, "log -n " + count + " " + revision + " --pretty=format:" + sep + "%e%n%s%n%n%b", LosslessEncoding);
+            string[] messages = output.Split(new string[] { sep }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (messages.Length == 0)
+                return new string[] { string.Empty };
+
+            return messages.Select(cm =>
+                {
+                    int idx = cm.IndexOf("\n");
+                    string encodingName = cm.Substring(0, idx);
+                    cm = cm.Substring(idx + 1, cm.Length - idx - 1);
+                    cm = ReEncodeCommitMessage(cm, encodingName);
+                    return cm;
+
+                });
         }
 
 
