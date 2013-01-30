@@ -64,12 +64,13 @@ namespace ResourceManager.Translation
         {
             if (obj == null)
                 return;
-            foreach (FieldInfo fieldInfo in obj.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
+            foreach (FieldInfo fieldInfo in obj.GetType().GetFields(
+                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static))
             {
-                Action<PropertyInfo> paction = delegate(PropertyInfo propertyInfo) 
-                {
-                    action(fieldInfo.Name, fieldInfo.GetValue(obj), propertyInfo);
-                };
+                if (fieldInfo.IsPublic && !fieldInfo.IsInitOnly)
+                {// if public AND modifiable (not readonly)
+                    continue;
+                }// ... else: nonPublic OR readonly
                 Action<PropertyInfo> paction =
                     propertyInfo => action(fieldInfo.Name, fieldInfo.GetValue(obj), propertyInfo);
 
@@ -80,7 +81,6 @@ namespace ResourceManager.Translation
                 if (fieldInfo.FieldType.IsSubclassOf(typeof(Component)))
                 {
                     Component c = fieldInfo.GetValue(obj) as Component;
-
                     ForEachProperty(c, paction, IsTranslatableItemInComponent);
                 }
                 else if (fieldInfo.FieldType.IsSubclassOf(typeof(DataGridViewColumn)))

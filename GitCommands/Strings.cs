@@ -16,17 +16,6 @@ namespace GitCommands
 
         /// <summary>Lazy-initialized instance of the <see cref="Strings"/> class.</summary>
         public static Strings Instance { get { return instance ?? (instance = new Strings()); } }
-        private static Strings Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new Strings();
-                }
-                return instance;
-            }
-        }
 
         public static void Reinit()
         {
@@ -96,6 +85,9 @@ namespace GitCommands
             return Instance._LoadingData.Text;
         }
 
+        /// <summary>"branches" translation.</summary>
+        public readonly TranslationString branches = new TranslationString("branches");
+
         private readonly TranslationString _dateText = new TranslationString("Date");
         private readonly TranslationString _authorText = new TranslationString("Author");
         private readonly TranslationString _authorDateText = new TranslationString("Author date");
@@ -108,7 +100,6 @@ namespace GitCommands
         private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current uncommitted changes");
         private readonly TranslationString _currentIndex = new TranslationString("Commit index");
         private readonly TranslationString _LoadingData = new TranslationString("Loading data...");
-
 
         public static string GetNSecondsAgoText(int value)
         {
