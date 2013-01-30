@@ -187,11 +187,12 @@ namespace GitUI
                 if (RemoteBranch.Text != GetDefaultPushRemote(_NO_TRANSLATE_Remotes.Text) &&
                     !Module.GetHeads(true, true).Any(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text) )
                     //Ask if this is really what the user wants
-                    if (MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
-                        DialogResult.No)
-                    {
-                        return false;
-                    }
+                    if (!Settings.DontConfirmPushNewBranch)
+                        if (MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
+                            DialogResult.No)
+                        {
+                            return false;
+                        }
             }
 
             if (PushToUrl.Checked)
@@ -235,7 +236,7 @@ namespace GitUI
                             if (!string.IsNullOrEmpty(remoteBranch) && _NO_TRANSLATE_Branch.Text.StartsWith(remoteBranch))
                                 track = false;
 
-                    if (track)
+                    if (track && !Settings.DontConfirmAddTrackingRef)
                     {
                         DialogResult result = MessageBox.Show(String.Format(_updateTrackingReference.Text, selectedLocalBranch.Name, RemoteBranch.Text), _pushCaption.Text, MessageBoxButtons.YesNoCancel);
 
