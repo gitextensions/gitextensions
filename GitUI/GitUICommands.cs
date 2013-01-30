@@ -523,7 +523,7 @@ namespace GitUI
             StartCleanupRepositoryDialog(null);
         }
 
-        public bool StartCommitDialog(IWin32Window owner, bool showWhenNoChanges)
+        public bool StartCommitDialog(IWin32Window owner, bool showOnlyWhenChanges)
         {
             if (!RequiresValidWorkingDir(owner))
                 return false;
@@ -533,7 +533,7 @@ namespace GitUI
 
             using (var form = new FormCommit(this))
             {
-                if (showWhenNoChanges)
+                if (showOnlyWhenChanges)
                     form.ShowDialogWhenChanges(owner);
                 else
                     form.ShowDialog(owner);
@@ -552,9 +552,9 @@ namespace GitUI
             return StartCommitDialog(owner, false);
         }
 
-        public bool StartCommitDialog(bool showWhenNoChanges)
+        public bool StartCommitDialog(bool showOnlyWhenChanges)
         {
-            return StartCommitDialog(null, showWhenNoChanges);
+            return StartCommitDialog(null, showOnlyWhenChanges);
         }
 
         public bool StartCommitDialog()
