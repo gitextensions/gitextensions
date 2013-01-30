@@ -162,7 +162,8 @@ namespace GitUI.RepoHosting
         {
             if (prevTitle.Equals(_titleTB.Text) && !_yourBranchesCB.Text.IsNullOrWhiteSpace())
             {
-                _titleTB.Text = Module.GetPreviousCommitMessage(MyRemote.Name.Combine("/", _yourBranchesCB.Text), 0).TakeUntilStr("\n");
+                var lastMsg = Module.GetPreviousCommitMessages(MyRemote.Name.Combine("/", _yourBranchesCB.Text), 1).FirstOrDefault();
+                _titleTB.Text = lastMsg.TakeUntilStr("\n");
                 prevTitle = _titleTB.Text;
             }
         }
