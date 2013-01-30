@@ -2,12 +2,11 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace GitUI
 {
-    internal static class PluginLoader
+    public static class PluginLoader
     {
         public static void Load()
         {
@@ -39,6 +38,7 @@ namespace GitUI
                     try
                     {
                         var types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
+                        Debug.WriteLine("Loading plugin...", pluginFile.Name);
                         PluginExtraction.ExtractPluginTypes(types);
                     }
                     catch (Exception ex)

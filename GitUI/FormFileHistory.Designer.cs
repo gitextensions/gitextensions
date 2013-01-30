@@ -307,7 +307,6 @@ namespace GitUI
             this.ToolStrip.Padding = new System.Windows.Forms.Padding(0);
             this.ToolStrip.Size = new System.Drawing.Size(935, 28);
             this.ToolStrip.TabIndex = 5;
-            this.ToolStrip.Text = "toolStrip1";
             // 
             // toolStripLabel1
             // 

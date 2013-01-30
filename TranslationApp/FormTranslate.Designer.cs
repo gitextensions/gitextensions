@@ -55,7 +55,7 @@ namespace TranslationApp
             this.translateItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-            this.neutralTekst = new System.Windows.Forms.RichTextBox();
+            this.neutralText = new System.Windows.Forms.RichTextBox();
             this.translatedText = new System.Windows.Forms.RichTextBox();
             this.googleAll = new System.Windows.Forms.Button();
             this.googleTranslate = new System.Windows.Forms.Button();
@@ -334,7 +334,7 @@ namespace TranslationApp
             // 
             // translateItemBindingSource
             // 
-            this.translateItemBindingSource.DataSource = typeof(TranslationApp.TranslateItem);
+            this.translateItemBindingSource.DataSource = typeof(TranslationApp.TranslationItemWithCategory);
             // 
             // splitContainer3
             // 
@@ -369,7 +369,7 @@ namespace TranslationApp
             // 
             // splitContainer4.Panel1
             // 
-            this.splitContainer4.Panel1.Controls.Add(this.neutralTekst);
+            this.splitContainer4.Panel1.Controls.Add(this.neutralText);
             // 
             // splitContainer4.Panel2
             // 
@@ -379,16 +379,16 @@ namespace TranslationApp
             this.splitContainer4.SplitterWidth = 5;
             this.splitContainer4.TabIndex = 0;
             // 
-            // neutralTekst
+            // neutralText
             // 
-            this.neutralTekst.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.neutralTekst.Location = new System.Drawing.Point(0, 0);
-            this.neutralTekst.Margin = new System.Windows.Forms.Padding(4);
-            this.neutralTekst.Name = "neutralTekst";
-            this.neutralTekst.ReadOnly = true;
-            this.neutralTekst.Size = new System.Drawing.Size(560, 72);
-            this.neutralTekst.TabIndex = 0;
-            this.neutralTekst.Text = "";
+            this.neutralText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.neutralText.Location = new System.Drawing.Point(0, 0);
+            this.neutralText.Margin = new System.Windows.Forms.Padding(4);
+            this.neutralText.Name = "neutralText";
+            this.neutralText.ReadOnly = true;
+            this.neutralText.Size = new System.Drawing.Size(560, 72);
+            this.neutralText.TabIndex = 0;
+            this.neutralText.Text = "";
             // 
             // translatedText
             // 
@@ -509,7 +509,7 @@ namespace TranslationApp
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.SplitContainer splitContainer4;
-        private System.Windows.Forms.RichTextBox neutralTekst;
+        private System.Windows.Forms.RichTextBox neutralText;
         private System.Windows.Forms.RichTextBox translatedText;
         private System.Windows.Forms.ToolStripButton _toolStripButton1;
         private System.Windows.Forms.Button previousButton;
