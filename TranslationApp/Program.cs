@@ -17,6 +17,8 @@ namespace TranslationApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            // required for translation
+            GitUI.PluginLoader.Load();
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length == 1)
                 Application.Run(new FormTranslate());
@@ -34,11 +36,10 @@ namespace TranslationApp
             var neutralItems = TranslationHelpers.LoadNeutralItems();
 
             var translationsNames = Translator.GetAllTranslations();
-            var list = new List<KeyValuePair<string, int>>();
             foreach (var name in translationsNames)
             {
                 Translation translation = Translator.GetTranslation(name);
-                List<TranslateItem> translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
+                List<TranslationItemWithCategory> translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
                 string filename = Path.Combine(Translator.GetTranslationDir(), name + ".xml");
                 TranslationHelpers.SaveTranslation(translation.LanguageCode, translateItems, filename);
             }
@@ -55,7 +56,7 @@ namespace TranslationApp
             foreach (var name in translationsNames)
             {
                 Translation translation = Translator.GetTranslation(name);
-                List<TranslateItem> translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
+                List<TranslationItemWithCategory> translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
                 int translatedCount = translateItems.Count(translateItem => translateItem.Status != TranslationType.Obsolete &&
                     !string.IsNullOrEmpty(translateItem.TranslatedValue));
                 list.Add(new KeyValuePair<string, int>(name, translatedCount));
