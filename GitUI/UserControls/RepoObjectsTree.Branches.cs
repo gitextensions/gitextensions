@@ -17,7 +17,7 @@ namespace GitUI.UserControls
         void ReloadBranchNodes(ICollection<BranchNode> branches)
         {
             nodeBranches.Nodes.Clear();
-            nodeBranches.Text = string.Format("branches ({0})", branches.Count);
+            nodeBranches.Text = string.Format("{0} ({1})", Strings.Instance.branches, branches.Count);
 
             // todo: cache: per Repo, on BranchNode.FullPath
 

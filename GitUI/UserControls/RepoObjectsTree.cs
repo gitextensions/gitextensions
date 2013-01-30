@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI.UserControls
 {
@@ -26,11 +27,11 @@ namespace GitUI.UserControls
             treeMain.ShowNodeToolTips = true;
             DragDrops();
 
-            nodeBranches = GetNode("branches");
-            nodeTags = GetNode("tags");
-            nodeStashes = GetNode("stashes");
+            nodeBranches = AddTreeNode(Strings.Instance.branches.Text);
+            //nodeTags = AddTreeNode("tags");
+            //nodeStashes = AddTreeNode("stashes");
 
-            AddTreeSet(nodeStashes, (git) => git.GetStashes(), ReloadStashes, AddStash, ApplyStashStyle);
+            //AddTreeSet(nodeStashes, (git) => git.GetStashes(), ReloadStashes, AddStash, ApplyStashStyle);
             AddTreeSet(
                 nodeBranches,
                 git =>
@@ -65,9 +66,9 @@ namespace GitUI.UserControls
             treeSets.Add(treeSet);
         }
 
-        TreeNode GetNode(string node)
+        TreeNode AddTreeNode(string node)
         {
-            return treeMain.Nodes.Find(node, false)[0];
+             return treeMain.Nodes.Add(node);
         }
 
         /// <summary>Sets up the objects tree for a new repo, then reloads the objects tree.</summary>
@@ -122,7 +123,5 @@ namespace GitUI.UserControls
         {
             treeMain.CollapseAll();
         }
-
     }
-
 }

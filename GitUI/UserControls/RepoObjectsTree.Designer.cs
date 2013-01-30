@@ -34,11 +34,8 @@ namespace GitUI.UserControls
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("branches");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("stashes");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("remotes");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("submodules");
-            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("tags");
+            this.menuBranches = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnubtnNewBranch = new System.Windows.Forms.ToolStripMenuItem();
             this.toolbarMain = new System.Windows.Forms.ToolStrip();
             this.toolbtnExpandAll = new System.Windows.Forms.ToolStripButton();
             this.toolbtnCollapseAll = new System.Windows.Forms.ToolStripButton();
@@ -49,8 +46,6 @@ namespace GitUI.UserControls
             this.mnubtnBranchDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnBranchDeleteForce = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSubmodules = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.menuBranches = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mnubtnNewBranch = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTags = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuStashes = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnStashSave = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,14 +67,29 @@ namespace GitUI.UserControls
             this.mnubtnStashDrop = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSubmodule = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuTag = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuBranches.SuspendLayout();
             this.toolbarMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
-            this.menuBranches.SuspendLayout();
             this.menuStashes.SuspendLayout();
             this.menuRemotes.SuspendLayout();
             this.menuRemote.SuspendLayout();
             this.menuStash.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // menuBranches
+            // 
+            this.menuBranches.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnubtnNewBranch});
+            this.menuBranches.Name = "contextmenuBranches";
+            this.menuBranches.Size = new System.Drawing.Size(148, 26);
+            // 
+            // mnubtnNewBranch
+            // 
+            this.mnubtnNewBranch.Image = global::GitUI.Properties.Resources.IconBranchCreate;
+            this.mnubtnNewBranch.Name = "mnubtnNewBranch";
+            this.mnubtnNewBranch.Size = new System.Drawing.Size(147, 22);
+            this.mnubtnNewBranch.Text = "New Branch...";
+            this.mnubtnNewBranch.ToolTipText = "Create a new branch";
             // 
             // toolbarMain
             // 
@@ -119,28 +129,6 @@ namespace GitUI.UserControls
             this.treeMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeMain.Location = new System.Drawing.Point(0, 25);
             this.treeMain.Name = "treeMain";
-            treeNode1.ContextMenuStrip = this.menuBranches;
-            treeNode1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            treeNode1.Name = "branches";
-            treeNode1.Text = "branches";
-            treeNode2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            treeNode2.Name = "stashes";
-            treeNode2.Text = "stashes";
-            treeNode3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            treeNode3.Name = "remotes";
-            treeNode3.Text = "remotes";
-            treeNode4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            treeNode4.Name = "submodules";
-            treeNode4.Text = "submodules";
-            treeNode5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            treeNode5.Name = "tags";
-            treeNode5.Text = "tags";
-            this.treeMain.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1,
-            treeNode2,
-            treeNode3,
-            treeNode4,
-            treeNode5});
             this.treeMain.Size = new System.Drawing.Size(200, 325);
             this.treeMain.TabIndex = 3;
             this.treeMain.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnNodeSelected);
@@ -187,21 +175,6 @@ namespace GitUI.UserControls
             // 
             this.menuSubmodules.Name = "contextmenuSubmodules";
             this.menuSubmodules.Size = new System.Drawing.Size(61, 4);
-            // 
-            // menuBranches
-            // 
-            this.menuBranches.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnubtnNewBranch});
-            this.menuBranches.Name = "contextmenuBranches";
-            this.menuBranches.Size = new System.Drawing.Size(148, 26);
-            // 
-            // mnubtnNewBranch
-            // 
-            this.mnubtnNewBranch.Image = global::GitUI.Properties.Resources.IconBranchCreate;
-            this.mnubtnNewBranch.Name = "mnubtnNewBranch";
-            this.mnubtnNewBranch.Size = new System.Drawing.Size(147, 22);
-            this.mnubtnNewBranch.Text = "New Branch...";
-            this.mnubtnNewBranch.ToolTipText = "Create a new branch";
             // 
             // menuTags
             // 
@@ -356,10 +329,10 @@ namespace GitUI.UserControls
             this.Controls.Add(this.toolbarMain);
             this.Name = "RepoObjectsTree";
             this.Size = new System.Drawing.Size(200, 350);
+            this.menuBranches.ResumeLayout(false);
             this.toolbarMain.ResumeLayout(false);
             this.toolbarMain.PerformLayout();
             this.menuBranch.ResumeLayout(false);
-            this.menuBranches.ResumeLayout(false);
             this.menuStashes.ResumeLayout(false);
             this.menuRemotes.ResumeLayout(false);
             this.menuRemote.ResumeLayout(false);
