@@ -18,8 +18,7 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
           <Value>Git extensions - GitのためのVisual Studioとエクスプローラーの拡張
 
 This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.
-(このプログラムは、「役に立てば」という想いによって配布されています。そのため、『無保証』です。『the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE』さえありません。)
-訳注：未訳部分が気になる方は、「MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE」でぐぐると幸せになれるかも。</Value>
+(このプログラムは、「役に立てば」という想いによって配布されています。そのため、『無保証』です。『the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE』さえありません。)</Value>
         </TranslationItem>
         <TranslationItem Name="thanksTo" Property="Text">
           <Source>Thanks to:</Source>
@@ -29,30 +28,31 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
     </TranslationCategory>
     <TranslationCategory Name="AdvancedSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Advanced</Source>
-          <Value />
+          <Value>詳細設定</Value>
         </TranslationItem>
         <TranslationItem Name="CheckoutGB" Property="Text">
           <Source>Checkout</Source>
           <Value>チェックアウト</Value>
         </TranslationItem>
-        <TranslationItem Name="GeneralGB" Property="Text" type="unfinished">
+        <TranslationItem Name="GeneralGB" Property="Text">
           <Source>General</Source>
-          <Value />
+          <Value>全般</Value>
         </TranslationItem>
-        <TranslationItem Name="chkAlwaysShowCheckoutDlg" Property="Text" type="unfinished">
+        <TranslationItem Name="chkAlwaysShowCheckoutDlg" Property="Text">
           <Source>Always show checkout dialog</Source>
-          <Value />
+          <Value>常にチェックアウトダイアログを表示する</Value>
         </TranslationItem>
-        <TranslationItem Name="chkDontSHowHelpImages" Property="Text" type="unfinished">
+        <TranslationItem Name="chkDontSHowHelpImages" Property="Text">
           <Source>Don't show help images</Source>
-          <Value />
+          <Value>ヘルプ画像を表示しない</Value>
         </TranslationItem>
-        <TranslationItem Name="chkUseLocalChangesAction" Property="Text" type="unfinished">
+        <TranslationItem Name="chkUseLocalChangesAction" Property="Text">
           <Source>Use last chosen "local changes" action as default action.
 This action will be performed without warning while checking out branch.</Source>
-          <Value />
+          <Value>最後に選んだ「ローカルの変更」をデフォルトの挙動とする。
+この設定をするとブランチの切り替え時に警告を表示しなくなります。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -70,21 +70,21 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Get author image from gravatar.com</Source>
           <Value>gravatar.comから著者のイメージを取得</Value>
         </TranslationItem>
-        <TranslationItem Name="_noDictFilesFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_noDictFilesFound" Property="Text">
           <Source>No dictionary files found in: {0}</Source>
-          <Value />
+          <Value>辞書ファイルが見つかりません: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="applicationFontChangeButton" Property="Text" type="unfinished">
+        <TranslationItem Name="applicationFontChangeButton" Property="Text">
           <Source>font name</Source>
-          <Value />
+          <Value>フォント名</Value>
         </TranslationItem>
-        <TranslationItem Name="chkEnableAutoScale" Property="Text" type="unfinished">
+        <TranslationItem Name="chkEnableAutoScale" Property="Text">
           <Source>Auto scale user interface when high dpi is used</Source>
-          <Value />
+          <Value>高解像度のディスプレイに合わせて自動的に画面を拡大</Value>
         </TranslationItem>
-        <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text" type="unfinished">
+        <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
           <Source>Show current branch in Visual Studio</Source>
-          <Value />
+          <Value>Visual Studio内で現在のブランチ名を表示する</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowRelativeDate" Property="Text">
           <Source>Show relative date instead of full date</Source>
@@ -94,37 +94,37 @@ This action will be performed without warning while checking out branch.</Source
           <Source>font name</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="downloadDictionary" Property="Text" type="unfinished">
+        <TranslationItem Name="downloadDictionary" Property="Text">
           <Source>Download dictionary</Source>
-          <Value />
+          <Value>辞書のダウンロード</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox13" Property="Text" type="unfinished">
           <Source>Language</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="groupBox14" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox14" Property="Text">
           <Source>General</Source>
-          <Value />
+          <Value>全般</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox15" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox15" Property="Text">
           <Source>Fonts</Source>
-          <Value />
+          <Value>フォント</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox6" Property="Text">
           <Source>Author images</Source>
-          <Value>著者画像</Value>
+          <Value>作者画像</Value>
         </TranslationItem>
         <TranslationItem Name="helpTranslate" Property="Text">
           <Source>Help translate</Source>
-          <Value>翻訳のヘルプ</Value>
+          <Value>翻訳に参加する</Value>
         </TranslationItem>
-        <TranslationItem Name="label22" Property="Text" type="unfinished">
+        <TranslationItem Name="label22" Property="Text">
           <Source>Dictionary for spelling checker</Source>
-          <Value />
+          <Value>スペルチェックに使う辞書</Value>
         </TranslationItem>
-        <TranslationItem Name="label26" Property="Text" type="unfinished">
+        <TranslationItem Name="label26" Property="Text">
           <Source>Application font</Source>
-          <Value />
+          <Value>GitExtensionsのフォント</Value>
         </TranslationItem>
         <TranslationItem Name="label44" Property="Text">
           <Source>Image size</Source>
@@ -142,17 +142,17 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Language (restart required)</Source>
           <Value>言語（再起動が必要）</Value>
         </TranslationItem>
-        <TranslationItem Name="label53" Property="Text" type="unfinished">
+        <TranslationItem Name="label53" Property="Text">
           <Source>No image service</Source>
-          <Value />
+          <Value>画像が設定されていないとき</Value>
         </TranslationItem>
-        <TranslationItem Name="label56" Property="Text" type="unfinished">
+        <TranslationItem Name="label56" Property="Text">
           <Source>Code font</Source>
-          <Value />
+          <Value>コードのフォント</Value>
         </TranslationItem>
-        <TranslationItem Name="truncatePathMethod" Property="Text" type="unfinished">
+        <TranslationItem Name="truncatePathMethod" Property="Text">
           <Source>Truncate long filenames</Source>
-          <Value />
+          <Value>長いファイル名の省略</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -206,130 +206,131 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Check settings at startup (disables automatically if all settings are correct)</Source>
           <Value>起動時に設定を確認（すべての設定が正しい場合、自動的に無効になります）</Value>
         </TranslationItem>
-        <TranslationItem Name="DiffTool_Fix" Property="Text" type="unfinished">
+        <TranslationItem Name="DiffTool_Fix" Property="Text">
           <Source>Repair</Source>
-          <Value />
+          <Value>設定</Value>
         </TranslationItem>
-        <TranslationItem Name="GitBinFound_Fix" Property="Text" type="unfinished">
+        <TranslationItem Name="GitBinFound_Fix" Property="Text">
           <Source>Repair</Source>
-          <Value />
+          <Value>設定</Value>
         </TranslationItem>
-        <TranslationItem Name="GitExtensionsInstall_Fix" Property="Text" type="unfinished">
+        <TranslationItem Name="GitExtensionsInstall_Fix" Property="Text">
           <Source>Repair</Source>
-          <Value />
+          <Value>設定</Value>
         </TranslationItem>
-        <TranslationItem Name="GitFound_Fix" Property="Text" type="unfinished">
+        <TranslationItem Name="GitFound_Fix" Property="Text">
           <Source>Repair</Source>
-          <Value />
+          <Value>設定</Value>
         </TranslationItem>
-        <TranslationItem Name="MergeTool_Fix" Property="Text" type="unfinished">
+        <TranslationItem Name="MergeTool_Fix" Property="Text">
           <Source>Repair</Source>
-          <Value />
+          <Value>設定</Value>
         </TranslationItem>
         <TranslationItem Name="Rescan" Property="Text">
           <Source>Save and rescan</Source>
           <Value>保存して再スキャン</Value>
         </TranslationItem>
-        <TranslationItem Name="ShellExtensionsRegistered_Fix" Property="Text" type="unfinished">
+        <TranslationItem Name="ShellExtensionsRegistered_Fix" Property="Text">
           <Source>Repair</Source>
-          <Value />
+          <Value>設定</Value>
         </TranslationItem>
-        <TranslationItem Name="SshConfig_Fix" Property="Text" type="unfinished">
+        <TranslationItem Name="SshConfig_Fix" Property="Text">
           <Source>Repair</Source>
-          <Value />
+          <Value>設定</Value>
         </TranslationItem>
-        <TranslationItem Name="UserNameSet_Fix" Property="Text" type="unfinished">
+        <TranslationItem Name="UserNameSet_Fix" Property="Text">
           <Source>Repair</Source>
-          <Value />
+          <Value>設定</Value>
         </TranslationItem>
-        <TranslationItem Name="_adviceDiffToolConfiguration" Property="Text" type="unfinished">
+        <TranslationItem Name="_adviceDiffToolConfiguration" Property="Text">
           <Source>You should configure a diff tool to show file diff in external program (kdiff3 for example).</Source>
-          <Value />
+          <Value>ファイルの差分を表示するため、KDiff3などの外部Diffツールを設定する必要があります。</Value>
         </TranslationItem>
-        <TranslationItem Name="_cantRegisterShellExtension" Property="Text" type="unfinished">
+        <TranslationItem Name="_cantRegisterShellExtension" Property="Text">
           <Source>Could not register the shell extension because '{0}' could not be found.</Source>
-          <Value />
+          <Value>シェル拡張を登録できませんでした: '{0}'が見つかりません。</Value>
         </TranslationItem>
-        <TranslationItem Name="_configureMergeTool" Property="Text" type="unfinished">
+        <TranslationItem Name="_configureMergeTool" Property="Text">
           <Source>You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).</Source>
-          <Value />
+          <Value>競合の解決をするため、KDiff3などのマージツールを設定する必要があります。</Value>
         </TranslationItem>
-        <TranslationItem Name="_credentialHelperInstalled" Property="Text" type="unfinished">
+        <TranslationItem Name="_credentialHelperInstalled" Property="Text">
           <Source>Git credential helper is installed.</Source>
-          <Value />
+          <Value>Git認証管理ツールが正常にインストールされています。</Value>
         </TranslationItem>
-        <TranslationItem Name="_customMergeToolXConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_customMergeToolXConfigured" Property="Text">
           <Source>There is a custom mergetool configured: {0}</Source>
-          <Value />
+          <Value>カスタムマージツールが設定されています: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="_diffToolXConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_diffToolXConfigured" Property="Text">
           <Source>There is a difftool configured: {0}</Source>
-          <Value />
+          <Value>Diffツールが設定されています: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="_emailSet" Property="Text" type="unfinished">
+        <TranslationItem Name="_emailSet" Property="Text">
           <Source>A username and an email address are configured.</Source>
-          <Value />
+          <Value>ユーザ名とメールアドレスが設定されています。</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitCanBeRun" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitCanBeRun" Property="Text">
           <Source>Git can be run using: {0}</Source>
-          <Value />
+          <Value>Gitは正しくインストールされています: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="_gitCanBeRunCaption" Property="Text" type="unfinished">
           <Source>Locate git</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_gitCredentialWinStoreHelperInstalled" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitCredentialWinStoreHelperInstalled" Property="Text">
           <Source>Git Credential Win Store is installed as credential helper.</Source>
-          <Value />
+          <Value>Git認証管理ツール (Win Store) が正しくインストールされています。</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitNotFound" Property="Text">
           <Source>Git not found. To solve this problem you can set the correct path in settings.</Source>
-          <Value />
+          <Value>Gitが見つかりません。問題を解決するため正しいパスを設定してください。</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitVersionFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitVersionFound" Property="Text">
           <Source>Git {0} is found on your computer.</Source>
-          <Value />
+          <Value>Git {0} はインストールされています。</Value>
         </TranslationItem>
-        <TranslationItem Name="_kdiffAsDiffConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_kdiffAsDiffConfigured" Property="Text">
           <Source>KDiff3 is configured as difftool.</Source>
-          <Value />
+          <Value>KDiff3がDiffツールとして設定されています。</Value>
         </TranslationItem>
-        <TranslationItem Name="_kdiffAsDiffConfiguredButNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_kdiffAsDiffConfiguredButNotFound" Property="Text">
           <Source>KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.</Source>
-          <Value />
+          <Value>KDiff3がDiffツールとして設定されていますが、kdiff.exeの位置は設定されていません。</Value>
         </TranslationItem>
-        <TranslationItem Name="_kdiffAsMergeConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_kdiffAsMergeConfigured" Property="Text">
           <Source>KDiff3 is configured as mergetool.</Source>
-          <Value />
+          <Value>KDiff3がマージツールとして設定されています。</Value>
         </TranslationItem>
-        <TranslationItem Name="_kdiffAsMergeConfiguredButNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_kdiffAsMergeConfiguredButNotFound" Property="Text">
           <Source>KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.</Source>
-          <Value />
+          <Value>KDiff3がマージツールとして設定されていますが、kdiff.exeの位置は設定されていません。</Value>
         </TranslationItem>
         <TranslationItem Name="_languageConfigured" Property="Text" type="unfinished">
           <Source>The configured language is {0}.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_linuxToolsShNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_linuxToolsShNotFound" Property="Text">
           <Source>The path to linux tools (sh) could not be found automatically.
 Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.</Source>
-          <Value />
+          <Value>Linuxツール (sh) のインストール先は自動的に認識できませんでした。
+msysgit や cygwin のようなLinuxツールのインストール先を手動で設定してください。</Value>
         </TranslationItem>
         <TranslationItem Name="_linuxToolsShNotFoundCaption" Property="Text" type="unfinished">
           <Source>Locate linux tools</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_linuxToolsSshFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_linuxToolsSshFound" Property="Text">
           <Source>Linux tools (sh) found on your computer.</Source>
-          <Value />
+          <Value>Linuxツール (sh) は正しくインストールされています。</Value>
         </TranslationItem>
-        <TranslationItem Name="_linuxToolsSshNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_linuxToolsSshNotFound" Property="Text">
           <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in settings.</Source>
-          <Value />
+          <Value>Linuxツール (sh) は見つかりませんでした。正しいインストール先を設定してください。</Value>
         </TranslationItem>
-        <TranslationItem Name="_mergeToolXConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_mergeToolXConfigured" Property="Text">
           <Source>There is a custom mergetool configured.</Source>
-          <Value />
+          <Value>カスタムマージツールが設定されています。</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeToolXConfiguredNeedsCmd" Property="Text" type="unfinished">
           <Source>{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.</Source>
@@ -343,27 +344,29 @@ Please make sure there are linux tools installed (through msysgit or cygwin) or 
           <Source>No credential helper could be installed. Try to install git-credential-winstore.exe.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_noDiffToolConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_noDiffToolConfigured" Property="Text">
           <Source>There is no difftool configured. Do you want to configure kdiff3 as your difftool?
 Select no if you want to configure a different difftool yourself.</Source>
-          <Value />
+          <Value>Diffツールが設定されていません。KDiff3をDiffツールとして設定しますか？
+異なるDiffツールを設定したい場合はいいえを選択してください。</Value>
         </TranslationItem>
         <TranslationItem Name="_noDiffToolConfiguredCaption" Property="Text">
           <Source>Difftool</Source>
-          <Value>Difftool</Value>
+          <Value>Diffツール</Value>
         </TranslationItem>
-        <TranslationItem Name="_noEmailSet" Property="Text" type="unfinished">
+        <TranslationItem Name="_noEmailSet" Property="Text">
           <Source>You need to configure a username and an email address.</Source>
-          <Value />
+          <Value>ユーザ名とメールアドレスが設定されていません。</Value>
         </TranslationItem>
         <TranslationItem Name="_noLanguageConfigured" Property="Text" type="unfinished">
           <Source>There is no language configured for Git Extensions.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_noMergeToolConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_noMergeToolConfigured" Property="Text">
           <Source>There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?
 Select no if you want to configure a different mergetool yourself.</Source>
-          <Value />
+          <Value>マージツールの設定がありません。KDiff3をマージツールとして設定しますか？
+それ以外のマージツールを設定したい場合はいいえを選択してください。</Value>
         </TranslationItem>
         <TranslationItem Name="_noMergeToolConfiguredCaption" Property="Text">
           <Source>Mergetool</Source>
@@ -377,86 +380,87 @@ Select no if you want to configure a different mergetool yourself.</Source>
           <Source>PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_puttyConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_puttyConfigured" Property="Text">
           <Source>SSH client PuTTY is configured properly.</Source>
-          <Value />
+          <Value>SSHクライアントPuTTYが正しくインストールされています。</Value>
         </TranslationItem>
-        <TranslationItem Name="_puttyFoundAuto" Property="Text" type="unfinished">
+        <TranslationItem Name="_puttyFoundAuto" Property="Text">
           <Source>All paths needed for PuTTY could be automatically found and are set.</Source>
-          <Value />
+          <Value>PuTTYのインストール先は自動的に認識しました。</Value>
         </TranslationItem>
         <TranslationItem Name="_puttyFoundAutoCaption" Property="Text">
           <Source>PuTTY</Source>
           <Value>PuTTY</Value>
         </TranslationItem>
-        <TranslationItem Name="_registryKeyGitExtensionsCorrect" Property="Text" type="unfinished">
+        <TranslationItem Name="_registryKeyGitExtensionsCorrect" Property="Text">
           <Source>GitExtensions is properly registered.</Source>
-          <Value />
+          <Value>GitExtensionsは正しくインストールされています。</Value>
         </TranslationItem>
-        <TranslationItem Name="_registryKeyGitExtensionsFaulty" Property="Text" type="unfinished">
+        <TranslationItem Name="_registryKeyGitExtensionsFaulty" Property="Text">
           <Source>Invalid installation directory stored in [Software\GitExtensions\GitExtensions\InstallDir].</Source>
-          <Value />
+          <Value>GitExtensionsは正しい [Software\GitExtensions\GitExtensions\InstallDir] の位置にインストールされていません。</Value>
         </TranslationItem>
-        <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text" type="unfinished">
+        <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text">
           <Source>Registry entry missing [Software\GitExtensions\GitExtensions\InstallDir].</Source>
-          <Value />
+          <Value>レジストリエントリ [Software\GitExtensions\GitExtensions\InstallDir] が見つかりません。</Value>
         </TranslationItem>
-        <TranslationItem Name="_shCanBeRun" Property="Text" type="unfinished">
+        <TranslationItem Name="_shCanBeRun" Property="Text">
           <Source>Command sh can be run using: {0}sh</Source>
-          <Value />
+          <Value>shコマンドは正常にインストールされています: {0}sh</Value>
         </TranslationItem>
         <TranslationItem Name="_shCanBeRunCaption" Property="Text" type="unfinished">
           <Source>Locate linux tools</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_shellExtNeedsToBeRegistered" Property="Text" type="unfinished">
+        <TranslationItem Name="_shellExtNeedsToBeRegistered" Property="Text">
           <Source>{0} needs to be registered in order to use the shell extensions.</Source>
-          <Value />
+          <Value>シェル拡張を利用するためには {0} が必要です。</Value>
         </TranslationItem>
-        <TranslationItem Name="_shellExtNoInstalled" Property="Text" type="unfinished">
+        <TranslationItem Name="_shellExtNoInstalled" Property="Text">
           <Source>Shell extensions are not installed. Run the installer to install the shell extensions.</Source>
-          <Value />
+          <Value>シェル拡張はインストールされていません。インストーラを実行してシェル拡張をインストールしなおしてください。</Value>
         </TranslationItem>
-        <TranslationItem Name="_shellExtRegistered" Property="Text" type="unfinished">
+        <TranslationItem Name="_shellExtRegistered" Property="Text">
           <Source>Shell extensions registered properly.</Source>
-          <Value />
+          <Value>シェル拡張は正しく登録されています。</Value>
         </TranslationItem>
-        <TranslationItem Name="_solveGitCommandFailed" Property="Text" type="unfinished">
+        <TranslationItem Name="_solveGitCommandFailed" Property="Text">
           <Source>The command to run git could not be determined automatically.
 Please make sure git (msysgit or cygwin) is installed or set the correct command manually.</Source>
-          <Value />
+          <Value>gitコマンドのインストール先が自動で見つけられませんでした。
+インストール済みのgit (msysgit または cygwin) の位置を手動で設定してください。</Value>
         </TranslationItem>
         <TranslationItem Name="_solveGitCommandFailedCaption" Property="Text" type="unfinished">
           <Source>Locate git</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_unknownSshClient" Property="Text" type="unfinished">
+        <TranslationItem Name="_unknownSshClient" Property="Text">
           <Source>Unknown SSH client configured: {0}.</Source>
-          <Value />
+          <Value>未知のSSHクライアントが設定されています: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="_wrongGitVersion" Property="Text" type="unfinished">
+        <TranslationItem Name="_wrongGitVersion" Property="Text">
           <Source>Git found but version {0} is not supported. Upgrage to version {1} or later</Source>
-          <Value />
+          <Value>インストールされている Git {0} はサポート対象外です。バージョン {1} 以上に更新してください。</Value>
         </TranslationItem>
-        <TranslationItem Name="gitCredentialWinStore_Fix" Property="Text" type="unfinished">
+        <TranslationItem Name="gitCredentialWinStore_Fix" Property="Text">
           <Source>Repair</Source>
-          <Value />
+          <Value>設定</Value>
         </TranslationItem>
         <TranslationItem Name="label11" Property="Text">
           <Source>The checklist below validates the basic settings needed for GitExtensions to work properly.</Source>
           <Value>GitExtensionsを正しく動作させるために必要な基本的な設定を検証するチェックリストです。</Value>
         </TranslationItem>
-        <TranslationItem Name="translationConfig_Fix" Property="Text" type="unfinished">
+        <TranslationItem Name="translationConfig_Fix" Property="Text">
           <Source>Repair</Source>
-          <Value />
+          <Value>設定</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="ColorsSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Colors</Source>
-          <Value />
+          <Value>色</Value>
         </TranslationItem>
         <TranslationItem Name="BlueIcon" Property="Text">
           <Source>Blue</Source>
@@ -474,9 +478,9 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
           <Source>Draw non relatives graph gray</Source>
           <Value>関係のないものを灰色で描画する</Value>
         </TranslationItem>
-        <TranslationItem Name="DrawNonRelativesTextGray" Property="Text" type="unfinished">
+        <TranslationItem Name="DrawNonRelativesTextGray" Property="Text">
           <Source>Draw non relatives text gray</Source>
-          <Value />
+          <Value>関係のないテキストを灰色で描画する</Value>
         </TranslationItem>
         <TranslationItem Name="GreenIcon" Property="Text">
           <Source>Green</Source>
@@ -570,45 +574,45 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
     </TranslationCategory>
     <TranslationCategory Name="CommitInfo">
       <translationItems>
-        <TranslationItem Name="addNoteToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="addNoteToolStripMenuItem" Property="Text">
           <Source>Add notes</Source>
-          <Value />
+          <Value>注釈を追記</Value>
         </TranslationItem>
-        <TranslationItem Name="containedInBranches" Property="Text" type="unfinished">
+        <TranslationItem Name="containedInBranches" Property="Text">
           <Source>Contained in branches:</Source>
-          <Value />
+          <Value>コミットを含むブランチ:</Value>
         </TranslationItem>
-        <TranslationItem Name="containedInNoBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="containedInNoBranch" Property="Text">
           <Source>Contained in no branch</Source>
-          <Value />
+          <Value>どのブランチにも含まれていません</Value>
         </TranslationItem>
-        <TranslationItem Name="containedInNoTag" Property="Text" type="unfinished">
+        <TranslationItem Name="containedInNoTag" Property="Text">
           <Source>Contained in no tag</Source>
-          <Value />
+          <Value>どのタグにも含まれていません</Value>
         </TranslationItem>
-        <TranslationItem Name="containedInTags" Property="Text" type="unfinished">
+        <TranslationItem Name="containedInTags" Property="Text">
           <Source>Contained in tags:</Source>
-          <Value />
+          <Value>コミットを含むタグ:</Value>
         </TranslationItem>
-        <TranslationItem Name="copyCommitInfoToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="copyCommitInfoToolStripMenuItem" Property="Text">
           <Source>Copy commit info</Source>
-          <Value />
+          <Value>コミット情報のコピー</Value>
         </TranslationItem>
-        <TranslationItem Name="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem" Property="Text">
           <Source>Show remote branches only when no local branch contains this commit</Source>
-          <Value />
+          <Value>このコミットがローカルブランチに含まれていない時のみリモートブランチを表示</Value>
         </TranslationItem>
-        <TranslationItem Name="showContainedInBranchesRemoteToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="showContainedInBranchesRemoteToolStripMenuItem" Property="Text">
           <Source>Show remote branches containing this commit</Source>
-          <Value />
+          <Value>このコミットを含むリモートブランチを表示</Value>
         </TranslationItem>
-        <TranslationItem Name="showContainedInBranchesToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="showContainedInBranchesToolStripMenuItem" Property="Text">
           <Source>Show local branches containing this commit</Source>
-          <Value />
+          <Value>このコミットを含むローカルブランチを表示</Value>
         </TranslationItem>
-        <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text">
           <Source>Show tags containing this commit</Source>
-          <Value />
+          <Value>このコミットを含むタグを表示</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -632,29 +636,29 @@ Value:  {2} = {3}</Source>
     </TranslationCategory>
     <TranslationCategory Name="ConfirmationsSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Confirmations</Source>
-          <Value />
+          <Value>確認</Value>
         </TranslationItem>
-        <TranslationItem Name="CheckoutGB" Property="Text" type="unfinished">
+        <TranslationItem Name="CheckoutGB" Property="Text">
           <Source>Don't ask to confirm to (use with caution)</Source>
-          <Value />
+          <Value>(警告を含む) 以下の確認をしない</Value>
         </TranslationItem>
-        <TranslationItem Name="chkAddTrackingRef" Property="Text" type="unfinished">
+        <TranslationItem Name="chkAddTrackingRef" Property="Text">
           <Source>Add a tracking reference for newly pushed branch.</Source>
-          <Value />
+          <Value>新規ブランチをプッシュする時に追跡先として設定</Value>
         </TranslationItem>
-        <TranslationItem Name="chkAmmend" Property="Text" type="unfinished">
+        <TranslationItem Name="chkAmmend" Property="Text">
           <Source>Ammend last commit.</Source>
-          <Value />
+          <Value>コミットやり直し</Value>
         </TranslationItem>
-        <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
+        <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text">
           <Source>Apply automatically stashed changes.  Stash will be automatically poped after successful pull.</Source>
-          <Value />
+          <Value>一時退避した変更をプル成功後に自動で適用</Value>
         </TranslationItem>
-        <TranslationItem Name="chkPushNewBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="chkPushNewBranch" Property="Text">
           <Source>Push a new branch for the remote.</Source>
-          <Value />
+          <Value>新規ブランチをリモートにプッシュ</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -696,70 +700,70 @@ Value:  {2} = {3}</Source>
     </TranslationCategory>
     <TranslationCategory Name="CreatePullRequestForm">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Create Pull Request</Source>
-          <Value />
+          <Value>Pull Requestの作成</Value>
         </TranslationItem>
-        <TranslationItem Name="_createBtn" Property="Text" type="unfinished">
+        <TranslationItem Name="_createBtn" Property="Text">
           <Source>Create</Source>
-          <Value />
+          <Value>作成</Value>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotLocateARemoteThatBelongsToYourUser" Property="Text" type="unfinished">
           <Source>Could not locate a remote that belongs to your user!</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_strDone" Property="Text" type="unfinished">
+        <TranslationItem Name="_strDone" Property="Text">
           <Source>Done</Source>
-          <Value />
+          <Value>完了</Value>
         </TranslationItem>
-        <TranslationItem Name="_strError" Property="Text" type="unfinished">
+        <TranslationItem Name="_strError" Property="Text">
           <Source>Error</Source>
-          <Value />
+          <Value>エラー</Value>
         </TranslationItem>
-        <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text" type="unfinished">
+        <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text">
           <Source>Failed to create pull request.
 </Source>
-          <Value />
+          <Value>Pull Requestを作成するのに失敗しました。</Value>
         </TranslationItem>
-        <TranslationItem Name="_strLoading" Property="Text" type="unfinished">
+        <TranslationItem Name="_strLoading" Property="Text">
           <Source>Loading...</Source>
-          <Value />
+          <Value>読込中...</Value>
         </TranslationItem>
-        <TranslationItem Name="_strPleaseCloneGitHubRep" Property="Text" type="unfinished">
+        <TranslationItem Name="_strPleaseCloneGitHubRep" Property="Text">
           <Source>Please clone GitHub repository before pull request.</Source>
-          <Value />
+          <Value>Pull RequestをするにはGitHubからリポジトリをクローンしてください。</Value>
         </TranslationItem>
         <TranslationItem Name="_strPullRequest" Property="Text" type="unfinished">
           <Source>Pull request</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_strYouMustSpecifyATitle" Property="Text" type="unfinished">
+        <TranslationItem Name="_strYouMustSpecifyATitle" Property="Text">
           <Source>You must specify a title.</Source>
-          <Value />
+          <Value>タイトルを入力してください。</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox1" Property="Text">
           <Source>Pull request data</Source>
-          <Value />
+          <Value>Pull Requestデータ</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Title:</Source>
-          <Value />
+          <Value>タイトル:</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Body:</Source>
-          <Value />
+          <Value>本文:</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text" type="unfinished">
+        <TranslationItem Name="label3" Property="Text">
           <Source>Target repository:</Source>
-          <Value />
+          <Value>対象リポジトリ:</Value>
         </TranslationItem>
-        <TranslationItem Name="label4" Property="Text" type="unfinished">
+        <TranslationItem Name="label4" Property="Text">
           <Source>Your branch:</Source>
-          <Value />
+          <Value>あなたのブランチ:</Value>
         </TranslationItem>
-        <TranslationItem Name="label5" Property="Text" type="unfinished">
+        <TranslationItem Name="label5" Property="Text">
           <Source>Target branch:</Source>
-          <Value />
+          <Value>対象ブランチ:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -775,7 +779,7 @@ Value:  {2} = {3}</Source>
         </TranslationItem>
         <TranslationItem Name="RecentRepositories" Property="Title">
           <Source>Recent Repositories</Source>
-          <Value>最近使ったリポジトリ</Value>
+          <Value>最近開いたリポジトリ</Value>
         </TranslationItem>
         <TranslationItem Name="cloneFork" Property="Text" type="unfinished">
           <Source>Clone {0} repository</Source>
@@ -783,11 +787,11 @@ Value:  {2} = {3}</Source>
         </TranslationItem>
         <TranslationItem Name="cloneRepository" Property="Text">
           <Source>Clone repository</Source>
-          <Value>リポジトリのclone</Value>
+          <Value>リポジトリのクローン</Value>
         </TranslationItem>
-        <TranslationItem Name="cloneSvnRepository" Property="Text" type="unfinished">
+        <TranslationItem Name="cloneSvnRepository" Property="Text">
           <Source>Clone SVN repository</Source>
-          <Value />
+          <Value>SVNリポジトリのクローン</Value>
         </TranslationItem>
         <TranslationItem Name="createRepository" Property="Text">
           <Source>Create new repository</Source>
@@ -1017,9 +1021,9 @@ Do you want to open it?</Source>
           <Source>Find</Source>
           <Value>検索</Value>
         </TranslationItem>
-        <TranslationItem Name="goToLineToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="goToLineToolStripMenuItem" Property="Text">
           <Source>Go to line</Source>
-          <Value />
+          <Value>行数を指定して移動</Value>
         </TranslationItem>
         <TranslationItem Name="ignoreWhiteSpaces" Property="ToolTipText">
           <Source>Ignore whitespaces</Source>
@@ -1063,7 +1067,7 @@ Do you want to open it?</Source>
         </TranslationItem>
         <TranslationItem Name="treatAllFilesAsTextToolStripMenuItem" Property="Text">
           <Source>Treat all files as text</Source>
-          <Value>全てテキストファイルとして扱う</Value>
+          <Value>すべてテキストファイルとして扱う</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1151,11 +1155,11 @@ Do you want to open it?</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Fi&amp;nd what:</Source>
-          <Value>検索：</Value>
+          <Value>検索:</Value>
         </TranslationItem>
         <TranslationItem Name="lblReplaceWith" Property="Text">
           <Source>Re&amp;place with:</Source>
-          <Value>置換：</Value>
+          <Value>置換:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1430,9 +1434,9 @@ You will have push access. {2}</Source>
           <Source>Browse</Source>
           <Value>参照</Value>
         </TranslationItem>
-        <TranslationItem Name="IgnoreWhitespace" Property="Text" type="unfinished">
+        <TranslationItem Name="IgnoreWhitespace" Property="Text">
           <Source>Ignore Wh.spc.</Source>
-          <Value />
+          <Value>空白を無視</Value>
         </TranslationItem>
         <TranslationItem Name="Mergetool" Property="Text">
           <Source>Solve conflicts</Source>
@@ -1491,9 +1495,9 @@ You will have push access. {2}</Source>
           <Source>Archive</Source>
           <Value>アーカイブ</Value>
         </TranslationItem>
-        <TranslationItem Name="_saveFileDialogCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_saveFileDialogCaption" Property="Text">
           <Source>Save archive as</Source>
-          <Value />
+          <Value>圧縮して保存</Value>
         </TranslationItem>
         <TranslationItem Name="_saveFileDialogFilterTar" Property="Text" type="unfinished">
           <Source>Tar file (*.tar)</Source>
@@ -1507,18 +1511,18 @@ You will have push access. {2}</Source>
           <Source>Save as...</Source>
           <Value>名前を付けて保存</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox1" Property="Text">
           <Source>Archive format</Source>
-          <Value />
+          <Value>圧縮形式</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Selected revision to archive:</Source>
           <Value>選択したリビジョンをzipに</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Choose another
 revision:</Source>
-          <Value />
+          <Value>違うリビジョンを選択:</Value>
         </TranslationItem>
         <TranslationItem Name="radioButtonFormatTar" Property="Text" type="unfinished">
           <Source>tar</Source>
@@ -1540,29 +1544,29 @@ revision:</Source>
           <Source>Bisect</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="Bad" Property="Text" type="unfinished">
+        <TranslationItem Name="Bad" Property="Text">
           <Source>Mark current revision bad</Source>
-          <Value />
+          <Value>現在のリビジョンは問題あり</Value>
         </TranslationItem>
-        <TranslationItem Name="Good" Property="Text" type="unfinished">
+        <TranslationItem Name="Good" Property="Text">
           <Source>Mark current revision good</Source>
-          <Value />
+          <Value>現在のリビジョンは問題なし</Value>
         </TranslationItem>
-        <TranslationItem Name="Start" Property="Text" type="unfinished">
+        <TranslationItem Name="Start" Property="Text">
           <Source>Start bisect</Source>
-          <Value />
+          <Value>Bisect開始</Value>
         </TranslationItem>
-        <TranslationItem Name="Stop" Property="Text" type="unfinished">
+        <TranslationItem Name="Stop" Property="Text">
           <Source>Stop bisect</Source>
-          <Value />
+          <Value>Bisect終了</Value>
         </TranslationItem>
-        <TranslationItem Name="_bisectStart" Property="Text" type="unfinished">
+        <TranslationItem Name="_bisectStart" Property="Text">
           <Source>Mark selected revisions as start bisect range?</Source>
-          <Value />
+          <Value>選択範囲のリビジョンでBisectを開始しますか？</Value>
         </TranslationItem>
-        <TranslationItem Name="btnSkip" Property="Text" type="unfinished">
+        <TranslationItem Name="btnSkip" Property="Text">
           <Source>Skip current revision</Source>
-          <Value />
+          <Value>現在のリビジョンをスキップ</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1676,61 +1680,61 @@ revision:</Source>
           <Source>Refresh</Source>
           <Value>更新</Value>
         </TranslationItem>
-        <TranslationItem Name="SvnDcommitToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="SvnDcommitToolStripMenuItem" Property="Text">
           <Source>SVN DCommit</Source>
-          <Value />
+          <Value>SVN Dコミット</Value>
         </TranslationItem>
-        <TranslationItem Name="SvnFetchToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="SvnFetchToolStripMenuItem" Property="Text">
           <Source>SVN Fetch</Source>
-          <Value />
+          <Value>SVNフェッチ</Value>
         </TranslationItem>
-        <TranslationItem Name="SvnRebaseToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="SvnRebaseToolStripMenuItem" Property="Text">
           <Source>SVN Rebase</Source>
-          <Value />
+          <Value>SVNリベース</Value>
         </TranslationItem>
         <TranslationItem Name="TreeTabPage" Property="Text">
           <Source>File tree</Source>
           <Value>ファイルツリー</Value>
         </TranslationItem>
-        <TranslationItem Name="_alwaysShowCheckoutDlgStr" Property="Text" type="unfinished">
+        <TranslationItem Name="_alwaysShowCheckoutDlgStr" Property="Text">
           <Source>Always show checkout dialog</Source>
-          <Value />
+          <Value>常にチェックアウトダイアログを表示する</Value>
         </TranslationItem>
         <TranslationItem Name="_configureWorkingDirMenu" Property="Text" type="unfinished">
           <Source>Configure this menu</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
           <Source>Create pull requests</Source>
-          <Value />
+          <Value>Pull Requestの作成</Value>
         </TranslationItem>
         <TranslationItem Name="_errorCaption" Property="Text" type="unfinished">
           <Source>Error</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_forkCloneRepositoryToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="_forkCloneRepositoryToolStripMenuItem" Property="Text">
           <Source>Fork/Clone repository</Source>
-          <Value />
+          <Value>リポジトリのフォーク/クローン</Value>
         </TranslationItem>
         <TranslationItem Name="_hintUnresolvedMergeConflicts" Property="Text" type="unfinished">
           <Source>There are unresolved merge conflicts!</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_indexLockDeleted" Property="Text" type="unfinished">
+        <TranslationItem Name="_indexLockDeleted" Property="Text">
           <Source>index.lock deleted.</Source>
-          <Value />
+          <Value>index.lockファイルを削除しました。</Value>
         </TranslationItem>
-        <TranslationItem Name="_indexLockNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_indexLockNotFound" Property="Text">
           <Source>index.lock not found at:</Source>
-          <Value />
+          <Value>index.lockファイルは見つかりません:</Value>
         </TranslationItem>
-        <TranslationItem Name="_noBranchTitle" Property="Text" type="unfinished">
+        <TranslationItem Name="_noBranchTitle" Property="Text">
           <Source>no branch</Source>
-          <Value />
+          <Value>ブランチなし</Value>
         </TranslationItem>
-        <TranslationItem Name="_noReposHostFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_noReposHostFound" Property="Text">
           <Source>Could not find any relevant repository hosts for the currently open repository.</Source>
-          <Value />
+          <Value>現在開いているリポジトリと関連のあるリポジトリホストが見つかりません。</Value>
         </TranslationItem>
         <TranslationItem Name="_noReposHostPluginLoaded" Property="Text" type="unfinished">
           <Source>No repository host plugin loaded.</Source>
@@ -1740,9 +1744,9 @@ revision:</Source>
           <Source>No revision found.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_noSubmodulesPresent" Property="Text" type="unfinished">
+        <TranslationItem Name="_noSubmodulesPresent" Property="Text">
           <Source>No submodules</Source>
-          <Value />
+          <Value>サブモジュールはありません</Value>
         </TranslationItem>
         <TranslationItem Name="_repositoryHostsToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Repository hosts</Source>
@@ -1768,29 +1772,29 @@ revision:</Source>
           <Source>stash</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_updateAllSuperprojectSubmodules" Property="Text" type="unfinished">
+        <TranslationItem Name="_updateAllSuperprojectSubmodules" Property="Text">
           <Source>Update all superproject submodules</Source>
-          <Value />
+          <Value>親プロジェクト内のすべてのサブモジュールを更新</Value>
         </TranslationItem>
-        <TranslationItem Name="_updateCurrentSubmodule" Property="Text" type="unfinished">
+        <TranslationItem Name="_updateCurrentSubmodule" Property="Text">
           <Source>Update current submodule</Source>
-          <Value />
+          <Value>現在のサブモジュールを更新</Value>
         </TranslationItem>
-        <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text">
           <Source>View pull requests</Source>
-          <Value />
+          <Value>Pull Requestの表示</Value>
         </TranslationItem>
-        <TranslationItem Name="_warningMiddleOfBisect" Property="Text" type="unfinished">
+        <TranslationItem Name="_warningMiddleOfBisect" Property="Text">
           <Source>Your are in the middle of a bisect</Source>
-          <Value />
+          <Value>現在bisect作業中です</Value>
         </TranslationItem>
-        <TranslationItem Name="_warningMiddleOfPatchApply" Property="Text" type="unfinished">
+        <TranslationItem Name="_warningMiddleOfPatchApply" Property="Text">
           <Source>You are in the middle of a patch apply</Source>
-          <Value />
+          <Value>現在パッチ適用作業中です</Value>
         </TranslationItem>
-        <TranslationItem Name="_warningMiddleOfRebase" Property="Text" type="unfinished">
+        <TranslationItem Name="_warningMiddleOfRebase" Property="Text">
           <Source>You are in the middle of a rebase</Source>
-          <Value />
+          <Value>現在リベース作業中です</Value>
         </TranslationItem>
         <TranslationItem Name="aBToolStripMenuItem" Property="Text" type="unfinished">
           <Source>A &lt;--&gt; B</Source>
@@ -1814,7 +1818,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="authorToolStripMenuItem" Property="Text">
           <Source>Author</Source>
-          <Value>著者</Value>
+          <Value>作者</Value>
         </TranslationItem>
         <TranslationItem Name="bLocalToolStripMenuItem" Property="Text" type="unfinished">
           <Source>B &lt;--&gt; Working dir</Source>
@@ -1860,9 +1864,9 @@ revision:</Source>
           <Source>Cleanup repository</Source>
           <Value>クリーンアップ</Value>
         </TranslationItem>
-        <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
           <Source>Clone SVN repository</Source>
-          <Value />
+          <Value>SVNリポジトリのクローン</Value>
         </TranslationItem>
         <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
           <Source>Clone repository</Source>
@@ -1872,9 +1876,9 @@ revision:</Source>
           <Source>Close</Source>
           <Value>閉じる</Value>
         </TranslationItem>
-        <TranslationItem Name="collapseAllToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="collapseAllToolStripMenuItem" Property="Text">
           <Source>Collapse all</Source>
-          <Value />
+          <Value>すべてたたむ</Value>
         </TranslationItem>
         <TranslationItem Name="commandsToolStripMenuItem" Property="Text">
           <Source>Commands</Source>
@@ -1914,15 +1918,15 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
           <Source>Delete index.lock</Source>
-          <Value>index.lockの削除</Value>
+          <Value>index.lockファイルの削除</Value>
         </TranslationItem>
         <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
           <Source>Delete tag</Source>
           <Value>タグの削除</Value>
         </TranslationItem>
-        <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
           <Source>Diff contains (SLOW)</Source>
-          <Value />
+          <Value>Diffを含める (遅い)</Value>
         </TranslationItem>
         <TranslationItem Name="directoryIsNotAValidRepository" Property="Text" type="unfinished">
           <Source>The selected item is not a valid git repository.
@@ -1938,17 +1942,17 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Donate</Source>
           <Value>寄付</Value>
         </TranslationItem>
-        <TranslationItem Name="dontSetAsDefaultToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="dontSetAsDefaultToolStripMenuItem" Property="Text">
           <Source>Don't set as default</Source>
-          <Value />
+          <Value>規定の動作にしない</Value>
         </TranslationItem>
-        <TranslationItem Name="editCheckedOutFileToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="editCheckedOutFileToolStripMenuItem" Property="Text">
           <Source>Edit working dir file</Source>
-          <Value />
+          <Value>作業ディレクトリのファイルを編集</Value>
         </TranslationItem>
         <TranslationItem Name="editgitattributesToolStripMenuItem" Property="Text">
           <Source>Edit .gitattributes</Source>
-          <Value>.gitattributeの編集</Value>
+          <Value>.gitattributeファイルの編集</Value>
         </TranslationItem>
         <TranslationItem Name="editgitignoreToolStripMenuItem1" Property="Text">
           <Source>Edit .gitignore</Source>
@@ -1962,17 +1966,17 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Exit</Source>
           <Value>終了</Value>
         </TranslationItem>
-        <TranslationItem Name="expandAllToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="expandAllToolStripMenuItem" Property="Text">
           <Source>Expand all (takes a while on large trees)</Source>
-          <Value />
+          <Value>すべて展開 (ファイル数が多い場合は時間がかかります)</Value>
         </TranslationItem>
-        <TranslationItem Name="fetchAllToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="fetchAllToolStripMenuItem" Property="Text">
           <Source>Fetch all</Source>
-          <Value />
+          <Value>すべてフェッチ</Value>
         </TranslationItem>
-        <TranslationItem Name="fetchToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="fetchToolStripMenuItem" Property="Text">
           <Source>Fetch</Source>
-          <Value />
+          <Value>フェッチ</Value>
         </TranslationItem>
         <TranslationItem Name="fileExplorerToolStripMenuItem" Property="Text">
           <Source>File Explorer</Source>
@@ -1990,9 +1994,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>File</Source>
           <Value>ファイル</Value>
         </TranslationItem>
-        <TranslationItem Name="fileTreeOpenContainingFolderToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="fileTreeOpenContainingFolderToolStripMenuItem" Property="Text">
           <Source>Open containing folder</Source>
-          <Value />
+          <Value>ファイルのあるフォルダを開く</Value>
         </TranslationItem>
         <TranslationItem Name="findInDiffToolStripMenuItem" Property="Text">
           <Source>Find</Source>
@@ -2030,9 +2034,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Gitcommand log</Source>
           <Value>コマンド履歴</Value>
         </TranslationItem>
-        <TranslationItem Name="goToToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="goToToolStripMenuItem" Property="Text">
           <Source>Go to commit</Source>
-          <Value />
+          <Value>コミットに移動</Value>
         </TranslationItem>
         <TranslationItem Name="hashToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Hash</Source>
@@ -2050,9 +2054,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>GitK</Source>
           <Value>GitK</Value>
         </TranslationItem>
-        <TranslationItem Name="localToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="localToolStripMenuItem" Property="Text">
           <Source>Local</Source>
-          <Value />
+          <Value>ローカル</Value>
         </TranslationItem>
         <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
           <Source>Manage remote repositories</Source>
@@ -2070,9 +2074,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Merge</Source>
           <Value>マージ</Value>
         </TranslationItem>
-        <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text">
           <Source>Open containing folder</Source>
-          <Value />
+          <Value>ファイルのあるフォルダを開く</Value>
         </TranslationItem>
         <TranslationItem Name="openFileToolStripMenuItem" Property="Text">
           <Source>Open this revision (temp file)</Source>
@@ -2090,9 +2094,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Open with difftool</Source>
           <Value>Diffツールで開く</Value>
         </TranslationItem>
-        <TranslationItem Name="openWithToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="openWithToolStripMenuItem" Property="Text">
           <Source>Open working dir file with...</Source>
-          <Value />
+          <Value>作業ディレクトリのファイルをプログラムから開く</Value>
         </TranslationItem>
         <TranslationItem Name="parentOfALocalToolStripMenuItem" Property="Text" type="unfinished">
           <Source>A's parent &lt;--&gt; Working dir</Source>
@@ -2120,7 +2124,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="pushToolStripMenuItem" Property="Text">
           <Source>Push</Source>
-          <Value>Push(リモートへ反映)</Value>
+          <Value>Push (リモートへ反映)</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem" Property="Text">
           <Source>Rebase</Source>
@@ -2132,7 +2136,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="recentToolStripMenuItem" Property="Text">
           <Source>Recent Repositories</Source>
-          <Value>最近のリポジトリ</Value>
+          <Value>最近開いたリポジトリ</Value>
         </TranslationItem>
         <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
           <Source>Refresh</Source>
@@ -2158,13 +2162,13 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Reset file(s) to</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="resetToThisRevisionToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="resetToThisRevisionToolStripMenuItem" Property="Text">
           <Source>Reset to selected revision</Source>
-          <Value />
+          <Value>選択しているリビジョンへ戻す</Value>
         </TranslationItem>
         <TranslationItem Name="resetToolStripMenuItem" Property="Text">
           <Source>Reset changes</Source>
-          <Value>変更の取り消し</Value>
+          <Value>Reset (変更の取り消し)</Value>
         </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
           <Source>Solve mergeconflicts</Source>
@@ -2200,7 +2204,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="stashChangesToolStripMenuItem" Property="Text">
           <Source>Stash</Source>
-          <Value>変更の一時退避</Value>
+          <Value>Stash (変更の一時退避)</Value>
         </TranslationItem>
         <TranslationItem Name="stashPopToolStripMenuItem" Property="Text">
           <Source>Stash pop</Source>
@@ -2214,37 +2218,37 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Submodules</Source>
           <Value>サブモジュール</Value>
         </TranslationItem>
-        <TranslationItem Name="synchronizeAllSubmodulesToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="synchronizeAllSubmodulesToolStripMenuItem" Property="Text">
           <Source>Synchronize all submodules</Source>
-          <Value />
+          <Value>すべてのサブモジュールの同期</Value>
         </TranslationItem>
         <TranslationItem Name="tagToolStripMenuItem" Property="Text">
           <Source>Create tag</Source>
           <Value>タグの作成</Value>
         </TranslationItem>
-        <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText" type="unfinished">
+        <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText">
           <Source>Toggle split view layout</Source>
-          <Value />
+          <Value>ウィンドウ分割の切り替え</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButton1" Property="Text">
           <Source>Commit</Source>
           <Value>コミット</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonLevelUp" Property="Text" type="unfinished">
+        <TranslationItem Name="toolStripButtonLevelUp" Property="Text">
           <Source>Go to superproject</Source>
-          <Value />
+          <Value>親プロジェクトへ移動</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPull" Property="Text">
           <Source>Pull</Source>
-          <Value>Pull(リモートから取得)</Value>
+          <Value>Pull (リモートから取得)</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPush" Property="Text">
           <Source>Push</Source>
-          <Value>Push(リモートへ反映)</Value>
+          <Value>Push (リモートへ反映)</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripLabel1" Property="Text" type="unfinished">
+        <TranslationItem Name="toolStripLabel1" Property="Text">
           <Source>Branches:</Source>
-          <Value />
+          <Value>ブランチ:</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel2" Property="Text">
           <Source>Filter:</Source>
@@ -2264,7 +2268,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="updateAllSubmodulesToolStripMenuItem" Property="Text">
           <Source>Update all submodules</Source>
-          <Value>全てのサブモジュールの更新</Value>
+          <Value>すべてのサブモジュールの更新</Value>
         </TranslationItem>
         <TranslationItem Name="userManualToolStripMenuItem" Property="Text">
           <Source>User Manual</Source>
@@ -2362,9 +2366,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Remote branch</Source>
           <Value>リモートブランチ</Value>
         </TranslationItem>
-        <TranslationItem Name="_createBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="_createBranch" Property="Text">
           <Source>Create local branch with the name:</Source>
-          <Value />
+          <Value>同じ名前のローカルブランチを作成:</Value>
         </TranslationItem>
         <TranslationItem Name="_customBranchNameIsEmpty" Property="Text" type="unfinished">
           <Source>Custom branch name is empty.
@@ -2382,19 +2386,19 @@ Enter valid branch name or select predefined value.</Source>
         </TranslationItem>
         <TranslationItem Name="localChangesGB" Property="Text" type="unfinished">
           <Source>Local changes</Source>
-          <Value />
+          <Value>ローカルの変更</Value>
         </TranslationItem>
-        <TranslationItem Name="rbCreateBranchWithCustomName" Property="Text" type="unfinished">
+        <TranslationItem Name="rbCreateBranchWithCustomName" Property="Text">
           <Source>Create local branch with custom name:</Source>
-          <Value />
+          <Value>違う名前でローカルブランチを作成:</Value>
         </TranslationItem>
-        <TranslationItem Name="rbDontChange" Property="Text" type="unfinished">
+        <TranslationItem Name="rbDontChange" Property="Text">
           <Source>Don't change</Source>
-          <Value />
+          <Value>変更しない</Value>
         </TranslationItem>
-        <TranslationItem Name="rbDontCreate" Property="Text" type="unfinished">
+        <TranslationItem Name="rbDontCreate" Property="Text">
           <Source>Checkout remote branch</Source>
-          <Value />
+          <Value>リモートブランチのチェックアウトのみ</Value>
         </TranslationItem>
         <TranslationItem Name="rbMerge" Property="Text">
           <Source>Merge</Source>
@@ -2414,7 +2418,7 @@ Enter valid branch name or select predefined value.</Source>
         </TranslationItem>
         <TranslationItem Name="_applyShashedItemsAgain" Property="Text" type="obsolete">
           <Source>Apply stashed items to working dir again?</Source>
-          <Value>一時退避(stash)された項目をworking dirに適用し直しますか？</Value>
+          <Value>一時退避 (stash) された項目を作業ディレクトリに適用し直しますか？</Value>
         </TranslationItem>
         <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text" type="obsolete">
           <Source>Auto stash</Source>
@@ -2438,7 +2442,7 @@ Enter valid branch name or select predefined value.</Source>
         </TranslationItem>
         <TranslationItem Name="BranchInfo" Property="Text">
           <Source>Cherry pick this commit:</Source>
-          <Value>このコミットをチェリーピック：</Value>
+          <Value>このコミットをチェリーピック:</Value>
         </TranslationItem>
         <TranslationItem Name="ParentsLabel" Property="Text" type="unfinished">
           <Source>This commit is a merge, select parent:</Source>
@@ -2470,7 +2474,7 @@ Enter valid branch name or select predefined value.</Source>
         </TranslationItem>
         <TranslationItem Name="columnHeader3" Property="Text">
           <Source>Author</Source>
-          <Value>著者</Value>
+          <Value>作者</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader4" Property="Text">
           <Source>Date</Source>
@@ -2547,7 +2551,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="RemoveAll" Property="Text">
           <Source>Remove all untracked files</Source>
-          <Value>全ての未管理ファイルを削除</Value>
+          <Value>すべての未管理ファイルを削除</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveDirectories" Property="Text">
           <Source>Remove untracked directories</Source>
@@ -2583,19 +2587,19 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="Central" Property="Text">
           <Source>Central repository, no working dir  (--bare --shared=all)</Source>
-          <Value>working dirを持たないCentralリポジトリ(--bare --shared=all)</Value>
+          <Value>作業ディレクトリを持たない中央リポジトリ (--bare --shared=all)</Value>
         </TranslationItem>
         <TranslationItem Name="CentralRepository" Property="Text">
           <Source>P&amp;ublic repository, no working dir  (--bare)</Source>
-          <Value>working dirを持たないCentralリポジトリ(--bare)</Value>
+          <Value>作業ディレクトリを持たない中央リポジトリ (--bare)</Value>
         </TranslationItem>
         <TranslationItem Name="FromBrowse" Property="Text">
           <Source>&amp;Browse</Source>
-          <Value>参照</Value>
+          <Value>参照(&amp;B)</Value>
         </TranslationItem>
         <TranslationItem Name="LoadSSHKey" Property="Text">
           <Source>&amp;Load SSH key</Source>
-          <Value>SSH鍵の読み込み</Value>
+          <Value>SSH鍵の読み込み(&amp;L)</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Clone</Source>
@@ -2607,24 +2611,25 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="PersonalRepository" Property="Text">
           <Source>&amp;Personal repository</Source>
-          <Value>個人リポジトリ</Value>
+          <Value>個人リポジトリ(&amp;P)</Value>
         </TranslationItem>
         <TranslationItem Name="ToBrowse" Property="Text">
           <Source>B&amp;rowse</Source>
-          <Value>参照</Value>
+          <Value>参照(&amp;R)</Value>
         </TranslationItem>
-        <TranslationItem Name="_infoDirectoryExists" Property="Text" type="unfinished">
+        <TranslationItem Name="_infoDirectoryExists" Property="Text">
           <Source>(Directory already exists)</Source>
-          <Value />
+          <Value>(ディレクトリは既に存在します)</Value>
         </TranslationItem>
         <TranslationItem Name="_infoDirectoryNew" Property="Text" type="unfinished">
           <Source>(New directory)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_infoNewRepositoryLocation" Property="Text" type="unfinished">
+        <TranslationItem Name="_infoNewRepositoryLocation" Property="Text">
           <Source>The repository will be cloned to a new directory located here:
 {0}</Source>
-          <Value />
+          <Value>リポジトリは以下のディレクトリにクローンされます:
+{0}</Value>
         </TranslationItem>
         <TranslationItem Name="_questionOpenRepo" Property="Text" type="unfinished">
           <Source>The repository has been cloned successfully.
@@ -2635,13 +2640,13 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Open</Source>
           <Value>開く</Value>
         </TranslationItem>
-        <TranslationItem Name="brachLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="brachLabel" Property="Text">
           <Source>&amp;Branch:</Source>
-          <Value />
+          <Value>ブランチ(&amp;B):</Value>
         </TranslationItem>
-        <TranslationItem Name="cbIntializeAllSubmodules" Property="Text" type="unfinished">
+        <TranslationItem Name="cbIntializeAllSubmodules" Property="Text">
           <Source>Initialize all submodules</Source>
-          <Value />
+          <Value>すべてのサブモジュールを初期化</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Repository type</Source>
@@ -2649,21 +2654,21 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>&amp;Repository to clone:</Source>
-          <Value>クローンするリポジトリ</Value>
+          <Value>クローンするリポジトリ(&amp;R)</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>&amp;Destination:</Source>
-          <Value>クローン先</Value>
+          <Value>クローン先(&amp;D)</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>&amp;Subdirectory to create:</Source>
-          <Value>サブディレクトリの作成</Value>
+          <Value>サブディレクトリの作成(&amp;S)</Value>
         </TranslationItem>
         <TranslationItem Name="Info" Property="Text" type="obsolete">
           <Source>The repository will be cloned to a new directory located here:
 [&amp;Destination:]\GitExtensions</Source>
           <Value>リポジトリは次の新しいディレクトリにクローンされます:
-    [クローン先]\gitextnsions</Value>
+    [クローン先]\GitExtnsions(&amp;D)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2676,7 +2681,7 @@ Do you want to open the new repository "{0}" now?</Source>
         <TranslationItem Name="label1" Property="Text">
           <Source>Supported commandline arguments for
 gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
-          <Value>サポートしているコマンドライン引数：</Value>
+          <Value>サポートしているコマンドライン引数:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2698,9 +2703,9 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
           <Source>&amp;Commit</Source>
           <Value>コミット(&amp;C)</Value>
         </TranslationItem>
-        <TranslationItem Name="CommitAndPush" Property="Text" type="unfinished">
+        <TranslationItem Name="CommitAndPush" Property="Text">
           <Source>C&amp;ommit &amp;&amp; push</Source>
-          <Value />
+          <Value>コミット&amp;&amp;プッシュ(&amp;O)</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Commit</Source>
@@ -2719,13 +2724,13 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
           <Source>Stage in Superproject</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_ResetSelectedLinesToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="_ResetSelectedLinesToolStripMenuItem" Property="Text">
           <Source>Reset selected line(s)</Source>
-          <Value />
+          <Value>選択行の変更を取り消し</Value>
         </TranslationItem>
-        <TranslationItem Name="_StageSelectedLinesToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="_StageSelectedLinesToolStripMenuItem" Property="Text">
           <Source>Stage selected line(s)</Source>
-          <Value />
+          <Value>選択行をステージに追加</Value>
         </TranslationItem>
         <TranslationItem Name="_amendCommit" Property="Text">
           <Source>You are about to rewrite history.
@@ -2745,36 +2750,42 @@ Do you want to continue?</Source>
           <Source>Commit Message is requested during commit</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_commitMsgFirstLineInvalid" Property="Text" type="unfinished">
+        <TranslationItem Name="_commitMsgFirstLineInvalid" Property="Text">
           <Source>First line of commit message contains too many characters.
 Do you want to continue?</Source>
-          <Value />
+          <Value>一行目のコミットメッセージが長すぎます。
+本当にコミットしますか？</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitMsgLineInvalid" Property="Text" type="unfinished">
+        <TranslationItem Name="_commitMsgLineInvalid" Property="Text">
           <Source>The following line of commit message contains too many characters:
 
 {0}
 
 Do you want to continue?</Source>
-          <Value />
+          <Value>以下の行のコミットメッセージが長過ぎます:
+{0}
+
+本当にコミットしますか？</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitMsgRegExNotMatched" Property="Text" type="unfinished">
+        <TranslationItem Name="_commitMsgRegExNotMatched" Property="Text">
           <Source>Commit message does not match RegEx.
 Do you want to continue?</Source>
-          <Value />
+          <Value>コミットメッセージが正規表現にマッチしません。
+本当にコミットしますか？</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitMsgSecondLineNotEmpty" Property="Text" type="unfinished">
+        <TranslationItem Name="_commitMsgSecondLineNotEmpty" Property="Text">
           <Source>Second line of commit message is not empty.
 Do you want to continue?</Source>
-          <Value />
+          <Value>二行目が空ではありません。
+本当にコミットしますか？</Value>
         </TranslationItem>
         <TranslationItem Name="_commitTemplateSettings" Property="Text">
           <Source>Settings</Source>
           <Value>設定</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitValidationCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_commitValidationCaption" Property="Text">
           <Source>Commit validation</Source>
-          <Value />
+          <Value>コミットバリデーション</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteFailed" Property="Text">
           <Source>Delete file failed</Source>
@@ -2808,9 +2819,9 @@ Do you want to continue?</Source>
           <Source>Enter commit message</Source>
           <Value>コミットメッセージを入力してください</Value>
         </TranslationItem>
-        <TranslationItem Name="_formTitle" Property="Text" type="unfinished">
+        <TranslationItem Name="_formTitle" Property="Text">
           <Source>Commit to {0} ({1})</Source>
-          <Value />
+          <Value>コミット {0} ({1})</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeConflicts" Property="Text">
           <Source>There are unresolved mergeconflicts, solve mergeconflicts before committing.</Source>
@@ -2829,9 +2840,9 @@ Are you sure you want to commit?</Source>
           <Source>There are no files staged for this commit.</Source>
           <Value>ステージされたファイルがありません。</Value>
         </TranslationItem>
-        <TranslationItem Name="_noFilesStagedButSuggestToCommitAllUnstaged" Property="Text" type="unfinished">
+        <TranslationItem Name="_noFilesStagedButSuggestToCommitAllUnstaged" Property="Text">
           <Source>There are no files staged for this commit. Stage and commit all unstaged files?</Source>
-          <Value />
+          <Value>ステージされたファイルがありません。すべてのステージされていないファイルを追加してコミットしますか？</Value>
         </TranslationItem>
         <TranslationItem Name="_noStagedChanges" Property="Text">
           <Source>There are no staged changes</Source>
@@ -2874,13 +2885,13 @@ Do you want to continue?</Source>
           <Source>Are you sure you want to reset all selected files?</Source>
           <Value>選択したファイルへの変更を取り消してもよろしいですか？</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetSelectedLines" Property="Text" type="unfinished">
+        <TranslationItem Name="_resetSelectedLines" Property="Text">
           <Source>Reset selected line(s)</Source>
-          <Value />
+          <Value>選択行の変更を取り消し</Value>
         </TranslationItem>
-        <TranslationItem Name="_resetSelectedLinesConfirmation" Property="Text" type="unfinished">
+        <TranslationItem Name="_resetSelectedLinesConfirmation" Property="Text">
           <Source>Are you sure you want to reset the changes to the selected lines?</Source>
-          <Value />
+          <Value>本当に選択行の変更を取り消しますか？</Value>
         </TranslationItem>
         <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
           <Source>Unstage chunk of file</Source>
@@ -2910,49 +2921,49 @@ Do you want to continue?</Source>
           <Source>Stage {0} files</Source>
           <Value>{0}個のファイルをステージ</Value>
         </TranslationItem>
-        <TranslationItem Name="_stageSelectedLines" Property="Text" type="unfinished">
+        <TranslationItem Name="_stageSelectedLines" Property="Text">
           <Source>Stage selected line(s)</Source>
-          <Value />
+          <Value>選択行をステージに追加</Value>
         </TranslationItem>
-        <TranslationItem Name="_unstageSelectedLines" Property="Text" type="unfinished">
+        <TranslationItem Name="_unstageSelectedLines" Property="Text">
           <Source>Unstage selected line(s)</Source>
-          <Value />
+          <Value>選択行のステージを取り消し</Value>
         </TranslationItem>
         <TranslationItem Name="addFileTogitignoreToolStripMenuItem" Property="Text">
           <Source>Add file to .gitignore</Source>
           <Value>このファイルを無視</Value>
         </TranslationItem>
-        <TranslationItem Name="closeDialogAfterAllFilesCommittedToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="closeDialogAfterAllFilesCommittedToolStripMenuItem" Property="Text">
           <Source>Close dialog when all changes are committed</Source>
-          <Value />
+          <Value>すべての変更をコミット後にダイアログを閉じる</Value>
         </TranslationItem>
-        <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
           <Source>Close dialog after each commit</Source>
-          <Value />
+          <Value>コミット毎にダイアログを閉じる</Value>
         </TranslationItem>
-        <TranslationItem Name="commitCursorColumnLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="commitCursorColumnLabel" Property="Text">
           <Source>Col</Source>
-          <Value />
+          <Value>文字数</Value>
         </TranslationItem>
-        <TranslationItem Name="commitCursorLineLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="commitCursorLineLabel" Property="Text">
           <Source>Ln</Source>
-          <Value />
+          <Value>行</Value>
         </TranslationItem>
         <TranslationItem Name="commitMessageToolStripMenuItem" Property="Text">
           <Source>Commit &amp;message</Source>
-          <Value>過去のメッセージ(&amp;m)</Value>
+          <Value>過去のメッセージ(&amp;M)</Value>
         </TranslationItem>
-        <TranslationItem Name="commitSubmoduleChanges" Property="Text" type="unfinished">
+        <TranslationItem Name="commitSubmoduleChanges" Property="Text">
           <Source>Commit submodule changes</Source>
-          <Value />
+          <Value>サブモジュールの変更をコミットする</Value>
         </TranslationItem>
-        <TranslationItem Name="commitTemplatesToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="commitTemplatesToolStripMenuItem" Property="ToolTipText">
           <Source>Commit &amp;templates</Source>
-          <Value />
+          <Value>コミットテンプレート(&amp;T)</Value>
         </TranslationItem>
-        <TranslationItem Name="copyFolderNameMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="copyFolderNameMenuItem" Property="Text">
           <Source>Copy folder name</Source>
-          <Value />
+          <Value>フォルダ名をコピー</Value>
         </TranslationItem>
         <TranslationItem Name="deleteAllUntrackedFilesToolStripMenuItem" Property="Text">
           <Source>Delete all untracked files</Source>
@@ -2990,21 +3001,21 @@ Do you want to continue?</Source>
           <Source>This file is over 5 MB. Click to show preview</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text">
           <Source>Open containing folder</Source>
-          <Value />
+          <Value>ファイルのあるフォルダを開く</Value>
         </TranslationItem>
-        <TranslationItem Name="openDiffMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="openDiffMenuItem" Property="Text">
           <Source>Open with Difftool</Source>
-          <Value />
+          <Value>Diffツールで開く</Value>
         </TranslationItem>
-        <TranslationItem Name="openFolderMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="openFolderMenuItem" Property="Text">
           <Source>Open folder</Source>
-          <Value />
+          <Value>フォルダを開く</Value>
         </TranslationItem>
-        <TranslationItem Name="openSubmoduleMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="openSubmoduleMenuItem" Property="Text">
           <Source>Open with Git Extensions</Source>
-          <Value />
+          <Value>Git Extensionsで開く</Value>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
           <Source>Open</Source>
@@ -3018,13 +3029,13 @@ Do you want to continue?</Source>
           <Source>Open with</Source>
           <Value>プログラムから開く</Value>
         </TranslationItem>
-        <TranslationItem Name="refreshDialogOnFormFocusToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="refreshDialogOnFormFocusToolStripMenuItem" Property="Text">
           <Source>Refresh dialog on form focus</Source>
-          <Value />
+          <Value>フォーカスがあたる度にダイアログを更新</Value>
         </TranslationItem>
         <TranslationItem Name="resetAlltrackedChangesToolStripMenuItem" Property="Text">
           <Source>Reset all (tracked) changes</Source>
-          <Value>Git管理下のファイルの変更を全て元に戻す</Value>
+          <Value>Git管理下のファイルの変更をすべて元に戻す</Value>
         </TranslationItem>
         <TranslationItem Name="resetChanges" Property="Text">
           <Source>Reset file or directory changes</Source>
@@ -3038,13 +3049,13 @@ Do you want to continue?</Source>
           <Source>Reset selected files</Source>
           <Value>選択されたファイルの変更を元に戻す</Value>
         </TranslationItem>
-        <TranslationItem Name="resetSubmoduleChanges" Property="Text" type="unfinished">
+        <TranslationItem Name="resetSubmoduleChanges" Property="Text">
           <Source>Reset submodule changes</Source>
-          <Value />
+          <Value>サブモジュールの変更を元に戻す</Value>
         </TranslationItem>
-        <TranslationItem Name="selectionFilterToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="selectionFilterToolStripMenuItem" Property="Text">
           <Source>Selection filter</Source>
-          <Value />
+          <Value>選択フィルタ</Value>
         </TranslationItem>
         <TranslationItem Name="showIgnoredFilesToolStripMenuItem" Property="Text">
           <Source>Show ignored files</Source>
@@ -3054,17 +3065,17 @@ Do you want to continue?</Source>
           <Source>Show untracked files</Source>
           <Value>管理外ファイルの表示</Value>
         </TranslationItem>
-        <TranslationItem Name="signOffToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="signOffToolStripMenuItem" Property="Text">
           <Source>Sign-off commit</Source>
-          <Value />
+          <Value>コミットに署名する</Value>
         </TranslationItem>
-        <TranslationItem Name="stashSubmoduleChangesToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="stashSubmoduleChangesToolStripMenuItem" Property="Text">
           <Source>Stash submodule changes</Source>
-          <Value />
+          <Value>サブモジュールの変更を一時退避する</Value>
         </TranslationItem>
-        <TranslationItem Name="submoduleSummaryMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="submoduleSummaryMenuItem" Property="Text">
           <Source>View summary</Source>
-          <Value />
+          <Value>概要を見る</Value>
         </TranslationItem>
         <TranslationItem Name="toolAuthorLabelItem" Property="Text" type="unfinished">
           <Source>Author: (Format: "name &lt;mail&gt;")</Source>
@@ -3074,21 +3085,21 @@ Do you want to continue?</Source>
           <Source>Refresh</Source>
           <Value>更新</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStageAllItem" Property="Text" type="unfinished">
+        <TranslationItem Name="toolStageAllItem" Property="Text">
           <Source>Stage All</Source>
-          <Value />
+          <Value>すべてステージに追加</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStageItem" Property="Text" type="unfinished">
+        <TranslationItem Name="toolStageItem" Property="Text">
           <Source>&amp;Stage</Source>
-          <Value />
+          <Value>ステージに追加(&amp;S)</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripLabel1" Property="Text" type="unfinished">
+        <TranslationItem Name="toolStripLabel1" Property="Text">
           <Source>Selection Filter</Source>
-          <Value />
+          <Value>選択フィルタ</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripMenuItem10" Property="Text" type="unfinished">
+        <TranslationItem Name="toolStripMenuItem10" Property="Text">
           <Source>Open containing folder</Source>
-          <Value />
+          <Value>ファイルのあるフォルダを開く</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripMenuItem11" Property="Text">
           <Source>Edit file</Source>
@@ -3098,13 +3109,13 @@ Do you want to continue?</Source>
           <Source>Copy full path</Source>
           <Value>ファイル名をクリップボードにコピー</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripMenuItem3" Property="Text" type="unfinished">
+        <TranslationItem Name="toolStripMenuItem3" Property="Text">
           <Source>Options</Source>
-          <Value />
+          <Value>オプション</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripMenuItem6" Property="Text" type="unfinished">
+        <TranslationItem Name="toolStripMenuItem6" Property="Text">
           <Source>View file history</Source>
-          <Value />
+          <Value>ファイルの履歴を見る</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripMenuItem7" Property="Text">
           <Source>Open</Source>
@@ -3118,25 +3129,25 @@ Do you want to continue?</Source>
           <Source>Open with difftool</Source>
           <Value>Diffツールで開く</Value>
         </TranslationItem>
-        <TranslationItem Name="toolUnstageAllItem" Property="Text" type="unfinished">
+        <TranslationItem Name="toolUnstageAllItem" Property="Text">
           <Source>Unstage All</Source>
-          <Value />
+          <Value>すべてのステージの取り消し</Value>
         </TranslationItem>
-        <TranslationItem Name="toolUnstageItem" Property="Text" type="unfinished">
+        <TranslationItem Name="toolUnstageItem" Property="Text">
           <Source>&amp;Unstage</Source>
-          <Value />
+          <Value>ステージの取り消し(&amp;U)</Value>
         </TranslationItem>
-        <TranslationItem Name="updateSubmoduleMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="updateSubmoduleMenuItem" Property="Text">
           <Source>Update submodule</Source>
-          <Value />
+          <Value>サブモジュールを更新</Value>
         </TranslationItem>
-        <TranslationItem Name="viewFileHistoryToolStripItem" Property="Text" type="unfinished">
+        <TranslationItem Name="viewFileHistoryToolStripItem" Property="Text">
           <Source>View file history</Source>
-          <Value />
+          <Value>ファイルの履歴を見る</Value>
         </TranslationItem>
-        <TranslationItem Name="viewHistoryMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="viewHistoryMenuItem" Property="Text">
           <Source>View history</Source>
-          <Value />
+          <Value>履歴を見る</Value>
         </TranslationItem>
         <TranslationItem Name="workingToolStripMenuItem" Property="Text">
           <Source>Working dir changes</Source>
@@ -3158,21 +3169,21 @@ Do you want to continue?</Source>
           <Source>Commit count</Source>
           <Value>コミット数</Value>
         </TranslationItem>
-        <TranslationItem Name="cbIncludeSubmodules" Property="Text" type="unfinished">
+        <TranslationItem Name="cbIncludeSubmodules" Property="Text">
           <Source>Include submodules</Source>
-          <Value />
+          <Value>サブモジュールも含める</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormCommitTemplateSettings">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Commit template settings</Source>
-          <Value />
+          <Value>コミットテンプレート設定</Value>
         </TranslationItem>
-        <TranslationItem Name="_emptyTemplate" Property="Text" type="unfinished">
+        <TranslationItem Name="_emptyTemplate" Property="Text">
           <Source>empty</Source>
-          <Value />
+          <Value>なし</Value>
         </TranslationItem>
         <TranslationItem Name="buttonCancel" Property="Text">
           <Source>Cancel</Source>
@@ -3182,37 +3193,37 @@ Do you want to continue?</Source>
           <Source>Ok</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="groupBoxCommitTemplates" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBoxCommitTemplates" Property="Text">
           <Source>Commit templates</Source>
-          <Value />
+          <Value>コミットテンプレート</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBoxCommitValidation" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBoxCommitValidation" Property="Text">
           <Source>Commit validation</Source>
-          <Value />
+          <Value>コミットバリデーション</Value>
         </TranslationItem>
-        <TranslationItem Name="labelCommitTemplate" Property="Text" type="unfinished">
+        <TranslationItem Name="labelCommitTemplate" Property="Text">
           <Source>Commit template:</Source>
-          <Value />
+          <Value>コミットテンプレート:</Value>
         </TranslationItem>
-        <TranslationItem Name="labelCommitTemplateName" Property="Text" type="unfinished">
+        <TranslationItem Name="labelCommitTemplateName" Property="Text">
           <Source>Name:</Source>
-          <Value />
+          <Value>名前:</Value>
         </TranslationItem>
-        <TranslationItem Name="labelMaxFirstLineLength" Property="Text" type="unfinished">
+        <TranslationItem Name="labelMaxFirstLineLength" Property="Text">
           <Source>Maximum numbers of characters in first line (0 = check disabled):</Source>
-          <Value />
+          <Value>一行目の最大文字数 (0 = チェックしない)</Value>
         </TranslationItem>
-        <TranslationItem Name="labelMaxLineLength" Property="Text" type="unfinished">
+        <TranslationItem Name="labelMaxLineLength" Property="Text">
           <Source>Maximum numbers of characters per line (0 = check disabled):</Source>
-          <Value />
+          <Value>一行あたりの最大文字数 (0 = チェックしない)</Value>
         </TranslationItem>
-        <TranslationItem Name="labelRegExCheck" Property="Text" type="unfinished">
+        <TranslationItem Name="labelRegExCheck" Property="Text">
           <Source>Commit must match following RegEx (Empty = check disabled):</Source>
-          <Value />
+          <Value>コミットメッセージは以下の正規表現にマッチすることを確認 (空の時はチェックなし)</Value>
         </TranslationItem>
-        <TranslationItem Name="labelSecondLineEmpty" Property="Text" type="unfinished">
+        <TranslationItem Name="labelSecondLineEmpty" Property="Text">
           <Source>Second line must be empty:</Source>
-          <Value />
+          <Value>二行目は空であることを確認</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3308,9 +3319,9 @@ Deleting a branch can cause commits to be deleted too!</Source>
           <Value>本当にこのブランチを削除しますか？
 ブランチの削除はコミットの削除ということでもありますよ！</Value>
         </TranslationItem>
-        <TranslationItem Name="_deleteUnmergedBranchForcingSuggestion" Property="Text" type="unfinished">
+        <TranslationItem Name="_deleteUnmergedBranchForcingSuggestion" Property="Text">
           <Source>You cannot delete unmerged branch until you set “force delete” mode.</Source>
-          <Value />
+          <Value>マージされていないブランチは「強制削除」でなければ削除できません。</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select branches</Source>
@@ -3339,13 +3350,13 @@ this using `force delete´.
           <Source>Delete</Source>
           <Value>削除</Value>
         </TranslationItem>
-        <TranslationItem Name="_deleteFromCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_deleteFromCaption" Property="Text">
           <Source>Delete from '{0}'</Source>
-          <Value />
+          <Value>'{0}'から削除</Value>
         </TranslationItem>
-        <TranslationItem Name="deleteTag" Property="Text" type="unfinished">
+        <TranslationItem Name="deleteTag" Property="Text">
           <Source>Delete tag from '{0}'</Source>
-          <Value />
+          <Value>タグを'{0}'から削除</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select tag</Source>
@@ -3415,9 +3426,9 @@ Click on the "Support this project" button to get more information about making 
           <Source>Error</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_saveChanges" Property="Text" type="unfinished">
+        <TranslationItem Name="_saveChanges" Property="Text">
           <Source>Do you want to save changes?</Source>
-          <Value />
+          <Value>変更を保存しますか？</Value>
         </TranslationItem>
         <TranslationItem Name="_saveChangesCaption" Property="Text">
           <Source>Save changes</Source>
@@ -3433,7 +3444,7 @@ Click on the "Support this project" button to get more information about making 
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>File History</Source>
-          <Value>ファイルの歴史</Value>
+          <Value>ファイルの履歴</Value>
         </TranslationItem>
         <TranslationItem Name="BlameTab" Property="Text">
           <Source>Blame</Source>
@@ -3477,7 +3488,7 @@ Click on the "Support this project" button to get more information about making 
         </TranslationItem>
         <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
           <Source>Open with difftool</Source>
-          <Value>difftoolで開く</Value>
+          <Value>Diffツールで開く</Value>
         </TranslationItem>
         <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
           <Source>Revert commit</Source>
@@ -3487,17 +3498,17 @@ Click on the "Support this project" button to get more information about making 
           <Source>Save as</Source>
           <Value>名前を付けて保存</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripLabel1" Property="Text" type="unfinished">
+        <TranslationItem Name="toolStripLabel1" Property="Text">
           <Source>Branches:</Source>
-          <Value />
+          <Value>ブランチ:</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel2" Property="Text">
           <Source>Filter:</Source>
           <Value>フィルタ:</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripSplitLoad" Property="ToolTipText" type="unfinished">
+        <TranslationItem Name="toolStripSplitLoad" Property="ToolTipText">
           <Source>Load file history</Source>
-          <Value />
+          <Value>ファイルの履歴を読み込み</Value>
         </TranslationItem>
         <TranslationItem Name="viewCommitToolStripMenuItem" Property="Text" type="unfinished">
           <Source>View commit</Source>
@@ -3526,9 +3537,9 @@ Do you want Git Extensions to help locate the correct folder?</Source>
           <Source>Global config</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_gitconfigFoundHome" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitconfigFoundHome" Property="Text">
           <Source>Located .gitconfig in %HOME% ({0}). This setting has been chosen automatically.</Source>
-          <Value />
+          <Value>.gitconfig ファイルは %HOME% ({0}) ディレクトリに配置され、自動的に読み込まれます。</Value>
         </TranslationItem>
         <TranslationItem Name="_gitconfigFoundHomedrive" Property="Text" type="unfinished">
           <Source>Located .gitconfig in %HOMEDRIVE%%HOMEPATH% ({0}). This setting has been chosen automatically.</Source>
@@ -3609,9 +3620,9 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Mail patches to</Source>
           <Value>パッチをメール</Value>
         </TranslationItem>
-        <TranslationItem Name="_currentBranchText" Property="Text" type="unfinished">
+        <TranslationItem Name="_currentBranchText" Property="Text">
           <Source>Current branch:</Source>
-          <Value />
+          <Value>現在のブランチ:</Value>
         </TranslationItem>
         <TranslationItem Name="_noEmailEnteredText" Property="Text" type="unfinished">
           <Source>You need to enter an email address.</Source>
@@ -3689,7 +3700,7 @@ Failed to send mail.</Source>
           <Source>Download Gerrit Change</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="AddRemote" Property="Text" type="unfinished">
+        <TranslationItem Name="AddRemote" Property="Text">
           <Source>Manage remotes</Source>
           <Value>リモートの管理</Value>
         </TranslationItem>
@@ -3834,13 +3845,13 @@ command "git help gitattributes"
           <Value>git attributesの編集
 パスごとに属性を定義します。
 
-全てのjpgファイルをバイナリとしてマークする例：
+すべてのjpgファイルをバイナリとしてマークする例:
 *.jpg binary
 
-slnファイルをバイナリとしてマークする例：
+slnファイルをバイナリとしてマークする例:
 *.sln binary
 
-あるファイルをテキストとしてマークする例：
+あるファイルをテキストとしてマークする例:
 weirdchars.txt text
 
 これより詳しい情報は、gitの
@@ -3862,9 +3873,9 @@ weirdchars.txt text
           <Source>Add default ignores</Source>
           <Value>デフォルトの無視ファイルを追加</Value>
         </TranslationItem>
-        <TranslationItem Name="AddPattern" Property="Text" type="unfinished">
+        <TranslationItem Name="AddPattern" Property="Text">
           <Source>Add pattern</Source>
-          <Value />
+          <Value>無視パターンの追加</Value>
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Source>Save</Source>
@@ -3891,11 +3902,11 @@ Check if file is accessible.</Source>
           <Source>Save changes to .gitignore?</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_saveFileQuestionCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_saveFileQuestionCaption" Property="Text">
           <Source>Save changes?</Source>
-          <Value />
+          <Value>保存しますか？</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
+        <TranslationItem Name="label1" Property="Text" type="obsolete">
           <Source>Specify filepatterns you want git to ignore.
 
 Example:
@@ -3920,7 +3931,7 @@ Thumbs.db
 obj/
 [Rr]elease*/
 _ReSharper*/</Source>
-          <Value>gitに無視させたいファイルのパターンを指定します。
+          <Value>gitに無視させいファイルのパターンを指定します。
 
 例:
 #Windowsによって作られるサムネイルを無視
@@ -4015,57 +4026,62 @@ defaultrebase=0</Source>
     </TranslationCategory>
     <TranslationCategory Name="FormGoToCommit">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Go to commit</Source>
-          <Value />
+          <Value>コミットに移動</Value>
         </TranslationItem>
-        <TranslationItem Name="goButton" Property="Text" type="unfinished">
+        <TranslationItem Name="goButton" Property="Text">
           <Source>Go</Source>
-          <Value />
+          <Value>移動</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Help</Source>
           <Value>ヘルプ</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Commit expression:</Source>
-          <Value />
+          <Value>コミット式:</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Commit expression examples:
 - complete commit hash: e. g.: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9
 - partial commit hash (if unique): e. g.: 8eab51fcb9c453
 - tag name
 - branch name</Source>
-          <Value />
+          <Value>コミット式が示すコミットに移動します。
+例:
+- 完全なコミットハッシュ:例  8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9
+- 部分的な (ただし唯一の) コミットハッシュ:例: 8eab51fcb9c453
+- タグ名
+- ブランチ名</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text" type="unfinished">
+        <TranslationItem Name="label3" Property="Text">
           <Source>Go to tag:</Source>
-          <Value />
+          <Value>タグに移動:</Value>
         </TranslationItem>
-        <TranslationItem Name="label4" Property="Text" type="unfinished">
+        <TranslationItem Name="label4" Property="Text">
           <Source>Go to branch:</Source>
-          <Value />
+          <Value>ブランチに移動:</Value>
         </TranslationItem>
-        <TranslationItem Name="linkGitRevParse" Property="Text" type="unfinished">
+        <TranslationItem Name="linkGitRevParse" Property="Text">
           <Source>More (git-rev-parse, section SPECIFYING REVISIONS)</Source>
-          <Value />
+          <Value>詳しい情報 (git-rev-parse, section SPECIFYING REVISIONS)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormGoToLine">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Go to line</Source>
-          <Value />
+          <Value>行数を指定して移動</Value>
         </TranslationItem>
         <TranslationItem Name="cancelBtn" Property="Text">
           <Source>Cancel</Source>
           <Value>キャンセル</Value>
         </TranslationItem>
-        <TranslationItem Name="lineLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="lineLabel" Property="Text">
           <Source>Line number</Source>
-          <Value />
+          <Value>行数</Value>
         </TranslationItem>
         <TranslationItem Name="okBtn" Property="Text">
           <Source>OK</Source>
@@ -4093,7 +4109,7 @@ defaultrebase=0</Source>
         </TranslationItem>
         <TranslationItem Name="Central" Property="Text">
           <Source>Central repository, no working dir  (--bare --shared=all)</Source>
-          <Value>Working dirを持たないCentralリポジトリ(--bare --shared)</Value>
+          <Value>作業ディレクトリを持たない中央リポジトリ (--bare --shared)</Value>
         </TranslationItem>
         <TranslationItem Name="Init" Property="Text">
           <Source>Initialize</Source>
@@ -4183,7 +4199,7 @@ command "git help shortlog"</Source>
           <Value>mailmapを編集します。
 このファイルはユーザ名を訂正するためのものです。
 
-例：
+例:
 Henk Westhuis &lt;Henk@.(none)&gt;
 Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
         </TranslationItem>
@@ -4195,9 +4211,9 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</Value>
           <Source>Merge branches</Source>
           <Value>ブランチのマージ</Value>
         </TranslationItem>
-        <TranslationItem Name="Currentbranch" Property="Text">
+        <TranslationItem Name="Currentbranch" Property="Text" type="obsolete">
           <Source>Current branch</Source>
-          <Value>現在のブランチ：</Value>
+          <Value>現在のブランチ</Value>
         </TranslationItem>
         <TranslationItem Name="NonDefaultMergeStrategy" Property="Text">
           <Source>Use non-default merge strategy</Source>
@@ -4232,7 +4248,7 @@ This is a modified recursive strategy. When merging trees A and B, if B correspo
 match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common 
 ancestor tree. </Source>
           <Value>resolve
-3-wayマージアルゴリズムを用いて、2つのブランチ(例えば、現在のブランチとpullしてきたブランチ)のみをマージできます。
+3-wayマージアルゴリズムを用いて、2つのブランチ (例えば、現在のブランチとpullしてきたブランチ) のみをマージできます。
 この戦略はcriss-crossマージの曖昧さを検出します。このアルゴリズムは、高速かつ安全と考えられています。
 訳注：criss-crossマージに遭遇したことがないのでわかりませんが、おそらくcriss-crossマージに遭遇すると、
 この戦略ではマージが中断されるということだと思います。
@@ -4255,13 +4271,13 @@ subtree
 この戦略はrecursive戦略のバリエーションです。AとBをマージするとき、もしBがAの部分階層と一致するなら、
 同階層で階層を読み込む代わりに、BをAの階層構造と合うように調整されます。この調整は共通の先祖にも行われます。</Value>
         </TranslationItem>
-        <TranslationItem Name="advanced" Property="Text" type="unfinished">
+        <TranslationItem Name="advanced" Property="Text">
           <Source>Show advanced options</Source>
-          <Value />
+          <Value>詳細なオプションの表示</Value>
         </TranslationItem>
         <TranslationItem Name="fastForward" Property="Text">
           <Source>Keep a single branch line if possible (fast forward)</Source>
-          <Value>可能ならブランチを一直線に保つ(fast forward)</Value>
+          <Value>可能ならブランチを一直線に保つ (fast forward)</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Merge</Source>
@@ -4275,17 +4291,17 @@ subtree
           <Source>Merge with</Source>
           <Value>マージ対象</Value>
         </TranslationItem>
-        <TranslationItem Name="noCommit" Property="Text" type="unfinished">
+        <TranslationItem Name="noCommit" Property="Text">
           <Source>Do not commit</Source>
-          <Value />
+          <Value>コミットしない</Value>
         </TranslationItem>
         <TranslationItem Name="noFastForward" Property="Text">
           <Source>Always create a new merge commit</Source>
           <Value>常にマージコミットを作成する</Value>
         </TranslationItem>
-        <TranslationItem Name="squash" Property="Text" type="unfinished">
+        <TranslationItem Name="squash" Property="Text">
           <Source>Squash commits</Source>
-          <Value />
+          <Value>Squash (まとめてコミットする)</Value>
         </TranslationItem>
         <TranslationItem Name="strategyHelp" Property="Text">
           <Source>Help</Source>
@@ -4335,27 +4351,27 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         </TranslationItem>
         <TranslationItem Name="AutoStash" Property="Text">
           <Source>Auto stash</Source>
-          <Value>自動で一時退避(stash)</Value>
+          <Value>自動で一時退避 (stash)</Value>
         </TranslationItem>
         <TranslationItem Name="Fetch" Property="Text">
           <Source>Do not merge, only &amp;fetch remote changes</Source>
-          <Value>マージせずに取得のみ行う(&amp;f) : git fetch</Value>
+          <Value>マージせずに取得のみ行う(&amp;F) : git fetch</Value>
         </TranslationItem>
         <TranslationItem Name="Merge" Property="Text">
           <Source>&amp;Merge remote branch into current branch</Source>
-          <Value>現在のブランチと取得したブランチをマージする(&amp;m) : git pull</Value>
+          <Value>現在のブランチと取得したブランチをマージする(&amp;M) : git pull</Value>
         </TranslationItem>
         <TranslationItem Name="Mergetool" Property="Text">
           <Source>Solve conflicts</Source>
           <Value>競合の解決</Value>
         </TranslationItem>
-        <TranslationItem Name="NoTags" Property="Text" type="unfinished">
+        <TranslationItem Name="NoTags" Property="Text">
           <Source>No tags</Source>
-          <Value />
+          <Value>タグなし</Value>
         </TranslationItem>
-        <TranslationItem Name="Pull" Property="Text">
+        <TranslationItem Name="Pull" Property="Text" type="unfinished">
           <Source>&amp;Pull</Source>
-          <Value>Pull(&amp;p)</Value>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="PullFromRemote" Property="Text">
           <Source>Remote</Source>
@@ -4363,11 +4379,11 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         </TranslationItem>
         <TranslationItem Name="PullFromUrl" Property="Text">
           <Source>Url</Source>
-          <Value>URLを</Value>
+          <Value>URL</Value>
         </TranslationItem>
         <TranslationItem Name="Rebase" Property="Text">
           <Source>&amp;Rebase current branch on top of remote branch, creates linear history (use with caution)</Source>
-          <Value>現在のブランチに取得したブランチをリベースする(&amp;r) : git pull --rebase</Value>
+          <Value>現在のブランチに取得したブランチをリベースする(&amp;R) : git pull --rebase</Value>
         </TranslationItem>
         <TranslationItem Name="Stash" Property="Text">
           <Source>Stash changes</Source>
@@ -4375,7 +4391,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         </TranslationItem>
         <TranslationItem Name="_allMergeConflictSolvedQuestion" Property="Text">
           <Source>Are all merge conflicts solved? Do you want to commit?</Source>
-          <Value>全ての競合を解決しましたか？</Value>
+          <Value>すべての競合を解決しましたか？</Value>
         </TranslationItem>
         <TranslationItem Name="_allMergeConflictSolvedQuestionCaption" Property="Text">
           <Source>Conflicts solved</Source>
@@ -4383,7 +4399,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         </TranslationItem>
         <TranslationItem Name="_applyShashedItemsAgain" Property="Text">
           <Source>Apply stashed items to working dir again?</Source>
-          <Value>一時退避(stash)された項目をworking dirに適用し直しますか？</Value>
+          <Value>一時退避 (stash) された項目をworking dirに適用し直しますか？</Value>
         </TranslationItem>
         <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text">
           <Source>Auto stash</Source>
@@ -4406,7 +4422,7 @@ Are you sure you want to rebase this merge?</Source>
           <Source>You can only fetch all remote branches (*) without merge or rebase.
 If you want to fetch all remote branches, choose fetch.
 If you want to fetch and merge a branch, choose a specific branch.</Source>
-          <Value>mergeとrebaseでは全てのブランチ(*)のfetchは使用できません。
+          <Value>mergeとrebaseではすべてのブランチ(*)のfetchは使用できません。
 もしすべてのブランチを取得したければ、fetchを選択してください。
 マージも行いたい場合、ブランチを指定してください。</Value>
         </TranslationItem>
@@ -4504,11 +4520,11 @@ This will initialize and update all submodules recursive.</Source>
         </TranslationItem>
         <TranslationItem Name="ForcePushBranches" Property="Text">
           <Source>&amp;Force Push</Source>
-          <Value>強制Push(&amp;f)</Value>
+          <Value>強制Push(&amp;F)</Value>
         </TranslationItem>
         <TranslationItem Name="ForcePushTags" Property="Text">
           <Source>&amp;Force Push</Source>
-          <Value>強制Push(&amp;f)</Value>
+          <Value>強制Push(&amp;F)</Value>
         </TranslationItem>
         <TranslationItem Name="LoadSSHKey" Property="Text">
           <Source>Load SSH key</Source>
@@ -4530,21 +4546,21 @@ This will initialize and update all submodules recursive.</Source>
           <Source>Pull</Source>
           <Value>Pull</Value>
         </TranslationItem>
-        <TranslationItem Name="Push" Property="Text">
+        <TranslationItem Name="Push" Property="Text" type="unfinished">
           <Source>&amp;Push</Source>
-          <Value>Push(&amp;p)</Value>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="PushAllBranches" Property="Text">
           <Source>Push &amp;all branches</Source>
-          <Value>全てのブランチをPush(&amp;a)</Value>
+          <Value>すべてのブランチをPush(&amp;A)</Value>
         </TranslationItem>
         <TranslationItem Name="PushAllTags" Property="Text">
           <Source>Push &amp;all tags</Source>
-          <Value>全てのタグをPush(&amp;a)</Value>
+          <Value>すべてのタグをPush(&amp;A)</Value>
         </TranslationItem>
         <TranslationItem Name="PushColumn" Property="HeaderText">
           <Source>Push</Source>
-          <Value>Push(リモートへ反映)</Value>
+          <Value>Push (リモートへ反映)</Value>
         </TranslationItem>
         <TranslationItem Name="PushToRemote" Property="Text">
           <Source>Remote</Source>
@@ -4610,11 +4626,11 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="_selectTag" Property="Text">
           <Source>You need to select a tag to push or select "Push all tags".</Source>
-          <Value>Pushするタグを選択するか、「全てのタグをPush」を選択してください。</Value>
+          <Value>Pushするタグを選択するか、「すべてのタグをPush」を選択してください。</Value>
         </TranslationItem>
-        <TranslationItem Name="_updateTrackingReference" Property="Text" type="unfinished">
+        <TranslationItem Name="_updateTrackingReference" Property="Text">
           <Source>The branch {0} does not have a tracking reference. Do you want to add a tracking reference to {1}?</Source>
-          <Value />
+          <Value>ブランチ {0} は追跡先ブランチが設定されていません。{1} を追跡先ブランチとして設定しますか？</Value>
         </TranslationItem>
         <TranslationItem Name="_yes" Property="Text" type="unfinished">
           <Source>Yes</Source>
@@ -4728,9 +4744,9 @@ Are you sure you want to push this branch?</Source>
           <Source>Continue rebase</Source>
           <Value>リベース続行</Value>
         </TranslationItem>
-        <TranslationItem Name="ShowOptions" Property="Text" type="unfinished">
+        <TranslationItem Name="ShowOptions" Property="Text">
           <Source>Show options</Source>
-          <Value />
+          <Value>オプションの表示</Value>
         </TranslationItem>
         <TranslationItem Name="Skip" Property="Text">
           <Source>Skip this commit</Source>
@@ -4754,9 +4770,9 @@ Nothing to rebase.</Source>
           <Source>Continue rebase</Source>
           <Value>リベース続行</Value>
         </TranslationItem>
-        <TranslationItem Name="_continueRebaseText2" Property="Text" type="unfinished">
+        <TranslationItem Name="_continueRebaseText2" Property="Text">
           <Source>&gt;Continue rebase&lt;</Source>
-          <Value />
+          <Value>&gt;リベース続行&lt;</Value>
         </TranslationItem>
         <TranslationItem Name="_noBranchSelectedText" Property="Text" type="unfinished">
           <Source>Please select a branch</Source>
@@ -4774,17 +4790,17 @@ Nothing to rebase.</Source>
           <Source>Autosquash</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="chkInteractive" Property="Text" type="unfinished">
+        <TranslationItem Name="chkInteractive" Property="Text">
           <Source>Interactive Rebase</Source>
-          <Value />
+          <Value>インタラクティブリベース</Value>
         </TranslationItem>
         <TranslationItem Name="chkPreserveMerges" Property="Text" type="unfinished">
           <Source>Preserve Merges</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="chkSpecificRange" Property="Text" type="unfinished">
+        <TranslationItem Name="chkSpecificRange" Property="Text">
           <Source>Specific range</Source>
-          <Value />
+          <Value>範囲指定</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Rebase current branch on top of another branch</Source>
@@ -4798,19 +4814,19 @@ Nothing to rebase.</Source>
           <Source>Commits to re-apply:</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="lblCurrent" Property="Text" type="unfinished">
+        <TranslationItem Name="lblCurrent" Property="Text">
           <Source>Current branch:</Source>
-          <Value />
+          <Value>現在のブランチ:</Value>
         </TranslationItem>
-        <TranslationItem Name="lblRangeFrom" Property="Text" type="unfinished">
+        <TranslationItem Name="lblRangeFrom" Property="Text">
           <Source>From (exc.)</Source>
-          <Value />
+          <Value>ここから (含まれない)</Value>
         </TranslationItem>
-        <TranslationItem Name="lblRangeTo" Property="Text" type="unfinished">
+        <TranslationItem Name="lblRangeTo" Property="Text">
           <Source>To</Source>
-          <Value />
+          <Value>ここまで</Value>
         </TranslationItem>
-        <TranslationItem Name="Currentbranch" Property="Text" type="obsolete">
+        <TranslationItem Name="Currentbranch" Property="Text">
           <Source>Current</Source>
           <Value>現在</Value>
         </TranslationItem>
@@ -4920,7 +4936,7 @@ Nothing to rebase.</Source>
         </TranslationItem>
         <TranslationItem Name="Prune" Property="Text">
           <Source>Prune remote branches</Source>
-          <Value>Prune remote branches</Value>
+          <Value>Prune (リモートで削除されたブランチ情報を削除)</Value>
         </TranslationItem>
         <TranslationItem Name="PuTTYSSH" Property="Text">
           <Source>PuTTY SSH</Source>
@@ -4948,24 +4964,25 @@ Nothing to rebase.</Source>
         </TranslationItem>
         <TranslationItem Name="UpdateBranch" Property="Text">
           <Source>Update all remote branch info</Source>
-          <Value>すべてのリモートのブランチ情報を更新する</Value>
+          <Value>Update (すべてのリモートのブランチ情報を更新する)</Value>
         </TranslationItem>
         <TranslationItem Name="_hintDelete" Property="Text">
           <Source>Delete</Source>
           <Value>削除</Value>
         </TranslationItem>
-        <TranslationItem Name="_labelUrlAsFetch" Property="Text" type="unfinished">
+        <TranslationItem Name="_labelUrlAsFetch" Property="Text">
           <Source>Fetch Url</Source>
-          <Value />
+          <Value>フェッチURL</Value>
         </TranslationItem>
         <TranslationItem Name="_labelUrlAsFetchPush" Property="Text">
           <Source>Url</Source>
           <Value>URLを</Value>
         </TranslationItem>
-        <TranslationItem Name="_questionAutoPullBehaviour" Property="Text" type="unfinished">
+        <TranslationItem Name="_questionAutoPullBehaviour" Property="Text">
           <Source>You have added a new remote repository.
 Do you want to automatically configure the default push and pull behavior for this remote?</Source>
-          <Value />
+          <Value>新しいリモートリポジトリを追加しました。
+このリポジトリをデフォルトのリモートリポジトリとしますか？</Value>
         </TranslationItem>
         <TranslationItem Name="_questionAutoPullBehaviourCaption" Property="Text" type="unfinished">
           <Source>New remote</Source>
@@ -5008,9 +5025,9 @@ Value has been reset to empty value.</Source>
           <Source>Close</Source>
           <Value>閉じる</Value>
         </TranslationItem>
-        <TranslationItem Name="checkBoxSepPushUrl" Property="Text" type="unfinished">
+        <TranslationItem Name="checkBoxSepPushUrl" Property="Text">
           <Source>Separate Push Url</Source>
-          <Value />
+          <Value>フェッチ元とプッシュ先を分ける</Value>
         </TranslationItem>
         <TranslationItem Name="dataGridViewTextBoxColumn1" Property="HeaderText">
           <Source>Name</Source>
@@ -5044,9 +5061,9 @@ Value has been reset to empty value.</Source>
           <Source>Default merge with</Source>
           <Value>デフォルトのマージ先</Value>
         </TranslationItem>
-        <TranslationItem Name="labelPushUrl" Property="Text" type="unfinished">
+        <TranslationItem Name="labelPushUrl" Property="Text">
           <Source>Push Url</Source>
-          <Value />
+          <Value>プッシュURL</Value>
         </TranslationItem>
         <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Branch</Source>
@@ -5072,21 +5089,21 @@ Value has been reset to empty value.</Source>
     </TranslationCategory>
     <TranslationCategory Name="FormRenameBranch">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Rename branch</Source>
-          <Value />
+          <Value>ブランチ名の変更</Value>
         </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text" type="unfinished">
+        <TranslationItem Name="Ok" Property="Text">
           <Source>Rename</Source>
-          <Value />
+          <Value>変更</Value>
         </TranslationItem>
-        <TranslationItem Name="_branchRenameFailed" Property="Text" type="unfinished">
+        <TranslationItem Name="_branchRenameFailed" Property="Text">
           <Source>Rename failed.</Source>
-          <Value />
+          <Value>ブランチ名の変更は失敗しました。</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>New name</Source>
-          <Value />
+          <Value>新しいブランチ名</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -5100,21 +5117,21 @@ Value has been reset to empty value.</Source>
           <Source>Cancel</Source>
           <Value>キャンセル</Value>
         </TranslationItem>
-        <TranslationItem Name="btnReset" Property="Text" type="unfinished">
+        <TranslationItem Name="btnReset" Property="Text">
           <Source>Reset</Source>
-          <Value />
+          <Value>実行</Value>
         </TranslationItem>
-        <TranslationItem Name="cbDeleteNewFilesAndDirectories" Property="Text" type="unfinished">
+        <TranslationItem Name="cbDeleteNewFilesAndDirectories" Property="Text">
           <Source>Also delete new files and/or directories</Source>
-          <Value />
+          <Value>新規ファイル/ディレクトリも削除する</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Are you sure you want to reset your changes?</Source>
-          <Value />
+          <Value>本当に変更を取り消しますか？</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>This will delete any uncommitted work.</Source>
-          <Value />
+          <Value>コミットしていない変更は全て削除されます。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -5130,11 +5147,11 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="Hard" Property="Text">
           <Source>Hard: reset working dir and index (discard ALL local changes, even uncommitted changes)</Source>
-          <Value>コミットされていない変更点を全て破棄します。</Value>
+          <Value>コミットされていない変更点をすべて破棄します: git reset --hard</Value>
         </TranslationItem>
         <TranslationItem Name="Mixed" Property="Text">
           <Source>Mixed: leave working dir untouched, reset index</Source>
-          <Value>作業ディレクトリの状態を保ったまま移動します。</Value>
+          <Value>作業ディレクトリの状態を保ったまま移動します: git reset --mixed</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>OK</Source>
@@ -5142,27 +5159,27 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="Soft" Property="Text">
           <Source>Soft: leave working dir and index untouched</Source>
-          <Value>HEADのみ移動し、作業ディレクトリとインデックスの状態は保ちます。</Value>
+          <Value>HEADのみ移動し、作業ディレクトリとインデックスの状態は保ちます: git reset --soft</Value>
         </TranslationItem>
         <TranslationItem Name="authorInfo" Property="Text">
           <Source>Author: {0}</Source>
-          <Value>著者：{0}</Value>
+          <Value>作者: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="branchInfo" Property="Text">
           <Source>Reset {0} to:</Source>
-          <Value>{0}から：</Value>
+          <Value>{0}から:</Value>
         </TranslationItem>
         <TranslationItem Name="commitInfo" Property="Text">
           <Source>Commit: {0}</Source>
-          <Value>コミット：{0}</Value>
+          <Value>コミット: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="commitMessage" Property="Text">
           <Source>Message: {0}</Source>
-          <Value>メッセージ：{0}</Value>
+          <Value>メッセージ: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="dateInfo" Property="Text">
           <Source>Commit date: {0}</Source>
-          <Value>コミット日時：{0}</Value>
+          <Value>コミット日時: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Reset type</Source>
@@ -5224,9 +5241,9 @@ Value has been reset to empty value.</Source>
           <Source>Save remote as</Source>
           <Value>名前を付けてremoteを保存</Value>
         </TranslationItem>
-        <TranslationItem Name="FileName" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="FileName" Property="HeaderText">
           <Source>Filename</Source>
-          <Value />
+          <Value>ファイル名</Value>
         </TranslationItem>
         <TranslationItem Name="OpenMergetool" Property="Text">
           <Source>Open in mergetool</Source>
@@ -5325,9 +5342,9 @@ This action cannot be made undone.</Source>
           <Source>Open in</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_resetItemMergeText" Property="Text" type="unfinished">
+        <TranslationItem Name="_resetItemMergeText" Property="Text">
           <Source>Abort merge</Source>
-          <Value />
+          <Value>マージの終了</Value>
         </TranslationItem>
         <TranslationItem Name="_resetItemRebaseText" Property="Text" type="unfinished">
           <Source>Abort rebase</Source>
@@ -5336,7 +5353,7 @@ This action cannot be made undone.</Source>
         <TranslationItem Name="allConflictsResolved" Property="Text">
           <Source>All mergeconflicts are resolved, you can commit.
 Do you want to commit now?</Source>
-          <Value>全ての競合を解決するとコミットできます。
+          <Value>すべての競合を解決するとコミットできます。
 今すぐコミットしますか？</Value>
         </TranslationItem>
         <TranslationItem Name="allConflictsResolvedCaption" Property="Text">
@@ -5360,7 +5377,7 @@ Is the mergeconflict solved?</Source>
         </TranslationItem>
         <TranslationItem Name="authorDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Author</Source>
-          <Value>著者</Value>
+          <Value>作者</Value>
         </TranslationItem>
         <TranslationItem Name="chooseLocalButtonText" Property="Text">
           <Source>Choose local</Source>
@@ -5444,7 +5461,7 @@ Choose to delete the file or keep the modified version.</Source>
         </TranslationItem>
         <TranslationItem Name="fileNameDataGridViewTextBoxColumn" Property="HeaderText" type="unfinished">
           <Source>FileName</Source>
-          <Value />
+          <Value>ファイル名</Value>
         </TranslationItem>
         <TranslationItem Name="fileUnchangedAfterMerge" Property="Text" type="unfinished">
           <Source>The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location.
@@ -5472,17 +5489,17 @@ The merge conflict will not be marked as solved. Please try again.</Source>
           <Source>Unresolved merge conflicts</Source>
           <Value>解決されていない競合</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Base</Source>
-          <Value />
+          <Value>ベース</Value>
         </TranslationItem>
         <TranslationItem Name="label5" Property="Text">
           <Source>Remote</Source>
           <Value>リモート</Value>
         </TranslationItem>
-        <TranslationItem Name="label7" Property="Text" type="unfinished">
+        <TranslationItem Name="label7" Property="Text">
           <Source>Local</Source>
-          <Value />
+          <Value>ローカル</Value>
         </TranslationItem>
         <TranslationItem Name="merge" Property="Text">
           <Source>Merge</Source>
@@ -5594,7 +5611,7 @@ Do you want to use this custom merge script?</Source>
         </TranslationItem>
         <TranslationItem Name="BranchInfo" Property="Text">
           <Source>Revert this commit:</Source>
-          <Value>打ち消すコミット：</Value>
+          <Value>打ち消すコミット:</Value>
         </TranslationItem>
         <TranslationItem Name="ParentsLabel" Property="Text" type="unfinished">
           <Source>This commit is a merge, select parent:</Source>
@@ -5602,7 +5619,7 @@ Do you want to use this custom merge script?</Source>
         </TranslationItem>
         <TranslationItem Name="Revert" Property="Text">
           <Source>Revert this commit</Source>
-          <Value>コミットを打ち消す(revert)</Value>
+          <Value>コミットを打ち消す (revert)</Value>
         </TranslationItem>
         <TranslationItem Name="_noneParentSelectedText" Property="Text" type="unfinished">
           <Source>None parent is selected!</Source>
@@ -5622,7 +5639,7 @@ Do you want to use this custom merge script?</Source>
         </TranslationItem>
         <TranslationItem Name="columnHeader3" Property="Text">
           <Source>Author</Source>
-          <Value>著者</Value>
+          <Value>作者</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader4" Property="Text">
           <Source>Date</Source>
@@ -5630,35 +5647,35 @@ Do you want to use this custom merge script?</Source>
         </TranslationItem>
         <TranslationItem Name="_authorInfo" Property="Text" type="obsolete">
           <Source>Author: {0}</Source>
-          <Value>著者：{0}</Value>
+          <Value>作者: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="_commitInfo" Property="Text" type="obsolete">
           <Source>Commit: {0}</Source>
-          <Value>コミット：{0}</Value>
+          <Value>コミット: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="_commitMessage" Property="Text" type="obsolete">
           <Source>Message: {0}</Source>
-          <Value>メッセージ：{0}</Value>
+          <Value>メッセージ: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="_dateInfo" Property="Text" type="obsolete">
           <Source>Commit date: {0}</Source>
-          <Value>コミット日時：{0}</Value>
+          <Value>コミット日時: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="Author" Property="Text" type="obsolete">
           <Source>Author: {0}</Source>
-          <Value>著者：</Value>
+          <Value>作者: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="Commit" Property="Text" type="obsolete">
           <Source>Commit: {0}</Source>
-          <Value>コミット：</Value>
+          <Value>コミット: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="Date" Property="Text" type="obsolete">
           <Source>Commit date: {0}</Source>
-          <Value>コミット日時：</Value>
+          <Value>コミット日時: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="Message" Property="Text" type="obsolete">
           <Source>Message: {0}</Source>
-          <Value>メッセージ：</Value>
+          <Value>メッセージ: {0}</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -5686,7 +5703,7 @@ Do you want to use this custom merge script?</Source>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>Author</Source>
-          <Value>著者</Value>
+          <Value>作者</Value>
         </TranslationItem>
         <TranslationItem Name="label4" Property="Text">
           <Source>Committer</Source>
@@ -5736,12 +5753,15 @@ Do you want to use this custom merge script?</Source>
           <Source>Settings</Source>
           <Value>設定</Value>
         </TranslationItem>
-        <TranslationItem Name="_cantFindGitMessage" Property="Text" type="unfinished">
+        <TranslationItem Name="_cantFindGitMessage" Property="Text">
           <Source>The command to run git is not configured correct.
 You need to set the correct path to be able to use GitExtensions.
 
 Do you want to set the correct command now? If not Global and Local Settings will not be saved.</Source>
-          <Value />
+          <Value>gitコマンドの設定が正しくありません。
+GitExtensionsを利用するには正しいパスを設定する必要があります。
+
+正しいコマンドを設定できますか？　できない場合はグローバル設定とローカル設定は保存されません。</Value>
         </TranslationItem>
         <TranslationItem Name="_cantFindGitMessageCaption" Property="Text" type="unfinished">
           <Source>Incorrect path</Source>
@@ -5751,17 +5771,17 @@ Do you want to set the correct command now? If not Global and Local Settings wil
           <Source>Could not load settings.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="buttonApply" Property="Text" type="unfinished">
+        <TranslationItem Name="buttonApply" Property="Text">
           <Source>Apply</Source>
-          <Value />
+          <Value>適用</Value>
         </TranslationItem>
         <TranslationItem Name="buttonCancel" Property="Text">
           <Source>Cancel</Source>
           <Value>キャンセル</Value>
         </TranslationItem>
-        <TranslationItem Name="buttonDiscard" Property="Text" type="unfinished">
+        <TranslationItem Name="buttonDiscard" Property="Text">
           <Source>Discard</Source>
-          <Value />
+          <Value>破棄</Value>
         </TranslationItem>
         <TranslationItem Name="buttonOk" Property="Text">
           <Source>OK</Source>
@@ -5776,10 +5796,11 @@ any global setting.
 git.cmd before you can change
 any global setting.</Value>
         </TranslationItem>
-        <TranslationItem Name="labelInstantSaveNotice" Property="Text" type="unfinished">
+        <TranslationItem Name="labelInstantSaveNotice" Property="Text">
           <Source>Changes made on this page will be saved instantly. 
 Thus the Cancel and Discard button will have no effect for this page.</Source>
-          <Value />
+          <Value>このページ上での設定はすぐに保存されるため、
+キャンセル/破棄ボタンはこのページでは特に意味はありません。</Value>
         </TranslationItem>
         <TranslationItem Name="labelSettingsPageTitle" Property="Text" type="unfinished">
           <Source>...title...</Source>
@@ -5787,7 +5808,7 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
         </TranslationItem>
         <TranslationItem Name="_noDiffToolConfiguredCaption" Property="Text" type="obsolete">
           <Source>Difftool</Source>
-          <Value>Difftool</Value>
+          <Value>Diffツール</Value>
         </TranslationItem>
         <TranslationItem Name="_noMergeToolConfiguredCaption" Property="Text" type="obsolete">
           <Source>Mergetool</Source>
@@ -5859,7 +5880,7 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
         </TranslationItem>
         <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text" type="obsolete">
           <Source>Show repository status in browse dialog (number of changes in toolbar, restart required)</Source>
-          <Value>リポジトリの状態(変更の数)を表示する(再起動が必要)</Value>
+          <Value>リポジトリの状態 (変更の数) を表示する (再起動が必要)</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowRelativeDate" Property="Text" type="obsolete">
           <Source>Show relative date instead of full date</Source>
@@ -5891,15 +5912,15 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
         </TranslationItem>
         <TranslationItem Name="globalAutoCrlfFalse" Property="Text" type="obsolete">
           <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
-          <Value>そのままにする("core.autocrlf"を"false"に設定)</Value>
+          <Value>そのままにする ("core.autocrlf"を"false"に設定)</Value>
         </TranslationItem>
         <TranslationItem Name="globalAutoCrlfInput" Property="Text" type="obsolete">
           <Source>Checkout as-is, commit Unix-style line endings ("core.autocrlf"  is set to "input")</Source>
-          <Value>そのままチェックアウトし、Unix-styleでコミット("core.autocrlf"を"input"に設定)</Value>
+          <Value>そのままチェックアウトし、Unix-styleでコミット ("core.autocrlf"を"input"に設定)</Value>
         </TranslationItem>
         <TranslationItem Name="globalAutoCrlfTrue" Property="Text" type="obsolete">
           <Source>Checkout Windows-style, commit Unix-style line endings ("core.autocrlf"  is set to "true")</Source>
-          <Value>Windows-styleでチェックアウトし、Unix-styleでコミット("core.autocrlf"を"true"に設定)</Value>
+          <Value>Windows-styleでチェックアウトし、Unix-styleでコミット ("core.autocrlf"を"true"に設定)</Value>
         </TranslationItem>
         <TranslationItem Name="GreenIcon" Property="Text" type="obsolete">
           <Source>Green</Source>
@@ -5931,7 +5952,7 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
         </TranslationItem>
         <TranslationItem Name="groupBox6" Property="Text" type="obsolete">
           <Source>Author images</Source>
-          <Value>著者画像</Value>
+          <Value>作者画像</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox7" Property="Text" type="obsolete">
           <Source>Git</Source>
@@ -5965,7 +5986,7 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
         </TranslationItem>
         <TranslationItem Name="label13" Property="Text" type="obsolete">
           <Source>Command used to run git (git.cmd or git.exe)</Source>
-          <Value>gitの実行に使用するコマンド(git.cmdかgit.exe)</Value>
+          <Value>gitの実行に使用するコマンド (git.cmdかgit.exe)</Value>
         </TranslationItem>
         <TranslationItem Name="label14" Property="Text" type="obsolete">
           <Source>Path to linux tools (sh). Leave empty when it is in the path.</Source>
@@ -6041,7 +6062,7 @@ local settings.</Value>
         </TranslationItem>
         <TranslationItem Name="label28" Property="Text" type="obsolete">
           <Source>Keep backup (.orig) after merge</Source>
-          <Value>マージ後にバックアップ(.orig)を残す</Value>
+          <Value>マージ後にバックアップ (.orig) を残す</Value>
         </TranslationItem>
         <TranslationItem Name="label29" Property="Text" type="obsolete">
           <Source>Color added line</Source>
@@ -6053,7 +6074,7 @@ local settings.</Value>
         </TranslationItem>
         <TranslationItem Name="label30" Property="Text" type="obsolete">
           <Source>Keep backup (.orig) after merge</Source>
-          <Value>マージ後にバックアップ(.orig)を残す</Value>
+          <Value>マージ後にバックアップ (.orig) を残す</Value>
         </TranslationItem>
         <TranslationItem Name="label31" Property="Text" type="obsolete">
           <Source>Color section</Source>
@@ -6077,11 +6098,11 @@ local settings.</Value>
         </TranslationItem>
         <TranslationItem Name="label41" Property="Text" type="obsolete">
           <Source>Difftool</Source>
-          <Value>Difftool</Value>
+          <Value>Diffツール</Value>
         </TranslationItem>
         <TranslationItem Name="label42" Property="Text" type="obsolete">
           <Source>Path to difftool</Source>
-          <Value>Difftoolのパス</Value>
+          <Value>Diffツールのパス</Value>
         </TranslationItem>
         <TranslationItem Name="label43" Property="Text" type="obsolete">
           <Source>Color removed line highlighting</Source>
@@ -6105,7 +6126,7 @@ local settings.</Value>
         </TranslationItem>
         <TranslationItem Name="label48" Property="Text" type="obsolete">
           <Source>Difftool command</Source>
-          <Value>Difftoolコマンド</Value>
+          <Value>Diffツールコマンド</Value>
         </TranslationItem>
         <TranslationItem Name="label49" Property="Text" type="obsolete">
           <Source>Language (restart required)</Source>
@@ -6148,15 +6169,15 @@ global settings.</Value>
         </TranslationItem>
         <TranslationItem Name="localAutoCrlfFalse" Property="Text" type="obsolete">
           <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
-          <Value>そのままにする("core.autocrlf"を"false"に設定)</Value>
+          <Value>そのままにする ("core.autocrlf"を"false"に設定)</Value>
         </TranslationItem>
         <TranslationItem Name="localAutoCrlfInput" Property="Text" type="obsolete">
           <Source>Checkout as-is, commit Unix-style line endings ("core.autocrlf"  is set to "input")</Source>
-          <Value>そのままチェックアウトし、Unix-styleでコミット("core.autocrlf"を"input"に設定)</Value>
+          <Value>そのままチェックアウトし、Unix-styleでコミット ("core.autocrlf"を"input"に設定)</Value>
         </TranslationItem>
         <TranslationItem Name="localAutoCrlfTrue" Property="Text" type="obsolete">
           <Source>Checkout Windows-style, commit Unix-style line endings ("core.autocrlf"  is set to "true")</Source>
-          <Value>Windows-styleでチェックアウトし、Unix-styleでコミット("core.autocrlf"を"true"に設定)</Value>
+          <Value>Windows-styleでチェックアウトし、Unix-styleでコミット ("core.autocrlf"を"true"に設定)</Value>
         </TranslationItem>
         <TranslationItem Name="MergeToolCmdSuggest" Property="Text" type="obsolete">
           <Source>Suggest command</Source>
@@ -6172,7 +6193,7 @@ global settings.</Value>
         </TranslationItem>
         <TranslationItem Name="NoGitRepo" Property="Text" type="obsolete">
           <Source>Not in a git repository</Source>
-          <Value>Gitのリポジトリにいない</Value>
+          <Value>現在Gitリポジトリを開いていません</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text" type="obsolete">
           <Source>OK</Source>
@@ -6184,7 +6205,7 @@ global settings.</Value>
         </TranslationItem>
         <TranslationItem Name="Other" Property="Text" type="obsolete">
           <Source>Other ssh client</Source>
-          <Value>その他のsshクライアント</Value>
+          <Value>その他のSSHクライアント</Value>
         </TranslationItem>
         <TranslationItem Name="OtherSshBrowse" Property="Text" type="obsolete">
           <Source>Browse</Source>
@@ -6232,7 +6253,7 @@ global settings.</Value>
         </TranslationItem>
         <TranslationItem Name="ShowAuthorGravatar" Property="Text" type="obsolete">
           <Source>Get author image from gravatar.com</Source>
-          <Value>gravatar.comから著者のイメージを取得</Value>
+          <Value>gravatar.comから作者のイメージを取得</Value>
         </TranslationItem>
         <TranslationItem Name="StripedBanchChange" Property="Text" type="obsolete">
           <Source>Striped branch change</Source>
@@ -6276,7 +6297,7 @@ global settings.</Value>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Stash</Source>
-          <Value>一時退避(stash)</Value>
+          <Value>一時退避 (stash)</Value>
         </TranslationItem>
         <TranslationItem Name="Apply" Property="Text">
           <Source>Apply Selected</Source>
@@ -6288,7 +6309,7 @@ global settings.</Value>
         </TranslationItem>
         <TranslationItem Name="Stash" Property="Text">
           <Source>Save Changes</Source>
-          <Value>全ての変更を退避</Value>
+          <Value>すべての変更を退避</Value>
         </TranslationItem>
         <TranslationItem Name="StashKeepIndex" Property="Text" type="unfinished">
           <Source>Keep index</Source>
@@ -6306,21 +6327,21 @@ global settings.</Value>
           <Source>This action cannot be undone.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="chkIncludeUntrackedFiles" Property="Text" type="unfinished">
+        <TranslationItem Name="chkIncludeUntrackedFiles" Property="Text">
           <Source>Include untracked files</Source>
-          <Value />
+          <Value>ステージに追加していないファイルも含める</Value>
         </TranslationItem>
-        <TranslationItem Name="currentWorkingDirChanges" Property="Text" type="unfinished">
+        <TranslationItem Name="currentWorkingDirChanges" Property="Text">
           <Source>Current working dir changes</Source>
-          <Value />
+          <Value>現在の作業ディレクトリの変更</Value>
         </TranslationItem>
         <TranslationItem Name="dontShowAgain" Property="Text" type="unfinished">
           <Source>Don't show me this message again.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="noStashes" Property="Text" type="unfinished">
+        <TranslationItem Name="noStashes" Property="Text">
           <Source>There are no stashes.</Source>
-          <Value />
+          <Value>一時退避 (stash) された変更はありません</Value>
         </TranslationItem>
         <TranslationItem Name="stashDropConfirmTitle" Property="Text" type="unfinished">
           <Source>Drop Stash Confirmation</Source>
@@ -6458,9 +6479,9 @@ Do you want to trust this host key and then try again?</Source>
     </TranslationCategory>
     <TranslationCategory Name="FormSvnClone">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Svn Clone</Source>
-          <Value />
+          <Value>SVNクローン</Value>
         </TranslationItem>
         <TranslationItem Name="_questionContinueWithoutAuthors" Property="Text" type="unfinished">
           <Source>Authors file "{0}" does not exists. Continue without authors file?</Source>
@@ -6470,10 +6491,11 @@ Do you want to trust this host key and then try again?</Source>
           <Source>Authors file</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_questionOpenRepo" Property="Text" type="unfinished">
+        <TranslationItem Name="_questionOpenRepo" Property="Text">
           <Source>The repository has been cloned successfully.
 Do you want to open the new repository "{0}" now?</Source>
-          <Value />
+          <Value>リポジトリは正常にクローンされました。
+今すぐリポジトリ"{0}"を開きますか？</Value>
         </TranslationItem>
         <TranslationItem Name="_questionOpenRepoCaption" Property="Text">
           <Source>Open</Source>
@@ -6487,33 +6509,33 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Browse</Source>
           <Value>参照</Value>
         </TranslationItem>
-        <TranslationItem Name="cbBranches" Property="Text" type="unfinished">
+        <TranslationItem Name="cbBranches" Property="Text">
           <Source>Branches:</Source>
-          <Value />
+          <Value>ブランチ:</Value>
         </TranslationItem>
-        <TranslationItem Name="cbTags" Property="Text" type="unfinished">
+        <TranslationItem Name="cbTags" Property="Text">
           <Source>Tags:</Source>
-          <Value />
+          <Value>タグ:</Value>
         </TranslationItem>
         <TranslationItem Name="cbTrunk" Property="Text" type="unfinished">
           <Source>Trunk:</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox1" Property="Text">
           <Source>Advanced settings</Source>
-          <Value />
+          <Value>詳細設定</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Svn repository to clone</Source>
-          <Value />
+          <Value>クローンするSVNリポジトリ</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Destination</Source>
-          <Value />
+          <Value>クローン先</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text" type="unfinished">
+        <TranslationItem Name="label3" Property="Text">
           <Source>Subdirectory to create</Source>
-          <Value />
+          <Value>作成するサブディレクトリ</Value>
         </TranslationItem>
         <TranslationItem Name="label4" Property="Text" type="unfinished">
           <Source>Authors file</Source>
@@ -6569,7 +6591,7 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="_pushToCaption" Property="Text">
           <Source>Push tag to '{0}'</Source>
-          <Value>{0}タグにPush</Value>
+          <Value>タグを{0}にPush</Value>
         </TranslationItem>
         <TranslationItem Name="annotate" Property="Text">
           <Source>Create annotated tag</Source>
@@ -6643,11 +6665,11 @@ Do you want to open the new repository "{0}" now?</Source>
     </TranslationCategory>
     <TranslationCategory Name="FormTranslate">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Translate</Source>
           <Value>翻訳</Value>
         </TranslationItem>
-        <TranslationItem Name="allText" Property="Text" type="unfinished">
+        <TranslationItem Name="allText" Property="Text">
           <Source>All</Source>
           <Value>すべて</Value>
         </TranslationItem>
@@ -6659,15 +6681,15 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>[EDITING]</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="googleAll" Property="Text" type="unfinished">
+        <TranslationItem Name="googleAll" Property="Text">
           <Source>Google all empty</Source>
-          <Value>空を全てぐぐる</Value>
+          <Value>空欄をすべてGoogle翻訳で埋める</Value>
         </TranslationItem>
-        <TranslationItem Name="googleTranslate" Property="Text" type="unfinished">
+        <TranslationItem Name="googleTranslate" Property="Text">
           <Source>Google translate</Source>
           <Value>Google翻訳</Value>
         </TranslationItem>
-        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Name</Source>
           <Value>名前</Value>
         </TranslationItem>
@@ -6675,7 +6697,7 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>NeutralValue</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="nextButton" Property="Text" type="unfinished">
+        <TranslationItem Name="nextButton" Property="Text">
           <Source>&amp;Next</Source>
           <Value>次へ(&amp;N)</Value>
         </TranslationItem>
@@ -6688,7 +6710,7 @@ Do you want to select a language code first?</Source>
           <Source>Language code</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="previousButton" Property="Text" type="unfinished">
+        <TranslationItem Name="previousButton" Property="Text">
           <Source>&amp;Previous</Source>
           <Value>前へ(&amp;P)</Value>
         </TranslationItem>
@@ -6696,11 +6718,11 @@ Do you want to select a language code first?</Source>
           <Source>Property</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="saveAs" Property="ToolTipText" type="unfinished">
+        <TranslationItem Name="saveAs" Property="ToolTipText">
           <Source>Save translation</Source>
           <Value>翻訳を保存</Value>
         </TranslationItem>
-        <TranslationItem Name="saveAsText" Property="Text" type="unfinished">
+        <TranslationItem Name="saveAsText" Property="Text">
           <Source>Save as</Source>
           <Value>名前を付けて保存</Value>
         </TranslationItem>
@@ -6708,11 +6730,11 @@ Do you want to select a language code first?</Source>
           <Source>Translation file (*.xml)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="saveCurrentChangesCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="saveCurrentChangesCaption" Property="Text">
           <Source>Save changes</Source>
           <Value>変更を保存する</Value>
         </TranslationItem>
-        <TranslationItem Name="saveCurrentChangesText" Property="Text" type="unfinished">
+        <TranslationItem Name="saveCurrentChangesText" Property="Text">
           <Source>Do you want to save the current changes?</Source>
           <Value>現在の変更を保存しますか？</Value>
         </TranslationItem>
@@ -6720,19 +6742,19 @@ Do you want to select a language code first?</Source>
           <Source>Select a language code first.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonNew" Property="Text" type="unfinished">
+        <TranslationItem Name="toolStripButtonNew" Property="Text">
           <Source>New</Source>
           <Value>新規</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripTranslationLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="toolStripTranslationLabel" Property="Text">
           <Source>Current translation:</Source>
-          <Value>現在の翻訳：</Value>
+          <Value>現在の翻訳:</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text" type="unfinished">
+        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
           <Source>Language code:</Source>
-          <Value>言語コード：</Value>
+          <Value>言語コード:</Value>
         </TranslationItem>
-        <TranslationItem Name="translateProgressText" Property="Text" type="unfinished">
+        <TranslationItem Name="translateProgressText" Property="Text">
           <Source>Translated {0} out of {1}</Source>
           <Value>{1}中{0}個が翻訳済み</Value>
         </TranslationItem>
@@ -6760,7 +6782,7 @@ Do you want to select a language code first?</Source>
           <Source>Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), 
 but also the ones found in alternate object pools.
 </Source>
-          <Value>GIT_OBJECT_DIRECTORY($GIT_DIR/objects)だけでなく、
+          <Value>GIT_OBJECT_DIRECTORY ($GIT_DIR/objects) だけでなく、
 別のオブジェクトプールも調べる</Value>
         </TranslationItem>
         <TranslationItem Name="NoReflogs" Property="Text">
@@ -6770,7 +6792,7 @@ reflog to be reachable.</Source>
         </TranslationItem>
         <TranslationItem Name="Remove" Property="Text">
           <Source>Remove all dangling objects</Source>
-          <Value>遊離オブジェクトを全て削除</Value>
+          <Value>遊離オブジェクトをすべて削除</Value>
         </TranslationItem>
         <TranslationItem Name="SaveObjects" Property="Text">
           <Source>Save objects to .git/lost-found</Source>
@@ -6812,7 +6834,7 @@ Do not forget to delete these tags when finished.</Source>
         </TranslationItem>
         <TranslationItem Name="columnAuthor" Property="HeaderText">
           <Source>Author</Source>
-          <Value>著者</Value>
+          <Value>作者</Value>
         </TranslationItem>
         <TranslationItem Name="columnDate" Property="HeaderText">
           <Source>Date</Source>
@@ -6842,11 +6864,11 @@ dangling objects"
 
 Check commits you want to recover and press Recover button
 Context menu for additional operations</Source>
-          <Value>デフォルトでは、2週間で到達不能オブジェクトのみが
-削除されます。他のオブジェクトは、「遊離オブジェクトを
-全て削除」を実行したときのみ削除されます。
+          <Value>デフォルトでは2週間以上前の到達不能オブジェクトのみが削除
+されます。他のオブジェクトは「遊離オブジェクトをすべて削除」を実行したとき
+のみ削除されます。
 
-消してしまったコミットにタグを付けることで、
+消してしまったコミットにタグを付けることで
 再びBrowse画面でそのコミットが見えるようになります。</Value>
         </TranslationItem>
         <TranslationItem Name="mnuLostObjectView" Property="Text">
@@ -6885,9 +6907,9 @@ Context menu for additional operations</Source>
           <Source>Type</Source>
           <Value>タイプ</Value>
         </TranslationItem>
-        <TranslationItem Name="FileNameA" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="FileNameA" Property="HeaderText">
           <Source>Filename</Source>
-          <Value />
+          <Value>ファイル名</Value>
         </TranslationItem>
         <TranslationItem Name="_patchFileFilterString" Property="Text" type="unfinished">
           <Source>Patch file (*.Patch)</Source>
@@ -6907,63 +6929,55 @@ Context menu for additional operations</Source>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="GitExtensionsSettingsGroup">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Title">
-          <Source>Git Extensions</Source>
-          <Value>Git Extensions</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="GitExtensionsSettingsPage">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Git Extensions</Source>
           <Value>Git Extensions</Value>
         </TranslationItem>
-        <TranslationItem Name="chkCheckForUncommittedChangesInCheckoutBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="chkCheckForUncommittedChangesInCheckoutBranch" Property="Text">
           <Source>Check for uncommitted changes in checkout branch dialog</Source>
-          <Value />
+          <Value>ブランチ切り替えダイアログでコミット前の変更のチェックをする</Value>
         </TranslationItem>
-        <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="unfinished">
+        <TranslationItem Name="chkCloseProcessDialog" Property="Text">
           <Source>Close Process dialog when process is succeeded</Source>
-          <Value />
+          <Value>処理に成功したときにダイアログを閉じる</Value>
         </TranslationItem>
         <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
           <Source>Follow renames in file history (experimental)</Source>
-          <Value>ファイルの歴史でファイル名の変更も追跡する(実験的)</Value>
+          <Value>ファイルの歴史でファイル名の変更も追跡する (実験的)</Value>
         </TranslationItem>
-        <TranslationItem Name="chkPlaySpecialStartupSound" Property="Text" type="unfinished">
+        <TranslationItem Name="chkPlaySpecialStartupSound" Property="Text">
           <Source>Play Special Startup Sound</Source>
-          <Value />
+          <Value>起動時に音声を再生する</Value>
         </TranslationItem>
-        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text" type="unfinished">
+        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text">
           <Source>Show current working dir changes in revision graph (slow!)</Source>
-          <Value />
+          <Value>作業ディレクトリの変更をリビジョングラフ上に表示する (動作は遅くなります)</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text">
           <Source>Show errors when staging files</Source>
           <Value>ファイルをステージする際のエラーを表示する</Value>
         </TranslationItem>
-        <TranslationItem Name="chkShowGitCommandLine" Property="Text" type="unfinished">
+        <TranslationItem Name="chkShowGitCommandLine" Property="Text">
           <Source>Show console window when executing git process</Source>
-          <Value />
+          <Value>gitプロセス動作時にコンソールウィンドウを表示する。</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text">
           <Source>Show repository status in browse dialog (number of changes in toolbar, restart required)</Source>
-          <Value>リポジトリの状態(変更の数)を表示する(再起動が必要)</Value>
+          <Value>リポジトリの状態 (変更の数) を表示する (再起動が必要)</Value>
         </TranslationItem>
-        <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text" type="unfinished">
+        <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text">
           <Source>Show stash count on status bar in browse window</Source>
-          <Value />
+          <Value>一時退避 (stash) 数をBrowse画面のステータスバーに表示</Value>
         </TranslationItem>
-        <TranslationItem Name="chkStartWithRecentWorkingDir" Property="Text" type="unfinished">
+        <TranslationItem Name="chkStartWithRecentWorkingDir" Property="Text">
           <Source>Open last working dir on startup</Source>
-          <Value />
+          <Value>起動時に最後に開いていた作業ディレクトリを開く</Value>
         </TranslationItem>
-        <TranslationItem Name="chkStashUntrackedFiles" Property="Text" type="unfinished">
+        <TranslationItem Name="chkStashUntrackedFiles" Property="Text">
           <Source>Include untracked files in stash</Source>
-          <Value />
+          <Value>ステージに追加していないファイルも一時退避 (stash) 対象に入れる</Value>
         </TranslationItem>
         <TranslationItem Name="chkUseFastChecks" Property="Text">
           <Source>Use FileSystemWatcher to check if index is changed</Source>
@@ -6973,22 +6987,23 @@ Context menu for additional operations</Source>
           <Source>Use patience diff algorithm</Source>
           <Value>コミットログにリビジョングラフを表示する</Value>
         </TranslationItem>
-        <TranslationItem Name="chkWriteCommitMessageInCommitWindow" Property="Text" type="unfinished">
+        <TranslationItem Name="chkWriteCommitMessageInCommitWindow" Property="Text">
           <Source>Compose commit messages in Commit dialog
 (otherwise the message will be requested during commit)</Source>
-          <Value />
+          <Value>コミットメッセージをコミットダイアログ内で入力する
+(もしくはコミット作業中にメッセージを入力します)</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox11" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox11" Property="Text">
           <Source>Performance</Source>
-          <Value />
+          <Value>パフォーマンス</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox12" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox12" Property="Text">
           <Source>Behaviour</Source>
-          <Value />
+          <Value>動作</Value>
         </TranslationItem>
-        <TranslationItem Name="label12" Property="Text" type="unfinished">
+        <TranslationItem Name="label12" Property="Text">
           <Source>Limit number of commits that will be loaded at startup</Source>
-          <Value />
+          <Value>起動時に読み込むコミットの数</Value>
         </TranslationItem>
         <TranslationItem Name="label23" Property="Text">
           <Source>Smtp server for sending patches by email</Source>
@@ -7006,17 +7021,17 @@ Context menu for additional operations</Source>
           <Source>Log</Source>
           <Value>ログ</Value>
         </TranslationItem>
-        <TranslationItem Name="alwaysOnTopCheckBox" Property="Text" type="unfinished">
+        <TranslationItem Name="alwaysOnTopCheckBox" Property="Text">
           <Source>Always on top</Source>
-          <Value />
+          <Value>常に最前面に表示</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPageCommandCache" Property="Text" type="unfinished">
+        <TranslationItem Name="tabPageCommandCache" Property="Text">
           <Source>Command cache</Source>
-          <Value />
+          <Value>コマンドキャッシュ</Value>
         </TranslationItem>
-        <TranslationItem Name="tabPageCommandLog" Property="Text" type="unfinished">
+        <TranslationItem Name="tabPageCommandLog" Property="Text">
           <Source>Command log</Source>
-          <Value />
+          <Value>コマンドログ</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7034,17 +7049,17 @@ Context menu for additional operations</Source>
           <Source>Browse</Source>
           <Value>参照</Value>
         </TranslationItem>
-        <TranslationItem Name="ChangeHomeButton" Property="Text" type="unfinished">
+        <TranslationItem Name="ChangeHomeButton" Property="Text">
           <Source>Change HOME</Source>
-          <Value />
+          <Value>HOMEディレクトリを変更</Value>
         </TranslationItem>
-        <TranslationItem Name="_homeIsSetToString" Property="Text" type="unfinished">
+        <TranslationItem Name="_homeIsSetToString" Property="Text">
           <Source>HOME is set to:</Source>
-          <Value />
+          <Value>現在のHOMEディレクトリ:</Value>
         </TranslationItem>
-        <TranslationItem Name="downloadMsysgit" Property="Text" type="unfinished">
+        <TranslationItem Name="downloadMsysgit" Property="Text">
           <Source>Download msysgit</Source>
-          <Value />
+          <Value>msysgitをダウンロード</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox7" Property="Text">
           <Source>Git</Source>
@@ -7054,13 +7069,13 @@ Context menu for additional operations</Source>
           <Source>Environment</Source>
           <Value>環境変数</Value>
         </TranslationItem>
-        <TranslationItem Name="homeIsSetToLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="homeIsSetToLabel" Property="Text">
           <Source>HOME is set to: {0}</Source>
-          <Value />
+          <Value>現在のHOMEディレクトリ: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="label13" Property="Text">
           <Source>Command used to run git (git.cmd or git.exe)</Source>
-          <Value>gitの実行に使用するコマンド(git.cmdかgit.exe)</Value>
+          <Value>gitの実行に使用するコマンド (git.cmdかgit.exe)</Value>
         </TranslationItem>
         <TranslationItem Name="label14" Property="Text">
           <Source>Path to linux tools (sh). Leave empty when it is in the path.</Source>
@@ -7114,15 +7129,15 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="globalAutoCrlfFalse" Property="Text">
           <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
-          <Value>そのままにする("core.autocrlf"を"false"に設定)</Value>
+          <Value>そのままにする ("core.autocrlf"を"false"に設定)</Value>
         </TranslationItem>
         <TranslationItem Name="globalAutoCrlfInput" Property="Text">
           <Source>Checkout as-is, commit Unix-style line endings ("core.autocrlf"  is set to "input")</Source>
-          <Value>そのままチェックアウトし、Unix-styleでコミット("core.autocrlf"を"input"に設定)</Value>
+          <Value>そのままチェックアウトし、Unix-styleでコミット ("core.autocrlf"を"input"に設定)</Value>
         </TranslationItem>
         <TranslationItem Name="globalAutoCrlfTrue" Property="Text">
           <Source>Checkout Windows-style, commit Unix-style line endings ("core.autocrlf"  is set to "true")</Source>
-          <Value>Windows-styleでチェックアウトし、Unix-styleでコミット("core.autocrlf"を"true"に設定)</Value>
+          <Value>Windows-styleでチェックアウトし、Unix-styleでコミット ("core.autocrlf"を"true"に設定)</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox9" Property="Text">
           <Source>Line endings</Source>
@@ -7134,7 +7149,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="label28" Property="Text">
           <Source>Keep backup (.orig) after merge</Source>
-          <Value>マージ後にバックアップ(.orig)を残す</Value>
+          <Value>マージ後にバックアップ (.orig) を残す</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>User name</Source>
@@ -7146,15 +7161,15 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="label41" Property="Text">
           <Source>Difftool</Source>
-          <Value>Difftool</Value>
+          <Value>Diffツール</Value>
         </TranslationItem>
         <TranslationItem Name="label42" Property="Text">
           <Source>Path to difftool</Source>
-          <Value>Difftoolのパス</Value>
+          <Value>Diffツールのパス</Value>
         </TranslationItem>
         <TranslationItem Name="label48" Property="Text">
           <Source>Difftool command</Source>
-          <Value>Difftoolコマンド</Value>
+          <Value>Diffツールコマンド</Value>
         </TranslationItem>
         <TranslationItem Name="label57" Property="Text" type="unfinished">
           <Source>Path to commit template</Source>
@@ -7229,9 +7244,9 @@ global settings.</Value>
     </TranslationCategory>
     <TranslationCategory Name="HelpImageDisplayUserControl">
       <translationItems>
-        <TranslationItem Name="linkLabelHide" Property="Text" type="unfinished">
+        <TranslationItem Name="linkLabelHide" Property="Text">
           <Source>Hide help</Source>
-          <Value />
+          <Value>ヘルプ画像を表示しない</Value>
         </TranslationItem>
         <TranslationItem Name="linkLabelShowHelp" Property="Text" type="unfinished">
           <Source>Show
@@ -7277,8 +7292,8 @@ global settings for the current
 repository.</Source>
           <Value>グローバル設定を
 上書きしたい場合のみ、
-ローカル設定(現在のリポジトリ
-のみで有効)が必要です。</Value>
+ローカル設定 (現在のリポジトリ
+のみで有効) が必要です。</Value>
         </TranslationItem>
         <TranslationItem Name="label21" Property="Text">
           <Source>You need to set the correct path to 
@@ -7291,7 +7306,7 @@ local settings.</Value>
         </TranslationItem>
         <TranslationItem Name="label30" Property="Text">
           <Source>Keep backup (.orig) after merge</Source>
-          <Value>マージ後にバックアップ(.orig)を残す</Value>
+          <Value>マージ後にバックアップ (.orig) を残す</Value>
         </TranslationItem>
         <TranslationItem Name="label5" Property="Text">
           <Source>Editor</Source>
@@ -7307,15 +7322,15 @@ local settings.</Value>
         </TranslationItem>
         <TranslationItem Name="localAutoCrlfFalse" Property="Text">
           <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
-          <Value>そのままにする("core.autocrlf"を"false"に設定)</Value>
+          <Value>そのままにする ("core.autocrlf"を"false"に設定)</Value>
         </TranslationItem>
         <TranslationItem Name="localAutoCrlfInput" Property="Text">
           <Source>Checkout as-is, commit Unix-style line endings ("core.autocrlf"  is set to "input")</Source>
-          <Value>そのままチェックアウトし、Unix-styleでコミット("core.autocrlf"を"input"に設定)</Value>
+          <Value>そのままチェックアウトし、Unix-styleでコミット ("core.autocrlf"を"input"に設定)</Value>
         </TranslationItem>
         <TranslationItem Name="localAutoCrlfTrue" Property="Text">
           <Source>Checkout Windows-style, commit Unix-style line endings ("core.autocrlf"  is set to "true")</Source>
-          <Value>Windows-styleでチェックアウトし、Unix-styleでコミット("core.autocrlf"を"true"に設定)</Value>
+          <Value>Windows-styleでチェックアウトし、Unix-styleでコミット ("core.autocrlf"を"true"に設定)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7341,21 +7356,21 @@ local settings.</Value>
           <Source>Rebase</Source>
           <Value>リベース</Value>
         </TranslationItem>
-        <TranslationItem Name="_notValidGitDirectory" Property="Text" type="unfinished">
+        <TranslationItem Name="_notValidGitDirectory" Property="Text">
           <Source>The current directory is not a valid git repository.</Source>
-          <Value />
+          <Value>現在のディレクトリは正しいgitリポジトリではありません。</Value>
         </TranslationItem>
-        <TranslationItem Name="_notValidGitSVNDirectory" Property="Text" type="unfinished">
+        <TranslationItem Name="_notValidGitSVNDirectory" Property="Text">
           <Source>The current directory is not a valid git-svn repository.</Source>
-          <Value />
+          <Value>現在のディレクトリは有効なgit-svnリポジトリではありません。</Value>
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_unresolvedMergeConflicts" Property="Text" type="unfinished">
+        <TranslationItem Name="_unresolvedMergeConflicts" Property="Text">
           <Source>There are unresolved merge conflicts, solve conflicts now?</Source>
-          <Value />
+          <Value>未解決のマージ競合が存在します。今すぐ競合を解消しますか？</Value>
         </TranslationItem>
         <TranslationItem Name="_unresolvedMergeConflictsCaption" Property="Text">
           <Source>Merge conflicts</Source>
@@ -7373,9 +7388,9 @@ local settings.</Value>
           <Source>Open</Source>
           <Value>開く</Value>
         </TranslationItem>
-        <TranslationItem Name="_warningOpenFailed" Property="Text" type="unfinished">
+        <TranslationItem Name="_warningOpenFailed" Property="Text">
           <Source>Directory does not exist.</Source>
-          <Value />
+          <Value>ディレクトリは存在しません。</Value>
         </TranslationItem>
         <TranslationItem Name="_warningOpenFailedCaption" Property="Text" type="unfinished">
           <Source>Error</Source>
@@ -7403,7 +7418,7 @@ local settings.</Value>
         </TranslationItem>
         <TranslationItem Name="authorDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Author</Source>
-          <Value>著者</Value>
+          <Value>作者</Value>
         </TranslationItem>
         <TranslationItem Name="dateDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Date</Source>
@@ -7417,17 +7432,9 @@ local settings.</Value>
     </TranslationCategory>
     <TranslationCategory Name="PluginSettingsPage">
       <translationItems>
-        <TranslationItem Name="labelNoSettings" Property="Text" type="unfinished">
+        <TranslationItem Name="labelNoSettings" Property="Text">
           <Source>There are no settings available for this plugin.</Source>
-          <Value />
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="PluginsSettingsGroup">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Title">
-          <Source>Plugins</Source>
-          <Value>プラグイン</Value>
+          <Value>このプラグインで設定可能な項目はありません。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7435,11 +7442,11 @@ local settings.</Value>
       <translationItems>
         <TranslationItem Name="Author" Property="HeaderText">
           <Source>Author</Source>
-          <Value>著者</Value>
+          <Value>作者</Value>
         </TranslationItem>
         <TranslationItem Name="CloneRepository" Property="Text">
           <Source>Clone repository</Source>
-          <Value>リポジトリのclone</Value>
+          <Value>リポジトリのクローン</Value>
         </TranslationItem>
         <TranslationItem Name="Commit" Property="Text">
           <Source>Commit</Source>
@@ -7487,11 +7494,11 @@ local settings.</Value>
         </TranslationItem>
         <TranslationItem Name="authorToolStripMenuItem" Property="Text">
           <Source>Author</Source>
-          <Value>著者</Value>
+          <Value>作者</Value>
         </TranslationItem>
-        <TranslationItem Name="bisectSkipRevisionToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="bisectSkipRevisionToolStripMenuItem" Property="Text">
           <Source>Skip revision</Source>
-          <Value />
+          <Value>リビジョンをスキップ</Value>
         </TranslationItem>
         <TranslationItem Name="branchNameToolStripMenuItem" Property="Text">
           <Source>Branch name</Source>
@@ -7509,9 +7516,9 @@ local settings.</Value>
           <Source>Cherry pick commit</Source>
           <Value>チェリーピック</Value>
         </TranslationItem>
-        <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="copyToClipboardToolStripMenuItem" Property="Text">
           <Source>Copy to clipboard</Source>
-          <Value />
+          <Value>クリップボードにコピー</Value>
         </TranslationItem>
         <TranslationItem Name="createNewBranchToolStripMenuItem" Property="Text">
           <Source>Create new branch</Source>
@@ -7571,17 +7578,17 @@ If this is a central repository (bare repository without a working dir):
           <Source>The current working dir is not a git repository.</Source>
           <Value>このフォルダはGitのリポジトリではありません。</Value>
         </TranslationItem>
-        <TranslationItem Name="manipulateCommitToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="manipulateCommitToolStripMenuItem" Property="Text">
           <Source>Advanced</Source>
-          <Value />
+          <Value>詳細</Value>
         </TranslationItem>
-        <TranslationItem Name="markRevisionAsBadToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="markRevisionAsBadToolStripMenuItem" Property="Text">
           <Source>Mark revision as bad</Source>
-          <Value />
+          <Value>問題のあるリビジョン</Value>
         </TranslationItem>
-        <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="markRevisionAsGoodToolStripMenuItem" Property="Text">
           <Source>Mark revision as good</Source>
-          <Value />
+          <Value>問題のないリビジョン</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Source>Merge into current branch</Source>
@@ -7599,9 +7606,9 @@ If this is a central repository (bare repository without a working dir):
           <Source>Rebase current branch on</Source>
           <Value>ここにリベース</Value>
         </TranslationItem>
-        <TranslationItem Name="renameBranchToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="renameBranchToolStripMenuItem" Property="Text">
           <Source>Rename branch</Source>
-          <Value />
+          <Value>ブランチ名の変更</Value>
         </TranslationItem>
         <TranslationItem Name="resetCurrentBranchToHereToolStripMenuItem" Property="Text">
           <Source>Reset current branch to here</Source>
@@ -7617,7 +7624,7 @@ If this is a central repository (bare repository without a working dir):
         </TranslationItem>
         <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
           <Source>Show all branches</Source>
-          <Value>全てのブランチの表示</Value>
+          <Value>すべてのブランチの表示</Value>
         </TranslationItem>
         <TranslationItem Name="showAuthorDateToolStripMenuItem" Property="Text">
           <Source>Show author date</Source>
@@ -7651,9 +7658,9 @@ If this is a central repository (bare repository without a working dir):
           <Source>Squash commit</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="stopBisectToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="stopBisectToolStripMenuItem" Property="Text">
           <Source>Stop bisect</Source>
-          <Value />
+          <Value>Bisectを終了</Value>
         </TranslationItem>
         <TranslationItem Name="tagToolStripMenuItem" Property="Text">
           <Source>Tag</Source>
@@ -7663,9 +7670,9 @@ If this is a central repository (bare repository without a working dir):
     </TranslationCategory>
     <TranslationCategory Name="ScriptsSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Scripts</Source>
-          <Value />
+          <Value>スクリプト</Value>
         </TranslationItem>
         <TranslationItem Name="AskConfirmation" Property="HeaderText" type="unfinished">
           <Source>Confirmation</Source>
@@ -7735,14 +7742,14 @@ If this is a central repository (bare repository without a working dir):
     </TranslationCategory>
     <TranslationCategory Name="ShellExtensionSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Shell extension</Source>
-          <Value />
+          <Value>シェル拡張</Value>
         </TranslationItem>
-        <TranslationItem Name="lblMenuEntries" Property="Text" type="unfinished">
+        <TranslationItem Name="lblMenuEntries" Property="Text">
           <Source>Select items to be shown in
 the cascaded context menu:</Source>
-          <Value />
+          <Value>以下の項目をコンテキストメニュー内に表示します:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7835,11 +7842,11 @@ When OpenSSH is used, command line dialogs are shown!
         </TranslationItem>
         <TranslationItem Name="_authorText" Property="Text">
           <Source>Author</Source>
-          <Value>著者</Value>
+          <Value>作者</Value>
         </TranslationItem>
-        <TranslationItem Name="_childrenText" Property="Text" type="unfinished">
+        <TranslationItem Name="_childrenText" Property="Text">
           <Source>Children</Source>
-          <Value />
+          <Value>子コミット</Value>
         </TranslationItem>
         <TranslationItem Name="_commitDateText" Property="Text">
           <Source>Commit date</Source>
@@ -7901,9 +7908,9 @@ When OpenSSH is used, command line dialogs are shown!
           <Source>{0} months ago</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_parentsText" Property="Text" type="unfinished">
+        <TranslationItem Name="_parentsText" Property="Text">
           <Source>Parent(s)</Source>
-          <Value />
+          <Value>親コミット</Value>
         </TranslationItem>
         <TranslationItem Name="_secondAgo" Property="Text" type="unfinished">
           <Source>{0} second ago</Source>
@@ -7933,29 +7940,29 @@ When OpenSSH is used, command line dialogs are shown!
     </TranslationCategory>
     <TranslationCategory Name="ViewPullRequestsForm">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>View Pull Requests</Source>
-          <Value />
+          <Value>Pull Requestの表示</Value>
         </TranslationItem>
-        <TranslationItem Name="_addAndFetchBtn" Property="Text" type="unfinished">
+        <TranslationItem Name="_addAndFetchBtn" Property="Text">
           <Source>Add remote and fetch</Source>
-          <Value />
+          <Value>リモートに追加してフェッチ</Value>
         </TranslationItem>
-        <TranslationItem Name="_chooseRepo" Property="Text" type="unfinished">
+        <TranslationItem Name="_chooseRepo" Property="Text">
           <Source>Choose repository:</Source>
-          <Value />
+          <Value>リポジトリの選択:</Value>
         </TranslationItem>
-        <TranslationItem Name="_closePullRequestBtn" Property="Text" type="unfinished">
+        <TranslationItem Name="_closePullRequestBtn" Property="Text">
           <Source>Close pull request</Source>
-          <Value />
+          <Value>プルリクエストをクローズ</Value>
         </TranslationItem>
-        <TranslationItem Name="_fetchBtn" Property="Text" type="unfinished">
+        <TranslationItem Name="_fetchBtn" Property="Text">
           <Source>Fetch to pr/ branch</Source>
-          <Value />
+          <Value>pr/ブランチとしてフェッチ</Value>
         </TranslationItem>
-        <TranslationItem Name="_postComment" Property="Text" type="unfinished">
+        <TranslationItem Name="_postComment" Property="Text">
           <Source>Post comment</Source>
-          <Value />
+          <Value>コメントを投稿</Value>
         </TranslationItem>
         <TranslationItem Name="_refreshCommentsBtn" Property="Text">
           <Source>Refresh</Source>
@@ -8007,17 +8014,17 @@ Details: Is {1} expected {2}</Source>
           <Source>Error: Unable to understand patch</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="columnHeader2" Property="Text" type="unfinished">
+        <TranslationItem Name="columnHeader2" Property="Text">
           <Source>Heading</Source>
-          <Value />
+          <Value>表題</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader3" Property="Text" type="unfinished">
           <Source>By</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="columnHeader4" Property="Text" type="unfinished">
+        <TranslationItem Name="columnHeader4" Property="Text">
           <Source>Created</Source>
-          <Value />
+          <Value>作成日時</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -8049,7 +8056,7 @@ Details: Is {1} expected {2}</Source>
         </TranslationItem>
         <TranslationItem Name="Author" Property="Text" type="obsolete">
           <Source>Author:</Source>
-          <Value>著者：</Value>
+          <Value>作者:</Value>
         </TranslationItem>
         <TranslationItem Name="AutoCommit" Property="Text" type="obsolete">
           <Source>Automatically creates a commit</Source>
@@ -8057,7 +8064,7 @@ Details: Is {1} expected {2}</Source>
         </TranslationItem>
         <TranslationItem Name="BranchInfo" Property="Text" type="obsolete">
           <Source>Cherry pick this commit:</Source>
-          <Value>このコミットをチェリーピック：</Value>
+          <Value>このコミットをチェリーピック:</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader2" Property="Text" type="obsolete">
           <Source>Message</Source>
@@ -8065,7 +8072,7 @@ Details: Is {1} expected {2}</Source>
         </TranslationItem>
         <TranslationItem Name="columnHeader3" Property="Text" type="obsolete">
           <Source>Author</Source>
-          <Value>著者</Value>
+          <Value>作者</Value>
         </TranslationItem>
         <TranslationItem Name="columnHeader4" Property="Text" type="obsolete">
           <Source>Date</Source>
@@ -8073,15 +8080,15 @@ Details: Is {1} expected {2}</Source>
         </TranslationItem>
         <TranslationItem Name="Commit" Property="Text" type="obsolete">
           <Source>Commit:</Source>
-          <Value>コミット：</Value>
+          <Value>コミット:</Value>
         </TranslationItem>
         <TranslationItem Name="Date" Property="Text" type="obsolete">
           <Source>Commit date:</Source>
-          <Value>コミット日時：</Value>
+          <Value>コミット日時:</Value>
         </TranslationItem>
         <TranslationItem Name="Message" Property="Text" type="obsolete">
           <Source>Message:</Source>
-          <Value>メッセージ：</Value>
+          <Value>メッセージ:</Value>
         </TranslationItem>
         <TranslationItem Name="Pick" Property="Text" type="obsolete">
           <Source>Pick this commit</Source>
@@ -8093,7 +8100,7 @@ Details: Is {1} expected {2}</Source>
       <translationItems>
         <TranslationItem Name="Author" Property="Text" type="obsolete">
           <Source>Author</Source>
-          <Value>著者</Value>
+          <Value>作者</Value>
         </TranslationItem>
         <TranslationItem Name="Column2" Property="HeaderText" type="obsolete">
           <Source>Message</Source>
@@ -8101,7 +8108,7 @@ Details: Is {1} expected {2}</Source>
         </TranslationItem>
         <TranslationItem Name="Column3" Property="HeaderText" type="obsolete">
           <Source>Author</Source>
-          <Value>著者</Value>
+          <Value>作者</Value>
         </TranslationItem>
         <TranslationItem Name="Column4" Property="HeaderText" type="obsolete">
           <Source>Date</Source>
@@ -8141,7 +8148,7 @@ Details: Is {1} expected {2}</Source>
       <translationItems>
         <TranslationItem Name="_applyShashedItemsAgain" Property="Text" type="obsolete">
           <Source>Apply stashed items to working dir again?</Source>
-          <Value>一時退避(stash)された項目をworking dirに適用し直しますか？</Value>
+          <Value>一時退避 (stash) された項目を作業ディレクトリに適用し直しますか？</Value>
         </TranslationItem>
         <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text" type="obsolete">
           <Source>Auto stash</Source>
