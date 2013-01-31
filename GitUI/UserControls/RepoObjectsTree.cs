@@ -32,13 +32,13 @@ namespace GitUI.UserControls
             //nodeTags = AddTreeNode("tags");
             //nodeStashes = AddTreeNode("stashes");
 
-            //AddTreeSet(nodeStashes, (git) => git.GetStashes(), ReloadStashes, AddStash, ApplyStashStyle);
+            AddTreeSet(nodeStashes, (git) => git.GetStashes(), ReloadStashes, AddStash, ApplyStashStyle);
             AddTreeSet(
                 nodeBranches,
                 git =>
                 {
                     var branchNames = git.GetBranchNames().ToArray();
-                    return BranchNode.GetBranchTree(branchNames);
+                    return BaseBranchNode.GetBranchTree(UICommands, branchNames);
                 },
                 ReloadBranchNodes,
                 AddBranchNode,
@@ -124,5 +124,6 @@ namespace GitUI.UserControls
         {
             treeMain.CollapseAll();
         }
+
     }
 }

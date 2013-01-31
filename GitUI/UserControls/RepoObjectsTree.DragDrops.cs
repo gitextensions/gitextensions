@@ -94,7 +94,7 @@ namespace GitUI.UserControls
                 return true;
             }
 
-            Branch draggedBranch = draggedNode.Tag as Branch;
+            BranchNode draggedBranch = draggedNode.Tag as BranchNode;
             if (draggedBranch != null)
             {
                 if (draggedBranch.IsLocal)
@@ -102,14 +102,14 @@ namespace GitUI.UserControls
                     // local branch -> branches header = new branch
                     // local branch -> remotes header = publish new
 
-                    Branch targetBranch = targetNode.Tag as Branch;
+                    BranchNode targetBranch = targetNode.Tag as BranchNode;
                     if (targetBranch != null)
                     {
                         if (targetBranch.IsRemote)
                         {// local branch -> remote branch = push
                             uiCommands.StartPushDialog(
                                 new GitPushAction(
-                                    ((RemoteBranch)targetBranch).Remote,
+                                    ((RemoteBranchNode)targetBranch).Remote,
                                     draggedBranch.FullPath,
                                     targetBranch.FullPath));
                         }
@@ -147,6 +147,7 @@ namespace GitUI.UserControls
                 node.OnClick();
             }
         }
+
         /// <summary>Performed on a <see cref="TreeNode"/> double-click.
         /// <remarks>Expand/Collapse still executes for any node with children.</remarks></summary>
         void OnNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -222,7 +223,7 @@ namespace GitUI.UserControls
             static DragDropAction()
             {
                 AcceptableDragDrops = new List<DragDropAction>();
-                AcceptableDragDrops.Add(New<Branch, Branch>((dragged, target, cmds) =>
+                AcceptableDragDrops.Add(New<BranchNode, BranchNode>((dragged, target, cmds) =>
                 {
                     if (Equals(dragged, target)) { return false; }// disallow merge into same exact branch
 
@@ -240,7 +241,7 @@ namespace GitUI.UserControls
                     }
                     return false;
                 }));
-                AcceptableDragDrops.Add(New<RemoteBranch, BranchList>((dragged, target, cmds) =>
+                AcceptableDragDrops.Add(New<RemoteBranchNode, BranchList>((dragged, target, cmds) =>
                 {
                     // TODO: check if local branch with same name already exists
                     //cmds.Module.GetLocalConfig().
@@ -250,7 +251,7 @@ namespace GitUI.UserControls
                     return true;
                 }));
                 //AcceptableDragDrops.Add(New<Branch,RemotesList>());
-                AcceptableDragDrops.Add(New<Branch, BranchList>((dragged, target, cmds) =>
+                AcceptableDragDrops.Add(New<BranchNode, BranchList>((dragged, target, cmds) =>
                 {// local branch -> branches header = new branch
                     using (FormBranchSmall branchForm = new FormBranchSmall(cmds, dragged.FullPath))
                     {

@@ -440,7 +440,7 @@ namespace GitUI
             return StartAddFilesDialog(null, null);
         }
 
-        public bool StartCreateBranchDialog(IWin32Window owner, string newBranchName)
+        public bool StartCreateBranchDialog(IWin32Window owner)
         {
             if (!RequiresValidWorkingDir(owner))
                 return false;
@@ -458,7 +458,7 @@ namespace GitUI
 
         public bool StartCreateBranchDialog()
         {
-            return StartCreateBranchDialog(null, null);
+            return StartCreateBranchDialog(null);
         }
 
         public bool StartCloneDialog(IWin32Window owner, string url, bool openedFromProtocolHandler, GitModuleChangedEventHandler GitModuleChanged)

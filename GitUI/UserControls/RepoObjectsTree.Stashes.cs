@@ -10,7 +10,7 @@ namespace GitUI.UserControls
         /// <summary>Reloads the stashes.</summary>
         void ReloadStashes(ICollection<GitStash> stashes)
         {
-            nodeStashes.Text = string.Format("stashes ({0})", stashes.Count);
+            nodeStashes.Text = string.Format("{0} ({1})", Strings.Instance.stashes, stashes.Count);
         }
 
         /// <summary>Adds the specified <paramref name="stash"/> to the stashes tree.</summary>
@@ -26,6 +26,12 @@ namespace GitUI.UserControls
         void ApplyStashStyle(TreeNode treeNode)
         {
             // style
+        }
+
+        class StashNode : Node<GitStash, RootNode<StashNode>>
+        {
+            public StashNode(GitStash stash, RootNode<StashNode> parent, GitUICommands uiCommands)
+                : base(stash, parent, uiCommands) { }
         }
     }
 }

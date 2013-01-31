@@ -775,6 +775,9 @@
     <Compile Include="UserControls\RepoObjectsTree.DragDrops.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UserControls\RepoObjectsTree.Nodes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UserControls\ValueWatcher.cs" />
     <Compile Include="UserControls\RepoObjectsTree.Branches.cs">
       <SubType>UserControl</SubType>
