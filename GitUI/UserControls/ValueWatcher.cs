@@ -23,11 +23,13 @@ namespace GitUI.UserControls
         readonly Action<T> _onChanged;
         readonly Func<T> _getValue;
         readonly Func<T, T, bool> _equals;
+        Action<T, T> _onChanging;
 
-        public ValueWatcher(T initialValue, Func<T> getValue, Action<T> onChanged, Func<T, T, bool> equality)
+        public ValueWatcher(T initialValue, Func<T> getValue, Action<T, T> onChanging, Action<T> onChanged, Func<T, T, bool> equality)
         {
             _currentValue = initialValue;
             _onChanged = onChanged;
+            _onChanging = onChanging;
             _getValue = getValue;
             _equals = equality ?? Equals;
         }
@@ -63,6 +65,7 @@ namespace GitUI.UserControls
                                 (_equals(_currentValue, newValue) == false)
                                 )
                             {// XOR null/not null OR not equal -> update
+                                _onChanging(_currentValue, newValue);
                                 return new DirtyResults<T> { IsDirty = true, NewValue = newValue };
                             }// ... else equal
                             return new DirtyResults<T> { IsDirty = false };
@@ -92,7 +95,10 @@ namespace GitUI.UserControls
     /// Values are retrieved async, while updates are run on the UI thread.</summary>
     class ListWatcher<T> : ValueWatcher<ICollection<T>>
     {
-        public ListWatcher(Func<ICollection<T>> getValues, Action<ICollection<T>> onChanged)
-            : base(null, getValues, onChanged, (olds, news) => olds.SequenceEqual(news)) { }
+        public ListWatcher(
+            Func<ICollection<T>> getValues, 
+            Action<ICollection<T>, ICollection<T>> onChanging, 
+            Action<ICollection<T>> onChanged)
+            : base(null, getValues, onChanging, onChanged, (olds, news) => olds.SequenceEqual(news)) { }
     }
 }

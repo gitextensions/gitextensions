@@ -800,9 +800,6 @@
     <Compile Include="UserControls\RepoObjectsTree.Tags.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\RepoObjectsTreeSet.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="WarningToolStripItem.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -13,66 +13,64 @@ namespace GitUI.UserControls
         TreeNode nodeBranches;
         TreeNode nodeStashes;
 
-        List<RepoObjectsTreeSet> treeSets = new List<RepoObjectsTreeSet>();
+        List<RootNode> rootNodes = new List<RootNode>();
 
         public RepoObjectsTree()
         {
             InitializeComponent();
+
+            if (DesignMode)
+            {
+                return;
+            }
 
             treeMain.ShowNodeToolTips = true;
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
             DragDrops();
 
-            nodeBranches = AddTreeNode(Strings.branches.Text);
             //nodeTags = AddTreeNode("tags");
             //nodeStashes = AddTreeNode("stashes");
 
-            AddTreeSet(nodeStashes, () =>
-            {
-                var stashes = Module.GetStashes();
-                return new RootNode<GitStash>(UICommands, null, stashes);
-            }, ReloadStashes, AddStash, ApplyStashStyle);
+            AddTreeSet(nodeStashes,
+                () => Module.GetStashes().Select(stash => new StashNode(stash, UICommands)).ToList(),
+                OnReloadStashes,
+                OnAddStash
+            );
             AddTreeSet(
                 nodeBranches,
                 () =>
                 {
                     var branchNames = Module.GetBranchNames().ToArray();
-                    return BaseBranchNode.GetBranchTree(UICommands, branchNames);
+                    return BranchesNode.GetBranchTree(UICommands, branchNames);
                 },
-                ReloadBranchNodes,
-                AddBranchNode,
-                null // taken care of in AddBranchNode
+                OnReloadBranches,
+                OnAddBranchNode
                 );
             //AddTreeSet(nodeTags, ...);
-
-            foreach (TreeNode node in treeMain.Nodes)
-            {
-                ApplyTreeNodeStyle(node);
-            }
         }
 
         void AddTreeSet<T>(
-            TreeNode rootNode,
-            Func<RootNode<T>> getValues,
-            Action<ICollection<T>> onReset,
-            Func<TreeNodeCollection, T, TreeNode> itemToTreeNode,
-            Action<TreeNode> applyStyle)
+            TreeNode rootTreeNode,
+            Func<ICollection<T>> getValues,
+            Action<ICollection<T>, RootNode<T>> onReload,
+            Func<TreeNodeCollection, T, TreeNode> itemToTreeNode)
+            where T : Node
         {
-            treeSets.Add(new RepoObjectsTreeSet<T>(rootNode, getValues, onReset, itemToTreeNode, applyStyle));
+            AddNode(new RootNode<T>(rootTreeNode, UICommands, getValues, onReload, itemToTreeNode));
         }
 
-        TreeNode AddTreeNode(string node)
+        void AddNode(RootNode rootNode)
         {
-            return treeMain.Nodes.Add(node);
+            rootNodes.Add(rootNode);
         }
 
         /// <summary>Sets up the objects tree for a new repo, then reloads the objects tree.</summary>
         public void RepoChanged()
         {
-            foreach (RepoObjectsTreeSet treeSet in treeSets)
+            foreach (RootNode rootNode in rootNodes)
             {
-                treeSet.RepoChanged();
+                rootNode.RepoChanged();
             }
 
             Reload();
@@ -84,12 +82,12 @@ namespace GitUI.UserControls
             // todo: async CancellationToken(s)
             // todo: task exception handling
 
-            foreach (RepoObjectsTreeSet treeSet in treeSets)
+            foreach (RootNode rootNode in rootNodes)
             {
-                treeSet.ReloadAsync();
+                rootNode.ReloadAsync();
             }
 
-            // update tree little by little OR when all data retrieved?
+            // update tree little by little OR after all data retrieved?
 
             //Task.Factory.ContinueWhenAll(
             //    new[] { taskBranches },

@@ -8,30 +8,25 @@ namespace GitUI.UserControls
     public partial class RepoObjectsTree
     {
         /// <summary>Reloads the stashes.</summary>
-        void ReloadStashes(ICollection<GitStash> stashes)
+        static void OnReloadStashes(ICollection<StashNode> stashes,RootNode<StashNode> stashesNode)
         {
-            nodeStashes.Text = string.Format("{0} ({1})", Strings.Instance.stashes, stashes.Count);
+            stashesNode.TreeNode.Text = string.Format("{0} ({1})", Strings.Instance.stashes, stashes.Count);
         }
 
-        /// <summary>Adds the specified <paramref name="stash"/> to the stashes tree.</summary>
-        TreeNode AddStash(TreeNodeCollection nodes, GitStash stash)
+        /// <summary>Adds the specified <paramref name="stashNode"/> to the stashes tree.</summary>
+        static TreeNode OnAddStash(TreeNodeCollection nodes, StashNode stashNode)
         {
+            GitStash stash = stashNode.Value;
             TreeNode treeNode = nodes.Add(stash.Index.ToString(), stash.Name);
-            treeNode.Tag = new Node<GitStash,RootNode<GitStash>> (stash,);
+            treeNode.Tag = stash;
             treeNode.ToolTipText = stash.Message;
-            ApplyStashStyle(treeNode);
             return treeNode;
         }
 
-        void ApplyStashStyle(TreeNode treeNode)
+        class StashNode : Node<GitStash, RootNode<StashNode>>
         {
-            // style
+            public StashNode(GitStash stash, GitUICommands uiCommands)
+                : base(stash, null, uiCommands) { }
         }
-
-        //class StashNode : Node<GitStash, RootNode<StashNode>>
-        //{
-        //    public StashNode(GitStash stash, RootNode<StashNode> parent, GitUICommands uiCommands)
-        //        : base(stash, parent, uiCommands) { }
-        //}
     }
 }

@@ -14,82 +14,39 @@ namespace GitUI.UserControls
     // "branches"
     public partial class RepoObjectsTree
     {
-        /// <summary>Applies the specified <see cref="BaseBranchNode"/>s to the <see cref="TreeView"/>.</summary>
-        void ReloadBranchNodes(ICollection<BaseBranchNode> branches)
+        static void OnReloadBranches(ICollection<BaseBranchNode> items, RootNode<BaseBranchNode> rootNode)
         {
-            nodeBranches.Nodes.Clear();
-            nodeBranches.Text = string.Format("{0} ({1})", Strings.branches, branches.Count);
-
             // todo: cache: per Repo, on BranchNode.FullPath
-
-            foreach (BaseBranchNode node in branches)
+            
+            rootNode.TreeNode.Text = string.Format("{0} ({1})", Strings.branches, items.Count);
+            foreach (BaseBranchNode node in items)
             {
-                AddBranchNode(nodeBranches.Nodes, node);
+                OnAddBranchNode(rootNode.TreeNode.Nodes, node);
             }
         }
 
         /// <summary>Adds a <see cref="BaseBranchNode"/>, and recursivley, its children.</summary>
-        TreeNode AddBranchNode(TreeNodeCollection nodes, BaseBranchNode branchNode)
+        static TreeNode OnAddBranchNode(TreeNodeCollection nodes, BaseBranchNode branchNode)
         {
             TreeNode treeNode = nodes.Add(branchNode.FullPath, branchNode.Name);
             treeNode.Tag = branchNode;
             BranchPath branchPath = branchNode as BranchPath;
             if (branchPath != null)
             {
-                ApplyBranchPathStyle(treeNode);
                 foreach (BaseBranchNode child in branchPath.Children)
                 {// recurse children
-                    AddBranchNode(treeNode.Nodes, child);
+                    OnAddBranchNode(treeNode.Nodes, child);
                 }
             }
-            else
-            {
-                ApplyBranchStyle(treeNode);
-            }
+
             return null;
         }
-
-        #region Styles
-
-        /// <summary>Applies a style for a <see cref="BranchNode"/>.</summary>
-        void ApplyBranchStyle(TreeNode node)
-        {
-            ApplyBranchNodeStyle(node);
-            if (((BranchNode)node.Tag).IsActive)
-            {
-                node.NodeFont = new Font(node.NodeFont, FontStyle.Bold);
-            }
-
-            // ...
-        }
-
-        /// <summary>Applies a style for a <see cref="BranchPath"/>.</summary>
-        void ApplyBranchPathStyle(TreeNode node)
-        {
-            ApplyBranchNodeStyle(node);
-            // ...
-        }
-
-        /// <summary>Apples the style for a <see cref="BaseBranchNode"/>. 
-        /// <remarks>Should be invoked from a more specific style.</remarks></summary>
-        void ApplyBranchNodeStyle(TreeNode node)
-        {
-            ApplyTreeNodeStyle(node);
-            // ...
-        }
-
-        #endregion Styles
 
         #region private classes
 
         /// <summary>base class for a branch node</summary>
         abstract class BaseBranchNode : Node
         {
-            /// <summary>'/'</summary>
-            protected static char Separator = '/';
-            /// <summary>"/"</summary>
-            protected static string SeparatorStr = Separator.ToString();
-
             /// <summary>Short name of the branch/branch path. <example>"issue1344"</example></summary>
             public string Name { get; private set; }
             /// <summary>do NOT access this member directly. <remarks>use <see cref="FullPath"/></remarks></summary>
@@ -101,7 +58,7 @@ namespace GitUI.UserControls
                 {
                     return _FullPath ?? (_FullPath = (Parent != null)
                                                          ? string.Format("{0}{1}{2}",
-                                                                Parent.FullPath, SeparatorStr, Name)
+                                                                Parent.FullPath, BranchesNode.SeparatorStr, Name)
                                                          : Name);
                 }
             }
@@ -109,7 +66,7 @@ namespace GitUI.UserControls
             public BranchPath Parent { get; private set; }
             BranchPath _Root;
             /// <summary>Root <see cref="BaseBranchNode"/>.</summary>
-            public BranchPath Root { get { return _Root ?? (_Root = GetRoot(this)); } }
+            public BranchPath Root { get { return _Root ?? (_Root = BranchesNode.GetRoot(this)); } }
             internal int Level { get; private set; }
             /// <summary>true: local branch; false: remote branch</summary>
             public bool IsLocal { get; private set; }
@@ -169,48 +126,6 @@ namespace GitUI.UserControls
 
             public override string ToString() { return Name; }
 
-            /// <summary>Gets the root <see cref="BranchPath"/> or this, if it is the root.</summary>
-            protected static BranchPath GetRoot(BaseBranchNode node)
-            {
-                return (node.Parent != null)
-                    ? GetRoot(node.Parent)
-                    : node as BranchPath;
-            }
-
-            /// <summary>Gets the name of the branch or path part.</summary>
-            protected static string GetName(string branch)
-            {
-                return IsOrHasParent(branch)
-                    ? branch.Substring(EndOfParentPath(branch))
-                    : branch;
-            }
-
-            protected static bool IsParentOf(BaseBranchNode parent, string branch)
-            {
-                return string.Equals(GetFullParentPath(branch), parent.FullPath);
-            }
-
-            /// <summary>Indicates whether a branch HAS or IS a parent.</summary>
-            protected static bool IsOrHasParent(string branch)
-            {
-                return branch.Contains(SeparatorStr);
-            }
-
-            /// <summary>Indicates whether the specified</summary>
-            static bool IsInFamilyTree(BranchPath parent, string branch, out BranchPath commonAncestor)
-            {
-                if (IsParentOf(parent, branch))
-                {
-                    commonAncestor = parent;
-                    return true;
-                }
-                commonAncestor = null;
-                return
-                    (parent.Parent != null)
-                    &&
-                    IsInFamilyTree(parent.Parent, branch, out commonAncestor);
-            }
-
             //static bool HasSameParents(string branch, BranchPath other, out BranchPath newPath)
             //{
             //    bool hasSameParents = string.Equals(other.FullPath, GetFullParentPath(branch));
@@ -225,21 +140,95 @@ namespace GitUI.UserControls
             //        return true;
             //    }
             //}
+        }
+
+        /// <summary>root "branches" node</summary>
+        ///// <summary>list of <see cref="BaseBranchNode"/>s, including the <see cref="Active"/> branch, if applicable</summary>
+        class BranchesNode : RootNode<BaseBranchNode>
+        {
+            IEnumerable<string> _Branches;
+
+            BranchesNode(TreeNode rootNode, GitUICommands uiCommands,
+               BaseBranchNode active, IEnumerable<string> branches)
+                : base(
+                rootNode,
+                uiCommands,
+                () => GetBranchTree(uiCommands, branches),
+                OnReloadBranches,
+                OnAddBranchNode)
+            {
+                Active = active;
+                _Branches = branches;
+            }
+
+            /// <summary>Gets the current active branch. <remarks>May be null, if HEAD is detached.</remarks></summary>
+            public BaseBranchNode Active { get; private set; }
+
+            /// <summary>Gets the list of branch names from the raw output.</summary>
+            public IEnumerable<string> Branches { get { return _Branches; } }
+
+            public override int GetHashCode() { return Branches.GetHash(); }
+            /// <summary>'/'</summary>
+            public static char Separator = '/';
+            /// <summary>"/"</summary>
+            public static string SeparatorStr = Separator.ToString();
+
+            /// <summary>Gets the root <see cref="BranchPath"/> or this, if it is the root.</summary>
+            public static BranchPath GetRoot(BaseBranchNode node)
+            {
+                return (node.Parent != null)
+                           ? GetRoot(node.Parent)
+                           : node as BranchPath;
+            }
+
+            /// <summary>Gets the name of the branch or path part.</summary>
+            public static string GetName(string branch)
+            {
+                return IsOrHasParent(branch)
+                           ? branch.Substring(EndOfParentPath(branch))
+                           : branch;
+            }
+
+            public static bool IsParentOf(BaseBranchNode parent, string branch)
+            {
+                return String.Equals((string)GetFullParentPath(branch), parent.FullPath);
+            }
+
+            /// <summary>Indicates whether a branch HAS or IS a parent.</summary>
+            public static bool IsOrHasParent(string branch)
+            {
+                return branch.Contains(SeparatorStr);
+            }
+
+            /// <summary>Indicates whether the specified</summary>
+            public static bool IsInFamilyTree(BranchPath parent, string branch, out BranchPath commonAncestor)
+            {
+                if (IsParentOf(parent, branch))
+                {
+                    commonAncestor = parent;
+                    return true;
+                }
+                commonAncestor = null;
+                return
+                    (parent.Parent != null)
+                    &&
+                    IsInFamilyTree(parent.Parent, branch, out commonAncestor);
+            }
 
             /// <summary>Gets the full path of the parent for the specified <paramref name="branch"/>.</summary>
-            protected static string GetFullParentPath(string branch)
+            public static string GetFullParentPath(string branch)
             {
                 return branch.Substring(0, EndOfParentPath(branch));
             }
 
             /// <summary>Gets the end index of the parent of the specified <paramref name="branch"/>.</summary>
-            protected static int EndOfParentPath(string branch)
+            public static int EndOfParentPath(string branch)
             {
                 return branch.LastIndexOf(Separator);
             }
 
             /// <summary>Gets the hierarchical branch tree from the specified list of <paramref name="branches"/>.</summary>
-            public static BranchesNode GetBranchTree(GitUICommands uiCommands, IEnumerable<string> branches)
+            public static ICollection<BaseBranchNode> GetBranchTree(GitUICommands uiCommands, IEnumerable<string> branches)
             {
                 // (input)
                 // a-branch
@@ -309,18 +298,18 @@ namespace GitUI.UserControls
                         nodes.Add(GetChildren(uiCommands, null, branch, activeBranch, out currentParent));
                     }
                 }
-                return new BranchesNode(uiCommands, activeBranch, nodes, rawBranches);
+                return nodes;
             }
 
             /// <summary>Gets the children of the specified <paramref name="parent"/> node OR
             /// Creates a new lineage of <see cref="BaseBranchNode"/>s.</summary>
-            static BranchPath GetChildren(GitUICommands uiCommands, BranchPath parent, string branch, string activeBranch, out BranchPath currentParent)
+            public static BranchPath GetChildren(GitUICommands uiCommands, BranchPath parent, string branch, string activeBranch, out BranchPath currentParent)
             {
                 string[] splits = branch.Split(Separator);// issues/iss1334 -> issues, iss1334
                 int nParents = splits.Length - 1;
 
                 currentParent = parent // common ancestor
-                    ?? new BranchPath(uiCommands, splits[0], 0);
+                                ?? new BranchPath(uiCommands, splits[0], 0);
 
                 // benchmarks/-main
                 // benchmarks/get-branches
@@ -339,7 +328,7 @@ namespace GitUI.UserControls
             /// <summary>Finds a specified <see cref="BaseBranchNode"/> with the given full name.</summary>
             /// <typeparam name="TBranchNode">Type of <see cref="BaseBranchNode"/> to search for.</typeparam>
             public static TBranchNode Find<TBranchNode>(IEnumerable<BaseBranchNode> nodes, string fullPath)
-                  where TBranchNode : BaseBranchNode
+                where TBranchNode : BaseBranchNode
             {
                 if (fullPath == null) { return null; }
 
@@ -363,44 +352,13 @@ namespace GitUI.UserControls
             }
         }
 
-        /// <summary>root "branches" node</summary>
-        ///// <summary>list of <see cref="BaseBranchNode"/>s, including the <see cref="Active"/> branch, if applicable</summary>
-        class BranchesNode : RootNode<BaseBranchNode>
-        {
-            public BranchesNode(GitUICommands uiCommands)
-                : base(uiCommands) { }
-
-
-            IEnumerable<string> _Branches;
-
-            public BranchesNode(GitUICommands uiCommands,
-                BaseBranchNode active, IEnumerable<BaseBranchNode> nodes, IEnumerable<string> branches)
-                : base(uiCommands, null, nodes)
-            {
-                Active = active;
-                _Branches = branches;
-            }
-
-            public BranchesNode(GitUICommands uiCommands,
-                string active, IList<BaseBranchNode> nodes, IEnumerable<string> branches)
-                : this(uiCommands, BaseBranchNode.Find<BranchNode>(nodes, active), nodes, branches) { }
-
-            /// <summary>Gets the current active branch. <remarks>May be null, if HEAD is detached.</remarks></summary>
-            public BaseBranchNode Active { get; private set; }
-
-            /// <summary>Gets the list of branch names from the raw output.</summary>
-            public IEnumerable<string> Branches { get { return _Branches; } }
-
-            public override int GetHashCode() { return Branches.GetHash(); }
-        }
-
         /// <summary>branch</summary>
         class BranchNode : BaseBranchNode
         {
             public BranchNode(GitUICommands uiCommands,
                 string branch, int level, string activeBranchPath = null,
                 BranchPath parent = null, bool isLocal = true)
-                : base(uiCommands, GetName(branch), level, parent, isLocal)
+                : base(uiCommands, BranchesNode.GetName(branch), level, parent, isLocal)
             {
                 IsActive = Equals(activeBranchPath, FullPath);
             }
@@ -417,6 +375,16 @@ namespace GitUI.UserControls
             {// NOT (not whitespace)
                 return !string.IsNullOrWhiteSpace(config.GetValue(GitHead.RemoteSettingName(FullPath)));
             }
+
+            internal override void ApplyStyle()
+            {
+                base.ApplyStyle();
+                if (IsActive)
+                {
+                    TreeNode.NodeFont = new Font(TreeNode.NodeFont, FontStyle.Bold);
+                }
+
+            }
         }
 
         class RemoteBranchNode : BranchNode
@@ -431,7 +399,7 @@ namespace GitUI.UserControls
                 : base(uiCommands, branch, level, activeBranchPath, parent, isLocal: false)
             {
                 Remote = remote;
-                FullBranchName = FullPath.Substring(FullPath.IndexOf(Separator));
+                FullBranchName = FullPath.Substring(FullPath.IndexOf(BranchesNode.Separator));
             }
         }
 
@@ -470,7 +438,7 @@ namespace GitUI.UserControls
 
             public override string ToString()
             {
-                return string.Format("{0}{1}", Name, SeparatorStr);
+                return string.Format("{0}{1}", Name, BranchesNode.SeparatorStr);
             }
         }
 

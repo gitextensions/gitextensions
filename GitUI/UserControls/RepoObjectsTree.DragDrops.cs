@@ -77,7 +77,7 @@ namespace GitUI.UserControls
                 var dragDropAction = DragDropAction.GetFirstOrDefault(draggedNode, targetNode);
                 if (dragDropAction != null)
                 {
-                    dragDropAction.Action(draggedNode, targetNode, uiCommands);
+                    //!dragDropAction.Action(draggedNode, targetNode, uiCommands);
                 }
             }
 
@@ -105,19 +105,19 @@ namespace GitUI.UserControls
                     BranchNode targetBranch = targetNode.Tag as BranchNode;
                     if (targetBranch != null)
                     {
-                        if (targetBranch.IsRemote)
-                        {// local branch -> remote branch = push
-                            uiCommands.StartPushDialog(
-                                new GitPushAction(
-                                    ((RemoteBranchNode)targetBranch).Remote,
-                                    draggedBranch.FullPath,
-                                    targetBranch.FullPath));
-                        }
-                        else if (targetBranch.IsLocal && Equals(git.GetSelectedBranch(), targetBranch.FullPath))
-                        {// local branch -> current local branch
-                            // TODO: rebase on Alt+Drag
-                            uiCommands.StartMergeBranchDialog(draggedBranch.FullPath);
-                        }
+                        //!if (targetBranch.IsRemote)
+                        //{// local branch -> remote branch = push
+                        //    uiCommands.StartPushDialog(
+                        //        new GitPushAction(
+                        //            ((RemoteBranchNode)targetBranch).Remote,
+                        //            draggedBranch.FullPath,
+                        //            targetBranch.FullPath));
+                        //}
+                        //else if (targetBranch.IsLocal && Equals(git.GetSelectedBranch(), targetBranch.FullPath))
+                        //{// local branch -> current local branch
+                        //    // TODO: rebase on Alt+Drag
+                        //    uiCommands.StartMergeBranchDialog(draggedBranch.FullPath);
+                        //}
                     }
                 }
                 else
@@ -241,7 +241,7 @@ namespace GitUI.UserControls
                     }
                     return false;
                 }));
-                AcceptableDragDrops.Add(New<RemoteBranchNode, BranchList>((dragged, target, cmds) =>
+                AcceptableDragDrops.Add(New<RemoteBranchNode, BranchesNode>((dragged, target, cmds) =>
                 {
                     // TODO: check if local branch with same name already exists
                     //cmds.Module.GetLocalConfig().
@@ -251,7 +251,7 @@ namespace GitUI.UserControls
                     return true;
                 }));
                 //AcceptableDragDrops.Add(New<Branch,RemotesList>());
-                AcceptableDragDrops.Add(New<BranchNode, BranchList>((dragged, target, cmds) =>
+                AcceptableDragDrops.Add(New<BranchNode, BranchesNode>((dragged, target, cmds) =>
                 {// local branch -> branches header = new branch
                     using (FormBranchSmall branchForm = new FormBranchSmall(cmds, dragged.FullPath))
                     {

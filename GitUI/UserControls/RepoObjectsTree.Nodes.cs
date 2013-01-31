@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -20,6 +21,8 @@ namespace GitUI.UserControls
                 get { return _TreeNode; }
                 internal set { _TreeNode = value; ApplyStyle(); }
             }
+
+            public Node ParentNode { get; internal set; }
 
             /// <summary>Gets the <see cref="GitUICommands"/> reference.</summary>
             public GitUICommands UiCommands { get; private set; }
@@ -51,7 +54,7 @@ namespace GitUI.UserControls
         /// <summary>base class for a node, with a parent</summary>
         abstract class Node<TParent> : Node
         {
-            public TParent ParentNode { get; private set; }
+            new public TParent ParentNode { get; private set; }
 
             protected Node(TParent parent, GitUICommands uiCommands, TreeNode treeNode = null)
                 : base(uiCommands, treeNode)
@@ -77,15 +80,93 @@ namespace GitUI.UserControls
             }
         }
 
-        /// <summary>Root node in a <see cref="RepoObjectsTreeSet"/> of type <see cref="TChild"/>.</summary>
-        class RootNode<TChild> : Node, ICollection<TChild>
+        /* readme
+         * Ok, so this may look a bit confusing, but here's the gist:
+         * On FormBrowse init or repo change, NewRepo is called:
+         *      basically sets the new git module and creates a new ListWatcher
+         * ListWatcher holds the previous value of the nodes
+         * When FormBrowse is refreshed/reloaded, ReloadAsync is invoked
+         * ReloadAsync calls ListWatcher.CheckUpdateAsync which will async get current values for the nodes
+         *      if the current values don't equal previous values, the UI is updated via ReloadNodes
+         * When the UI is updated, the root node's children are cleared and new nodes are created
+         */
+        /// <summary>Base class for a root node in a <see cref="RepoObjectsTree"/>.</summary>
+        abstract class RootNode : Node
+        {
+            protected ValueWatcher _Watcher;
+
+            protected RootNode(GitUICommands uiCommands, TreeNode treeNode = null)
+                : base(uiCommands, treeNode) { }
+
+            /// <summary>Readies the tree set for a new repo.</summary>
+            public virtual void RepoChanged()
+            {
+                ReloadAsync();
+            }
+
+            /// <summary>Async reloads the set of nodes.</summary>
+            public virtual Task ReloadAsync()
+            {
+                return _Watcher.CheckUpdateAsync();
+            }
+        }
+
+        /// <summary>Root node in a <see cref="RepoObjectsTree"/> of type <see cref="TChild"/>.</summary>
+        class RootNode<TChild> : RootNode, ICollection<TChild>
+            where TChild : Node
         {
             public virtual IList<TChild> Children { get; protected set; }
 
-            public RootNode(GitUICommands uiCommands, TreeNode treeNode = null, IEnumerable<TChild> children = null)
-                : base(uiCommands, treeNode)
+            protected readonly Func<ICollection<TChild>> _getValues;
+            protected readonly Action<ICollection<TChild>, RootNode<TChild>> _onReload;
+            protected ListWatcher<TChild> _WatcherT;
+            readonly Func<TreeNodeCollection, TChild, TreeNode> _addChild;
+
+            public RootNode(TreeNode rootNode, GitUICommands uiCommands,
+                Func<ICollection<TChild>> getValues,
+                Action<ICollection<TChild>, RootNode<TChild>> onReload,
+                Func<TreeNodeCollection, TChild, TreeNode> addChild
+                )
+                : base(uiCommands, rootNode)
             {
-                Children = new List<TChild>(children ?? new TChild[] { });
+                _getValues = getValues;
+                _onReload = onReload;
+                _addChild = addChild;
+            }
+
+            /// <summary>Readies the tree set for a new repo.</summary>
+            public override void RepoChanged()
+            {
+                _Watcher = _WatcherT = new ListWatcher<TChild>(
+                    () => _getValues(),
+                    (olds, news) => Children.Clear(), // clear children in BG thread
+                    ReloadNodes);
+                base.RepoChanged();
+            }
+
+            /// <summary>Reloads the set of nodes based on the specified <paramref name="items"/>.</summary>
+            protected virtual void ReloadNodes(ICollection<TChild> items)
+            {
+                //Children.Clear();
+                TreeNode.TreeView.Update(() =>
+                {
+                    TreeNode.Nodes.Clear();
+
+                    foreach (TChild item in items)
+                    {
+                        TreeNode child = AddChild(TreeNode.Nodes, item);
+                        item.ParentNode = this;
+                        item.ApplyStyle();
+                    }
+
+                    _onReload(items, this);
+                });
+            }
+
+            /// <summary>Adds a child <see cref="TreeNode"/> based on the specified <paramref name="item"/>.</summary>
+            protected virtual TreeNode AddChild(TreeNodeCollection nodes, TChild item)
+            {
+                return _addChild(nodes, item);
             }
 
             #region ICollectionT (wraps Children)
@@ -99,21 +180,6 @@ namespace GitUI.UserControls
             public int Count { get { return Children.Count; } }
             public bool IsReadOnly { get { return Children.IsReadOnly; } }
             #endregion ICollectionT (wraps Children)
-        }
-
-        /// <summary>base class for a root node</summary>
-        class RootNode<T, TChild> : RootNode<TChild>, IValueNode<T>
-            where T : class
-            where TChild : Node
-        {
-            public T Value { get; private set; }
-
-            public RootNode(T value, GitUICommands uiCommands, TreeNode treeNode = null, IEnumerable<TChild> children = null)
-                : base(uiCommands, treeNode, children)
-            {
-                Value = value;
-            }
-
         }
     }
 
