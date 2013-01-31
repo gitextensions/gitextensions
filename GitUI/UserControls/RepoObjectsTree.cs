@@ -9,36 +9,34 @@ namespace GitUI.UserControls
     /// <summary>Tree-like structure for a repo's objects.</summary>
     public partial class RepoObjectsTree : GitModuleControl
     {
-        TreeNode nodeTags;
-        TreeNode nodeBranches;
-        TreeNode nodeStashes;
-
         List<RootNode> rootNodes = new List<RootNode>();
 
         public RepoObjectsTree()
         {
             InitializeComponent();
 
-            if (DesignMode)
-            {
-                return;
-            }
+            GitUICommandsSourceSet += OnGitUICommandsSource;
 
             treeMain.ShowNodeToolTips = true;
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
+        }
+
+        void OnGitUICommandsSource(object sender, IGitUICommandsSource uicommandssource)
+        {
+            GitUICommandsSourceSet -= OnGitUICommandsSource;// only do this once
             DragDrops();
 
             //nodeTags = AddTreeNode("tags");
             //nodeStashes = AddTreeNode("stashes");
 
-            AddTreeSet(nodeStashes,
+            AddTreeSet(new TreeNode(Strings.Instance.stashes.Text),
                 () => Module.GetStashes().Select(stash => new StashNode(stash, UICommands)).ToList(),
                 OnReloadStashes,
                 OnAddStash
             );
             AddTreeSet(
-                nodeBranches,
+                new TreeNode(Strings.branches.Text),
                 () =>
                 {
                     var branchNames = Module.GetBranchNames().ToArray();
@@ -48,6 +46,8 @@ namespace GitUI.UserControls
                 OnAddBranchNode
                 );
             //AddTreeSet(nodeTags, ...);
+
+            RepoChanged();
         }
 
         void AddTreeSet<T>(
@@ -62,6 +62,7 @@ namespace GitUI.UserControls
 
         void AddNode(RootNode rootNode)
         {
+            treeMain.Nodes.Add(rootNode.TreeNode);
             rootNodes.Add(rootNode);
         }
 

@@ -29,7 +29,10 @@ namespace GitUI.UserControls
 
             public Node(GitUICommands uiCommands, TreeNode treeNode = null)
             {
-                TreeNode = treeNode;
+                if (treeNode != null)
+                {
+                    TreeNode = treeNode;
+                }
                 UiCommands = uiCommands;
                 ContextActions = new ContextAction[0];
                 ValidDrops = new DropAction[0];
@@ -138,8 +141,11 @@ namespace GitUI.UserControls
             public override void RepoChanged()
             {
                 _Watcher = _WatcherT = new ListWatcher<TChild>(
-                    () => _getValues(),
-                    (olds, news) => Children.Clear(), // clear children in BG thread
+                    _getValues,
+                    (olds, news) =>
+                    {
+                        //Children.Clear()
+                    }, // clear children in BG thread
                     ReloadNodes);
                 base.RepoChanged();
             }
@@ -147,7 +153,7 @@ namespace GitUI.UserControls
             /// <summary>Reloads the set of nodes based on the specified <paramref name="items"/>.</summary>
             protected virtual void ReloadNodes(ICollection<TChild> items)
             {
-                //Children.Clear();
+                Children.Clear();
                 TreeNode.TreeView.Update(() =>
                 {
                     TreeNode.Nodes.Clear();

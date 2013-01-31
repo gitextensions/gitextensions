@@ -117,9 +117,7 @@ namespace GitUI
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
-
-            repoObjectsTree.RepoChanged();
-
+           
             // set tab page images
             {
                 var imageList = new ImageList();
@@ -134,6 +132,8 @@ namespace GitUI
             }
 
             RevisionGrid.UICommandsSource = this;
+            repoObjectsTree.UICommandsSource = this;
+            //repoObjectsTree.RepoChanged();
             AsyncLoader.DoAsync(() => PluginLoader.Load(), () => RegisterPlugins());
             RevisionGrid.GitModuleChanged += DashboardGitModuleChanged;
             filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
