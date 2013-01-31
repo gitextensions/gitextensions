@@ -86,20 +86,29 @@ namespace GitCommands
         }
 
         /// <summary>"branches" translation.</summary>
-        public readonly TranslationString branches = new TranslationString("branches");
+        public static readonly TranslationString branches = new TranslationString("branches");
+        /// <summary>"remotes" translation.</summary>
+        public readonly TranslationString remotes = new TranslationString("remotes");
+        /// <summary>"tags" translation.</summary>
+        public readonly TranslationString tags = new TranslationString("tags");
+        /// <summary>"stashes" translation.</summary>
+        public readonly TranslationString stashes = new TranslationString("stashes");
+        /// <summary>"submodules" translation.</summary>
+        public readonly TranslationString submodules = new TranslationString("submodules");
 
-        private readonly TranslationString _dateText = new TranslationString("Date");
-        private readonly TranslationString _authorText = new TranslationString("Author");
-        private readonly TranslationString _authorDateText = new TranslationString("Author date");
-        private readonly TranslationString _committerText = new TranslationString("Committer");
-        private readonly TranslationString _commitDateText = new TranslationString("Commit date");
-        private readonly TranslationString _commitHashText = new TranslationString("Commit hash");
-        private readonly TranslationString _messageText = new TranslationString("Message");
-        private readonly TranslationString _parentsText = new TranslationString("Parent(s)");
-        private readonly TranslationString _childrenText = new TranslationString("Children");
+
+        private readonly TranslationString _dateText                 = new TranslationString("Date");
+        private readonly TranslationString _authorText               = new TranslationString("Author");
+        private readonly TranslationString _authorDateText           = new TranslationString("Author date");
+        private readonly TranslationString _committerText            = new TranslationString("Committer");
+        private readonly TranslationString _commitDateText           = new TranslationString("Commit date");
+        private readonly TranslationString _commitHashText           = new TranslationString("Commit hash");
+        private readonly TranslationString _messageText              = new TranslationString("Message");
+        private readonly TranslationString _parentsText              = new TranslationString("Parent(s)");
+        private readonly TranslationString _childrenText             = new TranslationString("Children");
         private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current uncommitted changes");
-        private readonly TranslationString _currentIndex = new TranslationString("Commit index");
-        private readonly TranslationString _LoadingData = new TranslationString("Loading data...");
+        private readonly TranslationString _currentIndex             = new TranslationString("Commit index");
+        private readonly TranslationString _LoadingData              = new TranslationString("Loading data...");
 
         public static string GetNSecondsAgoText(int value)
         {
