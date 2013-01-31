@@ -17,8 +17,6 @@ namespace TranslationApp
         {
             Category = category;
             _item = item;
-            OldNeutralValue = _item.Source;
-            OldTranslatedValue = _item.Value;
         }
 
         public string Category { get; set; }
@@ -32,6 +30,7 @@ namespace TranslationApp
         public string Name { get { return _item.Name; } set { _item.Name = value; } }
         public string Property { get { return _item.Property; } set { _item.Property = value; } }
         public string NeutralValue { get { return _item.Source; } set { _item.Source = value; } }
+        public string OldNeutralValue { get { return _item.OldSource; } set { _item.OldSource = value; } }
         public string TranslatedValue
         {
             get { return _item.Value; }
@@ -42,32 +41,28 @@ namespace TranslationApp
                 {
                     pc(this, new PropertyChangedEventArgs("TranslatedValue"));
                 }
-                _item.Value = value;
-                if (value != OldTranslatedValue)
+                if (value != _item.Value)
                 {
+                    _item.Value = value;
+                    _item.OldSource = null;
                     if (!string.IsNullOrEmpty(value))
-                    {
-                        OldNeutralValue = NeutralValue;
                         Status = TranslationType.Translated;
-                    }
                     else
                         Status = TranslationType.Unfinished;
                 }
             }
         }
-        public string OldNeutralValue { get; set; }
-        public string OldTranslatedValue { get; set; }
         public TranslationType Status { get { return _item.Status; } set { _item.Status = value; } }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public bool IsSourceEqual(string value)
         {
-            if (OldNeutralValue == null)
+            if (NeutralValue == null)
                 return true;
-            bool equal = (value == OldNeutralValue);
+            bool equal = (value == NeutralValue);
             if (!equal && value.Contains("\n"))
-                return OldNeutralValue == value.Replace(Environment.NewLine, "\n");
+                return NeutralValue == value.Replace(Environment.NewLine, "\n");
             return equal;
         }
 

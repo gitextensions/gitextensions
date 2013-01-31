@@ -183,6 +183,13 @@ namespace GitCommands
             set { SafeSet("translation", value, ref _translation); }
         }
 
+        private static string _currentTranslation;
+        public static string CurrentTranslation
+        {
+            get { return _currentTranslation ?? Translation; }
+            set { _currentTranslation = value; }
+        }
+
         private static bool? _userProfileHomeDir;
         public static bool UserProfileHomeDir
         {
