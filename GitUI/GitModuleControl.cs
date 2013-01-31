@@ -5,6 +5,8 @@ using GitCommands;
 
 namespace GitUI
 {
+    /// <summary>Base class for a <see cref="UserControl"/> requiring 
+    /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
     public class GitModuleControl : GitExtensionsControl
     {
         [Browsable(false)]
