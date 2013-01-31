@@ -136,12 +136,10 @@ namespace TranslationApp
 
         private void FillNeutralTranslation(Translation neutralTranslation)
         {
-            string currentTranslation = GitCommands.Settings.Translation;
-
             try
             {
                 //Set language to neutral to get neutral translations
-                GitCommands.Settings.Translation = "";
+                GitCommands.Settings.CurrentTranslation = "";
                 Translate();
 
                 List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
@@ -158,7 +156,7 @@ namespace TranslationApp
                 neutralTranslation.Sort();
                 
                 //Restore translation
-                GitCommands.Settings.Translation = currentTranslation;
+                GitCommands.Settings.CurrentTranslation = null;
                 Translate();
             }
         }
