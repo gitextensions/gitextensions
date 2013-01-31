@@ -66,7 +66,7 @@ namespace GitUI
 
         protected void Translate()
         {
-            Translator.Translate(this, GitCommands.Settings.Translation);
+            Translator.Translate(this, GitCommands.Settings.CurrentTranslation);
             translated = true;
         }
 
