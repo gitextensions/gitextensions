@@ -17,6 +17,7 @@ using Settings = GitCommands.Settings;
 
 namespace GitUI
 {
+    /// <summary>Contains methods to invoke GitEx forms, dialogs, etc.</summary>
     public sealed class GitUICommands : IGitUICommands
     {
         public GitUICommands(GitModule module)

@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
 
 namespace GitUI.UserControls
 {
     /// <summary>Tree-like structure for a repo's objects.</summary>
-    public partial class RepoObjectsTree : UserControl
+    public partial class RepoObjectsTree : GitModuleControl
     {
         /// <summary>the <see cref="GitModule"/></summary>
         GitModule git;
@@ -27,7 +26,7 @@ namespace GitUI.UserControls
             treeMain.ShowNodeToolTips = true;
             DragDrops();
 
-            nodeBranches = AddTreeNode(Strings.Instance.branches.Text);
+            nodeBranches = AddTreeNode(Strings.branches.Text);
             //nodeTags = AddTreeNode("tags");
             //nodeStashes = AddTreeNode("stashes");
 
@@ -41,8 +40,8 @@ namespace GitUI.UserControls
                 },
                 ReloadBranchNodes,
                 AddBranchNode,
-                null// taken care of in AddBranchNode
-            );
+                null // taken care of in AddBranchNode
+                );
             //AddTreeSet(nodeTags, ...);
 
             foreach (TreeNode node in treeMain.Nodes)
@@ -68,7 +67,7 @@ namespace GitUI.UserControls
 
         TreeNode AddTreeNode(string node)
         {
-             return treeMain.Nodes.Add(node);
+            return treeMain.Nodes.Add(node);
         }
 
         /// <summary>Sets up the objects tree for a new repo, then reloads the objects tree.</summary>
