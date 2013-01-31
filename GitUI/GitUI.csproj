@@ -772,32 +772,32 @@
     <Compile Include="UserControls\FolderBrowserButton.Designer.cs">
       <DependentUpon>FolderBrowserButton.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RepoObjectsTree.DragDrops.cs">
+    <Compile Include="RepoObjectsTree\RepoObjectsTree.DragDrops.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\RepoObjectsTree.Nodes.cs">
+    <Compile Include="RepoObjectsTree\RepoObjectsTree.Nodes.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\ValueWatcher.cs" />
-    <Compile Include="UserControls\RepoObjectsTree.Branches.cs">
+    <Compile Include="RepoObjectsTree\ValueWatcher.cs" />
+    <Compile Include="RepoObjectsTree\RepoObjectsTree.Branches.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\RepoObjectsTree.cs">
+    <Compile Include="RepoObjectsTree\RepoObjectsTree.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\RepoObjectsTree.Designer.cs">
+    <Compile Include="RepoObjectsTree\RepoObjectsTree.Designer.cs">
       <DependentUpon>RepoObjectsTree.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RepoObjectsTree.Remotes.cs">
+    <Compile Include="RepoObjectsTree\RepoObjectsTree.Remotes.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\RepoObjectsTree.Stashes.cs">
+    <Compile Include="RepoObjectsTree\RepoObjectsTree.Stashes.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\RepoObjectsTree.Submodules.cs">
+    <Compile Include="RepoObjectsTree\RepoObjectsTree.Submodules.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\RepoObjectsTree.Tags.cs">
+    <Compile Include="RepoObjectsTree\RepoObjectsTree.Tags.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="WarningToolStripItem.cs">
@@ -1204,7 +1204,7 @@
     <EmbeddedResource Include="UserControls\FolderBrowserButton.resx">
       <DependentUpon>FolderBrowserButton.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\RepoObjectsTree.resx">
+    <EmbeddedResource Include="RepoObjectsTree\RepoObjectsTree.resx">
       <DependentUpon>RepoObjectsTree.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
