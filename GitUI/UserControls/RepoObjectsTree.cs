@@ -27,16 +27,13 @@ namespace GitUI.UserControls
             GitUICommandsSourceSet -= OnGitUICommandsSource;// only do this once
             DragDrops();
 
-            AddTreeSet(
-                new TreeNode(Strings.branches.Text),
+            AddNode(new BranchesNode(new TreeNode(Strings.branches.Text), UICommands,
                 () =>
                 {
                     var branchNames = Module.GetBranchNames().ToArray();
                     return BranchesNode.GetBranchTree(UICommands, branchNames);
-                },
-                OnReloadBranches,
-                OnAddBranchNode
-                );
+                }
+            ));
             AddTreeSet(new TreeNode(Strings.stashes.Text),
                () => Module.GetStashes().Select(stash => new StashNode(stash, UICommands)).ToList(),
                OnReloadStashes,
@@ -54,7 +51,7 @@ namespace GitUI.UserControls
             Func<TreeNodeCollection, T, TreeNode> itemToTreeNode)
             where T : Node
         {
-            AddNode(new RootNode<T>(rootTreeNode, UICommands, getValues, onReload, itemToTreeNode));
+            AddNode(new RootNode<T>(rootTreeNode, UICommands, getValues, null, onReload, itemToTreeNode));
         }
 
         void AddNode(RootNode rootNode)

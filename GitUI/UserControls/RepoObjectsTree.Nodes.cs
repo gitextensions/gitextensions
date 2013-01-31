@@ -122,20 +122,27 @@ namespace GitUI.UserControls
             public virtual IList<TChild> Children { get; protected set; }
 
             protected readonly Func<ICollection<TChild>> _getValues;
+            readonly Action<ICollection<TChild>, ICollection<TChild>> _onReloading;
             protected readonly Action<ICollection<TChild>, RootNode<TChild>> _onReload;
             protected ListWatcher<TChild> _WatcherT;
             readonly Func<TreeNodeCollection, TChild, TreeNode> _addChild;
 
             public RootNode(TreeNode rootNode, GitUICommands uiCommands,
                 Func<ICollection<TChild>> getValues,
+                Action<ICollection<TChild>, ICollection<TChild>> onReloading,
                 Action<ICollection<TChild>, RootNode<TChild>> onReload,
                 Func<TreeNodeCollection, TChild, TreeNode> addChild
                 )
                 : base(uiCommands, rootNode)
             {
+                if (getValues == null)
+                {
+                    throw new ArgumentNullException("getValues", "Must provide a function to retrieve values.");
+                }
                 _getValues = getValues;
-                _onReload = onReload;
-                _addChild = addChild;
+                _onReloading = onReloading ?? ((olds, news) => { });
+                _onReload = onReload ?? ((items, root) => { });
+                _addChild = addChild ?? ((nodes, child) => null);
                 Children = new List<TChild>();
             }
 
@@ -144,7 +151,11 @@ namespace GitUI.UserControls
             {
                 _Watcher = _WatcherT = new ListWatcher<TChild>(
                     _getValues,
-                    (olds, news) => Children.Clear(), // clear children in BG thread
+                    (olds, news) =>
+                    {
+                        Children.Clear(); // clear children in BG thread
+                        OnReloading(olds, news);
+                    },
                     ReloadNodes);
                 base.RepoChanged();
             }
@@ -152,25 +163,32 @@ namespace GitUI.UserControls
             /// <summary>Reloads the set of nodes based on the specified <paramref name="items"/>.</summary>
             protected virtual void ReloadNodes(ICollection<TChild> items)
             {
-               TreeNode.TreeView.Update(() =>
-                {
-                    TreeNode.Nodes.Clear();
+                TreeNode.TreeView.Update(() =>
+                 {
+                     TreeNode.Nodes.Clear();
 
-                    foreach (TChild item in items)
-                    {
-                        TreeNode child = AddChild(TreeNode.Nodes, item);
-                        item.ParentNode = this;
-                        item.TreeNode = child;
-                    }
+                     foreach (TChild item in items)
+                     {
+                         TreeNode child = AddChild(TreeNode.Nodes, item);
+                         item.ParentNode = this;
+                         item.TreeNode = child;
+                     }
 
-                    _onReload(items, this);
-                });
+                     _onReload(items, this);
+                 });
             }
 
             /// <summary>Adds a child <see cref="TreeNode"/> based on the specified <paramref name="item"/>.</summary>
             protected virtual TreeNode AddChild(TreeNodeCollection nodes, TChild item)
             {
                 return _addChild(nodes, item);
+            }
+
+            /// <summary>Occurs on the background thread immediately before <see cref="ReloadNodes"/> is called.</summary>
+            protected virtual void OnReloading(ICollection<TChild> olds, ICollection<TChild> news)
+            {
+                Children.Clear();
+                _onReloading(olds, news);
             }
 
             #region ICollectionT (wraps Children)
