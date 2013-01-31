@@ -27,86 +27,100 @@ namespace ResourceManager.Translation
 
         public TranslationItem(string name, string property, string source)
         {
-            this.name = name;
-            this.property = property;
-            this.source = source;
-            this.status = TranslationType.New;
+            _name = name;
+            _property = property;
+            _source = source;
+            _status = TranslationType.New;
         }
 
-        public TranslationItem(string name, string property, string source, string value, TranslationType status)
+        public TranslationItem(string name, string property, string source, string oldSource, string value, TranslationType status)
         {
-            this.name = name;
-            this.property = property;
-            this.source = source;
-            this.value = value;
-            this.status = status;
+            _name = name;
+            _property = property;
+            _source = source;
+            _oldSource = oldSource;
+            _value = value;
+            _status = status;
         }
 
-        private string name;
+        private string _name;
         [XmlAttribute]
         public string Name 
         {
             get
             {
-                return name;
+                return _name;
             }
             set
             {
-                name = value;
+                _name = value;
             }
         }
 
-        private string property;
+        private string _property;
         [XmlAttribute]
         public string Property
         {
             get
             {
-                return property;
+                return _property;
             }
             set
             {
-                property = value;
+                _property = value;
             }
         }
 
-        private TranslationType status;
+        private TranslationType _status;
         [XmlAttribute("type"), DefaultValue(0)]
         public TranslationType Status
         {
             get
             {
-                return status;
+                return _status;
             }
             set
             {
-                status = value;
+                _status = value;
             }
         }
 
-        private string source;
+        private string _source;
         public string Source
         {
             get
             {
-                return source;
+                return _source;
             }
             set
             {
-                this.source = value;
+                _source = value;
             }
         }
 
-        private string value;
+        private string _oldSource;
+        public string OldSource
+        {
+            get
+            {
+                return _oldSource;
+            }
+            set
+            {
+                _oldSource = value;
+            }
+        }
+
+        private string _value;
         public string Value 
         {
             get
             {
-                return value;
+                return _value;
             }
             set
             {
-                this.value = value;
+                _value = value;
             }
         }
 
@@ -124,7 +138,7 @@ namespace ResourceManager.Translation
 
         public TranslationItem Clone()
         {
-            return new TranslationItem(name, property, source, value, status);
+            return new TranslationItem(_name, _property, _source, _oldSource, _value, _status);
         }
     }
 }
