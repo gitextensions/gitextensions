@@ -22,24 +22,21 @@ namespace GitUI.UserControls
         /// <summary>Base class for a <see cref="RepoObjectsTree"/> set of nodes.</summary>
         abstract class RepoObjectsTreeSet
         {
-            /// <summary>current git repo</summary>
-            protected GitModule git;
             /// <summary>root <see cref="TreeNode"/></summary>
             protected readonly TreeNode _treeNode;
             readonly Action<TreeNode> _applyStyle;
             protected ValueWatcher _Watcher;
 
-            protected RepoObjectsTreeSet(GitModule git, TreeNode treeNode, Action<TreeNode> applyStyle)
+            protected RepoObjectsTreeSet(TreeNode treeNode, Action<TreeNode> applyStyle)
             {
-                this.git = git;
                 _treeNode = treeNode;
                 _applyStyle = applyStyle ?? (node => { });
             }
 
             /// <summary>Readies the tree set for a new repo.</summary>
-            public virtual void NewRepo(GitModule git)
+            public virtual void RepoChanged()
             {
-                this.git = git;
+                ReloadAsync();
             }
 
             /// <summary>Async reloads the set of nodes.</summary>
@@ -59,7 +56,7 @@ namespace GitUI.UserControls
         /// <summary><see cref="RepoObjectsTree"/> set of nodes, with an underlying type T.</summary>
         class RepoObjectsTreeSet<T> : RepoObjectsTreeSet
         {
-            protected readonly Func<GitModule, ICollection<T>> _getValues;
+            protected readonly Func<ICollection<T>> _getValues;
             protected readonly Action<ICollection<T>> _onReload;
             protected ListWatcher<T> _WatcherT;
             readonly Func<TreeNodeCollection, T, TreeNode> _addChild;
@@ -67,11 +64,11 @@ namespace GitUI.UserControls
             public RepoObjectsTreeSet(
                 GitModule git,
                 TreeNode treeNode,
-                Func<GitModule, ICollection<T>> getValues,
+                Func<ICollection<T>> getValues,
                 Action<ICollection<T>> onReload,
                 Func<TreeNodeCollection, T, TreeNode> addChild, Action<TreeNode> applyStyle
                 )
-                : base(git, treeNode, applyStyle)
+                : base(treeNode, applyStyle)
             {
                 _getValues = getValues;
                 _onReload = onReload;
@@ -79,10 +76,10 @@ namespace GitUI.UserControls
             }
 
             /// <summary>Readies the tree set for a new repo.</summary>
-            public override void NewRepo(GitModule git)
+            public override void RepoChanged()
             {
-                base.NewRepo(git);
-                _Watcher = _WatcherT = new ListWatcher<T>(() => _getValues(git), ReloadNodes);
+                _Watcher = _WatcherT = new ListWatcher<T>(() => _getValues(), ReloadNodes);
+                base.RepoChanged();
             }
 
             /// <summary>Reloads the set of nodes based on the specified <paramref name="items"/>.</summary>

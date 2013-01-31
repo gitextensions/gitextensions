@@ -80,7 +80,7 @@ namespace GitUI.UserControls
 
             foreach (RepoObjectsTreeSet treeSet in treeSets)
             {
-                treeSet.NewRepo(git);
+                treeSet.RepoChanged(git);
             }
 
             Reload();
