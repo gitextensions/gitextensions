@@ -9,36 +9,13 @@ namespace TranslationApp
 {
     static class TranslationHelpers
     {
-        public static void SaveTranslation(string languageCode, IEnumerable<TranslationItemWithCategory> items, string filename)
-        {
-            Translation foreignTranslation = new Translation { GitExVersion = GitCommands.Settings.GitExtensionsVersionString, LanguageCode = languageCode };
-            foreach (TranslationItemWithCategory translateItem in items)
-            {
-                if (translateItem.Status == TranslationType.Obsolete &&
-                    (String.IsNullOrEmpty(translateItem.TranslatedValue) || String.IsNullOrEmpty(translateItem.NeutralValue)))
-                    continue;
-
-                TranslationItem ti = translateItem.GetTranslationItem().Clone();
-                if (ti.Status == TranslationType.New)
-                    ti.Status = TranslationType.Unfinished;
-                Debug.Assert(!string.IsNullOrEmpty(ti.Value) || ti.Status != TranslationType.Translated);
-                ti.Value = ti.Value ?? String.Empty;
-                Debug.Assert(ti.Status != TranslationType.Translated || translateItem.IsSourceEqual(ti.Source));
-                ti.Source = translateItem.OldNeutralValue;
-                foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).AddTranslationItem(ti);
-            }
-            TranslationSerializer.Serialize(foreignTranslation, filename);
-        }
-
         public static IList<TranslationItemWithCategory> LoadNeutralItems()
         {
-            string language = GitCommands.Settings.Translation;
-
             Translation neutralTranslation = new Translation();
             try
             {
                 //Set language to neutral to get neutral translations
-                GitCommands.Settings.Translation = "";
+                GitCommands.Settings.CurrentTranslation = "";
 
                 List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
                 foreach (Type type in translatableTypes)
@@ -53,7 +30,7 @@ namespace TranslationApp
                 neutralTranslation.Sort();
 
                 //Restore translation
-                GitCommands.Settings.Translation = language;
+                GitCommands.Settings.CurrentTranslation = null;
             }
 
             IList<TranslationItemWithCategory> neutralItems =
@@ -92,15 +69,25 @@ namespace TranslationApp
                 oldTranslationItems.Remove(curItem);
                 curItem.Category = item.Category;
                 curItem.Name = item.Name;
-                if (curItem.Status == TranslationType.Translated)
+                if (curItem.Status == TranslationType.Translated || curItem.Status == TranslationType.Obsolete)
                 {
-                    string source = curItem.OldNeutralValue ?? item.NeutralValue;
+                    string source = curItem.NeutralValue ?? item.NeutralValue;
                     if (!String.IsNullOrEmpty(curItem.TranslatedValue) && !dict.ContainsKey(source))
                         dict.Add(source, curItem.TranslatedValue);
                 }
-                if (curItem.Status == TranslationType.Translated && !curItem.IsSourceEqual(item.NeutralValue) ||
-                    curItem.Status == TranslationType.Obsolete)
+                if ((curItem.Status == TranslationType.Translated || curItem.Status == TranslationType.Obsolete) && 
+                    !curItem.IsSourceEqual(item.NeutralValue))
                     curItem.Status = TranslationType.Unfinished;
+                else if (curItem.Status == TranslationType.Obsolete && curItem.IsSourceEqual(item.NeutralValue))
+                    curItem.Status = TranslationType.Translated;
+                if (curItem.Status == TranslationType.Unfinished)
+                {
+                    if (!String.IsNullOrEmpty(curItem.TranslatedValue) &&
+                        curItem.OldNeutralValue == null && curItem.NeutralValue != item.NeutralValue)
+                        curItem.OldNeutralValue = curItem.NeutralValue;
+                }
+                else
+                    curItem.OldNeutralValue = null;
                 curItem.NeutralValue = item.NeutralValue;
                 translateItems.Add(curItem);
             }
@@ -115,6 +102,7 @@ namespace TranslationApp
                     dict.Add(item.NeutralValue, item.TranslatedValue);
 
                 item.Status = TranslationType.Obsolete;
+                item.OldNeutralValue = null;
                 translateItems.Add(item);
             }
 
@@ -126,10 +114,30 @@ namespace TranslationApp
 
             foreach (var untranlatedItem in untranlatedItems)
             {
-                untranlatedItem.Status = TranslationType.Unfinished;
                 untranlatedItem.TranslatedValue = dict[untranlatedItem.NeutralValue];
+                untranlatedItem.Status = TranslationType.Unfinished;
             }
             return translateItems;
+        }
+
+        public static void SaveTranslation(string languageCode, IEnumerable<TranslationItemWithCategory> items, string filename)
+        {
+            Translation foreignTranslation = new Translation { GitExVersion = GitCommands.Settings.GitExtensionsVersionString, LanguageCode = languageCode };
+            foreach (TranslationItemWithCategory translateItem in items)
+            {
+                if (translateItem.Status == TranslationType.Obsolete &&
+                    (String.IsNullOrEmpty(translateItem.TranslatedValue) || String.IsNullOrEmpty(translateItem.NeutralValue)))
+                    continue;
+
+                TranslationItem ti = translateItem.GetTranslationItem().Clone();
+                if (ti.Status == TranslationType.New)
+                    ti.Status = TranslationType.Unfinished;
+                Debug.Assert(!string.IsNullOrEmpty(ti.Value) || ti.Status != TranslationType.Translated);
+                ti.Value = ti.Value ?? String.Empty;
+                Debug.Assert(ti.Status != TranslationType.Translated || translateItem.IsSourceEqual(ti.Source));
+                foreignTranslation.FindOrAddTranslationCategory(translateItem.Category).AddTranslationItem(ti);
+            }
+            TranslationSerializer.Serialize(foreignTranslation, filename);
         }
     }
 }
