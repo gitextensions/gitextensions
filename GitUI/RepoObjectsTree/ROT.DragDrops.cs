@@ -157,17 +157,6 @@ namespace GitUI.UserControls
             {
                 node.OnDoubleClick();
             }
-            //TreeNode node = e.Node;
-            //if (node.IsAncestorOf(nodeBranches))
-            //{// branches/
-            //    if (node.HasNoChildren())
-            //    {// no children -> branch
-            //        // needs to go into Settings, but would probably like an option to:
-            //        // stash; checkout;
-            //        uiCommands.StartCheckoutBranchDialog(base.ParentForm, node.Text, false);
-            //    }
-
-            //}
         }
 
         /// <summary>Represents a valid drag-drop action.</summary>

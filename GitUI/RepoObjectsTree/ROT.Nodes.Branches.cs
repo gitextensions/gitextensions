@@ -175,6 +175,12 @@ namespace GitUI.UserControls
                 }
 
             }
+
+            internal override void OnDoubleClick()
+            {
+                base.OnDoubleClick();
+                UiCommands.StartCheckoutBranchDialog(FullPath);
+            }
         }
 
         class RemoteBranchNode : BranchNode

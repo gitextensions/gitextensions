@@ -779,7 +779,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="RepoObjectsTree\ValueWatcher.cs" />
-    <Compile Include="RepoObjectsTree\ROT.Branches.cs">
+    <Compile Include="RepoObjectsTree\ROT.Nodes.Branches.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="RepoObjectsTree\RepoObjectsTree.cs">
@@ -788,16 +788,16 @@
     <Compile Include="RepoObjectsTree\RepoObjectsTree.Designer.cs">
       <DependentUpon>RepoObjectsTree.cs</DependentUpon>
     </Compile>
-    <Compile Include="RepoObjectsTree\ROT.Remotes.cs">
+    <Compile Include="RepoObjectsTree\ROT.Nodes.Remotes.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="RepoObjectsTree\ROT.Stashes.cs">
+    <Compile Include="RepoObjectsTree\ROT.Nodes.Stashes.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="RepoObjectsTree\ROT.Submodules.cs">
+    <Compile Include="RepoObjectsTree\ROT.Nodes.Submodules.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="RepoObjectsTree\ROT.Tags.cs">
+    <Compile Include="RepoObjectsTree\ROT.Nodes.Tags.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="WarningToolStripItem.cs">
