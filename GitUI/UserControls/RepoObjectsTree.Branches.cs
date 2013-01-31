@@ -28,6 +28,8 @@ namespace GitUI.UserControls
         {
             TreeNode treeNode = nodes.Add(branchNode.FullPath, branchNode.Name);
             treeNode.Tag = branchNode;
+            branchNode.TreeNode = treeNode;
+
             BranchPathNode branchPath = branchNode as BranchPathNode;
             if (branchPath != null)
             {
@@ -37,7 +39,7 @@ namespace GitUI.UserControls
                 }
             }
 
-            return treeNode;
+            return null;// return null bypass duplicate call to ApplyStyle
         }
 
         #region private classes
@@ -450,6 +452,7 @@ namespace GitUI.UserControls
                 return null;
             }
 
+            /// <summary>Occurs on the background thread immediately before <see cref="RootNode{TChild}.ReloadNodes"/> is called.</summary>
             protected override void OnReloading(ICollection<BaseBranchNode> olds, ICollection<BaseBranchNode> news)
             {
                 base.OnReloading(olds, news);

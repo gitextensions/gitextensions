@@ -169,9 +169,12 @@ namespace GitUI.UserControls
 
                      foreach (TChild item in items)
                      {
-                         TreeNode child = AddChild(TreeNode.Nodes, item);
+                         TreeNode treeNode = AddChild(TreeNode.Nodes, item);
                          item.ParentNode = this;
-                         item.TreeNode = child;
+                         if (treeNode != null)
+                         {
+                             item.TreeNode = treeNode;
+                         }
                      }
 
                      _onReload(items, this);
