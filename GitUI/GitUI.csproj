@@ -772,14 +772,14 @@
     <Compile Include="UserControls\FolderBrowserButton.Designer.cs">
       <DependentUpon>FolderBrowserButton.cs</DependentUpon>
     </Compile>
-    <Compile Include="RepoObjectsTree\RepoObjectsTree.DragDrops.cs">
+    <Compile Include="RepoObjectsTree\ROT.DragDrops.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="RepoObjectsTree\RepoObjectsTree.Nodes.cs">
+    <Compile Include="RepoObjectsTree\ROT.Nodes.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="RepoObjectsTree\ValueWatcher.cs" />
-    <Compile Include="RepoObjectsTree\RepoObjectsTree.Branches.cs">
+    <Compile Include="RepoObjectsTree\ROT.Branches.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="RepoObjectsTree\RepoObjectsTree.cs">
@@ -788,16 +788,16 @@
     <Compile Include="RepoObjectsTree\RepoObjectsTree.Designer.cs">
       <DependentUpon>RepoObjectsTree.cs</DependentUpon>
     </Compile>
-    <Compile Include="RepoObjectsTree\RepoObjectsTree.Remotes.cs">
+    <Compile Include="RepoObjectsTree\ROT.Remotes.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="RepoObjectsTree\RepoObjectsTree.Stashes.cs">
+    <Compile Include="RepoObjectsTree\ROT.Stashes.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="RepoObjectsTree\RepoObjectsTree.Submodules.cs">
+    <Compile Include="RepoObjectsTree\ROT.Submodules.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="RepoObjectsTree\RepoObjectsTree.Tags.cs">
+    <Compile Include="RepoObjectsTree\ROT.Tags.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="WarningToolStripItem.cs">
