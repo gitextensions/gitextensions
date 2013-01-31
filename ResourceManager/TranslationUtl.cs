@@ -24,7 +24,7 @@ namespace ResourceManager.Translation
             if (objName != null)
                 yield return new Tuple<string, object>(objName, obj);
 
-            foreach (FieldInfo fieldInfo in obj.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
+            foreach (FieldInfo fieldInfo in obj.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.SetField))
             {
                 yield return new Tuple<string, object>(fieldInfo.Name, fieldInfo.GetValue(obj));
             }
@@ -96,14 +96,20 @@ namespace ResourceManager.Translation
             Action<string, object, PropertyInfo> action = delegate(string item, object itemObj, PropertyInfo propertyInfo)
             {
                 string value = translation.TranslateItem(category, item, propertyInfo.Name, null);
-                if (!String.IsNullOrEmpty(value))
-                    propertyInfo.SetValue(itemObj, value, null);
-                else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
-                {
-                    value = translation.TranslateItem(category, item, "Text", null);
-                    if (!String.IsNullOrEmpty(value))
-                        propertyInfo.SetValue(itemObj, value, null);
-                }
+				if (!String.IsNullOrEmpty(value))
+				{
+					if (propertyInfo.CanWrite)
+						propertyInfo.SetValue(itemObj, value, null);
+				}
+				else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
+				{
+					value = translation.TranslateItem(category, item, "Text", null);
+					if (!String.IsNullOrEmpty(value))
+					{
+						if (propertyInfo.CanWrite)
+							propertyInfo.SetValue(itemObj, value, null);
+					}
+				}
             };
             ForEachItem(items, action);
         }
@@ -121,7 +127,7 @@ namespace ResourceManager.Translation
             if (obj == null)
                 return;
 
-            foreach (PropertyInfo propertyInfo in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic))
+            foreach (PropertyInfo propertyInfo in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.SetProperty))
                 if (IsTranslatableItem(propertyInfo))
                     action(propertyInfo);
         }
