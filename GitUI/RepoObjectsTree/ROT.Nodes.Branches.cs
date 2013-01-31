@@ -143,7 +143,7 @@ namespace GitUI.UserControls
         }
 
         /// <summary>branch</summary>
-        class BranchNode : BaseBranchNode
+        sealed class BranchNode : BaseBranchNode
         {
             public BranchNode(GitUICommands uiCommands,
                 string branch, int level, string activeBranchPath = null,
@@ -181,23 +181,35 @@ namespace GitUI.UserControls
                 base.OnDoubleClick();
                 UiCommands.StartCheckoutBranchDialog(FullPath);
             }
-        }
 
-        class RemoteBranchNode : BranchNode
-        {
-            /// <summary>Name of the remote for this remote branch. <example>"origin"</example></summary>
-            public string Remote { get; private set; }
-            /// <summary>Full name of the branch, excluding the remote name. <example>"issues/issue1344"</example></summary>
-            public string FullBranchName { get; private set; }
+            public override bool AllowDrop { get { return true; } }
 
-            public RemoteBranchNode(GitUICommands uiCommands,
-                string remote, string branch, int level, string activeBranchPath = null, BranchPathNode parent = null)
-                : base(uiCommands, branch, level, activeBranchPath, parent, isLocal: false)
+            public override bool Accepts(Node dragged)
             {
-                Remote = remote;
-                FullBranchName = FullPath.Substring(FullPath.IndexOf(BranchesNode.Separator));
+                return dragged is StashNode;
+            }
+            public override void Drop(object droppedObject)
+            {
+                base.Drop(droppedObject);
+
             }
         }
+
+        //class RemoteBranchNode : BranchNode
+        //{
+        //    /// <summary>Name of the remote for this remote branch. <example>"origin"</example></summary>
+        //    public string Remote { get; private set; }
+        //    /// <summary>Full name of the branch, excluding the remote name. <example>"issues/issue1344"</example></summary>
+        //    public string FullBranchName { get; private set; }
+
+        //    public RemoteBranchNode(GitUICommands uiCommands,
+        //        string remote, string branch, int level, string activeBranchPath = null, BranchPathNode parent = null)
+        //        : base(uiCommands, branch, level, activeBranchPath, parent, isLocal: false)
+        //    {
+        //        Remote = remote;
+        //        FullBranchName = FullPath.Substring(FullPath.IndexOf(BranchesNode.Separator));
+        //    }
+        //}
 
         /// <summary>part of a path leading to a branch(s)</summary>
         class BranchPathNode : BaseBranchNode

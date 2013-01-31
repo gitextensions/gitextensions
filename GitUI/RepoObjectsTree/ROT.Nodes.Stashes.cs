@@ -8,7 +8,7 @@ namespace GitUI.UserControls
     public partial class RepoObjectsTree
     {
         /// <summary>Reloads the stashes.</summary>
-        static void OnReloadStashes(ICollection<StashNode> stashes,RootNode<StashNode> stashesNode)
+        static void OnReloadStashes(ICollection<StashNode> stashes, RootNode<StashNode> stashesNode)
         {
             stashesNode.TreeNode.Text = string.Format("{0} ({1})", Strings.stashes, stashes.Count);
         }
@@ -18,15 +18,18 @@ namespace GitUI.UserControls
         {
             GitStash stash = stashNode.Value;
             TreeNode treeNode = nodes.Add(stash.Index.ToString(), stash.Name);
-            treeNode.Tag = stash;
+            treeNode.Tag = stashNode;
             treeNode.ToolTipText = stash.Message;
             return treeNode;
         }
 
-        class StashNode : Node<GitStash, RootNode<StashNode>>
+        sealed class StashNode : Node<GitStash, RootNode<StashNode>>
         {
             public StashNode(GitStash stash, GitUICommands uiCommands)
-                : base(stash, null, uiCommands) { }
+                : base(stash, null, uiCommands)
+            {
+                IsDraggable = true;
+            }
         }
     }
 }

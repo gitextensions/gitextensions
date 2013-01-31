@@ -35,6 +35,7 @@ namespace GitUI.UserControls
                     TreeNode = treeNode;
                 }
                 UiCommands = uiCommands;
+                IsDraggable = false;
                 ContextActions = new ContextAction[0];
                 ValidDrops = new DropAction[0];
             }
@@ -44,15 +45,43 @@ namespace GitUI.UserControls
             {
                 TreeNode.NodeFont = Settings.Font;
             }
+
+            internal virtual void OnSelected() { }
             internal virtual void OnClick() { }
             internal virtual void OnDoubleClick() { }
             public virtual IEnumerable<ContextAction> ContextActions { get; protected set; }
 
-            public bool IsDraggable { get; protected set; }
-            public bool HasDrops { get { return ValidDrops.Any(); } }
-            public virtual void Drop(object droppedObject) { }
+            /// <summary>true if this <see cref="Node"/> is draggable.</summary>
+            public virtual bool IsDraggable { get; protected set; }
+            /// <summary>true if this <see cref="Node"/> will accept a dropped object.</summary>
+            public virtual bool AllowDrop { get { return ValidDrops.Any(); } }
+            public virtual bool Accepts(Node dragged) { return false; }
             public virtual void DragOver(object draggedObject) { }
+            /// <summary>Drops the object onto this <see cref="Node"/>.</summary>
+            public virtual void Drop(object droppedObject) { }
             public virtual IEnumerable<DropAction> ValidDrops { get; protected set; }
+
+            public static Node GetNode(TreeNode treeNode)
+            {
+                return (Node)treeNode.Tag;
+            }
+
+            public static Node GetNodeSafe(TreeNode treeNode)
+            {
+                return treeNode.Tag as Node;
+            }
+
+            public static bool OnNode(TreeNode treeNode, Action<Node> action)
+            {
+                Node node = GetNodeSafe(treeNode);
+                if (node != null)
+                {
+                    action(node);
+                    return true;
+                }
+                return false;
+            }
+
         }
 
         /// <summary>base class for a node, with a parent</summary>
@@ -82,6 +111,8 @@ namespace GitUI.UserControls
             {
                 Value = value;
             }
+
+            public override string ToString() { return Value.ToString(); }
         }
 
         /* readme
