@@ -110,7 +110,7 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
         <TranslationItem Name="groupBox6" Property="Text">
           <Source>Author images</Source>
-          <Value>Autor Bild</Value>
+          <Value>Autorenbilder</Value>
         </TranslationItem>
         <TranslationItem Name="helpTranslate" Property="Text">
           <Source>Help translate</Source>
@@ -130,7 +130,7 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
         <TranslationItem Name="label44" Property="Text">
           <Source>Image size</Source>
-          <Value>Bild Größe</Value>
+          <Value>Bildgröße</Value>
         </TranslationItem>
         <TranslationItem Name="label46" Property="Text">
           <Source>Cache images</Source>
@@ -472,9 +472,9 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
     </TranslationCategory>
     <TranslationCategory Name="ColorsSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Colors</Source>
-          <Value />
+          <Value>Farben</Value>
         </TranslationItem>
         <TranslationItem Name="BlueIcon" Property="Text">
           <Source>Blue</Source>
@@ -482,7 +482,7 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         </TranslationItem>
         <TranslationItem Name="BranchBorders" Property="Text">
           <Source>Draw branch borders</Source>
-          <Value>Zeichne Branch Ränder</Value>
+          <Value>Zeichne Branch-Ränder</Value>
         </TranslationItem>
         <TranslationItem Name="DefaultIcon" Property="Text">
           <Source>Default</Source>
@@ -578,7 +578,7 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         </TranslationItem>
         <TranslationItem Name="StripedBanchChange" Property="Text">
           <Source>Striped branch change</Source>
-          <Value>Branch Änderungen stricheln</Value>
+          <Value>Branch-Änderungen stricheln</Value>
         </TranslationItem>
         <TranslationItem Name="YellowIcon" Property="Text">
           <Source>Yellow</Source>
@@ -626,7 +626,7 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         </TranslationItem>
         <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text">
           <Source>Show tags containing this commit</Source>
-          <Value>Zeige Tags, die den Commit enthalten</Value>
+          <Value>Zeige Tags, die diesen Commit enthalten</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
