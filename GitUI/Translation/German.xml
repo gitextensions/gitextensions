@@ -35,9 +35,9 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
           <Source>Checkout</Source>
           <Value>Checkout</Value>
         </TranslationItem>
-        <TranslationItem Name="chkAlwaysShowCheckoutDlg" Property="Text" type="unfinished">
+        <TranslationItem Name="chkAlwaysShowCheckoutDlg" Property="Text">
           <Source>Always show checkout dialog</Source>
-          <Value />
+          <Value>Checkout-Dialog immer anzeigen</Value>
         </TranslationItem>
         <TranslationItem Name="chkDontSHowHelpImages" Property="Text" type="unfinished">
           <Source>Don't show help images</Source>
@@ -48,9 +48,9 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen vo
 This action will be performed without warning while checking out branch.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="GeneralGB" Property="Text" type="unfinished">
+        <TranslationItem Name="GeneralGB" Property="Text">
           <Source>General</Source>
-          <Value />
+          <Value>Allgemein</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -60,13 +60,13 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Appearance</Source>
           <Value>Erscheinungsbild</Value>
         </TranslationItem>
-        <TranslationItem Name="_noDictFilesFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_noDictFilesFound" Property="Text">
           <Source>No dictionary files found in: {0}</Source>
-          <Value />
+          <Value>Keine Wörterbuch-Dateien gefunden: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="applicationFontChangeButton" Property="Text" type="unfinished">
+        <TranslationItem Name="applicationFontChangeButton" Property="Text">
           <Source>font name</Source>
-          <Value />
+          <Value>Schriftname</Value>
         </TranslationItem>
         <TranslationItem Name="chkEnableAutoScale" Property="Text" type="unfinished">
           <Source>Auto scale user interface when high dpi is used</Source>
@@ -84,29 +84,29 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Clear image cache</Source>
           <Value>Bilder Cache löschen</Value>
         </TranslationItem>
-        <TranslationItem Name="commitFontChangeButton" Property="Text" type="unfinished">
+        <TranslationItem Name="commitFontChangeButton" Property="Text">
           <Source>font name</Source>
-          <Value />
+          <Value>Schriftname</Value>
         </TranslationItem>
-        <TranslationItem Name="diffFontChangeButton" Property="Text" type="unfinished">
+        <TranslationItem Name="diffFontChangeButton" Property="Text">
           <Source>font name</Source>
-          <Value />
+          <Value>Schriftname</Value>
         </TranslationItem>
         <TranslationItem Name="downloadDictionary" Property="Text">
           <Source>Download dictionary</Source>
           <Value>Wörterbuch herunterladen</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox13" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox13" Property="Text">
           <Source>Language</Source>
-          <Value />
+          <Value>Sprache</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox14" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox14" Property="Text">
           <Source>General</Source>
-          <Value />
+          <Value>Allgemein</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox15" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox15" Property="Text">
           <Source>Fonts</Source>
-          <Value />
+          <Value>Schriftarten</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox6" Property="Text">
           <Source>Author images</Source>
@@ -120,13 +120,13 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Dictionary for spelling checker</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label26" Property="Text" type="unfinished">
+        <TranslationItem Name="label26" Property="Text">
           <Source>Application font</Source>
-          <Value />
+          <Value>Anwendungsschriftart</Value>
         </TranslationItem>
-        <TranslationItem Name="label34" Property="Text" type="unfinished">
+        <TranslationItem Name="label34" Property="Text">
           <Source>Commit font</Source>
-          <Value />
+          <Value>Schriftart der Commit-Nachricht</Value>
         </TranslationItem>
         <TranslationItem Name="label44" Property="Text">
           <Source>Image size</Source>
@@ -252,9 +252,9 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Git can be run using: {0}</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_gitCanBeRunCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitCanBeRunCaption" Property="Text">
           <Source>Locate git</Source>
-          <Value />
+          <Value>git suchen</Value>
         </TranslationItem>
         <TranslationItem Name="_gitCredentialWinStoreHelperInstalled" Property="Text" type="unfinished">
           <Source>Git Credential Win Store is installed as credential helper.</Source>
@@ -404,9 +404,9 @@ Select no if you want to configure a different mergetool yourself.</Source>
 Please make sure git (msysgit or cygwin) is installed or set the correct command manually.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_solveGitCommandFailedCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_solveGitCommandFailedCaption" Property="Text">
           <Source>Locate git</Source>
-          <Value />
+          <Value>git suchen</Value>
         </TranslationItem>
         <TranslationItem Name="_unknownSshClient" Property="Text" type="unfinished">
           <Source>Unknown SSH client configured: {0}.</Source>
@@ -651,9 +651,9 @@ Value:  {2} = {3}</Source>
     </TranslationCategory>
     <TranslationCategory Name="ConfirmationsSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Confirmations</Source>
-          <Value />
+          <Value>Bestätigungen</Value>
         </TranslationItem>
         <TranslationItem Name="CheckoutGB" Property="Text" type="unfinished">
           <Source>Don't ask to confirm to (use with caution)</Source>
@@ -820,7 +820,7 @@ Do you want to open it?</Source>
         </TranslationItem>
         <TranslationItem Name="DonateCategory" Property="Title">
           <Source>Contribute</Source>
-          <Value>Beitragen</Value>
+          <Value>Mithelfen</Value>
         </TranslationItem>
         <TranslationItem Name="issues" Property="Text">
           <Source>Issues</Source>
@@ -1513,9 +1513,9 @@ You will have push access. {2}</Source>
           <Source>Save archive as</Source>
           <Value>Archiv speichern als</Value>
         </TranslationItem>
-        <TranslationItem Name="_saveFileDialogFilterTar" Property="Text" type="unfinished">
+        <TranslationItem Name="_saveFileDialogFilterTar" Property="Text">
           <Source>Tar file (*.tar)</Source>
-          <Value />
+          <Value>tar-Date (*.tar)</Value>
         </TranslationItem>
         <TranslationItem Name="_saveFileDialogFilterZip" Property="Text">
           <Source>Zip file (*.zip)</Source>
@@ -1525,26 +1525,27 @@ You will have push access. {2}</Source>
           <Source>Save as...</Source>
           <Value>Speichern als</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox1" Property="Text">
           <Source>Archive format</Source>
-          <Value />
+          <Value>Archivformat</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Selected revision to archive:</Source>
           <Value>Wählen Sie eine Revision aus, die Sie archivieren möchten</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Choose another
 revision:</Source>
-          <Value />
+          <Value>Andere Revision
+auswählen</Value>
         </TranslationItem>
-        <TranslationItem Name="radioButtonFormatTar" Property="Text" type="unfinished">
+        <TranslationItem Name="radioButtonFormatTar" Property="Text">
           <Source>tar</Source>
-          <Value />
+          <Value>tar</Value>
         </TranslationItem>
-        <TranslationItem Name="radioButtonFormatZip" Property="Text" type="unfinished">
+        <TranslationItem Name="radioButtonFormatZip" Property="Text">
           <Source>zip</Source>
-          <Value />
+          <Value>zip</Value>
         </TranslationItem>
         <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text" type="obsolete">
           <Source>Select 1 revision to archive</Source>
@@ -1666,9 +1667,9 @@ revision:</Source>
           <Source>Create branch</Source>
           <Value>Branch erzeugen</Value>
         </TranslationItem>
-        <TranslationItem Name="Orphan" Property="Text" type="unfinished">
+        <TranslationItem Name="Orphan" Property="Text">
           <Source>Orphan</Source>
-          <Value />
+          <Value>Orphan</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
