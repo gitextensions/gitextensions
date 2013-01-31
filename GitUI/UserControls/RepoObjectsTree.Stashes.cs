@@ -10,7 +10,7 @@ namespace GitUI.UserControls
         /// <summary>Reloads the stashes.</summary>
         static void OnReloadStashes(ICollection<StashNode> stashes,RootNode<StashNode> stashesNode)
         {
-            stashesNode.TreeNode.Text = string.Format("{0} ({1})", Strings.Instance.stashes, stashes.Count);
+            stashesNode.TreeNode.Text = string.Format("{0} ({1})", Strings.stashes, stashes.Count);
         }
 
         /// <summary>Adds the specified <paramref name="stashNode"/> to the stashes tree.</summary>

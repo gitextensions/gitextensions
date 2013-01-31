@@ -39,7 +39,7 @@ namespace GitUI.UserControls
                 }
             }
 
-            return null;
+            return treeNode;
         }
 
         #region private classes

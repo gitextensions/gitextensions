@@ -27,14 +27,6 @@ namespace GitUI.UserControls
             GitUICommandsSourceSet -= OnGitUICommandsSource;// only do this once
             DragDrops();
 
-            //nodeTags = AddTreeNode("tags");
-            //nodeStashes = AddTreeNode("stashes");
-
-            AddTreeSet(new TreeNode(Strings.Instance.stashes.Text),
-                () => Module.GetStashes().Select(stash => new StashNode(stash, UICommands)).ToList(),
-                OnReloadStashes,
-                OnAddStash
-            );
             AddTreeSet(
                 new TreeNode(Strings.branches.Text),
                 () =>
@@ -45,6 +37,11 @@ namespace GitUI.UserControls
                 OnReloadBranches,
                 OnAddBranchNode
                 );
+            AddTreeSet(new TreeNode(Strings.stashes.Text),
+               () => Module.GetStashes().Select(stash => new StashNode(stash, UICommands)).ToList(),
+               OnReloadStashes,
+               OnAddStash
+           );
             //AddTreeSet(nodeTags, ...);
 
             RepoChanged();
@@ -73,8 +70,6 @@ namespace GitUI.UserControls
             {
                 rootNode.RepoChanged();
             }
-
-            Reload();
         }
 
         /// <summary>Reloads the repo's objects tree.</summary>

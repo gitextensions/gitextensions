@@ -88,13 +88,13 @@ namespace GitCommands
         /// <summary>"branches" translation.</summary>
         public static readonly TranslationString branches = new TranslationString("branches");
         /// <summary>"remotes" translation.</summary>
-        public readonly TranslationString remotes = new TranslationString("remotes");
+        public static readonly TranslationString remotes = new TranslationString("remotes");
         /// <summary>"tags" translation.</summary>
-        public readonly TranslationString tags = new TranslationString("tags");
+        public static readonly TranslationString tags = new TranslationString("tags");
         /// <summary>"stashes" translation.</summary>
-        public readonly TranslationString stashes = new TranslationString("stashes");
+        public static readonly TranslationString stashes = new TranslationString("stashes");
         /// <summary>"submodules" translation.</summary>
-        public readonly TranslationString submodules = new TranslationString("submodules");
+        public static readonly TranslationString submodules = new TranslationString("submodules");
 
 
         private readonly TranslationString _dateText                 = new TranslationString("Date");

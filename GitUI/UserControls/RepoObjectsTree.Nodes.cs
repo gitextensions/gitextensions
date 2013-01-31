@@ -15,7 +15,8 @@ namespace GitUI.UserControls
         abstract class Node
         {
             TreeNode _TreeNode;
-            /// <summary>Gets the <see cref="TreeNode"/> which holds this <see cref="Node"/>.</summary>
+            /// <summary>Gets the <see cref="TreeNode"/> which holds this <see cref="Node"/>.
+            /// <remarks>Setting this value will automatically call <see cref="ApplyStyle"/>.</remarks></summary>
             public TreeNode TreeNode
             {
                 get { return _TreeNode; }
@@ -101,7 +102,7 @@ namespace GitUI.UserControls
             protected RootNode(GitUICommands uiCommands, TreeNode treeNode = null)
                 : base(uiCommands, treeNode) { }
 
-            /// <summary>Readies the tree set for a new repo.</summary>
+            /// <summary>Readies the tree set for a new repo. <remarks>Calls <see cref="ReloadAsync"/>.</remarks></summary>
             public virtual void RepoChanged()
             {
                 ReloadAsync();
@@ -135,17 +136,15 @@ namespace GitUI.UserControls
                 _getValues = getValues;
                 _onReload = onReload;
                 _addChild = addChild;
+                Children = new List<TChild>();
             }
 
-            /// <summary>Readies the tree set for a new repo.</summary>
+            /// <summary>Readies the tree set for a new repo. <remarks>Calls <see cref="RootNode.ReloadAsync"/>.</remarks></summary>
             public override void RepoChanged()
             {
                 _Watcher = _WatcherT = new ListWatcher<TChild>(
                     _getValues,
-                    (olds, news) =>
-                    {
-                        //Children.Clear()
-                    }, // clear children in BG thread
+                    (olds, news) => Children.Clear(), // clear children in BG thread
                     ReloadNodes);
                 base.RepoChanged();
             }
@@ -153,8 +152,7 @@ namespace GitUI.UserControls
             /// <summary>Reloads the set of nodes based on the specified <paramref name="items"/>.</summary>
             protected virtual void ReloadNodes(ICollection<TChild> items)
             {
-                Children.Clear();
-                TreeNode.TreeView.Update(() =>
+               TreeNode.TreeView.Update(() =>
                 {
                     TreeNode.Nodes.Clear();
 
@@ -162,7 +160,7 @@ namespace GitUI.UserControls
                     {
                         TreeNode child = AddChild(TreeNode.Nodes, item);
                         item.ParentNode = this;
-                        item.ApplyStyle();
+                        item.TreeNode = child;
                     }
 
                     _onReload(items, this);
