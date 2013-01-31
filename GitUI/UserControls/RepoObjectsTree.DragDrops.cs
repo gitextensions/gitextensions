@@ -138,21 +138,35 @@ namespace GitUI.UserControls
 
         }
 
+        /// <summary>Performed on a <see cref="TreeNode"/> click.</summary>
+        void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            Node node = e.Node.Tag as Node;
+            if (node != null)
+            {
+                node.OnClick();
+            }
+        }
         /// <summary>Performed on a <see cref="TreeNode"/> double-click.
         /// <remarks>Expand/Collapse still executes for any node with children.</remarks></summary>
         void OnNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            TreeNode node = e.Node;
-            if (node.IsAncestorOf(nodeBranches))
-            {// branches/
-                if (node.HasNoChildren())
-                {// no children -> branch
-                    // needs to go into Settings, but would probably like an option to:
-                    // stash; checkout;
-                    uiCommands.StartCheckoutBranchDialog(base.ParentForm, node.Text, false);
-                }
-
+            Node node = e.Node.Tag as Node;
+            if (node != null)
+            {
+                node.OnDoubleClick();
             }
+            //TreeNode node = e.Node;
+            //if (node.IsAncestorOf(nodeBranches))
+            //{// branches/
+            //    if (node.HasNoChildren())
+            //    {// no children -> branch
+            //        // needs to go into Settings, but would probably like an option to:
+            //        // stash; checkout;
+            //        uiCommands.StartCheckoutBranchDialog(base.ParentForm, node.Text, false);
+            //    }
+
+            //}
         }
 
         /// <summary>Represents a valid drag-drop action.</summary>

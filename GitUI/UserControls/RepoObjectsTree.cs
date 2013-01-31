@@ -24,6 +24,8 @@ namespace GitUI.UserControls
             InitializeComponent();
 
             treeMain.ShowNodeToolTips = true;
+            treeMain.NodeMouseClick += OnNodeClick;
+            treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
             DragDrops();
 
             nodeBranches = AddTreeNode(Strings.branches.Text);
