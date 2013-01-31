@@ -9,10 +9,6 @@ namespace GitUI.UserControls
     /// <summary>Tree-like structure for a repo's objects.</summary>
     public partial class RepoObjectsTree : GitModuleControl
     {
-        /// <summary>the <see cref="GitModule"/></summary>
-        GitModule git;
-        GitUICommands uiCommands;
-
         TreeNode nodeTags;
         TreeNode nodeBranches;
         TreeNode nodeStashes;
@@ -32,12 +28,16 @@ namespace GitUI.UserControls
             //nodeTags = AddTreeNode("tags");
             //nodeStashes = AddTreeNode("stashes");
 
-            AddTreeSet(nodeStashes, (git) => git.GetStashes(), ReloadStashes, AddStash, ApplyStashStyle);
+            AddTreeSet(nodeStashes, () =>
+            {
+                var stashes = Module.GetStashes();
+                return new RootNode<GitStash>(UICommands, null, stashes);
+            }, ReloadStashes, AddStash, ApplyStashStyle);
             AddTreeSet(
                 nodeBranches,
-                git =>
+                () =>
                 {
-                    var branchNames = git.GetBranchNames().ToArray();
+                    var branchNames = Module.GetBranchNames().ToArray();
                     return BaseBranchNode.GetBranchTree(UICommands, branchNames);
                 },
                 ReloadBranchNodes,
@@ -54,17 +54,12 @@ namespace GitUI.UserControls
 
         void AddTreeSet<T>(
             TreeNode rootNode,
-            Func<GitModule, ICollection<T>> getValues,
+            Func<RootNode<T>> getValues,
             Action<ICollection<T>> onReset,
             Func<TreeNodeCollection, T, TreeNode> itemToTreeNode,
             Action<TreeNode> applyStyle)
         {
-            AddTreeSet(new RepoObjectsTreeSet<T>(git, rootNode, getValues, onReset, itemToTreeNode, applyStyle));
-        }
-
-        void AddTreeSet(RepoObjectsTreeSet treeSet)
-        {
-            treeSets.Add(treeSet);
+            treeSets.Add(new RepoObjectsTreeSet<T>(rootNode, getValues, onReset, itemToTreeNode, applyStyle));
         }
 
         TreeNode AddTreeNode(string node)
@@ -73,14 +68,11 @@ namespace GitUI.UserControls
         }
 
         /// <summary>Sets up the objects tree for a new repo, then reloads the objects tree.</summary>
-        public void NewRepo(GitModule git, GitUICommands uiCommands)
+        public void RepoChanged()
         {
-            this.git = git;
-            this.uiCommands = uiCommands;
-
             foreach (RepoObjectsTreeSet treeSet in treeSets)
             {
-                treeSet.RepoChanged(git);
+                treeSet.RepoChanged();
             }
 
             Reload();

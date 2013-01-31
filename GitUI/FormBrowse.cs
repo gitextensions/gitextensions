@@ -118,7 +118,7 @@ namespace GitUI
 
             InitializeComponent();
 
-            repoObjectsTree.NewRepo(Module, UICommands);
+            repoObjectsTree.RepoChanged(Module, UICommands);
 
             // set tab page images
             {
@@ -1755,7 +1755,7 @@ namespace GitUI
 #endif
             }
 
-            repoObjectsTree.NewRepo(module, UICommands);
+            repoObjectsTree.RepoChanged(module, UICommands);
             Initialize();
             RevisionGrid.IndexWatcher.Reset();
             RegisterPlugins();

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands;
 
 namespace GitUI.UserControls
 {
@@ -62,7 +61,6 @@ namespace GitUI.UserControls
             readonly Func<TreeNodeCollection, T, TreeNode> _addChild;
 
             public RepoObjectsTreeSet(
-                GitModule git,
                 TreeNode treeNode,
                 Func<ICollection<T>> getValues,
                 Action<ICollection<T>> onReload,

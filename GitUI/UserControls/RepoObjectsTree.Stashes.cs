@@ -17,7 +17,7 @@ namespace GitUI.UserControls
         TreeNode AddStash(TreeNodeCollection nodes, GitStash stash)
         {
             TreeNode treeNode = nodes.Add(stash.Index.ToString(), stash.Name);
-            treeNode.Tag = stash;
+            treeNode.Tag = new Node<GitStash,RootNode<GitStash>> (stash,);
             treeNode.ToolTipText = stash.Message;
             ApplyStashStyle(treeNode);
             return treeNode;
@@ -28,10 +28,10 @@ namespace GitUI.UserControls
             // style
         }
 
-        class StashNode : Node<GitStash, RootNode<StashNode>>
-        {
-            public StashNode(GitStash stash, RootNode<StashNode> parent, GitUICommands uiCommands)
-                : base(stash, parent, uiCommands) { }
-        }
+        //class StashNode : Node<GitStash, RootNode<StashNode>>
+        //{
+        //    public StashNode(GitStash stash, RootNode<StashNode> parent, GitUICommands uiCommands)
+        //        : base(stash, parent, uiCommands) { }
+        //}
     }
 }
