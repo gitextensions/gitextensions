@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Translation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="2.44">
+<Translation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" GitExVersion="2.44">
   <translationCategories>
     <TranslationCategory Name="AboutBox">
       <translationItems>
@@ -90,10 +90,6 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Show relative date instead of full date</Source>
           <Value>絶対日付の代わりに相対日付を表示する</Value>
         </TranslationItem>
-        <TranslationItem Name="commitFontChangeButton" Property="Text" type="unfinished">
-          <Source>font name</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="diffFontChangeButton" Property="Text" type="unfinished">
           <Source>font name</Source>
           <Value />
@@ -128,10 +124,6 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
         <TranslationItem Name="label26" Property="Text" type="unfinished">
           <Source>Application font</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="label34" Property="Text" type="unfinished">
-          <Source>Commit font</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label44" Property="Text">
@@ -2749,10 +2741,6 @@ Do you want to continue?</Source>
           <Source>Amend commit</Source>
           <Value>コミットやり直し</Value>
         </TranslationItem>
-        <TranslationItem Name="_checkBoxAutoWrap" Property="Text" type="unfinished">
-          <Source>Auto-wrap</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text" type="unfinished">
           <Source>Commit Message is requested during commit</Source>
           <Value />
@@ -3224,10 +3212,6 @@ Do you want to continue?</Source>
         </TranslationItem>
         <TranslationItem Name="labelSecondLineEmpty" Property="Text" type="unfinished">
           <Source>Second line must be empty:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="labelUseIndent" Property="Text" type="unfinished">
-          <Source>Indent lines after first line:</Source>
           <Value />
         </TranslationItem>
       </translationItems>
@@ -6659,11 +6643,11 @@ Do you want to open the new repository "{0}" now?</Source>
     </TranslationCategory>
     <TranslationCategory Name="FormTranslate">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text">
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Translate</Source>
           <Value>翻訳</Value>
         </TranslationItem>
-        <TranslationItem Name="allText" Property="Text">
+        <TranslationItem Name="allText" Property="Text" type="unfinished">
           <Source>All</Source>
           <Value>すべて</Value>
         </TranslationItem>
@@ -6675,15 +6659,15 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>[EDITING]</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="googleAll" Property="Text">
+        <TranslationItem Name="googleAll" Property="Text" type="unfinished">
           <Source>Google all empty</Source>
           <Value>空を全てぐぐる</Value>
         </TranslationItem>
-        <TranslationItem Name="googleTranslate" Property="Text">
+        <TranslationItem Name="googleTranslate" Property="Text" type="unfinished">
           <Source>Google translate</Source>
           <Value>Google翻訳</Value>
         </TranslationItem>
-        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
+        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText" type="unfinished">
           <Source>Name</Source>
           <Value>名前</Value>
         </TranslationItem>
@@ -6691,7 +6675,7 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>NeutralValue</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="nextButton" Property="Text">
+        <TranslationItem Name="nextButton" Property="Text" type="unfinished">
           <Source>&amp;Next</Source>
           <Value>次へ(&amp;N)</Value>
         </TranslationItem>
@@ -6704,7 +6688,7 @@ Do you want to select a language code first?</Source>
           <Source>Language code</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="previousButton" Property="Text">
+        <TranslationItem Name="previousButton" Property="Text" type="unfinished">
           <Source>&amp;Previous</Source>
           <Value>前へ(&amp;P)</Value>
         </TranslationItem>
@@ -6712,11 +6696,11 @@ Do you want to select a language code first?</Source>
           <Source>Property</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="saveAs" Property="ToolTipText">
+        <TranslationItem Name="saveAs" Property="ToolTipText" type="unfinished">
           <Source>Save translation</Source>
           <Value>翻訳を保存</Value>
         </TranslationItem>
-        <TranslationItem Name="saveAsText" Property="Text">
+        <TranslationItem Name="saveAsText" Property="Text" type="unfinished">
           <Source>Save as</Source>
           <Value>名前を付けて保存</Value>
         </TranslationItem>
@@ -6724,11 +6708,11 @@ Do you want to select a language code first?</Source>
           <Source>Translation file (*.xml)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="saveCurrentChangesCaption" Property="Text">
+        <TranslationItem Name="saveCurrentChangesCaption" Property="Text" type="unfinished">
           <Source>Save changes</Source>
           <Value>変更を保存する</Value>
         </TranslationItem>
-        <TranslationItem Name="saveCurrentChangesText" Property="Text">
+        <TranslationItem Name="saveCurrentChangesText" Property="Text" type="unfinished">
           <Source>Do you want to save the current changes?</Source>
           <Value>現在の変更を保存しますか？</Value>
         </TranslationItem>
@@ -6736,19 +6720,19 @@ Do you want to select a language code first?</Source>
           <Source>Select a language code first.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonNew" Property="Text">
+        <TranslationItem Name="toolStripButtonNew" Property="Text" type="unfinished">
           <Source>New</Source>
           <Value>新規</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripTranslationLabel" Property="Text">
+        <TranslationItem Name="toolStripTranslationLabel" Property="Text" type="unfinished">
           <Source>Current translation:</Source>
           <Value>現在の翻訳：</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
+        <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text" type="unfinished">
           <Source>Language code:</Source>
           <Value>言語コード：</Value>
         </TranslationItem>
-        <TranslationItem Name="translateProgressText" Property="Text">
+        <TranslationItem Name="translateProgressText" Property="Text" type="unfinished">
           <Source>Translated {0} out of {1}</Source>
           <Value>{1}中{0}個が翻訳済み</Value>
         </TranslationItem>
