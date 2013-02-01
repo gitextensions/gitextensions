@@ -2075,7 +2075,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(Message.Text) && Amend.Checked)
             {
-                Message.Text = Module.GetPreviousCommitMessages(0).FirstOrDefault().Trim();
+                Message.Text = Module.GetPreviousCommitMessages(1).FirstOrDefault().Trim();
                 return;
             }
         }
