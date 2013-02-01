@@ -552,9 +552,13 @@ namespace GitUI.UserControls
             void SetFavorites(ICollection<BaseBranchNode> news)
             {
                 favorites.Clear();
-                var favs = UiCommands.Module.GetLocalConfig().FindConfigSection("favorites");
-                if (favs == null)
-                {
+                var favs = (from section in UiCommands.Module.GetLocalConfig().ConfigSections
+                            where Equals(section.SectionName, "branch")
+                            let value = section.GetValue("fav")
+                            where value.IsNotNullOrWhitespace()
+                            select section.SubSection).ToList();
+                if (favs.Any() == false)
+                {// no branches config'd -> return
                     return;
                 } // else...
 
@@ -569,13 +573,13 @@ namespace GitUI.UserControls
                             (bbp, favors) => (from branchNode in branchPath.Children
                                               let branch = branchNode as BranchNode
                                               where branch != null
-                                              let isFav = !favs.GetValue(branchNode.FullPath).IsNullOrWhiteSpace()
+                                              let isFav = favs.Any(fav => Equals(fav, branchNode.FullPath))
                                               where isFav
                                               select branch).ToList());
                     } // else (Branch)
                     BranchNode branchNod = node as BranchNode;
-                    if (branchNod != null && !favs.GetValue(branchNod.FullPath).IsNullOrWhiteSpace())
-                    {
+                    if (branchNod != null && favs.Any(fav => Equals(fav, branchNod.FullPath)))
+                    {// branch AND 
                         return new List<BranchNode> { branchNod };
                     }
 
