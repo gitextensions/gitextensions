@@ -39,7 +39,10 @@ namespace GitUI.UserControls
                 IsDraggable = false;
                 ContextActions = new ContextAction[0];
                 AllowDrop = false;
+
+                dragDropActions = new Lazy<IEnumerable<DragDropAction>>(CreateDragDropActions);
             }
+
 
             /// <summary>Styles the <see cref="TreeNode"/>.</summary>
             internal virtual void ApplyStyle()
@@ -60,9 +63,19 @@ namespace GitUI.UserControls
             /// <summary>true if the <see cref="Node"/> will accept a dropped object.</summary>
             public virtual bool AllowDrop { get; protected set; }
             /// <summary>true if the <see cref="Node"/> will accept the specified <paramref name="dragged"/> object.</summary>
-            public virtual bool Accepts(Node dragged) { return false; }
+            public bool Accepts(Node dragged)
+            {
+                return dragDropActions.Value.Any(dda => dda.Drag(dragged));
+            }
             /// <summary>Drops the object onto this <see cref="Node"/>.</summary>
-            public virtual void Drop(object droppedObject) { }
+            public void Drop(object droppedObject)
+            {
+                if (dragDropActions.Value.Any(dda => dda.Drop(droppedObject))) { }
+            }
+
+            /// <summary>Gets the valid <see cref="DragDropAction"/>s.</summary>
+            protected virtual IEnumerable<DragDropAction> CreateDragDropActions() { return new DragDropAction[0]; }
+            Lazy<IEnumerable<DragDropAction>> dragDropActions;
 
             /// <summary>Gets the <see cref="Node"/> from a <see cref="TreeNode"/>'s tag.</summary>
             public static Node GetNode(TreeNode treeNode)
@@ -88,21 +101,25 @@ namespace GitUI.UserControls
                 return false;
             }
 
+            /// <summary>Valid drag-drop action.</summary>
             protected class DragDropAction
             {
                 Func<object, bool> _canDrop;
                 Action<object> _onDrop;
+
                 public DragDropAction(Func<object, bool> canDrop, Action<object> onDrop)
                 {
                     _canDrop = canDrop;
                     _onDrop = onDrop;
                 }
 
+                /// <summary>Execute a drag, which indicates whether a drop is allowed.</summary>
                 public bool Drag(object draggedObject)
                 {
                     return _canDrop(draggedObject);
                 }
 
+                /// <summary>Execute the drop, with a validity check.</summary>
                 public bool Drop(object droppedObject)
                 {
                     if (_canDrop(droppedObject))
@@ -114,11 +131,16 @@ namespace GitUI.UserControls
                 }
             }
 
+            /// <summary><see cref="DragDropAction"/> with safe type-casting.</summary>
             protected class DragDropAction<T> : DragDropAction
                 where T : class
             {
                 public DragDropAction(Func<T, bool> canDrop, Action<T> onDrop)
-                    : base((obj) => canDrop(obj as T), obj => onDrop(obj as T)) { }
+                    : base(obj =>
+                    {
+                        T t = obj as T;
+                        return (t != null) && canDrop(t);
+                    }, obj => onDrop(obj as T)) { }
             }
         }
 
