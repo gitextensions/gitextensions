@@ -51,7 +51,7 @@ namespace GitCommands.Config
         public string SectionName { get; set; }
         public string SubSection { get; set; }
         public bool SubSectionCaseSensitive { get; set; }
-        
+
         internal static string UnescapeString(string value)
         {
             // The .gitconfig escapes some character sequences -> 
@@ -67,10 +67,9 @@ namespace GitCommands.Config
 
             path = path.Trim();
 
-            if (path.StartsWith("\\\\")) //for using unc paths -> these need to be backward slashes
-                path = path.Replace("\\", "\\\\");
-            else //for directories -> git only supports forward slashes
-                path = path.Replace('\\', '/');
+            path = path.StartsWith("\\\\")
+                ? path.Replace("\\", "\\\\")//for using unc paths -> these need to be backward slashes
+                : path.Replace('\\', '/');  //for directories -> git only supports forward slashes
 
             return path.Replace("$QUOTE$", "\\\"");
         }
@@ -80,7 +79,7 @@ namespace GitCommands.Config
             if (string.IsNullOrEmpty(value))
                 Keys.Remove(key);
             else
-                Keys[key] = new List<string> {value};
+                Keys[key] = new List<string> { value };
         }
 
         public void SetPathValue(string setting, string value)
@@ -113,27 +112,25 @@ namespace GitCommands.Config
 
         public override string ToString()
         {
-			string result = "[" + SectionName;
-			if (!SubSection.IsNullOrEmpty())
-				if (SubSectionCaseSensitive)
-					result = result + " \"" + SubSection + "\"";
-			    else
-				    result = result + "." + SubSection;
-			result = result + "]";
-			return result;
+            string result = "[" + SectionName;
+            if (!SubSection.IsNullOrEmpty())
+                if (SubSectionCaseSensitive)
+                    result = result + " \"" + SubSection + "\"";
+                else
+                    result = result + "." + SubSection;
+            result = result + "]";
+            return result;
         }
 
         public bool Equals(ConfigSection other)
         {
-            StringComparison sc;
-            if (SubSectionCaseSensitive)
-                sc = StringComparison.Ordinal;
-            else
-                sc = StringComparison.OrdinalIgnoreCase;
+            StringComparison sc = SubSectionCaseSensitive
+                ? StringComparison.Ordinal
+                : StringComparison.OrdinalIgnoreCase;
 
-            return string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) && 
+            return
+                string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) &&
                 string.Equals(SubSection, other.SubSection, sc);
         }
-
     }
 }

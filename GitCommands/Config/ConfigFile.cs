@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -27,13 +28,12 @@ namespace GitCommands.Config
                 );
 
         private readonly string _fileName;
-        private readonly IList<ConfigSection> _sections;
 
         public bool Local { get; private set; }
 
         public ConfigFile(string fileName, bool aLocal)
         {
-            _sections = new List<ConfigSection>();
+            ConfigSections = new List<ConfigSection>();
             Local = aLocal;
 
             _fileName = fileName;
@@ -48,10 +48,7 @@ namespace GitCommands.Config
             }
         }
 
-        public IList<ConfigSection> GetConfigSections()
-        {
-            return _sections;
-        }
+        public IList<ConfigSection> ConfigSections { get; private set; }
 
         private Encoding GetEncoding()
         {
@@ -78,7 +75,7 @@ namespace GitCommands.Config
                     var name = m.Groups["SectionName"].Value;
 
                     configSection = new ConfigSection(name, false);
-                    _sections.Add(configSection);
+                    ConfigSections.Add(configSection);
                 }
                 else
                 {
@@ -102,7 +99,7 @@ namespace GitCommands.Config
         {
             var configFileContent = new StringBuilder();
 
-            foreach (var section in _sections)
+            foreach (var section in ConfigSections)
             {
                 //Skip empty sections
                 if (section.Keys.Count == 0)
@@ -183,10 +180,7 @@ namespace GitCommands.Config
         public bool HasConfigSection(string configSectionName)
         {
             var configSection = FindConfigSection(configSectionName);
-            if (configSection != null)
-                return true;
-                
-            return false;
+            return configSection != null;
         }
 
         private string GetStringValue(string setting)
@@ -253,7 +247,7 @@ namespace GitCommands.Config
             if (result == null)
             {
                 result = new ConfigSection(name, true);
-                _sections.Add(result);
+                ConfigSections.Add(result);
             }
             
             return result;
@@ -266,19 +260,14 @@ namespace GitCommands.Config
             if (configSection == null)
                 return;
 
-            _sections.Remove(configSection);
+            ConfigSections.Remove(configSection);
         }
 
-        private ConfigSection FindConfigSection(string name)
+        public ConfigSection FindConfigSection(string name)
         {
             var configSectionToFind = new ConfigSection(name, true);
 
-            foreach (var configSection in _sections)
-            {
-                if (configSectionToFind.Equals(configSection))
-                    return configSection;
-            }
-            return null;
+            return ConfigSections.FirstOrDefault(configSectionToFind.Equals);
         }
     }
 }
