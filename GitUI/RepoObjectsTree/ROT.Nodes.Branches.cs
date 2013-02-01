@@ -193,7 +193,7 @@ namespace GitUI.UserControls
                     { 
                         // normal -> Pop
                         // Alt -> Apply
-                        UiCommands.StartStashDialog();// TODO
+                        UiCommands.StartStashDialog();
                     });
 
                 var branchDD = new DragDropAction<BranchNode>(draggedBranch =>
@@ -210,9 +210,7 @@ namespace GitUI.UserControls
                     return false;
                 }, draggedBranch =>
                 {
-                    // TODO: rebase on Alt+Drag
                     string activeBranch = UiCommands.Module.GetSelectedBranch();
-                    // TODO: need to find out which branch is behind, check it out, then merge it
                     if (Equals(FullPath, activeBranch))
                     {// target is active -> merge dropped
                         UiCommands.StartMergeBranchDialog(draggedBranch.FullPath);
