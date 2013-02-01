@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -24,8 +25,13 @@ namespace ResourceManager.Translation
             if (objName != null)
                 yield return new Tuple<string, object>(objName, obj);
 
-            foreach (FieldInfo fieldInfo in obj.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
+            foreach (FieldInfo fieldInfo in obj.GetType().GetFields(
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static))
             {
+                if (fieldInfo.IsPublic && !fieldInfo.IsInitOnly)
+                {// if public AND modifiable (NOT readonly)
+                    continue;
+                }
                 yield return new Tuple<string, object>(fieldInfo.Name, fieldInfo.GetValue(obj));
             }
         }
@@ -48,11 +54,11 @@ namespace ResourceManager.Translation
                     translation.AddTranslationItem(category, item, propertyInfo.Name, value);
                 }
             };
-            ForEachItem(items, action);        
+            ForEachItem(items, action);
         }
 
         public static void ForEachItem(IEnumerable<Tuple<string, object>> items, Action<string, object, PropertyInfo> action)
-        {            
+        {
             foreach (var item in items)
             {
                 string itemName = item.Item1;
@@ -80,7 +86,7 @@ namespace ResourceManager.Translation
             }
         }
 
-        public static void TranslateItemsFromList(string category, Translation translation, IEnumerable<Tuple<string, object>> items) 
+        public static void TranslateItemsFromList(string category, Translation translation, IEnumerable<Tuple<string, object>> items)
         {
             Action<string, object, PropertyInfo> action = (item, itemObj, propertyInfo) =>
             {
@@ -108,7 +114,7 @@ namespace ResourceManager.Translation
                 return;
 
             TranslateItemsFromList(category, translation, GetObjProperties(obj, "$this"));
-        } 
+        }
 
         public static void ForEachProperty(object obj, Action<PropertyInfo> action, Func<PropertyInfo, bool> IsTranslatableItem)
         {
@@ -140,21 +146,26 @@ namespace ResourceManager.Translation
             return propertyInfo.Name.Equals("HeaderText", StringComparison.CurrentCulture) && viewCol.Visible;
         }
 
-        public static bool IsAssemblyTranslatable(Assembly assembly)
+        static string[] UnTranslatableDLLs = new string[]
         {
-            if ((assembly.FullName.StartsWith("mscorlib", StringComparison.OrdinalIgnoreCase)) ||
-                (assembly.FullName.StartsWith("Microsoft", StringComparison.OrdinalIgnoreCase)) ||
-                (assembly.FullName.StartsWith("Presentation", StringComparison.OrdinalIgnoreCase)) ||
-                (assembly.FullName.StartsWith("WindowsBase", StringComparison.OrdinalIgnoreCase)) ||
-                (assembly.FullName.StartsWith("ICSharpCode", StringComparison.OrdinalIgnoreCase)) ||
-                (assembly.FullName.StartsWith("access", StringComparison.OrdinalIgnoreCase)) ||
-                (assembly.FullName.StartsWith("SMDiag", StringComparison.OrdinalIgnoreCase)) ||
-                (assembly.FullName.StartsWith("System", StringComparison.OrdinalIgnoreCase)) ||
-                (assembly.FullName.StartsWith("vshost", StringComparison.OrdinalIgnoreCase)))
-            {
-                return false;
-            }
-            return true;
+            "mscorlib",
+            "Microsoft",
+            "Presentation",
+            "WindowsBase",
+            "ICSharpCode",
+            "access",
+            "SMDiag",
+            "System",
+            "vshost",
+        };
+
+        /// <summary>true if the specified <see cref="Assembly"/> may be translatable.</summary>
+        public static bool IsTranslatable(this Assembly assembly)
+        {
+            bool isInvalid = UnTranslatableDLLs.Any(
+                asm => assembly.FullName.StartsWith(asm, StringComparison.OrdinalIgnoreCase));
+
+            return !isInvalid;
         }
 
         public static List<Type> GetTranslatableTypes()
@@ -162,10 +173,10 @@ namespace ResourceManager.Translation
             List<Type> translatableTypes = new List<Type>();
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (IsAssemblyTranslatable(assembly))
+                if (assembly.IsTranslatable())
                 {
                     foreach (Type type in assembly.GetTypes())
-                    {                        
+                    {
                         if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
                         {
                             translatableTypes.Add(type);
