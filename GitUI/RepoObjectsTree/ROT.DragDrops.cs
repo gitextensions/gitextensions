@@ -83,12 +83,19 @@ namespace GitUI.UserControls
             Node dragged = Node.GetNode(draggedNode);
 
             TreeNode targetNode = GetTargetNode(e);
-            Node node = Node.GetNode(targetNode);
-
-            if (node.AllowDrop && node.Accepts(dragged))
+            if (targetNode == draggedNode)
             {
+                e.Effect = DragDropEffects.None;
+                return;
+            }
+            
+            Node target = Node.GetNode(targetNode);
+
+            if (dragged != target && target.AllowDrop && target.Accepts(dragged))
+            {// NOT same AND allows drops AND accepts the object
+                e.Effect = e.AllowedEffect;
                 if (previousTarget != null && previousTarget != targetNode)
-                {
+                {// target changed -> UN-highlight previous target
                     Highlight(previousTarget, false);
                 }
                 previousTarget = targetNode;
