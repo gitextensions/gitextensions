@@ -153,6 +153,52 @@ namespace GitUI.UserControls
                 IsActive = Equals(activeBranchPath, FullPath);
                 IsDraggable = true;
                 AllowDrop = true;
+                ddas = new DragDropAction[]{
+                    new DragDropAction<StashNode>(
+                    (draggedStash) =>
+                    {
+                        if (IsActive == false)
+                        {
+                            return false;
+                        }
+                        
+                        return draggedStash!= null;
+                    },
+                    (draggedStash) =>
+                    {
+                        UiCommands.StartStashDialog();
+                    }),
+                    new DragDropAction<BranchNode>(
+                        draggedBranch =>
+                        {
+                            if (draggedBranch == null){   return false;}
+                             
+                            string activeBranch = UiCommands.Module.GetSelectedBranch();
+                            if (Equals(FullPath, activeBranch))
+                            {// target is active -> merge dropped
+                       
+                                return true;
+                            }
+                            if (Equals(draggedBranch.FullPath, activeBranch))
+                            {
+                                return true;
+                            }
+                            return false;
+                        },
+                        draggedBranch =>
+                        {
+                            string activeBranch = UiCommands.Module.GetSelectedBranch();
+                    if (Equals(FullPath, activeBranch))
+                    {// target is active -> merge dropped
+                            UiCommands.StartMergeBranchDialog(draggedBranch.FullPath);
+                    }
+                    if (Equals(draggedBranch.FullPath, activeBranch))
+                    {// dropped is active -> merge target
+                            UiCommands.StartMergeBranchDialog(FullPath);
+                    }
+                        }
+                        ), 
+                };
             }
 
             /// <summary>true if this <see cref="BranchNode"/> is the active branch.</summary>
@@ -185,37 +231,50 @@ namespace GitUI.UserControls
                 UiCommands.StartCheckoutBranchDialog(FullPath);
             }
 
+            DragDropAction[] ddas;
+
             /// <summary>true if the <see cref="BranchNode"/> will accept the specified <paramref name="dragged"/> object.</summary>
             public override bool Accepts(Node dragged)
             {
-                return dragged is StashNode || dragged is BranchNode;
+                //var dda = new DragDropAction((draggedObj, execute)=>,branch =>OnBranchNodeDragDrop(branch));
+                return ddas.Any(dragDropAction => dragDropAction.Drag(dragged));
+                //return OnBranchNodeDragDrop(dragged);
             }
 
             public override void Drop(object droppedObject)
             {
-                base.Drop(droppedObject);
+                if (ddas.Any(dragDropAction => dragDropAction.Drop(droppedObject))) { }
+
+                // normal -> Pop
+                // Alt -> Apply
+
+            }
+
+            bool OnBranchNodeDragDrop(object droppedObject, bool execute = true)
+            {
                 BranchNode branch = droppedObject as BranchNode;
                 if (branch != null)
-                {
+                {// branch
                     string activeBranch = UiCommands.Module.GetSelectedBranch();
                     if (Equals(FullPath, activeBranch))
-                    {
-                        UiCommands.StartMergeBranchDialog(branch.FullPath);
+                    {// target is active -> merge dropped
+                        if (execute)
+                        {
+                            UiCommands.StartMergeBranchDialog(branch.FullPath);
+                        }
+                        return true;
                     }
-                    else if (Equals(branch.FullPath, activeBranch))
-                    {
-                        UiCommands.StartMergeBranchDialog(FullPath);
+                    if (Equals(branch.FullPath, activeBranch))
+                    {// dropped is active -> merge target
+                        if (execute)
+                        {
+                            UiCommands.StartMergeBranchDialog(FullPath);
+                        }
+                        return true;
                     }
                     // TODO: rebase on Alt+Drag
-                    return;
                 }
-
-                StashNode stashNode = droppedObject as StashNode;
-                if (stashNode != null)
-                {
-                    // normal -> Pop
-                    // Alt -> Apply
-                }
+                return false;
             }
         }
 

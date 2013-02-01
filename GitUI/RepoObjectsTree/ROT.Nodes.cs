@@ -63,7 +63,7 @@ namespace GitUI.UserControls
             public virtual bool Accepts(Node dragged) { return false; }
             /// <summary>Drops the object onto this <see cref="Node"/>.</summary>
             public virtual void Drop(object droppedObject) { }
-          
+
             /// <summary>Gets the <see cref="Node"/> from a <see cref="TreeNode"/>'s tag.</summary>
             public static Node GetNode(TreeNode treeNode)
             {
@@ -88,6 +88,38 @@ namespace GitUI.UserControls
                 return false;
             }
 
+            protected class DragDropAction
+            {
+                Func<object, bool> _canDrop;
+                Action<object> _onDrop;
+                public DragDropAction(Func<object, bool> canDrop, Action<object> onDrop)
+                {
+                    _canDrop = canDrop;
+                    _onDrop = onDrop;
+                }
+
+                public bool Drag(object draggedObject)
+                {
+                    return _canDrop(draggedObject);
+                }
+
+                public bool Drop(object droppedObject)
+                {
+                    if (_canDrop(droppedObject))
+                    {
+                        _onDrop(droppedObject);
+                        return true;
+                    }
+                    return false;
+                }
+            }
+
+            protected class DragDropAction<T> : DragDropAction
+                where T : class
+            {
+                public DragDropAction(Func<T, bool> canDrop, Action<T> onDrop)
+                    : base((obj) => canDrop(obj as T), obj => onDrop(obj as T)) { }
+            }
         }
 
         /// <summary>base class for a node with a (strongly-typed) parent</summary>
