@@ -2889,8 +2889,6 @@ namespace GitCommands
                 else
                     return string.Empty;
             }
-
-
         }
 
         public static void StreamCopy(Stream input, Stream output)
