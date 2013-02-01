@@ -10,13 +10,9 @@ namespace GitUI
         private readonly TranslationString _selectOneRevision = new TranslationString("Select 1 revision to create the branch on.");
         private readonly TranslationString _branchCaption = new TranslationString("Branch");
 
-                /// <summary>
-        /// For VS designer
-        /// </summary>
+        /// <summary>For VS designer</summary>
         private FormBranch()
-            : this(null)
-        {
-        }
+            : this(null) { }
 
 
         public FormBranch(GitUICommands aCommands)
@@ -30,7 +26,6 @@ namespace GitUI
         {
             try
             {
-
                 if (RevisionGrid.GetSelectedRevisions().Count != 1)
                 {
                     MessageBox.Show(this, _selectOneRevision.Text, _branchCaption.Text);
@@ -41,7 +36,6 @@ namespace GitUI
                 FormProcess.ShowDialog(this, cmd);
 
                 Close();
-
             }
             catch
             {

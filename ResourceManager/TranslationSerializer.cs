@@ -4,6 +4,7 @@ using System.Xml.Serialization;
 
 namespace ResourceManager.Translation
 {
+    /// <summary>Serializes and deserialize a <see cref="Translation"/>.</summary>
     public static class TranslationSerializer
     {
         public static void Serialize(Translation translation, string path)

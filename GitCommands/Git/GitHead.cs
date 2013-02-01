@@ -11,7 +11,7 @@ namespace GitCommands
         private IList<IGitItem> _subItems;
         public GitModule Module { get; private set; }
 
-        public GitHead(GitModule module, string guid, string completeName) : this(module, guid, completeName, string.Empty) {}
+        public GitHead(GitModule module, string guid, string completeName) : this(module, guid, completeName, string.Empty) { }
 
         public GitHead(GitModule module, string guid, string completeName, string remote)
         {
@@ -27,7 +27,7 @@ namespace GitCommands
 
             ParseName();
 
-            _remoteSettingName = String.Format("branch.{0}.remote", Name);
+            _remoteSettingName = RemoteSettingName(Name);
             _mergeSettingName = String.Format("branch.{0}.merge", Name);
         }
 
@@ -53,9 +53,9 @@ namespace GitCommands
 
         public string TrackingRemote
         {
-            get 
+            get
             {
-                return GetTrackingRemote(Module.GetLocalConfig());    
+                return GetTrackingRemote(Module.GetLocalConfig());
             }
             set
             {
@@ -69,6 +69,12 @@ namespace GitCommands
                         MergeWith = Name;
                 }
             }
+        }
+
+        /// <summary>Gets the setting name for a branch's remote.</summary>
+        public static string RemoteSettingName(string branch)
+        {
+            return String.Format("branch.{0}.remote", branch);
         }
 
         /// <summary>

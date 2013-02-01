@@ -44,7 +44,9 @@ namespace ResourceManager.Translation
             {
                 var value = (string)propertyInfo.GetValue(itemObj, null);
                 if (AllowTranslateProperty(value))
+                {
                     translation.AddTranslationItem(category, item, propertyInfo.Name, value);
+                }
             };
             ForEachItem(items, action);        
         }
@@ -61,48 +63,40 @@ namespace ResourceManager.Translation
                 if (itemName.StartsWith("_NO_TRANSLATE_"))
                     continue;
 
-                Func<PropertyInfo, bool> IsTranslatableItem = null;
+                Func<PropertyInfo, bool> IsTranslatableItem;
                 if (itemObj is DataGridViewColumn)
                 {
                     DataGridViewColumn c = itemObj as DataGridViewColumn;
 
-                    IsTranslatableItem = delegate(PropertyInfo propertyInfo)
-                    {
-                        return IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
-                    };
+                    IsTranslatableItem = propertyInfo => IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
                 }
                 else
                 {
-                    IsTranslatableItem = delegate(PropertyInfo propertyInfo)
-                    {
-                        return IsTranslatableItemInComponent(propertyInfo);
-                    };
+                    IsTranslatableItem = IsTranslatableItemInComponent;
                 }
 
-                if (IsTranslatableItem != null)
-                {
-                    Action<PropertyInfo> paction = delegate(PropertyInfo propertyInfo)
-                    {
-                        action(itemName, itemObj, propertyInfo);
-                    };
-
-                    ForEachProperty(itemObj, paction, IsTranslatableItem);
-                }
+                Action<PropertyInfo> paction = propertyInfo => action(itemName, itemObj, propertyInfo);
+                ForEachProperty(itemObj, paction, IsTranslatableItem);
             }
         }
 
         public static void TranslateItemsFromList(string category, Translation translation, IEnumerable<Tuple<string, object>> items) 
         {
-            Action<string, object, PropertyInfo> action = delegate(string item, object itemObj, PropertyInfo propertyInfo)
+            Action<string, object, PropertyInfo> action = (item, itemObj, propertyInfo) =>
             {
                 string value = translation.TranslateItem(category, item, propertyInfo.Name, null);
                 if (!String.IsNullOrEmpty(value))
+                {
                     propertyInfo.SetValue(itemObj, value, null);
-                else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
+                }
+                else if (propertyInfo.Name == "ToolTipText" &&
+                         !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
                 {
                     value = translation.TranslateItem(category, item, "Text", null);
                     if (!String.IsNullOrEmpty(value))
+                    {
                         propertyInfo.SetValue(itemObj, value, null);
+                    }
                 }
             };
             ForEachItem(items, action);

@@ -54,7 +54,6 @@ namespace GitUI
                 OnRuntimeLoad(e);
         }
 
-
         void GitExtensionsControl_Load(object sender, EventArgs e)
         {
             // find out if the value is a component and is currently in design mode
@@ -64,6 +63,7 @@ namespace GitUI
                 throw new Exception("The control " + GetType().Name + " is not translated in the constructor. You need to call Translate() right after InitializeComponent().");
         }
 
+        /// <summary>Translates the <see cref="UserControl"/> elements.</summary>
         protected void Translate()
         {
             Translator.Translate(this, GitCommands.Settings.Translation);

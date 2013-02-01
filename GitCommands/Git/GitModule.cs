@@ -36,6 +36,13 @@ namespace GitCommands
     [DebuggerDisplay("GitModule ( {_workingdir} )")]
     public sealed class GitModule : IGitModule
     {
+        /// <summary>'\n' : new-line separator</summary>
+        const char LineSeparator = '\n';
+        /// <summary>"*" indicates the current branch</summary>
+        public static char ActiveBranchIndicator = '*';
+        /// <summary>"*" indicates the current branch</summary>
+        public static string ActiveBranchIndicatorStr = ActiveBranchIndicator.ToString();
+
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
 
         public GitModule(string workingdir)
@@ -191,7 +198,6 @@ namespace GitCommands
             Settings.SetEncoding(lname, encoding);
             //storing to config file is handled by FormSettings
         }
-
 
         //Encoding that let us read all bytes without replacing any char
         //It is using to read output of commands, which may consist of:
@@ -2080,22 +2086,14 @@ namespace GitCommands
             var list = RunGitCmd("stash list").Split('\n');
 
             var stashes = new List<GitStash>();
-            foreach (var stashString in list)
+            for (int i = 0; i < list.Length; i++)
             {
-                if (stashString.IndexOf(':') <= 0)
-                    continue;
-
-                var stash = new GitStash
-                        {
-                            Name = stashString.Substring(0, stashString.IndexOf(':')).Trim()
-                        };
-
-                if (stashString.IndexOf(':') + 1 < stashString.Length)
-                    stash.Message = stashString.Substring(stashString.IndexOf(':') + 1).Trim();
-
-                stashes.Add(stash);
+                string stashString = list[i];
+                if (stashString.IndexOf(':') > 0)
+                {
+                    stashes.Add(new GitStash(stashString, i));
+                }
             }
-
             return stashes;
         }
 
@@ -2629,6 +2627,18 @@ namespace GitCommands
             heads.AddRange(defaultHeads.Values);
 
             return heads;
+        }
+
+        /// <summary>Gets the branch names, with the active branch, if applicable, listed first.
+        /// <remarks>A bit quicker than <see cref="GetHeads()"/>.
+        /// The active branch will be indicated by a "*", so ensure to Trim before processing.</remarks></summary>
+        public IEnumerable<string> GetBranchNames()
+        {
+            return RunGitCmd("branch", SystemEncoding)
+                .Split(LineSeparator)
+                .Where(branch => !string.IsNullOrWhiteSpace(branch))// first is ""
+                .OrderByDescending(branch => branch.Contains(ActiveBranchIndicator))// * for current branch
+                .Select(line => line.Trim());// trim justify space
         }
 
         /// <summary>

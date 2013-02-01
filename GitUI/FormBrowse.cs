@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -112,14 +113,9 @@ namespace GitUI
 
         private const string DiffTabPageTitleBase = "Diff";
 
-        /// <summary>
-        /// For VS designer
-        /// </summary>
+        /// <summary>For VS designer</summary>
         private FormBrowse()
-            : this(null, string.Empty)
-        {
-        }
-
+            : this(null, string.Empty) { }
 
         public FormBrowse(GitUICommands aCommands, string filter)
             : base(true, aCommands)
@@ -127,7 +123,7 @@ namespace GitUI
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
-
+           
             // set tab page images
             {
                 var imageList = new ImageList();
@@ -142,6 +138,8 @@ namespace GitUI
             }
 
             RevisionGrid.UICommandsSource = this;
+            repoObjectsTree.UICommandsSource = this;
+            //repoObjectsTree.RepoChanged();
             AsyncLoader.DoAsync(() => PluginLoader.Load(), () => RegisterPlugins());
             RevisionGrid.GitModuleChanged += DashboardGitModuleChanged;
             filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
@@ -152,7 +150,7 @@ namespace GitUI
             {
                 _toolStripGitStatus = new ToolStripGitStatus
                                  {
-                                     ImageTransparentColor = System.Drawing.Color.Magenta
+                                     ImageTransparentColor = Color.Magenta
                                  };
                 if (aCommands != null)
                     _toolStripGitStatus.UICommandsSource = this;
@@ -260,7 +258,6 @@ namespace GitUI
             RevisionGrid.IndexWatcher.Changed += _indexWatcher_Changed;
 
             Cursor.Current = Cursors.Default;
-
 
             try
             {
@@ -410,10 +407,12 @@ namespace GitUI
 
             CheckForMergeConflicts();
             UpdateStashCount();
+
             // load custom user menu
             LoadUserMenu();
 
             UICommands.RaisePostBrowseInitialize(this);
+            repoObjectsTree.Reload();
 
             Cursor.Current = Cursors.Default;
         }
@@ -1538,7 +1537,7 @@ namespace GitUI
             if (UICommands.StartSubmodulesDialog(this))
                 Initialize();
         }
-        
+
         private void UpdateSubmoduleToolStripMenuItemClick(object sender, EventArgs e)
         {
             var submodule = (sender as ToolStripMenuItem).Tag as string;
@@ -1799,6 +1798,7 @@ namespace GitUI
 #endif
             }
 
+            repoObjectsTree.RepoChanged();
             Initialize();
             RevisionGrid.IndexWatcher.Reset();
             RegisterPlugins();
@@ -2199,15 +2199,15 @@ namespace GitUI
 
         private void toggleSplitViewLayout_Click(object sender, EventArgs e)
         {
-            EnabledSplitViewLayout(MainSplitContainer.Panel2.Height == 0 && MainSplitContainer.Height > 0);
+            EnabledSplitViewLayout(RightSplitContainer.Panel2.Height == 0 && RightSplitContainer.Height > 0);
         }
 
         private void EnabledSplitViewLayout(bool enabled)
         {
             if (enabled)
-                MainSplitContainer.SplitterDistance = (MainSplitContainer.Height / 5) * 2;
+                RightSplitContainer.SplitterDistance = (RightSplitContainer.Height / 5) * 2;
             else
-                MainSplitContainer.SplitterDistance = MainSplitContainer.Height;
+                RightSplitContainer.SplitterDistance = RightSplitContainer.Height;
         }
 
         private void editCheckedOutFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2879,7 +2879,5 @@ namespace GitUI
                 }
             }
         }
-
     }
-
 }

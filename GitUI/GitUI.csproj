@@ -193,6 +193,8 @@
     </Compile>
     <Compile Include="GitUIExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\SystemExtensions.cs" />
+    <Compile Include="Helpers\TreeViewExtensions.cs" />
     <Compile Include="Help\HelpImageDisplayUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -875,6 +877,34 @@
     <Compile Include="UserControls\FolderBrowserButton.Designer.cs">
       <DependentUpon>FolderBrowserButton.cs</DependentUpon>
     </Compile>
+    <Compile Include="RepoObjectsTree\ROT.DragDrops.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RepoObjectsTree\ROT.Nodes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RepoObjectsTree\ValueWatcher.cs" />
+    <Compile Include="RepoObjectsTree\ROT.Nodes.Branches.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RepoObjectsTree\RepoObjectsTree.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RepoObjectsTree\RepoObjectsTree.Designer.cs">
+      <DependentUpon>RepoObjectsTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RepoObjectsTree\ROT.Nodes.Remotes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RepoObjectsTree\ROT.Nodes.Stashes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RepoObjectsTree\ROT.Nodes.Submodules.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RepoObjectsTree\ROT.Nodes.Tags.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="WarningToolStripItem.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1325,6 +1355,9 @@
     <EmbeddedResource Include="UserControls\FolderBrowserButton.resx">
       <DependentUpon>FolderBrowserButton.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="RepoObjectsTree\RepoObjectsTree.resx">
+      <DependentUpon>RepoObjectsTree.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
@@ -1550,8 +1583,9 @@
     <None Include="Resources\Icons\IconSubmoduleRevisionDownDirty.png" />
     <None Include="Resources\Icons\IconSubmoduleRevisionUpDirty.png" />
     <None Include="Resources\Icons\IconRevertCommit.png" />
-    <None Include="Resources\Icons\HelpPullMergeFastForward.png" />
-    <None Include="Resources\Icons\HelpCommandMergeFastForward.png" />
+    <None Include="Resources\Icons\CollapseAll.png" />
+    <None Include="Resources\Icons\ExpandAll.png" />
+    <None Include="Resources\Icons\StashesClear.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

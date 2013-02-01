@@ -20,6 +20,7 @@ using GitUI.SettingsDialog.Pages;
 
 namespace GitUI
 {
+    /// <summary>Contains methods to invoke GitEx forms, dialogs, etc.</summary>
     public sealed class GitUICommands : IGitUICommands
     {
         public GitUICommands(GitModule module)
@@ -357,6 +358,8 @@ namespace GitUI
             return actionDone;
         }
 
+        #region Checkout
+
         public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote, string containRevison)
         {
             return DoAction(owner, true, PreCheckoutBranch, PostCheckoutBranch, () =>
@@ -391,6 +394,14 @@ namespace GitUI
         {
             return StartCheckoutBranchDialog(owner, branch, true);
         }
+
+        public bool StartCheckoutBranchDialog(string branch)
+        {
+            throw new NotImplementedException();
+            return StartCheckoutBranchDialog(null, branch);
+        }
+
+        #endregion Checkout
 
         public bool StartCompareRevisionsDialog(IWin32Window owner)
         {
@@ -655,11 +666,6 @@ namespace GitUI
         public bool StartInitializeDialog(string dir)
         {
             return StartInitializeDialog(null, dir, null);
-        }
-
-        public bool StartPushDialog()
-        {
-            return StartPushDialog(false);
         }
 
         /// <summary>
@@ -929,7 +935,7 @@ namespace GitUI
                 {
                     return false;
                 }
-            }            
+            }
         }
 
         public bool StartCherryPickDialog(IWin32Window owner)
@@ -942,6 +948,9 @@ namespace GitUI
             return StartCherryPickDialog(null);
         }
 
+        /// <summary>Start Merge dialog, using the specified branch.</summary>
+        /// <param name="owner">Owner of the dialog.</param>
+        /// <param name="branch">Branch to merge into the current branch.</param>
         public bool StartMergeBranchDialog(IWin32Window owner, string branch)
         {
             if (!RequiresValidWorkingDir(owner))
@@ -958,6 +967,8 @@ namespace GitUI
             return true;
         }
 
+        /// <summary>Start Merge dialog, using the specified branch.</summary>
+        /// <param name="branch">Branch to merge into the current branch.</param>
         public bool StartMergeBranchDialog(string branch)
         {
             return StartMergeBranchDialog(null, branch);
@@ -1373,6 +1384,11 @@ namespace GitUI
         public bool StartFileHistoryDialog(string fileName)
         {
             return StartFileHistoryDialog(fileName, null);
+        }
+
+        public bool StartPushDialog()
+        {
+            return StartPushDialog(false);
         }
 
         public bool StartPushDialog(IWin32Window owner, bool pushOnShow, out bool pushCompleted)
