@@ -23,6 +23,7 @@ namespace GitUI.UserControls
                 internal set { _TreeNode = value; ApplyStyle(); }
             }
 
+            /// <summary>Gets the parent node.</summary>
             public Node ParentNode { get; internal set; }
 
             /// <summary>Gets the <see cref="GitUICommands"/> reference.</summary>
@@ -37,7 +38,7 @@ namespace GitUI.UserControls
                 UiCommands = uiCommands;
                 IsDraggable = false;
                 ContextActions = new ContextAction[0];
-                ValidDrops = new DropAction[0];
+                AllowDrop = false;
             }
 
             /// <summary>Styles the <see cref="TreeNode"/>.</summary>
@@ -46,31 +47,36 @@ namespace GitUI.UserControls
                 TreeNode.NodeFont = Settings.Font;
             }
 
+            /// <summary>Occurs when the <see cref="Node"/> is selected.</summary>
             internal virtual void OnSelected() { }
+            /// <summary>Occurs when the <see cref="Node"/> is clicked.</summary>
             internal virtual void OnClick() { }
+            /// <summary>Occurs when the <see cref="Node"/> is double-clicked.</summary>
             internal virtual void OnDoubleClick() { }
             public virtual IEnumerable<ContextAction> ContextActions { get; protected set; }
 
-            /// <summary>true if this <see cref="Node"/> is draggable.</summary>
+            /// <summary>true if the <see cref="Node"/> is draggable.</summary>
             public virtual bool IsDraggable { get; protected set; }
-            /// <summary>true if this <see cref="Node"/> will accept a dropped object.</summary>
-            public virtual bool AllowDrop { get { return ValidDrops.Any(); } }
+            /// <summary>true if the <see cref="Node"/> will accept a dropped object.</summary>
+            public virtual bool AllowDrop { get; protected set; }
+            /// <summary>true if the <see cref="Node"/> will accept the specified <paramref name="dragged"/> object.</summary>
             public virtual bool Accepts(Node dragged) { return false; }
-            public virtual void DragOver(object draggedObject) { }
             /// <summary>Drops the object onto this <see cref="Node"/>.</summary>
             public virtual void Drop(object droppedObject) { }
-            public virtual IEnumerable<DropAction> ValidDrops { get; protected set; }
-
+          
+            /// <summary>Gets the <see cref="Node"/> from a <see cref="TreeNode"/>'s tag.</summary>
             public static Node GetNode(TreeNode treeNode)
             {
                 return (Node)treeNode.Tag;
             }
 
+            /// <summary>Casts the <see cref="System.Windows.Forms.TreeNode.Tag"/> to a <see cref="Node"/>.</summary>
             public static Node GetNodeSafe(TreeNode treeNode)
             {
                 return treeNode.Tag as Node;
             }
 
+            /// <summary>Executes an action if <see cref="TreeNode"/> holds a <see cref="Node"/>.</summary>
             public static bool OnNode(TreeNode treeNode, Action<Node> action)
             {
                 Node node = GetNodeSafe(treeNode);
@@ -84,7 +90,7 @@ namespace GitUI.UserControls
 
         }
 
-        /// <summary>base class for a node, with a parent</summary>
+        /// <summary>base class for a node with a (strongly-typed) parent</summary>
         abstract class Node<TParent> : Node
         {
             new public TParent ParentNode { get; private set; }
@@ -117,8 +123,8 @@ namespace GitUI.UserControls
 
         /* readme
          * Ok, so this may look a bit confusing, but here's the gist:
-         * On FormBrowse init or repo change, NewRepo is called:
-         *      basically sets the new git module and creates a new ListWatcher
+         * On FormBrowse init or repo change, RepoChanged is called:
+         *      basically creates a new ListWatcher
          * ListWatcher holds the previous value of the nodes
          * When FormBrowse is refreshed/reloaded, ReloadAsync is invoked
          * ReloadAsync calls ListWatcher.CheckUpdateAsync which will async get current values for the nodes
@@ -128,6 +134,7 @@ namespace GitUI.UserControls
         /// <summary>Base class for a root node in a <see cref="RepoObjectsTree"/>.</summary>
         abstract class RootNode : Node
         {
+            /// <summary><see cref="ValueWatcher"/> instance</summary>
             protected ValueWatcher _Watcher;
 
             protected RootNode(GitUICommands uiCommands, TreeNode treeNode = null)
@@ -150,6 +157,7 @@ namespace GitUI.UserControls
         class RootNode<TChild> : RootNode, ICollection<TChild>
             where TChild : Node
         {
+            /// <summary>Gets the root's child <see cref="Node"/>s.</summary>
             public virtual IList<TChild> Children { get; protected set; }
 
             protected readonly Func<ICollection<TChild>> _getValues;
@@ -238,8 +246,6 @@ namespace GitUI.UserControls
             #endregion ICollectionT (wraps Children)
         }
     }
-
-    internal class DropAction { }
 
     internal class ContextAction { }
 }

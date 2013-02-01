@@ -14,6 +14,7 @@ namespace GitUI.UserControls
         public RepoObjectsTree()
         {
             InitializeComponent();
+            Translate();
 
             GitUICommandsSourceSet += OnGitUICommandsSource;
 

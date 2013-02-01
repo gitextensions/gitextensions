@@ -151,14 +151,15 @@ namespace GitUI.UserControls
                 : base(uiCommands, BranchesNode.GetName(branch), level, parent, isLocal)
             {
                 IsActive = Equals(activeBranchPath, FullPath);
+                IsDraggable = true;
+                AllowDrop = true;
             }
 
+            /// <summary>true if this <see cref="BranchNode"/> is the active branch.</summary>
             public bool IsActive { get; private set; }
 
-            public override string ToString()
-            {
-                return Name;
-            }
+            /// <summary>Gets the branch's short name.</summary>
+            public override string ToString() { return Name; }
 
             /// <summary>Indicates whether this <see cref="BranchNode"/> is setup for remote tracking.</summary>
             public bool IsTrackingSetup(ConfigFile config)
@@ -166,6 +167,7 @@ namespace GitUI.UserControls
                 return !string.IsNullOrWhiteSpace(config.GetValue(GitHead.RemoteSettingName(FullPath)));
             }
 
+            /// <summary>Styles the <see cref="Node.TreeNode"/>.</summary>
             internal override void ApplyStyle()
             {
                 base.ApplyStyle();
@@ -176,22 +178,44 @@ namespace GitUI.UserControls
 
             }
 
+            /// <summary>Checkout the branch.</summary>
             internal override void OnDoubleClick()
             {
                 base.OnDoubleClick();
                 UiCommands.StartCheckoutBranchDialog(FullPath);
             }
 
-            public override bool AllowDrop { get { return true; } }
-
+            /// <summary>true if the <see cref="BranchNode"/> will accept the specified <paramref name="dragged"/> object.</summary>
             public override bool Accepts(Node dragged)
             {
-                return dragged is StashNode;
+                return dragged is StashNode || dragged is BranchNode;
             }
+
             public override void Drop(object droppedObject)
             {
                 base.Drop(droppedObject);
+                BranchNode branch = droppedObject as BranchNode;
+                if (branch != null)
+                {
+                    string activeBranch = UiCommands.Module.GetSelectedBranch();
+                    if (Equals(FullPath, activeBranch))
+                    {
+                        UiCommands.StartMergeBranchDialog(branch.FullPath);
+                    }
+                    else if (Equals(branch.FullPath, activeBranch))
+                    {
+                        UiCommands.StartMergeBranchDialog(FullPath);
+                    }
+                    // TODO: rebase on Alt+Drag
+                    return;
+                }
 
+                StashNode stashNode = droppedObject as StashNode;
+                if (stashNode != null)
+                {
+                    // normal -> Pop
+                    // Alt -> Apply
+                }
             }
         }
 
@@ -209,6 +233,15 @@ namespace GitUI.UserControls
         //        Remote = remote;
         //        FullBranchName = FullPath.Substring(FullPath.IndexOf(BranchesNode.Separator));
         //    }
+
+        //!if (targetBranch.IsRemote)
+        //{// local branch -> remote branch = push
+        //    uiCommands.StartPushDialog(
+        //        new GitPushAction(
+        //            ((RemoteBranchNode)targetBranch).Remote,
+        //            draggedBranch.FullPath,
+        //            targetBranch.FullPath));
+        //}
         //}
 
         /// <summary>part of a path leading to a branch(s)</summary>
@@ -266,7 +299,7 @@ namespace GitUI.UserControls
             }
         }
 
-        /// <summary>root "branches" node</summary>
+        /// <summary>Root "branches" node</summary>
         ///// <summary>list of <see cref="BaseBranchNode"/>s, including the <see cref="Active"/> branch, if applicable</summary>
         class BranchesNode : RootNode<BaseBranchNode>
         {
@@ -475,6 +508,7 @@ namespace GitUI.UserControls
             {
                 base.OnReloading(olds, news);
 
+                // recursive get branches...
                 List<string> branches = new List<string>();
 
                 Func<List<string>, BaseBranchNode, List<string>> getChildBranches = ((seed, node) =>
@@ -499,18 +533,20 @@ namespace GitUI.UserControls
                 }
 
                 Branches = branches;
+            }
 
-                //news.Aggregate(
-                //    news.Count,
-                //    (prevCount, node) =>
-                //    {
-                //        BranchPath branchPath = node as BranchPath;
-                //        if (branchPath != null)
-                //        {
-                //            return branchPath.Children.Count;
-                //        }
-                //        return 0;
-                //    });
+            /// <summary>Drops the object onto this <see cref="BranchNode"/>.</summary>
+            public override void Drop(object droppedObject)
+            {
+                base.Drop(droppedObject);
+                BranchNode branch = droppedObject as BranchNode;
+                if (branch != null)
+                {
+                    using (FormBranchSmall branchForm = new FormBranchSmall(UiCommands, branch.FullPath))
+                    {
+                        branchForm.ShowDialog();
+                    }
+                }
             }
         }
 

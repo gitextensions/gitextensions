@@ -52,15 +52,17 @@ namespace GitUI.UserControls
             }
         }
 
-        /// <summary>Occurs when an object is dragged into the <see cref="TreeView"/>.</summary>
+        /// <summary>Verifies that the dragged object is valid for dropping.
+        /// Occurs when an object is dragged into the <see cref="TreeView"/>.</summary>
         void OnTreeDragEnter(object sender, DragEventArgs e)
         {// set the target drop effect to the effect specified in OnTreeNodeDrag
-            e.Effect = IsValidData(e.Data)
+            e.Effect = IsValidDragData(e.Data)
                 ? e.AllowedEffect
                 : DragDropEffects.None;
         }
 
-        bool IsValidData(IDataObject data)
+        /// <summary>true if <paramref name="data"/> is valid for dragging.</summary>
+        bool IsValidDragData(IDataObject data)
         {
             var treeNode = GetDraggedTreeNode(data);
             if (treeNode == null) { return false; }
@@ -69,7 +71,8 @@ namespace GitUI.UserControls
             return (node != null) && node.IsDraggable;
         }
 
-        /// <summary>Occurs while the user is dragging an object over the <see cref="TreeView"/>.
+        /// <summary>Verifies that the dragged object is valid for dropping.
+        /// Occurs while the user is dragging an object over the <see cref="TreeView"/>.
         /// May occur multiple times during a single drag.</summary>
         void OnTreeDragOver(object sender, DragEventArgs e)
         {
@@ -112,10 +115,8 @@ namespace GitUI.UserControls
             OnTreeDragOver(sender, e);
             if (e.Effect == DragDropEffects.None) { return; }
 
-            // get dragged node
-            TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
-
-            var targetNode = GetTargetNode(e);
+            TreeNode draggedNode = GetDraggedTreeNode(e);
+            TreeNode targetNode = GetTargetNode(e);
 
             if (draggedNode != targetNode)
             {// dragged node NOT node at drop location
@@ -125,8 +126,6 @@ namespace GitUI.UserControls
                 target.Drop(dragged);
                 Highlight(targetNode, false);
             }
-
-            throw new NotImplementedException();
         }
 
         /// <summary>Gets the target <see cref="TreeNode"/>.</summary>
@@ -137,55 +136,6 @@ namespace GitUI.UserControls
 
             // get node at drop location
             return treeMain.GetNodeAt(targetPoint);
-        }
-
-        bool IsValidDrop(TreeNode draggedNode, TreeNode targetNode)
-        {
-            GitStash stash = draggedNode.Tag as GitStash;
-            if (stash != null)
-            {// stash -> local branch = apply stash
-
-
-                return true;
-            }
-
-            BranchNode draggedBranch = draggedNode.Tag as BranchNode;
-            if (draggedBranch != null)
-            {
-                if (draggedBranch.IsLocal)
-                {// local branch
-                    // local branch -> branches header = new branch
-                    // local branch -> remotes header = publish new
-
-                    BranchNode targetBranch = targetNode.Tag as BranchNode;
-                    if (targetBranch != null)
-                    {
-                        //!if (targetBranch.IsRemote)
-                        //{// local branch -> remote branch = push
-                        //    uiCommands.StartPushDialog(
-                        //        new GitPushAction(
-                        //            ((RemoteBranchNode)targetBranch).Remote,
-                        //            draggedBranch.FullPath,
-                        //            targetBranch.FullPath));
-                        //}
-                        //else if (targetBranch.IsLocal && Equals(git.GetSelectedBranch(), targetBranch.FullPath))
-                        //{// local branch -> current local branch
-                        //    // TODO: rebase on Alt+Drag
-                        //    uiCommands.StartMergeBranchDialog(draggedBranch.FullPath);
-                        //}
-                    }
-                }
-                else
-                {// remote
-                    // remote branch -> branch = pull/fetch
-                    // remote branch -> branches header = new local tracking branch
-
-
-                    throw new NotImplementedException();
-                }
-            }
-
-            throw new NotImplementedException();
         }
 
         TreeNode previousTarget;
@@ -202,7 +152,7 @@ namespace GitUI.UserControls
             return data.GetData(typeof(TreeNode)) as TreeNode;
         }
 
-        /// <summary>Highlights the specified <see cref="TreeNode"/> as a valid drop target.</summary>
+        /// <summary>Highlights or UN-highlights the specified <see cref="TreeNode"/> as a valid drop target.</summary>
         /// <param name="treeNode"><see cref="TreeNode"/> to highlight.</param>
         /// <param name="on">true to highlight, false to un-highlight.</param>
         static void Highlight(TreeNode treeNode, bool on = true)
@@ -229,117 +179,5 @@ namespace GitUI.UserControls
         {
             Node.OnNode(e.Node, node => node.OnDoubleClick());
         }
-
-        /// <summary>Represents a valid drag-drop action.</summary>
-        class DragDropAction
-        {
-            static DragDropAction<TDragged, TTarget> New<TDragged, TTarget>(
-                Func<TDragged, TTarget, GitUICommands, bool> action)
-                where TDragged : class
-                where TTarget : class
-            {
-                return new DragDropAction<TDragged, TTarget>(action);
-            }
-
-            /// <summary>Gets the type of the dragged object.</summary>
-            public Type DraggedType { get; private set; }
-            /// <summary>Gets the type of the target object.</summary>
-            public Type TargetType { get; private set; }
-            /// <summary>Gets the action to perform on the drag-drop. 
-            /// <remarks>Returns true if both the dragged and target objects are compatible.</remarks></summary>
-            public Func<object, object, GitUICommands, bool> Action { get; private set; }
-
-            public DragDropAction(Type draggedType, Type targetType, Func<object, object, GitUICommands, bool> action)
-            {
-                DraggedType = draggedType;
-                TargetType = targetType;
-                Action = action;
-            }
-
-            public static DragDropAction GetFirstOrDefault(TreeNode dragged, TreeNode target)
-            {
-                return AcceptableDragDrops
-                    .FirstOrDefault(
-                        dda =>
-                            dda.DraggedType == dragged.Tag.GetType() &&
-                            dda.TargetType == target.Tag.GetType());
-            }
-
-            public static bool IsValidDragDrop(TreeNode dragged, TreeNode target)
-            {
-                return GetFirstOrDefault(dragged, target) != null;
-            }
-
-            public static DragDropAction<TDragged, TTarget> GetDragDropAction<TDragged, TTarget>(
-                TreeNode dragged, TreeNode target)
-                where TDragged : class
-                where TTarget : class
-            {
-                return GetFirstOrDefault(dragged, target) as DragDropAction<TDragged, TTarget>;
-            }
-
-            static List<DragDropAction> AcceptableDragDrops;
-
-            static DragDropAction()
-            {
-                AcceptableDragDrops = new List<DragDropAction>();
-                AcceptableDragDrops.Add(New<BranchNode, BranchNode>((dragged, target, cmds) =>
-                {
-                    if (Equals(dragged, target)) { return false; }// disallow merge into same exact branch
-
-                    string currentBranch = cmds.GitModule.GetSelectedBranch();
-                    if (Equals(dragged.FullPath, currentBranch))
-                    {// current branch -> local branch = merge
-                        cmds.StartMergeBranchDialog(target.FullPath);
-                        return true;
-                    }
-
-                    if (Equals(target.FullPath, currentBranch))
-                    {// local branch -> current branch = merge
-                        cmds.StartMergeBranchDialog(dragged.FullPath);
-                        return true;
-                    }
-                    return false;
-                }));
-                //AcceptableDragDrops.Add(New<RemoteBranchNode, BranchesNode>((dragged, target, cmds) =>
-                //{
-                //    // TODO: check if local branch with same name already exists
-                //    //cmds.Module.GetLocalConfig().
-                //    var cmd = GitCommandHelpers.BranchCmd(dragged.FullBranchName, dragged.FullPath, false);
-                //    FormProcess.ShowDialog(null, cmd);
-
-                //    return true;
-                //}));
-                //AcceptableDragDrops.Add(New<Branch,RemotesList>());
-                AcceptableDragDrops.Add(New<BranchNode, BranchesNode>((dragged, target, cmds) =>
-                {// local branch -> branches header = new branch
-                    using (FormBranchSmall branchForm = new FormBranchSmall(cmds, dragged.FullPath))
-                    {
-                        branchForm.ShowDialog();
-                    }
-                    return true;
-                }));
-            }
-        }
-
-        /// <summary>Provides a strong-type, generic implementation of <see cref="DragDropAction"/>.</summary>
-        class DragDropAction<TDragged, TTarget> : DragDropAction
-            where TDragged : class
-            where TTarget : class
-        {
-            public Func<TDragged, TTarget, GitUICommands, bool> Action { get; private set; }
-
-            public DragDropAction(
-                Func<TDragged, TTarget, GitUICommands, bool> action)
-                : base(typeof(TDragged), typeof(TTarget),
-                (dragged, target, cmds) => action(
-                    ((TreeNode)dragged).Tag as TDragged,
-                    ((TreeNode)target).Tag as TTarget,
-                    cmds))
-            {
-                Action = action;
-            }
-        }
-    
     }
 }
