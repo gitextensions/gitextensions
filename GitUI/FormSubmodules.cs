@@ -126,7 +126,7 @@ namespace GitUI
 
             var modules = Module.GetSubmoduleConfigFile();
             modules.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
-            if (modules.GetConfigSections().Count > 0)
+            if (modules.ConfigSections.Count > 0)
             {
                 modules.Save();
                 Module.StageFile(".gitmodules");
