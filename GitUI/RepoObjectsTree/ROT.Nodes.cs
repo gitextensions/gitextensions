@@ -237,20 +237,15 @@ namespace GitUI.UserControls
                 _onReload = onReload ?? ((items, root) => { });
                 _addChild = addChild ?? ((nodes, child) => null);
                 Children = new List<TChild>();
-            }
 
-            /// <summary>Readies the tree set for a new repo. <remarks>Calls <see cref="RootNode.ReloadAsync"/>.</remarks></summary>
-            public override void RepoChanged()
-            {
                 _Watcher = _WatcherT = new ListWatcher<TChild>(
-                    _getValues,
-                    (olds, news) =>
-                    {
-                        Children.Clear(); // clear children in BG thread
-                        OnReloading(olds, news);
-                    },
-                    ReloadNodes);
-                base.RepoChanged();
+                  _getValues,
+                  (olds, news) =>
+                  {
+                      Children.Clear(); // clear children in BG thread
+                      OnReloading(olds, news);
+                  },
+                  ReloadNodes);
             }
 
             /// <summary>Reloads the set of nodes based on the specified <paramref name="items"/>.</summary>

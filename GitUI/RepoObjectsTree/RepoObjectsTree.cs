@@ -16,16 +16,17 @@ namespace GitUI.UserControls
             InitializeComponent();
             Translate();
 
-            GitUICommandsSourceSet += OnGitUICommandsSource;
-
             treeMain.ShowNodeToolTips = true;
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
         }
 
-        void OnGitUICommandsSource(object sender, IGitUICommandsSource uicommandssource)
+
+        bool isFirst = true;
+        protected override void OnUICommandsSourceChanged(object sender, IGitUICommandsSource newSource)
         {
-            GitUICommandsSourceSet -= OnGitUICommandsSource;// only do this once
+            base.OnUICommandsSourceChanged(sender, newSource);
+
             DragDrops();
 
             AddRootNode(new BranchesNode(new TreeNode(Strings.branches.Text), UICommands,
@@ -42,7 +43,16 @@ namespace GitUI.UserControls
            );
             //AddTreeSet(nodeTags, ...);
 
-            RepoChanged();
+            if (isFirst)
+            {// bypass reloading twice 
+                // (once from initial UICommandsSource being set)
+                // (once from FormBrowse Initialize())
+                isFirst = false;
+            }
+            else
+            {
+                RepoChanged();
+            }
         }
 
         void AddTreeSet<T>(
