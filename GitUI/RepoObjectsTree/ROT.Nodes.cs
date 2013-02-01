@@ -207,7 +207,7 @@ namespace GitUI.UserControls
             }
         }
 
-        /// <summary>Root node in a <see cref="RepoObjectsTree"/> of type <see cref="TChild"/>.</summary>
+        /// <summary>Root node in a <see cref="RepoObjectsTree"/>, with children of type <see cref="TChild"/>.</summary>
         class RootNode<TChild> : RootNode, ICollection<TChild>
             where TChild : Node
         {

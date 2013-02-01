@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using System.Linq;
 
 namespace GitUI.UserControls
 {
@@ -352,19 +353,19 @@ namespace GitUI.UserControls
                            : branch;
             }
 
-            public static bool IsParentOf(BaseBranchNode parent, string branch)
+            static bool IsParentOf(BaseBranchNode parent, string branch)
             {
                 return String.Equals((string)GetFullParentPath(branch), parent.FullPath);
             }
 
             /// <summary>Indicates whether a branch HAS or IS a parent.</summary>
-            public static bool IsOrHasParent(string branch)
+            static bool IsOrHasParent(string branch)
             {
                 return branch.Contains(SeparatorStr);
             }
 
             /// <summary>Indicates whether the specified</summary>
-            public static bool IsInFamilyTree(BranchPathNode parent, string branch, out BranchPathNode commonAncestor)
+            static bool IsInFamilyTree(BranchPathNode parent, string branch, out BranchPathNode commonAncestor)
             {
                 if (IsParentOf(parent, branch))
                 {
@@ -379,13 +380,13 @@ namespace GitUI.UserControls
             }
 
             /// <summary>Gets the full path of the parent for the specified <paramref name="branch"/>.</summary>
-            public static string GetFullParentPath(string branch)
+            static string GetFullParentPath(string branch)
             {
                 return branch.Substring(0, EndOfParentPath(branch));
             }
 
             /// <summary>Gets the end index of the parent of the specified <paramref name="branch"/>.</summary>
-            public static int EndOfParentPath(string branch)
+            static int EndOfParentPath(string branch)
             {
                 return branch.LastIndexOf(Separator);
             }
@@ -466,7 +467,7 @@ namespace GitUI.UserControls
 
             /// <summary>Gets the children of the specified <paramref name="parent"/> node OR
             /// Creates a new lineage of <see cref="BaseBranchNode"/>s.</summary>
-            public static BranchPathNode GetChildren(GitUICommands uiCommands, BranchPathNode parent, string branch, string activeBranch, out BranchPathNode currentParent)
+            static BranchPathNode GetChildren(GitUICommands uiCommands, BranchPathNode parent, string branch, string activeBranch, out BranchPathNode currentParent)
             {
                 string[] splits = branch.Split(Separator);// issues/iss1334 -> issues, iss1334
                 int nParents = splits.Length - 1;
@@ -544,7 +545,50 @@ namespace GitUI.UserControls
                 }
 
                 Branches = branches;
+
+                SetFavorites(news);
             }
+
+            void SetFavorites(ICollection<BaseBranchNode> news)
+            {
+                favorites.Clear();
+                var favs = UiCommands.Module.GetLocalConfig().FindConfigSection("favorites");
+                if (favs == null)
+                {
+                    return;
+                } // else...
+
+                Func<List<BranchNode>, BaseBranchNode, List<BranchNode>> getFavBranches = ((seed, node) =>
+                {
+                    BranchPathNode branchPath = node as BranchPathNode;
+                    if (branchPath != null)
+                    {
+                        // BranchPath
+                        return branchPath.Recurse(
+                            seed,
+                            (bbp, favors) => (from branchNode in branchPath.Children
+                                              let branch = branchNode as BranchNode
+                                              where branch != null
+                                              let isFav = !favs.GetValue(branchNode.FullPath).IsNullOrWhiteSpace()
+                                              where isFav
+                                              select branch).ToList());
+                    } // else (Branch)
+                    BranchNode branchNod = node as BranchNode;
+                    if (branchNod != null && !favs.GetValue(branchNod.FullPath).IsNullOrWhiteSpace())
+                    {
+                        return new List<BranchNode> { branchNod };
+                    }
+
+                    return new List<BranchNode>();
+                });
+
+                foreach (BaseBranchNode baseBranchNode in news)
+                {
+                    favorites.AddRange(getFavBranches(favorites, baseBranchNode));
+                }
+            }
+
+            List<BranchNode> favorites = new List<BranchNode>();
 
             protected override IEnumerable<DragDropAction> CreateDragDropActions()
             {
