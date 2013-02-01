@@ -972,6 +972,8 @@ namespace GitUI
                 foreach (var gitItemStatus in gitItemStatusses)
                 {
                     toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
+                    if (gitItemStatus.Name.EndsWith("/"))
+                        gitItemStatus.Name = gitItemStatus.Name.TrimEnd('/');
                     files.Add(gitItemStatus);
                 }
 
@@ -1002,7 +1004,8 @@ namespace GitUI
                     var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatuses;
                     Unstaged.GitItemStatuses = null;
 
-                    unStagedFiles.RemoveAll(item => files.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
+                    unStagedFiles.RemoveAll(item => !item.IsSubmodule && files.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
+                    unStagedFiles.RemoveAll(item => item.IsSubmodule && !item.SubmoduleStatus.IsDirty && files.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
 
                     Unstaged.GitItemStatuses = unStagedFiles;
                     Unstaged.SelectStoredNextIndex();
