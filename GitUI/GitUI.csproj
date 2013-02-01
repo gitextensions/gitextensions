@@ -1586,6 +1586,7 @@
     <None Include="Resources\Icons\CollapseAll.png" />
     <None Include="Resources\Icons\ExpandAll.png" />
     <None Include="Resources\Icons\StashesClear.png" />
+    <None Include="Resources\Icons\HelpPullMergeFastForward.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

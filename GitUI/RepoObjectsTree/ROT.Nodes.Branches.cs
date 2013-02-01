@@ -175,7 +175,6 @@ namespace GitUI.UserControls
                 {
                     TreeNode.NodeFont = new Font(TreeNode.NodeFont, FontStyle.Bold);
                 }
-
             }
 
             /// <summary>Checkout the branch.</summary>
@@ -188,9 +187,9 @@ namespace GitUI.UserControls
             protected override IEnumerable<DragDropAction> CreateDragDropActions()
             {
                 var stashDD = new DragDropAction<StashNode>(
-                    (draggedStash) => IsActive, 
+                    (draggedStash) => IsActive,
                     (draggedStash) =>
-                    { 
+                    {
                         // normal -> Pop
                         // Alt -> Apply
                         UiCommands.StartStashDialog();
@@ -302,6 +301,12 @@ namespace GitUI.UserControls
                     }
                 }
                 return egg;
+            }
+
+            internal override void ApplyStyle()
+            {
+                base.ApplyStyle();
+                TreeNode.NodeFont = new Font(TreeNode.NodeFont, FontStyle.Italic);
             }
         }
 
