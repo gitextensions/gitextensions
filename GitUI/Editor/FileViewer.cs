@@ -338,7 +338,8 @@ namespace GitUI.Editor
 
         public void ViewFile(string fileName)
         {
-            ViewItem(fileName, () => GetImage(fileName), () => GetFileText(fileName));
+            ViewItem(fileName, () => GetImage(fileName), () => GetFileText(fileName),
+                () => GitCommandHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""));
         }
 
         public string GetText()
@@ -438,18 +439,18 @@ namespace GitUI.Editor
 
         public void ViewGitItem(string fileName, string guid)
         {
-            ViewItem(fileName, () => GetImage(fileName, guid), () => Module.GetFileText(guid, Encoding));
+            ViewItem(fileName, () => GetImage(fileName, guid), () => Module.GetFileText(guid, Encoding),
+                () => GitCommandHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), guid));
         }
 
-        private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText)
+        private void ViewItem(string fileName, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText)
         {
-            if (fileName.EndsWith("/"))
+            string fullPath = Path.GetFullPath(Path.Combine(Module.WorkingDir, fileName));
+            if (fileName.EndsWith("/") || Directory.Exists(fullPath))
             {
-                string fullPath = Path.GetFullPath(Path.Combine(Module.WorkingDir, fileName));
                 if (GitModule.ValidWorkingDir(fullPath))
                 {
-                    ViewText(fileName,
-                             GitCommandHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""));
+                    _async.Load(getSubmoduleText, text => ViewText(fileName, text));
                 }
                 else
                 {

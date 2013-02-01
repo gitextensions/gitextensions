@@ -1678,6 +1678,8 @@ namespace GitUI
                     StartApplyPatchDialog(args.Length == 3 ? args[2] : "");
                     return;
                 case "blame":       // filename
+                    if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]))
+                        Module = Module.SuperprojectModule;
                     RunBlameCommand(args);
                     return;
                 case "branch":
@@ -1709,6 +1711,8 @@ namespace GitUI
                     Module.OpenWithDifftool(args[2]);
                     return;
                 case "filehistory": // filename
+                    if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]))
+                        Module = Module.SuperprojectModule;
                     RunFileHistoryCommand(args);
                     return;
                 case "fileeditor":  // filename
