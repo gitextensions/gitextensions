@@ -3016,10 +3016,10 @@ namespace GitCommands
 
         public SubmoduleStatus CheckSubmoduleStatus(string commit, string oldCommit, CommitData data, CommitData olddata, bool loaddata = false)
         {
-            if (!ValidWorkingDir())
+            if (!ValidWorkingDir() || oldCommit == null)
                 return SubmoduleStatus.NewSubmodule;
 
-            if (commit == oldCommit)
+            if (commit == null || commit == oldCommit)
                 return SubmoduleStatus.Unknown;
 
             string baseCommit = GetMergeBase(commit, oldCommit);
