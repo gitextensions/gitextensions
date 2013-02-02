@@ -57,10 +57,7 @@ namespace GitCommands
             Branch = branchStart.Substring(0, branchStart.IndexOf(':'));
         }
 
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() { return Name; }
 
         public override bool Equals(object obj)
         {

@@ -1346,14 +1346,60 @@ namespace GitCommands
             return RunGitCmd(arguments);
         }
 
-        public string StashApply()
+        public string StashApply(string stash = null)
         {
-            return RunGitCmd("stash apply");
+            return RunGitCmd(string.Format("stash apply {0}", stash));
         }
 
+        /// <summary>Remove all the stashed states.</summary>
         public string StashClear()
         {
             return RunGitCmd("stash clear");
+        }
+
+        /// <summary>Show the changes recorded in the stash as a diff between the stashed state and its original parent.</summary>
+        public string StashShowDiff(string stash = null)
+        {
+            return RunGit(string.Format("stash show {0}", stash));
+        }
+
+        /// <summary>Remove a single stashed state from the stash list and apply it on top of the current working tree state.</summary>
+        /// <param name="stash">Stash to pop.</param>
+        /// <param name="includeIndex">Try to reinstate both working tree and index changes.</param>
+        public string StashPop(string stash = null, bool includeIndex = false)
+        {
+            return RunGit(
+                string.Format(
+                    "stash pop {0} {1}",
+                    includeIndex ? "--index" : "",
+                    stash
+                )
+            );
+        }
+
+        /// <summary>Creates and checks out a new branch starting from the commit at which the stash was originally created.
+        /// Applies the changes recorded in the stash to the new working tree and index.</summary>
+        public string StashBranch(string branchName, string stash = null)
+        {
+            return RunGit(
+                string.Format(
+                    "stash branch {0} {1}",
+                    branchName,
+                    stash
+                )
+            );
+        }
+
+        /// <summary>Remove a single stashed state from the stash list. 
+        /// <remarks>When no stash is given, removes the latest one.</remarks></summary>
+        public string StashDelete(string stash = null)
+        {
+            return RunGit(
+               string.Format(
+                   "stash drop {0}",
+                   stash
+               )
+           );
         }
 
         public string ResetSoft(string commit)
