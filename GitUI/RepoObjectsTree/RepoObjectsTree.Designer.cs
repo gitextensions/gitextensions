@@ -34,6 +34,7 @@ namespace GitUI.UserControls
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RepoObjectsTree));
             this.menuBranches = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnNewBranch = new System.Windows.Forms.ToolStripMenuItem();
             this.toolbarMain = new System.Windows.Forms.ToolStrip();
@@ -105,7 +106,7 @@ namespace GitUI.UserControls
             // toolbtnExpandAll
             // 
             this.toolbtnExpandAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolbtnExpandAll.Image = global::GitUI.Properties.Resources.ExpandAll;
+            this.toolbtnExpandAll.Image = ((System.Drawing.Image)(resources.GetObject("toolbtnExpandAll.Image")));
             this.toolbtnExpandAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolbtnExpandAll.Name = "toolbtnExpandAll";
             this.toolbtnExpandAll.Size = new System.Drawing.Size(23, 22);
@@ -116,7 +117,7 @@ namespace GitUI.UserControls
             // toolbtnCollapseAll
             // 
             this.toolbtnCollapseAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolbtnCollapseAll.Image = global::GitUI.Properties.Resources.CollapseAll;
+            this.toolbtnCollapseAll.Image = ((System.Drawing.Image)(resources.GetObject("toolbtnCollapseAll.Image")));
             this.toolbtnCollapseAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolbtnCollapseAll.Name = "toolbtnCollapseAll";
             this.toolbtnCollapseAll.Size = new System.Drawing.Size(23, 22);
@@ -228,43 +229,43 @@ namespace GitUI.UserControls
             // menuRemote
             // 
             this.menuRemote.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnubtnRemoteRename,
-            this.mnubtnRemotePrune,
-            this.mnubtnRemoteRemove,
+            this.toolbtnRemotePull,
             this.mnubtnRemoteFetch,
-            this.toolbtnRemotePull});
+            this.mnubtnRemotePrune,
+            this.mnubtnRemoteRename,
+            this.mnubtnRemoteRemove});
             this.menuRemote.Name = "contextmenuRemote";
-            this.menuRemote.Size = new System.Drawing.Size(118, 114);
+            this.menuRemote.Size = new System.Drawing.Size(153, 136);
             // 
             // mnubtnRemoteRename
             // 
             this.mnubtnRemoteRename.Name = "mnubtnRemoteRename";
-            this.mnubtnRemoteRename.Size = new System.Drawing.Size(117, 22);
+            this.mnubtnRemoteRename.Size = new System.Drawing.Size(152, 22);
             this.mnubtnRemoteRename.Text = "Rename";
             // 
             // mnubtnRemotePrune
             // 
             this.mnubtnRemotePrune.Name = "mnubtnRemotePrune";
-            this.mnubtnRemotePrune.Size = new System.Drawing.Size(117, 22);
+            this.mnubtnRemotePrune.Size = new System.Drawing.Size(152, 22);
             this.mnubtnRemotePrune.Text = "Prune";
             // 
             // mnubtnRemoteRemove
             // 
             this.mnubtnRemoteRemove.Name = "mnubtnRemoteRemove";
-            this.mnubtnRemoteRemove.Size = new System.Drawing.Size(117, 22);
+            this.mnubtnRemoteRemove.Size = new System.Drawing.Size(152, 22);
             this.mnubtnRemoteRemove.Text = "Remove";
             this.mnubtnRemoteRemove.ToolTipText = "Remove the remote and all tracking branches";
             // 
             // mnubtnRemoteFetch
             // 
             this.mnubtnRemoteFetch.Name = "mnubtnRemoteFetch";
-            this.mnubtnRemoteFetch.Size = new System.Drawing.Size(117, 22);
+            this.mnubtnRemoteFetch.Size = new System.Drawing.Size(152, 22);
             this.mnubtnRemoteFetch.Text = "Fetch";
             // 
             // toolbtnRemotePull
             // 
             this.toolbtnRemotePull.Name = "toolbtnRemotePull";
-            this.toolbtnRemotePull.Size = new System.Drawing.Size(117, 22);
+            this.toolbtnRemotePull.Size = new System.Drawing.Size(152, 22);
             this.toolbtnRemotePull.Text = "Pull";
             // 
             // menuStash

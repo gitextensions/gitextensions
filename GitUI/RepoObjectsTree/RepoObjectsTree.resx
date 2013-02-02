@@ -123,6 +123,32 @@
   <metadata name="toolbarMain.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="toolbtnExpandAll.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAF2SURBVDhPY2CgJQgJCeEkxfzQ0FA2nOqBkvxAA+8HBwe3
+        ANnMhAwGqvUG4qdArItVbVJS0ra4uLj/UHw8JiZGEZtCkGVANS0wtYmJiQ+Tk5OFUNRmZWXxtLW1vQbS
+        /2E4Ozv7ExAHIivMzc0VBYrtQ1aXk5Pzv7q6OhnFwP////P8/ft339atW/+Xl5ej4LKysmmFhYWcQHEb
+        IH6GLN/U1PT/5s2bf//9+xeO4RugocxAia4bN2787+7u/t/a2grHLS0t94H4F7LYggUL/r9///4NUI8r
+        3vAGKgh8+/bt18WLF/+fNGkSVrx///7/f/78OQ50hByhyAPLAw1V//Xr1629e/f+nzdvHhwvXLjw/927
+        d/8D5acBDcOdZGC2IKdDULgCNa67fv36/5UrV/7fsmULyIvfgWJRMPVkpUOgAaVv3rz5+/v377tAthaS
+        5eSnQ6BBliAXgwwbTYdDPR0ip3pi0iFRuQRdEa50SJZhME3I6ZCQQQAxsAJJ8sUG+wAAAABJRU5ErkJg
+        gg==
+</value>
+  </data>
+  <data name="toolbtnCollapseAll.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFxSURBVDhPY2AgAqxcuZKTCGXEKVm2bJnHihUrXi9fvryU
+        OB14VM2bN68RiP8j4XVTpkzhIdng3t5eoUmTJm0H4v/oePLkybf6+/vViTa0vb3duLW19TEQ/8eF29ra
+        vra0tAQSNLSioiINiH+Ul5f/h+GJEyf+f/ny5f81a9bAxWByZWVlXaGhocwYBhcWFnJmZWXNAeL/yBgY
+        If9//Phx8d+/f1pAPOfMmTP/gWpR1GRnZ+/Lzc0VRTF09+7d/EBbX8TFxf0H4ZSUlP+HDh36DzRkJhDD
+        kwyQHf7q1auvDQ0NYHUwXFBQkIti4P///9nevn17Ii0t7X9OTs7/Bw8e/ACKJcAUIadDoKGKP3/+PLVo
+        0aL/ISEh/6dNmwZUilALNxioUPTu3bsvv3z5chfI1oVJYEuHIAcA1XRdvnwZFCTzcEYOyCCgYng6I5QO
+        gertQYYTjO3RdDgE0iFyLFKcDrElCbLTIaH0RXQ6JGQQPnkAxYMK9xluKUUAAAAASUVORK5CYII=
+</value>
+  </data>
   <metadata name="menuBranch.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>11, 54</value>
   </metadata>
