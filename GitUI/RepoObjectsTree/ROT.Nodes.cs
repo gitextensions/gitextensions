@@ -86,13 +86,27 @@ namespace GitUI.UserControls
             /// <summary>Casts the <see cref="System.Windows.Forms.TreeNode.Tag"/> to a <see cref="Node"/>.</summary>
             public static Node GetNodeSafe(TreeNode treeNode)
             {
-                return treeNode.Tag as Node;
+                return GetNodeSafe<Node>(treeNode);
+            }
+
+            /// <summary>Casts the <see cref="System.Windows.Forms.TreeNode.Tag"/> to a <see cref="Node"/>.</summary>
+            public static TNode GetNodeSafe<TNode>(TreeNode treeNode)
+                where TNode : Node
+            {
+                return treeNode.Tag as TNode;
             }
 
             /// <summary>Executes an action if <see cref="TreeNode"/> holds a <see cref="Node"/>.</summary>
             public static bool OnNode(TreeNode treeNode, Action<Node> action)
             {
-                Node node = GetNodeSafe(treeNode);
+                return OnNode<Node>(treeNode, action);
+            }
+
+            /// <summary>Executes an action if <see cref="TreeNode"/> holds a <see cref="Node"/>.</summary>
+            public static bool OnNode<TNode>(TreeNode treeNode, Action<TNode> action)
+                where TNode : Node
+            {
+                TNode node = GetNodeSafe<TNode>(treeNode);
                 if (node != null)
                 {
                     action(node);

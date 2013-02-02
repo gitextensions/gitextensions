@@ -414,6 +414,9 @@
     <Compile Include="RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="RepoObjectsTree\ROT.ContextActions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Script\RunScript.cs" />
     <Compile Include="Script\ScriptInfo.cs" />
     <Compile Include="Script\ScriptManager.cs" />

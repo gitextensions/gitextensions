@@ -236,6 +236,26 @@ namespace GitUI.UserControls
 
                 return new DragDropAction[] { stashDD, branchDD, };
             }
+
+            public void Checkout()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void CreateBranch()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Delete()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void DeleteForce()
+            {
+                throw new NotImplementedException();
+            }
         }
 
         //class RemoteBranchNode : BranchNode
@@ -322,9 +342,24 @@ namespace GitUI.UserControls
                 base.ApplyStyle();
                 TreeNode.NodeFont = new Font(TreeNode.NodeFont, FontStyle.Italic);
             }
+
+            public void CreateWithin()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void DeleteAll()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void DeleteAllForce()
+            {
+                throw new NotImplementedException();
+            }
         }
 
-        /// <summary>Root "branches" node</summary>
+        /// <summary>Root "branches" node.</summary>
         ///// <summary>list of <see cref="BaseBranchNode"/>s, including the <see cref="Active"/> branch, if applicable</summary>
         class BranchesNode : RootNode<BaseBranchNode>
         {
@@ -623,6 +658,11 @@ namespace GitUI.UserControls
                             }
                         }), 
                 };
+            }
+
+            public void CreateBranch()
+            {
+                throw new NotImplementedException();
             }
         }
 

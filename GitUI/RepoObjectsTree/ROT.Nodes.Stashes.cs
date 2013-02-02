@@ -34,12 +34,38 @@ namespace GitUI.UserControls
             return treeNode;
         }
 
+        /// <summary>Stash node.</summary>
         sealed class StashNode : Node<GitStash, RootNode<StashNode>>
         {
             public StashNode(GitStash stash, GitUICommands uiCommands)
                 : base(stash, null, uiCommands)
             {
                 IsDraggable = true;
+            }
+
+            public void Pop()
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void Apply()
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void Delete()
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void ShowDiff()
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public void CreateBranch()
+            {
+                throw new System.NotImplementedException();
             }
         }
     }

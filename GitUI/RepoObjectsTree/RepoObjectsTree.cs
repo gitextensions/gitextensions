@@ -17,6 +17,8 @@ namespace GitUI.UserControls
             InitializeComponent();
             Translate();
 
+            RegisterContextActions();
+
             imgList.Images.Add(branchesKey, Resources.Branch);
             imgList.Images.Add(branchKey, Resources.Branch);
             imgList.Images.Add(branchPathKey, Resources.Namespace);
@@ -47,7 +49,7 @@ namespace GitUI.UserControls
                 {
                     var branchNames = Module.GetBranchNames().ToArray();
                     return BranchesNode.GetBranchTree(UICommands, branchNames);
-                }, 
+                },
                 OnAddBranchNode
             ));
             AddTreeSet(new TreeNode(Strings.stashes.Text)
@@ -86,6 +88,7 @@ namespace GitUI.UserControls
         void AddRootNode(RootNode rootNode)
         {
             rootNode.TreeNode.SelectedImageKey = rootNode.TreeNode.ImageKey;
+            rootNode.TreeNode.Tag = rootNode;
             treeMain.Nodes.Add(rootNode.TreeNode);
             rootNodes.Add(rootNode);
         }
