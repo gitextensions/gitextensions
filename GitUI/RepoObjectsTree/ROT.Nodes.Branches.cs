@@ -15,6 +15,10 @@ namespace GitUI.UserControls
     // "branches"
     public partial class RepoObjectsTree
     {
+        static readonly string branchesKey = "branches";
+        static readonly string branchKey = "branch";
+        static readonly string branchPathKey = "branchPath";
+
         static void OnReloadBranches(ICollection<BaseBranchNode> items, RootNode<BaseBranchNode> rootNode)
         {
             // todo: cache: per Repo, on BranchNode.FullPath
@@ -25,10 +29,19 @@ namespace GitUI.UserControls
         }
 
         /// <summary>Adds a <see cref="BaseBranchNode"/>, and recursivley, its children.</summary>
-        static TreeNode OnAddBranchNode(TreeNodeCollection nodes, BaseBranchNode branchNode)
+        TreeNode OnAddBranchNode(TreeNodeCollection nodes, BaseBranchNode branchNode)
         {
-            TreeNode treeNode = nodes.Add(branchNode.FullPath, branchNode.Name);
-            treeNode.Tag = branchNode;
+            bool isBranch = branchNode is BranchNode;
+            TreeNode treeNode = new TreeNode(branchNode.Name)
+            {
+                Name = branchNode.FullPath,
+                Tag = branchNode,
+                ContextMenuStrip = isBranch ? menuBranch : menuBranchPath,
+                ImageKey = isBranch ? branchKey : branchPathKey,
+                SelectedImageKey = isBranch ? branchKey : branchPathKey,
+            };
+
+            nodes.Add(treeNode);
             branchNode.TreeNode = treeNode;
 
             BranchPathNode branchPath = branchNode as BranchPathNode;
@@ -316,14 +329,14 @@ namespace GitUI.UserControls
         class BranchesNode : RootNode<BaseBranchNode>
         {
             public BranchesNode(TreeNode rootNode, GitUICommands uiCommands,
-                Func<ICollection<BaseBranchNode>> getBranches)
+                Func<ICollection<BaseBranchNode>> getBranches, Func<TreeNodeCollection, BaseBranchNode, TreeNode> onAddBranchNode)
                 : base(
                 rootNode,
                 uiCommands,
                 getBranches,
                 null,
                 OnReloadBranches,
-                OnAddBranchNode) { }
+                onAddBranchNode) { }
 
             /// <summary>Gets the current active branch. <remarks>May be null, if HEAD is detached.</remarks></summary>
             public BaseBranchNode Active { get; private set; }
