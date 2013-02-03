@@ -2157,8 +2157,10 @@ namespace GitUI
                             runScriptToolStripMenuItem.DropDown.Items.Add(item);
                     }
                 }
-                toolStripSeparator7.Visible = addedScripts > 1;
-                runScriptToolStripMenuItem.Visible = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
+
+                bool showScriptsMenu = addedScripts > 1;
+                toolStripSeparator7.Visible = showScriptsMenu;
+                runScriptToolStripMenuItem.Visible = showScriptsMenu; 
             }
         }
 
