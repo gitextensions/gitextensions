@@ -70,9 +70,13 @@
     <Compile Include="AsyncLoader.cs" />
     <Compile Include="CommitData.cs" />
     <Compile Include="Config\SettingKeyString.cs" />
+    <Compile Include="Core\SimpleStructured.cs" />
     <Compile Include="DateTimeUtils.cs" />
     <Compile Include="ExceptionUtils.cs" />
     <Compile Include="FileHelper.cs" />
+    <Compile Include="GitExtLinks\GitExtLink.cs" />
+    <Compile Include="GitExtLinks\GitExtLinkDef.cs" />
+    <Compile Include="GitExtLinks\GitExtLinksParser.cs" />
     <Compile Include="Git\GitBisectOption.cs" />
     <Compile Include="Git\GitCheckoutBranchCmd.cs" />
     <Compile Include="Git\GitCommand.cs" />

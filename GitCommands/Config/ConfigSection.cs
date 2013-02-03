@@ -136,4 +136,20 @@ namespace GitCommands.Config
         }
 
     }
+
+    public static class ConfigSectionExt
+    {
+        public static bool GetValueAsBool(this ConfigSection section, string name, bool defaultValue)
+        {
+            bool result = defaultValue;
+            string value = section.GetValue(name);
+            bool.TryParse(value, out result);
+            return result;
+        }
+
+        public static void SetValueAsBool(this ConfigSection section, string name, bool value)
+        {
+            section.SetValue(name, value.ToString());
+        }
+    }
 }
