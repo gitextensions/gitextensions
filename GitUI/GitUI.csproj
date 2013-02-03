@@ -386,12 +386,12 @@
     <Compile Include="Plugin\PluginExtraction.cs" />
     <Compile Include="ProcessOutputTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Custom.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Resources.Custom.cs">
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RepoHosting\CreatePullRequestForm.cs">
@@ -413,6 +413,9 @@
     </Compile>
     <Compile Include="RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RepoObjectsTree\ROT.ContextActions.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Script\RunScript.cs" />
     <Compile Include="Script\ScriptInfo.cs" />
@@ -1586,6 +1589,22 @@
     <None Include="Resources\Icons\CollapseAll.png" />
     <None Include="Resources\Icons\ExpandAll.png" />
     <None Include="Resources\Icons\StashesClear.png" />
+    <None Include="Resources\Icons\HelpPullMergeFastForward.png" />
+    <None Include="Resources\Icons\AddBranch.png" />
+    <None Include="Resources\Icons\AddConnection.png" />
+    <None Include="Resources\Icons\ApplyChanges.png" />
+    <None Include="Resources\Icons\Branch.png" />
+    <None Include="Resources\Icons\CheckOut.png" />
+    <None Include="Resources\Icons\DeleteRed.png" />
+    <None Include="Resources\Icons\Disconnect.png" />
+    <None Include="Resources\Icons\Rename.png" />
+    <None Include="Resources\Icons\Stashes.png" />
+    <None Include="Resources\Icons\StashPop.png" />
+    <None Include="Resources\Icons\DeleteSoft.png" />
+    <None Include="Resources\Icons\ShowDiff.png" />
+    <None Include="Resources\Icons\Cut.png" />
+    <Content Include="Resources\Icons\BranchNew.png" />
+    <Content Include="Resources\Icons\Namespace.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1666,7 +1685,6 @@
     </None>
     <None Include="Resources\ChangeLog.md" />
     <None Include="Resources\Icons\merge.png" />
-    <None Include="Resources\Icons\fetch.png" />
     <None Include="Resources\Icons\Rebase.png" />
     <None Include="Properties\DataSources\GitCommands.GitBlame.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitHead.datasource" />

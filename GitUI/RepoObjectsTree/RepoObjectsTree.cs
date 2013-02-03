@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Properties;
 
 namespace GitUI.UserControls
 {
@@ -16,33 +17,62 @@ namespace GitUI.UserControls
             InitializeComponent();
             Translate();
 
-            GitUICommandsSourceSet += OnGitUICommandsSource;
+            RegisterContextActions();
+
+            imgList.Images.Add(branchesKey, Resources.Branch);
+            imgList.Images.Add(branchKey, Resources.Branch);
+            imgList.Images.Add(branchPathKey, Resources.Namespace);
+            imgList.Images.Add(stashesKey, Resources.Stashes);
+            imgList.Images.Add(stashKey, Resources.Stashes);
 
             treeMain.ShowNodeToolTips = true;
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
         }
 
-        void OnGitUICommandsSource(object sender, IGitUICommandsSource uicommandssource)
+
+        bool isFirst = true;
+        protected override void OnUICommandsSourceChanged(object sender, IGitUICommandsSource newSource)
         {
-            GitUICommandsSourceSet -= OnGitUICommandsSource;// only do this once
+            base.OnUICommandsSourceChanged(sender, newSource);
+
             DragDrops();
 
-            AddNode(new BranchesNode(new TreeNode(Strings.branches.Text), UICommands,
+            AddRootNode(new BranchesNode(
+                new TreeNode(Strings.branches.Text)
+                {
+                    ContextMenuStrip = menuBranches,
+                    ImageKey = branchesKey
+                },
+                UICommands,
                 () =>
                 {
                     var branchNames = Module.GetBranchNames().ToArray();
                     return BranchesNode.GetBranchTree(UICommands, branchNames);
-                }
+                },
+                OnAddBranchNode
             ));
-            AddTreeSet(new TreeNode(Strings.stashes.Text),
+            AddTreeSet(new TreeNode(Strings.stashes.Text)
+                {
+                    ContextMenuStrip = menuStashes,
+                    ImageKey = stashesKey
+                },
                () => Module.GetStashes().Select(stash => new StashNode(stash, UICommands)).ToList(),
                OnReloadStashes,
                OnAddStash
            );
             //AddTreeSet(nodeTags, ...);
 
-            RepoChanged();
+            if (isFirst)
+            {// bypass reloading twice 
+                // (once from initial UICommandsSource being set)
+                // (once from FormBrowse Initialize())
+                isFirst = false;
+            }
+            else
+            {
+                RepoChanged();
+            }
         }
 
         void AddTreeSet<T>(
@@ -52,11 +82,13 @@ namespace GitUI.UserControls
             Func<TreeNodeCollection, T, TreeNode> itemToTreeNode)
             where T : Node
         {
-            AddNode(new RootNode<T>(rootTreeNode, UICommands, getValues, null, onReload, itemToTreeNode));
+            AddRootNode(new RootNode<T>(rootTreeNode, UICommands, getValues, null, onReload, itemToTreeNode));
         }
 
-        void AddNode(RootNode rootNode)
+        void AddRootNode(RootNode rootNode)
         {
+            rootNode.TreeNode.SelectedImageKey = rootNode.TreeNode.ImageKey;
+            rootNode.TreeNode.Tag = rootNode;
             treeMain.Nodes.Add(rootNode.TreeNode);
             rootNodes.Add(rootNode);
         }
@@ -91,14 +123,6 @@ namespace GitUI.UserControls
             //    uiScheduler);
         }
 
-        /// <summary>Applies the style to the specified <see cref="TreeNode"/>.
-        /// <remarks>Should be invoked from a more specific style.</remarks></summary>
-        static void ApplyTreeNodeStyle(TreeNode node)
-        {
-            node.NodeFont = Settings.Font;
-            // ...
-        }
-
         void ExpandAll_Click(object sender, EventArgs e)
         {
             treeMain.ExpandAll();
@@ -108,6 +132,5 @@ namespace GitUI.UserControls
         {
             treeMain.CollapseAll();
         }
-
     }
 }

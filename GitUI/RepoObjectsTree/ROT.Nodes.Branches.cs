@@ -8,12 +8,17 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using System.Linq;
 
 namespace GitUI.UserControls
 {
     // "branches"
     public partial class RepoObjectsTree
     {
+        static readonly string branchesKey = "branches";
+        static readonly string branchKey = "branch";
+        static readonly string branchPathKey = "branchPath";
+
         static void OnReloadBranches(ICollection<BaseBranchNode> items, RootNode<BaseBranchNode> rootNode)
         {
             // todo: cache: per Repo, on BranchNode.FullPath
@@ -24,10 +29,19 @@ namespace GitUI.UserControls
         }
 
         /// <summary>Adds a <see cref="BaseBranchNode"/>, and recursivley, its children.</summary>
-        static TreeNode OnAddBranchNode(TreeNodeCollection nodes, BaseBranchNode branchNode)
+        TreeNode OnAddBranchNode(TreeNodeCollection nodes, BaseBranchNode branchNode)
         {
-            TreeNode treeNode = nodes.Add(branchNode.FullPath, branchNode.Name);
-            treeNode.Tag = branchNode;
+            bool isBranch = branchNode is BranchNode;
+            TreeNode treeNode = new TreeNode(branchNode.Name)
+            {
+                Name = branchNode.FullPath,
+                Tag = branchNode,
+                ContextMenuStrip = isBranch ? menuBranch : menuBranchPath,
+                ImageKey = isBranch ? branchKey : branchPathKey,
+                SelectedImageKey = isBranch ? branchKey : branchPathKey,
+            };
+
+            nodes.Add(treeNode);
             branchNode.TreeNode = treeNode;
 
             BranchPathNode branchPath = branchNode as BranchPathNode;
@@ -175,7 +189,6 @@ namespace GitUI.UserControls
                 {
                     TreeNode.NodeFont = new Font(TreeNode.NodeFont, FontStyle.Bold);
                 }
-
             }
 
             /// <summary>Checkout the branch.</summary>
@@ -188,9 +201,9 @@ namespace GitUI.UserControls
             protected override IEnumerable<DragDropAction> CreateDragDropActions()
             {
                 var stashDD = new DragDropAction<StashNode>(
-                    (draggedStash) => IsActive, 
+                    (draggedStash) => IsActive,
                     (draggedStash) =>
-                    { 
+                    {
                         // normal -> Pop
                         // Alt -> Apply
                         UiCommands.StartStashDialog();
@@ -222,6 +235,26 @@ namespace GitUI.UserControls
                 });
 
                 return new DragDropAction[] { stashDD, branchDD, };
+            }
+
+            public void Checkout()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void CreateBranch()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Delete()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void DeleteForce()
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -303,21 +336,42 @@ namespace GitUI.UserControls
                 }
                 return egg;
             }
+
+            internal override void ApplyStyle()
+            {
+                base.ApplyStyle();
+                TreeNode.NodeFont = new Font(TreeNode.NodeFont, FontStyle.Italic);
+            }
+
+            public void CreateWithin()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void DeleteAll()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void DeleteAllForce()
+            {
+                throw new NotImplementedException();
+            }
         }
 
-        /// <summary>Root "branches" node</summary>
+        /// <summary>Root "branches" node.</summary>
         ///// <summary>list of <see cref="BaseBranchNode"/>s, including the <see cref="Active"/> branch, if applicable</summary>
         class BranchesNode : RootNode<BaseBranchNode>
         {
             public BranchesNode(TreeNode rootNode, GitUICommands uiCommands,
-                Func<ICollection<BaseBranchNode>> getBranches)
+                Func<ICollection<BaseBranchNode>> getBranches, Func<TreeNodeCollection, BaseBranchNode, TreeNode> onAddBranchNode)
                 : base(
                 rootNode,
                 uiCommands,
                 getBranches,
                 null,
                 OnReloadBranches,
-                OnAddBranchNode) { }
+                onAddBranchNode) { }
 
             /// <summary>Gets the current active branch. <remarks>May be null, if HEAD is detached.</remarks></summary>
             public BaseBranchNode Active { get; private set; }
@@ -347,19 +401,19 @@ namespace GitUI.UserControls
                            : branch;
             }
 
-            public static bool IsParentOf(BaseBranchNode parent, string branch)
+            static bool IsParentOf(BaseBranchNode parent, string branch)
             {
                 return String.Equals((string)GetFullParentPath(branch), parent.FullPath);
             }
 
             /// <summary>Indicates whether a branch HAS or IS a parent.</summary>
-            public static bool IsOrHasParent(string branch)
+            static bool IsOrHasParent(string branch)
             {
                 return branch.Contains(SeparatorStr);
             }
 
             /// <summary>Indicates whether the specified</summary>
-            public static bool IsInFamilyTree(BranchPathNode parent, string branch, out BranchPathNode commonAncestor)
+            static bool IsInFamilyTree(BranchPathNode parent, string branch, out BranchPathNode commonAncestor)
             {
                 if (IsParentOf(parent, branch))
                 {
@@ -374,13 +428,13 @@ namespace GitUI.UserControls
             }
 
             /// <summary>Gets the full path of the parent for the specified <paramref name="branch"/>.</summary>
-            public static string GetFullParentPath(string branch)
+            static string GetFullParentPath(string branch)
             {
                 return branch.Substring(0, EndOfParentPath(branch));
             }
 
             /// <summary>Gets the end index of the parent of the specified <paramref name="branch"/>.</summary>
-            public static int EndOfParentPath(string branch)
+            static int EndOfParentPath(string branch)
             {
                 return branch.LastIndexOf(Separator);
             }
@@ -461,7 +515,7 @@ namespace GitUI.UserControls
 
             /// <summary>Gets the children of the specified <paramref name="parent"/> node OR
             /// Creates a new lineage of <see cref="BaseBranchNode"/>s.</summary>
-            public static BranchPathNode GetChildren(GitUICommands uiCommands, BranchPathNode parent, string branch, string activeBranch, out BranchPathNode currentParent)
+            static BranchPathNode GetChildren(GitUICommands uiCommands, BranchPathNode parent, string branch, string activeBranch, out BranchPathNode currentParent)
             {
                 string[] splits = branch.Split(Separator);// issues/iss1334 -> issues, iss1334
                 int nParents = splits.Length - 1;
@@ -539,7 +593,54 @@ namespace GitUI.UserControls
                 }
 
                 Branches = branches;
+
+                SetFavorites(news);
             }
+
+            void SetFavorites(ICollection<BaseBranchNode> news)
+            {
+                favorites.Clear();
+                var favs = (from section in UiCommands.Module.GetLocalConfig().ConfigSections
+                            where Equals(section.SectionName, "branch")
+                            let value = section.GetValue("fav")
+                            where value.IsNotNullOrWhitespace()
+                            select section.SubSection).ToList();
+                if (favs.Any() == false)
+                {// no branches config'd -> return
+                    return;
+                } // else...
+
+                Func<List<BranchNode>, BaseBranchNode, List<BranchNode>> getFavBranches = ((seed, node) =>
+                {
+                    BranchPathNode branchPath = node as BranchPathNode;
+                    if (branchPath != null)
+                    {
+                        // BranchPath
+                        return branchPath.Recurse(
+                            seed,
+                            (bbp, favors) => (from branchNode in branchPath.Children
+                                              let branch = branchNode as BranchNode
+                                              where branch != null
+                                              let isFav = favs.Any(fav => Equals(fav, branchNode.FullPath))
+                                              where isFav
+                                              select branch).ToList());
+                    } // else (Branch)
+                    BranchNode branchNod = node as BranchNode;
+                    if (branchNod != null && favs.Any(fav => Equals(fav, branchNod.FullPath)))
+                    {// branch AND 
+                        return new List<BranchNode> { branchNod };
+                    }
+
+                    return new List<BranchNode>();
+                });
+
+                foreach (BaseBranchNode baseBranchNode in news)
+                {
+                    favorites.AddRange(getFavBranches(favorites, baseBranchNode));
+                }
+            }
+
+            List<BranchNode> favorites = new List<BranchNode>();
 
             protected override IEnumerable<DragDropAction> CreateDragDropActions()
             {
@@ -557,6 +658,11 @@ namespace GitUI.UserControls
                             }
                         }), 
                 };
+            }
+
+            public void CreateBranch()
+            {
+                throw new NotImplementedException();
             }
         }
 

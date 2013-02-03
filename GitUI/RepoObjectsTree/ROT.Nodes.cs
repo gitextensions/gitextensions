@@ -28,6 +28,8 @@ namespace GitUI.UserControls
 
             /// <summary>Gets the <see cref="GitUICommands"/> reference.</summary>
             public GitUICommands UiCommands { get; private set; }
+            /// <summary>Gets the <see cref="GitModule"/> reference.</summary>
+            public GitModule Git { get; private set; }
 
             public Node(GitUICommands uiCommands, TreeNode treeNode = null)
             {
@@ -36,6 +38,7 @@ namespace GitUI.UserControls
                     TreeNode = treeNode;
                 }
                 UiCommands = uiCommands;
+                Git = uiCommands.Module;
                 IsDraggable = false;
                 ContextActions = new ContextAction[0];
                 AllowDrop = false;
@@ -86,13 +89,27 @@ namespace GitUI.UserControls
             /// <summary>Casts the <see cref="System.Windows.Forms.TreeNode.Tag"/> to a <see cref="Node"/>.</summary>
             public static Node GetNodeSafe(TreeNode treeNode)
             {
-                return treeNode.Tag as Node;
+                return GetNodeSafe<Node>(treeNode);
+            }
+
+            /// <summary>Casts the <see cref="System.Windows.Forms.TreeNode.Tag"/> to a <see cref="Node"/>.</summary>
+            public static TNode GetNodeSafe<TNode>(TreeNode treeNode)
+                where TNode : Node
+            {
+                return treeNode.Tag as TNode;
             }
 
             /// <summary>Executes an action if <see cref="TreeNode"/> holds a <see cref="Node"/>.</summary>
             public static bool OnNode(TreeNode treeNode, Action<Node> action)
             {
-                Node node = GetNodeSafe(treeNode);
+                return OnNode<Node>(treeNode, action);
+            }
+
+            /// <summary>Executes an action if <see cref="TreeNode"/> holds a <see cref="Node"/>.</summary>
+            public static bool OnNode<TNode>(TreeNode treeNode, Action<TNode> action)
+                where TNode : Node
+            {
+                TNode node = GetNodeSafe<TNode>(treeNode);
                 if (node != null)
                 {
                     action(node);
@@ -207,7 +224,7 @@ namespace GitUI.UserControls
             }
         }
 
-        /// <summary>Root node in a <see cref="RepoObjectsTree"/> of type <see cref="TChild"/>.</summary>
+        /// <summary>Root node in a <see cref="RepoObjectsTree"/>, with children of type <see cref="TChild"/>.</summary>
         class RootNode<TChild> : RootNode, ICollection<TChild>
             where TChild : Node
         {
@@ -237,20 +254,15 @@ namespace GitUI.UserControls
                 _onReload = onReload ?? ((items, root) => { });
                 _addChild = addChild ?? ((nodes, child) => null);
                 Children = new List<TChild>();
-            }
 
-            /// <summary>Readies the tree set for a new repo. <remarks>Calls <see cref="RootNode.ReloadAsync"/>.</remarks></summary>
-            public override void RepoChanged()
-            {
                 _Watcher = _WatcherT = new ListWatcher<TChild>(
-                    _getValues,
-                    (olds, news) =>
-                    {
-                        Children.Clear(); // clear children in BG thread
-                        OnReloading(olds, news);
-                    },
-                    ReloadNodes);
-                base.RepoChanged();
+                  _getValues,
+                  (olds, news) =>
+                  {
+                      Children.Clear(); // clear children in BG thread
+                      OnReloading(olds, news);
+                  },
+                  ReloadNodes);
             }
 
             /// <summary>Reloads the set of nodes based on the specified <paramref name="items"/>.</summary>

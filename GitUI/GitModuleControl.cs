@@ -12,12 +12,14 @@ namespace GitUI
         [Browsable(false)]
         public bool UICommandsSourceParentSearch { get; private set; }
 
+        /// <summary>Occurs after the <see cref="UICommandsSource"/> is changed.</summary>
         [Browsable(false)]
         public event GitUICommandsSourceSetEventHandler GitUICommandsSourceSet;
-        private IGitUICommandsSource _UICommandsSource;
+        
+        /// <summary>Gets the <see cref="IGitUICommandsSource"/>.</summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IGitUICommandsSource UICommandsSource 
+        public IGitUICommandsSource UICommandsSource
         {
             get
             {
@@ -35,30 +37,18 @@ namespace GitUI
                     throw new ArgumentException("UICommandsSource is already set");
 
                 _UICommandsSource = value;
-
-                if (GitUICommandsSourceSet != null)
-                    GitUICommandsSourceSet(this, _UICommandsSource);
+                OnUICommandsSourceChanged(this, _UICommandsSource);
             }
-
         }
+        private IGitUICommandsSource _UICommandsSource;
 
+        /// <summary>Gets the <see cref="UICommandsSource"/>'s <see cref="GitUICommands"/> reference.</summary>
         [Browsable(false)]
-        public GitUICommands UICommands 
-        { 
-            get 
-            {
-                return UICommandsSource.UICommands;
-            }
-        }
+        public GitUICommands UICommands { get { return UICommandsSource.UICommands; } }
 
+        /// <summary>Gets the <see cref="UICommands"/>' <see cref="GitModule"/> reference.</summary>
         [Browsable(false)]
-        public GitModule Module
-        {
-            get
-            {
-                return UICommands.Module;
-            }
-        }
+        public GitModule Module { get { return UICommands.Module; } }
 
         public GitModuleControl()
         {
@@ -73,12 +63,14 @@ namespace GitUI
             base.Dispose(disposing);
         }
 
+        /// <summary>Occurs when the <see cref="UICommandsSource"/> is disposed.</summary>
         protected virtual void DisposeUICommandsSource()
         {
             _UICommandsSource = null;
         }
 
-        private void SearchForUICommandsSource()
+        /// <summary>Searches up the <see cref="UserControl"/>'s parent tree until it finds a <see cref="IGitUICommandsSource"/>.</summary>
+        void SearchForUICommandsSource()
         {
             if (!UICommandsSourceParentSearch)
                 return;
@@ -88,31 +80,39 @@ namespace GitUI
                 if (_UICommandsSource != null)
                     return;
 
-                IGitUICommandsSource cs = null;
-                Control p = Parent;
-                while (p != null && cs == null)
+                IGitUICommandsSource cmdsSrc = null;
+                Control parent = Parent;
+                while (parent != null && cmdsSrc == null)
                 {
-                    if (p is IGitUICommandsSource)
-                        cs = p as IGitUICommandsSource;
+                    if (parent is IGitUICommandsSource)
+                        cmdsSrc = parent as IGitUICommandsSource;
                     else
-                        p = p.Parent;
+                        parent = parent.Parent;
                 }
 
-                UICommandsSource = cs;
+                UICommandsSource = cmdsSrc;
             }
         }
 
         protected override bool ExecuteCommand(int command)
         {
-            if (ExecuteScriptCommand(command))
-                return true;
-            else
-                return base.ExecuteCommand(command);
+            return ExecuteScriptCommand(command)
+                || base.ExecuteCommand(command);
         }
 
+        /// <summary>Tries to run scripts identified by a <paramref name="command"/> 
+        /// and returns true if any executed.</summary>
         protected virtual bool ExecuteScriptCommand(int command)
         {
-            return GitUI.Script.ScriptRunner.ExecuteScriptCommand(Module, command);
+            return Script.ScriptRunner.ExecuteScriptCommand(Module, command);
+        }
+
+        /// <summary>Raises the <see cref="GitUICommandsSourceSet"/> event.</summary>
+        protected virtual void OnUICommandsSourceChanged(object sender, IGitUICommandsSource newSource)
+        {
+            var handler = GitUICommandsSourceSet;
+            if (handler != null)
+                handler(this, _UICommandsSource);
         }
     }
 }

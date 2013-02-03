@@ -359,6 +359,7 @@ namespace GitUI
             }
         }
 
+        /// <summary>Refreshes the UI.</summary>
         private void InternalInitialize(bool hard)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -411,9 +412,9 @@ namespace GitUI
             // load custom user menu
             LoadUserMenu();
 
-            UICommands.RaisePostBrowseInitialize(this);
             repoObjectsTree.Reload();
-
+            UICommands.RaisePostBrowseInitialize(this);
+            
             Cursor.Current = Cursors.Default;
         }
 
@@ -478,6 +479,7 @@ namespace GitUI
             return dirInfo.Name;
         }
 
+        /// <summary>Updates the UI with the correct userscript(s).</summary>
         private void LoadUserMenu()
         {
             var scripts = ScriptManager.GetScripts().Where(script => script.Enabled
@@ -642,6 +644,7 @@ namespace GitUI
             return Icon.FromHandle(square.GetHicon());
         }
 
+        /// <summary>Updates the UI with the correct stash count.</summary>
         private void UpdateStashCount()
         {
             if (Settings.ShowStashCount)
@@ -662,7 +665,6 @@ namespace GitUI
 
             if (validWorkingDir && Module.InTheMiddleOfBisect())
             {
-
                 if (_bisect == null)
                 {
                     _bisect = new WarningToolStripItem { Text = _warningMiddleOfBisect.Text };
@@ -1798,7 +1800,6 @@ namespace GitUI
 #endif
             }
 
-            repoObjectsTree.RepoChanged();
             Initialize();
             RevisionGrid.IndexWatcher.Reset();
             RegisterPlugins();

@@ -85,7 +85,13 @@ namespace System
         [Pure]
         public static bool IsNullOrWhiteSpace([CanBeNull] this string value)
         {
-            return value == null || value.All(Char.IsWhiteSpace);
+            return string.IsNullOrWhiteSpace(value);
+        }
+
+        /// <summary>Indicates whether the specified string is neither null, nor empty, nor has only whitespace.</summary>
+        public static bool IsNotNullOrWhitespace([CanBeNull] this string value)
+        {
+            return !value.IsNullOrWhiteSpace();
         }
 
         /// <summary>

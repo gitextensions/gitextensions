@@ -95,6 +95,8 @@ namespace GitCommands
         public static readonly TranslationString stashes = new TranslationString("stashes");
         /// <summary>"submodules" translation.</summary>
         public static readonly TranslationString submodules = new TranslationString("submodules");
+        /// <summary>"favorites" translation.</summary>
+        public static readonly TranslationString favorites = new TranslationString("favorites");
 
 
         private readonly TranslationString _dateText               = new TranslationString("Date");

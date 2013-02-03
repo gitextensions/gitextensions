@@ -1,16 +1,15 @@
 ### left-panel
 
 #### contribute
+* find/create an [issue](https://github.com/bergerjac/gitextensions/issues)
 * fork [repo](https://github.com/bergerjac/gitextensions)
 * branch off of **left-panel/-main**
-* (I'm not too keen on *Tags* and *Submodules* usage, so those would be great places)
-* (main files: <code>[Solution]/GuitUI/UserControls/RepoObjectsTree.*.cs</code>)
+* (main files: <code>[Solution]/GuitUI/RepoObjectsTree/*.cs</code>)
 * send a pull request
 
-<img src="https://raw.github.com/bergerjac/gitextensions/left-panel/-main/UiProgress.png">
+<img src="UiProgress.png">
 
 #### progress
 * branches  
-	* population
-	* minor caching
 * stashes
+* basic drag-drop operations
