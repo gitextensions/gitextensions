@@ -2152,7 +2152,7 @@ namespace GitUI
                         item.Name = item.Text + "_ownScript";
                         item.Click += runScript;
                         if (scriptInfo.AddToRevisionGridContextMenu)
-                            CreateTag.Items.Add(item);
+                            mainContextMenu.Items.Add(item);
                         else
                             runScriptToolStripMenuItem.DropDown.Items.Add(item);
                     }
@@ -2166,11 +2166,11 @@ namespace GitUI
         {
             runScriptToolStripMenuItem.DropDown.Items.Clear();
             List<ToolStripItem> list = new List<ToolStripItem>();
-            foreach (ToolStripItem item in CreateTag.Items)
+            foreach (ToolStripItem item in mainContextMenu.Items)
                 list.Add(item);
             foreach (ToolStripItem item in list)
                 if (item.Name.Contains("_ownScript"))
-                    CreateTag.Items.RemoveByKey(item.Name);
+                    mainContextMenu.Items.RemoveByKey(item.Name);
         }
 
         private bool settingsLoaded;

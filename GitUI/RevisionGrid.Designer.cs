@@ -49,7 +49,7 @@ namespace GitUI
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
             this.Revisions = new GitUI.DvcsGraph();
-            this.CreateTag = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mainContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.markRevisionAsBadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.markRevisionAsGoodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bisectSkipRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -118,7 +118,7 @@ namespace GitUI
             this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
-            this.CreateTag.SuspendLayout();
+            this.mainContextMenu.SuspendLayout();
             this.NoCommits.SuspendLayout();
             this.NoGit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Error)).BeginInit();
@@ -145,7 +145,7 @@ namespace GitUI
             this.Message,
             this.Author,
             this.Date});
-            this.Revisions.ContextMenuStrip = this.CreateTag;
+            this.Revisions.ContextMenuStrip = this.mainContextMenu;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -182,7 +182,7 @@ namespace GitUI
             // 
             // CreateTag
             // 
-            this.CreateTag.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mainContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.markRevisionAsBadToolStripMenuItem,
             this.markRevisionAsGoodToolStripMenuItem,
             this.bisectSkipRevisionToolStripMenuItem,
@@ -217,9 +217,9 @@ namespace GitUI
             this.filterToolStripMenuItem,
             this.toolStripSeparator7,
             this.runScriptToolStripMenuItem});
-            this.CreateTag.Name = "CreateTag";
-            this.CreateTag.Size = new System.Drawing.Size(224, 612);
-            this.CreateTag.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTagOpening);
+            this.mainContextMenu.Name = "CreateTag";
+            this.mainContextMenu.Size = new System.Drawing.Size(224, 612);
+            this.mainContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTagOpening);
             // 
             // markRevisionAsBadToolStripMenuItem
             // 
@@ -752,7 +752,7 @@ namespace GitUI
             this.Name = "RevisionGrid";
             this.Size = new System.Drawing.Size(682, 235);
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).EndInit();
-            this.CreateTag.ResumeLayout(false);
+            this.mainContextMenu.ResumeLayout(false);
             this.NoCommits.ResumeLayout(false);
             this.NoCommits.PerformLayout();
             this.NoGit.ResumeLayout(false);
@@ -771,7 +771,7 @@ namespace GitUI
         private System.Windows.Forms.PictureBox Loading;
         private System.Windows.Forms.Timer SelectionTimer;
         public System.Windows.Forms.PictureBox Error;
-        private System.Windows.Forms.ContextMenuStrip CreateTag;
+        private System.Windows.Forms.ContextMenuStrip mainContextMenu;
         private System.Windows.Forms.ToolStripMenuItem createTagToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createNewBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetCurrentBranchToHereToolStripMenuItem;
