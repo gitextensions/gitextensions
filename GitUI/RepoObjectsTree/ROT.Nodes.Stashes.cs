@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -45,27 +46,27 @@ namespace GitUI.UserControls
 
             public void Pop()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             public void Apply()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             public void Delete()
             {
-                throw new System.NotImplementedException();
+                Git.StashDelete(Value.Name);
             }
 
             public void ShowDiff()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
 
             public void CreateBranch()
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
     }

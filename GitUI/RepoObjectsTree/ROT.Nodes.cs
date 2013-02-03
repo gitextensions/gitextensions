@@ -28,6 +28,8 @@ namespace GitUI.UserControls
 
             /// <summary>Gets the <see cref="GitUICommands"/> reference.</summary>
             public GitUICommands UiCommands { get; private set; }
+            /// <summary>Gets the <see cref="GitModule"/> reference.</summary>
+            public GitModule Git { get; private set; }
 
             public Node(GitUICommands uiCommands, TreeNode treeNode = null)
             {
@@ -36,6 +38,7 @@ namespace GitUI.UserControls
                     TreeNode = treeNode;
                 }
                 UiCommands = uiCommands;
+                Git = uiCommands.Module;
                 IsDraggable = false;
                 ContextActions = new ContextAction[0];
                 AllowDrop = false;
