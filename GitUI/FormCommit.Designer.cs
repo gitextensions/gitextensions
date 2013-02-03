@@ -1026,6 +1026,7 @@ namespace GitUI
             this.Message.TabIndex = 13;
             this.Message.SelectionChanged += new System.EventHandler(this.Message_SelectionChanged);
             this.Message.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Message_KeyDown);
+            this.Message.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Message_KeyPress);
             this.Message.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Message_KeyUp);
             // 
             // commitStatusStrip
@@ -1042,7 +1043,6 @@ namespace GitUI
             this.commitStatusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 11, 0);
             this.commitStatusStrip.Size = new System.Drawing.Size(336, 25);
             this.commitStatusStrip.TabIndex = 7;
-            this.commitStatusStrip.Text = "statusStrip1";
             // 
             // commitSpacer
             // 

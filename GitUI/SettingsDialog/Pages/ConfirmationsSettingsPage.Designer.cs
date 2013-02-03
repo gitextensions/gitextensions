@@ -95,7 +95,7 @@
             this.chkAmmend.Name = "chkAmmend";
             this.chkAmmend.Size = new System.Drawing.Size(145, 18);
             this.chkAmmend.TabIndex = 0;
-            this.chkAmmend.Text = "Ammend last commit.";
+            this.chkAmmend.Text = "Ammend last commit";
             this.chkAmmend.UseVisualStyleBackColor = true;
             // 
             // chkAutoPopStashAfterPull
@@ -105,8 +105,8 @@
             this.chkAutoPopStashAfterPull.Name = "chkAutoPopStashAfterPull";
             this.chkAutoPopStashAfterPull.Size = new System.Drawing.Size(532, 18);
             this.chkAutoPopStashAfterPull.TabIndex = 1;
-            this.chkAutoPopStashAfterPull.Text = "Apply automatically stashed changes.  Stash will be automatically poped after suc" +
-                "cessful pull.";
+            this.chkAutoPopStashAfterPull.Text = "Apply stashed changes (Stash will be popped automatically after suc" +
+                "cessful pull)";
             this.chkAutoPopStashAfterPull.UseVisualStyleBackColor = true;
             // 
             // chkPushNewBranch
@@ -116,7 +116,7 @@
             this.chkPushNewBranch.Name = "chkPushNewBranch";
             this.chkPushNewBranch.Size = new System.Drawing.Size(221, 18);
             this.chkPushNewBranch.TabIndex = 3;
-            this.chkPushNewBranch.Text = "Push a new branch for the remote.";
+            this.chkPushNewBranch.Text = "Push a new branch for the remote";
             this.chkPushNewBranch.UseVisualStyleBackColor = true;
             // 
             // chkAddTrackingRef
@@ -126,7 +126,7 @@
             this.chkAddTrackingRef.Name = "chkAddTrackingRef";
             this.chkAddTrackingRef.Size = new System.Drawing.Size(306, 18);
             this.chkAddTrackingRef.TabIndex = 4;
-            this.chkAddTrackingRef.Text = "Add a tracking reference for newly pushed branch.";
+            this.chkAddTrackingRef.Text = "Add a tracking reference for newly pushed branch";
             this.chkAddTrackingRef.UseVisualStyleBackColor = true;
             // 
             // ConfirmationsSettingsPage

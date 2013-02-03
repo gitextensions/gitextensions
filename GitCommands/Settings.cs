@@ -183,6 +183,13 @@ namespace GitCommands
             set { SafeSet("translation", value, ref _translation); }
         }
 
+        private static string _currentTranslation;
+        public static string CurrentTranslation
+        {
+            get { return _currentTranslation ?? Translation; }
+            set { _currentTranslation = value; }
+        }
+
         private static bool? _userProfileHomeDir;
         public static bool UserProfileHomeDir
         {
@@ -703,13 +710,6 @@ namespace GitCommands
             set { SafeSet("difffont", value, ref _diffFont); }
         }
 
-        private static Font _commitFont;
-        public static Font CommitFont
-        {
-            get { return SafeGet("commitfont", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size), ref _commitFont); }
-            set { SafeSet("commitfont", value, ref _commitFont); }
-        }
-
         private static Font _font;
         public static Font Font
         {
@@ -939,20 +939,6 @@ namespace GitCommands
         {
             get { return SafeGet("CommitValidationSecondLineMustBeEmpty", false, ref _CommitValidationSecondLineMustBeEmpty); }
             set { SafeSet("CommitValidationSecondLineMustBeEmpty", value, ref _CommitValidationSecondLineMustBeEmpty); }
-        }
-
-        private static bool? _CommitValidationIndentAfterFirstLine;
-        public static bool CommitValidationIndentAfterFirstLine
-        {
-            get { return SafeGet("CommitValidationIndentAfterFirstLine", true, ref _CommitValidationIndentAfterFirstLine); }
-            set { SafeSet("CommitValidationIndentAfterFirstLine", value, ref _CommitValidationIndentAfterFirstLine); }
-        }
-
-        private static bool? _CommitValidationAutoWrap;
-        public static bool CommitValidationAutoWrap
-        {
-            get { return SafeGet("CommitValidationAutoWrap", true, ref _CommitValidationAutoWrap); }
-            set { SafeSet("CommitValidationAutoWrap", value, ref _CommitValidationAutoWrap); }
         }
 
         private static string _CommitValidationRegEx;

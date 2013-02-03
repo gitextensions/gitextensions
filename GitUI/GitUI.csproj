@@ -451,7 +451,7 @@
     <Compile Include="SettingsDialog\Pages\ConfirmationsSettingsPage.Designer.cs">
       <DependentUpon>ConfirmationsSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\SettingsGroupPages.cs" />
+    <Compile Include="SettingsDialog\SettingsGroupPages.cs" />
     <Compile Include="SettingsDialog\Pages\GitExtensionsSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>

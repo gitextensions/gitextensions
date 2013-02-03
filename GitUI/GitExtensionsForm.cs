@@ -270,7 +270,7 @@ namespace GitUI
 
         protected void Translate()
         {
-            Translator.Translate(this, Settings.Translation);
+            Translator.Translate(this, Settings.CurrentTranslation);
             _translated = true;
         }
 

@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 using GitUI;
 using ResourceManager.Translation;
@@ -26,7 +23,7 @@ namespace TranslationApp
         readonly TranslationString noLanguageCodeSelectedCaption = new TranslationString("Language code");
         readonly TranslationString editingCellPrefixText = new TranslationString("[EDITING]");
 
-        private List<TranslateItem> translationItems;
+        private List<TranslationItemWithCategory> translationItems;
 
         readonly Translation neutralTranslation = new Translation();
         Translation translation;
@@ -82,30 +79,21 @@ namespace TranslationApp
 
         private void LoadTranslation()
         {
-            IList<Tuple<string, TranslationItem>> neutralItems =
-                (from translationCategory in neutralTranslation.GetTranslationCategories()
-                 from translationItem in translationCategory.GetTranslationItems()
-                 select Tuple.Create(translationCategory.Name, translationItem)).ToList();
-
             if (translation != null)
+            {
+                IEnumerable<TranslationItemWithCategory> neutralItems =
+                    (from translationCategory in neutralTranslation.GetTranslationCategories()
+                     from translationItem in translationCategory.GetTranslationItems()
+                     select new TranslationItemWithCategory(translationCategory.Name, translationItem));
                 translationItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
+            }
             else
             {
-                translationItems = new List<TranslateItem>();
-
-                foreach (var item in neutralItems)
-                {
-                    var translateItem = new TranslateItem
-                                            {
-                                                Category = item.Item1,
-                                                Name = item.Item2.Name,
-                                                Property = item.Item2.Property,
-                                                NeutralValue = item.Item2.Value,
-                                                Status = TranslationType.New
-                                            };
-
-                    translationItems.Add(translateItem);
-                }
+                List<TranslationItemWithCategory> neutralItems =
+                    (from translationCategory in neutralTranslation.GetTranslationCategories()
+                     from translationItem in translationCategory.GetTranslationItems()
+                     select new TranslationItemWithCategory(translationCategory.Name, translationItem.Clone())).ToList();
+                translationItems = neutralItems;
             }
 
             UpdateProgress();
@@ -148,12 +136,10 @@ namespace TranslationApp
 
         private void FillNeutralTranslation(Translation neutralTranslation)
         {
-            string currentTranslation = GitCommands.Settings.Translation;
-
             try
             {
                 //Set language to neutral to get neutral translations
-                GitCommands.Settings.Translation = "";
+                GitCommands.Settings.CurrentTranslation = "";
                 Translate();
 
                 List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
@@ -170,7 +156,7 @@ namespace TranslationApp
                 neutralTranslation.Sort();
                 
                 //Restore translation
-                GitCommands.Settings.Translation = currentTranslation;
+                GitCommands.Settings.CurrentTranslation = null;
                 Translate();
             }
         }
@@ -379,32 +365,32 @@ namespace TranslationApp
             }
         }
 
-        TranslateItem translateItemInEditing;
+        TranslationItemWithCategory _translationItemWithCategoryInEditing;
 
         private void translatedText_Enter(object sender, System.EventArgs e)
         {
-            if (translateItemInEditing != null)
+            if (_translationItemWithCategoryInEditing != null)
             {
-                translateItemInEditing.TranslatedValue = translatedText.Text;
+                _translationItemWithCategoryInEditing.TranslatedValue = translatedText.Text;
             }
 
-            translateItemInEditing = (TranslateItem)translateItemBindingSource.Current;
+            _translationItemWithCategoryInEditing = (TranslationItemWithCategory)translateItemBindingSource.Current;
 
-            if (translateItemInEditing != null)
+            if (_translationItemWithCategoryInEditing != null)
             {
-                translateItemInEditing.TranslatedValue = editingCellPrefixText.Text + " " + translateItemInEditing.TranslatedValue;
+                _translationItemWithCategoryInEditing.TranslatedValue = editingCellPrefixText.Text + " " + _translationItemWithCategoryInEditing.TranslatedValue;
             }
         }
 
         private void translatedText_Leave(object sender, System.EventArgs e)
         {
-            //Debug.Assert(translateItemInEditing != null);
+            //Debug.Assert(_translationItemWithCategoryInEditing != null);
 
-            if (translateItemInEditing != null)
+            if (_translationItemWithCategoryInEditing != null)
             {
-                translateItemInEditing.TranslatedValue = translatedText.Text;
+                _translationItemWithCategoryInEditing.TranslatedValue = translatedText.Text;
 
-                translateItemInEditing = null;
+                _translationItemWithCategoryInEditing = null;
             }
         }
 
@@ -417,11 +403,11 @@ namespace TranslationApp
                     splitContainer2.Panel2Collapsed = false;
                 }
 
-                var translateItem = (TranslateItem)translateGrid.SelectedRows[0].DataBoundItem;
+                var translateItem = (TranslationItemWithCategory)translateGrid.SelectedRows[0].DataBoundItem;
 
                 if (translateItem == null) return;
 
-                neutralTekst.Text = translateItem.NeutralValue;
+                neutralText.Text = translateItem.NeutralValue;
                 translatedText.Text = translateItem.TranslatedValue;
             }
             else
@@ -432,7 +418,7 @@ namespace TranslationApp
 
         private void translateGrid_SelectionChanged(object sender, EventArgs e)
         {
-            bool nowTranslatedTextInEditing = translateItemInEditing != null;
+            bool nowTranslatedTextInEditing = _translationItemWithCategoryInEditing != null;
 
             translatedText_Leave(null, null);
 
@@ -482,7 +468,7 @@ namespace TranslationApp
 
             if (translateGrid.SelectedRows.Count == 1)
             {
-                var translateItem = ((TranslateItem)translateGrid.SelectedRows[0].DataBoundItem);
+                var translateItem = ((TranslationItemWithCategory)translateGrid.SelectedRows[0].DataBoundItem);
 
                 translateItem.TranslatedValue = Google.TranslateText(translateItem.NeutralValue, "en", GetSelectedLanguageCode());
 
@@ -499,7 +485,7 @@ namespace TranslationApp
                 return;
             }
 
-            foreach (TranslateItem translateItem in translationItems)
+            foreach (TranslationItemWithCategory translateItem in translationItems)
             {
                 if (string.IsNullOrEmpty(translateItem.TranslatedValue))
                     translateItem.TranslatedValue = Google.TranslateText(translateItem.NeutralValue, "en", GetSelectedLanguageCode());
@@ -535,7 +521,7 @@ namespace TranslationApp
                 e.Handled = true;
                 translatedText.SelectionStart = 0;
                 translatedText.SelectionLength = translatedText.TextLength;
-                translatedText.SelectedText = neutralTekst.Text;
+                translatedText.SelectedText = neutralText.Text;
             }
         }
     }
