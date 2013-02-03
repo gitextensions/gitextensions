@@ -203,8 +203,10 @@
             this.RssFeedType.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeedType_Validating);
             // 
             // tableLayoutPanel1
-            // 
+            //
+#if !__MonoCS__
             resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
+#endif
             this.tableLayoutPanel1.Controls.Add(this.Remove, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.Add, 0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
