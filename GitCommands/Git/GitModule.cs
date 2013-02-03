@@ -59,6 +59,11 @@ namespace GitCommands
             }
         }
 
+        public string FullPath(string localPath)
+        {
+            return Path.Combine(WorkingDir, localPath);
+        }
+
         private bool _superprojectInit;
         private GitModule _superprojectModule;
         private string _submoduleName;
@@ -2053,6 +2058,11 @@ namespace GitCommands
         public ConfigFile GetLocalConfig()
         {
             return new ConfigFile(WorkingDirGitDir() + Settings.PathSeparator.ToString() + "config", true);
+        }
+
+        public ConfigFile GetGitExtensionsConfig()
+        {
+            return new ConfigFile(FullPath(".gitextensions"), true);
         }
 
         public string GetSetting(string setting)

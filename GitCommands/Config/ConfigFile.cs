@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -51,6 +52,11 @@ namespace GitCommands.Config
         public IList<ConfigSection> GetConfigSections()
         {
             return _sections;
+        }
+
+        public IEnumerable<ConfigSection> GetConfigSections(string sectionName)
+        {
+            return _sections.Where(section => section.SectionName.Equals(sectionName, StringComparison.OrdinalIgnoreCase));
         }
 
         private Encoding GetEncoding()
@@ -259,6 +265,14 @@ namespace GitCommands.Config
             return result;
         }
 
+        public void AddConfigSection(ConfigSection configSection)
+        {
+            if (FindConfigSection(configSection) != null)
+                throw new ArgumentException("Can not add a section that already exists: " + configSection.SectionName);
+            
+            _sections.Add(configSection);
+        }
+
         public void RemoveConfigSection(string configSectionName)
         {
             var configSection = FindConfigSection(configSectionName);
@@ -269,16 +283,27 @@ namespace GitCommands.Config
             _sections.Remove(configSection);
         }
 
-        private ConfigSection FindConfigSection(string name)
+        public void RemoveConfigSections(string configSectionName)
         {
-            var configSectionToFind = new ConfigSection(name, true);
+            var configSections = GetConfigSections(configSectionName).ToArray();
+            configSections.ForEach(section => _sections.Remove(section));
+        }
 
+        private ConfigSection FindConfigSection(ConfigSection configSectionToFind)
+        {
             foreach (var configSection in _sections)
             {
                 if (configSectionToFind.Equals(configSection))
                     return configSection;
             }
             return null;
+        }
+
+        private ConfigSection FindConfigSection(string name)
+        {
+            var configSectionToFind = new ConfigSection(name, true);
+
+            return FindConfigSection(configSectionToFind);
         }
     }
 }
