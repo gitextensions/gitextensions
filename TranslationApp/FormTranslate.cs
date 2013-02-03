@@ -42,10 +42,9 @@ namespace TranslationApp
             translations.Items.Clear();
             translations.Sorted = true;
             translations.Items.AddRange(Translator.GetAllTranslations());
-            translations.SelectedItem = GitCommands.Settings.Translation;
 
             GetPropertiesToTranslate();
-            LoadTranslation();
+            translations.SelectedItem = GitCommands.Settings.Translation; // should be called after GetPropertiesToTranslate()
             translateCategories.SelectedItem = allCategories;
             FillTranslateGrid(allCategories);
 
@@ -126,14 +125,6 @@ namespace TranslationApp
             return filterTranslate;
         }
 
-        public object CreateInstanceOfClass(Type type)
-        {
-            if (type == GetType())
-                return this;
-            else
-                return TranslationUtl.CreateInstanceOfClass(type);
-        }
-
         public void GetPropertiesToTranslate()
         {
             translateCategories.Items.Clear();
@@ -149,13 +140,12 @@ namespace TranslationApp
             {
                 //Set language to neutral to get neutral translations
                 GitCommands.Settings.CurrentTranslation = "";
-                Translate();
 
                 List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
 
                 foreach (Type type in translatableTypes)
                 {
-                    ITranslate obj = CreateInstanceOfClass(type) as ITranslate;
+                    ITranslate obj = TranslationUtl.CreateInstanceOfClass(type) as ITranslate;
                     if (obj != null)
                         obj.AddTranslationItems(neutralTranslation);
                 }
@@ -166,7 +156,6 @@ namespace TranslationApp
                 
                 //Restore translation
                 GitCommands.Settings.CurrentTranslation = null;
-                Translate();
             }
         }
 
