@@ -75,7 +75,7 @@ namespace GitCommands
                 {
                     if (parts.Length < 2 || parts[0][0] == '#')
                         continue;
-                    if (parts.Contains("binary") || parts.Contains("-text"))
+                    if (parts.Contains("binary") || parts.Contains("-diff"))
                     {
                         try
                         {
@@ -87,7 +87,7 @@ namespace GitCommands
                             continue;
                         }
                     }
-                    if (parts.Contains("text"))
+                    if (parts.Contains("diff"))
                     {
                         try
                         {
