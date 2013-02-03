@@ -1775,30 +1775,30 @@ namespace GitUI
             }
 
             deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
-            deleteTagToolStripMenuItem.Visible = deleteTagDropDown.Items.Count > 0;
+            deleteTagToolStripMenuItem.Enabled = deleteTagDropDown.Items.Count > 0;
 
             deleteBranchToolStripMenuItem.DropDown = deleteBranchDropDown;
-            deleteBranchToolStripMenuItem.Visible = deleteBranchDropDown.Items.Count > 0;
+            deleteBranchToolStripMenuItem.Enabled = deleteBranchDropDown.Items.Count > 0;
 
             checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
-            checkoutBranchToolStripMenuItem.Visible = checkoutBranchDropDown.Items.Count > 0;
+            checkoutBranchToolStripMenuItem.Enabled = checkoutBranchDropDown.Items.Count > 0;
 
             mergeBranchToolStripMenuItem.DropDown = mergeBranchDropDown;
-            mergeBranchToolStripMenuItem.Visible = mergeBranchDropDown.Items.Count > 0;
+            mergeBranchToolStripMenuItem.Enabled = mergeBranchDropDown.Items.Count > 0;
 
             rebaseOnToolStripMenuItem.DropDown = rebaseDropDown;
-            rebaseOnToolStripMenuItem.Visible = rebaseDropDown.Items.Count > 0;
+            rebaseOnToolStripMenuItem.Enabled = rebaseDropDown.Items.Count > 0;
 
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
-            renameBranchToolStripMenuItem.Visible = renameDropDown.Items.Count > 0;
+            renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
 
             branchNameToolStripMenuItem.DropDown = branchNameCopy;
-            branchNameToolStripMenuItem.Visible = branchNameCopy.Items.Count > 0;
+            branchNameToolStripMenuItem.Enabled = branchNameCopy.Items.Count > 0;
 
             tagToolStripMenuItem.DropDown = tagNameCopy;
-            tagToolStripMenuItem.Visible = tagNameCopy.Items.Count > 0;
+            tagToolStripMenuItem.Enabled = tagNameCopy.Items.Count > 0;
 
-            toolStripSeparator6.Visible = tagNameCopy.Items.Count > 0 || branchNameCopy.Items.Count > 0;
+            toolStripSeparator6.Enabled = branchNameToolStripMenuItem.Enabled || tagToolStripMenuItem.Enabled;
 
             RefreshOwnScripts();
         }
@@ -2152,13 +2152,15 @@ namespace GitUI
                         item.Name = item.Text + "_ownScript";
                         item.Click += runScript;
                         if (scriptInfo.AddToRevisionGridContextMenu)
-                            CreateTag.Items.Add(item);
+                            mainContextMenu.Items.Add(item);
                         else
                             runScriptToolStripMenuItem.DropDown.Items.Add(item);
                     }
                 }
-                toolStripSeparator7.Visible = addedScripts > 1;
-                runScriptToolStripMenuItem.Visible = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
+
+                bool showScriptsMenu = addedScripts > 1;
+                toolStripSeparator7.Visible = showScriptsMenu;
+                runScriptToolStripMenuItem.Visible = showScriptsMenu; 
             }
         }
 
@@ -2166,11 +2168,11 @@ namespace GitUI
         {
             runScriptToolStripMenuItem.DropDown.Items.Clear();
             List<ToolStripItem> list = new List<ToolStripItem>();
-            foreach (ToolStripItem item in CreateTag.Items)
+            foreach (ToolStripItem item in mainContextMenu.Items)
                 list.Add(item);
             foreach (ToolStripItem item in list)
                 if (item.Name.Contains("_ownScript"))
-                    CreateTag.Items.RemoveByKey(item.Name);
+                    mainContextMenu.Items.RemoveByKey(item.Name);
         }
 
         private bool settingsLoaded;
