@@ -8,6 +8,7 @@ using System.Threading;
 using System.Net;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.GitExtLinks;
 using GitUI.Editor.RichTextBoxExtension;
 using ResourceManager.Translation;
 
@@ -19,6 +20,7 @@ namespace GitUI.CommitInfo
         private readonly TranslationString containedInNoBranch = new TranslationString("Contained in no branch");
         private readonly TranslationString containedInTags = new TranslationString("Contained in tags:");
         private readonly TranslationString containedInNoTag = new TranslationString("Contained in no tag");
+        private readonly TranslationString trsLinksRelatedToRevision = new TranslationString("Related links");
 
         public CommitInfo()
         {
@@ -41,16 +43,21 @@ namespace GitUI.CommitInfo
                 try
                 {
                     if (data.Length > 1)
-                        url = data[1];
-                    var result = new Uri(url);
-                    if (result.Scheme == "gitex")
                     {
-                        if (CommandClick != null)
+                        var result = new Uri(data[1]);
+                        if (result.Scheme == "gitex")
                         {
-                            string path = result.AbsolutePath.TrimStart('/');
-                            CommandClick(sender, new CommandEventArgs(result.Host, path));
+                            if (CommandClick != null)
+                            {
+                                string path = result.AbsolutePath.TrimStart('/');
+                                CommandClick(sender, new CommandEventArgs(result.Host, path));
+                            }
+                            return;
                         }
-                        return;
+                        else if (result.Scheme.Equals(Uri.UriSchemeHttp) || result.Scheme.Equals(Uri.UriSchemeHttps))
+                        {
+                            url = result.AbsoluteUri;
+                        }
                     }
                 }
                 catch (UriFormatException)
@@ -61,7 +68,7 @@ namespace GitUI.CommitInfo
                 using (var process = new Process
                     {
                         EnableRaisingEvents = false,
-                        StartInfo = { FileName = e.LinkText }
+                        StartInfo = { FileName = url }
                     })
                     process.Start();
             }
@@ -118,6 +125,7 @@ namespace GitUI.CommitInfo
         }
 
         private string _revisionInfo;
+        private string _linksInfo;
         private string _tagInfo;
         private string _branchInfo;
 
@@ -143,6 +151,7 @@ namespace GitUI.CommitInfo
             {
                 data = CommitData.CreateFromRevision(_revision);
                 CommitData.UpdateCommitMessage(data, Module, _revisionGuid, ref error);
+                ThreadPool.QueueUserWorkItem(_ => loadLinksForRevision(_revision));
             }
             else
                 data = CommitData.GetCommitData(Module, _revisionGuid, ref error);
@@ -189,10 +198,19 @@ namespace GitUI.CommitInfo
             this.InvokeAsync(updateText);
         }
 
+        private void loadLinksForRevision(GitRevision revision)
+        {
+            if (revision == null)
+                return;
+
+            _linksInfo = GetLinksForRevision(revision);
+            this.InvokeAsync(updateText);
+        }
+
         private void updateText()
         {
             RevisionInfo.SuspendLayout();
-            RevisionInfo.SetXHTMLText(_revisionInfo + _branchInfo + _tagInfo);
+            RevisionInfo.SetXHTMLText(_revisionInfo + _linksInfo + _branchInfo + _tagInfo);
             RevisionInfo.SelectionStart = 0; //scroll up
             RevisionInfo.ScrollToCaret();    //scroll up
             RevisionInfo.ResumeLayout(true);
@@ -201,6 +219,7 @@ namespace GitUI.CommitInfo
         private void ResetTextAndImage()
         {
             _revisionInfo = string.Empty;
+            _linksInfo = string.Empty;
             _branchInfo = string.Empty;
             _tagInfo = string.Empty;
             updateText();
@@ -276,6 +295,23 @@ namespace GitUI.CommitInfo
             if (!String.IsNullOrEmpty(tagString))
                 return Environment.NewLine + WebUtility.HtmlEncode(containedInTags.Text) + " " + tagString;
             return Environment.NewLine + WebUtility.HtmlEncode(containedInNoTag.Text);
+        }
+
+        private string GetLinksForRevision(GitRevision revision)
+        {
+            GitExtLinksParser parser = new GitExtLinksParser(Module);
+            var links = parser.Parse(revision).Distinct();
+            var linksString = string.Empty;
+
+            foreach (var link in links)
+            { 
+               linksString = linksString.Combine(", ", LinkFactory.CreateLink(link.Caption, link.URI));
+            }
+
+            if (linksString.IsNullOrEmpty())
+                return string.Empty;
+            else
+                return WebUtility.HtmlEncode(trsLinksRelatedToRevision.Text) + " " + linksString;
         }
 
         private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)

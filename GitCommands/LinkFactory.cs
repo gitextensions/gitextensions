@@ -1,13 +1,19 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 
 namespace GitCommands
 {
     public class LinkFactory
     {
-         public static string CreateTagLink(string tag)
-         {
-             return "<a href='gitex://gototag/" + tag + "'>" + WebUtility.HtmlEncode(tag) + "</a>";
-         }
+        public static string CreateLink(string caption, string uri)
+        {
+            return "<a href="+uri.Quote()+">" + WebUtility.HtmlEncode(caption) + "</a>";
+        }
+
+        public static string CreateTagLink(string tag)
+        {
+            return "<a href='gitex://gototag/" + tag + "'>" + WebUtility.HtmlEncode(tag) + "</a>";
+        }
 
         public static string CreateBranchLink(string noPrefixBranch)
         {
