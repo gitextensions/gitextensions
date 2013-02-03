@@ -42,6 +42,7 @@ namespace TranslationApp
             translations.Items.Clear();
             translations.Sorted = true;
             translations.Items.AddRange(Translator.GetAllTranslations());
+            translations.SelectedItem = GitCommands.Settings.Translation;
 
             GetPropertiesToTranslate();
             LoadTranslation();
@@ -109,12 +110,20 @@ namespace TranslationApp
             if (filter == allCategories)
                 filter = null;
 
-            var filterTranslate = translationItems.Where(translateItem => filter == null || filter.Name.Equals(translateItem.Category)).
-                Where(translateItem => translateItem.Status != TranslationType.Obsolete && (!hideTranslatedItems.Checked || string.IsNullOrEmpty(translateItem.TranslatedValue))).ToList();
-
-            translateItemBindingSource.DataSource = filterTranslate;
+            translateItemBindingSource.DataSource = GetCategoryItems(filter).ToList();
 
             UpdateProgress();
+        }
+
+        private IEnumerable<TranslationItemWithCategory> GetCategoryItems(TranslationCategory filter)
+        {
+            var filterTranslate = translationItems.Where(
+                translateItem => filter == null || filter.Name.Equals(translateItem.Category)).
+                Where(
+                    translateItem =>
+                    translateItem.Status != TranslationType.Obsolete &&
+                    (!hideTranslatedItems.Checked || string.IsNullOrEmpty(translateItem.TranslatedValue)));
+            return filterTranslate;
         }
 
         public object CreateInstanceOfClass(Type type)
@@ -164,6 +173,7 @@ namespace TranslationApp
 
         private void translateCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
+            categoryDataGridViewTextBoxColumn.Visible = (translateCategories.SelectedItem == allCategories);
             FillTranslateGrid(translateCategories.SelectedItem as TranslationCategory);
         }
 
