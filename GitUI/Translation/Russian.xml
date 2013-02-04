@@ -35,7 +35,7 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
         </TranslationItem>
         <TranslationItem Name="GeneralGB" Property="Text" type="unfinished">
           <Source>General</Source>
-          <Value />
+          <Value>Общие</Value>
         </TranslationItem>
         <TranslationItem Name="chkAlwaysShowCheckoutDlg" Property="Text" type="unfinished">
           <Source>Always show checkout dialog</Source>
@@ -70,9 +70,9 @@ This action will be performed without warning while checking out branch.</Source
           <Source>No dictionary files found in: {0}</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="applicationFontChangeButton" Property="Text" type="unfinished">
+        <TranslationItem Name="applicationFontChangeButton" Property="Text">
           <Source>font name</Source>
-          <Value />
+          <Value>имя шрифта</Value>
         </TranslationItem>
         <TranslationItem Name="chkEnableAutoScale" Property="Text" type="unfinished">
           <Source>Auto scale user interface when high dpi is used</Source>
@@ -80,35 +80,31 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
         <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
           <Source>Show current branch in Visual Studio</Source>
-          <Value>Показывать имя текущей ветки в Visual Studio</Value>
+          <Value>Показывать имя текущей ветви в Visual Studio</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowRelativeDate" Property="Text">
           <Source>Show relative date instead of full date</Source>
           <Value>Показывать относительные даты вместо полных</Value>
         </TranslationItem>
-        <TranslationItem Name="commitFontChangeButton" Property="Text" type="unfinished">
-          <Source>font name</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="diffFontChangeButton" Property="Text" type="unfinished">
           <Source>font name</Source>
-          <Value />
+          <Value>имя шрифта</Value>
         </TranslationItem>
         <TranslationItem Name="downloadDictionary" Property="Text">
           <Source>Download dictionary</Source>
           <Value>Скачать словарь</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox13" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox13" Property="Text">
           <Source>Language</Source>
-          <Value />
+          <Value>Язык</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox14" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox14" Property="Text">
           <Source>General</Source>
-          <Value />
+          <Value>Общие</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox15" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox15" Property="Text">
           <Source>Fonts</Source>
-          <Value />
+          <Value>Шрифты</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox6" Property="Text">
           <Source>Author images</Source>
@@ -124,10 +120,6 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
         <TranslationItem Name="label26" Property="Text" type="unfinished">
           <Source>Application font</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="label34" Property="Text" type="unfinished">
-          <Source>Commit font</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label44" Property="Text">
@@ -162,25 +154,25 @@ This action will be performed without warning while checking out branch.</Source
     </TranslationCategory>
     <TranslationCategory Name="BlameControl">
       <translationItems>
-        <TranslationItem Name="blamePreviousRevisionToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="blamePreviousRevisionToolStripMenuItem" Property="Text">
           <Source>Blame previous revision</Source>
-          <Value />
+          <Value>Авторство предыдущей ревизии</Value>
         </TranslationItem>
-        <TranslationItem Name="copyLogMessageToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="copyLogMessageToolStripMenuItem" Property="Text">
           <Source>Copy log message to clipboard</Source>
-          <Value />
+          <Value>Копировать в буфер обмена</Value>
         </TranslationItem>
-        <TranslationItem Name="showChangesToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="showChangesToolStripMenuItem" Property="Text">
           <Source>Show changes</Source>
-          <Value />
+          <Value>Показать изменения</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="BranchComboBox">
       <translationItems>
-        <TranslationItem Name="_branchCheckoutError" Property="Text" type="unfinished">
+        <TranslationItem Name="_branchCheckoutError" Property="Text">
           <Source>Branch '{0}' is not selectable, this branch has been removed from the selection.</Source>
-          <Value />
+          <Value>Ветвь '{0}' не выделяема, эта ветвь удалена из выделения.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -190,9 +182,9 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
           <Value>Не удалось загрузить ключ. PuTTY не настроен должным образом.</Value>
         </TranslationItem>
-        <TranslationItem Name="_pageantNotFoundCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_pageantNotFoundCaption" Property="Text">
           <Source>PuTTY</Source>
-          <Value />
+          <Value>PuTTY</Value>
         </TranslationItem>
         <TranslationItem Name="_browsePrivateKeyCaption" Property="Text" type="obsolete">
           <Source>Select SSH key file</Source>
@@ -397,9 +389,9 @@ Select no if you want to configure a different mergetool yourself.</Source>
           <Source>All paths needed for PuTTY could be automatically found and are set.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_puttyFoundAutoCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_puttyFoundAutoCaption" Property="Text">
           <Source>PuTTY</Source>
-          <Value />
+          <Value>PuTTY</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsCorrect" Property="Text" type="unfinished">
           <Source>GitExtensions is properly registered.</Source>
@@ -466,9 +458,9 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
     </TranslationCategory>
     <TranslationCategory Name="ColorsSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Colors</Source>
-          <Value />
+          <Value>Цвета</Value>
         </TranslationItem>
         <TranslationItem Name="BlueIcon" Property="Text">
           <Source>Blue</Source>
@@ -476,7 +468,7 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         </TranslationItem>
         <TranslationItem Name="BranchBorders" Property="Text">
           <Source>Draw branch borders</Source>
-          <Value>Рисовать границы веток</Value>
+          <Value>Рисовать границы ветвей</Value>
         </TranslationItem>
         <TranslationItem Name="DefaultIcon" Property="Text">
           <Source>Default</Source>
@@ -500,7 +492,7 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         </TranslationItem>
         <TranslationItem Name="MulticolorBranches" Property="Text">
           <Source>Multicolor branches</Source>
-          <Value>Многоцветные ветки</Value>
+          <Value>Многоцветные ветви</Value>
         </TranslationItem>
         <TranslationItem Name="PurpleIcon" Property="Text">
           <Source>Purple</Source>
@@ -514,9 +506,9 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
           <Source>Red</Source>
           <Value>Красный</Value>
         </TranslationItem>
-        <TranslationItem Name="StripedBanchChange" Property="Text" type="unfinished">
+        <TranslationItem Name="StripedBanchChange" Property="Text">
           <Source>Striped branch change</Source>
-          <Value />
+          <Value>Полосатые изменения ветви</Value>
         </TranslationItem>
         <TranslationItem Name="YellowIcon" Property="Text">
           <Source>Yellow</Source>
@@ -552,11 +544,11 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         </TranslationItem>
         <TranslationItem Name="label32" Property="Text">
           <Source>Color branch</Source>
-          <Value>Цвет ветки</Value>
+          <Value>Цвет ветви</Value>
         </TranslationItem>
         <TranslationItem Name="label33" Property="Text">
           <Source>Color remote branch</Source>
-          <Value>Цвет внешней ветки</Value>
+          <Value>Цвет внешней вевки</Value>
         </TranslationItem>
         <TranslationItem Name="label36" Property="Text">
           <Source>Color other label</Source>
@@ -588,11 +580,11 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         </TranslationItem>
         <TranslationItem Name="containedInBranches" Property="Text">
           <Source>Contained in branches:</Source>
-          <Value>Содержится в ветках</Value>
+          <Value>Содержится в ветвях</Value>
         </TranslationItem>
         <TranslationItem Name="containedInNoBranch" Property="Text">
           <Source>Contained in no branch</Source>
-          <Value>Не содержится в ветках</Value>
+          <Value>Не содержится в ветвях</Value>
         </TranslationItem>
         <TranslationItem Name="containedInNoTag" Property="Text">
           <Source>Contained in no tag</Source>
@@ -608,15 +600,15 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         </TranslationItem>
         <TranslationItem Name="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem" Property="Text">
           <Source>Show remote branches only when no local branch contains this commit</Source>
-          <Value>Показывать внешние ветки только когда не существует локальных веток, содержащих этот коммит</Value>
+          <Value>Показывать внешние ветви только когда не существует локальных ветвей, содержащих этот коммит</Value>
         </TranslationItem>
         <TranslationItem Name="showContainedInBranchesRemoteToolStripMenuItem" Property="Text">
           <Source>Show remote branches containing this commit</Source>
-          <Value>Показать внешние ветки, содержащие этот коммит</Value>
+          <Value>Показать внешние ветви, содержащие этот коммит</Value>
         </TranslationItem>
         <TranslationItem Name="showContainedInBranchesToolStripMenuItem" Property="Text">
           <Source>Show local branches containing this commit</Source>
-          <Value>Показать локальные ветки, содержащие этот коммит</Value>
+          <Value>Показать локальные ветви, содержащие этот коммит</Value>
         </TranslationItem>
         <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text">
           <Source>Show tags containing this commit</Source>
@@ -644,29 +636,29 @@ Value:  {2} = {3}</Source>
     </TranslationCategory>
     <TranslationCategory Name="ConfirmationsSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Confirmations</Source>
-          <Value />
+          <Value>Подтверждения</Value>
         </TranslationItem>
-        <TranslationItem Name="CheckoutGB" Property="Text" type="unfinished">
+        <TranslationItem Name="CheckoutGB" Property="Text">
           <Source>Don't ask to confirm to (use with caution)</Source>
-          <Value />
+          <Value>Не спрашивать подтверждения (использовать с осторожностью)</Value>
         </TranslationItem>
-        <TranslationItem Name="chkAddTrackingRef" Property="Text" type="unfinished">
-          <Source>Add a tracking reference for newly pushed branch.</Source>
-          <Value />
+        <TranslationItem Name="chkAddTrackingRef" Property="Text">
+          <Source>Add a tracking reference for newly pushed branch</Source>
+          <Value>Добавить отслеживание ссылки для вновь запушенной ветви</Value>
         </TranslationItem>
-        <TranslationItem Name="chkAmmend" Property="Text" type="unfinished">
-          <Source>Ammend last commit.</Source>
-          <Value />
+        <TranslationItem Name="chkAmmend" Property="Text">
+          <Source>Ammend last commit</Source>
+          <Value>Присоединить к последнему коммиту</Value>
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
-          <Source>Apply automatically stashed changes.  Stash will be automatically poped after successful pull.</Source>
+          <Source>Apply stashed changes (Stash will be popped automatically after successful pull)</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkPushNewBranch" Property="Text" type="unfinished">
-          <Source>Push a new branch for the remote.</Source>
-          <Value />
+          <Source>Push a new branch for the remote</Source>
+          <Value>Пушить новую ветвь во внешний репозиторий</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -720,9 +712,9 @@ Value:  {2} = {3}</Source>
           <Source>Could not locate a remote that belongs to your user!</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_strDone" Property="Text" type="unfinished">
+        <TranslationItem Name="_strDone" Property="Text">
           <Source>Done</Source>
-          <Value />
+          <Value>Готово</Value>
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
           <Source>Error</Source>
@@ -753,25 +745,25 @@ Value:  {2} = {3}</Source>
           <Source>Pull request data</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Title:</Source>
-          <Value />
+          <Value>Заголовок:</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Body:</Source>
-          <Value />
+          <Value>Сообщение:</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text" type="unfinished">
           <Source>Target repository:</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label4" Property="Text" type="unfinished">
+        <TranslationItem Name="label4" Property="Text">
           <Source>Your branch:</Source>
-          <Value />
+          <Value>Ваша ветвь:</Value>
         </TranslationItem>
-        <TranslationItem Name="label5" Property="Text" type="unfinished">
+        <TranslationItem Name="label5" Property="Text">
           <Source>Target branch:</Source>
-          <Value />
+          <Value>Ветвь назначения:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -877,7 +869,7 @@ Do you want to open it?</Source>
         </TranslationItem>
         <TranslationItem Name="_showCurrentBranch" Property="Text">
           <Source>Show current branch</Source>
-          <Value>Показывать текущую ветку</Value>
+          <Value>Показывать текущую ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="editToolStripMenuItem" Property="Text">
           <Source>Edit</Source>
@@ -917,7 +909,7 @@ Do you want to open it?</Source>
         </TranslationItem>
         <TranslationItem Name="RssFeedType" Property="Text">
           <Source>RSS Feed</Source>
-          <Value>RSS feed</Value>
+          <Value>RSS лента</Value>
         </TranslationItem>
         <TranslationItem Name="Title" Property="HeaderText">
           <Source>Title</Source>
@@ -1011,9 +1003,9 @@ Do you want to open it?</Source>
           <Source>No changes</Source>
           <Value>Нет изменений</Value>
         </TranslationItem>
-        <TranslationItem Name="_UnsupportedMultiselectAction" Property="Text" type="unfinished">
+        <TranslationItem Name="_UnsupportedMultiselectAction" Property="Text">
           <Source>Operation not supported</Source>
-          <Value />
+          <Value>Операция не поддерживается</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1269,9 +1261,9 @@ Do you want to open it?</Source>
           <Source>Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu "Plugins/{0}".</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_strLoading" Property="Text" type="unfinished">
+        <TranslationItem Name="_strLoading" Property="Text">
           <Source> : LOADING : </Source>
-          <Value />
+          <Value> : ЗАГРУЗКА : </Value>
         </TranslationItem>
         <TranslationItem Name="_strNo" Property="Text">
           <Source>No</Source>
@@ -1286,9 +1278,9 @@ Do you want to open it?</Source>
 </Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_strSearching" Property="Text" type="unfinished">
+        <TranslationItem Name="_strSearching" Property="Text">
           <Source> : SEARCHING : </Source>
-          <Value />
+          <Value> : ПОИСК : </Value>
         </TranslationItem>
         <TranslationItem Name="_strSelectOneItem" Property="Text" type="unfinished">
           <Source>You must select exactly one item</Source>
@@ -1374,7 +1366,7 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="_remoteAndLocalPathRequired" Property="Text">
           <Source>A remote path and local path are required</Source>
-          <Value>Необходимо указать удаленный и локальный путь</Value>
+          <Value>Необходимо указать внешний и локальный путь</Value>
         </TranslationItem>
         <TranslationItem Name="chkForce" Property="Text">
           <Source>Force</Source>
@@ -1390,7 +1382,7 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>Branch</Source>
-          <Value>Ветка</Value>
+          <Value>Ветвь</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1604,31 +1596,31 @@ revision:</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Create Branch</Source>
-          <Value>Создать ветку</Value>
+          <Value>Создать ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="Checkout" Property="Text">
           <Source>Checkout branch</Source>
-          <Value>Выбрать ветку</Value>
+          <Value>Выбрать ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
           <Source>Checkout after create</Source>
-          <Value>Создать ветку</Value>
+          <Value>Создать ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Create branch</Source>
-          <Value>Создать ветку</Value>
+          <Value>Создать ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="_branchCaption" Property="Text">
           <Source>Branch</Source>
-          <Value>Ветка</Value>
+          <Value>Ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="_selectOneRevision" Property="Text">
           <Source>Select 1 revision to create the branch on.</Source>
-          <Value>Выберите коммит, чтобы создать на его основе ветку.</Value>
+          <Value>Выберите коммит, чтобы создать на его основе ветвь.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Branch name</Source>
-          <Value>Имя ветки</Value>
+          <Value>Имя ветви</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1636,7 +1628,7 @@ revision:</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Create branch</Source>
-          <Value>Создать ветку</Value>
+          <Value>Создать ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
           <Source>Checkout after create</Source>
@@ -1648,7 +1640,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Create branch</Source>
-          <Value>Создать ветку</Value>
+          <Value>Создать ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="Orphan" Property="Text" type="unfinished">
           <Source>Orphan</Source>
@@ -1656,19 +1648,19 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="_branchNameIsEmpty" Property="Text">
           <Source>Enter branch name.</Source>
-          <Value>Введите имя ветки.</Value>
+          <Value>Введите имя ветви.</Value>
         </TranslationItem>
         <TranslationItem Name="_branchNameIsNotValud" Property="Text">
           <Source>“{0}” is not valid branch name.</Source>
-          <Value>«{0}» — недопустимое имя для ветки.</Value>
+          <Value>«{0}» — недопустимое имя для ветви.</Value>
         </TranslationItem>
         <TranslationItem Name="_noRevisionSelected" Property="Text">
           <Source>Select 1 revision to create the branch on.</Source>
-          <Value>Выберите 1 ревизию для создания от неё ветки.</Value>
+          <Value>Выберите 1 ревизию для создания от неё ветви.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Branch name</Source>
-          <Value>Имя ветки</Value>
+          <Value>Имя ветви</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1676,7 +1668,7 @@ revision:</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Git Extensions</Source>
-          <Value />
+          <Value>Git Extensions</Value>
         </TranslationItem>
         <TranslationItem Name="CommitInfoTabPage" Property="Text">
           <Source>Commit</Source>
@@ -1694,9 +1686,9 @@ revision:</Source>
           <Source>Git bash</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="PuTTYToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="PuTTYToolStripMenuItem" Property="Text">
           <Source>PuTTY</Source>
-          <Value />
+          <Value>PuTTY</Value>
         </TranslationItem>
         <TranslationItem Name="RefreshButton" Property="ToolTipText">
           <Source>Refresh</Source>
@@ -1752,7 +1744,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="_noBranchTitle" Property="Text">
           <Source>no branch</Source>
-          <Value>нет веток</Value>
+          <Value>нет ветвей</Value>
         </TranslationItem>
         <TranslationItem Name="_noReposHostFound" Property="Text" type="unfinished">
           <Source>Could not find any relevant repository hosts for the currently open repository.</Source>
@@ -1850,21 +1842,21 @@ revision:</Source>
           <Source>Bisect</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="blameToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="blameToolStripMenuItem" Property="Text">
           <Source>Blame</Source>
-          <Value />
+          <Value>Авторство</Value>
         </TranslationItem>
-        <TranslationItem Name="blameToolStripMenuItem1" Property="Text" type="unfinished">
+        <TranslationItem Name="blameToolStripMenuItem1" Property="Text">
           <Source>Blame</Source>
-          <Value />
+          <Value>Авторство</Value>
         </TranslationItem>
         <TranslationItem Name="branchSelect" Property="Text">
           <Source>Branch</Source>
-          <Value>Ветка</Value>
+          <Value>Ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="branchToolStripMenuItem" Property="Text">
           <Source>Create branch</Source>
-          <Value>Создать ветку</Value>
+          <Value>Создать ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
           <Source>Changelog</Source>
@@ -1872,7 +1864,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
           <Source>Checkout branch</Source>
-          <Value>Получить ветку</Value>
+          <Value>Получить ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutToolStripMenuItem" Property="Text">
           <Source>Checkout revision</Source>
@@ -1936,7 +1928,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
           <Source>Delete branch</Source>
-          <Value>Удалить ветку</Value>
+          <Value>Удалить ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
           <Source>Delete index.lock</Source>
@@ -2052,7 +2044,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="gitToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Git</Source>
-          <Value />
+          <Value>Git</Value>
         </TranslationItem>
         <TranslationItem Name="gitcommandLogToolStripMenuItem" Property="Text">
           <Source>Gitcommand log</Source>
@@ -2084,7 +2076,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
           <Source>Manage remote repositories</Source>
-          <Value>Управление удаленными репозиториями</Value>
+          <Value>Управление внешним репозиториями</Value>
         </TranslationItem>
         <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text">
           <Source>Manage submodules</Source>
@@ -2092,7 +2084,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Source>Merge branches</Source>
-          <Value>Объединить ветки</Value>
+          <Value>Объединить ветви</Value>
         </TranslationItem>
         <TranslationItem Name="mergeToolStripMenuItem" Property="Text">
           <Source>Merge</Source>
@@ -2168,11 +2160,11 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="remoteToolStripMenuItem" Property="Text">
           <Source>Remote</Source>
-          <Value>Внешние</Value>
+          <Value>Внешние репозитории</Value>
         </TranslationItem>
         <TranslationItem Name="remotesToolStripMenuItem" Property="Text">
           <Source>Remotes</Source>
-          <Value>Удаленные</Value>
+          <Value>Внешние репозитории</Value>
         </TranslationItem>
         <TranslationItem Name="resetFileToAToolStripMenuItem" Property="Text" type="unfinished">
           <Source>A</Source>
@@ -2272,7 +2264,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel1" Property="Text">
           <Source>Branches:</Source>
-          <Value>Ветки:</Value>
+          <Value>Ветви:</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel2" Property="Text">
           <Source>Filter:</Source>
@@ -2312,7 +2304,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="branchSelect" Property="ToolTipText" type="obsolete">
           <Source>Change current branch</Source>
-          <Value>Сменить текущую ветку</Value>
+          <Value>Сменить текущую ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="stashChangesToolStripMenuItem" Property="ToolTipText" type="obsolete">
           <Source>Stash changes</Source>
@@ -2388,11 +2380,11 @@ Do you want to abort and remove it from the recent repositories list?</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Checkout branch</Source>
-          <Value>Выбор ветки</Value>
+          <Value>Выбор ветви</Value>
         </TranslationItem>
         <TranslationItem Name="LocalBranch" Property="Text">
           <Source>Local branch</Source>
-          <Value>Локальная ветка</Value>
+          <Value>Локальная ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Checkout</Source>
@@ -2400,11 +2392,11 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="Remotebranch" Property="Text">
           <Source>Remote branch</Source>
-          <Value>Внешняя ветка</Value>
+          <Value>Внешняя ветвь</Value>
         </TranslationItem>
-        <TranslationItem Name="_createBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="_createBranch" Property="Text">
           <Source>Create local branch with the name:</Source>
-          <Value />
+          <Value>Создать локальную ветвь с именем:</Value>
         </TranslationItem>
         <TranslationItem Name="_customBranchNameIsEmpty" Property="Text" type="unfinished">
           <Source>Custom branch name is empty.
@@ -2418,11 +2410,11 @@ Enter valid branch name or select predefined value.</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select branch</Source>
-          <Value>Выберите ветку</Value>
+          <Value>Выберите ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="localChangesGB" Property="Text" type="unfinished">
           <Source>Local changes</Source>
-          <Value />
+          <Value>Локальные изменения</Value>
         </TranslationItem>
         <TranslationItem Name="rbCreateBranchWithCustomName" Property="Text" type="unfinished">
           <Source>Create local branch with custom name:</Source>
@@ -2446,7 +2438,7 @@ Enter valid branch name or select predefined value.</Source>
         </TranslationItem>
         <TranslationItem Name="rbResetBranch" Property="Text">
           <Source>Reset local branch with the name:</Source>
-          <Value>Сбросить локальную ветку с именем «{0}»</Value>
+          <Value>Сбросить локальную ветвь с именем «{0}»</Value>
         </TranslationItem>
         <TranslationItem Name="rbStash" Property="Text" type="unfinished">
           <Source>Stash</Source>
@@ -2462,7 +2454,7 @@ Enter valid branch name or select predefined value.</Source>
         </TranslationItem>
         <TranslationItem Name="rbCreateBranch" Property="Text" type="obsolete">
           <Source>Create local branch with the name '{0}'</Source>
-          <Value>Создать локальную ветку с именем «{0}»</Value>
+          <Value>Создать локальную ветвь с именем «{0}»</Value>
         </TranslationItem>
         <TranslationItem Name="Force" Property="Text" type="obsolete">
           <Source>Force</Source>
@@ -2539,7 +2531,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="obsolete">
           <Source>Select a commit you want to cherry pick. The commit will be recommitted on top of the current head.</Source>
-          <Value>Выберите коммит для cherry pick. Коммит будет скопирован на вершину текущей ветки.</Value>
+          <Value>Выберите коммит для cherry pick. Коммит будет скопирован на вершину текущей ветви.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2549,9 +2541,9 @@ revision:</Source>
           <Source>Choose Commit</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="btnOK" Property="Text" type="unfinished">
+        <TranslationItem Name="btnOK" Property="Text">
           <Source>OK</Source>
-          <Value />
+          <Value>OK</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2683,7 +2675,7 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="brachLabel" Property="Text">
           <Source>&amp;Branch:</Source>
-          <Value>Ветка</Value>
+          <Value>Ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="cbIntializeAllSubmodules" Property="Text">
           <Source>Initialize all submodules</Source>
@@ -2695,15 +2687,15 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>&amp;Repository to clone:</Source>
-          <Value>Удаленный репозиторий</Value>
+          <Value>&amp;Внешний репозиторий для клонирования:</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>&amp;Destination:</Source>
-          <Value>Назначение</Value>
+          <Value>&amp;Назначение:</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>&amp;Subdirectory to create:</Source>
-          <Value>Подкаталог для создания</Value>
+          <Value>&amp;Подкаталог для создания:</Value>
         </TranslationItem>
         <TranslationItem Name="Info" Property="Text" type="obsolete">
           <Source>The repository will be cloned to a new directory located here:
@@ -2786,10 +2778,6 @@ Do you want to continue?</Source>
           <Source>Amend commit</Source>
           <Value>Дописать коммит</Value>
         </TranslationItem>
-        <TranslationItem Name="_checkBoxAutoWrap" Property="Text" type="unfinished">
-          <Source>Auto-wrap</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text" type="unfinished">
           <Source>Commit Message is requested during commit</Source>
           <Value />
@@ -2823,7 +2811,7 @@ Do you want to continue?</Source>
         </TranslationItem>
         <TranslationItem Name="_commitValidationCaption" Property="Text" type="unfinished">
           <Source>Commit validation</Source>
-          <Value />
+          <Value>Проверка сообщения</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteFailed" Property="Text">
           <Source>Delete file failed</Source>
@@ -2896,18 +2884,18 @@ Are you sure you want to commit?</Source>
           <Source>This commit will be unreferenced when switching to another branch and can be lost.
 
 Do you want to continue?</Source>
-          <Value>Вы работаете не в ветке.
-На этот коммит не будет ссылок, и когда вы переключитесь на другую ветку, он может быть потерян.
+          <Value>Вы работаете не в ветве.
+На этот коммит не будет ссылок, и когда вы переключитесь на другую ветвь, он может быть потерян.
 
 Хотите продолжить?</Value>
         </TranslationItem>
-        <TranslationItem Name="_notOnBranchButtons" Property="Text" type="unfinished">
+        <TranslationItem Name="_notOnBranchButtons" Property="Text">
           <Source>Checkout branch|Continue</Source>
-          <Value />
+          <Value>Забрать ветвь|Продолжить</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranchCaption" Property="Text">
           <Source>Not on a branch</Source>
-          <Value>Не на ветке.</Value>
+          <Value>Не на ветве.</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranchMainInstruction" Property="Text" type="unfinished">
           <Source>You are not working on a branch</Source>
@@ -2981,13 +2969,13 @@ Do you want to continue?</Source>
           <Source>Close dialog after each commit</Source>
           <Value>Закрывать диалог после каждого коммита</Value>
         </TranslationItem>
-        <TranslationItem Name="commitCursorColumnLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="commitCursorColumnLabel" Property="Text">
           <Source>Col</Source>
-          <Value />
+          <Value>Кол</Value>
         </TranslationItem>
-        <TranslationItem Name="commitCursorLineLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="commitCursorLineLabel" Property="Text">
           <Source>Ln</Source>
-          <Value />
+          <Value>Стр</Value>
         </TranslationItem>
         <TranslationItem Name="commitMessageToolStripMenuItem" Property="Text">
           <Source>Commit &amp;message</Source>
@@ -3239,9 +3227,9 @@ Choose 'No' to keep all new files.</Source>
           <Source>Cancel</Source>
           <Value>Отмена</Value>
         </TranslationItem>
-        <TranslationItem Name="buttonOk" Property="Text" type="unfinished">
+        <TranslationItem Name="buttonOk" Property="Text">
           <Source>Ok</Source>
-          <Value />
+          <Value>Ok</Value>
         </TranslationItem>
         <TranslationItem Name="groupBoxCommitTemplates" Property="Text">
           <Source>Commit templates</Source>
@@ -3274,10 +3262,6 @@ Choose 'No' to keep all new files.</Source>
         <TranslationItem Name="labelSecondLineEmpty" Property="Text">
           <Source>Second line must be empty:</Source>
           <Value>Вторая строка должна быть пустой:</Value>
-        </TranslationItem>
-        <TranslationItem Name="labelUseIndent" Property="Text" type="unfinished">
-          <Source>Indent lines after first line:</Source>
-          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3321,7 +3305,7 @@ Choose 'No' to keep all new files.</Source>
         </TranslationItem>
         <TranslationItem Name="OkButton" Property="Text" type="unfinished">
           <Source>OK</Source>
-          <Value />
+          <Value>OK</Value>
         </TranslationItem>
         <TranslationItem Name="_needEnterCaptionText" Property="Text">
           <Source>You need to enter a caption.</Source>
@@ -3349,7 +3333,7 @@ Choose 'No' to keep all new files.</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Delete branch</Source>
-          <Value>Удалить ветку</Value>
+          <Value>Удалить ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="ForceDelete" Property="Text">
           <Source>Force delete</Source>
@@ -3361,25 +3345,25 @@ Choose 'No' to keep all new files.</Source>
         </TranslationItem>
         <TranslationItem Name="_cannotDeleteCurrentBranchMessage" Property="Text">
           <Source>Cannot delete the branch “{0}” which you are currently on.</Source>
-          <Value>Вы не можете удалить ветку «{0}», на которой в данный момент находитесь.</Value>
+          <Value>Вы не можете удалить ветвь «{0}», на которой в данный момент находитесь.</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteBranchCaption" Property="Text">
           <Source>Delete branches</Source>
-          <Value>Удалить ветку</Value>
+          <Value>Удалить ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteBranchQuestion" Property="Text">
           <Source>Are you sure you want to delete selected branches?
 Deleting a branch can cause commits to be deleted too!</Source>
-          <Value>Вы точно хотите удалить ветку?
-Удаление ветки также приведет к удалению коммитов, которые есть только в этой ветке!</Value>
+          <Value>Вы точно хотите удалить ветвь?
+Удаление ветви также приведет к удалению коммитов, которые есть только в этой ветве!</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteUnmergedBranchForcingSuggestion" Property="Text">
           <Source>You cannot delete unmerged branch until you set “force delete” mode.</Source>
-          <Value>Для удаления неполностью слитой ветки необходимо установить режим «Принудительное удаление».</Value>
+          <Value>Для удаления неполностью слитой ветви необходимо установить режим «Принудительное удаление».</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select branches</Source>
-          <Value>Выберите ветку</Value>
+          <Value>Выберите ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>You can only delete branches when they are fully merged in HEAD. 
@@ -3387,9 +3371,9 @@ When you delete a branch the commits can get lost because nothing point to them.
 When you want to delete a not-fully merged branch, you can override
 this using `force delete´.
 </Source>
-          <Value>Удалять можно только полностью слитую ветку,
+          <Value>Удалять можно только полностью слитую ветвь,
 иначе оставшиеся без ссылок коммиты будут потеряны.
-Чтобы принудительно удалить неполностью слитую ветку,
+Чтобы принудительно удалить неполностью слитую ветвь,
 установите режим "Принудительное удаление".</Value>
         </TranslationItem>
       </translationItems>
@@ -3500,13 +3484,13 @@ Click on the "Support this project" button to get more information about making 
           <Source>File History</Source>
           <Value>История файла</Value>
         </TranslationItem>
-        <TranslationItem Name="BlameTab" Property="Text" type="unfinished">
+        <TranslationItem Name="BlameTab" Property="Text">
           <Source>Blame</Source>
-          <Value />
+          <Value>Авторство</Value>
         </TranslationItem>
-        <TranslationItem Name="DiffTab" Property="Text" type="unfinished">
+        <TranslationItem Name="DiffTab" Property="Text">
           <Source>Diff</Source>
-          <Value />
+          <Value>Изменения</Value>
         </TranslationItem>
         <TranslationItem Name="ViewTab" Property="Text">
           <Source>View</Source>
@@ -3530,7 +3514,7 @@ Click on the "Support this project" button to get more information about making 
         </TranslationItem>
         <TranslationItem Name="loadBlameOnShowToolStripMenuItem" Property="Text">
           <Source>Load blame on show</Source>
-          <Value>Загружать blame при открытии</Value>
+          <Value>Загружать информацию об авторстве при открытии</Value>
         </TranslationItem>
         <TranslationItem Name="loadHistoryOnShowToolStripMenuItem" Property="Text">
           <Source>Load history on show</Source>
@@ -3554,7 +3538,7 @@ Click on the "Support this project" button to get more information about making 
         </TranslationItem>
         <TranslationItem Name="toolStripLabel1" Property="Text">
           <Source>Branches:</Source>
-          <Value>Ветки:</Value>
+          <Value>Ветви:</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel2" Property="Text">
           <Source>Filter:</Source>
@@ -3627,7 +3611,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="ok" Property="Text" type="unfinished">
           <Source>OK</Source>
-          <Value />
+          <Value>OK</Value>
         </TranslationItem>
         <TranslationItem Name="otherHome" Property="Text">
           <Source>Other</Source>
@@ -3663,7 +3647,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="SelectedBranch" Property="Text">
           <Source>Branch</Source>
-          <Value>Ветка</Value>
+          <Value>Ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="SendToMail" Property="Text">
           <Source>Mail patches to</Source>
@@ -3671,7 +3655,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="_currentBranchText" Property="Text">
           <Source>Current branch:</Source>
-          <Value>Текущая ветка:</Value>
+          <Value>Текущая ветвь:</Value>
         </TranslationItem>
         <TranslationItem Name="_noEmailEnteredText" Property="Text" type="unfinished">
           <Source>You need to enter an email address.</Source>
@@ -3775,7 +3759,7 @@ Failed to send mail.</Source>
         </TranslationItem>
         <TranslationItem Name="_selectRemote" Property="Text" type="unfinished">
           <Source>Please select a remote repository</Source>
-          <Value>Пожалуйста, выберите удаленный репозиторий</Value>
+          <Value>Пожалуйста, выберите внешний репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="labelChange" Property="Text" type="unfinished">
           <Source>Change:</Source>
@@ -3827,7 +3811,7 @@ Failed to send mail.</Source>
         </TranslationItem>
         <TranslationItem Name="_selectRemote" Property="Text" type="unfinished">
           <Source>Please select a remote repository</Source>
-          <Value>Пожалуйста, выберите удаленный репозиторий</Value>
+          <Value>Пожалуйста, выберите внешний репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="labelBranch" Property="Text" type="unfinished">
           <Source>Branch:</Source>
@@ -4117,7 +4101,7 @@ defaultrebase=0</Source>
         </TranslationItem>
         <TranslationItem Name="okBtn" Property="Text" type="unfinished">
           <Source>OK</Source>
-          <Value />
+          <Value>OK</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4125,7 +4109,7 @@ defaultrebase=0</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Hotkeys</Source>
-          <Value />
+          <Value>Горячие клавиши</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4242,11 +4226,11 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Merge branches</Source>
-          <Value>Слияние веток</Value>
+          <Value>Слияние ветвей</Value>
         </TranslationItem>
         <TranslationItem Name="Currentbranch" Property="Text">
           <Source>Current branch</Source>
-          <Value>Текущая ветка</Value>
+          <Value>Текущая ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="NonDefaultMergeStrategy" Property="Text">
           <Source>Use non-default merge strategy</Source>
@@ -4289,7 +4273,7 @@ ancestor tree. </Source>
         </TranslationItem>
         <TranslationItem Name="fastForward" Property="Text">
           <Source>Keep a single branch line if possible (fast forward)</Source>
-          <Value>Оставить одну ветку, если это возможно (fast forward)</Value>
+          <Value>Оставить одну ветвь, если это возможно (fast forward)</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Merge</Source>
@@ -4297,7 +4281,7 @@ ancestor tree. </Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Merge branch into current branch</Source>
-          <Value>Слияние текущей ветки с другой веткой</Value>
+          <Value>Слияние текущей ветви с другой ветвей</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>Merge with</Source>
@@ -4367,11 +4351,11 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         </TranslationItem>
         <TranslationItem Name="Fetch" Property="Text">
           <Source>Do not merge, only &amp;fetch remote changes</Source>
-          <Value>Только получить внешнюю ветку, не объединяя с локальной (fetch)</Value>
+          <Value>Только получить внешнюю ветвь, не объединяя с локальной (fetch)</Value>
         </TranslationItem>
         <TranslationItem Name="Merge" Property="Text">
           <Source>&amp;Merge remote branch into current branch</Source>
-          <Value>Объединить локальную и внешнюю ветки (merge)</Value>
+          <Value>Объединить локальную и внешнюю ветви (merge)</Value>
         </TranslationItem>
         <TranslationItem Name="Mergetool" Property="Text">
           <Source>Solve conflicts</Source>
@@ -4389,13 +4373,13 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
           <Source>Remote</Source>
           <Value>Внешние</Value>
         </TranslationItem>
-        <TranslationItem Name="PullFromUrl" Property="Text" type="unfinished">
+        <TranslationItem Name="PullFromUrl" Property="Text">
           <Source>Url</Source>
-          <Value />
+          <Value>Url</Value>
         </TranslationItem>
         <TranslationItem Name="Rebase" Property="Text">
           <Source>&amp;Rebase current branch on top of remote branch, creates linear history (use with caution)</Source>
-          <Value>Переставить локальную ветку над внешней (rebase)</Value>
+          <Value>Переставить локальную ветвь над внешней (rebase)</Value>
         </TranslationItem>
         <TranslationItem Name="Stash" Property="Text">
           <Source>Stash changes</Source>
@@ -4448,7 +4432,7 @@ Do you want to continue?</Source>
         </TranslationItem>
         <TranslationItem Name="_notOnBranchCaption" Property="Text">
           <Source>Not on a branch</Source>
-          <Value>Не на ветке.</Value>
+          <Value>Не на ветве.</Value>
         </TranslationItem>
         <TranslationItem Name="_notOnBranchMainInstruction" Property="Text" type="unfinished">
           <Source>You are not working on a branch</Source>
@@ -4466,7 +4450,7 @@ This will initialize and update all submodules recursive.</Source>
         </TranslationItem>
         <TranslationItem Name="_selectRemoteRepository" Property="Text">
           <Source>Please select a remote repository</Source>
-          <Value>Пожалуйста, выберите удаленный репозиторий</Value>
+          <Value>Пожалуйста, выберите внешний репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="_selectSourceDirectory" Property="Text">
           <Source>Please select a source directory</Source>
@@ -4482,15 +4466,15 @@ This will initialize and update all submodules recursive.</Source>
         </TranslationItem>
         <TranslationItem Name="groupBox3" Property="Text">
           <Source>Branch</Source>
-          <Value>Ветка</Value>
+          <Value>Ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Local branch</Source>
-          <Value>Локальная ветка</Value>
+          <Value>Локальная ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>Remote branch</Source>
-          <Value>Внешняя ветка</Value>
+          <Value>Внешняя ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="BrowseSource" Property="Text" type="obsolete">
           <Source>Browse</Source>
@@ -4514,7 +4498,7 @@ This will initialize and update all submodules recursive.</Source>
         </TranslationItem>
         <TranslationItem Name="BranchTab" Property="Text">
           <Source>Push branches</Source>
-          <Value>Отправить ветку</Value>
+          <Value>Отправить ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="DeleteColumn" Property="HeaderText">
           <Source>Delete Remote Branch</Source>
@@ -4542,7 +4526,7 @@ This will initialize and update all submodules recursive.</Source>
         </TranslationItem>
         <TranslationItem Name="MultipleBranchTab" Property="Text">
           <Source>Push multiple branches</Source>
-          <Value>Отправить несколько веток</Value>
+          <Value>Отправить несколько ветвей</Value>
         </TranslationItem>
         <TranslationItem Name="NewColumn" Property="HeaderText">
           <Source>New at Remote</Source>
@@ -4558,7 +4542,7 @@ This will initialize and update all submodules recursive.</Source>
         </TranslationItem>
         <TranslationItem Name="PushAllBranches" Property="Text">
           <Source>Push &amp;all branches</Source>
-          <Value>Pu&amp;sh все ветки</Value>
+          <Value>Pu&amp;sh все ветви</Value>
         </TranslationItem>
         <TranslationItem Name="PushAllTags" Property="Text">
           <Source>Push &amp;all tags</Source>
@@ -4574,7 +4558,7 @@ This will initialize and update all submodules recursive.</Source>
         </TranslationItem>
         <TranslationItem Name="PushToUrl" Property="Text" type="unfinished">
           <Source>Url</Source>
-          <Value />
+          <Value>Url</Value>
         </TranslationItem>
         <TranslationItem Name="RemoteColumn" Property="HeaderText">
           <Source>Remote Branch</Source>
@@ -4599,8 +4583,8 @@ This will initialize and update all submodules recursive.</Source>
         <TranslationItem Name="_branchNewForRemote" Property="Text">
           <Source>The branch you are about to push seems to be a new branch for the remote.
 Are you sure you want to push this branch?</Source>
-          <Value>Ветка, которую вы собираетесь отправить, является новой для удаленного репозитория.
-Вы уверены, что хотите отправить эту ветку?</Value>
+          <Value>Ветвь, которую вы собираетесь отправить, является новой для внешнего репозитория.
+Вы уверены, что хотите отправить эту ветвь?</Value>
         </TranslationItem>
         <TranslationItem Name="_cannotLoadPutty" Property="Text">
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
@@ -4628,7 +4612,7 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="_selectRemote" Property="Text">
           <Source>Please select a remote repository</Source>
-          <Value>Пожалуйста, выберите удаленный репозиторий</Value>
+          <Value>Пожалуйста, выберите внешний репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="_selectTag" Property="Text">
           <Source>You need to select a tag to push or select "Push all tags".</Source>
@@ -4644,7 +4628,7 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Branch</Source>
-          <Value>Ветка</Value>
+          <Value>Ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox2" Property="Text">
           <Source>Push to</Source>
@@ -4656,7 +4640,7 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="groupBox4" Property="Text">
           <Source>Select Branches to Push</Source>
-          <Value>Выберите ветки для отправки</Value>
+          <Value>Выберите ветви для отправки</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Tag to push</Source>
@@ -4668,7 +4652,7 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="labelFrom" Property="Text">
           <Source>Branch to push</Source>
-          <Value>Отправить ветку</Value>
+          <Value>Отправить ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="labelTo" Property="Text">
           <Source>to</Source>
@@ -4676,12 +4660,12 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="BranchTab" Property="ToolTipText" type="obsolete">
           <Source>Push branches and commits to remote repository.</Source>
-          <Value>Отправить ветку и commit'ить в удаленный репозиторий.
+          <Value>Отправить ветвь и commit'ить во внешний репозиторий.
 </Value>
         </TranslationItem>
         <TranslationItem Name="TagTab" Property="ToolTipText" type="obsolete">
           <Source>Push tags to remote repository</Source>
-          <Value>Отправить метки в удаленный репозиторий</Value>
+          <Value>Отправить метки во внешний репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="BrowseSource" Property="Text" type="obsolete">
           <Source>Browse</Source>
@@ -4689,7 +4673,7 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="PullFromRemote" Property="Text" type="obsolete">
           <Source>Remote</Source>
-          <Value>Удаленный</Value>
+          <Value>Внешний</Value>
         </TranslationItem>
         <TranslationItem Name="RecursiveSubmodulesCheck" Property="Text" type="obsolete">
           <Source>Recursive submodules check</Source>
@@ -4783,7 +4767,7 @@ Nothing to rebase.</Source>
         </TranslationItem>
         <TranslationItem Name="_noBranchSelectedText" Property="Text">
           <Source>Please select a branch</Source>
-          <Value>Пожалуйста, выберите ветку</Value>
+          <Value>Пожалуйста, выберите ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="_solveConflictsText" Property="Text">
           <Source>Solve conflicts</Source>
@@ -4811,7 +4795,7 @@ Nothing to rebase.</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Rebase current branch on top of another branch</Source>
-          <Value>Перебазировать текущую ветку на верхушке другой</Value>
+          <Value>Перебазировать текущую ветвь на верхушке другой</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text" type="unfinished">
           <Source>Rebase on</Source>
@@ -4823,7 +4807,7 @@ Nothing to rebase.</Source>
         </TranslationItem>
         <TranslationItem Name="lblCurrent" Property="Text">
           <Source>Current branch:</Source>
-          <Value>Текущая ветка:</Value>
+          <Value>Текущая ветвь:</Value>
         </TranslationItem>
         <TranslationItem Name="lblRangeFrom" Property="Text" type="unfinished">
           <Source>From (exc.)</Source>
@@ -4835,7 +4819,7 @@ Nothing to rebase.</Source>
         </TranslationItem>
         <TranslationItem Name="_currentBranchText" Property="Text" type="obsolete">
           <Source>Current branch:</Source>
-          <Value>Текущая ветка:</Value>
+          <Value>Текущая ветвь:</Value>
         </TranslationItem>
         <TranslationItem Name="Currentbranch" Property="Text" type="obsolete">
           <Source>Current</Source>
@@ -4857,9 +4841,9 @@ Nothing to rebase.</Source>
           <Source>Most recent repositories</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text" type="unfinished">
+        <TranslationItem Name="Ok" Property="Text">
           <Source>OK</Source>
-          <Value />
+          <Value>OK</Value>
         </TranslationItem>
         <TranslationItem Name="anchorToLessToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Anchor to less recent repositories</Source>
@@ -4919,7 +4903,7 @@ Nothing to rebase.</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Remote repositories</Source>
-          <Value>Удаленные репозитории</Value>
+          <Value>Внешние репозитории</Value>
         </TranslationItem>
         <TranslationItem Name="BName" Property="HeaderText">
           <Source>Name</Source>
@@ -4927,7 +4911,7 @@ Nothing to rebase.</Source>
         </TranslationItem>
         <TranslationItem Name="BranchName" Property="HeaderText">
           <Source>Local branch name</Source>
-          <Value>Имя локальной ветки</Value>
+          <Value>Имя локальной ветви</Value>
         </TranslationItem>
         <TranslationItem Name="Delete" Property="Text">
           <Source>Delete</Source>
@@ -4947,11 +4931,11 @@ Nothing to rebase.</Source>
         </TranslationItem>
         <TranslationItem Name="Prune" Property="Text">
           <Source>Prune remote branches</Source>
-          <Value>Удалить несуществующие ветки</Value>
+          <Value>Удалить несуществующие ветви</Value>
         </TranslationItem>
-        <TranslationItem Name="PuTTYSSH" Property="Text" type="unfinished">
+        <TranslationItem Name="PuTTYSSH" Property="Text">
           <Source>PuTTY SSH</Source>
-          <Value />
+          <Value>PuTTY SSH</Value>
         </TranslationItem>
         <TranslationItem Name="RemoteCombo" Property="HeaderText">
           <Source>Remote repository</Source>
@@ -4975,7 +4959,7 @@ Nothing to rebase.</Source>
         </TranslationItem>
         <TranslationItem Name="UpdateBranch" Property="Text">
           <Source>Update all remote branch info</Source>
-          <Value>Обновить внешние ветки</Value>
+          <Value>Обновить внешние ветви</Value>
         </TranslationItem>
         <TranslationItem Name="_hintDelete" Property="Text">
           <Source>Delete</Source>
@@ -4985,9 +4969,9 @@ Nothing to rebase.</Source>
           <Source>Fetch Url</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_labelUrlAsFetchPush" Property="Text" type="unfinished">
+        <TranslationItem Name="_labelUrlAsFetchPush" Property="Text">
           <Source>Url</Source>
-          <Value />
+          <Value>Url</Value>
         </TranslationItem>
         <TranslationItem Name="_questionAutoPullBehaviour" Property="Text" type="unfinished">
           <Source>You have added a new remote repository.
@@ -5051,9 +5035,9 @@ Value has been reset to empty value.</Source>
           <Source>Name</Source>
           <Value>Название</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Url</Source>
-          <Value />
+          <Value>Url</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>Private key file</Source>
@@ -5061,7 +5045,7 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="label4" Property="Text">
           <Source>Local branch name</Source>
-          <Value>Имя локальной ветки</Value>
+          <Value>Имя локальной ветви</Value>
         </TranslationItem>
         <TranslationItem Name="label5" Property="Text">
           <Source>Remote repository</Source>
@@ -5077,11 +5061,11 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Branch</Source>
-          <Value>Ветка</Value>
+          <Value>Ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="tabPage1" Property="Text">
           <Source>Remote repositories</Source>
-          <Value>Удаленные репозитории</Value>
+          <Value>Внешние репозитории</Value>
         </TranslationItem>
         <TranslationItem Name="tabPage2" Property="Text">
           <Source>Default pull behavior (fetch &amp; merge)</Source>
@@ -5101,7 +5085,7 @@ Value has been reset to empty value.</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Rename branch</Source>
-          <Value>Переименовать ветку</Value>
+          <Value>Переименовать ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Rename</Source>
@@ -5109,7 +5093,7 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="_branchRenameFailed" Property="Text">
           <Source>Rename failed.</Source>
-          <Value>Не удалось переименовать ветку.</Value>
+          <Value>Не удалось переименовать ветвь.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>New name</Source>
@@ -5167,9 +5151,9 @@ Value has been reset to empty value.</Source>
           <Source>Mixed: leave working dir untouched, reset index</Source>
           <Value>Mixed: рабочую копию не трогать, сбросить только индекс</Value>
         </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text" type="unfinished">
+        <TranslationItem Name="Ok" Property="Text">
           <Source>OK</Source>
-          <Value />
+          <Value>OK</Value>
         </TranslationItem>
         <TranslationItem Name="Soft" Property="Text">
           <Source>Soft: leave working dir and index untouched</Source>
@@ -5201,7 +5185,7 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="resetCaption" Property="Text">
           <Source>Reset branch</Source>
-          <Value>Сбросить ветку</Value>
+          <Value>Сбросить ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="resetHardWarning" Property="Text">
           <Source>You are about to discard ALL local changes, are you sure?</Source>
@@ -5225,7 +5209,7 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="ContextChooseRemote" Property="Text">
           <Source>Choose remote</Source>
-          <Value>Выбрать удаленную</Value>
+          <Value>Выбрать внешний</Value>
         </TranslationItem>
         <TranslationItem Name="ContextMarkAsSolved" Property="Text">
           <Source>Mark conflict as solved</Source>
@@ -5241,7 +5225,7 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="ContextOpenRemoteWith" Property="Text">
           <Source>Open remote with</Source>
-          <Value>Открыть удаленную с помощью</Value>
+          <Value>Открыть внешнюю с помощью</Value>
         </TranslationItem>
         <TranslationItem Name="ContextSaveBaseAs" Property="Text">
           <Source>Save base as</Source>
@@ -5253,7 +5237,7 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="ContextSaveRemoteAs" Property="Text">
           <Source>Save remote as</Source>
-          <Value>Сохранить удаленную как</Value>
+          <Value>Сохранить внешнюю как</Value>
         </TranslationItem>
         <TranslationItem Name="FileName" Property="HeaderText">
           <Source>Filename</Source>
@@ -5315,7 +5299,7 @@ This action cannot be made undone.</Source>
         </TranslationItem>
         <TranslationItem Name="_chooseRemoteFileFailedText" Property="Text">
           <Source>Choose remote file failed.</Source>
-          <Value>Не удалось выбрать удаленный файл.</Value>
+          <Value>Не удалось выбрать внешний файл.</Value>
         </TranslationItem>
         <TranslationItem Name="_conflictedFilesContextMenuText" Property="Text">
           <Source>Solve</Source>
@@ -5331,11 +5315,11 @@ This action cannot be made undone.</Source>
         </TranslationItem>
         <TranslationItem Name="_contextChooseRemoteMergeText" Property="Text">
           <Source>Choose remote (theirs)</Source>
-          <Value>Выбрать удаленный (их)</Value>
+          <Value>Выбрать внешний (их)</Value>
         </TranslationItem>
         <TranslationItem Name="_contextChooseRemoteRebaseText" Property="Text">
           <Source>Choose remote (ours)</Source>
-          <Value>Выбрать удаленный (наш)</Value>
+          <Value>Выбрать внешний (наш)</Value>
         </TranslationItem>
         <TranslationItem Name="_currentFormatFilter" Property="Text">
           <Source>Current format (*.{0})</Source>
@@ -5403,7 +5387,7 @@ Is the mergeconflict solved?</Source>
         </TranslationItem>
         <TranslationItem Name="chooseRemoteButtonText" Property="Text">
           <Source>Choose remote</Source>
-          <Value>Выбрать удаленный</Value>
+          <Value>Выбрать внешний</Value>
         </TranslationItem>
         <TranslationItem Name="commitGuidDataGridViewTextBoxColumn" Property="HeaderText" type="unfinished">
           <Source>CommitGuid</Source>
@@ -5432,11 +5416,11 @@ Choose to keep the local({1}), remote({2}) or base file.</Source>
         </TranslationItem>
         <TranslationItem Name="fileChangeLocallyAndRemotely" Property="Text">
           <Source>The file has been changed both locally({0}) and remotely({1}). Merge the changes.</Source>
-          <Value>Файл был изменен локально({0}) и удаленно({1}). Слейте изменения.</Value>
+          <Value>Файл был изменен локально({0}) и извне({1}). Слейте изменения.</Value>
         </TranslationItem>
         <TranslationItem Name="fileCreatedLocallyAndRemotely" Property="Text">
           <Source>A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.</Source>
-          <Value>Файл с одинаковым именем был создан локально({0}) и удалено({1}). Выберите файл, который Вы хотите оставить, или слейте их.</Value>
+          <Value>Файл с одинаковым именем был создан локально({0}) и извне({1}). Выберите файл, который Вы хотите оставить, или слейте их.</Value>
         </TranslationItem>
         <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text">
           <Source>File {0} does not have a base revision.
@@ -5444,13 +5428,13 @@ A file with the same name has been created locally({1}) and remotely({2}) causin
 
 Choose the file you want to keep, merge the files or delete the file?</Source>
           <Value>Файл {0} не имеет базовой ревизии.
-Файл с одним и тем же именем был создан локально({1}) и удаленно({2}), что вызвало конфликт.
+Файл с одним и тем же именем был создан локально({1}) и извне({2}), что вызвало конфликт.
 
 Удалите локальный файл, слейте файлы или удалите другой файл.</Value>
         </TranslationItem>
         <TranslationItem Name="fileDeletedLocallyAndModifiedRemotely" Property="Text">
           <Source>The file has been deleted locally({0}) and modified remotely({1}). Choose to delete the file or keep the modified version.</Source>
-          <Value>Файл был удален локально и изменен удаленно. Удалите или оставьте измененную версию.</Value>
+          <Value>Файл был удален локально и изменен извне. Удалите или оставьте измененную версию.</Value>
         </TranslationItem>
         <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text">
           <Source>File {0} does not have a local revision.
@@ -5458,7 +5442,7 @@ The file has been deleted locally({1}) but modified remotely({2}).
 
 Choose to delete the file or keep the modified version.</Source>
           <Value>Файл {0} не имеет локальной версии.
-Файл был удален локально({1}), но изменен удаленно({2}).
+Файл был удален локально({1}), но изменен извне({2}).
 
 Удалите файл или оставьте измененную версию.</Value>
         </TranslationItem>
@@ -5474,7 +5458,7 @@ Are you sure you want to open this file in {0}?</Source>
         </TranslationItem>
         <TranslationItem Name="fileModifiedLocallyAndDelededRemotely" Property="Text">
           <Source>The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.</Source>
-          <Value>Файл был изменен локально и удален удаленно. Можно оставить локальную версию или удалить файл.</Value>
+          <Value>Файл был изменен локально и удален извне. Можно оставить локальную версию или удалить файл.</Value>
         </TranslationItem>
         <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text">
           <Source>File {0} does not have a remote revision.
@@ -5482,7 +5466,7 @@ The file has been modified locally({1}) but deleted remotely({2}).
 
 Choose to delete the file or keep the modified version.</Source>
           <Value>У файла {0} не существует удаленной ревизии.
-Файл был изменен локально({1}) и удален удаленно({2}).
+Файл был изменен локально({1}) и удален извне({2}).
 
 Можно оставить локальную версию или удалить файл.</Value>
         </TranslationItem>
@@ -5524,7 +5508,7 @@ The merge conflict will not be marked as solved. Please try again.</Source>
         </TranslationItem>
         <TranslationItem Name="label5" Property="Text">
           <Source>Remote</Source>
-          <Value>Удаленный</Value>
+          <Value>Внешний</Value>
         </TranslationItem>
         <TranslationItem Name="label7" Property="Text">
           <Source>Local</Source>
@@ -5720,11 +5704,11 @@ Do you want to use this custom merge script?</Source>
         </TranslationItem>
         <TranslationItem Name="CurrentBranchOnlyCheck" Property="Text">
           <Source>Show current branch only</Source>
-          <Value>Показывать только текущую ветку</Value>
+          <Value>Показывать только текущую ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text" type="unfinished">
           <Source>OK</Source>
-          <Value />
+          <Value>OK</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Since</Source>
@@ -5760,7 +5744,7 @@ Do you want to use this custom merge script?</Source>
         </TranslationItem>
         <TranslationItem Name="label9" Property="Text">
           <Source>Branches</Source>
-          <Value>Ветки</Value>
+          <Value>Ветви</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -5768,15 +5752,15 @@ Do you want to use this custom merge script?</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Select multiple branches</Source>
-          <Value>Выделите несколько веток</Value>
+          <Value>Выделите несколько ветвей</Value>
         </TranslationItem>
         <TranslationItem Name="okButton" Property="Text" type="unfinished">
           <Source>Ok</Source>
-          <Value />
+          <Value>Ok</Value>
         </TranslationItem>
         <TranslationItem Name="selectBranchesLabel" Property="Text">
           <Source>Select branches</Source>
-          <Value>Выделите ветки</Value>
+          <Value>Выделите ветви</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -5815,7 +5799,7 @@ Do you want to set the correct command now? If not Global and Local Settings wil
         </TranslationItem>
         <TranslationItem Name="buttonOk" Property="Text" type="unfinished">
           <Source>OK</Source>
-          <Value />
+          <Value>OK</Value>
         </TranslationItem>
         <TranslationItem Name="label10" Property="Text">
           <Source>You need to set the correct path to 
@@ -5904,7 +5888,7 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
         </TranslationItem>
         <TranslationItem Name="AutostartPageant" Property="Text" type="obsolete">
           <Source>Automatically start authentication client when a private key is configured for a remote</Source>
-          <Value>Автоматически запускать клиент аутентификации, когда для удаленного репозитория сконфигурирован секретный ключ.</Value>
+          <Value>Автоматически запускать клиент аутентификации, когда для внешнего репозитория сконфигурирован секретный ключ.</Value>
         </TranslationItem>
         <TranslationItem Name="BlueIcon" Property="Text" type="obsolete">
           <Source>Blue</Source>
@@ -5912,7 +5896,7 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
         </TranslationItem>
         <TranslationItem Name="BranchBorders" Property="Text" type="obsolete">
           <Source>Draw branch borders</Source>
-          <Value>Рисовать границы веток</Value>
+          <Value>Рисовать границы ветвей</Value>
         </TranslationItem>
         <TranslationItem Name="BrowseCommitTemplate" Property="Text" type="obsolete">
           <Source>Browse</Source>
@@ -5952,7 +5936,7 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
         </TranslationItem>
         <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text" type="obsolete">
           <Source>Show current branch in Visual Studio</Source>
-          <Value>Показывать имя текущей ветки в Visual Studio</Value>
+          <Value>Показывать имя текущей ветви в Visual Studio</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text" type="obsolete">
           <Source>Show current working dir changes in revision graph (slow!)</Source>
@@ -6168,11 +6152,11 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="label32" Property="Text" type="obsolete">
           <Source>Color branch</Source>
-          <Value>Цвет ветки</Value>
+          <Value>Цвет ветви</Value>
         </TranslationItem>
         <TranslationItem Name="label33" Property="Text" type="obsolete">
           <Source>Color remote branch</Source>
-          <Value>Цвет внешней ветки</Value>
+          <Value>Цвет внешней ветви</Value>
         </TranslationItem>
         <TranslationItem Name="label36" Property="Text" type="obsolete">
           <Source>Color other label</Source>
@@ -6277,7 +6261,7 @@ global settings.
         </TranslationItem>
         <TranslationItem Name="MulticolorBranches" Property="Text" type="obsolete">
           <Source>Multicolor branches</Source>
-          <Value>Многоцветные ветки</Value>
+          <Value>Многоцветные ветви</Value>
         </TranslationItem>
         <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
           <Source>Name</Source>
@@ -6497,7 +6481,7 @@ global settings.
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text" type="unfinished">
           <Source>OK</Source>
-          <Value />
+          <Value>OK</Value>
         </TranslationItem>
         <TranslationItem Name="_fingerprintNotRegistredText" Property="Text" type="unfinished">
           <Source>The fingerprint of this host is not registered by PuTTY.
@@ -6565,7 +6549,7 @@ Do you want to trust this host key and then try again?</Source>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>Remote path</Source>
-          <Value>Внешняя ветка</Value>
+          <Value>Внешняя ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>Local path</Source>
@@ -6577,7 +6561,7 @@ Do you want to trust this host key and then try again?</Source>
         </TranslationItem>
         <TranslationItem Name="label5" Property="Text">
           <Source>Branch</Source>
-          <Value>Ветка</Value>
+          <Value>Ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="label6" Property="Text">
           <Source>Status</Source>
@@ -6622,7 +6606,7 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="cbBranches" Property="Text">
           <Source>Branches:</Source>
-          <Value>Ветки:</Value>
+          <Value>Ветви:</Value>
         </TranslationItem>
         <TranslationItem Name="cbTags" Property="Text" type="unfinished">
           <Source>Tags:</Source>
@@ -6812,8 +6796,8 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>&amp;Next</Source>
           <Value>Следующий</Value>
         </TranslationItem>
-        <TranslationItem Name="noLanguageCodeSelected" Property="Text" type="unfinished">
-          <Source>There is no languagecode selected.
+        <TranslationItem Name="noLanguageCodeSelected" Property="Text">
+          <Source>There is no language code selected.
 Do you want to select a language code first?</Source>
           <Value>Не выбран код языка.
 Вы желаете выбрать код языка сначала?</Value>
@@ -6838,9 +6822,9 @@ Do you want to select a language code first?</Source>
           <Source>Save as</Source>
           <Value>Сохранить как</Value>
         </TranslationItem>
-        <TranslationItem Name="saveAsTextFilter" Property="Text" type="unfinished">
+        <TranslationItem Name="saveAsTextFilter" Property="Text">
           <Source>Translation file (*.xml)</Source>
-          <Value />
+          <Value>Файл перевода (*.xml)</Value>
         </TranslationItem>
         <TranslationItem Name="saveCurrentChangesCaption" Property="Text">
           <Source>Save changes</Source>
@@ -6991,7 +6975,7 @@ Context menu for additional operations</Source>
         </TranslationItem>
         <TranslationItem Name="mnuLostObjectsCreateBranch" Property="Text">
           <Source>Create branch</Source>
-          <Value>Создать ветку</Value>
+          <Value>Создать ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="mnuLostObjectsCreateTag" Property="Text">
           <Source>Create tag</Source>
@@ -7047,15 +7031,15 @@ Context menu for additional operations</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Title" type="unfinished">
           <Source>Git Extensions</Source>
-          <Value />
+          <Value>Git Extensions</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="GitExtensionsSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Git Extensions</Source>
-          <Value />
+          <Value>Git Extensions</Value>
         </TranslationItem>
         <TranslationItem Name="chkCheckForUncommittedChangesInCheckoutBranch" Property="Text" type="unfinished">
           <Source>Check for uncommitted changes in checkout branch dialog</Source>
@@ -7160,7 +7144,7 @@ Context menu for additional operations</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Git</Source>
-          <Value />
+          <Value>Git</Value>
         </TranslationItem>
         <TranslationItem Name="BrowseGitBinPath" Property="Text">
           <Source>Browse</Source>
@@ -7182,9 +7166,9 @@ Context menu for additional operations</Source>
           <Source>Download msysgit</Source>
           <Value>Скачать msysgit</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox7" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox7" Property="Text">
           <Source>Git</Source>
-          <Value />
+          <Value>Git</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox8" Property="Text">
           <Source>Environment</Source>
@@ -7333,9 +7317,9 @@ global settings.
           <Source>Image size</Source>
           <Value>Размер картинки</Value>
         </TranslationItem>
-        <TranslationItem Name="monsterIdToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="monsterIdToolStripMenuItem" Property="Text">
           <Source>Monster Id</Source>
-          <Value />
+          <Value>Monster Id</Value>
         </TranslationItem>
         <TranslationItem Name="noImageGeneratorToolStripMenuItem" Property="Text">
           <Source>No image service</Source>
@@ -7353,34 +7337,35 @@ global settings.
           <Source>Register at gravatar.com</Source>
           <Value>Зарегистрироваться на gravatar.com</Value>
         </TranslationItem>
-        <TranslationItem Name="retroToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="retroToolStripMenuItem" Property="Text">
           <Source>Retro</Source>
-          <Value />
+          <Value>Ретро</Value>
         </TranslationItem>
-        <TranslationItem Name="wavatarToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="wavatarToolStripMenuItem" Property="Text">
           <Source>Wavatar</Source>
-          <Value />
+          <Value>Wavatar</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="HelpImageDisplayUserControl">
       <translationItems>
-        <TranslationItem Name="linkLabelHide" Property="Text" type="unfinished">
+        <TranslationItem Name="linkLabelHide" Property="Text">
           <Source>Hide help</Source>
-          <Value />
+          <Value>Спрятать справку</Value>
         </TranslationItem>
-        <TranslationItem Name="linkLabelShowHelp" Property="Text" type="unfinished">
+        <TranslationItem Name="linkLabelShowHelp" Property="Text">
           <Source>Show
 help</Source>
-          <Value />
+          <Value>Показать
+справку</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="HotkeysSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Hotkeys</Source>
-          <Value />
+          <Value>Горячие клавиши</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7595,7 +7580,7 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="ShowRemoteBranches" Property="Text">
           <Source>Show remote branches</Source>
-          <Value>Показывать внешние ветки</Value>
+          <Value>Показывать внешние ветви</Value>
         </TranslationItem>
         <TranslationItem Name="_areYouSureYouWantCheckout" Property="Text">
           <Source>Are you sure to checkout the selected revision?</Source>
@@ -7627,11 +7612,11 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="branchNameToolStripMenuItem" Property="Text">
           <Source>Branch name</Source>
-          <Value>Имя ветки</Value>
+          <Value>Имя ветви</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
           <Source>Checkout branch</Source>
-          <Value>Забрать ветку</Value>
+          <Value>Забрать ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutRevisionToolStripMenuItem" Property="Text">
           <Source>Checkout revision</Source>
@@ -7647,7 +7632,7 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="createNewBranchToolStripMenuItem" Property="Text">
           <Source>Create new branch</Source>
-          <Value>Создать новую ветку</Value>
+          <Value>Создать новую ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="createTagToolStripMenuItem" Property="Text">
           <Source>Create new tag</Source>
@@ -7659,7 +7644,7 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
           <Source>Delete branch</Source>
-          <Value>Удалить ветку</Value>
+          <Value>Удалить ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
           <Source>Delete tag</Source>
@@ -7667,7 +7652,7 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
           <Source>Draw non relatives gray</Source>
-          <Value>Отображать неродственные ветки серыми</Value>
+          <Value>Отображать неродственные ветви серыми</Value>
         </TranslationItem>
         <TranslationItem Name="filterToolStripMenuItem" Property="Text">
           <Source>Set advanced filter</Source>
@@ -7710,7 +7695,7 @@ If this is a central repository (bare repository without a working dir):
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Source>Merge into current branch</Source>
-          <Value>Объединить текущую ветку с</Value>
+          <Value>Объединить текущую ветвь с</Value>
         </TranslationItem>
         <TranslationItem Name="messageToolStripMenuItem" Property="Text">
           <Source>Message</Source>
@@ -7722,15 +7707,15 @@ If this is a central repository (bare repository without a working dir):
         </TranslationItem>
         <TranslationItem Name="rebaseOnToolStripMenuItem" Property="Text">
           <Source>Rebase current branch on</Source>
-          <Value>Rebase текущую ветку на</Value>
+          <Value>Rebase текущую ветвь на</Value>
         </TranslationItem>
         <TranslationItem Name="renameBranchToolStripMenuItem" Property="Text">
           <Source>Rename branch</Source>
-          <Value>Переименовать ветку</Value>
+          <Value>Переименовать ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="resetCurrentBranchToHereToolStripMenuItem" Property="Text">
           <Source>Reset current branch to here</Source>
-          <Value>Сбросить текущую ветку сюда</Value>
+          <Value>Сбросить текущую ветвь сюда</Value>
         </TranslationItem>
         <TranslationItem Name="revertCommitToolStripMenuItem" Property="Text">
           <Source>Revert commit</Source>
@@ -7742,7 +7727,7 @@ If this is a central repository (bare repository without a working dir):
         </TranslationItem>
         <TranslationItem Name="showAllBranchesToolStripMenuItem" Property="Text">
           <Source>Show all branches</Source>
-          <Value>Показывать все ветки</Value>
+          <Value>Показывать все ветви</Value>
         </TranslationItem>
         <TranslationItem Name="showAuthorDateToolStripMenuItem" Property="Text">
           <Source>Show author date</Source>
@@ -7750,15 +7735,15 @@ If this is a central repository (bare repository without a working dir):
         </TranslationItem>
         <TranslationItem Name="showBranchesToolStripMenuItem" Property="Text">
           <Source>Show branches</Source>
-          <Value>Показывать ветки</Value>
+          <Value>Показывать ветви</Value>
         </TranslationItem>
         <TranslationItem Name="showCurrentBranchOnlyToolStripMenuItem" Property="Text">
           <Source>Show current branch only</Source>
-          <Value>Показывать только текущую ветку</Value>
+          <Value>Показывать только текущую ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="showFilteredBranchesToolStripMenuItem" Property="Text">
           <Source>Show filtered branches</Source>
-          <Value>Показывать отфильтрованные ветки</Value>
+          <Value>Показывать отфильтрованные ветви</Value>
         </TranslationItem>
         <TranslationItem Name="showGitNotesToolStripMenuItem" Property="Text">
           <Source>Show git notes</Source>
@@ -7885,17 +7870,17 @@ the cascaded context menu:</Source>
     </TranslationCategory>
     <TranslationCategory Name="SshSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>SSH</Source>
-          <Value />
+          <Value>SSH</Value>
         </TranslationItem>
         <TranslationItem Name="AutostartPageant" Property="Text">
           <Source>Automatically start authentication client when a private key is configured for a remote</Source>
-          <Value>Автоматически запускать клиент аутентификации, когда для удаленного репозитория сконфигурирован секретный ключ.</Value>
+          <Value>Автоматически запускать клиент аутентификации, когда для внешнего репозитория сконфигурирован секретный ключ.</Value>
         </TranslationItem>
-        <TranslationItem Name="OpenSSH" Property="Text" type="unfinished">
+        <TranslationItem Name="OpenSSH" Property="Text">
           <Source>OpenSSH</Source>
-          <Value />
+          <Value>OpenSSH</Value>
         </TranslationItem>
         <TranslationItem Name="Other" Property="Text">
           <Source>Other ssh client</Source>
@@ -7913,9 +7898,9 @@ the cascaded context menu:</Source>
           <Source>Browse</Source>
           <Value>Обзор</Value>
         </TranslationItem>
-        <TranslationItem Name="Putty" Property="Text" type="unfinished">
+        <TranslationItem Name="Putty" Property="Text">
           <Source>PuTTY</Source>
-          <Value />
+          <Value>PuTTY</Value>
         </TranslationItem>
         <TranslationItem Name="PuttygenBrowse" Property="Text">
           <Source>Browse</Source>
@@ -8133,9 +8118,9 @@ When OpenSSH is used, command line dialogs are shown!
 </Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_strLoading" Property="Text" type="unfinished">
+        <TranslationItem Name="_strLoading" Property="Text">
           <Source> : LOADING : </Source>
-          <Value />
+          <Value> : ЗАГРУЗКА : </Value>
         </TranslationItem>
         <TranslationItem Name="_strRemoteAlreadyExist" Property="Text" type="unfinished">
           <Source>ERROR: Remote with name {0} already exists but it does not point to the same repository!
@@ -8146,249 +8131,17 @@ Details: Is {1} expected {2}</Source>
           <Source>Error: Unable to understand patch</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="columnHeader2" Property="Text" type="unfinished">
+        <TranslationItem Name="columnHeader2" Property="Text">
           <Source>Heading</Source>
-          <Value />
+          <Value>Заголовок</Value>
         </TranslationItem>
-        <TranslationItem Name="columnHeader3" Property="Text" type="unfinished">
+        <TranslationItem Name="columnHeader3" Property="Text">
           <Source>By</Source>
-          <Value />
+          <Value>От</Value>
         </TranslationItem>
-        <TranslationItem Name="columnHeader4" Property="Text" type="unfinished">
+        <TranslationItem Name="columnHeader4" Property="Text">
           <Source>Created</Source>
-          <Value />
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="ViewPatch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
-          <Source>View patch file</Source>
-          <Value>Просмотреть патч файл</Value>
-        </TranslationItem>
-        <TranslationItem Name="_patchFileFilterString" Property="Text" type="obsolete">
-          <Source>Patch file (*.Patch)</Source>
-          <Value>Patch файл (*.Patch)</Value>
-        </TranslationItem>
-        <TranslationItem Name="_patchFileFilterTitle" Property="Text" type="obsolete">
-          <Source>Select patch file</Source>
-          <Value>Выберите patch файл</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowsePatch" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Обзор</Value>
-        </TranslationItem>
-        <TranslationItem Name="File" Property="HeaderText" type="obsolete">
-          <Source>Type</Source>
-          <Value>Тип</Value>
-        </TranslationItem>
-        <TranslationItem Name="FileNameA" Property="HeaderText" type="obsolete">
-          <Source>Filename</Source>
-          <Value>Имя файла</Value>
-        </TranslationItem>
-        <TranslationItem Name="labelPatch" Property="Text" type="obsolete">
-          <Source>Patch</Source>
-          <Value>Патч</Value>
-        </TranslationItem>
-        <TranslationItem Name="typeDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
-          <Source>Change</Source>
-          <Value>Изменить</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCherryPickCommitSmall">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
-          <Source>Cherry pick commit</Source>
-          <Value>Cherry pick коммит</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noneParentSelectedText" Property="Text" type="obsolete">
-          <Source>None parent is selected!</Source>
-          <Value>Не выбран родитель.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noneParentSelectedTextCaption" Property="Text" type="obsolete">
-          <Source>Error</Source>
-          <Value>Ошибка</Value>
-        </TranslationItem>
-        <TranslationItem Name="Author" Property="Text" type="obsolete">
-          <Source>Author:</Source>
-          <Value>Автор:</Value>
-        </TranslationItem>
-        <TranslationItem Name="AutoCommit" Property="Text" type="obsolete">
-          <Source>Automatically creates a commit</Source>
-          <Value>Автоматически создавать коммит</Value>
-        </TranslationItem>
-        <TranslationItem Name="BranchInfo" Property="Text" type="obsolete">
-          <Source>Cherry pick this commit:</Source>
-          <Value>Скопировать (cherry pick) этот коммит:</Value>
-        </TranslationItem>
-        <TranslationItem Name="checkAddReference" Property="Text" type="obsolete">
-          <Source>Add commit reference</Source>
-          <Value>Добавить к сообщению строку со ссылкой на исходный коммит</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader1" Property="Text" type="obsolete">
-          <Source>No.</Source>
-          <Value>Номер.</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader2" Property="Text" type="obsolete">
-          <Source>Message</Source>
-          <Value>Сообщение</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader3" Property="Text" type="obsolete">
-          <Source>Author</Source>
-          <Value>Автор</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader4" Property="Text" type="obsolete">
-          <Source>Date</Source>
-          <Value>Дата</Value>
-        </TranslationItem>
-        <TranslationItem Name="Commit" Property="Text" type="obsolete">
-          <Source>Commit:</Source>
-          <Value>Коммит:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Date" Property="Text" type="obsolete">
-          <Source>Commit date:</Source>
-          <Value>Дата коммита:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Message" Property="Text" type="obsolete">
-          <Source>Message:</Source>
-          <Value>Сообщение:</Value>
-        </TranslationItem>
-        <TranslationItem Name="ParentsLabel" Property="Text" type="obsolete">
-          <Source>This commit is a merge, select parent:</Source>
-          <Value>Этот коммит является результатом слияния, выберите родителя:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Pick" Property="Text" type="obsolete">
-          <Source>Pick this commit</Source>
-          <Value>Выбрать этот коммит:</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCherryPickMerge">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
-          <Source>Choose parent</Source>
-          <Value>Выбрать родителя</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noneParentSelectedText" Property="Text" type="obsolete">
-          <Source>None parent is selected!</Source>
-          <Value>Не выбран родитель.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noneParentSelectedTextCaption" Property="Text" type="obsolete">
-          <Source>Error</Source>
-          <Value>Ошибка</Value>
-        </TranslationItem>
-        <TranslationItem Name="Author" Property="Text" type="obsolete">
-          <Source>Author</Source>
-          <Value>Автор</Value>
-        </TranslationItem>
-        <TranslationItem Name="Column1" Property="HeaderText" type="obsolete">
-          <Source>No.</Source>
-          <Value>Номер.</Value>
-        </TranslationItem>
-        <TranslationItem Name="Column2" Property="HeaderText" type="obsolete">
-          <Source>Message</Source>
-          <Value>Сообщение</Value>
-        </TranslationItem>
-        <TranslationItem Name="Column3" Property="HeaderText" type="obsolete">
-          <Source>Author</Source>
-          <Value>Автор</Value>
-        </TranslationItem>
-        <TranslationItem Name="Column4" Property="HeaderText" type="obsolete">
-          <Source>Date</Source>
-          <Value>Дата</Value>
-        </TranslationItem>
-        <TranslationItem Name="CommitDate" Property="Text" type="obsolete">
-          <Source>Date</Source>
-          <Value>Дата</Value>
-        </TranslationItem>
-        <TranslationItem Name="Message" Property="Text" type="obsolete">
-          <Source>Message</Source>
-          <Value>Сообщение</Value>
-        </TranslationItem>
-        <TranslationItem Name="No" Property="Text" type="obsolete">
-          <Source>No.</Source>
-          <Value>Номер.</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormPluginSettings">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
-          <Source>Plugin settings</Source>
-          <Value>Настройки модуля</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="Abort">
-      <translationItems>
-        <TranslationItem Name="_abortCurrentOpperationCaption" Property="Text" type="obsolete">
-          <Source>Abort</Source>
-          <Value>Отмена</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCheckoutRemoteBranch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
-          <Source>Checkout remote branch '{0}'</Source>
-          <Value>Забрать удаленную ветку «{0}»</Value>
-        </TranslationItem>
-        <TranslationItem Name="_applyShashedItemsAgain" Property="Text" type="obsolete">
-          <Source>Apply stashed items to working dir again?</Source>
-          <Value>Применить stash к рабочей директории снова?</Value>
-        </TranslationItem>
-        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text" type="obsolete">
-          <Source>Auto stash</Source>
-          <Value>Авто stash</Value>
-        </TranslationItem>
-        <TranslationItem Name="btOk" Property="Text" type="obsolete">
-          <Source>Checkout</Source>
-          <Value>Забрать</Value>
-        </TranslationItem>
-        <TranslationItem Name="localChangesGB" Property="Text" type="obsolete">
-          <Source>Local changes</Source>
-          <Value>Локальные изменения</Value>
-        </TranslationItem>
-        <TranslationItem Name="rbCreateBranch" Property="Text" type="obsolete">
-          <Source>Create local branch with the name '{0}'</Source>
-          <Value>Создать локальную ветку с именем «{0}»</Value>
-        </TranslationItem>
-        <TranslationItem Name="rbDontCreate" Property="Text" type="obsolete">
-          <Source>Do not create local branch</Source>
-          <Value>Не создавать локальную ветку</Value>
-        </TranslationItem>
-        <TranslationItem Name="rbMerge" Property="Text" type="obsolete">
-          <Source>Merge</Source>
-          <Value>Объединить</Value>
-        </TranslationItem>
-        <TranslationItem Name="rbReset" Property="Text" type="obsolete">
-          <Source>Reset</Source>
-          <Value>Сбросить</Value>
-        </TranslationItem>
-        <TranslationItem Name="rbResetBranch" Property="Text" type="obsolete">
-          <Source>Reset local branch with the name '{0}'</Source>
-          <Value>Сбросить локальную ветку с именем «{0}»</Value>
-        </TranslationItem>
-        <TranslationItem Name="btCancel" Property="Text" type="obsolete">
-          <Source>Cancel</Source>
-          <Value>Отмена</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDirtyDirWarn">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
-          <Source>Warning</Source>
-          <Value>Предупреждение</Value>
-        </TranslationItem>
-        <TranslationItem Name="button4" Property="Text" type="obsolete">
-          <Source>Commit</Source>
-          <Value>Коммит</Value>
-        </TranslationItem>
-        <TranslationItem Name="button5" Property="Text" type="obsolete">
-          <Source>Cancel</Source>
-          <Value>Отмена</Value>
+          <Value>Создано</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
