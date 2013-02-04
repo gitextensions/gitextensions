@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -2879,6 +2880,20 @@ namespace GitUI
                     return;
                 }
             }
+        }
+
+        private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string issueData = "--- GitExtensions";
+            try
+            {
+                issueData += Settings.GitExtensionsVersionString;
+                issueData += ", " + GitCommandHelpers.VersionInUse.Full;
+                issueData += ", " + System.Environment.OSVersion.ToString();
+            }
+            catch(Exception){}
+
+            Process.Start(@"https://github.com/gitextensions/gitextensions/issues/new?body=" + WebUtility.HtmlEncode(issueData));            
         }
 
     }
