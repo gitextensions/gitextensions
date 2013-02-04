@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -938,15 +939,12 @@ namespace GitUI
             if (item == null)
                 return;
 
-            if (item.IsBlob || item.IsTree)
-            {
-                IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
 
-                if (revisions.Count == 0)
-                    UICommands.StartFileHistoryDialog(this, item.FileName);
-                else
-                    UICommands.StartFileHistoryDialog(this, item.FileName, revisions[0], false, false);
-            }
+            if (revisions.Count == 0)
+                UICommands.StartFileHistoryDialog(this, item.FileName);
+            else
+                UICommands.StartFileHistoryDialog(this, item.FileName, revisions[0], false, false);
         }
 
         public void FindFileOnClick(object sender, EventArgs e)
@@ -1036,7 +1034,6 @@ namespace GitUI
             openFileWithToolStripMenuItem.Enabled = enableItems;
             openWithToolStripMenuItem.Enabled = enableItems;
             copyFilenameToClipboardToolStripMenuItem.Enabled = enableItems;
-            fileHistoryToolStripMenuItem.Enabled = enableItems;
             editCheckedOutFileToolStripMenuItem.Enabled = enableItems;
         }
 
@@ -1151,11 +1148,19 @@ namespace GitUI
             if (item == null)
                 return;
 
-            if (!item.IsBlob)
-                return;
-
-            if (UICommands.StartFileHistoryDialog(this, item.FileName, null))
-                Initialize();
+            if (item.IsBlob)
+            {
+                if (UICommands.StartFileHistoryDialog(this, item.FileName, null))
+                    Initialize();
+            }
+            else if (item.IsCommit)
+            {
+                Process process = new Process();
+                process.StartInfo.FileName = Application.ExecutablePath;
+                process.StartInfo.Arguments = "browse";
+                process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.Name + Settings.PathSeparator.ToString());
+                process.Start();
+            }
         }
 
         private void ViewDiffToolStripMenuItemClick(object sender, EventArgs e)
@@ -2456,15 +2461,12 @@ namespace GitUI
             if (item == null)
                 return;
 
-            if (item.IsBlob || item.IsTree)
-            {
-                IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
 
-                if (revisions.Count == 0)
-                    UICommands.StartFileHistoryDialog(this, item.FileName, null, false, true);
-                else
-                    UICommands.StartFileHistoryDialog(this, item.FileName, revisions[0], true, true);
-            }
+            if (revisions.Count == 0)
+                UICommands.StartFileHistoryDialog(this, item.FileName, null, false, true);
+            else
+                UICommands.StartFileHistoryDialog(this, item.FileName, revisions[0], true, true);
         }
 
         public override void AddTranslationItems(Translation translation)
@@ -2878,6 +2880,20 @@ namespace GitUI
                     return;
                 }
             }
+        }
+
+        private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string issueData = "--- GitExtensions";
+            try
+            {
+                issueData += Settings.GitExtensionsVersionString;
+                issueData += ", " + GitCommandHelpers.VersionInUse.Full;
+                issueData += ", " + System.Environment.OSVersion.ToString();
+            }
+            catch(Exception){}
+
+            Process.Start(@"https://github.com/gitextensions/gitextensions/issues/new?body=" + WebUtility.HtmlEncode(issueData));            
         }
 
     }
