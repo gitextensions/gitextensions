@@ -1709,6 +1709,8 @@ namespace GitUI
                     Module.OpenWithDifftool(args[2]);
                     return;
                 case "filehistory": // filename
+                    if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]))
+                        Module = Module.SuperprojectModule;
                     RunFileHistoryCommand(args);
                     return;
                 case "fileeditor":  // filename

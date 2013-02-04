@@ -262,12 +262,14 @@ namespace TranslationApp
             // 
             this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
             this.splitContainer2.Size = new System.Drawing.Size(772, 545);
-            this.splitContainer2.SplitterDistance = 383;
+            this.splitContainer2.SplitterDistance = 382;
             this.splitContainer2.SplitterWidth = 5;
             this.splitContainer2.TabIndex = 2;
             // 
             // translateGrid
             // 
+            this.translateGrid.AllowUserToAddRows = false;
+            this.translateGrid.AllowUserToDeleteRows = false;
             this.translateGrid.AutoGenerateColumns = false;
             this.translateGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.translateGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -285,7 +287,7 @@ namespace TranslationApp
             this.translateGrid.Name = "translateGrid";
             this.translateGrid.RowHeadersVisible = false;
             this.translateGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.translateGrid.Size = new System.Drawing.Size(772, 383);
+            this.translateGrid.Size = new System.Drawing.Size(772, 382);
             this.translateGrid.TabIndex = 1;
             this.translateGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.translateGrid_CellEndEdit);
             this.translateGrid.SelectionChanged += new System.EventHandler(this.translateGrid_SelectionChanged);
@@ -354,8 +356,8 @@ namespace TranslationApp
             this.splitContainer3.Panel2.Controls.Add(this.googleTranslate);
             this.splitContainer3.Panel2.Controls.Add(this.previousButton);
             this.splitContainer3.Panel2.Controls.Add(this.nextButton);
-            this.splitContainer3.Size = new System.Drawing.Size(772, 157);
-            this.splitContainer3.SplitterDistance = 560;
+            this.splitContainer3.Size = new System.Drawing.Size(772, 158);
+            this.splitContainer3.SplitterDistance = 559;
             this.splitContainer3.SplitterWidth = 5;
             this.splitContainer3.TabIndex = 0;
             // 
@@ -374,7 +376,7 @@ namespace TranslationApp
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.translatedText);
-            this.splitContainer4.Size = new System.Drawing.Size(560, 157);
+            this.splitContainer4.Size = new System.Drawing.Size(559, 158);
             this.splitContainer4.SplitterDistance = 72;
             this.splitContainer4.SplitterWidth = 5;
             this.splitContainer4.TabIndex = 0;
@@ -386,7 +388,7 @@ namespace TranslationApp
             this.neutralText.Margin = new System.Windows.Forms.Padding(4);
             this.neutralText.Name = "neutralText";
             this.neutralText.ReadOnly = true;
-            this.neutralText.Size = new System.Drawing.Size(560, 72);
+            this.neutralText.Size = new System.Drawing.Size(559, 72);
             this.neutralText.TabIndex = 0;
             this.neutralText.Text = "";
             // 
@@ -396,7 +398,7 @@ namespace TranslationApp
             this.translatedText.Location = new System.Drawing.Point(0, 0);
             this.translatedText.Margin = new System.Windows.Forms.Padding(4);
             this.translatedText.Name = "translatedText";
-            this.translatedText.Size = new System.Drawing.Size(560, 80);
+            this.translatedText.Size = new System.Drawing.Size(559, 81);
             this.translatedText.TabIndex = 0;
             this.translatedText.Text = "";
             this.translatedText.TextChanged += new System.EventHandler(this.translatedText_TextChanged);

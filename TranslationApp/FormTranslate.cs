@@ -44,7 +44,7 @@ namespace TranslationApp
             translations.Items.AddRange(Translator.GetAllTranslations());
 
             GetPropertiesToTranslate();
-            LoadTranslation();
+            translations.SelectedItem = GitCommands.Settings.Translation; // should be called after GetPropertiesToTranslate()
             translateCategories.SelectedItem = allCategories;
             FillTranslateGrid(allCategories);
 
@@ -109,20 +109,20 @@ namespace TranslationApp
             if (filter == allCategories)
                 filter = null;
 
-            var filterTranslate = translationItems.Where(translateItem => filter == null || filter.Name.Equals(translateItem.Category)).
-                Where(translateItem => translateItem.Status != TranslationType.Obsolete && (!hideTranslatedItems.Checked || string.IsNullOrEmpty(translateItem.TranslatedValue))).ToList();
-
-            translateItemBindingSource.DataSource = filterTranslate;
+            translateItemBindingSource.DataSource = GetCategoryItems(filter).ToList();
 
             UpdateProgress();
         }
 
-        public object CreateInstanceOfClass(Type type)
+        private IEnumerable<TranslationItemWithCategory> GetCategoryItems(TranslationCategory filter)
         {
-            if (type == GetType())
-                return this;
-            else
-                return TranslationUtl.CreateInstanceOfClass(type);
+            var filterTranslate = translationItems.Where(
+                translateItem => filter == null || filter.Name.Equals(translateItem.Category)).
+                Where(
+                    translateItem =>
+                    translateItem.Status != TranslationType.Obsolete &&
+                    (!hideTranslatedItems.Checked || string.IsNullOrEmpty(translateItem.TranslatedValue)));
+            return filterTranslate;
         }
 
         public void GetPropertiesToTranslate()
@@ -140,13 +140,12 @@ namespace TranslationApp
             {
                 //Set language to neutral to get neutral translations
                 GitCommands.Settings.CurrentTranslation = "";
-                Translate();
 
                 List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
 
                 foreach (Type type in translatableTypes)
                 {
-                    ITranslate obj = CreateInstanceOfClass(type) as ITranslate;
+                    ITranslate obj = TranslationUtl.CreateInstanceOfClass(type) as ITranslate;
                     if (obj != null)
                         obj.AddTranslationItems(neutralTranslation);
                 }
@@ -157,13 +156,13 @@ namespace TranslationApp
                 
                 //Restore translation
                 GitCommands.Settings.CurrentTranslation = null;
-                Translate();
             }
         }
 
 
         private void translateCategories_SelectedIndexChanged(object sender, EventArgs e)
         {
+            categoryDataGridViewTextBoxColumn.Visible = (translateCategories.SelectedItem == allCategories);
             FillTranslateGrid(translateCategories.SelectedItem as TranslationCategory);
         }
 
