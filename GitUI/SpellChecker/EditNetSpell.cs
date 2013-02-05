@@ -504,16 +504,17 @@ namespace GitUI.SpellChecker
             _customUnderlines.Lines.Clear();
             _customUnderlines.IllFormedLines.Clear();
 
+            if (!IsWatermarkShowing)
+            {
+                OnTextChanged(e);
+            }
+
             if (Settings.Dictionary == "None" || TextBox.Text.Length < 4)
                 return;
 
             SpellCheckTimer.Enabled = false;
             SpellCheckTimer.Interval = 250;
             SpellCheckTimer.Enabled = true;
-            if (!IsWatermarkShowing)
-            {
-                OnTextChanged(e);
-            }
         }
 
         private void TextBoxSizeChanged(object sender, EventArgs e)
