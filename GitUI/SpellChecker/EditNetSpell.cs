@@ -74,6 +74,23 @@ namespace GitUI.SpellChecker
             }
         }
 
+        public string Line(int line)
+        {
+            return TextBox.Lines[line];
+        }
+
+        public void ReplaceLine(int line, string withText)
+        {
+            var oldPos = TextBox.SelectionStart + TextBox.SelectionLength;
+            var startIdx = TextBox.GetFirstCharIndexFromLine(line);
+            TextBox.SelectionLength = 0;
+            TextBox.SelectionStart = startIdx;
+            TextBox.SelectionLength = Line(line).Length;
+            TextBox.SelectedText = withText;
+            TextBox.SelectionLength = 0;
+            TextBox.SelectionStart = oldPos;
+        }
+
         public int LineLength(int line)
         {
             return LineCount() <= line ? 0 : TextBox.Lines[line].Length;
