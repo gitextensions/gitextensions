@@ -1726,7 +1726,7 @@ namespace GitUI
 
             if (limit1 > 0 && line == 0)
             {
-                ColorTextAsNecessary(line, limit1);
+                ColorTextAsNecessary(line, limit1, false);
             }
 
             if (empty2 && line == 1)
@@ -1748,13 +1748,8 @@ namespace GitUI
                     {
                         textHasChanged = true;
                     }
-                    else
-                        ColorTextAsNecessary(line, limitX);
                 }
-                else
-                {
-                    ColorTextAsNecessary(line, limitX);
-                }
+                ColorTextAsNecessary(line, limitX, textHasChanged);
             }
 
             return textHasChanged;
@@ -1775,13 +1770,26 @@ namespace GitUI
             return false;
         }
 
-        private void ColorTextAsNecessary(int line, int lineLimit)
+        private void ColorTextAsNecessary(int line, int lineLimit, bool fullRefresh)
         {
             var lineLength = Message.LineLength(line);
-            Message.ChangeTextColor(line, 0, Math.Min(lineLimit, lineLength), Color.Black);
+            int offset = 0;
+            if (!fullRefresh && formattedLines.Count > line)
+            {
+                offset = formattedLines[line].CommonPrefix(Message.Line(line)).Length;
+            }
+
+            int len = Math.Min(lineLimit, lineLength);
+
+            if (offset <= len)
+                Message.ChangeTextColor(line, offset, len, Color.Black);
+
             if (lineLength > lineLimit)
             {
-                Message.ChangeTextColor(line, lineLimit, lineLength - lineLimit, Color.Red);
+                offset = Math.Max(offset, lineLimit);
+                len = lineLength - offset;
+                if (len > 0)
+                    Message.ChangeTextColor(line, offset, len, Color.Red);
             }
         }
 
