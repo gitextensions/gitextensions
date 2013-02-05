@@ -636,7 +636,6 @@ namespace GitUI.SpellChecker
 
         public void ChangeTextColor(int line, int offset, int length, Color color)
         {
-            var oldColor = TextBox.SelectionColor;
             var oldPos = TextBox.SelectionStart;
             var lineIndex = TextBox.GetFirstCharIndexFromLine(line);
             TextBox.SelectionStart = lineIndex + offset;
@@ -645,7 +644,7 @@ namespace GitUI.SpellChecker
 
             TextBox.SelectionLength = 0;
             TextBox.SelectionStart = oldPos;
-            TextBox.SelectionColor = oldColor;
+            TextBox.SelectionColor = Color.Black;
         }
 
         /// <summary>
