@@ -1707,15 +1707,13 @@ namespace GitUI
 
         private void Message_TextChanged(object sender, EventArgs e)
         {
-            if (FormatLine(Message.CurrentLine - 1))
-            {
-                FormatAllText();
-            }
+            //always format from 0 to handle pasted text
+            FormatAllText(0);
         }
 
         private void Message_TextAssigned(object sender, EventArgs e)
         {
-            FormatAllText();
+            Message_TextChanged(sender, e);
         }
 
         private bool FormatLine(int line)
@@ -1787,20 +1785,48 @@ namespace GitUI
             }
         }
 
-        private void FormatAllText()
+        private List<string> formattedLines = new List<string>();
+
+        private bool DidFormattedLineChange(int lineNumber)
         {
-            var textHasChanged = false;
-            var lineCount = Message.LineCount();
-            for (int line = 0; line < lineCount; line++)
+            //line not formated yet
+            if (formattedLines.Count <= lineNumber)
+                return true;
+            
+            return !formattedLines[lineNumber].Equals(Message.Line(lineNumber), StringComparison.OrdinalIgnoreCase);
+        }
+
+        private void TrimFormattedLines(int lineCount)
+        {
+            if (formattedLines.Count > lineCount)
+                formattedLines.RemoveRange(lineCount, formattedLines.Count - lineCount);
+        }
+
+        private void SetFormattedLine(int lineNumber)
+        {
+            //line not formated yet
+            if (formattedLines.Count <= lineNumber)
             {
-                if (FormatLine(line))
-                {
-                    textHasChanged = true;
-                }
+                Debug.Assert(formattedLines.Count == lineNumber, formattedLines.Count + ":" + lineNumber);
+                formattedLines.Add(Message.Line(lineNumber));
             }
-            if (textHasChanged)
+            else
+                formattedLines[lineNumber] = Message.Line(lineNumber);
+        }
+
+        private void FormatAllText(int startLine)
+        {
+            var lineCount = Message.LineCount();
+            TrimFormattedLines(lineCount);
+            for (int line = startLine; line < lineCount; line++)
             {
-                FormatAllText();
+                if (DidFormattedLineChange(line))
+                {
+                    bool lineChanged = FormatLine(line);
+                    SetFormattedLine(line);
+                    if (lineChanged)
+                        FormatAllText(line);
+                }
             }
         }
 
