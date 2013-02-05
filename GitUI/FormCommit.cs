@@ -1750,6 +1750,8 @@ namespace GitUI
                     {
                         textHasChanged = true;
                     }
+                    else
+                        ColorTextAsNecessary(line, limitX);
                 }
                 else
                 {
