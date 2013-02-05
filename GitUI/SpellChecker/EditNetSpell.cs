@@ -638,7 +638,7 @@ namespace GitUI.SpellChecker
         {
             var oldPos = TextBox.SelectionStart;
             var lineIndex = TextBox.GetFirstCharIndexFromLine(line);
-            TextBox.SelectionStart = lineIndex + offset;
+            TextBox.SelectionStart = Math.Max(lineIndex + offset, 0);
             TextBox.SelectionLength = length;
             TextBox.SelectionColor = color;
 
