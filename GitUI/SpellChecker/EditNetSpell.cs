@@ -652,15 +652,19 @@ namespace GitUI.SpellChecker
         /// </summary>
         public void EnsureEmptyLine(bool addBullet, int afterLine)
         {
-            var bullet = addBullet ? " - " : "";
-            var indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
             var lineLength = LineLength(afterLine);
-            var newLine = (lineLength > 0) ? Environment.NewLine : String.Empty;
-            var lastIndexOfLine = indexOfLine + lineLength;
-            TextBox.SelectionLength = 0;
-            TextBox.SelectionStart = lastIndexOfLine;
-            TextBox.SelectedText = newLine + bullet;
-            TextBox.SelectionLength = 0;
+            if (lineLength > 0)
+            {
+                var bullet = addBullet ? " - " : String.Empty;
+                var indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
+                var newLine = (lineLength > 0) ? Environment.NewLine : String.Empty;
+                var newCursorPos = indexOfLine + newLine.Length + bullet.Length + lineLength - 1;
+                TextBox.SelectionLength = 0;
+                TextBox.SelectionStart = indexOfLine;
+                TextBox.SelectedText = newLine + bullet;
+                TextBox.SelectionLength = 0;
+                TextBox.SelectionStart = newCursorPos;
+            }
         }
     }
 }
