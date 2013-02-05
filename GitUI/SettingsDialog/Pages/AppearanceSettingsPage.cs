@@ -21,6 +21,7 @@ namespace GitUI.SettingsDialog.Pages
 
         private Font _diffFont;
         private Font _applicationFont;
+        private Font commitFont;
 
         public AppearanceSettingsPage()
         {
@@ -67,7 +68,10 @@ namespace GitUI.SettingsDialog.Pages
 
             chkShowRelativeDate.Checked = Settings.RelativeDate;
 
-            SetCurrentDiffFont(Settings.Font, Settings.DiffFont);
+            SetCurrentApplicationFont(Settings.Font);
+            SetCurrentDiffFont(Settings.DiffFont);
+            SetCurrentCommitFont(Settings.CommitFont);
+
         }
 
         public override void SaveSettings()
@@ -96,6 +100,7 @@ namespace GitUI.SettingsDialog.Pages
 
             Settings.DiffFont = _diffFont;
             Settings.Font = _applicationFont;
+            Settings.CommitFont = commitFont;
         }
 
         private void Dictionary_DropDown(object sender, EventArgs e)
@@ -125,7 +130,7 @@ namespace GitUI.SettingsDialog.Pages
 
             if (result == DialogResult.OK || result == DialogResult.Yes)
             {
-                SetCurrentDiffFont(_applicationFont, diffFontDialog.Font);
+                SetCurrentDiffFont(diffFontDialog.Font);
             }
         }
 
@@ -136,19 +141,42 @@ namespace GitUI.SettingsDialog.Pages
 
             if (result == DialogResult.OK || result == DialogResult.Yes)
             {
-                SetCurrentDiffFont(applicationDialog.Font, _diffFont);
+                SetCurrentApplicationFont(applicationDialog.Font);
             }
         }
 
-        private void SetCurrentDiffFont(Font applicationFont, Font diffFont)
+        private void commitFontChangeButton_Click(object sender, EventArgs e)
         {
-            this._diffFont = diffFont;
-            this._applicationFont = applicationFont;
+            commitFontDialog.Font = commitFont;
+            DialogResult result = commitFontDialog.ShowDialog(this);
 
-            diffFontChangeButton.Text =
-                string.Format("{0}, {1}", this._diffFont.FontFamily.Name, (int)(this._diffFont.Size + 0.5f));
-            applicationFontChangeButton.Text =
-                string.Format("{0}, {1}", this._applicationFont.FontFamily.Name, (int)(this._applicationFont.Size + 0.5f));
+            if (result == DialogResult.OK || result == DialogResult.Yes)
+            {
+                SetCurrentCommitFont(commitFontDialog.Font);
+            }
+        }
+
+        private void SetCurrentDiffFont(Font newFont)
+        {
+            this._diffFont = newFont;
+            SetFontButtonText(newFont, diffFontChangeButton);
+        }
+
+        private void SetCurrentApplicationFont(Font newFont)
+        {
+            this._applicationFont = newFont;
+            SetFontButtonText(newFont, applicationFontChangeButton);
+        }
+
+        private void SetCurrentCommitFont(Font newFont)
+        {
+            this.commitFont = newFont;
+            SetFontButtonText(newFont, commitFontChangeButton);
+        }
+
+        private void SetFontButtonText(Font font, Button button)
+        {
+            button.Text = string.Format("{0}, {1}", font.FontFamily.Name, (int)(font.Size + 0.5f));
         }
 
         private void ClearImageCache_Click(object sender, EventArgs e)

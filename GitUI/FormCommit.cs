@@ -106,6 +106,8 @@ namespace GitUI
         private readonly TranslationString _commitValidationCaption = new TranslationString("Commit validation");
 
         private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
+
+        private readonly TranslationString _checkBoxAutoWrap = new TranslationString("Auto-wrap");
         #endregion
 
         private readonly SynchronizationContext _syncContext;
@@ -123,6 +125,7 @@ namespace GitUI
         private AsyncLoader unstagedLoader;
         private bool _useFormCommitMessage;
         private CancellationTokenSource interactiveAddBashCloseWaitCTS;
+        private readonly string _indent;
 
         /// <summary>
         /// For VS designer
@@ -146,6 +149,8 @@ namespace GitUI
             _useFormCommitMessage = Settings.UseFormCommitMessage;
 
             InitializeComponent();
+            Message.TextChanged += Message_TextChanged;
+            Message.TextAssigned += Message_TextAssigned;
 
             Loading.Image = Properties.Resources.loadingpanel;
 
@@ -192,6 +197,7 @@ namespace GitUI
             _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
             _ResetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
             _ResetSelectedLinesToolStripMenuItem.Image = Reset.Image;
+            _indent = Settings.CommitValidationIndentAfterFirstLine ? "   " : String.Empty;
         }
 
         private void FormCommit_Load(object sender, EventArgs e)
@@ -200,6 +206,16 @@ namespace GitUI
                 splitMain.SplitterDistance = Settings.CommitDialogSplitter;
             if (Settings.CommitDialogRightSplitter != -1)
                 splitRight.SplitterDistance = Settings.CommitDialogRightSplitter;
+
+            AddAutoWrapCheckboxToStatusBar();
+        }
+
+        private void AddAutoWrapCheckboxToStatusBar()
+        {
+            var cb = new CheckBox {Text = _checkBoxAutoWrap.Text, Checked = Settings.CommitValidationAutoWrap};
+            cb.CheckStateChanged += (s, ex) => Settings.CommitValidationAutoWrap = cb.Checked;
+            var toolStripHost = new ToolStripControlHost(cb);
+            commitStatusStrip.Items.Insert(0, toolStripHost);
         }
 
         private void FormCommitFormClosing(object sender, FormClosingEventArgs e)
@@ -548,6 +564,8 @@ namespace GitUI
             }
 
             UpdateMergeHead();
+
+            Message.TextBoxFont = Settings.CommitFont;
 
             // Check if commit.template is used
             string fileName = Module.GetEffectivePathSetting("commit.template");
@@ -1687,26 +1705,78 @@ namespace GitUI
                 e.Handled = true;
         }
 
-        private void Message_KeyPress(object sender, KeyPressEventArgs e)
+        private void Message_TextChanged(object sender, EventArgs e)
+        {
+            FormatLine(Message.CurrentLine - 1);
+        }
+
+        private void Message_TextAssigned(object sender, EventArgs e)
+        {
+            FormatAllText();
+        }
+
+        private void FormatLine(int line)
         {
             int limit1 = Settings.CommitValidationMaxCntCharsFirstLine;
             int limitX = Settings.CommitValidationMaxCntCharsPerLine;
             bool empty2 = Settings.CommitValidationSecondLineMustBeEmpty;
 
-            if (limit1 > 0 && Message.CurrentLine == 1 && Message.CurrentColumn > limit1)
+            var lineLength = Message.LineLength(line);
+
+            if (limit1 > 0 && line == 0)
             {
-                // TODO: I don't really know what to do in this case.
+                Message.ChangeTextColor(line, 0, Math.Min(limit1, lineLength), Color.Black);
+                if (lineLength > limit1)
+                {
+                    Message.ChangeTextColor(line, limit1, lineLength - limit1, Color.Red);
+                }
             }
 
-            if (empty2 && Message.CurrentLine == 2)
+            if (empty2 && line == 1)
             {
-                // Force next line and add a bullet.
-                Message.ForceNextLine(true);
+                // Ensure next line. Optionally add a bullet.
+                Message.EnsureEmptyLine(Settings.CommitValidationIndentAfterFirstLine, 1);
+                Message.ChangeTextColor(2, 0, Message.LineLength(2), Color.Black);
+                FormatLine(2);
             }
 
-            if (limitX > 0 && Message.CurrentLine >= (empty2 ? 3 : 2) && Message.CurrentColumn > limitX)
+            if (limitX > 0 && line >= (empty2 ? 2 : 1))
             {
-                Message.WrapWord();
+                if (Settings.CommitValidationAutoWrap)
+                {
+                    WrapIfNecessary(lineLength, limitX);
+                }
+                else
+                {
+                    ColorTextAsNecessary(line, lineLength, limitX);
+                }
+            }
+        }
+
+        private void WrapIfNecessary(int lineLength, int lineLimit)
+        {
+            if (lineLength > lineLimit)
+            {
+                Message.WrapWord(_indent);
+                FormatAllText();
+            }
+        }
+
+        private void ColorTextAsNecessary(int line, int lineLength, int lineLimit)
+        {
+            Message.ChangeTextColor(line, 0, Math.Min(lineLimit, lineLength), Color.Black);
+            if (lineLength > lineLimit)
+            {
+                Message.ChangeTextColor(line, lineLimit, lineLength - lineLimit, Color.Red);
+            }
+        }
+
+        private void FormatAllText()
+        {
+            var lineCount = Message.LineCount();
+            for (int line = 0; line < lineCount; line++)
+            {
+                FormatLine(line);
             }
         }
 
