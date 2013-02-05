@@ -1744,7 +1744,7 @@ namespace GitUI
             {
                 if (Settings.CommitValidationAutoWrap)
                 {
-                    WrapIfNecessary(lineLength, limitX);
+                    WrapIfNecessary(line, limitX);
                 }
                 else
                 {
@@ -1753,12 +1753,16 @@ namespace GitUI
             }
         }
 
-        private void WrapIfNecessary(int lineLength, int lineLimit)
+        private void WrapIfNecessary(int line, int lineLimit)
         {
-            if (lineLength > lineLimit)
+            if (Message.LineLength(line) > lineLimit)
             {
-                Message.WrapWord(_indent);
-                FormatAllText();
+                var oldText = Message.Line(line);
+                var newText = WordWrapper.WrapSingleLine(oldText, lineLimit);
+                if (!String.Equals(oldText, newText))
+                {
+                    Message.ReplaceLine(line, newText);
+                }
             }
         }
 

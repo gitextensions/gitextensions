@@ -624,33 +624,6 @@ namespace GitUI.SpellChecker
             TextBox.SelectAll();
         }
 
-        public void WrapWord(string indent)
-        {
-            var text = TextBox.Text;
-            var originalCursorPosition = TextBox.SelectionStart;
-            var cursor = originalCursorPosition - 1;
-            int newCursorPosition;
-            int endOfPreviousWord;
-
-            // Find the beginning of current word
-            while (cursor >= 0 && !char.IsWhiteSpace(text[cursor])) cursor--;
-            endOfPreviousWord = cursor;
-
-            // Find the end of the previous word
-            while (endOfPreviousWord >= 0 && char.IsWhiteSpace(text[endOfPreviousWord]))
-                endOfPreviousWord--;
-
-            // Calculate the new cursor position which would keep the cursor
-            // at the same spot in the word being typed.
-            newCursorPosition = originalCursorPosition - (cursor - endOfPreviousWord) + 4;
-
-            string textBefore = text.Substring(0, endOfPreviousWord + 1);
-            string textAfter = text.Substring(cursor + 1);
-            TextBox.Text = textBefore + Environment.NewLine + indent + textAfter;
-
-            TextBox.SelectionStart = newCursorPosition;
-        }
-
         public void ChangeTextColor(int line, int offset, int length, Color color)
         {
             var oldPos = TextBox.SelectionStart;
