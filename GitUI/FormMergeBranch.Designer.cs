@@ -265,12 +265,12 @@
             this.helpImageDisplayUserControl1.Image1 = global::GitUI.Properties.Resources.HelpCommandMerge;
             this.helpImageDisplayUserControl1.Image2 = global::GitUI.Properties.Resources.HelpCommandMergeFastForward;
             this.helpImageDisplayUserControl1.IsExpanded = true;
-            this.helpImageDisplayUserControl1.Location = new System.Drawing.Point(3, 3);
-            this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(30, 50);
-            this.helpImageDisplayUserControl1.Name = "helpImageDisplayUserControl1";
-            this.helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = "Hover to see scenario when fast forward is possible.";
             this.helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
-            this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(30, 311);
+            this.helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = "Hover to see scenario when fast forward is possible.";
+            this.helpImageDisplayUserControl1.Location = new System.Drawing.Point(3, 3);
+            this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(289, 418);
+            this.helpImageDisplayUserControl1.Name = "helpImageDisplayUserControl1";
+            this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(289, 426);
             this.helpImageDisplayUserControl1.TabIndex = 18;
             this.helpImageDisplayUserControl1.UniqueIsExpandedSettingsId = "MergeBranches";
             // 
@@ -279,7 +279,7 @@
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(584, 317);
+            this.ClientSize = new System.Drawing.Size(784, 432);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
