@@ -45,10 +45,13 @@ namespace TranslationApp
                 {
                     _item.Value = value;
                     _item.OldSource = null;
-                    if (!string.IsNullOrEmpty(value))
-                        Status = TranslationType.Translated;
-                    else
-                        Status = TranslationType.Unfinished;
+                    if (Status != TranslationType.Obsolete)
+                    {
+                        if (!string.IsNullOrEmpty(value))
+                            Status = TranslationType.Translated;
+                        else
+                            Status = TranslationType.Unfinished;
+                    }
                 }
             }
         }
@@ -62,7 +65,7 @@ namespace TranslationApp
                 return true;
             bool equal = (value == NeutralValue);
             if (!equal && value.Contains("\n"))
-                return NeutralValue == value.Replace(Environment.NewLine, "\n");
+                return value.Replace(Environment.NewLine, "\n") == NeutralValue.Replace(Environment.NewLine, "\n");
             return equal;
         }
 
