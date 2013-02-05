@@ -1703,7 +1703,10 @@ namespace GitUI
 
         private void Message_TextChanged(object sender, EventArgs e)
         {
-            FormatLine(Message.CurrentLine - 1);
+            if (FormatLine(Message.CurrentLine - 1))
+            {
+                FormatAllText();
+            }
         }
 
         private void Message_TextAssigned(object sender, EventArgs e)
@@ -1711,12 +1714,13 @@ namespace GitUI
             FormatAllText();
         }
 
-        private void FormatLine(int line)
+        private bool FormatLine(int line)
         {
             int limit1 = Settings.CommitValidationMaxCntCharsFirstLine;
             int limitX = Settings.CommitValidationMaxCntCharsPerLine;
             bool empty2 = Settings.CommitValidationSecondLineMustBeEmpty;
 
+            bool textHasChanged = false;
 
             if (limit1 > 0 && line == 0)
             {
@@ -1728,23 +1732,31 @@ namespace GitUI
                 // Ensure next line. Optionally add a bullet.
                 Message.EnsureEmptyLine(Settings.CommitValidationIndentAfterFirstLine, 1);
                 Message.ChangeTextColor(2, 0, Message.LineLength(2), Color.Black);
-                FormatLine(2);
+                if (FormatLine(2))
+                {
+                    textHasChanged = true;
+                }
             }
 
             if (limitX > 0 && line >= (empty2 ? 2 : 1))
             {
                 if (Settings.CommitValidationAutoWrap)
                 {
-                    WrapIfNecessary(line, limitX);
+                    if (WrapIfNecessary(line, limitX))
+                    {
+                        textHasChanged = true;
+                    }
                 }
                 else
                 {
                     ColorTextAsNecessary(line, limitX);
                 }
             }
+
+            return textHasChanged;
         }
 
-        private void WrapIfNecessary(int line, int lineLimit)
+        private bool WrapIfNecessary(int line, int lineLimit)
         {
             if (Message.LineLength(line) > lineLimit)
             {
@@ -1753,8 +1765,10 @@ namespace GitUI
                 if (!String.Equals(oldText, newText))
                 {
                     Message.ReplaceLine(line, newText);
+                    return true;
                 }
             }
+            return false;
         }
 
         private void ColorTextAsNecessary(int line, int lineLimit)
@@ -1769,10 +1783,18 @@ namespace GitUI
 
         private void FormatAllText()
         {
+            var textHasChanged = false;
             var lineCount = Message.LineCount();
             for (int line = 0; line < lineCount; line++)
             {
-                FormatLine(line);
+                if (FormatLine(line))
+                {
+                    textHasChanged = true;
+                }
+            }
+            if (textHasChanged)
+            {
+                FormatAllText();
             }
         }
 
