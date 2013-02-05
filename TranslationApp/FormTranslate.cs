@@ -45,6 +45,8 @@ namespace TranslationApp
 
             GetPropertiesToTranslate();
             translations.SelectedItem = GitCommands.Settings.Translation; // should be called after GetPropertiesToTranslate()
+            if (translation == null)
+                LoadTranslation();
             translateCategories.SelectedItem = allCategories;
             FillTranslateGrid(allCategories);
 
