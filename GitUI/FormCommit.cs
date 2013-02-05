@@ -1717,15 +1717,10 @@ namespace GitUI
             int limitX = Settings.CommitValidationMaxCntCharsPerLine;
             bool empty2 = Settings.CommitValidationSecondLineMustBeEmpty;
 
-            var lineLength = Message.LineLength(line);
 
             if (limit1 > 0 && line == 0)
             {
-                Message.ChangeTextColor(line, 0, Math.Min(limit1, lineLength), Color.Black);
-                if (lineLength > limit1)
-                {
-                    Message.ChangeTextColor(line, limit1, lineLength - limit1, Color.Red);
-                }
+                ColorTextAsNecessary(line, limit1);
             }
 
             if (empty2 && line == 1)
@@ -1744,7 +1739,7 @@ namespace GitUI
                 }
                 else
                 {
-                    ColorTextAsNecessary(line, lineLength, limitX);
+                    ColorTextAsNecessary(line, limitX);
                 }
             }
         }
@@ -1762,8 +1757,9 @@ namespace GitUI
             }
         }
 
-        private void ColorTextAsNecessary(int line, int lineLength, int lineLimit)
+        private void ColorTextAsNecessary(int line, int lineLimit)
         {
+            var lineLength = Message.LineLength(line);
             Message.ChangeTextColor(line, 0, Math.Min(lineLimit, lineLength), Color.Black);
             if (lineLength > lineLimit)
             {
