@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
@@ -6,6 +7,8 @@ namespace System
 {
     public static class StringExtensions
     {
+        /// <summary>'\n'</summary>
+        static readonly char[] NewLineSeparator = new char[] { '\n' };
 
         public static string SkipStr(this string str, string toSkip)
         {
@@ -115,7 +118,7 @@ namespace System
 
             StringBuilder sb = new StringBuilder();
             string[] lines = value.Split('\n');
-            
+
             foreach (string line in lines)
                 if (!shouldRemoveLine(line))
                     sb.Append(line + '\n');
@@ -123,6 +126,33 @@ namespace System
             return sb.ToString();
         }
 
+        /// <summary>Split a string, removing empty entries, then trim whitespace.</summary>
+        public static IEnumerable<string> SplitThenTrim(this string value, params string[] separator)
+        {
+            return value
+                .Split(separator, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim());
+        }
+
+        /// <summary>Split a string, removing empty entries, then trim whitespace.</summary>
+        public static IEnumerable<string> SplitThenTrim(this string value, params char[] separator)
+        {
+            return value
+                .Split(separator, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim());
+        }
+
+        /// <summary>Split a string, delimited by line-breaks, excluding empty entries.</summary>
+        public static string[] SplitLines(this string value)
+        {
+            return value.Split(NewLineSeparator);
+        }
+
+        /// <summary>Split a string, delimited by line-breaks, excluding empty entries; then trim whitespace.</summary>
+        public static IEnumerable<string> SplitLinesThenTrim(this string value)
+        {
+            return value.SplitThenTrim(NewLineSeparator);
+        }
     }
 
     public static class BoolExtensions

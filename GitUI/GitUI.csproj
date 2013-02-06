@@ -1605,6 +1605,7 @@
     <None Include="Resources\Icons\Cut.png" />
     <Content Include="Resources\Icons\BranchNew.png" />
     <Content Include="Resources\Icons\Namespace.png" />
+    <Content Include="Resources\Icons\RemoteRepo.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

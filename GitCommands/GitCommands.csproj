@@ -86,6 +86,7 @@
     <Compile Include="Git\GitSubmoduleStatus.cs" />
     <Compile Include="Git\GitSvnCommandHelpers.cs" />
     <Compile Include="Git\GitCommandsInstance.cs" />
+    <Compile Include="Git\RemoteInfo.cs" />
     <Compile Include="LinkFactory.cs" />
     <Compile Include="LinqExtensions.cs" />
     <Compile Include="Logging\CommandLogger.cs" />

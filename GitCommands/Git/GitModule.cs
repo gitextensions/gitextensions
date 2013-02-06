@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using PatchApply;
@@ -627,6 +628,7 @@ namespace GitCommands
             return RunGitCmd(arguments, out exitCode, stdInput, encoding);
         }
 
+        /// <summary>Runs a git command. "git {arguments}"</summary>
         public string RunGitCmd(string arguments)
         {
             return RunGitCmd(arguments, (byte[])null);
@@ -646,7 +648,6 @@ namespace GitCommands
         {
             return RunGitCmd(arguments, out exitCode);
         }
-
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         private IEnumerable<string> RunCmdAsync(string cmd, string arguments, string stdInput, Encoding encoding)
@@ -2056,6 +2057,45 @@ namespace GitCommands
         {
             string remotes = RunGitCmd("remote show");
             return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        /// <summary>Gets a key/value collection of branches with configured upstream branches. 
+        /// Key: Local Branch; Value: (Upstream) Remote Branch</summary>
+        public IDictionary<string, string> GetConfiguredUpstreamBranches()
+        {
+            // foreach ref: sort descending on upstream value and output: {upstream}<{ref}
+            string output = RunGitCmd("for-each-ref --sort=-upstream --format='%(upstream:short)<%(refname:short)' refs/heads");
+            // example output:
+            // jberger/left-panel/-main<left-panel/-main
+            // origin/master<master
+            // <left-panel/dragdrops
+            // <some-branch
+
+            const string separator = "<";
+            var upstreams =
+                output
+                    .Split('\n') // delimit by new-line
+                    .TakeWhile(branch => !branch.StartsWith(separator))// take only branches w/ upstream
+                    .Select(branch =>
+                    {
+                        // {upstream}<{local}
+                        string line = branch.Trim();// trim each line
+                        return new { Line = line, IndexOf = line.IndexOf(separator) };
+                    }).ToDictionary(
+                        line => line.Line.Substring(line.IndexOf + 1),// local
+                        line => line.Line.Substring(0, line.IndexOf)) // upstream
+                ;
+
+            return upstreams;
+        }
+
+        /// <summary>Gets information for all remotes.</summary>
+        public IEnumerable<RemoteInfo> GetRemotesInfo()
+        {
+            return 
+                GetRemotes(false)
+                .Select(remote => 
+                    new RemoteInfo(RunGitCmd(string.Format("remote show {0}", remote))));
         }
 
         public ConfigFile GetLocalConfig()

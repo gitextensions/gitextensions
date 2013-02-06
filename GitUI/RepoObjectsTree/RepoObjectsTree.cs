@@ -24,6 +24,8 @@ namespace GitUI.UserControls
             imgList.Images.Add(branchPathKey, Resources.Namespace);
             imgList.Images.Add(stashesKey, Resources.Stashes);
             imgList.Images.Add(stashKey, Resources.Stashes);
+            imgList.Images.Add(remoteKey, Resources.RemoteRepo);
+            imgList.Images.Add(remotesKey, Resources.RemoteRepo);
 
             treeMain.ShowNodeToolTips = true;
             treeMain.NodeMouseClick += OnNodeClick;
@@ -38,20 +40,20 @@ namespace GitUI.UserControls
 
             DragDrops();
 
-            AddRootNode(new BranchesNode(
-                new TreeNode(Strings.branches.Text)
-                {
-                    ContextMenuStrip = menuBranches,
-                    ImageKey = branchesKey
-                },
-                UICommands,
-                () =>
-                {
-                    var branchNames = Module.GetBranchNames().ToArray();
-                    return BranchesNode.GetBranchTree(UICommands, branchNames);
-                },
-                OnAddBranchNode
-            ));
+            //AddRootNode(new BranchesNode(
+            //    new TreeNode(Strings.branches.Text)
+            //    {
+            //        ContextMenuStrip = menuBranches,
+            //        ImageKey = branchesKey
+            //    },
+            //    UICommands,
+            //    () =>
+            //    {
+            //        var branchNames = Module.GetBranchNames().ToArray();
+            //        return BranchesNode.GetBranchTree(UICommands, branchNames);
+            //    },
+            //    OnAddBranchNode
+            //));
             AddTreeSet(new TreeNode(Strings.stashes.Text)
                 {
                     ContextMenuStrip = menuStashes,
@@ -60,8 +62,16 @@ namespace GitUI.UserControls
                () => Module.GetStashes().Select(stash => new StashNode(stash, UICommands)).ToList(),
                OnReloadStashes,
                OnAddStash
-           );
-            //AddTreeSet(nodeTags, ...);
+            );
+            AddTreeSet(new TreeNode(Strings.remotes.Text)
+                {
+                    ContextMenuStrip = menuRemotes,
+                    ImageKey = remotesKey
+                },
+                () => Module.GetRemotesInfo().Select(remote => new RemoteNode(remote, UICommands)).ToList(),
+                OnReloadRemotes,
+                OnAddRemote
+            );
 
             if (isFirst)
             {// bypass reloading twice 
