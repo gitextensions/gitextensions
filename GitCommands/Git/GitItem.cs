@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GitCommands
 {
+    [DebuggerDisplay("GitItem( {FileName} )")]
     public class GitItem : IGitItem
     {
         internal const int MinimumStringLength = 53;
@@ -104,7 +106,5 @@ namespace GitCommands
 
             return items;
         }
-
-
     }
 }
