@@ -532,6 +532,20 @@ namespace GitUI.SpellChecker
             OnKeyUp(e);
         }
 
+        private bool skipSelectionUndo = false;
+        private void UndoHighlighting()
+        {
+            if (!skipSelectionUndo)
+                return;
+
+            while (TextBox.UndoActionName.Equals("Unknown"))
+            {
+                TextBox.Undo();
+            }
+            TextBox.Undo();
+            skipSelectionUndo = false;
+        }
+
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.V)
@@ -544,6 +558,10 @@ namespace GitUI.SpellChecker
                 // remove image data from clipboard
                 string text = Clipboard.GetText();
                 Clipboard.SetText(text);
+            }
+            else if (e.Control && e.KeyCode == Keys.Z)
+            {
+                UndoHighlighting();
             }
             OnKeyDown(e);
         }
@@ -636,6 +654,8 @@ namespace GitUI.SpellChecker
             TextBox.SelectionLength = 0;
             TextBox.SelectionStart = oldPos;
             TextBox.SelectionColor = Color.Black;
+            //undoes all recent selections while ctrl-z pressed
+            skipSelectionUndo = true;
         }
 
         /// <summary>
