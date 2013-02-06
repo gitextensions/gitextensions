@@ -646,14 +646,18 @@ namespace GitUI.SpellChecker
         public void ChangeTextColor(int line, int offset, int length, Color color)
         {
             var oldPos = TextBox.SelectionStart;
+            var oldColor = TextBox.SelectionColor;
             var lineIndex = TextBox.GetFirstCharIndexFromLine(line);
             TextBox.SelectionStart = Math.Max(lineIndex + offset, 0);
             TextBox.SelectionLength = length;
             TextBox.SelectionColor = color;
+            var restoreColor = oldPos < TextBox.SelectionStart || oldPos > TextBox.SelectionStart + TextBox.SelectionLength;
 
             TextBox.SelectionLength = 0;
             TextBox.SelectionStart = oldPos;
-            TextBox.SelectionColor = Color.Black;
+            //restore old color only if oldPos doesn't intersects with colored selection
+            if(restoreColor)
+                TextBox.SelectionColor = oldColor;
             //undoes all recent selections while ctrl-z pressed
             skipSelectionUndo = true;
         }
