@@ -1779,9 +1779,9 @@ namespace GitUI
                 offset = formattedLines[line].CommonPrefix(Message.Line(line)).Length;
             }
 
-            int len = Math.Min(lineLimit, lineLength);
+            int len = Math.Min(lineLimit, lineLength) - offset;
 
-            if (offset <= len)
+            if (0 < len)
                 Message.ChangeTextColor(line, offset, len, Color.Black);
 
             if (lineLength > lineLimit)
