@@ -8,39 +8,42 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using GitCommands.Config;
 using GitCommands.Git;
 using JetBrains.Annotations;
 
 namespace GitCommands
 {
+    /// <summary>Specifies whether to check untracked files/directories (e.g. via 'git status')</summary>
     public enum UntrackedFilesMode
     {
-        /// <summary>
-        /// Default value.
-        /// </summary>
+        /// <summary>Default is <see cref="All"/>; when <see cref="UntrackedFilesMode"/> is NOT used, 'git status' uses <see cref="Normal"/>.</summary>
         Default = 1,
-        /// <summary>
-        /// Show no untracked files.
-        /// </summary>
+        /// <summary>Show no untracked files.</summary>
         No = 2,
-        /// <summary>
-        /// Shows untracked files and directories.
-        /// </summary>
+        /// <summary>Shows untracked files and directories.</summary>
         Normal = 3,
-        /// <summary>
-        /// Also shows individual files in untracked directories.
-        /// </summary>
+        /// <summary>Shows untracked files and directories, and individual files in untracked directories.</summary>
         All = 4
     }
 
+    /// <summary>Specifies whether to ignore changes to submodules when looking for changes (e.g. via 'git status').</summary>
     public enum IgnoreSubmodulesMode
     {
+        /// <summary>Default is <see cref="All"/> (hides all changes to submodules).</summary>
         Default = 1,
+        /// <summary>Consider a submodule modified when it either:
+        ///  contains untracked or modified files,
+        ///  or its HEAD differs from the commit recorded in the superproject.</summary>
         None = 2,
+        /// <summary>Submodules NOT considered dirty when they only contain <i>untracked</i> content
+        ///  (but they are still scanned for modified content).</summary>
         Untracked = 3,
+        /// <summary>Ignores all changes to the work tree of submodules,
+        ///  only changes to the <i>commits</i> stored in the superproject are shown.</summary>
         Dirty = 4,
+        /// <summary>Hides all changes to submodules
+        ///  (and suppresses the output of submodule summaries when the config option status.submodulesummary is set).</summary>
         All = 5
     }
 
@@ -117,6 +120,7 @@ namespace GitCommands
             }
         }
 
+        /// <summary>Trims whitespace and replaces '\' with '/'.</summary>
         public static string FixPath(string path)
         {
             path = path.Trim();
@@ -257,7 +261,7 @@ namespace GitCommands
                 process.StartInfo.StandardErrorEncoding = encoding;
                 process.Start();
 
-                string line = null;
+                string line;
                 do
                 {
                     line = process.StandardOutput.ReadLine();
@@ -326,10 +330,7 @@ namespace GitCommands
         public static string DeleteBranchCmd(string branchName, bool force, bool remoteBranch)
         {
             StringBuilder cmd = new StringBuilder("branch");
-            if (force)
-                cmd.Append(" -D");
-            else
-                cmd.Append(" -d");
+            cmd.Append(force ? " -D" : " -d");
 
             if (remoteBranch)
                 cmd.Append(" -r");
@@ -444,7 +445,7 @@ namespace GitCommands
             if (initSubmodules)
                 options.Add("--recurse-submodules");
             if (depth.HasValue)
-                options.Add("--depth " + depth.ToString());
+                options.Add("--depth " + depth);
             if (VersionInUse.CloneCanAskForProgress)
                 options.Add("--progress");
             if (!string.IsNullOrEmpty(branch))
@@ -495,9 +496,10 @@ namespace GitCommands
 
         public static string BranchCmd(string branchName, string revision, bool checkout)
         {
-            if (checkout)
-                return string.Format("checkout -b \"{0}\" \"{1}\"", branchName.Trim(), revision);
-            return string.Format("branch \"{0}\" \"{1}\"", branchName.Trim(), revision);
+            return string.Format(
+                checkout 
+                ? "checkout -b \"{0}\" \"{1}\"" 
+                : "branch \"{0}\" \"{1}\"", branchName.Trim(), revision);
         }
 
         public static string MergedBranches()
@@ -505,17 +507,20 @@ namespace GitCommands
             return "branch --merged";
         }
 
+        /// <summary>Un-sets the git SSH command path.</summary>
         public static void UnsetSsh()
         {
             Environment.SetEnvironmentVariable("GIT_SSH", "", EnvironmentVariableTarget.Process);
         }
 
+        /// <summary>Sets the git SSH command path.</summary>
         public static void SetSsh(string path)
         {
             if (!string.IsNullOrEmpty(path))
                 Environment.SetEnvironmentVariable("GIT_SSH", path, EnvironmentVariableTarget.Process);
         }
 
+        /// <summary>Indicates whether the git SSH command uses Plink.</summary>
         public static bool Plink()
         {
             var sshString = GetSsh();
@@ -523,22 +528,49 @@ namespace GitCommands
             return sshString.EndsWith("plink.exe", StringComparison.CurrentCultureIgnoreCase);
         }
 
+        /// <summary>Gets the git SSH command; or "" if the environment variable is NOT set.</summary>
         public static string GetSsh()
         {
-            var ssh = Environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process);
-
-            return ssh ?? "";
+            return Environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process) 
+                ?? "";
         }
 
-        public static string PushCmd(string path, string branch, bool all)
+        /// <summary>Creates a 'git push' command using the specified parameters, pushing from HEAD.</summary>
+        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
+        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
+        /// <param name="all">All refs under 'refs/heads/' will be pushed.</param>
+        /// <returns>'git push' command with the specified parameters.</returns>
+        public static string PushCmd(string remote, string toBranch, bool all)
         {
-            return PushCmd(path, null, branch, all, false, true, 0);
+            return PushCmd(remote, null, toBranch, all, false, true, 0);
         }
 
-        public static string PushCmd(string path, string fromBranch, string toBranch,
+        /// <summary>Creates a 'git push' command using the specified parameters.</summary>
+        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
+        /// <param name="fromBranch">Name of the branch to push.</param>
+        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
+        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it. 
+        /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
+        /// <returns>'git push' command with the specified parameters.</returns>
+        public static string PushCmd(string remote, string fromBranch, string toBranch, bool force = false)
+        {
+            return PushCmd(remote, fromBranch, toBranch, false, force, false, 0);
+        }
+
+        /// <summary>Creates a 'git push' command using the specified parameters.</summary>
+        /// <param name="remote">Remote repository that is the destination of the push operation.</param>
+        /// <param name="fromBranch">Name of the branch to push.</param>
+        /// <param name="toBranch">Name of the ref on the remote side to update with the push.</param>
+        /// <param name="all">All refs under 'refs/heads/' will be pushed.</param>
+        /// <param name="force">If a remote ref is not an ancestor of the local ref, overwrite it. 
+        /// <remarks>This can cause the remote repository to lose commits; use it with care.</remarks></param>
+        /// <param name="track">For every branch that is up to date or successfully pushed, add upstream (tracking) reference.</param>
+        /// <param name="recursiveSubmodules">If '1', check whether all submodule commits used by the revisions to be pushed are available on a remote tracking branch; otherwise, the push will be aborted.</param>
+        /// <returns>'git push' command with the specified parameters.</returns>
+        public static string PushCmd(string remote, string fromBranch, string toBranch,
             bool all, bool force, bool track, int recursiveSubmodules)
         {
-            path = FixPath(path);
+            remote = FixPath(remote);
 
             if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
                 fromBranch = "HEAD";
@@ -560,17 +592,17 @@ namespace GitCommands
                 srecursiveSubmodules = "--recurse-submodules=on-demand ";
 
             var sprogressOption = "";
-            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+            if (VersionInUse.PushCanAskForProgress)
                 sprogressOption = "--progress ";
 
             var options = String.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
             if (all)
-                return string.Format("push {0}--all \"{1}\"", options, path.Trim());
+                return string.Format("push {0}--all \"{1}\"", options, remote);
 
             if (!string.IsNullOrEmpty(toBranch) && !string.IsNullOrEmpty(fromBranch))
-                return string.Format("push {0}\"{1}\" {2}:{3}", options, path.Trim(), fromBranch, toBranch);
+                return string.Format("push {0}\"{1}\" {2}:{3}", options, remote, fromBranch, toBranch);
 
-            return string.Format("push {0}\"{1}\" {2}", options, path.Trim(), fromBranch);
+            return string.Format("push {0}\"{1}\" {2}", options, remote, fromBranch);
         }
 
         public static string PushMultipleCmd(string path, IEnumerable<GitPushAction> pushActions)
@@ -578,7 +610,7 @@ namespace GitCommands
             path = FixPath(path);
 
             var sprogressOption = "";
-            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+            if (VersionInUse.PushCanAskForProgress)
                 sprogressOption = "--progress ";
 
             string cmd = string.Format("push {0} \"{1}\"", sprogressOption, path.Trim());
@@ -605,7 +637,7 @@ namespace GitCommands
                 sforce = "-f ";
 
             var sprogressOption = "";
-            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+            if (VersionInUse.PushCanAskForProgress)
                 sprogressOption = "--progress ";
 
             var options = String.Concat(sforce, sprogressOption);
@@ -649,9 +681,9 @@ namespace GitCommands
         public static string ContinueBisectCmd(GitBisectOption bisectOption, params string[] revisions)
         {
             var bisectCommand = GetBisectCommand(bisectOption);
-            if (revisions.Length == 0)
-                return bisectCommand;
-            return string.Format("{0} {1}", bisectCommand, string.Join(" ", revisions));
+            return (revisions.Length == 0) 
+                ? bisectCommand 
+                : string.Format("{0} {1}", bisectCommand, string.Join(" ", revisions));
         }
 
         private static string GetBisectCommand(GitBisectOption bisectOption)
@@ -753,18 +785,16 @@ namespace GitCommands
 
         public static string PatchCmd(string patchFile)
         {
-            if (IsDiffFile(patchFile))
-                return "apply \"" + FixPath(patchFile) + "\"";
-            else
-                return "am --3way --signoff \"" + FixPath(patchFile) + "\"";
+            return IsDiffFile(patchFile)
+                       ? "apply \"" + FixPath(patchFile) + "\""
+                       : "am --3way --signoff \"" + FixPath(patchFile) + "\"";
         }
 
         public static string PatchCmdIgnoreWhitespace(string patchFile)
         {
-            if (IsDiffFile(patchFile))
-                return "apply --ignore-whitespace \"" + FixPath(patchFile) + "\"";
-            else
-                return "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
+            return IsDiffFile(patchFile)
+                       ? "apply --ignore-whitespace \"" + FixPath(patchFile) + "\""
+                       : "am --3way --signoff --ignore-whitespace \"" + FixPath(patchFile) + "\"";
         }
 
         public static string PatchDirCmd()
@@ -798,9 +828,9 @@ namespace GitCommands
         public static ConfigFile GetGlobalConfig()
         {
             string configPath = Path.Combine(GetHomeDir(), ".config", "git", "config");
-            if (File.Exists(configPath))
-                return new ConfigFile(configPath, false);
-            return new ConfigFile(Path.Combine(GetHomeDir(), ".gitconfig"), false);
+            return File.Exists(configPath) 
+                ? new ConfigFile(configPath, false) 
+                : new ConfigFile(Path.Combine(GetHomeDir(), ".gitconfig"), false);
         }
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool untrackedFiles)
@@ -984,7 +1014,7 @@ namespace GitCommands
 
                 if (x != '?' && x != '!' && x != ' ')
                 {
-                    GitItemStatus gitItemStatusX = null;
+                    GitItemStatus gitItemStatusX;
                     if (x == 'R' || x == 'C') // Find renamed files...
                     {
                         string nextfile = n + 1 < files.Length ? files[n + 1] : "";
@@ -1002,7 +1032,7 @@ namespace GitCommands
 
                 if (fromDiff || y == ' ')
                     continue;
-                GitItemStatus gitItemStatusY = null;
+                GitItemStatus gitItemStatusY;
                 if (y == 'R' || y == 'C') // Find renamed files...
                 {
                     string nextfile = n + 1 < files.Length ? files[n + 1] : "";
@@ -1239,6 +1269,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="originDate">Current date.</param>
         /// <param name="previousDate">The date to get relative time string for.</param>
+        /// <param name="displayWeeks">Indicates whether to display weeks.</param>
         /// <returns>The human readable string for relative date.</returns>
         /// <see cref="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
         public static string GetRelativeDateString(DateTime originDate, DateTime previousDate, bool displayWeeks)
