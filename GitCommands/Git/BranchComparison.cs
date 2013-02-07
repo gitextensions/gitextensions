@@ -1,4 +1,6 @@
-﻿namespace GitCommands.Git
+﻿using System.Collections.Generic;
+
+namespace GitCommands.Git
 {
     /// <summary>Commit comparison between two branches.</summary>
     public class BranchComparison
@@ -51,6 +53,19 @@
             DiffCount = diffCount;
         }
     }
+
+    ///// <summary>Commit differential for a branch.</summary>
+    //public class CommitDiff : CommitDiffCount
+    //{
+    //    /// <summary>Gets the SHAs of the commits that are different.</summary>
+    //    public IEnumerable<string> SHAs { get; private set; }
+   
+    //    public CommitDiff(string branch, ICollection<string> shas)
+    //        : base(branch, shas.Count)
+    //    {
+    //        SHAs = shas;
+    //    }
+    //}
 
     /// <summary>Specifies the commit comparison of a branch compared to another branch.</summary>
     public enum BranchCompareStatus
