@@ -156,7 +156,7 @@ namespace GitUI.UserControls
             //}
         }
 
-        /// <summary>branch</summary>
+        /// <summary>Local branch node.</summary>
         sealed class BranchNode : BaseBranchNode
         {
             public BranchNode(GitUICommands uiCommands,
@@ -234,7 +234,28 @@ namespace GitUI.UserControls
                     }
                 });
 
-                return new DragDropAction[] { stashDD, branchDD, };
+                // RemoteBranch onto (local) branch -> pull
+                var remoteBranchDD = new DragDropAction<RemoteBranchNode>(
+                    remoteBranch =>
+                    {
+                        if (Git.IsDirtyDir())
+                        {// disallow pull onto the current branch if it's "dirty"
+                            // show: "commit changes first"
+                            return false;
+                        }
+                        return remoteBranch.Value.PullConfigs.Any(pull => Equals(pull.LocalBranch, FullPath))
+                            && Git.IsBranchBehind(FullPath, remoteBranch.Value);
+                    },
+                    remoteBranch =>
+                    {
+                        // checkout this branch
+                        if (false)
+                        {// can fast-forward pull
+
+                        }
+                    });
+
+                return new DragDropAction[] { stashDD, branchDD, remoteBranchDD };
             }
 
             public void Checkout()
@@ -283,7 +304,7 @@ namespace GitUI.UserControls
         //}
         //}
 
-        /// <summary>part of a path leading to a branch(s)</summary>
+        /// <summary>Part of a path leading to local branch(es)</summary>
         class BranchPathNode : BaseBranchNode
         {
             public IList<BaseBranchNode> Children { get; private set; }
@@ -381,9 +402,9 @@ namespace GitUI.UserControls
 
             public override int GetHashCode() { return Branches.GetHash(); }
             /// <summary>'/'</summary>
-            public static char Separator = '/';
+            public static char Separator = GitModule.RefSeparator;
             /// <summary>"/"</summary>
-            public static string SeparatorStr = Separator.ToString();
+            public static string SeparatorStr = GitModule.RefSep;
 
             /// <summary>Gets the root <see cref="BranchPathNode"/> or this, if it is the root.</summary>
             public static BranchPathNode GetRoot(BaseBranchNode node)

@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using RemoteBranch = GitCommands.Git.RemoteInfo.RemoteBranch;
 
 namespace GitUI.UserControls
 {
@@ -23,16 +24,9 @@ namespace GitUI.UserControls
         // $ git remote
         // $ git remote show {remote}
 
-        // $ git for-each-ref --format='%(upstream:short) <- %(refname:short)' refs/heads
+        // $ git for-each-ref --sort=-upstream --format='%(upstream:short) <- %(refname:short)' refs/heads
         // master <- origin/master
         // pu <- origin/pu
-
-        // $ git ls-remote {remote}
-        // {sha}    HEAD
-        // ...
-        // {sha}    refs/heads/{branch}
-        // ...
-        // {sha}    refs/tags/{tag}
 
         static readonly string remoteKey = "remote";
         static readonly string remotesKey = "remotes";
@@ -49,7 +43,7 @@ namespace GitUI.UserControls
             RemoteInfo remote = remoteNode.Value;
             TreeNode treeNode = new TreeNode(remote.Name)
             {
-                Name = string.Format("remotes{0}", remote.Name),
+                //Name = string.Format("remotes{0}", remote.Name),TODO: branch name may have invalid chars for Control.Name
                 Tag = remoteNode,
                 //ToolTipText = "",
                 ContextMenuStrip = menuRemote,
@@ -61,13 +55,38 @@ namespace GitUI.UserControls
             return treeNode;
         }
 
-        /// <summary>Stash node.</summary>
-        sealed class RemoteNode : Node<RemoteInfo, RootNode<RemoteNode>>
+        /// <summary>Remote repo node.</summary>
+        sealed class RemoteNode : ParentNode<RemoteInfo, RemoteBranchNode>
         {
             public RemoteNode(RemoteInfo remote, GitUICommands uiCommands)
-                : base(remote, null, uiCommands)
+                : base(uiCommands, remote, remote.Branches.Select(b => new RemoteBranchNode(uiCommands, b))) { }
+        }
+
+        /// <summary>Remote-tracking branch node.</summary>
+        sealed class RemoteBranchNode : Node<RemoteBranch>
+        {
+            public RemoteBranchNode(GitUICommands uiCommands,
+                 RemoteBranch branch)
+                : base(branch, uiCommands)
             {
                 IsDraggable = true;
+            }
+
+            protected override IEnumerable<DragDropAction> CreateDragDropActions()
+            {
+                // (local) Branch onto this RemoteBranch -> push
+                return new List<DragDropAction>
+                {
+                    new DragDropAction<BranchNode>(
+                        branch => Value.PushConfig != null && Equals(Value.PushConfig.LocalBranch, branch.FullPath),
+                        branch =>
+                        {
+                            if (Git.CompareCommits(branch.FullPath,Value.FullPath).State == BranchCompareStatus.AheadPublishable)
+                            {
+                            }
+                            //UiCommands.StartPushDialog()
+                        })
+                };
             }
         }
 

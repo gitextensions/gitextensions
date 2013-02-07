@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -31,7 +31,7 @@ namespace GitUI.UserControls
             /// <summary>Gets the <see cref="GitModule"/> reference.</summary>
             public GitModule Git { get; private set; }
 
-            public Node(GitUICommands uiCommands, TreeNode treeNode = null)
+            protected Node(GitUICommands uiCommands, TreeNode treeNode = null)
             {
                 if (treeNode != null)
                 {
@@ -124,7 +124,7 @@ namespace GitUI.UserControls
                 Func<object, bool> _canDrop;
                 Action<object> _onDrop;
 
-                public DragDropAction(Func<object, bool> canDrop, Action<object> onDrop)
+                protected DragDropAction(Func<object, bool> canDrop, Action<object> onDrop)
                 {
                     _canDrop = canDrop;
                     _onDrop = onDrop;
@@ -149,47 +149,58 @@ namespace GitUI.UserControls
             }
 
             /// <summary><see cref="DragDropAction"/> with safe type-casting.</summary>
-            protected class DragDropAction<T> : DragDropAction
-                where T : class
+            /// <typeparam name="TDragged">Type of the dragged/dropped object.</typeparam>
+            protected class DragDropAction<TDragged> : DragDropAction
+                where TDragged : class
             {
-                public DragDropAction(Func<T, bool> canDrop, Action<T> onDrop)
+                public DragDropAction(Func<TDragged, bool> canDrop, Action<TDragged> onDrop)
                     : base(obj =>
                     {
-                        T t = obj as T;
+                        TDragged t = obj as TDragged;
                         return (t != null) && canDrop(t);
-                    }, obj => onDrop(obj as T)) { }
+                    }, obj => onDrop(obj as TDragged)) { }
             }
         }
 
-        /// <summary>base class for a node with a (strongly-typed) parent</summary>
-        abstract class Node<TParent> : Node
+        /// <summary>Node with a value</summary>
+        abstract class Node<TValue> : Node
         {
-            new public TParent ParentNode { get; private set; }
+            public TValue Value { get; private set; }
 
-            protected Node(TParent parent, GitUICommands uiCommands, TreeNode treeNode = null)
+            protected Node(TValue value, GitUICommands uiCommands, TreeNode treeNode = null)
                 : base(uiCommands, treeNode)
-            {
-                ParentNode = parent;
-            }
-        }
-
-        interface IValueNode<out TValue>
-        {
-            TValue Value { get; }
-        }
-
-        /// <summary>Basic node with a value.</summary>
-        class Node<T, TParent> : Node<TParent>, IValueNode<T>
-        {
-            public T Value { get; private set; }
-
-            public Node(T value, TParent parent, GitUICommands uiCommands, TreeNode treeNode = null)
-                : base(parent, uiCommands, treeNode)
             {
                 Value = value;
             }
+        }
+
+        /// <summary>Node with a value and a strongly-typed parent.</summary>
+        class Node<TValue, TParent> : Node<TValue>
+        {
+            public TParent Parent { get; private set; }
+            public Node(TValue value, TParent parent, GitUICommands uiCommands, TreeNode treeNode = null)
+                : base(value, uiCommands, treeNode)
+            {
+                Parent = parent;
+            }
 
             public override string ToString() { return Value.ToString(); }
+        }
+
+        /// <summary>Node with a value and children.</summary>
+        abstract class ParentNode<TValue, TChild> : Node<TValue>
+        {
+            /// <summary>Gets the node's children.</summary>
+            public ICollection<TChild> Children { get; private set; }
+
+            protected ParentNode(GitUICommands uiCommands, TValue value, IEnumerable<TChild> children = null, TreeNode treeNode = null)
+                : base(value, uiCommands, treeNode)
+            {
+                Children = new Collection<TChild>(
+                    children != null
+                    ? children.ToList()
+                    : new List<TChild>());
+            }
         }
 
         /* readme
@@ -253,7 +264,7 @@ namespace GitUI.UserControls
                 _onReloading = onReloading ?? ((olds, news) => { });
                 _onReload = onReload ?? ((items, root) => { });
                 _addChild = addChild ?? ((nodes, child) => null);
-                Children = new List<TChild>();
+                this.Children = new List<TChild>();
 
                 _Watcher = _WatcherT = new ListWatcher<TChild>(
                   _getValues,
