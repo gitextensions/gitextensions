@@ -88,10 +88,6 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Show relative date instead of full date</Source>
           <Value>Mostrar fecha relativa en lugar de la fecha completa</Value>
         </TranslationItem>
-        <TranslationItem Name="commitFontChangeButton" Property="Text" type="unfinished">
-          <Source>font name</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="diffFontChangeButton" Property="Text" type="unfinished">
           <Source>font name</Source>
           <Value />
@@ -126,10 +122,6 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
         <TranslationItem Name="label26" Property="Text" type="unfinished">
           <Source>Application font</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="label34" Property="Text" type="unfinished">
-          <Source>Commit font</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label44" Property="Text">
@@ -193,10 +185,6 @@ This action will be performed without warning while checking out branch.</Source
           <Value>No se puede cargar clave SSH. PuTTY no está configurado correctamente.</Value>
         </TranslationItem>
         <TranslationItem Name="_pageantNotFoundCaption" Property="Text">
-          <Source>PuTTY</Source>
-          <Value>PuTTY</Value>
-        </TranslationItem>
-        <TranslationItem Name="_loadKeyFailedCaption" Property="Text" type="obsolete">
           <Source>PuTTY</Source>
           <Value>PuTTY</Value>
         </TranslationItem>
@@ -647,19 +635,19 @@ Value:  {2} = {3}</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkAddTrackingRef" Property="Text" type="unfinished">
-          <Source>Add a tracking reference for newly pushed branch.</Source>
+          <Source>Add a tracking reference for newly pushed branch</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkAmmend" Property="Text" type="unfinished">
-          <Source>Ammend last commit.</Source>
+          <Source>Ammend last commit</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
-          <Source>Apply automatically stashed changes.  Stash will be automatically poped after successful pull.</Source>
+          <Source>Apply stashed changes (Stash will be popped automatically after successful pull)</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkPushNewBranch" Property="Text" type="unfinished">
-          <Source>Push a new branch for the remote.</Source>
+          <Source>Push a new branch for the remote</Source>
           <Value />
         </TranslationItem>
       </translationItems>
@@ -1542,25 +1530,17 @@ Tendrá acceso para hacer Push. {2}</Value>
 revision:</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="radioButtonFormatTar" Property="Text" type="unfinished">
+        <TranslationItem Name="radioButtonFormatTar" Property="Text">
           <Source>tar</Source>
-          <Value />
+          <Value>tar</Value>
         </TranslationItem>
-        <TranslationItem Name="radioButtonFormatZip" Property="Text" type="unfinished">
+        <TranslationItem Name="radioButtonFormatZip" Property="Text">
           <Source>zip</Source>
-          <Value />
+          <Value>zip</Value>
         </TranslationItem>
         <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text" type="obsolete">
           <Source>Select 1 revision to archive</Source>
           <Value>Seleccione una revisión para archivar</Value>
-        </TranslationItem>
-        <TranslationItem Name="_saveFileDialogFilter" Property="Text" type="obsolete">
-          <Source>Zip file (*.zip)</Source>
-          <Value>Archivo zip (*.zip)</Value>
-        </TranslationItem>
-        <TranslationItem Name="Save" Property="Text" type="obsolete">
-          <Source>Save</Source>
-          <Value>Guardar</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1797,10 +1777,6 @@ revision:</Source>
         <TranslationItem Name="_stashSingular" Property="Text">
           <Source>stash</Source>
           <Value>pila</Value>
-        </TranslationItem>
-        <TranslationItem Name="_updateAllSuperprojectSubmodules" Property="Text" type="unfinished">
-          <Source>Update all superproject submodules</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="_updateCurrentSubmodule" Property="Text" type="unfinished">
           <Source>Update current submodule</Source>
@@ -2176,13 +2152,17 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Remotes</Source>
           <Value>Remotos</Value>
         </TranslationItem>
+        <TranslationItem Name="reportAnIssueToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Report an issue</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="resetFileToAToolStripMenuItem" Property="Text" type="unfinished">
           <Source>A</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="resetFileToRemoteToolStripMenuItem" Property="Text">
+        <TranslationItem Name="resetFileToRemoteToolStripMenuItem" Property="Text" type="unfinished">
           <Source>B</Source>
-          <Value>Remoto</Value>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="resetFileToToolStripMenuItem" Property="Text">
           <Source>Reset file(s) to</Source>
@@ -2316,41 +2296,13 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Change current branch</Source>
           <Value>Cambio rama actual</Value>
         </TranslationItem>
-        <TranslationItem Name="stashChangesToolStripMenuItem" Property="ToolTipText" type="obsolete">
-          <Source>Stash changes</Source>
-          <Value>Apilar cambios</Value>
-        </TranslationItem>
         <TranslationItem Name="stashPopToolStripMenuItem" Property="ToolTipText" type="obsolete">
           <Source>Apply and drop single stash</Source>
           <Value>Aplicar y quitar uno de la pila</Value>
         </TranslationItem>
-        <TranslationItem Name="_UnsupportedMultiselectAction" Property="Text" type="obsolete">
-          <Source>Operation not supported</Source>
-          <Value>Operación no soportada</Value>
-        </TranslationItem>
-        <TranslationItem Name="CommitInfo" Property="Text" type="obsolete">
-          <Source>Commit</Source>
-          <Value>Commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="Diff" Property="Text" type="obsolete">
-          <Source>Diff</Source>
-          <Value>Diff</Value>
-        </TranslationItem>
         <TranslationItem Name="openSubmoduleToolStripMenuItem" Property="Text" type="obsolete">
           <Source>Browse submodule</Source>
           <Value>Examinar un submódulo</Value>
-        </TranslationItem>
-        <TranslationItem Name="resetFileToBaseToolStripMenuItem" Property="Text" type="obsolete">
-          <Source>Base</Source>
-          <Value>Base</Value>
-        </TranslationItem>
-        <TranslationItem Name="Tree" Property="Text" type="obsolete">
-          <Source>File tree</Source>
-          <Value>Árbol de archivos</Value>
-        </TranslationItem>
-        <TranslationItem Name="_toolStripGitStatus" Property="Text" type="obsolete">
-          <Source>Commit</Source>
-          <Value>Commit</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2458,21 +2410,9 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Remember as default action</Source>
           <Value>Recordar como acción por defecto</Value>
         </TranslationItem>
-        <TranslationItem Name="_applyShashedItemsAgain" Property="Text" type="obsolete">
-          <Source>Apply stashed items to working dir again?</Source>
-          <Value>¿Aplicar objetos apilados al directorio de trabajo nuevamente?</Value>
-        </TranslationItem>
-        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text" type="obsolete">
-          <Source>Auto stash</Source>
-          <Value>Auto apilar</Value>
-        </TranslationItem>
         <TranslationItem Name="rbCreateBranch" Property="Text" type="obsolete">
           <Source>Create local branch with the name '{0}'</Source>
           <Value>Crear rama local con el nombre '{0}'</Value>
-        </TranslationItem>
-        <TranslationItem Name="Force" Property="Text" type="obsolete">
-          <Source>Force</Source>
-          <Value>Forzar</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2535,25 +2475,13 @@ revision:</Source>
           <Source>Command executed</Source>
           <Value>Comando ejecutado</Value>
         </TranslationItem>
-        <TranslationItem Name="_cmdExecutedMsgBoxCaption" Property="Text" type="obsolete">
-          <Source>Cherry pick</Source>
-          <Value>Elegir el mejor</Value>
-        </TranslationItem>
         <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text" type="obsolete">
           <Source>Select 1 revision to pick.</Source>
           <Value>Seleccione 1 revisión para recoger</Value>
         </TranslationItem>
-        <TranslationItem Name="_noRevisionSelectedMsgBoxCaption" Property="Text" type="obsolete">
-          <Source>Cherry pick</Source>
-          <Value>Elegir el mejor</Value>
-        </TranslationItem>
         <TranslationItem Name="autoParent" Property="Text" type="obsolete">
           <Source>Automatically set parent to 1 when commit is a merge</Source>
           <Value>Automáticamente poner padre en 1 cuando el commit es una fusión</Value>
-        </TranslationItem>
-        <TranslationItem Name="CherryPick" Property="Text" type="obsolete">
-          <Source>Cherry pick</Source>
-          <Value>Seleccionar manualmente</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="obsolete">
           <Source>Select a commit you want to cherry pick. The commit will be recommitted on top of the current head.</Source>
@@ -2803,10 +2731,6 @@ Utilice sólo modificar si el commit no está publicado todavía!
         <TranslationItem Name="_amendCommitCaption" Property="Text">
           <Source>Amend commit</Source>
           <Value>Modificar commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="_checkBoxAutoWrap" Property="Text" type="unfinished">
-          <Source>Auto-wrap</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text" type="unfinished">
           <Source>Commit Message is requested during commit</Source>
@@ -3059,7 +2983,7 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
         </TranslationItem>
         <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Open containing folder</Source>
-          <Value />
+          <Value>Abrir carpeta contenedora</Value>
         </TranslationItem>
         <TranslationItem Name="openDiffMenuItem" Property="Text" type="unfinished">
           <Source>Open with Difftool</Source>
@@ -3155,7 +3079,7 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
         </TranslationItem>
         <TranslationItem Name="toolStripMenuItem10" Property="Text" type="unfinished">
           <Source>Open containing folder</Source>
-          <Value />
+          <Value>Abrir carpeta contenedora</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripMenuItem11" Property="Text">
           <Source>Edit file</Source>
@@ -3217,10 +3141,6 @@ Choose 'No' to keep all new files.</Source>
 
 Elija "No" para mantener todos los archivos nuevos.</Value>
         </TranslationItem>
-        <TranslationItem Name="_alsoDeleteUntrackedFilesCaption" Property="Text" type="obsolete">
-          <Source>Delete</Source>
-          <Value>Eliminar</Value>
-        </TranslationItem>
         <TranslationItem Name="_resetChangesText" Property="Text" type="obsolete">
           <Source>Are you sure you want to reset the changes to the selected files?</Source>
           <Value>¿Está seguro de que deseas restablecer los cambios en los archivos seleccionados?</Value>
@@ -3254,8 +3174,8 @@ Elija "No" para mantener todos los archivos nuevos.</Value>
           <Value>Cancelar</Value>
         </TranslationItem>
         <TranslationItem Name="buttonOk" Property="Text" type="unfinished">
-          <Source>Ok</Source>
-          <Value />
+          <Source>OK</Source>
+          <Value>Aceptar</Value>
         </TranslationItem>
         <TranslationItem Name="groupBoxCommitTemplates" Property="Text" type="unfinished">
           <Source>Commit templates</Source>
@@ -3287,10 +3207,6 @@ Elija "No" para mantener todos los archivos nuevos.</Value>
         </TranslationItem>
         <TranslationItem Name="labelSecondLineEmpty" Property="Text" type="unfinished">
           <Source>Second line must be empty:</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="labelUseIndent" Property="Text" type="unfinished">
-          <Source>Indent lines after first line:</Source>
           <Value />
         </TranslationItem>
       </translationItems>
@@ -3588,10 +3504,6 @@ Haga clic en el botón "Support this project" para obtener más información sob
         <TranslationItem Name="viewCommitToolStripMenuItem" Property="Text" type="unfinished">
           <Source>View commit</Source>
           <Value />
-        </TranslationItem>
-        <TranslationItem Name="Blame" Property="Text" type="obsolete">
-          <Source>Blame</Source>
-          <Value>Culpa</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4152,7 +4064,7 @@ defaultrebase=0</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Go to line</Source>
-          <Value />
+          <Value>Ir a la línea</Value>
         </TranslationItem>
         <TranslationItem Name="cancelBtn" Property="Text">
           <Source>Cancel</Source>
@@ -4568,14 +4480,6 @@ This will initialize and update all submodules recursive.</Source>
           <Source>Remote branch</Source>
           <Value>Ramas remotas</Value>
         </TranslationItem>
-        <TranslationItem Name="BrowseSource" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text" type="obsolete">
-          <Source>Url</Source>
-          <Value>Url</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormPush">
@@ -4762,18 +4666,6 @@ el remoto. ¿Está seguro de que desea hacer Push con esta rama?</Value>
           <Source>Push tags to remote repository</Source>
           <Value>Push etiquetas a repositorio remoto</Value>
         </TranslationItem>
-        <TranslationItem Name="BrowseSource" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="PullFromRemote" Property="Text" type="obsolete">
-          <Source>Remote</Source>
-          <Value>Remoto</Value>
-        </TranslationItem>
-        <TranslationItem Name="PullFromUrl" Property="Text" type="obsolete">
-          <Source>Url</Source>
-          <Value>Url</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormPuttyError">
@@ -4912,10 +4804,6 @@ Nada para rebase.</Value>
         <TranslationItem Name="lblRangeTo" Property="Text" type="unfinished">
           <Source>To</Source>
           <Value />
-        </TranslationItem>
-        <TranslationItem Name="_currentBranchText" Property="Text" type="obsolete">
-          <Source>Current branch:</Source>
-          <Value>Rama actual:</Value>
         </TranslationItem>
         <TranslationItem Name="Currentbranch" Property="Text" type="obsolete">
           <Source>Current</Source>
@@ -5169,21 +5057,13 @@ El valor se ha restablecido a un valor vacío.</Value>
           <Source>Default pull behavior (fetch &amp; merge)</Source>
           <Value>Comportamiento por defecto del Pull (buscar y fusionar)</Value>
         </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="buttonBrowsePushUrl" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormRenameBranch">
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Rename branch</Source>
-          <Value />
+          <Value>Renombrar rama</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text" type="unfinished">
           <Source>Rename</Source>
@@ -5756,38 +5636,6 @@ Do you want to use this custom merge script?</Source>
           <Source>Date</Source>
           <Value>Fecha</Value>
         </TranslationItem>
-        <TranslationItem Name="_authorInfo" Property="Text" type="obsolete">
-          <Source>Author: {0}</Source>
-          <Value>Autor: {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="_commitInfo" Property="Text" type="obsolete">
-          <Source>Commit: {0}</Source>
-          <Value>Commit: {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="_commitMessage" Property="Text" type="obsolete">
-          <Source>Message: {0}</Source>
-          <Value>Mensaje: {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="_dateInfo" Property="Text" type="obsolete">
-          <Source>Commit date: {0}</Source>
-          <Value>Fecha commit: {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="Author" Property="Text" type="obsolete">
-          <Source>Author: {0}</Source>
-          <Value>Autor:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Commit" Property="Text" type="obsolete">
-          <Source>Commit: {0}</Source>
-          <Value>Commit:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Date" Property="Text" type="obsolete">
-          <Source>Commit date: {0}</Source>
-          <Value>Fecha de commit:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Message" Property="Text" type="obsolete">
-          <Source>Message: {0}</Source>
-          <Value>Mensaje:</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormRevisionFilter">
@@ -5849,8 +5697,8 @@ Do you want to use this custom merge script?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="okButton" Property="Text" type="unfinished">
-          <Source>Ok</Source>
-          <Value />
+          <Source>OK</Source>
+          <Value>Aceptar</Value>
         </TranslationItem>
         <TranslationItem Name="selectBranchesLabel" Property="Text">
           <Source>Select branches</Source>
@@ -5913,303 +5761,25 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
           <Source>...title...</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_homeIsSetToString" Property="Text" type="obsolete">
-          <Source>HOME is set to:</Source>
-          <Value>HOME está seteado a:</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noDiffToolConfiguredCaption" Property="Text" type="obsolete">
-          <Source>Difftool</Source>
-          <Value>Difftool</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noMergeToolConfiguredCaption" Property="Text" type="obsolete">
-          <Source>Mergetool</Source>
-          <Value>Mergetool</Value>
-        </TranslationItem>
-        <TranslationItem Name="_puttyFoundAutoCaption" Property="Text" type="obsolete">
-          <Source>PuTTY</Source>
-          <Value>PuTTY</Value>
-        </TranslationItem>
-        <TranslationItem Name="_selectFile" Property="Text" type="obsolete">
-          <Source>Select file</Source>
-          <Value>Seleccione el archivo</Value>
-        </TranslationItem>
-        <TranslationItem Name="addScriptButton" Property="Text" type="obsolete">
-          <Source>Add</Source>
-          <Value>Agregar</Value>
-        </TranslationItem>
         <TranslationItem Name="addToRevisionGridContextMenuDataGridViewCheckBoxColumn" Property="HeaderText" type="obsolete">
           <Source>Context menu</Source>
           <Value>Menú contextual</Value>
-        </TranslationItem>
-        <TranslationItem Name="argumentsLabel" Property="Text" type="obsolete">
-          <Source>Arguments:</Source>
-          <Value>Argumentos:</Value>
-        </TranslationItem>
-        <TranslationItem Name="AskConfirmation" Property="HeaderText" type="obsolete">
-          <Source>Confirmation</Source>
-          <Value>Confirmación</Value>
-        </TranslationItem>
-        <TranslationItem Name="AutostartPageant" Property="Text" type="obsolete">
-          <Source>Automatically start authentication client when a private key is configured for a remote</Source>
-          <Value>Abre el cliente de autenticación cuando una clave privada es configurada para un remoto</Value>
-        </TranslationItem>
-        <TranslationItem Name="BlueIcon" Property="Text" type="obsolete">
-          <Source>Blue</Source>
-          <Value>Azul</Value>
-        </TranslationItem>
-        <TranslationItem Name="BranchBorders" Property="Text" type="obsolete">
-          <Source>Draw branch borders</Source>
-          <Value>Dibujar los bordes de las ramas</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseCommitTemplate" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseDiffTool" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseGitBinPath" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseGitPath" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowseMergeTool" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="browseScriptButton" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="ChangeHomeButton" Property="Text" type="obsolete">
-          <Source>Change HOME</Source>
-          <Value>Cambiar HOME</Value>
-        </TranslationItem>
-        <TranslationItem Name="CheckAtStartup" Property="Text" type="obsolete">
-          <Source>Check settings at startup (disables automatically if all settings are correct)</Source>
-          <Value>Compruebe la configuración en el arranque (se desactiva automáticamente si la configuración es correcta)</Value>
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="obsolete">
           <Source>Close process dialog automatically when process is succeeded</Source>
           <Value>Cerrar la ventana del proceso automáticamente cuando el proceso fue satisfactorio</Value>
         </TranslationItem>
-        <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text" type="obsolete">
-          <Source>Follow renames in file history (experimental)</Source>
-          <Value>Seguir renombramientos en el historial de archivos (experimental)</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text" type="obsolete">
-          <Source>Show current branch in Visual Studio</Source>
-          <Value>Mostrar rama actual en Visual Studio</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text" type="obsolete">
-          <Source>Show current working dir changes in revision graph (slow!)</Source>
-          <Value>Mostrar cambios del directorio de trabajo actual en el gráfico de revisiones</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkShowErrorsWhenStagingFiles" Property="Text" type="obsolete">
-          <Source>Show errors when staging files</Source>
-          <Value>Mostrar errores al colocar archivos en el Stage</Value>
-        </TranslationItem>
         <TranslationItem Name="chkShowGitCommandLine" Property="Text" type="obsolete">
           <Source>Show Git commandline dialog when executing process</Source>
           <Value>Mostrar línea de comandos de Git al ejecutar un proceso</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkShowGitStatusInToolbar" Property="Text" type="obsolete">
-          <Source>Show repository status in browse dialog (number of changes in toolbar, restart required)</Source>
-          <Value>Mostrar el estado del repositorio en la ventana de búsqueda (número de cambios en la barra de herramientas, requiere reiniciar)</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkShowRelativeDate" Property="Text" type="obsolete">
-          <Source>Show relative date instead of full date</Source>
-          <Value>Mostrar fecha relativa en lugar de la fecha completa</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkShowStashCountInBrowseWindow" Property="Text" type="obsolete">
-          <Source>Show stash count on status bar in browse window</Source>
-          <Value>Mostrar cantidad de pilas en la barra de estado de la ventana de exploración</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkUseFastChecks" Property="Text" type="obsolete">
-          <Source>Use FileSystemWatcher to check if index is changed</Source>
-          <Value>Utilice FileSystemWatcher para comprobar si el índice cambia</Value>
-        </TranslationItem>
-        <TranslationItem Name="chkUsePatienceDiffAlgorithm" Property="Text" type="obsolete">
-          <Source>Use patience diff algorithm</Source>
-          <Value>Mostrar el gráfico de la revisión en el informe de commits</Value>
-        </TranslationItem>
-        <TranslationItem Name="ClearImageCache" Property="Text" type="obsolete">
-          <Source>Clear image cache</Source>
-          <Value>Borrar caché</Value>
-        </TranslationItem>
-        <TranslationItem Name="commandLabel" Property="Text" type="obsolete">
-          <Source>Command:</Source>
-          <Value>Comando:</Value>
-        </TranslationItem>
-        <TranslationItem Name="DefaultIcon" Property="Text" type="obsolete">
-          <Source>Default</Source>
-          <Value>Por defecto</Value>
-        </TranslationItem>
-        <TranslationItem Name="DiffTool_Fix" Property="Text" type="obsolete">
-          <Source>Repair</Source>
-          <Value>Reparar</Value>
-        </TranslationItem>
-        <TranslationItem Name="DiffToolCmdSuggest" Property="Text" type="obsolete">
-          <Source>Suggest command</Source>
-          <Value>Sugerir comando</Value>
-        </TranslationItem>
-        <TranslationItem Name="downloadDictionary" Property="Text" type="obsolete">
-          <Source>Download dictionary</Source>
-          <Value>Descargar diccionario</Value>
-        </TranslationItem>
-        <TranslationItem Name="downloadMsysgit" Property="Text" type="obsolete">
-          <Source>Download msysgit</Source>
-          <Value>Descargar msysgit</Value>
-        </TranslationItem>
-        <TranslationItem Name="DrawNonRelativesGray" Property="Text" type="obsolete">
-          <Source>Draw non relatives graph gray</Source>
-          <Value>Dibujar no parientes con color gris</Value>
-        </TranslationItem>
-        <TranslationItem Name="DrawNonRelativesTextGray" Property="Text" type="obsolete">
-          <Source>Draw non relatives text gray</Source>
-          <Value>Dibujar en gris el texto de los no emparentados</Value>
-        </TranslationItem>
-        <TranslationItem Name="EnabledColumn" Property="HeaderText" type="obsolete">
-          <Source>Enabled</Source>
-          <Value>Habilitado</Value>
-        </TranslationItem>
-        <TranslationItem Name="GitBinFound_Fix" Property="Text" type="obsolete">
-          <Source>Repair</Source>
-          <Value>Reparar</Value>
-        </TranslationItem>
-        <TranslationItem Name="GitExtensionsInstall_Fix" Property="Text" type="obsolete">
-          <Source>Repair</Source>
-          <Value>Reparar</Value>
-        </TranslationItem>
-        <TranslationItem Name="GitFound_Fix" Property="Text" type="obsolete">
-          <Source>Repair</Source>
-          <Value>Reparar</Value>
-        </TranslationItem>
-        <TranslationItem Name="globalAutoCrlfFalse" Property="Text" type="obsolete">
-          <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
-          <Value>Checkout tal cual, commit tal cual ("core.autocrlf" se establece en "false")</Value>
-        </TranslationItem>
-        <TranslationItem Name="globalAutoCrlfInput" Property="Text" type="obsolete">
-          <Source>Checkout as-is, commit Unix-style line endings ("core.autocrlf"  is set to "input")</Source>
-          <Value>Checkout tal cual, commit con estilo Unix ("core.autocrlf" se establece en "input")</Value>
-        </TranslationItem>
-        <TranslationItem Name="globalAutoCrlfTrue" Property="Text" type="obsolete">
-          <Source>Checkout Windows-style, commit Unix-style line endings ("core.autocrlf"  is set to "true")</Source>
-          <Value>Checkout con estilo Windows, commit con estilo Unix ("core.autocrlf" se establece en "true")</Value>
-        </TranslationItem>
-        <TranslationItem Name="GreenIcon" Property="Text" type="obsolete">
-          <Source>Green</Source>
-          <Value>Verde</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text" type="obsolete">
-          <Source>Specify which ssh client to use</Source>
-          <Value>Especifique qué cliente SSH utilizar</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox10" Property="Text" type="obsolete">
-          <Source>Line endings</Source>
-          <Value>Terminaciones de líneas</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox2" Property="Text" type="obsolete">
-          <Source>Configure PuTTY</Source>
-          <Value>Configurar PuTTY</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox3" Property="Text" type="obsolete">
-          <Source>Difference view</Source>
-          <Value>Vista de diferencias</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox4" Property="Text" type="obsolete">
-          <Source>Revision graph</Source>
-          <Value>Gráfico de revisiones</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox5" Property="Text" type="obsolete">
-          <Source>Application Icon</Source>
-          <Value>Icono de la aplicación</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox6" Property="Text" type="obsolete">
-          <Source>Author images</Source>
-          <Value>Imágenes de autor</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox7" Property="Text" type="obsolete">
-          <Source>Git</Source>
-          <Value>Git</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox8" Property="Text" type="obsolete">
-          <Source>Environment</Source>
-          <Value>Ambiente</Value>
-        </TranslationItem>
-        <TranslationItem Name="groupBox9" Property="Text" type="obsolete">
-          <Source>Line endings</Source>
-          <Value>Terminaciones de líneas</Value>
         </TranslationItem>
         <TranslationItem Name="helpLabel" Property="Text" type="obsolete">
           <Source>Press F1 to see available options</Source>
           <Value>Pulse F1 para ver las opciones disponibles</Value>
         </TranslationItem>
-        <TranslationItem Name="helpTranslate" Property="Text" type="obsolete">
-          <Source>Help translate</Source>
-          <Value>Ayudar a traducir</Value>
-        </TranslationItem>
-        <TranslationItem Name="homeIsSetToLabel" Property="Text" type="obsolete">
-          <Source>HOME is set to: {0}</Source>
-          <Value>HOME está seteado a: {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="inMenuCheckBox" Property="Text" type="obsolete">
-          <Source>Add to revision grid context menu</Source>
-          <Value>Agregar al menú contextual de la grilla de revisiones</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="obsolete">
-          <Source>User name</Source>
-          <Value>Nombre de usuario</Value>
-        </TranslationItem>
-        <TranslationItem Name="label11" Property="Text" type="obsolete">
-          <Source>The checklist below validates the basic settings needed for GitExtensions to work properly.</Source>
-          <Value>La siguiente lista comprueba la configuración básica necesaria para que Git Extensions funcione correctamente.</Value>
-        </TranslationItem>
         <TranslationItem Name="label12" Property="Text" type="obsolete">
           <Source>Limit number of commits that will be loaded at startup.</Source>
           <Value>Limitar el número de commits que se cargan al inicio.</Value>
-        </TranslationItem>
-        <TranslationItem Name="label13" Property="Text" type="obsolete">
-          <Source>Command used to run git (git.cmd or git.exe)</Source>
-          <Value>Comando utilizado para ejecutar Git (git.cmd o git.exe)</Value>
-        </TranslationItem>
-        <TranslationItem Name="label14" Property="Text" type="obsolete">
-          <Source>Path to linux tools (sh). Leave empty when it is in the path.</Source>
-          <Value>Ruta de acceso a las herramientas de Linux (sh).
-Dejar en blanco cuando están en el PATH.</Value>
-        </TranslationItem>
-        <TranslationItem Name="label15" Property="Text" type="obsolete">
-          <Source>Path to plink.exe</Source>
-          <Value>Ruta de plink.exe</Value>
-        </TranslationItem>
-        <TranslationItem Name="label16" Property="Text" type="obsolete">
-          <Source>Path to puttygen</Source>
-          <Value>Ruta de puttygen</Value>
-        </TranslationItem>
-        <TranslationItem Name="label17" Property="Text" type="obsolete">
-          <Source>Path to pageant</Source>
-          <Value>Ruta de pageant</Value>
-        </TranslationItem>
-        <TranslationItem Name="label18" Property="Text" type="obsolete">
-          <Source>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
-but requires the PuTTY authentication client to run  in the background.
-When OpenSSH is used, command line dialogs are shown!
-</Source>
-          <Value>OpenSSH es una herramienta de línea de comandos. PuTTY es más fácil de usar de usar 
-para usuarios de Windows, pero requiere ejecutar el agente de autenticación del cliente PuTTY 
-en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea de comandos!</Value>
-        </TranslationItem>
-        <TranslationItem Name="label19" Property="Text" type="obsolete">
-          <Source>Mergetool command</Source>
-          <Value>Comando Mergetool</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="obsolete">
-          <Source>User email</Source>
-          <Value>Email de usuario</Value>
         </TranslationItem>
         <TranslationItem Name="label20" Property="Text" type="obsolete">
           <Source>You only need local settings
@@ -6232,140 +5802,6 @@ la configuración local.</Value>
           <Source>Dictionary for spelling checker.</Source>
           <Value>Diccionario para el corrector ortográfico.</Value>
         </TranslationItem>
-        <TranslationItem Name="label23" Property="Text" type="obsolete">
-          <Source>Smtp server for sending patches by email</Source>
-          <Value>Servidor SMTP para el envío de parches por e-mail</Value>
-        </TranslationItem>
-        <TranslationItem Name="label24" Property="Text" type="obsolete">
-          <Source>Revision grid quick search timeout [ms]</Source>
-          <Value>Tiempo máximo de búsqueda rápida en la tabla de revisiones [ms]</Value>
-        </TranslationItem>
-        <TranslationItem Name="label25" Property="Text" type="obsolete">
-          <Source>Color tag</Source>
-          <Value>Color etiqueta</Value>
-        </TranslationItem>
-        <TranslationItem Name="label27" Property="Text" type="obsolete">
-          <Source>Color removed line</Source>
-          <Value>Color de línea removida</Value>
-        </TranslationItem>
-        <TranslationItem Name="label28" Property="Text" type="obsolete">
-          <Source>Keep backup (.orig) after merge</Source>
-          <Value>Mantener respaldos (.orig) después de fusionarse</Value>
-        </TranslationItem>
-        <TranslationItem Name="label29" Property="Text" type="obsolete">
-          <Source>Color added line</Source>
-          <Value>Color de línea agregada</Value>
-        </TranslationItem>
-        <TranslationItem Name="label3" Property="Text" type="obsolete">
-          <Source>User name</Source>
-          <Value>Nombre de usuario</Value>
-        </TranslationItem>
-        <TranslationItem Name="label30" Property="Text" type="obsolete">
-          <Source>Keep backup (.orig) after merge</Source>
-          <Value>Mantener respaldos (.orig) después de fusionarse</Value>
-        </TranslationItem>
-        <TranslationItem Name="label31" Property="Text" type="obsolete">
-          <Source>Color section</Source>
-          <Value>Color de la sección</Value>
-        </TranslationItem>
-        <TranslationItem Name="label32" Property="Text" type="obsolete">
-          <Source>Color branch</Source>
-          <Value>Color rama</Value>
-        </TranslationItem>
-        <TranslationItem Name="label33" Property="Text" type="obsolete">
-          <Source>Color remote branch</Source>
-          <Value>Color ramas remotas</Value>
-        </TranslationItem>
-        <TranslationItem Name="label36" Property="Text" type="obsolete">
-          <Source>Color other label</Source>
-          <Value>Color otra etiqueta</Value>
-        </TranslationItem>
-        <TranslationItem Name="label4" Property="Text" type="obsolete">
-          <Source>User email</Source>
-          <Value>Email de usuario</Value>
-        </TranslationItem>
-        <TranslationItem Name="label41" Property="Text" type="obsolete">
-          <Source>Difftool</Source>
-          <Value>Difftool</Value>
-        </TranslationItem>
-        <TranslationItem Name="label42" Property="Text" type="obsolete">
-          <Source>Path to difftool</Source>
-          <Value>Ruta de difftool</Value>
-        </TranslationItem>
-        <TranslationItem Name="label43" Property="Text" type="obsolete">
-          <Source>Color removed line highlighting</Source>
-          <Value>Color destacado línea removida</Value>
-        </TranslationItem>
-        <TranslationItem Name="label44" Property="Text" type="obsolete">
-          <Source>Image size</Source>
-          <Value>Tamaño de la imagen</Value>
-        </TranslationItem>
-        <TranslationItem Name="label45" Property="Text" type="obsolete">
-          <Source>Color added line highlighting</Source>
-          <Value>Color destacado línea agregada</Value>
-        </TranslationItem>
-        <TranslationItem Name="label46" Property="Text" type="obsolete">
-          <Source>Cache images</Source>
-          <Value>Caché de imágenes</Value>
-        </TranslationItem>
-        <TranslationItem Name="label47" Property="Text" type="obsolete">
-          <Source>days</Source>
-          <Value>días</Value>
-        </TranslationItem>
-        <TranslationItem Name="label48" Property="Text" type="obsolete">
-          <Source>Difftool command</Source>
-          <Value>Comando Difftool</Value>
-        </TranslationItem>
-        <TranslationItem Name="label49" Property="Text" type="obsolete">
-          <Source>Language (restart required)</Source>
-          <Value>Idioma (requiere reiniciar)</Value>
-        </TranslationItem>
-        <TranslationItem Name="label5" Property="Text" type="obsolete">
-          <Source>Editor</Source>
-          <Value>Editor</Value>
-        </TranslationItem>
-        <TranslationItem Name="label50" Property="Text" type="obsolete">
-          <Source>Git Extensions can use msysgit or cygwin to access git repositories. Set the correct paths below.</Source>
-          <Value>Git Extensions puede utilizar msysgit o cygwin para acceder a repositorios. Establecer las rutas correctas a continuación.</Value>
-        </TranslationItem>
-        <TranslationItem Name="label51" Property="Text" type="obsolete">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>El archivo de configuración global se almacena en la ubicación dada por la variable de entorno %HOME%. Por defecto %HOME%
-					se establecerá como %HOMEDRIVE%%HOMEPATH% si está vacía. Cambie el comportamiento por defecto sólo si experimenta problemas.</Value>
-        </TranslationItem>
-        <TranslationItem Name="label53" Property="Text" type="obsolete">
-          <Source>No image service</Source>
-          <Value>No hay servicio de imágenes</Value>
-        </TranslationItem>
-        <TranslationItem Name="label54" Property="Text" type="obsolete">
-          <Source>Icon style</Source>
-          <Value>Estilo de íconos</Value>
-        </TranslationItem>
-        <TranslationItem Name="label55" Property="Text" type="obsolete">
-          <Source>Icon color</Source>
-          <Value>Color de íconos</Value>
-        </TranslationItem>
-        <TranslationItem Name="label56" Property="Text" type="obsolete">
-          <Source>Code font</Source>
-          <Value>Fuente</Value>
-        </TranslationItem>
-        <TranslationItem Name="label57" Property="Text" type="obsolete">
-          <Source>Path to commit template</Source>
-          <Value>Ruta al template de commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="label6" Property="Text" type="obsolete">
-          <Source>Editor</Source>
-          <Value>Editor</Value>
-        </TranslationItem>
-        <TranslationItem Name="label7" Property="Text" type="obsolete">
-          <Source>Mergetool</Source>
-          <Value>Mergetool</Value>
-        </TranslationItem>
-        <TranslationItem Name="label8" Property="Text" type="obsolete">
-          <Source>Mergetool</Source>
-          <Value>Mergetool</Value>
-        </TranslationItem>
         <TranslationItem Name="label9" Property="Text" type="obsolete">
           <Source>You need to set the correct path to 
 git before you can change
@@ -6375,189 +5811,13 @@ global settings.
 a Git antes de que pueda cambiar 
 la configuración global.</Value>
         </TranslationItem>
-        <TranslationItem Name="labelOnEvent" Property="Text" type="obsolete">
-          <Source>On event:</Source>
-          <Value>En evento:</Value>
-        </TranslationItem>
-        <TranslationItem Name="lbl_icon" Property="Text" type="obsolete">
-          <Source>Icon:</Source>
-          <Value>Ícono</Value>
-        </TranslationItem>
-        <TranslationItem Name="LightblueIcon" Property="Text" type="obsolete">
-          <Source>Light blue</Source>
-          <Value>Azul claro</Value>
-        </TranslationItem>
-        <TranslationItem Name="localAutoCrlfFalse" Property="Text" type="obsolete">
-          <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
-          <Value>Checkout tal cual, commit tal cual ("core.autocrlf" se establece en "false")</Value>
-        </TranslationItem>
-        <TranslationItem Name="localAutoCrlfInput" Property="Text" type="obsolete">
-          <Source>Checkout as-is, commit Unix-style line endings ("core.autocrlf"  is set to "input")</Source>
-          <Value>Checkout tal cual, commit con estilo Unix ("core.autocrlf" se establece en "input")</Value>
-        </TranslationItem>
-        <TranslationItem Name="localAutoCrlfTrue" Property="Text" type="obsolete">
-          <Source>Checkout Windows-style, commit Unix-style line endings ("core.autocrlf"  is set to "true")</Source>
-          <Value>Checkout con estilo Windows, commit con estilo Unix ("core.autocrlf" se establece en "true")</Value>
-        </TranslationItem>
-        <TranslationItem Name="MergeTool_Fix" Property="Text" type="obsolete">
-          <Source>Repair</Source>
-          <Value>Reparar</Value>
-        </TranslationItem>
-        <TranslationItem Name="MergeToolCmdSuggest" Property="Text" type="obsolete">
-          <Source>Suggest command</Source>
-          <Value>Sugerir comando</Value>
-        </TranslationItem>
-        <TranslationItem Name="MulticolorBranches" Property="Text" type="obsolete">
-          <Source>Multicolor branches</Source>
-          <Value>Ramas multicolor</Value>
-        </TranslationItem>
-        <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
-          <Source>Name</Source>
-          <Value>Nombre</Value>
-        </TranslationItem>
-        <TranslationItem Name="nameLabel" Property="Text" type="obsolete">
-          <Source>Name:</Source>
-          <Value>Nombre:</Value>
-        </TranslationItem>
-        <TranslationItem Name="NoGitRepo" Property="Text" type="obsolete">
-          <Source>Not in a git repository</Source>
-          <Value>No está trabajando con un repositorio Git</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text" type="obsolete">
-          <Source>OK</Source>
-          <Value>Aceptar</Value>
-        </TranslationItem>
-        <TranslationItem Name="OpenSSH" Property="Text" type="obsolete">
-          <Source>OpenSSH</Source>
-          <Value>OpenSSH</Value>
-        </TranslationItem>
-        <TranslationItem Name="Other" Property="Text" type="obsolete">
-          <Source>Other ssh client</Source>
-          <Value>Otro cliente SSH</Value>
-        </TranslationItem>
-        <TranslationItem Name="OtherSshBrowse" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="PageantBrowse" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="PathToKDiff3" Property="Text" type="obsolete">
-          <Source>Path to mergetool</Source>
-          <Value>Ruta de mergetool</Value>
-        </TranslationItem>
-        <TranslationItem Name="PlinkBrowse" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="PurpleIcon" Property="Text" type="obsolete">
-          <Source>Purple</Source>
-          <Value>Púrpura</Value>
-        </TranslationItem>
-        <TranslationItem Name="Putty" Property="Text" type="obsolete">
-          <Source>PuTTY</Source>
-          <Value>PuTTY</Value>
-        </TranslationItem>
-        <TranslationItem Name="PuttygenBrowse" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="RandomIcon" Property="Text" type="obsolete">
-          <Source>Random</Source>
-          <Value>Al azar</Value>
-        </TranslationItem>
-        <TranslationItem Name="RedIcon" Property="Text" type="obsolete">
-          <Source>Red</Source>
-          <Value>Rojo</Value>
-        </TranslationItem>
-        <TranslationItem Name="removeScriptButton" Property="Text" type="obsolete">
-          <Source>Remove</Source>
-          <Value>Eliminar</Value>
-        </TranslationItem>
-        <TranslationItem Name="Rescan" Property="Text" type="obsolete">
-          <Source>Save and rescan</Source>
-          <Value>Guardar y volver a examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="sbtn_icon" Property="Text" type="obsolete">
-          <Source>Select icon</Source>
-          <Value>Seleccionar ícono</Value>
-        </TranslationItem>
-        <TranslationItem Name="scriptEnabled" Property="Text" type="obsolete">
-          <Source>Enabled</Source>
-          <Value>Habilitado</Value>
-        </TranslationItem>
-        <TranslationItem Name="scriptNeedsConfirmation" Property="Text" type="obsolete">
-          <Source>Ask for confirmation</Source>
-          <Value>Pedir confirmación</Value>
-        </TranslationItem>
-        <TranslationItem Name="ShellExtensionsRegistered_Fix" Property="Text" type="obsolete">
-          <Source>Repair</Source>
-          <Value>Reparar</Value>
-        </TranslationItem>
-        <TranslationItem Name="ShowAuthorGravatar" Property="Text" type="obsolete">
-          <Source>Get author image from gravatar.com</Source>
-          <Value>Obtener la imagen del autor de gravatar.com</Value>
-        </TranslationItem>
-        <TranslationItem Name="SshConfig_Fix" Property="Text" type="obsolete">
-          <Source>Repair</Source>
-          <Value>Reparar</Value>
-        </TranslationItem>
-        <TranslationItem Name="StripedBanchChange" Property="Text" type="obsolete">
-          <Source>Striped branch change</Source>
-          <Value>Cambio de ramas rayadas</Value>
-        </TranslationItem>
-        <TranslationItem Name="tpAppearance" Property="Text" type="obsolete">
-          <Source>Appearance</Source>
-          <Value>Apariencia</Value>
-        </TranslationItem>
-        <TranslationItem Name="tpChecklist" Property="Text" type="obsolete">
-          <Source>Checklist</Source>
-          <Value>Checklist</Value>
-        </TranslationItem>
-        <TranslationItem Name="tpGit" Property="Text" type="obsolete">
-          <Source>Git</Source>
-          <Value>Git</Value>
-        </TranslationItem>
         <TranslationItem Name="tpGitExtensions" Property="Text" type="obsolete">
           <Source>Git extensions</Source>
           <Value>Git Extensions</Value>
         </TranslationItem>
-        <TranslationItem Name="tpGlobalSettings" Property="Text" type="obsolete">
-          <Source>Global settings</Source>
-          <Value>Configuración global</Value>
-        </TranslationItem>
-        <TranslationItem Name="tpHotkeys" Property="Text" type="obsolete">
-          <Source>Hotkeys</Source>
-          <Value>Teclas de acceso rápido</Value>
-        </TranslationItem>
-        <TranslationItem Name="tpLocalSettings" Property="Text" type="obsolete">
-          <Source>Local settings</Source>
-          <Value>configuración local</Value>
-        </TranslationItem>
-        <TranslationItem Name="tpScriptsTab" Property="Text" type="obsolete">
-          <Source>Scripts</Source>
-          <Value>Scripts</Value>
-        </TranslationItem>
         <TranslationItem Name="tpSsh" Property="Text" type="obsolete">
           <Source>Ssh</Source>
           <Value>SSH</Value>
-        </TranslationItem>
-        <TranslationItem Name="translationConfig_Fix" Property="Text" type="obsolete">
-          <Source>Repair</Source>
-          <Value>Reparar</Value>
-        </TranslationItem>
-        <TranslationItem Name="truncatePathMethod" Property="Text" type="obsolete">
-          <Source>Truncate long filenames</Source>
-          <Value>Truncar nombres largos de archivo</Value>
-        </TranslationItem>
-        <TranslationItem Name="UserNameSet_Fix" Property="Text" type="obsolete">
-          <Source>Repair</Source>
-          <Value>Reparar</Value>
-        </TranslationItem>
-        <TranslationItem Name="YellowIcon" Property="Text" type="obsolete">
-          <Source>Yellow</Source>
-          <Value>Amarillo</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6970,8 +6230,10 @@ Do you want to open the new repository "{0}" now?</Source>
           <Value>Siguiente</Value>
         </TranslationItem>
         <TranslationItem Name="noLanguageCodeSelected" Property="Text" type="unfinished">
-          <Source>There is no languagecode selected.
+          <Source>There is no language code selected.
 Do you want to select a language code first?</Source>
+          <OldSource>There is no languagecode selected.
+Do you want to select a language code first?</OldSource>
           <Value>No hay un código de idioma seleccionado.
 ¿Desea seleccionar un código de idioma primero?</Value>
         </TranslationItem>
@@ -7676,10 +6938,6 @@ la configuración local.</Value>
           <Source>Directory</Source>
           <Value>Directorio</Value>
         </TranslationItem>
-        <TranslationItem Name="Browse" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="PatchGrid">
@@ -7950,10 +7208,6 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
           <Source>Tag</Source>
           <Value>Etiqueta</Value>
         </TranslationItem>
-        <TranslationItem Name="_currentIndex" Property="Text" type="obsolete">
-          <Source>Commit index</Source>
-          <Value>Comprometerse en el indice</Value>
-        </TranslationItem>
         <TranslationItem Name="_currentWorkingDirChanges" Property="Text" type="obsolete">
           <Source>Current uncommitted changes</Source>
           <Value>Actuales cambios no confirmados</Value>
@@ -8047,9 +7301,9 @@ the cascaded context menu:</Source>
     </TranslationCategory>
     <TranslationCategory Name="SshSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>SSH</Source>
-          <Value />
+          <Value>SSH</Value>
         </TranslationItem>
         <TranslationItem Name="AutostartPageant" Property="Text">
           <Source>Automatically start authentication client when a private key is configured for a remote</Source>
@@ -8228,10 +7482,6 @@ en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea d
           <Source>{0} years ago</Source>
           <Value>hace {0} años</Value>
         </TranslationItem>
-        <TranslationItem Name="_currentWorkingDirChanges" Property="Text" type="obsolete">
-          <Source>Current uncommitted changes</Source>
-          <Value>Actuales cambios no confirmados</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="ViewPullRequestsForm">
@@ -8324,52 +7574,8 @@ Details: Is {1} expected {2}</Source>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="ViewPatch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
-          <Source>View patch file</Source>
-          <Value>Ver archivo de parche</Value>
-        </TranslationItem>
-        <TranslationItem Name="_patchFileFilterString" Property="Text" type="obsolete">
-          <Source>Patch file (*.Patch)</Source>
-          <Value>Archivo parche (*.Patch)</Value>
-        </TranslationItem>
-        <TranslationItem Name="_patchFileFilterTitle" Property="Text" type="obsolete">
-          <Source>Select patch file</Source>
-          <Value>Seleccione archivo parche</Value>
-        </TranslationItem>
-        <TranslationItem Name="BrowsePatch" Property="Text" type="obsolete">
-          <Source>Browse</Source>
-          <Value>Examinar</Value>
-        </TranslationItem>
-        <TranslationItem Name="File" Property="HeaderText" type="obsolete">
-          <Source>Type</Source>
-          <Value>Tipo</Value>
-        </TranslationItem>
-        <TranslationItem Name="FileNameA" Property="HeaderText" type="obsolete">
-          <Source>Filename</Source>
-          <Value>Nombre de archivo</Value>
-        </TranslationItem>
-        <TranslationItem Name="labelPatch" Property="Text" type="obsolete">
-          <Source>Patch</Source>
-          <Value>Parche</Value>
-        </TranslationItem>
-        <TranslationItem Name="typeDataGridViewTextBoxColumn" Property="HeaderText" type="obsolete">
-          <Source>Change</Source>
-          <Value>Cambio</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="FormCherryPickCommitSmall">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
-          <Source>Cherry pick commit</Source>
-          <Value>Seleccionar manualmente commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noneParentSelectedTextCaption" Property="Text" type="obsolete">
-          <Source>Error</Source>
-          <Value>Error</Value>
-        </TranslationItem>
         <TranslationItem Name="Author" Property="Text" type="obsolete">
           <Source>Author:</Source>
           <Value>Autor:</Value>
@@ -8377,26 +7583,6 @@ Details: Is {1} expected {2}</Source>
         <TranslationItem Name="AutoCommit" Property="Text" type="obsolete">
           <Source>Automatically creates a commit</Source>
           <Value>Crea automáticamente un commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="BranchInfo" Property="Text" type="obsolete">
-          <Source>Cherry pick this commit:</Source>
-          <Value>Seleccionar manualmente este commit:</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader1" Property="Text" type="obsolete">
-          <Source>No.</Source>
-          <Value>Nº</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader2" Property="Text" type="obsolete">
-          <Source>Message</Source>
-          <Value>Mensaje</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader3" Property="Text" type="obsolete">
-          <Source>Author</Source>
-          <Value>Autor</Value>
-        </TranslationItem>
-        <TranslationItem Name="columnHeader4" Property="Text" type="obsolete">
-          <Source>Date</Source>
-          <Value>Fecha</Value>
         </TranslationItem>
         <TranslationItem Name="Commit" Property="Text" type="obsolete">
           <Source>Commit:</Source>
@@ -8410,57 +7596,9 @@ Details: Is {1} expected {2}</Source>
           <Source>Message:</Source>
           <Value>Mensaje:</Value>
         </TranslationItem>
-        <TranslationItem Name="ParentsLabel" Property="Text" type="obsolete">
-          <Source>This commit is a merge, select parent:</Source>
-          <Value>Este commit es una fusión, seleccione el padre:</Value>
-        </TranslationItem>
         <TranslationItem Name="Pick" Property="Text" type="obsolete">
           <Source>Pick this commit</Source>
           <Value>Elegir este commit</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCherryPickMerge">
-      <translationItems>
-        <TranslationItem Name="_noneParentSelectedTextCaption" Property="Text" type="obsolete">
-          <Source>Error</Source>
-          <Value>Error</Value>
-        </TranslationItem>
-        <TranslationItem Name="Author" Property="Text" type="obsolete">
-          <Source>Author</Source>
-          <Value>Autor</Value>
-        </TranslationItem>
-        <TranslationItem Name="Column1" Property="HeaderText" type="obsolete">
-          <Source>No.</Source>
-          <Value>Nº</Value>
-        </TranslationItem>
-        <TranslationItem Name="Column2" Property="HeaderText" type="obsolete">
-          <Source>Message</Source>
-          <Value>Mensaje</Value>
-        </TranslationItem>
-        <TranslationItem Name="Column3" Property="HeaderText" type="obsolete">
-          <Source>Author</Source>
-          <Value>Autor</Value>
-        </TranslationItem>
-        <TranslationItem Name="Column4" Property="HeaderText" type="obsolete">
-          <Source>Date</Source>
-          <Value>Fecha</Value>
-        </TranslationItem>
-        <TranslationItem Name="CommitDate" Property="Text" type="obsolete">
-          <Source>Date</Source>
-          <Value>Fecha</Value>
-        </TranslationItem>
-        <TranslationItem Name="Message" Property="Text" type="obsolete">
-          <Source>Message</Source>
-          <Value>Mensaje</Value>
-        </TranslationItem>
-        <TranslationItem Name="No" Property="Text" type="obsolete">
-          <Source>No.</Source>
-          <Value>Nº</Value>
-        </TranslationItem>
-        <TranslationItem Name="OK" Property="Text" type="obsolete">
-          <Source>OK</Source>
-          <Value>Aceptar</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -8469,54 +7607,6 @@ Details: Is {1} expected {2}</Source>
         <TranslationItem Name="$this" Property="Text" type="obsolete">
           <Source>Plugin settings</Source>
           <Value>Plugin de configuración</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="Abort">
-      <translationItems>
-        <TranslationItem Name="_abortCurrentOpperationCaption" Property="Text" type="obsolete">
-          <Source>Abort</Source>
-          <Value>Abortar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCheckoutRemoteBranch">
-      <translationItems>
-        <TranslationItem Name="_applyShashedItemsAgain" Property="Text" type="obsolete">
-          <Source>Apply stashed items to working dir again?</Source>
-          <Value>¿Aplicar objetos apilados al directorio de trabajo nuevamente?</Value>
-        </TranslationItem>
-        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text" type="obsolete">
-          <Source>Auto stash</Source>
-          <Value>Auto apilar</Value>
-        </TranslationItem>
-        <TranslationItem Name="btOk" Property="Text" type="obsolete">
-          <Source>Checkout</Source>
-          <Value>Checkout</Value>
-        </TranslationItem>
-        <TranslationItem Name="rbMerge" Property="Text" type="obsolete">
-          <Source>Merge</Source>
-          <Value>Fusionar</Value>
-        </TranslationItem>
-        <TranslationItem Name="btCancel" Property="Text" type="obsolete">
-          <Source>Cancel</Source>
-          <Value>Cancelar</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDirtyDirWarn">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
-          <Source>Warning</Source>
-          <Value>Advertencia</Value>
-        </TranslationItem>
-        <TranslationItem Name="button4" Property="Text" type="obsolete">
-          <Source>Commit</Source>
-          <Value>Commit</Value>
-        </TranslationItem>
-        <TranslationItem Name="button5" Property="Text" type="obsolete">
-          <Source>Cancel</Source>
-          <Value>Cancelar</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
