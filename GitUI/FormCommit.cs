@@ -1003,10 +1003,11 @@ namespace GitUI
                     InitializedStaged();
                     var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatuses;
                     Unstaged.GitItemStatuses = null;
-
-                    unStagedFiles.RemoveAll(item => !item.IsSubmodule && files.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
-                    unStagedFiles.RemoveAll(item => item.IsSubmodule && !item.SubmoduleStatus.IsDirty && files.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
-
+                    var unstagedItems = unStagedFiles.Where(item => files.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
+                    unStagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
+                    unStagedFiles.RemoveAll(item => item.IsSubmodule && !item.SubmoduleStatus.IsDirty && unstagedItems.Contains(item));
+                    foreach (var item in unstagedItems.Where(item => item.IsSubmodule && item.SubmoduleStatus.IsDirty))
+                        item.SubmoduleStatus.Status = SubmoduleStatus.Unknown;
                     Unstaged.GitItemStatuses = unStagedFiles;
                     Unstaged.SelectStoredNextIndex();
                 }                
