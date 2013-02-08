@@ -1266,15 +1266,15 @@ namespace GitCommands
             }
             if (displayWeeks && delta < 30 * 24 * 60 * 60)
             {
-                int weeks = Convert.ToInt32(Math.Floor(ts.Days / 7.0));
+                int weeks = Convert.ToInt32(ts.Days / 7.0);
                 return Strings.GetNWeeksAgoText(weeks);
             }
-            if (delta < 12 * 30 * 24 * 60 * 60)
+            if (delta < 365 * 24 * 60 * 60)
             {
-                int months = Convert.ToInt32(Math.Floor(ts.Days / 30.0));
+                int months = Convert.ToInt32(ts.Days / 30.0);
                 return Strings.GetNMonthsAgoText(months);
             }
-            int years = Convert.ToInt32(Math.Floor(ts.Days / 365.0));
+            int years = Convert.ToInt32(ts.Days / 365.0);
             return Strings.GetNYearsAgoText(years);
         }
 
