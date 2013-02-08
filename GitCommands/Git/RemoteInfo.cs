@@ -35,8 +35,9 @@ namespace GitCommands.Git
         public Uri FetchUrl { get; private set; }
         /// <summary>Gets the URL(s) which this remote may be configured to push to.</summary>
         public IEnumerable<Uri> PushUrls { get; private set; }
+        internal string HeadBranchName { get; set; }
         /// <summary>Gets the HEAD branch, which is the default branch when the remote is cloned.</summary>
-        public string HeadBranch { get; private set; }
+        public RemoteBranch HeadBranch { get; internal set; }
         /// <summary>Gets the branches on the remote repo.</summary>
         public IEnumerable<RemoteBranch> Branches { get; private set; }
         /// <summary>Gets the configured pull branches.</summary>
@@ -89,7 +90,7 @@ namespace GitCommands.Git
             if (!headLine.Contains("("))
             {// NOT: (not queried), (unknown), (remote HEAD is ambiguous...)
                 //   HEAD branch: left-panel/-main
-                HeadBranch = headLine.Substring(headLine.IndexOf(":") + 1).Trim();
+                HeadBranchName = headLine.Substring(headLine.IndexOf(":") + 1).Trim();
             }
             #endregion Header
 
@@ -262,6 +263,11 @@ namespace GitCommands.Git
                     remote.Name,
                     GitModule.RefSep,
                     Name);
+                IsHead = Equals(Name, remote.HeadBranchName);
+                if (IsHead)
+                {
+                    remote.HeadBranch = this;
+                }
             }
 
             /// <summary>Gets the full name of the branch. "master"</summary>
@@ -272,6 +278,8 @@ namespace GitCommands.Git
             public RemoteInfo Remote { get; private set; }
             /// <summary>Gets the state of the branch.</summary>
             public State Status { get; private set; }
+            /// <summary>Indicates whether this is the HEAD branch, which is the default branch when the remote is cloned.</summary>
+            public bool IsHead { get; private set; }
 
             /// <summary>Gets the configurations which local branch(es) may be setup to pull from this branch.</summary>
             public IEnumerable<PullConfig> PullConfigs { get { return InternalPullConfigs; } }
