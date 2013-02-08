@@ -81,8 +81,16 @@ namespace GitUI.UserControls
                         branch => Value.PushConfig != null && Equals(Value.PushConfig.LocalBranch, branch.FullPath),
                         branch =>
                         {
+                            GitPush push = Value.CreatePush(branch.FullPath);
+                                
                             if (Git.CompareCommits(branch.FullPath,Value.FullPath).State == BranchCompareStatus.AheadPublishable)
+                            {// local is ahead and publishable (remote has NOT diverged)
+                                Git.Push(push);
+                                throw new NotImplementedException("Need to tell user about fail or success.");
+                            }
+                            else
                             {
+                                //UiCommands.StartPushDialog(push);
                             }
                             //UiCommands.StartPushDialog()
                         })
