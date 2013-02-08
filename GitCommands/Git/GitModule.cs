@@ -1518,6 +1518,8 @@ namespace GitCommands
             return RunGitCmd(push.ToString());
         }
 
+        /// <summary>Tries to start Pageant for the specified remote repo (using the remote's PuTTY key file).</summary>
+        /// <returns>true if the remote has a PuTTY key file; otherwise, false.</returns>
         public bool StartPageantForRemote(string remote)
         {
             var sshKeyFile = GetPuttyKeyFileForRemote(remote);

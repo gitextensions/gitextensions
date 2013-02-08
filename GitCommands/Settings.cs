@@ -605,6 +605,7 @@ namespace GitCommands
         }
 
         private static string _pageant;
+        /// <summary>Gets the path to Pageant (SSH auth agent).</summary>
         public static string Pageant
         {
             get { return SafeGet("pageant", "", ref _pageant); }
