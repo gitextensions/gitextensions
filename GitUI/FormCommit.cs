@@ -1765,22 +1765,27 @@ namespace GitUI
         {
             var lineLength = Message.LineLength(line);
             int offset = 0;
+            bool textAppended = false;
             if (!fullRefresh && formattedLines.Count > line)
             {
                 offset = formattedLines[line].CommonPrefix(Message.Line(line)).Length;
+                textAppended = offset > 0 && offset == formattedLines[line].Length;
             }
 
             int len = Math.Min(lineLimit, lineLength) - offset;
 
-            if (0 < len)
+            if (!textAppended && 0 < len)
                 Message.ChangeTextColor(line, offset, len, Color.Black);
 
             if (lineLength > lineLimit)
             {
-                offset = Math.Max(offset, lineLimit);
-                len = lineLength - offset;
-                if (len > 0)
-                    Message.ChangeTextColor(line, offset, len, Color.Red);
+                if (offset <= lineLimit || !textAppended)
+                {
+                    offset = Math.Max(offset, lineLimit);
+                    len = lineLength - offset;
+                    if (len > 0)
+                        Message.ChangeTextColor(line, offset, len, Color.Red);
+                }
             }
         }
 
