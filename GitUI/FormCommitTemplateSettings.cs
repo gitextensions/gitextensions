@@ -52,6 +52,8 @@ namespace GitUI
             }
 
             _NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex = 0;
+            checkBoxAutoWrap.Checked = Settings.CommitValidationAutoWrap;
+
         }
 
         private void SaveSettings()
@@ -67,6 +69,7 @@ namespace GitUI
                 Settings.CommitTemplates = "";
             else
                 Settings.CommitTemplates = serializedCommitTemplates;
+            Settings.CommitValidationAutoWrap = checkBoxAutoWrap.Checked;
         }
 
 
@@ -111,11 +114,6 @@ namespace GitUI
                 comboBoxText = "<" + _emptyTemplate.Text + ">";
 
             _NO_TRANSLATE_comboBoxCommitTemplates.Items[line] = String.Format("{0} : {1}", (line + 1), comboBoxText);
-        }
-
-        private void checkBoxAutoWrap_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.CommitValidationAutoWrap = checkBoxAutoWrap.Checked;
         }
     }
 }
