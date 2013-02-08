@@ -11,6 +11,8 @@ namespace GitUI.UserControls
     public partial class RepoObjectsTree : GitModuleControl
     {
         List<RootNode> rootNodes = new List<RootNode>();
+        /// <summary>Image key for a head branch.</summary>
+        static readonly string headBranchKey = "headBranch";
 
         public RepoObjectsTree()
         {
@@ -26,6 +28,7 @@ namespace GitUI.UserControls
             imgList.Images.Add(stashKey, Resources.Stashes);
             imgList.Images.Add(remoteKey, Resources.RemoteRepo);
             imgList.Images.Add(remotesKey, Resources.RemoteRepo);
+            imgList.Images.Add(headBranchKey, Resources.HeadBranch);
 
             treeMain.ShowNodeToolTips = true;
             treeMain.NodeMouseClick += OnNodeClick;
@@ -34,6 +37,7 @@ namespace GitUI.UserControls
 
 
         bool isFirst = true;
+
         protected override void OnUICommandsSourceChanged(object sender, IGitUICommandsSource newSource)
         {
             base.OnUICommandsSourceChanged(sender, newSource);

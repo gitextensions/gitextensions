@@ -51,6 +51,13 @@ namespace GitUI.UserControls
                 SelectedImageKey = remoteKey,
             };
             nodes.Add(treeNode);
+            treeNode.Nodes.AddRange(remoteNode.Children.Select(child => new TreeNode(child.Value.Name)
+            {
+                Tag = child,
+                ContextMenuStrip = menuRemoteBranch,
+                ImageKey = child.Value.IsHead ? headBranchKey : branchKey,
+                SelectedImageKey = child.Value.IsHead ? headBranchKey : branchKey,
+            }).ToArray());
 
             return treeNode;
         }
@@ -95,6 +102,27 @@ namespace GitUI.UserControls
                     });
 
                 return new[] { dropLocalBranch, };
+            }
+
+            public void CreateBranch()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Fetch()
+            {
+                throw new NotImplementedException();
+            }
+
+            public void UnTrack()
+            {
+                throw new NotImplementedException();   
+            }
+
+            public void Delete()
+            {
+                // needs BIG WARNING
+                throw new NotImplementedException();
             }
         }
 

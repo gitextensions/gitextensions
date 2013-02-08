@@ -130,10 +130,10 @@
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAF8SURBVDhPY2CgJQgJCeEkxfzQ0FA2nOqBkvzBwcH3gbgF
         yGYmZDDQcm+g2qdAWher2qSkpG1xcXH/QTg2NvZ4TEyMIjaFIMuAalpgahMTEx8mJycLoajNysriaW1t
         fQ2k/8Nwdnb2JyAORFaYm5srChTbh6wuJyfnf3V1dTKKgf///+f5+/fvvq1bt/4vLy9HwaWlpdMKCws5
-        geI2QPYzZPmmpqb/Z8+e/fvv379wDN8ADWUGGtp148aN/93d3f+BLobj5ubm+/X19b+QxRYsWPD/1atX
+        geI2QPYzZPmmpqb/p0+f/vvv379wDN8ADWUGGtp148aN/93d3f+BLobj5ubm+/X19b+QxRYsWPD/1atX
         b4CGueINb6CCwLdv335dvHjx/0mTJmHF+/fv///nz5/jQEfIEYo8sDzQUPVfv37d2rt37/958+bB8cKF
-        C//fvXv3P9An04CG4U4yMFuQ0yE0XNddv379/8qVK/9v2bLl//v3778DLYuCqScrHQINKH3w4MHf379/
-        3wWytZAsJz8dAg2yBLkYZNhoOhzq6RA51ROTDonKJeiKcKVDsgyDaUJOh4QMAgA8yQE74yNoSwAAAABJ
+        C//fvXv3P9An04CG4U4yMFuQ0yE0XNddv379/8qVK/9v2bLl//v3778DLYuCqScrHQINKL13797f379/
+        3wWytZAsJz8dAg2yBLkYZNhoOhzq6RA51ROTDonKJeiKcKVDsgyDaUJOh4QMAgABHQEj6E05AwAAAABJ
         RU5ErkJggg==
 </value>
   </data>
@@ -182,6 +182,9 @@
   </metadata>
   <metadata name="menuBranchPath.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>656, 117</value>
+  </metadata>
+  <metadata name="menuRemoteBranch.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>237, 144</value>
   </metadata>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>264</value>

@@ -50,6 +50,11 @@ namespace GitUI.UserControls
             RegisterClick<StashNode>(mnubtnStashShowDiff, stash => stash.ShowDiff());
             RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
             RegisterClick<StashNode>(mnubtnStashBranch, stash => stash.CreateBranch());
+
+            RegisterClick<RemoteBranchNode>(mnubtnRemoteBranchCreateBranch, remoteBranch => remoteBranch.CreateBranch());
+            RegisterClick<RemoteBranchNode>(mnubtnRemoteFetch, remoteBranch => remoteBranch.Fetch());
+            RegisterClick<RemoteBranchNode>(mnubtnRemoteBranchUnTrack, remoteBranch => remoteBranch.UnTrack());
+            RegisterClick<RemoteBranchNode>(mnubtnRemoteBranchDelete, remoteBranch => remoteBranch.Delete());
         }
 
 
