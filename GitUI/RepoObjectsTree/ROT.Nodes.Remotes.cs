@@ -75,26 +75,26 @@ namespace GitUI.UserControls
             protected override IEnumerable<DragDropAction> CreateDragDropActions()
             {
                 // (local) Branch onto this RemoteBranch -> push
-                return new List<DragDropAction>
-                {
-                    new DragDropAction<BranchNode>(
-                        branch => Value.PushConfig != null && Equals(Value.PushConfig.LocalBranch, branch.FullPath),
-                        branch =>
+                var dropLocalBranch = new DragDropAction<BranchNode>(
+                    branch => Value.PushConfig != null && Equals(Value.PushConfig.LocalBranch, branch.FullPath),
+                    branch =>
+                    {
+                        GitPush push = Value.CreatePush(branch.FullPath);
+
+                        if (Git.CompareCommits(branch.FullPath, Value.FullPath).State == BranchCompareStatus.AheadPublishable)
                         {
-                            GitPush push = Value.CreatePush(branch.FullPath);
-                                
-                            if (Git.CompareCommits(branch.FullPath,Value.FullPath).State == BranchCompareStatus.AheadPublishable)
-                            {// local is ahead and publishable (remote has NOT diverged)
-                                Git.Push(push);
-                                throw new NotImplementedException("Need to tell user about fail or success.");
-                            }
-                            else
-                            {
-                                //UiCommands.StartPushDialog(push);
-                            }
-                            //UiCommands.StartPushDialog()
-                        })
-                };
+                            // local is ahead and publishable (remote has NOT diverged)
+                            Git.Push(push);
+                            throw new NotImplementedException("Need to tell user about fail or success.");
+                            // if fail because remote diverged between checks (unlikely) -> tell user to fetch/merge or pull
+                        }
+                        else
+                        {
+                            throw new NotImplementedException("tell user to fetch/merge or pull");
+                        }
+                    });
+
+                return new[] { dropLocalBranch, };
             }
         }
 
