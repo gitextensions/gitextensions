@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -39,7 +41,8 @@ namespace GitCommands.Git
         /// <summary>Gets the HEAD branch, which is the default branch when the remote is cloned.</summary>
         public RemoteBranch HeadBranch { get; internal set; }
         /// <summary>Gets the branches on the remote repo.</summary>
-        public IEnumerable<RemoteBranch> Branches { get; private set; }
+        public IEnumerable<RemoteBranch> Branches { get { return _Branches; } }
+        private ObservableCollection<RemoteBranch> _Branches;
         /// <summary>Gets the configured pull branches.</summary>
         public IEnumerable<PullConfig> PullConfigs { get; private set; }
         /// <summary>Gets the configured push branches.</summary>
@@ -106,16 +109,24 @@ namespace GitCommands.Git
             if (lines[i].Contains("Remote branch"))
             {
                 i += 1;// increment
-                Branches = lines
-                    .Skip(i)
-                    .TakeWhile(line => !line.Contains("Local"))
-                    .Select(line => new RemoteBranch(line, this))
-                    .ToArray();
+                _Branches = new ObservableCollection<RemoteBranch>(
+                    lines
+                        .Skip(i)
+                        .TakeWhile(line => !line.Contains("Local"))
+                        .Select(line => new RemoteBranch(line, this)));
                 NameToBranch = Branches.ToDictionary(branch => branch.Name);
+                _Branches.CollectionChanged += (o, e) =>
+                {
+                    if (e.Action == NotifyCollectionChangedAction.Remove)
+                    {
+                        NameToBranch.Remove(((RemoteBranch)e.OldItems[0]).Name);
+                    }
+                    
+                };
             }
             else
             {
-                Branches = Enumerable.Empty<RemoteBranch>();
+                _Branches = new ObservableCollection<RemoteBranch>();
                 NameToBranch = new Dictionary<string, RemoteBranch>(0);
             }
 
@@ -232,6 +243,17 @@ namespace GitCommands.Git
             return new GitPush(Name, localBranch, remoteBranch.Name);
         }
 
+        /// <summary>Removes the specified remote-tracking branches.</summary>
+        public void UnTrack(params RemoteBranch[] remoteBranches)
+        {
+            foreach (RemoteBranch remoteBranch in remoteBranches)
+            {
+                _Branches.Remove(remoteBranch);
+            }
+            // 'git remote' command should be executed and successful before removing
+            //return GitRemote.UnTrack(this, remoteBranches);
+        }
+
         /// <summary>Remote-tracking branch.</summary>
         [System.Diagnostics.DebuggerDisplay("{Name} ({Status})")]
         public class RemoteBranch
@@ -287,6 +309,7 @@ namespace GitCommands.Git
             /// <summary>Gets the implied push configuration, if any, for this remote branch.</summary>
             public PushConfig PushConfig { get; internal set; }
 
+            /// <summary>Returns the <see cref="RemoteBranch"/>'s <see cref="Name"/>.</summary>
             public override string ToString() { return Name; }
 
             /// <summary>Creates a <see cref="GitPush"/> to push from the specified local branch to this <see cref="RemoteBranch"/>.</summary>

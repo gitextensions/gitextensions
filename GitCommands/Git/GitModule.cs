@@ -2106,6 +2106,12 @@ namespace GitCommands
                     new RemoteInfo(RunGitCmd(string.Format("remote show {0}", remote))));
         }
 
+        /// <summary>Executes the specified 'git remote' command.</summary>
+        public string RemoteCmd(GitRemote remoteCommand)
+        {
+            return RunGitCmd(remoteCommand.ToString());
+        }
+
         /// <summary>Gets the number of commits which appear in a branch/revision that are NOT in another branch/revision.
         /// <example>If a feature branch is behind master by 2 commits; '2' will be returned.</example></summary>
         /// <param name="behindRevision">Commits in <paramref name="aheadRevision"/> but NOT in this branch/revision.</param>

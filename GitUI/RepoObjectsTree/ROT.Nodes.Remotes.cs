@@ -51,12 +51,17 @@ namespace GitUI.UserControls
                 SelectedImageKey = remoteKey,
             };
             nodes.Add(treeNode);
-            treeNode.Nodes.AddRange(remoteNode.Children.Select(child => new TreeNode(child.Value.Name)
+            treeNode.Nodes.AddRange(remoteNode.Children.Select(child =>
             {
-                Tag = child,
-                ContextMenuStrip = menuRemoteBranch,
-                ImageKey = child.Value.IsHead ? headBranchKey : branchKey,
-                SelectedImageKey = child.Value.IsHead ? headBranchKey : branchKey,
+                TreeNode childTreeNode = new TreeNode(child.Value.Name)
+                {
+                    Tag = child,
+                    ContextMenuStrip = menuRemoteBranch,
+                    ImageKey = child.Value.IsHead ? headBranchKey : branchKey,
+                    SelectedImageKey = child.Value.IsHead ? headBranchKey : branchKey,
+                };
+                child.TreeNode = childTreeNode;
+                return childTreeNode;
             }).ToArray());
 
             return treeNode;
@@ -116,7 +121,15 @@ namespace GitUI.UserControls
 
             public void UnTrack()
             {
-                throw new NotImplementedException();   
+                string error = Git.RemoteCmd(GitRemote.UnTrack(Value.Remote, Value));
+                GC.KeepAlive(error);
+                bool isSuccess = true;
+                if (isSuccess)
+                {
+                    TreeNode.Parent.Nodes.Remove(TreeNode);
+                    Value.Remote.UnTrack(Value);
+                }
+                //throw new NotImplementedException();   
             }
 
             public void Delete()
