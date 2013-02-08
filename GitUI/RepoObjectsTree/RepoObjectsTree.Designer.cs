@@ -105,6 +105,9 @@ namespace GitUI.UserControls
             // 
             // toolbarMain
             // 
+            this.toolbarMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolbtnExpandAll,
+            this.toolbtnCollapseAll}); 
             this.toolbarMain.Location = new System.Drawing.Point(0, 0);
             this.toolbarMain.Name = "toolbarMain";
             this.toolbarMain.Size = new System.Drawing.Size(200, 25);

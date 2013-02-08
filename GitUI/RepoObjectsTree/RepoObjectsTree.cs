@@ -44,20 +44,20 @@ namespace GitUI.UserControls
 
             DragDrops();
 
-            //AddRootNode(new BranchesNode(
-            //    new TreeNode(Strings.branches.Text)
-            //    {
-            //        ContextMenuStrip = menuBranches,
-            //        ImageKey = branchesKey
-            //    },
-            //    UICommands,
-            //    () =>
-            //    {
-            //        var branchNames = Module.GetBranchNames().ToArray();
-            //        return BranchesNode.GetBranchTree(UICommands, branchNames);
-            //    },
-            //    OnAddBranchNode
-            //));
+            AddRootNode(new BranchesNode(
+                new TreeNode(Strings.branches.Text)
+                {
+                    ContextMenuStrip = menuBranches,
+                    ImageKey = branchesKey
+                },
+                UICommands,
+                () =>
+                {
+                    var branchNames = Module.GetBranchNames().ToArray();
+                    return BranchesNode.GetBranchTree(UICommands, branchNames);
+                },
+                OnAddBranchNode
+            ));
             AddTreeSet(new TreeNode(Strings.stashes.Text)
                 {
                     ContextMenuStrip = menuStashes,

@@ -5,11 +5,13 @@
 * fork [repo](https://github.com/bergerjac/gitextensions)
 * branch off of **left-panel/-main**
 * (main files: <code>[Solution]/GuitUI/RepoObjectsTree/*.cs</code>)
-* send a pull request
+* send pull request
 
 <img src="UiProgress.png">
 
 #### progress
 * branches  
 * stashes
-* basic drag-drop operations
+* remotes
+* right-click context menu interface
+* drag-drop framework
