@@ -879,6 +879,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="WindowPositionList.cs" />
+    <Compile Include="WordWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AboutBox.resx">
