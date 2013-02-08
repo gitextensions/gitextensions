@@ -113,5 +113,9 @@ namespace GitUI
             _NO_TRANSLATE_comboBoxCommitTemplates.Items[line] = String.Format("{0} : {1}", (line + 1), comboBoxText);
         }
 
+        private void checkBoxAutoWrap_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.CommitValidationAutoWrap = checkBoxAutoWrap.Checked;
+        }
     }
 }
