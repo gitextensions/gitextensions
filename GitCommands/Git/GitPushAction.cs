@@ -1,24 +1,79 @@
-﻿namespace GitCommands
-{
-    /// <summary>Push a local branch to a remote branch.
-    /// Update remote refs along with associated objects.</summary>
-    public class GitPushAction
-    {
-        string remote;
-        string _localBranch;
-        string _remoteBranch;
-        bool _force;
-        bool _delete;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
-        /// <summary>Push a local branch to a remote one.</summary>
+namespace GitCommands
+{
+    /// <summary>Creates a 'git push' command.
+    /// Push a local branch to a remote branch.
+    /// Update remote refs along with associated objects.</summary>
+    public class GitPush
+    {
+        /// <summary>Gets the name or URL of the remote repo to push to.</summary>
+        public string Remote { get; private set; }
+        /// <summary>Gets the set of LocalBranch:RemoteBranch actions.</summary>
+        public IEnumerable<GitPushAction> PushActions { get; private set; }
+        /// <summary>Indicates whether to report progress during the push operation.</summary>
+        public bool ReportProgress { get; set; }
+
+        /// <summary>Works like 'git push {remote}', where {remote} is the current branch’s remote.
+        ///  (or 'origin', if no remote is configured for the current branch).</summary>
+        public GitPush()
+            : this(null) { }
+
+        /// <summary>Works like 'git push {remote} :', where branches matching the refspec are pushed.</summary>
+        public GitPush(string remote)
+            : this(remote, (string)null) { }
+
+        /// <summary>'git push {remote} {source}' : Push to a matching ref in the remote,
+        ///  or if non-existing, create one with the same name.</summary>
+        public GitPush(string remote, string source)
+            : this(remote, source, null) { }
+
+        /// <summary>Push a local branch to a remote branch.</summary>
         /// <param name="remote">Name or URL of the remote repository.</param>
         /// <param name="source">Name of the branch to push.</param>
         /// <param name="destination">Ref on the remote side to be updated.</param>
-        public GitPushAction(string remote, string source, string destination)
-            : this(source, destination)
+        /// <param name="force">Indicates whether to update the <paramref name="destination"/> 
+        /// ref even when the update is not a fast-forward.</param>
+        public GitPush(string remote, string source, string destination, bool force = false)
+            : this(remote, new GitPushAction(source, destination, force)) { }
+
+        /// <summary>Push sets of local branches to a remote branches.</summary>
+        /// <param name="remote">Name or URL of the remote repository.</param>
+        /// <param name="pushActions">Sets of LocalBranch:RemoteBranch.</param>
+        public GitPush(string remote, params GitPushAction[] pushActions)
+            : this(remote, pushActions.AsEnumerable()) { }
+
+        /// <summary>Push sets of local branches to remote branches.</summary>
+        /// <param name="remote">Name or URL of the remote repository.</param>
+        /// <param name="pushActions">Sets of LocalBranch:RemoteBranch.</param>
+        public GitPush(string remote, IEnumerable<GitPushAction> pushActions)
         {
-            this.remote = remote;
+            Remote = remote;
+            PushActions = pushActions;
         }
+
+        /// <summary>Creates the 'push' command string. <example>"push --progress origin master:master"</example></summary>
+        public override string ToString()
+        {
+            var combined = string.Join(" ", PushActions);
+
+            return string.Format("push {0} \"{1}\" {2}",
+                        ReportProgress ? "--progress " : "",
+                        Remote,
+                        combined)
+                .Trim();
+
+        }
+    }
+
+    /// <summary>Part of a 'git push', which specifies the local and/or remote branch.</summary>
+    public class GitPushAction
+    {
+        string _localBranch;
+        string _remoteBranch;
+        bool _force;
 
         /// <summary>
         /// Push a local branch to a remote one, optionally forcing a non-fast-forward commit.
@@ -34,24 +89,17 @@
             _force = force;
         }
 
-        /// <summary>Push a delete of a remote branch.</summary>
+        /// <summary>Delete a remote branch.</summary>
         /// <param name="branch">Remote branch to delete.</param>
         public static GitPushAction DeleteRemoteBranch(string branch)
         {
-            return new GitPushAction(branch);
+            return new GitPushAction(null, branch);
         }
 
-        /// <summary>Push a delete of a remote branch.</summary>
-        /// <param name="deleteBranch">Remote branch to delete.</param>
-        public GitPushAction(string deleteBranch)
+        /// <summary>Creates the push action command part.</summary>
+        public override string ToString()
         {
-            _remoteBranch = deleteBranch;
-            _delete = true;
-        }
-
-        public string Format()
-        {
-            if (_delete)
+            if (_localBranch.IsNullOrWhiteSpace())
             {
                 return string.Format(":{0}", _remoteBranch);
             }
@@ -60,11 +108,6 @@
                 (_force ? "+" : ""),
                 _localBranch,
                 _remoteBranch);
-        }
-
-        public override string ToString()
-        {// git push {remote} {source}:{destination}
-            return string.Format("{0} {1}:{2}", remote, _localBranch, _remoteBranch);
         }
     }
 }

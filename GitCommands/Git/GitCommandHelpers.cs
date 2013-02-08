@@ -497,8 +497,8 @@ namespace GitCommands
         public static string BranchCmd(string branchName, string revision, bool checkout)
         {
             return string.Format(
-                checkout 
-                ? "checkout -b \"{0}\" \"{1}\"" 
+                checkout
+                ? "checkout -b \"{0}\" \"{1}\""
                 : "branch \"{0}\" \"{1}\"", branchName.Trim(), revision);
         }
 
@@ -531,7 +531,7 @@ namespace GitCommands
         /// <summary>Gets the git SSH command; or "" if the environment variable is NOT set.</summary>
         public static string GetSsh()
         {
-            return Environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process) 
+            return Environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process)
                 ?? "";
         }
 
@@ -605,20 +605,14 @@ namespace GitCommands
             return string.Format("push {0}\"{1}\" {2}", options, remote, fromBranch);
         }
 
-        public static string PushMultipleCmd(string path, IEnumerable<GitPushAction> pushActions)
+        /// <summary>Pushes multiple sets of local branches to remote branches.</summary>
+        public static string PushMultipleCmd(string remote, IEnumerable<GitPushAction> pushActions)
         {
-            path = FixPath(path);
-
-            var sprogressOption = "";
-            if (VersionInUse.PushCanAskForProgress)
-                sprogressOption = "--progress ";
-
-            string cmd = string.Format("push {0} \"{1}\"", sprogressOption, path.Trim());
-
-            foreach (GitPushAction action in pushActions)
-                cmd += " " + action.Format();
-
-            return cmd;
+            remote = FixPath(remote);
+            return new GitPush(remote, pushActions)
+            {
+                ReportProgress = VersionInUse.PushCanAskForProgress
+            }.ToString();
         }
 
         public static string PushTagCmd(string path, string tag, bool all)
@@ -681,8 +675,8 @@ namespace GitCommands
         public static string ContinueBisectCmd(GitBisectOption bisectOption, params string[] revisions)
         {
             var bisectCommand = GetBisectCommand(bisectOption);
-            return (revisions.Length == 0) 
-                ? bisectCommand 
+            return (revisions.Length == 0)
+                ? bisectCommand
                 : string.Format("{0} {1}", bisectCommand, string.Join(" ", revisions));
         }
 
@@ -828,8 +822,8 @@ namespace GitCommands
         public static ConfigFile GetGlobalConfig()
         {
             string configPath = Path.Combine(GetHomeDir(), ".config", "git", "config");
-            return File.Exists(configPath) 
-                ? new ConfigFile(configPath, false) 
+            return File.Exists(configPath)
+                ? new ConfigFile(configPath, false)
                 : new ConfigFile(Path.Combine(GetHomeDir(), ".gitconfig"), false);
         }
 
