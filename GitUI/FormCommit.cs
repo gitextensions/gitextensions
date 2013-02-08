@@ -206,16 +206,6 @@ namespace GitUI
                 splitMain.SplitterDistance = Settings.CommitDialogSplitter;
             if (Settings.CommitDialogRightSplitter != -1)
                 splitRight.SplitterDistance = Settings.CommitDialogRightSplitter;
-
-            AddAutoWrapCheckboxToStatusBar();
-        }
-
-        private void AddAutoWrapCheckboxToStatusBar()
-        {
-            var cb = new CheckBox {Text = _checkBoxAutoWrap.Text, Checked = Settings.CommitValidationAutoWrap};
-            cb.CheckStateChanged += (s, ex) => Settings.CommitValidationAutoWrap = cb.Checked;
-            var toolStripHost = new ToolStripControlHost(cb);
-            commitStatusStrip.Items.Insert(0, toolStripHost);
         }
 
         private void FormCommitFormClosing(object sender, FormClosingEventArgs e)
