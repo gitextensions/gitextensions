@@ -373,7 +373,6 @@
             this.checkBoxAutoWrap.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAutoWrap.TabIndex = 14;
             this.checkBoxAutoWrap.UseVisualStyleBackColor = true;
-            this.checkBoxAutoWrap.CheckedChanged += new System.EventHandler(this.checkBoxAutoWrap_CheckedChanged);
             // 
             // FormCommitTemplateSettings
             // 
