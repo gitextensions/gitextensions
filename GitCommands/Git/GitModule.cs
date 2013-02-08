@@ -3123,6 +3123,8 @@ namespace GitCommands
 
             var output = RunCmd(cmd, arguments);
             var lines = output.Split('\n');
+            if (lines.Count() >= 2)
+                return false;
             var headers = lines[0].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var commandIndex = Array.IndexOf(headers, "COMMAND");
             for (int i = 1; i < lines.Count(); i++)

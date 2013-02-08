@@ -89,9 +89,6 @@ namespace GitUI
         private readonly TranslationString _updateCurrentSubmodule =
             new TranslationString("Update current submodule");
 
-        private readonly TranslationString _updateAllSuperprojectSubmodules =
-            new TranslationString("Update all superproject submodules");
-
         #endregion
 
         private readonly SynchronizationContext syncContext;
@@ -376,8 +373,8 @@ namespace GitUI
                 HideDashboard();
             else
                 ShowDashboard();
+            toolStripButtonLevelUp.Enabled = hasWorkingDir;
             CommitInfoTabControl.Visible = validWorkingDir;
-            toolStripButtonLevelUp.Enabled = validWorkingDir;
             fileExplorerToolStripMenuItem.Enabled = validWorkingDir;
             commandsToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
@@ -2812,14 +2809,6 @@ namespace GitUI
                 usmi.Tag = currentSubmoduleName;
                 usmi.Click += UpdateSubmoduleToolStripMenuItemClick;
                 toolStripButtonLevelUp.DropDownItems.Add(usmi);
-            }
-
-            if (supersuperproject != null)
-            {
-                mi = new ToolStripMenuItem(_updateAllSuperprojectSubmodules.Text);
-                mi.Click += UpdateAllSubmodulesForSuperProjectToolStripMenuItemClick;
-                mi.Tag = supersuperproject;
-                toolStripButtonLevelUp.DropDownItems.Add(mi);
             }
 
             Cursor.Current = Cursors.Default;
