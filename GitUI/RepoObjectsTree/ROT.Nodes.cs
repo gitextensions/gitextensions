@@ -20,7 +20,12 @@ namespace GitUI.UserControls
             public TreeNode TreeNode
             {
                 get { return _TreeNode; }
-                internal set { _TreeNode = value; ApplyStyle(); }
+                internal set
+                {
+                    _TreeNode = value;
+                    _TreeNode.Tag = this;
+                    ApplyStyle();
+                }
             }
 
             /// <summary>Gets the parent node.</summary>

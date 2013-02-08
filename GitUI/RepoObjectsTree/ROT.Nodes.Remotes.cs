@@ -44,7 +44,6 @@ namespace GitUI.UserControls
             TreeNode treeNode = new TreeNode(remote.Name)
             {
                 //Name = string.Format("remotes{0}", remote.Name),TODO: branch name may have invalid chars for Control.Name
-                Tag = remoteNode,
                 //ToolTipText = "",
                 ContextMenuStrip = menuRemote,
                 ImageKey = remoteKey,
@@ -55,7 +54,6 @@ namespace GitUI.UserControls
             {
                 TreeNode childTreeNode = new TreeNode(child.Value.Name)
                 {
-                    Tag = child,
                     ContextMenuStrip = menuRemoteBranch,
                     ImageKey = child.Value.IsHead ? headBranchKey : branchKey,
                     SelectedImageKey = child.Value.IsHead ? headBranchKey : branchKey,

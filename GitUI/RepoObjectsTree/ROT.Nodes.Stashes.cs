@@ -24,7 +24,6 @@ namespace GitUI.UserControls
             TreeNode treeNode = new TreeNode(stash.Name)
             {
                 Name = string.Format("stash{0}", stash.Index),
-                Tag = stashNode,
                 ToolTipText = stash.Message,
                 ContextMenuStrip = menuStash,
                 ImageKey = stashKey,

@@ -35,7 +35,6 @@ namespace GitUI.UserControls
             TreeNode treeNode = new TreeNode(branchNode.Name)
             {
                 Name = branchNode.FullPath,
-                Tag = branchNode,
                 ContextMenuStrip = isBranch ? menuBranch : menuBranchPath,
                 ImageKey = isBranch ? branchKey : branchPathKey,
                 SelectedImageKey = isBranch ? branchKey : branchPathKey,
