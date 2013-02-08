@@ -225,6 +225,12 @@ namespace GitCommands.Git
 
         public override string ToString() { return Name; }
 
+        /// <summary>Creates a <see cref="GitPush"/> to push from a local branch to a remote branch.</summary>
+        public GitPush CreatePush(RemoteBranch remoteBranch, string localBranch)
+        {
+            return new GitPush(Name, localBranch, remoteBranch.Name);
+        }
+
         /// <summary>Remote-tracking branch.</summary>
         [System.Diagnostics.DebuggerDisplay("{Name} ({Status})")]
         public class RemoteBranch
@@ -274,6 +280,12 @@ namespace GitCommands.Git
             public PushConfig PushConfig { get; internal set; }
 
             public override string ToString() { return Name; }
+
+            /// <summary>Creates a <see cref="GitPush"/> to push from the specified local branch to this <see cref="RemoteBranch"/>.</summary>
+            public GitPush CreatePush(string localBranch)
+            {
+                return Remote.CreatePush(this, localBranch);
+            }
 
             static Dictionary<string, State> ValidStates =
                 ((State[])Enum.GetValues(typeof(State)))

@@ -1506,10 +1506,16 @@ namespace GitCommands
             return RunGitCmd("checkout " + force.AsForce() + revision.Quote() + " -- " + files);
         }
 
-
-        public string Push(string path)
+        /// <summary>Run 'git push {remote}'.</summary>
+        public string Push(string remote)
         {
-            return RunGitCmd("push \"" + FixPath(path).Trim() + "\"");
+            return RunGitCmd("push \"" + FixPath(remote).Trim() + "\"");
+        }
+
+        /// <summary>Run 'git push' using the specified push options.</summary>
+        public string Push(GitPush push)
+        {
+            return RunGitCmd(push.ToString());
         }
 
         public bool StartPageantForRemote(string remote)
