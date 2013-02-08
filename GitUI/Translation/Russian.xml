@@ -37,13 +37,13 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
           <Source>General</Source>
           <Value>Общие</Value>
         </TranslationItem>
-        <TranslationItem Name="chkAlwaysShowCheckoutDlg" Property="Text" type="unfinished">
+        <TranslationItem Name="chkAlwaysShowCheckoutDlg" Property="Text">
           <Source>Always show checkout dialog</Source>
-          <Value />
+          <Value>Всегда показывать диалог смены ветки</Value>
         </TranslationItem>
-        <TranslationItem Name="chkDontSHowHelpImages" Property="Text" type="unfinished">
+        <TranslationItem Name="chkDontSHowHelpImages" Property="Text">
           <Source>Don't show help images</Source>
-          <Value />
+          <Value>Не показывать справочные картинки</Value>
         </TranslationItem>
         <TranslationItem Name="chkUseLocalChangesAction" Property="Text" type="unfinished">
           <Source>Use last chosen "local changes" action as default action.
@@ -66,17 +66,17 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Get author image from gravatar.com</Source>
           <Value>Получить картинки с gravatar.com</Value>
         </TranslationItem>
-        <TranslationItem Name="_noDictFilesFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_noDictFilesFound" Property="Text">
           <Source>No dictionary files found in: {0}</Source>
-          <Value />
+          <Value>Не найдены файлы словарей в: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="applicationFontChangeButton" Property="Text">
           <Source>font name</Source>
           <Value>имя шрифта</Value>
         </TranslationItem>
-        <TranslationItem Name="chkEnableAutoScale" Property="Text" type="unfinished">
+        <TranslationItem Name="chkEnableAutoScale" Property="Text">
           <Source>Auto scale user interface when high dpi is used</Source>
-          <Value />
+          <Value>Автоматически масштабировать пользовательский интерфейс при высоком DPI</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
           <Source>Show current branch in Visual Studio</Source>
@@ -114,13 +114,13 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Help translate</Source>
           <Value>Помочь перевести</Value>
         </TranslationItem>
-        <TranslationItem Name="label22" Property="Text" type="unfinished">
+        <TranslationItem Name="label22" Property="Text">
           <Source>Dictionary for spelling checker</Source>
-          <Value />
+          <Value>Словарь для проверки орфографии</Value>
         </TranslationItem>
-        <TranslationItem Name="label26" Property="Text" type="unfinished">
+        <TranslationItem Name="label26" Property="Text">
           <Source>Application font</Source>
-          <Value />
+          <Value>Шрифт приложения</Value>
         </TranslationItem>
         <TranslationItem Name="label44" Property="Text">
           <Source>Image size</Source>
@@ -146,9 +146,9 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Code font</Source>
           <Value>Шрифт</Value>
         </TranslationItem>
-        <TranslationItem Name="truncatePathMethod" Property="Text" type="unfinished">
+        <TranslationItem Name="truncatePathMethod" Property="Text">
           <Source>Truncate long filenames</Source>
-          <Value />
+          <Value>Обрезать длинные имена файлов</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -580,7 +580,7 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         </TranslationItem>
         <TranslationItem Name="containedInBranches" Property="Text">
           <Source>Contained in branches:</Source>
-          <Value>Содержится в ветвях</Value>
+          <Value>Содержится в ветвях:</Value>
         </TranslationItem>
         <TranslationItem Name="containedInNoBranch" Property="Text">
           <Source>Contained in no branch</Source>
@@ -2410,7 +2410,7 @@ Enter valid branch name or select predefined value.</Source>
         </TranslationItem>
         <TranslationItem Name="rbResetBranch" Property="Text">
           <Source>Reset local branch with the name:</Source>
-          <Value>Сбросить локальную ветвь с именем «{0}»</Value>
+          <Value>Сбросить локальную ветвь с именем:</Value>
         </TranslationItem>
         <TranslationItem Name="rbStash" Property="Text" type="unfinished">
           <Source>Stash</Source>
