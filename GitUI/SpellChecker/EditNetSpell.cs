@@ -532,6 +532,20 @@ namespace GitUI.SpellChecker
             OnKeyUp(e);
         }
 
+        private bool skipSelectionUndo = false;
+        private void UndoHighlighting()
+        {
+            if (!skipSelectionUndo)
+                return;
+
+            while (TextBox.UndoActionName.Equals("Unknown"))
+            {
+                TextBox.Undo();
+            }
+            TextBox.Undo();
+            skipSelectionUndo = false;
+        }
+
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.V)
@@ -544,6 +558,10 @@ namespace GitUI.SpellChecker
                 // remove image data from clipboard
                 string text = Clipboard.GetText();
                 Clipboard.SetText(text);
+            }
+            else if (e.Control && e.KeyCode == Keys.Z)
+            {
+                UndoHighlighting();
             }
             OnKeyDown(e);
         }
@@ -628,14 +646,20 @@ namespace GitUI.SpellChecker
         public void ChangeTextColor(int line, int offset, int length, Color color)
         {
             var oldPos = TextBox.SelectionStart;
+            var oldColor = TextBox.SelectionColor;
             var lineIndex = TextBox.GetFirstCharIndexFromLine(line);
             TextBox.SelectionStart = Math.Max(lineIndex + offset, 0);
             TextBox.SelectionLength = length;
             TextBox.SelectionColor = color;
+            var restoreColor = oldPos < TextBox.SelectionStart || oldPos > TextBox.SelectionStart + TextBox.SelectionLength;
 
             TextBox.SelectionLength = 0;
             TextBox.SelectionStart = oldPos;
-            TextBox.SelectionColor = Color.Black;
+            //restore old color only if oldPos doesn't intersects with colored selection
+            if(restoreColor)
+                TextBox.SelectionColor = oldColor;
+            //undoes all recent selections while ctrl-z pressed
+            skipSelectionUndo = true;
         }
 
         /// <summary>
