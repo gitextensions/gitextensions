@@ -1383,6 +1383,10 @@ namespace GitUI
             AddCommitMessageToMenu(Module.GetPreviousCommitMessage(1));
             AddCommitMessageToMenu(Module.GetPreviousCommitMessage(2));
             AddCommitMessageToMenu(Module.GetPreviousCommitMessage(3));
+
+            commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
+                toolStripMenuItem1,
+                generateListOfChangesInSubmodulesChangesToolStripMenuItem});
         }
 
         private void AddCommitMessageToMenu(string commitMessage)
