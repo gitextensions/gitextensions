@@ -81,10 +81,6 @@ namespace GitUI.UserControls
             /// <summary>Root <see cref="BaseBranchNode"/>.</summary>
             public BranchPathNode Root { get { return _Root ?? (_Root = BranchesNode.GetRoot(this)); } }
             internal int Level { get; private set; }
-            /// <summary>true: local branch; false: remote branch</summary>
-            public bool IsLocal { get; private set; }
-            /// <summary>true: remote branch; false: local branch</summary>
-            public bool IsRemote { get { return IsLocal == false; } }
 
             List<BranchPathNode> _Parents;
             /// <summary>Gets the list of parent <see cref="BranchPathNode"/>s, youngest to oldest.</summary>
@@ -113,12 +109,14 @@ namespace GitUI.UserControls
                 return FullPath.GetHashCode();
             }
 
+            /// <summary>Two <see cref="BaseBranchNode"/> instances are equal
+            ///  if their <see cref="FullPath"/> values are equal.</summary>
             protected bool Equals(BaseBranchNode other)
             {
                 if (other == null) { return false; }
                 return (other == this)
                     ||
-                       ((IsLocal && other.IsLocal) && string.Equals(_FullPath, other._FullPath));
+                       string.Equals(FullPath, other.FullPath);
             }
 
             public override bool Equals(object obj)
@@ -128,13 +126,12 @@ namespace GitUI.UserControls
             }
 
             protected BaseBranchNode(GitUICommands uiCommands,
-                string name, int level, BranchPathNode parent, bool isLocal)
+                string name, int level, BranchPathNode parent)
                 : base(uiCommands)
             {
                 Name = name;
                 Parent = parent;
                 Level = level;
-                IsLocal = isLocal;
             }
 
             public override string ToString() { return Name; }
@@ -161,7 +158,7 @@ namespace GitUI.UserControls
             public BranchNode(GitUICommands uiCommands,
                 string branch, int level, string activeBranchPath = null,
                 BranchPathNode parent = null, bool isLocal = true)
-                : base(uiCommands, BranchesNode.GetName(branch), level, parent, isLocal)
+                : base(uiCommands, BranchesNode.GetName(branch), level, parent)
             {
                 IsActive = Equals(activeBranchPath, FullPath);
                 IsDraggable = true;
@@ -322,10 +319,9 @@ namespace GitUI.UserControls
             /// <param name="name">Short name for the path.</param>
             /// <param name="level">Level of the node in the tree.</param>
             /// <param name="parent">Parent node. Leave NULL if this is a Root.</param>
-            /// <param name="isLocal">Indicates whether the <see cref="BranchPathNode"/> is for local branches.</param>
             public BranchPathNode(GitUICommands uiCommands,
-                string name, int level, BranchPathNode parent = null, bool isLocal = true)
-                : base(uiCommands, name, level, parent, isLocal)
+                string name, int level, BranchPathNode parent = null)
+                : base(uiCommands, name, level, parent)
             {
                 Children = new List<BaseBranchNode>();
             }
@@ -333,7 +329,9 @@ namespace GitUI.UserControls
             public override bool Equals(object obj)
             {
                 BranchPathNode other = obj as BranchPathNode;
-                return other != null && string.Equals(Name, other.Name);
+                return other != null &&
+                    base.Equals(other) &&
+                    Children.SequenceEqual(other.Children);
             }
 
             public override string ToString()
