@@ -74,7 +74,7 @@ namespace GitUI
 
             Revisions.CellPainting += RevisionsCellPainting;
             Revisions.CellFormatting += RevisionsCellFormatting;
-            Revisions.KeyDown += RevisionsKeyDown;
+            Revisions.KeyPress += RevisionsKeyPress;
 
             showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
@@ -275,15 +275,14 @@ namespace GitUI
             quickSearchTimer.Start();
         }
 
-        private void RevisionsKeyDown(object sender, KeyEventArgs e)
+        private void RevisionsKeyPress(object sender, KeyPressEventArgs e)
         {
             var curIndex = -1;
             if (Revisions.SelectedRows.Count > 0)
                 curIndex = Revisions.SelectedRows[0].Index;
 
             curIndex = curIndex >= 0 ? curIndex : 0;
-            int key = e.KeyValue;
-            if (!e.Alt && !e.Control && key == 8 && _quickSearchString.Length > 1) //backspace
+            if (e.KeyChar == 8 && _quickSearchString.Length > 1) //backspace
             {
                 RestartQuickSearchTimer();
 
@@ -295,32 +294,12 @@ namespace GitUI
                 e.Handled = true;
                 ShowQuickSearchString();
             }
-            else if (!e.Alt && !e.Control && (char.IsLetterOrDigit((char)key) || char.IsNumber((char)key) || char.IsSeparator((char)key) || key == 191))
+            else if (!char.IsControl(e.KeyChar))
             {
                 RestartQuickSearchTimer();
 
                 //The code below is meant to fix the weird keyvalues when pressing keys e.g. ".".
-                switch (key)
-                {
-                    case 51:
-                        _quickSearchString = e.Shift ? string.Concat(_quickSearchString, "#").ToLower() : string.Concat(_quickSearchString, "3").ToLower();
-                        break;
-                    case 188:
-                        _quickSearchString = string.Concat(_quickSearchString, ",").ToLower();
-                        break;
-                    case 189:
-                        _quickSearchString = e.Shift ? string.Concat(_quickSearchString, "_").ToLower() : string.Concat(_quickSearchString, "-").ToLower();
-                        break;
-                    case 190:
-                        _quickSearchString = string.Concat(_quickSearchString, ".").ToLower();
-                        break;
-                    case 191:
-                        _quickSearchString = string.Concat(_quickSearchString, "/").ToLower();
-                        break;
-                    default:
-                        _quickSearchString = string.Concat(_quickSearchString, (char)e.KeyValue).ToLower();
-                        break;
-                }
+                _quickSearchString = string.Concat(_quickSearchString, char.ToLower(e.KeyChar));
 
                 FindNextMatch(curIndex, _quickSearchString, false);
                 _lastQuickSearchString = _quickSearchString;
@@ -2043,6 +2022,7 @@ namespace GitUI
             if (Module.GetStagedFiles().Count > 0)
                 stagedChanges = true;
 
+            // FiltredCurrentCheckout doesn't works because only calculated after loading all revisions in SelectInitialRevision()
             if (unstagedChanges)
             {
                 //Add working dir as virtual commit

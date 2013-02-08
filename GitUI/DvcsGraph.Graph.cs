@@ -156,7 +156,7 @@ namespace GitUI
                     {
                         // TODO: We might be able to recover from this with some work, but
                         // since we build the graph async it might be tough to figure out.
-                        //throw new ArgumentException("The nodes must be added such that all children are added before their parents", "aParentIds");
+                        Debug.WriteLine("The nodes must be added such that all children are added before their parents");
                         continue;
                     }
 
@@ -218,8 +218,7 @@ namespace GitUI
                     if (parent != null && parent.InLane != int.MaxValue)
                     {
                         int resetTo = d.Parent.Descendants.Aggregate(d.Parent.InLane, (current, dd) => Math.Min(current, dd.Child.InLane));
-
-                        Console.WriteLine("We have to start over at lane {0} because of {1}", resetTo, node);
+                        Debug.WriteLine("We have to start over at lane {0} because of {1}", resetTo, node);
                         isRebuild = true;
                         break;
                     }
@@ -405,7 +404,7 @@ namespace GitUI
                         {
                             if (junction.Parent != junction.Child)
                             {
-                                Console.WriteLine("*** {0} *** {1} {2}", junction, Nodes.Count, junctions.Count);
+                                Debug.WriteLine("*** {0} *** {1} {2}", junction, Nodes.Count, junctions.Count);
                             }
                         }
                     }
