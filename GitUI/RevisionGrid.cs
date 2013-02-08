@@ -132,7 +132,7 @@ namespace GitUI
         [Browsable(false)]
         public int LastScrollPos { get; private set; }
         [Browsable(false)]
-        public IComparable[] LastSelectedRows { get; private set; }
+        public string[] LastSelectedRows { get; private set; }
         [Browsable(false)]
         public Font RefsFont { get; private set; }
         private Font _normalFont;
@@ -511,7 +511,7 @@ namespace GitUI
             Revisions.Select();
         }
 
-        public void HighlightBranch(IComparable aId)
+        public void HighlightBranch(string aId)
         {
             Revisions.HighlightBranch(aId);
         }
@@ -1004,7 +1004,7 @@ namespace GitUI
             }
             else if (_initialSelectedRevision == null)
             {
-                Revisions.SelectedIds = new IComparable[] { CurrentCheckout };
+                Revisions.SelectedIds = new[] { CurrentCheckout };
             }
 
             if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)

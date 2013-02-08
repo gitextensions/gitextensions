@@ -74,7 +74,7 @@ namespace GitUI
             };
 
         private readonly SynchronizationContext syncContext;
-        private readonly List<IComparable> toBeSelected = new List<IComparable>();
+        private readonly List<string> toBeSelected = new List<string>();
         private int backgroundScrollTo;
         private Thread backgroundThread;
         private volatile bool shouldRun = true;
@@ -205,7 +205,7 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IComparable[] SelectedIds
+        public string[] SelectedIds
         {
             get
             {
@@ -213,7 +213,7 @@ namespace GitUI
                 {
                     return null;
                 }
-                var data = new IComparable[SelectedRows.Count];
+                var data = new string[SelectedRows.Count];
                 for (int i = 0; i < SelectedRows.Count; i++)
                 {
                     if (graphData[SelectedRows[i].Index] != null)
@@ -233,7 +233,7 @@ namespace GitUI
                         return;
                     }
 
-                    foreach (IComparable rowItem in value)
+                    foreach (string rowItem in value)
                     {
                         int row = FindRow(rowItem);
                         if (row >= 0 && Rows.Count > row)
@@ -299,7 +299,7 @@ namespace GitUI
             }
         }
 
-        public void Add(IComparable aId, IComparable[] aParentIds, DataType aType, GitRevision aData)
+        public void Add(string aId, string[] aParentIds, DataType aType, GitRevision aData)
         {
             lock (graphData)
             {
@@ -338,7 +338,7 @@ namespace GitUI
             }
         }
 
-        public void Filter(IComparable aId)
+        public void Filter(string aId)
         {
             lock (graphData)
             {
@@ -372,7 +372,7 @@ namespace GitUI
             }
         }
 
-        public IComparable GetRowId(int aRow)
+        public string GetRowId(int aRow)
         {
             lock (graphData)
             {
@@ -385,7 +385,7 @@ namespace GitUI
             }
         }
 
-        public int FindRow(IComparable aId)
+        public int FindRow(string aId)
         {
             lock (graphData)
             {
@@ -645,7 +645,7 @@ namespace GitUI
                 // Check to see if the newly added item should be selected
                 if (graphData.Count > row)
                 {
-                    IComparable id = graphData[row].Node.Id;
+                    string id = graphData[row].Node.Id;
                     if (toBeSelected.Contains(id))
                     {
                         toBeSelected.Remove(id);
@@ -1192,7 +1192,7 @@ namespace GitUI
             return true;
         }
 
-        public void HighlightBranch(IComparable aId)
+        public void HighlightBranch(string aId)
         {
             graphData.HighlightBranch(aId);
         }
@@ -1237,13 +1237,13 @@ namespace GitUI
         {
             public readonly List<Junction> Ancestors = new List<Junction>();
             public readonly List<Junction> Descendants = new List<Junction>();
-            public readonly IComparable Id;
+            public readonly string Id;
             public GitRevision Data;
             public DataType DataType;
             public int InLane = int.MaxValue;
             public int Index = int.MaxValue;
 
-            public Node(IComparable aId)
+            public Node(string aId)
             {
                 Id = aId;
             }
