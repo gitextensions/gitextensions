@@ -1816,9 +1816,6 @@ namespace GitUI
 
             string branch = toolStripItem.Text;
             UICommands.StartCheckoutBranchDialog(this, branch, false);
-
-            ForceRefreshRevisions();
-            OnActionOnRepositoryPerformed();
         }
 
         private void ToolStripItemClickCheckoutRemoteBranch(object sender, EventArgs e)
@@ -1885,8 +1882,6 @@ namespace GitUI
                 return;
 
             UICommands.StartCheckoutBranchDialog(this, GetRevision(LastRow).Guid, false);
-            ForceRefreshRevisions();
-            OnActionOnRepositoryPerformed();
         }
 
         private void ArchiveRevisionToolStripMenuItemClick(object sender, EventArgs e)
