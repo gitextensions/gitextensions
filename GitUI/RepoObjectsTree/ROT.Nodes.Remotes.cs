@@ -30,6 +30,7 @@ namespace GitUI.UserControls
 
         static readonly string remoteKey = "remote";
         static readonly string remotesKey = "remotes";
+        static readonly string remoteBranchStaleKey = "remoteBranchStale";
 
         /// <summary>Reloads the remotes.</summary>
         static void OnReloadRemotes(ICollection<RemoteNode> remotes, RootNode<RemoteNode> remotesNode)
