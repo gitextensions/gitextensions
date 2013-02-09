@@ -29,6 +29,8 @@ namespace GitUI.UserControls
             imgList.Images.Add(remoteKey, Resources.RemoteRepo);
             imgList.Images.Add(remotesKey, Resources.RemoteRepo);
             imgList.Images.Add(headBranchKey, Resources.HeadBranch);
+            imgList.Images.Add(remoteBranchStaleKey, Resources.BranchStale);
+            imgList.Images.Add(remoteBranchNewKey, Resources.BranchNew);
 
             treeMain.ShowNodeToolTips = true;
             treeMain.NodeMouseClick += OnNodeClick;

@@ -31,6 +31,7 @@ namespace GitUI.UserControls
         static readonly string remoteKey = "remote";
         static readonly string remotesKey = "remotes";
         static readonly string remoteBranchStaleKey = "remoteBranchStale";
+        static readonly string remoteBranchNewKey = "remoteBranchNew";
 
         /// <summary>Reloads the remotes.</summary>
         static void OnReloadRemotes(ICollection<RemoteNode> remotes, RootNode<RemoteNode> remotesNode)
@@ -53,11 +54,29 @@ namespace GitUI.UserControls
             nodes.Add(treeNode);
             treeNode.Nodes.AddRange(remoteNode.Children.Select(child =>
             {
-                TreeNode childTreeNode = new TreeNode(child.Value.Name)
+                RemoteBranch remoteBranch = child.Value;
+                string imgKey = branchKey;
+                string toolTip = remoteBranch.Name;//Module.CompareCommits();
+                if (remoteBranch.IsHead)
+                {
+                    imgKey = headBranchKey;
+                }
+                else if (remoteBranch.Status == RemoteBranch.State.Stale)
+                {
+                    imgKey = remoteBranchStaleKey;
+                    toolTip = string.Format(Strings.RemoteBranchStaleTipFormat.Text, remoteBranch.Name);
+                }
+                else if (remoteBranch.Status == RemoteBranch.State.New)
+                {
+                    imgKey = remoteBranchNewKey;
+                    toolTip = string.Format(Strings.RemoteBranchNewTipFormat.Text, remoteBranch.Name);
+                }
+                TreeNode childTreeNode = new TreeNode(remoteBranch.Name)
                 {
                     ContextMenuStrip = menuRemoteBranch,
-                    ImageKey = child.Value.IsHead ? headBranchKey : branchKey,
-                    SelectedImageKey = child.Value.IsHead ? headBranchKey : branchKey,
+                    ImageKey = imgKey,
+                    SelectedImageKey = imgKey,
+                    ToolTipText = toolTip,
                 };
                 child.TreeNode = childTreeNode;
                 return childTreeNode;

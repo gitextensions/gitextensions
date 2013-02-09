@@ -1603,8 +1603,9 @@
     <None Include="Resources\Icons\DeleteSoft.png" />
     <None Include="Resources\Icons\ShowDiff.png" />
     <None Include="Resources\Icons\Cut.png" />
-    <Content Include="Resources\Icons\BranchNew.png" />
+    <Content Include="Resources\Icons\BranchFrom.png" />
     <None Include="Resources\Icons\BranchStale.png" />
+    <None Include="Resources\Icons\BranchNew.png" />
     <Content Include="Resources\Icons\HeadBranch.png" />
     <Content Include="Resources\Icons\Namespace.png" />
     <Content Include="Resources\Icons\RemoteRepo.png" />

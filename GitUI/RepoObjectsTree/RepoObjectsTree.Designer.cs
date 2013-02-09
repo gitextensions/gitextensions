@@ -97,7 +97,7 @@ namespace GitUI.UserControls
             // 
             // mnubtnNewBranch
             // 
-            this.mnubtnNewBranch.Image = global::GitUI.Properties.Resources.BranchNew;
+            this.mnubtnNewBranch.Image = global::GitUI.Properties.Resources.BranchFrom;
             this.mnubtnNewBranch.Name = "mnubtnNewBranch";
             this.mnubtnNewBranch.Size = new System.Drawing.Size(147, 22);
             this.mnubtnNewBranch.Text = "New Branch...";
@@ -176,7 +176,7 @@ namespace GitUI.UserControls
             // 
             // mnubtnBranchCreateFrom
             // 
-            this.mnubtnBranchCreateFrom.Image = global::GitUI.Properties.Resources.BranchNew;
+            this.mnubtnBranchCreateFrom.Image = global::GitUI.Properties.Resources.BranchFrom;
             this.mnubtnBranchCreateFrom.Name = "mnubtnBranchCreateFrom";
             this.mnubtnBranchCreateFrom.Size = new System.Drawing.Size(157, 22);
             this.mnubtnBranchCreateFrom.Text = "Create branch...";
@@ -338,7 +338,7 @@ namespace GitUI.UserControls
             // 
             // mnubtnStashBranch
             // 
-            this.mnubtnStashBranch.Image = global::GitUI.Properties.Resources.BranchNew;
+            this.mnubtnStashBranch.Image = global::GitUI.Properties.Resources.BranchFrom;
             this.mnubtnStashBranch.Name = "mnubtnStashBranch";
             this.mnubtnStashBranch.Size = new System.Drawing.Size(157, 22);
             this.mnubtnStashBranch.Text = "Create branch...";
@@ -373,7 +373,7 @@ namespace GitUI.UserControls
             // 
             // mnubtnCreateBranchWithin
             // 
-            this.mnubtnCreateBranchWithin.Image = global::GitUI.Properties.Resources.BranchNew;
+            this.mnubtnCreateBranchWithin.Image = global::GitUI.Properties.Resources.BranchFrom;
             this.mnubtnCreateBranchWithin.Name = "mnubtnCreateBranchWithin";
             this.mnubtnCreateBranchWithin.Size = new System.Drawing.Size(157, 22);
             this.mnubtnCreateBranchWithin.Text = "Create branch...";
@@ -416,7 +416,7 @@ namespace GitUI.UserControls
             // 
             // mnubtnRemoteBranchCreateBranch
             // 
-            this.mnubtnRemoteBranchCreateBranch.Image = global::GitUI.Properties.Resources.BranchNew;
+            this.mnubtnRemoteBranchCreateBranch.Image = global::GitUI.Properties.Resources.BranchFrom;
             this.mnubtnRemoteBranchCreateBranch.Name = "mnubtnRemoteBranchCreateBranch";
             this.mnubtnRemoteBranchCreateBranch.Size = new System.Drawing.Size(157, 22);
             this.mnubtnRemoteBranchCreateBranch.Text = "Create branch...";

@@ -163,9 +163,29 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap BranchFrom {
+            get {
+                object obj = ResourceManager.GetObject("BranchFrom", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap BranchNew {
             get {
                 object obj = ResourceManager.GetObject("BranchNew", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap BranchStale {
+            get {
+                object obj = ResourceManager.GetObject("BranchStale", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

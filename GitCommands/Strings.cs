@@ -97,7 +97,11 @@ namespace GitCommands
         public static readonly TranslationString submodules = new TranslationString("submodules");
         /// <summary>"favorites" translation.</summary>
         public static readonly TranslationString favorites = new TranslationString("favorites");
-
+        /// <summary>"'{0}' no longer exists on remote repo and can be pruned."</summary>
+        public static TranslationString RemoteBranchStaleTipFormat = new TranslationString("'{0}' no longer exists on remote repo and can be pruned");
+        /// <summary>"'{0}' is new and may be fetched."</summary>
+        public static TranslationString RemoteBranchNewTipFormat = new TranslationString("'{0}' is new and may be fetched");
+    
 
         private readonly TranslationString _dateText               = new TranslationString("Date");
         private readonly TranslationString _authorText             = new TranslationString("Author");
@@ -174,5 +178,6 @@ namespace GitCommands
         private readonly TranslationString _monthsAgo = new TranslationString("{0} months ago");
         private readonly TranslationString _yearAgo = new TranslationString("{0} year ago");
         private readonly TranslationString _yearsAgo = new TranslationString("{0} years ago");
+        
     }
 }

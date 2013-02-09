@@ -643,9 +643,6 @@
   <data name="StashPop" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\StashPop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="BranchNew" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\BranchNew.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Cut" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Cut.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -663,5 +660,14 @@
   </data>
   <data name="HeadBranch" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\HeadBranch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BranchStale" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\BranchStale.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BranchFrom" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\BranchFrom.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BranchNew" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\BranchNew.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
