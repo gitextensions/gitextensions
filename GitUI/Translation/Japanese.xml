@@ -2517,7 +2517,7 @@ revision:</Source>
           <Value>未管理ディレクトリの削除</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveIngnored" Property="Text">
-          <Source>Remove only ingnored untracked files</Source>
+          <Source>Remove only ignored untracked files</Source>
           <Value>無視された未管理ファイルのみ削除</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveNonIgnored" Property="Text">
@@ -5401,7 +5401,7 @@ Is the mergeconflict solved?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text" type="unfinished">
-          <Source>File ({0}) appears to be a binairy file.
+          <Source>File ({0}) appears to be a binary file.
 Choose to keep the local({1}), remote({2}) or base file.</Source>
           <Value />
         </TranslationItem>
