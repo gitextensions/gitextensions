@@ -64,5 +64,9 @@ namespace GitCommands.Git
             return false;
         }
 
+        public override bool ChangesRepoState()
+        {
+            return true;
+        }
     }
 }

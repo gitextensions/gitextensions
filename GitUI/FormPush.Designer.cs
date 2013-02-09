@@ -128,6 +128,7 @@
             // Push
             // 
             this.Push.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Push.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Push.Image = global::GitUI.Properties.Resources.ArrowUp;
             this.Push.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Push.Location = new System.Drawing.Point(530, 201);
