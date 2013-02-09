@@ -88,11 +88,6 @@ namespace GitCommands
             return Instance._currentIndex.Text;
         }
 
-        public static string GetPAgeantNotFound()
-        {
-            return Instance._pageantNotFound.Text;
-        }
-
         public static string GetLoadingData()
         {
             return Instance._LoadingData.Text;
@@ -109,7 +104,6 @@ namespace GitCommands
         private readonly TranslationString _childrenText = new TranslationString("Children");
         private readonly TranslationString _currentUnstagedChanges = new TranslationString("Current unstaged changes");
         private readonly TranslationString _currentIndex = new TranslationString("Commit index");
-        private readonly TranslationString _pageantNotFound = new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
         private readonly TranslationString _LoadingData = new TranslationString("Loading data...");
 
 

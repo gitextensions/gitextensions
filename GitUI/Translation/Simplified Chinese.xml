@@ -697,8 +697,7 @@ Value:  {2} = {3}</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text" type="unfinished">
-          <Source>Failed to create pull request.
-</Source>
+          <Source>Failed to create pull request.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text" type="unfinished">
@@ -1210,8 +1209,7 @@ Do you want to open it?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strCouldNotFetchReposOfUser" Property="Text" type="unfinished">
-          <Source>Could not fetch repositories of user!
-</Source>
+          <Source>Could not fetch repositories of user!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text" type="unfinished">
@@ -1219,8 +1217,7 @@ Do you want to open it?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToFork" Property="Text" type="unfinished">
-          <Source>Failed to fork:
-</Source>
+          <Source>Failed to fork:</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToGetRepos" Property="Text" type="unfinished">
@@ -1240,8 +1237,7 @@ Do you want to open it?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strSearchFailed" Property="Text" type="unfinished">
-          <Source>Search failed!
-</Source>
+          <Source>Search failed!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strSearching" Property="Text" type="unfinished">
@@ -3568,15 +3564,11 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Value />
         </TranslationItem>
         <TranslationItem Name="_sendMailResult" Property="Text" type="unfinished">
-          <Source>
-
-Send to:</Source>
+          <Source>Send to:</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_sendMailResultFailed" Property="Text" type="unfinished">
-          <Source>
-
-Failed to send mail.</Source>
+          <Source>Failed to send mail.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_twoRevisionsNeededCaption" Property="Text" type="unfinished">
@@ -5652,31 +5644,9 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
           <Source>Limit number of commits that will be loaded at startup.</Source>
           <Value>限制将在启动时加载的提交次数。</Value>
         </TranslationItem>
-        <TranslationItem Name="label20" Property="Text" type="obsolete">
-          <Source>You only need local settings
-if you want to override the 
-global settings for the current
-repository.</Source>
-          <Value>如果你想覆盖本档案库的全局设置，
-你只需要做本地设置就够了。</Value>
-        </TranslationItem>
-        <TranslationItem Name="label21" Property="Text" type="obsolete">
-          <Source>You need to set the correct path to 
-git before you can change
-local settings.
-</Source>
-          <Value>您需要设置git正确的路径，才能更改本地设置。</Value>
-        </TranslationItem>
         <TranslationItem Name="label22" Property="Text" type="obsolete">
           <Source>Dictionary for spelling checker.</Source>
           <Value>拼写检查器所用的词典。</Value>
-        </TranslationItem>
-        <TranslationItem Name="label9" Property="Text" type="obsolete">
-          <Source>You need to set the correct path to 
-git before you can change
-global settings.
-</Source>
-          <Value>您需要设置git正确的路径，才能更改全局设置。</Value>
         </TranslationItem>
         <TranslationItem Name="tpGitExtensions" Property="Text" type="obsolete">
           <Source>Git extensions</Source>
@@ -6820,6 +6790,10 @@ local settings.
           <Source>The current directory is not a valid git-svn repository.</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>无法载入SSH密钥。 PuTTY配置的不正确。</Value>
+        </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
           <Value />
@@ -7371,10 +7345,6 @@ When OpenSSH is used, command line dialogs are shown!
           <Source>{0} months ago</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_pageantNotFound" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>无法载入SSH密钥。 PuTTY配置的不正确。</Value>
-        </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text" type="unfinished">
           <Source>Parent(s)</Source>
           <Value />
@@ -7402,6 +7372,10 @@ When OpenSSH is used, command line dialogs are shown!
         <TranslationItem Name="_yearsAgo" Property="Text" type="unfinished">
           <Source>{0} years ago</Source>
           <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>无法载入SSH密钥。 PuTTY配置的不正确。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7440,8 +7414,7 @@ When OpenSSH is used, command line dialogs are shown!
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text" type="unfinished">
-          <Source>Could not load discussion!
-</Source>
+          <Source>Could not load discussion!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text" type="unfinished">
@@ -7449,23 +7422,19 @@ When OpenSSH is used, command line dialogs are shown!
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToClosePullRequest" Property="Text" type="unfinished">
-          <Source>Failed to close pull request!
-</Source>
+          <Source>Failed to close pull request!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToFetchPullData" Property="Text" type="unfinished">
-          <Source>Failed to fetch pull data!
-</Source>
+          <Source>Failed to fetch pull data!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiffData" Property="Text" type="unfinished">
-          <Source>Failed to load diff data!
-</Source>
+          <Source>Failed to load diff data!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiscussionItem" Property="Text" type="unfinished">
-          <Source>Failed to post discussion item!
-</Source>
+          <Source>Failed to post discussion item!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text" type="unfinished">
@@ -7492,14 +7461,6 @@ Details: Is {1} expected {2}</Source>
         <TranslationItem Name="columnHeader4" Property="Text" type="unfinished">
           <Source>Created</Source>
           <Value />
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="BrowseForPrivateKey">
-      <translationItems>
-        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>无法载入SSH密钥。 PuTTY配置的不正确。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

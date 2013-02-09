@@ -65,8 +65,6 @@ namespace GitUI
         private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch");
         #endregion
 
-        private const string PuttyCaption = "PuTTY";
-
         private IList<GitHead> _heads;
         public bool ErrorOccurred { get; private set; }
         private string branch;
@@ -495,7 +493,7 @@ namespace GitUI
             if (File.Exists(Settings.Pageant))
                 Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
             else
-                MessageBox.Show(this, Strings.GetPAgeantNotFound(), PuttyCaption);
+                MessageBoxes.PAgentNotFound(this);
         }
 
         private void FormPullLoad(object sender, EventArgs e)

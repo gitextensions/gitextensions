@@ -39,7 +39,7 @@ This program is destributed in the hope that it will be useful, but WITHOUT ANY 
         </TranslationItem>
         <TranslationItem Name="chkAlwaysShowCheckoutDlg" Property="Text">
           <Source>Always show checkout dialog</Source>
-          <Value>Всегда показывать диалог смены ветки</Value>
+          <Value>Всегда показывать диалог смены ветви</Value>
         </TranslationItem>
         <TranslationItem Name="chkDontSHowHelpImages" Property="Text">
           <Source>Don't show help images</Source>
@@ -693,8 +693,7 @@ Value:  {2} = {3}</Source>
           <Value>Ошибка</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text" type="unfinished">
-          <Source>Failed to create pull request.
-</Source>
+          <Source>Failed to create pull request.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text" type="unfinished">
@@ -1218,8 +1217,7 @@ Do you want to open it?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strCouldNotFetchReposOfUser" Property="Text" type="unfinished">
-          <Source>Could not fetch repositories of user!
-</Source>
+          <Source>Could not fetch repositories of user!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
@@ -1227,8 +1225,7 @@ Do you want to open it?</Source>
           <Value>Ошибка</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToFork" Property="Text" type="unfinished">
-          <Source>Failed to fork:
-</Source>
+          <Source>Failed to fork:</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToGetRepos" Property="Text" type="unfinished">
@@ -1248,8 +1245,7 @@ Do you want to open it?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strSearchFailed" Property="Text" type="unfinished">
-          <Source>Search failed!
-</Source>
+          <Source>Search failed!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strSearching" Property="Text">
@@ -1682,7 +1678,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="_alwaysShowCheckoutDlgStr" Property="Text" type="unfinished">
           <Source>Always show checkout dialog</Source>
-          <Value>Всегда показывать диалог смены ветки</Value>
+          <Value>Всегда показывать диалог смены ветви</Value>
         </TranslationItem>
         <TranslationItem Name="_configureWorkingDirMenu" Property="Text">
           <Source>Configure this menu</Source>
@@ -3602,15 +3598,11 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Value />
         </TranslationItem>
         <TranslationItem Name="_sendMailResult" Property="Text" type="unfinished">
-          <Source>
-
-Send to:</Source>
+          <Source>Send to:</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_sendMailResultFailed" Property="Text" type="unfinished">
-          <Source>
-
-Failed to send mail.</Source>
+          <Source>Failed to send mail.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_twoRevisionsNeededCaption" Property="Text" type="unfinished">
@@ -5168,9 +5160,9 @@ Do you want to reset changes?</Source>
 This action cannot be made undone.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_areYouSureYouWantDeleteFilesCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_areYouSureYouWantDeleteFilesCaption" Property="Text">
           <Source>WARNING!</Source>
-          <Value />
+          <Value>Предупреждение!</Value>
         </TranslationItem>
         <TranslationItem Name="_binaryFileWarningCaption" Property="Text">
           <Source>Warning</Source>
@@ -5566,7 +5558,7 @@ Do you want to use this custom merge script?</Source>
           <Source>Show current branch only</Source>
           <Value>Показывать только текущую ветвь</Value>
         </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text" type="unfinished">
+        <TranslationItem Name="Ok" Property="Text">
           <Source>OK</Source>
           <Value>OK</Value>
         </TranslationItem>
@@ -5657,7 +5649,7 @@ Do you want to set the correct command now? If not Global and Local Settings wil
           <Source>Discard</Source>
           <Value>Сбросить</Value>
         </TranslationItem>
-        <TranslationItem Name="buttonOk" Property="Text" type="unfinished">
+        <TranslationItem Name="buttonOk" Property="Text">
           <Source>OK</Source>
           <Value>OK</Value>
         </TranslationItem>
@@ -5701,13 +5693,6 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
         <TranslationItem Name="label12" Property="Text" type="obsolete">
           <Source>Limit number of commits that will be loaded at startup.</Source>
           <Value>Ограничить количество загружаемых при запуске коммитов</Value>
-        </TranslationItem>
-        <TranslationItem Name="label18" Property="Text" type="obsolete">
-          <Source>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
-but requires the PuTTY authentication client to run  in the background.
-When OpenSSH is used, command line dialogs are shown!
-</Source>
-          <Value>OpenSSH - утилита командной строки. PuTTY удобнее для пользователей Windows, но требует, чтобы клиент аутентификации PuTTY был запущен в фоновом режиме. Когда используется OpenSSH, показываются диалоги с командной строкой!</Value>
         </TranslationItem>
         <TranslationItem Name="label22" Property="Text" type="obsolete">
           <Source>Dictionary for spelling checker.</Source>
@@ -5813,7 +5798,7 @@ When OpenSSH is used, command line dialogs are shown!
           <Source>Keep dialog open</Source>
           <Value>Оставить окно открытым</Value>
         </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text" type="unfinished">
+        <TranslationItem Name="Ok" Property="Text">
           <Source>OK</Source>
           <Value>OK</Value>
         </TranslationItem>
@@ -5942,17 +5927,17 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Branches:</Source>
           <Value>Ветви:</Value>
         </TranslationItem>
-        <TranslationItem Name="cbTags" Property="Text" type="unfinished">
+        <TranslationItem Name="cbTags" Property="Text">
           <Source>Tags:</Source>
-          <Value />
+          <Value>Метки:</Value>
         </TranslationItem>
         <TranslationItem Name="cbTrunk" Property="Text" type="unfinished">
           <Source>Trunk:</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox1" Property="Text">
           <Source>Advanced settings</Source>
-          <Value />
+          <Value>Расширенные настройки</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Svn repository to clone</Source>
@@ -5970,25 +5955,25 @@ Do you want to open the new repository "{0}" now?</Source>
           <Source>Authors file</Source>
           <Value>Файл авторов</Value>
         </TranslationItem>
-        <TranslationItem Name="label5" Property="Text" type="unfinished">
+        <TranslationItem Name="label5" Property="Text">
           <Source>From:</Source>
-          <Value />
+          <Value>От:</Value>
         </TranslationItem>
-        <TranslationItem Name="label6" Property="Text" type="unfinished">
+        <TranslationItem Name="label6" Property="Text">
           <Source>Username</Source>
-          <Value />
+          <Value>Имя пользователя</Value>
         </TranslationItem>
         <TranslationItem Name="okButton" Property="Text">
           <Source>Clone</Source>
           <Value>Клонировать</Value>
         </TranslationItem>
-        <TranslationItem Name="tbBranches" Property="Text" type="unfinished">
+        <TranslationItem Name="tbBranches" Property="Text">
           <Source>branches</Source>
-          <Value />
+          <Value>ветви</Value>
         </TranslationItem>
-        <TranslationItem Name="tbTags" Property="Text" type="unfinished">
+        <TranslationItem Name="tbTags" Property="Text">
           <Source>tags</Source>
-          <Value />
+          <Value>метки</Value>
         </TranslationItem>
         <TranslationItem Name="tbTrunk" Property="Text" type="unfinished">
           <Source>trunk</Source>
@@ -6269,7 +6254,7 @@ Do not forget to delete these tags when finished.</Source>
           <Source>Date</Source>
           <Value>Дата</Value>
         </TranslationItem>
-        <TranslationItem Name="columnHash" Property="HeaderText" type="unfinished">
+        <TranslationItem Name="columnHash" Property="HeaderText">
           <Source>Hash</Source>
           <Value>Хеш</Value>
         </TranslationItem>
@@ -6285,7 +6270,7 @@ Do not forget to delete these tags when finished.</Source>
           <Source>Double-click on a row for quick view</Source>
           <Value>Щёлкните дважды по строке, чтобы просмотреть объект</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>By default only unreferenced objects that are older than 
 2 weeks are removed when cleaning up the database. All
 other object are only deleted when you run "Remove all
@@ -6293,13 +6278,6 @@ dangling objects"
 
 Check commits you want to recover and press Recover button
 Context menu for additional operations</Source>
-          <OldSource>By default only unreferenced objects that are older than 
-2 weeks are removed when cleaning up the database. All
-other object are only deleted when you run "Remove all
-dangling objects"
-
-Check commits you want to recover and press Recover button
-Context menu for additional operations</OldSource>
           <Value>По умолчанию потерянные объекты хранятся две недели,
 прежде чем будут удалены при сжатии базы.
 Их можно принудительно удалить,
@@ -6374,7 +6352,7 @@ Context menu for additional operations</OldSource>
           <Source>Download Gerrit Change</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_editGitReview" Property="Text" type="unfinished">
+        <TranslationItem Name="_editGitReview" Property="Text">
           <Source>Edit .gitreview</Source>
           <Value>Редактировать .gitreview</Value>
         </TranslationItem>
@@ -6434,7 +6412,7 @@ Context menu for additional operations</OldSource>
     </TranslationCategory>
     <TranslationCategory Name="GitExtensionsSettingsGroup">
       <translationItems>
-        <TranslationItem Name="$this" Property="Title" type="unfinished">
+        <TranslationItem Name="$this" Property="Title">
           <Source>Git Extensions</Source>
           <Value>Git Extensions</Value>
         </TranslationItem>
@@ -6547,7 +6525,7 @@ Context menu for additional operations</OldSource>
     </TranslationCategory>
     <TranslationCategory Name="GitSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Git</Source>
           <Value>Git</Value>
         </TranslationItem>
@@ -6853,7 +6831,7 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="_middleOfPatchApplyCaption" Property="Text" type="unfinished">
           <Source>Patch apply</Source>
-          <Value />
+          <Value>Применить патч</Value>
         </TranslationItem>
         <TranslationItem Name="_middleOfRebase" Property="Text" type="unfinished">
           <Source>You are in the middle of a rebase, continue rebase?</Source>
@@ -6870,6 +6848,10 @@ local settings.
         <TranslationItem Name="_notValidGitSVNDirectory" Property="Text" type="unfinished">
           <Source>The current directory is not a valid git-svn repository.</Source>
           <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>Не удалось загрузить ключ. PuTTY не настроен должным образом.</Value>
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
@@ -7324,16 +7306,14 @@ the cascaded context menu:</Source>
           <Source>Path to pageant</Source>
           <Value>Путь к pageant</Value>
         </TranslationItem>
-        <TranslationItem Name="label18" Property="Text" type="unfinished">
+        <TranslationItem Name="label18" Property="Text">
           <Source>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
 but requires the PuTTY authentication client to run  in the background.
 When OpenSSH is used, command line dialogs are shown!
 </Source>
-          <OldSource>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
-but requires the PuTTY authentication client to run  in the background.
-When OpenSSH is used, command line dialogs are shown!
-</OldSource>
-          <Value>OpenSSH - утилита командной строки. PuTTY удобнее для пользователей Windows, но требует, чтобы клиент аутентификации PuTTY был запущен в фоновом режиме. Когда используется OpenSSH, показываются диалоги с командной строкой!</Value>
+          <Value>OpenSSH - утилита командной строки. PuTTY удобнее для пользователей Windows,
+но требует, чтобы клиент аутентификации PuTTY был запущен в фоновом режиме.
+Когда используется OpenSSH, показываются диалоги с командной строкой!</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7423,10 +7403,6 @@ When OpenSSH is used, command line dialogs are shown!
           <Source>{0} months ago</Source>
           <Value>{0} месяця(ев) назад</Value>
         </TranslationItem>
-        <TranslationItem Name="_pageantNotFound" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Не удалось загрузить ключ. PuTTY не настроен должным образом.</Value>
-        </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text">
           <Source>Parent(s)</Source>
           <Value>Предки</Value>
@@ -7454,6 +7430,10 @@ When OpenSSH is used, command line dialogs are shown!
         <TranslationItem Name="_yearsAgo" Property="Text">
           <Source>{0} years ago</Source>
           <Value>{0} года/лет назад</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>Не удалось загрузить ключ. PuTTY не настроен должным образом.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7492,8 +7472,7 @@ When OpenSSH is used, command line dialogs are shown!
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text" type="unfinished">
-          <Source>Could not load discussion!
-</Source>
+          <Source>Could not load discussion!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
@@ -7501,23 +7480,19 @@ When OpenSSH is used, command line dialogs are shown!
           <Value>Ошибка</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToClosePullRequest" Property="Text" type="unfinished">
-          <Source>Failed to close pull request!
-</Source>
+          <Source>Failed to close pull request!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToFetchPullData" Property="Text" type="unfinished">
-          <Source>Failed to fetch pull data!
-</Source>
+          <Source>Failed to fetch pull data!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiffData" Property="Text" type="unfinished">
-          <Source>Failed to load diff data!
-</Source>
+          <Source>Failed to load diff data!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiscussionItem" Property="Text" type="unfinished">
-          <Source>Failed to post discussion item!
-</Source>
+          <Source>Failed to post discussion item!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">

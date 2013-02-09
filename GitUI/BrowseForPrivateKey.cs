@@ -9,8 +9,6 @@ namespace GitUI
     /// </summary>
     public static class BrowseForPrivateKey
     {
-        private const string _putty = "PuTTY";
-
         /// <summary>
         /// Prompts the user to browse for a key, and attempts to load it. Returns the path to the key, if successful.
         /// </summary>
@@ -51,7 +49,7 @@ namespace GitUI
         {
             if (!File.Exists(Settings.Pageant))
             {
-                MessageBox.Show(parent, Strings.GetPAgeantNotFound(), _putty);
+                MessageBoxes.PAgentNotFound(parent);
                 return false;
             }
 
