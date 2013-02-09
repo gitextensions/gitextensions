@@ -174,7 +174,6 @@ namespace GitUI
             // flowLayoutPanel4
             // 
             this.flowLayoutPanel4.AutoSize = true;
-            this.tableLayoutPanel3.SetColumnSpan(this.flowLayoutPanel4, 2);
             this.flowLayoutPanel4.Controls.Add(this.buttonApply);
             this.flowLayoutPanel4.Controls.Add(this.buttonDiscard);
             this.flowLayoutPanel4.Controls.Add(this.buttonCancel);
