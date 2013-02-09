@@ -222,9 +222,9 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Repair</Source>
           <Value>Исправить</Value>
         </TranslationItem>
-        <TranslationItem Name="_adviceDiffToolConfiguration" Property="Text" type="unfinished">
+        <TranslationItem Name="_adviceDiffToolConfiguration" Property="Text">
           <Source>You should configure a diff tool to show file diff in external program (kdiff3 for example).</Source>
-          <Value />
+          <Value>Необходимо настроить инструмент сравнения для просмотра изменений файла во внешней программе (например, kdiff3).</Value>
         </TranslationItem>
         <TranslationItem Name="_cantRegisterShellExtension" Property="Text" type="unfinished">
           <Source>Could not register the shell extension because '{0}' could not be found.</Source>
@@ -250,9 +250,9 @@ This action will be performed without warning while checking out branch.</Source
           <Source>A username and an email address are configured.</Source>
           <Value>Имя пользователя и электронная почта настроены.</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitCanBeRun" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitCanBeRun" Property="Text">
           <Source>Git can be run using: {0}</Source>
-          <Value />
+          <Value>Git может быть запущен используя: {0}</Value>
         </TranslationItem>
         <TranslationItem Name="_gitCanBeRunCaption" Property="Text">
           <Source>Locate git</Source>
@@ -272,19 +272,19 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
         <TranslationItem Name="_kdiffAsDiffConfigured" Property="Text">
           <Source>KDiff3 is configured as difftool.</Source>
-          <Value>KDiff3 настроен как difftool.</Value>
+          <Value>KDiff3 настроен как инструмент сравнения.</Value>
         </TranslationItem>
         <TranslationItem Name="_kdiffAsDiffConfiguredButNotFound" Property="Text">
           <Source>KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.</Source>
-          <Value>KDiff3 настроен как difftool, но путь к kdiff.exe не указан.</Value>
+          <Value>KDiff3 настроен как инструмент сравнения, но путь к kdiff.exe не указан.</Value>
         </TranslationItem>
         <TranslationItem Name="_kdiffAsMergeConfigured" Property="Text">
           <Source>KDiff3 is configured as mergetool.</Source>
-          <Value>KDiff3 настроен как mergetool.</Value>
+          <Value>KDiff3 настроен как инструмент слияния.</Value>
         </TranslationItem>
         <TranslationItem Name="_kdiffAsMergeConfiguredButNotFound" Property="Text">
           <Source>KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.</Source>
-          <Value>KDiff3 настроен как mergetool, но путь к kdiff.exe не указан.</Value>
+          <Value>KDiff3 настроен как инструмент слияния, но путь к kdiff.exe не указан.</Value>
         </TranslationItem>
         <TranslationItem Name="_languageConfigured" Property="Text">
           <Source>The configured language is {0}.</Source>
@@ -332,13 +332,13 @@ Select no if you want to configure a different difftool yourself.</Source>
           <Source>Difftool</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_noEmailSet" Property="Text" type="unfinished">
+        <TranslationItem Name="_noEmailSet" Property="Text">
           <Source>You need to configure a username and an email address.</Source>
-          <Value />
+          <Value>Вам необходимо настроить имя пользователя и адрес электронной почты.</Value>
         </TranslationItem>
-        <TranslationItem Name="_noLanguageConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_noLanguageConfigured" Property="Text">
           <Source>There is no language configured for Git Extensions.</Source>
-          <Value />
+          <Value>Язык не настроен для Git Extensions.</Value>
         </TranslationItem>
         <TranslationItem Name="_noMergeToolConfigured" Property="Text" type="unfinished">
           <Source>There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?
@@ -349,9 +349,9 @@ Select no if you want to configure a different mergetool yourself.</Source>
           <Source>Mergetool</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_opensshUsed" Property="Text" type="unfinished">
+        <TranslationItem Name="_opensshUsed" Property="Text">
           <Source>Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)</Source>
-          <Value />
+          <Value>Будет использоваться SSH клиент по умолчанию, OpenSSH (окно с командной строкой будет появлять после pull, push и операции клонирования).</Value>
         </TranslationItem>
         <TranslationItem Name="_plinkputtyGenpageantNotFound" Property="Text" type="unfinished">
           <Source>PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.</Source>
@@ -3977,27 +3977,31 @@ defaultrebase=0</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Commit expression:</Source>
-          <Value>Хеш коммита:</Value>
+          <Value>Выражение:</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Commit expression examples:
 - complete commit hash: e. g.: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9
 - partial commit hash (if unique): e. g.: 8eab51fcb9c453
 - tag name
 - branch name</Source>
-          <Value />
+          <Value>Примеры выражений:
+- полный хеш коммита, например: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9
+- частичный хеш коммита (если уникален), например: 8eab51fcb9c453
+- имя метки
+- имя ветви</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text" type="unfinished">
+        <TranslationItem Name="label3" Property="Text">
           <Source>Go to tag:</Source>
-          <Value />
+          <Value>Перейти к метке:</Value>
         </TranslationItem>
-        <TranslationItem Name="label4" Property="Text" type="unfinished">
+        <TranslationItem Name="label4" Property="Text">
           <Source>Go to branch:</Source>
-          <Value />
+          <Value>Перейти к ветве:</Value>
         </TranslationItem>
-        <TranslationItem Name="linkGitRevParse" Property="Text" type="unfinished">
+        <TranslationItem Name="linkGitRevParse" Property="Text">
           <Source>More (git-rev-parse, section SPECIFYING REVISIONS)</Source>
-          <Value />
+          <Value>Смотрите (git-rev-parse, раздел SPECIFYING REVISIONS)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
