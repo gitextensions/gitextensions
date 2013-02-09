@@ -32,9 +32,6 @@ namespace GitUI
             new TranslationString("The branch you are about to push seems to be a new branch for the remote." +
                                   Environment.NewLine + "Are you sure you want to push this branch?");
 
-        private readonly TranslationString _cannotLoadPutty =
-            new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
-
         private readonly TranslationString _pushCaption = new TranslationString("Push");
 
         private readonly TranslationString _pushToCaption = new TranslationString("Push to {0}");
@@ -212,7 +209,7 @@ namespace GitUI
                 if (GitCommandHelpers.Plink())
                 {
                     if (!File.Exists(Settings.Pageant))
-                        MessageBox.Show(owner, _cannotLoadPutty.Text, PuttyText);
+                        MessageBox.Show(owner, Strings.GetPAgeantNotFound(), PuttyText);
                     else
                         Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
                 }
@@ -518,7 +515,7 @@ namespace GitUI
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
             if (!File.Exists(Settings.Pageant))
-                MessageBox.Show(this, _cannotLoadPutty.Text, PuttyText);
+                MessageBox.Show(this, Strings.GetPAgeantNotFound(), PuttyText);
             else
                 Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
         }

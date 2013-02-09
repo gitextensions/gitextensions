@@ -46,7 +46,7 @@ namespace GitUI
         private readonly TranslationString _hintUnresolvedMergeConflicts =
             new TranslationString("There are unresolved merge conflicts!");
 
-        private static readonly TranslationString _noBranchTitle =
+        private readonly TranslationString _noBranchTitle =
             new TranslationString("no branch");
 
         private readonly TranslationString _noSubmodulesPresent =
@@ -738,7 +738,7 @@ namespace GitUI
         /// <param name="workingDir">Path to repository.</param>
         /// <param name="isWorkingDirValid">If the given path contains valid repository.</param>
         /// <param name="branchName">Current branch name.</param>
-        private static string GenerateWindowTitle(string workingDir, bool isWorkingDirValid, string branchName)
+        private string GenerateWindowTitle(string workingDir, bool isWorkingDirValid, string branchName)
         {
 #if DEBUG
             const string defaultTitle = "Git Extensions -> DEBUG <-";
