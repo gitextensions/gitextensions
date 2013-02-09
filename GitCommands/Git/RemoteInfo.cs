@@ -37,6 +37,7 @@ namespace GitCommands.Git
         public string FetchUrl { get; private set; }
         /// <summary>Gets the URL(s) which this remote may be configured to push to.</summary>
         public IEnumerable<string> PushUrls { get; private set; }
+        /// <summary>(internal) Gets or sets the HEAD branch name (or null if indeterminate).</summary>
         internal string HeadBranchName { get; set; }
         /// <summary>Gets the HEAD branch, which is the default branch when the remote is cloned.</summary>
         public RemoteBranch HeadBranch { get; internal set; }
@@ -95,6 +96,18 @@ namespace GitCommands.Git
                 //   HEAD branch: left-panel/-main
                 HeadBranchName = headLine.Substring(headLine.IndexOf(":") + 1).Trim();
             }
+
+            foreach (string line in lines.Skip(i))
+            {
+                if (line.EndsWith(":", StringComparison.InvariantCulture))
+                {// ":" marks a headline
+                    break;
+                }
+                i += 1;
+            }
+
+            if (i >= lines.Count) { return; }// [8] >= 8 items (IndexOutOfRangeEx)
+
             #endregion Header
 
             #region Remote Branches
@@ -103,16 +116,14 @@ namespace GitCommands.Git
             //     ...
             //     translationApp               tracked
             //   Local branch configured for 'git pull':
-            i += 1;
-            if (i > lines.Count) { return; }// [8] > 8 items
 
-            if (lines[i].Contains("Remote branch"))
+            if (lines[i].StartsWith("Remote branch"))
             {
                 i += 1;// increment
                 _Branches = new ObservableCollection<RemoteBranch>(
                     lines
                         .Skip(i)
-                        .TakeWhile(line => !line.Contains("Local"))
+                        .TakeWhile(line => !line.StartsWith("Local"))
                         .Select(line => new RemoteBranch(line, this)));
                 NameToBranch = Branches.ToDictionary(branch => branch.Name);
                 _Branches.CollectionChanged += (o, e) =>
@@ -121,7 +132,7 @@ namespace GitCommands.Git
                     {
                         NameToBranch.Remove(((RemoteBranch)e.OldItems[0]).Name);
                     }
-                    
+
                 };
             }
             else
@@ -131,7 +142,8 @@ namespace GitCommands.Git
             }
 
             i += Branches.Count();
-            if (i > lines.Count) { return; }
+            if (i >= lines.Count) { return; }// [8] >= 8 items (IndexOutOfRangeEx)
+
             #endregion Remote Branches
 
             #region Pull
@@ -197,7 +209,7 @@ namespace GitCommands.Git
             }
 
             i += PullConfigs.Count();
-            if (i > lines.Count) { return; }
+            if (i >= lines.Count) { return; }// [8] >= 8 items (IndexOutOfRangeEx)
             #endregion Pull
 
             #region Push
@@ -274,6 +286,16 @@ namespace GitCommands.Git
                     if (status.StartsWith(state.Key))
                     {
                         Status = state.Value;
+                        if (Status == State.Stale)
+                        {
+                            // refs/remotes/berger/left-panel/remotes     stale (use 'git remote prune' to remove)
+                            // release/2.32                               tracked
+                            string staleName = string.Format("refs/remotes/{0}/", remote.Name);
+                            if (Name.StartsWith(staleName))
+                            {// stale remote branch starts with "refs/remotes/{0}/"
+                                Name = Name.Substring(staleName.Length);
+                            }
+                        }
                         break;
                     }
                 }
@@ -329,9 +351,9 @@ namespace GitCommands.Git
                 Unknown,
                 /// <summary>Branch is being tracked.</summary>
                 Tracked,
-                /// <summary>Has already been removed from the remote repository, but are still locally available in "remotes/{remote}".</summary>
+                /// <summary>Has already been removed from the remote repository, but is still locally available in 'refs/remotes/{remote}/'.</summary>
                 Stale,
-                /// <summary>Next fetch will store in remotes/{remote}.</summary>
+                /// <summary>Next fetch will store in 'remotes/{remote}'.</summary>
                 New,
             }
         }
