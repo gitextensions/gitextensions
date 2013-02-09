@@ -4,16 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
-using ResourceManager.Translation;
 
 namespace Gerrit
 {
     internal static class GerritUtil
     {
-        private const string PuttyText = "PuTTY";
-
         public static string RunGerritCommand([NotNull] IWin32Window owner, [NotNull] IGitModule aModule, [NotNull] string command, [NotNull] string remote, byte[] stdIn)
         {
             var fetchUrl = GetFetchUrl(aModule, remote);
@@ -101,7 +99,7 @@ namespace Gerrit
             if (GitCommandHelpers.Plink())
             {
                 if (!File.Exists(Settings.Pageant))
-                    MessageBox.Show(owner, Strings.GetPAgeantNotFound(), PuttyText);
+                    MessageBoxes.PAgentNotFound(owner);
                 else
                     aModule.StartPageantForRemote(remote);
             }

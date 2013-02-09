@@ -708,8 +708,7 @@ Valeur: {2} = {3}</Value>
           <Value>Erreur</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text" type="unfinished">
-          <Source>Failed to create pull request.
-</Source>
+          <Source>Failed to create pull request.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text" type="unfinished">
@@ -1221,8 +1220,7 @@ Do you want to open it?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strCouldNotFetchReposOfUser" Property="Text" type="unfinished">
-          <Source>Could not fetch repositories of user!
-</Source>
+          <Source>Could not fetch repositories of user!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
@@ -1230,8 +1228,7 @@ Do you want to open it?</Source>
           <Value>Erreur</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToFork" Property="Text" type="unfinished">
-          <Source>Failed to fork:
-</Source>
+          <Source>Failed to fork:</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToGetRepos" Property="Text" type="unfinished">
@@ -1251,8 +1248,7 @@ Do you want to open it?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strSearchFailed" Property="Text" type="unfinished">
-          <Source>Search failed!
-</Source>
+          <Source>Search failed!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strSearching" Property="Text" type="unfinished">
@@ -2753,12 +2749,11 @@ Do you want to continue?</Source>
           <Source>Merge conflicts</Source>
           <Value>Conflits de fusion</Value>
         </TranslationItem>
-        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text" type="unfinished">
+        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
           <Source>There are no files staged for this commit.
 Are you sure you want to commit?</Source>
-          <OldSource>There are no files staged for this commit.
-Are you sure you want to commit?</OldSource>
-          <Value>Il n'y a pas de fichiers indexés pour ce commit. Voulez-vous vraiment faire un commit ?</Value>
+          <Value>Il n'y a pas de fichiers indexés pour ce commit.
+Voulez-vous vraiment faire un commit ?</Value>
         </TranslationItem>
         <TranslationItem Name="_noFilesStagedAndNothingToCommit" Property="Text">
           <Source>There are no files staged for this commit.</Source>
@@ -3555,15 +3550,11 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Value />
         </TranslationItem>
         <TranslationItem Name="_sendMailResult" Property="Text" type="unfinished">
-          <Source>
-
-Send to:</Source>
+          <Source>Send to:</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_sendMailResultFailed" Property="Text" type="unfinished">
-          <Source>
-
-Failed to send mail.</Source>
+          <Source>Failed to send mail.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_twoRevisionsNeededCaption" Property="Text" type="unfinished">
@@ -3990,11 +3981,9 @@ defaultrebase=0</Source>
           <Source>Choose directory</Source>
           <Value>Choix dossier</Value>
         </TranslationItem>
-        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text" type="unfinished">
+        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
           <Source>Cannot initialize a new repository on a file.
 Please choose a directory.</Source>
-          <OldSource>Cannot initialize a new repository on a file.
-Please choose a directory.</OldSource>
           <Value>Impossible de créer un dépôt sur un fichier.
 Veuillez entrer un dossier.</Value>
         </TranslationItem>
@@ -6743,6 +6732,10 @@ local settings.
           <Source>The current directory is not a valid git-svn repository.</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>Impossible de charger la clef SSH. PuTTY n'est pas configuré correctement.</Value>
+        </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
           <Value />
@@ -7283,10 +7276,6 @@ mais nécessite que le client d'authentification tourne en arrière-plan.</Value
           <Source>{0} months ago</Source>
           <Value>Il y a {0} mois</Value>
         </TranslationItem>
-        <TranslationItem Name="_pageantNotFound" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Impossible de charger la clef SSH. PuTTY n'est pas configuré correctement.</Value>
-        </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text" type="unfinished">
           <Source>Parent(s)</Source>
           <Value />
@@ -7314,6 +7303,10 @@ mais nécessite que le client d'authentification tourne en arrière-plan.</Value
         <TranslationItem Name="_yearsAgo" Property="Text">
           <Source>{0} years ago</Source>
           <Value>Il y a {0} ans</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>Impossible de charger la clef SSH. PuTTY n'est pas configuré correctement.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7352,8 +7345,7 @@ mais nécessite que le client d'authentification tourne en arrière-plan.</Value
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text" type="unfinished">
-          <Source>Could not load discussion!
-</Source>
+          <Source>Could not load discussion!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
@@ -7361,23 +7353,19 @@ mais nécessite que le client d'authentification tourne en arrière-plan.</Value
           <Value>Erreur</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToClosePullRequest" Property="Text" type="unfinished">
-          <Source>Failed to close pull request!
-</Source>
+          <Source>Failed to close pull request!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToFetchPullData" Property="Text" type="unfinished">
-          <Source>Failed to fetch pull data!
-</Source>
+          <Source>Failed to fetch pull data!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiffData" Property="Text" type="unfinished">
-          <Source>Failed to load diff data!
-</Source>
+          <Source>Failed to load diff data!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiscussionItem" Property="Text" type="unfinished">
-          <Source>Failed to post discussion item!
-</Source>
+          <Source>Failed to post discussion item!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text" type="unfinished">
@@ -7404,14 +7392,6 @@ Details: Is {1} expected {2}</Source>
         <TranslationItem Name="columnHeader4" Property="Text" type="unfinished">
           <Source>Created</Source>
           <Value />
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="BrowseForPrivateKey">
-      <translationItems>
-        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Impossible de charger la clef SSH. PuTTY n'est pas configuré correctement.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

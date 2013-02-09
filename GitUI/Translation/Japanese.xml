@@ -11,13 +11,10 @@
           <Source>&amp;OK</Source>
           <Value>&amp;OK</Value>
         </TranslationItem>
-        <TranslationItem Name="textBoxDescription" Property="Text" type="unfinished">
+        <TranslationItem Name="textBoxDescription" Property="Text">
           <Source>Git extensions - Visual Studio and Shell Explorer Extensions for Git
 
 This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
-          <OldSource>Git extensions - Visual Studio and Shell Explorer Extensions for Git
-
-This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</OldSource>
           <Value>Git extensions - GitのためのVisual Studioとエクスプローラーの拡張
 
 This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.
@@ -627,14 +624,12 @@ Value:  {2} = {3}</Source>
           <Source>Don't ask to confirm to (use with caution)</Source>
           <Value>(警告を含む) 以下の確認をしない</Value>
         </TranslationItem>
-        <TranslationItem Name="chkAddTrackingRef" Property="Text" type="unfinished">
+        <TranslationItem Name="chkAddTrackingRef" Property="Text">
           <Source>Add a tracking reference for newly pushed branch</Source>
-          <OldSource>Add a tracking reference for newly pushed branch.</OldSource>
           <Value>新規ブランチをプッシュする時に追跡先として設定</Value>
         </TranslationItem>
-        <TranslationItem Name="chkAmmend" Property="Text" type="unfinished">
+        <TranslationItem Name="chkAmmend" Property="Text">
           <Source>Ammend last commit</Source>
-          <OldSource>Ammend last commit.</OldSource>
           <Value>コミットやり直し</Value>
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
@@ -642,9 +637,8 @@ Value:  {2} = {3}</Source>
           <OldSource>Apply automatically stashed changes.  Stash will be automatically poped after successful pull.</OldSource>
           <Value>一時退避した変更をプル成功後に自動で適用</Value>
         </TranslationItem>
-        <TranslationItem Name="chkPushNewBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="chkPushNewBranch" Property="Text">
           <Source>Push a new branch for the remote</Source>
-          <OldSource>Push a new branch for the remote.</OldSource>
           <Value>新規ブランチをリモートにプッシュ</Value>
         </TranslationItem>
       </translationItems>
@@ -708,8 +702,7 @@ Value:  {2} = {3}</Source>
           <Value>エラー</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text">
-          <Source>Failed to create pull request.
-</Source>
+          <Source>Failed to create pull request.</Source>
           <Value>Pull Requestを作成するのに失敗しました。</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">
@@ -1221,8 +1214,7 @@ Do you want to open it?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strCouldNotFetchReposOfUser" Property="Text" type="unfinished">
-          <Source>Could not fetch repositories of user!
-</Source>
+          <Source>Could not fetch repositories of user!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text" type="unfinished">
@@ -1230,8 +1222,7 @@ Do you want to open it?</Source>
           <Value>エラー</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToFork" Property="Text" type="unfinished">
-          <Source>Failed to fork:
-</Source>
+          <Source>Failed to fork:</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToGetRepos" Property="Text" type="unfinished">
@@ -1251,8 +1242,7 @@ Do you want to open it?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strSearchFailed" Property="Text" type="unfinished">
-          <Source>Search failed!
-</Source>
+          <Source>Search failed!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strSearching" Property="Text" type="unfinished">
@@ -2775,11 +2765,9 @@ Do you want to continue?</Source>
           <Source>Merge conflicts</Source>
           <Value>マージの競合</Value>
         </TranslationItem>
-        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text" type="unfinished">
+        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
           <Source>There are no files staged for this commit.
 Are you sure you want to commit?</Source>
-          <OldSource>There are no files staged for this commit.
-Are you sure you want to commit?</OldSource>
           <Value>ステージされたファイルがありません。本当にコミットしますか？</Value>
         </TranslationItem>
         <TranslationItem Name="_noFilesStagedAndNothingToCommit" Property="Text">
@@ -3273,17 +3261,12 @@ Deleting a branch can cause commits to be deleted too!</Source>
           <Source>Select branches</Source>
           <Value>ブランチの選択</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>You can only delete branches when they are fully merged in HEAD. 
 When you delete a branch the commits can get lost because nothing point to them.
 When you want to delete a not-fully merged branch, you can override
 this using `force delete´.
 </Source>
-          <OldSource>You can only delete branches when they are fully merged in HEAD. 
-When you delete a branch the commits can get lost because nothing point to them.
-When you want to delete a not-fully merged branch, you can override
-this using `force delete´.
-</OldSource>
           <Value>HEADとマージしたブランチのみ削除できます。
 ブランチを削除すると、辿れなくなったコミットは失われたように見えます。
 もしマージされていないブランチを削除したい場合、
@@ -3337,17 +3320,12 @@ this using `force delete´.
           <Source>Donate</Source>
           <Value>寄付</Value>
         </TranslationItem>
-        <TranslationItem Name="richTextBox1" Property="Text" type="unfinished">
+        <TranslationItem Name="richTextBox1" Property="Text">
           <Source>Donate
 
 You can help by making a financial contribution to the project. Donations will be used to cover the costs of hosting a website and to get the resources needed to keep the project running. 
 
 Click on the "Support this project" button to get more information about making a donation.</Source>
-          <OldSource>Donate
-
-You can help by making a financial contribution to the project. Donations will be used to cover the costs of hosting a website and to get the resources needed to keep the project running. 
-
-Click on the "Support this project" button to get more information about making a donation.</OldSource>
           <Value>寄付
 
 プロジェクトに貢献するために寄付をしてみませんか？受け取ったお金は、Webサイトのホスト費用をカバーしたり、プロジェクトの継続に必要なリソースの獲得に使用されます。
@@ -3522,11 +3500,9 @@ Do you want Git Extensions to help locate the correct folder?</Source>
           <Source>Environment</Source>
           <Value>環境</Value>
         </TranslationItem>
-        <TranslationItem Name="label51" Property="Text" type="unfinished">
+        <TranslationItem Name="label51" Property="Text">
           <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
 to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <OldSource>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </OldSource>
           <Value>グローバルな設定ファイルは、環境変数%HOME%の場所に配置されます。%HOME%が空の場合、
 %HOMEDRIVE%%HOMEPATH%に設定されます。問題があった時のみこの振る舞いを変更してください。</Value>
         </TranslationItem>
@@ -3599,15 +3575,11 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Value />
         </TranslationItem>
         <TranslationItem Name="_sendMailResult" Property="Text" type="unfinished">
-          <Source>
-
-Send to:</Source>
+          <Source>Send to:</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_sendMailResultFailed" Property="Text" type="unfinished">
-          <Source>
-
-Failed to send mail.</Source>
+          <Source>Failed to send mail.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_twoRevisionsNeededCaption" Property="Text" type="unfinished">
@@ -3779,7 +3751,7 @@ Check if file is accessible.</Source>
           <Source>Save changes?</Source>
           <Value>保存しますか？</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Edit the git attributes
 Define attributes per path
 
@@ -3796,22 +3768,6 @@ weirdchars.txt text
 For more information run
 command "git help gitattributes"
 </Source>
-          <OldSource>Edit the git attributes
-Define attributes per path
-
-Examples
-Mark all jpg files as binary:
-*.jpg binary
-
-Mark sln files as binary:
-*.sln binary
-
-Mark single file as text:
-weirdchars.txt text
-
-For more information run
-command "git help gitattributes"
-</OldSource>
           <Value>git attributesの編集
 パスごとに属性を定義します。
 
@@ -3876,7 +3832,7 @@ Check if file is accessible.</Source>
           <Source>Save changes?</Source>
           <Value>保存しますか？</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Specify filepatterns you want git to ignore.
 
 Example:
@@ -3901,30 +3857,6 @@ Thumbs.db
 obj/
 [Rr]elease*/
 _ReSharper*/</Source>
-          <OldSource>Specify filepatterns you want git to ignore.
-
-Example:
-#ignore thumbnails created by windows
-Thumbs.db
-#Ignore files build by Visual Studio
-*.user
-*.aps
-*.pch
-*.vspscc
-*_i.c
-*_p.c
-*.ncb
-*.suo
-*.bak
-*.cache
-*.ilk
-*.log
-[Bb]in
-[Dd]ebug*/
-*.sbr
-obj/
-[Rr]elease*/
-_ReSharper*/</OldSource>
           <Value>gitに無視させいファイルのパターンを指定します。
 
 例:
@@ -4121,11 +4053,9 @@ defaultrebase=0</Source>
           <Source>Choose directory</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text" type="unfinished">
+        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
           <Source>Cannot initialize a new repository on a file.
 Please choose a directory.</Source>
-          <OldSource>Cannot initialize a new repository on a file.
-Please choose a directory.</OldSource>
           <Value>ファイルにリポジトリを作成することはできません。
 ディレクトリを選択してください。</Value>
         </TranslationItem>
@@ -4197,10 +4127,7 @@ This file is meant to correct usernames.
 
 Example:
 Henk Westhuis &lt;Henk@.(none)&gt;
-Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
-
-For more information run
-command "git help shortlog"</OldSource>
+Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</OldSource>
           <Value>mailmapを編集します。
 このファイルはユーザ名を訂正するためのものです。
 
@@ -5757,24 +5684,9 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
 読み込まれなかったコミットは必要に応じて読み込まれます。
 低く設定すると早く起動しますが、スクロールは低速になります。</Value>
         </TranslationItem>
-        <TranslationItem Name="label18" Property="Text" type="obsolete">
-          <Source>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
-but requires the PuTTY authentication client to run  in the background.
-When OpenSSH is used, command line dialogs are shown!
-</Source>
-          <Value>OpenSSHはコマンドラインツールです。 PuTTYはWindowsユーザにとって使いやすいですが、
-バックグラウンドでPuTTY認証クライアントの実行が必要です。
-もしOpenSSHを使う場合、コマンドラインダイアログが表示されます！</Value>
-        </TranslationItem>
         <TranslationItem Name="label22" Property="Text" type="obsolete">
           <Source>Dictionary for spelling checker.</Source>
           <Value>スペルチェックのための辞書</Value>
-        </TranslationItem>
-        <TranslationItem Name="label51" Property="Text" type="obsolete">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>グローバルな設定ファイルは、環境変数%HOME%の場所に配置されます。%HOME%が空の場合、
-%HOMEDRIVE%%HOMEPATH%に設定されます。問題があった時のみこの振る舞いを変更してください。</Value>
         </TranslationItem>
         <TranslationItem Name="tpGitExtensions" Property="Text" type="obsolete">
           <Source>Git extensions</Source>
@@ -6349,7 +6261,7 @@ Do not forget to delete these tags when finished.</Source>
           <Source>Double-click on a row for quick view</Source>
           <Value>SHA1を含む行をダブルクリックすると、オブジェクトを表示します</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>By default only unreferenced objects that are older than 
 2 weeks are removed when cleaning up the database. All
 other object are only deleted when you run "Remove all
@@ -6357,13 +6269,6 @@ dangling objects"
 
 Check commits you want to recover and press Recover button
 Context menu for additional operations</Source>
-          <OldSource>By default only unreferenced objects that are older than 
-2 weeks are removed when cleaning up the database. All
-other object are only deleted when you run "Remove all
-dangling objects"
-
-Check commits you want to recover and press Recover button
-Context menu for additional operations</OldSource>
           <Value>デフォルトでは2週間以上前の到達不能オブジェクトのみが削除
 されます。他のオブジェクトは「遊離オブジェクトをすべて削除」を実行したとき
 のみ削除されます。
@@ -6657,11 +6562,9 @@ Context menu for additional operations</OldSource>
           <Source>Git Extensions can use msysgit or cygwin to access git repositories. Set the correct paths below.</Source>
           <Value>Git ExtensionsはGitのリポジトリへのアクセスにmsysgitかcygwinが使用可能です。正しいパスを設定してください。</Value>
         </TranslationItem>
-        <TranslationItem Name="label51" Property="Text" type="unfinished">
+        <TranslationItem Name="label51" Property="Text">
           <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
 to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <OldSource>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </OldSource>
           <Value>グローバルな設定ファイルは、環境変数%HOME%の場所に配置されます。%HOME%が空の場合、
 %HOMEDRIVE%%HOMEPATH%に設定されます。問題があった時のみこの振る舞いを変更してください。</Value>
         </TranslationItem>
@@ -6937,6 +6840,10 @@ local settings.</Value>
         <TranslationItem Name="_notValidGitSVNDirectory" Property="Text">
           <Source>The current directory is not a valid git-svn repository.</Source>
           <Value>現在のディレクトリは有効なgit-svnリポジトリではありません。</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>SSH鍵が読み込めません。PuTTYが正しく設定されていません。</Value>
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
@@ -7389,15 +7296,11 @@ the cascaded context menu:</Source>
           <Source>Path to pageant</Source>
           <Value>pageantのパス</Value>
         </TranslationItem>
-        <TranslationItem Name="label18" Property="Text" type="unfinished">
+        <TranslationItem Name="label18" Property="Text">
           <Source>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
 but requires the PuTTY authentication client to run  in the background.
 When OpenSSH is used, command line dialogs are shown!
 </Source>
-          <OldSource>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
-but requires the PuTTY authentication client to run  in the background.
-When OpenSSH is used, command line dialogs are shown!
-</OldSource>
           <Value>OpenSSHはコマンドラインツールです。 PuTTYはWindowsユーザにとって使いやすいですが、
 バックグラウンドでPuTTY認証クライアントの実行が必要です。
 もしOpenSSHを使う場合、コマンドラインダイアログが表示されます！</Value>
@@ -7490,10 +7393,6 @@ When OpenSSH is used, command line dialogs are shown!
           <Source>{0} months ago</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_pageantNotFound" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>SSH鍵が読み込めません。PuTTYが正しく設定されていません。</Value>
-        </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text">
           <Source>Parent(s)</Source>
           <Value>親コミット</Value>
@@ -7521,6 +7420,10 @@ When OpenSSH is used, command line dialogs are shown!
         <TranslationItem Name="_yearsAgo" Property="Text" type="unfinished">
           <Source>{0} years ago</Source>
           <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>SSH鍵が読み込めません。PuTTYが正しく設定されていません。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7559,8 +7462,7 @@ When OpenSSH is used, command line dialogs are shown!
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text" type="unfinished">
-          <Source>Could not load discussion!
-</Source>
+          <Source>Could not load discussion!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text" type="unfinished">
@@ -7568,23 +7470,19 @@ When OpenSSH is used, command line dialogs are shown!
           <Value>エラー</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToClosePullRequest" Property="Text" type="unfinished">
-          <Source>Failed to close pull request!
-</Source>
+          <Source>Failed to close pull request!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToFetchPullData" Property="Text" type="unfinished">
-          <Source>Failed to fetch pull data!
-</Source>
+          <Source>Failed to fetch pull data!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiffData" Property="Text" type="unfinished">
-          <Source>Failed to load diff data!
-</Source>
+          <Source>Failed to load diff data!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiscussionItem" Property="Text" type="unfinished">
-          <Source>Failed to post discussion item!
-</Source>
+          <Source>Failed to post discussion item!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text" type="unfinished">
@@ -7611,14 +7509,6 @@ Details: Is {1} expected {2}</Source>
         <TranslationItem Name="columnHeader4" Property="Text">
           <Source>Created</Source>
           <Value>作成日時</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="BrowseForPrivateKey">
-      <translationItems>
-        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>SSH鍵が読み込めません。PuTTYが正しく設定されていません。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

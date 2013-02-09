@@ -16,7 +16,6 @@ namespace GitUI
 {
     public partial class FormPush : GitModuleForm
     {
-        private const string PuttyText = "PuTTY";
         private const string HeadText = "HEAD";
         private string _currentBranch;
         private string _currentBranchRemote;
@@ -209,7 +208,7 @@ namespace GitUI
                 if (GitCommandHelpers.Plink())
                 {
                     if (!File.Exists(Settings.Pageant))
-                        MessageBox.Show(owner, Strings.GetPAgeantNotFound(), PuttyText);
+                        MessageBoxes.PAgentNotFound(owner);
                     else
                         Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
                 }
@@ -515,7 +514,7 @@ namespace GitUI
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
             if (!File.Exists(Settings.Pageant))
-                MessageBox.Show(this, Strings.GetPAgeantNotFound(), PuttyText);
+                MessageBoxes.PAgentNotFound(this);
             else
                 Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
         }
