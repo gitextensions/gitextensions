@@ -11,13 +11,10 @@
           <Source>&amp;OK</Source>
           <Value>&amp;OK</Value>
         </TranslationItem>
-        <TranslationItem Name="textBoxDescription" Property="Text" type="unfinished">
+        <TranslationItem Name="textBoxDescription" Property="Text">
           <Source>Git extensions - Visual Studio and Shell Explorer Extensions for Git
 
 This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</Source>
-          <OldSource>Git extensions - Visual Studio and Shell Explorer Extensions for Git
-
-This program is destributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</OldSource>
           <Value>Git extensions - Visual Studio und Shell Explorer Erweiterung für Git
 
 Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, daß es Ihnen von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License.</Value>
@@ -702,8 +699,7 @@ Value:  {2} = {3}</Source>
           <Value>Fehler</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text">
-          <Source>Failed to create pull request.
-</Source>
+          <Source>Failed to create pull request.</Source>
           <Value>Fehler beim Erzeugen des Pull Requests.</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">
@@ -786,13 +782,10 @@ Value:  {2} = {3}</Source>
           <Source>Develop</Source>
           <Value>Weiterentwickeln</Value>
         </TranslationItem>
-        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text" type="unfinished">
+        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text">
           <Source>The selected item is not a valid git repository.
 
 Do you want to abort and remove it from the recent repositories list?</Source>
-          <OldSource>The selected item is not a valid git repository.
-
-Do you want to abort and remove it from the recent repositories list?</OldSource>
           <Value>Das ausgewählte Objekt ist kein gültiges Git Repository.
 
 Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys streichen?</Value>
@@ -1232,8 +1225,7 @@ Do you want to open it?</Source>
           <Value>Remote hinzufügen fehlgeschlagen</Value>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotFetchReposOfUser" Property="Text">
-          <Source>Could not fetch repositories of user!
-</Source>
+          <Source>Could not fetch repositories of user!</Source>
           <Value>Fetch der Repositorys des Benutzers fehlgeschlagen!</Value>
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
@@ -1241,8 +1233,7 @@ Do you want to open it?</Source>
           <Value>Fehler</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToFork" Property="Text">
-          <Source>Failed to fork:
-</Source>
+          <Source>Failed to fork:</Source>
           <Value>Forken fehlgeschlagen:</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToGetRepos" Property="Text">
@@ -1262,13 +1253,12 @@ Do you want to open it?</Source>
           <Value>Keine Homepage angegeben</Value>
         </TranslationItem>
         <TranslationItem Name="_strSearchFailed" Property="Text">
-          <Source>Search failed!
-</Source>
+          <Source>Search failed!</Source>
           <Value>Suche fehlgeschlagen!</Value>
         </TranslationItem>
         <TranslationItem Name="_strSearching" Property="Text">
           <Source> : SEARCHING : </Source>
-          <Value>: SUCHE :</Value>
+          <Value> : SUCHE : </Value>
         </TranslationItem>
         <TranslationItem Name="_strSelectOneItem" Property="Text">
           <Source>You must select exactly one item</Source>
@@ -1924,13 +1914,10 @@ auswählen</Value>
           <Source>Diff contains (SLOW)</Source>
           <Value>Vergleichsinhalt (Langsam)</Value>
         </TranslationItem>
-        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text" type="unfinished">
+        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text">
           <Source>The selected item is not a valid git repository.
 
 Do you want to abort and remove it from the recent repositories list?</Source>
-          <OldSource>The selected item is not a valid git repository.
-
-Do you want to abort and remove it from the recent repositories list?</OldSource>
           <Value>Das ausgewählte Objekt ist kein gültiges Git Repository.
 
 Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys streichen?</Value>
@@ -2371,11 +2358,9 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
           <Source>Create local branch with the name:</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_customBranchNameIsEmpty" Property="Text" type="unfinished">
+        <TranslationItem Name="_customBranchNameIsEmpty" Property="Text">
           <Source>Custom branch name is empty.
 Enter valid branch name or select predefined value.</Source>
-          <OldSource>Custom branch name is empty.
-Enter valid branch name or select predefined value.</OldSource>
           <Value>Auto-Stash</Value>
         </TranslationItem>
         <TranslationItem Name="_customBranchNameIsNotValid" Property="Text" type="unfinished">
@@ -2822,11 +2807,9 @@ Do you want to continue?</Source>
           <Source>Merge conflicts</Source>
           <Value>Konflikte mergen</Value>
         </TranslationItem>
-        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text" type="unfinished">
+        <TranslationItem Name="_noFilesStagedAndConfirmAnEmptyMergeCommit" Property="Text">
           <Source>There are no files staged for this commit.
 Are you sure you want to commit?</Source>
-          <OldSource>There are no files staged for this commit.
-Are you sure you want to commit?</OldSource>
           <Value>Es gibt keine gestagten Dateien für diesen Commit. 
 Wollen sie wirklich commiten?</Value>
         </TranslationItem>
@@ -3331,17 +3314,12 @@ Ein Branch zu löschen kann zu gelöschten Commits führen!</Value>
           <Source>Select branches</Source>
           <Value>Branch auswählen</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>You can only delete branches when they are fully merged in HEAD. 
 When you delete a branch the commits can get lost because nothing point to them.
 When you want to delete a not-fully merged branch, you can override
 this using `force delete´.
 </Source>
-          <OldSource>You can only delete branches when they are fully merged in HEAD. 
-When you delete a branch the commits can get lost because nothing point to them.
-When you want to delete a not-fully merged branch, you can override
-this using `force delete´.
-</OldSource>
           <Value>Sie können ein Branch nur löschen wenn er komplett mit HEAD gemergt ist. 
 Wenn Sie einen Branch löschen, können Commits verlorgen gehen, weil nichts 
 mehr auf diese zeigt. Wenn Sie einen nicht vollständig gemergten Branch 
@@ -3400,17 +3378,12 @@ löschen wollen, können Sie dies mit der Option 'Löschen erzwingen' erreichen.
           <Source>Donate</Source>
           <Value>Spenden</Value>
         </TranslationItem>
-        <TranslationItem Name="richTextBox1" Property="Text" type="unfinished">
+        <TranslationItem Name="richTextBox1" Property="Text">
           <Source>Donate
 
 You can help by making a financial contribution to the project. Donations will be used to cover the costs of hosting a website and to get the resources needed to keep the project running. 
 
 Click on the "Support this project" button to get more information about making a donation.</Source>
-          <OldSource>Donate
-
-You can help by making a financial contribution to the project. Donations will be used to cover the costs of hosting a website and to get the resources needed to keep the project running. 
-
-Click on the "Support this project" button to get more information about making a donation.</OldSource>
           <Value>Spenden
 
 Sie können das Projekt unterstützen indem Sie einen finanziellen Beitrag dazu leisten. Ihre Zuwendung hilft die laufenden Kosten für die Homepage zu decken und wird in Resourcen investiert, die helfen das Projekt am Leben zu erhalten und weiterzuentwickeln.
@@ -3589,11 +3562,9 @@ Wollen Sie dass Git Extensions Ihnen hilft das korrekte Verzeichnis zu finden?</
           <Source>Environment</Source>
           <Value>Umgebung</Value>
         </TranslationItem>
-        <TranslationItem Name="label51" Property="Text" type="unfinished">
+        <TranslationItem Name="label51" Property="Text">
           <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
 to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <OldSource>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </OldSource>
           <Value>Die globale Git Konfigurationsdatei wird gespeichert in dem unter der Umgebungsvariable %HOME% angegebenen Verzeichnis.
 Standardmäßig wird %HOME% zu %HOMEDRIVE%%HOMEPATH% gesetzt, falls diese leer ist. Ändern Sie die Standardeinstellung
 nur, wenn Sie mit dieser Probleme auftreten.</Value>
@@ -3666,22 +3637,12 @@ nur, wenn Sie mit dieser Probleme auftreten.</Value>
           <Source>Patch result</Source>
           <Value>Patch Resultat</Value>
         </TranslationItem>
-        <TranslationItem Name="_sendMailResult" Property="Text" type="unfinished">
-          <Source>
-
-Send to:</Source>
-          <OldSource>
-
-Send to:</OldSource>
+        <TranslationItem Name="_sendMailResult" Property="Text">
+          <Source>Send to:</Source>
           <Value>Senden an:</Value>
         </TranslationItem>
-        <TranslationItem Name="_sendMailResultFailed" Property="Text" type="unfinished">
-          <Source>
-
-Failed to send mail.</Source>
-          <OldSource>
-
-Failed to send mail.</OldSource>
+        <TranslationItem Name="_sendMailResultFailed" Property="Text">
+          <Source>Failed to send mail.</Source>
           <Value>E-Mail senden fehlgeschlagen.</Value>
         </TranslationItem>
         <TranslationItem Name="_twoRevisionsNeededCaption" Property="Text">
@@ -3883,9 +3844,6 @@ Mark sln files as binary:
 
 Mark single file as text:
 weirdchars.txt text
-
-For more information run
-command "git help gitattributes"
 </OldSource>
           <Value>Git Attribute bearbeiten
 Attribute pro Pfad definieren
@@ -3953,7 +3911,7 @@ Bitte prüfen Sie, ob auf die Datei zugegriffen werden kann.</Value>
           <Source>Save changes?</Source>
           <Value>Änderungen speichern?</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Specify filepatterns you want git to ignore.
 
 Example:
@@ -3978,30 +3936,6 @@ Thumbs.db
 obj/
 [Rr]elease*/
 _ReSharper*/</Source>
-          <OldSource>Specify filepatterns you want git to ignore.
-
-Example:
-#ignore thumbnails created by windows
-Thumbs.db
-#Ignore files build by Visual Studio
-*.user
-*.aps
-*.pch
-*.vspscc
-*_i.c
-*_p.c
-*.ncb
-*.suo
-*.bak
-*.cache
-*.ilk
-*.log
-[Bb]in
-[Dd]ebug*/
-*.sbr
-obj/
-[Rr]elease*/
-_ReSharper*/</OldSource>
           <Value>Geben Sie Dateimuster an,
 die Git ignorieren soll.
 
@@ -4195,12 +4129,11 @@ defaultrebase=0</Source>
           <Source>Choose directory</Source>
           <Value>Verzeichnis wählen</Value>
         </TranslationItem>
-        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text" type="unfinished">
+        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
           <Source>Cannot initialize a new repository on a file.
 Please choose a directory.</Source>
-          <OldSource>Cannot initialize a new repository on a file.
-Please choose a directory.</OldSource>
-          <Value>Bitte geben Sie ein Verzeichnis und keine Datei an. Ein Repository kann nicht in einer Datei initialisiert werden.</Value>
+          <Value>Bitte geben Sie ein Verzeichnis und keine Datei an.
+Ein Repository kann nicht in einer Datei initialisiert werden.</Value>
         </TranslationItem>
         <TranslationItem Name="_chooseDirectoryNotFileCaption" Property="Text">
           <Source>Error</Source>
@@ -4271,10 +4204,7 @@ This file is meant to correct usernames.
 
 Example:
 Henk Westhuis &lt;Henk@.(none)&gt;
-Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
-
-For more information run
-command "git help shortlog"</OldSource>
+Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</OldSource>
           <Value>Mailmap bearbeiten.
 Diese Datei ist für korrekte Benutzernamen vorgesehen.
 
@@ -5475,11 +5405,9 @@ Ist der Mergekonflikt behoben?</Value>
           <Source>deleted</Source>
           <Value>Gelöscht</Value>
         </TranslationItem>
-        <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text" type="unfinished">
+        <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text">
           <Source>File ({0}) appears to be a binairy file.
 Choose to keep the local({1}), remote({2}) or base file.</Source>
-          <OldSource>File ({0}) appears to be a binairy file.
-Choose to keep the local({1}), remote({2}) or base file.</OldSource>
           <Value>Datei ({0}) scheint eine Binärdatei zu sein.
 Wählen Sie, ob Sie die lokale ({1}), die Remote-({2}) oder die Basis-Datei behalten möchten.</Value>
         </TranslationItem>
@@ -5491,15 +5419,11 @@ Wählen Sie, ob Sie die lokale ({1}), die Remote-({2}) oder die Basis-Datei beha
           <Source>A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.</Source>
           <Value>Eine Datei mit dem selben Namen wurde lokal ({0}) und beim Remote ({1}) erzeugt. Wählen Sie die Datei aus, die sie behalten möchten oder mergen Sie die Dateien.</Value>
         </TranslationItem>
-        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text" type="unfinished">
+        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text">
           <Source>File {0} does not have a base revision.
 A file with the same name has been created locally({1}) and remotely({2}) causing this conflict.
 
 Choose the file you want to keep, merge the files or delete the file?</Source>
-          <OldSource>File {0} does not have a base revision.
-A file with the same name has been created locally({1}) and remotely({2}) causing this conflict.
-
-Choose the file you want to keep, merge the files or delete the file?</OldSource>
           <Value>Die Datei {0} hat keine Basis-Revision.
 Der Konflikt tritt auf, weil eine Datei mit dem selben Namen lokal ({1}) und auch beim Remote ({2}) erzeugt wurde.
 
@@ -5509,15 +5433,11 @@ Bitte wählen Sie die Datei aus, die sie behalten möchten, mergen Sie die Datei
           <Source>The file has been deleted locally({0}) and modified remotely({1}). Choose to delete the file or keep the modified version.</Source>
           <Value>Die Datei wurde lokal ({0}) gelöscht und beim Remote ({1}) verändert. Bitte löschen Sie die Datei oder behalten die geänderte Version.</Value>
         </TranslationItem>
-        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text" type="unfinished">
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text">
           <Source>File {0} does not have a local revision.
 The file has been deleted locally({1}) but modified remotely({2}).
 
 Choose to delete the file or keep the modified version.</Source>
-          <OldSource>File {0} does not have a local revision.
-The file has been deleted locally({1}) but modified remotely({2}).
-
-Choose to delete the file or keep the modified version.</OldSource>
           <Value>Die Datei {0} besitzt keine lokale Revision.
 Die Datei wurde lokal ({1}) gelöscht, aber beim Remote ({2}) geändert.
 
@@ -5537,15 +5457,11 @@ Wollen Sie die Datei wirklich mit {0} öffnen?</Value>
           <Source>The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.</Source>
           <Value>Die Datei wurde lokal ({0}) geändert und beim Remote ({1}) gelöscht. Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möchten.</Value>
         </TranslationItem>
-        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text" type="unfinished">
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text">
           <Source>File {0} does not have a remote revision.
 The file has been modified locally({1}) but deleted remotely({2}).
 
 Choose to delete the file or keep the modified version.</Source>
-          <OldSource>File {0} does not have a remote revision.
-The file has been modified locally({1}) but deleted remotely({2}).
-
-Choose to delete the file or keep the modified version.</OldSource>
           <Value>Die Datei {0} hat beim Remote keine Revision.
 Die Datei wurde lokal ({1}) bearbeitet, aber beim Remote ({2}) gelöscht.
 
@@ -5619,12 +5535,11 @@ Der Merge-Konflikt wird als nicht-gelöst markiert. Bitte versuchen Sie es noch 
           <Source>no base</Source>
           <Value>Keine Basis</Value>
         </TranslationItem>
-        <TranslationItem Name="noBaseRevision" Property="Text" type="unfinished">
+        <TranslationItem Name="noBaseRevision" Property="Text">
           <Source>There is no base revision for {0}.
 Fall back to 2-way merge?</Source>
-          <OldSource>There is no base revision for {0}.
-Fall back to 2-way merge?</OldSource>
-          <Value>Es gibt keine Basis-Version für {0}. Auf einen 2-Wege-Merge wechseln?</Value>
+          <Value>Es gibt keine Basis-Version für {0}.
+Auf einen 2-Wege-Merge wechseln?</Value>
         </TranslationItem>
         <TranslationItem Name="noMergeTool" Property="Text">
           <Source>There is no mergetool configured. Please go to settings and set a mergetool!</Source>
@@ -5686,11 +5601,9 @@ Wollen Sie dieses Skript verwenden?</Value>
           <Source>Reset changes</Source>
           <Value>Änderungen zurücksetzen</Value>
         </TranslationItem>
-        <TranslationItem Name="_undoChangesIn" Property="Text" type="unfinished">
+        <TranslationItem Name="_undoChangesIn" Property="Text">
           <Source>Undo changes in:
 {0}?</Source>
-          <OldSource>Undo changes in:
-{0}?</OldSource>
           <Value>Änderungen zurücknehmen in: 
 {0}?</Value>
         </TranslationItem>
@@ -5896,25 +5809,9 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
           <Source>Limit number of commits that will be loaded at startup.</Source>
           <Value>Anzahl der Commits, die beim Start geladen werden, beschränken auf</Value>
         </TranslationItem>
-        <TranslationItem Name="label18" Property="Text" type="obsolete">
-          <Source>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
-but requires the PuTTY authentication client to run  in the background.
-When OpenSSH is used, command line dialogs are shown!
-</Source>
-          <Value>OpenSSH ist ein Kommandozeilenprogramm. PuTTY ist benutzerfreundlicher für Windows-Benutzer, 
-setzt aber voraus das PuTTY Pageant im Hintergrund läuft.
-Wenn Sie OpenSSH verwenden, werden Kommandozeilendialoge angezeigt!</Value>
-        </TranslationItem>
         <TranslationItem Name="label22" Property="Text" type="obsolete">
           <Source>Dictionary for spelling checker.</Source>
           <Value>Wörterbuch für Rechtschreibprüfung</Value>
-        </TranslationItem>
-        <TranslationItem Name="label51" Property="Text" type="obsolete">
-          <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>Die globale Konfigurationsdatei ist im Verzeichnis %HOME% gespeichert. Standardmäßig wird %HOME% auf 
-%HOMEDRIVE%%HOMEPATH% gesetzt, wenn diese leer ist. Ändern Sie das Standardverhalten nur, wenn Probleme 
-bei der Benutzung auftreten.</Value>
         </TranslationItem>
         <TranslationItem Name="tpGitExtensions" Property="Text" type="obsolete">
           <Source>Git extensions</Source>
@@ -6048,13 +5945,10 @@ Wollen Sie den Fingerprint dieses Hosts registrieren und den Prozess neu starten
           <Source>Host Fingerprint not registered</Source>
           <Value>Fingerprint von Host nicht registriert</Value>
         </TranslationItem>
-        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text" type="unfinished">
+        <TranslationItem Name="_serverHotkeyNotCachedText" Property="Text">
           <Source>The server's host key is not cached in the registry.
 
 Do you want to trust this host key and then try again?</Source>
-          <OldSource>The server's host key is not cached in the registry.
-
-Do you want to trust this host key and then try again?</OldSource>
           <Value>Der Host-Key des Servers ist nicht in der Registry vorhanden.
 
 Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</Value>
@@ -6509,7 +6403,7 @@ Vergessen Sie nicht diese Tags zu löschen, wenn Sie fertig sind.</Value>
           <Source>Double-click on a row for quick view</Source>
           <Value>Doppelklick auf eine Zeile mit SHA1-Hash zeigt das Objekt an.</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>By default only unreferenced objects that are older than 
 2 weeks are removed when cleaning up the database. All
 other object are only deleted when you run "Remove all
@@ -6517,13 +6411,6 @@ dangling objects"
 
 Check commits you want to recover and press Recover button
 Context menu for additional operations</Source>
-          <OldSource>By default only unreferenced objects that are older than 
-2 weeks are removed when cleaning up the database. All
-other object are only deleted when you run "Remove all
-dangling objects"
-
-Check commits you want to recover and press Recover button
-Context menu for additional operations</OldSource>
           <Value>Standardmäßig werden alle nicht referenzierten Objekte
 aus der Datenbank entfernt, die älter als 2 Wochen sind.
 Alle anderen Objekte werden nur gelöscht, wenn Sie
@@ -6819,11 +6706,9 @@ Mehr Optionen im Kontextmenü</Value>
           <Source>Git Extensions can use msysgit or cygwin to access git repositories. Set the correct paths below.</Source>
           <Value>Git Extensions kann msysgit oder cygwin verwenden um auf Git Repositorys zuzugreifen. Setzen Sie hier die korrekten Pfade.</Value>
         </TranslationItem>
-        <TranslationItem Name="label51" Property="Text" type="unfinished">
+        <TranslationItem Name="label51" Property="Text">
           <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
 to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <OldSource>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </OldSource>
           <Value>Die globale Konfigurationsdatei ist im Verzeichnis %HOME% gespeichert. Standardmäßig wird %HOME% auf 
 %HOMEDRIVE%%HOMEPATH% gesetzt, wenn diese leer ist. Ändern Sie das Standardverhalten nur, wenn Probleme 
 bei der Benutzung auftreten.</Value>
@@ -7105,6 +6990,10 @@ können.</Value>
         <TranslationItem Name="_notValidGitSVNDirectory" Property="Text" type="unfinished">
           <Source>The current directory is not a valid git-svn repository.</Source>
           <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>Laden des SSH-Schlüssels fehlgeschlagen. PuTTY ist nicht korrekt konfiguriert.</Value>
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
@@ -7561,15 +7450,11 @@ the cascaded context menu:</Source>
           <Source>Path to pageant</Source>
           <Value>Pfad zur pageant.exe</Value>
         </TranslationItem>
-        <TranslationItem Name="label18" Property="Text" type="unfinished">
+        <TranslationItem Name="label18" Property="Text">
           <Source>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
 but requires the PuTTY authentication client to run  in the background.
 When OpenSSH is used, command line dialogs are shown!
 </Source>
-          <OldSource>OpenSSH is a commandline tool. PuTTY is more userfriendly to use for windows users, 
-but requires the PuTTY authentication client to run  in the background.
-When OpenSSH is used, command line dialogs are shown!
-</OldSource>
           <Value>OpenSSH ist ein Kommandozeilenprogramm. PuTTY ist benutzerfreundlicher für Windows-Benutzer, 
 setzt aber voraus das PuTTY Pageant im Hintergrund läuft.
 Wenn Sie OpenSSH verwenden, werden Kommandozeilendialoge angezeigt!</Value>
@@ -7662,10 +7547,6 @@ Wenn Sie OpenSSH verwenden, werden Kommandozeilendialoge angezeigt!</Value>
           <Source>{0} months ago</Source>
           <Value>vor {0} Monaten</Value>
         </TranslationItem>
-        <TranslationItem Name="_pageantNotFound" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Laden des SSH-Schlüssels fehlgeschlagen. PuTTY ist nicht korrekt konfiguriert.</Value>
-        </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text" type="unfinished">
           <Source>Parent(s)</Source>
           <Value />
@@ -7693,6 +7574,10 @@ Wenn Sie OpenSSH verwenden, werden Kommandozeilendialoge angezeigt!</Value>
         <TranslationItem Name="_yearsAgo" Property="Text">
           <Source>{0} years ago</Source>
           <Value>vor {0} Jahr(en)</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>Laden des SSH-Schlüssels fehlgeschlagen. PuTTY ist nicht korrekt konfiguriert.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7731,8 +7616,7 @@ Wenn Sie OpenSSH verwenden, werden Kommandozeilendialoge angezeigt!</Value>
           <Value>Hinzufügen von Remote mit Name {0} und URL {1} fehlgeschlagen</Value>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text">
-          <Source>Could not load discussion!
-</Source>
+          <Source>Could not load discussion!</Source>
           <Value>Laden der Diskussion fehlgeschlagen!</Value>
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
@@ -7740,23 +7624,19 @@ Wenn Sie OpenSSH verwenden, werden Kommandozeilendialoge angezeigt!</Value>
           <Value>Fehler</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToClosePullRequest" Property="Text">
-          <Source>Failed to close pull request!
-</Source>
+          <Source>Failed to close pull request!</Source>
           <Value>Schließen des Pull Requests fehlgeschlagen!</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToFetchPullData" Property="Text">
-          <Source>Failed to fetch pull data!
-</Source>
+          <Source>Failed to fetch pull data!</Source>
           <Value>Pull-Daten holen fehlgeschlagen!</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiffData" Property="Text">
-          <Source>Failed to load diff data!
-</Source>
+          <Source>Failed to load diff data!</Source>
           <Value>Laden der Vergleichsdaten fehlgeschlagen!</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiscussionItem" Property="Text">
-          <Source>Failed to post discussion item!
-</Source>
+          <Source>Failed to post discussion item!</Source>
           <Value>Senden des Diskussionspunktes fehlgeschlagen!</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">
@@ -7789,10 +7669,6 @@ Details: {1} als {2} erwartet</Value>
     </TranslationCategory>
     <TranslationCategory Name="BrowseForPrivateKey">
       <translationItems>
-        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Laden des SSH-Schlüssels fehlgeschlagen. PuTTY ist nicht korrekt konfiguriert.</Value>
-        </TranslationItem>
         <TranslationItem Name="_browsePrivateKeyCaption" Property="Text" type="obsolete">
           <Source>Select SSH key file</Source>
           <Value>SSH-Key-Datei auswählen</Value>
