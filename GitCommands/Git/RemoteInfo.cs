@@ -34,9 +34,9 @@ namespace GitCommands.Git
         /// <summary>Gets the configured name of the remote.</summary>
         public string Name { get; private set; }
         /// <summary>Gets the URL which this remote fetches from. <remarks>May be null.</remarks></summary>
-        public Uri FetchUrl { get; private set; }
+        public string FetchUrl { get; private set; }
         /// <summary>Gets the URL(s) which this remote may be configured to push to.</summary>
-        public IEnumerable<Uri> PushUrls { get; private set; }
+        public IEnumerable<string> PushUrls { get; private set; }
         internal string HeadBranchName { get; set; }
         /// <summary>Gets the HEAD branch, which is the default branch when the remote is cloned.</summary>
         public RemoteBranch HeadBranch { get; internal set; }
@@ -230,9 +230,9 @@ namespace GitCommands.Git
         }
 
         /// <summary>Gets a URL from a line.</summary>
-        static Uri GetURL(string line)
+        static string GetURL(string line)
         {
-            return new Uri(line.Substring(line.IndexOf(":") + 1).Trim(), UriKind.Absolute);
+            return line.Substring(line.IndexOf(":") + 1).Trim();
         }
 
         public override string ToString() { return Name; }
