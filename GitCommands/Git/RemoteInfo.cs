@@ -91,9 +91,12 @@ namespace GitCommands.Git
 
             i += nPushUrls;// 2 + PushURLs
             string headLine = lines[i];
-            if (!headLine.Contains("("))
-            {// NOT: (not queried), (unknown), (remote HEAD is ambiguous...)
-                //   HEAD branch: left-panel/-main
+            if (headLine.Contains("("))
+            {// (not queried), (unknown), (remote HEAD is ambiguous...)
+                i += 1; // skip HEAD line
+            }
+            else
+            {// HEAD branch: left-panel/-main
                 HeadBranchName = headLine.Substring(headLine.IndexOf(":") + 1).Trim();
             }
 
@@ -353,7 +356,7 @@ namespace GitCommands.Git
                 Tracked,
                 /// <summary>Has already been removed from the remote repository, but is still locally available in 'refs/remotes/{remote}/'.</summary>
                 Stale,
-                /// <summary>Next fetch will store in 'remotes/{remote}'.</summary>
+                /// <summary>Next fetch will store in 'remotes/{remote}/'.</summary>
                 New,
             }
         }
