@@ -15,10 +15,10 @@ namespace GitUI.SettingsDialog
 {
     public class CheckSettingsLogic : Translate
     {
-        public static readonly TranslationString _toolSuggestPath =
+        public readonly TranslationString _toolSuggestPath =
             new TranslationString("Please enter the path to {0} and press suggest.");
 
-        public static readonly TranslationString __mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
+        public readonly TranslationString __mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
 
         readonly CommonLogic _commonLogic;
         readonly GitModule _gitModule;
@@ -123,10 +123,10 @@ namespace GitUI.SettingsDialog
             return false;
         }
 
-        private static IEnumerable<string> GetGitLocations()
+        private IEnumerable<string> GetGitLocations()
         {
             yield return
-                CommonLogic.GetRegistryValue(Registry.LocalMachine,
+                _commonLogic.GetRegistryValue(Registry.LocalMachine,
                                  "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
             string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
             string programFilesX86 = null;
@@ -143,7 +143,7 @@ namespace GitUI.SettingsDialog
             yield return @"C:\cygwin\";
         }
 
-        private static IEnumerable<string> GetWindowsCommandLocations()
+        private IEnumerable<string> GetWindowsCommandLocations()
         {
             if (!string.IsNullOrEmpty(Settings.GitCommand) && File.Exists(Settings.GitCommand))
                 yield return Settings.GitCommand;

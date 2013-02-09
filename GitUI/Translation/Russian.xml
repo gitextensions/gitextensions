@@ -176,30 +176,6 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="BrowseForPrivateKey">
-      <translationItems>
-        <TranslationItem Name="_pageantNotFound" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Не удалось загрузить ключ. PuTTY не настроен должным образом.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_pageantNotFoundCaption" Property="Text">
-          <Source>PuTTY</Source>
-          <Value>PuTTY</Value>
-        </TranslationItem>
-        <TranslationItem Name="_browsePrivateKeyCaption" Property="Text" type="obsolete">
-          <Source>Select SSH key file</Source>
-          <Value>Выберите файл с SSH ключом</Value>
-        </TranslationItem>
-        <TranslationItem Name="_browsePrivateKeyFilter" Property="Text" type="obsolete">
-          <Source>Private key</Source>
-          <Value>Закрытый ключ</Value>
-        </TranslationItem>
-        <TranslationItem Name="_loadKeyFailed" Property="Text" type="obsolete">
-          <Source>Could not load key.</Source>
-          <Value>Не удалось загрузить ключ.</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="ChecklistSettingsPage">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -319,9 +295,9 @@ This action will be performed without warning while checking out branch.</Source
 Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_linuxToolsShNotFoundCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_linuxToolsShNotFoundCaption" Property="Text">
           <Source>Locate linux tools</Source>
-          <Value />
+          <Value>Найти утилиты linux</Value>
         </TranslationItem>
         <TranslationItem Name="_linuxToolsSshFound" Property="Text">
           <Source>Linux tools (sh) found on your computer.</Source>
@@ -331,9 +307,9 @@ Please make sure there are linux tools installed (through msysgit or cygwin) or 
           <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in settings.</Source>
           <Value>Утилиты Linux(sh) не найдены. Чтобы исправить эту проблему настройте путь в настройках.</Value>
         </TranslationItem>
-        <TranslationItem Name="_mergeToolXConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_mergeToolXConfigured" Property="Text">
           <Source>There is a custom mergetool configured.</Source>
-          <Value />
+          <Value>Настроен пользовательский инструмент слияния.</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeToolXConfiguredNeedsCmd" Property="Text" type="unfinished">
           <Source>{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.</Source>
@@ -389,13 +365,9 @@ Select no if you want to configure a different mergetool yourself.</Source>
           <Source>All paths needed for PuTTY could be automatically found and are set.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_puttyFoundAutoCaption" Property="Text">
-          <Source>PuTTY</Source>
-          <Value>PuTTY</Value>
-        </TranslationItem>
-        <TranslationItem Name="_registryKeyGitExtensionsCorrect" Property="Text" type="unfinished">
+        <TranslationItem Name="_registryKeyGitExtensionsCorrect" Property="Text">
           <Source>GitExtensions is properly registered.</Source>
-          <Value />
+          <Value>GitExtensions должным образом зарегистрирован.</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsFaulty" Property="Text" type="unfinished">
           <Source>Invalid installation directory stored in [Software\GitExtensions\GitExtensions\InstallDir].</Source>
@@ -409,9 +381,9 @@ Select no if you want to configure a different mergetool yourself.</Source>
           <Source>Command sh can be run using: {0}sh</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_shCanBeRunCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_shCanBeRunCaption" Property="Text">
           <Source>Locate linux tools</Source>
-          <Value />
+          <Value>Найти утилиты linux</Value>
         </TranslationItem>
         <TranslationItem Name="_shellExtNeedsToBeRegistered" Property="Text" type="unfinished">
           <Source>{0} needs to be registered in order to use the shell extensions.</Source>
@@ -1710,7 +1682,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="_alwaysShowCheckoutDlgStr" Property="Text" type="unfinished">
           <Source>Always show checkout dialog</Source>
-          <Value />
+          <Value>Всегда показывать диалог смены ветки</Value>
         </TranslationItem>
         <TranslationItem Name="_configureWorkingDirMenu" Property="Text">
           <Source>Configure this menu</Source>
@@ -1894,11 +1866,11 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem" Property="Text">
           <Source>Commit</Source>
-          <Value>Коммит</Value>
+          <Value>Коммитить</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem1" Property="Text">
           <Source>Commit</Source>
-          <Value>Коммит</Value>
+          <Value>Коммитить</Value>
         </TranslationItem>
         <TranslationItem Name="commitcountPerUserToolStripMenuItem" Property="Text">
           <Source>Commits per user</Source>
@@ -1952,9 +1924,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Donate</Source>
           <Value>Пожертвовать</Value>
         </TranslationItem>
-        <TranslationItem Name="dontSetAsDefaultToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="dontSetAsDefaultToolStripMenuItem" Property="Text">
           <Source>Don't set as default</Source>
-          <Value />
+          <Value>Не устанавливать как по умолчанию</Value>
         </TranslationItem>
         <TranslationItem Name="editCheckedOutFileToolStripMenuItem" Property="Text">
           <Source>Edit working dir file</Source>
@@ -1980,13 +1952,13 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Expand all (takes a while on large trees)</Source>
           <Value>Развернуть все</Value>
         </TranslationItem>
-        <TranslationItem Name="fetchAllToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="fetchAllToolStripMenuItem" Property="Text">
           <Source>Fetch all</Source>
-          <Value />
+          <Value>Забрать все</Value>
         </TranslationItem>
-        <TranslationItem Name="fetchToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="fetchToolStripMenuItem" Property="Text">
           <Source>Fetch</Source>
-          <Value />
+          <Value>Забрать</Value>
         </TranslationItem>
         <TranslationItem Name="fileExplorerToolStripMenuItem" Property="Text">
           <Source>File Explorer</Source>
@@ -2028,9 +2000,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Git bash</Source>
           <Value>Git bash</Value>
         </TranslationItem>
-        <TranslationItem Name="gitGUIToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="gitGUIToolStripMenuItem" Property="Text">
           <Source>Git GUI</Source>
-          <Value />
+          <Value>Git GUI</Value>
         </TranslationItem>
         <TranslationItem Name="gitMaintenanceToolStripMenuItem" Property="Text">
           <Source>Git maintenance</Source>
@@ -2048,9 +2020,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Go to commit</Source>
           <Value>Перейти к коммиту</Value>
         </TranslationItem>
-        <TranslationItem Name="hashToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="hashToolStripMenuItem" Property="Text">
           <Source>Hash</Source>
-          <Value />
+          <Value>Хеш</Value>
         </TranslationItem>
         <TranslationItem Name="helpToolStripMenuItem" Property="Text">
           <Source>Help</Source>
@@ -2060,9 +2032,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Create new repository</Source>
           <Value>Создать новый репозиторий</Value>
         </TranslationItem>
-        <TranslationItem Name="kGitToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="kGitToolStripMenuItem" Property="Text">
           <Source>GitK</Source>
-          <Value />
+          <Value>GitK</Value>
         </TranslationItem>
         <TranslationItem Name="localToolStripMenuItem" Property="Text">
           <Source>Local</Source>
@@ -2176,9 +2148,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Reset file(s) to</Source>
           <Value>Сбросить файл к</Value>
         </TranslationItem>
-        <TranslationItem Name="resetToThisRevisionToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="resetToThisRevisionToolStripMenuItem" Property="Text">
           <Source>Reset to selected revision</Source>
-          <Value />
+          <Value>Сбросить к выбранной ревизии</Value>
         </TranslationItem>
         <TranslationItem Name="resetToolStripMenuItem" Property="Text">
           <Source>Reset changes</Source>
@@ -2246,7 +2218,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="toolStripButton1" Property="Text">
           <Source>Commit</Source>
-          <Value>Коммит</Value>
+          <Value>Коммитить</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonLevelUp" Property="Text" type="unfinished">
           <Source>Go to superproject</Source>
@@ -2272,9 +2244,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Stash changes</Source>
           <Value>Stash изменения</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripStatusLabel1" Property="Text" type="unfinished">
+        <TranslationItem Name="toolStripStatusLabel1" Property="Text">
           <Source>X</Source>
-          <Value />
+          <Value>X</Value>
         </TranslationItem>
         <TranslationItem Name="translateToolStripMenuItem" Property="Text">
           <Source>Translate</Source>
@@ -2807,7 +2779,7 @@ Do you want to continue?</Source>
         </TranslationItem>
         <TranslationItem Name="_formTitle" Property="Text">
           <Source>Commit to {0} ({1})</Source>
-          <Value>Commit в {0} ({1})</Value>
+          <Value>Коммитить в {0} ({1})</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeConflicts" Property="Text">
           <Source>There are unresolved mergeconflicts, solve mergeconflicts before committing.</Source>
@@ -2939,11 +2911,11 @@ Do you want to continue?</Source>
         </TranslationItem>
         <TranslationItem Name="commitMessageToolStripMenuItem" Property="Text">
           <Source>Commit &amp;message</Source>
-          <Value>Сообщение commit'а</Value>
+          <Value>Сообщение коммита</Value>
         </TranslationItem>
         <TranslationItem Name="commitSubmoduleChanges" Property="Text">
           <Source>Commit submodule changes</Source>
-          <Value>Commit изменений субмодуля</Value>
+          <Value>Коммит изменений субмодуля</Value>
         </TranslationItem>
         <TranslationItem Name="commitTemplatesToolStripMenuItem" Property="Text">
           <Source>Commit &amp;templates</Source>
@@ -3943,9 +3915,9 @@ _ReSharper*/
     </TranslationCategory>
     <TranslationCategory Name="FormGitReview">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Edit .gitreview</Source>
-          <Value />
+          <Value>Редактировать .gitreview</Value>
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text" type="unfinished">
           <Source>Save</Source>
@@ -4362,10 +4334,6 @@ Are you sure you want to rebase this merge?</Source>
           <Source>Rebase merge commit?</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_cannotLoadPutty" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Не могу загрузить ключ SSH. PuTTY неправильно сконфигурирован.</Value>
-        </TranslationItem>
         <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text" type="unfinished">
           <Source>You can only fetch all remote branches (*) without merge or rebase.
 If you want to fetch all remote branches, choose fetch.
@@ -4533,10 +4501,6 @@ This will initialize and update all submodules recursive.</Source>
 Are you sure you want to push this branch?</Source>
           <Value>Ветвь, которую вы собираетесь отправить, является новой для внешнего репозитория.
 Вы уверены, что хотите отправить эту ветвь?</Value>
-        </TranslationItem>
-        <TranslationItem Name="_cannotLoadPutty" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Не могу загрузить SSH ключ. PuTTY сконфигурирован неправильно.</Value>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestCB" Property="Text">
           <Source>Create pull request after push</Source>
@@ -5043,9 +5007,9 @@ Value has been reset to empty value.</Source>
           <Source>Reset</Source>
           <Value>Сбросить</Value>
         </TranslationItem>
-        <TranslationItem Name="cbDeleteNewFilesAndDirectories" Property="Text" type="unfinished">
+        <TranslationItem Name="cbDeleteNewFilesAndDirectories" Property="Text">
           <Source>Also delete new files and/or directories</Source>
-          <Value />
+          <Value>Также удалить новые файлы и/или папки</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Are you sure you want to reset your changes?</Source>
@@ -5536,7 +5500,7 @@ Do you want to use this custom merge script?</Source>
           <Source>Undo changes in:
 {0}?</Source>
           <Value>Отменить изменения в файле
-{0} ?</Value>
+{0}?</Value>
         </TranslationItem>
         <TranslationItem Name="btnCancel" Property="Text">
           <Source>Cancel</Source>
@@ -6307,7 +6271,7 @@ Do not forget to delete these tags when finished.</Source>
         </TranslationItem>
         <TranslationItem Name="columnHash" Property="HeaderText" type="unfinished">
           <Source>Hash</Source>
-          <Value />
+          <Value>Хеш</Value>
         </TranslationItem>
         <TranslationItem Name="columnSubject" Property="HeaderText">
           <Source>Subject</Source>
@@ -6401,6 +6365,70 @@ Context menu for additional operations</OldSource>
         <TranslationItem Name="typeDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Change</Source>
           <Value>Изменить</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GerritPlugin">
+      <translationItems>
+        <TranslationItem Name="_downloadGerritChange" Property="Text" type="unfinished">
+          <Source>Download Gerrit Change</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_editGitReview" Property="Text" type="unfinished">
+          <Source>Edit .gitreview</Source>
+          <Value>Редактировать .gitreview</Value>
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHook" Property="Text" type="unfinished">
+          <Source>Install Hook</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookFailed" Property="Text" type="unfinished">
+          <Source>Could not download the commit-msg file. Please install the commit-msg hook manually.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookMessage" Property="Text" type="unfinished">
+          <Source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookShortText" Property="Text" type="unfinished">
+          <Source>Install commit-msg hook</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pluginDescription" Property="Text" type="unfinished">
+          <Source>Gerrit Code Review</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_publishGerritChange" Property="Text" type="unfinished">
+          <Source>Publish Gerrit Change</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GerritSettings">
+      <translationItems>
+        <TranslationItem Name="_settingsError" Property="Text" type="unfinished">
+          <Source>Error loading .gitreview file.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorDefaultRemoteNotPresent" Property="Text" type="unfinished">
+          <Source>The remote "{0}" specified with the "defaultremote" setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorFileNotFound" Property="Text" type="unfinished">
+          <Source>Cannot find the ".gitreview" file in the working directory.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorHostNotEntered" Property="Text" type="unfinished">
+          <Source>The "host" setting in the .gitreview file is mandatory.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorPortNotNumeric" Property="Text" type="unfinished">
+          <Source>The "port" specified in the .gitreview file may only contain digits.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorProjectNotEntered" Property="Text" type="unfinished">
+          <Source>The "project" setting in the .gitreview file is mandatory.</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6610,15 +6638,15 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="globalAutoCrlfFalse" Property="Text">
           <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
-          <Value>Забирать как есть, commit как есть ("core.autocrlf" установлен в "false")</Value>
+          <Value>Забирать как есть, коммитить как есть ("core.autocrlf" установлен в "false")</Value>
         </TranslationItem>
         <TranslationItem Name="globalAutoCrlfInput" Property="Text">
           <Source>Checkout as-is, commit Unix-style line endings ("core.autocrlf"  is set to "input")</Source>
-          <Value>Забирать как есть, commit конец строки в стиле Unix-style ("core.autocrlf" установлен в "input")</Value>
+          <Value>Забирать как есть, коммитить конец строки в стиле Unix-style ("core.autocrlf" установлен в "input")</Value>
         </TranslationItem>
         <TranslationItem Name="globalAutoCrlfTrue" Property="Text">
           <Source>Checkout Windows-style, commit Unix-style line endings ("core.autocrlf"  is set to "true")</Source>
-          <Value>Забирать в стиле Windows, commit конец строки в стиле Unix-style ("core.autocrlf" установлен в "true")</Value>
+          <Value>Забирать в стиле Windows, коммитить конец строки в стиле Unix-style ("core.autocrlf" установлен в "true")</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox9" Property="Text">
           <Source>Line endings</Source>
@@ -6801,15 +6829,15 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="localAutoCrlfFalse" Property="Text" type="unfinished">
           <Source>Checkout as-is, commit as-is ("core.autocrlf"  is set to "false")</Source>
-          <Value>Забирать как есть, commit как есть ("core.autocrlf" установлен в "false")</Value>
+          <Value>Забирать как есть, коммитить как есть ("core.autocrlf" установлен в "false")</Value>
         </TranslationItem>
         <TranslationItem Name="localAutoCrlfInput" Property="Text" type="unfinished">
           <Source>Checkout as-is, commit Unix-style line endings ("core.autocrlf"  is set to "input")</Source>
-          <Value>Забирать как есть, commit конец строки в стиле Unix-style ("core.autocrlf" установлен в "input")</Value>
+          <Value>Забирать как есть, коммитить конец строки в стиле Unix-style ("core.autocrlf" установлен в "input")</Value>
         </TranslationItem>
         <TranslationItem Name="localAutoCrlfTrue" Property="Text" type="unfinished">
           <Source>Checkout Windows-style, commit Unix-style line endings ("core.autocrlf"  is set to "true")</Source>
-          <Value>Забирать в стиле Windows, commit конец строки в стиле Unix-style ("core.autocrlf" установлен в "true")</Value>
+          <Value>Забирать в стиле Windows, коммитить конец строки в стиле Unix-style ("core.autocrlf" установлен в "true")</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7056,7 +7084,7 @@ If this is a central repository (bare repository without a working dir):
         </TranslationItem>
         <TranslationItem Name="manipulateCommitToolStripMenuItem" Property="Text">
           <Source>Advanced</Source>
-          <Value>Manipulate коммит</Value>
+          <Value>Дополнительные</Value>
         </TranslationItem>
         <TranslationItem Name="markRevisionAsBadToolStripMenuItem" Property="Text">
           <Source>Mark revision as bad</Source>
@@ -7393,7 +7421,11 @@ When OpenSSH is used, command line dialogs are shown!
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
           <Source>{0} months ago</Source>
-          <Value>{0} месяцев назад</Value>
+          <Value>{0} месяця(ев) назад</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>Не удалось загрузить ключ. PuTTY не настроен должным образом.</Value>
         </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text">
           <Source>Parent(s)</Source>
@@ -7421,7 +7453,7 @@ When OpenSSH is used, command line dialogs are shown!
         </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
           <Source>{0} years ago</Source>
-          <Value>{0} лет назад</Value>
+          <Value>{0} года/лет назад</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7512,6 +7544,22 @@ Details: Is {1} expected {2}</Source>
         <TranslationItem Name="columnHeader4" Property="Text">
           <Source>Created</Source>
           <Value>Создано</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="BrowseForPrivateKey">
+      <translationItems>
+        <TranslationItem Name="_browsePrivateKeyCaption" Property="Text" type="obsolete">
+          <Source>Select SSH key file</Source>
+          <Value>Выберите файл с SSH ключом</Value>
+        </TranslationItem>
+        <TranslationItem Name="_browsePrivateKeyFilter" Property="Text" type="obsolete">
+          <Source>Private key</Source>
+          <Value>Закрытый ключ</Value>
+        </TranslationItem>
+        <TranslationItem Name="_loadKeyFailed" Property="Text" type="obsolete">
+          <Source>Could not load key.</Source>
+          <Value>Не удалось загрузить ключ.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

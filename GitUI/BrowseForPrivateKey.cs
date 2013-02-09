@@ -1,19 +1,15 @@
 ﻿using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
 
 namespace GitUI
 {
     /// <summary>
     /// Shows a dialog to let the user browse for a SSH key.
     /// </summary>
-    public class BrowseForPrivateKey : Translate
+    public static class BrowseForPrivateKey
     {
-        private static readonly TranslationString _pageantNotFound =
-            new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
-        private static readonly TranslationString _pageantNotFoundCaption =
-            new TranslationString("PuTTY");
+        private const string _putty = "PuTTY";
 
         /// <summary>
         /// Prompts the user to browse for a key, and attempts to load it. Returns the path to the key, if successful.
@@ -55,7 +51,7 @@ namespace GitUI
         {
             if (!File.Exists(Settings.Pageant))
             {
-                MessageBox.Show(parent, _pageantNotFound.Text, _pageantNotFoundCaption.Text);
+                MessageBox.Show(parent, Strings.GetPAgeantNotFound(), _putty);
                 return false;
             }
 

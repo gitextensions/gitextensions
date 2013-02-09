@@ -38,9 +38,6 @@ namespace GitUI
         private readonly TranslationString _applyShashedItemsAgainCaption =
             new TranslationString("Auto stash");
 
-        private readonly TranslationString _cannotLoadPutty =
-            new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
-
         private readonly TranslationString _fetchAllBranchesCanOnlyWithFetch =
             new TranslationString("You can only fetch all remote branches (*) without merge or rebase." +
                                   Environment.NewLine + "If you want to fetch all remote branches, choose fetch." +
@@ -498,7 +495,7 @@ namespace GitUI
             if (File.Exists(Settings.Pageant))
                 Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
             else
-                MessageBox.Show(this, _cannotLoadPutty.Text, PuttyCaption);
+                MessageBox.Show(this, Strings.GetPAgeantNotFound(), PuttyCaption);
         }
 
         private void FormPullLoad(object sender, EventArgs e)
