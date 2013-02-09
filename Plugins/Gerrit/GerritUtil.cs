@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,10 +13,6 @@ namespace Gerrit
     internal static class GerritUtil
     {
         private const string PuttyText = "PuTTY";
-
-        #region Translation
-        private static readonly TranslationString _cannotLoadSshKey = new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
-        #endregion
 
         public static string RunGerritCommand([NotNull] IWin32Window owner, [NotNull] IGitModule aModule, [NotNull] string command, [NotNull] string remote, byte[] stdIn)
         {
@@ -53,7 +48,7 @@ namespace Gerrit
             var sshCmd = GitCommandHelpers.GetSsh();
             if (GitCommandHelpers.Plink())
             {
-                sshCmd = GitCommands.Settings.Plink;
+                sshCmd = Settings.Plink;
             }
             if (string.IsNullOrEmpty(sshCmd))
             {
@@ -105,8 +100,8 @@ namespace Gerrit
 
             if (GitCommandHelpers.Plink())
             {
-                if (!File.Exists(GitCommands.Settings.Pageant))
-                    MessageBox.Show(owner, _cannotLoadSshKey.Text, PuttyText);
+                if (!File.Exists(Settings.Pageant))
+                    MessageBox.Show(owner, Strings.GetPAgeantNotFound(), PuttyText);
                 else
                     aModule.StartPageantForRemote(remote);
             }

@@ -8,10 +8,10 @@ namespace GitUI
 {
     public partial class FormFixHome : GitExtensionsForm
     {
-        private static readonly TranslationString _gitGlobalConfigNotFound =
+        private readonly TranslationString _gitGlobalConfigNotFound =
             new TranslationString("The environment variable HOME does not point to a directory that contains the global git config file:" + Environment.NewLine +
                 "\" {0} \"" + Environment.NewLine + Environment.NewLine + "Do you want Git Extensions to help locate the correct folder?");
-        private static readonly TranslationString _gitGlobalConfigNotFoundCaption =
+        private readonly TranslationString _gitGlobalConfigNotFoundCaption =
             new TranslationString("Global config");
 
         private readonly TranslationString _gitconfigFoundHome =
@@ -29,6 +29,11 @@ namespace GitUI
             new TranslationString("The environment variable HOME points to a directory that is not accessible:" + Environment.NewLine +
                                 "\"{0}\"");
 
+        public FormFixHome()
+        {
+            InitializeComponent();
+            Translate();
+        }
 
         private static bool IsFixHome()
         {
@@ -64,12 +69,19 @@ namespace GitUI
             }
             catch
             {
-                //Exception occured while checking for home dir. 
+                //Exception occurred while checking for home dir. 
                 //Could be a security issue. Just return true to let the user fix
                 //this manually.
                 return true;
             }
             return false;
+        }
+
+        public void ShowIfUserWant()
+        {
+            if (MessageBox.Show(string.Format(_gitGlobalConfigNotFound.Text, Environment.GetEnvironmentVariable("HOME")),
+                     _gitGlobalConfigNotFoundCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                ShowDialog();
         }
 
         public static void CheckHomePath()
@@ -78,16 +90,9 @@ namespace GitUI
 
             if (IsFixHome())
             {
-                if (MessageBox.Show(string.Format(_gitGlobalConfigNotFound.Text, Environment.GetEnvironmentVariable("HOME")),
-                        _gitGlobalConfigNotFoundCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    using (var frm = new FormFixHome()) frm.ShowDialog();
+                using (var frm = new FormFixHome())
+                    frm.ShowIfUserWant();
             }
-        }
-
-        public FormFixHome()
-        {
-            InitializeComponent(); Translate();
-
         }
 
         protected override void OnLoad(EventArgs e)

@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using System.IO;
@@ -226,8 +220,8 @@ namespace GitUI.SettingsDialog.Pages
                 MergeToolCmd.SelectAll();
                 MergeToolCmd.SelectedText = "";
                 if (sender != null)
-                    MessageBox.Show(this, String.Format(CheckSettingsLogic._toolSuggestPath.Text, exeName),
-                        CheckSettingsLogic.__mergeToolSuggestCaption.Text);
+                    MessageBox.Show(this, String.Format(_checkSettingsLogic._toolSuggestPath.Text, exeName),
+                        _checkSettingsLogic.__mergeToolSuggestCaption.Text);
                 return;
             }
             MergetoolPath.SelectAll(); // allow Undo action
@@ -271,7 +265,7 @@ namespace GitUI.SettingsDialog.Pages
                 DifftoolCmd.SelectAll();
                 DifftoolCmd.SelectedText = "";
                 if (sender != null)
-                    MessageBox.Show(this, String.Format(CheckSettingsLogic._toolSuggestPath.Text, exeName),
+                    MessageBox.Show(this, String.Format(_checkSettingsLogic._toolSuggestPath.Text, exeName),
                         __diffToolSuggestCaption.Text);
                 return;
             }
@@ -287,9 +281,9 @@ namespace GitUI.SettingsDialog.Pages
             string exeFile = MergeToolsHelper.GetMergeToolExeFile(mergeTool);
 
             if (exeFile != null)
-                MergetoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} ({1})|{1}", GlobalMergeTool.Text, exeFile), MergetoolPath.Text);
+                MergetoolPath.Text = _commonLogic.SelectFile(".", string.Format("{0} ({1})|{1}", GlobalMergeTool.Text, exeFile), MergetoolPath.Text);
             else
-                MergetoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} (*.exe)|*.exe", GlobalMergeTool.Text), MergetoolPath.Text);
+                MergetoolPath.Text = _commonLogic.SelectFile(".", string.Format("{0} (*.exe)|*.exe", GlobalMergeTool.Text), MergetoolPath.Text);
         }
 
         private void GlobalDiffTool_TextChanged(object sender, EventArgs e)
@@ -312,14 +306,14 @@ namespace GitUI.SettingsDialog.Pages
             string exeFile = MergeToolsHelper.GetDiffToolExeFile(diffTool);
 
             if (exeFile != null)
-                DifftoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} ({1})|{1}", GlobalDiffTool.Text, exeFile), DifftoolPath.Text);
+                DifftoolPath.Text = _commonLogic.SelectFile(".", string.Format("{0} ({1})|{1}", GlobalDiffTool.Text, exeFile), DifftoolPath.Text);
             else
-                DifftoolPath.Text = CommonLogic.SelectFile(".", string.Format("{0} (*.exe)|*.exe", GlobalDiffTool.Text), DifftoolPath.Text);
+                DifftoolPath.Text = _commonLogic.SelectFile(".", string.Format("{0} (*.exe)|*.exe", GlobalDiffTool.Text), DifftoolPath.Text);
         }
 
         private void BrowseCommitTemplate_Click(object sender, EventArgs e)
         {
-            CommitTemplatePath.Text = CommonLogic.SelectFile(".", "*.txt (*.txt)|*.txt", CommitTemplatePath.Text);
+            CommitTemplatePath.Text = _commonLogic.SelectFile(".", "*.txt (*.txt)|*.txt", CommitTemplatePath.Text);
         }
     }
 }

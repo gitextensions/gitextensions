@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using GitCommands;
@@ -12,15 +13,15 @@ namespace GitUI.SettingsDialog
 {
     public class CommonLogic : Translate
     {
-        private static readonly TranslationString _cantReadRegistry =
+        private readonly TranslationString _cantReadRegistry =
             new TranslationString("GitExtensions has insufficient permissions to check the registry.");
 
-        private static readonly TranslationString _AddEntryManually =
+        private readonly TranslationString _AddEntryManually =
             new TranslationString("Please add this key to the registry manually." +
                                 Environment.NewLine + "Path:  {0}\\{1}" + Environment.NewLine +
                                 "Value:  {2} = {3}");
 
-        private static readonly TranslationString _selectFile =
+        private readonly TranslationString _selectFile =
             new TranslationString("Select file");
 
         private readonly GitModule _gitModule;
@@ -49,7 +50,7 @@ namespace GitUI.SettingsDialog
                 StringComparison.CurrentCultureIgnoreCase);
         }
 
-        public static string GetRegistryValue(RegistryKey root, string subkey, string key)
+        public string GetRegistryValue(RegistryKey root, string subkey, string key)
         {
             string value = null;
             try
@@ -85,7 +86,7 @@ namespace GitUI.SettingsDialog
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show(_cantReadRegistry + Environment.NewLine + 
+                MessageBox.Show(_cantReadRegistry + Environment.NewLine +
                     String.Format(_AddEntryManually.Text, root, subkey, key, value));
             }
         }
@@ -104,7 +105,7 @@ namespace GitUI.SettingsDialog
             return Environment.GetEnvironmentVariable("EDITOR");
         }
 
-        public static string SelectFile(string initialDirectory, string filter, string prev)
+        public string SelectFile(string initialDirectory, string filter, string prev)
         {
             using (var dialog = new OpenFileDialog
             {

@@ -138,7 +138,7 @@ namespace GitUI.SettingsDialog.Pages
         private readonly TranslationString _kdiffAsMergeConfigured =
             new TranslationString("KDiff3 is configured as mergetool.");
 
-        public static readonly TranslationString _kdiff3NotFoundAuto =
+        public readonly TranslationString _kdiff3NotFoundAuto =
             new TranslationString("Path to kdiff3 could not be found automatically." + Environment.NewLine +
                 "Please make sure KDiff3 is installed or set path manually.");
 
@@ -155,9 +155,6 @@ namespace GitUI.SettingsDialog.Pages
         private readonly TranslationString _puttyFoundAuto =
             new TranslationString("All paths needed for PuTTY could be automatically found and are set.");
 
-        private readonly TranslationString _puttyFoundAutoCaption =
-            new TranslationString("PuTTY");
-
         private readonly TranslationString _linuxToolsShNotFound =
             new TranslationString("The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
                 "Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.");
@@ -170,6 +167,8 @@ namespace GitUI.SettingsDialog.Pages
 
         private readonly TranslationString _shCanBeRunCaption =
             new TranslationString("Locate linux tools");
+
+        private const string _putty = "PuTTY";
 
         readonly CommonLogic _commonLogic;
         readonly CheckSettingsLogic _checkSettingsLogic;
@@ -251,7 +250,7 @@ namespace GitUI.SettingsDialog.Pages
             {
                 if (SshSettingsPage.AutoFindPuttyPaths())
                 {
-                    MessageBox.Show(this, _puttyFoundAuto.Text, _puttyFoundAutoCaption.Text);
+                    MessageBox.Show(this, _puttyFoundAuto.Text, _putty);
                 }
                 else
                 {
@@ -718,14 +717,14 @@ namespace GitUI.SettingsDialog.Pages
 
             ShellExtensionsRegistered.Visible = true;
 
-            if (string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.LocalMachine,
+            if (string.IsNullOrEmpty(_commonLogic.GetRegistryValue(Registry.LocalMachine,
                                                       "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved",
                                                       "{3C16B20A-BA16-4156-916F-0A375ECFFE24}")) ||
-                string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.ClassesRoot,
+                string.IsNullOrEmpty(_commonLogic.GetRegistryValue(Registry.ClassesRoot,
                                                       "*\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||
-                string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.ClassesRoot,
+                string.IsNullOrEmpty(_commonLogic.GetRegistryValue(Registry.ClassesRoot,
                                                       "Directory\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||
-                string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.ClassesRoot,
+                string.IsNullOrEmpty(_commonLogic.GetRegistryValue(Registry.ClassesRoot,
                                                       "Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2",
                                                       null)))
             {
