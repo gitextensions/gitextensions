@@ -48,6 +48,7 @@ namespace GitUI
             Translate();
 
             FileName = fileName;
+            SetTitle(string.Empty);
 
             Diff.ExtraDiffArgumentsChanged += DiffExtraDiffArgumentsChanged;
 
@@ -195,11 +196,6 @@ namespace GitUI
             UpdateSelectedFileViewers();
         }
 
-        private void FormFileHistoryLoad(object sender, EventArgs e)
-        {
-            Text = string.Format("File History ({0})", FileName);
-        }
-
         private void FileChangesSelectionChanged(object sender, EventArgs e)
         {
             View.SaveCurrentScrollPos();
@@ -217,6 +213,15 @@ namespace GitUI
             UpdateSelectedFileViewers();
         }
 
+        private void SetTitle(string fileName)
+        {
+            Text = string.Format("File History - {0}", FileName);
+            if (!fileName.IsNullOrEmpty() && !fileName.Equals(FileName))
+                Text = Text + string.Format(" ({0})", fileName);
+
+            Text += " - " + Module.WorkingDir;        
+        }
+
         private void UpdateSelectedFileViewers()
         {
             var selectedRows = FileChanges.GetSelectedRevisions();
@@ -230,10 +235,8 @@ namespace GitUI
 
             if (string.IsNullOrEmpty(fileName))
                 fileName = FileName;
-
-            Text = string.Format("File History - {0}", FileName);
-            if (!fileName.Equals(FileName))
-                Text = Text + string.Format(" ({0})", fileName);
+            
+            SetTitle(fileName);
 
             if (tabControl1.SelectedTab == BlameTab)
                 Blame.LoadBlame(revision, children, fileName, FileChanges, BlameTab, Diff.Encoding);
@@ -332,8 +335,7 @@ namespace GitUI
             var selectedRevisions = FileChanges.GetSelectedRevisions();
             if (selectedRevisions.Count == 1)
             {
-                using (var frm = new FormCherryPick(UICommands, selectedRevisions[0]))
-                    frm.ShowDialog(this);
+                UICommands.StartCherryPickDialog(this, selectedRevisions[0]);
             }
         }
 
@@ -342,8 +344,7 @@ namespace GitUI
             var selectedRevisions = FileChanges.GetSelectedRevisions();
             if (selectedRevisions.Count == 1)
             {
-                var frm = new FormRevertCommitSmall(UICommands, selectedRevisions[0]);
-                frm.ShowDialog(this);
+                UICommands.StartRevertCommitDialog(this, selectedRevisions[0]);
             }
         }
 
