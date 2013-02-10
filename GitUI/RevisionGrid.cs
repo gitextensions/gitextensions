@@ -217,14 +217,6 @@ namespace GitUI
             _initialSelectedRevision = initialSelectedRevision != null ? initialSelectedRevision.Guid : null;
         }
 
-        public event EventHandler ActionOnRepositoryPerformed;
-
-        private void OnActionOnRepositoryPerformed()
-        {
-            if (ActionOnRepositoryPerformed != null)
-                ActionOnRepositoryPerformed(this, null);
-        }
-
         private bool _isLoading;
         private void RevisionsLoading(bool isLoading)
         {
@@ -1503,8 +1495,6 @@ namespace GitUI
 
             var frm = new FormResetCurrentBranch(UICommands, GetRevision(LastRow));
             frm.ShowDialog(this);
-            RefreshRevisions();
-            OnActionOnRepositoryPerformed();
         }
 
         private void CreateNewBranchToolStripMenuItemClick(object sender, EventArgs e)
@@ -1512,13 +1502,12 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            var frm = new FormBranchSmall(UICommands) { Revision = GetRevision(LastRow) };
+            UICommands.DoActionOnRepo(() =>
+                {
+                    var frm = new FormBranchSmall(UICommands) { Revision = GetRevision(LastRow) };
 
-            if (frm.ShowDialog(this) == DialogResult.OK)
-            {
-                RefreshRevisions();
-                OnActionOnRepositoryPerformed();
-            }
+                    return frm.ShowDialog(this) == DialogResult.OK;
+                });
         }
 
         private void RevisionsMouseClick(object sender, MouseEventArgs e)
@@ -1549,8 +1538,6 @@ namespace GitUI
         private void CommitClick(object sender, EventArgs e)
         {
             UICommands.StartCommitDialog(this);
-            OnActionOnRepositoryPerformed();
-            RefreshRevisions();
         }
 
         private void GitIgnoreClick(object sender, EventArgs e)
@@ -1826,9 +1813,6 @@ namespace GitUI
                 return;
 
             UICommands.StartCheckoutRemoteBranchDialog(this, toolStripItem.Text);
-
-            ForceRefreshRevisions();
-            OnActionOnRepositoryPerformed();
         }
 
         private void ToolStripItemClickMergeBranch(object sender, EventArgs e)
@@ -1839,9 +1823,6 @@ namespace GitUI
                 return;
 
             UICommands.StartMergeBranchDialog(this, toolStripItem.Text);
-
-            ForceRefreshRevisions();
-            OnActionOnRepositoryPerformed();
         }
 
         private void ToolStripItemClickRebaseBranch(object sender, EventArgs e)
@@ -1852,9 +1833,6 @@ namespace GitUI
                 return;
 
             UICommands.StartRebaseDialog(this, toolStripItem.Text);
-
-            ForceRefreshRevisions();
-            OnActionOnRepositoryPerformed();
         }
 
         private void ToolStripItemClickRenameBranch(object sender, EventArgs e)
@@ -1864,12 +1842,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            var renameExecuted = UICommands.StartRenameDialog(this, toolStripItem.Text);
-            if (!renameExecuted)
-                return;
-
-            ForceRefreshRevisions();
-            OnActionOnRepositoryPerformed();
+            UICommands.StartRenameDialog(this, toolStripItem.Text);
         }
 
         private void CheckoutRevisionToolStripMenuItemClick(object sender, EventArgs e)
@@ -1914,35 +1887,40 @@ namespace GitUI
         {
             var revisions = GetSelectedRevisions(SortDirection.Descending);
 
-            FormCherryPick prevForm = null;
-
-            try
-            {
-                foreach (var r in revisions)
+            UICommands.DoActionOnRepo(() =>
                 {
-                    var frm = new FormCherryPick(UICommands, r);
-                    if (prevForm != null)
-                    {
-                        frm.CopyOptions(prevForm);
-                        prevForm.Dispose();
-                    }
-                    prevForm = frm;
-                    if (frm.ShowDialog(this) != DialogResult.OK)
-                    {
-                        return;
-                    }
-                }
-            }
-            finally
-            {
-                if (prevForm != null)
-                {
-                    prevForm.Dispose();
-                }
-            }
 
-            ForceRefreshRevisions();
-            OnActionOnRepositoryPerformed();
+                    FormCherryPick prevForm = null;
+
+                    try
+                    {
+                        bool repoChanged = false;
+
+                        foreach (var r in revisions)
+                        {
+                            var frm = new FormCherryPick(UICommands, r);
+                            if (prevForm != null)
+                            {
+                                frm.CopyOptions(prevForm);
+                                prevForm.Dispose();
+                            }
+                            prevForm = frm;
+                            if (frm.ShowDialog(this) == DialogResult.OK)
+                                repoChanged = true;
+                            else
+                                return repoChanged;
+                        }
+
+                        return repoChanged;
+                    }
+                    finally
+                    {
+                        if (prevForm != null)
+                        {
+                            prevForm.Dispose();
+                        }
+                    }                    
+                });
         }
 
         private void FixupCommitToolStripMenuItemClick(object sender, EventArgs e)
@@ -1960,10 +1938,11 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            using (var frm = new FormCommit(UICommands, commitKind, GetRevision(LastRow))) frm.ShowDialog(this);
-
-            ForceRefreshRevisions();
-            OnActionOnRepositoryPerformed();
+            UICommands.DoActionOnRepo(() =>
+                {
+                    using (var frm = new FormCommit(UICommands, commitKind, GetRevision(LastRow))) frm.ShowDialog(this);
+                }
+            );
         }
 
         private void ShowRelativeDateToolStripMenuItemClick(object sender, EventArgs e)
