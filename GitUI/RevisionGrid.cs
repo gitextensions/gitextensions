@@ -1611,11 +1611,7 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            var frm = new FormRevertCommitSmall(UICommands, GetRevision(LastRow));
-            if (frm.ShowDialog(this) == DialogResult.OK)
-            {
-                RefreshRevisions();
-            }
+            UICommands.StartRevertCommitDialog(this, GetRevision(LastRow));
         }
 
         private void FilterToolStripMenuItemClick(object sender, EventArgs e)

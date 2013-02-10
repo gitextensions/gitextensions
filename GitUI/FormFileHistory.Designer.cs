@@ -400,7 +400,6 @@ namespace GitUI
             this.Name = "FormFileHistory";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "File History";
-            this.Load += new System.EventHandler(this.FormFileHistoryLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
 #if Mono212Released //waiting for mono 2.12
