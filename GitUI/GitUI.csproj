@@ -222,6 +222,7 @@
     </Compile>
     <Compile Include="IGitUICommandsSource.cs" />
     <Compile Include="IndexWatcher.cs" />
+    <Compile Include="StatusFeed.cs" />
     <Compile Include="MenuStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
