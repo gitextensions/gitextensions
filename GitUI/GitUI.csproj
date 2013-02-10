@@ -417,6 +417,7 @@
     <Compile Include="RepoObjectsTree\ROT.ContextActions.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Properties\UiSettings.cs" />
     <Compile Include="Script\RunScript.cs" />
     <Compile Include="Script\ScriptInfo.cs" />
     <Compile Include="Script\ScriptManager.cs" />
@@ -1608,6 +1609,7 @@
     <None Include="Resources\Icons\BranchNew.png" />
     <Content Include="Resources\Icons\HeadBranch.png" />
     <Content Include="Resources\Icons\Namespace.png" />
+    <Content Include="Resources\Icons\RemoteMirror.png" />
     <Content Include="Resources\Icons\RemoteRepo.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">

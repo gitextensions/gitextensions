@@ -101,7 +101,11 @@ namespace GitCommands
         public static TranslationString RemoteBranchStaleTipFormat = new TranslationString("'{0}' no longer exists on remote repo and can be pruned");
         /// <summary>"'{0}' is new and may be fetched."</summary>
         public static TranslationString RemoteBranchNewTipFormat = new TranslationString("'{0}' is new and may be fetched");
-    
+        /// <summary>"Mirrors '{0}'"</summary>
+        public static TranslationString RemoteMirrorsTipFormat = new TranslationString("Mirrors '{0}'");
+        /// <summary>"Fetch and Push URLs differ"</summary>
+        public static TranslationString RemoteDifferingUrlsTip = new TranslationString("Fetch and Push URLs differ");
+
 
         private readonly TranslationString _dateText               = new TranslationString("Date");
         private readonly TranslationString _authorText             = new TranslationString("Author");
@@ -178,6 +182,5 @@ namespace GitCommands
         private readonly TranslationString _monthsAgo = new TranslationString("{0} months ago");
         private readonly TranslationString _yearAgo = new TranslationString("{0} year ago");
         private readonly TranslationString _yearsAgo = new TranslationString("{0} years ago");
-        
     }
 }

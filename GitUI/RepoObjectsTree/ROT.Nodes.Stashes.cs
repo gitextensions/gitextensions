@@ -8,8 +8,8 @@ namespace GitUI.UserControls
     // "stashes"
     public partial class RepoObjectsTree
     {
-        static readonly string stashKey = "stash";
-        static readonly string stashesKey = "stashes";
+        static readonly string stashKey = Guid.NewGuid().ToString();
+        static readonly string stashesKey = Guid.NewGuid().ToString();
 
         /// <summary>Reloads the stashes.</summary>
         static void OnReloadStashes(ICollection<StashNode> stashes, RootNode<StashNode> stashesNode)

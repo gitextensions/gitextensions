@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using System.Linq;
 
 namespace GitUI.UserControls
 {
     // "branches"
     public partial class RepoObjectsTree
     {
-        static readonly string branchesKey = "branches";
-        static readonly string branchKey = "branch";
-        static readonly string branchPathKey = "branchPath";
+        static readonly string branchesKey = Guid.NewGuid().ToString();
+        static readonly string branchKey = Guid.NewGuid().ToString();
+        static readonly string branchPathKey = Guid.NewGuid().ToString();
 
         static void OnReloadBranches(ICollection<BaseBranchNode> items, RootNode<BaseBranchNode> rootNode)
         {

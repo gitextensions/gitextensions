@@ -28,10 +28,12 @@ namespace GitUI.UserControls
         // master <- origin/master
         // pu <- origin/pu
 
-        static readonly string remoteKey = "remote";
-        static readonly string remotesKey = "remotes";
-        static readonly string remoteBranchStaleKey = "remoteBranchStale";
-        static readonly string remoteBranchNewKey = "remoteBranchNew";
+        static readonly string remoteKey = Guid.NewGuid().ToString();
+        static readonly string remotePushMirrorKey = Guid.NewGuid().ToString();
+        static readonly string remotesKey = Guid.NewGuid().ToString();
+        static readonly string remoteBranchStaleKey = Guid.NewGuid().ToString();
+        static readonly string remoteBranchNewKey = Guid.NewGuid().ToString();
+
 
         /// <summary>Reloads the remotes.</summary>
         static void OnReloadRemotes(ICollection<RemoteNode> remotes, RootNode<RemoteNode> remotesNode)
@@ -43,13 +45,32 @@ namespace GitUI.UserControls
         TreeNode OnAddRemote(TreeNodeCollection nodes, RemoteNode remoteNode)
         {
             RemoteInfo remote = remoteNode.Value;
+            bool hasSameURLs = remote.PushUrls.Count() == 1 && Equals(remote.PushUrls.First(), remote.FetchUrl);
+
+            string remoteImgKey = remote.IsMirror ? remotePushMirrorKey : remoteKey;
+
+            string remoteTip;
+            if (remote.IsMirror)
+            {// setup as push mirror
+                remoteTip = string.Format(Strings.RemoteMirrorsTipFormat.Text,
+                    hasSameURLs
+                        ? remote.FetchUrl
+                        : remote.PushUrls.First());
+            }
+            else
+            {
+                remoteTip = hasSameURLs
+                    ? remote.FetchUrl
+                    : Strings.RemoteDifferingUrlsTip.Text;
+            }
+
             TreeNode treeNode = new TreeNode(remote.Name)
             {
                 //Name = string.Format("remotes{0}", remote.Name),TODO: branch name may have invalid chars for Control.Name
-                //ToolTipText = "",
+                ToolTipText = remoteTip,
                 ContextMenuStrip = menuRemote,
-                ImageKey = remoteKey,
-                SelectedImageKey = remoteKey,
+                ImageKey = remoteImgKey,
+                SelectedImageKey = remoteImgKey,
             };
             nodes.Add(treeNode);
             treeNode.Nodes.AddRange(remoteNode.Children.Select(child =>

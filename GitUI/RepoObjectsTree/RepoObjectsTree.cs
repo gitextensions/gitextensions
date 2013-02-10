@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -12,11 +13,12 @@ namespace GitUI.UserControls
     {
         List<RootNode> rootNodes = new List<RootNode>();
         /// <summary>Image key for a head branch.</summary>
-        static readonly string headBranchKey = "headBranch";
+        static readonly string headBranchKey = Guid.NewGuid().ToString();
 
         public RepoObjectsTree()
         {
             InitializeComponent();
+            
             Translate();
 
             RegisterContextActions();
@@ -26,8 +28,9 @@ namespace GitUI.UserControls
             imgList.Images.Add(branchPathKey, Resources.Namespace);
             imgList.Images.Add(stashesKey, Resources.Stashes);
             imgList.Images.Add(stashKey, Resources.Stashes);
-            imgList.Images.Add(remoteKey, Resources.RemoteRepo);
             imgList.Images.Add(remotesKey, Resources.RemoteRepo);
+            imgList.Images.Add(remoteKey, Resources.RemoteRepo);
+            imgList.Images.Add(remotePushMirrorKey, Resources.RemoteMirror);
             imgList.Images.Add(headBranchKey, Resources.HeadBranch);
             imgList.Images.Add(remoteBranchStaleKey, Resources.BranchStale);
             imgList.Images.Add(remoteBranchNewKey, Resources.BranchNew);
