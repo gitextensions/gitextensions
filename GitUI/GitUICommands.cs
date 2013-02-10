@@ -354,17 +354,15 @@ namespace GitUI
                 if (requiresValidWorkingDir && !RequiresValidWorkingDir(owner))
                     return false;
 
-                if (preEvent != null)
-                    if (!InvokeEvent(owner, preEvent))
-                        return false;
+                if (!InvokeEvent(owner, preEvent))
+                    return false;
                 try
                 {
                     actionDone = action();
                 }
                 finally
                 {
-                    if (postEvent != null)
-                        InvokePostEvent(owner, actionDone, postEvent);
+                    InvokePostEvent(owner, actionDone, postEvent);
                 }
             }
             finally
@@ -863,6 +861,19 @@ namespace GitUI
             StartRevertDialog(null, fileName);
         }
 
+        public bool StartRevertCommitDialog(IWin32Window owner, GitRevision revision)
+        {
+            Func<bool> action = () =>
+            {
+                using (var form = new FormRevertCommitSmall(this, revision))
+                {
+                    return form.ShowDialog(owner) == DialogResult.OK;
+                }
+            };
+
+            return DoActionOnRepo(owner, true, true, PreCherryPick, PostCherryPick, action);
+        }
+
         public bool StartResolveConflictsDialog(IWin32Window owner, bool offerCommit)
         {
             Func<bool> action = () =>
@@ -1241,45 +1252,44 @@ namespace GitUI
             return StartBrowseDialog(null, filter);
         }
 
-        public bool StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision, bool filterByRevision, bool showBlame)
+        public void StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision, bool filterByRevision, bool showBlame)
         {
-            Func<bool> action = () =>
-                {
-                    using (var form = new FormFileHistory(this, fileName, revision, filterByRevision))
-                    {
-                        if (showBlame)
-                            form.SelectBlameTab();
-                        form.ShowDialog(owner);
-                    }
-                    return true;
-                };
+            if (!InvokeEvent(owner, PreFileHistory))
+                return;
 
-            return DoActionOnRepo(owner, true, false, PreFileHistory, PostFileHistory, action);
+            var form = new FormFileHistory(this, fileName, revision, filterByRevision);
+            form.ShowInTaskbar = true;
+            form.FormClosed += (object sender, FormClosedEventArgs e) => { InvokePostEvent(owner, true, PostFileHistory); };
+            
+            if (showBlame)
+                form.SelectBlameTab();
+            
+            form.Show(owner);            
         }
 
-        public bool StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision, bool filterByRevision)
+        public void StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision, bool filterByRevision)
         {
-            return StartFileHistoryDialog(owner, fileName, revision, filterByRevision, false);
+            StartFileHistoryDialog(owner, fileName, revision, filterByRevision, false);
         }
 
-        public bool StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision)
+        public void StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision)
         {
-            return StartFileHistoryDialog(owner, fileName, revision, false);
+            StartFileHistoryDialog(owner, fileName, revision, false);
         }
 
-        public bool StartFileHistoryDialog(IWin32Window owner, string fileName)
+        public void StartFileHistoryDialog(IWin32Window owner, string fileName)
         {
-            return StartFileHistoryDialog(owner, fileName, null, false);
+            StartFileHistoryDialog(owner, fileName, null, false);
         }
 
-        public bool StartFileHistoryDialog(string fileName, GitRevision revision)
+        public void StartFileHistoryDialog(string fileName, GitRevision revision)
         {
-            return StartFileHistoryDialog(null, fileName, revision, false);
+            StartFileHistoryDialog(null, fileName, revision, false);
         }
 
-        public bool StartFileHistoryDialog(string fileName)
+        public void StartFileHistoryDialog(string fileName)
         {
-            return StartFileHistoryDialog(fileName, null);
+            StartFileHistoryDialog(fileName, null);
         }
 
         public bool StartPushDialog(IWin32Window owner, bool pushOnShow, out bool pushCompleted)
