@@ -90,9 +90,9 @@ namespace AutoCompileSubmodules
         /// <summary>
         ///   Automaticly compile all solution files found in any submodule
         /// </summary>
-        private void GitUiCommandsPostUpdateSubmodules(object sender, GitUIBaseEventArgs e)
+        private void GitUiCommandsPostUpdateSubmodules(object sender, GitUIPostActionEventArgs e)
         {
-            if (Settings.GetSetting("Enabled (true / false)")
+            if (e.ActionDone && Settings.GetSetting("Enabled (true / false)")
                 .Equals("true", StringComparison.InvariantCultureIgnoreCase))
                 Execute(e);
         }
