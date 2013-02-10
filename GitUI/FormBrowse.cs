@@ -351,18 +351,6 @@ namespace GitUI
                 plugin.Unregister(UICommands);
         }
 
-        protected void Initialize()
-        {
-            try
-            {
-                InternalInitialize(true);
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(this, exception.Message, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         private void InternalInitialize(bool hard)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -1383,7 +1371,6 @@ namespace GitUI
                 Translate();
 
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            Initialize();
             RevisionGrid.ReloadHotkeys();
             RevisionGrid.ReloadTranslation();
         }
@@ -1512,7 +1499,7 @@ namespace GitUI
             var submodule = (sender as ToolStripMenuItem).Tag as string;
             FormProcess.ShowDialog(this, Module.SuperprojectModule,
                 GitCommandHelpers.SubmoduleUpdateCmd(submodule));
-            Initialize();
+            UICommands.RepoChangedNotifier.Notify();
         }
 
         private void UpdateAllSubmodulesForSuperProjectToolStripMenuItemClick(object sender, EventArgs e)
@@ -1520,45 +1507,41 @@ namespace GitUI
             var module = (sender as ToolStripMenuItem).Tag as GitModule;
             GitUICommands uiCommands = new GitUICommands(module);
             if (uiCommands.StartUpdateSubmodulesDialog(this))
-                Initialize();
+                UICommands.RepoChangedNotifier.Notify();
         }
 
         private void UpdateAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (UICommands.StartUpdateSubmodulesDialog(this))
-                Initialize();
+            UICommands.StartUpdateSubmodulesDialog(this);
         }
 
         private void SynchronizeAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (UICommands.StartSyncSubmodulesDialog(this))
-                Initialize();
+            UICommands.StartSyncSubmodulesDialog(this);
         }
 
         private void ToolStripSplitStashButtonClick(object sender, EventArgs e)
         {
-            if (UICommands.StartStashDialog(this))
-                Initialize();
+            UICommands.StartStashDialog(this);
         }
 
         private void StashChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
             var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInManualStash);
             FormProcess.ShowDialog(this, arguments);
-            Initialize();
+            UICommands.RepoChangedNotifier.Notify();
         }
 
         private void StashPopToolStripMenuItemClick(object sender, EventArgs e)
         {
             FormProcess.ShowDialog(this, "stash pop");
-            Initialize();
+            UICommands.RepoChangedNotifier.Notify();
             MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
         }
 
         private void ViewStashToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (UICommands.StartStashDialog(this))
-                Initialize();
+            UICommands.StartStashDialog(this);
         }
 
         private void ExitToolStripMenuItemClick(object sender, EventArgs e)
@@ -1767,7 +1750,7 @@ namespace GitUI
 #endif
             }
 
-            Initialize();
+            UICommands.RepoChangedNotifier.Notify();
             RevisionGrid.IndexWatcher.Reset();
             RegisterPlugins();
         }
@@ -1860,8 +1843,7 @@ namespace GitUI
 
         private void CreateBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (UICommands.StartCreateBranchDialog(this))
-                Initialize();
+            UICommands.StartCreateBranchDialog(this);
         }
 
         private void RevisionGridDoubleClick(object sender, EventArgs e)
@@ -1881,8 +1863,7 @@ namespace GitUI
 
         private void editgitattributesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (UICommands.StartEditGitAttributesDialog(this))
-                Initialize();
+            UICommands.StartEditGitAttributesDialog(this);
         }
 
         private void copyFilenameToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1986,7 +1967,7 @@ namespace GitUI
         private void BisectClick(object sender, EventArgs e)
         {
             using (var frm = new FormBisect(RevisionGrid)) frm.ShowDialog(this);
-            Initialize();
+            UICommands.RepoChangedNotifier.Notify();
         }
 
         private void fileHistoryDiffToolstripMenuItem_Click(object sender, EventArgs e)
@@ -2033,7 +2014,7 @@ namespace GitUI
             if (RepoHosts.GitHosters.Count > 0)
             {
                 UICommands.StartCloneForkFromHoster(this, RepoHosts.GitHosters[0], DashboardGitModuleChanged);
-                Initialize();
+                UICommands.RepoChangedNotifier.Notify();
             }
             else
             {
@@ -2051,7 +2032,7 @@ namespace GitUI
             }
 
             UICommands.StartPullRequestsDialog(this, repoHost);
-            Initialize();
+            UICommands.RepoChangedNotifier.Notify();
         }
 
         private void _createPullRequestToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2107,7 +2088,7 @@ namespace GitUI
         private void QuickFetch()
         {
             FormProcess.ShowDialog(this, Module.FetchCmd(string.Empty, string.Empty, string.Empty));
-            Initialize();
+            UICommands.RepoChangedNotifier.Notify();
         }
 
 
@@ -2129,12 +2110,10 @@ namespace GitUI
                 case Commands.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
                 case Commands.QuickFetch: QuickFetch(); break;
                 case Commands.QuickPull:
-                    if (UICommands.StartPullDialog(this, true))
-                        Initialize();
+                    UICommands.StartPullDialog(this, true);
                     break;
                 case Commands.QuickPush:
-                    if (UICommands.StartPushDialog(this, true))
-                        Initialize();
+                    UICommands.StartPushDialog(this, true);                   
                     break;
                 case Commands.RotateApplicationIcon: RotateApplicationIcon(); break;
                 default: return base.ExecuteCommand(cmd);
@@ -2368,8 +2347,7 @@ namespace GitUI
 
         private void SvnRebaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (UICommands.StartSvnRebaseDialog(this))
-                Initialize();
+            UICommands.StartSvnRebaseDialog(this);
         }
 
         private void SvnDcommitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2379,8 +2357,7 @@ namespace GitUI
 
         private void SvnFetchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (UICommands.StartSvnFetchDialog(this))
-                Initialize();
+            UICommands.StartSvnFetchDialog(this);
         }
 
         private void expandAllStripMenuItem_Click(object sender, EventArgs e)
@@ -2554,9 +2531,8 @@ namespace GitUI
             bool pullCompelted;
             ConfigureFormPull configProc = (formPull) => formPull.SetForFetchAll();
 
-            if (UICommands.StartPullDialog(this, true, out pullCompelted, configProc))
-                Initialize();
-
+            UICommands.StartPullDialog(this, true, out pullCompelted, configProc);
+            
             //restore Settings.PullMerge value
             if (Settings.DonSetAsLastPullAction)
                 Module.LastPullActionToPullMerge();
