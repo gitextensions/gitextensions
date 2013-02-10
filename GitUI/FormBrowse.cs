@@ -261,7 +261,6 @@ namespace GitUI
             Cursor.Current = Cursors.WaitCursor;
             InternalInitialize(false);
             RevisionGrid.Focus();
-            RevisionGrid.ActionOnRepositoryPerformed += ActionOnRepositoryPerformed;
             RevisionGrid.IndexWatcher.Reset();
 
             RevisionGrid.IndexWatcher.Changed += _indexWatcher_Changed;
@@ -350,11 +349,6 @@ namespace GitUI
         {
             foreach (var plugin in LoadedPlugins.Plugins)
                 plugin.Unregister(UICommands);
-        }
-
-        private void ActionOnRepositoryPerformed(object sender, EventArgs e)
-        {
-            InternalInitialize(false);
         }
 
         protected void Initialize()
