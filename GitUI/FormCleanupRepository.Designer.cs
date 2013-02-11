@@ -99,7 +99,7 @@
             this.RemoveIngnored.Name = "RemoveIngnored";
             this.RemoveIngnored.Size = new System.Drawing.Size(203, 17);
             this.RemoveIngnored.TabIndex = 2;
-            this.RemoveIngnored.Text = "Remove only ingnored untracked files";
+            this.RemoveIngnored.Text = "Remove only ignored untracked files";
             this.RemoveIngnored.UseVisualStyleBackColor = true;
             // 
             // RemoveNonIgnored

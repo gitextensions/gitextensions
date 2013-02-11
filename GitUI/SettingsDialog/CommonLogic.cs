@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using GitCommands;
-using System.ComponentModel;
 using Microsoft.Win32;
 using System.Windows.Forms;
 using ResourceManager.Translation;
@@ -17,9 +15,8 @@ namespace GitUI.SettingsDialog
         private static readonly TranslationString _cantReadRegistry =
             new TranslationString("GitExtensions has insufficient permissions to check the registry.");
 
-        private static readonly TranslationString _cantReadRegistryAddEntryManually =
-            new TranslationString("GitExtensions has insufficient permissions to modify the registry." +
-                                Environment.NewLine + "Please add this key to the registry manually." +
+        private static readonly TranslationString _AddEntryManually =
+            new TranslationString("Please add this key to the registry manually." +
                                 Environment.NewLine + "Path:  {0}\\{1}" + Environment.NewLine +
                                 "Value:  {2} = {3}");
 
@@ -88,7 +85,8 @@ namespace GitUI.SettingsDialog
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show(String.Format(_cantReadRegistryAddEntryManually.Text, root, subkey, key, value));
+                MessageBox.Show(_cantReadRegistry + Environment.NewLine + 
+                    String.Format(_AddEntryManually.Text, root, subkey, key, value));
             }
         }
 

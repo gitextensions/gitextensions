@@ -52,6 +52,8 @@
             this._NO_TRANSLATE_textCommitTemplateText = new System.Windows.Forms.TextBox();
             this._NO_TRANSLATE_textBoxCommitTemplateName = new System.Windows.Forms.TextBox();
             this._NO_TRANSLATE_comboBoxCommitTemplates = new System.Windows.Forms.ComboBox();
+            this.labelAutoWrap = new System.Windows.Forms.Label();
+            this.checkBoxAutoWrap = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.groupBoxCommitValidation.SuspendLayout();
@@ -78,7 +80,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(698, 362);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(698, 394);
             this.tableLayoutPanel1.TabIndex = 60;
             // 
             // tableLayoutPanel2
@@ -91,7 +93,7 @@
             this.tableLayoutPanel2.Controls.Add(this.buttonOk, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.buttonCancel, 2, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 329);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 361);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -104,7 +106,7 @@
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(75, 23);
             this.buttonOk.TabIndex = 6;
-            this.buttonOk.Text = "Ok";
+            this.buttonOk.Text = "OK";
             this.buttonOk.UseVisualStyleBackColor = true;
             this.buttonOk.Click += new System.EventHandler(this.buttonOk_Click);
             // 
@@ -122,9 +124,9 @@
             // 
             this.groupBoxCommitValidation.Controls.Add(this.tableLayoutPanel3);
             this.groupBoxCommitValidation.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxCommitValidation.Location = new System.Drawing.Point(3, 166);
+            this.groupBoxCommitValidation.Location = new System.Drawing.Point(3, 182);
             this.groupBoxCommitValidation.Name = "groupBoxCommitValidation";
-            this.groupBoxCommitValidation.Size = new System.Drawing.Size(692, 157);
+            this.groupBoxCommitValidation.Size = new System.Drawing.Size(692, 173);
             this.groupBoxCommitValidation.TabIndex = 1;
             this.groupBoxCommitValidation.TabStop = false;
             this.groupBoxCommitValidation.Text = "Commit validation";
@@ -139,30 +141,34 @@
             this.tableLayoutPanel3.Controls.Add(this.labelMaxFirstLineLength, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this._NO_TRANSLATE_numericMaxLineLength, 1, 1);
             this.tableLayoutPanel3.Controls.Add(this._NO_TRANSLATE_numericMaxFirstLineLength, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.labelSecondLineEmpty, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.checkBoxSecondLineEmpty, 1, 2);
             this.tableLayoutPanel3.Controls.Add(this.labelRegExCheck, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this._NO_TRANSLATE_textBoxCommitValidationRegex, 1, 3);
             this.tableLayoutPanel3.Controls.Add(this.checkBoxUseIndent, 1, 4);
+            this.tableLayoutPanel3.Controls.Add(this.labelSecondLineEmpty, 0, 5);
+            this.tableLayoutPanel3.Controls.Add(this.labelAutoWrap, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.checkBoxSecondLineEmpty, 1, 5);
+            this.tableLayoutPanel3.Controls.Add(this.checkBoxAutoWrap, 1, 2);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 19);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 5;
+            this.tableLayoutPanel3.RowCount = 6;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(686, 135);
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(686, 151);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
             // labelUseIndent
             //
             this.labelUseIndent.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelUseIndent.AutoSize = true;
-            this.labelUseIndent.Location = new System.Drawing.Point(3, 114);
+            this.labelUseIndent.Location = new System.Drawing.Point(3, 109);
             this.labelUseIndent.Name = "labelUseIndent";
-            this.labelUseIndent.Size = new System.Drawing.Size(144, 17);
+            this.labelUseIndent.Size = new System.Drawing.Size(143, 15);
             this.labelUseIndent.TabIndex = 11;
             this.labelUseIndent.Text = "Indent lines after first line:";
             //
@@ -206,21 +212,11 @@
             // 
             this.labelSecondLineEmpty.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelSecondLineEmpty.AutoSize = true;
-            this.labelSecondLineEmpty.Location = new System.Drawing.Point(3, 60);
+            this.labelSecondLineEmpty.Location = new System.Drawing.Point(3, 131);
             this.labelSecondLineEmpty.Name = "labelSecondLineEmpty";
             this.labelSecondLineEmpty.Size = new System.Drawing.Size(154, 15);
             this.labelSecondLineEmpty.TabIndex = 6;
             this.labelSecondLineEmpty.Text = "Second line must be empty:";
-            // 
-            // checkBoxSecondLineEmpty
-            // 
-            this.checkBoxSecondLineEmpty.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.checkBoxSecondLineEmpty.AutoSize = true;
-            this.checkBoxSecondLineEmpty.Location = new System.Drawing.Point(668, 61);
-            this.checkBoxSecondLineEmpty.Name = "checkBoxSecondLineEmpty";
-            this.checkBoxSecondLineEmpty.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxSecondLineEmpty.TabIndex = 5;
-            this.checkBoxSecondLineEmpty.UseVisualStyleBackColor = true;
             // 
             // labelRegExCheck
             // 
@@ -244,7 +240,7 @@
             //
             this.checkBoxUseIndent.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.checkBoxUseIndent.AutoSize = true;
-            this.checkBoxUseIndent.Location = new System.Drawing.Point(668, 115);
+            this.checkBoxUseIndent.Location = new System.Drawing.Point(668, 110);
             this.checkBoxUseIndent.Name = "checkBoxUseIndent";
             this.checkBoxUseIndent.Size = new System.Drawing.Size(15, 14);
             this.checkBoxUseIndent.TabIndex = 10;
@@ -256,7 +252,7 @@
             this.groupBoxCommitTemplates.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxCommitTemplates.Location = new System.Drawing.Point(3, 3);
             this.groupBoxCommitTemplates.Name = "groupBoxCommitTemplates";
-            this.groupBoxCommitTemplates.Size = new System.Drawing.Size(692, 157);
+            this.groupBoxCommitTemplates.Size = new System.Drawing.Size(692, 173);
             this.groupBoxCommitTemplates.TabIndex = 0;
             this.groupBoxCommitTemplates.TabStop = false;
             this.groupBoxCommitTemplates.Text = "Commit templates";
@@ -273,7 +269,7 @@
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(686, 135);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(686, 151);
             this.tableLayoutPanel4.TabIndex = 3;
             // 
             // tableLayoutPanel5
@@ -291,7 +287,7 @@
             this.tableLayoutPanel5.RowCount = 2;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(553, 129);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(553, 145);
             this.tableLayoutPanel5.TabIndex = 1;
             // 
             // labelCommitTemplate
@@ -323,7 +319,7 @@
             this._NO_TRANSLATE_textCommitTemplateText.Multiline = true;
             this._NO_TRANSLATE_textCommitTemplateText.Name = "_NO_TRANSLATE_textCommitTemplateText";
             this._NO_TRANSLATE_textCommitTemplateText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this._NO_TRANSLATE_textCommitTemplateText.Size = new System.Drawing.Size(437, 94);
+            this._NO_TRANSLATE_textCommitTemplateText.Size = new System.Drawing.Size(437, 110);
             this._NO_TRANSLATE_textCommitTemplateText.TabIndex = 2;
             this._NO_TRANSLATE_textCommitTemplateText.TextChanged += new System.EventHandler(this.textCommitTemplateText_TextChanged);
             // 
@@ -348,11 +344,41 @@
             this._NO_TRANSLATE_comboBoxCommitTemplates.TabIndex = 0;
             this._NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndexChanged += new System.EventHandler(this.comboBoxCommitTemplates_SelectedIndexChanged);
             // 
+            // labelAutoWrap
+            // 
+            this.labelAutoWrap.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.labelAutoWrap.AutoSize = true;
+            this.labelAutoWrap.Location = new System.Drawing.Point(3, 60);
+            this.labelAutoWrap.Name = "labelAutoWrap";
+            this.labelAutoWrap.Size = new System.Drawing.Size(266, 15);
+            this.labelAutoWrap.TabIndex = 13;
+            this.labelAutoWrap.Text = "Auto-wrap commit message (except subject line)";
+            // 
+            // checkBoxSecondLineEmpty
+            // 
+            this.checkBoxSecondLineEmpty.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.checkBoxSecondLineEmpty.AutoSize = true;
+            this.checkBoxSecondLineEmpty.Location = new System.Drawing.Point(668, 132);
+            this.checkBoxSecondLineEmpty.Name = "checkBoxSecondLineEmpty";
+            this.checkBoxSecondLineEmpty.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxSecondLineEmpty.TabIndex = 5;
+            this.checkBoxSecondLineEmpty.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxAutoWrap
+            // 
+            this.checkBoxAutoWrap.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.checkBoxAutoWrap.AutoSize = true;
+            this.checkBoxAutoWrap.Location = new System.Drawing.Point(668, 61);
+            this.checkBoxAutoWrap.Name = "checkBoxAutoWrap";
+            this.checkBoxAutoWrap.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxAutoWrap.TabIndex = 14;
+            this.checkBoxAutoWrap.UseVisualStyleBackColor = true;
+            // 
             // FormCommitTemplateSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(698, 362);
+            this.ClientSize = new System.Drawing.Size(698, 394);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MinimumSize = new System.Drawing.Size(550, 400);
             this.Name = "FormCommitTemplateSettings";
@@ -400,5 +426,7 @@
         private System.Windows.Forms.TextBox _NO_TRANSLATE_textBoxCommitValidationRegex;
         private System.Windows.Forms.Label labelUseIndent;
         private System.Windows.Forms.CheckBox checkBoxUseIndent;
+        private System.Windows.Forms.Label labelAutoWrap;
+        private System.Windows.Forms.CheckBox checkBoxAutoWrap;
     }
 }

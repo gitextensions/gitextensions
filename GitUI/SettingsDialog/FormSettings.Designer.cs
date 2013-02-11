@@ -114,7 +114,7 @@ namespace GitUI
             this.tableLayoutPanel3.Controls.Add(this.settingsTreeView, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.panelCurrentSettingsPage, 1, 1);
             this.tableLayoutPanel3.Controls.Add(this.panel2, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel4, 2, 2);
+            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel4, 1, 2);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -174,7 +174,6 @@ namespace GitUI
             // flowLayoutPanel4
             // 
             this.flowLayoutPanel4.AutoSize = true;
-            this.tableLayoutPanel3.SetColumnSpan(this.flowLayoutPanel4, 2);
             this.flowLayoutPanel4.Controls.Add(this.buttonApply);
             this.flowLayoutPanel4.Controls.Add(this.buttonDiscard);
             this.flowLayoutPanel4.Controls.Add(this.buttonCancel);

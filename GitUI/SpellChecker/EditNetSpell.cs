@@ -74,6 +74,23 @@ namespace GitUI.SpellChecker
             }
         }
 
+        public string Line(int line)
+        {
+            return TextBox.Lines[line];
+        }
+
+        public void ReplaceLine(int line, string withText)
+        {
+            var oldPos = TextBox.SelectionStart + TextBox.SelectionLength;
+            var startIdx = TextBox.GetFirstCharIndexFromLine(line);
+            TextBox.SelectionLength = 0;
+            TextBox.SelectionStart = startIdx;
+            TextBox.SelectionLength = Line(line).Length;
+            TextBox.SelectedText = withText;
+            TextBox.SelectionLength = 0;
+            TextBox.SelectionStart = oldPos;
+        }
+
         public int LineLength(int line)
         {
             return LineCount() <= line ? 0 : TextBox.Lines[line].Length;
@@ -487,16 +504,17 @@ namespace GitUI.SpellChecker
             _customUnderlines.Lines.Clear();
             _customUnderlines.IllFormedLines.Clear();
 
+            if (!IsWatermarkShowing)
+            {
+                OnTextChanged(e);
+            }
+
             if (Settings.Dictionary == "None" || TextBox.Text.Length < 4)
                 return;
 
             SpellCheckTimer.Enabled = false;
             SpellCheckTimer.Interval = 250;
             SpellCheckTimer.Enabled = true;
-            if (!IsWatermarkShowing)
-            {
-                OnTextChanged(e);
-            }
         }
 
         private void TextBoxSizeChanged(object sender, EventArgs e)
@@ -514,6 +532,20 @@ namespace GitUI.SpellChecker
             OnKeyUp(e);
         }
 
+        private bool skipSelectionUndo = false;
+        private void UndoHighlighting()
+        {
+            if (!skipSelectionUndo)
+                return;
+
+            while (TextBox.UndoActionName.Equals("Unknown"))
+            {
+                TextBox.Undo();
+            }
+            TextBox.Undo();
+            skipSelectionUndo = false;
+        }
+
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.V)
@@ -526,6 +558,10 @@ namespace GitUI.SpellChecker
                 // remove image data from clipboard
                 string text = Clipboard.GetText();
                 Clipboard.SetText(text);
+            }
+            else if (e.Control && e.KeyCode == Keys.Z)
+            {
+                UndoHighlighting();
             }
             OnKeyDown(e);
         }
@@ -607,45 +643,23 @@ namespace GitUI.SpellChecker
             TextBox.SelectAll();
         }
 
-        public void WrapWord(string indent)
-        {
-            var text = TextBox.Text;
-            var originalCursorPosition = TextBox.SelectionStart;
-            var cursor = originalCursorPosition - 1;
-            int newCursorPosition;
-            int endOfPreviousWord;
-
-            // Find the beginning of current word
-            while (cursor >= 0 && !char.IsWhiteSpace(text[cursor])) cursor--;
-            endOfPreviousWord = cursor;
-
-            // Find the end of the previous word
-            while (endOfPreviousWord >= 0 && char.IsWhiteSpace(text[endOfPreviousWord]))
-                endOfPreviousWord--;
-
-            // Calculate the new cursor position which would keep the cursor
-            // at the same spot in the word being typed.
-            newCursorPosition = originalCursorPosition - (cursor - endOfPreviousWord) + 4;
-
-            string textBefore = text.Substring(0, endOfPreviousWord + 1);
-            string textAfter = text.Substring(cursor + 1);
-            TextBox.Text = textBefore + Environment.NewLine + indent + textAfter;
-
-            TextBox.SelectionStart = newCursorPosition;
-        }
-
         public void ChangeTextColor(int line, int offset, int length, Color color)
         {
-            var oldColor = TextBox.SelectionColor;
             var oldPos = TextBox.SelectionStart;
+            var oldColor = TextBox.SelectionColor;
             var lineIndex = TextBox.GetFirstCharIndexFromLine(line);
-            TextBox.SelectionStart = lineIndex + offset;
+            TextBox.SelectionStart = Math.Max(lineIndex + offset, 0);
             TextBox.SelectionLength = length;
             TextBox.SelectionColor = color;
+            var restoreColor = oldPos < TextBox.SelectionStart || oldPos > TextBox.SelectionStart + TextBox.SelectionLength;
 
             TextBox.SelectionLength = 0;
             TextBox.SelectionStart = oldPos;
-            TextBox.SelectionColor = oldColor;
+            //restore old color only if oldPos doesn't intersects with colored selection
+            if(restoreColor)
+                TextBox.SelectionColor = oldColor;
+            //undoes all recent selections while ctrl-z pressed
+            skipSelectionUndo = true;
         }
 
         /// <summary>
@@ -653,15 +667,19 @@ namespace GitUI.SpellChecker
         /// </summary>
         public void EnsureEmptyLine(bool addBullet, int afterLine)
         {
-            var bullet = addBullet ? " - " : "";
-            var indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
             var lineLength = LineLength(afterLine);
-            var newLine = (lineLength > 0) ? Environment.NewLine : String.Empty;
-            var lastIndexOfLine = indexOfLine + lineLength;
-            TextBox.SelectionLength = 0;
-            TextBox.SelectionStart = lastIndexOfLine;
-            TextBox.SelectedText = newLine + bullet;
-            TextBox.SelectionLength = 0;
+            if (lineLength > 0)
+            {
+                var bullet = addBullet ? " - " : String.Empty;
+                var indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
+                var newLine = (lineLength > 0) ? Environment.NewLine : String.Empty;
+                var newCursorPos = indexOfLine + newLine.Length + bullet.Length + lineLength - 1;
+                TextBox.SelectionLength = 0;
+                TextBox.SelectionStart = indexOfLine;
+                TextBox.SelectedText = newLine + bullet;
+                TextBox.SelectionLength = 0;
+                TextBox.SelectionStart = newCursorPos;
+            }
         }
     }
 }

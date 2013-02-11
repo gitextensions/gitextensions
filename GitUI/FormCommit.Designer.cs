@@ -1042,7 +1042,6 @@ namespace GitUI
             this.commitStatusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 11, 0);
             this.commitStatusStrip.Size = new System.Drawing.Size(336, 25);
             this.commitStatusStrip.TabIndex = 7;
-            this.commitStatusStrip.Text = "statusStrip1";
             // 
             // commitSpacer
             // 

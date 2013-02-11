@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace GitUI.SettingsDialog.Pages
+namespace GitUI.SettingsDialog
 {
     /// <summary>
     /// Page to group other pages
@@ -17,7 +17,7 @@ namespace GitUI.SettingsDialog.Pages
         protected GroupSettingsPage(string aTitle)
         {
             Title = aTitle;
-            Translator.Translate(this, GitCommands.Settings.Translation);
+            Translator.Translate(this, GitCommands.Settings.CurrentTranslation);
         }
 
         public string GetTitle()

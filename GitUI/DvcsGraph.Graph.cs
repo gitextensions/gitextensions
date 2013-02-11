@@ -21,7 +21,7 @@ namespace GitUI
             public readonly List<Node> AddedNodes = new List<Node>();
 
             private readonly List<Junction> junctions = new List<Junction>();
-            public readonly Dictionary<IComparable, Node> Nodes = new Dictionary<IComparable, Node>();
+            public readonly Dictionary<string, Node> Nodes = new Dictionary<string, Node>();
             private readonly Lanes lanes;
             private int filterNodeCount;
 
@@ -79,7 +79,7 @@ namespace GitUI
                 get { return lanes.CachedCount; }
             }
 
-            public void Filter(IComparable aId)
+            public void Filter(string aId)
             {
                 Node node = Nodes[aId];
 
@@ -110,13 +110,13 @@ namespace GitUI
                 }
             }
 
-            public void HighlightBranch(IComparable aId)
+            public void HighlightBranch(string aId)
             {
                 ClearHighlightBranch();
                 HighlightBranchRecursive(aId);
             }
 
-            public void HighlightBranchRecursive(IComparable aId)
+            public void HighlightBranchRecursive(string aId)
             {
                 Node startNode = Nodes[aId];
 
@@ -133,7 +133,7 @@ namespace GitUI
 
             public event GraphUpdatedHandler Updated;
 
-            public void Add(IComparable aId, IComparable[] aParentIds, DataType aType, GitRevision aData)
+            public void Add(string aId, string[] aParentIds, DataType aType, GitRevision aData)
             {
                 // If we haven't seen this node yet, create a new junction.
                 Node node;
@@ -148,7 +148,7 @@ namespace GitUI
                 node.Index = AddedNodes.Count;
                 AddedNodes.Add(node);
 
-                foreach (IComparable parentId in aParentIds)
+                foreach (string parentId in aParentIds)
                 {
                     Node parent;
                     GetNode(parentId, out parent);
@@ -156,7 +156,7 @@ namespace GitUI
                     {
                         // TODO: We might be able to recover from this with some work, but
                         // since we build the graph async it might be tough to figure out.
-                        //throw new ArgumentException("The nodes must be added such that all children are added before their parents", "aParentIds");
+                        Debug.WriteLine("The nodes must be added such that all children are added before their parents");
                         continue;
                     }
 
@@ -218,8 +218,7 @@ namespace GitUI
                     if (parent != null && parent.InLane != int.MaxValue)
                     {
                         int resetTo = d.Parent.Descendants.Aggregate(d.Parent.InLane, (current, dd) => Math.Min(current, dd.Child.InLane));
-
-                        Console.WriteLine("We have to start over at lane {0} because of {1}", resetTo, node);
+                        Debug.WriteLine("We have to start over at lane {0} because of {1}", resetTo, node);
                         isRebuild = true;
                         break;
                     }
@@ -405,7 +404,7 @@ namespace GitUI
                         {
                             if (junction.Parent != junction.Child)
                             {
-                                Console.WriteLine("*** {0} *** {1} {2}", junction, Nodes.Count, junctions.Count);
+                                Debug.WriteLine("*** {0} *** {1} {2}", junction, Nodes.Count, junctions.Count);
                             }
                         }
                     }
@@ -414,7 +413,7 @@ namespace GitUI
                 return L.ToArray();
             }
 
-            private bool GetNode(IComparable aId, out Node aNode)
+            private bool GetNode(string aId, out Node aNode)
             {
                 if (!Nodes.TryGetValue(aId, out aNode))
                 {

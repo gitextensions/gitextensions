@@ -80,7 +80,6 @@
             this.labelHoverText.Name = "labelHoverText";
             this.labelHoverText.Size = new System.Drawing.Size(144, 15);
             this.labelHoverText.TabIndex = 1;
-            this.labelHoverText.Text = "label1";
             // 
             // flowLayoutPanel1
             // 
