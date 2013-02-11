@@ -153,6 +153,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap BlankIcon {
+            get {
+                object obj = ResourceManager.GetObject("BlankIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Branch {
             get {
                 object obj = ResourceManager.GetObject("Branch", resourceCulture);
@@ -1515,6 +1525,46 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap nonprintchar {
             get {
                 object obj = ResourceManager.GetObject("nonprintchar", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap NotifyError {
+            get {
+                object obj = ResourceManager.GetObject("NotifyError", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap NotifyInfo {
+            get {
+                object obj = ResourceManager.GetObject("NotifyInfo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap NotifySuccess {
+            get {
+                object obj = ResourceManager.GetObject("NotifySuccess", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap NotifyWarn {
+            get {
+                object obj = ResourceManager.GetObject("NotifyWarn", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

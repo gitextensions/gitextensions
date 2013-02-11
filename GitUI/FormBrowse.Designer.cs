@@ -123,6 +123,8 @@ namespace GitUI
             this.TreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.statusFeed = new GitUI.WarningToolStripItem();
+            this.statusFiller = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1109,18 +1111,35 @@ namespace GitUI
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusFeed,
+            this.statusFiller,
             this.toolStripStatusLabel1});
             this.statusStrip.Location = new System.Drawing.Point(0, 551);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.statusStrip.Size = new System.Drawing.Size(923, 22);
             this.statusStrip.TabIndex = 4;
+            // 
+            // statusFeed
+            // 
+            this.statusFeed.BackColor = System.Drawing.SystemColors.Control;
+            this.statusFeed.Image = global::GitUI.Properties.Resources.NotifyWarn;
+            this.statusFeed.Name = "statusFeed";
+            this.statusFeed.Size = new System.Drawing.Size(90, 20);
+            this.statusFeed.Text = "Update Text";
+            this.statusFeed.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // statusFiller
+            // 
+            this.statusFiller.Name = "statusFiller";
+            this.statusFiller.Size = new System.Drawing.Size(773, 17);
+            this.statusFiller.Spring = true;
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(14, 17);
             this.toolStripStatusLabel1.Text = "X";
+            this.toolStripStatusLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
             // fileToolStripMenuItem
@@ -1977,6 +1996,7 @@ namespace GitUI
         private ToolStripDropDownButton toolStripDropDownButton1;
         private StatusStrip statusStrip;
         private ToolStripStatusLabel toolStripStatusLabel1;
+        WarningToolStripItem statusFeed;
         private ToolStripMenuItem openWithToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator20;
         private ToolStripSeparator toolStripSeparator30;
@@ -2083,7 +2103,7 @@ namespace GitUI
         private ToolStripMenuItem blameToolStripMenuItem;
         private ToolStripMenuItem blameToolStripMenuItem1;
         private ToolStripMenuItem expandAllToolStripMenuItem;
-        private ToolStripMenuItem findInDiffToolStripMenuItem;        
+        private ToolStripMenuItem findInDiffToolStripMenuItem;
         private ToolStripMenuItem collapseAllToolStripMenuItem;
         private ToolStripSplitButton toolStripButtonLevelUp;
         private ToolStripSplitButton toolStripButtonPull;
@@ -2097,13 +2117,14 @@ namespace GitUI
         private ToolStripMenuItem resetFileToToolStripMenuItem;
         private ToolStripMenuItem resetFileToAToolStripMenuItem;
         private ToolStripMenuItem resetFileToRemoteToolStripMenuItem;
-        private ToolStripMenuItem resetToolStripMenuItem;        
+        private ToolStripMenuItem resetToolStripMenuItem;
         private ToolStripMenuItem aBToolStripMenuItem;
         private ToolStripMenuItem aLocalToolStripMenuItem;
         private ToolStripMenuItem bLocalToolStripMenuItem;
         private ToolStripMenuItem parentOfALocalToolStripMenuItem;
         private ToolStripMenuItem parentOfBLocalToolStripMenuItem;
         private SplitContainer MainSplitContainer;
-        private UserControls.RepoObjectsTree repoObjectsTree;        
+        private UserControls.RepoObjectsTree repoObjectsTree;
+        private ToolStripStatusLabel statusFiller;
     }
 }

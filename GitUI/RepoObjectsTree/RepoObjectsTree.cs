@@ -11,6 +11,8 @@ namespace GitUI.UserControls
     /// <summary>Tree-like structure for a repo's objects.</summary>
     public partial class RepoObjectsTree : GitModuleControl
     {
+        public IObservable<StatusFeedItem> StatusFeed { get; private set; }
+
         List<RootNode> rootNodes = new List<RootNode>();
         /// <summary>Image key for a head branch.</summary>
         static readonly string headBranchKey = Guid.NewGuid().ToString();

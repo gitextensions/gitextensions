@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -17,6 +19,7 @@ using GitUI.RepoHosting;
 using GitUI.Script;
 using GitUI.Statistics;
 using GitUIPluginInterfaces;
+using System.Reactive;
 
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
@@ -123,7 +126,7 @@ namespace GitUI
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
-           
+
             // set tab page images
             {
                 var imageList = new ImageList();
@@ -136,6 +139,43 @@ namespace GitUI
                 CommitInfoTabControl.TabPages[1].ImageIndex = 1;
                 CommitInfoTabControl.TabPages[2].ImageIndex = 2;
             }
+
+            WarningToolStripItem statusToolStripItem = statusStrip.Items
+                .OfType<WarningToolStripItem>()
+                .Last();
+
+            var mockStatusUPdates = new StatusFeedItem[]
+            {
+                new StatusFeedItem(StatusSeverity.Fail, "fail"), 
+                new StatusFeedItem(StatusSeverity.Fail, "fail2"), 
+                new StatusFeedItem(StatusSeverity.Info, "info"), 
+                new StatusFeedItem(StatusSeverity.Success, "success"), 
+                new StatusFeedItem(StatusSeverity.Warn, "warn"), 
+                new StatusFeedItem(StatusSeverity.Success, "really long text with a lot of text alsdjfksjadfl;jkasdflkjs;dfjslkjfdskljdfklsj;dfljslkdfjskldfjlsjdfkljsdfjslkdjfkl"), 
+            };
+
+            var statusFeedDelay = Observable.Create<StatusFeedItem>(o =>
+            {
+                var els = new EventLoopScheduler();
+                return mockStatusUPdates.ToObservable()//repoObjectsTree.StatusFeed
+                    .ObserveOn(els)
+                    .Do(x => els.Schedule(() => Thread.Sleep(5 * 1000)))
+                    .Subscribe(o);
+            });
+
+            //statusFeedDelay
+            //    .Timestamp()
+            //    .Select(status => new { status.Value, Timestamp = status.Timestamp.Second + (double)status.Timestamp.Millisecond / 1000.0 })
+            //    .Subscribe(status => Debug.WriteLine("{0}: {1}", status.Timestamp, status.Value));
+            //statusFeedDelay
+            //    .SubscribeOn(this)
+            //    .Subscribe(update => statusToolStripItem.Notify(update));
+
+            mockStatusUPdates
+                .ToObservable()
+                .SubscribeOn(this)
+                .DelaySubscription(TimeSpan.FromSeconds(30))
+                .Subscribe(s => statusToolStripItem.Notify(s));
 
             RevisionGrid.UICommandsSource = this;
             repoObjectsTree.UICommandsSource = this;
@@ -414,7 +454,7 @@ namespace GitUI
 
             repoObjectsTree.Reload();
             UICommands.RaisePostBrowseInitialize(this);
-            
+
             Cursor.Current = Cursors.Default;
         }
 
@@ -1205,7 +1245,7 @@ namespace GitUI
                     return;
                 }
                 else
-                { 
+                {
                     bSilent = true;
                     Module.LastPullActionToPullMerge();
                 }
