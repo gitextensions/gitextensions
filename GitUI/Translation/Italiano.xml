@@ -2497,7 +2497,7 @@ revision:</Source>
           <Value>Rimuovi tutte le cartelle non gestite</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveIngnored" Property="Text">
-          <Source>Remove only ingnored untracked files</Source>
+          <Source>Remove only ignored untracked files</Source>
           <Value>Rimuovi solo file non gestiti e ignorati</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveNonIgnored" Property="Text">
@@ -5306,7 +5306,7 @@ E' stato risolto il conflitto?</Value>
           <Value>cancellato</Value>
         </TranslationItem>
         <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text">
-          <Source>File ({0}) appears to be a binairy file.
+          <Source>File ({0}) appears to be a binary file.
 Choose to keep the local({1}), remote({2}) or base file.</Source>
           <Value>Il file ({0}) sembra essere un file binario. Scegli se mantenre il file locale ({1}), quello remoto ({2}) o la base.</Value>
         </TranslationItem>

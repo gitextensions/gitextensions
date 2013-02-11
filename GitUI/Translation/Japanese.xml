@@ -2491,7 +2491,7 @@ revision:</Source>
           <Value>未管理ディレクトリの削除</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveIngnored" Property="Text">
-          <Source>Remove only ingnored untracked files</Source>
+          <Source>Remove only ignored untracked files</Source>
           <Value>無視された未管理ファイルのみ削除</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveNonIgnored" Property="Text">
@@ -4122,12 +4122,6 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
 
 For more information run
 command "git help shortlog"</Source>
-          <OldSource>Edit the mailmap.
-This file is meant to correct usernames.
-
-Example:
-Henk Westhuis &lt;Henk@.(none)&gt;
-Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;</OldSource>
           <Value>mailmapを編集します。
 このファイルはユーザ名を訂正するためのものです。
 
@@ -5312,7 +5306,7 @@ Is the mergeconflict solved?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text">
-          <Source>File ({0}) appears to be a binairy file.
+          <Source>File ({0}) appears to be a binary file.
 Choose to keep the local({1}), remote({2}) or base file.</Source>
           <Value>ファイル ({0})はおそらくバイナリファイルです。
 ローカル({0})でもリモート({1})どちらのファイルを用いるか選択してください。</Value>
@@ -7429,10 +7423,6 @@ When OpenSSH is used, command line dialogs are shown!
         <TranslationItem Name="_yearsAgo" Property="Text" type="unfinished">
           <Source>{0} years ago</Source>
           <Value />
-        </TranslationItem>
-        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>SSH鍵が読み込めません。PuTTYが正しく設定されていません。</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
