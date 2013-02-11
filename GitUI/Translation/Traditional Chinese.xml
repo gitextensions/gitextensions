@@ -2506,7 +2506,7 @@ revision:</Source>
           <Value>移除所有未追踪的目錄</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveIngnored" Property="Text">
-          <Source>Remove only ingnored untracked files</Source>
+          <Source>Remove only ignored untracked files</Source>
           <Value>只移除忽略的未追踪的檔案</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveNonIgnored" Property="Text">
@@ -5298,7 +5298,7 @@ Is the mergeconflict solved?</Source>
           <Value>刪除</Value>
         </TranslationItem>
         <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text" type="unfinished">
-          <Source>File ({0}) appears to be a binairy file.
+          <Source>File ({0}) appears to be a binary file.
 Choose to keep the local({1}), remote({2}) or base file.</Source>
           <Value>{0}似乎是二進位檔案。
 是要保留本機檔案{1}還是遠端檔案{2}抑或是基底檔案？</Value>
