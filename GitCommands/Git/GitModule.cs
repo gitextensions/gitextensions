@@ -2945,8 +2945,6 @@ namespace GitCommands
                 else
                     return string.Empty;
             }
-
-
         }
 
         public static void StreamCopy(Stream input, Stream output)
@@ -3082,10 +3080,10 @@ namespace GitCommands
 
         public SubmoduleStatus CheckSubmoduleStatus(string commit, string oldCommit, CommitData data, CommitData olddata, bool loaddata = false)
         {
-            if (!ValidWorkingDir())
+            if (!ValidWorkingDir() || oldCommit == null)
                 return SubmoduleStatus.NewSubmodule;
 
-            if (commit == oldCommit)
+            if (commit == null || commit == oldCommit)
                 return SubmoduleStatus.Unknown;
 
             string baseCommit = GetMergeBase(commit, oldCommit);
@@ -3181,6 +3179,8 @@ namespace GitCommands
 
             var output = RunCmd(cmd, arguments);
             var lines = output.Split('\n');
+            if (lines.Count() >= 2)
+                return false;
             var headers = lines[0].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var commandIndex = Array.IndexOf(headers, "COMMAND");
             for (int i = 1; i < lines.Count(); i++)

@@ -58,6 +58,9 @@
             this.ShowAuthorGravatar = new System.Windows.Forms.CheckBox();
             this.diffFontDialog = new System.Windows.Forms.FontDialog();
             this.applicationDialog = new System.Windows.Forms.FontDialog();
+            this.commitFontChangeButton = new System.Windows.Forms.Button();
+            this.label34 = new System.Windows.Forms.Label();
+            this.commitFontDialog = new System.Windows.Forms.FontDialog();
             this.groupBox13.SuspendLayout();
             this.groupBox15.SuspendLayout();
             this.groupBox14.SuspendLayout();
@@ -148,16 +151,44 @@
             // 
             this.groupBox15.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox15.Controls.Add(this.commitFontChangeButton);
+            this.groupBox15.Controls.Add(this.label34);
             this.groupBox15.Controls.Add(this.diffFontChangeButton);
             this.groupBox15.Controls.Add(this.applicationFontChangeButton);
             this.groupBox15.Controls.Add(this.label26);
             this.groupBox15.Controls.Add(this.label56);
             this.groupBox15.Location = new System.Drawing.Point(3, 311);
             this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(509, 100);
+            this.groupBox15.Size = new System.Drawing.Size(509, 115);
             this.groupBox15.TabIndex = 59;
             this.groupBox15.TabStop = false;
             this.groupBox15.Text = "Fonts";
+            // 
+            // commitFontChangeButton
+            //
+            this.commitFontChangeButton.AutoSize = true;
+            this.commitFontChangeButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.commitFontChangeButton.Location = new System.Drawing.Point(143, 80);
+            this.commitFontChangeButton.Name = "commitFontChangeButton";
+            this.commitFontChangeButton.Size = new System.Drawing.Size(64, 23);
+            this.commitFontChangeButton.TabIndex = 56;
+            this.commitFontChangeButton.Text = "font name";
+            this.commitFontChangeButton.UseVisualStyleBackColor = true;
+            this.commitFontChangeButton.Click += new System.EventHandler(this.commitFontChangeButton_Click);
+            //
+            // label34
+            //
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(17, 85);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(76, 15);
+            this.label34.TabIndex = 55;
+            this.label34.Text = "Commit font";
+            // 
+            // commitFontDialog
+            //
+            this.commitFontDialog.AllowVerticalFonts = false;
+            this.commitFontDialog.Color = System.Drawing.SystemColors.ControlText;
             // 
             // diffFontChangeButton
             // 
@@ -446,5 +477,8 @@
         private System.Windows.Forms.CheckBox ShowAuthorGravatar;
         private System.Windows.Forms.FontDialog diffFontDialog;
         private System.Windows.Forms.FontDialog applicationDialog;
+        private System.Windows.Forms.Button commitFontChangeButton;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.FontDialog commitFontDialog;
     }
 }

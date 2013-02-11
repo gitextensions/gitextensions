@@ -74,7 +74,7 @@ namespace GitUI
 
             Revisions.CellPainting += RevisionsCellPainting;
             Revisions.CellFormatting += RevisionsCellFormatting;
-            Revisions.KeyDown += RevisionsKeyDown;
+            Revisions.KeyPress += RevisionsKeyPress;
 
             showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
@@ -132,7 +132,7 @@ namespace GitUI
         [Browsable(false)]
         public int LastScrollPos { get; private set; }
         [Browsable(false)]
-        public IComparable[] LastSelectedRows { get; private set; }
+        public string[] LastSelectedRows { get; private set; }
         [Browsable(false)]
         public Font RefsFont { get; private set; }
         private Font _normalFont;
@@ -275,15 +275,14 @@ namespace GitUI
             quickSearchTimer.Start();
         }
 
-        private void RevisionsKeyDown(object sender, KeyEventArgs e)
+        private void RevisionsKeyPress(object sender, KeyPressEventArgs e)
         {
             var curIndex = -1;
             if (Revisions.SelectedRows.Count > 0)
                 curIndex = Revisions.SelectedRows[0].Index;
 
             curIndex = curIndex >= 0 ? curIndex : 0;
-            int key = e.KeyValue;
-            if (!e.Alt && !e.Control && key == 8 && _quickSearchString.Length > 1) //backspace
+            if (e.KeyChar == 8 && _quickSearchString.Length > 1) //backspace
             {
                 RestartQuickSearchTimer();
 
@@ -295,32 +294,12 @@ namespace GitUI
                 e.Handled = true;
                 ShowQuickSearchString();
             }
-            else if (!e.Alt && !e.Control && (char.IsLetterOrDigit((char)key) || char.IsNumber((char)key) || char.IsSeparator((char)key) || key == 191))
+            else if (!char.IsControl(e.KeyChar))
             {
                 RestartQuickSearchTimer();
 
                 //The code below is meant to fix the weird keyvalues when pressing keys e.g. ".".
-                switch (key)
-                {
-                    case 51:
-                        _quickSearchString = e.Shift ? string.Concat(_quickSearchString, "#").ToLower() : string.Concat(_quickSearchString, "3").ToLower();
-                        break;
-                    case 188:
-                        _quickSearchString = string.Concat(_quickSearchString, ",").ToLower();
-                        break;
-                    case 189:
-                        _quickSearchString = e.Shift ? string.Concat(_quickSearchString, "_").ToLower() : string.Concat(_quickSearchString, "-").ToLower();
-                        break;
-                    case 190:
-                        _quickSearchString = string.Concat(_quickSearchString, ".").ToLower();
-                        break;
-                    case 191:
-                        _quickSearchString = string.Concat(_quickSearchString, "/").ToLower();
-                        break;
-                    default:
-                        _quickSearchString = string.Concat(_quickSearchString, (char)e.KeyValue).ToLower();
-                        break;
-                }
+                _quickSearchString = string.Concat(_quickSearchString, char.ToLower(e.KeyChar));
 
                 FindNextMatch(curIndex, _quickSearchString, false);
                 _lastQuickSearchString = _quickSearchString;
@@ -532,7 +511,7 @@ namespace GitUI
             Revisions.Select();
         }
 
-        public void HighlightBranch(IComparable aId)
+        public void HighlightBranch(string aId)
         {
             Revisions.HighlightBranch(aId);
         }
@@ -1025,7 +1004,7 @@ namespace GitUI
             }
             else if (_initialSelectedRevision == null)
             {
-                Revisions.SelectedIds = new IComparable[] { CurrentCheckout };
+                Revisions.SelectedIds = new[] { CurrentCheckout };
             }
 
             if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
@@ -1775,30 +1754,30 @@ namespace GitUI
             }
 
             deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
-            deleteTagToolStripMenuItem.Visible = deleteTagDropDown.Items.Count > 0;
+            deleteTagToolStripMenuItem.Enabled = deleteTagDropDown.Items.Count > 0;
 
             deleteBranchToolStripMenuItem.DropDown = deleteBranchDropDown;
-            deleteBranchToolStripMenuItem.Visible = deleteBranchDropDown.Items.Count > 0;
+            deleteBranchToolStripMenuItem.Enabled = deleteBranchDropDown.Items.Count > 0;
 
             checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
-            checkoutBranchToolStripMenuItem.Visible = checkoutBranchDropDown.Items.Count > 0;
+            checkoutBranchToolStripMenuItem.Enabled = checkoutBranchDropDown.Items.Count > 0;
 
             mergeBranchToolStripMenuItem.DropDown = mergeBranchDropDown;
-            mergeBranchToolStripMenuItem.Visible = mergeBranchDropDown.Items.Count > 0;
+            mergeBranchToolStripMenuItem.Enabled = mergeBranchDropDown.Items.Count > 0;
 
             rebaseOnToolStripMenuItem.DropDown = rebaseDropDown;
-            rebaseOnToolStripMenuItem.Visible = rebaseDropDown.Items.Count > 0;
+            rebaseOnToolStripMenuItem.Enabled = rebaseDropDown.Items.Count > 0;
 
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
-            renameBranchToolStripMenuItem.Visible = renameDropDown.Items.Count > 0;
+            renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
 
             branchNameToolStripMenuItem.DropDown = branchNameCopy;
-            branchNameToolStripMenuItem.Visible = branchNameCopy.Items.Count > 0;
+            branchNameToolStripMenuItem.Enabled = branchNameCopy.Items.Count > 0;
 
             tagToolStripMenuItem.DropDown = tagNameCopy;
-            tagToolStripMenuItem.Visible = tagNameCopy.Items.Count > 0;
+            tagToolStripMenuItem.Enabled = tagNameCopy.Items.Count > 0;
 
-            toolStripSeparator6.Visible = tagNameCopy.Items.Count > 0 || branchNameCopy.Items.Count > 0;
+            toolStripSeparator6.Enabled = branchNameToolStripMenuItem.Enabled || tagToolStripMenuItem.Enabled;
 
             RefreshOwnScripts();
         }
@@ -2043,6 +2022,7 @@ namespace GitUI
             if (Module.GetStagedFiles().Count > 0)
                 stagedChanges = true;
 
+            // FiltredCurrentCheckout doesn't works because only calculated after loading all revisions in SelectInitialRevision()
             if (unstagedChanges)
             {
                 //Add working dir as virtual commit
@@ -2152,13 +2132,15 @@ namespace GitUI
                         item.Name = item.Text + "_ownScript";
                         item.Click += runScript;
                         if (scriptInfo.AddToRevisionGridContextMenu)
-                            CreateTag.Items.Add(item);
+                            mainContextMenu.Items.Add(item);
                         else
                             runScriptToolStripMenuItem.DropDown.Items.Add(item);
                     }
                 }
-                toolStripSeparator7.Visible = addedScripts > 1;
-                runScriptToolStripMenuItem.Visible = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
+
+                bool showScriptsMenu = addedScripts > 1;
+                toolStripSeparator7.Visible = showScriptsMenu;
+                runScriptToolStripMenuItem.Visible = showScriptsMenu; 
             }
         }
 
@@ -2166,11 +2148,11 @@ namespace GitUI
         {
             runScriptToolStripMenuItem.DropDown.Items.Clear();
             List<ToolStripItem> list = new List<ToolStripItem>();
-            foreach (ToolStripItem item in CreateTag.Items)
+            foreach (ToolStripItem item in mainContextMenu.Items)
                 list.Add(item);
             foreach (ToolStripItem item in list)
                 if (item.Name.Contains("_ownScript"))
-                    CreateTag.Items.RemoveByKey(item.Name);
+                    mainContextMenu.Items.RemoveByKey(item.Name);
         }
 
         private bool settingsLoaded;

@@ -31,6 +31,7 @@ namespace GitUI
             _NO_TRANSLATE_numericMaxFirstLineLength.Value = Settings.CommitValidationMaxCntCharsFirstLine;
             _NO_TRANSLATE_numericMaxLineLength.Value = Settings.CommitValidationMaxCntCharsPerLine;
             checkBoxSecondLineEmpty.Checked = Settings.CommitValidationSecondLineMustBeEmpty;
+            checkBoxUseIndent.Checked = Settings.CommitValidationIndentAfterFirstLine;
             _NO_TRANSLATE_textBoxCommitValidationRegex.Text = Settings.CommitValidationRegEx;
 
             _commitTemplates = CommitTemplateItem.DeserializeCommitTemplates(Settings.CommitTemplates);
@@ -51,6 +52,8 @@ namespace GitUI
             }
 
             _NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex = 0;
+            checkBoxAutoWrap.Checked = Settings.CommitValidationAutoWrap;
+
         }
 
         private void SaveSettings()
@@ -58,6 +61,7 @@ namespace GitUI
             Settings.CommitValidationMaxCntCharsFirstLine = Convert.ToInt32(_NO_TRANSLATE_numericMaxFirstLineLength.Value);
             Settings.CommitValidationMaxCntCharsPerLine = Convert.ToInt32(_NO_TRANSLATE_numericMaxLineLength.Value);
             Settings.CommitValidationSecondLineMustBeEmpty = checkBoxSecondLineEmpty.Checked;
+            Settings.CommitValidationIndentAfterFirstLine = checkBoxUseIndent.Checked;
             Settings.CommitValidationRegEx = _NO_TRANSLATE_textBoxCommitValidationRegex.Text;
 
             string serializedCommitTemplates = CommitTemplateItem.SerializeCommitTemplates(_commitTemplates);
@@ -65,6 +69,7 @@ namespace GitUI
                 Settings.CommitTemplates = "";
             else
                 Settings.CommitTemplates = serializedCommitTemplates;
+            Settings.CommitValidationAutoWrap = checkBoxAutoWrap.Checked;
         }
 
 
@@ -110,6 +115,5 @@ namespace GitUI
 
             _NO_TRANSLATE_comboBoxCommitTemplates.Items[line] = String.Format("{0} : {1}", (line + 1), comboBoxText);
         }
-
     }
 }

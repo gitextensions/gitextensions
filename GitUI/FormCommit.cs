@@ -106,6 +106,8 @@ namespace GitUI
         private readonly TranslationString _commitValidationCaption = new TranslationString("Commit validation");
 
         private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
+
+        private readonly TranslationString _checkBoxAutoWrap = new TranslationString("Auto-wrap");
         #endregion
 
         private readonly SynchronizationContext _syncContext;
@@ -123,6 +125,7 @@ namespace GitUI
         private AsyncLoader unstagedLoader;
         private bool _useFormCommitMessage;
         private CancellationTokenSource interactiveAddBashCloseWaitCTS;
+        private readonly string _indent;
 
         /// <summary>
         /// For VS designer
@@ -146,6 +149,8 @@ namespace GitUI
             _useFormCommitMessage = Settings.UseFormCommitMessage;
 
             InitializeComponent();
+            Message.TextChanged += Message_TextChanged;
+            Message.TextAssigned += Message_TextAssigned;
 
             Loading.Image = Properties.Resources.loadingpanel;
 
@@ -192,6 +197,7 @@ namespace GitUI
             _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
             _ResetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
             _ResetSelectedLinesToolStripMenuItem.Image = Reset.Image;
+            _indent = Settings.CommitValidationIndentAfterFirstLine ? "   " : String.Empty;
         }
 
         private void FormCommit_Load(object sender, EventArgs e)
@@ -548,6 +554,8 @@ namespace GitUI
             }
 
             UpdateMergeHead();
+
+            Message.TextBoxFont = Settings.CommitFont;
 
             // Check if commit.template is used
             string fileName = Module.GetEffectivePathSetting("commit.template");
@@ -972,6 +980,8 @@ namespace GitUI
                 foreach (var gitItemStatus in gitItemStatusses)
                 {
                     toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
+                    if (gitItemStatus.Name.EndsWith("/"))
+                        gitItemStatus.Name = gitItemStatus.Name.TrimEnd('/');
                     files.Add(gitItemStatus);
                 }
 
@@ -1001,9 +1011,11 @@ namespace GitUI
                     InitializedStaged();
                     var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatuses;
                     Unstaged.GitItemStatuses = null;
-
-                    unStagedFiles.RemoveAll(item => files.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
-
+                    var unstagedItems = unStagedFiles.Where(item => files.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
+                    unStagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
+                    unStagedFiles.RemoveAll(item => item.IsSubmodule && !item.SubmoduleStatus.IsDirty && unstagedItems.Contains(item));
+                    foreach (var item in unstagedItems.Where(item => item.IsSubmodule && item.SubmoduleStatus.IsDirty))
+                        item.SubmoduleStatus.Status = SubmoduleStatus.Unknown;
                     Unstaged.GitItemStatuses = unStagedFiles;
                     Unstaged.SelectStoredNextIndex();
                 }                
@@ -1684,26 +1696,141 @@ namespace GitUI
                 e.Handled = true;
         }
 
-        private void Message_KeyPress(object sender, KeyPressEventArgs e)
+        private void Message_TextChanged(object sender, EventArgs e)
+        {
+            //always format from 0 to handle pasted text
+            FormatAllText(0);
+        }
+
+        private void Message_TextAssigned(object sender, EventArgs e)
+        {
+            Message_TextChanged(sender, e);
+        }
+
+        private bool FormatLine(int line)
         {
             int limit1 = Settings.CommitValidationMaxCntCharsFirstLine;
             int limitX = Settings.CommitValidationMaxCntCharsPerLine;
             bool empty2 = Settings.CommitValidationSecondLineMustBeEmpty;
 
-            if (limit1 > 0 && Message.CurrentLine == 1 && Message.CurrentColumn > limit1)
+            bool textHasChanged = false;
+
+            if (limit1 > 0 && line == 0)
             {
-                // TODO: I don't really know what to do in this case.
+                ColorTextAsNecessary(line, limit1, false);
             }
 
-            if (empty2 && Message.CurrentLine == 2)
+            if (empty2 && line == 1)
             {
-                // Force next line and add a bullet.
-                Message.ForceNextLine(true);
+                // Ensure next line. Optionally add a bullet.
+                Message.EnsureEmptyLine(Settings.CommitValidationIndentAfterFirstLine, 1);
+                Message.ChangeTextColor(2, 0, Message.LineLength(2), Color.Black);
+                if (FormatLine(2))
+                {
+                    textHasChanged = true;
+                }
             }
 
-            if (limitX > 0 && Message.CurrentLine >= (empty2 ? 3 : 2) && Message.CurrentColumn > limitX)
+            if (limitX > 0 && line >= (empty2 ? 2 : 1))
             {
-                Message.WrapWord();
+                if (Settings.CommitValidationAutoWrap)
+                {
+                    if (WrapIfNecessary(line, limitX))
+                    {
+                        textHasChanged = true;
+                    }
+                }
+                ColorTextAsNecessary(line, limitX, textHasChanged);
+            }
+
+            return textHasChanged;
+        }
+
+        private bool WrapIfNecessary(int line, int lineLimit)
+        {
+            if (Message.LineLength(line) > lineLimit)
+            {
+                var oldText = Message.Line(line);
+                var newText = WordWrapper.WrapSingleLine(oldText, lineLimit);
+                if (!String.Equals(oldText, newText))
+                {
+                    Message.ReplaceLine(line, newText);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void ColorTextAsNecessary(int line, int lineLimit, bool fullRefresh)
+        {
+            var lineLength = Message.LineLength(line);
+            int offset = 0;
+            bool textAppended = false;
+            if (!fullRefresh && formattedLines.Count > line)
+            {
+                offset = formattedLines[line].CommonPrefix(Message.Line(line)).Length;
+                textAppended = offset > 0 && offset == formattedLines[line].Length;
+            }
+
+            int len = Math.Min(lineLimit, lineLength) - offset;
+
+            if (!textAppended && 0 < len)
+                Message.ChangeTextColor(line, offset, len, Color.Black);
+
+            if (lineLength > lineLimit)
+            {
+                if (offset <= lineLimit || !textAppended)
+                {
+                    offset = Math.Max(offset, lineLimit);
+                    len = lineLength - offset;
+                    if (len > 0)
+                        Message.ChangeTextColor(line, offset, len, Color.Red);
+                }
+            }
+        }
+
+        private List<string> formattedLines = new List<string>();
+
+        private bool DidFormattedLineChange(int lineNumber)
+        {
+            //line not formated yet
+            if (formattedLines.Count <= lineNumber)
+                return true;
+            
+            return !formattedLines[lineNumber].Equals(Message.Line(lineNumber), StringComparison.OrdinalIgnoreCase);
+        }
+
+        private void TrimFormattedLines(int lineCount)
+        {
+            if (formattedLines.Count > lineCount)
+                formattedLines.RemoveRange(lineCount, formattedLines.Count - lineCount);
+        }
+
+        private void SetFormattedLine(int lineNumber)
+        {
+            //line not formated yet
+            if (formattedLines.Count <= lineNumber)
+            {
+                Debug.Assert(formattedLines.Count == lineNumber, formattedLines.Count + ":" + lineNumber);
+                formattedLines.Add(Message.Line(lineNumber));
+            }
+            else
+                formattedLines[lineNumber] = Message.Line(lineNumber);
+        }
+
+        private void FormatAllText(int startLine)
+        {
+            var lineCount = Message.LineCount();
+            TrimFormattedLines(lineCount);
+            for (int line = startLine; line < lineCount; line++)
+            {
+                if (DidFormattedLineChange(line))
+                {
+                    bool lineChanged = FormatLine(line);
+                    SetFormattedLine(line);
+                    if (lineChanged)
+                        FormatAllText(line);
+                }
             }
         }
 

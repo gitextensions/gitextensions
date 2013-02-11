@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ResourceManager.Translation;
 using System.Diagnostics;
 
@@ -94,23 +93,24 @@ namespace TranslationApp
 
             foreach (var item in oldTranslationItems)
             {
-                if (String.IsNullOrEmpty(item.TranslatedValue))
-                    continue;
-
-                if ((item.Status == TranslationType.Translated || item.Status == TranslationType.Obsolete) && 
+                if ((item.Status == TranslationType.Translated || item.Status == TranslationType.Obsolete) &&
+                    !String.IsNullOrEmpty(item.TranslatedValue) && 
                     item.NeutralValue != null && !dict.ContainsKey(item.NeutralValue))
+                {
                     dict.Add(item.NeutralValue, item.TranslatedValue);
 
-                item.Status = TranslationType.Obsolete;
-                item.OldNeutralValue = null;
-                translateItems.Add(item);
+                    item.Status = TranslationType.Obsolete;
+                    item.OldNeutralValue = null;
+                    translateItems.Add(item);
+                }
             }
 
             // update untranslated items
-            var untranlatedItems = from trItem in translateItems
-                                   where trItem.Status == TranslationType.New &&
-                                   dict.ContainsKey(trItem.NeutralValue)
-                                   select trItem;
+            var untranlatedItems = 
+                from trItem in translateItems
+                where (trItem.Status == TranslationType.New || trItem.Status == TranslationType.Unfinished &&
+                String.IsNullOrEmpty(trItem.TranslatedValue)) && dict.ContainsKey(trItem.NeutralValue)
+                select trItem;
 
             foreach (var untranlatedItem in untranlatedItems)
             {
@@ -122,7 +122,9 @@ namespace TranslationApp
 
         public static void SaveTranslation(string languageCode, IEnumerable<TranslationItemWithCategory> items, string filename)
         {
-            Translation foreignTranslation = new Translation { GitExVersion = GitCommands.Settings.GitExtensionsVersionString, LanguageCode = languageCode };
+            Translation foreignTranslation = new Translation {
+                GitExVersion = GitCommands.Settings.GitExtensionsVersionString,
+                LanguageCode = languageCode };
             foreach (TranslationItemWithCategory translateItem in items)
             {
                 if (translateItem.Status == TranslationType.Obsolete &&
