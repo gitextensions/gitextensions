@@ -64,7 +64,7 @@ namespace GitUI
 
             var heads = module.GetHeads(false);
 
-            heads.Insert(0, GitHead.NoHead(module));
+            heads.Insert(0, GitRef.NoHead(module));
 
             Branch.DisplayMember = "Name";
             Branch.DataSource = heads;

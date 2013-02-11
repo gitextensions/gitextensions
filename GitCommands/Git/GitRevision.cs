@@ -15,7 +15,7 @@ namespace GitCommands
 
         public String[] ParentGuids;
         private IList<IGitItem> _subItems;
-        private readonly List<GitHead> heads = new List<GitHead>();
+        private readonly List<GitRef> heads = new List<GitRef>();
         private readonly GitModule Module;
 
         public GitRevision(GitModule aModule, string guid)
@@ -25,7 +25,7 @@ namespace GitCommands
             Module = aModule;
         }
 
-        public List<GitHead> Heads { get { return heads; } }
+        public List<GitRef> Heads { get { return heads; } }
 
         public string TreeGuid { get; set; }
 

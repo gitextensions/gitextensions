@@ -1331,7 +1331,7 @@ namespace GitUI
                                  cellBounds.Width - (int)offset, cellBounds.Height);
         }
 
-        private static Color GetHeadColor(GitHead head)
+        private static Color GetHeadColor(GitRef head)
         {
             return head.IsTag
                        ? Settings.TagColor

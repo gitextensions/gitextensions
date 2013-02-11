@@ -7,11 +7,11 @@ namespace GitUI
 {
     public partial class FormRunScriptSpecify : Form
     {
-        public FormRunScriptSpecify(IEnumerable<GitHead> options, string label)
+        public FormRunScriptSpecify(IEnumerable<GitRef> options, string label)
         {
             InitializeComponent();
             specifyLabel.Text = "Specify '" + label+"':";
-            foreach (GitHead head in options)
+            foreach (GitRef head in options)
             {
                 branchesListView.Items.Add(head.Name);
             }

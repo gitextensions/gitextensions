@@ -70,7 +70,7 @@ namespace GitUI
 
         private const string PuttyCaption = "PuTTY";
 
-        private IList<GitHead> _heads;
+        private IList<GitRef> _heads;
         public bool ErrorOccurred { get; private set; }
         private string branch;
 
@@ -181,7 +181,7 @@ namespace GitUI
                     // It only returns the heads that are already known to the repository. This
                     // doesn't return heads that are new on the server. This can be updated using
                     // update branch info in the manage remotes dialog.
-                    _heads = new List<GitHead>();
+                    _heads = new List<GitRef>();
                     foreach (var head in Module.GetHeads(true, true))
                     {
                         if (!head.IsRemote ||
@@ -195,7 +195,7 @@ namespace GitUI
             Branches.DisplayMember = "LocalName";
 
             //_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
-            _heads.Insert(0, GitHead.NoHead(Module));
+            _heads.Insert(0, GitRef.NoHead(Module));
             Branches.DataSource = _heads;
 
 

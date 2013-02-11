@@ -289,7 +289,7 @@ namespace GitUI
             if (RemoteBranches.SelectedRows.Count != 1)
                 return;
 
-            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitHead;
+            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitRef;
 
             if (head == null)
                 return;
@@ -311,7 +311,7 @@ namespace GitUI
             if (RemoteBranches.SelectedRows.Count != 1)
                 return;
 
-            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitHead;
+            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitRef;
 
             if (head == null)
                 return;
@@ -343,7 +343,7 @@ namespace GitUI
             if (RemoteBranches.SelectedRows.Count != 1)
                 return;
 
-            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitHead;
+            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitRef;
             if (head == null)
                 return;
 
@@ -355,7 +355,7 @@ namespace GitUI
             if (RemoteBranches.SelectedRows.Count != 1)
                 return;
 
-            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitHead;
+            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitRef;
             if (head == null)
                 return;
 

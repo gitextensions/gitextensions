@@ -198,8 +198,6 @@ namespace GitUI
         {
             RefreshRevisions();
         }
-    
-        #region IBrowseRepo
 
         private void RefreshRevisions()
         {
@@ -209,7 +207,8 @@ namespace GitUI
                 InternalInitialize(false);
             }
         }
-
+    
+        #region IBrowseRepo
         public void GoToRevision(string revision)
         {
             RevisionGrid.GoToRevision(revision);

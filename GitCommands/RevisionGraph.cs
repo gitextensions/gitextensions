@@ -51,7 +51,7 @@ namespace GitCommands
 
         private const string COMMIT_BEGIN = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
 
-        private Dictionary<string, List<GitHead>> heads;
+        private Dictionary<string, List<GitRef>> heads;
 
 
         private enum ReadStep
@@ -205,12 +205,12 @@ namespace GitCommands
                 Exited(this, EventArgs.Empty);            
         }
 
-        private IList<GitHead> GetHeads()
+        private IList<GitRef> GetHeads()
         {
             var result = Module.GetHeads(true);
             bool validWorkingDir = Module.ValidWorkingDir();
             selectedBranchName = validWorkingDir ? Module.GetSelectedBranch() : string.Empty;
-            GitHead selectedHead = result.FirstOrDefault(head => head.Name == selectedBranchName);
+            GitRef selectedHead = result.FirstOrDefault(head => head.Name == selectedBranchName);
 
             if (selectedHead != null)
             {
@@ -285,7 +285,7 @@ namespace GitCommands
                 case ReadStep.Hash:
                     revision.Guid = line;
 
-                    List<GitHead> headList;
+                    List<GitRef> headList;
                     if (heads.TryGetValue(revision.Guid, out headList))
                         revision.Heads.AddRange(headList);
                     

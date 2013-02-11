@@ -170,7 +170,7 @@ namespace GitUI.UserControls
             /// <summary>Indicates whether this <see cref="BranchNode"/> is setup for remote tracking.</summary>
             public bool IsTrackingSetup(ConfigFile config)
             {// NOT (not whitespace)
-                return !string.IsNullOrWhiteSpace(config.GetValue(GitHead.RemoteSettingName(FullPath)));
+                return !string.IsNullOrWhiteSpace(config.GetValue(GitRef.RemoteSettingName(FullPath)));
             }
 
             /// <summary>Styles the <see cref="Node.TreeNode"/>.</summary>
@@ -272,8 +272,8 @@ namespace GitUI.UserControls
 
             public void DeleteForce()
             {
-                var branchHead = new GitHead(UiCommands.Module, null, FullPath);
-                var cmd = new GitDeleteBranchCmd(new GitHead[] { branchHead }, true);
+                var branchHead = GitRef.CreateBranchRef(UiCommands.Module, null, FullPath);
+                var cmd = new GitDeleteBranchCmd(new GitRef[] { branchHead }, true);
                 UiCommands.StartCommandLineProcessDialog(cmd, null);
             }
         }
