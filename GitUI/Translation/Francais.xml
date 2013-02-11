@@ -209,7 +209,7 @@ Cette action sera effectuée sans avertissment durant le checkout d'une branche.
         </TranslationItem>
         <TranslationItem Name="CheckAtStartup" Property="Text">
           <Source>Check settings at startup (disables automatically if all settings are correct)</Source>
-          <Value>Vérifier les paramètres au démarrage (disables automatically if all settings are correct)</Value>
+          <Value>Vérifier les paramètres au démarrage (se désactive automatiquement si tous les paramètres sont correctes)</Value>
         </TranslationItem>
         <TranslationItem Name="DiffTool_Fix" Property="Text">
           <Source>Repair</Source>
@@ -516,7 +516,7 @@ S'il vous plait, assurez vous que git (msysgit ou cygwin) est installé ou rense
         </TranslationItem>
         <TranslationItem Name="StripedBanchChange" Property="Text">
           <Source>Striped branch change</Source>
-          <Value>Hachurer le changement de branches</Value>
+          <Value>Hachurer lors de chevauchement de branches</Value>
         </TranslationItem>
         <TranslationItem Name="YellowIcon" Property="Text">
           <Source>Yellow</Source>
@@ -536,7 +536,7 @@ S'il vous plait, assurez vous que git (msysgit ou cygwin) est installé ou rense
         </TranslationItem>
         <TranslationItem Name="label25" Property="Text">
           <Source>Color tag</Source>
-          <Value>Couleur des tags</Value>
+          <Value>Couleur des étiquettes</Value>
         </TranslationItem>
         <TranslationItem Name="label27" Property="Text">
           <Source>Color removed line</Source>
@@ -544,19 +544,19 @@ S'il vous plait, assurez vous que git (msysgit ou cygwin) est installé ou rense
         </TranslationItem>
         <TranslationItem Name="label29" Property="Text">
           <Source>Color added line</Source>
-          <Value>Couleur lignes ajoutées</Value>
+          <Value>Couleur des lignes ajoutées</Value>
         </TranslationItem>
         <TranslationItem Name="label31" Property="Text">
           <Source>Color section</Source>
-          <Value>Couleur de section</Value>
+          <Value>Couleur des sections</Value>
         </TranslationItem>
         <TranslationItem Name="label32" Property="Text">
           <Source>Color branch</Source>
-          <Value>Couleur de branche</Value>
+          <Value>Couleur des branches</Value>
         </TranslationItem>
         <TranslationItem Name="label33" Property="Text">
           <Source>Color remote branch</Source>
-          <Value>Couleur de branche distante</Value>
+          <Value>Couleur des branches distantes</Value>
         </TranslationItem>
         <TranslationItem Name="label36" Property="Text">
           <Source>Color other label</Source>
@@ -588,7 +588,7 @@ S'il vous plait, assurez vous que git (msysgit ou cygwin) est installé ou rense
         </TranslationItem>
         <TranslationItem Name="containedInBranches" Property="Text">
           <Source>Contained in branches:</Source>
-          <Value>Contenu dans les branches:</Value>
+          <Value>Contenu dans les branches :</Value>
         </TranslationItem>
         <TranslationItem Name="containedInNoBranch" Property="Text">
           <Source>Contained in no branch</Source>
@@ -596,11 +596,11 @@ S'il vous plait, assurez vous que git (msysgit ou cygwin) est installé ou rense
         </TranslationItem>
         <TranslationItem Name="containedInNoTag" Property="Text">
           <Source>Contained in no tag</Source>
-          <Value>Contenu dans aucun tag</Value>
+          <Value>Contenu dans aucune étiquette</Value>
         </TranslationItem>
         <TranslationItem Name="containedInTags" Property="Text">
           <Source>Contained in tags:</Source>
-          <Value>Contenu dans les tags</Value>
+          <Value>Contenu dans les étiquettes</Value>
         </TranslationItem>
         <TranslationItem Name="copyCommitInfoToolStripMenuItem" Property="Text">
           <Source>Copy commit info</Source>
@@ -620,7 +620,7 @@ S'il vous plait, assurez vous que git (msysgit ou cygwin) est installé ou rense
         </TranslationItem>
         <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text">
           <Source>Show tags containing this commit</Source>
-          <Value>Montrer les tags contenant ce commit</Value>
+          <Value>Montrer les étiquettes contenant ce commit</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -767,23 +767,23 @@ Valeur: {2} = {3}</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Title:</Source>
-          <Value>Titre:</Value>
+          <Value>Titre :</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>Body:</Source>
-          <Value>Corps:</Value>
+          <Value>Corps :</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>Target repository:</Source>
-          <Value>Dépôt cible:</Value>
+          <Value>Dépôt cible :</Value>
         </TranslationItem>
         <TranslationItem Name="label4" Property="Text">
           <Source>Your branch:</Source>
-          <Value>Votre branche:</Value>
+          <Value>Votre branche :</Value>
         </TranslationItem>
         <TranslationItem Name="label5" Property="Text">
           <Source>Target branch:</Source>
-          <Value>Branche cible:</Value>
+          <Value>Branche cible :</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1182,11 +1182,11 @@ Voulez-vous l'ouvrir?</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Fi&amp;nd what:</Source>
-          <Value>Chercher çà:</Value>
+          <Value>Chercher çà :</Value>
         </TranslationItem>
         <TranslationItem Name="lblReplaceWith" Property="Text">
           <Source>Re&amp;place with:</Source>
-          <Value>Re&amp;mplacer par:</Value>
+          <Value>Re&amp;mplacer par :</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1214,11 +1214,11 @@ Voulez-vous l'ouvrir?</Value>
         </TranslationItem>
         <TranslationItem Name="_createDirectoryLbl" Property="Text">
           <Source>Create directory:</Source>
-          <Value>Créer le répertoire:</Value>
+          <Value>Créer le répertoire :</Value>
         </TranslationItem>
         <TranslationItem Name="_descriptionLbl" Property="Text">
           <Source>Description:</Source>
-          <Value>Description:</Value>
+          <Value>Description :</Value>
         </TranslationItem>
         <TranslationItem Name="_forkBtn" Property="Text">
           <Source>Fork!</Source>
@@ -1272,7 +1272,7 @@ Voulez-vous l'ouvrir?</Value>
         <TranslationItem Name="_strFailedToFork" Property="Text">
           <Source>Failed to fork:
 </Source>
-          <Value>Echec du fork:</Value>
+          <Value>Echec du fork :</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToGetRepos" Property="Text">
           <Source>Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu "Plugins/{0}".</Source>
@@ -1429,7 +1429,7 @@ Vous aurez les droits de pousser. {2}</Value>
         </TranslationItem>
         <TranslationItem Name="groupFilePattern" Property="Text">
           <Source>Enter a file pattern to ignore:</Source>
-          <Value>Entrer un motif de fichier à ignorer:</Value>
+          <Value>Entrer un motif de fichier à ignorer :</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>No existing files match that pattern.</Source>
@@ -1751,7 +1751,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="_indexLockNotFound" Property="Text">
           <Source>index.lock not found at:</Source>
-          <Value>index.lock non trouvé à:</Value>
+          <Value>index.lock non trouvé à :</Value>
         </TranslationItem>
         <TranslationItem Name="_noBranchTitle" Property="Text">
           <Source>no branch</Source>
@@ -1891,7 +1891,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
           <Source>Clone repository</Source>
-          <Value>Cloner dépôt</Value>
+          <Value>Cloner le dépôt</Value>
         </TranslationItem>
         <TranslationItem Name="closeToolStripMenuItem" Property="Text">
           <Source>Close</Source>
@@ -1907,11 +1907,11 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem" Property="Text">
           <Source>Commit</Source>
-          <Value>Commiter</Value>
+          <Value>Commit</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem1" Property="Text">
           <Source>Commit</Source>
-          <Value>Commiter</Value>
+          <Value>Commit</Value>
         </TranslationItem>
         <TranslationItem Name="commitcountPerUserToolStripMenuItem" Property="Text">
           <Source>Commits per user</Source>
@@ -1943,7 +1943,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
           <Source>Delete tag</Source>
-          <Value>Supprimer tag</Value>
+          <Value>Supprimer une étiquette</Value>
         </TranslationItem>
         <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
           <Source>Diff contains (SLOW)</Source>
@@ -1995,11 +1995,11 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         </TranslationItem>
         <TranslationItem Name="fetchAllToolStripMenuItem" Property="Text">
           <Source>Fetch all</Source>
-          <Value>Récupérrer tous</Value>
+          <Value>Récupérer tout (Fetch)</Value>
         </TranslationItem>
         <TranslationItem Name="fetchToolStripMenuItem" Property="Text">
           <Source>Fetch</Source>
-          <Value>Récupérer</Value>
+          <Value>Récupérer (Fetch)</Value>
         </TranslationItem>
         <TranslationItem Name="fileExplorerToolStripMenuItem" Property="Text">
           <Source>File Explorer</Source>
@@ -2035,7 +2035,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         </TranslationItem>
         <TranslationItem Name="generateOrImportKeyToolStripMenuItem" Property="Text">
           <Source>Generate or import key</Source>
-          <Value>Générer ou importer clé</Value>
+          <Value>Générer ou importer une clé</Value>
         </TranslationItem>
         <TranslationItem Name="gitBashToolStripMenuItem" Property="Text">
           <Source>Git bash</Source>
@@ -2140,15 +2140,15 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem" Property="Text">
           <Source>Pull</Source>
-          <Value>Récupérer</Value>
+          <Value>Récupérer (Pull)</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem1" Property="Text">
           <Source>Pull</Source>
-          <Value>Récupérer</Value>
+          <Value>Récupérer (Pull)</Value>
         </TranslationItem>
         <TranslationItem Name="pushToolStripMenuItem" Property="Text">
           <Source>Push</Source>
-          <Value>Pousser</Value>
+          <Value>Pousser (Push)</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem" Property="Text">
           <Source>Rebase</Source>
@@ -2252,7 +2252,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         </TranslationItem>
         <TranslationItem Name="tagToolStripMenuItem" Property="Text">
           <Source>Create tag</Source>
-          <Value>Créer tag</Value>
+          <Value>Créer une étiquette</Value>
         </TranslationItem>
         <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText">
           <Source>Toggle split view layout</Source>
@@ -2268,11 +2268,11 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPull" Property="Text">
           <Source>Pull</Source>
-          <Value>Récupérer</Value>
+          <Value>Récupérer (Pull)</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPush" Property="Text">
           <Source>Push</Source>
-          <Value>Pousser</Value>
+          <Value>Pousser (Push)</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel1" Property="Text">
           <Source>Branches:</Source>
@@ -2280,7 +2280,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripLabel2" Property="Text">
           <Source>Filter:</Source>
-          <Value>Filtre:</Value>
+          <Value>Filtre :</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripSplitStash" Property="ToolTipText">
           <Source>Stash changes</Source>
@@ -2372,7 +2372,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         </TranslationItem>
         <TranslationItem Name="_createBranch" Property="Text">
           <Source>Create local branch with the name:</Source>
-          <Value>Créer une branche locale avec le nom:</Value>
+          <Value>Créer une branche locale avec le nom :</Value>
         </TranslationItem>
         <TranslationItem Name="_customBranchNameIsEmpty" Property="Text">
           <Source>Custom branch name is empty.
@@ -2417,7 +2417,7 @@ Entrez un nom de branche valide ou sélectionnez une valeur prédéfinie.
         </TranslationItem>
         <TranslationItem Name="rbResetBranch" Property="Text">
           <Source>Reset local branch with the name:</Source>
-          <Value>Réinitialiser la branche locale avec le nom:</Value>
+          <Value>Réinitialiser la branche locale avec le nom :</Value>
         </TranslationItem>
         <TranslationItem Name="rbStash" Property="Text">
           <Source>Stash</Source>
@@ -2555,7 +2555,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
           <Source>Cleanup repository</Source>
-          <Value>Néttoyer le dépôt</Value>
+          <Value>Nettoyer le dépôt</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2571,7 +2571,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="CentralRepository" Property="Text">
           <Source>P&amp;ublic repository, no working dir  (--bare)</Source>
-          <Value>Dépôt public, pas de répertoire de tarvail (--bare)</Value>
+          <Value>Dépôt public, pas de répertoire de travail (--bare)</Value>
         </TranslationItem>
         <TranslationItem Name="FromBrowse" Property="Text">
           <Source>&amp;Browse</Source>
@@ -2623,7 +2623,7 @@ Voulez-vous ouvrir le nouveau dépôt "{0}" maintenant ?</Value>
         </TranslationItem>
         <TranslationItem Name="brachLabel" Property="Text">
           <Source>&amp;Branch:</Source>
-          <Value>&amp;Branche:</Value>
+          <Value>&amp;Branche :</Value>
         </TranslationItem>
         <TranslationItem Name="cbIntializeAllSubmodules" Property="Text">
           <Source>Initialize all submodules</Source>
@@ -2635,7 +2635,7 @@ Voulez-vous ouvrir le nouveau dépôt "{0}" maintenant ?</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>&amp;Repository to clone:</Source>
-          <Value>&amp;Dépôt à cloner:</Value>
+          <Value>&amp;Dépôt à cloner :</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>&amp;Destination:</Source>
@@ -2643,7 +2643,7 @@ Voulez-vous ouvrir le nouveau dépôt "{0}" maintenant ?</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>&amp;Subdirectory to create:</Source>
-          <Value>Sous-dossier à créer:</Value>
+          <Value>Sous-dossier à créer :</Value>
         </TranslationItem>
         <TranslationItem Name="Info" Property="Text" type="obsolete">
           <Source>The repository will be cloned to a new directory located here:
@@ -2662,7 +2662,7 @@ Voulez-vous ouvrir le nouveau dépôt "{0}" maintenant ?</Value>
           <Source>Supported commandline arguments for
 gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
           <Value>Arguments de ligne de commande supporté pour
-gitex.cmd / gitex (situé dans le même répertoire que GitExtensions.exe):</Value>
+gitex.cmd / gitex (situé dans le même répertoire que GitExtensions.exe) :</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2941,7 +2941,7 @@ Do you want to continue?</Source>
         </TranslationItem>
         <TranslationItem Name="commitTemplatesToolStripMenuItem" Property="Text">
           <Source>Commit &amp;templates</Source>
-          <Value>&amp;Templates de Commit</Value>
+          <Value>&amp;Modèles de message de Commit</Value>
         </TranslationItem>
         <TranslationItem Name="copyFolderNameMenuItem" Property="Text">
           <Source>Copy folder name</Source>
@@ -3139,7 +3139,9 @@ Do you want to continue?</Source>
           <Source>Do you also want to delete the new files that are in the selection?
 
 Choose 'No' to keep all new files.</Source>
-          <Value>Voulez-vous aussi supprimer les nouveaux fichiers dans cette séléction ?Choisissez 'Non' pour garder les nouveaux fichiers.</Value>
+          <Value>Voulez-vous aussi supprimer les nouveaux fichiers dans cette séléction ?
+
+Choisissez 'Non' pour garder les nouveaux fichiers.</Value>
         </TranslationItem>
         <TranslationItem Name="_resetChangesText" Property="Text" type="obsolete">
           <Source>Are you sure you want to reset the changes to the selected files?</Source>
@@ -3179,11 +3181,11 @@ Choose 'No' to keep all new files.</Source>
         </TranslationItem>
         <TranslationItem Name="groupBoxCommitTemplates" Property="Text">
           <Source>Commit templates</Source>
-          <Value>Models de commit</Value>
+          <Value>Modèles de message de commit</Value>
         </TranslationItem>
         <TranslationItem Name="groupBoxCommitValidation" Property="Text">
           <Source>Commit validation</Source>
-          <Value>Validation de commit</Value>
+          <Value>Validation du commit</Value>
         </TranslationItem>
         <TranslationItem Name="labelAutoWrap" Property="Text">
           <Source>Auto-wrap commit message (except subject line)</Source>
@@ -3191,11 +3193,11 @@ Choose 'No' to keep all new files.</Source>
         </TranslationItem>
         <TranslationItem Name="labelCommitTemplate" Property="Text">
           <Source>Commit template:</Source>
-          <Value>Model de Commit :</Value>
+          <Value>Modèle de Commit :</Value>
         </TranslationItem>
         <TranslationItem Name="labelCommitTemplateName" Property="Text">
           <Source>Name:</Source>
-          <Value>Nom:</Value>
+          <Value>Nom :</Value>
         </TranslationItem>
         <TranslationItem Name="labelMaxFirstLineLength" Property="Text">
           <Source>Maximum numbers of characters in first line (0 = check disabled):</Source>
@@ -3207,7 +3209,7 @@ Choose 'No' to keep all new files.</Source>
         </TranslationItem>
         <TranslationItem Name="labelRegExCheck" Property="Text">
           <Source>Commit must match following RegEx (Empty = check disabled):</Source>
-          <Value>Le commit doiot satisfaire la RegEx (Vide = vérification désactivée)</Value>
+          <Value>Le commit doit satisfaire la RegEx (Vide = vérification désactivée)</Value>
         </TranslationItem>
         <TranslationItem Name="labelSecondLineEmpty" Property="Text">
           <Source>Second line must be empty:</Source>
@@ -3235,7 +3237,7 @@ Choose 'No' to keep all new files.</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Coders:</Source>
-          <Value>Codeurs :</Value>
+          <Value>Développeurs :</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>Translators:</Source>
@@ -3243,7 +3245,7 @@ Choose 'No' to keep all new files.</Source>
         </TranslationItem>
         <TranslationItem Name="label4" Property="Text">
           <Source>Logo design:</Source>
-          <Value>Design du logo:</Value>
+          <Value>Design du logo :</Value>
         </TranslationItem>
         <TranslationItem Name="translatorsLabel" Property="Text">
           <Source>Translators</Source>
@@ -3299,7 +3301,7 @@ Choose 'No' to keep all new files.</Source>
         </TranslationItem>
         <TranslationItem Name="_cannotDeleteCurrentBranchMessage" Property="Text">
           <Source>Cannot delete the branch “{0}” which you are currently on.</Source>
-          <Value>Ne peut pas supprimer ma branche "{0}" sur laquelle vous êtes actuellement.</Value>
+          <Value>Ne peut pas supprimer la branche "{0}" sur laquelle vous êtes actuellement.</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteBranchCaption" Property="Text">
           <Source>Delete branches</Source>
@@ -3313,7 +3315,7 @@ Supprimer une branche peut entrainer la suppression de commits également!</Valu
         </TranslationItem>
         <TranslationItem Name="_deleteUnmergedBranchForcingSuggestion" Property="Text">
           <Source>You cannot delete unmerged branch until you set “force delete” mode.</Source>
-          <Value>Vous ne pouvez pas supprime une branche non fusionnée à moins d'activer le mode "forcer la suppression"</Value>
+          <Value>Vous ne pouvez pas supprimer une branche non fusionnée à moins d'activer le mode "forcer la suppression"</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select branches</Source>
@@ -3336,7 +3338,7 @@ en utilisant `forcer la suppression´.</Value>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Delete tag</Source>
-          <Value>Supprimer tag</Value>
+          <Value>Supprimer étiquette</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Delete</Source>
@@ -3348,7 +3350,7 @@ en utilisant `forcer la suppression´.</Value>
         </TranslationItem>
         <TranslationItem Name="deleteTag" Property="Text">
           <Source>Delete tag from '{0}'</Source>
-          <Value>Supprimer le tag depuis '{0}'</Value>
+          <Value>Supprimer l'étiquette depuis '{0}'</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select tag</Source>
@@ -3496,7 +3498,7 @@ Cliquez sur le boutton "Supporter le projet" pour obtenir plus d'informations su
         </TranslationItem>
         <TranslationItem Name="toolStripLabel2" Property="Text">
           <Source>Filter:</Source>
-          <Value>Filtre:</Value>
+          <Value>Filtre :</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripSplitLoad" Property="ToolTipText">
           <Source>Load file history</Source>
@@ -3614,7 +3616,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="_currentBranchText" Property="Text">
           <Source>Current branch:</Source>
-          <Value>Branche courante:</Value>
+          <Value>Branche courante :</Value>
         </TranslationItem>
         <TranslationItem Name="_noEmailEnteredText" Property="Text">
           <Source>You need to enter an email address.</Source>
@@ -4061,7 +4063,7 @@ defaultrebase=0</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>Go to tag:</Source>
-          <Value>Allez au tag :</Value>
+          <Value>Allez à l'étiquette :</Value>
         </TranslationItem>
         <TranslationItem Name="label4" Property="Text">
           <Source>Go to branch:</Source>
@@ -4357,7 +4359,7 @@ Pour activer le support de Gerrit pour un dépôt, un fichier .gitreview doit ê
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Pull</Source>
-          <Value>Récupérer</Value>
+          <Value>Récupérer (Pull)</Value>
         </TranslationItem>
         <TranslationItem Name="AddRemote" Property="Text">
           <Source>Manage</Source>
@@ -4381,7 +4383,7 @@ Pour activer le support de Gerrit pour un dépôt, un fichier .gitreview doit ê
         </TranslationItem>
         <TranslationItem Name="NoTags" Property="Text">
           <Source>No tags</Source>
-          <Value>Pas de tags</Value>
+          <Value>Pas d'étiquette</Value>
         </TranslationItem>
         <TranslationItem Name="Pull" Property="Text">
           <Source>&amp;Pull</Source>
@@ -4567,7 +4569,7 @@ Cela va initialiser et mettre à jour tous les modules récursivement.</Value>
         </TranslationItem>
         <TranslationItem Name="PushAllTags" Property="Text">
           <Source>Push &amp;all tags</Source>
-          <Value>Tous les tags</Value>
+          <Value>Pousser toutes les étiquettes</Value>
         </TranslationItem>
         <TranslationItem Name="PushColumn" Property="HeaderText">
           <Source>Push</Source>
@@ -4599,7 +4601,7 @@ Cela va initialiser et mettre à jour tous les modules récursivement.</Value>
         </TranslationItem>
         <TranslationItem Name="TagTab" Property="Text">
           <Source>Push tags</Source>
-          <Value>Pousser tags</Value>
+          <Value>Pousser les étiquettes</Value>
         </TranslationItem>
         <TranslationItem Name="_branchNewForRemote" Property="Text">
           <Source>The branch you are about to push seems to be a new branch for the remote.
@@ -4639,7 +4641,7 @@ Voulez-vous vraiment pousser cette branche ?
         </TranslationItem>
         <TranslationItem Name="_selectTag" Property="Text">
           <Source>You need to select a tag to push or select "Push all tags".</Source>
-          <Value>Vous devez sélectionner un tag ou cocher "Tous les tags".</Value>
+          <Value>Vous devez sélectionner une étiquette ou cocher "Toutes les étiquettes".</Value>
         </TranslationItem>
         <TranslationItem Name="_updateTrackingReference" Property="Text">
           <Source>The branch {0} does not have a tracking reference. Do you want to add a tracking reference to {1}?</Source>
@@ -4667,7 +4669,7 @@ Voulez-vous vraiment pousser cette branche ?
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Tag to push</Source>
-          <Value>Tag à pousser</Value>
+          <Value>Etiquette à pousser</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>Recursive submodules</Source>
@@ -4687,7 +4689,7 @@ Voulez-vous vraiment pousser cette branche ?
         </TranslationItem>
         <TranslationItem Name="TagTab" Property="ToolTipText" type="obsolete">
           <Source>Push tags to remote repository</Source>
-          <Value>Pousser tags sur un dépôt distant</Value>
+          <Value>Pousser les étiquettes sur un dépôt distant</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4818,7 +4820,7 @@ Rien à rebaser.</Value>
         </TranslationItem>
         <TranslationItem Name="lblCurrent" Property="Text" type="unfinished">
           <Source>Current branch:</Source>
-          <Value>Branche courante:</Value>
+          <Value>Branche courante :</Value>
         </TranslationItem>
         <TranslationItem Name="lblRangeFrom" Property="Text">
           <Source>From (exc.)</Source>
@@ -5781,7 +5783,7 @@ any global setting.
           <Source>Changes made on this page will be saved instantly. 
 Thus the Cancel and Discard button will have no effect for this page.</Source>
           <Value>Les modifications faites sur cette page seront sauvées instantanément.
-Par conséquent les boutons Annuler et Interrompre n'auront aucun effet sur cette page.</Value>
+Par conséquent les boutons Annuler et Rejeter n'auront aucun effet sur cette page.</Value>
         </TranslationItem>
         <TranslationItem Name="labelSettingsPageTitle" Property="Text">
           <Source>...title...</Source>
@@ -6129,7 +6131,7 @@ Voulez-vous ouvrir le nouveau dépôt "{0}" maintenant ?</Value>
         </TranslationItem>
         <TranslationItem Name="_noRevisionSelected" Property="Text" type="unfinished">
           <Source>Select 1 revision to create the tag on.</Source>
-          <Value>Sélectionner une révision sur laquelle créer le tag.</Value>
+          <Value>Sélectionner une révision sur laquelle créer une étiquette.</Value>
         </TranslationItem>
         <TranslationItem Name="_noTagMessage" Property="Text">
           <Source>Please enter a tag message</Source>
@@ -6145,7 +6147,7 @@ Voulez-vous ouvrir le nouveau dépôt "{0}" maintenant ?</Value>
         </TranslationItem>
         <TranslationItem Name="btnCreateTag" Property="Text">
           <Source>Create tag</Source>
-          <Value>Créer tag</Value>
+          <Value>Créer l'étiquette</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Tag name</Source>
@@ -6165,7 +6167,7 @@ Voulez-vous ouvrir le nouveau dépôt "{0}" maintenant ?</Value>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Create tag</Source>
-          <Value>Créer tag</Value>
+          <Value>Créer l'étiquette</Value>
         </TranslationItem>
         <TranslationItem Name="ForceTag" Property="Text" type="unfinished">
           <Source>Force</Source>
@@ -6173,7 +6175,7 @@ Voulez-vous ouvrir le nouveau dépôt "{0}" maintenant ?</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Create tag</Source>
-          <Value>Créer tag</Value>
+          <Value>Créer l'étiquette</Value>
         </TranslationItem>
         <TranslationItem Name="_messageCaption" Property="Text">
           <Source>Tag</Source>
@@ -6181,11 +6183,11 @@ Voulez-vous ouvrir le nouveau dépôt "{0}" maintenant ?</Value>
         </TranslationItem>
         <TranslationItem Name="_noRevisionSelected" Property="Text">
           <Source>Select 1 revision to create the tag on.</Source>
-          <Value>Sélectionner une révision sur laquelle créer le tag.</Value>
+          <Value>Sélectionner une révision sur laquelle créer l'étiquette.</Value>
         </TranslationItem>
         <TranslationItem Name="_noTagMassage" Property="Text">
           <Source>Please enter a tag message</Source>
-          <Value>Entrez un message de tag, s'il vous plait</Value>
+          <Value>Entrez un message pour l'étiquette, s'il vous plait</Value>
         </TranslationItem>
         <TranslationItem Name="_pushToCaption" Property="Text">
           <Source>Push tag to '{0}'</Source>
@@ -6257,7 +6259,7 @@ Voulez-vous sélectionner un code de langue ?</Value>
         </TranslationItem>
         <TranslationItem Name="noLanguageCodeSelectedCaption" Property="Text">
           <Source>Language code</Source>
-          <Value>Code langue:</Value>
+          <Value>Code langue :</Value>
         </TranslationItem>
         <TranslationItem Name="previousButton" Property="Text">
           <Source>&amp;Previous</Source>
@@ -6297,11 +6299,11 @@ Voulez-vous sélectionner un code de langue ?</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripTranslationLabel" Property="Text">
           <Source>Current translation:</Source>
-          <Value>Traduction actuelle:</Value>
+          <Value>Traduction actuelle :</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripTranslationLanguageCode" Property="Text">
           <Source>Language code:</Source>
-          <Value>Code langage:</Value>
+          <Value>Code langage :</Value>
         </TranslationItem>
         <TranslationItem Name="translateProgressText" Property="Text">
           <Source>Translated {0} out of {1}</Source>
@@ -6509,7 +6511,7 @@ du menu contextuel pour des opérations supplémentaires</Value>
         </TranslationItem>
         <TranslationItem Name="chkPlaySpecialStartupSound" Property="Text">
           <Source>Play Special Startup Sound</Source>
-          <Value>Jouer un son de démarrage spécial</Value>
+          <Value>Jouer un son spécifique au démarrage</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowCurrentChangesInRevisionGraph" Property="Text">
           <Source>Show current working dir changes in revision graph (slow!)</Source>
@@ -6615,7 +6617,7 @@ du menu contextuel pour des opérations supplémentaires</Value>
         </TranslationItem>
         <TranslationItem Name="_homeIsSetToString" Property="Text">
           <Source>HOME is set to:</Source>
-          <Value>HOME est définie à:</Value>
+          <Value>HOME est définie à :</Value>
         </TranslationItem>
         <TranslationItem Name="downloadMsysgit" Property="Text">
           <Source>Download msysgit</Source>
@@ -6643,12 +6645,12 @@ du menu contextuel pour des opérations supplémentaires</Value>
         </TranslationItem>
         <TranslationItem Name="label50" Property="Text">
           <Source>Git Extensions can use msysgit or cygwin to access git repositories. Set the correct paths below.</Source>
-          <Value>Git Extensions peut utiliser msysgit ou cygwin pour accéder aux dépôts git. Mettre les chemins corrects ci-dessous.</Value>
+          <Value>Git Extensions peut utiliser msysgit ou cygwin pour accéder aux dépôts git. Renseigner les chemins corrects ci-dessous.</Value>
         </TranslationItem>
         <TranslationItem Name="label51" Property="Text">
           <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
 to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>Le fichier de configuration global doit être situé dans l'endroit indiqué par la variable d'environnement %HOME%. Par défaut, %HOME% sera mis
+          <Value>Le fichier de configuration global doit être situé à l'endroit indiqué par la variable d'environnement %HOME%. Par défaut, %HOME% sera mis
 à %HOMEDRIVE%%HOMEPATH% si vide. Changez le comportement par défaut uniquement si vous rencontrez des problèmes.</Value>
         </TranslationItem>
       </translationItems>
@@ -7272,7 +7274,7 @@ Si c'est un dépôt central (dépôt nu sans répertoire de travail) :
         </TranslationItem>
         <TranslationItem Name="commandLabel" Property="Text">
           <Source>Command:</Source>
-          <Value>Commande:</Value>
+          <Value>Commande :</Value>
         </TranslationItem>
         <TranslationItem Name="inMenuCheckBox" Property="Text">
           <Source>Add to revision grid context menu</Source>
@@ -7284,11 +7286,11 @@ Si c'est un dépôt central (dépôt nu sans répertoire de travail) :
         </TranslationItem>
         <TranslationItem Name="lbl_icon" Property="Text">
           <Source>Icon:</Source>
-          <Value>Icône:</Value>
+          <Value>Icône :</Value>
         </TranslationItem>
         <TranslationItem Name="nameLabel" Property="Text">
           <Source>Name:</Source>
-          <Value>Nom:</Value>
+          <Value>Nom :</Value>
         </TranslationItem>
         <TranslationItem Name="removeScriptButton" Property="Text">
           <Source>Remove</Source>
