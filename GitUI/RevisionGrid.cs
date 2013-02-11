@@ -1776,10 +1776,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            if (UICommands.StartDeleteTagDialog(this, toolStripItem.Text))
-            {
-                ForceRefreshRevisions();
-            }
+            UICommands.StartDeleteTagDialog(this, toolStripItem.Text);
         }
 
         private void ToolStripItemClickDeleteBranch(object sender, EventArgs e)
@@ -1790,8 +1787,6 @@ namespace GitUI
                 return;
 
             UICommands.StartDeleteBranchDialog(this, toolStripItem.Text);
-
-            ForceRefreshRevisions();
         }
 
         private void ToolStripItemClickCheckoutBranch(object sender, EventArgs e)
