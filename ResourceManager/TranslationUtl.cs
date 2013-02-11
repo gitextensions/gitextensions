@@ -25,7 +25,8 @@ namespace ResourceManager.Translation
             if (objName != null)
                 yield return new Tuple<string, object>(objName, obj);
 
-            foreach (FieldInfo fieldInfo in obj.GetType().GetFields(BindingFlags.Public |BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.SetField))
+            foreach (FieldInfo fieldInfo in obj.GetType().GetFields(
+                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.SetField))
             {
                 if (fieldInfo.IsPublic && !fieldInfo.IsInitOnly)
                 {// if public AND modifiable (NOT readonly)
@@ -95,7 +96,8 @@ namespace ResourceManager.Translation
 					if (propertyInfo.CanWrite)
 						propertyInfo.SetValue(itemObj, value, null);
 				}
-				else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
+				else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null))
+                         && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
 				{
 					value = translation.TranslateItem(category, item, "Text", null);
 					if (!String.IsNullOrEmpty(value))

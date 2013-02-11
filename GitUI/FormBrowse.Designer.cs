@@ -2121,6 +2121,7 @@ namespace GitUI
         private ToolStripMenuItem bLocalToolStripMenuItem;
         private ToolStripMenuItem parentOfALocalToolStripMenuItem;
         private ToolStripMenuItem parentOfBLocalToolStripMenuItem;
+        private ToolStripMenuItem reportAnIssueToolStripMenuItem;        
         private SplitContainer MainSplitContainer;
         private UserControls.RepoObjectsTree repoObjectsTree;        
         private ToolStripMenuItem reportAnIssueToolStripMenuItem;        

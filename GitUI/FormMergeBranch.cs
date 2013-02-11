@@ -57,7 +57,10 @@ namespace GitUI
             var wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this);
 
             if (successfullyMerged || wasConflict)
+            {
+                UICommands.RepoChangedNotifier.Notify();
                 Close();
+            }
         }
 
         private void NonDefaultMergeStrategy_CheckedChanged(object sender, EventArgs e)

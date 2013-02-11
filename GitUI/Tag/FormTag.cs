@@ -79,6 +79,9 @@ namespace GitUI.Tag
 
             if (s.Contains("fatal:"))
                 return string.Empty;
+            else
+                UICommands.RepoChangedNotifier.Notify();
+
             return Tagname.Text;
         }
 
@@ -94,8 +97,10 @@ namespace GitUI.Tag
                 Text = string.Format(_pushToCaption.Text, currentRemote),
             })
             {
-
                 form.ShowDialog();
+
+                if (!form.ErrorOccurred())
+                    UICommands.RepoChangedNotifier.Notify();
 
                 if (!Module.InTheMiddleOfConflictedMerge() &&
                     !Module.InTheMiddleOfRebase() && !form.ErrorOccurred())

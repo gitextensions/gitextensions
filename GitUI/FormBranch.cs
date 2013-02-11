@@ -34,6 +34,7 @@ namespace GitUI
 
                 string cmd = GitCommandHelpers.BranchCmd(BName.Text, RevisionGrid.GetSelectedRevisions()[0].Guid, CheckoutAfterCreate.Checked);
                 FormProcess.ShowDialog(this, cmd);
+                UICommands.RepoChangedNotifier.Notify();
 
                 Close();
             }

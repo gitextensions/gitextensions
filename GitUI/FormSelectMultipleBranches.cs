@@ -15,7 +15,7 @@ namespace GitUI
             Translate();
         }
 
-        public FormSelectMultipleBranches(IList<GitHead> branchesToSelect)
+        public FormSelectMultipleBranches(IList<GitRef> branchesToSelect)
         {
             InitializeComponent();
             Translate();
@@ -32,7 +32,7 @@ namespace GitUI
             int index = 0;
             foreach (object item in Branches.Items)
             {
-                GitHead branch = item as GitHead;
+                GitRef branch = item as GitRef;
                 if (branch != null && branch.Name == name)
                 {
                     Branches.SetItemChecked(index, true);
@@ -42,11 +42,11 @@ namespace GitUI
             }
         }
 
-        public IList<GitHead> GetSelectedBranches()
+        public IList<GitRef> GetSelectedBranches()
         {
-            IList<GitHead> branches = new List<GitHead>();
+            IList<GitRef> branches = new List<GitRef>();
 
-            foreach (GitHead head in Branches.CheckedItems)
+            foreach (GitRef head in Branches.CheckedItems)
                 branches.Add(head);
 
             return branches;

@@ -91,6 +91,7 @@
     <Compile Include="Git\RemoteInfo.cs" />
     <Compile Include="LinkFactory.cs" />
     <Compile Include="LinqExtensions.cs" />
+    <Compile Include="LockableNotifier.cs" />
     <Compile Include="Logging\CommandLogger.cs" />
     <Compile Include="Commit.cs" />
     <Compile Include="CommitInformation.cs" />
@@ -106,7 +107,7 @@
     <Compile Include="Git\GitItemStatus.cs" />
     <Compile Include="Git\GitPushAction.cs" />
     <Compile Include="Git\GitRevision.cs" />
-    <Compile Include="Git\GitHead.cs" />
+    <Compile Include="Git\GitRef.cs" />
     <Compile Include="Git\GitItem.cs" />
     <Compile Include="Git\GitStash.cs" />
     <Compile Include="Git\GitSubmodule.cs" />

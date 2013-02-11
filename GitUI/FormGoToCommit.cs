@@ -121,8 +121,8 @@ namespace GitUI
     /// </summary>
     class GitHeaderGuiWrapper
     {
-        readonly GitHead _gitHead;
-        public GitHeaderGuiWrapper(GitHead gitHead)
+        readonly GitRef _gitHead;
+        public GitHeaderGuiWrapper(GitRef gitHead)
         {
             _gitHead = gitHead;
         }
@@ -132,6 +132,6 @@ namespace GitUI
             return _gitHead.LocalName;
         }
 
-        public GitHead GitHead { get { return _gitHead; } }
+        public GitRef GitHead { get { return _gitHead; } }
     }
 }

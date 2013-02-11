@@ -239,7 +239,7 @@ namespace GitUI
                 bool track = ReplaceTrackingReference.Checked;
                 if (!track && !string.IsNullOrWhiteSpace(RemoteBranch.Text))
                 {
-                    GitHead selectedLocalBranch = _NO_TRANSLATE_Branch.SelectedItem as GitHead;
+                    GitRef selectedLocalBranch = _NO_TRANSLATE_Branch.SelectedItem as GitRef;
                     track = selectedLocalBranch != null && string.IsNullOrEmpty(selectedLocalBranch.TrackingRemote);
 
                     string[] remotes = _NO_TRANSLATE_Remotes.DataSource as string[];
@@ -411,7 +411,7 @@ namespace GitUI
             {
                 if (PushToRemote.Checked)
                 {
-                    var branch = _NO_TRANSLATE_Branch.SelectedItem as GitHead;
+                    var branch = _NO_TRANSLATE_Branch.SelectedItem as GitRef;
                     if (branch != null && branch.TrackingRemote.Equals(SelectedRemote.Trim()))
                     {
                         RemoteBranch.Text = branch.MergeWith;
@@ -496,7 +496,7 @@ namespace GitUI
                 RemoteBranch.Text = "";
                 if (!string.IsNullOrEmpty(defaultPush.LocalBranch))
                 {
-                    var currentBranch = new GitHead(Module, null, defaultPush.LocalBranch, SelectedRemote);
+                    var currentBranch = new GitRef(Module, null, defaultPush.LocalBranch, SelectedRemote);
                     _NO_TRANSLATE_Branch.Items.Add(currentBranch);
                     _NO_TRANSLATE_Branch.SelectedItem = currentBranch;
                 }
@@ -510,7 +510,7 @@ namespace GitUI
                 // Doing this makes it pretty easy to accidentally create a branch on the remote.
                 // But leaving it blank will do the 'default' thing, meaning all branches are pushed.
                 // Solution: when pushing a branch that doesn't exist on the remote, ask what to do
-                var currentBranch = new GitHead(Module, null, _currentBranch, SelectedRemote);
+                var currentBranch = new GitRef(Module, null, _currentBranch, SelectedRemote);
                 _NO_TRANSLATE_Branch.Items.Add(currentBranch);
                 _NO_TRANSLATE_Branch.SelectedItem = currentBranch;
                 return;
@@ -610,7 +610,7 @@ namespace GitUI
             // Offer to delete all the left over remote branches.
             foreach (var remoteHead in remoteHeads)
             {
-                GitHead head = remoteHead;
+                GitRef head = remoteHead;
                 if (!localHeads.Any(h => h.Name == head.Name))
                 {
                     DataRow row = _branchTable.NewRow();

@@ -170,7 +170,7 @@ namespace GitUI.UserControls
             /// <summary>Indicates whether this <see cref="BranchNode"/> is setup for remote tracking.</summary>
             public bool IsTrackingSetup(ConfigFile config)
             {// NOT (not whitespace)
-                return !string.IsNullOrWhiteSpace(config.GetValue(GitHead.RemoteSettingName(FullPath)));
+                return !string.IsNullOrWhiteSpace(config.GetValue(GitRef.RemoteSettingName(FullPath)));
             }
 
             /// <summary>Styles the <see cref="Node.TreeNode"/>.</summary>
@@ -183,13 +183,29 @@ namespace GitUI.UserControls
                 }
             }
 
+            public override bool Equals(object obj)
+            {
+                if (base.Equals(obj))
+                {
+                    BranchNode branchNode = obj as BranchNode;
+                    return branchNode != null && IsActive == branchNode.IsActive;
+                }
+
+                return false;
+            }
+
             /// <summary>Checkout the branch.</summary>
             internal override void OnDoubleClick()
             {
                 base.OnDoubleClick();
-                UiCommands.StartCheckoutBranchDialog(FullPath);
+                Checkout();
             }
 
+            internal override void OnSelected()
+            {
+                base.OnSelected();
+                UiCommands.BrowseGoToRevision(FullPath);
+            }
             protected override IEnumerable<DragDropAction> CreateDragDropActions()
             {
                 var stashDD = new DragDropAction<StashNode>(
@@ -252,22 +268,24 @@ namespace GitUI.UserControls
 
             public void Checkout()
             {
-                throw new NotImplementedException();
+                UiCommands.StartCheckoutBranchDialog(FullPath, false);
             }
 
             public void CreateBranch()
             {
-                throw new NotImplementedException();
+                UiCommands.StartCreateBranchDialog();
             }
 
             public void Delete()
             {
-                throw new NotImplementedException();
+                UiCommands.StartDeleteBranchDialog(FullPath);
             }
 
             public void DeleteForce()
             {
-                throw new NotImplementedException();
+                var branchHead = GitRef.CreateBranchRef(UiCommands.Module, null, FullPath);
+                var cmd = new GitDeleteBranchCmd(new GitRef[] { branchHead }, true);
+                UiCommands.StartCommandLineProcessDialog(cmd, null);
             }
         }
 

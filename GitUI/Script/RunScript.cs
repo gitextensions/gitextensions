@@ -69,15 +69,15 @@ namespace GitUI.Script
             GitRevision selectedRevision = null;
             GitRevision currentRevision = null;
 
-            var selectedLocalBranches = new List<GitHead>();
-            var selectedRemoteBranches = new List<GitHead>();
+            var selectedLocalBranches = new List<GitRef>();
+            var selectedRemoteBranches = new List<GitRef>();
             var selectedRemotes = new List<string>();
-            var selectedBranches = new List<GitHead>();
-            var selectedTags = new List<GitHead>();
-            var currentLocalBranches = new List<GitHead>();
-            var currentRemoteBranches = new List<GitHead>();
-            var currentBranches = new List<GitHead>();
-            var currentTags = new List<GitHead>();
+            var selectedBranches = new List<GitRef>();
+            var selectedTags = new List<GitRef>();
+            var currentLocalBranches = new List<GitRef>();
+            var currentRemoteBranches = new List<GitRef>();
+            var currentBranches = new List<GitRef>();
+            var currentTags = new List<GitRef>();
 
             foreach (string option in Options)
             {
@@ -242,12 +242,12 @@ namespace GitUI.Script
             FormProcess.ShowDialog(null, command, argument, aModule.WorkingDir, null, true);
         }
 
-        private static GitRevision CalculateSelectedRevision(RevisionGrid RevisionGrid, List<GitHead> selectedRemoteBranches,
-                                                             List<string> selectedRemotes, List<GitHead> selectedLocalBranches,
-                                                             List<GitHead> selectedBranches, List<GitHead> selectedTags)
+        private static GitRevision CalculateSelectedRevision(RevisionGrid RevisionGrid, List<GitRef> selectedRemoteBranches,
+                                                             List<string> selectedRemotes, List<GitRef> selectedLocalBranches,
+                                                             List<GitRef> selectedBranches, List<GitRef> selectedTags)
         {
             GitRevision selectedRevision = RevisionGrid.GetRevision(RevisionGrid.LastRow);
-            foreach (GitHead head in selectedRevision.Heads)
+            foreach (GitRef head in selectedRevision.Heads)
             {
                 if (head.IsTag)
                     selectedTags.Add(head);
@@ -268,19 +268,19 @@ namespace GitUI.Script
             return selectedRevision;
         }
 
-        private static GitRevision GetCurrentRevision(GitModule aModule, RevisionGrid RevisionGrid, List<GitHead> currentTags, List<GitHead> currentLocalBranches,
-                                                      List<GitHead> currentRemoteBranches, List<GitHead> currentBranches,
+        private static GitRevision GetCurrentRevision(GitModule aModule, RevisionGrid RevisionGrid, List<GitRef> currentTags, List<GitRef> currentLocalBranches,
+                                                      List<GitRef> currentRemoteBranches, List<GitRef> currentBranches,
                                                       GitRevision currentRevision, string option)
         {
             if (option.StartsWith("{c") && currentRevision == null)
             {
-                IList<GitHead> heads;
+                IList<GitRef> heads;
 
                 if (RevisionGrid == null)
                 {
-                    heads = new List<GitHead>();
+                    heads = new List<GitRef>();
                     string currentRevisionGuid = aModule.GetCurrentCheckout();
-                    foreach (GitHead head in aModule.GetHeads(true, true))
+                    foreach (GitRef head in aModule.GetHeads(true, true))
                     {
                         if (head.Guid == currentRevisionGuid)
                             heads.Add(head);
@@ -292,7 +292,7 @@ namespace GitUI.Script
                     heads = currentRevision.Heads;
                 }
 
-                foreach (GitHead head in heads)
+                foreach (GitRef head in heads)
                 {
                     if (head.IsTag)
                         currentTags.Add(head);
@@ -358,7 +358,7 @@ namespace GitUI.Script
             return originalCommand;
         }
 
-        private static string askToSpecify(IEnumerable<GitHead> options, string title)
+        private static string askToSpecify(IEnumerable<GitRef> options, string title)
         {
             using (var f = new FormRunScriptSpecify(options, title))
             {

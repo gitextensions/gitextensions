@@ -261,7 +261,7 @@ namespace GitUI
 
         private AsyncLoader branchListLoader = new AsyncLoader();
 
-        private void UpdateBranches(IList<GitHead> branchList)
+        private void UpdateBranches(IList<GitRef> branchList)
         {
             string text = Branches.Text;
             Branches.DataSource = branchList;

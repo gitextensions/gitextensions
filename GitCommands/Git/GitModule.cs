@@ -2672,7 +2672,7 @@ namespace GitCommands
             return remote + "/" + (merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge);
         }
 
-        public IList<GitHead> GetRemoteHeads(string remote, bool tags, bool branches)
+        public IList<GitRef> GetRemoteHeads(string remote, bool tags, bool branches)
         {
             remote = FixPath(remote);
 
@@ -2691,17 +2691,17 @@ namespace GitCommands
             return "";
         }
 
-        public IList<GitHead> GetHeads()
+        public IList<GitRef> GetHeads()
         {
             return GetHeads(true, true);
         }
 
-        public IList<GitHead> GetHeads(bool tags)
+        public IList<GitRef> GetHeads(bool tags)
         {
             return GetHeads(tags, true);
         }
 
-        public IList<GitHead> GetHeads(bool tags, bool branches)
+        public IList<GitRef> GetHeads(bool tags, bool branches)
         {
             var tree = GetTree(tags, branches);
             return GetTreeHeads(tree);
@@ -2712,11 +2712,11 @@ namespace GitCommands
         /// </summary>
         /// <param name="option">Ordery by date is slower.</param>
         /// <returns></returns>
-        public IList<GitHead> GetTagHeads(GetTagHeadsSortOrder option)
+        public IList<GitRef> GetTagHeads(GetTagHeadsSortOrder option)
         {
             var list = GetHeads(true, false);
 
-            var sortedList = new List<GitHead>();
+            var sortedList = new List<GitRef>();
 
             if (option == GetTagHeadsSortOrder.ByCommitDateAscending)
             {
@@ -2735,7 +2735,7 @@ namespace GitCommands
                 }).ToList();
             }
             else
-                sortedList = new List<GitHead>(list);
+                sortedList = new List<GitRef>(list);
 
             return sortedList;
         }
@@ -2776,12 +2776,12 @@ namespace GitCommands
             return "";
         }
 
-        private IList<GitHead> GetTreeHeads(string tree)
+        private IList<GitRef> GetTreeHeads(string tree)
         {
             var itemsStrings = tree.Split('\n');
 
-            var heads = new List<GitHead>();
-            var defaultHeads = new Dictionary<string, GitHead>(); // remote -> HEAD
+            var heads = new List<GitRef>();
+            var defaultHeads = new Dictionary<string, GitRef>(); // remote -> HEAD
             var remotes = GetRemotes(false);
 
             foreach (var itemsString in itemsStrings)
@@ -2792,7 +2792,7 @@ namespace GitCommands
                 var completeName = itemsString.Substring(41).Trim();
                 var guid = itemsString.Substring(0, 40);
                 var remoteName = GetRemoteName(completeName, remotes);
-                var head = new GitHead(this, guid, completeName, remoteName);
+                var head = new GitRef(this, guid, completeName, remoteName);
                 if (DefaultHeadPattern.IsMatch(completeName))
                     defaultHeads[remoteName] = head;
                 else
@@ -2800,7 +2800,7 @@ namespace GitCommands
             }
 
             // do not show default head if remote has a branch on the same commit
-            GitHead defaultHead;
+            GitRef defaultHead;
             foreach (var head in heads.Where(head => defaultHeads.TryGetValue(head.Remote, out defaultHead) && head.Guid == defaultHead.Guid))
             {
                 defaultHeads.Remove(head.Remote);
