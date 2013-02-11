@@ -183,6 +183,17 @@ namespace GitUI.UserControls
                 }
             }
 
+            public override bool Equals(object obj)
+            {
+                if (base.Equals(obj))
+                {
+                    BranchNode branchNode = obj as BranchNode;
+                    return branchNode != null && IsActive == branchNode.IsActive;
+                }
+
+                return false;
+            }
+
             /// <summary>Checkout the branch.</summary>
             internal override void OnDoubleClick()
             {
