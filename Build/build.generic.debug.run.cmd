@@ -9,4 +9,4 @@ EXIT /B 1
 
 :success
 echo BUILD SUCCEEDED. Start GitExtensions.exe
-start "%~p0\..\GitExtensions\bin\Debug\GitExtensions.exe"
+start "" "%~p0\..\GitExtensions\bin\Debug\GitExtensions.exe"
