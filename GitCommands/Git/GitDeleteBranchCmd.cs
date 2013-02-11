@@ -40,5 +40,10 @@ namespace GitCommands
         {
             return false;
         }
+
+        public override bool ChangesRepoState()
+        {
+            return true;
+        }
     }
 }

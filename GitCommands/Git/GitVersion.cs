@@ -14,7 +14,7 @@ namespace GitCommands
 
         private const string Prefix = "git version";
 
-        private readonly string full;
+        public readonly string Full;
         private readonly int a;
         private readonly int b;
         private readonly int c;
@@ -22,9 +22,9 @@ namespace GitCommands
 
         public GitVersion(string version)
         {
-            full = Fix(version);
+            Full = Fix(version);
 
-            IList<int> numbers = GetNumbers(full);
+            IList<int> numbers = GetNumbers(Full);
             a = Get(numbers, 0);
             b = Get(numbers, 1);
             c = Get(numbers, 2);
@@ -179,7 +179,7 @@ namespace GitCommands
 
         public override string ToString()
         {
-            return full.Replace(".msysgit.0", "").Replace(".msysgit.1", "");
+            return Full.Replace(".msysgit.0", "").Replace(".msysgit.1", "");
         }
     }
 }

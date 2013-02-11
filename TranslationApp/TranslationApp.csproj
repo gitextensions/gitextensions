@@ -84,7 +84,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="TranslateItem.cs" />
+    <Compile Include="TranslationItemWithCategory.cs" />
     <Compile Include="TranslationHelpers.cs" />
     <EmbeddedResource Include="FormTranslate.resx">
       <DependentUpon>FormTranslate.cs</DependentUpon>
@@ -96,7 +96,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="Properties\DataSources\FormTranslate.TranslateItem.datasource" />
+    <None Include="Properties\DataSources\FormTranslate.TranslationItemWithCategory.datasource" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">

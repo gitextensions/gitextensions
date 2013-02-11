@@ -111,7 +111,6 @@ namespace GitUI
         #endregion
 
         private readonly SynchronizationContext _syncContext;
-        public bool NeedRefresh;
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
         private readonly CommitKind _commitKind;
@@ -206,16 +205,6 @@ namespace GitUI
                 splitMain.SplitterDistance = Settings.CommitDialogSplitter;
             if (Settings.CommitDialogRightSplitter != -1)
                 splitRight.SplitterDistance = Settings.CommitDialogRightSplitter;
-
-            AddAutoWrapCheckboxToStatusBar();
-        }
-
-        private void AddAutoWrapCheckboxToStatusBar()
-        {
-            var cb = new CheckBox {Text = _checkBoxAutoWrap.Text, Checked = Settings.CommitValidationAutoWrap};
-            cb.CheckStateChanged += (s, ex) => Settings.CommitValidationAutoWrap = cb.Checked;
-            var toolStripHost = new ToolStripControlHost(cb);
-            commitStatusStrip.Items.Insert(0, toolStripHost);
         }
 
         private void FormCommitFormClosing(object sender, FormClosingEventArgs e)
@@ -853,7 +842,7 @@ namespace GitUI
 
                 var errorOccurred = !FormProcess.ShowDialog(this, Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text, _useFormCommitMessage));
 
-                NeedRefresh = true;
+                UICommands.RepoChangedNotifier.Notify();
 
                 if (errorOccurred)
                     return;
@@ -990,6 +979,8 @@ namespace GitUI
                 foreach (var gitItemStatus in gitItemStatusses)
                 {
                     toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
+                    if (gitItemStatus.Name.EndsWith("/"))
+                        gitItemStatus.Name = gitItemStatus.Name.TrimEnd('/');
                     files.Add(gitItemStatus);
                 }
 
@@ -1019,9 +1010,11 @@ namespace GitUI
                     InitializedStaged();
                     var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatuses;
                     Unstaged.GitItemStatuses = null;
-
-                    unStagedFiles.RemoveAll(item => files.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
-
+                    var unstagedItems = unStagedFiles.Where(item => files.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
+                    unStagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
+                    unStagedFiles.RemoveAll(item => item.IsSubmodule && !item.SubmoduleStatus.IsDirty && unstagedItems.Contains(item));
+                    foreach (var item in unstagedItems.Where(item => item.IsSubmodule && item.SubmoduleStatus.IsDirty))
+                        item.SubmoduleStatus.Status = SubmoduleStatus.Unknown;
                     Unstaged.GitItemStatuses = unStagedFiles;
                     Unstaged.SelectStoredNextIndex();
                 }                
@@ -1042,7 +1035,7 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
 
             if (Settings.RevisionGraphShowWorkingDirChanges)
-                NeedRefresh = true;
+                UICommands.RepoChangedNotifier.Notify();
         }
 
         private void UnstageFilesClick(object sender, EventArgs e)
@@ -1148,7 +1141,7 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
 
             if (Settings.RevisionGraphShowWorkingDirChanges)
-                NeedRefresh = true;
+                UICommands.RepoChangedNotifier.Notify();
         }
 
 
@@ -1387,17 +1380,17 @@ namespace GitUI
 
         private void CommitMessageToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
-            var items = commitMessageToolStripMenuItem.DropDownItems;
-            for (int i = 0; i < items.Count - 2; i++)
-                items.RemoveAt(0);
-            AddCommitMessageToMenu(Settings.LastCommitMessage);
+            commitMessageToolStripMenuItem.DropDownItems.Clear();
 
-            string localLastCommitMessage = Module.GetPreviousCommitMessage(0);
-            if (!localLastCommitMessage.Trim().Equals(Settings.LastCommitMessage.Trim()))
-                AddCommitMessageToMenu(localLastCommitMessage);
-            AddCommitMessageToMenu(Module.GetPreviousCommitMessage(1));
-            AddCommitMessageToMenu(Module.GetPreviousCommitMessage(2));
-            AddCommitMessageToMenu(Module.GetPreviousCommitMessage(3));
+            var msg = Settings.LastCommitMessage;
+
+            AddCommitMessageToMenu(msg);
+
+            foreach (var localLastCommitMessage in Module.GetPreviousCommitMessages(4))
+            {
+                if (!localLastCommitMessage.Trim().Equals(msg.Trim()))
+                    AddCommitMessageToMenu(localLastCommitMessage);
+            }
         }
 
         private void AddCommitMessageToMenu(string commitMessage)
@@ -1417,7 +1410,7 @@ namespace GitUI
                 };
 
             int count = commitMessageToolStripMenuItem.DropDownItems.Count;
-            commitMessageToolStripMenuItem.DropDownItems.Insert(count - 2, toolStripItem);
+            commitMessageToolStripMenuItem.DropDownItems.Add(toolStripItem);
         }
 
         private void CommitMessageToolStripMenuItemDropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -1598,7 +1591,7 @@ namespace GitUI
             }
 
             Initialize();
-            NeedRefresh = true;
+            UICommands.RepoChangedNotifier.Notify();
         }
 
         private void ShowUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
@@ -1704,29 +1697,26 @@ namespace GitUI
 
         private void Message_TextChanged(object sender, EventArgs e)
         {
-            FormatLine(Message.CurrentLine - 1);
+            //always format from 0 to handle pasted text
+            FormatAllText(0);
         }
 
         private void Message_TextAssigned(object sender, EventArgs e)
         {
-            FormatAllText();
+            Message_TextChanged(sender, e);
         }
 
-        private void FormatLine(int line)
+        private bool FormatLine(int line)
         {
             int limit1 = Settings.CommitValidationMaxCntCharsFirstLine;
             int limitX = Settings.CommitValidationMaxCntCharsPerLine;
             bool empty2 = Settings.CommitValidationSecondLineMustBeEmpty;
 
-            var lineLength = Message.LineLength(line);
+            bool textHasChanged = false;
 
             if (limit1 > 0 && line == 0)
             {
-                Message.ChangeTextColor(line, 0, Math.Min(limit1, lineLength), Color.Black);
-                if (lineLength > limit1)
-                {
-                    Message.ChangeTextColor(line, limit1, lineLength - limit1, Color.Red);
-                }
+                ColorTextAsNecessary(line, limit1, false);
             }
 
             if (empty2 && line == 1)
@@ -1734,46 +1724,112 @@ namespace GitUI
                 // Ensure next line. Optionally add a bullet.
                 Message.EnsureEmptyLine(Settings.CommitValidationIndentAfterFirstLine, 1);
                 Message.ChangeTextColor(2, 0, Message.LineLength(2), Color.Black);
-                FormatLine(2);
+                if (FormatLine(2))
+                {
+                    textHasChanged = true;
+                }
             }
 
             if (limitX > 0 && line >= (empty2 ? 2 : 1))
             {
                 if (Settings.CommitValidationAutoWrap)
                 {
-                    WrapIfNecessary(lineLength, limitX);
+                    if (WrapIfNecessary(line, limitX))
+                    {
+                        textHasChanged = true;
+                    }
                 }
-                else
+                ColorTextAsNecessary(line, limitX, textHasChanged);
+            }
+
+            return textHasChanged;
+        }
+
+        private bool WrapIfNecessary(int line, int lineLimit)
+        {
+            if (Message.LineLength(line) > lineLimit)
+            {
+                var oldText = Message.Line(line);
+                var newText = WordWrapper.WrapSingleLine(oldText, lineLimit);
+                if (!String.Equals(oldText, newText))
                 {
-                    ColorTextAsNecessary(line, lineLength, limitX);
+                    Message.ReplaceLine(line, newText);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void ColorTextAsNecessary(int line, int lineLimit, bool fullRefresh)
+        {
+            var lineLength = Message.LineLength(line);
+            int offset = 0;
+            bool textAppended = false;
+            if (!fullRefresh && formattedLines.Count > line)
+            {
+                offset = formattedLines[line].CommonPrefix(Message.Line(line)).Length;
+                textAppended = offset > 0 && offset == formattedLines[line].Length;
+            }
+
+            int len = Math.Min(lineLimit, lineLength) - offset;
+
+            if (!textAppended && 0 < len)
+                Message.ChangeTextColor(line, offset, len, Color.Black);
+
+            if (lineLength > lineLimit)
+            {
+                if (offset <= lineLimit || !textAppended)
+                {
+                    offset = Math.Max(offset, lineLimit);
+                    len = lineLength - offset;
+                    if (len > 0)
+                        Message.ChangeTextColor(line, offset, len, Color.Red);
                 }
             }
         }
 
-        private void WrapIfNecessary(int lineLength, int lineLimit)
+        private List<string> formattedLines = new List<string>();
+
+        private bool DidFormattedLineChange(int lineNumber)
         {
-            if (lineLength > lineLimit)
-            {
-                Message.WrapWord(_indent);
-                FormatAllText();
-            }
+            //line not formated yet
+            if (formattedLines.Count <= lineNumber)
+                return true;
+            
+            return !formattedLines[lineNumber].Equals(Message.Line(lineNumber), StringComparison.OrdinalIgnoreCase);
         }
 
-        private void ColorTextAsNecessary(int line, int lineLength, int lineLimit)
+        private void TrimFormattedLines(int lineCount)
         {
-            Message.ChangeTextColor(line, 0, Math.Min(lineLimit, lineLength), Color.Black);
-            if (lineLength > lineLimit)
-            {
-                Message.ChangeTextColor(line, lineLimit, lineLength - lineLimit, Color.Red);
-            }
+            if (formattedLines.Count > lineCount)
+                formattedLines.RemoveRange(lineCount, formattedLines.Count - lineCount);
         }
 
-        private void FormatAllText()
+        private void SetFormattedLine(int lineNumber)
+        {
+            //line not formated yet
+            if (formattedLines.Count <= lineNumber)
+            {
+                Debug.Assert(formattedLines.Count == lineNumber, formattedLines.Count + ":" + lineNumber);
+                formattedLines.Add(Message.Line(lineNumber));
+            }
+            else
+                formattedLines[lineNumber] = Message.Line(lineNumber);
+        }
+
+        private void FormatAllText(int startLine)
         {
             var lineCount = Message.LineCount();
-            for (int line = 0; line < lineCount; line++)
+            TrimFormattedLines(lineCount);
+            for (int line = startLine; line < lineCount; line++)
             {
-                FormatLine(line);
+                if (DidFormattedLineChange(line))
+                {
+                    bool lineChanged = FormatLine(line);
+                    SetFormattedLine(line);
+                    if (lineChanged)
+                        FormatAllText(line);
+                }
             }
         }
 
@@ -2145,7 +2201,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(Message.Text) && Amend.Checked)
             {
-                Message.Text = Module.GetPreviousCommitMessage(0).Trim();
+                Message.Text = Module.GetPreviousCommitMessages(1).FirstOrDefault().Trim();
                 return;
             }
         }

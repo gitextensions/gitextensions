@@ -36,6 +36,24 @@ namespace System
                 return str;
         }
 
+        public static string CommonPrefix(this string s, string other)
+        {
+            if (s.IsNullOrEmpty() || other.IsNullOrEmpty())
+                return string.Empty;
+
+            int prefixLength = 0;
+
+            foreach (char c in other)
+            {
+                if (s.Length <= prefixLength || s[prefixLength] != c)
+                    return s.Substring(0, prefixLength);
+
+                prefixLength++;
+            }
+
+            return s;
+        }
+
         public static bool IsNullOrEmpty(this string s)
         {
             return string.IsNullOrEmpty(s);

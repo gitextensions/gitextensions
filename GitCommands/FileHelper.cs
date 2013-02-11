@@ -63,46 +63,56 @@ namespace GitCommands
             return HasMatchingExtension(BinaryExtensions, fileName);
         }
 
-        /// <returns>null if no info in .gitattributes. True if marked as binary, false if marked as text</returns>
+        /// <returns>null if no info in .gitattributes (or ambiguous). True if marked as binary, false if marked as text</returns>
         private static bool? IsBinaryAccordingToGitAttributes(GitModule aModule, string fileName)
         {
             string gitAttributesPath = Path.Combine(aModule.WorkingDir, ".gitattributes");
             if (File.Exists(gitAttributesPath))
             {
                 var lines = File.ReadLines(gitAttributesPath);
-                bool? lastMatchResult = null;
-                foreach (var parts in lines.Select(line => line.Trim().Split(' ')))
+                bool? diff = null;
+                bool? text = null;
+                foreach (var parts in lines.Select(line => line.Split(new[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries)))
                 {
                     if (parts.Length < 2 || parts[0][0] == '#')
                         continue;
-                    if (parts.Contains("binary") || parts.Contains("-text"))
+                    try
                     {
-                        try
-                        {
-                            if (Regex.IsMatch(fileName, CreateRegexFromFilePattern(parts[0])))
-                                lastMatchResult = true;
-                        }
-                        catch
-                        {
+                        if (!Regex.IsMatch(fileName, CreateRegexFromFilePattern(parts[0])))
                             continue;
-                        }
                     }
-                    if (parts.Contains("text"))
+                    catch (ArgumentException)
                     {
-                        try
-                        {
-                            if (Regex.IsMatch(fileName, CreateRegexFromFilePattern(parts[0])))
-                                lastMatchResult = false;
-                        }
-                        catch
-                        {
-                            continue;
-                        }
+                        continue;
+                    }
+                    if (parts.Contains("binary"))
+                    {
+                        diff = false;
+                        text = false;
+                    }
+                    else
+                    {
+                        if (parts.Contains("diff"))
+                            diff = true;
+                        else if (parts.Contains("-diff"))
+                            diff = false;
+                        else if (parts.Contains("!diff"))
+                            diff = null;
+                        if (parts.Contains("text") || parts.Contains("crlf"))
+                            text = true;
+                        else if (parts.Contains("-text") || parts.Contains("-crlf"))
+                            text = false;
+                        else if (parts.Contains("!text") || parts.Contains("!crlf"))
+                            text = null;
                     }
                 }
-                return lastMatchResult;
+                //detect explicit binary attributes (no textual diffs allowed)
+                if (diff == false)
+                    return true;
+                //detect explicit text-based file (diff attr set) or implicit text-based file (text attr set)
+                if (diff == true && text == true)
+                    return false;
             }
-
             return null;
         }
 

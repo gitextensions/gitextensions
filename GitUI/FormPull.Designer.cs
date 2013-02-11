@@ -118,7 +118,7 @@
             this.Pull.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.Pull.Image = global::GitUI.Properties.Resources.ArrowDown;
             this.Pull.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Pull.Location = new System.Drawing.Point(624, 8);
+            this.Pull.Location = new System.Drawing.Point(787, 8);
             this.Pull.MinimumSize = new System.Drawing.Size(120, 25);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(124, 25);
@@ -140,7 +140,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(799, 362);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(972, 393);
             this.tableLayoutPanel1.TabIndex = 16;
             // 
             // helpImageDisplayUserControl1
@@ -153,12 +153,12 @@
             this.helpImageDisplayUserControl1.Image1 = null;
             this.helpImageDisplayUserControl1.Image2 = null;
             this.helpImageDisplayUserControl1.IsExpanded = true;
-            this.helpImageDisplayUserControl1.Location = new System.Drawing.Point(3, 3);
-            this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(30, 50);
-            this.helpImageDisplayUserControl1.Name = "helpImageDisplayUserControl1";
-            this.helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = "Hover to see scenario when fast forward is possible.";
             this.helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
-            this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(30, 356);
+            this.helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = "Hover to see scenario when fast forward is possible.";
+            this.helpImageDisplayUserControl1.Location = new System.Drawing.Point(3, 3);
+            this.helpImageDisplayUserControl1.MinimumSize = new System.Drawing.Size(40, 85);
+            this.helpImageDisplayUserControl1.Name = "helpImageDisplayUserControl1";
+            this.helpImageDisplayUserControl1.Size = new System.Drawing.Size(40, 387);
             this.helpImageDisplayUserControl1.TabIndex = 10;
             this.helpImageDisplayUserControl1.UniqueIsExpandedSettingsId = "Pull";
             // 
@@ -166,9 +166,9 @@
             // 
             this.panel2.Controls.Add(this.tableLayoutPanel2);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(39, 3);
+            this.panel2.Location = new System.Drawing.Point(49, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(757, 356);
+            this.panel2.Size = new System.Drawing.Size(920, 387);
             this.panel2.TabIndex = 19;
             // 
             // tableLayoutPanel2
@@ -189,7 +189,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(757, 356);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(920, 387);
             this.tableLayoutPanel2.TabIndex = 42;
             // 
             // groupBox2
@@ -204,7 +204,7 @@
             this.groupBox2.Controls.Add(this.comboBoxPullSource);
             this.groupBox2.Location = new System.Drawing.Point(3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(751, 87);
+            this.groupBox2.Size = new System.Drawing.Size(914, 87);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Pull from";
@@ -213,7 +213,7 @@
             // 
             this.folderBrowserButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.folderBrowserButton1.Enabled = false;
-            this.folderBrowserButton1.Location = new System.Drawing.Point(614, 47);
+            this.folderBrowserButton1.Location = new System.Drawing.Point(777, 47);
             this.folderBrowserButton1.Name = "folderBrowserButton1";
             this.folderBrowserButton1.PathShowingControl = this.comboBoxPullSource;
             this.folderBrowserButton1.Size = new System.Drawing.Size(131, 25);
@@ -227,7 +227,7 @@
             this.comboBoxPullSource.FormattingEnabled = true;
             this.comboBoxPullSource.Location = new System.Drawing.Point(148, 46);
             this.comboBoxPullSource.Name = "comboBoxPullSource";
-            this.comboBoxPullSource.Size = new System.Drawing.Size(460, 23);
+            this.comboBoxPullSource.Size = new System.Drawing.Size(623, 23);
             this.comboBoxPullSource.TabIndex = 4;
             this.comboBoxPullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             // 
@@ -236,7 +236,7 @@
             this.AddRemote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.AddRemote.Image = global::GitUI.Properties.Resources.IconRemotes;
             this.AddRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.AddRemote.Location = new System.Drawing.Point(614, 16);
+            this.AddRemote.Location = new System.Drawing.Point(777, 16);
             this.AddRemote.Name = "AddRemote";
             this.AddRemote.Size = new System.Drawing.Size(131, 25);
             this.AddRemote.TabIndex = 2;
@@ -253,7 +253,7 @@
             this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
             this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(148, 16);
             this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
-            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(460, 23);
+            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(623, 23);
             this._NO_TRANSLATE_Remotes.TabIndex = 1;
             this._NO_TRANSLATE_Remotes.TextChanged += new System.EventHandler(this.Remotes_TextChanged);
             this._NO_TRANSLATE_Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
@@ -265,7 +265,7 @@
             this.groupBox1.Controls.Add(this.flowLayoutPanel1);
             this.groupBox1.Location = new System.Drawing.Point(3, 180);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(751, 102);
+            this.groupBox1.Size = new System.Drawing.Size(914, 102);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Merge options";
@@ -280,7 +280,7 @@
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 19);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(745, 80);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(908, 80);
             this.flowLayoutPanel1.TabIndex = 11;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -338,7 +338,7 @@
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Location = new System.Drawing.Point(3, 96);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(751, 78);
+            this.groupBox3.Size = new System.Drawing.Size(914, 78);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Branch";
@@ -374,12 +374,12 @@
             this.tableLayoutPanel3.Controls.Add(this.Stash, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.AutoStash, 2, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 312);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 343);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(751, 41);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(914, 41);
             this.tableLayoutPanel3.TabIndex = 42;
             // 
             // NoTags
@@ -431,7 +431,7 @@
             this.AcceptButton = this.Pull;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(799, 362);
+            this.ClientSize = new System.Drawing.Size(972, 393);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
