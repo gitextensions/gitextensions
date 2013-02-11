@@ -166,6 +166,7 @@ namespace GitUI
         public event GitUIEventHandler PostRegisterPlugin;
 
         public ILockableNotifier RepoChangedNotifier { get; private set; }
+        public IBrowseRepo BrowseRepo { get; set; }
 
         #endregion
 
@@ -428,10 +429,9 @@ namespace GitUI
             return StartCheckoutBranchDialog(owner, branch, true);
         }
 
-        public bool StartCheckoutBranchDialog(string branch)
-        {
-            throw new NotImplementedException();
-            return StartCheckoutBranchDialog(null, branch);
+        public bool StartCheckoutBranchDialog(string branch, bool remote)
+        {            
+            return StartCheckoutBranchDialog(null, branch, remote);
         }
 
         #endregion Checkout
@@ -1901,6 +1901,12 @@ namespace GitUI
         internal void RaisePostRegisterPlugin(IWin32Window owner)
         {
             InvokeEvent(owner, PostRegisterPlugin);
+        }
+
+        public void BrowseGoToRevision(string revision)
+        {
+            if (BrowseRepo != null)
+                BrowseRepo.GoToRevision(revision);
         }
 
         public IGitRemoteCommand CreateRemoteCommand()

@@ -26,7 +26,7 @@ using ResourceManager.Translation;
 
 namespace GitUI
 {
-    public partial class FormBrowse : GitModuleForm
+    public partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         #region Translation
 
@@ -71,9 +71,6 @@ namespace GitUI
 
         private readonly TranslationString _noReposHostFound =
             new TranslationString("Could not find any relevant repository hosts for the currently open repository.");
-
-        private readonly TranslationString _noRevisionFoundError =
-            new TranslationString("No revision found.");
 
         private readonly TranslationString _configureWorkingDirMenu =
             new TranslationString("Configure this menu");
@@ -135,9 +132,12 @@ namespace GitUI
                 CommitInfoTabControl.TabPages[2].ImageIndex = 2;
             }
 
-            RevisionGrid.UICommandsSource = this;
-            repoObjectsTree.UICommandsSource = this;
-            //repoObjectsTree.RepoChanged();
+            if (aCommands != null)
+            {
+                RevisionGrid.UICommandsSource = this;
+                repoObjectsTree.UICommandsSource = this;
+            }
+
             AsyncLoader.DoAsync(() => PluginLoader.Load(), () => RegisterPlugins());
             RevisionGrid.GitModuleChanged += DashboardGitModuleChanged;
             filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
@@ -174,17 +174,23 @@ namespace GitUI
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             this.toolPanel.SplitterDistance = this.ToolStrip.Height;
             this._dontUpdateOnIndexChange = false;
+            
             GitUICommandsChanged += (a, oldcommands) =>
             {
                 RefreshPullIcon();
                 oldcommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
+                oldcommands.BrowseRepo = null;
+                UICommands.BrowseRepo = this;
             };
+            
             if (aCommands != null)
             {
                 RefreshPullIcon();
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
+                UICommands.BrowseRepo = this;                
             }
+
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
         }
 
@@ -192,6 +198,8 @@ namespace GitUI
         {
             RefreshRevisions();
         }
+    
+        #region IBrowseRepo
 
         private void RefreshRevisions()
         {
@@ -201,6 +209,13 @@ namespace GitUI
                 InternalInitialize(false);
             }
         }
+
+        public void GoToRevision(string revision)
+        {
+            RevisionGrid.GoToRevision(revision);
+        }
+
+        #endregion
 
         private void ShowDashboard()
         {
@@ -2131,15 +2146,7 @@ namespace GitUI
             {
                 if (formGoToCommit.ShowDialog(this) == DialogResult.OK)
                 {
-                    string revisionGuid = formGoToCommit.GetRevision();
-                    if (!string.IsNullOrEmpty(revisionGuid))
-                    {
-                        RevisionGrid.SetSelectedRevision(new GitRevision(Module, revisionGuid));
-                    }
-                    else
-                    {
-                        MessageBox.Show(this, _noRevisionFoundError.Text);
-                    }
+                   GoToRevision(formGoToCommit.GetRevision());
                 }
             }
         }

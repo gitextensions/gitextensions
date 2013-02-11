@@ -187,9 +187,14 @@ namespace GitUI.UserControls
             internal override void OnDoubleClick()
             {
                 base.OnDoubleClick();
-                UiCommands.StartCheckoutBranchDialog(FullPath);
+                Checkout();
             }
 
+            internal override void OnSelected()
+            {
+                base.OnSelected();
+                UiCommands.BrowseGoToRevision(FullPath);
+            }
             protected override IEnumerable<DragDropAction> CreateDragDropActions()
             {
                 var stashDD = new DragDropAction<StashNode>(
@@ -252,22 +257,24 @@ namespace GitUI.UserControls
 
             public void Checkout()
             {
-                throw new NotImplementedException();
+                UiCommands.StartCheckoutBranchDialog(FullPath, false);
             }
 
             public void CreateBranch()
             {
-                throw new NotImplementedException();
+                UiCommands.StartCreateBranchDialog();
             }
 
             public void Delete()
             {
-                throw new NotImplementedException();
+                UiCommands.StartDeleteBranchDialog(FullPath);
             }
 
             public void DeleteForce()
             {
-                throw new NotImplementedException();
+                var branchHead = new GitHead(UiCommands.Module, null, FullPath);
+                var cmd = new GitDeleteBranchCmd(new GitHead[] { branchHead }, true);
+                UiCommands.StartCommandLineProcessDialog(cmd, null);
             }
         }
 
