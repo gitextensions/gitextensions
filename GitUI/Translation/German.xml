@@ -2582,7 +2582,7 @@ auswählen</Value>
           <Value>Nicht-verfolgte Verzeichnisse löschen</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveIngnored" Property="Text">
-          <Source>Remove only ingnored untracked files</Source>
+          <Source>Remove only ignored untracked files</Source>
           <Value>Nur ignorierte nicht-verfolgte Dateien löschen</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveNonIgnored" Property="Text">
@@ -5512,9 +5512,9 @@ Ist der Mergekonflikt behoben?</Value>
           <Value>Gelöscht</Value>
         </TranslationItem>
         <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text" type="unfinished">
-          <Source>File ({0}) appears to be a binairy file.
+          <Source>File ({0}) appears to be a binary file.
 Choose to keep the local({1}), remote({2}) or base file.</Source>
-          <OldSource>File ({0}) appears to be a binairy file.
+          <OldSource>File ({0}) appears to be a binary file.
 Choose to keep the local({1}), remote({2}) or base file.</OldSource>
           <Value>Datei ({0}) scheint eine Binärdatei zu sein.
 Wählen Sie, ob Sie die lokale ({1}), die Remote-({2}) oder die Basis-Datei behalten möchten.</Value>
