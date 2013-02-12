@@ -233,7 +233,9 @@ namespace GitUI
             FormProcess.ShowDialog(this, string.Format("stash apply \"{0}\"", Stashes.Text));
 
             MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
-
+            
+            UICommands.RepoChangedNotifier.Notify();
+            
             Initialize();
         }
 
