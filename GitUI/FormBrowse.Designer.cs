@@ -217,7 +217,6 @@ namespace GitUI
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.reportAnIssueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).BeginInit();
             this.toolPanel.Panel1.SuspendLayout();
             this.toolPanel.Panel2.SuspendLayout();
@@ -2124,6 +2123,5 @@ namespace GitUI
         private ToolStripMenuItem reportAnIssueToolStripMenuItem;        
         private SplitContainer MainSplitContainer;
         private UserControls.RepoObjectsTree repoObjectsTree;        
-        private ToolStripMenuItem reportAnIssueToolStripMenuItem;        
     }
 }
