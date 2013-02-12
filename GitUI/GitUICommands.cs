@@ -1152,7 +1152,7 @@ namespace GitUI
                 using (var form = new FormRenameBranch(this, branch))
                 {
 
-                    return form.ShowDialog(owner) != DialogResult.OK;
+                    return form.ShowDialog(owner) == DialogResult.OK;
                 }
 
             };
