@@ -228,6 +228,7 @@ namespace GitUI
 
         private void DashboardGitModuleChanged(GitModule module)
         {
+            HideDashboard();
             SetGitModule(module);
         }
 
