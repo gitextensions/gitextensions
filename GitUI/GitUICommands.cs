@@ -1323,7 +1323,7 @@ namespace GitUI
 
         public bool StartApplyPatchDialog(IWin32Window owner, string patchFile)
         {
-            return DoActionOnRepo(owner, true, true, PreApplyPatch, PostApplyPatch, () =>
+            return DoActionOnRepo(owner, true, false, PreApplyPatch, PostApplyPatch, () =>
                 {
                     using (var form = new FormApplyPatch(this))
                     {
@@ -1331,7 +1331,10 @@ namespace GitUI
                             form.SetPatchDir(patchFile);
                         else
                             form.SetPatchFile(patchFile);
-                        return form.ShowDialog(owner) != DialogResult.Cancel;
+                        
+                        form.ShowDialog(owner);
+
+                        return true;
                     }
                 }
             );
