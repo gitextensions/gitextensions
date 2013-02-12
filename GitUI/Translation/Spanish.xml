@@ -2544,7 +2544,7 @@ revision:</Source>
           <Value>Quitar todos los directorios sin seguimiento</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveIngnored" Property="Text">
-          <Source>Remove only ingnored untracked files</Source>
+          <Source>Remove only ignored untracked files</Source>
           <Value>Quitar sólo archivos sin seguimiento ignorados</Value>
         </TranslationItem>
         <TranslationItem Name="RemoveNonIgnored" Property="Text">
@@ -5383,7 +5383,7 @@ Is the mergeconflict solved?</Source>
           <Value>eliminado</Value>
         </TranslationItem>
         <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text" type="unfinished">
-          <Source>File ({0}) appears to be a binairy file.
+          <Source>File ({0}) appears to be a binary file.
 Choose to keep the local({1}), remote({2}) or base file.</Source>
           <Value>El archivo ({0}) aparenta ser un archivo binario.
 Elija mantener el archivo local ({1}), remoto ({2}) o base.</Value>
