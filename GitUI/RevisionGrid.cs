@@ -1076,7 +1076,7 @@ namespace GitUI
             }
             else
             {
-                foreColor = Color.LightGray;
+                foreColor = isRowSelected ? SystemColors.HighlightText : Color.Gray;
             }
 
             Brush foreBrush = new SolidBrush(foreColor);
