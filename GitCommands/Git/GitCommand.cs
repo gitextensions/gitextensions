@@ -29,6 +29,11 @@ namespace GitCommands
         /// <returns>if command accesses remote repository</returns>
         public abstract bool AccessesRemote();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>true if repo state changes after executing this command</returns>
+        public abstract bool ChangesRepoState();
 
         /// <summary>
         /// 

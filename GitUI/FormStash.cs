@@ -20,7 +20,6 @@ namespace GitUI
         readonly TranslationString cannotBeUndone = new TranslationString("This action cannot be undone.");
         readonly TranslationString areYouSure = new TranslationString("Are you sure you want to drop the stash? This action cannot be undone.");
         readonly TranslationString dontShowAgain = new TranslationString("Don't show me this message again.");
-        public bool NeedRefresh;
 
         private FormStash()
             : this(null)
@@ -184,8 +183,8 @@ namespace GitUI
                         return;
                 }
             }
-            FormProcess.ShowDialog(this, String.Format("stash save {0}{1}", arguments, msg));
-            NeedRefresh = true;
+            if (FormProcess.ShowDialog(this, String.Format("stash save {0}{1}", arguments, msg)))
+                UICommands.RepoChangedNotifier.Notify();
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -209,8 +208,8 @@ namespace GitUI
                                        PSTaskDialog.eSysIcons.Information);
                 if (res == DialogResult.OK)
                 {
-                    FormProcess.ShowDialog(this, string.Format("stash drop \"{0}\"", Stashes.Text));
-                    NeedRefresh = true;
+                    if (FormProcess.ShowDialog(this, string.Format("stash drop \"{0}\"", Stashes.Text)))
+                        UICommands.RepoChangedNotifier.Notify();
                     Initialize();
                     Cursor.Current = Cursors.Default;
                 }
@@ -222,8 +221,8 @@ namespace GitUI
             }
             else
             {
-                FormProcess.ShowDialog(this, string.Format("stash drop \"{0}\"", Stashes.Text));
-                NeedRefresh = true;
+                if (FormProcess.ShowDialog(this, string.Format("stash drop \"{0}\"", Stashes.Text)))
+                    UICommands.RepoChangedNotifier.Notify();
                 Initialize();
                 Cursor.Current = Cursors.Default;
             }
@@ -234,7 +233,9 @@ namespace GitUI
             FormProcess.ShowDialog(this, string.Format("stash apply \"{0}\"", Stashes.Text));
 
             MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
-
+            
+            UICommands.RepoChangedNotifier.Notify();
+            
             Initialize();
         }
 

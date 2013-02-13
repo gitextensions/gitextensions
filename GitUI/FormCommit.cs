@@ -111,7 +111,6 @@ namespace GitUI
         #endregion
 
         private readonly SynchronizationContext _syncContext;
-        public bool NeedRefresh;
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
         private readonly CommitKind _commitKind;
@@ -843,7 +842,7 @@ namespace GitUI
 
                 var errorOccurred = !FormProcess.ShowDialog(this, Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text, _useFormCommitMessage));
 
-                NeedRefresh = true;
+                UICommands.RepoChangedNotifier.Notify();
 
                 if (errorOccurred)
                     return;
@@ -1036,7 +1035,7 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
 
             if (Settings.RevisionGraphShowWorkingDirChanges)
-                NeedRefresh = true;
+                UICommands.RepoChangedNotifier.Notify();
         }
 
         private void UnstageFilesClick(object sender, EventArgs e)
@@ -1142,7 +1141,7 @@ namespace GitUI
             Cursor.Current = Cursors.Default;
 
             if (Settings.RevisionGraphShowWorkingDirChanges)
-                NeedRefresh = true;
+                UICommands.RepoChangedNotifier.Notify();
         }
 
 
@@ -1592,7 +1591,7 @@ namespace GitUI
             }
 
             Initialize();
-            NeedRefresh = true;
+            UICommands.RepoChangedNotifier.Notify();
         }
 
         private void ShowUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
