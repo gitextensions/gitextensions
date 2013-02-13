@@ -77,6 +77,9 @@ namespace GitUI
 
                             File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(this.MailMapFile));
                         });
+
+                UICommands.RepoChangedNotifier.Notify();
+
                 return true;
             }
             catch (Exception ex)

@@ -243,7 +243,7 @@ namespace Gerrit
                 form.ShowDialog(_mainForm);
             }
 
-            _gitUiCommands.RaiseBrowseInitialize();
+            _gitUiCommands.RepoChangedNotifier.Notify();
         }
 
         void downloadMenuItem_Click(object sender, EventArgs e)
@@ -253,7 +253,7 @@ namespace Gerrit
                 form.ShowDialog(_mainForm);
             }
 
-            _gitUiCommands.RaiseBrowseInitialize();
+            _gitUiCommands.RepoChangedNotifier.Notify();
         }
 
         void installCommitMsgMenuItem_Click(object sender, EventArgs e)
@@ -269,7 +269,7 @@ namespace Gerrit
             if (result == DialogResult.Yes)
                 InstallCommitMsgHook();
 
-            _gitUiCommands.RaiseBrowseInitialize();
+            _gitUiCommands.RepoChangedNotifier.Notify();
         }
 
         private void InstallCommitMsgHook()
@@ -370,7 +370,7 @@ namespace Gerrit
                 form.ShowDialog(_mainForm);
             }
 
-            _gitUiCommands.RaiseBrowseInitialize();
+            _gitUiCommands.RepoChangedNotifier.Notify();
         }
 
         private T FindControl<T>(Control form, Func<T, bool> predicate)
