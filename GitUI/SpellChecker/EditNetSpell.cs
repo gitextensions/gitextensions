@@ -109,6 +109,57 @@ namespace GitUI.SpellChecker
             }
         }
 
+        [Category("Appearance")]
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public int SelectionStart
+        {
+            get
+            {
+                return TextBox.SelectionStart;
+            }
+            set
+            {
+                TextBox.SelectionStart = value;
+            }
+        }
+
+        [Category("Appearance")]
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public virtual int SelectionLength
+        {
+            get
+            {
+                return TextBox.SelectionLength;
+            }
+
+            set
+            {
+                TextBox.SelectionLength = value;
+            }
+        }
+
+        [Category("Appearance")]
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public virtual string SelectedText
+        {
+            get
+            {
+                return TextBox.SelectedText;
+            }
+            set
+            {
+               TextBox.SelectedText = value;
+            }
+        }
+
+        public void SelectAll()
+        {
+            TextBox.SelectAll();
+        }
+
         private void EditNetSpellLoad(object sender, EventArgs e)
         {
             MistakeFont = new Font(TextBox.Font, FontStyle.Underline);
