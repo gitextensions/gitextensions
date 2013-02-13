@@ -1098,9 +1098,7 @@ namespace GitUI
             {
                 var revisions = RevisionGrid.GetSelectedRevisions();
 
-                if (revisions.Count > 0 &&
-                    (revisions[0].Guid == GitRevision.UnstagedGuid ||
-                     revisions[0].Guid == GitRevision.IndexGuid))
+                if (revisions.Count > 0 && GitRevision.IsArtificial(revisions[0].Guid))
                 {
                     CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
                     CommitInfoTabControl.RemoveIfExists(TreeTabPage);

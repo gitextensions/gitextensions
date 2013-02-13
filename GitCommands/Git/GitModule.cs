@@ -2168,6 +2168,13 @@ namespace GitCommands
             return noCache ? RunGitCmd(cmd) : this.RunCachableCmd(Settings.GitCommand, cmd, SystemEncoding);
         }
 
+        public List<GitItemStatus> GetDiffFilesWithSubmodulesStatus(string from, string to)
+        {
+            var status = GetDiffFiles(from, to, false);
+            GetSubmoduleStatus(status, from, to);
+            return status;
+        }
+
         public List<GitItemStatus> GetDiffFiles(string from, string to)
         {
             return GetDiffFiles(from, to, false);
@@ -2258,7 +2265,7 @@ namespace GitCommands
         public IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles, bool untrackedFiles)
         {
             var status = GetAllChangedFiles(excludeIgnoredFiles, untrackedFiles);
-            GetSubmoduleStatus(status);
+            GetCurrentSubmoduleStatus(status);
             return status;
         }
 
@@ -2267,12 +2274,28 @@ namespace GitCommands
             return GetAllChangedFilesWithSubmodulesStatus(true, true);
         }
 
-        private void GetSubmoduleStatus(IList<GitItemStatus> status)
+        private void GetCurrentSubmoduleStatus(IList<GitItemStatus> status)
         {
             foreach (var item in status)
                 if (item.IsSubmodule)
                 {
-                    item.SubmoduleStatus = GitCommandHelpers.GetSubmoduleChanges(this, item.Name, item.OldName, item.IsStaged);
+                    item.SubmoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, item.Name, item.OldName, item.IsStaged);
+                    if (item.SubmoduleStatus.Commit != item.SubmoduleStatus.OldCommit)
+                    {
+                        var submodule = item.SubmoduleStatus.GetSubmodule(this);
+                        item.SubmoduleStatus.CheckSubmoduleStatus(submodule);
+                    }
+                }
+        }
+
+        private void GetSubmoduleStatus(IList<GitItemStatus> status, string from, string to)
+        {
+            foreach (var item in status)
+                if (item.IsSubmodule)
+                {
+                    Patch patch = GetSingleDiff(from, to, item.Name, item.OldName, "", SystemEncoding);
+                    string text = patch != null ? patch.Text : "";
+                    item.SubmoduleStatus = GitCommandHelpers.GetSubmoduleStatus(text);
                     if (item.SubmoduleStatus.Commit != item.SubmoduleStatus.OldCommit)
                     {
                         var submodule = item.SubmoduleStatus.GetSubmodule(this);
@@ -2339,7 +2362,7 @@ namespace GitCommands
         public IList<GitItemStatus> GetStagedFilesWithSubmodulesStatus()
         {
             var status = GetStagedFiles();
-            GetSubmoduleStatus(status);
+            GetCurrentSubmoduleStatus(status);
             return status;
         }
 
@@ -2373,7 +2396,7 @@ namespace GitCommands
             return GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count > 0;
         }
 
-        public string GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
+        public Patch GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
             fileName = string.Concat("\"", FixPath(fileName), "\"");
             if (!string.IsNullOrEmpty(oldFileName))
@@ -2390,7 +2413,7 @@ namespace GitCommands
             var patchManager = new PatchManager();
             patchManager.LoadPatch(result, false, encoding);
 
-            return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1].Text : string.Empty;
+            return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
         }
 
         public string StageFile(string file)
