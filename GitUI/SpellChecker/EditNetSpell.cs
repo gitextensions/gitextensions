@@ -559,7 +559,7 @@ namespace GitUI.SpellChecker
                 string text = Clipboard.GetText();
                 Clipboard.SetText(text);
             }
-            else if (e.Control && e.KeyCode == Keys.Z)
+            else if (e.Control && !e.Alt && e.KeyCode == Keys.Z)
             {
                 UndoHighlighting();
             }

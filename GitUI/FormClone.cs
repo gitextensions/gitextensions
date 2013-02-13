@@ -108,9 +108,8 @@ namespace GitUI
                     GitUICommands uiCommands = new GitUICommands(dirTo);
                     uiCommands.StartBrowseDialog();
                 }
-                else if (ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
-                    if (GitModuleChanged != null)
-                        GitModuleChanged(new GitModule(dirTo));
+                else if (GitModuleChanged != null && ShowInTaskbar == false && AskIfNewRepositoryShouldBeOpened(dirTo))
+                    GitModuleChanged(new GitModule(dirTo));
 
                 Close();
             }

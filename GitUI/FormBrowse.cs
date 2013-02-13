@@ -240,6 +240,7 @@ namespace GitUI
 
         private void DashboardGitModuleChanged(GitModule module)
         {
+            HideDashboard();
             SetGitModule(module);
         }
 
@@ -1170,7 +1171,7 @@ namespace GitUI
 
         private void CloneToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartCloneDialog(this);            
+            UICommands.StartCloneDialog(this, string.Empty, false, DashboardGitModuleChanged);            
         }
 
         private void CommitToolStripMenuItemClick(object sender, EventArgs e)
