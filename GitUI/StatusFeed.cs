@@ -2,14 +2,30 @@
 
 namespace GitUI
 {
-    /// <summary>Represents a single status update in a status feed.</summary>
-    public class StatusFeedItem
+    /// <summary>Represents a single notification in a status feed.</summary>
+    public class Notification
     {
-        public StatusFeedItem(StatusSeverity severity, string text)
+        /// <summary><see cref="Notification"/> which isn't part of a batch of status updates.</summary>
+        static readonly Guid loner = Guid.NewGuid();
+
+        public Notification(StatusSeverity severity, string text)
+            //: this(severity, text, loner)
         {
             Severity = severity;
             Text = text;
+            //BatchId = loner;
         }
+
+        //public Notification(StatusSeverity severity, string text, Guid batchId)
+        //{
+        //    Severity = severity;
+        //    Text = text;
+        //    if (batchId == Guid.Empty)
+        //    {
+        //        throw new ArgumentException("Must specify a NON-empty GUID.", "batchId");
+        //    }
+        //    BatchId = batchId;
+        //}
 
         /// <summary>Gets the severity of the update.</summary>
         public StatusSeverity Severity { get; private set; }
@@ -17,6 +33,8 @@ namespace GitUI
         public string Text { get; private set; }
         ///// <summary></summary>
         //public Action OnClick { get; private set; }
+        /// <summary>Indicates that a </summary>
+        //public Guid BatchId { get; private set; }
 
         public override string ToString() { return Text; }
     }

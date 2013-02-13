@@ -1,11 +1,16 @@
-﻿namespace WindowsFormsApplication1
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace WindowsFormsApplication1
 {
     partial class Form1
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -28,15 +33,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusFiller = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusNumNotifications = new System.Windows.Forms.ToolStripDropDownButton();
+            this.warningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.failureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusNumNotifications,
             this.statusFiller,
             this.toolStripStatusLabel1});
             this.statusStrip.Location = new System.Drawing.Point(0, 70);
@@ -47,7 +57,7 @@
             // statusFiller
             // 
             this.statusFiller.Name = "statusFiller";
-            this.statusFiller.Size = new System.Drawing.Size(224, 17);
+            this.statusFiller.Size = new System.Drawing.Size(604, 17);
             this.statusFiller.Spring = true;
             // 
             // toolStripStatusLabel1
@@ -57,10 +67,31 @@
             this.toolStripStatusLabel1.Text = "X";
             this.toolStripStatusLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // statusNumNotifications
+            // 
+            this.statusNumNotifications.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.failureToolStripMenuItem,
+            this.warningToolStripMenuItem});
+            this.statusNumNotifications.Image = ((System.Drawing.Image)(resources.GetObject("statusNumNotifications.Image")));
+            this.statusNumNotifications.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.statusNumNotifications.Name = "statusNumNotifications";
+            this.statusNumNotifications.Size = new System.Drawing.Size(42, 20);
+            this.statusNumNotifications.Text = "5";
+            // 
+            // warningToolStripMenuItem
+            // 
+            this.warningToolStripMenuItem.Name = "warningToolStripMenuItem";
+            this.warningToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.warningToolStripMenuItem.Text = "Warning";
+            // 
+            // failureToolStripMenuItem
+            // 
+            this.failureToolStripMenuItem.Name = "failureToolStripMenuItem";
+            this.failureToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.failureToolStripMenuItem.Text = "Failure";
+            // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(706, 92);
             this.Controls.Add(this.statusStrip);
             this.Name = "Form1";
@@ -74,9 +105,12 @@
 
         #endregion
 
-        private System.Windows.Forms.StatusStrip statusStrip;
-        private System.Windows.Forms.ToolStripStatusLabel statusFiller;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private StatusStrip statusStrip;
+        private ToolStripStatusLabel statusFiller;
+        private ToolStripStatusLabel toolStripStatusLabel1;
+        private ToolStripDropDownButton statusNumNotifications;
+        private ToolStripMenuItem failureToolStripMenuItem;
+        private ToolStripMenuItem warningToolStripMenuItem;
     }
 }
 

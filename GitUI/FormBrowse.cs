@@ -140,21 +140,21 @@ namespace GitUI
                 CommitInfoTabControl.TabPages[2].ImageIndex = 2;
             }
 
-            WarningToolStripItem statusToolStripItem = statusStrip.Items
-                .OfType<WarningToolStripItem>()
+            NotificationsToolStripButton statusToolStripItem = statusStrip.Items
+                .OfType<NotificationsToolStripButton>()
                 .Last();
 
-            var mockStatusUPdates = new StatusFeedItem[]
+            var mockStatusUPdates = new Notification[]
             {
-                new StatusFeedItem(StatusSeverity.Fail, "fail"), 
-                new StatusFeedItem(StatusSeverity.Fail, "fail2"), 
-                new StatusFeedItem(StatusSeverity.Info, "info"), 
-                new StatusFeedItem(StatusSeverity.Success, "success"), 
-                new StatusFeedItem(StatusSeverity.Warn, "warn"), 
-                new StatusFeedItem(StatusSeverity.Success, "really long text with a lot of text alsdjfksjadfl;jkasdflkjs;dfjslkjfdskljdfklsj;dfljslkdfjskldfjlsjdfkljsdfjslkdjfkl"), 
+                new Notification(StatusSeverity.Fail, "fail"), 
+                new Notification(StatusSeverity.Fail, "fail2"), 
+                new Notification(StatusSeverity.Info, "info"), 
+                new Notification(StatusSeverity.Success, "success"), 
+                new Notification(StatusSeverity.Warn, "warn"), 
+                new Notification(StatusSeverity.Success, "really long text with a lot of text alsdjfksjadfl;jkasdflkjs;dfjslkjfdskljdfklsj;dfljslkdfjskldfjlsjdfkljsdfjslkdjfkl"), 
             };
 
-            var statusFeedDelay = Observable.Create<StatusFeedItem>(o =>
+            var statusFeedDelay = Observable.Create<Notification>(o =>
             {
                 var els = new EventLoopScheduler();
                 return mockStatusUPdates.ToObservable()//repoObjectsTree.StatusFeed
@@ -173,7 +173,7 @@ namespace GitUI
 
             mockStatusUPdates
                 .ToObservable()
-                .SubscribeOn(this)
+                .ObserveOn(this)
                 .DelaySubscription(TimeSpan.FromSeconds(30))
                 .Subscribe(s => statusToolStripItem.Notify(s));
 

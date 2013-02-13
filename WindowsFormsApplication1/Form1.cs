@@ -11,9 +11,21 @@ namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
+        }
+
         public Form1()
         {
             InitializeComponent();
+
+            Button button = new Button { Text = "Test" };
+            button.Click += (o, e) => Test();
+            Controls.Add(button);
 
             Test();
         }
@@ -21,20 +33,20 @@ namespace WindowsFormsApplication1
         void Test()
         {
             Debug.WriteLine("Thread: {0}", Thread.CurrentThread.ManagedThreadId);
-            WarningToolStripItem warner = new WarningToolStripItem(0);
+            var warner = new NotificationsToolStripButton();
             statusStrip.Items.Insert(0, warner);
 
-            var mockStatusUPdates = new StatusFeedItem[]
+            var mockStatusUPdates = new Notification[]
             {
-                new StatusFeedItem(StatusSeverity.Fail, "1. fail"), 
-                new StatusFeedItem(StatusSeverity.Fail, "2. fail2"), 
-                new StatusFeedItem(StatusSeverity.Info, "3. info"), 
-                new StatusFeedItem(StatusSeverity.Success, "4. success"), 
-                new StatusFeedItem(StatusSeverity.Warn, "5. warn"), 
-                new StatusFeedItem(StatusSeverity.Success, "6. really long text with a lot of text alsdjfksjadfl;jkasdflkjs;dfjslkjfdskljdfklsj;dfljslkdfjskldfjlsjdfkljsdfjslkdjfkl"), 
+                new Notification(StatusSeverity.Fail, "1. fail"), 
+                new Notification(StatusSeverity.Fail, "2. fail2"), 
+                new Notification(StatusSeverity.Info, "3. info"), 
+                new Notification(StatusSeverity.Success, "4. success"), 
+                new Notification(StatusSeverity.Warn, "5. warn"), 
+                new Notification(StatusSeverity.Success, "6. really long text with a lot of text alsdjfksjadfl;jkasdflkjs;dfjslkjfdskljdfklsj;dfljslkdfjskldfjlsjdfkljsdfjslkdjfkl"), 
             };
 
-            var statusFeedDelay = Observable.Create<StatusFeedItem>(o =>
+            var statusFeedDelay = Observable.Create<Notification>(o =>
             {
                 var els = new EventLoopScheduler();
                 return mockStatusUPdates.ToObservable()//repoObjectsTree.StatusFeed
@@ -51,11 +63,11 @@ namespace WindowsFormsApplication1
             //    .SubscribeOn(this)
             //    .Subscribe(update => statusToolStripItem.Notify(update));
 
-            statusFeedDelay
-                //.ToObservable()
+            mockStatusUPdates
+                .ToObservable()
                 .ObserveOn(this)
                 .DelaySubscription(TimeSpan.FromSeconds(3))
-                .Subscribe(s => warner.Notify(s));
+                .Subscribe(warner.Notify);
         }
     }
 }
