@@ -43,6 +43,12 @@ namespace GitUI.UserControls
                 IsDraggable = true;
             }
 
+            internal override void OnSelected()
+            {
+                base.OnSelected();
+                UiCommands.BrowseRepo.GoToRevision(Value.Name);
+            }
+
             public void Pop()
             {
                 throw new NotImplementedException();

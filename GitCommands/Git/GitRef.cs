@@ -171,7 +171,7 @@ namespace GitCommands
             }
             else
                 //if we don't know ref type then we don't know if '/' is a valid ref character
-                Name = CompleteName;
+                Name = CompleteName.SkipStr("refs/");
         }
     }
 }
