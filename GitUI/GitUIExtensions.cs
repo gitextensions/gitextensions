@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
@@ -53,39 +53,18 @@ namespace GitUI
 
                 string extraDiffArgs = "-M -C";
 
-                if (firstRevision == GitRevision.UnstagedGuid) //working dir changes
+                if (GitRevision.IsArtificial(firstRevision))
                 {
+                    bool staged = firstRevision == GitRevision.IndexGuid;
                     if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
-                    {
                         firstRevision = string.Empty;
-                        secondRevision = string.Empty;
-                    }
                     else
-                    {
-                        // rev2 vs working dir changes
                         firstRevision = secondRevision;
-                        secondRevision = string.Empty;
-                    }
-                }
-                if (firstRevision == GitRevision.IndexGuid) //index
-                {
-                    if (secondRevision == null)
-                    {
-                        firstRevision = string.Empty;
-                        secondRevision = string.Empty;
+                    secondRevision = string.Empty;
+                    if (staged) //rev1 vs index
                         extraDiffArgs = string.Join(" ", extraDiffArgs, "--cached");
-                    }
-                    else //rev1 vs index
-                    {
-                        firstRevision = secondRevision;
-                        secondRevision = string.Empty;
-                        extraDiffArgs = string.Join(" ", extraDiffArgs, "--cached");
-                    }
                 }
-
-                Debug.Assert(!GitRevision.IsArtificial(firstRevision), string.Join(" ", firstRevision, secondRevision));
-
-                if (secondRevision == null)
+                else if (secondRevision == null)
                     secondRevision = firstRevision + "^";
 
                 output = grid.Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, extraDiffArgs);
@@ -127,6 +106,41 @@ namespace GitUI
                 MessageBox.Show(grid, output);
         }
 
+        public static bool IsItemUntracked(GitItemStatus file,
+            string firstRevision, string secondRevision)
+        {
+            if (firstRevision == GitRevision.UnstagedGuid) //working dir changes
+            {
+                if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
+                    return !file.IsTracked;
+            }
+            return false;
+        }
+
+        private static PatchApply.Patch GetItemPatch(GitModule module, GitItemStatus file,
+            string firstRevision, string secondRevision, string diffArgs, Encoding encoding)
+        {
+            if (GitRevision.IsArtificial(firstRevision))
+            {
+                bool staged = firstRevision == GitRevision.IndexGuid;
+                if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
+                {
+                    return module.GetCurrentChanges(file.Name, file.OldName, staged,
+                            diffArgs, encoding);
+                }
+
+                firstRevision = secondRevision;
+                secondRevision = string.Empty;
+                if (staged)
+                    diffArgs = string.Join(" ", diffArgs, "--cached");
+            }
+            else if (secondRevision == null)
+                secondRevision = firstRevision + "^";
+
+            return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
+                    diffArgs, encoding);
+        }
+
         public static string GetSelectedPatch(this FileViewer diffViewer, RevisionGrid grid, GitItemStatus file)
         {
             IList<GitRevision> revisions = grid.GetSelectedRevisions();
@@ -144,63 +158,26 @@ namespace GitUI
                 secondRevision = revisions[0].Guid;
             }
 
-            string extraDiffArgs = null;
-
-            if (firstRevision == GitRevision.UnstagedGuid) //working dir changes
+            if (IsItemUntracked(file, firstRevision, secondRevision))
             {
-                if (secondRevision == null || secondRevision == GitRevision.IndexGuid)
-                {
-                    if (file.IsTracked)
-                    {
-                        return ProcessDiffText(grid.Module, grid.Module.GetCurrentChanges(file.Name, file.OldName, false,
-                            diffViewer.GetExtraDiffArguments(), diffViewer.Encoding), file.IsSubmodule);
-                    }
-
-                    var fullPath = Path.Combine(grid.Module.WorkingDir, file.Name);
-                    if (Directory.Exists(fullPath) && GitModule.ValidWorkingDir(fullPath))
-                        return GitCommandHelpers.GetSubmoduleText(grid.Module, file.Name.TrimEnd('/'), "");
-                    return FileReader.ReadFileContent(fullPath, diffViewer.Encoding);
-                }
-                else
-                {
-                    firstRevision = secondRevision;
-                    secondRevision = string.Empty;
-                }
-            }
-            if (firstRevision == GitRevision.IndexGuid) //index
-            {
-                if (secondRevision == null)
-                {
-                    return ProcessDiffText(grid.Module, grid.Module.GetCurrentChanges(file.Name, file.OldName, true,
-                        diffViewer.GetExtraDiffArguments(), diffViewer.Encoding), file.IsSubmodule);
-                }
-
-                //rev1 vs index
-                firstRevision = secondRevision;
-                secondRevision = string.Empty;
-                extraDiffArgs = string.Join(" ", extraDiffArgs, "--cached");
+                var fullPath = Path.Combine(grid.Module.WorkingDir, file.Name);
+                if (Directory.Exists(fullPath) && GitModule.ValidWorkingDir(fullPath))
+                    return GitCommandHelpers.GetSubmoduleText(grid.Module, file.Name.TrimEnd('/'), "");
+                return FileReader.ReadFileContent(fullPath, diffViewer.Encoding);
             }
 
-            Debug.Assert(!GitRevision.IsArtificial(firstRevision), string.Join(" ", firstRevision,secondRevision));                
+            if (file.IsSubmodule && file.SubmoduleStatus != null)
+                return GitCommandHelpers.ProcessSubmoduleStatus(grid.Module, file.SubmoduleStatus);
 
-            if (secondRevision == null)
-                secondRevision = firstRevision + "^";
-
-            PatchApply.Patch patch = grid.Module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
-                                                    string.Join(" ", diffViewer.GetExtraDiffArguments(), extraDiffArgs), diffViewer.Encoding);
+            PatchApply.Patch patch = GetItemPatch(grid.Module, file, firstRevision, secondRevision,
+                diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
 
             if (patch == null)
                 return string.Empty;
 
-            return ProcessDiffText(grid.Module, patch.Text, file.IsSubmodule);
-        }
-
-        private static string ProcessDiffText(GitModule module, string diff, bool isSubmodule)
-        {
-            if (isSubmodule)
-                return GitCommandHelpers.ProcessSubmodulePatch(module, diff);
-
-            return diff;
+            if (file.IsSubmodule)
+                return GitCommandHelpers.ProcessSubmodulePatch(grid.Module, patch);
+            return patch.Text;
         }
 
         public static void ViewPatch(this FileViewer diffViewer, RevisionGrid grid, GitItemStatus file, string defaultText)

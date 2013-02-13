@@ -40,24 +40,7 @@ namespace PatchApply
 
             if (patch == null) return;
 
-            ChangesList.ViewPatch(patch.Text);
-            /*
-            ChangesList.Text = "";
-
-            try
-            {
-                ChangesList.SetHighlighting("Patch");
-                ChangesList.Refresh();
-                ChangesList.IsReadOnly = true;
-            }
-            catch
-            {
-                ChangesList.Text = "";
-                ChangesList.Refresh();
-            }
-            ChangesList.Text = patch.Text;
-            //PatchedFileEdit.Text = changedFile.New;*/
-
+            ChangesList.ViewPatch(patch);
         }
 
         private string SelectPatchFile(string initialDirectory)
