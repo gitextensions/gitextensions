@@ -167,6 +167,8 @@ namespace GitUI
                     Module.ApplyPatch(PatchDir.Text, GitCommandHelpers.PatchDirCmd());
                 }
 
+            UICommands.RepoChangedNotifier.Notify();
+
             EnableButtons();
 
             if (!Module.InTheMiddleOfConflictedMerge() && !Module.InTheMiddleOfRebase() && !Module.InTheMiddleOfPatch())

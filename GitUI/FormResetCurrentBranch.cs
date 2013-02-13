@@ -60,6 +60,7 @@ namespace GitUI
                 }
             }
 
+            UICommands.RepoChangedNotifier.Notify();
             Close();
         }
 
