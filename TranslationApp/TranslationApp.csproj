@@ -107,6 +107,10 @@
       <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
       <Name>GitUI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NetSpell.SpellChecker\SpellChecker.csproj">
+      <Project>{a426ee0b-e52e-4d74-af24-06797142d7b2}</Project>
+      <Name>SpellChecker</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-f35e-4b62-a6ec-11ff21a5fa6f}</Project>
       <Name>GitUIPluginInterfaces</Name>

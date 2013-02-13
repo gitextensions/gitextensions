@@ -520,8 +520,7 @@ namespace TranslationApp
             else if (e.Control && e.KeyCode == Keys.Down)
             {
                 e.Handled = true;
-                translatedText.SelectionStart = 0;
-                translatedText.SelectionLength = translatedText.TextLength;
+                translatedText.SelectAll();
                 translatedText.SelectedText = neutralText.Text;
             }
         }
