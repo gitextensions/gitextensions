@@ -132,24 +132,7 @@ namespace GitUI
         /// <param name="notification">Status update to show to user.</param>
         public void Notify(Notification notification)
         {
-            Debug.WriteLine("<Notify {0}", notification);
-            Visible = true;
-
-            if (currentBlinker == null)
-            {// no status is being shown
-                Start(notification);
-
-            }
-            else if (currentBlinker != null && notification.Severity > currentBlinker.Notification.Severity)
-            {// new status more severe than current -> start this one
-                Close();
-                Start(notification);
-            }
-            else
-            {// (another status is currently blinking) -> queue
-                Debug.WriteLine("<Queue {0}", notification);
-                statusQueue.Enqueue(notification);
-            }
+            throw new NotImplementedException();
         }
 
 

@@ -41,16 +41,19 @@ namespace WindowsFormsApplication1
             this.warningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusFiller = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.failToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip
             // 
+            this.statusStrip.Dock = System.Windows.Forms.DockStyle.Top;
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusNumNotifications,
             this.statusFiller,
             this.toolStripStatusLabel1});
-            this.statusStrip.Location = new System.Drawing.Point(0, 70);
+            this.statusStrip.Location = new System.Drawing.Point(0, 0);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(706, 22);
             this.statusStrip.TabIndex = 5;
@@ -75,6 +78,9 @@ namespace WindowsFormsApplication1
             // 
             // failureToolStripMenuItem
             // 
+            this.failureToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.failToolStripMenuItem,
+            this.toolStripMenuItem2});
             this.failureToolStripMenuItem.Name = "failureToolStripMenuItem";
             this.failureToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.failureToolStripMenuItem.Text = "Failure";
@@ -98,6 +104,18 @@ namespace WindowsFormsApplication1
             this.toolStripStatusLabel1.Text = "X";
             this.toolStripStatusLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem2.Text = "success";
+            // 
+            // failToolStripMenuItem
+            // 
+            this.failToolStripMenuItem.Name = "failToolStripMenuItem";
+            this.failToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.failToolStripMenuItem.Text = "Failure";
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(706, 92);
@@ -120,6 +138,8 @@ namespace WindowsFormsApplication1
         private ToolStripMenuItem failureToolStripMenuItem;
         private ToolStripMenuItem warningToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItem1;
+        private ToolStripMenuItem toolStripMenuItem2;
+        private ToolStripMenuItem failToolStripMenuItem;
     }
 }
 
