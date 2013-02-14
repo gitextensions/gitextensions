@@ -27,7 +27,8 @@ namespace WindowsFormsApplication1
             button.Click += (o, e) => Test();
             Controls.Add(button);
 
-            Test();
+           // Test();
+
         }
 
         void Test()

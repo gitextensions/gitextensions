@@ -80,7 +80,7 @@ namespace GitUI
     }
 
     /// <summary><see cref="ToolStripButton"/> which is meant to notify a user.</summary>
-    public class NotificationsToolStripButton : ToolStripButton, INotifier
+    public class NotificationsToolStripButton : ToolStripDropDownButton, INotifier
     {
         /// <summary>blank icon</summary>
         static string blank = Guid.NewGuid().ToString();
@@ -105,6 +105,8 @@ namespace GitUI
 
         Blinker currentBlinker;
         Queue<Notification> statusQueue = new Queue<Notification>();
+
+
 
         /// <summary>Toggles between an 'on' and 'off' action.</summary>
         void ToggleOnOff(Action on, Action off)
@@ -219,7 +221,7 @@ namespace GitUI
             nBlinks = 0;
             _blinkTimer.Stop();
             _blinkTimer.Tick -= Blink;
-            
+
             StartNewOrLeaveOn();
         }
 
@@ -313,16 +315,70 @@ namespace GitUI
             }
         }
 
+        void Add(Notification notification)
+        {
+            var control = new NotificationItem(notification);
+            control.Click += OnNotificationClick;
+        }
+
+        List<Notification> notifications = new List<Notification>();
+
+        void OnNotificationClick(object sender, EventArgs e)
+        {
+            NotificationItem control = (NotificationItem)sender;
+            control.Click -= OnNotificationClick;
+            Remove(control);
+        }
+
+        /// <summary>Removes a notification from the status feed.</summary>
+        void Remove(NotificationItem control)
+        {
+            DropDownItems.Remove(control);
+            notifications.Remove(control.Notification);
+        }
+
+        class NotificationSet
+        {
+
+        }
+    }
+
+    class NotificationSetToolStrip : ToolStripMenuItem
+    {
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+            if (e.Button == MouseButtons.Right)
+            {
+
+            }
+        }
+
+        void Test()
+        {
+
+        }
+    }
+
+    /// <summary>Single notification item in the status feed.</summary>
+    sealed class NotificationItem : ToolStripMenuItem
+    {
+        internal Notification Notification { get; private set; }
+
+        public NotificationItem(Notification notification)
+        {
+            throw new NotImplementedException("image");
+            Text = notification.Text;
+            Notification = notification;
+        }
+
+
+
         protected override void OnClick(EventArgs e)
         {
             base.OnClick(e);
             Visible = false;
         }
 
-
-        class NotificationSet
-        {
-            
-        }
     }
 }

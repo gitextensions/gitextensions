@@ -35,11 +35,12 @@ namespace WindowsFormsApplication1
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.statusNumNotifications = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.failureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.warningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusFiller = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.statusNumNotifications = new System.Windows.Forms.ToolStripDropDownButton();
-            this.warningToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.failureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -54,6 +55,36 @@ namespace WindowsFormsApplication1
             this.statusStrip.Size = new System.Drawing.Size(706, 22);
             this.statusStrip.TabIndex = 5;
             // 
+            // statusNumNotifications
+            // 
+            this.statusNumNotifications.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
+            this.failureToolStripMenuItem,
+            this.warningToolStripMenuItem});
+            this.statusNumNotifications.Image = ((System.Drawing.Image)(resources.GetObject("statusNumNotifications.Image")));
+            this.statusNumNotifications.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.statusNumNotifications.Name = "statusNumNotifications";
+            this.statusNumNotifications.Size = new System.Drawing.Size(42, 20);
+            this.statusNumNotifications.Text = "5";
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem1.Text = "toolStripMenuItem1";
+            // 
+            // failureToolStripMenuItem
+            // 
+            this.failureToolStripMenuItem.Name = "failureToolStripMenuItem";
+            this.failureToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.failureToolStripMenuItem.Text = "Failure";
+            // 
+            // warningToolStripMenuItem
+            // 
+            this.warningToolStripMenuItem.Name = "warningToolStripMenuItem";
+            this.warningToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.warningToolStripMenuItem.Text = "Warning";
+            // 
             // statusFiller
             // 
             this.statusFiller.Name = "statusFiller";
@@ -66,29 +97,6 @@ namespace WindowsFormsApplication1
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(14, 17);
             this.toolStripStatusLabel1.Text = "X";
             this.toolStripStatusLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // statusNumNotifications
-            // 
-            this.statusNumNotifications.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.failureToolStripMenuItem,
-            this.warningToolStripMenuItem});
-            this.statusNumNotifications.Image = ((System.Drawing.Image)(resources.GetObject("statusNumNotifications.Image")));
-            this.statusNumNotifications.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.statusNumNotifications.Name = "statusNumNotifications";
-            this.statusNumNotifications.Size = new System.Drawing.Size(42, 20);
-            this.statusNumNotifications.Text = "5";
-            // 
-            // warningToolStripMenuItem
-            // 
-            this.warningToolStripMenuItem.Name = "warningToolStripMenuItem";
-            this.warningToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.warningToolStripMenuItem.Text = "Warning";
-            // 
-            // failureToolStripMenuItem
-            // 
-            this.failureToolStripMenuItem.Name = "failureToolStripMenuItem";
-            this.failureToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.failureToolStripMenuItem.Text = "Failure";
             // 
             // Form1
             // 
@@ -111,6 +119,7 @@ namespace WindowsFormsApplication1
         private ToolStripDropDownButton statusNumNotifications;
         private ToolStripMenuItem failureToolStripMenuItem;
         private ToolStripMenuItem warningToolStripMenuItem;
+        private ToolStripMenuItem toolStripMenuItem1;
     }
 }
 
