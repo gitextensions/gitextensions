@@ -140,8 +140,8 @@ namespace GitUI
                 CommitInfoTabControl.TabPages[2].ImageIndex = 2;
             }
 
-            NotificationsToolStripButton statusToolStripItem = statusStrip.Items
-                .OfType<NotificationsToolStripButton>()
+            NotificationFeed statusToolStripItem = statusStrip.Items
+                .OfType<NotificationFeed>()
                 .Last();
 
             var mockStatusUPdates = new Notification[]

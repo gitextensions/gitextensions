@@ -106,14 +106,21 @@ namespace GitUI
                 default: throw new ArgumentOutOfRangeException();
             }
         }
+
+        /// <summary>Resets a <see cref="Timer"/>.</summary>
+        public static void Reset(this Timer timer)
+        {
+            timer.Stop();
+            timer.Start();
+        }
     }
 
     /// <summary><see cref="ToolStripButton"/> which holds notifications, with most recent items first.</summary>
-    public class NotificationsToolStripButton : ToolStripDropDownButton, INotifier
+    public class NotificationFeed : ToolStripDropDownButton, INotifier
     {
         readonly ImageList images;
 
-        public NotificationsToolStripButton()
+        public NotificationFeed()
         {
             //TextAlign = ContentAlignment.MiddleRight;
             //Image = Resources.NotifyWarn;
@@ -132,17 +139,26 @@ namespace GitUI
         /// <param name="notification">Status update to show to user.</param>
         public void Notify(Notification notification)
         {
-            throw new NotImplementedException();
+            Add(notification);
         }
 
-
-
+        /// <summary>Sets or adds to the parent's ImageList.</summary>
         protected override void OnParentChanged(ToolStrip oldParent, ToolStrip newParent)
         {
             base.OnParentChanged(oldParent, newParent);
-            if (newParent != null)
+            if (newParent == null) { return; }
+
+            if (newParent.ImageList == null)
             {
                 newParent.ImageList = images;
+            }
+            else
+            {
+                foreach (Image image in images.Images)
+                {
+                    newParent.ImageList.Images.Add(image);
+                }
+
             }
         }
 
@@ -187,40 +203,26 @@ namespace GitUI
         }
     }
 
-    class NotificationSetToolStrip : ToolStripMenuItem
-    {
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-            if (e.Button == MouseButtons.Right)
-            {
-
-            }
-        }
-
-        void Test()
-        {
-
-        }
-    }
-
-    /// <summary>Single notification item in the status feed.</summary>
-    sealed class NotificationItem : ToolStripMenuItem
+    internal abstract class NotificationControl : ToolStripMenuItem
     {
         /// <summary>Gets the displayed notification.</summary>
         internal Notification Notification { get; private set; }
-
         /// <summary>syncronizes the notification's relevancy duration</summary>
-        Timer timer;
+        protected Timer timer;
 
-        public NotificationItem(Notification notification)
+        protected NotificationControl(Notification notification)
         {
-            Text = notification.Text;
-            ImageKey = Notification.GetImageKey();
             Notification = notification;
             timer = new Timer { Interval = (int)TimeSpan.FromMinutes(1).TotalMilliseconds };
             timer.Tick += OnExpired;
             timer.Start();
+        }
+
+        /// <summary>Hides the notification.</summary>
+        protected override void OnClick(EventArgs e)
+        {
+            Visible = false;
+            base.OnClick(e);
         }
 
         /// <summary>Invoked when the notification's relevance expires.</summary>
@@ -238,14 +240,42 @@ namespace GitUI
             }
         }
 
-        /// <summary>Hides the notification.</summary>
-        protected override void OnClick(EventArgs e)
-        {
-            Visible = false;
-            base.OnClick(e);
-        }
-
         /// <summary>Occurs when a notification's relevance has expired.</summary>
         public event EventHandler Expired;
+
+        protected void Update(Notification notification)
+        {
+            Text = notification.Text;
+            ImageKey = Notification.GetImageKey();
+        }
+    }
+
+    class NotificationBatch : NotificationControl
+    {
+        public NotificationBatch(Notification notification)
+            : base(notification)
+        {
+            timer.Stop();// don't start timer until Last batch entry
+        }
+
+        public void Add(Notification notification)
+        {
+            throw new NotImplementedException("remove click stuff");
+            
+            DropDownItems.Insert(0, new NotificationItem(notification));
+            Update(notification); 
+
+            if (notification.BatchPart == Notification.BatchEntry.Last)
+            {
+                timer.Start();
+            }
+        }
+    }
+
+    /// <summary>Single notification item in the status feed.</summary>
+    sealed class NotificationItem : NotificationControl
+    {
+        public NotificationItem(Notification notification)
+            : base(notification) { }
     }
 }

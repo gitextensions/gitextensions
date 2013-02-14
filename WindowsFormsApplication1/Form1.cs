@@ -34,7 +34,7 @@ namespace WindowsFormsApplication1
         void Test()
         {
             Debug.WriteLine("Thread: {0}", Thread.CurrentThread.ManagedThreadId);
-            var warner = new NotificationsToolStripButton();
+            var warner = new NotificationFeed();
             statusStrip.Items.Insert(0, warner);
 
             var mockStatusUPdates = new Notification[]
