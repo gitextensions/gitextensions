@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSvnClone));
-            this._NO_TRANSLATE_svnRepositoryComboBox = new System.Windows.Forms.ComboBox();
+            this._NO_TRANSLATE_SvnFrom = new System.Windows.Forms.ComboBox();
             this._NO_TRANSLATE_destinationComboBox = new System.Windows.Forms.ComboBox();
             this.browseButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -42,28 +42,30 @@
             this.label4 = new System.Windows.Forms.Label();
             this.cbTrunk = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.tbUsername = new System.Windows.Forms.TextBox();
             this.tbFrom = new System.Windows.Forms.TextBox();
-            this.tbBranches = new System.Windows.Forms.TextBox();
+            this._NO_TRANSLATE_tbBranches = new System.Windows.Forms.TextBox();
             this.cbBranches = new System.Windows.Forms.CheckBox();
-            this.tbTags = new System.Windows.Forms.TextBox();
+            this._NO_TRANSLATE_tbTags = new System.Windows.Forms.TextBox();
             this.cbTags = new System.Windows.Forms.CheckBox();
-            this.tbTrunk = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_tbTrunk = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // _NO_TRANSLATE_svnRepositoryComboBox
+            // _NO_TRANSLATE_SvnFrom
             // 
-            this._NO_TRANSLATE_svnRepositoryComboBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this._NO_TRANSLATE_SvnFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_svnRepositoryComboBox.FormattingEnabled = true;
-            this._NO_TRANSLATE_svnRepositoryComboBox.Location = new System.Drawing.Point(200, 16);
-            this._NO_TRANSLATE_svnRepositoryComboBox.Margin = new System.Windows.Forms.Padding(4);
-            this._NO_TRANSLATE_svnRepositoryComboBox.Name = "_NO_TRANSLATE_svnRepositoryComboBox";
-            this._NO_TRANSLATE_svnRepositoryComboBox.Size = new System.Drawing.Size(441, 31);
-            this._NO_TRANSLATE_svnRepositoryComboBox.TabIndex = 1;
+            this._NO_TRANSLATE_SvnFrom.FormattingEnabled = true;
+            this._NO_TRANSLATE_SvnFrom.Location = new System.Drawing.Point(200, 16);
+            this._NO_TRANSLATE_SvnFrom.Margin = new System.Windows.Forms.Padding(4);
+            this._NO_TRANSLATE_SvnFrom.Name = "_NO_TRANSLATE_SvnFrom";
+            this._NO_TRANSLATE_SvnFrom.Size = new System.Drawing.Size(441, 31);
+            this._NO_TRANSLATE_SvnFrom.TabIndex = 1;
+            this._NO_TRANSLATE_SvnFrom.SelectedIndexChanged += new System.EventHandler(this._NO_TRANSLATE_svnRepositoryComboBox_TextUpdate);
+            this._NO_TRANSLATE_SvnFrom.TextUpdate += new System.EventHandler(this._NO_TRANSLATE_svnRepositoryComboBox_TextUpdate);
             // 
             // _NO_TRANSLATE_destinationComboBox
             // 
@@ -194,11 +196,11 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.tbUsername);
             this.groupBox1.Controls.Add(this.tbFrom);
-            this.groupBox1.Controls.Add(this.tbBranches);
+            this.groupBox1.Controls.Add(this._NO_TRANSLATE_tbBranches);
             this.groupBox1.Controls.Add(this.cbBranches);
-            this.groupBox1.Controls.Add(this.tbTags);
+            this.groupBox1.Controls.Add(this._NO_TRANSLATE_tbTags);
             this.groupBox1.Controls.Add(this.cbTags);
-            this.groupBox1.Controls.Add(this.tbTrunk);
+            this.groupBox1.Controls.Add(this._NO_TRANSLATE_tbTrunk);
             this.groupBox1.Controls.Add(this.cbTrunk);
             this.groupBox1.Location = new System.Drawing.Point(12, 167);
             this.groupBox1.Name = "groupBox1";
@@ -206,6 +208,24 @@
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Advanced settings";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(410, 66);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(87, 23);
+            this.label6.TabIndex = 22;
+            this.label6.Text = "Username";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 66);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(53, 23);
+            this.label5.TabIndex = 21;
+            this.label5.Text = "From:";
             // 
             // tbUsername
             // 
@@ -225,13 +245,13 @@
             this.tbFrom.Text = "0";
             this.tbFrom.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbFrom_KeyPress);
             // 
-            // tbBranches
+            // _NO_TRANSLATE_tbBranches
             // 
-            this.tbBranches.Location = new System.Drawing.Point(521, 27);
-            this.tbBranches.Name = "tbBranches";
-            this.tbBranches.Size = new System.Drawing.Size(100, 30);
-            this.tbBranches.TabIndex = 16;
-            this.tbBranches.Text = "branches";
+            this._NO_TRANSLATE_tbBranches.Location = new System.Drawing.Point(521, 27);
+            this._NO_TRANSLATE_tbBranches.Name = "_NO_TRANSLATE_tbBranches";
+            this._NO_TRANSLATE_tbBranches.Size = new System.Drawing.Size(100, 30);
+            this._NO_TRANSLATE_tbBranches.TabIndex = 16;
+            this._NO_TRANSLATE_tbBranches.Text = "branches";
             // 
             // cbBranches
             // 
@@ -246,13 +266,13 @@
             this.cbBranches.UseVisualStyleBackColor = true;
             this.cbBranches.CheckedChanged += new System.EventHandler(this.cbBranches_CheckedChanged);
             // 
-            // tbTags
+            // _NO_TRANSLATE_tbTags
             // 
-            this.tbTags.Location = new System.Drawing.Point(287, 27);
-            this.tbTags.Name = "tbTags";
-            this.tbTags.Size = new System.Drawing.Size(100, 30);
-            this.tbTags.TabIndex = 14;
-            this.tbTags.Text = "tags";
+            this._NO_TRANSLATE_tbTags.Location = new System.Drawing.Point(287, 27);
+            this._NO_TRANSLATE_tbTags.Name = "_NO_TRANSLATE_tbTags";
+            this._NO_TRANSLATE_tbTags.Size = new System.Drawing.Size(100, 30);
+            this._NO_TRANSLATE_tbTags.TabIndex = 14;
+            this._NO_TRANSLATE_tbTags.Text = "tags";
             // 
             // cbTags
             // 
@@ -267,31 +287,13 @@
             this.cbTags.UseVisualStyleBackColor = true;
             this.cbTags.CheckedChanged += new System.EventHandler(this.cbTags_CheckedChanged);
             // 
-            // tbTrunk
+            // _NO_TRANSLATE_tbTrunk
             // 
-            this.tbTrunk.Location = new System.Drawing.Point(92, 27);
-            this.tbTrunk.Name = "tbTrunk";
-            this.tbTrunk.Size = new System.Drawing.Size(100, 30);
-            this.tbTrunk.TabIndex = 12;
-            this.tbTrunk.Text = "trunk";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 66);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(53, 23);
-            this.label5.TabIndex = 21;
-            this.label5.Text = "From:";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(410, 66);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(87, 23);
-            this.label6.TabIndex = 22;
-            this.label6.Text = "Username";
+            this._NO_TRANSLATE_tbTrunk.Location = new System.Drawing.Point(92, 27);
+            this._NO_TRANSLATE_tbTrunk.Name = "_NO_TRANSLATE_tbTrunk";
+            this._NO_TRANSLATE_tbTrunk.Size = new System.Drawing.Size(100, 30);
+            this._NO_TRANSLATE_tbTrunk.TabIndex = 12;
+            this._NO_TRANSLATE_tbTrunk.Text = "trunk";
             // 
             // FormSvnClone
             // 
@@ -303,7 +305,7 @@
             this.Controls.Add(this._NO_TRANSLATE_authorsFileTextBox);
             this.Controls.Add(this._NO_TRANSLATE_subdirectoryTextBox);
             this.Controls.Add(this._NO_TRANSLATE_destinationComboBox);
-            this.Controls.Add(this._NO_TRANSLATE_svnRepositoryComboBox);
+            this.Controls.Add(this._NO_TRANSLATE_SvnFrom);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.authorsFileBrowseButton);
             this.Controls.Add(this.okButton);
@@ -329,7 +331,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_svnRepositoryComboBox;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_SvnFrom;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_destinationComboBox;
         private System.Windows.Forms.Button browseButton;
         private System.Windows.Forms.Label label1;
@@ -344,11 +346,11 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox tbUsername;
         private System.Windows.Forms.TextBox tbFrom;
-        private System.Windows.Forms.TextBox tbBranches;
+        private System.Windows.Forms.TextBox _NO_TRANSLATE_tbBranches;
         private System.Windows.Forms.CheckBox cbBranches;
-        private System.Windows.Forms.TextBox tbTags;
+        private System.Windows.Forms.TextBox _NO_TRANSLATE_tbTags;
         private System.Windows.Forms.CheckBox cbTags;
-        private System.Windows.Forms.TextBox tbTrunk;
+        private System.Windows.Forms.TextBox _NO_TRANSLATE_tbTrunk;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
     }
