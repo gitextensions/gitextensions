@@ -2225,20 +2225,21 @@ namespace GitUI
 
             ForceRefreshRevisions();
         }
+
+        public void OnModuleChanged(GitModule aModule)
+        {
+            if (GitModuleChanged != null)
+                GitModuleChanged(aModule);
+        }
+
         private void InitRepository_Click(object sender, EventArgs e)
         {
-            UICommands.StartInitializeDialog(this, Module.WorkingDir,
-                (module) =>
-                {
-                    if (GitModuleChanged != null)
-                        GitModuleChanged(module);
-                }
-                    );
+            UICommands.StartInitializeDialog(this, Module.WorkingDir, OnModuleChanged);
         }
 
         private void CloneRepository_Click(object sender, EventArgs e)
         {
-            if (UICommands.StartCloneDialog(this))
+            if (UICommands.StartCloneDialog(this, null, OnModuleChanged))
                 ForceRefreshRevisions();
         }
 
