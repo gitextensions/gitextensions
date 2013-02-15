@@ -214,10 +214,16 @@ namespace GitUI
             Image = Resources.Information;
         }
 
+        MostRecentNotification mostRecent;
+
         /// <summary>Notifies the user about a status update.</summary>
         /// <param name="notification">Status update to show to user.</param>
         public void Notify(Notification notification)
         {
+            if (mostRecent != null)
+            {
+                mostRecent.Update(notification);
+            }
             Add(notification);
         }
 
@@ -226,24 +232,38 @@ namespace GitUI
         {
             base.OnParentChanged(oldParent, newParent);
             newParent.SetImageList();
+
+            if (mostRecent != null) { return; }
+
+            StatusStrip statusStrip = newParent as StatusStrip;
+            if (statusStrip == null) { return; }
+
+            mostRecent = new MostRecentNotification();
+            statusStrip.Items.Insert(1, mostRecent);
         }
 
         /// <summary>Updates the text and image according to the current notifications, if any.</summary>
         void Update()
         {
-            if (notifications.Any())
+            if (nNotifications >= 1)
             {// 1 or more notifications -> [Image] [N]
-                Text = notifications.Count.ToString();
+                Text = nNotifications.ToString();
+                if (nNotifications >= 2) { return; }// only set values once
+
+                Enabled = true;
+                ShowDropDownArrow = true;
                 Image = Resources.NotifyInfo;
             }
             else
             {// (no notifications)
+                Enabled = false;
+                ShowDropDownArrow = false;
                 Text = string.Empty;
                 Image = Resources.Information;
             }
         }
 
-        List<Notification> notifications = new List<Notification>();
+        int nNotifications;
         Dictionary<string, NotificationBatch> batches = new Dictionary<string, NotificationBatch>();
 
         /// <summary>Adds a notification to the status feed.</summary>
@@ -281,7 +301,7 @@ namespace GitUI
         /// <summary>Adds the <see cref="NotificationControl"/> then updates the UI.</summary>
         void Add(NotificationControl control)
         {
-            notifications.Insert(0, control.Notification);
+            nNotifications++;
             this.Insertion(control);
             Update();
         }
@@ -289,10 +309,10 @@ namespace GitUI
         /// <summary>De-registers for notification control events, then removes it.</summary>
         void RemoveNotification(object sender, EventArgs e)
         {
+            nNotifications--;
             NotificationControl control = (NotificationControl)sender;
             control.Click -= RemoveNotification;
             control.Expired -= RemoveNotification;
-            notifications.Remove(control.Notification);
             this.Removal(control);
             Update();
         }
@@ -308,8 +328,12 @@ namespace GitUI
         /// <summary>syncronizes the notification's relevancy duration</summary>
         Timer timer;
 
-        protected NotificationControl(Notification notification)
+        protected NotificationControl(Notification notification = null)
         {
+            if (notification == null)
+            {
+                return;
+            }
             Id = Guid.NewGuid().ToString();
             Name = Id;
             Notification = notification;
@@ -317,11 +341,22 @@ namespace GitUI
         }
 
         /// <summary>Starts the relevance timer which will remove the notification when it expires.</summary>
-        protected void StartExpiration()
+        protected void StartExpiration(TimeSpan expiration)
         {
-            timer = new Timer { Interval = (int)TimeSpan.FromSeconds(15).TotalMilliseconds };
+            timer = new Timer { Interval = (int)expiration.TotalMilliseconds };
             timer.Tick += OnExpiredPrivate;
             timer.Start();
+        }
+
+        void OnExpiredPrivate(object sender, EventArgs e)
+        {
+            if (timer == null) { return; }
+
+            timer.Stop();
+            timer.Tick -= OnExpired;
+
+            //Visible = false;
+            OnExpired(sender, e);
         }
 
         /// <summary>Invoked when the notification's relevance expires.</summary>
@@ -334,27 +369,24 @@ namespace GitUI
             }
         }
 
-        void OnExpiredPrivate(object sender, EventArgs e)
-        {
-            if (timer == null) { return; }
-
-            timer.Stop();
-            timer.Tick -= OnExpired;
-            timer.Dispose();
-
-            //Visible = false;
-            OnExpired(sender, e);
-        }
-
         /// <summary>Occurs when a notification's relevance has expired.</summary>
         public event EventHandler Expired;
 
         /// <summary>Updates the text and image for UI.</summary>
-        protected void Update(Notification notification = null)
+        public virtual void Update(Notification notification)
         {
-            notification = notification ?? Notification;
-            Text = notification.Text;
-            ImageKey = notification.GetImageKey();
+            if (notification != null)
+            {
+                Notification = notification;
+                Text = notification.Text;
+                ImageKey = notification.GetImageKey();
+            }
+            else
+            {
+                Text = string.Empty;
+                ImageKey = NotifierHelpers.blank;
+            }
+
         }
 
         protected override void OnParentChanged(ToolStrip oldParent, ToolStrip newParent)
@@ -364,6 +396,15 @@ namespace GitUI
         }
 
         public override string ToString() { return Notification.ToString(); }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (timer != null)
+            {
+                timer.Dispose();
+            }
+        }
     }
 
     /// <summary>List of notifications which are related to a specific batch operation.</summary>
@@ -389,7 +430,7 @@ namespace GitUI
 
             if (notification.BatchPart == Notification.BatchEntry.Last)
             {
-                StartExpiration();
+                StartExpiration(TimeSpan.FromSeconds(15));
             }
 
             // TODO: ?allow click removal for batch items?
@@ -411,16 +452,36 @@ namespace GitUI
         {
             if (notification.BatchPart == Notification.BatchEntry.No)
             {// NOT part of a batch start expiration
-                StartExpiration();
+                StartExpiration(TimeSpan.FromSeconds(15));
             }
         }
+    }
 
-        /// <summary>Hides the notification.</summary>
-        protected override void OnClick(EventArgs e)
+    sealed class MostRecentNotification : NotificationControl
+    {
+        public override void Update(Notification notification)
         {
-            //Visible = false;
-            base.OnClick(e);
+            base.Update(notification);
+            Visible = true;
+            StartExpiration(TimeSpan.FromSeconds(5));
         }
 
+        void Empty()
+        {
+            Visible = false;
+            base.Update(null);
+        }
+
+        protected override void OnExpired(object sender, EventArgs e)
+        {
+            base.OnExpired(sender, e);
+            Empty();
+        }
+
+        protected override void OnClick(EventArgs e)
+        {
+            base.OnClick(e);
+            Empty();
+        }
     }
 }
