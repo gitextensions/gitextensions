@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GitUI.Properties;
 
@@ -92,6 +93,17 @@ namespace GitUI
         /// <summary>failure icon</summary>
         internal static string fail = Guid.NewGuid().ToString();
 
+        public static readonly ImageList images;
+        static NotifierHelpers()
+        {
+            images = new ImageList();
+            images.Images.Add(blank, Resources.BlankIcon);
+            images.Images.Add(success, Resources.NotifySuccess);
+            images.Images.Add(warn, Resources.NotifyWarn); // add when needed
+            images.Images.Add(fail, Resources.NotifyError);
+            images.Images.Add(info, Resources.NotifyInfo);
+        }
+
         /// <summary>Gets the image key for a <see cref="Notification"/>.</summary>
         public static string GetImageKey(this Notification notification)
         {
@@ -111,13 +123,32 @@ namespace GitUI
             timer.Stop();
             timer.Start();
         }
+
+        public static void SetImageList(this ToolStrip newParent)
+        {
+            if (newParent == null)
+            {
+                return;
+            }
+
+            if (newParent.ImageList == null)
+            {
+                newParent.ImageList = images;
+            }
+            else
+            {
+                foreach (Image image in images.Images)
+                {
+                    newParent.ImageList.Images.Add(image);
+                }
+            }
+        }
     }
 
     /// <summary><see cref="ToolStripButton"/> which holds notifications, with most recent items first.</summary>
-    public class NotificationFeed : ToolStripDropDownButton, INotifier
+    public sealed class NotificationFeed : ToolStripDropDownButton, INotifier
     {
-        readonly ImageList images;
-
+        /// <summary>Initalizes a new control which holds notifications, with most recent items first.</summary>
         public NotificationFeed()
         {
             //TextAlign = ContentAlignment.MiddleRight;
@@ -125,12 +156,7 @@ namespace GitUI
             //TextImageRelation = TextImageRelation.ImageBeforeText;
             //Dock = DockStyle.Left;
 
-            images = new ImageList();
-            images.Images.Add(NotifierHelpers.blank, Resources.BlankIcon);
-            images.Images.Add(NotifierHelpers.success, Resources.NotifySuccess);
-            images.Images.Add(NotifierHelpers.warn, Resources.NotifyWarn); // add when needed
-            images.Images.Add(NotifierHelpers.fail, Resources.NotifyError);
-            images.Images.Add(NotifierHelpers.info, Resources.NotifyInfo);
+            Image = Resources.Information;
         }
 
         /// <summary>Notifies the user about a status update.</summary>
@@ -144,26 +170,22 @@ namespace GitUI
         protected override void OnParentChanged(ToolStrip oldParent, ToolStrip newParent)
         {
             base.OnParentChanged(oldParent, newParent);
-            if (newParent == null) { return; }
-
-            if (newParent.ImageList == null)
-            {
-                newParent.ImageList = images;
-            }
-            else
-            {
-                foreach (Image image in images.Images)
-                {
-                    newParent.ImageList.Images.Add(image);
-                }
-
-            }
+            newParent.SetImageList();
         }
 
         /// <summary>Updates the text and image according to the current notifications, if any.</summary>
         void Update()
         {
-            Text = notifications.Count.ToString();
+            if (notifications.Any())
+            {// 1 or more notifications -> [Image] [N]
+                Text = notifications.Count.ToString();
+                Image = Resources.NotifyInfo;
+            }
+            else
+            {// (no notifications)
+                Text = string.Empty;
+                Image = Resources.Information;
+            }
         }
 
         List<Notification> notifications = new List<Notification>();
@@ -234,6 +256,7 @@ namespace GitUI
         protected NotificationControl(Notification notification)
         {
             Notification = notification;
+            Update(notification);
         }
 
         /// <summary>Starts the relevance timer which will remove the notification when it expires.</summary>
@@ -277,19 +300,31 @@ namespace GitUI
         public event EventHandler Expired;
 
         /// <summary>Updates the text and image for UI.</summary>
-        protected void Update(Notification notification)
+        protected void Update(Notification notification = null)
         {
+            notification = notification ?? Notification;
             Text = notification.Text;
-            ImageKey = Notification.GetImageKey();
+            ImageKey = notification.GetImageKey();
+        }
+
+        protected override void OnParentChanged(ToolStrip oldParent, ToolStrip newParent)
+        {
+            base.OnParentChanged(oldParent, newParent);
+            newParent.SetImageList();
         }
     }
 
     /// <summary>List of notifications which are related to a specific batch operation.</summary>
     sealed class NotificationBatch : NotificationControl
     {
+        /// <summary>Initializes a new batch notification control, adding the notification to the batch.</summary>
         public NotificationBatch(Notification notification)
-            : base(notification) { }
+            : base(notification)
+        {
+            Add(notification);
+        }
 
+        /// <summary>Adds a <see cref="Notification"/> to the batch.</summary>
         public void Add(Notification notification)
         {
             var control = new NotificationItem(notification);
@@ -322,7 +357,7 @@ namespace GitUI
         public NotificationItem(Notification notification)
             : base(notification)
         {
-            if (notification.BatchPart != Notification.BatchEntry.No)
+            if (notification.BatchPart == Notification.BatchEntry.No)
             {// NOT part of a batch start expiration
                 StartExpiration();
             }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
@@ -27,24 +26,32 @@ namespace WindowsFormsApplication1
             button.Click += (o, e) => Test();
             Controls.Add(button);
 
-           // Test();
-
+            Test();
         }
 
         void Test()
         {
             Debug.WriteLine("Thread: {0}", Thread.CurrentThread.ManagedThreadId);
-            var warner = new NotificationFeed();
-            statusStrip.Items.Insert(0, warner);
+            var notificationFeed = new NotificationFeed();
+            statusStrip.Items.Insert(0, notificationFeed);
+
+            var batch = Notification.BatchStart(StatusSeverity.Info, "Start");
+            var next1 = batch.BatchNext(StatusSeverity.Info, "Next1");
+            var next2 = next1.BatchNext(StatusSeverity.Info, "Next2");
+            var done = batch.BatchLast(StatusSeverity.Success, "Yay");
 
             var mockStatusUPdates = new Notification[]
             {
                 new Notification(StatusSeverity.Fail, "1. fail"), 
                 new Notification(StatusSeverity.Fail, "2. fail2"), 
+                batch,
+                next1,
                 new Notification(StatusSeverity.Info, "3. info"), 
                 new Notification(StatusSeverity.Success, "4. success"), 
+                next2,
                 new Notification(StatusSeverity.Warn, "5. warn"), 
                 new Notification(StatusSeverity.Success, "6. really long text with a lot of text alsdjfksjadfl;jkasdflkjs;dfjslkjfdskljdfklsj;dfljslkdfjskldfjlsjdfkljsdfjslkdjfkl"), 
+                done,
             };
 
             var statusFeedDelay = Observable.Create<Notification>(o =>
@@ -68,7 +75,7 @@ namespace WindowsFormsApplication1
                 .ToObservable()
                 .ObserveOn(this)
                 .DelaySubscription(TimeSpan.FromSeconds(3))
-                .Subscribe(warner.Notify);
+                .Subscribe(notificationFeed.Notify);
         }
     }
 }

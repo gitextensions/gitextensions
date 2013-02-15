@@ -1626,6 +1626,7 @@
     <None Include="Resources\Icons\BranchStale.png" />
     <None Include="Resources\Icons\BranchNew.png" />
     <Content Include="Resources\Icons\HeadBranch.png" />
+    <Content Include="Resources\Icons\Information.png" />
     <Content Include="Resources\Icons\Namespace.png" />
     <Content Include="Resources\Icons\NotifyError.png" />
     <Content Include="Resources\Icons\NotifyInfo.png" />

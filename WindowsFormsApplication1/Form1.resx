@@ -120,14 +120,4 @@
   <metadata name="statusStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="statusNumNotifications.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC0SURBVDhP3ZOxDcMgEEUZJbMwSeZgAHomSk3lUUgKoCR+
-        lmXBBZCddLFEwd3/X8f3P6XEl3O+xxgfKaVSH2r0JP64r83bSli898UYU7TWzaFGDwzYRmgnB2vtB1EK
-        OecQCY0IqjQk+BlehTMQWbYpeBejSRD3kQA9OJsnmNN7c0+wrsGBq3B6BJ5NAAfuPwjMTJx5cJj4828k
-        CwSpl8JTQdrDxB6EXhpPRbkS+W6Z6s26us5vzFIoWbvv430AAAAASUVORK5CYII=
-</value>
-  </data>
 </root>
