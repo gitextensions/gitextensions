@@ -135,6 +135,24 @@ namespace GitUI
         }
 
         internal static object notificationLock = new object();
+
+        public static void Act(ToolStripDropDownItem dropDown, ToolStripItem item, Action<ToolStripItemCollection, ToolStripItem> action)
+        {
+            if (dropDown.DropDown.Visible)
+            {// visible
+                dropDown.DropDownClosed += Schedule;
+            }
+            else
+            {
+                action(dropDown.DropDownItems, item);
+            }
+        }
+
+        static void Schedule(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     /// <summary><see cref="ToolStripButton"/> which holds notifications, with most recent items first.</summary>
@@ -284,7 +302,7 @@ namespace GitUI
         /// <summary>Gets the displayed notification.</summary>
         internal Notification Notification { get; private set; }
         public string Id { get; private set; }
-        
+
         /// <summary>syncronizes the notification's relevancy duration</summary>
         Timer timer;
 
