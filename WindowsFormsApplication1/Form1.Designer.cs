@@ -36,6 +36,8 @@ namespace WindowsFormsApplication1
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusFiller = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnDelayed = new System.Windows.Forms.Button();
+            this.btnAtOnce = new System.Windows.Forms.Button();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,7 +55,7 @@ namespace WindowsFormsApplication1
             // statusFiller
             // 
             this.statusFiller.Name = "statusFiller";
-            this.statusFiller.Size = new System.Drawing.Size(646, 17);
+            this.statusFiller.Size = new System.Drawing.Size(677, 17);
             this.statusFiller.Spring = true;
             // 
             // toolStripStatusLabel1
@@ -63,9 +65,29 @@ namespace WindowsFormsApplication1
             this.toolStripStatusLabel1.Text = "X";
             this.toolStripStatusLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // btnDelayed
+            // 
+            this.btnDelayed.Location = new System.Drawing.Point(163, 38);
+            this.btnDelayed.Name = "btnDelayed";
+            this.btnDelayed.Size = new System.Drawing.Size(187, 42);
+            this.btnDelayed.TabIndex = 6;
+            this.btnDelayed.Text = "Test Delayed";
+            this.btnDelayed.UseVisualStyleBackColor = true;
+            // 
+            // btnAtOnce
+            // 
+            this.btnAtOnce.Location = new System.Drawing.Point(425, 38);
+            this.btnAtOnce.Name = "btnAtOnce";
+            this.btnAtOnce.Size = new System.Drawing.Size(156, 42);
+            this.btnAtOnce.TabIndex = 7;
+            this.btnAtOnce.Text = "Test All at Once";
+            this.btnAtOnce.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(706, 92);
+            this.Controls.Add(this.btnAtOnce);
+            this.Controls.Add(this.btnDelayed);
             this.Controls.Add(this.statusStrip);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -81,6 +103,8 @@ namespace WindowsFormsApplication1
         private StatusStrip statusStrip;
         private ToolStripStatusLabel statusFiller;
         private ToolStripStatusLabel toolStripStatusLabel1;
+        private Button btnDelayed;
+        private Button btnAtOnce;
     }
 }
 
