@@ -1068,7 +1068,7 @@ namespace GitUI
 
             Color foreColor;
 
-            if (!Settings.RevisionGraphDrawNonRelativesGray || !Settings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
+            if (!Settings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
             {
                 foreColor = isRowSelected && IsFilledBranchesLayout()
                     ? SystemColors.HighlightText
@@ -1076,7 +1076,7 @@ namespace GitUI
             }
             else
             {
-                foreColor = Color.LightGray;
+                foreColor = isRowSelected ? SystemColors.HighlightText : Color.Gray;
             }
 
             Brush foreBrush = new SolidBrush(foreColor);
