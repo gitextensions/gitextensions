@@ -133,6 +133,8 @@ namespace GitUI
                 newParent.ImageList = images;
             }
         }
+
+        internal static object notificationLock = new object();
     }
 
     /// <summary><see cref="ToolStripButton"/> which holds notifications, with most recent items first.</summary>
@@ -216,18 +218,12 @@ namespace GitUI
         /// <summary>Adds the <see cref="NotificationControl"/> then updates the UI.</summary>
         void Add(NotificationControl control)
         {
-            notifications.Insert(0, control.Notification);
-            DropDownItems.Insert(0, control);
-            Update();
-        }
-
-        /// <summary>Removes a notification from the status feed, then updates the UI.</summary>
-        void Remove(NotificationControl control)
-        {
-            notifications.Remove(control.Notification);
-            DropDownItems.Remove(control);
-            control.Dispose();
-            Update();
+            lock (NotifierHelpers.notificationLock)
+            {
+                notifications.Insert(0, control.Notification);
+                DropDownItems.Insert(0, control);
+                Update();
+            }
         }
 
         /// <summary>De-registers for notification control events, then removes it.</summary>
@@ -238,6 +234,48 @@ namespace GitUI
             control.Expired -= RemoveNotification;
             Remove(control);
         }
+
+        /// <summary>Removes a notification from the status feed, then updates the UI.</summary>
+        void Remove(NotificationControl control)
+        {
+            removables.Add(control);
+            if (DropDown.Visible == false)
+            {
+                Removal();
+            }
+            else
+            {
+                DropDownClosed += ScheduleRemoval;
+            }
+
+            Update();
+        }
+
+        List<NotificationControl> removables = new List<NotificationControl>();
+
+        void ScheduleRemoval(object sender, EventArgs e)
+        {
+            DropDownClosed -= ScheduleRemoval;
+            Removal();
+        }
+
+        void Removal()
+        {
+            DropDown.Enabled = false;
+            lock (NotifierHelpers.notificationLock)
+            {
+                for (int i = 0; i < removables.Count; i++)
+                {
+                    NotificationControl control = removables[i];
+                    DropDownItems.Remove(control);
+                    control.Dispose();
+                    removables.RemoveAt(i);
+                    notifications.Remove(control.Notification);
+                }
+            }
+            DropDown.Enabled = true;
+            Update();
+        }
     }
 
     /// <summary>Base class for a notification control which expires.</summary>
@@ -245,11 +283,15 @@ namespace GitUI
     {
         /// <summary>Gets the displayed notification.</summary>
         internal Notification Notification { get; private set; }
+        public string Id { get; private set; }
+        
         /// <summary>syncronizes the notification's relevancy duration</summary>
         Timer timer;
 
         protected NotificationControl(Notification notification)
         {
+            Id = Guid.NewGuid().ToString();
+            Name = Id;
             Notification = notification;
             Update(notification);
         }
@@ -280,7 +322,7 @@ namespace GitUI
             timer.Tick -= OnExpired;
             timer.Dispose();
 
-            Visible = false;
+            //Visible = false;
             OnExpired(sender, e);
         }
 
@@ -300,6 +342,8 @@ namespace GitUI
             base.OnParentChanged(oldParent, newParent);
             newParent.SetImageList();
         }
+
+        public override string ToString() { return Notification.ToString(); }
     }
 
     /// <summary>List of notifications which are related to a specific batch operation.</summary>
@@ -316,7 +360,10 @@ namespace GitUI
         public void Add(Notification notification)
         {
             var control = new NotificationItem(notification);
-            DropDownItems.Insert(0, control);
+            lock (NotifierHelpers.notificationLock)
+            {
+                DropDownItems.Insert(0, control);
+            }
 
             Update(notification);
 
@@ -331,11 +378,8 @@ namespace GitUI
 
         protected override void OnExpired(object sender, EventArgs e)
         {
+            DropDownItems.Clear();
             base.OnExpired(sender, e);
-            foreach (NotificationItem item in DropDownItems)
-            {
-                item.Dispose();
-            }
         }
     }
 
@@ -354,8 +398,9 @@ namespace GitUI
         /// <summary>Hides the notification.</summary>
         protected override void OnClick(EventArgs e)
         {
-            Visible = false;
+            //Visible = false;
             base.OnClick(e);
         }
+
     }
 }
