@@ -488,7 +488,8 @@ namespace TranslationApp
 
             foreach (TranslationItemWithCategory translateItem in translationItems)
             {
-                if (string.IsNullOrEmpty(translateItem.TranslatedValue))
+                if ((translateItem.Status != TranslationType.Unfinished || translateItem.Status == TranslationType.New) &&
+                    string.IsNullOrEmpty(translateItem.TranslatedValue))
                     translateItem.TranslatedValue = Google.TranslateText(translateItem.NeutralValue, "en", GetSelectedLanguageCode());
 
                 UpdateProgress();

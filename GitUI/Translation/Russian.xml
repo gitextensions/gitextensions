@@ -2216,9 +2216,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Commit</Source>
           <Value>Коммитить</Value>
         </TranslationItem>
-        <TranslationItem Name="toolStripButtonLevelUp" Property="Text" type="unfinished">
+        <TranslationItem Name="toolStripButtonLevelUp" Property="Text">
           <Source>Go to superproject</Source>
-          <Value />
+          <Value>Перейти в суперпроект</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButtonPull" Property="Text" type="unfinished">
           <Source>Pull</Source>
@@ -7361,11 +7361,11 @@ When OpenSSH is used, command line dialogs are shown!
         </TranslationItem>
         <TranslationItem Name="_currentIndex" Property="Text">
           <Source>Commit index</Source>
-          <Value>Индекс коммита</Value>
+          <Value>Буфер коммита</Value>
         </TranslationItem>
-        <TranslationItem Name="_currentUnstagedChanges" Property="Text" type="unfinished">
+        <TranslationItem Name="_currentUnstagedChanges" Property="Text">
           <Source>Current unstaged changes</Source>
-          <Value />
+          <Value>Текущие небуферизованные изменения</Value>
         </TranslationItem>
         <TranslationItem Name="_dateText" Property="Text">
           <Source>Date</Source>
