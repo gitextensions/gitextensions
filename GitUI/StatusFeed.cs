@@ -39,6 +39,7 @@ namespace GitUI
         {
             /// <summary>NOT part of a batch.</summary>
             No,
+            First,
             /// <summary>Any notification that isn't the last.</summary>
             Next,
             /// <summary>Last notification in a batch.</summary>
@@ -73,7 +74,7 @@ namespace GitUI
         /// <summary>Creates a new notification which will start a batch.</summary>
         public static Notification BatchStart(StatusSeverity severity, string text)
         {
-            return Batch(severity, text, Guid.NewGuid(), BatchEntry.Next);
+            return Batch(severity, text, Guid.NewGuid(), BatchEntry.First);
         }
 
         /// <summary>Creates the next notification in a batch.</summary>

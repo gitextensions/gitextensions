@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
-using System.Linq;
 using System.Windows.Forms;
 using GitUI.Properties;
 
@@ -162,33 +160,60 @@ namespace GitUI
             }
         }
 
+        /// <summary>Updates the text and image according to the current notifications, if any.</summary>
         void Update()
         {
             Text = notifications.Count.ToString();
         }
 
         List<Notification> notifications = new List<Notification>();
+        Dictionary<string, NotificationBatch> batches = new Dictionary<string, NotificationBatch>();
 
+        /// <summary>Adds a notification to the status feed.</summary>
         void Add(Notification notification)
         {
             var control = new NotificationItem(notification);
-            control.Click += RemoveNotification;
-            control.Expired += RemoveNotification;
 
-            notifications.Insert(0, notification);
+            if (notification.BatchPart == Notification.BatchEntry.No)
+            {// normal notification (NOT part of batch)
+                control.Click += RemoveNotification;
+                control.Expired += RemoveNotification;
+
+                Add(control);
+            }
+            else
+            {// (part of batch)
+                if (notification.BatchPart == Notification.BatchEntry.First)
+                {
+                    NotificationBatch batch = new NotificationBatch(notification);
+                    batches[notification.BatchId.ToString()] = batch;
+                    Add(batch);
+                }
+                else
+                {
+                    batches[notification.BatchId.ToString()].Add(notification);
+                }
+            }
+        }
+
+        /// <summary>Adds the <see cref="NotificationControl"/> then updates the UI.</summary>
+        void Add(NotificationControl control)
+        {
+            notifications.Insert(0, control.Notification);
             DropDownItems.Insert(0, control);
-
             Update();
         }
 
-        /// <summary>Removes a notification from the status feed.</summary>
-        void Remove(NotificationItem control)
+        /// <summary>Removes a notification from the status feed, then updates the UI.</summary>
+        void Remove(NotificationControl control)
         {
             notifications.Remove(control.Notification);
             DropDownItems.Remove(control);
+            control.Dispose();
             Update();
         }
 
+        /// <summary>De-registers for notification control events, then removes it.</summary>
         void RemoveNotification(object sender, EventArgs e)
         {
             NotificationItem control = (NotificationItem)sender;
@@ -196,25 +221,26 @@ namespace GitUI
             control.Expired -= RemoveNotification;
             Remove(control);
         }
-
-        class NotificationSet
-        {
-
-        }
     }
 
-    internal abstract class NotificationControl : ToolStripMenuItem
+    /// <summary>Base class for a notification control which expires.</summary>
+    abstract class NotificationControl : ToolStripMenuItem
     {
         /// <summary>Gets the displayed notification.</summary>
         internal Notification Notification { get; private set; }
         /// <summary>syncronizes the notification's relevancy duration</summary>
-        protected Timer timer;
+        Timer timer;
 
         protected NotificationControl(Notification notification)
         {
             Notification = notification;
+        }
+
+        /// <summary>Starts the relevance timer which will remove the notification when it expires.</summary>
+        protected void StartExpiration()
+        {
             timer = new Timer { Interval = (int)TimeSpan.FromMinutes(1).TotalMilliseconds };
-            timer.Tick += OnExpired;
+            timer.Tick += OnExpiredPrivate;
             timer.Start();
         }
 
@@ -226,13 +252,8 @@ namespace GitUI
         }
 
         /// <summary>Invoked when the notification's relevance expires.</summary>
-        void OnExpired(object sender, EventArgs e)
+        protected virtual void OnExpired(object sender, EventArgs e)
         {
-            timer.Stop();
-            timer.Tick -= OnExpired;
-            timer.Dispose();
-
-            Visible = false;
             var handler = Expired;
             if (handler != null)
             {
@@ -240,9 +261,22 @@ namespace GitUI
             }
         }
 
+        void OnExpiredPrivate(object sender, EventArgs e)
+        {
+            if (timer == null) { return; }
+
+            timer.Stop();
+            timer.Tick -= OnExpired;
+            timer.Dispose();
+
+            Visible = false;
+            OnExpired(sender, e);
+        }
+
         /// <summary>Occurs when a notification's relevance has expired.</summary>
         public event EventHandler Expired;
 
+        /// <summary>Updates the text and image for UI.</summary>
         protected void Update(Notification notification)
         {
             Text = notification.Text;
@@ -250,24 +284,34 @@ namespace GitUI
         }
     }
 
-    class NotificationBatch : NotificationControl
+    /// <summary>List of notifications which are related to a specific batch operation.</summary>
+    sealed class NotificationBatch : NotificationControl
     {
         public NotificationBatch(Notification notification)
-            : base(notification)
-        {
-            timer.Stop();// don't start timer until Last batch entry
-        }
+            : base(notification) { }
 
         public void Add(Notification notification)
         {
-            throw new NotImplementedException("remove click stuff");
-            
-            DropDownItems.Insert(0, new NotificationItem(notification));
-            Update(notification); 
+            var control = new NotificationItem(notification);
+            DropDownItems.Insert(0, control);
+
+            Update(notification);
 
             if (notification.BatchPart == Notification.BatchEntry.Last)
             {
-                timer.Start();
+                StartExpiration();
+            }
+
+            // TODO: ?allow click removal for batch items?
+            // if allowed, what happens when they remove all items before the last item has been received?
+        }
+
+        protected override void OnExpired(object sender, EventArgs e)
+        {
+            base.OnExpired(sender, e);
+            foreach (NotificationItem item in DropDownItems)
+            {
+                item.Dispose();
             }
         }
     }
@@ -276,6 +320,12 @@ namespace GitUI
     sealed class NotificationItem : NotificationControl
     {
         public NotificationItem(Notification notification)
-            : base(notification) { }
+            : base(notification)
+        {
+            if (notification.BatchPart != Notification.BatchEntry.No)
+            {// NOT part of a batch start expiration
+                StartExpiration();
+            }
+        }
     }
 }
