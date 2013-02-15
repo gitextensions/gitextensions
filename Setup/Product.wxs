@@ -233,6 +233,9 @@
       <Component Id="Gerrit.dll" Guid="*">
         <File Source="..\Plugins\Gerrit\bin\Release\Gerrit.dll"/>
       </Component>
+	  <Component Id="ReleaseNotesGenerator.dll" Guid="*">
+		 <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll"/>
+	  </Component>		
       <Component Id="Newtonsoft.Json.dll" Guid="*">
         <File Source="..\Plugins\Gerrit\Dependencies\Newtonsoft.Json.dll"/>
       </Component>
@@ -568,7 +571,10 @@
         <Feature Id="ProxySwitcher" Title="ProxySwitcher" Level="1">
           <ComponentRef Id="ProxySwitcher.dll"/>
         </Feature>
-      </Feature>
+        <Feature Id="ReleaseNotesGenerator" Title="ReleaseNotesGenerator" Level="1">
+		  <ComponentRef Id="ReleaseNotesGenerator.dll"/>
+		</Feature>
+	  </Feature>
 
       <Feature Id="Icons" Title="Extra application icons" Level="2">
         <ComponentRef Id="Blue.ico"/>
