@@ -136,10 +136,34 @@ namespace GitUI
 
         internal static object notificationLock = new object();
 
-        public static void Act(ToolStripDropDownItem dropDown, ToolStripItem item, Action<ToolStripItemCollection, ToolStripItem> action)
+        public static void Removal(this ToolStripDropDownItem dropDown, ToolStripItem item)
+        {
+            dropDown.Act(item, (items, child) => items.Remove(child));
+        }
+
+        public static void Insertion(this ToolStripDropDownItem dropDown, ToolStripItem item)
+        {
+            dropDown.Act(item, (items, child) => items.Insert(0, child));
+        }
+
+        static Dictionary<ToolStripDropDownItem, List<ScheduledAction>> scheduledActions
+            = new Dictionary<ToolStripDropDownItem, List<ScheduledAction>>();
+
+        class ScheduledAction
+        {
+            public Action<ToolStripItemCollection, ToolStripItem> action;
+            public ToolStripItem item;
+        }
+
+        static void Act(this ToolStripDropDownItem dropDown, ToolStripItem item, Action<ToolStripItemCollection, ToolStripItem> action)
         {
             if (dropDown.DropDown.Visible)
             {// visible
+                if (scheduledActions.ContainsKey(dropDown) == false)
+                {
+                    scheduledActions[dropDown] = new List<ScheduledAction>();
+                }
+                scheduledActions[dropDown].Add(new ScheduledAction { action = action, item = item });
                 dropDown.DropDownClosed += Schedule;
             }
             else
@@ -150,7 +174,11 @@ namespace GitUI
 
         static void Schedule(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            ToolStripDropDownItem dropDown = (ToolStripDropDownItem)sender;
+            foreach (var scheduledAction in scheduledActions[dropDown])
+            {
+                scheduledAction.action(dropDown.DropDownItems, scheduledAction.item);
+            }
         }
 
     }
