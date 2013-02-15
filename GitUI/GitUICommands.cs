@@ -474,6 +474,11 @@ namespace GitUI
             return true;
         }
 
+        public bool StartCloneDialog(IWin32Window owner, string url, GitModuleChangedEventHandler GitModuleChanged)
+        {
+            return StartCloneDialog(owner, url, false, GitModuleChanged);
+        }
+
         public bool StartCloneDialog(IWin32Window owner, string url)
         {
             return StartCloneDialog(owner, url, false, null);
@@ -481,17 +486,17 @@ namespace GitUI
 
         public bool StartCloneDialog(IWin32Window owner)
         {
-            return StartCloneDialog(owner, null);
+            return StartCloneDialog(owner, null, false, null);
         }
 
         public bool StartCloneDialog(string url)
         {
-            return StartCloneDialog(null, url);
+            return StartCloneDialog(null, url, false, null);
         }
 
         public bool StartCloneDialog()
         {
-            return StartCloneDialog(null, null);
+            return StartCloneDialog(null, null, false, null);
         }
 
         public bool StartSvnCloneDialog(IWin32Window owner, GitModuleChangedEventHandler GitModuleChanged)

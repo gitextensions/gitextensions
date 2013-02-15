@@ -1166,7 +1166,7 @@ namespace GitUI
 
         private void CloneToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (UICommands.StartCloneDialog(this))
+            if (UICommands.StartCloneDialog(this, null, DashboardGitModuleChanged))
                 Initialize();
         }
 
