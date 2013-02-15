@@ -402,6 +402,7 @@ namespace TranslationApp
             this.googleTranslate.TabIndex = 2;
             this.googleTranslate.Text = "Google translate";
             this.googleTranslate.UseVisualStyleBackColor = true;
+            this.googleTranslate.Visible = false;
             this.googleTranslate.Click += new System.EventHandler(this.googleTranslate_Click);
             // 
             // googleAll
@@ -413,6 +414,7 @@ namespace TranslationApp
             this.googleAll.TabIndex = 3;
             this.googleAll.Text = "Google all empty";
             this.googleAll.UseVisualStyleBackColor = true;
+            this.googleAll.Visible = false;
             this.googleAll.Click += new System.EventHandler(this.googleAll_Click);
             // 
             // nextButton
