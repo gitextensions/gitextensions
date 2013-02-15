@@ -138,7 +138,11 @@ namespace GitUI
 
         public static void Removal(this ToolStripDropDownItem dropDown, ToolStripItem item)
         {
-            dropDown.Act(item, (items, child) => items.Remove(child));
+            dropDown.Act(item, (items, child) =>
+            {
+                items.Remove(child);
+                child.Dispose();
+            });
         }
 
         public static void Insertion(this ToolStripDropDownItem dropDown, ToolStripItem item)
@@ -146,8 +150,8 @@ namespace GitUI
             dropDown.Act(item, (items, child) => items.Insert(0, child));
         }
 
-        static Dictionary<ToolStripDropDownItem, List<ScheduledAction>> scheduledActions
-            = new Dictionary<ToolStripDropDownItem, List<ScheduledAction>>();
+        static Dictionary<ToolStripDropDownItem, Queue<ScheduledAction>> scheduledActions
+            = new Dictionary<ToolStripDropDownItem, Queue<ScheduledAction>>();
 
         class ScheduledAction
         {
@@ -161,23 +165,36 @@ namespace GitUI
             {// visible
                 if (scheduledActions.ContainsKey(dropDown) == false)
                 {
-                    scheduledActions[dropDown] = new List<ScheduledAction>();
+                    scheduledActions[dropDown] = new Queue<ScheduledAction>();
                 }
-                scheduledActions[dropDown].Add(new ScheduledAction { action = action, item = item });
-                dropDown.DropDownClosed += Schedule;
+                lock (notificationLock)
+                {
+                    scheduledActions[dropDown].Enqueue(new ScheduledAction { action = action, item = item });
+                    dropDown.DropDownClosed += Schedule;
+                }
             }
             else
             {
-                action(dropDown.DropDownItems, item);
+                lock (notificationLock)
+                {
+                    dropDown.DropDown.Enabled = false;
+                    action(dropDown.DropDownItems, item);
+                    dropDown.DropDown.Enabled = true;
+                }
             }
         }
 
         static void Schedule(object sender, EventArgs e)
         {
             ToolStripDropDownItem dropDown = (ToolStripDropDownItem)sender;
-            foreach (var scheduledAction in scheduledActions[dropDown])
+            lock (notificationLock)
             {
-                scheduledAction.action(dropDown.DropDownItems, scheduledAction.item);
+                Queue<ScheduledAction> actions = scheduledActions[dropDown];
+                while (actions.Any())
+                {
+                    ScheduledAction scheduledAction = actions.Dequeue();
+                    scheduledAction.action(dropDown.DropDownItems, scheduledAction.item);
+                }
             }
         }
 
@@ -264,12 +281,9 @@ namespace GitUI
         /// <summary>Adds the <see cref="NotificationControl"/> then updates the UI.</summary>
         void Add(NotificationControl control)
         {
-            lock (NotifierHelpers.notificationLock)
-            {
-                notifications.Insert(0, control.Notification);
-                DropDownItems.Insert(0, control);
-                Update();
-            }
+            notifications.Insert(0, control.Notification);
+            this.Insertion(control);
+            Update();
         }
 
         /// <summary>De-registers for notification control events, then removes it.</summary>
@@ -278,48 +292,8 @@ namespace GitUI
             NotificationControl control = (NotificationControl)sender;
             control.Click -= RemoveNotification;
             control.Expired -= RemoveNotification;
-            Remove(control);
-        }
-
-        /// <summary>Removes a notification from the status feed, then updates the UI.</summary>
-        void Remove(NotificationControl control)
-        {
-            removables.Add(control);
-            if (DropDown.Visible == false)
-            {
-                Removal();
-            }
-            else
-            {
-                DropDownClosed += ScheduleRemoval;
-            }
-
-            Update();
-        }
-
-        List<NotificationControl> removables = new List<NotificationControl>();
-
-        void ScheduleRemoval(object sender, EventArgs e)
-        {
-            DropDownClosed -= ScheduleRemoval;
-            Removal();
-        }
-
-        void Removal()
-        {
-            DropDown.Enabled = false;
-            lock (NotifierHelpers.notificationLock)
-            {
-                for (int i = 0; i < removables.Count; i++)
-                {
-                    NotificationControl control = removables[i];
-                    DropDownItems.Remove(control);
-                    control.Dispose();
-                    removables.RemoveAt(i);
-                    notifications.Remove(control.Notification);
-                }
-            }
-            DropDown.Enabled = true;
+            notifications.Remove(control.Notification);
+            this.Removal(control);
             Update();
         }
     }
