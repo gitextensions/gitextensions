@@ -50,9 +50,9 @@ namespace GitUI.SpellChecker
         {
             get
             {
-				if (TextBox == null)
-					return string.Empty;
-				
+                if (TextBox == null)
+                    return string.Empty;
+                
                 return IsWatermarkShowing ? string.Empty : TextBox.Text;
             }
             set
@@ -365,7 +365,7 @@ namespace GitUI.SpellChecker
                 .Enabled = (TextBox.SelectedText.Length > 0);
             AddContextMenuItem(selectAllMenuItemText.Text, SelectAllMenuItemClick);
 
-            AddContextMenuSeparator();
+            /*AddContextMenuSeparator();
 
             if (!string.IsNullOrEmpty(_spelling.CurrentWord))
             {
@@ -374,7 +374,7 @@ namespace GitUI.SpellChecker
             }
 
             string entireText = string.Format(translateEntireText.Text, CultureCodeToString(Settings.Dictionary));
-            AddContextMenuItem(entireText, translateText_Click);
+            AddContextMenuItem(entireText, translateText_Click);*/
 
             AddContextMenuSeparator();
 
