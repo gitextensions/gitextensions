@@ -1068,7 +1068,7 @@ namespace GitUI
 
             Color foreColor;
 
-            if (!Settings.RevisionGraphDrawNonRelativesGray || !Settings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
+            if (!Settings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
             {
                 foreColor = isRowSelected && IsFilledBranchesLayout()
                     ? SystemColors.HighlightText
