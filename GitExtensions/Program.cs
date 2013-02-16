@@ -3,8 +3,8 @@ using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI;
-using GitUI.SettingsDialog.Pages;
-using GitUI.SettingsDialog;
+using GitUI.CommandsDialogs.SettingsDialog;
+using GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 namespace GitExtensions
 {
