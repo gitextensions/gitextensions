@@ -1827,10 +1827,10 @@ namespace GitCommands
 						CommitData data = CommitData.GetCommitData(this, parts[1], ref error);
 
 						PatchFile nextCommitPatch = new PatchFile();
-						nextCommitPatch.Author = data.Author;
-						nextCommitPatch.Subject = data.Body;
+						nextCommitPatch.Author = string.IsNullOrEmpty(error) ? data.Author : error;
+						nextCommitPatch.Subject = string.IsNullOrEmpty(error) ? data.Body : error;
 						nextCommitPatch.Name = parts[0];
-						nextCommitPatch.Date = data.CommitDate.LocalDateTime.ToString();
+						nextCommitPatch.Date = string.IsNullOrEmpty(error) ? data.CommitDate.LocalDateTime.ToString() : error;
 						nextCommitPatch.IsNext = patchFiles.Count == 0;
 
 						patchFiles.Add(nextCommitPatch);
