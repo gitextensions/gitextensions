@@ -23,9 +23,6 @@ namespace GitUI.SettingsDialog
         {
             InitializeComponent();
 
-            // if visible: when searching, if the selected node is valid, it will still have grey background
-            treeView1.HideSelection = true;
-
             Font = Settings.Font;
 
             _origTextBoxFont = textBoxFind.Font;
@@ -118,6 +115,12 @@ namespace GitUI.SettingsDialog
                 }
 
                 labelNumFound.Text = _nodesFoundByTextBox.Count.ToString();
+
+                if (_nodesFoundByTextBox.Any())
+                {
+                    // if visible: when searching, if the selected node is valid, it will still have grey background
+                    treeView1.HideSelection = true;
+                }
             }
         }
 
@@ -132,6 +135,7 @@ namespace GitUI.SettingsDialog
         {
             treeView1.BeginUpdate();
             ResetAllNodeHighlighting(treeView1.Nodes);
+            treeView1.HideSelection = false;
             treeView1.EndUpdate();
         }
 
