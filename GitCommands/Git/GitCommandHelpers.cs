@@ -540,6 +540,9 @@ namespace GitCommands
         {
             path = FixPath(path);
 
+            fromBranch = GitModule.GetFullBranchName(fromBranch);
+            toBranch = GitModule.GetFullBranchName(toBranch);
+
             if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
                 fromBranch = "HEAD";
 
