@@ -14,6 +14,7 @@ namespace GitUI
         private readonly TranslationString _error = new TranslationString("Error");
         private bool _hasChanges;
         private string _fileName;
+        private bool _formClosing = false;
 
         public FormEditor(GitUICommands aCommands, string fileName)
             : base(aCommands)
@@ -61,6 +62,13 @@ namespace GitUI
 
         private void FormEditor_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // prevent recursive calls to this method when setting DialogResult
+            // due to Mono bug https://bugzilla.xamarin.com/show_bug.cgi?id=5040
+            if(_formClosing)
+            {
+                return;
+            }
+
             // only offer to save if there's something to save.
             if (HasChanges)
             {
@@ -81,18 +89,21 @@ namespace GitUI
                                 return;
                             }
                         }
+                        _formClosing = true;
                         DialogResult = DialogResult.OK;
                         break;
                     case DialogResult.Cancel:
                         e.Cancel = true;
                         return;
                     default:
+                        _formClosing = true;
                         DialogResult = DialogResult.Cancel;
                         break;
                 }
             }
             else
             {
+                _formClosing = true;
                 DialogResult = DialogResult.OK;
             }
         }
