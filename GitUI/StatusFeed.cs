@@ -1,34 +1,112 @@
 ﻿using System;
+using System.Reactive;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Windows.Forms;
 
 namespace GitUI
 {
-    /// <summary>Represents a single notification in a status feed.</summary>
-    public class Notification
+    /// <summary>Provides the ability to notify the user.</summary>
+    public interface INotifier
     {
-        /// <summary><see cref="Notification"/> which isn't part of a batch of status updates.</summary>
-        static readonly Guid loner = Guid.NewGuid();
+        /// <summary>Notifies the user about a status update.</summary>
+        /// <param name="notification">Status update to show to user.</param>
+        void Notify(Notification notification);
+        /// <summary>Gets a notification batch.</summary>
+        INotificationBatch StartBatch();
+    }
 
-        public Notification(StatusSeverity severity, string text)
-            : this(severity, text, loner) { }
+    /// <summary>Provides the ability to notify the user about a batch process.</summary>
+    public interface INotificationBatch
+    {
+        /// <summary>Notifies the user about the next update in the batch.</summary>
+        void Next(Notification notification);
+        /// <summary>Notifies the user about the complete batch process.</summary>
+        void Last(Notification notification);
+    }
 
-        Notification(StatusSeverity severity, string text, Guid batchId)
+    /// <summary>Manages notifications between publishers and subscribers.</summary>
+    internal sealed class NotificationManager : INotifier
+    {
+        // TODO: ?repo-specific/GitModule-specific notifications?
+        // example: user executes a long-running process, closes the repo before it finishes
+
+        protected static CurrentThreadScheduler UiScheduler = Scheduler.CurrentThread;
+
+        /// <summary>singleton implementation</summary>
+        private NotificationManager() { }
+        /// <summary>Gets the <see cref="NotificationManager"/> instance.</summary>
+        public static NotificationManager Instance { get { return _Instance.Value; } }
+        static readonly Lazy<NotificationManager> _Instance
+            = new Lazy<NotificationManager>(() => new NotificationManager());
+
+        Subject<Notification> _notifications = new Subject<Notification>();
+        Subject<BatchNotification> _notificationBatches = new Subject<BatchNotification>();
+
+        public void Subscribe(
+            Action<Notification> onNotification,
+            Action<BatchNotification> onBatchNotification)
         {
-            Severity = severity;
-            Text = text;
-            if (batchId == Guid.Empty)
-            {
-                throw new ArgumentException("Must specify a NON-empty GUID.", "batchId");
-            }
-            BatchId = batchId;
-            IsBatch = (batchId != loner);
+            var observer =
+                Observer
+                    .Create(onNotification)
+                    .NotifyOn(UiScheduler);
+            _notifications.Subscribe(observer);
+            _notificationBatches.Subscribe(
+                Observer
+                    .Create(onBatchNotification)
+                    .NotifyOn(UiScheduler)
+            );
         }
 
-        /// <summary>Gets the severity of the update.</summary>
-        public StatusSeverity Severity { get; private set; }
-        /// <summary>Gets the text of the update.</summary>
-        public string Text { get; private set; }
-        ///// <summary></summary>
-        //public Action OnClick { get; private set; }
+        void INotifier.Notify(Notification notification)
+        {
+            _notifications.OnNext(notification);
+        }
+
+        INotificationBatch INotifier.StartBatch()
+        {
+            return new NotificationBatch();
+        }
+
+        class NotificationBatch : INotificationBatch
+        {
+            Subject<BatchNotification> _notifications = new Subject<BatchNotification>();
+
+            public Guid BatchId { get; private set; }
+
+            public NotificationBatch(Action<BatchNotification> onBatchNotification)
+            {
+                _notifications.Subscribe(Observer.Create(onBatchNotification).NotifyOn(UiScheduler));
+                BatchId = Guid.NewGuid();
+            }
+
+            public void Next(Notification notification)
+            {
+                _notifications.OnNext(new BatchNotification(notification, BatchId));
+            }
+
+            void INotificationBatch.Last(Notification notification)
+            {
+                Next(notification);
+                _notifications.OnCompleted();
+                throw new NotImplementedException();
+            }
+        }
+    }
+
+    /// <summary>Single notification which is part of a batch.</summary>
+    internal class BatchNotification
+    {
+        public Notification Notification { get; set; }
+
+        public BatchNotification(Notification notification, Guid batchId)
+        {
+            Notification = notification;
+            BatchId = batchId;
+        }
+
         /// <summary>Indicates that a </summary>
         internal Guid BatchId { get; private set; }
         /// <summary>Indicates whether a <see cref="Notification"/> is part of a batch of notifications.</summary>
@@ -47,9 +125,9 @@ namespace GitUI
         }
 
         /// <summary>Creates a notification which is part of a batch.</summary>
-        static Notification Batch(StatusSeverity severity, string text, Guid guid, BatchEntry entry)
+        static BatchNotification Batch(StatusSeverity severity, string text, Guid guid, BatchEntry entry)
         {
-            return new Notification(severity, text, guid) { BatchPart = entry };
+            return new BatchNotification(new Notification(severity, text), guid) { BatchPart = entry };
         }
 
         /// <summary>Ensures that the current notification is part of a batch AND not the last part.</summary>
@@ -65,29 +143,57 @@ namespace GitUI
             }
         }
 
-        Notification BatchFrom(StatusSeverity severity, string text, Guid guid, BatchEntry entry)
+        BatchNotification BatchFrom(StatusSeverity severity, string text, Guid guid, BatchEntry entry)
         {
             EnsureValidBatch();
             return Batch(severity, text, guid, entry);
         }
 
         /// <summary>Creates a new notification which will start a batch.</summary>
-        public static Notification BatchStart(StatusSeverity severity, string text)
+        public static BatchNotification BatchStart(StatusSeverity severity, string text)
         {
             return Batch(severity, text, Guid.NewGuid(), BatchEntry.First);
         }
 
         /// <summary>Creates the next notification in a batch.</summary>
-        public Notification BatchNext(StatusSeverity severity, string text)
+        public BatchNotification BatchNext(StatusSeverity severity, string text)
         {
             return BatchFrom(severity, text, BatchId, BatchEntry.Next);
         }
 
         /// <summary>Creates the last notification in a batch.</summary>
-        public Notification BatchLast(StatusSeverity severity, string text)
+        public BatchNotification BatchLast(StatusSeverity severity, string text)
         {
             return BatchFrom(severity, text, BatchId, BatchEntry.Last);
         }
+    }
+
+    /// <summary>Represents a single notification in a status feed.</summary>
+    public class Notification
+    {
+        /// <summary><see cref="Notification"/> which isn't part of a batch of status updates.</summary>
+        static readonly Guid loner = Guid.NewGuid();
+
+        public Notification(StatusSeverity severity, string text)
+            : this(severity, text, loner) { }
+
+        Notification(StatusSeverity severity, string text, Guid batchId)
+        {
+            Severity = severity;
+            Text = text;
+            if (batchId == Guid.Empty)
+            {
+                throw new ArgumentException("Must specify a NON-empty GUID.", "batchId");
+            }
+        }
+
+        /// <summary>Gets the severity of the update.</summary>
+        public StatusSeverity Severity { get; private set; }
+        /// <summary>Gets the text of the update.</summary>
+        public string Text { get; private set; }
+        ///// <summary></summary>
+        //public Action OnClick { get; private set; }
+
 
         public override string ToString() { return Text; }
     }

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reactive;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Windows.Forms;
 using GitUI.Properties;
 
@@ -69,14 +72,6 @@ namespace GitUI
                 Debug.WriteLine(">done");
             }
         }
-    }
-
-    /// <summary>Provides the ability to notify the user.</summary>
-    public interface INotifier
-    {
-        /// <summary>Notifies the user about a status update.</summary>
-        /// <param name="notification">Status update to show to user.</param>
-        void Notify(Notification notification);
     }
 
     /// <summary>Provides helpful members for notifications.</summary>
@@ -198,11 +193,17 @@ namespace GitUI
             }
         }
 
+        public static void Invoke(this Control control, Action action)
+        {
+            control.Invoke(action);
+        }
     }
 
     /// <summary><see cref="ToolStripButton"/> which holds notifications, with most recent items first.</summary>
-    public sealed class NotificationFeed : ToolStripDropDownButton, INotifier
+    public sealed class NotificationFeed : ToolStripDropDownButton
     {
+        public IObserver<Notification> Observer { get; private set; }
+
         /// <summary>Initalizes a new control which holds notifications, with most recent items first.</summary>
         public NotificationFeed()
         {
@@ -212,6 +213,10 @@ namespace GitUI
             //Dock = DockStyle.Left;
 
             Image = Resources.Information;
+
+            Observer = System.Reactive.Observer
+                            .Create<Notification>(Notify)
+                            .NotifyOn(Scheduler.CurrentThread);
         }
 
         MostRecentNotification mostRecent;
@@ -269,31 +274,38 @@ namespace GitUI
         /// <summary>Adds a notification to the status feed.</summary>
         void Add(Notification notification)
         {
-            if (notification.BatchPart == Notification.BatchEntry.No)
-            {// normal notification (NOT part of batch)
-                var control = new NotificationItem(notification);
-                control.Click += RemoveNotification;
-                control.Expired += RemoveNotification;
+            var control = new NotificationItem(notification);
+            control.Click += RemoveNotification;
+            control.Expired += RemoveNotification;
 
-                Add(control);
+            Add(control);
+        }
+
+        void Add(INotificationBatch batch)
+        {
+
+        }
+
+        void Add(BatchNotification batchNotification)
+        {
+            // (part of batch)
+            if (batchNotification.BatchPart == BatchNotification.BatchEntry.First)
+            {
+                // first -> add to status feed
+                NotificationBatch batch = new NotificationBatch(notification);
+                batches[notification.BatchId.ToString()] = batch;
+                Add(batch);
             }
             else
-            {// (part of batch)
-                if (notification.BatchPart == Notification.BatchEntry.First)
-                {// first -> add to status feed
-                    NotificationBatch batch = new NotificationBatch(notification);
-                    batches[notification.BatchId.ToString()] = batch;
-                    Add(batch);
-                }
-                else
-                {// (NOT first)
-                    NotificationBatch batch = batches[notification.BatchId.ToString()];
-                    batch.Add(notification);
-                    if (notification.BatchPart == Notification.BatchEntry.Last)
-                    {// last
-                        batch.Click += RemoveNotification;
-                        batch.Expired += RemoveNotification;
-                    }
+            {
+                // (NOT first)
+                NotificationBatch batch = batches[notification.BatchId.ToString()];
+                batch.Add(notification);
+                if (notification.BatchPart == BatchNotification.BatchEntry.Last)
+                {
+                    // last
+                    batch.Click += RemoveNotification;
+                    batch.Expired += RemoveNotification;
                 }
             }
         }

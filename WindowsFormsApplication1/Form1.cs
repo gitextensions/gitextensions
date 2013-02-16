@@ -24,9 +24,8 @@ namespace WindowsFormsApplication1
             InitializeComponent();
 
             NotificationFeed notificationFeed = new NotificationFeed();
-            notifier = notificationFeed;
             statusStrip.Items.Insert(0, notificationFeed);
-            
+
             btnDelayed.Click += (o, e) => Test(true);
             btnAtOnce.Click += (o, e) => Test(false);
 
@@ -37,21 +36,19 @@ namespace WindowsFormsApplication1
 
         void Test(bool hasDelay)
         {
-            var batch = Notification.BatchStart(StatusSeverity.Info, "Start");
-            var next1 = batch.BatchNext(StatusSeverity.Info, "Next1");
-            var next2 = next1.BatchNext(StatusSeverity.Info, "Next2");
-            var done = batch.BatchLast(StatusSeverity.Success, "Yay");
+            var batch = notifier.StartBatch();
+
+            batch.Next(new Notification(StatusSeverity.Info, "Start"));
+            batch.Next(new Notification(StatusSeverity.Info, "Next1"));
+            batch.Next(new Notification(StatusSeverity.Info, "Next2"));
+            batch.Last(new Notification(StatusSeverity.Success, "Yay"));
 
             var mockStatusUPdates = new Notification[]
             {
                 new Notification(StatusSeverity.Fail, "fail"), 
-                batch,
-                next1,
                 new Notification(StatusSeverity.Info, "info"), 
-                next2,
                 new Notification(StatusSeverity.Warn, "warn"), 
                 new Notification(StatusSeverity.Success, "really long text with a lot of text alsdjfksjadfl;jkasdflkjs;dfjslkjfdskljdfklsj;dfljslkdfjskldfjlsjdfkljsdfjslkdjfkl"), 
-                done,
             };
 
             var statusFeedDelay = Observable.Create<Notification>(o =>
@@ -67,10 +64,10 @@ namespace WindowsFormsApplication1
                     ? statusFeedDelay// this one adds them all at once
                     : mockStatusUPdates.ToObservable();// this on
 
-                observable
-                    .ObserveOn(this)
-                    .DelaySubscription(TimeSpan.FromSeconds(2))
-                    .Subscribe(notifier.Notify);
+            observable
+                .ObserveOn(this)
+                .DelaySubscription(TimeSpan.FromSeconds(2))
+                .Subscribe(notifier.Notify);
         }
     }
 }
