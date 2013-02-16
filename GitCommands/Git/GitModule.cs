@@ -1800,6 +1800,47 @@ namespace GitCommands
         private static readonly Regex HeadersMatch = new Regex(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$", RegexOptions.Compiled);
         private static readonly Regex QuotedText = new Regex(@"=\?([\w-]+)\?q\?(.*)\?=$", RegexOptions.Compiled);
 
+		public bool InTheMiddleOfInteractiveRebase()
+		{
+			return File.Exists(GetRebaseDir() + "git-rebase-todo");
+		}
+		
+		public IList<PatchFile> GetInteractiveRebasePatchFiles()
+		{
+			string todoFile = GetRebaseDir() + "git-rebase-todo";
+			string[] todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(new char[]{'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries) : null;
+
+			IList<PatchFile> patchFiles = new List<PatchFile>();
+
+			if (todoCommits != null)
+			{
+				foreach (string todoCommit in todoCommits)
+				{
+					if (todoCommit.StartsWith("#"))
+						continue;
+
+					string[] parts = todoCommit.Split(' ');
+
+					if (parts.Length >= 3)
+					{
+						string error = string.Empty;
+						CommitData data = CommitData.GetCommitData(this, parts[1], ref error);
+
+						PatchFile nextCommitPatch = new PatchFile();
+						nextCommitPatch.Author = data.Author;
+						nextCommitPatch.Subject = data.Body;
+						nextCommitPatch.Name = parts[0];
+						nextCommitPatch.Date = data.CommitDate.LocalDateTime.ToString();
+						nextCommitPatch.IsNext = patchFiles.Count == 0;
+
+						patchFiles.Add(nextCommitPatch);
+					}
+				}
+			}
+
+			return patchFiles;
+		}
+
         public IList<PatchFile> GetRebasePatchFiles()
         {
             var patchFiles = new List<PatchFile>();
