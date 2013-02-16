@@ -180,6 +180,10 @@
             this.groupLayoutPanel.Size = new System.Drawing.Size(647, 487);
             this.groupLayoutPanel.TabIndex = 0;
             this.groupLayoutPanel.WrapContents = false;
+			this.groupLayoutPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | 
+																				   System.Windows.Forms.AnchorStyles.Bottom) | 
+																				   System.Windows.Forms.AnchorStyles.Left) |
+																				   System.Windows.Forms.AnchorStyles.Right)));
             this.groupLayoutPanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.groupLayoutPanel_DragDrop);
             this.groupLayoutPanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.groupLayoutPanel_DragEnter);
             // 
