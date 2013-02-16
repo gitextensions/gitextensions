@@ -172,7 +172,7 @@ This action will be performed without warning while checking out branch.</Source
       <translationItems>
         <TranslationItem Name="_branchCheckoutError" Property="Text">
           <Source>Branch '{0}' is not selectable, this branch has been removed from the selection.</Source>
-          <Value>Ветвь '{0}' не выделяема, эта ветвь удалена из выделения.</Value>
+          <Value>Ветвь '{0}' нельзя выделить, эта ветвь удалена из выделения.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -351,7 +351,7 @@ Select no if you want to configure a different mergetool yourself.</Source>
         </TranslationItem>
         <TranslationItem Name="_opensshUsed" Property="Text">
           <Source>Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)</Source>
-          <Value>Будет использоваться SSH клиент по умолчанию, OpenSSH (окно с командной строкой будет появлять после pull, push и операции клонирования).</Value>
+          <Value>Будет использоваться SSH клиент по умолчанию, OpenSSH (окно с командной строкой будет появляться после pull, push и операции клонирования).</Value>
         </TranslationItem>
         <TranslationItem Name="_plinkputtyGenpageantNotFound" Property="Text" type="unfinished">
           <Source>PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.</Source>
@@ -5970,18 +5970,6 @@ Do you want to open the new repository "{0}" now?</Source>
         <TranslationItem Name="okButton" Property="Text">
           <Source>Clone</Source>
           <Value>Клонировать</Value>
-        </TranslationItem>
-        <TranslationItem Name="tbBranches" Property="Text">
-          <Source>branches</Source>
-          <Value>ветви</Value>
-        </TranslationItem>
-        <TranslationItem Name="tbTags" Property="Text">
-          <Source>tags</Source>
-          <Value>метки</Value>
-        </TranslationItem>
-        <TranslationItem Name="tbTrunk" Property="Text" type="unfinished">
-          <Source>trunk</Source>
-          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
