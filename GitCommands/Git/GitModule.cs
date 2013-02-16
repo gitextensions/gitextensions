@@ -1536,7 +1536,10 @@ namespace GitCommands
                 progressOption = "--progress ";
 
             if (rebase && !string.IsNullOrEmpty(remoteBranch))
-                return "pull --rebase " + progressOption + remote + " refs/heads/" + remoteBranch;
+            {
+                return "pull --rebase " + progressOption + remote + " " + 
+                    GetFullBranchName(remoteBranch);
+            }
 
             if (rebase)
                 return "pull --rebase " + progressOption + remote;
@@ -1564,13 +1567,17 @@ namespace GitCommands
             if (string.IsNullOrEmpty(remoteBranch))
                 remoteBranchArguments = "";
             else
-                remoteBranchArguments = "+refs/heads/" + remoteBranch + "";
+            {
+                if (remoteBranch.StartsWith("+"))
+                    remoteBranch = remoteBranch.Remove(0, 1);
+                remoteBranchArguments = "+" + GetFullBranchName(remoteBranch);
+            }
 
             string localBranchArguments;
             var remoteUrl = GetPathSetting(string.Format(SettingKeyString.RemoteUrl, remote));
 
             if (PathIsUrl(remote) && !string.IsNullOrEmpty(localBranch) && string.IsNullOrEmpty(remoteUrl))
-                localBranchArguments = ":refs/heads/" + localBranch + "";
+                localBranchArguments = ":" + GetFullBranchName(localBranch);
             else if (string.IsNullOrEmpty(localBranch) || PathIsUrl(remote) || string.IsNullOrEmpty(remoteUrl))
                 localBranchArguments = "";
             else
@@ -2513,6 +2520,13 @@ namespace GitCommands
             if (String.IsNullOrEmpty(remote) || String.IsNullOrEmpty(merge))
                 return "";
             return remote + "/" + (merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge);
+        }
+
+        public static string GetFullBranchName(string branch)
+        {
+            if (branch.StartsWith("refs/"))
+                return branch;
+            return "refs/heads/" + branch;
         }
 
         public IList<GitHead> GetRemoteHeads(string remote, bool tags, bool branches)
