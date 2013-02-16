@@ -862,15 +862,16 @@ namespace GitCommands
             return stringBuilder.ToString();
         }
 
-        public static GitSubmoduleStatus GetSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged)
+        public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged)
         {
-            string text = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
+            PatchApply.Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
+            string text = patch != null ? patch.Text : "";
             return GetSubmoduleStatus(text);
         }
 
-        public static GitSubmoduleStatus GetSubmoduleChanges(GitModule module, string submodule)
+        public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string submodule)
         {
-            return GetSubmoduleChanges(module, submodule, submodule, false);
+            return GetCurrentSubmoduleChanges(module, submodule, submodule, false);
         }
 
         public static GitSubmoduleStatus GetSubmoduleStatus(string text)
@@ -1089,9 +1090,15 @@ namespace GitCommands
             return sb.ToString();
         }
 
-        public static string ProcessSubmodulePatch(GitModule module, string text)
+        public static string ProcessSubmodulePatch(GitModule module, PatchApply.Patch patch)
         {
+            string text = patch != null ? patch.Text : null;
             var status = GetSubmoduleStatus(text);
+            return ProcessSubmoduleStatus(module, status);
+        }
+
+        public static string ProcessSubmoduleStatus(GitModule module, GitSubmoduleStatus status)
+        {
             GitModule gitmodule = module.GetSubmodule(status.Name);
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule " + status.Name + " Change");
@@ -1269,15 +1276,15 @@ namespace GitCommands
             }
             if (displayWeeks && delta < 30 * 24 * 60 * 60)
             {
-                int weeks = Convert.ToInt32(Math.Floor(ts.Days / 7.0));
+                int weeks = Convert.ToInt32(ts.Days / 7.0);
                 return Strings.GetNWeeksAgoText(weeks);
             }
-            if (delta < 12 * 30 * 24 * 60 * 60)
+            if (delta < 365 * 24 * 60 * 60)
             {
-                int months = Convert.ToInt32(Math.Floor(ts.Days / 30.0));
+                int months = Convert.ToInt32(ts.Days / 30.0);
                 return Strings.GetNMonthsAgoText(months);
             }
-            int years = Convert.ToInt32(Math.Floor(ts.Days / 365.0));
+            int years = Convert.ToInt32(ts.Days / 365.0);
             return Strings.GetNYearsAgoText(years);
         }
 

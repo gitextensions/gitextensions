@@ -178,18 +178,6 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="BrowseForPrivateKey">
-      <translationItems>
-        <TranslationItem Name="_pageantNotFound" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>No se puede cargar clave SSH. PuTTY no está configurado correctamente.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_pageantNotFoundCaption" Property="Text">
-          <Source>PuTTY</Source>
-          <Value>PuTTY</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="ChecklistSettingsPage">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -378,10 +366,6 @@ Select no if you want to configure a different mergetool yourself.</Source>
         <TranslationItem Name="_puttyFoundAuto" Property="Text" type="unfinished">
           <Source>All paths needed for PuTTY could be automatically found and are set.</Source>
           <Value />
-        </TranslationItem>
-        <TranslationItem Name="_puttyFoundAutoCaption" Property="Text">
-          <Source>PuTTY</Source>
-          <Value>PuTTY</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsCorrect" Property="Text" type="unfinished">
           <Source>GitExtensions is properly registered.</Source>
@@ -711,8 +695,7 @@ Value:  {2} = {3}</Source>
           <Value>Error</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text">
-          <Source>Failed to create pull request.
-</Source>
+          <Source>Failed to create pull request.</Source>
           <Value>No se pudo crear pedido de Pull.</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">
@@ -1238,8 +1221,7 @@ Do you want to open it?</Source>
           <Value>No se pudo agregar el remoto</Value>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotFetchReposOfUser" Property="Text">
-          <Source>Could not fetch repositories of user!
-</Source>
+          <Source>Could not fetch repositories of user!</Source>
           <Value>No se pudieron buscar los repositorios del usuario!</Value>
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
@@ -1247,8 +1229,7 @@ Do you want to open it?</Source>
           <Value>Error</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToFork" Property="Text">
-          <Source>Failed to fork:
-</Source>
+          <Source>Failed to fork:</Source>
           <Value>Fallo al bifurcar:</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToGetRepos" Property="Text">
@@ -1268,8 +1249,7 @@ Do you want to open it?</Source>
           <Value>Página de inicio no definida</Value>
         </TranslationItem>
         <TranslationItem Name="_strSearchFailed" Property="Text">
-          <Source>Search failed!
-</Source>
+          <Source>Search failed!</Source>
           <Value>Falló la búsqueda!</Value>
         </TranslationItem>
         <TranslationItem Name="_strSearching" Property="Text">
@@ -3635,16 +3615,12 @@ por defecto sólo si tiene problemas.</Value>
           <Source>Patch result</Source>
           <Value>Resultado del parche</Value>
         </TranslationItem>
-        <TranslationItem Name="_sendMailResult" Property="Text" type="unfinished">
-          <Source>
-
-Send to:</Source>
+        <TranslationItem Name="_sendMailResult" Property="Text">
+          <Source>Send to:</Source>
           <Value>Enviar a:</Value>
         </TranslationItem>
-        <TranslationItem Name="_sendMailResultFailed" Property="Text" type="unfinished">
-          <Source>
-
-Failed to send mail.</Source>
+        <TranslationItem Name="_sendMailResultFailed" Property="Text">
+          <Source>Failed to send mail.</Source>
           <Value>Fallo al enviar mail.</Value>
         </TranslationItem>
         <TranslationItem Name="_twoRevisionsNeededCaption" Property="Text">
@@ -4412,10 +4388,6 @@ Are you sure you want to rebase this merge?</Source>
           <Source>Rebase merge commit?</Source>
           <Value>¿Rebase commit de fusión?</Value>
         </TranslationItem>
-        <TranslationItem Name="_cannotLoadPutty" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>No se puede cargar clave SSH. PuTTY no está configurado correctamente.</Value>
-        </TranslationItem>
         <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text">
           <Source>You can only fetch all remote branches (*) without merge or rebase.
 If you want to fetch all remote branches, choose fetch.
@@ -4585,10 +4557,6 @@ This will initialize and update all submodules recursive.</Source>
 Are you sure you want to push this branch?</Source>
           <Value>La rama que está a punto de hacer Push parece ser una nueva rama para 
 el remoto. ¿Está seguro de que desea hacer Push con esta rama?</Value>
-        </TranslationItem>
-        <TranslationItem Name="_cannotLoadPutty" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>No se puede cargar clave SSH. PuTTY no está configurado correctamente.</Value>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestCB" Property="Text">
           <Source>Create pull request after push</Source>
@@ -5781,35 +5749,9 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
           <Source>Limit number of commits that will be loaded at startup.</Source>
           <Value>Limitar el número de commits que se cargan al inicio.</Value>
         </TranslationItem>
-        <TranslationItem Name="label20" Property="Text" type="obsolete">
-          <Source>You only need local settings
-if you want to override the 
-global settings for the current
-repository.</Source>
-          <Value>Sólo necesita configuración local si desea reemplazar la 
-configuración global del repositorio actual.</Value>
-        </TranslationItem>
-        <TranslationItem Name="label21" Property="Text" type="obsolete">
-          <Source>You need to set the correct path to 
-git before you can change
-local settings.
-</Source>
-          <Value>Tiene que establecer la ruta correcta 
-a Git antes de que pueda cambiar 
-la configuración local.</Value>
-        </TranslationItem>
         <TranslationItem Name="label22" Property="Text" type="obsolete">
           <Source>Dictionary for spelling checker.</Source>
           <Value>Diccionario para el corrector ortográfico.</Value>
-        </TranslationItem>
-        <TranslationItem Name="label9" Property="Text" type="obsolete">
-          <Source>You need to set the correct path to 
-git before you can change
-global settings.
-</Source>
-          <Value>Tiene que establecer la ruta correcta 
-a Git antes de que pueda cambiar 
-la configuración global.</Value>
         </TranslationItem>
         <TranslationItem Name="tpGitExtensions" Property="Text" type="obsolete">
           <Source>Git extensions</Source>
@@ -6461,6 +6403,70 @@ objetos colgados".</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="GerritPlugin">
+      <translationItems>
+        <TranslationItem Name="_downloadGerritChange" Property="Text" type="unfinished">
+          <Source>Download Gerrit Change</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_editGitReview" Property="Text" type="unfinished">
+          <Source>Edit .gitreview</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHook" Property="Text" type="unfinished">
+          <Source>Install Hook</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookFailed" Property="Text" type="unfinished">
+          <Source>Could not download the commit-msg file. Please install the commit-msg hook manually.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookMessage" Property="Text" type="unfinished">
+          <Source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookShortText" Property="Text" type="unfinished">
+          <Source>Install commit-msg hook</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pluginDescription" Property="Text" type="unfinished">
+          <Source>Gerrit Code Review</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_publishGerritChange" Property="Text" type="unfinished">
+          <Source>Publish Gerrit Change</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GerritSettings">
+      <translationItems>
+        <TranslationItem Name="_settingsError" Property="Text" type="unfinished">
+          <Source>Error loading .gitreview file.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorDefaultRemoteNotPresent" Property="Text" type="unfinished">
+          <Source>The remote "{0}" specified with the "defaultremote" setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorFileNotFound" Property="Text" type="unfinished">
+          <Source>Cannot find the ".gitreview" file in the working directory.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorHostNotEntered" Property="Text" type="unfinished">
+          <Source>The "host" setting in the .gitreview file is mandatory.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorPortNotNumeric" Property="Text" type="unfinished">
+          <Source>The "port" specified in the .gitreview file may only contain digits.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorProjectNotEntered" Property="Text" type="unfinished">
+          <Source>The "project" setting in the .gitreview file is mandatory.</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="GitExtensionsSettingsGroup">
       <translationItems>
         <TranslationItem Name="$this" Property="Title">
@@ -6901,6 +6907,10 @@ la configuración local.</Value>
         <TranslationItem Name="_notValidGitSVNDirectory" Property="Text" type="unfinished">
           <Source>The current directory is not a valid git-svn repository.</Source>
           <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>No se puede cargar clave SSH. PuTTY no está configurado correctamente.</Value>
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
@@ -7482,6 +7492,10 @@ en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea d
           <Source>{0} years ago</Source>
           <Value>hace {0} años</Value>
         </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>No se puede cargar clave SSH. PuTTY no está configurado correctamente.</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="ViewPullRequestsForm">
@@ -7519,8 +7533,7 @@ en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea d
           <Value>No se pudo agregar el remoto con nombre {0} y URL {1}</Value>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text">
-          <Source>Could not load discussion!
-</Source>
+          <Source>Could not load discussion!</Source>
           <Value>No se pudo cargar la discusion!</Value>
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
@@ -7528,23 +7541,19 @@ en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea d
           <Value>Error</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToClosePullRequest" Property="Text">
-          <Source>Failed to close pull request!
-</Source>
+          <Source>Failed to close pull request!</Source>
           <Value>Fallo al cerrar pedido de Pull!</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToFetchPullData" Property="Text">
-          <Source>Failed to fetch pull data!
-</Source>
+          <Source>Failed to fetch pull data!</Source>
           <Value>Fallo al obtener datos de Pull!</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiffData" Property="Text">
-          <Source>Failed to load diff data!
-</Source>
+          <Source>Failed to load diff data!</Source>
           <Value>Fallo al cargar datos diff!</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiscussionItem" Property="Text">
-          <Source>Failed to post discussion item!
-</Source>
+          <Source>Failed to post discussion item!</Source>
           <Value>Fallo al enviar item de discusión!</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">

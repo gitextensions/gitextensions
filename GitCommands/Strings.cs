@@ -11,25 +11,25 @@ namespace GitCommands
             Translator.Translate(this, Settings.CurrentTranslation);
         }
 
-        private static Strings instance;
+        private static Strings _instance;
 
         private static Strings Instance
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = new Strings();
+                    _instance = new Strings();
                 }
-                return instance;
+                return _instance;
             }
         }
 
         public static void Reinit()
         {
-            if (instance != null)
+            if (_instance != null)
             {
-                instance = new Strings();
+                _instance = new Strings();
             }
         }
 

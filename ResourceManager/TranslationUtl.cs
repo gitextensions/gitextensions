@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
@@ -96,20 +95,20 @@ namespace ResourceManager.Translation
             Action<string, object, PropertyInfo> action = delegate(string item, object itemObj, PropertyInfo propertyInfo)
             {
                 string value = translation.TranslateItem(category, item, propertyInfo.Name, null);
-				if (!String.IsNullOrEmpty(value))
-				{
-					if (propertyInfo.CanWrite)
-						propertyInfo.SetValue(itemObj, value, null);
-				}
-				else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
-				{
-					value = translation.TranslateItem(category, item, "Text", null);
-					if (!String.IsNullOrEmpty(value))
-					{
-						if (propertyInfo.CanWrite)
-							propertyInfo.SetValue(itemObj, value, null);
-					}
-				}
+                if (!String.IsNullOrEmpty(value))
+                {
+                    if (propertyInfo.CanWrite)
+                        propertyInfo.SetValue(itemObj, value, null);
+                }
+                else if (propertyInfo.Name == "ToolTipText" && !String.IsNullOrEmpty((string)propertyInfo.GetValue(itemObj, null)))
+                {
+                    value = translation.TranslateItem(category, item, "Text", null);
+                    if (!String.IsNullOrEmpty(value))
+                    {
+                        if (propertyInfo.CanWrite)
+                            propertyInfo.SetValue(itemObj, value, null);
+                    }
+                }
             };
             ForEachItem(items, action);
         }
@@ -178,6 +177,7 @@ namespace ResourceManager.Translation
                 {
                     foreach (Type type in assembly.GetTypes())
                     {                        
+                        //TODO: Check if class contain TranslationString but doesn't implement ITranslate
                         if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
                         {
                             translatableTypes.Add(type);

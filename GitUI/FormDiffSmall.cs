@@ -47,7 +47,7 @@ namespace GitUI
             if (DiffFiles.SelectedItem != null && revision != null)
             {
                 Patch selectedPatch = Module.GetSingleDiff(revision.Guid, revision.Guid + "^", DiffFiles.SelectedItem.Name, DiffFiles.SelectedItem.OldName, DiffText.GetExtraDiffArguments(), DiffText.Encoding);
-                DiffText.ViewPatch(selectedPatch != null ? selectedPatch.Text : "");
+                DiffText.ViewPatch(selectedPatch);
             }
             Cursor.Current = Cursors.Default;
         }
