@@ -32,6 +32,7 @@ namespace GitUI.SettingsDialog.Pages
 
         public override void OnPageShown()
         {
+#if !__MonoCS__
             System.Resources.ResourceManager rm =
                 new System.Resources.ResourceManager("GitUI.Properties.Resources",
                             System.Reflection.Assembly.GetExecutingAssembly());
@@ -58,7 +59,8 @@ namespace GitUI.SettingsDialog.Pages
             }
 
             resourceSet.Close();
-            rm.ReleaseAllResources();            
+            rm.ReleaseAllResources();     
+#endif
         }
 
         protected override void OnLoadSettings()
