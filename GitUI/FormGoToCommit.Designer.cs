@@ -173,7 +173,6 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.commitExpression);
             this.Controls.Add(this.goButton);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(620, 340);
