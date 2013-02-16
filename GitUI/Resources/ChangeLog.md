@@ -1,6 +1,59 @@
 ﻿Changelog
 =========
 
+### Version 2.44
+* Fixed issue 710: Added icons to shell extensions
+* Fixed issue 1336: Prefix context menu entries with
+* Fixed issue 1354: Dashboard item description label is cut off at the top
+* Fixed issue 1371: Different icons for submodule status icons
+* Fixed issue 1388: Created icons for submodules
+* Fixed issue 1396: Mergetool command suggest button does not work
+* Fixed issue 1397: Shell exceptions broken
+* Fixed issue 1407: Reorder context menu items in commit dialog to better match other context menus
+* Fixed issue 1419: Command line argument "commit --quiet" doesn't work anymore
+* Fixed issue 1428: Uncheck "Amend Commit" checkbox after commiting
+* Fixed issue 1372: Stage submodule after commit
+* Fixed Issue 1430: Replaced settings dialog with more user friendlue dialog
+* Fixed issue 1432: Add icon for "Revert commit" in revision grid context menu
+* Fixed issue 1433: Improved layout for commit information in various dialogs (e.g. cherry pick)
+* Fixed issue 1434: Use FolderBrowserButton in FormOpenDirectory, FormPull and FormPush
+* Fixed issue 1471: Make "Add submodule" Window resizable
+* Fixed issue 1475: Fixed tab order in create tag dialog
+* Fixed issue 1477: Quick filter by commit sha
+* Fixed issue 1478: Bug fixes and improvements to Gerrit plugin
+* Fixed issue 1483: Staging a file which undoes all current staged changes leaves the file available in "Working dir changes"
+* Fixed issue 1488: Default pull action not run
+* Fixed issue 1506: Do not refresh revisions in grid when Delete Tag dialog is canceled
+* Fixed issue 1505: New help images for Fetch, Rebase, Merge actions in pull dialog
+* Fixed issue 1513: Moved plugin settings to settings dialog
+* Fixed issue 1533: Font size incorrect when changing culture
+* Fixed issue 1561: Allow creating orphan branches
+* Fixed issue 1565: Tab Order is wrong on Delete Branch form
+* Fixed issue 1585: Binary file detection fixed
+* Fixed issue: Amend commit doesn't work when using Ctrl+Enter key
+* Fixed issue: shell extension registration in settings dialog fixed with UAC
+* Fixed issue: "0 hours" and "0 year" displayed in revision grid
+* Fixed issue: Do not refresh revisions in grid when Delete Tag dialog is canceled
+* Add "dirty" versions of Submodule icons
+* Added button to go to superproject
+* Support a separate font for the commit message
+* Add red coloring to long subject line in commit message
+* Add option to turn off automatic word-wrapping in commit messages
+* Stash window properly display information about submodules
+* GoToCommit dialog: added "jump to tag" and "jump to branch" with autocomplete
+* Added several icons
+* Auto pull option behavior improved
+* Git SVN Clone now supports custom trunk, tags and branches directory
+* Suggested local branch name fixed for svn remote branches
+* Added "Open with difftool" command to Visual Studio addin
+* Added hotkey for "Amend commit"
+* Updated Spanish translation
+* Updated Dutch translations
+* updated Japanese translation
+* Updated German translation
+* Updated Russion translation
+* Updated French translation
+
 ### Version 2.43
 * Fixed issue 47: Support non-standard SSH port for Test Connection
 * Fixed issue 85: Integrated git-credential-winstore to installer to handle HTTP authentication

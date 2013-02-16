@@ -23,9 +23,9 @@ namespace GitUI
         private readonly TranslationString _twoRevisionsNeededCaption =
             new TranslationString("Patch error");
         private readonly TranslationString _sendMailResult =
-            new TranslationString("\n\nSend to:");
+            new TranslationString("Send to:");
         private readonly TranslationString _sendMailResultFailed =
-            new TranslationString("\n\nFailed to send mail.");
+            new TranslationString("Failed to send mail.");
         private readonly TranslationString _patchResultCaption =
             new TranslationString("Patch result");
         private readonly TranslationString _noGitMailConfigured =
@@ -154,6 +154,7 @@ namespace GitUI
 
             if (!SaveToDir.Checked)
             {
+                result += Environment.NewLine + Environment.NewLine;
                 if (SendMail(savePatchesToDir))
                     result += _sendMailResult.Text + " " + MailAddress.Text;
                 else

@@ -46,7 +46,7 @@ namespace GitUI
         private readonly TranslationString _hintUnresolvedMergeConflicts =
             new TranslationString("There are unresolved merge conflicts!");
 
-        private static readonly TranslationString _noBranchTitle =
+        private readonly TranslationString _noBranchTitle =
             new TranslationString("no branch");
 
         private readonly TranslationString _noSubmodulesPresent =
@@ -730,7 +730,7 @@ namespace GitUI
         /// <param name="workingDir">Path to repository.</param>
         /// <param name="isWorkingDirValid">If the given path contains valid repository.</param>
         /// <param name="branchName">Current branch name.</param>
-        private static string GenerateWindowTitle(string workingDir, bool isWorkingDirValid, string branchName)
+        private string GenerateWindowTitle(string workingDir, bool isWorkingDirValid, string branchName)
         {
 #if DEBUG
             const string defaultTitle = "Git Extensions -> DEBUG <-";
@@ -1089,9 +1089,7 @@ namespace GitUI
             {
                 var revisions = RevisionGrid.GetSelectedRevisions();
 
-                if (revisions.Count > 0 &&
-                    (revisions[0].Guid == GitRevision.UnstagedGuid ||
-                     revisions[0].Guid == GitRevision.IndexGuid))
+                if (revisions.Count > 0 && GitRevision.IsArtificial(revisions[0].Guid))
                 {
                     CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
                     CommitInfoTabControl.RemoveIfExists(TreeTabPage);
@@ -1156,7 +1154,7 @@ namespace GitUI
 
         private void CloneToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartCloneDialog(this, string.Empty, false, DashboardGitModuleChanged);            
+            UICommands.StartCloneDialog(this, string.Empty, false, DashboardGitModuleChanged);
         }
 
         private void CommitToolStripMenuItemClick(object sender, EventArgs e)

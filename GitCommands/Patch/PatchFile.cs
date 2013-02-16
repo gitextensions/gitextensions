@@ -32,7 +32,7 @@ namespace PatchApply
                 {
                     return "Skipped";
                 }
-                if (!File.Exists(FullName))
+                if (!string.IsNullOrEmpty(FullName) && !File.Exists(FullName))
                 {
                     return "Applied";
                 }

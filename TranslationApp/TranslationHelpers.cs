@@ -82,7 +82,7 @@ namespace TranslationApp
                 if (curItem.Status == TranslationType.Unfinished)
                 {
                     if (!String.IsNullOrEmpty(curItem.TranslatedValue) &&
-                        curItem.OldNeutralValue == null && curItem.NeutralValue != item.NeutralValue)
+                        curItem.OldNeutralValue == null && !curItem.IsSourceEqual(item.NeutralValue))
                         curItem.OldNeutralValue = curItem.NeutralValue;
                 }
                 else

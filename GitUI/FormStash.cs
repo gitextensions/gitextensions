@@ -125,7 +125,7 @@ namespace GitUI
             if (stashedItem != null &&
                 gitStash == currentWorkingDirStashItem) //current working dir
             {
-                View.ViewCurrentChanges(stashedItem.Name, stashedItem.OldName, stashedItem.IsStaged, stashedItem.IsSubmodule);
+                View.ViewCurrentChanges(stashedItem);
             }
             else if (stashedItem != null)
             {
@@ -147,7 +147,7 @@ namespace GitUI
                         if (patch == null)
                             return String.Empty;
                         if (stashedItem.IsSubmodule)
-                            return GitCommandHelpers.ProcessSubmodulePatch(Module, patch.Text);
+                            return GitCommandHelpers.ProcessSubmodulePatch(Module, patch);
                         return patch.Text;
                     });
                 }
@@ -159,7 +159,7 @@ namespace GitUI
 
         private void ShowPatch(Patch patch)
         {
-            View.ViewPatch(patch.Text);
+            View.ViewPatch(patch);
         }
 
         private void StashClick(object sender, EventArgs e)
