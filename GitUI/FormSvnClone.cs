@@ -67,11 +67,11 @@ namespace GitUI
                     from = 0;
                 
                 var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, 
-                    GitSvnCommandHelpers.CloneCmd(_NO_TRANSLATE_svnRepositoryComboBox.Text, dirTo,
+                    GitSvnCommandHelpers.CloneCmd(_NO_TRANSLATE_SvnFrom.Text, dirTo,
                     tbUsername.Text, authorsfile, from,
-                    cbTrunk.Checked ? tbTrunk.Text : null,
-                    cbTags.Checked ? tbTags.Text : null,
-                    cbBranches.Checked ? tbBranches.Text : null));
+                    cbTrunk.Checked ? _NO_TRANSLATE_tbTrunk.Text : null,
+                    cbTags.Checked ? _NO_TRANSLATE_tbTags.Text : null,
+                    cbBranches.Checked ? _NO_TRANSLATE_tbBranches.Text : null));
                 
                 if (errorOccurred || Module.InTheMiddleOfPatch())
                     return;
@@ -133,17 +133,17 @@ namespace GitUI
 
         private void cbTrunk_CheckedChanged(object sender, EventArgs e)
         {
-            tbTrunk.Enabled = cbTrunk.Checked;
+            _NO_TRANSLATE_tbTrunk.Enabled = cbTrunk.Checked;
         }
 
         private void cbTags_CheckedChanged(object sender, EventArgs e)
         {
-            tbTags.Enabled = cbTags.Checked;
+            _NO_TRANSLATE_tbTags.Enabled = cbTags.Checked;
         }
 
         private void cbBranches_CheckedChanged(object sender, EventArgs e)
         {
-            tbBranches.Enabled = cbBranches.Checked;
+            _NO_TRANSLATE_tbBranches.Enabled = cbBranches.Checked;
         }
 
         private void tbFrom_KeyPress(object sender, KeyPressEventArgs e)
@@ -153,6 +153,15 @@ namespace GitUI
             {
                 e.Handled = true;
             }
+        }
+
+        private void _NO_TRANSLATE_svnRepositoryComboBox_TextUpdate(object sender, EventArgs e)
+        {
+            var path = _NO_TRANSLATE_SvnFrom.Text;
+            path = path.TrimEnd(new[] { '\\', '/' });
+
+            if (path.Contains("\\") || path.Contains("/"))
+                _NO_TRANSLATE_subdirectoryTextBox.Text = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);
         }
     }
 }

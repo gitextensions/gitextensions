@@ -14,11 +14,14 @@ namespace GitUI.SettingsDialog.Pages
 {
     public partial class SshSettingsPage : SettingsPageBase
     {
-        public SshSettingsPage()
+        readonly CommonLogic _commonLogic;
+
+        public SshSettingsPage(CommonLogic commonLogic)
         {
             InitializeComponent();
             Text = "SSH";
             Translate();
+            _commonLogic = commonLogic;
         }
 
         protected override string GetCommaSeparatedKeywordList()
@@ -82,7 +85,7 @@ namespace GitUI.SettingsDialog.Pages
             EnableSshOptions();
         }
 
-        private static IEnumerable<string> GetPuttyLocations()
+        private IEnumerable<string> GetPuttyLocations()
         {
             string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
             string programFilesX86 = null;
@@ -98,7 +101,7 @@ namespace GitUI.SettingsDialog.Pages
             yield return programFiles + @"\TortoiseSvn\bin\";
             if (programFilesX86 != null)
                 yield return programFilesX86 + @"\TortoiseSvn\bin\";
-            yield return CommonLogic.GetRegistryValue(Registry.LocalMachine,
+            yield return _commonLogic.GetRegistryValue(Registry.LocalMachine,
                                                         "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1",
                                                         "InstallLocation");
             yield return Settings.GetInstallDir() + @"\PuTTY\";
@@ -171,24 +174,24 @@ namespace GitUI.SettingsDialog.Pages
 
         private void OtherSshBrowse_Click(object sender, EventArgs e)
         {
-            OtherSsh.Text = CommonLogic.SelectFile(".", "Executable file (*.exe)|*.exe", OtherSsh.Text);
+            OtherSsh.Text = _commonLogic.SelectFile(".", "Executable file (*.exe)|*.exe", OtherSsh.Text);
         }
 
         private void PuttyBrowse_Click(object sender, EventArgs e)
         {
-            PlinkPath.Text = CommonLogic.SelectFile(".",
+            PlinkPath.Text = _commonLogic.SelectFile(".",
                                         "Plink.exe (plink.exe)|plink.exe|TortoisePlink.exe (tortoiseplink.exe)|tortoiseplink.exe",
                                         PlinkPath.Text);
         }
 
         private void PuttygenBrowse_Click(object sender, EventArgs e)
         {
-            PuttygenPath.Text = CommonLogic.SelectFile(".", "puttygen.exe (puttygen.exe)|puttygen.exe", PuttygenPath.Text);
+            PuttygenPath.Text = _commonLogic.SelectFile(".", "puttygen.exe (puttygen.exe)|puttygen.exe", PuttygenPath.Text);
         }
 
         private void PageantBrowse_Click(object sender, EventArgs e)
         {
-            PageantPath.Text = CommonLogic.SelectFile(".", "pageant.exe (pageant.exe)|pageant.exe", PageantPath.Text);
+            PageantPath.Text = _commonLogic.SelectFile(".", "pageant.exe (pageant.exe)|pageant.exe", PageantPath.Text);
         }
     }
 }

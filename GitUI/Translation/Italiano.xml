@@ -179,18 +179,6 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="BrowseForPrivateKey">
-      <translationItems>
-        <TranslationItem Name="_pageantNotFound" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Impossibile caricare la chiave SSH. PuTTY non è configurato correttamente.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_pageantNotFoundCaption" Property="Text">
-          <Source>PuTTY</Source>
-          <Value>PuTTY</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="ChecklistSettingsPage">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -379,10 +367,6 @@ Select no if you want to configure a different mergetool yourself.</Source>
         <TranslationItem Name="_puttyFoundAuto" Property="Text" type="unfinished">
           <Source>All paths needed for PuTTY could be automatically found and are set.</Source>
           <Value />
-        </TranslationItem>
-        <TranslationItem Name="_puttyFoundAutoCaption" Property="Text">
-          <Source>PuTTY</Source>
-          <Value>PuTTY</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsCorrect" Property="Text" type="unfinished">
           <Source>GitExtensions is properly registered.</Source>
@@ -712,8 +696,7 @@ Value:  {2} = {3}</Source>
           <Value>Errore</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text">
-          <Source>Failed to create pull request.
-</Source>
+          <Source>Failed to create pull request.</Source>
           <Value>Impossibile creare la richiesta di pull.</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">
@@ -796,14 +779,13 @@ Value:  {2} = {3}</Source>
           <Source>Develop</Source>
           <Value>Sviluppa</Value>
         </TranslationItem>
-        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text" type="unfinished">
+        <TranslationItem Name="directoryIsNotAValidRepository" Property="Text">
           <Source>The selected item is not a valid git repository.
 
 Do you want to abort and remove it from the recent repositories list?</Source>
-          <OldSource>The selected item is not a valid git repository.
+          <Value>L'elemento selezionato non è un repository git valido.
 
-Do you want to abort and remove it from the recent repositories list?</OldSource>
-          <Value>L'elemento selezionato non è un repository git valido. Vuoi rimuoverlo dalla lista dei repository recenti?</Value>
+Vuoi rimuoverlo dalla lista dei repository recenti?</Value>
         </TranslationItem>
         <TranslationItem Name="directoryIsNotAValidRepositoryCaption" Property="Text">
           <Source>Open</Source>
@@ -1232,8 +1214,7 @@ Do you want to open it?</Source>
           <Value>Impossibile aggiungere remoto</Value>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotFetchReposOfUser" Property="Text">
-          <Source>Could not fetch repositories of user!
-</Source>
+          <Source>Could not fetch repositories of user!</Source>
           <Value>Impossibile recuperare i repository dell'utente!</Value>
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
@@ -1241,8 +1222,7 @@ Do you want to open it?</Source>
           <Value>Errore</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToFork" Property="Text">
-          <Source>Failed to fork:
-</Source>
+          <Source>Failed to fork:</Source>
           <Value>Impossibile fare il fork:</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToGetRepos" Property="Text">
@@ -1262,8 +1242,7 @@ Do you want to open it?</Source>
           <Value>Nessuna homepage definita</Value>
         </TranslationItem>
         <TranslationItem Name="_strSearchFailed" Property="Text">
-          <Source>Search failed!
-</Source>
+          <Source>Search failed!</Source>
           <Value>Ricerca fallita!</Value>
         </TranslationItem>
         <TranslationItem Name="_strSearching" Property="Text">
@@ -1922,7 +1901,9 @@ revision:</Source>
           <Source>The selected item is not a valid git repository.
 
 Do you want to abort and remove it from the recent repositories list?</Source>
-          <Value />
+          <Value>L'elemento selezionato non è un repository git valido.
+
+Vuoi rimuoverlo dalla lista dei repository recenti?</Value>
         </TranslationItem>
         <TranslationItem Name="directoryIsNotAValidRepositoryCaption" Property="Text">
           <Source>Open</Source>
@@ -3596,15 +3577,11 @@ caso di problemi.</Value>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_sendMailResult" Property="Text" type="unfinished">
-          <Source>
-
-Send to:</Source>
+          <Source>Send to:</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_sendMailResultFailed" Property="Text" type="unfinished">
-          <Source>
-
-Failed to send mail.</Source>
+          <Source>Failed to send mail.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_twoRevisionsNeededCaption" Property="Text" type="unfinished">
@@ -4076,11 +4053,9 @@ defaultrebase=0</Source>
           <Source>Choose directory</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text" type="unfinished">
+        <TranslationItem Name="_chooseDirectoryNotFile" Property="Text">
           <Source>Cannot initialize a new repository on a file.
 Please choose a directory.</Source>
-          <OldSource>Cannot initialize a new repository on a file.
-Please choose a directory.</OldSource>
           <Value>Impossibile inizializzare un nuovo repository su un file.
 Per favore scegliere una cartella.</Value>
         </TranslationItem>
@@ -4367,10 +4342,6 @@ Are you sure you want to rebase this merge?</Source>
           <Source>Rebase merge commit?</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_cannotLoadPutty" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Impossibile caricare la chiave SSH. PuTTY non è configurato correttamente.</Value>
-        </TranslationItem>
         <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text">
           <Source>You can only fetch all remote branches (*) without merge or rebase.
 If you want to fetch all remote branches, choose fetch.
@@ -4540,10 +4511,6 @@ This will initialize and update all submodules recursive.</Source>
 Are you sure you want to push this branch?</Source>
           <Value>Il branch di cui stai per effettuarne il push sembra essere un nuovo branch per il repository remoto.
 Sei sicuro di volerne effettuare il push?</Value>
-        </TranslationItem>
-        <TranslationItem Name="_cannotLoadPutty" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Impossibile caricare la chiave SSH. PuTTY non è configurato correttamente.</Value>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestCB" Property="Text">
           <Source>Create pull request after push</Source>
@@ -5338,11 +5305,9 @@ E' stato risolto il conflitto?</Value>
           <Source>deleted</Source>
           <Value>cancellato</Value>
         </TranslationItem>
-        <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text" type="unfinished">
+        <TranslationItem Name="fileBinairyChooseLocalBaseRemote" Property="Text">
           <Source>File ({0}) appears to be a binary file.
 Choose to keep the local({1}), remote({2}) or base file.</Source>
-          <OldSource>File ({0}) appears to be a binary file.
-Choose to keep the local({1}), remote({2}) or base file.</OldSource>
           <Value>Il file ({0}) sembra essere un file binario. Scegli se mantenre il file locale ({1}), quello remoto ({2}) o la base.</Value>
         </TranslationItem>
         <TranslationItem Name="fileChangeLocallyAndRemotely" Property="Text">
@@ -5353,15 +5318,11 @@ Choose to keep the local({1}), remote({2}) or base file.</OldSource>
           <Source>A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.</Source>
           <Value>Un file con lo stesso nome è stato creato sia in locale ({0}) e sia in remoto ({1}). Scegliere il file da mantenere oppure effettuare il merge delle modifiche.</Value>
         </TranslationItem>
-        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text" type="unfinished">
+        <TranslationItem Name="fileCreatedLocallyAndRemotelyLong" Property="Text">
           <Source>File {0} does not have a base revision.
 A file with the same name has been created locally({1}) and remotely({2}) causing this conflict.
 
 Choose the file you want to keep, merge the files or delete the file?</Source>
-          <OldSource>File {0} does not have a base revision.
-A file with the same name has been created locally({1}) and remotely({2}) causing this conflict.
-
-Choose the file you want to keep, merge the files or delete the file?</OldSource>
           <Value>Il file {0} non ha una versione base.
 Un file con lo stesso nome è stato creato sia in locale ({1}) e sia in remoto ({2}), generando un conflitto.
 
@@ -5371,15 +5332,11 @@ Scegliere se mantenere il file, effettuarne il merge o cancellarlo.</Value>
           <Source>The file has been deleted locally({0}) and modified remotely({1}). Choose to delete the file or keep the modified version.</Source>
           <Value>Il file è stato cancellato localmente ({0}) e modificato in remoto ({1}). Scegliere se cancellare il file o tenere la versione modificata.</Value>
         </TranslationItem>
-        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text" type="unfinished">
+        <TranslationItem Name="fileDeletedLocallyAndModifiedRemotelyLong" Property="Text">
           <Source>File {0} does not have a local revision.
 The file has been deleted locally({1}) but modified remotely({2}).
 
 Choose to delete the file or keep the modified version.</Source>
-          <OldSource>File {0} does not have a local revision.
-The file has been deleted locally({1}) but modified remotely({2}).
-
-Choose to delete the file or keep the modified version.</OldSource>
           <Value>Il file {0} non ha una versione locale.
 Il file è stato cancellato localmente ({1}) ma modificato in remoto ({2}).
 
@@ -5399,15 +5356,11 @@ Sei sicuro di volerlo aprire in {0}?</Value>
           <Source>The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.</Source>
           <Value>Il file è stato modificato in locale ({0}) e cancellato in remoto ({1}). Scegliere se cancellare il file o tenere quello modificato.</Value>
         </TranslationItem>
-        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text" type="unfinished">
+        <TranslationItem Name="fileModifiedLocallyAndDelededRemotelyLong" Property="Text">
           <Source>File {0} does not have a remote revision.
 The file has been modified locally({1}) but deleted remotely({2}).
 
 Choose to delete the file or keep the modified version.</Source>
-          <OldSource>File {0} does not have a remote revision.
-The file has been modified locally({1}) but deleted remotely({2}).
-
-Choose to delete the file or keep the modified version.</OldSource>
           <Value>Il file {0} non ha una versione remota.
 Il file è stato modificato localmente ({1}) ma cancellato in remoto ({2}).
 
@@ -5481,12 +5434,11 @@ Il conflitto di merge non sarà segnato come risolto. Riprovare.</Value>
           <Source>no base</Source>
           <Value>nessuna base</Value>
         </TranslationItem>
-        <TranslationItem Name="noBaseRevision" Property="Text" type="unfinished">
+        <TranslationItem Name="noBaseRevision" Property="Text">
           <Source>There is no base revision for {0}.
 Fall back to 2-way merge?</Source>
-          <OldSource>There is no base revision for {0}.
-Fall back to 2-way merge?</OldSource>
-          <Value>Non c'è una versione base per {0}. Utilizzare merge 2-way?</Value>
+          <Value>Non c'è una versione base per {0}.
+Utilizzare merge 2-way?</Value>
         </TranslationItem>
         <TranslationItem Name="noMergeTool" Property="Text">
           <Source>There is no mergetool configured. Please go to settings and set a mergetool!</Source>
@@ -5546,12 +5498,11 @@ Do you want to use this custom merge script?</Source>
           <Source>Reset changes</Source>
           <Value>Ripristina modifiche</Value>
         </TranslationItem>
-        <TranslationItem Name="_undoChangesIn" Property="Text" type="unfinished">
+        <TranslationItem Name="_undoChangesIn" Property="Text">
           <Source>Undo changes in:
 {0}?</Source>
-          <OldSource>Undo changes in:
-{0}?</OldSource>
-          <Value>Ripristinare le modifiche in: {0}?</Value>
+          <Value>Ripristinare le modifiche in:
+{0}?</Value>
         </TranslationItem>
         <TranslationItem Name="btnCancel" Property="Text">
           <Source>Cancel</Source>
@@ -6392,6 +6343,70 @@ quando si esegue "Cancella tutti gli oggetti vaganti".</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="GerritPlugin">
+      <translationItems>
+        <TranslationItem Name="_downloadGerritChange" Property="Text" type="unfinished">
+          <Source>Download Gerrit Change</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_editGitReview" Property="Text" type="unfinished">
+          <Source>Edit .gitreview</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHook" Property="Text" type="unfinished">
+          <Source>Install Hook</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookFailed" Property="Text" type="unfinished">
+          <Source>Could not download the commit-msg file. Please install the commit-msg hook manually.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookMessage" Property="Text" type="unfinished">
+          <Source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookShortText" Property="Text" type="unfinished">
+          <Source>Install commit-msg hook</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pluginDescription" Property="Text" type="unfinished">
+          <Source>Gerrit Code Review</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_publishGerritChange" Property="Text" type="unfinished">
+          <Source>Publish Gerrit Change</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GerritSettings">
+      <translationItems>
+        <TranslationItem Name="_settingsError" Property="Text" type="unfinished">
+          <Source>Error loading .gitreview file.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorDefaultRemoteNotPresent" Property="Text" type="unfinished">
+          <Source>The remote "{0}" specified with the "defaultremote" setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorFileNotFound" Property="Text" type="unfinished">
+          <Source>Cannot find the ".gitreview" file in the working directory.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorHostNotEntered" Property="Text" type="unfinished">
+          <Source>The "host" setting in the .gitreview file is mandatory.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorPortNotNumeric" Property="Text" type="unfinished">
+          <Source>The "port" specified in the .gitreview file may only contain digits.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorProjectNotEntered" Property="Text" type="unfinished">
+          <Source>The "project" setting in the .gitreview file is mandatory.</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="GitExtensionsSettingsGroup">
       <translationItems>
         <TranslationItem Name="$this" Property="Title">
@@ -6833,6 +6848,10 @@ locali.</Value>
         <TranslationItem Name="_notValidGitSVNDirectory" Property="Text" type="unfinished">
           <Source>The current directory is not a valid git-svn repository.</Source>
           <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>Impossibile caricare la chiave SSH. PuTTY non è configurato correttamente.</Value>
         </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
@@ -7414,6 +7433,10 @@ Quando si usa OpenSSH, vengono visualizzate finestre della linea di comando!</Va
           <Source>{0} years ago</Source>
           <Value>{0} anni fa</Value>
         </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>Impossibile caricare la chiave SSH. PuTTY non è configurato correttamente.</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="ViewPullRequestsForm">
@@ -7451,8 +7474,7 @@ Quando si usa OpenSSH, vengono visualizzate finestre della linea di comando!</Va
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text">
-          <Source>Could not load discussion!
-</Source>
+          <Source>Could not load discussion!</Source>
           <Value>Impossibile caricare la discussione!</Value>
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
@@ -7460,28 +7482,24 @@ Quando si usa OpenSSH, vengono visualizzate finestre della linea di comando!</Va
           <Value>Errore</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToClosePullRequest" Property="Text">
-          <Source>Failed to close pull request!
-</Source>
+          <Source>Failed to close pull request!</Source>
           <Value>Impossibile chiudere la richiesta di pull!</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToFetchPullData" Property="Text">
-          <Source>Failed to fetch pull data!
-</Source>
+          <Source>Failed to fetch pull data!</Source>
           <Value>Impossibile recuperare i dati di pull!</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiffData" Property="Text">
-          <Source>Failed to load diff data!
-</Source>
+          <Source>Failed to load diff data!</Source>
           <Value>Impossibile caricare i dati di diff!</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiscussionItem" Property="Text">
-          <Source>Failed to post discussion item!
-</Source>
+          <Source>Failed to post discussion item!</Source>
           <Value>Impossibile scrivere nella discussione!</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">
           <Source> : LOADING : </Source>
-          <Value>: STO CARICANDO :</Value>
+          <Value> : STO CARICANDO : </Value>
         </TranslationItem>
         <TranslationItem Name="_strRemoteAlreadyExist" Property="Text" type="unfinished">
           <Source>ERROR: Remote with name {0} already exists but it does not point to the same repository!

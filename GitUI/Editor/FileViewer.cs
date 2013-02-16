@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Hotkey;
 using ICSharpCode.TextEditor.Util;
+using PatchApply;
 
 namespace GitUI.Editor
 {
@@ -349,39 +350,37 @@ namespace GitUI.Editor
 
         public void ViewCurrentChanges(GitItemStatus item)
         {
-            ViewCurrentChanges(item.Name, item.OldName, item.IsStaged, item.IsSubmodule);
+            ViewCurrentChanges(item.Name, item.OldName, item.IsStaged, item.IsSubmodule, item.SubmoduleStatus);
         }
 
         public void ViewCurrentChanges(GitItemStatus item, bool isStaged)
         {
-            ViewCurrentChanges(item.Name, item.OldName, isStaged, item.IsSubmodule);
+            ViewCurrentChanges(item.Name, item.OldName, isStaged, item.IsSubmodule, item.SubmoduleStatus);
         }
 
-        public void ViewCurrentChanges(string fileName, string oldFileName, bool staged, bool isSubmodule)
+        public void ViewCurrentChanges(string fileName, string oldFileName, bool staged,
+            bool isSubmodule, GitSubmoduleStatus status)
         {
             if (!isSubmodule)
                 _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
                     ViewStagingPatch);
+            else if (status != null)
+                _async.Load(() => GitCommandHelpers.ProcessSubmoduleStatus(Module, status), ViewPatch);
             else
-                _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
-                    ViewSubmodulePatch);
+                _async.Load(() => GitCommandHelpers.ProcessSubmodulePatch(Module, 
+                    Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding)), ViewPatch);
         }
 
-        public void ViewStagingPatch(string text)
+        public void ViewStagingPatch(Patch patch)
         {
+            ViewPatch(patch);
+            Reset(true, true, true);
+        }
+
+        public void ViewPatch(Patch patch)
+        {
+            string text = patch != null ? patch.Text : "";
             ViewPatch(text);
-            Reset(true, true, true);
-        }
-
-        public void ViewSubmodulePatch(string text)
-        {
-            ResetForText(null);
-            text = GitCommandHelpers.ProcessSubmodulePatch(Module, text);
-            _internalFileViewer.SetText(text);
-            if (TextLoaded != null)
-                TextLoaded(this, null);
-            RestoreCurrentScrollPos();
-            Reset(true, true, true);
         }
 
         public void ViewPatch(string text)

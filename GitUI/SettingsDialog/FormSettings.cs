@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Plugin;
-using GitUI.SettingsDialog.Plugins;
-using ResourceManager.Translation;
 using GitUI.SettingsDialog;
 using GitUI.SettingsDialog.Pages;
+using GitUI.SettingsDialog.Plugins;
+using ResourceManager.Translation;
 
 // TODO: fix namespaces
 namespace GitUI
@@ -79,7 +75,7 @@ namespace GitUI
             var localSettingsSettingsPage = new LocalSettingsSettingsPage(_commonLogic, _checkSettingsLogic, Module);
             settingsTreeView.AddSettingsPage(localSettingsSettingsPage, gitExtPageRef);
 
-            var _sshSettingsPage = new SshSettingsPage();
+            var _sshSettingsPage = new SshSettingsPage(_commonLogic);
             settingsTreeView.AddSettingsPage(_sshSettingsPage, gitExtPageRef);
             checklistSettingsPage.SshSettingsPage = _sshSettingsPage;
 

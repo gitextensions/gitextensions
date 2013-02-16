@@ -16,7 +16,6 @@ namespace GitUI
 {
     public partial class FormPush : GitModuleForm
     {
-        private const string PuttyText = "PuTTY";
         private const string HeadText = "HEAD";
         private string _currentBranch;
         private string _currentBranchRemote;
@@ -31,9 +30,6 @@ namespace GitUI
         private readonly TranslationString _branchNewForRemote =
             new TranslationString("The branch you are about to push seems to be a new branch for the remote." +
                                   Environment.NewLine + "Are you sure you want to push this branch?");
-
-        private readonly TranslationString _cannotLoadPutty =
-            new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
 
         private readonly TranslationString _pushCaption = new TranslationString("Push");
 
@@ -212,7 +208,7 @@ namespace GitUI
                 if (GitCommandHelpers.Plink())
                 {
                     if (!File.Exists(Settings.Pageant))
-                        MessageBox.Show(owner, _cannotLoadPutty.Text, PuttyText);
+                        MessageBoxes.PAgentNotFound(owner);
                     else
                         Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
                 }
@@ -518,7 +514,7 @@ namespace GitUI
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
             if (!File.Exists(Settings.Pageant))
-                MessageBox.Show(this, _cannotLoadPutty.Text, PuttyText);
+                MessageBoxes.PAgentNotFound(this);
             else
                 Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
         }

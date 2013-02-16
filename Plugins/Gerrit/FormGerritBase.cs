@@ -1,11 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using GitCommands;
-using GitUI;
+﻿using GitUI;
 using GitUIPluginInterfaces;
-using ResourceManager.Translation;
+using System;
 
 namespace Gerrit
 {

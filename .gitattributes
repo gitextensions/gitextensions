@@ -1,1 +1,2 @@
 *.xml diff -text
+*.patch diff -text

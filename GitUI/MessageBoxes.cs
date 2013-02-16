@@ -20,6 +20,9 @@ namespace GitUI
         private readonly TranslationString _middleOfPatchApplyCaption = new TranslationString("Patch apply");
         private readonly TranslationString _middleOfPatchApply = new TranslationString("You are in the middle of a patch apply, continue patch apply?");
 
+        private const string _putty = "PuTTY";
+        private readonly TranslationString _pageantNotFound = new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
+
         // internal for FormTranslate
         internal MessageBoxes()
         {
@@ -68,6 +71,11 @@ namespace GitUI
         public static bool MiddleOfPatchApply(IWin32Window owner)
         {
             return MessageBox.Show(owner, Instance._middleOfPatchApply.Text, Instance._middleOfPatchApplyCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes;
+        }
+
+        public static void PAgentNotFound(IWin32Window owner)
+        {
+            MessageBox.Show(owner, Instance._pageantNotFound.Text, _putty);
         }
     }
 }

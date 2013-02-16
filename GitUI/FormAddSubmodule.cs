@@ -61,12 +61,13 @@ namespace GitUI
         private void BranchDropDown(object sender, EventArgs e)
         {
             GitModule module = new GitModule(Directory.Text);
-
-            var heads = module.GetHeads(false);
-
-            heads.Insert(0, GitHead.NoHead(module));
-
             Branch.DisplayMember = "Name";
+            IList<GitHead> heads;
+            if (module.ValidWorkingDir())
+                heads = module.GetHeads(false);
+            else
+                heads = new List<GitHead>();
+            heads.Insert(0, GitHead.NoHead(module));
             Branch.DataSource = heads;
         }
 
