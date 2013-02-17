@@ -17,7 +17,10 @@ namespace GitUI
         protected override void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 DisposeRevisionGraphCommand();
+                CancelBuildStatusFetchOperation();
+            }
 
             if (_IndexWatcher != null)
             {
@@ -42,15 +45,11 @@ namespace GitUI
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
-            this.Revisions = new DvcsGraph();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.Revisions = new GitUI.RevisionGridClasses.DvcsGraph();
             this.mainContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.markRevisionAsBadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.markRevisionAsGoodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -117,10 +116,12 @@ namespace GitUI
             this.Loading = new System.Windows.Forms.PictureBox();
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.quickSearchTimer = new System.Windows.Forms.Timer(this.components);
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.BuildMessage = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
             this.mainContextMenu.SuspendLayout();
             this.NoCommits.SuspendLayout();
@@ -134,30 +135,33 @@ namespace GitUI
             // 
             this.Revisions.AllowUserToAddRows = false;
             this.Revisions.AllowUserToDeleteRows = false;
-            this.Revisions.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.Revisions.BackgroundColor = System.Drawing.SystemColors.Window;
             this.Revisions.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Revisions.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Revisions.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.Revisions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Revisions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn4,
             this.Message,
             this.Author,
-            this.Date});
+            this.Date,
+            this.BuildMessage});
             this.Revisions.ContextMenuStrip = this.mainContextMenu;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.Revisions.DefaultCellStyle = dataGridViewCellStyle3;
             this.Revisions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Revisions.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Revisions.GridColor = System.Drawing.SystemColors.Window;
             this.Revisions.Location = new System.Drawing.Point(0, 0);
             this.Revisions.Name = "Revisions";
@@ -170,11 +174,10 @@ namespace GitUI
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.Revisions.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.Revisions.RowHeadersVisible = false;
-            this.Revisions.RowsDefaultCellStyle = dataGridViewCellStyle5;
+            this.Revisions.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(185)))), ((int)(((byte)(235)))));
             this.Revisions.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             this.Revisions.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Revisions.SelectedIds = null;
             this.Revisions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Revisions.Size = new System.Drawing.Size(682, 235);
             this.Revisions.StandardTab = true;
@@ -183,7 +186,6 @@ namespace GitUI
             this.Revisions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.RevisionsCellMouseDown);
             this.Revisions.DoubleClick += new System.EventHandler(this.RevisionsDoubleClick);
             this.Revisions.MouseClick += new System.Windows.Forms.MouseEventHandler(this.RevisionsMouseClick);
-            // 
             // 
             // mainContextMenu
             // 
@@ -218,7 +220,7 @@ namespace GitUI
             this.toolStripSeparator7,
             this.runScriptToolStripMenuItem});
             this.mainContextMenu.Name = "CreateTag";
-            this.mainContextMenu.Size = new System.Drawing.Size(224, 562);
+            this.mainContextMenu.Size = new System.Drawing.Size(224, 546);
             this.mainContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTagOpening);
             // 
             // markRevisionAsBadToolStripMenuItem
@@ -585,7 +587,6 @@ namespace GitUI
             // 
             // dataGridViewTextBoxColumn3
             // 
-            this.dataGridViewTextBoxColumn3.DefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridViewTextBoxColumn3.Frozen = true;
             this.dataGridViewTextBoxColumn3.HeaderText = "";
             this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
@@ -595,7 +596,6 @@ namespace GitUI
             // 
             // dataGridViewTextBoxColumn2
             // 
-            this.dataGridViewTextBoxColumn2.DefaultCellStyle = dataGridViewCellStyle7;
             this.dataGridViewTextBoxColumn2.Frozen = true;
             this.dataGridViewTextBoxColumn2.HeaderText = "";
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
@@ -605,7 +605,6 @@ namespace GitUI
             // 
             // dataGridViewTextBoxColumn1
             // 
-            this.dataGridViewTextBoxColumn1.DefaultCellStyle = dataGridViewCellStyle8;
             this.dataGridViewTextBoxColumn1.Frozen = true;
             this.dataGridViewTextBoxColumn1.HeaderText = "";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
@@ -730,6 +729,22 @@ namespace GitUI
             // 
             this.quickSearchTimer.Interval = 500;
             // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(149, 6);
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dataGridViewTextBoxColumn4.DefaultCellStyle = dataGridViewCellStyle2;
+            this.dataGridViewTextBoxColumn4.Frozen = true;
+            this.dataGridViewTextBoxColumn4.HeaderText = "";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.ReadOnly = true;
+            this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.dataGridViewTextBoxColumn4.Width = 26;
+            // 
             // Message
             // 
             this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -746,13 +761,19 @@ namespace GitUI
             this.Author.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Author.Width = 150;
             // 
+            // Date
+            // 
             this.Date.HeaderText = "Date";
             this.Date.Name = "Date";
             this.Date.ReadOnly = true;
             this.Date.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Date.Width = 180;
-            this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(149, 6);
+            // 
+            // BuildMessage
+            // 
+            this.BuildMessage.HeaderText = "Build Message";
+            this.BuildMessage.Name = "BuildMessage";
+            this.BuildMessage.ReadOnly = true;
             // 
             // RevisionGrid
             // 
@@ -843,11 +864,13 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem renameBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hashToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bisectSkipRevisionToolStripMenuItem;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Message;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Author;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemView;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Message;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Author;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Date;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BuildMessage;
     }
 }
