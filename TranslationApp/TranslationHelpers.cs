@@ -115,7 +115,10 @@ namespace TranslationApp
             foreach (var untranlatedItem in untranlatedItems)
             {
                 untranlatedItem.TranslatedValue = dict[untranlatedItem.NeutralValue];
-                untranlatedItem.Status = TranslationType.Unfinished;
+                if (untranlatedItem.TranslatedValue.IndexOfAny(new[] { ' ', '\t', '\n' }) != -1)
+                    untranlatedItem.Status = TranslationType.Translated;
+                else
+                    untranlatedItem.Status = TranslationType.Unfinished;
             }
             return translateItems;
         }
