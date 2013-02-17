@@ -18,6 +18,12 @@ using GitUI.RevisionGridClasses;
 using GitUI.Script;
 using Gravatar;
 using ResourceManager.Translation;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using TeamCitySharp;
+using System.Threading.Tasks;
+using System.Reactive.Disposables;
+using TeamCitySharp.Locators;
 
 namespace GitUI
 {
@@ -67,6 +73,8 @@ namespace GitUI
         private RevisionGridLayout layout;
         private int rowHeigth;
         public event GitModuleChangedEventHandler GitModuleChanged;
+
+        private IDisposable buildStatusCancellationToken;
 
         public RevisionGrid()
         {
@@ -732,6 +740,15 @@ namespace GitUI
             Translate();
         }
 
+        private void CancelBuildStatusFetchOperation()
+        {
+            if (this.buildStatusCancellationToken != null)
+            {
+                this.buildStatusCancellationToken.Dispose();
+                this.buildStatusCancellationToken = null;
+            }
+        }
+
         public void ForceRefreshRevisions()
         {
             try
@@ -743,6 +760,8 @@ namespace GitUI
                 _initialLoad = true;
 
                 LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
+
+                CancelBuildStatusFetchOperation();
 
                 DisposeRevisionGraphCommand();
 
@@ -926,10 +945,74 @@ namespace GitUI
                                           Loading.Visible = false;
                                           SelectInitialRevision();
                                           _isLoading = false;
+
+                                          {
+                                              var observable = Observable.Create<BuildInfo>((observer, cancellationToken) =>
+                                              {
+                                                  var client = new TeamCityClient("teamcity.codebetter.com");
+                                                  client.Connect(string.Empty, string.Empty, true);
+
+                                                  try
+                                                  {
+                                                      var projectName = Module.GitWorkingDir.Split(new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
+                                                      var project = client.ProjectByName(projectName);
+                                                      var buildTypes = project.BuildTypes.BuildType;
+                                                      var builds = buildTypes.SelectMany(x => client.BuildsByBuildLocator(BuildLocator.WithDimensions(buildType: BuildTypeLocator.WithId(x.Id))));
+                                                      foreach (var build in builds.Where(b => project.BuildTypes.BuildType.Exists(x => x.Id == b.BuildTypeId)))
+                                                      {
+                                                          cancellationToken.ThrowIfCancellationRequested();
+
+                                                          dynamic buildExpando = client.CallByUrl<object>(build.Href.Replace("guestAuth/", ""));
+                                                          object buildObj = buildExpando;
+                                                          string status = buildExpando.status;
+                                                          string statusText = buildExpando.statusText;
+                                                          string revisionVersion = buildExpando.revisions != null ? buildExpando.revisions.revision[0].version : null;
+
+                                                          var buildInfo = new BuildInfo { Id = buildExpando.id, StartDate = buildExpando.startDate, BuildNumber = buildExpando.number, /*Branch = buildExpando.branchName, */Status = status, Description = statusText, CommitHash = revisionVersion };
+                                                          observer.OnNext(buildInfo);
+                                                      }
+
+                                                      observer.OnCompleted();
+                                                  }
+                                                  catch (Exception ex)
+                                                  {
+                                                      observer.OnError(ex);
+                                                  }
+
+                                                  return new Task<IDisposable>(() => Disposable.Empty);
+                                              });
+
+                                              this.buildStatusCancellationToken =
+                                                  observable.SubscribeOn(NewThreadScheduler.Default)
+                                                            .DoWhile(() => this.buildStatusCancellationToken != null)
+                                                            .OnErrorResumeNext(Observable.Empty<BuildInfo>())
+                                                            .Subscribe(item =>
+                                                                            {
+                                                                                string graphRevision;
+                                                                                int row = SearchRevision(item.CommitHash, out graphRevision);
+                                                                                if (row >= 0)
+                                                                                {
+                                                                                    var rowData = Revisions.GetRowData(row);
+                                                                                    rowData.BuildStatus = string.Format("{0} - {1}", item.Status, item.Description);
+                                                                                    Revisions.UpdateCellValue(4, row);
+                                                                                }
+                                                                            });
+                                          }
                                       }, this);
             }
 
             DisposeRevisionGraphCommand();
+        }
+
+        public struct BuildInfo
+        {
+            public int Id;
+            public DateTime StartDate;
+            public string BuildNumber;
+            public string Branch;
+            public string Status;
+            public string Description;
+            public string CommitHash;
         }
 
         private void SelectInitialRevision()
@@ -1265,6 +1348,7 @@ namespace GitUI
                     }
                     break;
                 case 2:
+                case 4:
                     {
                         var text = (string)e.FormattedValue;
                         e.Graphics.DrawString(text, rowFont, foreBrush,
@@ -1316,6 +1400,9 @@ namespace GitUI
                         else
                             e.Value = string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
                     }
+                    break;
+                case 4:
+                    e.Value = revision.BuildStatus ?? "";
                     break;
                 default:
                     e.FormattingApplied = false;

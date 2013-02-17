@@ -36,6 +36,8 @@ namespace GitCommands
         public string CommitterEmail { get; set; }
         public DateTime CommitDate { get; set; }
 
+        public string BuildStatus { get; set; }
+
         public string Message { get; set; }
         //UTF-8 when is null or empty
         public string MessageEncoding { get; set; }
