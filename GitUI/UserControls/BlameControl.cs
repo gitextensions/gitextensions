@@ -188,9 +188,8 @@ namespace GitUI.Blame
 
         public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding)
         {
-            string guid = revision.Guid;
             //refresh only when something changed
-            if (guid.Equals(CommitInfo.Revision.Guid) && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
+            if (revision.Equals(CommitInfo.Revision) && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
                 return;
 
             if (controlToMask != null)
@@ -203,6 +202,7 @@ namespace GitUI.Blame
             _revGrid = revGrid;
             _fileName = fileName;
             _encoding = encoding;
+            string guid = revision.Guid;
 
             blameLoader.Load(() =>
             {
