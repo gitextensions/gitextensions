@@ -87,7 +87,7 @@ namespace GitUI.CommandsDialogs
 
         private OutputFormat GetSelectedOutputFormat()
         {
-            return radioButtonFormatZip.Checked ? OutputFormat.Zip : OutputFormat.Tar;
+            return _NO_TRANSLATE_radioButtonFormatZip.Checked ? OutputFormat.Zip : OutputFormat.Tar;
         }
 
         private void btnChooseRevision_Click(object sender, EventArgs e)
