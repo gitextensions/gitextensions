@@ -190,6 +190,7 @@ namespace GitUI
         [Browsable(false)]
         public string CurrentCheckout { get; private set; }
         [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string FiltredFileName { get; set; }
         [Browsable(false)]
         private string FiltredCurrentCheckout { get; set; }
@@ -207,10 +208,10 @@ namespace GitUI
             set { Revisions.MultiSelect = value; }
         }
 
-        [Description("Don't show uncommited changes in revision grid even if enabled in settings.")]
+        [Description("Show uncommited changes in revision grid if enabled in settings.")]
         [Category("Behavior")]
         [DefaultValue(false)]
-        public bool DontShowUncommitedChanges
+        public bool ShowUncommitedChangesIfPossible
         {
             get; set;
         }
@@ -1933,7 +1934,7 @@ namespace GitUI
 
         private bool ShowUncommitedChanged()
         {
-            return !DontShowUncommitedChanges && Settings.RevisionGraphShowWorkingDirChanges;
+            return ShowUncommitedChangesIfPossible && Settings.RevisionGraphShowWorkingDirChanges;
         }
 
         private void UpdateGraph(GitRevision rev)

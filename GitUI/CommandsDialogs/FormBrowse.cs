@@ -919,7 +919,7 @@ namespace GitUI.CommandsDialogs
                 RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
-        public void FileHistoryOnClick(object sender, EventArgs e)
+        public void fileHistoryItem_Click(object sender, EventArgs e)
         {
             var item = GitTree.SelectedNode.Tag as GitItem;
 
@@ -928,10 +928,25 @@ namespace GitUI.CommandsDialogs
 
             IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
 
-            if (revisions.Count == 0)
+            if (revisions.Count == 0 || GitRevision.IsArtificial(revisions[0].Guid))
                 UICommands.StartFileHistoryDialog(this, item.FileName);
             else
                 UICommands.StartFileHistoryDialog(this, item.FileName, revisions[0], false, false);
+        }
+
+        private void blameMenuItem_Click(object sender, EventArgs e)
+        {
+            var item = GitTree.SelectedNode.Tag as GitItem;
+
+            if (item == null)
+                return;
+
+            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+
+            if (revisions.Count == 0 || GitRevision.IsArtificial(revisions[0].Guid))
+                UICommands.StartFileHistoryDialog(this, item.FileName, null, false, true);
+            else
+                UICommands.StartFileHistoryDialog(this, item.FileName, revisions[0], true, true);
         }
 
         public void FindFileOnClick(object sender, EventArgs e)
@@ -1975,10 +1990,25 @@ namespace GitUI.CommandsDialogs
             {
                 IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
 
-                if (revisions.Count == 0)
+                if (revisions.Count == 0 || GitRevision.IsArtificial(revisions[0].Guid))
                     UICommands.StartFileHistoryDialog(this, item.Name);
                 else
                     UICommands.StartFileHistoryDialog(this, item.Name, revisions[0], false);
+            }
+        }
+
+        private void blameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GitItemStatus item = DiffFiles.SelectedItem;
+
+            if (item.IsTracked)
+            {
+                IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+
+                if (revisions.Count == 0 || GitRevision.IsArtificial(revisions[0].Guid))
+                    UICommands.StartFileHistoryDialog(this, item.Name, null, false, true);
+                else
+                    UICommands.StartFileHistoryDialog(this, item.Name, revisions[0], true, true);
             }
         }
 
@@ -2373,37 +2403,6 @@ namespace GitUI.CommandsDialogs
                 DiffText.ViewPatch(String.Empty);
         }
 
-        private void blameToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            GitItemStatus item = DiffFiles.SelectedItem;
-
-            if (item.IsTracked)
-            {
-                IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
-
-                if (revisions.Count == 0)
-                    UICommands.StartFileHistoryDialog(this, item.Name, null, false, true);
-                else
-                    UICommands.StartFileHistoryDialog(this, item.Name, revisions[0], true, true);
-            }
-
-        }
-
-        private void blameToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            var item = GitTree.SelectedNode.Tag as GitItem;
-
-            if (item == null)
-                return;
-
-            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
-
-            if (revisions.Count == 0)
-                UICommands.StartFileHistoryDialog(this, item.FileName, null, false, true);
-            else
-                UICommands.StartFileHistoryDialog(this, item.FileName, revisions[0], true, true);
-        }
-
         public override void AddTranslationItems(Translation translation)
         {
             base.AddTranslationItems(translation);
@@ -2417,7 +2416,6 @@ namespace GitUI.CommandsDialogs
             TranslationUtl.TranslateItemsFromFields(Name, filterRevisionsHelper, translation);
             TranslationUtl.TranslateItemsFromFields(Name, _FilterBranchHelper, translation);
         }
-
 
         private IList<GitItemStatus> FindDiffFilesMatches(string name)
         {
