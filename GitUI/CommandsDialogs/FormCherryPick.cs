@@ -42,13 +42,13 @@ namespace GitUI.CommandsDialogs
         {
             commitSummaryUserControl1.Revision = Revision;
 
+            ParentsList.Items.Clear();
+
             IsMerge = Module.IsMerge(Revision.Guid);
 
             if (IsMerge)
             {
                 var parents = Module.GetParents(Revision.Guid);
-
-                ParentsList.Items.Clear();
 
                 for (int i = 0; i < parents.Length; i++)
                 {
@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs
                 ParentsList.TopItem.Selected = true;
             }
 
-            panelParentsList.Visible = IsMerge;
+            panelParentsList.Enabled = IsMerge;
         }
 
         private void Revert_Click(object sender, EventArgs e)
@@ -106,7 +106,7 @@ namespace GitUI.CommandsDialogs
         {
             using (var chooseForm = new FormChooseCommit(UICommands, Revision.Guid))
             {
-                if (chooseForm.ShowDialog() == DialogResult.OK && chooseForm.SelectedRevision != null)
+                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
                 {
                     Revision = chooseForm.SelectedRevision;
                 }
