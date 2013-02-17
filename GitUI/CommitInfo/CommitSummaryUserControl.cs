@@ -11,7 +11,7 @@ namespace GitUI
     /// TODO: replace with some better looking RTF control (similar to Commit Tab in main window)
     ///       Tried RichTextBox: strangely it does not show any formatting, just plain text.
     /// </summary>
-    public partial class CommitSummaryUserControl : UserControl
+    public partial class CommitSummaryUserControl : GitExtensionsControl
     {
         private readonly TranslationString tagsCaption = new TranslationString("Tags");
         private readonly TranslationString branchesCaption = new TranslationString("Branches");
@@ -23,6 +23,7 @@ namespace GitUI
         public CommitSummaryUserControl()
         {
             InitializeComponent();
+            Translate();
 
             messageY = labelMessage.Location.Y;
             messageHeight = labelMessage.Height;
