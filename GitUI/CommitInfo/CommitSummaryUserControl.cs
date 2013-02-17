@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using ResourceManager.Translation;
 
 namespace GitUI
 {
@@ -14,16 +11,19 @@ namespace GitUI
     /// TODO: replace with some better looking RTF control (similar to Commit Tab in main window)
     ///       Tried RichTextBox: strangely it does not show any formatting, just plain text.
     /// </summary>
-    public partial class CommitSummaryUserControl : UserControl
+    public partial class CommitSummaryUserControl : GitExtensionsControl
     {
-        private const string tagsCaption = "Tags";
-        private const string branchesCaption = "Branches";
+        private readonly TranslationString tagsCaption = new TranslationString("Tags");
+        private readonly TranslationString branchesCaption = new TranslationString("Branches");
+        private readonly TranslationString noRevision = new TranslationString("No revision");
+        private readonly TranslationString notAvailable = new TranslationString("n/a");
         private readonly Color tagsBackColor = Color.LightSteelBlue;
         private readonly Color branchesBackColor = Color.LightSalmon;
 
         public CommitSummaryUserControl()
         {
             InitializeComponent();
+            Translate();
 
             messageY = labelMessage.Location.Y;
             messageHeight = labelMessage.Height;
@@ -48,8 +48,8 @@ namespace GitUI
 
                 groupBox1.Text = Strings.GetCommitHashText() + ": ";
                 labelAuthorCaption.Text = Strings.GetAuthorText() + ":";
-                labelTagsCaption.Text = tagsCaption + ":";
-                labelBranchesCaption.Text = branchesCaption + ":";
+                labelTagsCaption.Text = tagsCaption.Text + ":";
+                labelBranchesCaption.Text = branchesCaption.Text + ":";
 
                 if (Revision != null)
                 {
@@ -60,17 +60,17 @@ namespace GitUI
                     
                     var tagList = Revision.Heads.Where(r => r.IsTag);
                     string tagListStr = string.Join(", ", tagList.Select(h => h.LocalName).ToArray());
-                    labelTags.Text = string.Format("{0}", tagListStr.IsNullOrEmpty() ? "n/a" : tagListStr);
+                    labelTags.Text = string.Format("{0}", tagListStr.IsNullOrEmpty() ? notAvailable.Text : tagListStr);
                     labelTags.BackColor = tagList.Any() ? tagsBackColor : Control.DefaultBackColor;
 
                     var branchesList = Revision.Heads.Where(r => r.IsHead);
                     string branchesListStr = string.Join(", ", branchesList.Select(h => h.LocalName).ToArray());
-                    labelBranches.Text = string.Format("{0}", branchesListStr.IsNullOrEmpty() ? "n/a" : branchesListStr);
+                    labelBranches.Text = string.Format("{0}", branchesListStr.IsNullOrEmpty() ? notAvailable.Text : branchesListStr);
                     labelBranches.BackColor = branchesList.Any() ? branchesBackColor : Control.DefaultBackColor;
                 }
                 else
                 {
-                    groupBox1.Text += "No revision";
+                    groupBox1.Text += noRevision.Text;
                     labelAuthor.Text = "---";
                     labelDate.Text = "---";
                     labelMessage.Text = "---";
