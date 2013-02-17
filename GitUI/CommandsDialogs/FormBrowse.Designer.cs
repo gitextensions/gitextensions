@@ -625,6 +625,7 @@ namespace GitUI.CommandsDialogs
             this.RevisionGrid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+            this.RevisionGrid.ShowUncommitedChangesIfPossible = true;
             this.RevisionGrid.Size = new System.Drawing.Size(923, 210);
             this.RevisionGrid.TabIndex = 0;
             this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGridDoubleClick);
@@ -813,7 +814,7 @@ namespace GitUI.CommandsDialogs
             this.fileHistoryToolStripMenuItem.Name = "fileHistoryToolStripMenuItem";
             this.fileHistoryToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
             this.fileHistoryToolStripMenuItem.Text = "File history";
-            this.fileHistoryToolStripMenuItem.Click += new System.EventHandler(this.FileHistoryOnClick);
+            this.fileHistoryToolStripMenuItem.Click += new System.EventHandler(this.fileHistoryItem_Click);
             // 
             // blameToolStripMenuItem1
             // 
@@ -821,7 +822,7 @@ namespace GitUI.CommandsDialogs
             this.blameToolStripMenuItem1.Name = "blameToolStripMenuItem1";
             this.blameToolStripMenuItem1.Size = new System.Drawing.Size(279, 22);
             this.blameToolStripMenuItem1.Text = "Blame";
-            this.blameToolStripMenuItem1.Click += new System.EventHandler(this.blameToolStripMenuItem1_Click);
+            this.blameToolStripMenuItem1.Click += new System.EventHandler(this.blameMenuItem_Click);
             // 
             // toolStripSeparator18
             // 

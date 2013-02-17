@@ -132,11 +132,11 @@ namespace TranslationApp
             translateCategories.Items.Clear();
             allCategories.Name = allText.Text;
             translateCategories.Items.Add(allCategories);
-            FillNeutralTranslation(neutralTranslation);
+            FillNeutralTranslation();
             translateCategories.Items.AddRange(neutralTranslation.GetTranslationCategories().ToArray());
         }
 
-        private void FillNeutralTranslation(Translation neutralTranslation)
+        private void FillNeutralTranslation()
         {
             try
             {
