@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
@@ -45,6 +46,7 @@ namespace GitUI.CommandsDialogs
             ParentsList.Items.Clear();
 
             IsMerge = Module.IsMerge(Revision.Guid);
+            panelParentsList.Visible = IsMerge;
 
             if (IsMerge)
             {
@@ -59,9 +61,10 @@ namespace GitUI.CommandsDialogs
                 }
 
                 ParentsList.TopItem.Selected = true;
+                Size size = MinimumSize;
+                size.Height += 100;
+                MinimumSize = size;
             }
-
-            panelParentsList.Enabled = IsMerge;
         }
 
         private void Revert_Click(object sender, EventArgs e)

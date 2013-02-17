@@ -113,7 +113,7 @@
             this.ParentsList.FullRowSelect = true;
             this.ParentsList.HideSelection = false;
             this.ParentsList.Location = new System.Drawing.Point(0, 23);
-            this.ParentsList.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
+            this.ParentsList.Margin = new System.Windows.Forms.Padding(0);
             this.ParentsList.MultiSelect = false;
             this.ParentsList.Name = "ParentsList";
             this.ParentsList.Size = new System.Drawing.Size(726, 109);
@@ -180,12 +180,12 @@
             this.commitSummaryUserControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.commitSummaryUserControl1.AutoSize = true;
-            this.commitSummaryUserControl1.Location = new System.Drawing.Point(4, 4);
-            this.commitSummaryUserControl1.Margin = new System.Windows.Forms.Padding(4);
+            this.commitSummaryUserControl1.Location = new System.Drawing.Point(20, 4);
+            this.commitSummaryUserControl1.Margin = new System.Windows.Forms.Padding(20, 4, 4, 4);
             this.commitSummaryUserControl1.MinimumSize = new System.Drawing.Size(550, 200);
             this.commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             this.commitSummaryUserControl1.Revision = null;
-            this.commitSummaryUserControl1.Size = new System.Drawing.Size(572, 200);
+            this.commitSummaryUserControl1.Size = new System.Drawing.Size(556, 200);
             this.commitSummaryUserControl1.TabIndex = 15;
             // 
             // mainTableLayoutPanel
