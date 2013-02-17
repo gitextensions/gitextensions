@@ -190,7 +190,7 @@ namespace GitUI.Blame
         {
             string guid = revision.Guid;
             //refresh only when something changed
-            if (guid.Equals(CommitInfo.Revision) && fileName.Equals(fileName) && revGrid == _revGrid && encoding == _encoding)
+            if (guid.Equals(CommitInfo.Revision.Guid) && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
                 return;
 
             if (controlToMask != null)
