@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs
             Translate();        
         }
 
-        public FormBlame(GitUICommands aCommands, string fileName, GitRevision revision, List<string> children) : this(aCommands)
+        public FormBlame(GitUICommands aCommands, string fileName, GitRevision revision) : this(aCommands)
         {
             if (string.IsNullOrEmpty(fileName))
                 return;
@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs
             if (revision == null)
                 revision = new GitRevision(Module, "Head");
 
-            blameControl1.LoadBlame(revision, children, fileName, null, null, Module.FilesEncoding);
+            blameControl1.LoadBlame(revision, null, fileName, null, null, Module.FilesEncoding);
         }
 
         public string FileName { get; set; }
