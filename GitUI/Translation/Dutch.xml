@@ -3699,6 +3699,122 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormGerritChangeSubmitted">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Change Submitted</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="btnClose" Property="Text" type="unfinished">
+          <Source>Close</Source>
+          <Value>Sluiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelSubmitted" Property="Text" type="unfinished">
+          <Source>Your change has been submitted for review at the following location:</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGerritDownload">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Download Gerrit Change</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="AddRemote" Property="Text" type="unfinished">
+          <Source>Manage remotes</Source>
+          <Value>Beheer externe opslagplaatsen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Download" Property="Text" type="unfinished">
+          <Source>&amp;Download</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_cannotGetChangeDetails" Property="Text" type="unfinished">
+          <Source>Could not retrieve the change details</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_downloadCaption" Property="Text" type="unfinished">
+          <Source>Download change {0}</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text" type="unfinished">
+          <Source>Download Gerrit Change</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_selectChange" Property="Text" type="unfinished">
+          <Source>Please enter a change</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_selectRemote" Property="Text" type="unfinished">
+          <Source>Please select a remote repository</Source>
+          <Value>Selecteer een doel directory</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelChange" Property="Text" type="unfinished">
+          <Source>Change:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="labelEnterChangeIdOrNumber" Property="Text" type="unfinished">
+          <Source>Enter the Change-Id or the number from the Gerrit URL</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="labelRemote" Property="Text" type="unfinished">
+          <Source>Remote:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="labelTopicBranch" Property="Text" type="unfinished">
+          <Source>Topic branch:</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGerritPublish">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Publish Gerrit Change</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="AddRemote" Property="Text" type="unfinished">
+          <Source>Manage remotes</Source>
+          <Value>Beheer externe opslagplaatsen</Value>
+        </TranslationItem>
+        <TranslationItem Name="Publish" Property="Text" type="unfinished">
+          <Source>&amp;Publish</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="PublishDraft" Property="Text" type="unfinished">
+          <Source>Submit review as draft</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text" type="unfinished">
+          <Source>Download Gerrit Change</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_publishCaption" Property="Text" type="unfinished">
+          <Source>Publish change</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_selectBranch" Property="Text" type="unfinished">
+          <Source>Please enter a branch</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_selectRemote" Property="Text" type="unfinished">
+          <Source>Please select a remote repository</Source>
+          <Value>Selecteer een doel directory</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelBranch" Property="Text" type="unfinished">
+          <Source>Branch:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="labelRemote" Property="Text" type="unfinished">
+          <Source>Remote:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="labelTopic" Property="Text" type="unfinished">
+          <Source>Topic:</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormGitAttributes">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -3892,6 +4008,62 @@ _ReSharper*/
         <TranslationItem Name="tabPageCommandLog" Property="Text">
           <Source>Command log</Source>
           <Value>Commando log</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormGitReview">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Edit .gitreview</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="Save" Property="Text" type="unfinished">
+          <Source>Save</Source>
+          <Value>Opslaan</Value>
+        </TranslationItem>
+        <TranslationItem Name="_cannotAccessGitreview" Property="Text" type="unfinished">
+          <Source>Failed to save .gitreview.
+Check if file is accessible.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_cannotAccessGitreviewCaption" Property="Text" type="unfinished">
+          <Source>Failed to save .gitreview</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_gitreviewOnlyInWorkingDirSupported" Property="Text" type="unfinished">
+          <Source>.gitreview is only supported when there is a working dir.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_gitreviewOnlyInWorkingDirSupportedCaption" Property="Text" type="unfinished">
+          <Source>No working dir</Source>
+          <Value>Geen werk directory</Value>
+        </TranslationItem>
+        <TranslationItem Name="_saveFileQuestion" Property="Text" type="unfinished">
+          <Source>Save changes to .gitreview?</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_saveFileQuestionCaption" Property="Text" type="unfinished">
+          <Source>Save changes?</Source>
+          <Value>Wijzigingen opslaan?</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text" type="unfinished">
+          <Source>Provide the configuration for
+.gitreview to setup Gerrit.
+
+Example configuration:
+
+[gerrit]
+host=review.example.com
+port=29418
+project=department/project.git
+defaultbranch=master
+defaultremote=review
+defaultrebase=0</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="lnkGitReviewHelp" Property="Text" type="unfinished">
+          <Source>GitHub page for git-review</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4203,6 +4375,24 @@ De aanpassingen worden ook in gemeenschappelijke oorspronkelijke vertakking uitg
         <TranslationItem Name="label1" Property="Text">
           <Source>Directory</Source>
           <Value>Directorie</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormPluginInformation">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Gerrit Plugin</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="btnClose" Property="Text" type="unfinished">
+          <Source>Close</Source>
+          <Value>Sluiten</Value>
+        </TranslationItem>
+        <TranslationItem Name="informationLabel" Property="Text" type="unfinished">
+          <Source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
+
+To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Settings | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6225,6 +6415,70 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="GerritPlugin">
+      <translationItems>
+        <TranslationItem Name="_downloadGerritChange" Property="Text" type="unfinished">
+          <Source>Download Gerrit Change</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_editGitReview" Property="Text" type="unfinished">
+          <Source>Edit .gitreview</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHook" Property="Text" type="unfinished">
+          <Source>Install Hook</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookFailed" Property="Text" type="unfinished">
+          <Source>Could not download the commit-msg file. Please install the commit-msg hook manually.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookMessage" Property="Text" type="unfinished">
+          <Source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookShortText" Property="Text" type="unfinished">
+          <Source>Install commit-msg hook</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pluginDescription" Property="Text" type="unfinished">
+          <Source>Gerrit Code Review</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_publishGerritChange" Property="Text" type="unfinished">
+          <Source>Publish Gerrit Change</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GerritSettings">
+      <translationItems>
+        <TranslationItem Name="_settingsError" Property="Text" type="unfinished">
+          <Source>Error loading .gitreview file.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorDefaultRemoteNotPresent" Property="Text" type="unfinished">
+          <Source>The remote "{0}" specified with the "defaultremote" setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorFileNotFound" Property="Text" type="unfinished">
+          <Source>Cannot find the ".gitreview" file in the working directory.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorHostNotEntered" Property="Text" type="unfinished">
+          <Source>The "host" setting in the .gitreview file is mandatory.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorPortNotNumeric" Property="Text" type="unfinished">
+          <Source>The "port" specified in the .gitreview file may only contain digits.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorProjectNotEntered" Property="Text" type="unfinished">
+          <Source>The "project" setting in the .gitreview file is mandatory.</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="GitExtensionsSettingsGroup">
       <translationItems>
         <TranslationItem Name="$this" Property="Title">
@@ -7306,6 +7560,22 @@ Details: Is {1} expected {2}</Source>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
+          <Source>Create Branch</Source>
+          <Value>Vertakking aanmaken</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCheckout">
+      <translationItems>
+        <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text" type="obsolete">
+          <Source>Select 1 revision to checkout.</Source>
+          <Value>Selecteer 1 revisie om uit te checken</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormRevert">
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="obsolete">
@@ -7315,6 +7585,46 @@ Details: Is {1} expected {2}</Source>
         <TranslationItem Name="Revert" Property="Text" type="obsolete">
           <Source>Revert changes</Source>
           <Value>Wijzigingen terugzetten</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRevertCommitSmall">
+      <translationItems>
+        <TranslationItem Name="BranchInfo" Property="Text" type="obsolete">
+          <Source>Revert this commit:</Source>
+          <Value>Maak deze commit ongedaan:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Revert" Property="Text" type="obsolete">
+          <Source>Revert this commit</Source>
+          <Value>Maak deze commit ongedaan:</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GitLogForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
+          <Source>Log</Source>
+          <Value>Logboek</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPageCommandCache" Property="Text" type="obsolete">
+          <Source>Command cache</Source>
+          <Value>Commando cache</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPageCommandLog" Property="Text" type="obsolete">
+          <Source>Command log</Source>
+          <Value>Commando log</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Open">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
+          <Source>Open local repository</Source>
+          <Value>Open repository</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningOpenFailed" Property="Text" type="obsolete">
+          <Source>Directory does not exist.</Source>
+          <Value>Directorie bestaat niet.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
