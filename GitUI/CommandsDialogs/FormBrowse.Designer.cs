@@ -148,6 +148,11 @@ namespace GitUI.CommandsDialogs
             this.stashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator40 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator41 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator42 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator43 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator44 = new System.Windows.Forms.ToolStripSeparator();
             this.applyPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.formatPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1101,15 +1106,15 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator12, // ok
             this.cloneToolStripMenuItem, // ok
             this.cloneSVNToolStripMenuItem, // ok
-            // TODO: sep
+            this.toolStripSeparator40, // ok
             this.gitBashToolStripMenuItem, // ok
             this.gitGUIToolStripMenuItem, // ok
             this.kGitToolStripMenuItem, // ok
             this.toolStripSeparator6, // ok
             this.PuTTYToolStripMenuItem,
-            // TODO: sep
+            this.toolStripSeparator41, // ok
             this.refreshToolStripMenuItem, // ok
-            // TODO: sep
+            this.toolStripSeparator42, // ok
             this.settingsToolStripMenuItem2,
             this.toolStripMenuItem1, // ok (sep)
             this.exitToolStripMenuItem}); // ok
@@ -1191,14 +1196,13 @@ namespace GitUI.CommandsDialogs
             // 
             this.repositoryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileExplorerToolStripMenuItem, // ok
-            // TODO: sep
-            this.manageRemoteRepositoriesToolStripMenuItem1, // ok
-            // TODO: sep
-            this.manageSubmodulesToolStripMenuItem, // ok
             this.toolStripSeparator8, // ok
+            this.manageRemoteRepositoriesToolStripMenuItem1, // ok
+            this.toolStripSeparator43, // ok
+            this.manageSubmodulesToolStripMenuItem, // ok
             this.updateAllSubmodulesToolStripMenuItem, // ok
             this.synchronizeAllSubmodulesToolStripMenuItem, // ok
-            // TODO: sep
+            this.toolStripSeparator44, // ok
             this.editgitignoreToolStripMenuItem1, // ok
             this.editgitattributesToolStripMenuItem, // ok
             this.editmailmapToolStripMenuItem, // ok
@@ -1364,6 +1368,22 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolStripSeparator25.Name = "toolStripSeparator25";
             this.toolStripSeparator25.Size = new System.Drawing.Size(219, 6);
+
+            this.toolStripSeparator40.Name = "toolStripSeparator40";
+            this.toolStripSeparator40.Size = new System.Drawing.Size(219, 6);
+
+            this.toolStripSeparator41.Name = "toolStripSeparator41";
+            this.toolStripSeparator41.Size = new System.Drawing.Size(219, 6);
+
+            this.toolStripSeparator42.Name = "toolStripSeparator42";
+            this.toolStripSeparator42.Size = new System.Drawing.Size(219, 6);
+
+            this.toolStripSeparator43.Name = "toolStripSeparator43";
+            this.toolStripSeparator43.Size = new System.Drawing.Size(219, 6);
+
+            this.toolStripSeparator44.Name = "toolStripSeparator44";
+            this.toolStripSeparator44.Size = new System.Drawing.Size(219, 6);
+
             // 
             // applyPatchToolStripMenuItem
             // 
@@ -2075,6 +2095,11 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem bLocalToolStripMenuItem;
         private ToolStripMenuItem parentOfALocalToolStripMenuItem;
         private ToolStripMenuItem parentOfBLocalToolStripMenuItem;        
-        private ToolStripMenuItem reportAnIssueToolStripMenuItem;        
+        private ToolStripMenuItem reportAnIssueToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator40;
+        private ToolStripSeparator toolStripSeparator41;
+        private ToolStripSeparator toolStripSeparator42;
+        private ToolStripSeparator toolStripSeparator43;
+        private ToolStripSeparator toolStripSeparator44;
     }
 }
