@@ -39,6 +39,7 @@ namespace GitUIPluginInterfaces
         event GitUIPostActionEventHandler PostRemotes;
         event GitUIEventHandler PostRepositoryChanged;
         event GitUIPostActionEventHandler PostResolveConflicts;
+        event GitUIPostActionEventHandler PostRevertCommit;
         event GitUIPostActionEventHandler PostSettings;
         event GitUIPostActionEventHandler PostStash;
         event GitUIPostActionEventHandler PostSvnClone;
@@ -80,6 +81,7 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PreRename;
         event GitUIEventHandler PreRemotes;
         event GitUIEventHandler PreResolveConflicts;
+        event GitUIEventHandler PreRevertCommit;
         event GitUIEventHandler PreSettings;
         event GitUIEventHandler PreStash;
         event GitUIEventHandler PreSvnClone;
