@@ -98,6 +98,9 @@ namespace GitUI
         public event GitUIEventHandler PreCherryPick;
         public event GitUIPostActionEventHandler PostCherryPick;
 
+        public event GitUIEventHandler PreRevertCommit;
+        public event GitUIPostActionEventHandler PostRevertCommit;
+
         public event GitUIEventHandler PreMergeBranch;
         public event GitUIPostActionEventHandler PostMergeBranch;
 
@@ -928,7 +931,7 @@ namespace GitUI
                 }
             };
 
-            return DoActionOnRepo(owner, true, true, PreCherryPick, PostCherryPick, action);
+            return DoActionOnRepo(owner, true, true, PreRevertCommit, PostRevertCommit, action);
         }
 
         public bool StartResolveConflictsDialog(IWin32Window owner, bool offerCommit)
