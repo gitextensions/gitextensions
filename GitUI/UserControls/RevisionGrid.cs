@@ -1291,7 +1291,7 @@ namespace GitUI
                         break;
                     case 4:
                     case 5:
-                        _BuildServerWatcher.RevisionsCellPainting(e, revision, foreBrush, rowFont);
+                        BuildInfoDrawingLogic.RevisionsCellPainting(e, revision, foreBrush, rowFont);
                         break;
                 }
             }
@@ -1334,7 +1334,7 @@ namespace GitUI
                     break;
                 case 4:
                 case 5:
-                    _BuildServerWatcher.RevisionsCellFormatting(e, revision);
+                    BuildInfoDrawingLogic.RevisionsCellFormatting(e, revision);
                     break;
                 default:
                     e.FormattingApplied = false;
