@@ -1381,7 +1381,6 @@
       <SubType>Component</SubType>
     </Compile>
     <None Include="gituikey.snk.pfx" />
-    <None Include="packages.config" />
     <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitItemStatus.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitRevision.datasource" />

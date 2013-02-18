@@ -36,7 +36,7 @@ namespace GitCommands
         public string CommitterEmail { get; set; }
         public DateTime CommitDate { get; set; }
 
-        public string BuildStatus { get; set; }
+        public BuildInfo BuildStatus { get; set; }
 
         public string Message { get; set; }
         //UTF-8 when is null or empty
@@ -93,5 +93,14 @@ namespace GitCommands
             return ParentGuids != null && ParentGuids.Length > 0;
         }
 
+    }
+
+    public class BuildInfo
+    {
+        public int Id { get; set; }
+        public DateTime StartDate { get; set; }
+        public string Status { get; set; }
+        public string Description { get; set; }
+        public string CommitHash { get; set; }
     }
 }
