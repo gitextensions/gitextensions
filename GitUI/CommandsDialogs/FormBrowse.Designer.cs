@@ -1101,8 +1101,9 @@ namespace GitUI.CommandsDialogs
             this.openToolStripMenuItem, // ok
             this.recentToolStripMenuItem, // ok
             this.toolStripSeparator12, // ok
-            // TODO: clone repo
-            // TODO: clone SVN repo
+            this.cloneToolStripMenuItem, // ok
+            this.cloneSVNToolStripMenuItem, // ok
+            // TODO: sep
             this.gitBashToolStripMenuItem, // ok
             this.gitGUIToolStripMenuItem, // ok
             this.kGitToolStripMenuItem, // ok
@@ -1111,7 +1112,7 @@ namespace GitUI.CommandsDialogs
             // TODO: sep
             this.refreshToolStripMenuItem, // ok
             // TODO: sep
-            // TODO: settings
+            this.settingsToolStripMenuItem2,
             this.toolStripMenuItem1, // ok (sep)
             this.exitToolStripMenuItem}); // ok
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -1193,10 +1194,19 @@ namespace GitUI.CommandsDialogs
             this.gitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileExplorerToolStripMenuItem, // ok
             // TODO: sep
-            this.manageRemoteRepositoriesToolStripMenuItem1,
+            this.manageRemoteRepositoriesToolStripMenuItem1, // ok
             // TODO: sep
-            // TODO...
+            this.manageSubmodulesToolStripMenuItem, // ok
+            this.toolStripSeparator8, // ok
+            this.updateAllSubmodulesToolStripMenuItem, // ok
+            this.synchronizeAllSubmodulesToolStripMenuItem, // ok
             // TODO: sep
+            this.editgitignoreToolStripMenuItem1, // ok
+            this.editgitattributesToolStripMenuItem, // ok
+            this.editmailmapToolStripMenuItem, // ok
+            this.toolStripSeparator4, // ok
+            this.gitMaintenanceToolStripMenuItem, // ok
+            this.toolStripSeparator13, // ok
             this.closeToolStripMenuItem, // ok
             });
             this.gitToolStripMenuItem.Name = "gitToolStripMenuItem";
@@ -1231,8 +1241,6 @@ namespace GitUI.CommandsDialogs
             this.commandsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.archiveToolStripMenuItem,
             this.cleanupToolStripMenuItem,
-            this.cloneToolStripMenuItem,
-            this.cloneSVNToolStripMenuItem,
             this.toolStripSeparator21,
             this.commitToolStripMenuItem,
             this.pullToolStripMenuItem,
@@ -1604,10 +1612,8 @@ namespace GitUI.CommandsDialogs
             // submodulesToolStripMenuItem
             // 
             this.submodulesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.manageSubmodulesToolStripMenuItem,
-            this.toolStripSeparator8,
-            this.updateAllSubmodulesToolStripMenuItem,
-            this.synchronizeAllSubmodulesToolStripMenuItem});
+                // TODO: remove completely
+            });
             this.submodulesToolStripMenuItem.Name = "submodulesToolStripMenuItem";
             this.submodulesToolStripMenuItem.Size = new System.Drawing.Size(85, 20);
             this.submodulesToolStripMenuItem.Text = "Submodules";
@@ -1664,13 +1670,8 @@ namespace GitUI.CommandsDialogs
             // settingsToolStripMenuItem1
             // 
             this.settingsToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gitMaintenanceToolStripMenuItem,
-            this.toolStripSeparator4,
-            this.editgitignoreToolStripMenuItem1,
-            this.editgitattributesToolStripMenuItem,
-            this.editmailmapToolStripMenuItem,
-            this.toolStripSeparator13,
-            this.settingsToolStripMenuItem2});
+                // TODO: remove this menu completely
+            });
             this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
             this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(61, 20);
             this.settingsToolStripMenuItem1.Text = "Settings";
