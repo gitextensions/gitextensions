@@ -1229,34 +1229,26 @@ namespace GitUI
                             {
                                 baseOffset = 5;
 
-                                Rectangle cellRectangle = new Rectangle(e.CellBounds.Left + baseOffset,
-                                                                        e.CellBounds.Top + 1,
-                                                                        e.CellBounds.Width - (baseOffset*2),
-                                                                        e.CellBounds.Height - 4);
+                                Rectangle cellRectangle = new Rectangle(e.CellBounds.Left + baseOffset, e.CellBounds.Top + 1, e.CellBounds.Width - (baseOffset * 2), e.CellBounds.Height - 4);
 
                                 if (!Settings.RevisionGraphDrawNonRelativesGray || Revisions.RowIsRelative(e.RowIndex))
                                 {
                                     e.Graphics.FillRectangle(
                                         new LinearGradientBrush(cellRectangle,
                                                                 Color.FromArgb(255, 220, 220, 231),
-                                                                Color.FromArgb(255, 240, 240, 250), 90, false),
-                                        cellRectangle);
-                                    e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, 200, 200, 200), 1),
-                                                             cellRectangle);
+                                                                Color.FromArgb(255, 240, 240, 250), 90, false), cellRectangle);
+                                    e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, 200, 200, 200), 1), cellRectangle);
                                 }
                                 else
                                 {
                                     e.Graphics.FillRectangle(
                                         new LinearGradientBrush(cellRectangle,
                                                                 Color.FromArgb(255, 240, 240, 240),
-                                                                Color.FromArgb(255, 250, 250, 250), 90, false),
-                                        cellRectangle);
+                                                                Color.FromArgb(255, 250, 250, 250), 90, false), cellRectangle);
                                 }
 
                                 if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
-                                    e.Graphics.DrawRectangle(
-                                        new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1),
-                                        cellRectangle);
+                                    e.Graphics.DrawRectangle(new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1), cellRectangle);
                             }
 
                             float offset = baseOffset;
@@ -1265,13 +1257,13 @@ namespace GitUI
                             if (heads.Count > 0)
                             {
                                 heads.Sort((left, right) =>
-                                    {
-                                        if (left.IsTag != right.IsTag)
-                                            return right.IsTag.CompareTo(left.IsTag);
-                                        if (left.IsRemote != right.IsRemote)
-                                            return left.IsRemote.CompareTo(right.IsRemote);
-                                        return left.Name.CompareTo(right.Name);
-                                    });
+                                {
+                                    if (left.IsTag != right.IsTag)
+                                        return right.IsTag.CompareTo(left.IsTag);
+                                    if (left.IsRemote != right.IsRemote)
+                                        return left.IsRemote.CompareTo(right.IsRemote);
+                                    return left.Name.CompareTo(right.Name);
+                                });
 
                                 foreach (var head in heads)
                                 {
@@ -1361,21 +1353,12 @@ namespace GitUI
                                 int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
 
 
-                                Image gravatar =
-                                    Gravatar.GravatarService.GetImageFromCache(
-                                        revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail,
-                                        Settings.AuthorImageCacheDays, gravatarSize, Settings.GravatarCachePath,
-                                        FallBackService.MonsterId);
+                                Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, Settings.AuthorImageCacheDays, gravatarSize, Settings.GravatarCachePath, FallBackService.MonsterId);
 
                                 if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
                                 {
                                     ThreadPool.QueueUserWorkItem(o =>
-                                                                 Gravatar.GravatarService.LoadCachedImage(
-                                                                     revision.AuthorEmail + gravatarSize.ToString() +
-                                                                     ".png", revision.AuthorEmail, null,
-                                                                     Settings.AuthorImageCacheDays, gravatarSize,
-                                                                     Settings.GravatarCachePath, RefreshGravatar,
-                                                                     FallBackService.MonsterId));
+                                            Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, Settings.AuthorImageCacheDays, gravatarSize, Settings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
                                 }
 
                                 if (gravatar != null)
@@ -1391,25 +1374,18 @@ namespace GitUI
                                 if (rowHeigth >= 60)
                                 {
                                     authorText = revision.Author;
-                                    timeText =
-                                        TimeToString(Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate);
+                                    timeText = TimeToString(Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate);
                                 }
                                 else
                                 {
-                                    timeText = string.Concat(revision.Author, " (",
-                                                             TimeToString(Settings.ShowAuthorDate
-                                                                              ? revision.AuthorDate
-                                                                              : revision.CommitDate), ")");
+                                    timeText = string.Concat(revision.Author, " (", TimeToString(Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate), ")");
                                     authorText = string.Empty;
                                 }
-
-
 
                                 e.Graphics.DrawString(authorText, rowFont, foreBrush,
                                                       new PointF(gravatarLeft + gravatarSize + 5, gravatarTop + 6));
                                 e.Graphics.DrawString(timeText, rowFont, foreBrush,
-                                                      new PointF(gravatarLeft + gravatarSize + 5,
-                                                                 e.CellBounds.Bottom - textHeight - 4));
+                                                      new PointF(gravatarLeft + gravatarSize + 5, e.CellBounds.Bottom - textHeight - 4));
                             }
                         }
                         break;
