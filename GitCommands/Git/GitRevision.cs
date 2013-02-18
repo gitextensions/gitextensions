@@ -92,15 +92,5 @@ namespace GitCommands
         {
             return ParentGuids != null && ParentGuids.Length > 0;
         }
-
-    }
-
-    public class BuildInfo
-    {
-        public int Id { get; set; }
-        public DateTime StartDate { get; set; }
-        public string Status { get; set; }
-        public string Description { get; set; }
-        public string CommitHash { get; set; }
     }
 }

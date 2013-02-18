@@ -18,12 +18,6 @@ using GitUI.RevisionGridClasses;
 using GitUI.Script;
 using Gravatar;
 using ResourceManager.Translation;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using TeamCitySharp;
-using System.Threading.Tasks;
-using System.Reactive.Disposables;
-using TeamCitySharp.Locators;
 
 namespace GitUI
 {
@@ -70,11 +64,11 @@ namespace GitUI
         private string _quickSearchString;
         private RevisionGraph _revisionGraphCommand;
 
+        private BuildServerWatcher _BuildServerWatcher;
+
         private RevisionGridLayout layout;
         private int rowHeigth;
         public event GitModuleChangedEventHandler GitModuleChanged;
-
-        private IDisposable buildStatusCancellationToken;
 
         public RevisionGrid()
         {
@@ -488,7 +482,7 @@ namespace GitUI
             Loading.Visible = true;
             Loading.BringToFront();
 
-            AddBuildStatusColumns();
+            _BuildServerWatcher = new BuildServerWatcher(this, Revisions);
         }
 
         public new void Load()
@@ -754,7 +748,7 @@ namespace GitUI
 
                 LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
 
-                CancelBuildStatusFetchOperation();
+                _BuildServerWatcher.CancelBuildStatusFetchOperation();
 
                 DisposeRevisionGraphCommand();
 
@@ -939,126 +933,11 @@ namespace GitUI
                         SelectInitialRevision();
                         _isLoading = false;
 
-                        LaunchBuildServerInfoFetchOperation();
+                        _BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
                     }, this);
             }
 
             DisposeRevisionGraphCommand();
-        }
-
-        private void AddBuildStatusColumns()
-        {
-            var buildStatusImageColumn = new DataGridViewImageColumn
-                {
-                    AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                    Width = 16,
-                    ReadOnly = true,
-                    SortMode = DataGridViewColumnSortMode.NotSortable
-                };
-            var buildMessageTextBoxColumn = new DataGridViewTextBoxColumn
-                {
-                    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                    HeaderText = "Build Status",
-                    ReadOnly = true,
-                    SortMode = DataGridViewColumnSortMode.NotSortable
-                };
-
-            Revisions.Columns.Add(buildStatusImageColumn);
-            Revisions.Columns.Add(buildMessageTextBoxColumn);
-        }
-
-        private void LaunchBuildServerInfoFetchOperation()
-        {
-            var client = new TeamCityClient("teamcity.codebetter.com");
-            client.Connect(string.Empty, string.Empty, true);
-
-            var projectName = Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
-            var initialObservable = CreateTeamCityObservable(client, projectName);
-            var followingObservable = CreateTeamCityObservable(client, projectName, DateTime.Now);
-
-            buildStatusCancellationToken =
-                initialObservable.SubscribeOn(NewThreadScheduler.Default)
-                          .OnErrorResumeNext(Observable.Empty<BuildInfo>())
-                          .Concat(Observable.Empty<BuildInfo>()
-                                            .Delay(TimeSpan.FromSeconds(5))
-                                            .Concat(followingObservable.SubscribeOn(NewThreadScheduler.Default)
-                                                                       .OnErrorResumeNext(Observable.Empty<BuildInfo>()))
-                                            .Repeat())
-                          .Subscribe(item =>
-                              {
-                                  if (buildStatusCancellationToken == null)
-                                      return;
-
-                                  string graphRevision;
-                                  int row = SearchRevision(item.CommitHash, out graphRevision);
-                                  if (row >= 0)
-                                  {
-                                      var rowData = Revisions.GetRowData(row);
-                                      if (rowData.BuildStatus == null || item.StartDate > rowData.BuildStatus.StartDate || item.Description.Length > rowData.BuildStatus.Description.Length)
-                                      {
-                                          rowData.BuildStatus = item;
-
-                                          Revisions.UpdateCellValue(4, row);
-                                          Revisions.UpdateCellValue(5, row);
-                                      }
-                                  }
-                              });
-        }
-
-        private IObservable<BuildInfo> CreateTeamCityObservable(TeamCityClient client, string projectName, DateTime? sinceDate = null)
-        {
-            return Observable.Create<BuildInfo>((observer, cancellationToken) =>
-                                                    {
-                                                        try
-                                                        {
-                                                            var project = client.ProjectByName(projectName);
-                                                            var buildTypes = project.BuildTypes.BuildType;
-                                                            var builds =
-                                                                buildTypes.SelectMany(
-                                                                    x =>
-                                                                    client.BuildsByBuildLocator(
-                                                                        BuildLocator.WithDimensions(BuildTypeLocator.WithId(x.Id), sinceDate: sinceDate)));
-                                                            foreach (var build in builds)
-                                                            {
-                                                                cancellationToken.ThrowIfCancellationRequested();
-
-                                                                dynamic buildExpando = client.CallByUrl<object>(build.Href.Replace("guestAuth/", string.Empty));
-                                                                string status = buildExpando.status;
-                                                                string statusText = buildExpando.statusText;
-                                                                string revisionVersion = buildExpando.revisions != null
-                                                                                             ? buildExpando.revisions.revision[0].version
-                                                                                             : null;
-
-                                                                var buildInfo = new BuildInfo
-                                                                                    {
-                                                                                        Id = buildExpando.id,
-                                                                                        StartDate = buildExpando.startDate,
-                                                                                        Status = status,
-                                                                                        Description = statusText,
-                                                                                        CommitHash = revisionVersion
-                                                                                    };
-                                                                observer.OnNext(buildInfo);
-                                                            }
-
-                                                            observer.OnCompleted();
-                                                        }
-                                                        catch (Exception ex)
-                                                        {
-                                                            observer.OnError(ex);
-                                                        }
-
-                                                        return new Task<IDisposable>(() => Disposable.Empty);
-                                                    });
-        }
-
-        private void CancelBuildStatusFetchOperation()
-        {
-            var cancellationToken = Interlocked.Exchange(ref buildStatusCancellationToken, null);
-
-            if (cancellationToken != null)
-            {
-                cancellationToken.Dispose();
-            }
         }
 
         private void SelectInitialRevision()
@@ -1078,7 +957,7 @@ namespace GitUI
             }
         }
 
-        private int SearchRevision(string initRevision, out string graphRevision)
+        internal int SearchRevision(string initRevision, out string graphRevision)
         {
             var rows = Revisions
                 .Rows
@@ -1411,50 +1290,8 @@ namespace GitUI
                         }
                         break;
                     case 4:
-                        {
-                            if (revision.BuildStatus != null)
-                            {
-                                Image buildStatusImage = null;
-
-                                switch (revision.BuildStatus.Status)
-                                {
-                                    case "SUCCESS":
-                                        buildStatusImage = Properties.Resources.IconClean;
-                                        break;
-                                    case "FAILURE":
-                                        buildStatusImage = Properties.Resources.error;
-                                        break;
-                                    case "UNKNOWN":
-                                        buildStatusImage = Properties.Resources.Conflict;
-                                        break;
-                                }
-
-                                if (buildStatusImage != null)
-                                {
-                                    e.Graphics.DrawImage(buildStatusImage, new Rectangle(e.CellBounds.Left, e.CellBounds.Top + 4, 16, 16));
-                                }
-                            }
-                        }
-                        break;
                     case 5:
-                        if (revision.BuildStatus != null)
-                        {
-                            Brush buildStatusForebrush = foreBrush;
-
-                            switch (revision.BuildStatus.Status)
-                            {
-                                case "SUCCESS":
-                                    buildStatusForebrush = Brushes.DarkGreen;
-                                    break;
-                                case "FAILURE":
-                                    buildStatusForebrush = Brushes.DarkRed;
-                                    break;
-                            }
-
-                            var text = (string) e.FormattedValue;
-                            e.Graphics.DrawString(text, rowFont, buildStatusForebrush,
-                                                    new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
-                        }
+                        _BuildServerWatcher.RevisionsCellPainting(e, revision, foreBrush, rowFont);
                         break;
                 }
             }
@@ -1495,10 +1332,9 @@ namespace GitUI
                             e.Value = string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
                     }
                     break;
+                case 4:
                 case 5:
-                    e.Value = revision.BuildStatus != null
-                                  ? revision.BuildStatus.Description
-                                  : string.Empty;
+                    _BuildServerWatcher.RevisionsCellFormatting(e, revision);
                     break;
                 default:
                     e.FormattingApplied = false;
