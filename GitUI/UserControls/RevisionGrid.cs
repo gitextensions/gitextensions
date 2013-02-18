@@ -927,14 +927,14 @@ namespace GitUI
             {
                 // This has to happen on the UI thread
                 _syncContext.Send(o =>
-                    {
-                        UpdateGraph(null);
-                        Loading.Visible = false;
-                        SelectInitialRevision();
-                        _isLoading = false;
+                                      {
+                                          UpdateGraph(null);
+                                          Loading.Visible = false;
+                                          SelectInitialRevision();
+                                          _isLoading = false;
 
-                        _BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
-                    }, this);
+                                          _BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
+                                      }, this);
             }
 
             DisposeRevisionGraphCommand();
