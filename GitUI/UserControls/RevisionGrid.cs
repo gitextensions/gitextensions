@@ -969,73 +969,32 @@ namespace GitUI
 
         private void LaunchBuildServerInfoFetchOperation()
         {
-            var observable = Observable.Create<BuildInfo>((observer, cancellationToken) =>
-                {
-                    var client = new TeamCityClient("lmbsvapp08:8081");
-                    client.Connect(string.Empty, string.Empty, true);
+            var client = new TeamCityClient("teamcity.codebetter.com");
+            client.Connect(string.Empty, string.Empty, true);
 
-                    try
-                    {
-                        var projectName =
-                            Module.GitWorkingDir
-                                  .Split(
-                                      new[] {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar},
-                                      StringSplitOptions.RemoveEmptyEntries)
-                                  .Last();
-                        var project = client.ProjectByName(projectName);
-                        var buildTypes = project.BuildTypes.BuildType;
-                        var builds =
-                            buildTypes.SelectMany(
-                                x =>
-                                client.BuildsByBuildLocator(
-                                    BuildLocator.WithDimensions(BuildTypeLocator.WithId(x.Id))));
-                        foreach (
-                            var build in
-                                builds.Where(b => buildTypes.Exists(x => x.Id == b.BuildTypeId)))
-                        {
-                            cancellationToken.ThrowIfCancellationRequested();
+            var projectName = Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
+            var initialObservable = CreateTeamCityObservable(client, projectName);
+            var followingObservable = CreateTeamCityObservable(client, projectName, DateTime.Now);
 
-                            dynamic buildExpando =
-                                client.CallByUrl<object>(build.Href.Replace("guestAuth/", string.Empty));
-                            string status = buildExpando.status;
-                            string statusText = buildExpando.statusText;
-                            string revisionVersion = buildExpando.revisions != null
-                                                         ? buildExpando.revisions.revision[0].version
-                                                         : null;
-
-                            var buildInfo = new BuildInfo
-                                {
-                                    Id = buildExpando.id,
-                                    StartDate = buildExpando.startDate,
-                                    Status = status,
-                                    Description = statusText,
-                                    CommitHash = revisionVersion
-                                };
-                            observer.OnNext(buildInfo);
-                        }
-
-                        observer.OnCompleted();
-                    }
-                    catch (Exception ex)
-                    {
-                        observer.OnError(ex);
-                    }
-
-                    return new Task<IDisposable>(() => Disposable.Empty);
-                });
-
-            this.buildStatusCancellationToken =
-                observable.SubscribeOn(NewThreadScheduler.Default)
-                          .DoWhile(() => this.buildStatusCancellationToken != null)
+            buildStatusCancellationToken =
+                initialObservable.SubscribeOn(NewThreadScheduler.Default)
                           .OnErrorResumeNext(Observable.Empty<BuildInfo>())
+                          .Concat(Observable.Empty<BuildInfo>()
+                                            .Delay(TimeSpan.FromSeconds(5))
+                                            .Concat(followingObservable.SubscribeOn(NewThreadScheduler.Default)
+                                                                       .OnErrorResumeNext(Observable.Empty<BuildInfo>()))
+                                            .Repeat())
                           .Subscribe(item =>
                               {
+                                  if (buildStatusCancellationToken == null)
+                                      return;
+
                                   string graphRevision;
                                   int row = SearchRevision(item.CommitHash, out graphRevision);
                                   if (row >= 0)
                                   {
                                       var rowData = Revisions.GetRowData(row);
-                                      if (rowData.BuildStatus == null || rowData.BuildStatus.StartDate < item.StartDate)
+                                      if (rowData.BuildStatus == null || item.StartDate > rowData.BuildStatus.StartDate || item.Description.Length > rowData.BuildStatus.Description.Length)
                                       {
                                           rowData.BuildStatus = item;
 
@@ -1046,12 +1005,59 @@ namespace GitUI
                               });
         }
 
+        private IObservable<BuildInfo> CreateTeamCityObservable(TeamCityClient client, string projectName, DateTime? sinceDate = null)
+        {
+            return Observable.Create<BuildInfo>((observer, cancellationToken) =>
+                                                    {
+                                                        try
+                                                        {
+                                                            var project = client.ProjectByName(projectName);
+                                                            var buildTypes = project.BuildTypes.BuildType;
+                                                            var builds =
+                                                                buildTypes.SelectMany(
+                                                                    x =>
+                                                                    client.BuildsByBuildLocator(
+                                                                        BuildLocator.WithDimensions(BuildTypeLocator.WithId(x.Id), sinceDate: sinceDate)));
+                                                            foreach (var build in builds)
+                                                            {
+                                                                cancellationToken.ThrowIfCancellationRequested();
+
+                                                                dynamic buildExpando = client.CallByUrl<object>(build.Href.Replace("guestAuth/", string.Empty));
+                                                                string status = buildExpando.status;
+                                                                string statusText = buildExpando.statusText;
+                                                                string revisionVersion = buildExpando.revisions != null
+                                                                                             ? buildExpando.revisions.revision[0].version
+                                                                                             : null;
+
+                                                                var buildInfo = new BuildInfo
+                                                                                    {
+                                                                                        Id = buildExpando.id,
+                                                                                        StartDate = buildExpando.startDate,
+                                                                                        Status = status,
+                                                                                        Description = statusText,
+                                                                                        CommitHash = revisionVersion
+                                                                                    };
+                                                                observer.OnNext(buildInfo);
+                                                            }
+
+                                                            observer.OnCompleted();
+                                                        }
+                                                        catch (Exception ex)
+                                                        {
+                                                            observer.OnError(ex);
+                                                        }
+
+                                                        return new Task<IDisposable>(() => Disposable.Empty);
+                                                    });
+        }
+
         private void CancelBuildStatusFetchOperation()
         {
-            if (this.buildStatusCancellationToken != null)
+            var cancellationToken = Interlocked.Exchange(ref buildStatusCancellationToken, null);
+
+            if (cancellationToken != null)
             {
-                this.buildStatusCancellationToken.Dispose();
-                this.buildStatusCancellationToken = null;
+                cancellationToken.Dispose();
             }
         }
 
