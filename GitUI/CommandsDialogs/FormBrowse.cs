@@ -375,7 +375,7 @@ namespace GitUI.CommandsDialogs
                 _toolStripGitStatus.Enabled = validWorkingDir;
             toolStripButtonPull.Enabled = validWorkingDir;
             toolStripButtonPush.Enabled = validWorkingDir;
-            submodulesToolStripMenuItem.Enabled = validWorkingDir;
+            dashboardToolStripMenuItem.Enabled = validWorkingDir;
             UpdatePluginMenu(validWorkingDir);
             gitMaintenanceToolStripMenuItem.Enabled = validWorkingDir;
             editgitignoreToolStripMenuItem1.Enabled = validWorkingDir;
