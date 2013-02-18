@@ -1101,9 +1101,17 @@ namespace GitUI.CommandsDialogs
             this.openToolStripMenuItem, // ok
             this.recentToolStripMenuItem, // ok
             this.toolStripSeparator12, // ok
-            this.closeToolStripMenuItem, // TODO: move away
-            this.fileExplorerToolStripMenuItem, // TODO: move away
-            this.refreshToolStripMenuItem, // TODO: move away
+            // TODO: clone repo
+            // TODO: clone SVN repo
+            this.gitBashToolStripMenuItem, // ok
+            this.gitGUIToolStripMenuItem, // ok
+            this.kGitToolStripMenuItem, // ok
+            this.toolStripSeparator6, // ok
+            this.PuTTYToolStripMenuItem,
+            // TODO: sep
+            this.refreshToolStripMenuItem, // ok
+            // TODO: sep
+            // TODO: settings
             this.toolStripMenuItem1, // ok (sep)
             this.exitToolStripMenuItem}); // ok
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -1183,12 +1191,17 @@ namespace GitUI.CommandsDialogs
             // gitToolStripMenuItem
             // 
             this.gitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gitBashToolStripMenuItem,
-            this.gitGUIToolStripMenuItem,
-            this.kGitToolStripMenuItem});
+            this.fileExplorerToolStripMenuItem, // ok
+            // TODO: sep
+            this.manageRemoteRepositoriesToolStripMenuItem1,
+            // TODO: sep
+            // TODO...
+            // TODO: sep
+            this.closeToolStripMenuItem, // ok
+            });
             this.gitToolStripMenuItem.Name = "gitToolStripMenuItem";
             this.gitToolStripMenuItem.Size = new System.Drawing.Size(34, 20);
-            this.gitToolStripMenuItem.Text = "Git";
+            this.gitToolStripMenuItem.Text = "Repository";
             // 
             // gitBashToolStripMenuItem
             // 
@@ -1512,9 +1525,8 @@ namespace GitUI.CommandsDialogs
             // remotesToolStripMenuItem
             // 
             this.remotesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.manageRemoteRepositoriesToolStripMenuItem1,
-            this.toolStripSeparator6,
-            this.PuTTYToolStripMenuItem});
+                // TODO: remove this menu completely
+            });
             this.remotesToolStripMenuItem.Name = "remotesToolStripMenuItem";
             this.remotesToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
             this.remotesToolStripMenuItem.Text = "Remotes";
