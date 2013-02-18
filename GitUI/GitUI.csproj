@@ -155,6 +155,7 @@
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateItem.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\BuildInfoDrawingLogic.cs" />
     <Compile Include="UserControls\RevisionGridClasses\BuildServerWatcher.cs" />
     <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Graph.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
