@@ -1097,17 +1097,18 @@ namespace GitUI.CommandsDialogs
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openToolStripMenuItem,
-            this.closeToolStripMenuItem,
-            this.refreshToolStripMenuItem,
-            this.recentToolStripMenuItem,
-            this.toolStripSeparator12,
-            this.fileExplorerToolStripMenuItem,
-            this.toolStripMenuItem1,
-            this.exitToolStripMenuItem});
+            this.initNewRepositoryToolStripMenuItem, // ok
+            this.openToolStripMenuItem, // ok
+            this.recentToolStripMenuItem, // ok
+            this.toolStripSeparator12, // ok
+            this.closeToolStripMenuItem, // TODO: move away
+            this.fileExplorerToolStripMenuItem, // TODO: move away
+            this.refreshToolStripMenuItem, // TODO: move away
+            this.toolStripMenuItem1, // ok (sep)
+            this.exitToolStripMenuItem}); // ok
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Text = "Start";
             this.fileToolStripMenuItem.DropDownOpening += new System.EventHandler(this.FileToolStripMenuItemDropDownOpening);
             // 
             // openToolStripMenuItem
@@ -1219,7 +1220,6 @@ namespace GitUI.CommandsDialogs
             this.cleanupToolStripMenuItem,
             this.cloneToolStripMenuItem,
             this.cloneSVNToolStripMenuItem,
-            this.initNewRepositoryToolStripMenuItem,
             this.toolStripSeparator21,
             this.commitToolStripMenuItem,
             this.pullToolStripMenuItem,
