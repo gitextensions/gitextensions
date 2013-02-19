@@ -2,28 +2,11 @@
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Subjects;
+using GitUIPluginInterfaces;
+using Notification = GitUIPluginInterfaces.Notification;
 
 namespace GitUI
 {
-    /// <summary>Provides the ability to notify the user.</summary>
-    public interface INotifier
-    {
-        /// <summary>Notifies the user about a status update.</summary>
-        /// <param name="notification">Status update to show to user.</param>
-        void Notify(Notification notification);
-        /// <summary>Gets a notification batch.</summary>
-        INotificationBatch StartBatch();
-    }
-
-    /// <summary>Provides the ability to notify the user about a batch process.</summary>
-    public interface INotificationBatch
-    {
-        /// <summary>Notifies the user about the next update in the batch.</summary>
-        void Next(Notification notification);
-        /// <summary>Notifies the user about the complete batch process.</summary>
-        void Last(Notification notification);
-    }
-
     /// <summary>Manages notifications between publishers and subscribers.</summary>
     internal sealed class NotificationManager : INotifier
     {
@@ -171,49 +154,5 @@ namespace GitUI
         {
             return BatchFrom(severity, text, BatchId, BatchEntry.Last);
         }
-    }
-
-    /// <summary>Represents a single notification in a status feed.</summary>
-    public class Notification
-    {
-        /// <summary><see cref="Notification"/> which isn't part of a batch of status updates.</summary>
-        static readonly Guid loner = Guid.NewGuid();
-
-        public Notification(StatusSeverity severity, string text)
-            : this(severity, text, loner) { }
-
-        Notification(StatusSeverity severity, string text, Guid batchId)
-        {
-            Severity = severity;
-            Text = text;
-            if (batchId == Guid.Empty)
-            {
-                throw new ArgumentException("Must specify a NON-empty GUID.", "batchId");
-            }
-        }
-
-        /// <summary>Gets the severity of the update.</summary>
-        public StatusSeverity Severity { get; private set; }
-        /// <summary>Gets the text of the update.</summary>
-        public string Text { get; private set; }
-        ///// <summary></summary>
-        //public Action OnClick { get; private set; }
-
-
-        public override string ToString() { return Text; }
-    }
-
-    /// <summary>Specifies the severity of a status update.</summary>
-    public enum StatusSeverity
-    {
-        /// <summary>Information from a long-running or passive action.</summary>
-        Info = 0,
-        /// <summary>Action succeeded.</summary>
-        Success = 1,
-        /// <summary>Possible long-running action which induced side effects.
-        ///  Or, another action which may NOT have only an boolean result.</summary>
-        Warn = 2,
-        /// <summary>Action failed.</summary>
-        Fail = 3,
     }
 }

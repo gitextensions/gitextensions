@@ -5,14 +5,13 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
+using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls
 {
     /// <summary>Tree-like structure for a repo's objects.</summary>
     public partial class RepoObjectsTree : GitModuleControl
     {
-        public IObservable<Notification> StatusFeed { get; private set; }
-
         List<RootNode> rootNodes = new List<RootNode>();
         /// <summary>Image key for a head branch.</summary>
         static readonly string headBranchKey = Guid.NewGuid().ToString();

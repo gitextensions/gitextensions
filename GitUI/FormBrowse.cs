@@ -25,6 +25,7 @@ using System.Reactive;
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
 using ResourceManager.Translation;
+using Notification = GitUIPluginInterfaces.Notification;
 
 namespace GitUI
 {
