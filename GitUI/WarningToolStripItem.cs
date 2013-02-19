@@ -9,7 +9,8 @@ using System.Reactive.Linq;
 using System.Windows.Forms;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
-using Notification = GitUIPluginInterfaces.Notification;
+using GitUIPluginInterfaces.Notifications;
+using Notification = GitUIPluginInterfaces.Notifications.Notification;
 
 namespace GitUI
 {

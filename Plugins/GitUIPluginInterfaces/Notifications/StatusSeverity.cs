@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces.Notifications
 {
     /// <summary>Specifies the severity of a status update.</summary>
     public enum StatusSeverity

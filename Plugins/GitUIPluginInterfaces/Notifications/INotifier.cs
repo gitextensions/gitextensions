@@ -1,4 +1,4 @@
-﻿namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces.Notifications
 {
     /// <summary>Provides the ability to notify the user.</summary>
     public interface INotifier

@@ -64,9 +64,9 @@
     <Compile Include="IGitPluginForRepository.cs" />
     <Compile Include="IGitModule.cs" />
     <Compile Include="IGitRemoteCommand.cs" />
-    <Compile Include="INotificationBatch.cs" />
-    <Compile Include="INotifier.cs" />
-    <Compile Include="Notification.cs" />
+    <Compile Include="Notifications\INotificationBatch.cs" />
+    <Compile Include="Notifications\INotifier.cs" />
+    <Compile Include="Notifications\Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryHosts\IRepositoryHostPlugin.cs" />
     <Compile Include="IGitPlugin.cs" />
@@ -78,7 +78,7 @@
     <Compile Include="RepositoryHosts\IPasswordHelper.cs" />
     <Compile Include="RepositoryHosts\IHostedRemote.cs" />
     <Compile Include="RepositoryHosts\IPullRequestInformation.cs" />
-    <Compile Include="StatusSeverity.cs" />
+    <Compile Include="Notifications\StatusSeverity.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

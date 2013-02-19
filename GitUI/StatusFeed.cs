@@ -3,7 +3,8 @@ using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Subjects;
 using GitUIPluginInterfaces;
-using Notification = GitUIPluginInterfaces.Notification;
+using GitUIPluginInterfaces.Notifications;
+using Notification = GitUIPluginInterfaces.Notifications.Notification;
 
 namespace GitUI
 {

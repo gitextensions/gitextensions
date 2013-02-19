@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GitUIPluginInterfaces
+namespace GitUIPluginInterfaces.Notifications
 {
     //public interface INotification
     //{

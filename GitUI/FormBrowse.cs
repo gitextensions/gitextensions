@@ -22,10 +22,11 @@ using GitUIPluginInterfaces;
 using System.Reactive;
 
 #if !__MonoCS__
+using GitUIPluginInterfaces.Notifications;
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
 using ResourceManager.Translation;
-using Notification = GitUIPluginInterfaces.Notification;
+using Notification = GitUIPluginInterfaces.Notifications.Notification;
 
 namespace GitUI
 {
