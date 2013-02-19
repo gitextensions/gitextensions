@@ -14,6 +14,7 @@ namespace GitUI.RevisionGridClasses
         private readonly DvcsGraph revisions;
 
         private IDisposable buildStatusCancellationToken;
+
         private int buildStatusImageColumnIndex = -1;
         private int buildStatusMessageColumnIndex = -1;
 
@@ -48,6 +49,8 @@ namespace GitUI.RevisionGridClasses
 
         public void LaunchBuildServerInfoFetchOperation()
         {
+            CancelBuildStatusFetchOperation();
+
             UpdateUI();
 
             if (Settings.ActiveBuildServerType == Settings.BuildServerType.None)
