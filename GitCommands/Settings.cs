@@ -1229,15 +1229,18 @@ namespace GitCommands
             if (parts.Length < 2)
                 return defaultValue;
 
-            CultureInfo ci;
-            if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
-                ci = CultureInfo.InvariantCulture;
-            else
-                ci = CultureInfo.InstalledUICulture;
-
             try
             {
-                return new Font(parts[0], Single.Parse(parts[1], ci));
+                string fontSize;
+                if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
+                    fontSize = parts[1];
+                else
+                {
+                    fontSize = parts[1].Replace(",", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
+                    fontSize = fontSize.Replace(".", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
+                }
+
+                return new Font(parts[0], Single.Parse(fontSize, CultureInfo.InvariantCulture));
             }
             catch (Exception)
             {
