@@ -27,6 +27,9 @@ namespace GitExtensions
                 NBug.Settings.ExitApplicationImmediately = false;
                 NBug.Settings.WriteLogToDisk = true;
                 NBug.Settings.MaxQueuedReports = 10;
+                NBug.Settings.StopReportingAfter = 90;
+                NBug.Settings.SleepBeforeSend = 30;
+                NBug.Settings.StoragePath = "WindowsTemp";
                 
                 AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
                 Application.ThreadException += NBug.Handler.ThreadException;
