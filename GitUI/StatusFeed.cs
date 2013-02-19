@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Windows.Forms;
 
 namespace GitUI
 {
@@ -44,6 +42,7 @@ namespace GitUI
         Subject<Notification> _notifications = new Subject<Notification>();
         Subject<BatchNotification> _notificationBatches = new Subject<BatchNotification>();
 
+
         public void Subscribe(
             Action<Notification> onNotification,
             Action<BatchNotification> onBatchNotification)
@@ -67,31 +66,37 @@ namespace GitUI
 
         INotificationBatch INotifier.StartBatch()
         {
-            return new NotificationBatch();
+            return new NotificationBatch(_notificationBatches);
         }
 
+        /// <summary>Re-routes <see cref="INotificationBatch"/> calls through <see cref="INotifier"/>'s subscribers.</summary>
         class NotificationBatch : INotificationBatch
         {
-            Subject<BatchNotification> _notifications = new Subject<BatchNotification>();
+            Subject<BatchNotification> _batchNotifications;
 
             public Guid BatchId { get; private set; }
 
-            public NotificationBatch(Action<BatchNotification> onBatchNotification)
+            public NotificationBatch(Subject<BatchNotification> batchNotifications)
             {
-                _notifications.Subscribe(Observer.Create(onBatchNotification).NotifyOn(UiScheduler));
+                _batchNotifications = batchNotifications;
                 BatchId = Guid.NewGuid();
             }
 
-            public void Next(Notification notification)
+            /// <summary>Notifies <see cref="INotifier"/>'s subscribers of a new batch notification.</summary>
+            void Next(Notification notification)
             {
-                _notifications.OnNext(new BatchNotification(notification, BatchId));
+                _batchNotifications.OnNext(new BatchNotification(notification, BatchId));
+            }
+
+            void INotificationBatch.Next(Notification notification)
+            {
+                Next(notification);
             }
 
             void INotificationBatch.Last(Notification notification)
             {
                 Next(notification);
-                _notifications.OnCompleted();
-                throw new NotImplementedException();
+                _batchNotifications.OnCompleted();
             }
         }
     }
