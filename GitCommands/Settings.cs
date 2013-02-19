@@ -346,6 +346,12 @@ namespace GitCommands
             ByNameMap[settingName] = encoding;
         }
 
+        public enum BuildServerType
+        {
+            None,
+            TeamCity
+        }
+
         public enum PullAction
         {
             None,
@@ -554,6 +560,19 @@ namespace GitCommands
         {
             get { return SafeGet("gitcommand", "git", ref _gitCommand); }
             set { SafeSet("gitcommand", value, ref _gitCommand); }
+        }
+
+        public static BuildServerType ActiveBuildServerType
+        {
+            get { return GetEnum("activebuildservertype", BuildServerType.None); }
+            set { SetEnum("activebuildservertype", value); }
+        }
+
+        private static string _buildServerUrl;
+        public static string BuildServerUrl
+        {
+            get { return SafeGet("buildserverurl", "teamcity.codebetter.com", ref _buildServerUrl); }
+            set { SafeSet("buildserverurl", value, ref _buildServerUrl); }
         }
 
         private static string _gitBinDir;
