@@ -129,8 +129,6 @@ namespace GitUI
             }
         }
 
-        internal static object notificationLock = new object();
-
         public static void Removal(this ToolStripDropDownItem dropDown, ToolStripItem item)
         {
             dropDown.Act(item, (items, child) =>
@@ -162,34 +160,25 @@ namespace GitUI
                 {
                     scheduledActions[dropDown] = new Queue<ScheduledAction>();
                 }
-                lock (notificationLock)
-                {
-                    scheduledActions[dropDown].Enqueue(new ScheduledAction { action = action, item = item });
-                    dropDown.DropDownClosed += Schedule;
-                }
+                scheduledActions[dropDown].Enqueue(new ScheduledAction { action = action, item = item });
+                dropDown.DropDownClosed += Schedule;
             }
             else
             {
-                lock (notificationLock)
-                {
-                    dropDown.DropDown.Enabled = false;
-                    action(dropDown.DropDownItems, item);
-                    dropDown.DropDown.Enabled = true;
-                }
+                dropDown.DropDown.Enabled = false;
+                action(dropDown.DropDownItems, item);
+                dropDown.DropDown.Enabled = true;
             }
         }
 
         static void Schedule(object sender, EventArgs e)
         {
             ToolStripDropDownItem dropDown = (ToolStripDropDownItem)sender;
-            lock (notificationLock)
+            Queue<ScheduledAction> actions = scheduledActions[dropDown];
+            while (actions.Any())
             {
-                Queue<ScheduledAction> actions = scheduledActions[dropDown];
-                while (actions.Any())
-                {
-                    ScheduledAction scheduledAction = actions.Dequeue();
-                    scheduledAction.action(dropDown.DropDownItems, scheduledAction.item);
-                }
+                ScheduledAction scheduledAction = actions.Dequeue();
+                scheduledAction.action(dropDown.DropDownItems, scheduledAction.item);
             }
         }
 
@@ -433,10 +422,7 @@ namespace GitUI
         public void Add(Notification notification)
         {
             var control = new NotificationItem(notification);
-            lock (NotifierHelpers.notificationLock)
-            {
-                DropDownItems.Insert(0, control);
-            }
+            DropDownItems.Insert(0, control);
 
             Update(notification);
 
