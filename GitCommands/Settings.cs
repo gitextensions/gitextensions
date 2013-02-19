@@ -1209,14 +1209,12 @@ namespace GitCommands
                 return defaultValue;
 
             CultureInfo ci;
-            if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
-                ci = CultureInfo.InvariantCulture;
-            else
-                ci = CultureInfo.InstalledUICulture;
-
             try
             {
-                return new Font(parts[0], Single.Parse(parts[1], ci));
+                if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
+                    return new Font(parts[0], Single.Parse(parts[1], CultureInfo.InvariantCulture));
+                else
+                    return new Font(parts[0], Single.Parse(parts[1]));
             }
             catch (Exception)
             {
