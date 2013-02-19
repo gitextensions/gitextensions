@@ -8,7 +8,7 @@ namespace GitUI
 {
     public sealed partial class FormDiffSmall : GitModuleForm
     {
-        private readonly GitRevision revision;
+        private readonly string _revision;
 
         private FormDiffSmall()
             : this(null, null)
@@ -16,7 +16,7 @@ namespace GitUI
         
         }
 
-        public FormDiffSmall(GitUICommands aCommands, GitRevision revision)
+        public FormDiffSmall(GitUICommands aCommands, string revision)
             : base(aCommands)
         {
             InitializeComponent(); 
@@ -24,14 +24,14 @@ namespace GitUI
             DiffText.ExtraDiffArgumentsChanged += DiffText_ExtraDiffArgumentsChanged;
             DiffFiles.Focus();
 
-            this.revision = revision;
+            _revision = revision;
 
             DiffFiles.GitItemStatuses = null;
-            if (this.revision != null)
+            if (_revision != null)
             {
-                DiffFiles.GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.Guid + "^");
+                DiffFiles.GitItemStatuses = Module.GetDiffFiles(_revision, _revision + "^");
 
-                commitInfo.Revision = revision;
+                commitInfo.RevisionGuid = _revision;
             }
         }
 
@@ -44,9 +44,9 @@ namespace GitUI
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            if (DiffFiles.SelectedItem != null && revision != null)
+            if (DiffFiles.SelectedItem != null && _revision != null)
             {
-                Patch selectedPatch = Module.GetSingleDiff(revision.Guid, revision.Guid + "^", DiffFiles.SelectedItem.Name, DiffFiles.SelectedItem.OldName, DiffText.GetExtraDiffArguments(), DiffText.Encoding);
+                Patch selectedPatch = Module.GetSingleDiff(_revision, _revision + "^", DiffFiles.SelectedItem.Name, DiffFiles.SelectedItem.OldName, DiffText.GetExtraDiffArguments(), DiffText.Encoding);
                 DiffText.ViewPatch(selectedPatch);
             }
             Cursor.Current = Cursors.Default;
