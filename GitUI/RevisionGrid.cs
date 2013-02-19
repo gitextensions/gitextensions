@@ -1467,7 +1467,7 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Count > 0)
             {
-                var form = new FormDiffSmall(UICommands, selectedRevisions[0]);
+                var form = new FormDiffSmall(UICommands, selectedRevisions[0].Guid);
                 form.ShowDialog(this);
             }
             else
