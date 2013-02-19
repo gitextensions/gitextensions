@@ -62,9 +62,9 @@ namespace GitUI.RevisionGridClasses
                 initialObservable.SubscribeOn(NewThreadScheduler.Default)
                     .OnErrorResumeNext(Observable.Empty<BuildInfo>())
                     .Concat(Observable.Empty<BuildInfo>()
-                                .Delay(TimeSpan.FromSeconds(5))
+                                .Delay(TimeSpan.FromSeconds(20))
                                 .Concat(followingObservable.SubscribeOn(NewThreadScheduler.Default)
-                                            .OnErrorResumeNext(Observable.Empty<BuildInfo>()))
+                                                           .OnErrorResumeNext(Observable.Empty<BuildInfo>()))
                                 .Repeat())
                     .Subscribe(item =>
                                    {
