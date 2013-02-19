@@ -156,6 +156,7 @@
     </Compile>
     <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateItem.cs" />
     <Compile Include="UserControls\RevisionGridClasses\BuildInfoDrawingLogic.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\TeamCityBuildLocator2.cs" />
     <Compile Include="UserControls\RevisionGridClasses\BuildServerWatcher.cs" />
     <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Graph.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>

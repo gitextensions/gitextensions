@@ -55,95 +55,98 @@ namespace GitUI.RevisionGridClasses
             client.Connect(string.Empty, string.Empty, true);
 
             var projectName = revisionGrid.Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
-            var initialObservable = CreateTeamCityObservable(client, projectName);
-            var followingObservable = CreateTeamCityObservable(client, projectName, DateTime.Now);
+            var fullDayObservable = CreateTeamCityObservable(client, projectName, DateTime.Now.Date);
+            var fullObservable = CreateTeamCityObservable(client, projectName);
+            var fromNowObservable = CreateTeamCityObservable(client, projectName, DateTime.Now);
 
             buildStatusCancellationToken =
-                initialObservable.SubscribeOn(NewThreadScheduler.Default)
-                    .OnErrorResumeNext(Observable.Empty<BuildInfo>())
-                    .Concat(Observable.Empty<BuildInfo>()
-                                .Delay(TimeSpan.FromSeconds(20))
-                                .Concat(followingObservable.SubscribeOn(NewThreadScheduler.Default)
-                                                           .OnErrorResumeNext(Observable.Empty<BuildInfo>()))
-                                .Repeat())
-                    .Subscribe(item =>
-                                   {
-                                       if (buildStatusCancellationToken == null)
-                                           return;
+                fullDayObservable.Concat(fullObservable)
+                                 .Concat(Observable.Empty<BuildInfo>().Delay(TimeSpan.FromMinutes(1))
+                                                   .Concat(fromNowObservable)
+                                                   .Repeat())
+                                 .Subscribe(item =>
+                                     {
+                                         if (buildStatusCancellationToken == null)
+                                             return;
 
-                                       string graphRevision;
-                                       int row = revisionGrid.SearchRevision(item.CommitHash, out graphRevision);
-                                       if (row >= 0)
-                                       {
-                                           var rowData = revisions.GetRowData(row);
-                                           if (rowData.BuildStatus == null ||
-                                               item.StartDate > rowData.BuildStatus.StartDate ||
-                                               item.Description.Length > rowData.BuildStatus.Description.Length)
-                                           {
-                                               rowData.BuildStatus = item;
+                                         string graphRevision;
+                                         int row = revisionGrid.SearchRevision(item.CommitHash, out graphRevision);
+                                         if (row >= 0)
+                                         {
+                                             var rowData = revisions.GetRowData(row);
+                                             if (rowData.BuildStatus == null ||
+                                                 item.StartDate > rowData.BuildStatus.StartDate)
+                                             {
+                                                 rowData.BuildStatus = item;
 
-                                               revisions.UpdateCellValue(4, row);
-                                               revisions.UpdateCellValue(5, row);
-                                           }
-                                       }
-                                   });
+                                                 revisions.UpdateCellValue(4, row);
+                                                 revisions.UpdateCellValue(5, row);
+                                             }
+                                         }
+                                     });
         }
 
         private IObservable<BuildInfo> CreateTeamCityObservable(TeamCityClient client, string projectName, DateTime? sinceDate = null)
         {
             return Observable.Create<BuildInfo>((observer, cancellationToken) =>
-            {
-                try
                 {
-                    var project = client.ProjectByName(projectName);
-                    var buildTypes = project.BuildTypes.BuildType;
-                    var builds =
-                        buildTypes.SelectMany(
-                            x =>
-                            client.BuildsByBuildLocator(
-                                BuildLocator.WithDimensions(BuildTypeLocator.WithId(x.Id), sinceDate: sinceDate)));
-                    foreach (var build in builds)
+                    try
                     {
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        dynamic buildExpando = client.CallByUrl<object>(build.Href.Replace("guestAuth/", string.Empty));
-                        BuildInfo.BuildStatus status = BuildInfo.BuildStatus.Unknown;
-                        string statusText = buildExpando.statusText;
-                        string revisionVersion = buildExpando.revisions != null
-                                                     ? buildExpando.revisions.revision[0].version
-                                                     : null;
-
-                        switch ((string)buildExpando.status)
+                        var project = client.ProjectByName(projectName);
+                        var buildTypes = project.BuildTypes.BuildType;
+                        var builds =
+                            buildTypes.SelectMany(
+                                x =>
+                                client.BuildsByBuildLocator(
+                                    TeamCityBuildLocator2.WithDimensions(BuildTypeLocator.WithId(x.Id), sinceDate: sinceDate, defaultBranch: "any")));
+                        foreach (var build in builds)
                         {
-                            case "SUCCESS":
-                                status = BuildInfo.BuildStatus.Success;
-                                break;
-                            case "FAILURE":
-                                status = BuildInfo.BuildStatus.Failure;
-                                break;
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            dynamic buildExpando =
+                                client.CallByUrl<object>(build.Href.Replace("guestAuth/", string.Empty));
+                            var status = BuildInfo.BuildStatus.Unknown;
+                            string statusText = buildExpando.statusText;
+                            object[] revisions = buildExpando.revisions != null
+                                                     ? buildExpando.revisions.revision
+                                                     : null;
+                            string revisionVersion = revisions != null
+                                                         ? ((dynamic)revisions.Single()).version
+                                                         : null;
+
+                            switch ((string)buildExpando.status)
+                            {
+                                case "SUCCESS":
+                                    status = BuildInfo.BuildStatus.Success;
+                                    break;
+                                case "FAILURE":
+                                    status = BuildInfo.BuildStatus.Failure;
+                                    break;
+                            }
+
+                            var buildInfo = new BuildInfo
+                                {
+                                    Id = buildExpando.id,
+                                    StartDate = buildExpando.startDate,
+                                    Status = status,
+                                    Description = statusText,
+                                    CommitHash = revisionVersion
+                                };
+
+                            observer.OnNext(buildInfo);
                         }
 
-                        var buildInfo = new BuildInfo
-                                            {
-                                                Id = buildExpando.id,
-                                                StartDate = buildExpando.startDate,
-                                                Status = status,
-                                                Description = statusText,
-                                                CommitHash = revisionVersion
-                                            };
-
-                        observer.OnNext(buildInfo);
+                        observer.OnCompleted();
+                    }
+                    catch (Exception ex)
+                    {
+                        observer.OnError(ex);
                     }
 
-                    observer.OnCompleted();
-                }
-                catch (Exception ex)
-                {
-                    observer.OnError(ex);
-                }
-
-                return new Task<IDisposable>(() => Disposable.Empty);
-            });
+                    return new Task<IDisposable>(() => Disposable.Empty);
+                })
+                             .SubscribeOn(NewThreadScheduler.Default)
+                             .OnErrorResumeNext(Observable.Empty<BuildInfo>());
         }
 
         public void CancelBuildStatusFetchOperation()
