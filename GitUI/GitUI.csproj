@@ -156,6 +156,7 @@
     </Compile>
     <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateItem.cs" />
     <Compile Include="UserControls\RevisionGridClasses\BuildInfoDrawingLogic.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\IBuildServerWatcher.cs" />
     <Compile Include="UserControls\RevisionGridClasses\TeamCityBuildLocator2.cs" />
     <Compile Include="UserControls\RevisionGridClasses\BuildServerWatcher.cs" />
     <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Graph.cs">
@@ -879,6 +880,7 @@
     </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\TeamCityBuildWatcher.cs" />
     <Compile Include="UserControls\ToolStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
