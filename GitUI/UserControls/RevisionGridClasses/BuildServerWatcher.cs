@@ -14,6 +14,8 @@ namespace GitUI.RevisionGridClasses
         private readonly DvcsGraph revisions;
 
         private IDisposable buildStatusCancellationToken;
+        private int buildStatusImageColumnIndex = -1;
+        private int buildStatusMessageColumnIndex = -1;
 
         public BuildServerWatcher(RevisionGrid revisionGrid, DvcsGraph revisions)
         {
@@ -26,26 +28,31 @@ namespace GitUI.RevisionGridClasses
         private void AddBuildStatusColumns()
         {
             var buildStatusImageColumn = new DataGridViewImageColumn
-            {
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                Width = 16,
-                ReadOnly = true,
-                SortMode = DataGridViewColumnSortMode.NotSortable
-            };
+                                             {
+                                                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                                                 Width = 16,
+                                                 ReadOnly = true,
+                                                 SortMode = DataGridViewColumnSortMode.NotSortable
+                                             };
             var buildMessageTextBoxColumn = new DataGridViewTextBoxColumn
-            {
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                HeaderText = "Build Status",
-                ReadOnly = true,
-                SortMode = DataGridViewColumnSortMode.NotSortable
-            };
+                                                {
+                                                    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                                                    HeaderText = "Build Status",
+                                                    ReadOnly = true,
+                                                    SortMode = DataGridViewColumnSortMode.NotSortable
+                                                };
 
-            revisions.Columns.Add(buildStatusImageColumn);
-            revisions.Columns.Add(buildMessageTextBoxColumn);
+            buildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
+            buildStatusMessageColumnIndex = revisions.Columns.Add(buildMessageTextBoxColumn);
         }
 
         public void LaunchBuildServerInfoFetchOperation()
         {
+            UpdateUI();
+
+            if (Settings.ActiveBuildServerType == Settings.BuildServerType.None)
+                return;
+
             var projectName = revisionGrid.Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
             IBuildServerWatcher buildServerWatcher = new TeamCityBuildWatcher(projectName);
 
@@ -78,6 +85,13 @@ namespace GitUI.RevisionGridClasses
                                              }
                                          }
                                      });
+        }
+
+        private void UpdateUI()
+        {
+            var columnsAreVisible = Settings.ActiveBuildServerType != Settings.BuildServerType.None;
+            revisions.Columns[buildStatusImageColumnIndex].Visible = columnsAreVisible;
+            revisions.Columns[buildStatusMessageColumnIndex].Visible = columnsAreVisible;
         }
 
         public void CancelBuildStatusFetchOperation()
