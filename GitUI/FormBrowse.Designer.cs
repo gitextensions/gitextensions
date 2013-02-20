@@ -327,14 +327,14 @@ namespace GitUI
             this.RefreshButton.Image = global::GitUI.Properties.Resources.arrow_refresh;
             this.RefreshButton.ImageTransparentColor = System.Drawing.Color.White;
             this.RefreshButton.Name = "RefreshButton";
-            this.RefreshButton.Size = new System.Drawing.Size(23, 22);
+            this.RefreshButton.Size = new System.Drawing.Size(23, 25);
             this.RefreshButton.ToolTipText = "Refresh";
             this.RefreshButton.Click += new System.EventHandler(this.RefreshButtonClick);
             // 
             // toolStripSeparator17
             // 
             this.toolStripSeparator17.Name = "toolStripSeparator17";
-            this.toolStripSeparator17.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator17.Size = new System.Drawing.Size(6, 28);
             // 
             // toolStripButtonLevelUp
             // 
@@ -343,7 +343,7 @@ namespace GitUI
             this.toolStripButtonLevelUp.Image = global::GitUI.Properties.Resources.levelUp;
             this.toolStripButtonLevelUp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLevelUp.Name = "toolStripButtonLevelUp";
-            this.toolStripButtonLevelUp.Size = new System.Drawing.Size(32, 22);
+            this.toolStripButtonLevelUp.Size = new System.Drawing.Size(32, 25);
             this.toolStripButtonLevelUp.Text = "Go to superproject";
             this.toolStripButtonLevelUp.ToolTipText = "Go to superproject";
             this.toolStripButtonLevelUp.ButtonClick += new System.EventHandler(this.toolStripButtonLevelUp_ButtonClick);
@@ -354,7 +354,7 @@ namespace GitUI
             this._NO_TRANSLATE_Workingdir.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this._NO_TRANSLATE_Workingdir.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._NO_TRANSLATE_Workingdir.Name = "_NO_TRANSLATE_Workingdir";
-            this._NO_TRANSLATE_Workingdir.Size = new System.Drawing.Size(83, 22);
+            this._NO_TRANSLATE_Workingdir.Size = new System.Drawing.Size(83, 25);
             this._NO_TRANSLATE_Workingdir.Text = "WorkingDir";
             this._NO_TRANSLATE_Workingdir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this._NO_TRANSLATE_Workingdir.ToolTipText = "Change working directory";
@@ -366,7 +366,7 @@ namespace GitUI
             // 
             this.branchSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.branchSelect.Name = "branchSelect";
-            this.branchSelect.Size = new System.Drawing.Size(60, 22);
+            this.branchSelect.Size = new System.Drawing.Size(60, 25);
             this.branchSelect.Text = "Branch";
             this.branchSelect.ToolTipText = "Change current branch";
             this.branchSelect.ButtonClick += new System.EventHandler(this.CurrentBranchClick);
@@ -376,7 +376,7 @@ namespace GitUI
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 28);
             // 
             // toolStripSplitStash
             // 
@@ -388,7 +388,7 @@ namespace GitUI
             this.toolStripSplitStash.Image = global::GitUI.Properties.Resources.stash;
             this.toolStripSplitStash.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSplitStash.Name = "toolStripSplitStash";
-            this.toolStripSplitStash.Size = new System.Drawing.Size(32, 22);
+            this.toolStripSplitStash.Size = new System.Drawing.Size(32, 25);
             this.toolStripSplitStash.ToolTipText = "Stash changes";
             this.toolStripSplitStash.ButtonClick += new System.EventHandler(this.ToolStripSplitStashButtonClick);
             // 
@@ -426,7 +426,7 @@ namespace GitUI
             this.toolStripButton1.Image = global::GitUI.Properties.Resources.IconClean;
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(71, 22);
+            this.toolStripButton1.Size = new System.Drawing.Size(71, 25);
             this.toolStripButton1.Text = "Commit";
             this.toolStripButton1.Click += new System.EventHandler(this.ToolStripButton1Click);
             // 
@@ -444,7 +444,7 @@ namespace GitUI
             this.toolStripButtonPull.Image = global::GitUI.Properties.Resources.Icon_4;
             this.toolStripButtonPull.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonPull.Name = "toolStripButtonPull";
-            this.toolStripButtonPull.Size = new System.Drawing.Size(32, 22);
+            this.toolStripButtonPull.Size = new System.Drawing.Size(32, 25);
             this.toolStripButtonPull.Text = "Pull";
             this.toolStripButtonPull.ButtonClick += new System.EventHandler(this.ToolStripButtonPullClick);
             // 
@@ -508,21 +508,21 @@ namespace GitUI
             this.toolStripButtonPush.Image = global::GitUI.Properties.Resources.Icon_3;
             this.toolStripButtonPush.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonPush.Name = "toolStripButtonPush";
-            this.toolStripButtonPush.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPush.Size = new System.Drawing.Size(23, 25);
             this.toolStripButtonPush.Text = "Push";
             this.toolStripButtonPush.Click += new System.EventHandler(this.ToolStripButtonPushClick);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 28);
             // 
             // GitBash
             // 
             this.GitBash.Image = global::GitUI.Properties.Resources.bash;
             this.GitBash.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.GitBash.Name = "GitBash";
-            this.GitBash.Size = new System.Drawing.Size(23, 22);
+            this.GitBash.Size = new System.Drawing.Size(23, 25);
             this.GitBash.ToolTipText = "Git bash";
             this.GitBash.Click += new System.EventHandler(this.GitBashClick);
             // 
@@ -532,19 +532,19 @@ namespace GitUI
             this.EditSettings.Image = global::GitUI.Properties.Resources.Icon_71;
             this.EditSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.EditSettings.Name = "EditSettings";
-            this.EditSettings.Size = new System.Drawing.Size(23, 22);
+            this.EditSettings.Size = new System.Drawing.Size(23, 25);
             this.EditSettings.ToolTipText = "Settings";
             this.EditSettings.Click += new System.EventHandler(this.SettingsClick);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(6, 28);
             // 
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(58, 22);
+            this.toolStripLabel1.Size = new System.Drawing.Size(58, 25);
             this.toolStripLabel1.Text = "Branches:";
             // 
             // toolStripBranches
@@ -552,7 +552,7 @@ namespace GitUI
             this.toolStripBranches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.toolStripBranches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.toolStripBranches.Name = "toolStripBranches";
-            this.toolStripBranches.Size = new System.Drawing.Size(150, 25);
+            this.toolStripBranches.Size = new System.Drawing.Size(150, 28);
             // 
             // toolStripDropDownButton2
             // 
@@ -560,17 +560,17 @@ namespace GitUI
             this.toolStripDropDownButton2.Image = global::GitUI.Properties.Resources.Icon_77;
             this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton2.Name = "toolStripDropDownButton2";
-            this.toolStripDropDownButton2.Size = new System.Drawing.Size(29, 22);
+            this.toolStripDropDownButton2.Size = new System.Drawing.Size(29, 25);
             // 
             // toolStripSeparator19
             // 
             this.toolStripSeparator19.Name = "toolStripSeparator19";
-            this.toolStripSeparator19.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator19.Size = new System.Drawing.Size(6, 28);
             // 
             // toolStripLabel2
             // 
             this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(36, 22);
+            this.toolStripLabel2.Size = new System.Drawing.Size(36, 25);
             this.toolStripLabel2.Text = "Filter:";
             // 
             // toggleSplitViewLayout
@@ -580,7 +580,7 @@ namespace GitUI
             this.toggleSplitViewLayout.Image = global::GitUI.Properties.Resources.SplitViewLayout;
             this.toggleSplitViewLayout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toggleSplitViewLayout.Name = "toggleSplitViewLayout";
-            this.toggleSplitViewLayout.Size = new System.Drawing.Size(23, 22);
+            this.toggleSplitViewLayout.Size = new System.Drawing.Size(23, 25);
             this.toggleSplitViewLayout.ToolTipText = "Toggle split view layout";
             this.toggleSplitViewLayout.Click += new System.EventHandler(this.toggleSplitViewLayout_Click);
             // 
@@ -588,7 +588,7 @@ namespace GitUI
             // 
             this.toolStripTextBoxFilter.ForeColor = System.Drawing.Color.Black;
             this.toolStripTextBoxFilter.Name = "toolStripTextBoxFilter";
-            this.toolStripTextBoxFilter.Size = new System.Drawing.Size(120, 25);
+            this.toolStripTextBoxFilter.Size = new System.Drawing.Size(120, 28);
             // 
             // toolStripDropDownButton1
             // 
@@ -596,7 +596,7 @@ namespace GitUI
             this.toolStripDropDownButton1.Image = global::GitUI.Properties.Resources.Icon_77;
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 22);
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(29, 25);
             // 
             // MainSplitContainer
             // 
@@ -640,7 +640,7 @@ namespace GitUI
             this.RightSplitContainer.Panel2.Controls.Add(this.CommitInfoTabControl);
             this.RightSplitContainer.Panel2MinSize = 0;
             this.RightSplitContainer.Size = new System.Drawing.Size(706, 501);
-            this.RightSplitContainer.SplitterDistance = 210;
+            this.RightSplitContainer.SplitterDistance = 209;
             this.RightSplitContainer.TabIndex = 1;
             this.RightSplitContainer.TabStop = false;
             // 
@@ -652,7 +652,7 @@ namespace GitUI
             this.RevisionGrid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.RevisionGraphDrawStyle = GitUI.DvcsGraph.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
-            this.RevisionGrid.Size = new System.Drawing.Size(706, 210);
+            this.RevisionGrid.Size = new System.Drawing.Size(706, 209);
             this.RevisionGrid.TabIndex = 0;
             this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGridDoubleClick);
             // 
@@ -665,7 +665,7 @@ namespace GitUI
             this.CommitInfoTabControl.Location = new System.Drawing.Point(0, 0);
             this.CommitInfoTabControl.Name = "CommitInfoTabControl";
             this.CommitInfoTabControl.SelectedIndex = 0;
-            this.CommitInfoTabControl.Size = new System.Drawing.Size(706, 287);
+            this.CommitInfoTabControl.Size = new System.Drawing.Size(706, 288);
             this.CommitInfoTabControl.TabIndex = 0;
             this.CommitInfoTabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl1SelectedIndexChanged);
             // 
@@ -897,7 +897,7 @@ namespace GitUI
             this.DiffTabPage.Controls.Add(this.DiffSplitContainer);
             this.DiffTabPage.Location = new System.Drawing.Point(4, 29);
             this.DiffTabPage.Name = "DiffTabPage";
-            this.DiffTabPage.Size = new System.Drawing.Size(698, 254);
+            this.DiffTabPage.Size = new System.Drawing.Size(698, 255);
             this.DiffTabPage.TabIndex = 1;
             this.DiffTabPage.Text = "Diff";
             this.DiffTabPage.UseVisualStyleBackColor = true;
@@ -917,7 +917,7 @@ namespace GitUI
             // DiffSplitContainer.Panel2
             // 
             this.DiffSplitContainer.Panel2.Controls.Add(this.DiffText);
-            this.DiffSplitContainer.Size = new System.Drawing.Size(698, 254);
+            this.DiffSplitContainer.Size = new System.Drawing.Size(698, 255);
             this.DiffSplitContainer.SplitterDistance = global::GitUI.Properties.Settings.Default.FormBrowse_DiffSplitContainer_SplitterDistance;
             this.DiffSplitContainer.TabIndex = 0;
             // 
@@ -928,7 +928,7 @@ namespace GitUI
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
             this.DiffFiles.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DiffFiles.Name = "DiffFiles";
-            this.DiffFiles.Size = new System.Drawing.Size(215, 254);
+            this.DiffFiles.Size = new System.Drawing.Size(215, 255);
             this.DiffFiles.TabIndex = 1;
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFilesSelectedIndexChanged);
             this.DiffFiles.DataSourceChanged += new System.EventHandler(this.DiffFiles_DataSourceChanged);
@@ -1092,7 +1092,7 @@ namespace GitUI
             this.DiffText.Location = new System.Drawing.Point(0, 0);
             this.DiffText.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.DiffText.Name = "DiffText";
-            this.DiffText.Size = new System.Drawing.Size(479, 254);
+            this.DiffText.Size = new System.Drawing.Size(479, 255);
             this.DiffText.TabIndex = 0;
             // 
             // TreeContextMenu
@@ -1121,7 +1121,7 @@ namespace GitUI
             // 
             // statusFeed
             // 
-            this.statusFeed.BackColor = System.Drawing.SystemColors.Control;
+            this.statusFeed.BackColor = System.Drawing.Color.Salmon;
             this.statusFeed.Image = global::GitUI.Properties.Resources.NotifyWarn;
             this.statusFeed.Name = "statusFeed";
             this.statusFeed.Size = new System.Drawing.Size(90, 20);
@@ -1131,7 +1131,7 @@ namespace GitUI
             // statusFiller
             // 
             this.statusFiller.Name = "statusFiller";
-            this.statusFiller.Size = new System.Drawing.Size(773, 17);
+            this.statusFiller.Size = new System.Drawing.Size(804, 17);
             this.statusFiller.Spring = true;
             // 
             // toolStripStatusLabel1

@@ -6,26 +6,21 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
 using GitUI.Hotkey;
-using GitUI.Notifications;
 using GitUI.Plugin;
 using GitUI.RepoHosting;
 using GitUI.Script;
 using GitUI.Statistics;
 using GitUIPluginInterfaces;
 #if !__MonoCS__
-using GitUIPluginInterfaces.Notifications;
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
 using ResourceManager.Translation;
-using Notification = GitUIPluginInterfaces.Notifications.Notification;
 
 namespace GitUI
 {
@@ -140,9 +135,6 @@ namespace GitUI
                 CommitInfoTabControl.TabPages[1].ImageIndex = 1;
                 CommitInfoTabControl.TabPages[2].ImageIndex = 2;
             }
-
-            NotificationFeed notificationFeed = new NotificationFeed(NotificationManager.Instance);
-            statusStrip.Items.Insert(0, notificationFeed);
 
             RevisionGrid.UICommandsSource = this;
             repoObjectsTree.UICommandsSource = this;

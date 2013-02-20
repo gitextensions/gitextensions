@@ -8,14 +8,25 @@ namespace GitUI.UserControls
         /// <summary>most recently right-clicked <see cref="TreeNode"/></summary>
         TreeNode rightClickNode;
 
-        /// <summary>Occurs when a <see cref="TreeNode"/> is clicked.</summary>
+        /// <summary>Captures the right-clicked <see cref="TreeNode"/>.</summary>
         void OnNodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
-            {
+            {// right-click -> set right-click TreeNode
                 e.Node.TreeView.SelectedNode = e.Node;
                 rightClickNode = e.Node;
             }
+            else
+            {// (NOT right-click) -> set right-click TreeNode to null
+                rightClickNode = null;
+            }
+        }
+
+
+        /// <summary>Hooks an action onto the Click event of a <see cref="ToolStripMenuItem"/>.</summary>
+        void RegisterClick(ToolStripMenuItem item, Action onClick)
+        {
+            item.Click += (o, e) => onClick();
         }
 
         /// <summary>Hooks an action onto the Click event of a <see cref="ToolStripMenuItem"/>.</summary>
@@ -28,6 +39,10 @@ namespace GitUI.UserControls
         /// <summary>Registers the context menu actions.</summary>
         void RegisterContextActions()
         {
+            RegisterClick(mnubtnCollapseAll, () => treeMain.CollapseAll());
+            RegisterClick(mnubtnExpandAll, () => treeMain.ExpandAll());
+            RegisterClick(mnubtnReload, Reload);
+
             treeMain.NodeMouseClick += OnNodeMouseClick;
 
             RegisterClick<BranchesNode>(mnubtnNewBranch, branches => branches.CreateBranch());

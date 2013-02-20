@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Notifications;
 using GitUI.Properties;
-using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls
 {
@@ -19,7 +18,10 @@ namespace GitUI.UserControls
         public RepoObjectsTree()
         {
             InitializeComponent();
-            
+
+            NotificationFeed notificationFeed = new NotificationFeed(NotificationManager.Instance);
+            toolbarMain.Items.Insert(0, notificationFeed);
+
             Translate();
 
             RegisterContextActions();
@@ -141,16 +143,6 @@ namespace GitUI.UserControls
             //    new CancellationToken(),
             //    TaskContinuationOptions.NotOnCanceled,
             //    uiScheduler);
-        }
-
-        void ExpandAll_Click(object sender, EventArgs e)
-        {
-            treeMain.ExpandAll();
-        }
-
-        void CollapseAll_Click(object sender, EventArgs e)
-        {
-            treeMain.CollapseAll();
         }
     }
 }

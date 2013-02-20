@@ -34,13 +34,14 @@ namespace GitUI.UserControls
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RepoObjectsTree));
             this.menuBranches = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnNewBranch = new System.Windows.Forms.ToolStripMenuItem();
             this.toolbarMain = new System.Windows.Forms.ToolStrip();
-            this.toolbtnExpandAll = new System.Windows.Forms.ToolStripButton();
-            this.toolbtnCollapseAll = new System.Windows.Forms.ToolStripButton();
             this.treeMain = new System.Windows.Forms.TreeView();
+            this.menuMain = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnubtnCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnExpandAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnReload = new System.Windows.Forms.ToolStripMenuItem();
             this.imgList = new System.Windows.Forms.ImageList(this.components);
             this.menuBranch = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnBranchCheckout = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,6 +80,7 @@ namespace GitUI.UserControls
             this.mnubtnRemoteBranchUnTrack = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnRemoteBranchDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.menuBranches.SuspendLayout();
+            this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
             this.menuStashes.SuspendLayout();
             this.menuRemotes.SuspendLayout();
@@ -105,50 +107,61 @@ namespace GitUI.UserControls
             // 
             // toolbarMain
             // 
-            this.toolbarMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolbtnExpandAll,
-            this.toolbtnCollapseAll}); 
             this.toolbarMain.Location = new System.Drawing.Point(0, 0);
             this.toolbarMain.Name = "toolbarMain";
             this.toolbarMain.Size = new System.Drawing.Size(200, 25);
             this.toolbarMain.TabIndex = 2;
             this.toolbarMain.Text = "toolStrip1";
             // 
-            // toolbtnExpandAll
-            // 
-            this.toolbtnExpandAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolbtnExpandAll.Image = ((System.Drawing.Image)(resources.GetObject("toolbtnExpandAll.Image")));
-            this.toolbtnExpandAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolbtnExpandAll.Name = "toolbtnExpandAll";
-            this.toolbtnExpandAll.Size = new System.Drawing.Size(23, 22);
-            this.toolbtnExpandAll.Text = "Expand All";
-            this.toolbtnExpandAll.ToolTipText = "Expand All";
-            this.toolbtnExpandAll.Click += new System.EventHandler(this.ExpandAll_Click);
-            // 
-            // toolbtnCollapseAll
-            // 
-            this.toolbtnCollapseAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolbtnCollapseAll.Image = ((System.Drawing.Image)(resources.GetObject("toolbtnCollapseAll.Image")));
-            this.toolbtnCollapseAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolbtnCollapseAll.Name = "toolbtnCollapseAll";
-            this.toolbtnCollapseAll.Size = new System.Drawing.Size(23, 22);
-            this.toolbtnCollapseAll.Text = "Collapse All";
-            this.toolbtnCollapseAll.ToolTipText = "Collapse All";
-            this.toolbtnCollapseAll.Click += new System.EventHandler(this.CollapseAll_Click);
-            // 
             // treeMain
             // 
+            this.treeMain.ContextMenuStrip = this.menuMain;
             this.treeMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeMain.FullRowSelect = true;
             this.treeMain.ImageIndex = 0;
             this.treeMain.ImageList = this.imgList;
             this.treeMain.Location = new System.Drawing.Point(0, 25);
             this.treeMain.Name = "treeMain";
             this.treeMain.SelectedImageIndex = 0;
+            this.treeMain.ShowLines = false;
             this.treeMain.ShowNodeToolTips = true;
             this.treeMain.Size = new System.Drawing.Size(200, 325);
             this.treeMain.TabIndex = 3;
             this.treeMain.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnNodeSelected);
             this.treeMain.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.OnNodeDoubleClick);
+            // 
+            // menuMain
+            // 
+            this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnubtnCollapseAll,
+            this.mnubtnExpandAll,
+            this.mnubtnReload});
+            this.menuMain.Name = "menuMain";
+            this.menuMain.Size = new System.Drawing.Size(137, 70);
+            // 
+            // mnubtnCollapseAll
+            // 
+            this.mnubtnCollapseAll.Image = global::GitUI.Properties.Resources.CollapseAll;
+            this.mnubtnCollapseAll.Name = "mnubtnCollapseAll";
+            this.mnubtnCollapseAll.Size = new System.Drawing.Size(136, 22);
+            this.mnubtnCollapseAll.Text = "Collapse All";
+            this.mnubtnCollapseAll.ToolTipText = "Collapse all nodes";
+            // 
+            // mnubtnExpandAll
+            // 
+            this.mnubtnExpandAll.Image = global::GitUI.Properties.Resources.ExpandAll;
+            this.mnubtnExpandAll.Name = "mnubtnExpandAll";
+            this.mnubtnExpandAll.Size = new System.Drawing.Size(136, 22);
+            this.mnubtnExpandAll.Text = "Expand All";
+            this.mnubtnExpandAll.ToolTipText = "Expand all nodes";
+            // 
+            // mnubtnReload
+            // 
+            this.mnubtnReload.Image = global::GitUI.Properties.Resources.arrow_refresh;
+            this.mnubtnReload.Name = "mnubtnReload";
+            this.mnubtnReload.Size = new System.Drawing.Size(136, 22);
+            this.mnubtnReload.Text = "Reload";
+            this.mnubtnReload.ToolTipText = "Reload the tree";
             // 
             // imgList
             // 
@@ -404,7 +417,7 @@ namespace GitUI.UserControls
             this.mnubtnRemoteBranchUnTrack,
             this.mnubtnRemoteBranchDelete});
             this.menuRemoteBranch.Name = "contextmenuBranch";
-            this.menuRemoteBranch.Size = new System.Drawing.Size(158, 114);
+            this.menuRemoteBranch.Size = new System.Drawing.Size(158, 92);
             // 
             // mnubtnRemoteBranchFetch
             // 
@@ -445,6 +458,7 @@ namespace GitUI.UserControls
             this.Name = "RepoObjectsTree";
             this.Size = new System.Drawing.Size(200, 350);
             this.menuBranches.ResumeLayout(false);
+            this.menuMain.ResumeLayout(false);
             this.menuBranch.ResumeLayout(false);
             this.menuStashes.ResumeLayout(false);
             this.menuRemotes.ResumeLayout(false);
@@ -460,8 +474,6 @@ namespace GitUI.UserControls
         #endregion
 
         private ToolStrip toolbarMain;
-        private ToolStripButton toolbtnExpandAll;
-        private ToolStripButton toolbtnCollapseAll;
         private TreeView treeMain;
         private ContextMenuStrip menuBranch;
         private ToolStripMenuItem mnubtnBranchCheckout;
@@ -502,5 +514,9 @@ namespace GitUI.UserControls
         private ToolStripMenuItem mnubtnRemoteBranchCreateBranch;
         private ToolStripMenuItem mnubtnRemoteBranchUnTrack;
         private ToolStripMenuItem mnubtnRemoteBranchDelete;
+        private ContextMenuStrip menuMain;
+        private ToolStripMenuItem mnubtnCollapseAll;
+        private ToolStripMenuItem mnubtnExpandAll;
+        private ToolStripMenuItem mnubtnReload;
     }
 }

@@ -57,11 +57,8 @@ namespace GitUI.Notifications
 
             if (mostRecent != null) { return; }
 
-            StatusStrip statusStrip = newParent as StatusStrip;
-            if (statusStrip == null) { return; }
-
             mostRecent = new MostRecentNotification();
-            statusStrip.Items.Insert(1, mostRecent);
+            newParent.Items.Insert(1, mostRecent);
         }
 
         /// <summary>Updates the text and image according to the current notifications, if any.</summary>
