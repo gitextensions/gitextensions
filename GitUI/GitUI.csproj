@@ -65,6 +65,10 @@
       <HintPath>..\Bin\JsonFx.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Nini, Version=1.1.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\Nini.dll</HintPath>
+    </Reference>
     <Reference Include="PSTaskDialog">
       <HintPath>..\Bin\PSTaskDialog.dll</HintPath>
     </Reference>
@@ -120,6 +124,18 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.designer.cs">
       <DependentUpon>FormOpenDirectory.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\EditBuildServer\FormEditBuildServer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\EditBuildServer\FormEditBuildServer.Designer.cs">
+      <DependentUpon>FormEditBuildServer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\EditBuildServer\TeamCitySettingsUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\EditBuildServer\TeamCitySettingsUserControl.Designer.cs">
+      <DependentUpon>TeamCitySettingsUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,18 +154,6 @@
     </Compile>
     <Compile Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\BuildServerIntegrationSettingsPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\BuildServerIntegrationSettingsPage.Designer.cs">
-      <DependentUpon>BuildServerIntegrationSettingsPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\TeamCitySettingsUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\TeamCitySettingsUserControl.Designer.cs">
-      <DependentUpon>TeamCitySettingsUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
     <Compile Include="RepoHosts.cs" />
@@ -923,6 +927,12 @@
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.resx">
       <DependentUpon>FormOpenDirectory.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\EditBuildServer\FormEditBuildServer.resx">
+      <DependentUpon>FormEditBuildServer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\EditBuildServer\TeamCitySettingsUserControl.resx">
+      <DependentUpon>TeamCitySettingsUserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.resx">
       <DependentUpon>CreatePullRequestForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -934,12 +944,6 @@
     <EmbeddedResource Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.resx">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\BuildServerIntegrationSettingsPage.resx">
-      <DependentUpon>BuildServerIntegrationSettingsPage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\TeamCitySettingsUserControl.resx">
-      <DependentUpon>TeamCitySettingsUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommitInfo\CommitSummaryUserControl.resx">
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
@@ -1689,6 +1693,8 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="BuildServerIntegration\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+namespace GitUI.CommandsDialogs.EditBuildServer
 {
     partial class TeamCitySettingsUserControl
     {
