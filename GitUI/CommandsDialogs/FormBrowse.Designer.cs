@@ -153,6 +153,8 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator42 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator43 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator44 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator45 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator46 = new System.Windows.Forms.ToolStripSeparator();
             this.applyPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.formatPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1241,37 +1243,40 @@ namespace GitUI.CommandsDialogs
             // commandsToolStripMenuItem
             // 
             this.commandsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.archiveToolStripMenuItem,
-            this.cleanupToolStripMenuItem,
-            this.toolStripSeparator21,
             this.commitToolStripMenuItem,
-            this.pullToolStripMenuItem,
-            this.pushToolStripMenuItem,
-            this.stashToolStripMenuItem,
-            this.resetToolStripMenuItem,
-            this.toolStripSeparator25,
-            this.applyPatchToolStripMenuItem,
-            this.formatPatchToolStripMenuItem,
-            this.viewDiffToolStripMenuItem,
+            this.pullToolStripMenuItem, // ok
+            this.pushToolStripMenuItem, // ok
+            this.toolStripSeparator21, // ok
+            this.stashToolStripMenuItem, // ok
+            this.resetToolStripMenuItem, // ok
+            this.cleanupToolStripMenuItem, // ok
+            this.toolStripSeparator25, // ok
+            this.branchToolStripMenuItem, // ok
+            this.deleteBranchToolStripMenuItem, // ok
+            this.checkoutBranchToolStripMenuItem, // ok
+            this.mergeBranchToolStripMenuItem, // ok
+            this.rebaseToolStripMenuItem, // ok
+            this.runMergetoolToolStripMenuItem, // ok
+            toolStripSeparator45,
+            this.tagToolStripMenuItem, // ok
+            this.deleteTagToolStripMenuItem, // ok
+            this.toolStripSeparator23, // ok
+            this.goToToolStripMenuItem, // ok
+            toolStripSeparator46,
+            this.cherryPickToolStripMenuItem, // ok
+            this.archiveToolStripMenuItem, // ok
+            this.checkoutToolStripMenuItem, // ok      
+            this.bisectToolStripMenuItem, // ok
+            this.toolStripSeparator22, // ok
+            this.formatPatchToolStripMenuItem, // ok
+            this.applyPatchToolStripMenuItem, // ok
+            this.viewDiffToolStripMenuItem, // TODO?
             this.patchToolStripMenuItem,
-            this.toolStripSeparator22,
-            this.checkoutBranchToolStripMenuItem,
-            this.branchToolStripMenuItem,
-            this.tagToolStripMenuItem,
-            this.deleteBranchToolStripMenuItem,
-            this.deleteTagToolStripMenuItem,
-            this.mergeBranchToolStripMenuItem,
-            this.rebaseToolStripMenuItem,
-            this.runMergetoolToolStripMenuItem,
-            this.toolStripSeparator23,
+            this.toolStripSeparator24,
             this.SvnFetchToolStripMenuItem,
             this.SvnRebaseToolStripMenuItem,
-            this.SvnDcommitToolStripMenuItem,
-            this.toolStripSeparator24,
-            this.bisectToolStripMenuItem,
-            this.checkoutToolStripMenuItem,
-            this.cherryPickToolStripMenuItem,
-            this.goToToolStripMenuItem});
+            this.SvnDcommitToolStripMenuItem
+            });
             this.commandsToolStripMenuItem.Name = "commandsToolStripMenuItem";
             this.commandsToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
             this.commandsToolStripMenuItem.Text = "Commands";
@@ -1289,7 +1294,7 @@ namespace GitUI.CommandsDialogs
             this.cleanupToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCleanupRepo;
             this.cleanupToolStripMenuItem.Name = "cleanupToolStripMenuItem";
             this.cleanupToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
-            this.cleanupToolStripMenuItem.Text = "Cleanup repository";
+            this.cleanupToolStripMenuItem.Text = "Clean working tree";
             this.cleanupToolStripMenuItem.Click += new System.EventHandler(this.CleanupToolStripMenuItemClick);
             // 
             // cloneToolStripMenuItem
@@ -1383,6 +1388,12 @@ namespace GitUI.CommandsDialogs
 
             this.toolStripSeparator44.Name = "toolStripSeparator44";
             this.toolStripSeparator44.Size = new System.Drawing.Size(219, 6);
+
+            this.toolStripSeparator45.Name = "toolStripSeparator45";
+            this.toolStripSeparator45.Size = new System.Drawing.Size(219, 6);
+
+            this.toolStripSeparator46.Name = "toolStripSeparator46";
+            this.toolStripSeparator46.Size = new System.Drawing.Size(219, 6);
 
             // 
             // applyPatchToolStripMenuItem
@@ -2101,5 +2112,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator42;
         private ToolStripSeparator toolStripSeparator43;
         private ToolStripSeparator toolStripSeparator44;
+        private ToolStripSeparator toolStripSeparator45;
+        private ToolStripSeparator toolStripSeparator46;
     }
 }
