@@ -72,7 +72,8 @@ namespace GitUI.RevisionGridClasses
                                                                                             buildExpando.startDate,
                                                                                         Status = status,
                                                                                         Description = statusText,
-                                                                                        CommitHash = revisionVersion
+                                                                                        CommitHash = revisionVersion,
+                                                                                        Url = build.WebUrl
                                                                                     };
 
                                                                 observer.OnNext(buildInfo);
