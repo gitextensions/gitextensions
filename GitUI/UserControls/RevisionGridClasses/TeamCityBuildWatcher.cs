@@ -5,10 +5,11 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using GitCommands;
+using Nini.Config;
 using TeamCitySharp;
 using TeamCitySharp.Locators;
 
-namespace GitUI.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGridClasses
 {
     internal class TeamCityBuildWatcher : IBuildServerWatcher
     {
@@ -16,9 +17,15 @@ namespace GitUI.RevisionGridClasses
 
         private string ProjectName { get; set; }
 
-        public TeamCityBuildWatcher(string projectName)
+        public TeamCityBuildWatcher(string projectName, IConfig config)
         {
-            Client = new TeamCityClient(Settings.BuildServerUrl);
+            var hostName = config.Get("BuildServerUrl");
+            if (string.IsNullOrEmpty(hostName))
+            {
+                throw new InvalidOperationException();
+            }
+
+            Client = new TeamCityClient(hostName);
             ProjectName = projectName;
 
             Client.Connect(string.Empty, string.Empty, true);
