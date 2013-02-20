@@ -790,6 +790,7 @@ namespace GitUI.CommandsDialogs
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
+                FillBuildReport();
             }
             RevisionGrid.IndexWatcher.Reset();
         }
@@ -917,6 +918,20 @@ namespace GitUI.CommandsDialogs
 
             if (revision != null)
                 RevisionInfo.SetRevisionWithChildren(revision, children);
+        }
+
+        private void FillBuildReport()
+        {
+            if (CommitInfoTabControl.SelectedTab != BuildReportTabPage)
+                return;
+
+            if (RevisionGrid.GetSelectedRevisions().Count == 0)
+                return;
+
+            var revision = RevisionGrid.GetSelectedRevisions()[0];
+
+            if (revision != null)
+                BuildReportWebBrowser.Navigate(revision.BuildStatus.Url);
         }
 
         public void fileHistoryItem_Click(object sender, EventArgs e)
@@ -1103,7 +1118,7 @@ namespace GitUI.CommandsDialogs
             {
                 var revisions = RevisionGrid.GetSelectedRevisions();
 
-                if (revisions.Count > 0 && GitRevision.IsArtificial(revisions[0].Guid))
+                if (revisions.Any() && GitRevision.IsArtificial(revisions[0].Guid))
                 {
                     CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
                     CommitInfoTabControl.RemoveIfExists(TreeTabPage);
@@ -1119,6 +1134,7 @@ namespace GitUI.CommandsDialogs
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
+                FillBuildReport();
             }
             catch (Exception ex)
             {
@@ -1463,6 +1479,7 @@ namespace GitUI.CommandsDialogs
             FillFileTree();
             FillDiff();
             FillCommitInfo();
+            FillBuildReport();
         }
 
         private void DiffFilesSelectedIndexChanged(object sender, EventArgs e)
