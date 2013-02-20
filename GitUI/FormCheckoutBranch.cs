@@ -97,7 +97,7 @@ namespace GitUI
 
         private bool ShowLocalChangesGB()
         {
-            return (isDirtyDir || !Settings.CheckForUncommittedChangesInCheckoutBranch) && _containRevison == null;
+            return isDirtyDir || !Settings.CheckForUncommittedChangesInCheckoutBranch;
         }
 
         public DialogResult DoDefaultActionOrShow(IWin32Window owner)
