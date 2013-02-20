@@ -35,7 +35,12 @@ namespace GitCommands
         {
             Version version = Assembly.GetCallingAssembly().GetName().Version;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
-            GitExtensionsVersionInt = version.Major * 100 + (version.Minor < 100 ? version.Minor : 99);
+            GitExtensionsVersionInt = version.Major * 100 + version.Minor;
+            if (version.Build > 0)
+            {
+                GitExtensionsVersionString += '.' + version.Build.ToString();
+                GitExtensionsVersionInt = GitExtensionsVersionInt * 100 + version.Build;
+            }
             if (!RunningOnWindows())
             {
                 PathSeparator = '/';
