@@ -251,7 +251,7 @@ namespace GitUI.Blame
             }
             else
             {
-                using (var frm = new FormCommitDiff(UICommands, gitRevision))
+                using (var frm = new FormCommitDiff(UICommands, gitRevision.Guid))
                     frm.ShowDialog(this);
             }
         }
@@ -312,7 +312,7 @@ namespace GitUI.Blame
                 }
                 else
                 {
-                    using (var frm = new FormCommitDiff(UICommands, gitRevision))
+                    using (var frm = new FormCommitDiff(UICommands, gitRevision.Guid))
                         frm.ShowDialog(this);
                 }
             }
@@ -324,7 +324,7 @@ namespace GitUI.Blame
             if (commit == null)
                 return;
             var gitRevision = new GitRevision(Module, commit) { ParentGuids = new[] { commit + "^" } };
-            using (var frm = new FormCommitDiff(UICommands, gitRevision))
+            using (var frm = new FormCommitDiff(UICommands, gitRevision.Guid))
                 frm.ShowDialog(this);
         }
     }
