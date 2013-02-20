@@ -922,16 +922,27 @@ namespace GitUI.CommandsDialogs
 
         private void FillBuildReport()
         {
-            if (CommitInfoTabControl.SelectedTab != BuildReportTabPage)
-                return;
+            var revision = RevisionGrid.GetSelectedRevisions().FirstOrDefault();
 
-            if (RevisionGrid.GetSelectedRevisions().Count == 0)
-                return;
+            if (revision == null || revision.BuildStatus == null || string.IsNullOrEmpty(revision.BuildStatus.Url))
+            {
+                if (CommitInfoTabControl.Controls.Contains(BuildReportTabPage))
+                {
+                    CommitInfoTabControl.Controls.Remove(BuildReportTabPage);
+                }
+            }
+            else
+            {
+                if (CommitInfoTabControl.SelectedTab == BuildReportTabPage)
+                {
+                    BuildReportWebBrowser.Navigate(revision.BuildStatus.Url);
+                }
 
-            var revision = RevisionGrid.GetSelectedRevisions()[0];
-
-            if (revision != null)
-                BuildReportWebBrowser.Navigate(revision.BuildStatus.Url);
+                if (!CommitInfoTabControl.Controls.Contains(BuildReportTabPage))
+                {
+                    CommitInfoTabControl.Controls.Add(BuildReportTabPage);
+                }
+            }
         }
 
         public void fileHistoryItem_Click(object sender, EventArgs e)
