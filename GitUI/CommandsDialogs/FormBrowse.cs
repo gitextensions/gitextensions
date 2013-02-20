@@ -1162,11 +1162,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void ViewDiffToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            UICommands.StartCompareRevisionsDialog(this);
-        }
-
         private void CloneToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartCloneDialog(this, string.Empty, false, DashboardGitModuleChanged);

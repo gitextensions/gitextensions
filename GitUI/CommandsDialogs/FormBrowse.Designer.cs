@@ -157,7 +157,6 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator46 = new System.Windows.Forms.ToolStripSeparator();
             this.applyPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.formatPatchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.patchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.checkoutBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1270,7 +1269,6 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator22, // ok
             this.formatPatchToolStripMenuItem, // ok
             this.applyPatchToolStripMenuItem, // ok
-            this.viewDiffToolStripMenuItem, // TODO?
             this.patchToolStripMenuItem,
             this.toolStripSeparator24,
             this.SvnFetchToolStripMenuItem,
@@ -1409,13 +1407,6 @@ namespace GitUI.CommandsDialogs
             this.formatPatchToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.formatPatchToolStripMenuItem.Text = "Format patch";
             this.formatPatchToolStripMenuItem.Click += new System.EventHandler(this.FormatPatchToolStripMenuItemClick);
-            // 
-            // viewDiffToolStripMenuItem
-            // 
-            this.viewDiffToolStripMenuItem.Name = "viewDiffToolStripMenuItem";
-            this.viewDiffToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
-            this.viewDiffToolStripMenuItem.Text = "View changes";
-            this.viewDiffToolStripMenuItem.Click += new System.EventHandler(this.ViewDiffToolStripMenuItemClick);
             // 
             // patchToolStripMenuItem
             // 
@@ -2031,7 +2022,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem rebaseToolStripMenuItem;
         private ToolStripMenuItem runMergetoolToolStripMenuItem;
         private ToolStripMenuItem stashToolStripMenuItem;
-        private ToolStripMenuItem viewDiffToolStripMenuItem;
         private ToolStripMenuItem patchToolStripMenuItem;
         private ToolStripMenuItem manageRemoteRepositoriesToolStripMenuItem1;
         private ToolStripSeparator toolStripSeparator6;
