@@ -17,15 +17,22 @@ namespace GitUI
             new TranslationString("“{0}” is not valid branch name.\nEnter valid branch name or select predefined value.");
         private readonly TranslationString _createBranch =
             new TranslationString("Create local branch with the name:");
+        private readonly TranslationString _applyShashedItemsAgainCaption =
+            new TranslationString("Auto stash");
+        private readonly TranslationString _applyShashedItemsAgain =
+            new TranslationString("Apply stashed items to working dir again?");
+
+        private readonly TranslationString _dontShowAgain =
+            new TranslationString("Don't show me this message again.");
         #endregion
 
-        private string _containRevison;
-        private bool isDirtyDir;
-        private bool isLoading;
+        private readonly string _containRevison;
+        private readonly bool _isDirtyDir;
+        private readonly bool _isLoading;
         private string _remoteName = "";
         private string _newLocalBranchName = "";
         private string _localBranchName = "";
-        private readonly string rbResetBranchText;
+        private readonly string _rbResetBranchText;
 
         private List<string> _localBranches;
         private List<string> _remoteBranches;
@@ -40,7 +47,7 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
-            rbResetBranchText = rbResetBranch.Text;
+            _rbResetBranchText = rbResetBranch.Text;
         }
 
         public FormCheckoutBranch(GitUICommands aCommands, string branch, bool remote)
@@ -51,7 +58,7 @@ namespace GitUI
         public FormCheckoutBranch(GitUICommands aCommands, string branch, bool remote, string containRevison)
             : this(aCommands)
         {
-            isLoading = true;
+            _isLoading = true;
 
             try
             {
@@ -82,29 +89,29 @@ namespace GitUI
                 //The dirty check is very expensive on large repositories. Without this setting
                 //the checkout branch dialog is too slow.
                 if (Settings.CheckForUncommittedChangesInCheckoutBranch)
-                    isDirtyDir = Module.IsDirtyDir();
+                    _isDirtyDir = Module.IsDirtyDir();
                 else
-                    isDirtyDir = false;
+                    _isDirtyDir = false;
 
                 localChangesGB.Visible = ShowLocalChangesGB();
                 ChangesMode = Settings.CheckoutBranchAction;
             }
             finally
             {
-                isLoading = false;
+                _isLoading = false;
             }
         }
 
         private bool ShowLocalChangesGB()
         {
-            return isDirtyDir || !Settings.CheckForUncommittedChangesInCheckoutBranch;
+            return _isDirtyDir || !Settings.CheckForUncommittedChangesInCheckoutBranch;
         }
 
         public DialogResult DoDefaultActionOrShow(IWin32Window owner)
         {
             if (Settings.AlwaysShowCheckoutBranchDlg ||
                 Branches.Text.IsNullOrWhiteSpace() || Remotebranch.Checked
-                || (isDirtyDir && !Settings.UseDefaultCheckoutBranchAction))
+                || (_isDirtyDir && !Settings.UseDefaultCheckoutBranchAction))
                 return ShowDialog(owner);
             else
                 return OkClick();
@@ -214,25 +221,47 @@ namespace GitUI
             IWin32Window _owner = Visible ? this : Owner;
 
             //Stash local changes, but only if the setting CheckForUncommittedChangesInCheckoutBranch is true
-            if (Settings.CheckForUncommittedChangesInCheckoutBranch &&
-                changes == LocalChangesAction.Stash && Module.IsDirtyDir())
+            bool stash = Settings.CheckForUncommittedChangesInCheckoutBranch &&
+                         changes == LocalChangesAction.Stash && Module.IsDirtyDir();
+            if (stash)
             {
                 UICommands.Stash(_owner);
             }
 
+            if (UICommands.StartCommandLineProcessDialog(cmd, _owner))
             {
-                var successfullyCheckedOut = UICommands.StartCommandLineProcessDialog(cmd, _owner);
+                bool? messageBoxResult = Settings.AutoPopStashAfterCheckoutBranch;
+                if (messageBoxResult == null)
+                {
+                    DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
+                        this,
+                        _applyShashedItemsAgainCaption.Text,
+                        "",
+                        _applyShashedItemsAgain.Text,
+                        "",
+                        "",
+                        _dontShowAgain.Text,
+                        PSTaskDialog.eTaskDialogButtons.YesNo,
+                        PSTaskDialog.eSysIcons.Question,
+                        PSTaskDialog.eSysIcons.Question);
+                    messageBoxResult = (res == DialogResult.Yes);
+                    if (PSTaskDialog.cTaskDialog.VerificationChecked)
+                        Settings.AutoPopStashAfterCheckoutBranch = messageBoxResult;
+                }
+                if (messageBoxResult ?? false)
+                {
+                    FormProcess.ShowDialog(this, Module, "stash pop");
+                    MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
+                }
+                return DialogResult.OK;
+            }
 
-                if (successfullyCheckedOut)
-                    return DialogResult.OK;
-                else
-                    return DialogResult.None;
-            }        
+            return DialogResult.None;
         }
 
         private void BranchTypeChanged()
         {
-            if (!isLoading)
+            if (!_isLoading)
                 Initialize();
         }
 
@@ -284,7 +313,7 @@ namespace GitUI
             }
             bool existsLocalBranch = LocalBranchExists(_localBranchName);
 
-            rbResetBranch.Text = existsLocalBranch ? rbResetBranchText : _createBranch.Text;
+            rbResetBranch.Text = existsLocalBranch ? _rbResetBranchText : _createBranch.Text;
             branchName.Text = "'" + _localBranchName + "'";
             txtCustomBranchName.Text = _newLocalBranchName;
         }

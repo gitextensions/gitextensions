@@ -63,6 +63,8 @@ namespace GitUI
                                   Environment.NewLine + "" + Environment.NewLine + "Do you want to continue?");
         private readonly TranslationString _notOnBranchButtons = new TranslationString("Checkout branch|Continue");
         private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch");
+
+        private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
         #endregion
 
         private IList<GitHead> _heads;
@@ -310,10 +312,25 @@ namespace GitUI
             {
                 if (stashed)
                 {
-                    bool messageBoxResult = Settings.AutoPopStashAfterPull ||
-                        MessageBox.Show(owner, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
-                                        MessageBoxButtons.YesNo) == DialogResult.Yes;
-                    if (ShouldStashPop(messageBoxResult, process, true))
+                    bool? messageBoxResult = Settings.AutoPopStashAfterPull;
+                    if (messageBoxResult == null)
+                    {
+                        DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
+                            this,
+                            _applyShashedItemsAgainCaption.Text,
+                            "",
+                            _applyShashedItemsAgain.Text,
+                            "",
+                            "",
+                            _dontShowAgain.Text,
+                            PSTaskDialog.eTaskDialogButtons.YesNo,
+                            PSTaskDialog.eSysIcons.Question,
+                            PSTaskDialog.eSysIcons.Question);
+                        messageBoxResult = (res == DialogResult.Yes);
+                        if (PSTaskDialog.cTaskDialog.VerificationChecked)
+                            Settings.AutoPopStashAfterPull = messageBoxResult;
+                    }
+                    if (ShouldStashPop(messageBoxResult ?? false, process, true))
                     {
                         FormProcess.ShowDialog(owner, Module, "stash pop");
                         MergeConflictHandler.HandleMergeConflicts(UICommands, owner, false);
