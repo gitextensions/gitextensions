@@ -13,10 +13,10 @@ namespace GitUI
     /// </summary>
     public partial class CommitSummaryUserControl : GitExtensionsControl
     {
-        private readonly TranslationString tagsCaption = new TranslationString("Tags");
-        private readonly TranslationString branchesCaption = new TranslationString("Branches");
         private readonly TranslationString noRevision = new TranslationString("No revision");
         private readonly TranslationString notAvailable = new TranslationString("n/a");
+        private readonly string tagsCaption;
+        private readonly string branchesCaption;
         private readonly Color tagsBackColor = Color.LightSteelBlue;
         private readonly Color branchesBackColor = Color.LightSalmon;
 
@@ -24,16 +24,18 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+            tagsCaption = labelTagsCaption.Text;
+            branchesCaption = labelBranchesCaption.Text;
 
-            messageY = labelMessage.Location.Y;
-            messageHeight = labelMessage.Height;
+            _messageY = labelMessage.Location.Y;
+            _messageHeight = labelMessage.Height;
             labelMessage.AutoSize = true;
         }
 
         private GitRevision _revision;
 
-        private int messageY;
-        private int messageHeight;
+        private readonly int _messageY;
+        private readonly int _messageHeight;
 
         public GitRevision Revision
         {
@@ -48,8 +50,8 @@ namespace GitUI
 
                 groupBox1.Text = Strings.GetCommitHashText() + ": ";
                 labelAuthorCaption.Text = Strings.GetAuthorText() + ":";
-                labelTagsCaption.Text = tagsCaption.Text + ":";
-                labelBranchesCaption.Text = branchesCaption.Text + ":";
+                labelTagsCaption.Text = tagsCaption;
+                labelBranchesCaption.Text = branchesCaption;
 
                 if (Revision != null)
                 {
@@ -61,12 +63,12 @@ namespace GitUI
                     var tagList = Revision.Heads.Where(r => r.IsTag);
                     string tagListStr = string.Join(", ", tagList.Select(h => h.LocalName).ToArray());
                     labelTags.Text = string.Format("{0}", tagListStr.IsNullOrEmpty() ? notAvailable.Text : tagListStr);
-                    labelTags.BackColor = tagList.Any() ? tagsBackColor : Control.DefaultBackColor;
+                    labelTags.BackColor = tagList.Any() ? tagsBackColor : DefaultBackColor;
 
                     var branchesList = Revision.Heads.Where(r => r.IsHead);
                     string branchesListStr = string.Join(", ", branchesList.Select(h => h.LocalName).ToArray());
                     labelBranches.Text = string.Format("{0}", branchesListStr.IsNullOrEmpty() ? notAvailable.Text : branchesListStr);
-                    labelBranches.BackColor = branchesList.Any() ? branchesBackColor : Control.DefaultBackColor;
+                    labelBranches.BackColor = branchesList.Any() ? branchesBackColor : DefaultBackColor;
                 }
                 else
                 {
@@ -75,9 +77,9 @@ namespace GitUI
                     labelDate.Text = "---";
                     labelMessage.Text = "---";
                     labelTags.Text = "---";
-                    labelTags.BackColor = Control.DefaultBackColor;
+                    labelTags.BackColor = DefaultBackColor;
                     labelBranches.Text = "---";
-                    labelBranches.BackColor = Control.DefaultBackColor;
+                    labelBranches.BackColor = DefaultBackColor;
                 }
             }
         }
@@ -86,7 +88,7 @@ namespace GitUI
         {
             labelMessage.Location = new Point(
                 labelMessage.Location.X,
-                (int)(messageY + messageHeight / 2.0 - labelMessage.Height / 2.0));
+                (int)(_messageY + _messageHeight / 2.0 - labelMessage.Height / 2.0));
         }
 
         private void groupBox1_Resize(object sender, EventArgs e)
