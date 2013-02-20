@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Drawing;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using GitUI;
+using GitUI.Notifications;
+using GitUIPluginInterfaces.Notifications;
 
 namespace WindowsFormsApplication1
 {
@@ -23,8 +22,8 @@ namespace WindowsFormsApplication1
         {
             InitializeComponent();
 
-            NotificationFeed notificationFeed = new NotificationFeed();
-            statusStrip.Items.Insert(0, notificationFeed);
+            //NotificationFeed notificationFeed = new NotificationFeed();
+            //statusStrip.Items.Insert(0, notificationFeed);
 
             btnDelayed.Click += (o, e) => Test(true);
             btnAtOnce.Click += (o, e) => Test(false);
@@ -32,17 +31,8 @@ namespace WindowsFormsApplication1
             Test(false);
         }
 
-        INotifier notifier;
-
         void Test(bool hasDelay)
         {
-            var batch = notifier.StartBatch();
-
-            batch.Next(new Notification(StatusSeverity.Info, "Start"));
-            batch.Next(new Notification(StatusSeverity.Info, "Next1"));
-            batch.Next(new Notification(StatusSeverity.Info, "Next2"));
-            batch.Last(new Notification(StatusSeverity.Success, "Yay"));
-
             var mockStatusUPdates = new Notification[]
             {
                 new Notification(StatusSeverity.Fail, "fail"), 
@@ -64,10 +54,10 @@ namespace WindowsFormsApplication1
                     ? statusFeedDelay// this one adds them all at once
                     : mockStatusUPdates.ToObservable();// this on
 
-            observable
-                .ObserveOn(this)
-                .DelaySubscription(TimeSpan.FromSeconds(2))
-                .Subscribe(notifier.Notify);
+            //observable
+            //    .ObserveOn(this)
+            //    .DelaySubscription(TimeSpan.FromSeconds(2))
+            //    .Subscribe(notifier.Notify);
         }
     }
 }

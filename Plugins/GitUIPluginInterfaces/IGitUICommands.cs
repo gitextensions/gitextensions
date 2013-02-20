@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using GitUIPluginInterfaces.Notifications;
 
 namespace GitUIPluginInterfaces
 {
@@ -100,6 +101,8 @@ namespace GitUIPluginInterfaces
         void RaiseBrowseInitialize();
         void CacheAvatar(string email);
         Icon FormIcon { get; }
+        /// <summary>Gets notifications implementation.</summary>
+        INotifications Notifications { get; }
 
         bool StartCommandLineProcessDialog(object ownerForm, string command, string arguments);
         bool StartCommandLineProcessDialog(string command, string arguments);

@@ -2,34 +2,24 @@
 
 namespace GitUIPluginInterfaces.Notifications
 {
-    //public interface INotification
-    //{
-    //    Guid Id { get; }
-
-    //}
-
-    /// <summary>Represents a single notification in a status feed.</summary>
+    /// <summary>Represents a single notification message.</summary>
     public class Notification
     {
-        /// <summary><see cref="Notification"/> which isn't part of a batch of status updates.</summary>
-        static readonly Guid loner = Guid.NewGuid();
-
         public Notification(StatusSeverity severity, string text)
-            : this(severity, text, loner) { }
+            : this(severity, text, DateTime.Now) { }
 
-        Notification(StatusSeverity severity, string text, Guid batchId)
+        public Notification(StatusSeverity severity, string text, DateTime timeOf)
         {
             Severity = severity;
             Text = text;
-            if (batchId == Guid.Empty)
-            {
-                throw new ArgumentException("Must specify a NON-empty GUID.", "batchId");
-            }
+            TimeOf = timeOf;
         }
 
-        /// <summary>Gets the severity of the update.</summary>
+        /// <summary>Gets the time of the notification.</summary>
+        public DateTime TimeOf { get; private set; }
+        /// <summary>Gets the severity of the notification.</summary>
         public StatusSeverity Severity { get; private set; }
-        /// <summary>Gets the text of the update.</summary>
+        /// <summary>Gets the notification text.</summary>
         public string Text { get; private set; }
         ///// <summary></summary>
         //public Action OnClick { get; private set; }

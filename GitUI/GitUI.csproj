@@ -237,13 +237,26 @@
     </Compile>
     <Compile Include="IGitUICommandsSource.cs" />
     <Compile Include="IndexWatcher.cs" />
-    <Compile Include="StatusFeed.cs" />
     <Compile Include="MenuStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="MessageBoxes.cs" />
     <Compile Include="MouseWheelRedirector.cs" />
     <Compile Include="MergeToolsHelper.cs" />
+    <Compile Include="Notifications\MostRecentNotification.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Notifications\NotificationControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Notifications\NotificationFeed.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Notifications\NotificationItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Notifications\NotificationManager.cs" />
+    <Compile Include="Notifications\NotifierHelpers.cs" />
     <Compile Include="PathFormatter.cs" />
     <Compile Include="Editor\FileViewer.cs">
       <SubType>UserControl</SubType>

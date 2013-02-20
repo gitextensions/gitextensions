@@ -14,13 +14,12 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
 using GitUI.Hotkey;
+using GitUI.Notifications;
 using GitUI.Plugin;
 using GitUI.RepoHosting;
 using GitUI.Script;
 using GitUI.Statistics;
 using GitUIPluginInterfaces;
-using System.Reactive;
-
 #if !__MonoCS__
 using GitUIPluginInterfaces.Notifications;
 using Microsoft.WindowsAPICodePack.Taskbar;
@@ -142,42 +141,8 @@ namespace GitUI
                 CommitInfoTabControl.TabPages[2].ImageIndex = 2;
             }
 
-            NotificationFeed statusToolStripItem = statusStrip.Items
-                .OfType<NotificationFeed>()
-                .Last();
-
-            var mockStatusUPdates = new Notification[]
-            {
-                new Notification(StatusSeverity.Fail, "fail"), 
-                new Notification(StatusSeverity.Fail, "fail2"), 
-                new Notification(StatusSeverity.Info, "info"), 
-                new Notification(StatusSeverity.Success, "success"), 
-                new Notification(StatusSeverity.Warn, "warn"), 
-                new Notification(StatusSeverity.Success, "really long text with a lot of text alsdjfksjadfl;jkasdflkjs;dfjslkjfdskljdfklsj;dfljslkdfjskldfjlsjdfkljsdfjslkdjfkl"), 
-            };
-
-            var statusFeedDelay = Observable.Create<Notification>(o =>
-            {
-                var els = new EventLoopScheduler();
-                return mockStatusUPdates.ToObservable()//repoObjectsTree.StatusFeed
-                    .ObserveOn(els)
-                    .Do(x => els.Schedule(() => Thread.Sleep(5 * 1000)))
-                    .Subscribe(o);
-            });
-
-            //statusFeedDelay
-            //    .Timestamp()
-            //    .Select(status => new { status.Value, Timestamp = status.Timestamp.Second + (double)status.Timestamp.Millisecond / 1000.0 })
-            //    .Subscribe(status => Debug.WriteLine("{0}: {1}", status.Timestamp, status.Value));
-            //statusFeedDelay
-            //    .SubscribeOn(this)
-            //    .Subscribe(update => statusToolStripItem.Notify(update));
-
-            mockStatusUPdates
-                .ToObservable()
-                .ObserveOn(this)
-                .DelaySubscription(TimeSpan.FromSeconds(30))
-                .Subscribe(s => statusToolStripItem.Notify(s));
+            NotificationFeed notificationFeed = new NotificationFeed(NotificationManager.Instance);
+            statusStrip.Items.Insert(0, notificationFeed);
 
             RevisionGrid.UICommandsSource = this;
             repoObjectsTree.UICommandsSource = this;

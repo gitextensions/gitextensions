@@ -7,10 +7,12 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Blame;
+using GitUI.Notifications;
 using GitUI.Plugin;
 using GitUI.RepoHosting;
 using GitUI.Tag;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Notifications;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
 using PatchApply;
@@ -219,7 +221,10 @@ namespace GitUI
                 gravatarFallBack);
         }
 
-        public Icon FormIcon { get { return GitExtensionsForm.ApplicationIcon; } } 
+        public Icon FormIcon { get { return GitExtensionsForm.ApplicationIcon; } }
+
+        /// <summary>Gets notifications implementation.</summary>
+        public INotifications Notifications { get { return NotificationManager.Instance; } }
 
         public bool StartBatchFileProcessDialog(object owner, string batchFile)
         {

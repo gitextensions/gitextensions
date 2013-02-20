@@ -94,6 +94,10 @@
       <Project>{cf5b22e7-230f-4e50-be88-c4f7023ced2c}</Project>
       <Name>GitUI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+      <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
+      <Name>GitUIPluginInterfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
