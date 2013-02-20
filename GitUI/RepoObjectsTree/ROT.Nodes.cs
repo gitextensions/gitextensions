@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
+using GitUI.Notifications;
 using GitUIPluginInterfaces.Notifications;
 
 namespace GitUI.UserControls
@@ -131,12 +133,24 @@ namespace GitUI.UserControls
             }
             #endregion Drag/Drop
 
-            protected INotifier Notifier { get { return Notifications.NotificationManager.Instance; } }
+            protected INotifier Notifier { get { return NotificationManager.Instance; } }
 
             /// <summary>Wraps <see cref="INotifier.Notify"/>.</summary>
             protected void Notify(Notification notification)
             {
                 Notifier.Notify(notification);
+            }
+
+            /// <summary>Depending on a git command's result, publishes a notification.</summary>
+            /// <param name="result">Result of the git command.</param>
+            /// <param name="successNotification">Notification to publish if successful.</param>
+            /// <param name="failNotification">Notification to publish if failed.</param>
+            protected void NotifyIf(
+                        GitCommandResult result,
+                        Func<Notification> successNotification,
+                        Func<Notification> failNotification)
+            {
+                Notifier.NotifyIf(result, successNotification, failNotification);
             }
 
             /// <summary>Gets the <see cref="Node"/> from a <see cref="TreeNode"/>'s tag.</summary>

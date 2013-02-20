@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitUIPluginInterfaces.Notifications;
 
 namespace GitUI.UserControls
 {

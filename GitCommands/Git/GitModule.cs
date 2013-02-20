@@ -642,6 +642,7 @@ namespace GitCommands
             return RunGitCmd(arguments, null, encoding);
         }
 
+        /// <summary>Runs a git command. "git {arguments}"</summary>
         public string RunGit(string arguments)
         {
             return RunGitCmd(arguments);
@@ -1393,14 +1394,10 @@ namespace GitCommands
 
         /// <summary>Remove a single stashed state from the stash list. 
         /// <remarks>When no stash is given, removes the latest one.</remarks></summary>
-        public string StashDelete(string stash = null)
+        public GitCommandResult StashDelete(string stash = null)
         {
-            return RunGit(
-               string.Format(
-                   "stash drop {0}",
-                   stash
-               )
-           );
+            string stashDelete = RunGit(string.Format("stash drop {0}", stash));
+            return new GitCommandResult(stashDelete, stashDelete.Contains("Dropped"));
         }
 
         public string ResetSoft(string commit)

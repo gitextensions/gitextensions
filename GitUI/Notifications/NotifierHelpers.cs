@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands.Git;
 using GitUI.Properties;
 using GitUIPluginInterfaces.Notifications;
 
@@ -22,7 +23,7 @@ namespace GitUI.Notifications
         internal static string fail = Guid.NewGuid().ToString();
 
         static readonly ImageList images;
-        
+
         static NotifierHelpers()
         {
             images = new ImageList();
@@ -124,6 +125,26 @@ namespace GitUI.Notifications
         public static void Invoke(this Control control, Action action)
         {
             control.Invoke(action);
+        }
+
+        /// <summary>Depending on a git command's result, publishes a notification.</summary>
+        /// <param name="notifier">Notifier to publish to.</param>
+        /// <param name="result">Result of the git command.</param>
+        /// <param name="successNotification">Notification to publish if successful.</param>
+        /// <param name="failNotification">Notification to publish if failed.</param>
+        public static void NotifyIf(this INotifier notifier,
+            GitCommandResult result,
+            Func<Notification> successNotification,
+            Func<Notification> failNotification)
+        {
+            if (result.WasSuccessful && successNotification != null)
+            {// successful AND success notification -> notify
+                notifier.Notify(successNotification());
+            }
+            else if (result.WasSuccessful == false && failNotification != null)
+            {// failed AND fail notification -> notify
+                notifier.Notify(failNotification());
+            }
         }
     }
 }

@@ -78,6 +78,7 @@
     <Compile Include="Git\GitCheckoutBranchCmd.cs" />
     <Compile Include="Git\GitCommand.cs" />
     <Compile Include="Git\EncodingHelper.cs" />
+    <Compile Include="Git\GitCommandResult.cs" />
     <Compile Include="Git\GitConvert.cs" />
     <Compile Include="Git\GitDeleteBranchCmd.cs" />
     <Compile Include="Git\GitCommandHelpers.cs" />

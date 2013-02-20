@@ -2,12 +2,14 @@
 
 namespace GitUIPluginInterfaces.Notifications
 {
-    /// <summary>Represents a single notification message.</summary>
+    /// <summary>Represents a single time-stamped notification message.</summary>
     public class Notification
     {
+        /// <summary>Creates a new notification with the specified severity and text.</summary>
         public Notification(StatusSeverity severity, string text)
             : this(severity, text, DateTime.Now) { }
 
+        /// <summary>Creates a new notification with the specified severity, text, and time.</summary>
         public Notification(StatusSeverity severity, string text, DateTime timeOf)
         {
             Severity = severity;
