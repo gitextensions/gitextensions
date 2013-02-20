@@ -1,22 +1,26 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.BuildServerIntegration;
+using GitUI.RevisionGridClasses;
+using Nini.Config;
 
-namespace GitUI.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGridClasses
 {
     public class BuildServerWatcher : IDisposable
     {
         private readonly RevisionGrid revisionGrid;
         private readonly DvcsGraph revisions;
 
-        private IDisposable buildStatusCancellationToken;
-
         private int buildStatusImageColumnIndex = -1;
         private int buildStatusMessageColumnIndex = -1;
+
+        private IDisposable buildStatusCancellationToken;
+        private IBuildServerWatcher buildServerWatcher;
 
         public BuildServerWatcher(RevisionGrid revisionGrid, DvcsGraph revisions)
         {
@@ -51,13 +55,13 @@ namespace GitUI.RevisionGridClasses
         {
             CancelBuildStatusFetchOperation();
 
+            var projectName = revisionGrid.Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
+            buildServerWatcher = GetBuildServerWatcher(projectName);
+
             UpdateUI();
 
-            if (Settings.ActiveBuildServerType == Settings.BuildServerType.None)
+            if (buildServerWatcher == null)
                 return;
-
-            var projectName = revisionGrid.Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
-            IBuildServerWatcher buildServerWatcher = new TeamCityBuildWatcher(projectName);
 
             var fullDayObservable = buildServerWatcher.CreateObservable(DateTime.Now.Date);
             var fullObservable = buildServerWatcher.CreateObservable();
@@ -90,9 +94,38 @@ namespace GitUI.RevisionGridClasses
                                      });
         }
 
+        private IBuildServerWatcher GetBuildServerWatcher(string projectName)
+        {
+            var fileName = Path.Combine(revisionGrid.Module.GitWorkingDir, ".buildserver");
+            if (File.Exists(fileName))
+            {
+                var buildServerConfigSource = new IniConfigSource(fileName);
+                var buildServerConfig = buildServerConfigSource.Configs["General"];
+
+                if (buildServerConfig != null)
+                {
+                    var buildServerType = (BuildServerType)Enum.Parse(typeof(BuildServerType), buildServerConfig.GetString("ActiveBuildServerType", BuildServerType.None.ToString()));
+                    try
+                    {
+                        switch (buildServerType)
+                        {
+                            case BuildServerType.TeamCity:
+                                return new TeamCityBuildWatcher(projectName, buildServerConfigSource.Configs[buildServerType.ToString()]);
+                        }
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // Invalid arguments, do not return a build server adapter
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private void UpdateUI()
         {
-            var columnsAreVisible = Settings.ActiveBuildServerType != Settings.BuildServerType.None;
+            var columnsAreVisible = buildServerWatcher != null;
             revisions.Columns[buildStatusImageColumnIndex].Visible = columnsAreVisible;
             revisions.Columns[buildStatusMessageColumnIndex].Visible = columnsAreVisible;
         }

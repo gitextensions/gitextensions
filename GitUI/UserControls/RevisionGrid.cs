@@ -16,6 +16,7 @@ using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.RevisionGridClasses;
 using GitUI.Script;
+using GitUI.UserControls.RevisionGridClasses;
 using Gravatar;
 using ResourceManager.Translation;
 

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using GitCommands.Config;
 using GitCommands.Logging;
 using GitCommands.Repository;
 using Microsoft.Win32;
@@ -346,12 +344,6 @@ namespace GitCommands
             ByNameMap[settingName] = encoding;
         }
 
-        public enum BuildServerType
-        {
-            None,
-            TeamCity
-        }
-
         public enum PullAction
         {
             None,
@@ -560,19 +552,6 @@ namespace GitCommands
         {
             get { return SafeGet("gitcommand", "git", ref _gitCommand); }
             set { SafeSet("gitcommand", value, ref _gitCommand); }
-        }
-
-        public static BuildServerType ActiveBuildServerType
-        {
-            get { return GetEnum("activebuildservertype", BuildServerType.None); }
-            set { SetEnum("activebuildservertype", value); }
-        }
-
-        private static string _buildServerUrl;
-        public static string BuildServerUrl
-        {
-            get { return SafeGet("buildserverurl", "teamcity.codebetter.com", ref _buildServerUrl); }
-            set { SafeSet("buildserverurl", value, ref _buildServerUrl); }
         }
 
         private static string _gitBinDir;

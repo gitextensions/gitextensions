@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs;
+using GitUI.CommandsDialogs.EditBuildServer;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUIPluginInterfaces;
@@ -109,6 +110,9 @@ namespace GitUI
 
         public event GitUIEventHandler PreEditGitIgnore;
         public event GitUIPostActionEventHandler PostEditGitIgnore;
+
+        public event GitUIEventHandler PreEditBuildServer;
+        public event GitUIPostActionEventHandler PostEditBuildServer;
 
         public event GitUIEventHandler PreSettings;
         public event GitUIPostActionEventHandler PostSettings;
@@ -1082,6 +1086,19 @@ namespace GitUI
         public bool StartDeleteTagDialog()
         {
             return StartDeleteTagDialog(null, "");
+        }
+
+        public bool StartEditBuildServerDialog(IWin32Window owner)
+        {
+            Func<bool> action = () =>
+                                    {
+                                        using (var form = new FormEditBuildServer(this))
+                                            form.ShowDialog(owner);
+
+                                        return true;
+                                    };
+
+            return DoActionOnRepo(owner, true, true, PreEditBuildServer, PostEditBuildServer, action);
         }
 
         public bool StartEditGitIgnoreDialog(IWin32Window owner)

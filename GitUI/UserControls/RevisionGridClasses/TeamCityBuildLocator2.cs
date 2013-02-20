@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using TeamCitySharp.Locators;
 
-namespace GitUI.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGridClasses
 {
     public class TeamCityBuildLocator2 : BuildLocator
     {
