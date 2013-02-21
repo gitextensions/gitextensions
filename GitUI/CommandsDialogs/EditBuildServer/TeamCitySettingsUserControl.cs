@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Nini.Config;
 
 namespace GitUI.CommandsDialogs.EditBuildServer
@@ -11,7 +10,7 @@ namespace GitUI.CommandsDialogs.EditBuildServer
             Translate();
         }
 
-        public void OnLoadSettings(IConfig buildServerConfig)
+        public void LoadSettings(IConfig buildServerConfig)
         {
             if (buildServerConfig != null)
             {
