@@ -9,7 +9,7 @@ using GitCommands.BuildServerIntegration;
 using GitUI.RevisionGridClasses;
 using Nini.Config;
 
-namespace GitUI.UserControls.RevisionGridClasses
+namespace GitUI.BuildServerIntegration
 {
     public class BuildServerWatcher : IDisposable
     {
