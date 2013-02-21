@@ -37,8 +37,8 @@ namespace AutoCheckForUpdates
 
         private void LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-			try
-			{
+            try
+            {
                 Process.Start(link.Text);
             }
             catch (System.ComponentModel.Win32Exception)
@@ -74,7 +74,7 @@ namespace AutoCheckForUpdates
                 {
                     string response = e.Result;
                     // search for string like "http://gitextensions.googlecode.com/files/GitExtensions170SetupComplete.msi"
-                    var regEx = new Regex(FilesUrl + @"[0-9][0-9][0-9]SetupComplete.msi");
+                    var regEx = new Regex(FilesUrl + @"\d{3,6}SetupComplete.msi");
 
                     var matches = regEx.Matches(response);
 
