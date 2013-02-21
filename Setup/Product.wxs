@@ -158,6 +158,9 @@
       <Component Id="TeamCitySharp.dll" Guid="*">
         <File Source="..\bin\TeamCitySharp.dll"/>
       </Component>
+      <Component Id="Nini.dll" Guid="*">
+        <File Source="..\bin\Nini.dll"/>
+      </Component>
 
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
@@ -557,6 +560,7 @@
       <ComponentRef Id="System.Reactive.Linq.dll" />
       <ComponentRef Id="System.Reactive.PlatformServices.dll" />
       <ComponentRef Id="TeamCitySharp.dll" />
+      <ComponentRef Id="Nini.dll" />
 
       <!--Remove unused dll, installed in versions <= 2.31-->
       <ComponentRef Id="Github.dll"/>
