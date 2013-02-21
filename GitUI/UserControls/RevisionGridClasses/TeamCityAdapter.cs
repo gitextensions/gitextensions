@@ -12,13 +12,13 @@ using TeamCitySharp.Locators;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    internal class TeamCityBuildWatcher : IBuildServerWatcher
+    internal class TeamCityAdapter : IBuildServerAdapter
     {
         private TeamCityClient Client { get; set; }
 
         private string ProjectName { get; set; }
 
-        public TeamCityBuildWatcher(string projectName, IConfig config)
+        public TeamCityAdapter(string projectName, IConfig config)
         {
             var hostName = config.Get("BuildServerUrl");
             if (string.IsNullOrEmpty(hostName))

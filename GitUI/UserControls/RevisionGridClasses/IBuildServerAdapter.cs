@@ -3,7 +3,7 @@ using GitCommands;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    public interface IBuildServerWatcher
+    public interface IBuildServerAdapter
     {
         IObservable<BuildInfo> CreateObservable(DateTime? sinceDate = null);
     }
