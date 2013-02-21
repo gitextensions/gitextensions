@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using GitCommands;
 using Nini.Config;
 using TeamCitySharp;
+using TeamCitySharp.DomainEntities;
 using TeamCitySharp.Locators;
 
 namespace GitUI.BuildServerIntegration
@@ -48,75 +49,40 @@ namespace GitUI.BuildServerIntegration
                                                                             BuildTypeLocator.WithId(x.Id),
                                                                             sinceDate: sinceDate, defaultBranch: "any")));
                                                             var tasks = new List<Task>(builds.Count());
+
                                                             foreach (var build in builds)
                                                             {
-                                                                cancellationToken.ThrowIfCancellationRequested();
-
                                                                 var buildHref = build.Href.Replace("guestAuth/", string.Empty);
                                                                 var callByUrlTask =
                                                                     Task.Factory
                                                                         .StartNew(() => Client.CallByUrl<object>(buildHref), cancellationToken)
-                                                                        .ContinueWith(
-                                                                            task =>
-                                                                                {
-                                                                                    dynamic buildExpando = task.Result;
-
-                                                                                    var status = BuildInfo.BuildStatus.Unknown;
-                                                                                    string statusText = buildExpando.statusText;
-                                                                                    object[] revisions = buildExpando.revisions != null
-                                                                                                            ? buildExpando.revisions.revision
-                                                                                                            : null;
-                                                                                    string revisionVersion = revisions != null
-                                                                                                                ? ((dynamic)revisions.Single()).version
-                                                                                                                : null;
-
-                                                                                    switch ((string)buildExpando.status)
-                                                                                    {
-                                                                                        case "SUCCESS":
-                                                                                            status = BuildInfo.BuildStatus.Success;
-                                                                                            break;
-                                                                                        case "FAILURE":
-                                                                                            status = BuildInfo.BuildStatus.Failure;
-                                                                                            break;
-                                                                                    }
-
-                                                                                    var buildInfo = new BuildInfo
-                                                                                                        {
-                                                                                                            Id = buildExpando.id,
-                                                                                                            StartDate =
-                                                                                                                buildExpando.startDate,
-                                                                                                            Status = status,
-                                                                                                            Description = statusText,
-                                                                                                            CommitHash = revisionVersion,
-                                                                                                            Url = build.WebUrl
-                                                                                                        };
-
-                                                                                    observer.OnNext(buildInfo);
-                                                                                },
-                                                                                TaskContinuationOptions.ExecuteSynchronously);
+                                                                        .ContinueWith(task => observer.OnNext(CreateBuildInfo((dynamic)task.Result)), TaskContinuationOptions.ExecuteSynchronously);
 
                                                                 tasks.Add(callByUrlTask);
 
                                                                 if (tasks.Count == 8)
                                                                 {
-                                                                    Task.Factory.ContinueWhenAll(tasks.ToArray(), completedTasks => tasks.Clear()).Wait(cancellationToken);
+                                                                    Task.Factory
+                                                                        .ContinueWhenAll(tasks.ToArray(), completedTasks => tasks.Clear())
+                                                                        .Wait(cancellationToken);
                                                                 }
                                                             }
 
-                                                            Task.Factory.ContinueWhenAll(
-                                                                tasks.ToArray(),
-                                                                completedTasks =>
-                                                                    {
-                                                                        var firstFaultedTask = completedTasks.FirstOrDefault(task => task.IsFaulted);
-                                                                        if (firstFaultedTask != null)
+                                                            Task.Factory
+                                                                .ContinueWhenAll(
+                                                                    tasks.ToArray(),
+                                                                    completedTasks =>
                                                                         {
-                                                                            observer.OnError(firstFaultedTask.Exception);
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            observer.OnCompleted();
-                                                                        }
-                                                                    });
+                                                                            var firstFaultedTask = completedTasks.FirstOrDefault(task => task.IsFaulted);
+                                                                            if (firstFaultedTask != null)
+                                                                            {
+                                                                                observer.OnError(firstFaultedTask.Exception);
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                observer.OnCompleted();
+                                                                            }
+                                                                        });
                                                         }
                                                         catch (Exception ex)
                                                         {
@@ -127,6 +93,40 @@ namespace GitUI.BuildServerIntegration
                                                     })
                 .SubscribeOn(NewThreadScheduler.Default)
                 .OnErrorResumeNext(Observable.Empty<BuildInfo>());
+        }
+
+        private static BuildInfo CreateBuildInfo(dynamic buildExpando)
+        {
+            var status = BuildInfo.BuildStatus.Unknown;
+            string statusText = buildExpando.statusText;
+            object[] revisions = buildExpando.revisions != null
+                                     ? buildExpando.revisions.revision
+                                     : null;
+            string revisionVersion = revisions != null
+                                         ? ((dynamic) revisions.Single()).version
+                                         : null;
+
+            switch ((string) buildExpando.status)
+            {
+                case "SUCCESS":
+                    status = BuildInfo.BuildStatus.Success;
+                    break;
+                case "FAILURE":
+                    status = BuildInfo.BuildStatus.Failure;
+                    break;
+            }
+
+            var buildInfo = new BuildInfo
+                                {
+                                    Id = buildExpando.id,
+                                    StartDate =
+                                        buildExpando.startDate,
+                                    Status = status,
+                                    Description = statusText,
+                                    CommitHash = revisionVersion,
+                                    Url = buildExpando.webUrl
+                                };
+            return buildInfo;
         }
     }
 }
