@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
 
-namespace GitUI.UserControls.RevisionGridClasses
+namespace GitUI.BuildServerIntegration
 {
     static internal class BuildInfoDrawingLogic
     {

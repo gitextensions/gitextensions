@@ -10,7 +10,7 @@ using Nini.Config;
 using TeamCitySharp;
 using TeamCitySharp.Locators;
 
-namespace GitUI.UserControls.RevisionGridClasses
+namespace GitUI.BuildServerIntegration
 {
     internal class TeamCityAdapter : IBuildServerAdapter
     {

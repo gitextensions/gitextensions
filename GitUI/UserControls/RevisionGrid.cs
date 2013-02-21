@@ -11,12 +11,12 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.RevisionGridClasses;
 using GitUI.Script;
-using GitUI.UserControls.RevisionGridClasses;
 using Gravatar;
 using ResourceManager.Translation;
 

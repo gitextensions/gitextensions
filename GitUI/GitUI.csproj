@@ -112,6 +112,11 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BuildServerIntegration\BuildInfoDrawingLogic.cs" />
+    <Compile Include="BuildServerIntegration\BuildServerWatcher.cs" />
+    <Compile Include="BuildServerIntegration\IBuildServerAdapter.cs" />
+    <Compile Include="BuildServerIntegration\TeamCityAdapter.cs" />
+    <Compile Include="BuildServerIntegration\TeamCityBuildLocator2.cs" />
     <Compile Include="CommandsDialogs\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -171,10 +176,6 @@
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateItem.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\BuildInfoDrawingLogic.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\IBuildServerAdapter.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\TeamCityBuildLocator2.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\BuildServerWatcher.cs" />
     <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Graph.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Component</SubType>
@@ -896,7 +897,6 @@
     </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\TeamCityAdapter.cs" />
     <Compile Include="UserControls\ToolStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1693,8 +1693,6 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BuildServerIntegration\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
