@@ -16,5 +16,6 @@ namespace GitCommands
         public BuildStatus Status { get; set; }
         public string Description { get; set; }
         public string CommitHash { get; set; }
+        public string Url { get; set; }
     }
 }
