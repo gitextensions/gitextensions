@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs.EditBuildServer
 
             if (control != null)
             {
-                control.LoadSettings(_buildServerConfig);
+                control.LoadSettings(_buildServerConfigSource.Configs[GetSelectedBuildServerType().ToString()]);
 
                 buildServerSettingsPanel.Controls.Add(control);
             }
