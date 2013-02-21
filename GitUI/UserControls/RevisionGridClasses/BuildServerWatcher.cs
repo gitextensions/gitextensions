@@ -20,7 +20,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         private int buildStatusMessageColumnIndex = -1;
 
         private IDisposable buildStatusCancellationToken;
-        private IBuildServerWatcher buildServerWatcher;
+        private IBuildServerAdapter _buildServerAdapter;
 
         public BuildServerWatcher(RevisionGrid revisionGrid, DvcsGraph revisions)
         {
@@ -56,16 +56,16 @@ namespace GitUI.UserControls.RevisionGridClasses
             CancelBuildStatusFetchOperation();
 
             var projectName = revisionGrid.Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
-            buildServerWatcher = GetBuildServerWatcher(projectName);
+            _buildServerAdapter = GetBuildServerWatcher(projectName);
 
             UpdateUI();
 
-            if (buildServerWatcher == null)
+            if (_buildServerAdapter == null)
                 return;
 
-            var fullDayObservable = buildServerWatcher.CreateObservable(DateTime.Now.Date);
-            var fullObservable = buildServerWatcher.CreateObservable();
-            var fromNowObservable = buildServerWatcher.CreateObservable(DateTime.Now);
+            var fullDayObservable = _buildServerAdapter.CreateObservable(DateTime.Now.Date);
+            var fullObservable = _buildServerAdapter.CreateObservable();
+            var fromNowObservable = _buildServerAdapter.CreateObservable(DateTime.Now);
 
             buildStatusCancellationToken =
                 fullDayObservable.Concat(fullObservable)
@@ -94,7 +94,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                                      });
         }
 
-        private IBuildServerWatcher GetBuildServerWatcher(string projectName)
+        private IBuildServerAdapter GetBuildServerWatcher(string projectName)
         {
             var fileName = Path.Combine(revisionGrid.Module.GitWorkingDir, ".buildserver");
             if (File.Exists(fileName))
@@ -110,7 +110,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                         switch (buildServerType)
                         {
                             case BuildServerType.TeamCity:
-                                return new TeamCityBuildWatcher(projectName, buildServerConfigSource.Configs[buildServerType.ToString()]);
+                                return new TeamCityAdapter(projectName, buildServerConfigSource.Configs[buildServerType.ToString()]);
                         }
                     }
                     catch (InvalidOperationException)
@@ -125,7 +125,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private void UpdateUI()
         {
-            var columnsAreVisible = buildServerWatcher != null;
+            var columnsAreVisible = _buildServerAdapter != null;
             revisions.Columns[buildStatusImageColumnIndex].Visible = columnsAreVisible;
             revisions.Columns[buildStatusMessageColumnIndex].Visible = columnsAreVisible;
         }
