@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using GitCommands;
 
-namespace GitUI.UserControls.RevisionGridClasses
+namespace GitUI.BuildServerIntegration
 {
     public interface IBuildServerAdapter
     {
