@@ -55,8 +55,10 @@ namespace GitUI.BuildServerIntegration
                                                                 var buildHref = build.Href.Replace("guestAuth/", string.Empty);
                                                                 var callByUrlTask =
                                                                     Task.Factory
-                                                                        .StartNew(() => Client.CallByUrl<object>(buildHref), cancellationToken)
-                                                                        .ContinueWith(task => observer.OnNext(CreateBuildInfo((dynamic)task.Result)), TaskContinuationOptions.ExecuteSynchronously);
+                                                                        .StartNew(() => Client.CallByUrl<dynamic>(buildHref), cancellationToken)
+                                                                        .ContinueWith(
+                                                                            task => { observer.OnNext(CreateBuildInfo(task.Result)); },
+                                                                            TaskContinuationOptions.ExecuteSynchronously);
 
                                                                 tasks.Add(callByUrlTask);
 
