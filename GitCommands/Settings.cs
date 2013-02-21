@@ -33,7 +33,12 @@ namespace GitCommands
         {
             Version version = Assembly.GetCallingAssembly().GetName().Version;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
-            GitExtensionsVersionInt = version.Major * 100 + (version.Minor < 100 ? version.Minor : 99);
+            GitExtensionsVersionInt = version.Major * 100 + version.Minor;
+            if (version.Build > 0)
+            {
+                GitExtensionsVersionString += '.' + version.Build.ToString();
+                GitExtensionsVersionInt = GitExtensionsVersionInt * 100 + version.Build;
+            }
             if (!RunningOnWindows())
             {
                 PathSeparator = '/';
@@ -403,10 +408,16 @@ namespace GitCommands
             set { SetBool("DontConfirmAmmend", value); }
         }
 
-        public static bool AutoPopStashAfterPull
+        public static bool? AutoPopStashAfterPull
         {
-            get { return GetBool("AutoPopStashAfterPull", false).Value; }
+            get { return GetBool("AutoPopStashAfterPull", null); }
             set { SetBool("AutoPopStashAfterPull", value); }
+        }
+
+        public static bool? AutoPopStashAfterCheckoutBranch
+        {
+            get { return GetBool("AutoPopStashAfterCheckoutBranch", null); }
+            set { SetBool("AutoPopStashAfterCheckoutBranch", value); }
         }
 
         public static bool DontConfirmPushNewBranch
@@ -1227,15 +1238,18 @@ namespace GitCommands
             if (parts.Length < 2)
                 return defaultValue;
 
-            CultureInfo ci;
-            if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
-                ci = CultureInfo.InvariantCulture;
-            else
-                ci = CultureInfo.InstalledUICulture;
-
             try
             {
-                return new Font(parts[0], Single.Parse(parts[1], ci));
+                string fontSize;
+                if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
+                    fontSize = parts[1];
+                else
+                {
+                    fontSize = parts[1].Replace(",", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
+                    fontSize = fontSize.Replace(".", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
+                }
+
+                return new Font(parts[0], Single.Parse(fontSize, CultureInfo.InvariantCulture));
             }
             catch (Exception)
             {
