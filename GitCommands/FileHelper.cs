@@ -66,59 +66,21 @@ namespace GitCommands
         /// <returns>null if no info in .gitattributes (or ambiguous). True if marked as binary, false if marked as text</returns>
         private static bool? IsBinaryAccordingToGitAttributes(GitModule aModule, string fileName)
         {
-            string gitAttributesPath = Path.Combine(aModule.WorkingDir, ".gitattributes");
-            if (File.Exists(gitAttributesPath))
+            string cmd = "check-attr diff -z -- " + fileName;
+            string result = aModule.RunGitCmd(cmd);
+            var lines = result.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in lines)
             {
-                var lines = File.ReadLines(gitAttributesPath);
-                bool? diff = null;
-                bool? text = null;
-                foreach (var parts in lines.Select(line => line.Split(new[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries)))
+                var values = line.Split(':');
+                if (values.Length == 3 && values[1].Trim() == "diff")
                 {
-                    if (parts.Length < 2 || parts[0][0] == '#')
-                        continue;
-                    try
-                    {
-                        if (!Regex.IsMatch(fileName, CreateRegexFromFilePattern(parts[0])))
-                            continue;
-                    }
-                    catch (ArgumentException)
-                    {
-                        continue;
-                    }
-                    if (parts.Contains("binary"))
-                    {
-                        diff = false;
-                        text = false;
-                    }
-                    else
-                    {
-                        if (parts.Contains("diff"))
-                            diff = true;
-                        else if (parts.Contains("-diff"))
-                            diff = false;
-                        else if (parts.Contains("!diff"))
-                            diff = null;
-                        if (parts.Contains("text") || parts.Contains("crlf"))
-                            text = true;
-                        else if (parts.Contains("-text") || parts.Contains("-crlf"))
-                            text = false;
-                        else if (parts.Contains("!text") || parts.Contains("!crlf"))
-                            text = null;
-                    }
+                    if (values[2].Trim() == "unset")
+                        return true;
+                    if (values[2].Trim() == "set")
+                        return false;
                 }
-                //detect explicit binary attributes (no textual diffs allowed)
-                if (diff == false)
-                    return true;
-                //detect explicit text-based file (diff attr set) or implicit text-based file (text attr set)
-                if (diff == true && text == true)
-                    return false;
             }
             return null;
-        }
-
-        private static string CreateRegexFromFilePattern(string pattern)
-        {
-            return pattern.Replace(".", "\\.").Replace("*", ".*").Replace("?", ".");
         }
 
         public static bool IsImage(string fileName)

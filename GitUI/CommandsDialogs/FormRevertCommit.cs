@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
@@ -23,16 +24,17 @@ namespace GitUI.CommandsDialogs
 
         public GitRevision Revision { get; set; }
 
-        private void FormRevertCommitSmall_Load(object sender, EventArgs e)
+        private void FormRevertCommit_Load(object sender, EventArgs e)
         {
             commitSummaryUserControl1.Revision = Revision;
 
+            ParentsList.Items.Clear(); // TODO: search this line and the ones below to find code duplication
+
             _isMerge = Module.IsMerge(Revision.Guid);
+            parentListPanel.Visible = _isMerge;
             if (_isMerge)
             {
                 var parents = Module.GetParents(Revision.Guid);
-
-                ParentsList.Items.Clear(); // TODO: search this line and the ones below to find code duplication
 
                 for (int i = 0; i < parents.Length; i++)
                 {
@@ -42,11 +44,9 @@ namespace GitUI.CommandsDialogs
                     ParentsList.Items[ParentsList.Items.Count - 1].SubItems.Add(parents[i].CommitDate.ToShortDateString());
                 }
                 ParentsList.TopItem.Selected = true;
-            }
-            else
-            {
-                ParentsList.Visible = false;
-                ParentsLabel.Visible = false;
+                Size size = MinimumSize;
+                size.Height += 100;
+                MinimumSize = size;
             }
         }
 
