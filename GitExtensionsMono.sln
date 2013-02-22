@@ -146,7 +146,7 @@ Global
 		{92B57383-233E-46AE-8A86-6E98BF349A72} = {AF6D7B1B-FAF6-4793-AC05-00C63A5BC0F5}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = GitExtensions\GitExtensions.Mono.csproj
+		StartupItem = TranslationApp\TranslationApp.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
