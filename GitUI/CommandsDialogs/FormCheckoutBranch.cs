@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -230,28 +230,31 @@ namespace GitUI.CommandsDialogs
 
             if (UICommands.StartCommandLineProcessDialog(cmd, _owner))
             {
-                bool? messageBoxResult = Settings.AutoPopStashAfterCheckoutBranch;
-                if (messageBoxResult == null)
+                if (stash)
                 {
-                    DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
-                        this,
-                        _applyShashedItemsAgainCaption.Text,
-                        "",
-                        _applyShashedItemsAgain.Text,
-                        "",
-                        "",
-                        _dontShowAgain.Text,
-                        PSTaskDialog.eTaskDialogButtons.YesNo,
-                        PSTaskDialog.eSysIcons.Question,
-                        PSTaskDialog.eSysIcons.Question);
-                    messageBoxResult = (res == DialogResult.Yes);
-                    if (PSTaskDialog.cTaskDialog.VerificationChecked)
-                        Settings.AutoPopStashAfterCheckoutBranch = messageBoxResult;
-                }
-                if (messageBoxResult ?? false)
-                {
-                    FormProcess.ShowDialog(this, Module, "stash pop");
-                    MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
+                    bool? messageBoxResult = Settings.AutoPopStashAfterCheckoutBranch;
+                    if (messageBoxResult == null)
+                    {
+                        DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
+                            this,
+                            _applyShashedItemsAgainCaption.Text,
+                            "",
+                            _applyShashedItemsAgain.Text,
+                            "",
+                            "",
+                            _dontShowAgain.Text,
+                            PSTaskDialog.eTaskDialogButtons.YesNo,
+                            PSTaskDialog.eSysIcons.Question,
+                            PSTaskDialog.eSysIcons.Question);
+                        messageBoxResult = (res == DialogResult.Yes);
+                        if (PSTaskDialog.cTaskDialog.VerificationChecked)
+                            Settings.AutoPopStashAfterCheckoutBranch = messageBoxResult;
+                    }
+                    if (messageBoxResult ?? false)
+                    {
+                        FormProcess.ShowDialog(this, Module, "stash pop");
+                        MergeConflictHandler.HandleMergeConflicts(UICommands, this, false);
+                    }
                 }
                 return DialogResult.OK;
             }
