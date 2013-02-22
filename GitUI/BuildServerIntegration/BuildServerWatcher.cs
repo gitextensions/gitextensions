@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -63,13 +64,14 @@ namespace GitUI.BuildServerIntegration
             if (_buildServerAdapter == null)
                 return;
 
-            var fullDayObservable = _buildServerAdapter.CreateObservable(DateTime.Now.Date);
-            var fullObservable = _buildServerAdapter.CreateObservable();
-            var fromNowObservable = _buildServerAdapter.CreateObservable(DateTime.Now);
+            var fullDayObservable = _buildServerAdapter.CreateObservable(NewThreadScheduler.Default, DateTime.Now.Date);
+            var fullObservable = _buildServerAdapter.CreateObservable(NewThreadScheduler.Default);
+            var fromNowObservable = _buildServerAdapter.CreateObservable(NewThreadScheduler.Default, DateTime.Now);
 
             buildStatusCancellationToken =
                 fullDayObservable.Concat(fullObservable)
-                                 .Concat(Observable.Empty<BuildInfo>().Delay(TimeSpan.FromMinutes(1))
+                                 .Concat(Observable.Empty<BuildInfo>()
+                                                   .Delay(TimeSpan.FromMinutes(1))
                                                    .Concat(fromNowObservable)
                                                    .Repeat())
                                  .Subscribe(item =>
