@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Git;
@@ -12,31 +13,24 @@ namespace GitUI.Notifications
     internal static class NotifierHelpers
     {
         /// <summary>blank icon</summary>
-        internal static string blank = Guid.NewGuid().ToString();
+        internal static Image blank = Resources.BlankIcon;
         /// <summary>info icon</summary>
-        internal static string info = Guid.NewGuid().ToString();
+        internal static Image info = Resources.NotifyInfo;
         /// <summary>success icon</summary>
-        internal static string success = Guid.NewGuid().ToString();
+        internal static Image success = Resources.NotifySuccess;
         /// <summary>warning icon</summary>
-        internal static string warn = Guid.NewGuid().ToString();
+        internal static Image warn = Resources.NotifyWarn;
         /// <summary>failure icon</summary>
-        internal static string fail = Guid.NewGuid().ToString();
-
-        static readonly ImageList images;
-
-        static NotifierHelpers()
-        {
-            images = new ImageList();
-            images.Images.Add(blank, Resources.BlankIcon);
-            images.Images.Add(success, Resources.NotifySuccess);
-            images.Images.Add(warn, Resources.NotifyWarn); // add when needed
-            images.Images.Add(fail, Resources.NotifyError);
-            images.Images.Add(info, Resources.NotifyInfo);
-        }
+        internal static Image fail = Resources.NotifyError;
 
         /// <summary>Gets the image key for a <see cref="Notification"/>.</summary>
-        public static string GetImageKey(this Notification notification)
+        public static Image GetImage(this Notification notification)
         {
+            if (notification == null)
+            {
+                return blank;
+            }
+
             switch (notification.Severity)
             {
                 case StatusSeverity.Info: return info;
@@ -52,17 +46,6 @@ namespace GitUI.Notifications
         {
             timer.Stop();
             timer.Start();
-        }
-
-        /// <summary>Sets the <see cref="ImageList"/> for the specified <see cref="ToolStrip"/>.</summary>
-        public static void SetImageList(this ToolStrip toolStrip)
-        {
-            if (toolStrip == null) { return; }
-
-            if (toolStrip.ImageList == null)
-            {
-                toolStrip.ImageList = images;
-            }
         }
 
         static Dictionary<ToolStripDropDownItem, Queue<ScheduledAction>> scheduledActions

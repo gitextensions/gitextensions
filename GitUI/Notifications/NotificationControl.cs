@@ -73,12 +73,12 @@ namespace GitUI.Notifications
                 {
                     Notification = notification;
                     Text = notification.Text;
-                    ImageKey = notification.GetImageKey();
+                    Image = notification.GetImage();
                 }
                 else
                 {
                     Text = string.Empty;
-                    ImageKey = NotifierHelpers.blank;
+                    Image = NotifierHelpers.blank;
                 }
 
             }
@@ -86,13 +86,6 @@ namespace GitUI.Notifications
             public override string ToString()
             {
                 return Notification.ToString();
-            }
-
-            /// <summary>Sets the <see cref="ImageList"/> of the parent.</summary>
-            protected override void OnParentChanged(ToolStrip oldParent, ToolStrip newParent)
-            {
-                base.OnParentChanged(oldParent, newParent);
-                newParent.SetImageList();
             }
 
             /// <summary>Disposes the <see cref="timer"/>.</summary>

@@ -53,8 +53,7 @@ namespace GitUI.Notifications
         protected override void OnParentChanged(ToolStrip oldParent, ToolStrip newParent)
         {
             base.OnParentChanged(oldParent, newParent);
-            newParent.SetImageList();
-
+           
             if (mostRecent != null) { return; }
 
             mostRecent = new MostRecentNotification();
