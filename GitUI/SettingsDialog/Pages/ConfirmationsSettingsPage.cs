@@ -1,4 +1,11 @@
 ﻿using GitCommands;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace GitUI.SettingsDialog.Pages
@@ -15,8 +22,7 @@ namespace GitUI.SettingsDialog.Pages
         protected override void OnLoadSettings()
         {
             chkAmmend.Checked = Settings.DontConfirmAmmend;
-            chkAutoPopStashAfterPull.CheckState = Settings.AutoPopStashAfterPull.ToCheckboxState();
-            chkAutoPopStashAfterCheckout.CheckState = Settings.AutoPopStashAfterCheckoutBranch.ToCheckboxState();
+            chkAutoPopStashAfterPull.Checked = Settings.AutoPopStashAfterPull;
             chkPushNewBranch.Checked = Settings.DontConfirmPushNewBranch;
             chkAddTrackingRef.Checked = Settings.DontConfirmAddTrackingRef;
         }
@@ -24,8 +30,7 @@ namespace GitUI.SettingsDialog.Pages
         public override void SaveSettings()
         {
             Settings.DontConfirmAmmend = chkAmmend.Checked;
-            Settings.AutoPopStashAfterPull = chkAutoPopStashAfterPull.CheckState.ToBoolean();
-            Settings.AutoPopStashAfterCheckoutBranch = chkAutoPopStashAfterCheckout.CheckState.ToBoolean();
+            Settings.AutoPopStashAfterPull = chkAutoPopStashAfterPull.Checked;
             Settings.DontConfirmPushNewBranch = chkPushNewBranch.Checked;
             Settings.DontConfirmAddTrackingRef = chkAddTrackingRef.Checked;
         }
@@ -33,28 +38,7 @@ namespace GitUI.SettingsDialog.Pages
         public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReferenceByType(typeof(ConfirmationsSettingsPage));
-        }
-    }
+        }        
 
-    public static class CheckboxExtension
-    {
-        public static CheckState ToCheckboxState(this bool booleanValue)
-        {
-            return booleanValue.ToCheckboxState();
-        }
-
-        public static CheckState ToCheckboxState(this bool? booleanValue)
-        {
-            if (!booleanValue.HasValue)
-                return CheckState.Indeterminate;
-            return booleanValue == true ? CheckState.Checked : CheckState.Unchecked;
-        }
-
-        public static bool? ToBoolean(this CheckState state)
-        {
-            if (state == CheckState.Indeterminate)
-                return null;
-            return state == CheckState.Checked;
-        }
     }
 }
