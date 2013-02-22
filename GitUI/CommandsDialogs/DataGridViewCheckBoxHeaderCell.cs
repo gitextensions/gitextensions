@@ -23,25 +23,25 @@ namespace GitUI.CommandsDialogs
             if (wasAttached)
                 throw new InvalidOperationException("This cell has already been attached to a column.");
 
-            if (DataGridView != null)
-            {
-                owningColumn.HeaderCell = this;
-                owningColumn.HeaderText = string.Empty;
+			if (DataGridView != null)
+			{
+	            owningColumn.HeaderCell = this;
+	            owningColumn.HeaderText = string.Empty;
 
-                DataGridView.CurrentCellDirtyStateChanged += OnCurrentCellDirtyStateChanged;
-                DataGridView.Rows.CollectionChanged += OnCollectionChanged;
-                UpdateCheckedState();
-                wasAttached = true;
-            }
+	            DataGridView.CurrentCellDirtyStateChanged += OnCurrentCellDirtyStateChanged;
+	            DataGridView.Rows.CollectionChanged += OnCollectionChanged;
+	            UpdateCheckedState();
+	            wasAttached = true;
+			}
         }
 
         public void Detach()
         {
-            if (wasAttached)
-            {
-                DataGridView.CurrentCellDirtyStateChanged -= OnCurrentCellDirtyStateChanged;
-                DataGridView.Rows.CollectionChanged -= OnCollectionChanged;
-            }
+			if (wasAttached)
+			{
+	            DataGridView.CurrentCellDirtyStateChanged -= OnCurrentCellDirtyStateChanged;
+	            DataGridView.Rows.CollectionChanged -= OnCollectionChanged;
+			}
         }
 
         private void OnCollectionChanged(object sender, CollectionChangeEventArgs e)
