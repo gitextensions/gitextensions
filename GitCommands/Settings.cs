@@ -410,16 +410,10 @@ namespace GitCommands
             set { SetBool("DontConfirmAmmend", value); }
         }
 
-        public static bool? AutoPopStashAfterPull
+        public static bool AutoPopStashAfterPull
         {
-            get { return GetBool("AutoPopStashAfterPull", null); }
+            get { return GetBool("AutoPopStashAfterPull", false).Value; }
             set { SetBool("AutoPopStashAfterPull", value); }
-        }
-
-        public static bool? AutoPopStashAfterCheckoutBranch
-        {
-            get { return GetBool("AutoPopStashAfterCheckoutBranch", null); }
-            set { SetBool("AutoPopStashAfterCheckoutBranch", value); }
         }
 
         public static bool DontConfirmPushNewBranch
