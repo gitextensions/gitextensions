@@ -1012,7 +1012,18 @@ namespace GitUI.CommandsDialogs
                     InitializedStaged();
                     var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatuses;
                     Unstaged.GitItemStatuses = null;
-                    var unstagedItems = unStagedFiles.Where(item => files.Exists(i => i.Name == item.Name || i.OldName == item.Name) && files.Exists(i => i.Name == item.Name));
+                    var names = new HashSet<string>();
+                    foreach (var item in files)
+                    {
+                        names.Add(item.Name);
+                        names.Add(item.OldName);
+                    }
+                    var unstagedItems = new HashSet<GitItemStatus>();
+                    foreach (var item in unStagedFiles)
+                    {
+                        if (names.Contains(item.Name))
+                            unstagedItems.Add(item);
+                    }
                     unStagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
                     unStagedFiles.RemoveAll(item => item.IsSubmodule && !item.SubmoduleStatus.IsDirty && unstagedItems.Contains(item));
                     foreach (var item in unstagedItems.Where(item => item.IsSubmodule && item.SubmoduleStatus.IsDirty))

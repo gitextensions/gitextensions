@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             _discussionWB.DocumentText = "";
             _diffViewer.ViewPatch("");
-            _fileStatusList.GitItemStatuses = new List<GitItemStatus>();
+            _fileStatusList.GitItemStatuses = null;
 
             _pullRequestsList.Items.Clear();
             var lvi = new ListViewItem("");
@@ -187,7 +187,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return;
             _discussionWB.DocumentText = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo);
             _diffViewer.ViewPatch("");
-            _fileStatusList.GitItemStatuses = new List<GitItemStatus>();
+            _fileStatusList.GitItemStatuses = null;
 
             LoadDiffPatch();
             LoadDiscussion();
