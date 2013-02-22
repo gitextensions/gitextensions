@@ -30,23 +30,40 @@ namespace GitUI
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.FileStatusListBox = new System.Windows.Forms.ListBox();
+            this.FileStatusListView = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.DiffFilesTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.NoFiles = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // FileStatusListBox
+            // FileStatusListView
             // 
-            this.FileStatusListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FileStatusListBox.FormattingEnabled = true;
-            this.FileStatusListBox.ItemHeight = 15;
-            this.FileStatusListBox.Location = new System.Drawing.Point(0, 0);
-            this.FileStatusListBox.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.FileStatusListBox.Name = "FileStatusListBox";
-            this.FileStatusListBox.Size = new System.Drawing.Size(682, 485);
-            this.FileStatusListBox.TabIndex = 0;
-            this.FileStatusListBox.SizeChanged += new System.EventHandler(this.NoFiles_SizeChanged);
-            this.FileStatusListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FileStatusListBox_KeyDown);
+            this.FileStatusListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
+            this.FileStatusListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FileStatusListView.FullRowSelect = true;
+            this.FileStatusListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.FileStatusListView.HideSelection = false;
+            this.FileStatusListView.LabelWrap = false;
+            this.FileStatusListView.Location = new System.Drawing.Point(0, 0);
+            this.FileStatusListView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.FileStatusListView.Name = "FileStatusListView";
+            this.FileStatusListView.ShowItemToolTips = true;
+            this.FileStatusListView.Size = new System.Drawing.Size(682, 485);
+            this.FileStatusListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.FileStatusListView.TabIndex = 0;
+            this.FileStatusListView.UseCompatibleStateImageBehavior = false;
+            this.FileStatusListView.View = System.Windows.Forms.View.Details;
+            this.FileStatusListView.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.FileStatusListView_DrawItem);
+            this.FileStatusListView.SelectedIndexChanged += new System.EventHandler(this.FileStatusListView_SelectedIndexChanged);
+            this.FileStatusListView.SizeChanged += new System.EventHandler(this.FileStatusListView_SizeChanged);
+            this.FileStatusListView.DoubleClick += new System.EventHandler(this.FileStatusListView_DoubleClick);
+            this.FileStatusListView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FileStatusListView_KeyDown);
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Files";
+            this.columnHeader1.Width = 678;
             // 
             // NoFiles
             // 
@@ -63,7 +80,7 @@ namespace GitUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.NoFiles);
-            this.Controls.Add(this.FileStatusListBox);
+            this.Controls.Add(this.FileStatusListView);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FileStatusList";
             this.Size = new System.Drawing.Size(682, 485);
@@ -73,9 +90,10 @@ namespace GitUI
 
         #endregion
 
-        private System.Windows.Forms.ListBox FileStatusListBox;
-		//This property cannot be private because this will break compilation in monodevelop
+        private System.Windows.Forms.ListView FileStatusListView;
+        //This property cannot be private because this will break compilation in monodevelop
         protected System.Windows.Forms.ToolTip DiffFilesTooltip;
         private System.Windows.Forms.Label NoFiles;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
     }
 }
