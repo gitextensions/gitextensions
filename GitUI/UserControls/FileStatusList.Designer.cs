@@ -1,4 +1,4 @@
-﻿#pragma warning disable 0628
+﻿using GitUI.UserControls;
 namespace GitUI
 {
     partial class FileStatusList
@@ -30,7 +30,7 @@ namespace GitUI
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.FileStatusListView = new System.Windows.Forms.ListView();
+            this.FileStatusListView = new ExListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.DiffFilesTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.NoFiles = new System.Windows.Forms.Label();
@@ -90,7 +90,7 @@ namespace GitUI
 
         #endregion
 
-        private System.Windows.Forms.ListView FileStatusListView;
+        private ExListView FileStatusListView;
         //This property cannot be private because this will break compilation in monodevelop
         protected System.Windows.Forms.ToolTip DiffFilesTooltip;
         private System.Windows.Forms.Label NoFiles;

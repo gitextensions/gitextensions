@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
+using GitUI.UserControls;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -26,7 +27,6 @@ namespace GitUI
         {
             InitializeComponent(); Translate();
             _NoDiffFilesChangesText = NoFiles.Text;
-            SizeChanged += FileStatusList_SizeChanged;
             //FileStatusListView.DrawMode = DrawMode.OwnerDrawVariable;
             //FileStatusListView.MeasureItem += FileStatusListView_MeasureItem;
             FileStatusListView.DrawItem += FileStatusListView_DrawItem;
@@ -73,11 +73,6 @@ namespace GitUI
         public string GetNoFilesText()
         {
             return NoFiles.Text;
-        }
-
-        void FileStatusList_SizeChanged(object sender, EventArgs e)
-        {
-            //FileStatusListView.HorizontalExtent = 0;
         }
 
         public override bool Focused
@@ -514,18 +509,18 @@ namespace GitUI
                     NoFiles.Visible = false;
 
                 //FileStatusListView.HorizontalExtent = 0;
-                FileStatusListView.BeginUpdate();
                 int prevSelectedIndex = SelectedIndex;
                 FileStatusListView.ShowGroups = value != null && value.Count > 1;
                 FileStatusListView.Groups.Clear();
                 FileStatusListView.Items.Clear();
                 if (value == null)
                     return;
+                FileStatusListView.BeginUpdate();
                 var list = new List<ListViewItem>();
                 foreach (var pair in value)
                 {
                     ListViewGroup group = null;
-                    if (pair.Key != null)
+                    if (!String.IsNullOrEmpty(pair.Key))
                     {
                         string shortHash = pair.Key.Length > 8 ? pair.Key.Substring(0, 8) : pair.Key;
                         group = new ListViewGroup("Diff with parent " + shortHash);
@@ -542,6 +537,7 @@ namespace GitUI
                 }
                 FileStatusListView.Items.AddRange(list.ToArray());
                 FileStatusListView.EndUpdate();
+                FileStatusListView.SetGroupState(ListViewGroupState.Collapsible);
                 if (DataSourceChanged != null)
                     DataSourceChanged(this, new EventArgs());
                 if (!value.Any() && prevSelectedIndex >= 0)
@@ -566,8 +562,7 @@ namespace GitUI
             NoFiles.Size = new Size(Size.Width - 10, Size.Height - 10);
             Refresh();
             FileStatusListView.BeginUpdate();
-            FileStatusListView.AutoResizeColumn(0,
-                ColumnHeaderAutoResizeStyle.HeaderSize);
+            FileStatusListView.Columns[0].Width = FileStatusListView.ClientSize.Width;
             FileStatusListView.EndUpdate();
         }
 

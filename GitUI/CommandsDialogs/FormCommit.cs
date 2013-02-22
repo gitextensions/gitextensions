@@ -614,9 +614,7 @@ namespace GitUI.CommandsDialogs
                     unStagedFiles.Add(fileStatus);
             }
 
-            Unstaged.GitItemStatuses = null;
             Unstaged.GitItemStatuses = unStagedFiles;
-            Staged.GitItemStatuses = null;
             Staged.GitItemStatuses = stagedFiles;
 
             Loading.Visible = false;
