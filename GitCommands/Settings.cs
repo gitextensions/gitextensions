@@ -31,6 +31,7 @@ namespace GitCommands
         public static readonly char PathSeparatorWrong = '/';
 
         private static readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
+
         static Settings()
         {
             Version version = Assembly.GetCallingAssembly().GetName().Version;
@@ -333,22 +334,26 @@ namespace GitCommands
             set { SafeSet("revisiongraphdrawnonrelativestextgray", value, ref _revisionGraphDrawNonRelativesTextGray); }
         }
 
-        public static readonly Dictionary<string, Encoding> availableEncodings = new Dictionary<string, Encoding>();
+        public static readonly Dictionary<string, Encoding> AvailableEncodings = new Dictionary<string, Encoding>();
+        private static readonly Dictionary<string, Encoding> EncodingSettings = new Dictionary<string, Encoding>();
 
         internal static bool GetEncoding(string settingName, out Encoding encoding)
         {
-            object o;
-            bool result = ByNameMap.TryGetValue(settingName, out o);
-            encoding = o as Encoding;
-            return result;
+            lock (EncodingSettings)
+            {
+                return EncodingSettings.TryGetValue(settingName, out encoding);
+            }
         }
 
         internal static void SetEncoding(string settingName, Encoding encoding)
         {
-            var items = (from item in ByNameMap.Keys where item.StartsWith(settingName) select item).ToList();
-            foreach (var item in items)
-                ByNameMap.Remove(item);
-            ByNameMap[settingName] = encoding;
+            lock (EncodingSettings)
+            {
+                var items = EncodingSettings.Keys.Where(item => item.StartsWith(settingName)).ToList();
+                foreach (var item in items)
+                    EncodingSettings.Remove(item);
+                EncodingSettings[settingName] = encoding;
+            }
         }
 
         public enum PullAction
@@ -839,7 +844,7 @@ namespace GitCommands
 
         public static void LoadSettings()
         {
-            Action<Encoding> addEncoding = delegate(Encoding e) { availableEncodings[e.HeaderName] = e; };
+            Action<Encoding> addEncoding = delegate(Encoding e) { AvailableEncodings[e.HeaderName] = e; };
             addEncoding(Encoding.Default);
             addEncoding(new ASCIIEncoding());
             addEncoding(new UnicodeEncoding());
