@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GitCommands;
 using Nini.Config;
@@ -33,67 +34,67 @@ namespace GitUI.BuildServerIntegration
             Client.Connect(string.Empty, string.Empty, true);
         }
 
-        public IObservable<BuildInfo> CreateObservable(DateTime? sinceDate = new DateTime?())
+        public IObservable<BuildInfo> CreateObservable(IScheduler scheduler, DateTime? sinceDate = null)
         {
-            return Observable.Create<BuildInfo>((observer, cancellationToken) =>
+            return Observable.Create<BuildInfo>(observer =>
                                                     {
-                                                        try
-                                                        {
-                                                            var project = Client.ProjectByName(ProjectName);
-                                                            var buildTypes = project.BuildTypes.BuildType;
-                                                            var builds =
-                                                                buildTypes.SelectMany(
-                                                                    x =>
-                                                                    Client.BuildsByBuildLocator(
-                                                                        TeamCityBuildLocator2.WithDimensions(
-                                                                            BuildTypeLocator.WithId(x.Id),
-                                                                            sinceDate: sinceDate, defaultBranch: "any")));
-                                                            var tasks = new List<Task>(builds.Count());
+                                                        var cancellationTokenSource = new CancellationTokenSource();
 
-                                                            foreach (var build in builds)
-                                                            {
-                                                                var buildHref = build.Href.Replace("guestAuth/", string.Empty);
-                                                                var callByUrlTask =
-                                                                    Task.Factory
-                                                                        .StartNew(() => Client.CallByUrl<dynamic>(buildHref), cancellationToken)
-                                                                        .ContinueWith(
-                                                                            task => { observer.OnNext(CreateBuildInfo(task.Result)); },
-                                                                            TaskContinuationOptions.ExecuteSynchronously);
+                                                        scheduler.Schedule(() =>
+                                                                               {
+                                                                                   try
+                                                                                   {
+                                                                                       var project = Client.ProjectByName(ProjectName);
+                                                                                       var buildTypes = project.BuildTypes.BuildType;
+                                                                                       var builds = buildTypes.SelectMany(x => Client.BuildsByBuildLocator(TeamCityBuildLocator2.WithDimensions(BuildTypeLocator.WithId(x.Id), sinceDate: sinceDate, defaultBranch: "any")));
+                                                                                       var tasks = new List<Task>(builds.Count());
 
-                                                                tasks.Add(callByUrlTask);
+                                                                                       foreach (var build in builds)
+                                                                                       {
+                                                                                           var buildHref = build.Href.Replace("guestAuth/", string.Empty);
+                                                                                           var callByUrlTask =
+                                                                                               Task.Factory
+                                                                                                   .StartNew(() => Client.CallByUrl<dynamic>(buildHref), cancellationTokenSource.Token)
+                                                                                                   .ContinueWith(
+                                                                                                       task => { observer.OnNext(CreateBuildInfo(task.Result)); },
+                                                                                                       TaskContinuationOptions.ExecuteSynchronously);
 
-                                                                if (tasks.Count == 8)
-                                                                {
-                                                                    Task.Factory
-                                                                        .ContinueWhenAll(tasks.ToArray(), completedTasks => tasks.Clear())
-                                                                        .Wait(cancellationToken);
-                                                                }
-                                                            }
+                                                                                           tasks.Add(callByUrlTask);
 
-                                                            Task.Factory
-                                                                .ContinueWhenAll(
-                                                                    tasks.ToArray(),
-                                                                    completedTasks =>
-                                                                        {
-                                                                            var firstFaultedTask = completedTasks.FirstOrDefault(task => task.IsFaulted);
-                                                                            if (firstFaultedTask != null)
-                                                                            {
-                                                                                observer.OnError(firstFaultedTask.Exception);
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                observer.OnCompleted();
-                                                                            }
-                                                                        });
-                                                        }
-                                                        catch (Exception ex)
-                                                        {
-                                                            observer.OnError(ex);
-                                                        }
+                                                                                           if (tasks.Count == 8)
+                                                                                           {
+                                                                                               // TODO: Improve this code to get rid of the Wait call (potentially using IObservable.Buffer(8) to handle the breaking up into batches).
+                                                                                               Task.Factory
+                                                                                                   .ContinueWhenAll(tasks.ToArray(), completedTasks => tasks.Clear())
+                                                                                                   .Wait(cancellationTokenSource.Token);
+                                                                                           }
+                                                                                       }
 
-                                                        return new Task<IDisposable>(() => Disposable.Empty);
+                                                                                       Task.Factory.ContinueWhenAll(
+                                                                                               tasks.ToArray(),
+                                                                                               completedTasks =>
+                                                                                                   {
+                                                                                                       var firstFaultedTask = completedTasks.FirstOrDefault(task => task.IsFaulted);
+                                                                                                       if (firstFaultedTask != null)
+                                                                                                       {
+                                                                                                           observer.OnError(firstFaultedTask.Exception);
+                                                                                                       }
+                                                                                                       else
+                                                                                                       {
+                                                                                                           observer.OnCompleted();
+                                                                                                       }
+                                                                                                   });
+                                                                                   }
+                                                                                   catch (Exception ex)
+                                                                                   {
+                                                                                       observer.OnError(ex);
+                                                                                   }
+                                                                               });
+
+                                                        var finallyCallback = Disposable.Create(cancellationTokenSource.Cancel);
+
+                                                        return finallyCallback;
                                                     })
-                .SubscribeOn(NewThreadScheduler.Default)
                 .OnErrorResumeNext(Observable.Empty<BuildInfo>());
         }
 
