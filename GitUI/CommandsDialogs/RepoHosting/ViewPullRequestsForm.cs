@@ -273,6 +273,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             if (errorOccurred)
                 return;
+
+            UICommands.RepoChangedNotifier.Notify();
+
             Close();
         }
 
@@ -280,40 +283,52 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             if (_currentPullRequestInfo == null)
                 return;
-
-            var remoteName = _currentPullRequestInfo.Owner;
-            var remoteUrl = _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl;
-            var remoteRef = _currentPullRequestInfo.HeadRef;
-
-            var existingRepo = _hostedRemotes.FirstOrDefault(el => el.Name == remoteName);
-            if (existingRepo != null)
+            
+            UICommands.RepoChangedNotifier.Lock();
+            try
             {
-                if (existingRepo.GetHostedRepository().CloneReadOnlyUrl != remoteUrl)
+
+                var remoteName = _currentPullRequestInfo.Owner;
+                var remoteUrl = _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl;
+                var remoteRef = _currentPullRequestInfo.HeadRef;
+
+                var existingRepo = _hostedRemotes.FirstOrDefault(el => el.Name == remoteName);
+                if (existingRepo != null)
                 {
-                    MessageBox.Show(this, string.Format(_strRemoteAlreadyExist.Text,
-                                        remoteName, existingRepo.GetHostedRepository().CloneReadOnlyUrl, remoteUrl));
-                    return;
+                    if (existingRepo.GetHostedRepository().CloneReadOnlyUrl != remoteUrl)
+                    {
+                        MessageBox.Show(this, string.Format(_strRemoteAlreadyExist.Text,
+                                            remoteName, existingRepo.GetHostedRepository().CloneReadOnlyUrl, remoteUrl));
+                        return;
+                    }
                 }
+                else
+                {
+                    var error = Module.AddRemote(remoteName, remoteUrl);
+                    if (!string.IsNullOrEmpty(error))
+                    {
+                        MessageBox.Show(this, error, string.Format(_strCouldNotAddRemote.Text, remoteName, remoteUrl));
+                        return;
+                    }
+                    UICommands.RepoChangedNotifier.Notify();
+                }
+
+                var cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
+                var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
+
+                if (errorOccurred)
+                    return;
+
+                UICommands.RepoChangedNotifier.Notify();
+
+                cmd = string.Format("checkout {0}/{1}", remoteName, remoteRef);
+                if (FormProcess.ShowDialog(this, Settings.GitCommand, cmd))
+                    UICommands.RepoChangedNotifier.Notify();
             }
-            else
+            finally
             {
-                var error = Module.AddRemote(remoteName, remoteUrl);
-                if (!string.IsNullOrEmpty(error))
-                {
-                    MessageBox.Show(this, error, string.Format(_strCouldNotAddRemote.Text, remoteName, remoteUrl));
-                    return;
-                }
+                UICommands.RepoChangedNotifier.UnLock(false);
             }
-
-            var cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
-            var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
-
-            if (errorOccurred)
-                return;
-
-            cmd = string.Format("checkout {0}/{1}", remoteName, remoteRef);
-            FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
-
             Close();
         }
 
