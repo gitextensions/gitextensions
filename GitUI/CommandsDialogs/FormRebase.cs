@@ -245,7 +245,7 @@ namespace GitUI.CommandsDialogs
         {
             using(var chooseForm = new FormChooseCommit(UICommands, txtFrom.Text))
             {
-                if (DialogResult.OK == chooseForm.ShowDialog() && null != chooseForm.SelectedRevision)
+                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
                 {
                     txtFrom.Text = chooseForm.SelectedRevision.Guid.Substring(0, 8);
                 }

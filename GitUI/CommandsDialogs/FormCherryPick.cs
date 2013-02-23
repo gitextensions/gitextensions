@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
@@ -42,13 +43,14 @@ namespace GitUI.CommandsDialogs
         {
             commitSummaryUserControl1.Revision = Revision;
 
+            ParentsList.Items.Clear();
+
             IsMerge = Module.IsMerge(Revision.Guid);
+            panelParentsList.Visible = IsMerge;
 
             if (IsMerge)
             {
                 var parents = Module.GetParents(Revision.Guid);
-
-                ParentsList.Items.Clear();
 
                 for (int i = 0; i < parents.Length; i++)
                 {
@@ -59,9 +61,10 @@ namespace GitUI.CommandsDialogs
                 }
 
                 ParentsList.TopItem.Selected = true;
+                Size size = MinimumSize;
+                size.Height += 100;
+                MinimumSize = size;
             }
-
-            panelParentsList.Visible = IsMerge;
         }
 
         private void Revert_Click(object sender, EventArgs e)
@@ -106,7 +109,7 @@ namespace GitUI.CommandsDialogs
         {
             using (var chooseForm = new FormChooseCommit(UICommands, Revision.Guid))
             {
-                if (chooseForm.ShowDialog() == DialogResult.OK && chooseForm.SelectedRevision != null)
+                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
                 {
                     Revision = chooseForm.SelectedRevision;
                 }
