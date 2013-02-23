@@ -31,11 +31,17 @@ namespace GitCommands
         public static readonly char PathSeparatorWrong = '/';
 
         private static readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
+
         static Settings()
         {
             Version version = Assembly.GetCallingAssembly().GetName().Version;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
-            GitExtensionsVersionInt = version.Major * 100 + (version.Minor < 100 ? version.Minor : 99);
+            GitExtensionsVersionInt = version.Major * 100 + version.Minor;
+            if (version.Build > 0)
+            {
+                GitExtensionsVersionString += '.' + version.Build.ToString();
+                GitExtensionsVersionInt = GitExtensionsVersionInt * 100 + version.Build;
+            }
             if (!RunningOnWindows())
             {
                 PathSeparator = '/';
@@ -328,22 +334,26 @@ namespace GitCommands
             set { SafeSet("revisiongraphdrawnonrelativestextgray", value, ref _revisionGraphDrawNonRelativesTextGray); }
         }
 
-        public static readonly Dictionary<string, Encoding> availableEncodings = new Dictionary<string, Encoding>();
+        public static readonly Dictionary<string, Encoding> AvailableEncodings = new Dictionary<string, Encoding>();
+        private static readonly Dictionary<string, Encoding> EncodingSettings = new Dictionary<string, Encoding>();
 
         internal static bool GetEncoding(string settingName, out Encoding encoding)
         {
-            object o;
-            bool result = ByNameMap.TryGetValue(settingName, out o);
-            encoding = o as Encoding;
-            return result;
+            lock (EncodingSettings)
+            {
+                return EncodingSettings.TryGetValue(settingName, out encoding);
+            }
         }
 
         internal static void SetEncoding(string settingName, Encoding encoding)
         {
-            var items = (from item in ByNameMap.Keys where item.StartsWith(settingName) select item).ToList();
-            foreach (var item in items)
-                ByNameMap.Remove(item);
-            ByNameMap[settingName] = encoding;
+            lock (EncodingSettings)
+            {
+                var items = EncodingSettings.Keys.Where(item => item.StartsWith(settingName)).ToList();
+                foreach (var item in items)
+                    EncodingSettings.Remove(item);
+                EncodingSettings[settingName] = encoding;
+            }
         }
 
         public enum PullAction
@@ -405,10 +415,16 @@ namespace GitCommands
             set { SetBool("DontConfirmAmmend", value); }
         }
 
-        public static bool AutoPopStashAfterPull
+        public static bool? AutoPopStashAfterPull
         {
-            get { return GetBool("AutoPopStashAfterPull", false).Value; }
+            get { return GetBool("AutoPopStashAfterPull", null); }
             set { SetBool("AutoPopStashAfterPull", value); }
+        }
+
+        public static bool? AutoPopStashAfterCheckoutBranch
+        {
+            get { return GetBool("AutoPopStashAfterCheckoutBranch", null); }
+            set { SetBool("AutoPopStashAfterCheckoutBranch", value); }
         }
 
         public static bool DontConfirmPushNewBranch
@@ -828,7 +844,7 @@ namespace GitCommands
 
         public static void LoadSettings()
         {
-            Action<Encoding> addEncoding = delegate(Encoding e) { availableEncodings[e.HeaderName] = e; };
+            Action<Encoding> addEncoding = delegate(Encoding e) { AvailableEncodings[e.HeaderName] = e; };
             addEncoding(Encoding.Default);
             addEncoding(new ASCIIEncoding());
             addEncoding(new UnicodeEncoding());
@@ -1229,15 +1245,18 @@ namespace GitCommands
             if (parts.Length < 2)
                 return defaultValue;
 
-            CultureInfo ci;
-            if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
-                ci = CultureInfo.InvariantCulture;
-            else
-                ci = CultureInfo.InstalledUICulture;
-
             try
             {
-                return new Font(parts[0], Single.Parse(parts[1], ci));
+                string fontSize;
+                if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
+                    fontSize = parts[1];
+                else
+                {
+                    fontSize = parts[1].Replace(",", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
+                    fontSize = fontSize.Replace(".", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
+                }
+
+                return new Font(parts[0], Single.Parse(fontSize, CultureInfo.InvariantCulture));
             }
             catch (Exception)
             {

@@ -32,7 +32,7 @@ If you do not want to use github, I also accept mailed patches. Just make sure t
 ## Links
 
 * Download page: [http://code.google.com/p/gitextensions/downloads/list](http://code.google.com/p/gitextensions/downloads/list)
-* ChangeLog: [https://github.com/gitextensions/gitextensions/blob/master/GitUI/Resources/ChangeLog.md](https://github.com/gitextensions/gitextensions/blob/master/GitUI/Resources/ChangeLog.md)
+* ChangeLog: [ChangeLog.md](GitUI/Resources/ChangeLog.md)
 * Source code: [http://github.com/gitextensions/gitextensions](http://github.com/gitextensions/gitextensions)
 * Issue tracker: [http://github.com/gitextensions/gitextensions/issues](http://github.com/gitextensions/gitextensions/issues)
 * Mailing list: [http://groups.google.com/group/gitextensions](http://groups.google.com/group/gitextensions)
