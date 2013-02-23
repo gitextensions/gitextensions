@@ -130,8 +130,11 @@ namespace GitUI
 
             string text = GetItemText(e.Graphics, gitItemStatus);
 
-            e.Graphics.DrawString(text, e.Item.ListView.Font,
-                                  new SolidBrush(e.Item.ForeColor), e.Bounds.Left + ImageSize, e.Bounds.Top);
+            using (var solidBrush = new SolidBrush(e.Item.ForeColor))
+            {
+                e.Graphics.DrawString(text, e.Item.ListView.Font,
+                                      solidBrush, e.Bounds.Left + ImageSize, e.Bounds.Top);
+            }
         }
 
 #if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
