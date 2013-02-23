@@ -17,9 +17,9 @@ using GitUI.Hotkey;
 using GitUI.Plugin;
 using GitUI.Script;
 using GitUIPluginInterfaces;
-using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager.Translation;
 #if !__MonoCS__
+using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
 
 namespace GitUI.CommandsDialogs
@@ -803,6 +803,11 @@ namespace GitUI.CommandsDialogs
             if (CommitInfoTabControl.SelectedTab != TreeTabPage)
                 return;
 
+            if (selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.FileTree))
+                return;
+
+            selectedRevisionUpdatedTargets |= UpdateTargets.FileTree;
+
             try
             {
                 GitTree.SuspendLayout();
@@ -875,6 +880,11 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
+            if (selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.DiffList))
+                return;
+
+            selectedRevisionUpdatedTargets |= UpdateTargets.DiffList;
+
             var revisions = RevisionGrid.GetSelectedRevisions();
 
             DiffText.SaveCurrentScrollPos();
@@ -909,6 +919,11 @@ namespace GitUI.CommandsDialogs
         {
             if (CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
                 return;
+
+            if (selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.CommitInfo))
+                return;
+
+            selectedRevisionUpdatedTargets |= UpdateTargets.CommitInfo;
 
             if (RevisionGrid.GetSelectedRevisions().Count == 0)
                 return;
@@ -1123,10 +1138,22 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        [Flags]
+        internal enum UpdateTargets
+        {
+            None = 1,
+            DiffList = 2,
+            FileTree = 4,
+            CommitInfo = 8
+        }
+
+        private UpdateTargets selectedRevisionUpdatedTargets = UpdateTargets.None;
         private void RevisionGridSelectionChanged(object sender, EventArgs e)
         {
             try
             {
+                selectedRevisionUpdatedTargets = UpdateTargets.None;
+
                 var revisions = RevisionGrid.GetSelectedRevisions();
 
                 if (revisions.Any() && GitRevision.IsArtificial(revisions[0].Guid))
@@ -1512,9 +1539,11 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            DiffText.ViewPatch(RevisionGrid, DiffFiles.SelectedItem, String.Empty);
+            IList<GitRevision> items = RevisionGrid.GetSelectedRevisions();
+            if (items.Count() == 1)
+                items.Add(new GitRevision(Module, DiffFiles.SelectedItemParent));
+            DiffText.ViewPatch(items, DiffFiles.SelectedItem, String.Empty);
         }
-
 
         private void ChangelogToolStripMenuItemClick(object sender, EventArgs e)
         {
@@ -2092,7 +2121,6 @@ namespace GitUI.CommandsDialogs
             }
 
             UICommands.StartPullRequestsDialog(this, repoHost);
-            UICommands.RepoChangedNotifier.Notify();
         }
 
         private void _createPullRequestToolStripMenuItem_Click(object sender, EventArgs e)

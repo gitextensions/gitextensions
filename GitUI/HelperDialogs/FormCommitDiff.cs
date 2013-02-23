@@ -28,7 +28,7 @@ namespace GitUI.HelperDialogs
             DiffFiles.GitItemStatuses = null;
             if (_revision != null)
             {
-                DiffFiles.GitItemStatuses = Module.GetDiffFiles(_revision, _revision + "^");
+                DiffFiles.SetGitItemStatuses(_revision + "^", Module.GetDiffFiles(_revision, _revision + "^"));
 
                 commitInfo.RevisionGuid = _revision;
             }
