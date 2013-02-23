@@ -21,13 +21,13 @@ namespace GitUI.BuildServerIntegration
                             switch (revision.BuildStatus.Status)
                             {
                                 case BuildInfo.BuildStatus.Success:
-                                    buildStatusImage = Resources.IconClean;
+                                    buildStatusImage = Resources.BuildSuccessful;
                                     break;
                                 case BuildInfo.BuildStatus.Failure:
-                                    buildStatusImage = Resources.error;
+                                    buildStatusImage = Resources.BuildFailed;
                                     break;
                                 case BuildInfo.BuildStatus.Unknown:
-                                    buildStatusImage = Resources.Conflict;
+                                    buildStatusImage = Resources.BuildCancelled;
                                     break;
                             }
 
