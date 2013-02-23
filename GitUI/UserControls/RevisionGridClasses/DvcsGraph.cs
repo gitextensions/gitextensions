@@ -125,8 +125,8 @@ namespace GitUI.RevisionGridClasses
             RowTemplate.DefaultCellStyle.Font = SystemFonts.DefaultFont;
             dataGridColumnGraph.DefaultCellStyle.Font = SystemFonts.DefaultFont;
 
-            whiteBorderPen = new Pen(new SolidBrush(Color.White), LANE_LINE_WIDTH + 2);
-            blackBorderPen = new Pen(new SolidBrush(Color.Black), LANE_LINE_WIDTH + 1);
+            whiteBorderPen = new Pen(Brushes.White, LANE_LINE_WIDTH + 2);
+            blackBorderPen = new Pen(Brushes.Black, LANE_LINE_WIDTH + 1);
             
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             CellPainting += dataGrid_CellPainting;
@@ -475,7 +475,7 @@ namespace GitUI.RevisionGridClasses
                 if (e.ColumnIndex != 0)
                     return;
                 var brush = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected
-                                ? selectionBrush : new SolidBrush(Color.White);
+                                ? selectionBrush : Brushes.White;
                 e.Graphics.FillRectangle(brush, e.CellBounds);
 
                 Rectangle srcRect = DrawGraph(e.RowIndex);
@@ -1151,26 +1151,30 @@ namespace GitUI.RevisionGridClasses
                     Rectangle highlightRect = nodeRect;
                     highlightRect.Inflate(2, 3);
                     wa.FillRectangle(Brushes.Yellow, highlightRect);
-                    wa.DrawRectangle(new Pen(Brushes.Black), highlightRect);
+                    wa.DrawRectangle(Pens.Black, highlightRect);
                 }
 
                 if (row.Node.Data == null)
                 {
                     wa.FillEllipse(Brushes.White, nodeRect);
-                    wa.DrawEllipse(new Pen(Color.Red, 2), nodeRect);
+                    using (var pen = new Pen(Color.Red, 2))
+                    {
+                        wa.DrawEllipse(pen, nodeRect);
+                    }
                 }
                 else if (row.Node.IsActive)
                 {
                     wa.FillRectangle(nodeBrush, nodeRect);
                     nodeRect.Inflate(1, 1);
-                    wa.DrawRectangle(new Pen(Color.Black, 3), nodeRect);
+                    using (var pen = new Pen(Color.Black, 3))
+                        wa.DrawRectangle(pen, nodeRect);
                 }
                 else if (row.Node.IsSpecial)
                 {
                     wa.FillRectangle(nodeBrush, nodeRect);
                     if (drawBorder)
                     {
-                        wa.DrawRectangle(new Pen(Color.Black, 1), nodeRect);
+                        wa.DrawRectangle(Pens.Black, nodeRect);
                     }
                 }
                 else
@@ -1178,7 +1182,7 @@ namespace GitUI.RevisionGridClasses
                     wa.FillEllipse(nodeBrush, nodeRect);
                     if (drawBorder)
                     {
-                        wa.DrawEllipse(new Pen(Color.Black, 1), nodeRect);
+                        wa.DrawEllipse(Pens.Black, nodeRect);
                     }
                 }
             }
