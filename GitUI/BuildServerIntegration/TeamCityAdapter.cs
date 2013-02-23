@@ -4,12 +4,10 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using GitCommands;
 using Nini.Config;
 using TeamCitySharp;
-using TeamCitySharp.DomainEntities;
 using TeamCitySharp.Locators;
 
 namespace GitUI.BuildServerIntegration
@@ -100,10 +98,10 @@ namespace GitUI.BuildServerIntegration
                                      ? buildExpando.revisions.revision
                                      : null;
             string revisionVersion = revisions != null
-                                         ? ((dynamic) revisions.Single()).version
+                                         ? ((dynamic)revisions.Single()).version
                                          : null;
 
-            switch ((string) buildExpando.status)
+            switch ((string)buildExpando.status)
             {
                 case "SUCCESS":
                     status = BuildInfo.BuildStatus.Success;
@@ -116,8 +114,7 @@ namespace GitUI.BuildServerIntegration
             var buildInfo = new BuildInfo
                                 {
                                     Id = buildExpando.id,
-                                    StartDate =
-                                        buildExpando.startDate,
+                                    StartDate = buildExpando.startDate,
                                     Status = status,
                                     Description = statusText,
                                     CommitHash = revisionVersion,
