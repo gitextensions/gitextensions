@@ -188,9 +188,8 @@ namespace GitUI.Blame
 
         public void LoadBlame(GitRevision revision, List<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding)
         {
-            string guid = revision.Guid;
             //refresh only when something changed
-            if (guid.Equals(CommitInfo.Revision.Guid) && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
+            if (revision.Equals(CommitInfo.Revision) && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
                 return;
 
             if (controlToMask != null)
@@ -203,6 +202,7 @@ namespace GitUI.Blame
             _revGrid = revGrid;
             _fileName = fileName;
             _encoding = encoding;
+            string guid = revision.Guid;
 
             blameLoader.Load(() =>
             {
@@ -251,7 +251,7 @@ namespace GitUI.Blame
             }
             else
             {
-                using (var frm = new FormCommitDiff(UICommands, gitRevision))
+                using (var frm = new FormCommitDiff(UICommands, gitRevision.Guid))
                     frm.ShowDialog(this);
             }
         }
@@ -312,7 +312,7 @@ namespace GitUI.Blame
                 }
                 else
                 {
-                    using (var frm = new FormCommitDiff(UICommands, gitRevision))
+                    using (var frm = new FormCommitDiff(UICommands, gitRevision.Guid))
                         frm.ShowDialog(this);
                 }
             }
@@ -324,7 +324,7 @@ namespace GitUI.Blame
             if (commit == null)
                 return;
             var gitRevision = new GitRevision(Module, commit) { ParentGuids = new[] { commit + "^" } };
-            using (var frm = new FormCommitDiff(UICommands, gitRevision))
+            using (var frm = new FormCommitDiff(UICommands, gitRevision.Guid))
                 frm.ShowDialog(this);
         }
     }

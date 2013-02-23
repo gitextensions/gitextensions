@@ -797,7 +797,7 @@ namespace GitUI
 
                 IndexWatcher.Reset();
 
-                if (!Settings.ShowGitNotes && !LogParam.Contains(" --not --glob=notes --not"))
+                if (!Settings.ShowGitNotes && LogParam.Contains("--all --boundary") && !LogParam.Contains(" --not --glob=notes --not"))
                     LogParam = LogParam + " --not --glob=notes --not";
 
                 if (Settings.ShowGitNotes && LogParam.Contains(" --not --glob=notes --not"))
@@ -1477,7 +1477,7 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Count > 0)
             {
-                var form = new FormCommitDiff(UICommands, selectedRevisions[0]);
+                var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
                 form.ShowDialog(this);
             }
             else
