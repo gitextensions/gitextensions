@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Translation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="2.44">
+<Translation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="2.44.1">
   <translationCategories>
     <TranslationCategory Name="AboutBox">
       <translationItems>
@@ -605,6 +605,34 @@ S'il vous plait, assurez vous que git (msysgit ou cygwin) est installé ou rense
         <TranslationItem Name="showContainedInTagsToolStripMenuItem" Property="Text">
           <Source>Show tags containing this commit</Source>
           <Value>Montrer les étiquettes contenant ce commit</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="CommitSummaryUserControl">
+      <translationItems>
+        <TranslationItem Name="labelAuthorCaption" Property="Text">
+          <Source>Author:</Source>
+          <Value>Auteur :</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelBranchesCaption" Property="Text" type="unfinished">
+          <Source>Branches:</Source>
+          <Value>Branches :</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelDate" Property="Text">
+          <Source>Commit date:</Source>
+          <Value>Date du commit:</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelTagsCaption" Property="Text" type="unfinished">
+          <Source>Tags:</Source>
+          <Value>Etiquettes :</Value>
+        </TranslationItem>
+        <TranslationItem Name="noRevision" Property="Text">
+          <Source>No revision</Source>
+          <Value>Aucune révision</Value>
+        </TranslationItem>
+        <TranslationItem Name="notAvailable" Property="Text">
+          <Source>n/a</Source>
+          <Value>s.o.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1863,7 +1891,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
           <Source>Cleanup repository</Source>
-          <Value>Néttoyer le dépôt</Value>
+          <Value>Nettoyer le dépôt</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
           <Source>Clone SVN repository</Source>
@@ -6071,15 +6099,15 @@ Voulez-vous ouvrir le nouveau dépôt "{0}" maintenant ?</Value>
           <Source>Clone</Source>
           <Value>Cloner</Value>
         </TranslationItem>
-        <TranslationItem Name="tbBranches" Property="Text">
+        <TranslationItem Name="tbBranches" Property="Text" type="obsolete">
           <Source>branches</Source>
           <Value>branches</Value>
         </TranslationItem>
-        <TranslationItem Name="tbTags" Property="Text">
+        <TranslationItem Name="tbTags" Property="Text" type="obsolete">
           <Source>tags</Source>
           <Value>étiquettes</Value>
         </TranslationItem>
-        <TranslationItem Name="tbTrunk" Property="Text">
+        <TranslationItem Name="tbTrunk" Property="Text" type="obsolete">
           <Source>trunk</Source>
           <Value>tronc</Value>
         </TranslationItem>
@@ -7011,6 +7039,10 @@ local settings.
           <Source>Status</Source>
           <Value>Statut</Value>
         </TranslationItem>
+        <TranslationItem Name="_unableToShowPatchDetails" Property="Text">
+          <Source>Unable to show details of patch file.</Source>
+          <Value>Impossible d'afficher les détails du fichier de patch.</Value>
+        </TranslationItem>
         <TranslationItem Name="authorDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Author</Source>
           <Value>Auteur</Value>
@@ -7077,7 +7109,7 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="_areYouSureYouWantCheckout" Property="Text">
           <Source>Are you sure to checkout the selected revision?</Source>
-          <Value>Etes vous sûr de charger la révision sélectionnée?</Value>
+          <Value>Etes vous sûr de vouloir charger la révision sélectionnée?</Value>
         </TranslationItem>
         <TranslationItem Name="_areYouSureYouWantCheckoutCaption" Property="Text" type="unfinished">
           <Source>Checkout revision</Source>
@@ -7129,7 +7161,7 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="createTagToolStripMenuItem" Property="Text">
           <Source>Create new tag</Source>
-          <Value>Créer nouveau tag</Value>
+          <Value>Créer un nouveau tag</Value>
         </TranslationItem>
         <TranslationItem Name="dateToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Date</Source>
@@ -7145,7 +7177,7 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="drawNonrelativesGrayToolStripMenuItem" Property="Text">
           <Source>Draw non relatives gray</Source>
-          <Value>Déssiner les non reliés en gris</Value>
+          <Value>Dessiner les non reliés en gris</Value>
         </TranslationItem>
         <TranslationItem Name="filterToolStripMenuItem" Property="Text">
           <Source>Set advanced filter</Source>
