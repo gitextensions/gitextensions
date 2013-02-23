@@ -1083,7 +1083,7 @@ namespace GitUI
             if (isRowSelected /*&& !showRevisionCards*/)
                 e.Graphics.FillRectangle(selectedItemBrush, e.CellBounds);
             else
-                e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
+                e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
 
             Color foreColor;
 
@@ -1123,7 +1123,10 @@ namespace GitUI
                                         new LinearGradientBrush(cellRectangle,
                                                                 Color.FromArgb(255, 220, 220, 231),
                                                                 Color.FromArgb(255, 240, 240, 250), 90, false), cellRectangle);
-                                    e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, 200, 200, 200), 1), cellRectangle);
+                                    using (var pen = new Pen(Color.FromArgb(255, 200, 200, 200), 1))
+                                    {
+                                        e.Graphics.DrawRectangle(pen, cellRectangle);
+                                    }
                                 }
                                 else
                                 {
@@ -1134,7 +1137,10 @@ namespace GitUI
                                 }
 
                                 if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
-                                    e.Graphics.DrawRectangle(new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1), cellRectangle);
+                                {
+                                    using (var penSelectionBackColor = new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1))
+                                        e.Graphics.DrawRectangle(penSelectionBackColor, cellRectangle);
+                                }
                             }
 
                             float offset = baseOffset;
@@ -1143,19 +1149,16 @@ namespace GitUI
                             if (heads.Count > 0)
                             {
                                 heads.Sort((left, right) =>
-                                {
-                                    if (left.IsTag != right.IsTag)
-                                        return right.IsTag.CompareTo(left.IsTag);
-                                    if (left.IsRemote != right.IsRemote)
-                                        return left.IsRemote.CompareTo(right.IsRemote);
-                                    return left.Name.CompareTo(right.Name);
-                                });
+                                               {
+                                                   if (left.IsTag != right.IsTag)
+                                                       return right.IsTag.CompareTo(left.IsTag);
+                                                   if (left.IsRemote != right.IsRemote)
+                                                       return left.IsRemote.CompareTo(right.IsRemote);
+                                                   return left.Name.CompareTo(right.Name);
+                                               });
 
-                                foreach (var head in heads)
+                                foreach (var head in heads.Where(head => (!head.IsRemote || ShowRemoteBranches.Checked)))
                                 {
-                                    if ((head.IsRemote && !ShowRemoteBranches.Checked))
-                                        continue;
-
                                     Font refsFont;
 
                                     if (IsFilledBranchesLayout())
@@ -1248,11 +1251,9 @@ namespace GitUI
                                 }
 
                                 if (gravatar != null)
-                                    e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize,
-                                                         gravatarSize);
+                                    e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
 
-                                e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 1,
-                                                         gravatarSize + 1);
+                                e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 1, gravatarSize + 1);
 
                                 string authorText;
                                 string timeText;
@@ -1267,6 +1268,8 @@ namespace GitUI
                                     timeText = string.Concat(revision.Author, " (", TimeToString(Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate), ")");
                                     authorText = string.Empty;
                                 }
+
+
 
                                 e.Graphics.DrawString(authorText, rowFont, foreBrush,
                                                       new PointF(gravatarLeft + gravatarSize + 5, gravatarTop + 6));
@@ -1385,27 +1388,28 @@ namespace GitUI
                 // shade
                 using (var shadePath = CreateRoundRectPath(x + 1, y + 1, width, height, radius))
                 {
-                    Color shadeColor = isSelected ? Color.Black : Color.Gray;
-                    graphics.FillPath(new SolidBrush(shadeColor), shadePath);
+                    var shadeBrush = isSelected ? Brushes.Black : Brushes.Gray;
+                    graphics.FillPath(shadeBrush, shadePath);
                 }
 
                 using (var forePath = CreateRoundRectPath(x, y, width, height, radius))
                 {
                     Color fillColor = Lerp(color, Color.White, 0.92F);
 
-                    var fillBrush = new LinearGradientBrush(new RectangleF(x, y, width, height), fillColor,
-                                                            Lerp(fillColor, Color.White, 0.9F), 90);
+                    using (var fillBrush = new LinearGradientBrush(new RectangleF(x, y, width, height), fillColor, Lerp(fillColor, Color.White, 0.9F), 90))
+                    {
+                        // fore rectangle
+                        graphics.FillPath(fillBrush, forePath);
+                        // frame
+                        using (var pen = new Pen(Lerp(color, Color.White, 0.83F)))
+                            graphics.DrawPath(pen, forePath);
 
-                    // fore rectangle
-                    graphics.FillPath(fillBrush, forePath);
-                    // frame
-                    graphics.DrawPath(new Pen(Lerp(color, Color.White, 0.83F)), forePath);
-
-                    // arrow if the head is the current branch 
-                    if (isCurrentBranch)
-                        DrawArrow(graphics, x, y, height, color, true);
-                    else if (isCurentBranchMergeSource)
-                        DrawArrow(graphics, x, y, height, color, false);
+                        // arrow if the head is the current branch 
+                        if (isCurrentBranch)
+                            DrawArrow(graphics, x, y, height, color, true);
+                        else if (isCurentBranchMergeSource)
+                            DrawArrow(graphics, x, y, height, color, false);
+                    }
                 }
             }
             finally
@@ -1437,9 +1441,15 @@ namespace GitUI
                                  };
 
             if (filled)
-                graphics.FillPolygon(new SolidBrush(color), points);
+            {
+                using (var solidBrush = new SolidBrush(color))
+                    graphics.FillPolygon(solidBrush, points);
+            }
             else
-                graphics.DrawPolygon(new Pen(color), points);
+            {
+                using (var pen = new Pen(color))
+                    graphics.DrawPolygon(pen, points);
+            }
         }
 
         private static GraphicsPath CreateRoundRectPath(float x, float y, float width, float height, float radius)

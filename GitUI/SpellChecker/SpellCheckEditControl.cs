@@ -165,10 +165,12 @@ namespace GitUI.SpellChecker
         {
             var col = Color.FromArgb(120, 255, 255, 0);
             var linHeight = LineHeight();
-            var pen = new Pen(col, linHeight);
-            start.Offset(0, -linHeight/2);
-            end.Offset(0, -linHeight/2);
-            _bufferGraphics.DrawLine(pen, start, end);
+            using (var pen = new Pen(col, linHeight))
+            {
+                start.Offset(0, -linHeight/2);
+                end.Offset(0, -linHeight/2);
+                _bufferGraphics.DrawLine(pen, start, end);
+            }
         }
 
         private int LineHeight()
