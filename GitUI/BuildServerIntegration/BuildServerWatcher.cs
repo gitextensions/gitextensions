@@ -64,9 +64,10 @@ namespace GitUI.BuildServerIntegration
             if (_buildServerAdapter == null)
                 return;
 
-            var fullDayObservable = _buildServerAdapter.CreateObservable(NewThreadScheduler.Default, DateTime.Now.Date);
-            var fullObservable = _buildServerAdapter.CreateObservable(NewThreadScheduler.Default);
-            var fromNowObservable = _buildServerAdapter.CreateObservable(NewThreadScheduler.Default, DateTime.Now);
+            var scheduler = NewThreadScheduler.Default;
+            var fullDayObservable = _buildServerAdapter.CreateObservable(scheduler, DateTime.Now.Date);
+            var fullObservable = _buildServerAdapter.CreateObservable(scheduler);
+            var fromNowObservable = _buildServerAdapter.CreateObservable(scheduler, DateTime.Now);
 
             buildStatusCancellationToken =
                 fullDayObservable.Concat(fullObservable)
