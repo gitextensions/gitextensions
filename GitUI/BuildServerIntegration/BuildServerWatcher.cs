@@ -43,7 +43,6 @@ namespace GitUI.BuildServerIntegration
             var buildMessageTextBoxColumn = new DataGridViewTextBoxColumn
                                                 {
                                                     AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                                                    HeaderText = "Build Status",
                                                     ReadOnly = true,
                                                     SortMode = DataGridViewColumnSortMode.NotSortable
                                                 };
@@ -56,8 +55,9 @@ namespace GitUI.BuildServerIntegration
         {
             CancelBuildStatusFetchOperation();
 
+            // Extract the project name from the last part of the directory path. It is assumed that it matches the project name in the CI build server.
             var projectName = revisionGrid.Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
-            _buildServerAdapter = GetBuildServerWatcher(projectName);
+            _buildServerAdapter = GetBuildServerAdapter(projectName);
 
             UpdateUI();
 
@@ -74,6 +74,7 @@ namespace GitUI.BuildServerIntegration
                                                    .Delay(TimeSpan.FromMinutes(1))
                                                    .Concat(fromNowObservable)
                                                    .Repeat())
+                                 .ObserveOn(SynchronizationContext.Current)
                                  .Subscribe(item =>
                                      {
                                          if (buildStatusCancellationToken == null)
@@ -96,7 +97,7 @@ namespace GitUI.BuildServerIntegration
                                      });
         }
 
-        private IBuildServerAdapter GetBuildServerWatcher(string projectName)
+        private IBuildServerAdapter GetBuildServerAdapter(string projectName)
         {
             var fileName = Path.Combine(revisionGrid.Module.GitWorkingDir, ".buildserver");
             if (File.Exists(fileName))
