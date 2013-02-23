@@ -41,8 +41,9 @@ namespace GitUI.BuildServerIntegration
                         {
                             var project = Client.ProjectByName(ProjectName);
                             var buildTypes = project.BuildTypes.BuildType;
-                            var builds = buildTypes.SelectMany(x => Client.BuildsByBuildLocator(TeamCityBuildLocator2.WithDimensions(BuildTypeLocator.WithId(x.Id), sinceDate: sinceDate, defaultBranch: "any")));
-                            var tasks = new List<Task>(builds.Count());
+                            var builds = buildTypes.SelectMany(x => Client.BuildsByBuildLocator(TeamCityBuildLocator2.WithDimensions(BuildTypeLocator.WithId(x.Id), sinceDate: sinceDate, defaultBranch: "any"))).ToArray();
+                            var tasks = new List<Task>(8);
+                            var buildsLeft = builds.Length;
 
                             foreach (var build in builds)
                             {
@@ -55,30 +56,19 @@ namespace GitUI.BuildServerIntegration
                                             TaskContinuationOptions.ExecuteSynchronously);
 
                                 tasks.Add(callByUrlTask);
+                                --buildsLeft;
 
-                                if (tasks.Count == 8)
+                                if (tasks.Count == tasks.Capacity || buildsLeft == 0)
                                 {
                                     // TODO: Improve this code to get rid of the Wait call (potentially using IObservable.Buffer(8) to handle the breaking up into batches).
-                                    Task.Factory
-                                        .ContinueWhenAll(tasks.ToArray(), completedTasks => tasks.Clear())
-                                        .Wait(cancellationToken);
+                                    var batchTasks = tasks.ToArray();
+                                    tasks.Clear();
+
+                                    Task.WaitAll(batchTasks, cancellationToken);
                                 }
                             }
 
-                            Task.Factory.ContinueWhenAll(
-                                tasks.ToArray(),
-                                completedTasks =>
-                                    {
-                                        var firstFaultedTask = completedTasks.FirstOrDefault(task => task.IsFaulted);
-                                        if (firstFaultedTask != null)
-                                        {
-                                            observer.OnError(firstFaultedTask.Exception);
-                                        }
-                                        else
-                                        {
-                                            observer.OnCompleted();
-                                        }
-                                    });
+                            observer.OnCompleted();
                         }
                         catch (Exception ex)
                         {
