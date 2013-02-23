@@ -1074,7 +1074,7 @@ namespace GitUI
             if (isRowSelected /*&& !showRevisionCards*/)
                 e.Graphics.FillRectangle(selectedItemBrush, e.CellBounds);
             else
-                e.Graphics.FillRectangle(new SolidBrush(Color.White), e.CellBounds);
+                e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
 
             Color foreColor;
 
@@ -1089,196 +1089,201 @@ namespace GitUI
                 foreColor = isRowSelected ? SystemColors.HighlightText : Color.Gray;
             }
 
-            Brush foreBrush = new SolidBrush(foreColor);
-            var rowFont = NormalFont;
-            if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
-                rowFont = HeadFont;
-            else if (revision.Guid == SuperprojectCurrentCheckout)
-                rowFont = SuperprojectFont;
-
-            switch (column)
+            using (Brush foreBrush = new SolidBrush(foreColor))
             {
-                case 1: //Description!!
-                    {
-                        int baseOffset = 0;
-                        if (IsCardLayout())
+                var rowFont = NormalFont;
+                if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
+                    rowFont = HeadFont;
+                else if (revision.Guid == SuperprojectCurrentCheckout)
+                    rowFont = SuperprojectFont;
+
+                switch (column)
+                {
+                    case 1: //Description!!
                         {
-                            baseOffset = 5;
-
-                            Rectangle cellRectangle = new Rectangle(e.CellBounds.Left + baseOffset, e.CellBounds.Top + 1, e.CellBounds.Width - (baseOffset * 2), e.CellBounds.Height - 4);
-
-                            if (!Settings.RevisionGraphDrawNonRelativesGray || Revisions.RowIsRelative(e.RowIndex))
+                            int baseOffset = 0;
+                            if (IsCardLayout())
                             {
-                                e.Graphics.FillRectangle(
-                                    new LinearGradientBrush(cellRectangle,
-                                                            Color.FromArgb(255, 220, 220, 231),
-                                                            Color.FromArgb(255, 240, 240, 250), 90, false), cellRectangle);
-                                e.Graphics.DrawRectangle(new Pen(Color.FromArgb(255, 200, 200, 200), 1), cellRectangle);
-                            }
-                            else
-                            {
-                                e.Graphics.FillRectangle(
-                                    new LinearGradientBrush(cellRectangle,
-                                                            Color.FromArgb(255, 240, 240, 240),
-                                                            Color.FromArgb(255, 250, 250, 250), 90, false), cellRectangle);
-                            }
+                                baseOffset = 5;
 
-                            if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
-                                e.Graphics.DrawRectangle(new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1), cellRectangle);
-                        }
+                                Rectangle cellRectangle = new Rectangle(e.CellBounds.Left + baseOffset, e.CellBounds.Top + 1, e.CellBounds.Width - (baseOffset * 2), e.CellBounds.Height - 4);
 
-                        float offset = baseOffset;
-                        var heads = revision.Heads;
-
-                        if (heads.Count > 0)
-                        {
-                            heads.Sort((left, right) =>
-                                           {
-                                               if (left.IsTag != right.IsTag)
-                                                   return right.IsTag.CompareTo(left.IsTag);
-                                               if (left.IsRemote != right.IsRemote)
-                                                   return left.IsRemote.CompareTo(right.IsRemote);
-                                               return left.Name.CompareTo(right.Name);
-                                           });
-
-                            foreach (var head in heads)
-                            {
-                                if ((head.IsRemote && !ShowRemoteBranches.Checked))
-                                    continue;
-
-                                Font refsFont;
-
-                                if (IsFilledBranchesLayout())
+                                if (!Settings.RevisionGraphDrawNonRelativesGray || Revisions.RowIsRelative(e.RowIndex))
                                 {
-                                    //refsFont = head.Selected ? rowFont : new Font(rowFont, FontStyle.Regular);
-                                    refsFont = rowFont;
-
-                                    //refsFont = head.Selected
-                                    //    ? new Font(rowFont, rowFont.Style | FontStyle.Italic)
-                                    //    : rowFont;
+                                    e.Graphics.FillRectangle(
+                                        new LinearGradientBrush(cellRectangle,
+                                                                Color.FromArgb(255, 220, 220, 231),
+                                                                Color.FromArgb(255, 240, 240, 250), 90, false), cellRectangle);
+                                    using (var pen = new Pen(Color.FromArgb(255, 200, 200, 200), 1))
+                                    {
+                                        e.Graphics.DrawRectangle(pen, cellRectangle);
+                                    }
                                 }
                                 else
                                 {
-                                    refsFont = RefsFont;
+                                    e.Graphics.FillRectangle(
+                                        new LinearGradientBrush(cellRectangle,
+                                                                Color.FromArgb(255, 240, 240, 240),
+                                                                Color.FromArgb(255, 250, 250, 250), 90, false), cellRectangle);
                                 }
 
-                                Color headColor = GetHeadColor(head);
-                                Brush textBrush = new SolidBrush(headColor);
-
-                                string headName;
-                                PointF location;
-
-                                if (IsCardLayout())
+                                if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
                                 {
-                                    headName = head.Name;
-                                    offset += e.Graphics.MeasureString(headName, refsFont).Width + 6;
-                                    location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
-                                    var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
-                                                         e.Graphics.MeasureString(headName, RefsFont).Height);
-                                    e.Graphics.FillRectangle(new SolidBrush(SystemColors.Info), location.X - 1,
-                                                             location.Y - 1, size.Width + 3, size.Height + 2);
-                                    e.Graphics.DrawRectangle(new Pen(SystemColors.InfoText), location.X - 1,
-                                                             location.Y - 1, size.Width + 3, size.Height + 2);
-                                    e.Graphics.DrawString(headName, refsFont, textBrush, location);
+                                    using (var penSelectionBackColor = new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1))
+                                        e.Graphics.DrawRectangle(penSelectionBackColor, cellRectangle);
                                 }
-                                else
+                            }
+
+                            float offset = baseOffset;
+                            var heads = revision.Heads;
+
+                            if (heads.Count > 0)
+                            {
+                                heads.Sort((left, right) =>
+                                               {
+                                                   if (left.IsTag != right.IsTag)
+                                                       return right.IsTag.CompareTo(left.IsTag);
+                                                   if (left.IsRemote != right.IsRemote)
+                                                       return left.IsRemote.CompareTo(right.IsRemote);
+                                                   return left.Name.CompareTo(right.Name);
+                                               });
+
+                                foreach (var head in heads.Where(head => (!head.IsRemote || ShowRemoteBranches.Checked)))
                                 {
-                                    headName = IsFilledBranchesLayout()
-                                                   ? head.Name
-                                                   : string.Concat("[", head.Name, "] ");
-
-                                    var headBounds = AdjustCellBounds(e.CellBounds, offset);
-                                    SizeF textSize = e.Graphics.MeasureString(headName, refsFont);
-
-                                    offset += textSize.Width;
+                                    Font refsFont;
 
                                     if (IsFilledBranchesLayout())
                                     {
-                                        offset += 9;
+                                        //refsFont = head.Selected ? rowFont : new Font(rowFont, FontStyle.Regular);
+                                        refsFont = rowFont;
 
-                                        float extraOffset = DrawHeadBackground(isRowSelected, e.Graphics,
-                                                                               headColor, headBounds.X,
-                                                                               headBounds.Y,
-                                                                               RoundToEven(textSize.Width + 3),
-                                                                               RoundToEven(textSize.Height), 3,
-                                                                               head.Selected,
-                                                                               head.SelectedHeadMergeSource);
-
-                                        offset += extraOffset;
-                                        headBounds.Offset((int)(extraOffset + 1), 0);
+                                        //refsFont = head.Selected
+                                        //    ? new Font(rowFont, rowFont.Style | FontStyle.Italic)
+                                        //    : rowFont;
+                                    }
+                                    else
+                                    {
+                                        refsFont = RefsFont;
                                     }
 
-                                    DrawColumnText(e.Graphics, headName, refsFont, headColor, headBounds);
+                                    Color headColor = GetHeadColor(head);
+                                    Brush textBrush = new SolidBrush(headColor);
+
+                                    string headName;
+                                    PointF location;
+
+                                    if (IsCardLayout())
+                                    {
+                                        headName = head.Name;
+                                        offset += e.Graphics.MeasureString(headName, refsFont).Width + 6;
+                                        location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
+                                        var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
+                                                             e.Graphics.MeasureString(headName, RefsFont).Height);
+                                        e.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
+                                                                 location.Y - 1, size.Width + 3, size.Height + 2);
+                                        e.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
+                                                                 location.Y - 1, size.Width + 3, size.Height + 2);
+                                        e.Graphics.DrawString(headName, refsFont, textBrush, location);
+                                    }
+                                    else
+                                    {
+                                        headName = IsFilledBranchesLayout()
+                                                       ? head.Name
+                                                       : string.Concat("[", head.Name, "] ");
+
+                                        var headBounds = AdjustCellBounds(e.CellBounds, offset);
+                                        SizeF textSize = e.Graphics.MeasureString(headName, refsFont);
+
+                                        offset += textSize.Width;
+
+                                        if (IsFilledBranchesLayout())
+                                        {
+                                            offset += 9;
+
+                                            float extraOffset = DrawHeadBackground(isRowSelected, e.Graphics,
+                                                                                   headColor, headBounds.X,
+                                                                                   headBounds.Y,
+                                                                                   RoundToEven(textSize.Width + 3),
+                                                                                   RoundToEven(textSize.Height), 3,
+                                                                                   head.Selected,
+                                                                                   head.SelectedHeadMergeSource);
+
+                                            offset += extraOffset;
+                                            headBounds.Offset((int)(extraOffset + 1), 0);
+                                        }
+
+                                        DrawColumnText(e.Graphics, headName, refsFont, headColor, headBounds);
+                                    }
                                 }
                             }
+
+                            if (IsCardLayout())
+                                offset = baseOffset;
+
+                            var text = (string)e.FormattedValue;
+                            var bounds = AdjustCellBounds(e.CellBounds, offset);
+                            DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
+
+                            if (IsCardLayout())
+                            {
+                                int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
+                                int gravatarSize = rowHeigth - textHeight - 12;
+                                int gravatarTop = e.CellBounds.Top + textHeight + 6;
+                                int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
+
+
+                                Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, Settings.AuthorImageCacheDays, gravatarSize, Settings.GravatarCachePath, FallBackService.MonsterId);
+
+                                if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
+                                {
+                                    ThreadPool.QueueUserWorkItem(o =>
+                                            Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, Settings.AuthorImageCacheDays, gravatarSize, Settings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
+                                }
+
+                                if (gravatar != null)
+                                    e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
+
+                                e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 1, gravatarSize + 1);
+
+                                string authorText;
+                                string timeText;
+
+                                if (rowHeigth >= 60)
+                                {
+                                    authorText = revision.Author;
+                                    timeText = TimeToString(Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate);
+                                }
+                                else
+                                {
+                                    timeText = string.Concat(revision.Author, " (", TimeToString(Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate), ")");
+                                    authorText = string.Empty;
+                                }
+
+
+
+                                e.Graphics.DrawString(authorText, rowFont, foreBrush,
+                                                      new PointF(gravatarLeft + gravatarSize + 5, gravatarTop + 6));
+                                e.Graphics.DrawString(timeText, rowFont, foreBrush,
+                                                      new PointF(gravatarLeft + gravatarSize + 5, e.CellBounds.Bottom - textHeight - 4));
+                            }
                         }
-
-                        if (IsCardLayout())
-                            offset = baseOffset;
-
-                        var text = (string)e.FormattedValue;
-                        var bounds = AdjustCellBounds(e.CellBounds, offset);
-                        DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
-
-                        if (IsCardLayout())
+                        break;
+                    case 2:
                         {
-                            int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
-                            int gravatarSize = rowHeigth - textHeight - 12;
-                            int gravatarTop = e.CellBounds.Top + textHeight + 6;
-                            int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
-
-
-                            Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, Settings.AuthorImageCacheDays, gravatarSize, Settings.GravatarCachePath, FallBackService.MonsterId);
-
-                            if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
-                            {
-                                ThreadPool.QueueUserWorkItem(o =>
-                                        Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, Settings.AuthorImageCacheDays, gravatarSize, Settings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
-                            }
-
-                            if (gravatar != null)
-                                e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
-
-                            e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 1, gravatarSize + 1);
-
-                            string authorText;
-                            string timeText;
-
-                            if (rowHeigth >= 60)
-                            {
-                                authorText = revision.Author;
-                                timeText = TimeToString(Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate);
-                            }
-                            else
-                            {
-                                timeText = string.Concat(revision.Author, " (", TimeToString(Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate), ")");
-                                authorText = string.Empty;
-                            }
-
-
-
-                            e.Graphics.DrawString(authorText, rowFont, foreBrush,
-                                                  new PointF(gravatarLeft + gravatarSize + 5, gravatarTop + 6));
-                            e.Graphics.DrawString(timeText, rowFont, foreBrush,
-                                                  new PointF(gravatarLeft + gravatarSize + 5, e.CellBounds.Bottom - textHeight - 4));
+                            var text = (string)e.FormattedValue;
+                            e.Graphics.DrawString(text, rowFont, foreBrush,
+                                                  new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                         }
-                    }
-                    break;
-                case 2:
-                    {
-                        var text = (string)e.FormattedValue;
-                        e.Graphics.DrawString(text, rowFont, foreBrush,
-                                              new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
-                    }
-                    break;
-                case 3:
-                    {
-                        var time = Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
-                        var text = TimeToString(time);
-                        e.Graphics.DrawString(text, rowFont, foreBrush,
-                                              new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
-                    }
-                    break;
+                        break;
+                    case 3:
+                        {
+                            var time = Settings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
+                            var text = TimeToString(time);
+                            e.Graphics.DrawString(text, rowFont, foreBrush,
+                                                  new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                        }
+                        break;
+                }
             }
         }
 
@@ -1365,27 +1370,28 @@ namespace GitUI
                 // shade
                 using (var shadePath = CreateRoundRectPath(x + 1, y + 1, width, height, radius))
                 {
-                    Color shadeColor = isSelected ? Color.Black : Color.Gray;
-                    graphics.FillPath(new SolidBrush(shadeColor), shadePath);
+                    var shadeBrush = isSelected ? Brushes.Black : Brushes.Gray;
+                    graphics.FillPath(shadeBrush, shadePath);
                 }
 
                 using (var forePath = CreateRoundRectPath(x, y, width, height, radius))
                 {
                     Color fillColor = Lerp(color, Color.White, 0.92F);
 
-                    var fillBrush = new LinearGradientBrush(new RectangleF(x, y, width, height), fillColor,
-                                                            Lerp(fillColor, Color.White, 0.9F), 90);
+                    using (var fillBrush = new LinearGradientBrush(new RectangleF(x, y, width, height), fillColor, Lerp(fillColor, Color.White, 0.9F), 90))
+                    {
+                        // fore rectangle
+                        graphics.FillPath(fillBrush, forePath);
+                        // frame
+                        using (var pen = new Pen(Lerp(color, Color.White, 0.83F)))
+                            graphics.DrawPath(pen, forePath);
 
-                    // fore rectangle
-                    graphics.FillPath(fillBrush, forePath);
-                    // frame
-                    graphics.DrawPath(new Pen(Lerp(color, Color.White, 0.83F)), forePath);
-
-                    // arrow if the head is the current branch 
-                    if (isCurrentBranch)
-                        DrawArrow(graphics, x, y, height, color, true);
-                    else if (isCurentBranchMergeSource)
-                        DrawArrow(graphics, x, y, height, color, false);
+                        // arrow if the head is the current branch 
+                        if (isCurrentBranch)
+                            DrawArrow(graphics, x, y, height, color, true);
+                        else if (isCurentBranchMergeSource)
+                            DrawArrow(graphics, x, y, height, color, false);
+                    }
                 }
             }
             finally
@@ -1417,9 +1423,15 @@ namespace GitUI
                                  };
 
             if (filled)
-                graphics.FillPolygon(new SolidBrush(color), points);
+            {
+                using (var solidBrush = new SolidBrush(color))
+                    graphics.FillPolygon(solidBrush, points);
+            }
             else
-                graphics.DrawPolygon(new Pen(color), points);
+            {
+                using (var pen = new Pen(color))
+                    graphics.DrawPolygon(pen, points);
+            }
         }
 
         private static GraphicsPath CreateRoundRectPath(float x, float y, float width, float height, float radius)
