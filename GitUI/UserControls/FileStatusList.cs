@@ -27,19 +27,10 @@ namespace GitUI
         {
             InitializeComponent(); Translate();
             _NoDiffFilesChangesText = NoFiles.Text;
-            //FileStatusListView.DrawMode = DrawMode.OwnerDrawVariable;
-            //FileStatusListView.MeasureItem += FileStatusListView_MeasureItem;
-            FileStatusListView.DrawItem += FileStatusListView_DrawItem;
-            FileStatusListView.SelectedIndexChanged += FileStatusListView_SelectedIndexChanged;
-            //FileStatusListView.DataSourceChanged += FileStatusListView_DataSourceChanged;
-            FileStatusListView.DoubleClick += FileStatusListView_DoubleClick;
-            //FileStatusListView.Sorted = true;
-            //FileStatusListView.SelectionMode = SelectionMode.MultiExtended;
 #if !__MonoCS__ // TODO Drag'n'Drop doesn't work on Mono/Linux
             FileStatusListView.MouseMove += FileStatusListView_MouseMove;
             FileStatusListView.MouseDown += FileStatusListView_MouseDown;
 #endif
-            //FileStatusListView.HorizontalScrollbar = true;
             if (_images == null)
             {
                 _images = new ImageList();
@@ -107,6 +98,40 @@ namespace GitUI
 
             return pathFormatter.FormatTextForDrawing(FileStatusListView.ClientSize.Width - ImageSize,
                                                       gitItemStatus.Name, gitItemStatus.OldName);
+        }
+
+        private void FileStatusListView_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            if (e.Bounds.Height <= 0 || e.Bounds.Width <= 0 || e.ItemIndex < 0)
+                return;
+
+            e.DrawBackground();
+            if (e.Item.Selected)
+            {
+                e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
+                e.Item.ForeColor = SystemColors.HighlightText;
+            }
+            else
+                e.Item.ForeColor = SystemColors.WindowText;
+            e.DrawFocusRectangle();
+
+            e.Graphics.FillRectangle(Brushes.White, e.Bounds.Left, e.Bounds.Top, ImageSize, e.Bounds.Height);
+
+            int centeredImageTop = e.Bounds.Top;
+            if ((e.Bounds.Height - ImageSize) > 1)
+                centeredImageTop = e.Bounds.Top + ((e.Bounds.Height - ImageSize) / 2);
+
+            var image = e.Item.ImageList.Images[e.Item.ImageIndex];
+
+            if (image != null)
+                e.Graphics.DrawImage(image, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+
+            GitItemStatus gitItemStatus = (GitItemStatus)e.Item.Tag;
+
+            string text = GetItemText(e.Graphics, gitItemStatus);
+
+            e.Graphics.DrawString(text, e.Item.ListView.Font,
+                                  new SolidBrush(e.Item.ForeColor), e.Bounds.Left + ImageSize, e.Bounds.Top);
         }
 
 #if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
@@ -211,7 +236,7 @@ namespace GitUI
                 var hover = listBox.HitTest(point);
                 if (hover.Item != null)
                 {
-                    /*GitItemStatus gitItemStatus = (GitItemStatus)hover.Item.Tag;
+                    GitItemStatus gitItemStatus = (GitItemStatus)hover.Item.Tag;
 
                     string text;
                     if (gitItemStatus.IsRenamed || gitItemStatus.IsCopied)
@@ -222,17 +247,13 @@ namespace GitUI
                     float fTextWidth = listBox.CreateGraphics().MeasureString(text, listBox.Font).Width + 17;
 
                     //Use width-itemheight because the icon drawn in front of the text is the itemheight
-                    if (fTextWidth > (FileStatusListView.Width - FileStatusListView.ItemHeight))
+                    if (fTextWidth > (FileStatusListView.Width - FileStatusListView.GetItemRect(hover.Item.Index).Height))
                     {
-                        if (!DiffFilesTooltip.GetToolTip(listBox).Equals(gitItemStatus.ToString()))
-                            DiffFilesTooltip.SetToolTip(listBox, gitItemStatus.ToString());
+                        if (!hover.Item.ToolTipText.Equals(gitItemStatus.ToString()))
+                            hover.Item.ToolTipText = gitItemStatus.ToString();
                     }
                     else
-                        DiffFilesTooltip.RemoveAll();*/
-                }
-                else
-                {
-                    DiffFilesTooltip.RemoveAll();
+                        hover.Item.ToolTipText = "";
                 }
             }
         }
@@ -350,67 +371,6 @@ namespace GitUI
         {
             if (SelectedIndexChanged != null)
                 SelectedIndexChanged(this, e);
-        }
-
-        void FileStatusListView_DrawItem(object sender, DrawListViewItemEventArgs e)
-        {
-            if (e.Bounds.Height <= 0 || e.Bounds.Width <= 0 || e.ItemIndex < 0)
-                return;
-
-            e.DrawBackground();
-            e.DrawFocusRectangle();
-
-            GitItemStatus gitItemStatus = (GitItemStatus)FileStatusListView.Items[e.ItemIndex].Tag;
-
-            e.Graphics.FillRectangle(Brushes.White, e.Bounds.Left, e.Bounds.Top, ImageSize, e.Bounds.Height);
-
-            int centeredImageTop = e.Bounds.Top;
-            if ((e.Bounds.Height - ImageSize) > 1)
-                centeredImageTop = e.Bounds.Top + ((e.Bounds.Height - ImageSize) / 2);
-
-            var image = GetItemImage(gitItemStatus);
-
-            if (image != null)
-                e.Graphics.DrawImage(image, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
-
-            string text = GetItemText(e.Graphics, gitItemStatus);
-
-            e.DrawText();
-            //e.Graphics.DrawString(text, FileStatusListView.Font,
-            //                      new SolidBrush(e.ForeColor), e.Bounds.Left + ImageSize, e.Bounds.Top);
-
-            //int width = (int)e.Graphics.MeasureString(text, e.Font).Width + ImageSize;
-
-            //ListView listBox = (ListView)sender;
-
-            //if (listBox.HorizontalExtent < width)
-            //    listBox.HorizontalExtent = width;
-        }
-
-        private static Bitmap GetItemImage(GitItemStatus gitItemStatus)
-        {
-            if (gitItemStatus.IsDeleted)
-                return Resources.Removed;
-            if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
-                return Resources.Added;
-            if (gitItemStatus.IsChanged)
-            {
-                if (!gitItemStatus.IsSubmodule || gitItemStatus.SubmoduleStatus == null)
-                    return Resources.Modified;
-
-                var status = gitItemStatus.SubmoduleStatus;
-                if (status.IsDirty && status.Commit == status.OldCommit)
-                    return Resources.IconSubmoduleDirty;
-                if (status.Status == SubmoduleStatus.FastForward || status.Status == SubmoduleStatus.NewerTime)
-                    return status.IsDirty ? Resources.IconSubmoduleRevisionUpDirty : Resources.IconSubmoduleRevisionUp;
-                if (status.Status == SubmoduleStatus.Rewind || status.Status == SubmoduleStatus.OlderTime)
-                    return status.IsDirty ? Resources.IconSubmoduleRevisionDownDirty : Resources.IconSubmoduleRevisionDown;
-            }
-            else if (gitItemStatus.IsRenamed)
-                return Resources.Renamed;
-            else if (gitItemStatus.IsCopied)
-                return Resources.Copied;
-            return null;
         }
 
         private static int GetItemImageIndex(GitItemStatus gitItemStatus)

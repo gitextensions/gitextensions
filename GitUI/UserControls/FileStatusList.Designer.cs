@@ -29,10 +29,8 @@ namespace GitUI
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.FileStatusListView = new ExListView();
+            this.FileStatusListView = new GitUI.UserControls.ExListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.DiffFilesTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.NoFiles = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -48,6 +46,7 @@ namespace GitUI
             this.FileStatusListView.Location = new System.Drawing.Point(0, 0);
             this.FileStatusListView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.FileStatusListView.Name = "FileStatusListView";
+            this.FileStatusListView.OwnerDraw = true;
             this.FileStatusListView.ShowItemToolTips = true;
             this.FileStatusListView.Size = new System.Drawing.Size(682, 485);
             this.FileStatusListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
@@ -92,7 +91,6 @@ namespace GitUI
 
         private ExListView FileStatusListView;
         //This property cannot be private because this will break compilation in monodevelop
-        protected System.Windows.Forms.ToolTip DiffFilesTooltip;
         private System.Windows.Forms.Label NoFiles;
         private System.Windows.Forms.ColumnHeader columnHeader1;
     }
