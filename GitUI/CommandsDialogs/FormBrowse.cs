@@ -2088,7 +2088,6 @@ namespace GitUI.CommandsDialogs
             }
 
             UICommands.StartPullRequestsDialog(this, repoHost);
-            UICommands.RepoChangedNotifier.Notify();
         }
 
         private void _createPullRequestToolStripMenuItem_Click(object sender, EventArgs e)
