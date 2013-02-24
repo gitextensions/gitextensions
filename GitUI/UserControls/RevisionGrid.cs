@@ -1179,13 +1179,12 @@ namespace GitUI
                                     using (Brush textBrush = new SolidBrush(headColor))
                                     {
                                         string headName;
-                                        PointF location;
 
                                         if (IsCardLayout())
                                         {
                                             headName = head.Name;
                                             offset += e.Graphics.MeasureString(headName, refsFont).Width + 6;
-                                            location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
+                                            PointF location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
                                             var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
                                                                  e.Graphics.MeasureString(headName, RefsFont).Height);
                                             e.Graphics.FillRectangle(new SolidBrush(SystemColors.Info), location.X - 1,

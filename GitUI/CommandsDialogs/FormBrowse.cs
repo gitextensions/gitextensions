@@ -938,15 +938,9 @@ namespace GitUI.CommandsDialogs
         private void FillBuildReport()
         {
             var revision = RevisionGrid.GetSelectedRevisions().FirstOrDefault();
+            var buildInfoIsAvailable = !(revision == null || revision.BuildStatus == null || string.IsNullOrEmpty(revision.BuildStatus.Url));
 
-            if (revision == null || revision.BuildStatus == null || string.IsNullOrEmpty(revision.BuildStatus.Url))
-            {
-                if (CommitInfoTabControl.Controls.Contains(BuildReportTabPage))
-                {
-                    CommitInfoTabControl.Controls.Remove(BuildReportTabPage);
-                }
-            }
-            else
+            if (buildInfoIsAvailable)
             {
                 if (CommitInfoTabControl.SelectedTab == BuildReportTabPage)
                 {
@@ -956,6 +950,13 @@ namespace GitUI.CommandsDialogs
                 if (!CommitInfoTabControl.Controls.Contains(BuildReportTabPage))
                 {
                     CommitInfoTabControl.Controls.Add(BuildReportTabPage);
+                }
+            }
+            else
+            {
+                if (CommitInfoTabControl.Controls.Contains(BuildReportTabPage))
+                {
+                    CommitInfoTabControl.Controls.Remove(BuildReportTabPage);
                 }
             }
         }
