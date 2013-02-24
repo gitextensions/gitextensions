@@ -47,7 +47,7 @@ namespace GitUI.CommandsDialogs.EditBuildServer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TeamCityServerUrl.Location = new System.Drawing.Point(136, 8);
             this.TeamCityServerUrl.Name = "TeamCityServerUrl";
-            this.TeamCityServerUrl.Size = new System.Drawing.Size(143, 23);
+            this.TeamCityServerUrl.Size = new System.Drawing.Size(318, 23);
             this.TeamCityServerUrl.TabIndex = 1;
             // 
             // TeamCitySettingsUserControl
@@ -56,8 +56,9 @@ namespace GitUI.CommandsDialogs.EditBuildServer
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.label13);
             this.Controls.Add(this.TeamCityServerUrl);
+            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "TeamCitySettingsUserControl";
-            this.Size = new System.Drawing.Size(292, 61);
+            this.Size = new System.Drawing.Size(467, 61);
             this.ResumeLayout(false);
             this.PerformLayout();
 
