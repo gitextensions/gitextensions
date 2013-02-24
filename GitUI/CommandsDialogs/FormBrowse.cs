@@ -944,9 +944,16 @@ namespace GitUI.CommandsDialogs
 
             if (buildInfoIsAvailable)
             {
-                if (CommitInfoTabControl.SelectedTab == BuildReportTabPage)
+                var isFavIconMissing = BuildReportTabPage.ImageIndex < 0;
+
+                if (isFavIconMissing || CommitInfoTabControl.SelectedTab == BuildReportTabPage)
                 {
                     BuildReportWebBrowser.Navigate(revision.BuildStatus.Url);
+
+                    if (isFavIconMissing)
+                    {
+                        BuildReportWebBrowser.Navigated += BuildReportWebBrowserOnNavigated;
+                    }
                 }
 
                 if (!CommitInfoTabControl.Controls.Contains(BuildReportTabPage))
@@ -961,6 +968,76 @@ namespace GitUI.CommandsDialogs
                     CommitInfoTabControl.Controls.Remove(BuildReportTabPage);
                 }
             }
+        }
+
+        private void BuildReportWebBrowserOnNavigated(object sender, WebBrowserNavigatedEventArgs webBrowserNavigatedEventArgs)
+        {
+            BuildReportWebBrowser.Navigated -= BuildReportWebBrowserOnNavigated;
+
+            var favIconUrl = DetermineFavIconUrl(BuildReportWebBrowser.Document);
+
+            if (favIconUrl != null)
+            {
+                using (var imageStream = DownloadRemoteImageFile(favIconUrl))
+                {
+                    if (imageStream != null)
+                    {
+                        var favIconImage = Image.FromStream(imageStream).GetThumbnailImage(16, 16, null, IntPtr.Zero);
+                        var imageCollection = CommitInfoTabControl.ImageList.Images;
+                        var imageIndex = BuildReportTabPage.ImageIndex;
+
+                        if (imageIndex < 0)
+                        {
+                            BuildReportTabPage.ImageIndex = imageCollection.Count;
+                            imageCollection.Add(favIconImage);
+                        }
+                        else
+                        {
+                            imageCollection[imageIndex] = favIconImage;
+                        }
+
+                        CommitInfoTabControl.Invalidate(false);
+                    }
+                }
+            }
+        }
+
+        private string DetermineFavIconUrl(HtmlDocument htmlDocument)
+        {
+            var links = htmlDocument.GetElementsByTagName("link");
+            var favIconLink = links.Cast<HtmlElement>().SingleOrDefault(x => x.GetAttribute("rel").ToLowerInvariant() == "shortcut icon");
+
+            if (favIconLink != null)
+            {
+                var href = favIconLink.GetAttribute("href");
+                var favIconUrl = htmlDocument.Url.AbsoluteUri.Replace(htmlDocument.Url.PathAndQuery, href);
+
+                return favIconUrl;
+            }
+
+            return null;
+        }
+
+        private static Stream DownloadRemoteImageFile(string uri)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            // Check that the remote file was found. The ContentType
+            // check is performed since a request for a non-existent
+            // image file might be redirected to a 404-page, which would
+            // yield the StatusCode "OK", even though the image was not
+            // found.
+            if ((response.StatusCode == HttpStatusCode.OK ||
+                response.StatusCode == HttpStatusCode.Moved ||
+                response.StatusCode == HttpStatusCode.Redirect) &&
+                response.ContentType.StartsWith("image", StringComparison.OrdinalIgnoreCase))
+            {
+                // if the remote file was found, download it
+                return response.GetResponseStream();
+            }
+
+            return null;
         }
 
         public void fileHistoryItem_Click(object sender, EventArgs e)
