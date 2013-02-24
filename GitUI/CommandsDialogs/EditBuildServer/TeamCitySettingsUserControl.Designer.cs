@@ -35,9 +35,9 @@ namespace GitUI.CommandsDialogs.EditBuildServer
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(3, 10);
+            this.label13.Location = new System.Drawing.Point(3, 12);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(108, 13);
+            this.label13.Size = new System.Drawing.Size(116, 15);
             this.label13.TabIndex = 0;
             this.label13.Text = "TeamCity server URL";
             // 
@@ -45,19 +45,19 @@ namespace GitUI.CommandsDialogs.EditBuildServer
             // 
             this.TeamCityServerUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TeamCityServerUrl.Location = new System.Drawing.Point(117, 7);
+            this.TeamCityServerUrl.Location = new System.Drawing.Point(136, 8);
             this.TeamCityServerUrl.Name = "TeamCityServerUrl";
-            this.TeamCityServerUrl.Size = new System.Drawing.Size(385, 20);
+            this.TeamCityServerUrl.Size = new System.Drawing.Size(143, 23);
             this.TeamCityServerUrl.TabIndex = 1;
             // 
             // TeamCitySettingsUserControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.label13);
             this.Controls.Add(this.TeamCityServerUrl);
             this.Name = "TeamCitySettingsUserControl";
-            this.Size = new System.Drawing.Size(512, 79);
+            this.Size = new System.Drawing.Size(292, 61);
             this.ResumeLayout(false);
             this.PerformLayout();
 
