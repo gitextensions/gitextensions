@@ -1,3 +1,4 @@
+using System.Windows.Forms;
 using Nini.Config;
 
 namespace GitUI.CommandsDialogs.EditBuildServer
@@ -8,6 +9,8 @@ namespace GitUI.CommandsDialogs.EditBuildServer
         {
             InitializeComponent();
             Translate();
+
+            Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
         }
 
         public void LoadSettings(IConfig buildServerConfig)
