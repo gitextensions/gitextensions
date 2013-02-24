@@ -328,6 +328,30 @@ namespace GitUI
 
         }
 
+        public void ShowModelessForm(IWin32Window owner, bool requiresValidWorkingDir, 
+            GitUIEventHandler preEvent, GitUIPostActionEventHandler postEvent, Func<Form> provideForm)
+        {
+            if (requiresValidWorkingDir && !RequiresValidWorkingDir(owner))
+                return;
+
+            if (!InvokeEvent(owner, preEvent))
+                return;
+
+            Form form = provideForm();
+
+            FormClosedEventHandler formClosed = null;
+
+            formClosed = (sender, e) =>
+                {
+                    form.FormClosed -= formClosed;
+                    InvokePostEvent(owner, true, postEvent);
+                };
+
+            form.FormClosed += formClosed;
+            form.ShowInTaskbar = true;
+            form.Show(owner);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -1355,17 +1379,17 @@ namespace GitUI
 
         public void StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision, bool filterByRevision, bool showBlame)
         {
-            if (!InvokeEvent(owner, PreFileHistory))
-                return;
+            Func<Form> provideForm = () =>
+                {
+                    var form = new FormFileHistory(this, fileName, revision, filterByRevision);
 
-            var form = new FormFileHistory(this, fileName, revision, filterByRevision);
-            form.ShowInTaskbar = true;
-            form.FormClosed += (sender, e) => InvokePostEvent(owner, true, PostFileHistory);
-            
-            if (showBlame)
-                form.SelectBlameTab();
-            
-            form.Show(owner);            
+                    if (showBlame)
+                        form.SelectBlameTab();
+
+                    return form;
+                };
+
+            ShowModelessForm(owner, true, PreFileHistory, PostFileHistory, provideForm);
         }
 
         public void StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision, bool filterByRevision)
