@@ -187,6 +187,8 @@ namespace GitUI.CommandsDialogs
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             }
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+
+            FillBuildReport();  // Ensure correct page visibility
         }
 
         void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)

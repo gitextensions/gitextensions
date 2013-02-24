@@ -215,8 +215,8 @@ namespace GitUI.CommandsDialogs
             this.menuStrip1 = new GitUI.MenuStripEx();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.BuildReportTabPage = new System.Windows.Forms.TabPage();
             this.BuildReportWebBrowser = new System.Windows.Forms.WebBrowser();
+            this.BuildReportTabPage = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).BeginInit();
             this.toolPanel.Panel1.SuspendLayout();
             this.toolPanel.Panel2.SuspendLayout();
@@ -1855,6 +1855,15 @@ namespace GitUI.CommandsDialogs
             this.menuStrip1.Size = new System.Drawing.Size(923, 24);
             this.menuStrip1.TabIndex = 3;
             // 
+            // BuildReportWebBrowser
+            // 
+            this.BuildReportWebBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BuildReportWebBrowser.Location = new System.Drawing.Point(3, 3);
+            this.BuildReportWebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.BuildReportWebBrowser.Name = "BuildReportWebBrowser";
+            this.BuildReportWebBrowser.Size = new System.Drawing.Size(909, 253);
+            this.BuildReportWebBrowser.TabIndex = 0;
+            // 
             // BuildReportTabPage
             // 
             this.BuildReportTabPage.Controls.Add(this.BuildReportWebBrowser);
@@ -1865,15 +1874,6 @@ namespace GitUI.CommandsDialogs
             this.BuildReportTabPage.TabIndex = 3;
             this.BuildReportTabPage.Text = "Build Report";
             this.BuildReportTabPage.UseVisualStyleBackColor = true;
-            // 
-            // BuildReportWebBrowser
-            // 
-            this.BuildReportWebBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BuildReportWebBrowser.Location = new System.Drawing.Point(3, 3);
-            this.BuildReportWebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.BuildReportWebBrowser.Name = "BuildReportWebBrowser";
-            this.BuildReportWebBrowser.Size = new System.Drawing.Size(909, 253);
-            this.BuildReportWebBrowser.TabIndex = 0;
             // 
             // FormBrowse
             // 
