@@ -77,7 +77,7 @@ This action will be performed without warning while checking out branch.</Source
           <Value>Schriftname</Value>
         </TranslationItem>
         <TranslationItem Name="chkEnableAutoScale" Property="Text" type="unfinished">
-          <Source>Auto scale user interface when high dpi is used</Source>
+          <Source>Auto scale user interface when high DPI is used</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
@@ -631,7 +631,7 @@ Value:  {2} = {3}</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkAmmend" Property="Text" type="unfinished">
-          <Source>Ammend last commit</Source>
+          <Source>Amend last commit</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
@@ -3718,7 +3718,7 @@ nur, wenn Sie mit dieser Probleme auftreten.</Value>
           <Value>Sie müssen zwei Revisionen angeben</Value>
         </TranslationItem>
         <TranslationItem Name="_wrongSmtpSettingsText" Property="Text">
-          <Source>You need to enter a valid smtp in the settings dialog.</Source>
+          <Source>You need to enter a valid SMTP in the settings dialog.</Source>
           <Value>Sie müssen einen gültigen SMTP-Server im Einstellungen-Dialog angeben.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
@@ -6641,7 +6641,7 @@ Mehr Optionen im Kontextmenü</Value>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label23" Property="Text">
-          <Source>Smtp server for sending patches by email</Source>
+          <Source>SMTP server for sending patches by email</Source>
           <Value>SMTP Server  um Patches per E-Mail zu senden</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text">

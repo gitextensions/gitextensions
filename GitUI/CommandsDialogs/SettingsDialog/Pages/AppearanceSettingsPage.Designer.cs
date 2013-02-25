@@ -276,7 +276,7 @@
             this.chkEnableAutoScale.Name = "chkEnableAutoScale";
             this.chkEnableAutoScale.Size = new System.Drawing.Size(248, 17);
             this.chkEnableAutoScale.TabIndex = 0;
-            this.chkEnableAutoScale.Text = "Auto scale user interface when high dpi is used";
+            this.chkEnableAutoScale.Text = "Auto scale user interface when high DPI is used";
             this.chkEnableAutoScale.UseVisualStyleBackColor = true;
             // 
             // truncatePathMethod
