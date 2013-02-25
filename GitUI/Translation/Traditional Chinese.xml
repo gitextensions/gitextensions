@@ -79,7 +79,7 @@ This action will be performed without warning while checking out branch.</Source
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkEnableAutoScale" Property="Text" type="unfinished">
-          <Source>Auto scale user interface when high dpi is used</Source>
+          <Source>Auto scale user interface when high DPI is used</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
@@ -633,7 +633,7 @@ Value:  {2} = {3}</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkAmmend" Property="Text" type="unfinished">
-          <Source>Ammend last commit</Source>
+          <Source>Amend last commit</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
@@ -3667,7 +3667,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Value />
         </TranslationItem>
         <TranslationItem Name="_wrongSmtpSettingsText" Property="Text" type="unfinished">
-          <Source>You need to enter a valid smtp in the settings dialog.</Source>
+          <Source>You need to enter a valid SMTP in the settings dialog.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
@@ -5751,7 +5751,7 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="obsolete">
-          <Source>Close process dialog automatically when process is succeeded</Source>
+          <Source>Close process dialog automatically when process succeeds</Source>
           <Value>對話框時自動關閉進程的過程是成功</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowGitCommandLine" Property="Text" type="obsolete">
@@ -6433,7 +6433,7 @@ Context menu for additional operations</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="unfinished">
-          <Source>Close Process dialog when process is succeeded</Source>
+          <Source>Close Process dialog when process succeeds</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
@@ -6498,7 +6498,7 @@ Context menu for additional operations</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label23" Property="Text">
-          <Source>Smtp server for sending patches by email</Source>
+          <Source>SMTP server for sending patches by email</Source>
           <Value>發送補丁到電子郵件所用的SMTP伺服機</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text">
