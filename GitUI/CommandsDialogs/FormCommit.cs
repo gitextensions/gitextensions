@@ -650,7 +650,7 @@ namespace GitUI.CommandsDialogs
         /// <summary>Returns if there are any changes at all, staged or unstaged.</summary>
         private bool DoChangesExist()
         {
-            return (Unstaged.AllItems.Count > 0) || (Staged.AllItems.Count > 0);
+            return Unstaged.AllItems.Any() || Staged.AllItems.Any();
         }
 
         private void ShowChanges(GitItemStatus item, bool staged)
@@ -717,11 +717,11 @@ namespace GitUI.CommandsDialogs
         {
             ClearDiffViewIfNoFilesLeft();
 
-            if (Staged.SelectedItems.Count == 0)
+            if (!Staged.SelectedItems.Any())
                 return;
 
             Unstaged.SelectedItem = null;
-            ShowChanges(Staged.SelectedItems[0], true);
+            ShowChanges(Staged.SelectedItems.First(), true);
         }
 
         private void UntrackedSelectionChanged(object sender, EventArgs e)
@@ -730,13 +730,13 @@ namespace GitUI.CommandsDialogs
 
             Unstaged.ContextMenuStrip = null;
 
-            if (Unstaged.SelectedItems.Count == 0)
+            if (!Unstaged.SelectedItems.Any())
                 return;
 
             Staged.SelectedItem = null;
-            ShowChanges(Unstaged.SelectedItems[0], false);
+            GitItemStatus item = Unstaged.SelectedItems.First();
+            ShowChanges(item, false);
 
-            GitItemStatus item = Unstaged.SelectedItems[0];
             if (!item.IsSubmodule)
                 Unstaged.ContextMenuStrip = UnstagedFileContext;
             else
@@ -1070,7 +1070,7 @@ namespace GitUI.CommandsDialogs
                 else
                 {
                     toolStripProgressBar1.Visible = true;
-                    toolStripProgressBar1.Maximum = Staged.SelectedItems.Count * 2;
+                    toolStripProgressBar1.Maximum = Staged.SelectedItems.Count() * 2;
                     toolStripProgressBar1.Value = 0;
                     Staged.StoreNextIndexToSelect();
 
@@ -1473,7 +1473,7 @@ namespace GitUI.CommandsDialogs
 
         private void AddFileTogitignoreToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItems.Count == 0)
+            if (!Unstaged.SelectedItems.Any())
                 return;
 
             SelectedDiff.Clear();
@@ -1498,7 +1498,7 @@ namespace GitUI.CommandsDialogs
             if (!SenderToFileStatusList(sender, out list))
                 return;
 
-            if (list.SelectedItems.Count == 0)
+            if (!list.SelectedItems.Any())
                 return;
 
             var item = list.SelectedItem;
@@ -1513,7 +1513,7 @@ namespace GitUI.CommandsDialogs
             if (!SenderToFileStatusList(sender, out list))
                 return;
 
-            if (list.SelectedItems.Count == 0)
+            if (!list.SelectedItems.Any())
                 return;
 
             var item = list.SelectedItem;
@@ -1528,7 +1528,7 @@ namespace GitUI.CommandsDialogs
             if (!SenderToFileStatusList(sender, out list))
                 return;
 
-            if (list.SelectedItems.Count == 0)
+            if (!list.SelectedItems.Any())
                 return;
 
             var fileNames = new StringBuilder();
@@ -1546,7 +1546,7 @@ namespace GitUI.CommandsDialogs
 
         private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItems.Count == 0)
+            if (!Unstaged.SelectedItems.Any())
                 return;
 
             var item = Unstaged.SelectedItem;
@@ -1561,7 +1561,7 @@ namespace GitUI.CommandsDialogs
 
         private void ResetPartOfFileToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItems.Count != 1)
+            if (Unstaged.SelectedItems.Count() != 1)
             {
                 MessageBox.Show(this, _onlyStageChunkOfSingleFileError.Text, _resetStageChunkOfFileCaption.Text);
                 return;
@@ -1670,7 +1670,7 @@ namespace GitUI.CommandsDialogs
             if (!SenderToFileStatusList(sender, out list))
                 return;
 
-            if (list.SelectedItems.Count == 1)
+            if (list.SelectedItems.Count() == 1)
             {
                 UICommands.StartFileHistoryDialog(this, list.SelectedItem.Name, null);
             }
