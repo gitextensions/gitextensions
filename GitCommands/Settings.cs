@@ -409,10 +409,10 @@ namespace GitCommands
             set { SetBool("DontShowHelpImages", value); }
         }
 
-        public static bool DontConfirmAmmend
+        public static bool DontConfirmAmend
         {
-            get { return GetBool("DontConfirmAmmend", false).Value; }
-            set { SetBool("DontConfirmAmmend", value); }
+            get { return GetBool("DontConfirmAmend", false).Value; }
+            set { SetBool("DontConfirmAmend", value); }
         }
 
         public static bool? AutoPopStashAfterPull
