@@ -68,9 +68,9 @@ namespace GitUI.BuildServerIntegration
                     e.FormattingApplied = false;
                     break;
                 case 5:
-                    e.Value = revision.BuildStatus != null
+                    e.Value = revision.BuildStatus != null && !string.IsNullOrEmpty(revision.BuildStatus.Description)
                                   ? revision.BuildStatus.Description
-                                  : String.Empty;
+                                  : string.Empty;
                     break;
             }
         }
