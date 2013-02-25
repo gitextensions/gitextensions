@@ -52,7 +52,14 @@ namespace GitUI.BuildServerIntegration
                                     Task.Factory
                                         .StartNew(() => Client.CallByUrl<dynamic>(buildHref), cancellationToken)
                                         .ContinueWith(
-                                            task => { observer.OnNext(CreateBuildInfo(task.Result)); },
+                                            task =>
+                                                {
+                                                    var buildInfo = CreateBuildInfo(task.Result);
+                                                    if (buildInfo.CommitHashList != null)
+                                                    {
+                                                        observer.OnNext(buildInfo);
+                                                    }
+                                                },
                                             TaskContinuationOptions.ExecuteSynchronously);
 
                                 tasks.Add(callByUrlTask);
@@ -84,12 +91,12 @@ namespace GitUI.BuildServerIntegration
         {
             var status = BuildInfo.BuildStatus.Unknown;
             string statusText = buildExpando.statusText;
-            object[] revisions = buildExpando.revisions != null
+            object[] changes = buildExpando.revisions != null
                                      ? buildExpando.revisions.revision
                                      : null;
-            string revisionVersion = revisions != null
-                                         ? ((dynamic)revisions.Single()).version
-                                         : null;
+            string[] commitHashList = changes != null
+                                          ? changes.Select(change => (string)((dynamic)change).version).ToArray()
+                                          : null;
 
             switch ((string)buildExpando.status)
             {
@@ -103,11 +110,11 @@ namespace GitUI.BuildServerIntegration
 
             var buildInfo = new BuildInfo
                                 {
-                                    Id = buildExpando.id,
+                                    Id = buildExpando.id.ToString(),
                                     StartDate = buildExpando.startDate,
                                     Status = status,
                                     Description = statusText,
-                                    CommitHash = revisionVersion,
+                                    CommitHashList = commitHashList,
                                     Url = buildExpando.webUrl
                                 };
             return buildInfo;
