@@ -81,30 +81,33 @@ namespace GitUI.BuildServerIntegration
                                          if (buildStatusCancellationToken == null)
                                              return;
 
-                                         string graphRevision;
-                                         int row = revisionGrid.SearchRevision(item.CommitHash, out graphRevision);
-                                         if (row >= 0)
+                                         foreach (var commitHash in item.CommitHashList)
                                          {
-                                             var rowData = revisions.GetRowData(row);
-                                             if (rowData.BuildStatus == null ||
-                                                 item.StartDate > rowData.BuildStatus.StartDate)
+                                             string graphRevision;
+                                             int row = revisionGrid.SearchRevision(commitHash, out graphRevision);
+                                             if (row >= 0)
                                              {
-                                                 rowData.BuildStatus = item;
-
-                                                 // Ensure that the Build Report tab page visibility is refreshed.
-                                                 if (revisionGrid.GetSelectedRevisions().Contains(rowData))
+                                                 var rowData = revisions.GetRowData(row);
+                                                 if (rowData.BuildStatus == null ||
+                                                     item.StartDate > rowData.BuildStatus.StartDate)
                                                  {
-                                                     // HACK: Since there is no INotifyPropertyChanged mechanism in Revision,
-                                                     // we have to rely on the knowledge that FormBrowse listens to the 
-                                                     // SelectionChanged event of RevisionGrid in order to show/hide
-                                                     // the Build Report tab page.
-                                                     var selectedIds = revisions.SelectedIds;
-                                                     revisions.ClearSelection();
-                                                     revisions.SelectedIds = selectedIds;
-                                                 }
+                                                     rowData.BuildStatus = item;
 
-                                                 revisions.UpdateCellValue(4, row);
-                                                 revisions.UpdateCellValue(5, row);
+                                                     // Ensure that the Build Report tab page visibility is refreshed.
+                                                     if (revisionGrid.GetSelectedRevisions().Contains(rowData))
+                                                     {
+                                                         // HACK: Since there is no INotifyPropertyChanged mechanism in Revision,
+                                                         // we have to rely on the knowledge that FormBrowse listens to the 
+                                                         // SelectionChanged event of RevisionGrid in order to show/hide
+                                                         // the Build Report tab page.
+                                                         var selectedIds = revisions.SelectedIds;
+                                                         revisions.ClearSelection();
+                                                         revisions.SelectedIds = selectedIds;
+                                                     }
+
+                                                     revisions.UpdateCellValue(4, row);
+                                                     revisions.UpdateCellValue(5, row);
+                                                 }
                                              }
                                          }
                                      });
