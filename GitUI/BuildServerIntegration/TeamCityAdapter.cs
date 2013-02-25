@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using GitCommands;
 using Nini.Config;
 using TeamCitySharp;
+using TeamCitySharp.DomainEntities;
 using TeamCitySharp.Locators;
 
 namespace GitUI.BuildServerIntegration
@@ -30,6 +31,7 @@ namespace GitUI.BuildServerIntegration
             ProjectName = projectName;
 
             Client.Connect(string.Empty, string.Empty, true);
+            Client.Authenticate();
         }
 
         public IObservable<BuildInfo> CreateObservable(IScheduler scheduler, DateTime? sinceDate = null)
@@ -39,24 +41,32 @@ namespace GitUI.BuildServerIntegration
                     {
                         try
                         {
-                            var project = Client.ProjectByName(ProjectName);
+                            var project = Client.Projects.ByName(ProjectName);
                             var buildTypes = project.BuildTypes.BuildType;
-                            var builds = buildTypes.SelectMany(x => Client.BuildsByBuildLocator(TeamCityBuildLocator2.WithDimensions(BuildTypeLocator.WithId(x.Id), sinceDate: sinceDate, defaultBranch: "any"))).ToArray();
+                            var builds = buildTypes.SelectMany(x => Client.Builds.ByBuildLocator(BuildLocator.WithDimensions(BuildTypeLocator.WithId(x.Id), sinceDate: sinceDate, branch: "default:any"))).ToArray();
                             var tasks = new List<Task>(8);
                             var buildsLeft = builds.Length;
 
                             foreach (var build in builds)
                             {
-                                var buildHref = build.Href.Replace("guestAuth/", string.Empty);
+                                string buildId = build.Id;
                                 var callByUrlTask =
                                     Task.Factory
-                                        .StartNew(() => Client.CallByUrl<dynamic>(buildHref), cancellationToken)
+                                        .StartNew(
+                                            () =>
+                                                {
+                                                    var buildDetails = Client.BuildDetails.ByBuildId(buildId);
+                                                    buildDetails.Changes.Change = Client.Changes.ByBuildLocator(BuildLocator.WithId(Convert.ToInt64(buildId)));
+                                                    return buildDetails;
+                                                },
+                                                cancellationToken)
                                         .ContinueWith(
                                             task =>
                                                 {
-                                                    var buildInfo = CreateBuildInfo(task.Result);
-                                                    if (buildInfo.CommitHashList != null)
+                                                    var buildDetails = task.Result;
+                                                    if (buildDetails.Changes.Change.Any())
                                                     {
+                                                        var buildInfo = CreateBuildInfo(task.Result);
                                                         observer.OnNext(buildInfo);
                                                     }
                                                 },
@@ -87,18 +97,12 @@ namespace GitUI.BuildServerIntegration
                 .OnErrorResumeNext(Observable.Empty<BuildInfo>());
         }
 
-        private static BuildInfo CreateBuildInfo(dynamic buildExpando)
+        private static BuildInfo CreateBuildInfo(Build build)
         {
-            var status = BuildInfo.BuildStatus.Unknown;
-            string statusText = buildExpando.statusText;
-            object[] changes = buildExpando.revisions != null
-                                     ? buildExpando.revisions.revision
-                                     : null;
-            string[] commitHashList = changes != null
-                                          ? changes.Select(change => (string)((dynamic)change).version).ToArray()
-                                          : null;
+            BuildInfo.BuildStatus status;
+            string[] commitHashList = build.Changes.Change.Select(change => change.Version).ToArray();
 
-            switch ((string)buildExpando.status)
+            switch (build.Status)
             {
                 case "SUCCESS":
                     status = BuildInfo.BuildStatus.Success;
@@ -106,16 +110,19 @@ namespace GitUI.BuildServerIntegration
                 case "FAILURE":
                     status = BuildInfo.BuildStatus.Failure;
                     break;
+                default:
+                    status = BuildInfo.BuildStatus.Unknown;
+                    break;
             }
 
             var buildInfo = new BuildInfo
                                 {
-                                    Id = buildExpando.id.ToString(),
-                                    StartDate = buildExpando.startDate,
+                                    Id = build.Id,
+                                    StartDate = build.StartDate,
                                     Status = status,
-                                    Description = statusText,
+                                    Description = build.StatusText,
                                     CommitHashList = commitHashList,
-                                    Url = buildExpando.webUrl
+                                    Url = build.WebUrl
                                 };
             return buildInfo;
         }
