@@ -108,7 +108,7 @@
             this.chkCloseProcessDialog.Name = "chkCloseProcessDialog";
             this.chkCloseProcessDialog.Size = new System.Drawing.Size(259, 17);
             this.chkCloseProcessDialog.TabIndex = 9;
-            this.chkCloseProcessDialog.Text = "Close Process dialog when process is succeeded";
+            this.chkCloseProcessDialog.Text = "Close Process dialog when process succeeds";
             this.chkCloseProcessDialog.UseVisualStyleBackColor = true;
             // 
             // chkShowGitCommandLine
@@ -138,7 +138,7 @@
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(200, 13);
             this.label23.TabIndex = 18;
-            this.label23.Text = "Smtp server for sending patches by email";
+            this.label23.Text = "SMTP server for sending patches by email";
             // 
             // SmtpServer
             // 
