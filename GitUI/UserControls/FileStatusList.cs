@@ -145,7 +145,7 @@ namespace GitUI
             {
                 var hover = FileStatusListView.HitTest(e.Location);
 
-                if (hover.Item != null)
+                if (hover.Item != null && !hover.Item.Selected)
                 {
                     ClearSelected();
 
@@ -295,6 +295,8 @@ namespace GitUI
             set
             {
                 ClearSelected();
+                if (value == null)
+                    return;
                 foreach (ListViewItem item in FileStatusListView.SelectedItems)
                     if (item.Tag == value)
                         item.Selected = true;
