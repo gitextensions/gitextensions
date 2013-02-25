@@ -19,23 +19,26 @@ namespace GitUI.BuildServerIntegration
 
         private string ProjectName { get; set; }
 
-        public TeamCityAdapter(string projectName, IConfig config)
+        public TeamCityAdapter(IConfig config)
         {
             var hostName = config.Get("BuildServerUrl");
-            if (string.IsNullOrEmpty(hostName))
+            ProjectName = config.Get("ProjectName");
+
+            if (!string.IsNullOrEmpty(hostName) && !string.IsNullOrEmpty(ProjectName))
             {
-                throw new InvalidOperationException();
+                Client = new TeamCityClient(hostName);
+                Client.Connect(string.Empty, string.Empty, true);
+                Client.Authenticate();
             }
-
-            Client = new TeamCityClient(hostName);
-            ProjectName = projectName;
-
-            Client.Connect(string.Empty, string.Empty, true);
-            Client.Authenticate();
         }
 
         public IObservable<BuildInfo> CreateObservable(IScheduler scheduler, DateTime? sinceDate = null)
         {
+            if (Client == null)
+            {
+                return Observable.Empty<BuildInfo>(scheduler);
+            }
+
             return Observable.Create<BuildInfo>((observer, cancellationToken) =>
                 Task<IDisposable>.Factory.StartNew(() =>
                     {
@@ -56,17 +59,24 @@ namespace GitUI.BuildServerIntegration
                                             () =>
                                                 {
                                                     var buildDetails = Client.BuildDetails.ByBuildId(buildId);
+                                                    return buildDetails;
+                                                },
+                                            cancellationToken)
+                                        .ContinueWith(
+                                            task =>
+                                                {
+                                                    var buildDetails = task.Result;
                                                     buildDetails.Changes.Change = Client.Changes.ByBuildLocator(BuildLocator.WithId(Convert.ToInt64(buildId)));
                                                     return buildDetails;
                                                 },
-                                                cancellationToken)
+                                            cancellationToken)
                                         .ContinueWith(
                                             task =>
                                                 {
                                                     var buildDetails = task.Result;
                                                     if (buildDetails.Changes.Change.Any())
                                                     {
-                                                        var buildInfo = CreateBuildInfo(task.Result);
+                                                        var buildInfo = CreateBuildInfo(buildDetails);
                                                         observer.OnNext(buildInfo);
                                                     }
                                                 },
