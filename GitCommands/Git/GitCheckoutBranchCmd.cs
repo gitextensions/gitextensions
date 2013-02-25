@@ -6,13 +6,6 @@ namespace GitCommands.Git
     public class GitCheckoutBranchCmd : GitCommand
     {
 
-        public enum LocalChanges
-        {
-            DontChange,
-            Merge,
-            Reset
-        }
-
         public enum NewBranch
         {
             DontCreate,
@@ -23,7 +16,18 @@ namespace GitCommands.Git
         public string BranchName { get; set; }
         public string NewBranchName { get; set; }
         public bool Remote { get; set; }
-        public LocalChanges LocalChangesAction { get; set; }
+        private LocalChangesAction _localChanges;
+        public LocalChangesAction LocalChanges 
+        {
+            get { return _localChanges; }
+            set
+            {
+                if (value == LocalChangesAction.Stash)
+                    _localChanges = LocalChangesAction.DontChange;
+                else
+                    _localChanges = value;
+            }
+        }
         public NewBranch NewBranchAction { get; set; }
 
         public GitCheckoutBranchCmd(string branchName, bool remote)
@@ -39,9 +43,9 @@ namespace GitCommands.Git
 
         public override IEnumerable<string> CollectArguments()
         {
-            if (LocalChangesAction == LocalChanges.Merge)
+            if (LocalChanges == LocalChangesAction.Merge)
                 yield return "--merge";
-            else if (LocalChangesAction == LocalChanges.Reset)
+            else if (LocalChanges == LocalChangesAction.Reset)
                 yield return "--force";
 
             if (Remote)
@@ -60,15 +64,9 @@ namespace GitCommands.Git
             return false;
         }
 
-        public void SetLocalChangesFromSettings(Settings.LocalChanges changes)
+        public override bool ChangesRepoState()
         {
-            if (changes == Settings.LocalChanges.Merge)
-                LocalChangesAction = LocalChanges.Merge;
-            else if (changes == Settings.LocalChanges.Reset)
-                LocalChangesAction = LocalChanges.Reset;
-            else
-                LocalChangesAction = LocalChanges.DontChange;
+            return true;
         }
-
     }
 }

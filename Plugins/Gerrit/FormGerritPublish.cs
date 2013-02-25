@@ -49,7 +49,7 @@ namespace Gerrit
                 return false;
             }
 
-            StartAgent(owner, _NO_TRANSLATE_Remotes.Text);
+            GerritUtil.StartAgent(owner, Module, _NO_TRANSLATE_Remotes.Text);
 
             string targetRef = PublishDraft.Checked ? "drafts" : "publish";
 
@@ -76,7 +76,7 @@ namespace Gerrit
                 bool hadNewChanges = false;
                 string change = null;
 
-                foreach (string line in pushCommand.CommandText.Split('\n'))
+                foreach (string line in pushCommand.CommandOutput.Split('\n'))
                 {
                     if (hadNewChanges)
                     {
@@ -118,7 +118,15 @@ namespace Gerrit
             string[] branchParts = branchName.Split('/');
 
             if (branchParts.Length >= 3 && branchParts[0] == "review")
-                return String.Join("/", branchParts.Skip(2));
+            {
+                branchName = String.Join("/", branchParts.Skip(2));
+
+                // Don't use the Gerrit change number as a topic branch.
+
+                int unused;
+                if (int.TryParse(branchName, out unused))
+                    branchName = null;
+            }
 
             return branchName;
         }

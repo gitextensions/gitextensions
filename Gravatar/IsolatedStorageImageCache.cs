@@ -50,7 +50,7 @@ namespace Gravatar
                     var rootDir = propertyInfo.GetValue(GetIsolatedStorageFile()) as string;
                     if (rootDir != null)
                     {
-                        var file = new FileInfo(rootDir + imageFileName);
+                        var file = new FileInfo(Path.Combine(rootDir, imageFileName));
                         if (file.Exists)
                         {
                             if (file.LastWriteTime < DateTime.Now.AddDays(-cacheDays))

@@ -110,7 +110,7 @@ namespace GitUI
             using (var formProcess = new FormProcess(process, arguments, module.WorkingDir, input, useDialogSettings))
             {
                 formProcess.ShowDialog(owner);
-                return formProcess.OutputString.ToString();
+                return formProcess.GetOutputString();
             }
         }
 
@@ -228,7 +228,7 @@ namespace GitUI
 
         public void AppendOutputLine(string line)
         {
-            OutputString.AppendLine(line);
+            AppendToOutputString(line + Environment.NewLine);
 
             AddMessageLine(line);
         }

@@ -92,7 +92,7 @@ namespace GitCommands
                 if (String.IsNullOrEmpty(value))
                     Module.UnsetSetting(_mergeSettingName);
                 else
-                    Module.SetSetting(_mergeSettingName, "refs/heads/" + value);
+                    Module.SetSetting(_mergeSettingName, GitModule.GetFullBranchName(value));
             }
         }
 
@@ -105,7 +105,6 @@ namespace GitCommands
         {
             string merge = configFile.GetValue(_mergeSettingName);
             return merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge;
-
         }
 
 

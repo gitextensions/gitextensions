@@ -91,6 +91,9 @@
           </Extension>
         </ProgId>
       </Component>
+      <Component Id="TranslationApp.exe" Guid="*">
+        <File Source="..\GitExtensions\bin\Release\TranslationApp.exe"/>
+      </Component>
       <Component Id="Gravatar.dll" Guid="*">
         <File Source="..\Gravatar\bin\Release\Gravatar.dll"/>
       </Component>
@@ -230,6 +233,9 @@
       <Component Id="Gerrit.dll" Guid="*">
         <File Source="..\Plugins\Gerrit\bin\Release\Gerrit.dll"/>
       </Component>
+	  <Component Id="ReleaseNotesGenerator.dll" Guid="*">
+		 <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll"/>
+	  </Component>		
       <Component Id="Newtonsoft.Json.dll" Guid="*">
         <File Source="..\Plugins\Gerrit\Dependencies\Newtonsoft.Json.dll"/>
       </Component>
@@ -491,6 +497,7 @@
       <ComponentRef Id="gitex.cmd"/>
       <ComponentRef Id="GitExtensionsUserManual.pdf"/>
       <ComponentRef Id="GitExtensions.exe"/>
+      <ComponentRef Id="TranslationApp.exe"/>
       <ComponentRef Id="Gravatar.dll"/>
       <ComponentRef Id="GitCommands.dll"/>
       <ComponentRef Id="GitUI.dll"/>
@@ -564,7 +571,10 @@
         <Feature Id="ProxySwitcher" Title="ProxySwitcher" Level="1">
           <ComponentRef Id="ProxySwitcher.dll"/>
         </Feature>
-      </Feature>
+        <Feature Id="ReleaseNotesGenerator" Title="ReleaseNotesGenerator" Level="1">
+		  <ComponentRef Id="ReleaseNotesGenerator.dll"/>
+		</Feature>
+	  </Feature>
 
       <Feature Id="Icons" Title="Extra application icons" Level="2">
         <ComponentRef Id="Blue.ico"/>
@@ -683,7 +693,7 @@
     <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.97.exe"/>
     <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore"/>
 
-    <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.8.0-preview20121022.exe"/>
+    <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.8.1.2-preview20130201.exe"/>
     <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore"/>
 
     <InstallExecuteSequence>

@@ -75,22 +75,45 @@ namespace GitUI.CommitInfo
             }
         }
 
-        private string _revision;
+        private GitRevision _revision;
+        private string _revisionGuid;
         private List<string> _children;
-        public void SetRevisionWithChildren(string revision, List<string> children)
+        public void SetRevisionWithChildren(GitRevision revision, List<string> children)
         {
             _revision = revision;
+            _revisionGuid = revision.Guid;
+            _children = children;
+            ReloadCommitInfo();
+        }
+        public void SetRevisionWithChildren(string revision, List<string> children)
+        {
+            _revision = null;
+            _revisionGuid = revision;
             _children = children;
             ReloadCommitInfo();
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public string Revision
+        public GitRevision Revision
         {
             get
             {
                 return _revision;
+            }
+            set
+            {
+                SetRevisionWithChildren(value, null);
+            }
+        }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public string RevisionGuid
+        {
+            get
+            {
+                return _revisionGuid;
             }
             set
             {
@@ -110,13 +133,23 @@ namespace GitUI.CommitInfo
             showContainedInTagsToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInTags;
 
             ResetTextAndImage();
-            if (string.IsNullOrEmpty(_revision))
-                return;
+
+            if (string.IsNullOrEmpty(_revisionGuid))
+                return; //is it regular case or should throw an exception
+
+            _RevisionHeader.SelectionTabs = GetRevisionHeaderTabStops(); 
             _RevisionHeader.Text = string.Empty;
             _RevisionHeader.Refresh();
 
             string error = "";
-            CommitData data = CommitData.GetCommitData(Module, _revision, ref error);
+            CommitData data = null;
+            if (_revision != null)
+            {
+                data = CommitData.CreateFromRevision(_revision);
+                CommitData.UpdateCommitMessage(data, Module, _revisionGuid, ref error);
+            }
+            else
+                data = CommitData.GetCommitData(Module, _revisionGuid, ref error);
             data.ChildrenGuids = _children;
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(data);
 
@@ -127,10 +160,25 @@ namespace GitUI.CommitInfo
             LoadAuthorImage(data.Author ?? data.Committer);
 
             if (Settings.CommitInfoShowContainedInBranches)
-                ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revision));
+                ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revisionGuid));
 
             if (Settings.CommitInfoShowContainedInTags)
-                ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revision));
+                ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revisionGuid));
+        }
+
+        private int[] _revisionHeaderTabStops;
+        private int[] GetRevisionHeaderTabStops()
+        {
+            if (_revisionHeaderTabStops != null)
+                return _revisionHeaderTabStops;
+            int tabStop = 0;
+            foreach (string s in CommitData.GetPossibleHeaders())
+            {
+                tabStop = Math.Max(tabStop, TextRenderer.MeasureText(s + "  ", _RevisionHeader.Font).Width);
+            }
+            // simulate a two column layout even when there's more then one tab used
+            _revisionHeaderTabStops = new int[] { tabStop, tabStop + 1, tabStop + 2, tabStop + 3 };
+            return _revisionHeaderTabStops;
         }
 
         private void loadTagInfo(string revision)
@@ -182,7 +230,7 @@ namespace GitUI.CommitInfo
             // Include remote branches if requested
             bool getRemote = Settings.CommitInfoShowContainedInBranchesRemote ||
                              Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-            var branches = CommitInformation.GetAllBranchesWhichContainGivenCommit(Module, revision, getLocal, getRemote);
+            var branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote);
             var links = new List<string>();
             bool allowLocal = Settings.CommitInfoShowContainedInBranchesLocal;
             bool allowRemote = getRemote;
@@ -226,8 +274,7 @@ namespace GitUI.CommitInfo
 
         private string GetTagsWhichContainsThisCommit(string revision, bool showBranchesAsLinks)
         {
-            var tagString = CommitInformation
-                .GetAllTagsWhichContainGivenCommit(Module, revision)
+            var tagString = Module.GetAllTagsWhichContainGivenCommit(revision)
                 .Select(s => showBranchesAsLinks ? LinkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s)).Join(", ");
 
             if (!String.IsNullOrEmpty(tagString))
@@ -266,7 +313,7 @@ namespace GitUI.CommitInfo
 
         private void addNoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Module.EditNotes(_revision);
+            Module.EditNotes(_revisionGuid);
             ReloadCommitInfo();
         }
     }

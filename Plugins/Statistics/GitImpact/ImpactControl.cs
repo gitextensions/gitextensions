@@ -255,14 +255,16 @@ namespace GitImpact
                 if (!line_labels.ContainsKey(author))
                     return;
 
-                Font font = new Font("Arial", lines_font_size);
-                Brush brush = new SolidBrush(Color.White);
-
-                foreach (var label in line_labels[author])
+                using (Font font = new Font("Arial", lines_font_size))
                 {
-                    SizeF sz = g.MeasureString(label.Item2.ToString(), font);
-                    PointF pt = new PointF(label.Item1.X - sz.Width / 2, label.Item1.Y - sz.Height / 2);
-                    g.DrawString(label.Item2.ToString(), font, brush, pt);
+                    Brush brush = Brushes.White;
+
+                    foreach (var label in line_labels[author])
+                    {
+                        SizeF sz = g.MeasureString(label.Item2.ToString(), font);
+                        PointF pt = new PointF(label.Item1.X - sz.Width/2, label.Item1.Y - sz.Height/2);
+                        g.DrawString(label.Item2.ToString(), font, brush, pt);
+                    }
                 }
             }
         }
@@ -271,14 +273,16 @@ namespace GitImpact
         {
             lock (data_lock)
             {
-                Font font = new Font("Arial", week_font_size);
-                Brush brush = new SolidBrush(Color.Gray);
-
-                foreach (var label in week_labels)
+                using (Font font = new Font("Arial", week_font_size))
                 {
-                    SizeF sz = g.MeasureString(label.Item2.ToString("dd. MMM yy"), font);
-                    PointF pt = new PointF(label.Item1.X - sz.Width / 2, label.Item1.Y + sz.Height / 2);
-                    g.DrawString(label.Item2.ToString("dd. MMM yy"), font, brush, pt);
+                    Brush brush = Brushes.Gray;
+
+                    foreach (var label in week_labels)
+                    {
+                        SizeF sz = g.MeasureString(label.Item2.ToString("dd. MMM yy"), font);
+                        PointF pt = new PointF(label.Item1.X - sz.Width/2, label.Item1.Y + sz.Height/2);
+                        g.DrawString(label.Item2.ToString("dd. MMM yy"), font, brush, pt);
+                    }
                 }
             }
         }
