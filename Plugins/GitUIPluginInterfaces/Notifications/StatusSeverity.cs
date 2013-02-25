@@ -1,6 +1,6 @@
 ﻿namespace GitUIPluginInterfaces.Notifications
 {
-    /// <summary>Specifies the severity of a status update.</summary>
+    /// <summary>Specifies the severity of a notification/status update.</summary>
     public enum StatusSeverity
     {
         /// <summary>Information from a long-running or passive action.</summary>

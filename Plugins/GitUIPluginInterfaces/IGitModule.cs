@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace GitUIPluginInterfaces
 {
+    /// <summary>Provides manipulation with git module.</summary>
     public interface IGitModule
     {
         IEnumerable<IGitSubmodule> GetSubmodules();
