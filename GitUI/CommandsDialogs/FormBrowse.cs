@@ -1919,13 +1919,13 @@ namespace GitUI.CommandsDialogs
 
         private void copyFilenameToClipboardToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedItems.Count == 0)
+            if (!DiffFiles.SelectedItems.Any())
                 return;
 
             var fileNames = new StringBuilder();
             foreach (var item in DiffFiles.SelectedItems)
             {
-                //Only use appendline when multiple items are selected.
+                //Only use append line when multiple items are selected.
                 //This to make it easier to use the text from clipboard when 1 file is selected.
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
@@ -2322,7 +2322,7 @@ namespace GitUI.CommandsDialogs
 
         private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedItems.Count == 0)
+            if (!DiffFiles.SelectedItems.Any())
                 return;
 
             foreach (var item in DiffFiles.SelectedItems)
