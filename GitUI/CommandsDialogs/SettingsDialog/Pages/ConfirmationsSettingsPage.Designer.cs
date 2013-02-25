@@ -103,7 +103,7 @@
             this.chkAmmend.Name = "chkAmmend";
             this.chkAmmend.Size = new System.Drawing.Size(196, 27);
             this.chkAmmend.TabIndex = 0;
-            this.chkAmmend.Text = "Ammend last commit";
+            this.chkAmmend.Text = "Amend last commit";
             this.chkAmmend.UseVisualStyleBackColor = true;
             // 
             // chkAutoPopStashAfterPull

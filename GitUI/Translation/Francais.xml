@@ -79,7 +79,7 @@ Cette action sera effectuée sans avertissment durant le chargement d'une branch
           <Value>nom de la police</Value>
         </TranslationItem>
         <TranslationItem Name="chkEnableAutoScale" Property="Text">
-          <Source>Auto scale user interface when high dpi is used</Source>
+          <Source>Auto scale user interface when high DPI is used</Source>
           <Value>Dimensioner automatiquement l'interface utilisateur quand la haute résolution est utilisée</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
@@ -657,7 +657,7 @@ Valeur: {2} = {3}</Value>
           <Value>Ajouter un suivi de référence pour les branches nouvellement poussées</Value>
         </TranslationItem>
         <TranslationItem Name="chkAmmend" Property="Text">
-          <Source>Ammend last commit</Source>
+          <Source>Amend last commit</Source>
           <Value>Modifier le dernier commit</Value>
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text">
@@ -5833,7 +5833,7 @@ Veuillez vérifier que KDiff3 est installé ou entrer un chemin manuellement. </
           <Value>Menu contextuel</Value>
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="obsolete">
-          <Source>Close process dialog automatically when process is succeeded</Source>
+          <Source>Close process dialog automatically when process succeeds</Source>
           <Value>Fermer automatiquement les fenêtres d'actions lorsque l'action est terminée</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowGitCommandLine" Property="Text" type="obsolete">
@@ -6551,7 +6551,7 @@ du menu contextuel pour des opérations supplémentaires</Value>
           <Value>Vérfifiez les modifications non commitées dans le formulaire de chargelent de branche</Value>
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text">
-          <Source>Close Process dialog when process is succeeded</Source>
+          <Source>Close Process dialog when process succeeds</Source>
           <Value>Fermer le fenêtre de traitement lorsque la traitement est en succès</Value>
         </TranslationItem>
         <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
@@ -6617,8 +6617,8 @@ du menu contextuel pour des opérations supplémentaires</Value>
           <Value>Limiter le nombre de commits chargés au démarrage</Value>
         </TranslationItem>
         <TranslationItem Name="label23" Property="Text">
-          <Source>Smtp server for sending patches by email</Source>
-          <Value>Serveur smtp pour l'envoi de patchs par email</Value>
+          <Source>SMTP server for sending patches by email</Source>
+          <Value>Serveur SMTP pour l'envoi de patchs par email</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text">
           <Source>Revision grid quick search timeout [ms]</Source>
