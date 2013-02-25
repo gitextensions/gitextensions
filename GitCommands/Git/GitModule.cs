@@ -32,7 +32,7 @@ namespace GitCommands
     }
 
     /// <summary>Provides manipulation with git module. 
-    /// <remarks>Several instances may be created for submodules</remarks></summary>
+    /// <remarks>Several instances may be created for submodules.</remarks></summary>
     [DebuggerDisplay("GitModule ( {_workingdir} )")]
     public sealed class GitModule : IGitModule
     {
@@ -3531,5 +3531,28 @@ namespace GitCommands
         }
 
         #endregion
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) { return false; }
+            if (obj == this) { return true; }
+
+            GitModule other = obj as GitModule;
+            return (other != null) && Equals(other);
+        }
+
+        bool Equals(GitModule other)
+        {
+            return 
+                string.Equals(_workingdir, other._workingdir) && 
+                Equals(_superprojectModule, other._superprojectModule);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_workingdir != null 
+                ? _workingdir.GetHashCode() 
+                : 0);
+        }
     }
 }
