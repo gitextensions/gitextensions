@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 
 namespace PatchApply
 {
+    [DebuggerDisplay("PatchFile( {Subject} )")]
     public class PatchFile
     {
         public string FullName { get; set; }
@@ -30,7 +32,7 @@ namespace PatchApply
                 {
                     return "Skipped";
                 }
-                if (!File.Exists(FullName))
+                if (!string.IsNullOrEmpty(FullName) && !File.Exists(FullName))
                 {
                     return "Applied";
                 }

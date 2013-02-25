@@ -5,12 +5,11 @@ using System.Text;
 
 namespace GitCommands
 {
-
     public class GitSubmoduleStatus
     {
         public GitSubmoduleStatus()
         {
-            IsCommitNewer = true; 
+            Status = SubmoduleStatus.Unknown; 
         }
 
         public string Name { get; set; }
@@ -18,20 +17,20 @@ namespace GitCommands
         public bool   IsDirty { get; set; }
         public string Commit { get; set; }
         public string OldCommit { get; set; }
-        public bool   IsCommitNewer { get; set; }
+        public SubmoduleStatus Status { get; set; }
         
         public GitModule GetSubmodule(GitModule module)
         {
             return module.GetSubmodule(Name);
         }
 
-        public void CheckIsCommitNewer(GitModule submodule)
+        public void CheckSubmoduleStatus(GitModule submodule)
         {
-            if (submodule == null || !submodule.ValidWorkingDir())
+            Status = SubmoduleStatus.NewSubmodule;
+            if (submodule == null)
                 return;
 
-            string baseCommit = submodule.GetMergeBase(Commit, OldCommit);
-            IsCommitNewer = baseCommit == OldCommit;
+            Status = submodule.CheckSubmoduleStatus(Commit, OldCommit);
         }
 
         public CommitData GetCommitData(GitModule submodule)

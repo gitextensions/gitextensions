@@ -37,6 +37,8 @@ namespace GitUIPluginInterfaces
 
         string RunCmd(string cmd, string arguments);
 
+        string RunCmd(string cmd, string arguments, byte[] stdIn);
+
         string GetSelectedBranch();
 
         bool IsBareRepository();

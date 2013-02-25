@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 namespace GitUIPluginInterfaces
 {
@@ -13,42 +14,45 @@ namespace GitUIPluginInterfaces
         event GitUIPostActionEventHandler PostApplyPatch;
         event GitUIPostActionEventHandler PostArchive;
         event GitUIPostActionEventHandler PostBlame;
-        event GitUIPostActionEventHandler PostBrowse;
+        event GitUIEventHandler PostBrowse;
         event GitUIPostActionEventHandler PostCheckoutBranch;
         event GitUIPostActionEventHandler PostCheckoutRevision;
-        event GitUIEventHandler PostCherryPick;
-        event GitUIEventHandler PostClone;
-        event GitUIEventHandler PostCommit;
-        event GitUIEventHandler PostCompareRevisions;
-        event GitUIEventHandler PostCreateBranch;
-        event GitUIEventHandler PostCreateTag;
-        event GitUIEventHandler PostDeleteBranch;
-        event GitUIEventHandler PostDeleteTag;
-        event GitUIEventHandler PostEditGitAttributes;
-        event GitUIEventHandler PostEditGitIgnore;
-        event GitUIEventHandler PostFileHistory;
-        event GitUIEventHandler PostFormatPatch;
-        event GitUIEventHandler PostInitialize;
-        event GitUIEventHandler PostMailMap;
-        event GitUIEventHandler PostMergeBranch;
-        event GitUIEventHandler PostPull;
-        event GitUIEventHandler PostPush;
-        event GitUIEventHandler PostRebase;
-        event GitUIEventHandler PostRename;
-        event GitUIEventHandler PostRemotes;
-        event GitUIEventHandler PostResolveConflicts;
-        event GitUIEventHandler PostSettings;
-        event GitUIEventHandler PostStash;
-        event GitUIEventHandler PostSvnClone;
-        event GitUIEventHandler PostSvnDcommit;
-        event GitUIEventHandler PostSvnFetch;
-        event GitUIEventHandler PostSvnRebase;
-        event GitUIEventHandler PostSubmodulesEdit;
-        event GitUIEventHandler PostSyncSubmodules;
-        event GitUIEventHandler PostUpdateSubmodules;
-        event GitUIEventHandler PostVerifyDatabase;
-        event GitUIEventHandler PostViewPatch;
+        event GitUIPostActionEventHandler PostCherryPick;
+        event GitUIPostActionEventHandler PostClone;
+        event GitUIPostActionEventHandler PostCommit;
+        event GitUIPostActionEventHandler PostCompareRevisions;
+        event GitUIPostActionEventHandler PostCreateBranch;
+        event GitUIPostActionEventHandler PostCreateTag;
+        event GitUIPostActionEventHandler PostDeleteBranch;
+        event GitUIPostActionEventHandler PostDeleteTag;
+        event GitUIPostActionEventHandler PostEditGitAttributes;
+        event GitUIPostActionEventHandler PostEditGitIgnore;
+        event GitUIPostActionEventHandler PostFileHistory;
+        event GitUIPostActionEventHandler PostFormatPatch;
+        event GitUIPostActionEventHandler PostInitialize;
+        event GitUIPostActionEventHandler PostMailMap;
+        event GitUIPostActionEventHandler PostMergeBranch;
+        event GitUIPostActionEventHandler PostPull;
+        event GitUIPostActionEventHandler PostPush;
+        event GitUIPostActionEventHandler PostRebase;
+        event GitUIPostActionEventHandler PostRename;
+        event GitUIPostActionEventHandler PostRemotes;
+        event GitUIEventHandler PostRepositoryChanged;
+        event GitUIPostActionEventHandler PostResolveConflicts;
+        event GitUIPostActionEventHandler PostRevertCommit;
+        event GitUIPostActionEventHandler PostSettings;
+        event GitUIPostActionEventHandler PostStash;
+        event GitUIPostActionEventHandler PostSvnClone;
+        event GitUIPostActionEventHandler PostSvnDcommit;
+        event GitUIPostActionEventHandler PostSvnFetch;
+        event GitUIPostActionEventHandler PostSvnRebase;
+        event GitUIPostActionEventHandler PostSubmodulesEdit;
+        event GitUIPostActionEventHandler PostSyncSubmodules;
+        event GitUIPostActionEventHandler PostUpdateSubmodules;
+        event GitUIPostActionEventHandler PostVerifyDatabase;
+        event GitUIPostActionEventHandler PostViewPatch;
         event GitUIEventHandler PostBrowseInitialize;
+        event GitUIEventHandler PostRegisterPlugin;
         event GitUIEventHandler PreAddFiles;
         event GitUIEventHandler PreApplyPatch;
         event GitUIEventHandler PreArchive;
@@ -77,6 +81,7 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PreRename;
         event GitUIEventHandler PreRemotes;
         event GitUIEventHandler PreResolveConflicts;
+        event GitUIEventHandler PreRevertCommit;
         event GitUIEventHandler PreSettings;
         event GitUIEventHandler PreStash;
         event GitUIEventHandler PreSvnClone;
@@ -89,14 +94,17 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PreVerifyDatabase;
         event GitUIEventHandler PreViewPatch;
         event GitUIEventHandler PreBrowseInitialize;
-        event GitUIEventHandler BrowseInitialize;
         
         IGitModule GitModule { get; }
         string GitCommand(string arguments);
         string CommandLineCommand(string cmd, string arguments);
         IGitRemoteCommand CreateRemoteCommand();
-        void RaiseBrowseInitialize();
         void CacheAvatar(string email);
+        Icon FormIcon { get; }
+        /// <summary>
+        /// RepoChangedNotifier.Notify() should be called after each action that changess repo state
+        /// </summary>
+        ILockableNotifier RepoChangedNotifier { get; }
 
         bool StartCommandLineProcessDialog(object ownerForm, string command, string arguments);
         bool StartCommandLineProcessDialog(string command, string arguments);
@@ -119,7 +127,7 @@ namespace GitUIPluginInterfaces
         bool StartDeleteBranchDialog(string branch);
         bool StartDeleteTagDialog();
         bool StartEditGitIgnoreDialog();
-        bool StartFileHistoryDialog(string fileName);
+        void StartFileHistoryDialog(string fileName);
         bool StartFormatPatchDialog();
         bool StartGitCommandProcessDialog(string arguments);
         bool StartInitializeDialog();

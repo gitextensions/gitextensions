@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -13,6 +14,14 @@ using Microsoft.Win32;
 
 namespace GitCommands
 {
+    public enum LocalChangesAction
+    {
+        DontChange,
+        Merge,
+        Reset,
+        Stash
+    }
+
     public static class Settings
     {
         //semi-constants
@@ -21,12 +30,18 @@ namespace GitCommands
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
 
-        private static readonly Dictionary<String, object> byNameMap = new Dictionary<String, object>();
+        private static readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
+
         static Settings()
         {
             Version version = Assembly.GetCallingAssembly().GetName().Version;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
-            GitExtensionsVersionInt = version.Major * 100 + (version.Minor < 100 ? version.Minor : 99);
+            GitExtensionsVersionInt = version.Major * 100 + version.Minor;
+            if (version.Build > 0)
+            {
+                GitExtensionsVersionString += '.' + version.Build.ToString();
+                GitExtensionsVersionInt = GitExtensionsVersionInt * 100 + version.Build;
+            }
             if (!RunningOnWindows())
             {
                 PathSeparator = '/';
@@ -183,6 +198,13 @@ namespace GitCommands
             set { SafeSet("translation", value, ref _translation); }
         }
 
+        private static string _currentTranslation;
+        public static string CurrentTranslation
+        {
+            get { return _currentTranslation ?? Translation; }
+            set { _currentTranslation = value; }
+        }
+
         private static bool? _userProfileHomeDir;
         public static bool UserProfileHomeDir
         {
@@ -321,22 +343,26 @@ namespace GitCommands
             set { SafeSet("revisiongraphdrawnonrelativestextgray", value, ref _revisionGraphDrawNonRelativesTextGray); }
         }
 
-        public static readonly Dictionary<string, Encoding> availableEncodings = new Dictionary<string, Encoding>();
+        public static readonly Dictionary<string, Encoding> AvailableEncodings = new Dictionary<string, Encoding>();
+        private static readonly Dictionary<string, Encoding> EncodingSettings = new Dictionary<string, Encoding>();
 
         internal static bool GetEncoding(string settingName, out Encoding encoding)
         {
-            object o;
-            bool result = byNameMap.TryGetValue(settingName, out o);
-            encoding = o as Encoding;
-            return result;
+            lock (EncodingSettings)
+            {
+                return EncodingSettings.TryGetValue(settingName, out encoding);
+            }
         }
 
         internal static void SetEncoding(string settingName, Encoding encoding)
         {
-            var items = (from item in byNameMap.Keys where item.StartsWith(settingName) select item).ToList();
-            foreach (var item in items)
-                byNameMap.Remove(item);
-            byNameMap[settingName] = encoding;
+            lock (EncodingSettings)
+            {
+                var items = EncodingSettings.Keys.Where(item => item.StartsWith(settingName)).ToList();
+                foreach (var item in items)
+                    EncodingSettings.Remove(item);
+                EncodingSettings[settingName] = encoding;
+            }
         }
 
         public enum PullAction
@@ -374,19 +400,10 @@ namespace GitCommands
             set { SafeSet("autostash", value, ref _autoStash); }
         }
 
-
-        public enum LocalChanges
+        public static LocalChangesAction CheckoutBranchAction
         {
-            DontChange,
-            Merge,
-            Reset,
-            Stash
-        }
-
-        public static LocalChanges CheckoutBranchAction
-        {
-            get { return GetEnum<LocalChanges>("checkoutbranchaction", LocalChanges.Merge); }
-            set { SetEnum<LocalChanges>("checkoutbranchaction", value); }
+            get { return GetEnum("checkoutbranchaction", LocalChangesAction.DontChange); }
+            set { SetEnum("checkoutbranchaction", value); }
         }
 
         public static bool UseDefaultCheckoutBranchAction
@@ -395,6 +412,42 @@ namespace GitCommands
             set { SetBool("UseDefaultCheckoutBranchAction", value); }
         }
 
+        public static bool DontShowHelpImages
+        {
+            get { return GetBool("DontShowHelpImages", false).Value; }
+            set { SetBool("DontShowHelpImages", value); }
+        }
+
+        public static bool DontConfirmAmend
+        {
+            get { return GetBool("DontConfirmAmend", false).Value; }
+            set { SetBool("DontConfirmAmend", value); }
+        }
+
+        public static bool? AutoPopStashAfterPull
+        {
+            get { return GetBool("AutoPopStashAfterPull", null); }
+            set { SetBool("AutoPopStashAfterPull", value); }
+        }
+
+        public static bool? AutoPopStashAfterCheckoutBranch
+        {
+            get { return GetBool("AutoPopStashAfterCheckoutBranch", null); }
+            set { SetBool("AutoPopStashAfterCheckoutBranch", value); }
+        }
+
+        public static bool DontConfirmPushNewBranch
+        {
+            get { return GetBool("DontConfirmPushNewBranch", false).Value; }
+            set { SetBool("DontConfirmPushNewBranch", value); }
+        }
+
+        public static bool DontConfirmAddTrackingRef
+        {
+            get { return GetBool("DontConfirmAddTrackingRef", false).Value; }
+            set { SetBool("DontConfirmAddTrackingRef", value); }
+        }
+        
         private static bool? _includeUntrackedFilesInAutoStash;
         public static bool IncludeUntrackedFilesInAutoStash
         {
@@ -682,6 +735,13 @@ namespace GitCommands
             set { SafeSet("difffont", value, ref _diffFont); }
         }
 
+        private static Font _commitFont;
+        public static Font CommitFont
+        {
+            get { return SafeGet("commitfont", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size), ref _commitFont); }
+            set { SafeSet("commitfont", value, ref _commitFont); }
+        }
+
         private static Font _font;
         public static Font Font
         {
@@ -793,7 +853,7 @@ namespace GitCommands
 
         public static void LoadSettings()
         {
-            Action<Encoding> addEncoding = delegate(Encoding e) { availableEncodings[e.HeaderName] = e; };
+            Action<Encoding> addEncoding = delegate(Encoding e) { AvailableEncodings[e.HeaderName] = e; };
             addEncoding(Encoding.Default);
             addEncoding(new ASCIIEncoding());
             addEncoding(new UnicodeEncoding());
@@ -913,6 +973,20 @@ namespace GitCommands
             set { SafeSet("CommitValidationSecondLineMustBeEmpty", value, ref _CommitValidationSecondLineMustBeEmpty); }
         }
 
+        private static bool? _CommitValidationIndentAfterFirstLine;
+        public static bool CommitValidationIndentAfterFirstLine
+        {
+            get { return SafeGet("CommitValidationIndentAfterFirstLine", true, ref _CommitValidationIndentAfterFirstLine); }
+            set { SafeSet("CommitValidationIndentAfterFirstLine", value, ref _CommitValidationIndentAfterFirstLine); }
+        }
+
+        private static bool? _CommitValidationAutoWrap;
+        public static bool CommitValidationAutoWrap
+        {
+            get { return SafeGet("CommitValidationAutoWrap", true, ref _CommitValidationAutoWrap); }
+            set { SafeSet("CommitValidationAutoWrap", value, ref _CommitValidationAutoWrap); }
+        }
+
         private static string _CommitValidationRegEx;
         public static string CommitValidationRegEx
         {
@@ -934,18 +1008,11 @@ namespace GitCommands
             set { SafeSet("CreateLocalBranchForRemote", value, ref _CreateLocalBranchForRemote); }
         }
 
-        private static bool? _ShellCascadeContextMenu;
-        public static bool ShellCascadeContextMenu
+        private static string _CascadeShellMenuItems;
+        public static string CascadeShellMenuItems
         {
-            get { return SafeGet("ShellCascadeContextMenu", true, ref _ShellCascadeContextMenu); }
-            set { SafeSet("ShellCascadeContextMenu", value, ref _ShellCascadeContextMenu); }
-        }
-
-        private static string _ShellVisibleMenuItems;
-        public static string ShellVisibleMenuItems
-        {
-            get { return SafeGet("ShellVisibleMenuItems", "11111111111111", ref _ShellVisibleMenuItems); }
-            set { SafeSet("ShellVisibleMenuItems", value, ref _ShellVisibleMenuItems); }
+            get { return SafeGet("CascadeShellMenuItems", "110111000111111111", ref _CascadeShellMenuItems); }
+            set { SafeSet("CascadeShellMenuItems", value, ref _CascadeShellMenuItems); }
         }
 
         private static bool? _UseFormCommitMessage;
@@ -1091,7 +1158,7 @@ namespace GitCommands
         public static T GetByName<T>(string name, T defaultValue, Func<object, T> decode)
         {
             object o;
-            if (byNameMap.TryGetValue(name, out o))
+            if (ByNameMap.TryGetValue(name, out o))
             {
                 if( o == null || o is T)
                     return (T)o;
@@ -1103,7 +1170,7 @@ namespace GitCommands
                 o = GetValue<object>(name, null);
                 T result = o == null ? defaultValue : decode(o);
 
-                byNameMap[name] = result;
+                ByNameMap[name] = result;
                 return result;
             }
         }
@@ -1111,7 +1178,7 @@ namespace GitCommands
         public static void SetByName<T>(string name, T value, Func<T, object> encode)
         {
             object o;
-            if (byNameMap.TryGetValue(name, out o))
+            if (ByNameMap.TryGetValue(name, out o))
                 if (Object.Equals(o, value))
                     return;
             if (value == null)
@@ -1119,7 +1186,7 @@ namespace GitCommands
             else
                 o = encode(value);
             SetValue<object>(name, o);
-            byNameMap[name] = value;
+            ByNameMap[name] = value;
         }
 
         public static bool? GetBool(string name, bool? defaultValue)
@@ -1169,10 +1236,12 @@ namespace GitCommands
 
     public static class FontParser
     {
+
+        private static readonly string InvariantCultureId = "_IC_";
         public static string AsString(this Font value)
         {
-            return String.Format(System.Globalization.CultureInfo.InstalledUICulture,
-                "{0};{1}", value.FontFamily.Name, value.Size);
+            return String.Format(CultureInfo.InvariantCulture,
+                "{0};{1};{2}", value.FontFamily.Name, value.Size, InvariantCultureId);
         }
 
         public static Font Parse(this string value, Font defaultValue)
@@ -1187,8 +1256,16 @@ namespace GitCommands
 
             try
             {
-                return new Font(parts[0], Single.Parse(parts[1],
-                  System.Globalization.CultureInfo.InstalledUICulture));
+                string fontSize;
+                if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
+                    fontSize = parts[1];
+                else
+                {
+                    fontSize = parts[1].Replace(",", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
+                    fontSize = fontSize.Replace(".", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
+                }
+
+                return new Font(parts[0], Single.Parse(fontSize, CultureInfo.InvariantCulture));
             }
             catch (Exception)
             {

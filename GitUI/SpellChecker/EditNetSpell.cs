@@ -32,7 +32,9 @@ namespace GitUI.SpellChecker
         private readonly SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
         private static WordDictionary _wordDictionary;
-        private Font TextBoxFont;
+
+        public Font TextBoxFont { get; set; }
+        public EventHandler TextAssigned;
 
         public EditNetSpell()
         {
@@ -50,9 +52,9 @@ namespace GitUI.SpellChecker
         {
             get
             {
-				if (TextBox == null)
-					return string.Empty;
-				
+                if (TextBox == null)
+                    return string.Empty;
+                
                 return IsWatermarkShowing ? string.Empty : TextBox.Text;
             }
             set
@@ -60,7 +62,43 @@ namespace GitUI.SpellChecker
                 HideWatermark();
                 TextBox.Text = value;
                 ShowWatermark();
+                OnTextAssigned();
             }
+        }
+
+        private void OnTextAssigned()
+        {
+            if (TextAssigned != null)
+            {
+                TextAssigned(this, EventArgs.Empty);
+            }
+        }
+
+        public string Line(int line)
+        {
+            return TextBox.Lines[line];
+        }
+
+        public void ReplaceLine(int line, string withText)
+        {
+            var oldPos = TextBox.SelectionStart + TextBox.SelectionLength;
+            var startIdx = TextBox.GetFirstCharIndexFromLine(line);
+            TextBox.SelectionLength = 0;
+            TextBox.SelectionStart = startIdx;
+            TextBox.SelectionLength = Line(line).Length;
+            TextBox.SelectedText = withText;
+            TextBox.SelectionLength = 0;
+            TextBox.SelectionStart = oldPos;
+        }
+
+        public int LineLength(int line)
+        {
+            return LineCount() <= line ? 0 : TextBox.Lines[line].Length;
+        }
+
+        public int LineCount()
+        {
+            return TextBox.Lines.Length;
         }
 
         [Browsable(false)]
@@ -107,6 +145,57 @@ namespace GitUI.SpellChecker
                 _WatermarkText = value;
                 ShowWatermark();
             }
+        }
+
+        [Category("Appearance")]
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public int SelectionStart
+        {
+            get
+            {
+                return TextBox.SelectionStart;
+            }
+            set
+            {
+                TextBox.SelectionStart = value;
+            }
+        }
+
+        [Category("Appearance")]
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public virtual int SelectionLength
+        {
+            get
+            {
+                return TextBox.SelectionLength;
+            }
+
+            set
+            {
+                TextBox.SelectionLength = value;
+            }
+        }
+
+        [Category("Appearance")]
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public virtual string SelectedText
+        {
+            get
+            {
+                return TextBox.SelectedText;
+            }
+            set
+            {
+               TextBox.SelectedText = value;
+            }
+        }
+
+        public void SelectAll()
+        {
+            TextBox.SelectAll();
         }
 
         private void EditNetSpellLoad(object sender, EventArgs e)
@@ -314,7 +403,7 @@ namespace GitUI.SpellChecker
                 .Enabled = (TextBox.SelectedText.Length > 0);
             AddContextMenuItem(selectAllMenuItemText.Text, SelectAllMenuItemClick);
 
-            AddContextMenuSeparator();
+            /*AddContextMenuSeparator();
 
             if (!string.IsNullOrEmpty(_spelling.CurrentWord))
             {
@@ -323,7 +412,7 @@ namespace GitUI.SpellChecker
             }
 
             string entireText = string.Format(translateEntireText.Text, CultureCodeToString(Settings.Dictionary));
-            AddContextMenuItem(entireText, translateText_Click);
+            AddContextMenuItem(entireText, translateText_Click);*/
 
             AddContextMenuSeparator();
 
@@ -466,6 +555,11 @@ namespace GitUI.SpellChecker
             _customUnderlines.Lines.Clear();
             _customUnderlines.IllFormedLines.Clear();
 
+            if (!IsWatermarkShowing)
+            {
+                OnTextChanged(e);
+            }
+
             if (Settings.Dictionary == "None" || TextBox.Text.Length < 4)
                 return;
 
@@ -489,6 +583,20 @@ namespace GitUI.SpellChecker
             OnKeyUp(e);
         }
 
+        private bool skipSelectionUndo = false;
+        private void UndoHighlighting()
+        {
+            if (!skipSelectionUndo)
+                return;
+
+            while (TextBox.UndoActionName.Equals("Unknown"))
+            {
+                TextBox.Undo();
+            }
+            TextBox.Undo();
+            skipSelectionUndo = false;
+        }
+
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.V)
@@ -501,6 +609,10 @@ namespace GitUI.SpellChecker
                 // remove image data from clipboard
                 string text = Clipboard.GetText();
                 Clipboard.SetText(text);
+            }
+            else if (e.Control && !e.Alt && e.KeyCode == Keys.Z)
+            {
+                UndoHighlighting();
             }
             OnKeyDown(e);
         }
@@ -527,8 +639,8 @@ namespace GitUI.SpellChecker
             {
                 TextBox.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
                 TextBox.ForeColor = SystemColors.InactiveCaption;
-                TextBox.Text = WatermarkText;
                 IsWatermarkShowing = true;
+                TextBox.Text = WatermarkText;
             }
         }
 
@@ -537,10 +649,10 @@ namespace GitUI.SpellChecker
             if (IsWatermarkShowing && TextBoxFont != null)
             {
                 TextBox.Font = TextBoxFont;
+                IsWatermarkShowing = false;
                 TextBox.Text = string.Empty;
                 TextBox.ForeColor = SystemColors.WindowText;
             }
-            IsWatermarkShowing = false;
         }
 
         public new bool Focus()
@@ -582,47 +694,43 @@ namespace GitUI.SpellChecker
             TextBox.SelectAll();
         }
 
-        public void WrapWord()
+        public void ChangeTextColor(int line, int offset, int length, Color color)
         {
-            var text = TextBox.Text;
-            var originalCursorPosition = TextBox.SelectionStart;
-            var cursor = originalCursorPosition - 1;
-            int newCursorPosition;
-            int endOfPreviousWord;
+            var oldPos = TextBox.SelectionStart;
+            var oldColor = TextBox.SelectionColor;
+            var lineIndex = TextBox.GetFirstCharIndexFromLine(line);
+            TextBox.SelectionStart = Math.Max(lineIndex + offset, 0);
+            TextBox.SelectionLength = length;
+            TextBox.SelectionColor = color;
+            var restoreColor = oldPos < TextBox.SelectionStart || oldPos > TextBox.SelectionStart + TextBox.SelectionLength;
 
-            // Find the beginning of current word
-            while (!char.IsWhiteSpace(text[cursor])) cursor--;
-            endOfPreviousWord = cursor;
-
-            // Find the end of the previous word
-            while (char.IsWhiteSpace(text[endOfPreviousWord])) endOfPreviousWord--;
-
-            // Calculate the new cursor position which would keep the cursor
-            // at the same spot in the word being typed.
-            newCursorPosition = originalCursorPosition - (cursor - endOfPreviousWord) + 4;
-
-            string textBefore = text.Substring(0, endOfPreviousWord + 1);
-            string textAfter = text.Substring(cursor + 1);
-            TextBox.Text = textBefore + "\n   " + textAfter;
-
-            TextBox.SelectionStart = newCursorPosition;
+            TextBox.SelectionLength = 0;
+            TextBox.SelectionStart = oldPos;
+            //restore old color only if oldPos doesn't intersects with colored selection
+            if(restoreColor)
+                TextBox.SelectionColor = oldColor;
+            //undoes all recent selections while ctrl-z pressed
+            skipSelectionUndo = true;
         }
 
         /// <summary>
         /// Make sure this line is empty by inserting a newline at its start.
         /// </summary>
-        public void ForceNextLine(bool addBullet)
+        public void EnsureEmptyLine(bool addBullet, int afterLine)
         {
-            var bullet = addBullet ? " - " : "";
-            var text = TextBox.Text;
-            var originalCursorPosition = TextBox.SelectionStart;
-            var cursor = originalCursorPosition - (CurrentColumn - 1);
-
-            string textBefore = text.Substring(0, cursor);
-            string textAfter = text.Substring(cursor);
-            TextBox.Text = textBefore + "\n" + bullet + textAfter;
-
-            TextBox.SelectionStart = originalCursorPosition + 1 + bullet.Length;
+            var lineLength = LineLength(afterLine);
+            if (lineLength > 0)
+            {
+                var bullet = addBullet ? " - " : String.Empty;
+                var indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
+                var newLine = (lineLength > 0) ? Environment.NewLine : String.Empty;
+                var newCursorPos = indexOfLine + newLine.Length + bullet.Length + lineLength - 1;
+                TextBox.SelectionLength = 0;
+                TextBox.SelectionStart = indexOfLine;
+                TextBox.SelectedText = newLine + bullet;
+                TextBox.SelectionLength = 0;
+                TextBox.SelectionStart = newCursorPos;
+            }
         }
     }
 }

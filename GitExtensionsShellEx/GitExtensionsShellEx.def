@@ -1,6 +1,4 @@
-; SimpleExt.def : Declares the module parameters.
-
-LIBRARY      "GitExtensionsShellEx.DLL"
+LIBRARY
 
 EXPORTS
     DllCanUnloadNow     PRIVATE

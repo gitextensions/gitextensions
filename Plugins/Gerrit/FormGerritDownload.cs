@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
@@ -64,7 +62,7 @@ namespace Gerrit
                 return false;
             }
 
-            StartAgent(owner, _NO_TRANSLATE_Remotes.Text);
+            GerritUtil.StartAgent(owner, Module, _NO_TRANSLATE_Remotes.Text);
 
             var reviewInfo = LoadReviewInfo();
 
@@ -73,6 +71,11 @@ namespace Gerrit
                 MessageBox.Show(owner, _cannotGetChangeDetails.Text);
                 return false;
             }
+
+            // The user can enter both the Change-Id or the number. Here we
+            // force the number to get prettier branches.
+
+            change = (string)reviewInfo["number"];
 
             string topic = _NO_TRANSLATE_TopicBranch.Text.Trim();
 
@@ -162,59 +165,24 @@ namespace Gerrit
 
         private JObject LoadReviewInfo()
         {
-            string remotes = Module.RunGit("remote show -n \"" + _currentBranchRemote + "\"");
-
-            string fetchUrlLine = remotes.Split('\n').Select(p => p.Trim()).First(p => p.StartsWith("Push"));
-            var fetchUrl = new Uri(fetchUrlLine.Split(new[] { ':' }, 2)[1].Trim());
+            var fetchUrl = GerritUtil.GetFetchUrl(Module, _currentBranchRemote);
 
             string projectName = fetchUrl.AbsolutePath.TrimStart('/');
 
             if (projectName.EndsWith(".git"))
                 projectName = projectName.Substring(0, projectName.Length - 4);
 
-
-            var sshCmd = GitCommandHelpers.GetSsh();
-            if (GitCommandHelpers.Plink())
-            {
-                sshCmd = GitCommands.Settings.Plink;
-            }
-            if (string.IsNullOrEmpty(sshCmd))
-            {
-                sshCmd = "ssh.exe";
-            }
-
-            string hostname = fetchUrl.Host;
-            string username = fetchUrl.UserInfo;
-            string portFlag = GitCommandHelpers.Plink() ? " -P " : " -p ";
-            int port = fetchUrl.Port;
-
-            if (port == -1 && fetchUrl.Scheme == "ssh")
-                port = 22;
-
-            var sb = new StringBuilder();
-
-            sb.Append('"');
-
-            if (!string.IsNullOrEmpty(username))
-            {
-                sb.Append(username);
-                sb.Append('@');
-            }
-
-            sb.Append(hostname);
-            sb.Append('"');            
-            sb.Append(portFlag);
-            sb.Append(port);
-
-            sb.Append(" \"gerrit query --format=JSON project:");
-            sb.Append(projectName);
-            sb.Append(" --current-patch-set change:");
-            sb.Append(_NO_TRANSLATE_Change.Text);
-            sb.Append('"');
-
-            string change = Module.RunCmd(
-                sshCmd,
-                sb.ToString()
+            string change = GerritUtil.RunGerritCommand(
+                this,
+                Module,
+                String.Format(
+                    "gerrit query --format=JSON project:{0} --current-patch-set change:{1}",
+                    projectName,
+                    _NO_TRANSLATE_Change.Text
+                ),
+                fetchUrl,
+                _currentBranchRemote,
+                null
             );
 
             foreach (string line in change.Split('\n'))
