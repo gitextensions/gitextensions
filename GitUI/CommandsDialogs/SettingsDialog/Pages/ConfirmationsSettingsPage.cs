@@ -14,7 +14,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void OnLoadSettings()
         {
-            chkAmmend.Checked = Settings.DontConfirmAmmend;
+            chkAmend.Checked = Settings.DontConfirmAmend;
             chkAutoPopStashAfterPull.CheckState = Settings.AutoPopStashAfterPull.ToCheckboxState();
             chkAutoPopStashAfterCheckout.CheckState = Settings.AutoPopStashAfterCheckoutBranch.ToCheckboxState();
             chkPushNewBranch.Checked = Settings.DontConfirmPushNewBranch;
@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public override void SaveSettings()
         {
-            Settings.DontConfirmAmmend = chkAmmend.Checked;
+            Settings.DontConfirmAmend = chkAmend.Checked;
             Settings.AutoPopStashAfterPull = chkAutoPopStashAfterPull.CheckState.ToBoolean();
             Settings.AutoPopStashAfterCheckoutBranch = chkAutoPopStashAfterCheckout.CheckState.ToBoolean();
             Settings.DontConfirmPushNewBranch = chkPushNewBranch.Checked;
