@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using GitUI.Properties;
 using GitUIPluginInterfaces.Notifications;
@@ -6,25 +7,43 @@ using GitUIPluginInterfaces.Notifications;
 namespace GitUI.Notifications
 {
     /// <summary><see cref="ToolStripButton"/> which holds notifications, with most recent items first.</summary>
-    public sealed partial class NotificationFeed : ToolStripDropDownButton
+    public sealed class NotificationFeed : ToolStripDropDownButton
     {
         /// <summary>Initalizes a new control which holds notifications, with most recent items first.</summary>
-        public NotificationFeed(INotifications notifications)
-            : this(notifications.Notifications) { }
-
-        /// <summary>Initalizes a new control which holds notifications, with most recent items first.</summary>
-        public NotificationFeed(IObservable<Notification> notifications)
+        public NotificationFeed(IGitUICommandsSource uiCommandsSource)
         {
             //TextAlign = ContentAlignment.MiddleRight;
-            //Image = Resources.NotifyWarn;
             //TextImageRelation = TextImageRelation.ImageBeforeText;
             //Dock = DockStyle.Left;
 
             Image = Resources.Information;
-            subscription = notifications.Subscribe(Notify);
+
+            this.uiCommandsSource = uiCommandsSource;
+            uiCommandsSource.GitUICommandsChanged += OnGitUICommandsChanged;
+            Subscribe(uiCommandsSource);
+        }
+
+        /// <summary>Subscribes to a git UI commands source's notifications.</summary>
+        void OnGitUICommandsChanged(IGitUICommandsSource sender, GitUICommands oldcommands)
+        {
+            Subscribe(sender);
+        }
+
+        /// <summary>Subscribes to a git UI commands source's notifications.</summary>
+        void Subscribe(IGitUICommandsSource iGitUICommandsSource)
+        {
+            if (subscription != null)
+            {
+                subscription.Dispose();
+            }
+            if (iGitUICommandsSource.UICommands != null)
+            {
+                subscription = iGitUICommandsSource.UICommands.Notifications.Notifications.Subscribe(OnNewNotification);
+            }
         }
 
         IDisposable subscription;
+        IGitUICommandsSource uiCommandsSource;
 
         /// <summary>Disposes of the <see cref="Notification"/> subscription.</summary>
         protected override void Dispose(bool disposing)
@@ -34,30 +53,35 @@ namespace GitUI.Notifications
             {
                 subscription.Dispose();
             }
+            uiCommandsSource.GitUICommandsChanged -= OnGitUICommandsChanged;
         }
 
-        MostRecentNotification mostRecent;
+        NotificationPopup popup;
 
-        /// <summary>Notifies the user about a status update.</summary>
-        /// <param name="notification">Status update to show to user.</param>
-        void Notify(Notification notification)
+        /// <summary>Occurs when a new notification has been published.</summary>
+        /// <param name="notification">The new notification message.</param>
+        void OnNewNotification(Notification notification)
         {
-            if (mostRecent != null)
+            if (popup != null)
             {
-                mostRecent.Update(notification);
+                popup.New(notification, GetPopupLocation());
             }
             Add(notification);
+        }
+
+        Point GetPopupLocation()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>Sets or adds to the parent's ImageList.</summary>
         protected override void OnParentChanged(ToolStrip oldParent, ToolStrip newParent)
         {
             base.OnParentChanged(oldParent, newParent);
-           
-            if (mostRecent != null) { return; }
 
-            mostRecent = new MostRecentNotification();
-            newParent.Items.Insert(1, mostRecent);
+            if (popup != null) { return; }
+
+            popup = new NotificationPopup();
         }
 
         /// <summary>Updates the text and image according to the current notifications, if any.</summary>
@@ -82,33 +106,10 @@ namespace GitUI.Notifications
         }
 
         int nNotifications;
-
+     
         /// <summary>Adds a notification to the status feed.</summary>
         void Add(Notification notification)
         {
-            var control = new NotificationItem(notification);
-            control.Click += RemoveNotification;
-            control.Expired += RemoveNotification;
-
-            Add(control);
-        }
-
-        /// <summary>Adds the <see cref="NotificationControl"/> then updates the UI.</summary>
-        void Add(NotificationControl control)
-        {
-            nNotifications++;
-            this.Insertion(control);
-            Update();
-        }
-
-        /// <summary>De-registers for notification control events, then removes it.</summary>
-        void RemoveNotification(object sender, EventArgs e)
-        {
-            nNotifications--;
-            NotificationControl control = (NotificationControl)sender;
-            control.Click -= RemoveNotification;
-            control.Expired -= RemoveNotification;
-            this.Removal(control);
             Update();
         }
     }

@@ -67,6 +67,7 @@
     <Compile Include="IGitPluginForRepository.cs" />
     <Compile Include="IGitModule.cs" />
     <Compile Include="IGitRemoteCommand.cs" />
+    <Compile Include="Notifications\ContextAction.cs" />
     <Compile Include="Notifications\INotifications.cs" />
     <Compile Include="Notifications\Notification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

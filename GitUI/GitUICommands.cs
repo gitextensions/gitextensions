@@ -28,6 +28,7 @@ namespace GitUI
         public GitUICommands(GitModule module)
         {
             Module = module;
+            Notifications = NotificationManager.Get(Module);
         }
 
         public GitUICommands(string workingDir)
@@ -224,7 +225,7 @@ namespace GitUI
         public Icon FormIcon { get { return GitExtensionsForm.ApplicationIcon; } }
 
         /// <summary>Gets notifications implementation.</summary>
-        public INotifications Notifications { get { return NotificationManager.Instance; } }
+        public INotifications Notifications { get; private set; }
 
         public bool StartBatchFileProcessDialog(object owner, string batchFile)
         {

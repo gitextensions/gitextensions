@@ -19,7 +19,7 @@ namespace GitUI.UserControls
         {
             InitializeComponent();
 
-            NotificationFeed notificationFeed = new NotificationFeed(NotificationManager.Instance);
+            NotificationFeed notificationFeed = new NotificationFeed(UICommandsSource);
             toolbarMain.Items.Insert(0, notificationFeed);
 
             Translate();

@@ -243,19 +243,23 @@
     <Compile Include="MessageBoxes.cs" />
     <Compile Include="MouseWheelRedirector.cs" />
     <Compile Include="MergeToolsHelper.cs" />
-    <Compile Include="Notifications\MostRecentNotification.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Notifications\NotificationControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Notifications\NotificationFeed.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Notifications\NotificationItem.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Notifications\NotificationList.cs" />
     <Compile Include="Notifications\NotificationManager.cs" />
+    <Compile Include="Notifications\NotificationPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Notifications\NotificationPopup.Designer.cs">
+      <DependentUpon>NotificationPopup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Notifications\NotificationsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Notifications\NotificationsForm.Designer.cs">
+      <DependentUpon>NotificationsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Notifications\NotifierHelpers.cs" />
     <Compile Include="PathFormatter.cs" />
     <Compile Include="Editor\FileViewer.cs">
@@ -1085,6 +1089,9 @@
     <EmbeddedResource Include="Hotkey\FormHotkeys.resx">
       <DependentUpon>FormHotkeys.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Notifications\NotificationPopup.resx">
+      <DependentUpon>NotificationPopup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RepoHosting\CreatePullRequestForm.resx">
       <DependentUpon>CreatePullRequestForm.cs</DependentUpon>

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Subjects;
+using GitCommands;
 using GitUIPluginInterfaces.Notifications;
 using Notification = GitUIPluginInterfaces.Notifications.Notification;
 
@@ -14,18 +16,26 @@ namespace GitUI.Notifications
         // example: user executes a long-running process, closes the repo before it finishes
 
         static CurrentThreadScheduler UiScheduler = Scheduler.CurrentThread;
+        static Dictionary<GitModule, NotificationManager> moduleToManager
+            = new Dictionary<GitModule, NotificationManager>();
 
-        #region Singleton
-        /// <summary>singleton implementation</summary>
+        /// <summary>Gets a new or the existing <see cref="NotificationManager"/> 
+        /// associated with the specified <see cref="GitModule"/>.</summary>
+        public static NotificationManager Get(GitModule git)
+        {
+            NotificationManager manager;
+            if (moduleToManager.TryGetValue(git, out manager))
+            {
+                return manager;
+            }
+            manager = new NotificationManager();
+            moduleToManager[git] = manager;
+            return manager;
+        }
+
+        /// <summary>private implementation</summary>
         private NotificationManager() { }
 
-        /// <summary>Gets the <see cref="NotificationManager"/> instance.</summary>
-        public static NotificationManager Instance { get { return _Instance.Value; } }
-        static readonly Lazy<NotificationManager> _Instance
-            = new Lazy<NotificationManager>(() => new NotificationManager());
-
-        #endregion Singleton
-        
         Subject<Notification> _notifications = new Subject<Notification>();
 
         public void Subscribe(Action<Notification> onNotification)

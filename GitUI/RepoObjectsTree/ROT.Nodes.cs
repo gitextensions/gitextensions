@@ -47,6 +47,7 @@ namespace GitUI.UserControls
                 }
                 UiCommands = uiCommands;
                 Git = uiCommands.Module;
+                Notifier = NotificationManager.Get(Git);
                 IsDraggable = false;
                 ContextActions = new ContextAction[0];
                 AllowDrop = false;
@@ -133,7 +134,7 @@ namespace GitUI.UserControls
             }
             #endregion Drag/Drop
 
-            protected INotifier Notifier { get { return NotificationManager.Instance; } }
+            protected INotifier Notifier { get; private set; }
 
             /// <summary>Wraps <see cref="INotifier.Notify"/>.</summary>
             protected void Notify(Notification notification)
