@@ -1438,26 +1438,26 @@ namespace GitUI.CommandsDialogs
         {
             var stagedFiles = Staged.AllItems;
 
-            List<string> modules = stagedFiles.Where(it => it.IsSubmodule).
-                Select(item => item.Name).ToList();
+            Dictionary<string, string> modules = stagedFiles.Where(it => it.IsSubmodule).
+                Select(item => item.Name).ToDictionary(item => Module.GetSubmoduleNameByPath(item));
             if (modules.Count == 0)
                 return;
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule" + (modules.Count == 1 ? " " : "s ") +
-                String.Join(", ", modules.ToArray()) + " updated.");
+                String.Join(", ", modules.Keys) + " updated.");
             sb.AppendLine();
             foreach (var item in modules)
             {
                 string diff = Module.RunGitCmd(
-                     string.Format("diff --cached -z -- {0}", item));
-                var lines = diff.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                     string.Format("diff --cached -z -- {0}", item.Value));
+                var lines = diff.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 const string subprojCommit = "Subproject commit ";
                 var from = lines.Single(s => s.StartsWith("-" + subprojCommit)).Substring(subprojCommit.Length + 1);
                 var to = lines.Single(s => s.StartsWith("+" + subprojCommit)).Substring(subprojCommit.Length + 1);
                 if (!String.IsNullOrEmpty(from) && !String.IsNullOrEmpty(to))
                 {
-                    sb.AppendLine("Submodule " + item + ":");
-                    GitModule module = new GitModule(Module.WorkingDir + item + Settings.PathSeparator.ToString());//
+                    sb.AppendLine("Submodule " + item.Key + ":");
+                    GitModule module = new GitModule(Module.WorkingDir + item.Value + Settings.PathSeparator);
                     string log = module.RunGitCmd(
                          string.Format("log --pretty=format:\"    %m %h - %s\" --no-merges {0}...{1}", from, to));
                     if (log.Length != 0)
