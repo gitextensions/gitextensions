@@ -5,8 +5,11 @@ namespace GitUI.CommandsDialogs.EditBuildServer
 {
     public partial class TeamCitySettingsUserControl : GitExtensionsControl
     {
-        public TeamCitySettingsUserControl()
+        private readonly string _defaultProjectName;
+
+        public TeamCitySettingsUserControl(string defaultProjectName)
         {
+            _defaultProjectName = defaultProjectName;
             InitializeComponent();
             Translate();
 
@@ -18,12 +21,14 @@ namespace GitUI.CommandsDialogs.EditBuildServer
             if (buildServerConfig != null)
             {
                 TeamCityServerUrl.Text = buildServerConfig.GetString("BuildServerUrl");
+                TeamCityProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
             }
         }
 
         public void SaveSettings(IConfig buildServerConfig)
         {
             buildServerConfig.Set("BuildServerUrl", TeamCityServerUrl.Text);
+            buildServerConfig.Set("ProjectName", TeamCityProjectName.Text);
         }
     }
 }

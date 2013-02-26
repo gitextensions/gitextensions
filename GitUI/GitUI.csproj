@@ -115,7 +115,6 @@
     <Compile Include="BuildServerIntegration\BuildServerWatcher.cs" />
     <Compile Include="BuildServerIntegration\IBuildServerAdapter.cs" />
     <Compile Include="BuildServerIntegration\TeamCityAdapter.cs" />
-    <Compile Include="BuildServerIntegration\TeamCityBuildLocator2.cs" />
     <Compile Include="CommandsDialogs\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
