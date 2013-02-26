@@ -115,7 +115,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public static void ShowOrActivate(IWin32Window owner)
         {
             if (instance == null)
-                (instance = new FormGitLog()).Show(owner);
+                (instance = new FormGitLog()).Show();
             else if (instance.WindowState == FormWindowState.Minimized)
                 instance.WindowState = FormWindowState.Normal;
             else
