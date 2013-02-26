@@ -1719,7 +1719,7 @@ revision:</Source>
           <Value>Configurer ce menu</Value>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
-          <Source>Create pull requests ...</Source>
+          <Source>Create pull requests...</Source>
           <Value>Créer une demande de pull...</Value>
         </TranslationItem>
         <TranslationItem Name="_errorCaption" Property="Text">
@@ -1727,7 +1727,7 @@ revision:</Source>
           <Value>Erreur</Value>
         </TranslationItem>
         <TranslationItem Name="_forkCloneRepositoryToolStripMenuItem" Property="Text">
-          <Source>Fork/Clone repository ...</Source>
+          <Source>Fork/Clone repository...</Source>
           <Value>Forker/Cloner le dépôt...</Value>
         </TranslationItem>
         <TranslationItem Name="_hintUnresolvedMergeConflicts" Property="Text">
@@ -1819,11 +1819,11 @@ revision:</Source>
           <Value>A propos</Value>
         </TranslationItem>
         <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
-          <Source>Apply patch ...</Source>
+          <Source>Apply patch...</Source>
           <Value>Appliquer patch...</Value>
         </TranslationItem>
         <TranslationItem Name="archiveToolStripMenuItem" Property="Text">
-          <Source>Archive revision ...</Source>
+          <Source>Archive revision...</Source>
           <Value>Archiver la révision...</Value>
         </TranslationItem>
         <TranslationItem Name="authorToolStripMenuItem" Property="Text">
@@ -1835,7 +1835,7 @@ revision:</Source>
           <Value>B &lt;--&gt; Répertoire de travail</Value>
         </TranslationItem>
         <TranslationItem Name="bisectToolStripMenuItem" Property="Text">
-          <Source>Bisect ...</Source>
+          <Source>Bisect...</Source>
           <Value>Bisection...</Value>
         </TranslationItem>
         <TranslationItem Name="blameToolStripMenuItem" Property="Text">
@@ -1851,7 +1851,7 @@ revision:</Source>
           <Value>Branche</Value>
         </TranslationItem>
         <TranslationItem Name="branchToolStripMenuItem" Property="Text">
-          <Source>Create branch ...</Source>
+          <Source>Create branch...</Source>
           <Value>Créer une branche...</Value>
         </TranslationItem>
         <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
@@ -1859,27 +1859,27 @@ revision:</Source>
           <Value>Journal des changements</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
-          <Source>Checkout branch ...</Source>
+          <Source>Checkout branch...</Source>
           <Value>Changer de branche...</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutToolStripMenuItem" Property="Text">
-          <Source>Checkout revision ...</Source>
+          <Source>Checkout revision...</Source>
           <Value>Charger la révision...</Value>
         </TranslationItem>
         <TranslationItem Name="cherryPickToolStripMenuItem" Property="Text">
-          <Source>Cherry pick ...</Source>
+          <Source>Cherry pick...</Source>
           <Value>Cherry pick...</Value>
         </TranslationItem>
         <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
-          <Source>Cleanup repository ...</Source>
+          <Source>Cleanup repository...</Source>
           <Value>Nettoyer le dépôt...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
-          <Source>Clone SVN repository ...</Source>
+          <Source>Clone SVN repository...</Source>
           <Value>Cloner les dépôt SVN...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
-          <Source>Clone repository ...</Source>
+          <Source>Clone repository...</Source>
           <Value>Cloner le dépôt...</Value>
         </TranslationItem>
         <TranslationItem Name="closeToolStripMenuItem" Property="Text">
@@ -1895,7 +1895,7 @@ revision:</Source>
           <Value>Commandes</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem" Property="Text">
-          <Source>Commit ...</Source>
+          <Source>Commit...</Source>
           <Value>Commit...</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem1" Property="Text">
@@ -1923,7 +1923,7 @@ revision:</Source>
           <Value>Copier le nom de fichier</Value>
         </TranslationItem>
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
-          <Source>Delete branch ...</Source>
+          <Source>Delete branch...</Source>
           <Value>Supprimer branche...</Value>
         </TranslationItem>
         <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
@@ -1931,7 +1931,7 @@ revision:</Source>
           <Value>Supprimer index.lock</Value>
         </TranslationItem>
         <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
-          <Source>Delete tag ...</Source>
+          <Source>Delete tag...</Source>
           <Value>Supprimer une étiquette...</Value>
         </TranslationItem>
         <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
@@ -2019,7 +2019,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
           <Value>Trouver</Value>
         </TranslationItem>
         <TranslationItem Name="formatPatchToolStripMenuItem" Property="Text">
-          <Source>Format patch ...</Source>
+          <Source>Format patch...</Source>
           <Value>Formater le patch...</Value>
         </TranslationItem>
         <TranslationItem Name="generateOrImportKeyToolStripMenuItem" Property="Text">
@@ -2047,7 +2047,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
           <Value>Journal des commandes Git</Value>
         </TranslationItem>
         <TranslationItem Name="goToToolStripMenuItem" Property="Text">
-          <Source>Go to commit ...</Source>
+          <Source>Go to commit...</Source>
           <Value>Allez au commit...</Value>
         </TranslationItem>
         <TranslationItem Name="hashToolStripMenuItem" Property="Text">
@@ -2059,7 +2059,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
           <Value>Aide</Value>
         </TranslationItem>
         <TranslationItem Name="initNewRepositoryToolStripMenuItem" Property="Text">
-          <Source>Create new repository ...</Source>
+          <Source>Create new repository...</Source>
           <Value>Créer nouveau dépôt...</Value>
         </TranslationItem>
         <TranslationItem Name="kGitToolStripMenuItem" Property="Text">
@@ -2079,7 +2079,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
           <Value>Gérer les sous modules</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
-          <Source>Merge branches ...</Source>
+          <Source>Merge branches...</Source>
           <Value>Fusionner branches...</Value>
         </TranslationItem>
         <TranslationItem Name="mergeToolStripMenuItem" Property="Text">
@@ -2099,7 +2099,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
           <Value>Ouvrir cette révision avec... (fichier temporaire)</Value>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
-          <Source>Open ...</Source>
+          <Source>Open...</Source>
           <Value>Ouvrir...</Value>
         </TranslationItem>
         <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
@@ -2120,7 +2120,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
 </Value>
         </TranslationItem>
         <TranslationItem Name="patchToolStripMenuItem" Property="Text">
-          <Source>View patch file ...</Source>
+          <Source>View patch file...</Source>
           <Value>Voir fichier patch...</Value>
         </TranslationItem>
         <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
@@ -2128,7 +2128,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
           <Value>Extensions</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem" Property="Text">
-          <Source>Pull ...</Source>
+          <Source>Pull...</Source>
           <Value>Récupérer (Pull)...</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem1" Property="Text">
@@ -2136,11 +2136,11 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
           <Value>Récupérer (Pull)</Value>
         </TranslationItem>
         <TranslationItem Name="pushToolStripMenuItem" Property="Text">
-          <Source>Push ...</Source>
+          <Source>Push...</Source>
           <Value>Pousser (Push)...</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem" Property="Text">
-          <Source>Rebase ...</Source>
+          <Source>Rebase...</Source>
           <Value>Rebaser...</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem1" Property="Text">
@@ -2184,11 +2184,11 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
           <Value>Remettre à la révision sélectionnée</Value>
         </TranslationItem>
         <TranslationItem Name="resetToolStripMenuItem" Property="Text">
-          <Source>Reset changes ...</Source>
+          <Source>Reset changes...</Source>
           <Value>Réinitialiser changements...</Value>
         </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
-          <Source>Solve mergeconflicts ...</Source>
+          <Source>Solve mergeconflicts...</Source>
           <Value>Résoudre conflits de fusion...</Value>
         </TranslationItem>
         <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
@@ -2228,7 +2228,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
           <Value>Appliquer le stash</Value>
         </TranslationItem>
         <TranslationItem Name="stashToolStripMenuItem" Property="Text">
-          <Source>Stash changes ...</Source>
+          <Source>Stash changes...</Source>
           <Value>Changements du stash...</Value>
         </TranslationItem>
         <TranslationItem Name="submodulesToolStripMenuItem" Property="Text">
@@ -2240,7 +2240,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
           <Value>Synchroniser tous les sous modules</Value>
         </TranslationItem>
         <TranslationItem Name="tagToolStripMenuItem" Property="Text">
-          <Source>Create tag ...</Source>
+          <Source>Create tag...</Source>
           <Value>Créer une étiquette...</Value>
         </TranslationItem>
         <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText">
@@ -2292,7 +2292,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
           <Value>Manuel Utilisateur</Value>
         </TranslationItem>
         <TranslationItem Name="verifyGitDatabaseToolStripMenuItem" Property="Text">
-          <Source>Recover lost objects ...</Source>
+          <Source>Recover lost objects...</Source>
           <Value>Retrouver objets perdus...</Value>
         </TranslationItem>
         <TranslationItem Name="viewDiffToolStripMenuItem" Property="Text">
