@@ -349,7 +349,11 @@ namespace GitUI
 
             form.FormClosed += formClosed;
             form.ShowInTaskbar = true;
-            form.Show(owner);
+
+            if (Application.OpenForms.Count > 0)
+                form.Show();
+            else
+                form.ShowDialog();
         }
 
         /// <summary>
@@ -1364,8 +1368,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreBrowse))
                 return false;
 
-            using (var form = new FormBrowse(this, filter))
-                form.ShowDialog(owner);
+            var form = new FormBrowse(this, filter);
+            Application.Run(form);
 
             InvokeEvent(owner, PostBrowse);
 
