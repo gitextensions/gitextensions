@@ -1750,11 +1750,11 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
           <Source>Apply patch ...</Source>
-          <Value>应用补丁 ...</Value>
+          <Value>应用补丁...</Value>
         </TranslationItem>
         <TranslationItem Name="archiveToolStripMenuItem" Property="Text">
           <Source>Archive revision ...</Source>
-          <Value>存档 ...</Value>
+          <Value>存档...</Value>
         </TranslationItem>
         <TranslationItem Name="authorToolStripMenuItem" Property="Text">
           <Source>Author</Source>
@@ -1782,7 +1782,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="branchToolStripMenuItem" Property="Text">
           <Source>Create branch ...</Source>
-          <Value>创建分支 ...</Value>
+          <Value>创建分支...</Value>
         </TranslationItem>
         <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
           <Source>Changelog</Source>
@@ -1790,19 +1790,19 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
           <Source>Checkout branch ...</Source>
-          <Value>登出分支 ...</Value>
+          <Value>登出分支...</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutToolStripMenuItem" Property="Text">
           <Source>Checkout revision ...</Source>
-          <Value>登出版本 ...</Value>
+          <Value>登出版本...</Value>
         </TranslationItem>
         <TranslationItem Name="cherryPickToolStripMenuItem" Property="Text">
           <Source>Cherry pick ...</Source>
-          <Value>选最好的 ...</Value>
+          <Value>选最好的...</Value>
         </TranslationItem>
         <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
           <Source>Cleanup repository ...</Source>
-          <Value>清理 ...</Value>
+          <Value>清理...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Clone SVN repository ...</Source>
@@ -1810,7 +1810,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
           <Source>Clone repository ...</Source>
-          <Value>克隆档案库 ...</Value>
+          <Value>克隆档案库...</Value>
         </TranslationItem>
         <TranslationItem Name="closeToolStripMenuItem" Property="Text">
           <Source>Close</Source>
@@ -1826,7 +1826,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem" Property="Text">
           <Source>Commit ...</Source>
-          <Value>提交 ...</Value>
+          <Value>提交...</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem1" Property="Text">
           <Source>Commit</Source>
@@ -1854,7 +1854,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
           <Source>Delete branch ...</Source>
-          <Value>删除分支 ...</Value>
+          <Value>删除分支...</Value>
         </TranslationItem>
         <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
           <Source>Delete index.lock</Source>
@@ -1862,7 +1862,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
           <Source>Delete tag ...</Source>
-          <Value>删除标签 ...</Value>
+          <Value>删除标签...</Value>
         </TranslationItem>
         <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Diff contains (SLOW)</Source>
@@ -1948,7 +1948,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="formatPatchToolStripMenuItem" Property="Text">
           <Source>Format patch ...</Source>
-          <Value>格式补丁 ...</Value>
+          <Value>格式补丁...</Value>
         </TranslationItem>
         <TranslationItem Name="generateOrImportKeyToolStripMenuItem" Property="Text">
           <Source>Generate or import key</Source>
@@ -1988,7 +1988,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="initNewRepositoryToolStripMenuItem" Property="Text">
           <Source>Create new repository ...</Source>
-          <Value>初始化新的档案库 ...</Value>
+          <Value>初始化新的档案库...</Value>
         </TranslationItem>
         <TranslationItem Name="kGitToolStripMenuItem" Property="Text">
           <Source>GitK</Source>
@@ -2008,7 +2008,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Source>Merge branches ...</Source>
-          <Value>合并分支 ...</Value>
+          <Value>合并分支...</Value>
         </TranslationItem>
         <TranslationItem Name="mergeToolStripMenuItem" Property="Text">
           <Source>Merge</Source>
@@ -2028,7 +2028,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
           <Source>Open ...</Source>
-          <Value>打开 ...</Value>
+          <Value>打开...</Value>
         </TranslationItem>
         <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
           <Source>Open with difftool</Source>
@@ -2048,7 +2048,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="patchToolStripMenuItem" Property="Text">
           <Source>View patch file ...</Source>
-          <Value>查看补丁文件 ...</Value>
+          <Value>查看补丁文件...</Value>
         </TranslationItem>
         <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
           <Source>Plugins</Source>
@@ -2056,7 +2056,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem" Property="Text">
           <Source>Pull ...</Source>
-          <Value>拉取 ...</Value>
+          <Value>拉取...</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem1" Property="Text">
           <Source>Pull</Source>
@@ -2064,11 +2064,11 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="pushToolStripMenuItem" Property="Text">
           <Source>Push ...</Source>
-          <Value>推送 ...</Value>
+          <Value>推送...</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem" Property="Text">
           <Source>Rebase ...</Source>
-          <Value>衍合(Rebase) ...</Value>
+          <Value>衍合(Rebase)...</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem1" Property="Text">
           <Source>Rebase</Source>
@@ -2112,11 +2112,11 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="resetToolStripMenuItem" Property="Text">
           <Source>Reset changes ...</Source>
-          <Value>复位变化 ...</Value>
+          <Value>复位变化...</Value>
         </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
           <Source>Solve mergeconflicts ...</Source>
-          <Value>解决合并冲突 ...</Value>
+          <Value>解决合并冲突...</Value>
         </TranslationItem>
         <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
           <Source>Save as...</Source>
@@ -2156,7 +2156,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="stashToolStripMenuItem" Property="Text">
           <Source>Stash changes ...</Source>
-          <Value>将改变放到缓冲区 ...</Value>
+          <Value>将改变放到缓冲区...</Value>
         </TranslationItem>
         <TranslationItem Name="submodulesToolStripMenuItem" Property="Text">
           <Source>Submodules</Source>
@@ -2168,7 +2168,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="tagToolStripMenuItem" Property="Text">
           <Source>Create tag ...</Source>
-          <Value>创建标签 ...</Value>
+          <Value>创建标签...</Value>
         </TranslationItem>
         <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText" type="unfinished">
           <Source>Toggle split view layout</Source>
@@ -2220,7 +2220,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="verifyGitDatabaseToolStripMenuItem" Property="Text">
           <Source>Recover lost objects ...</Source>
-          <Value>恢复丢失的对象 ...</Value>
+          <Value>恢复丢失的对象...</Value>
         </TranslationItem>
         <TranslationItem Name="viewDiffToolStripMenuItem" Property="Text">
           <Source>View changes</Source>

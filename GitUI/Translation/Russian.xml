@@ -1662,7 +1662,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
           <Source>Create pull requests ...</Source>
-          <Value>Создать pull request ...</Value>
+          <Value>Создать pull request...</Value>
         </TranslationItem>
         <TranslationItem Name="_errorCaption" Property="Text">
           <Source>Error</Source>
@@ -1670,7 +1670,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="_forkCloneRepositoryToolStripMenuItem" Property="Text">
           <Source>Fork/Clone repository ...</Source>
-          <Value>Fork/Clone репозиторий ...</Value>
+          <Value>Fork/Clone репозиторий...</Value>
         </TranslationItem>
         <TranslationItem Name="_hintUnresolvedMergeConflicts" Property="Text">
           <Source>There are unresolved merge conflicts!</Source>
@@ -1762,11 +1762,11 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
           <Source>Apply patch ...</Source>
-          <Value>Применить патч ...</Value>
+          <Value>Применить патч...</Value>
         </TranslationItem>
         <TranslationItem Name="archiveToolStripMenuItem" Property="Text">
           <Source>Archive revision ...</Source>
-          <Value>Архив ...</Value>
+          <Value>Архив...</Value>
         </TranslationItem>
         <TranslationItem Name="authorToolStripMenuItem" Property="Text">
           <Source>Author</Source>
@@ -1794,7 +1794,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="branchToolStripMenuItem" Property="Text">
           <Source>Create branch ...</Source>
-          <Value>Создать ветвь ...</Value>
+          <Value>Создать ветвь...</Value>
         </TranslationItem>
         <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
           <Source>Changelog</Source>
@@ -1802,11 +1802,11 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
           <Source>Checkout branch ...</Source>
-          <Value>Получить ветвь ...</Value>
+          <Value>Получить ветвь...</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutToolStripMenuItem" Property="Text">
           <Source>Checkout revision ...</Source>
-          <Value>Получить ревизию ...</Value>
+          <Value>Получить ревизию...</Value>
         </TranslationItem>
         <TranslationItem Name="cherryPickToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Cherry pick ...</Source>
@@ -1814,15 +1814,15 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
           <Source>Cleanup repository ...</Source>
-          <Value>Очистить ...</Value>
+          <Value>Очистить...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
           <Source>Clone SVN repository ...</Source>
-          <Value>Клонировать SVN репозиторий ...</Value>
+          <Value>Клонировать SVN репозиторий...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
           <Source>Clone repository ...</Source>
-          <Value>Клонировать репозиторий ...</Value>
+          <Value>Клонировать репозиторий...</Value>
         </TranslationItem>
         <TranslationItem Name="closeToolStripMenuItem" Property="Text">
           <Source>Close</Source>
@@ -1838,7 +1838,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem" Property="Text">
           <Source>Commit ...</Source>
-          <Value>Коммитить ...</Value>
+          <Value>Коммитить...</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem1" Property="Text">
           <Source>Commit</Source>
@@ -1866,7 +1866,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
           <Source>Delete branch ...</Source>
-          <Value>Удалить ветвь ...</Value>
+          <Value>Удалить ветвь...</Value>
         </TranslationItem>
         <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
           <Source>Delete index.lock</Source>
@@ -1874,7 +1874,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
           <Source>Delete tag ...</Source>
-          <Value>Удалить метку ...</Value>
+          <Value>Удалить метку...</Value>
         </TranslationItem>
         <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
           <Source>Diff contains (SLOW)</Source>
@@ -1962,7 +1962,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="formatPatchToolStripMenuItem" Property="Text">
           <Source>Format patch ...</Source>
-          <Value>Сформировать патч ...</Value>
+          <Value>Сформировать патч...</Value>
         </TranslationItem>
         <TranslationItem Name="generateOrImportKeyToolStripMenuItem" Property="Text">
           <Source>Generate or import key</Source>
@@ -1990,7 +1990,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="goToToolStripMenuItem" Property="Text">
           <Source>Go to commit ...</Source>
-          <Value>Перейти к коммиту ...</Value>
+          <Value>Перейти к коммиту...</Value>
         </TranslationItem>
         <TranslationItem Name="hashToolStripMenuItem" Property="Text">
           <Source>Hash</Source>
@@ -2002,7 +2002,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="initNewRepositoryToolStripMenuItem" Property="Text">
           <Source>Create new repository ...</Source>
-          <Value>Создать новый репозиторий ...</Value>
+          <Value>Создать новый репозиторий...</Value>
         </TranslationItem>
         <TranslationItem Name="kGitToolStripMenuItem" Property="Text">
           <Source>GitK</Source>
@@ -2022,7 +2022,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Source>Merge branches ...</Source>
-          <Value>Объединить ветви ...</Value>
+          <Value>Объединить ветви...</Value>
         </TranslationItem>
         <TranslationItem Name="mergeToolStripMenuItem" Property="Text">
           <Source>Merge</Source>
@@ -2042,7 +2042,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
           <Source>Open ...</Source>
-          <Value>Открыть ...</Value>
+          <Value>Открыть...</Value>
         </TranslationItem>
         <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
           <Source>Open with difftool</Source>
@@ -2062,7 +2062,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="patchToolStripMenuItem" Property="Text">
           <Source>View patch file ...</Source>
-          <Value>Просмотреть файл патч ...</Value>
+          <Value>Просмотреть файл патч...</Value>
         </TranslationItem>
         <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
           <Source>Plugins</Source>
@@ -2078,11 +2078,11 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="pushToolStripMenuItem" Property="Text">
           <Source>Push ...</Source>
-          <Value>Отправить ...</Value>
+          <Value>Отправить...</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem" Property="Text">
           <Source>Rebase ...</Source>
-          <Value>Перебазировать ветвь ...</Value>
+          <Value>Перебазировать ветвь...</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem1" Property="Text">
           <Source>Rebase</Source>
@@ -2126,11 +2126,11 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="resetToolStripMenuItem" Property="Text">
           <Source>Reset changes ...</Source>
-          <Value>Отменить изменения ...</Value>
+          <Value>Отменить изменения...</Value>
         </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
           <Source>Solve mergeconflicts ...</Source>
-          <Value>Решить конфликты ...</Value>
+          <Value>Решить конфликты...</Value>
         </TranslationItem>
         <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
           <Source>Save as...</Source>
@@ -2170,7 +2170,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="stashToolStripMenuItem" Property="Text">
           <Source>Stash changes ...</Source>
-          <Value>Сохранить изменения ...</Value>
+          <Value>Сохранить изменения...</Value>
         </TranslationItem>
         <TranslationItem Name="submodulesToolStripMenuItem" Property="Text">
           <Source>Submodules</Source>
@@ -2182,7 +2182,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="tagToolStripMenuItem" Property="Text">
           <Source>Create tag ...</Source>
-          <Value>Создать метку ...</Value>
+          <Value>Создать метку...</Value>
         </TranslationItem>
         <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText" type="unfinished">
           <Source>Toggle split view layout</Source>
@@ -2234,7 +2234,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="verifyGitDatabaseToolStripMenuItem" Property="Text">
           <Source>Recover lost objects ...</Source>
-          <Value>Восстановить потерянные объекты ...</Value>
+          <Value>Восстановить потерянные объекты...</Value>
         </TranslationItem>
         <TranslationItem Name="viewDiffToolStripMenuItem" Property="Text">
           <Source>View changes</Source>
