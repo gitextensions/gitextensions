@@ -180,7 +180,7 @@ namespace GitCommands
             if (sha1 == null)
                 throw new ArgumentNullException("sha1");
 
-            var commit = module.Repository.Lookup<LibGit2Sharp.Commit>(sha1);
+            var commit = module.Repository.Lookup<Commit>(sha1);
             if (commit == null)
             {
                 error = "Cannot find commit " + sha1;
@@ -194,7 +194,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="commit">Commit object from libgit2sharp.</param>
         /// <returns>CommitData object populated with parsed info from commit object.</returns>
-        public static CommitData CreateFromCommit(LibGit2Sharp.Commit commit)
+        public static CommitData CreateFromCommit(Commit commit)
         {
             if (commit == null)
                 throw new ArgumentNullException("commit");
@@ -205,10 +205,21 @@ namespace GitCommands
             var committer = string.Format("{0} <{1}>", commit.Committer.Name, commit.Committer.Email); ;
             var commitDate = commit.Committer.When;
 
-            var body = commit.Message;
+            StringBuilder body = new StringBuilder(commit.Message);
+            if (commit.Notes.Any())
+            {
+                body.AppendLine();
+                body.AppendLine("Notes:");
+                foreach (var note in commit.Notes)
+                {
+                    foreach (var line in note.Message.Split('\n'))
+                        body.AppendLine("\t" + line);
+                }
+            }
 
             var parents = commit.Parents.Select(p => p.Sha).ToList().AsReadOnly();
-            var commitInformation = new CommitData(commit.Sha, commit.Tree.Sha, parents, author, authorDate, committer, commitDate, body);
+            var commitInformation = new CommitData(commit.Sha, commit.Tree.Sha, parents, author, authorDate,
+                committer, commitDate, body.ToString());
 
             return commitInformation;
         }

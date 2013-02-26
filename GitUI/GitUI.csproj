@@ -1319,6 +1319,10 @@
       <Project>{4041B976-50D0-4C6E-ABAF-7E67458A1264}</Project>
       <Name>Gravatar</Name>
     </ProjectReference>
+    <ProjectReference Include="..\libgit2sharp\LibGit2Sharp\LibGit2Sharp.csproj">
+      <Project>{ee6ed99f-cb12-4683-b055-d28fc7357a34}</Project>
+      <Name>LibGit2Sharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NetSpell.SpellChecker\SpellChecker.csproj">
       <Project>{A426EE0B-E52E-4D74-AF24-06797142D7B2}</Project>
       <Name>SpellChecker</Name>

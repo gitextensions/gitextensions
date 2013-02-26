@@ -96,6 +96,10 @@
       <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
       <Name>GitUI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\libgit2sharp\LibGit2Sharp\LibGit2Sharp.csproj">
+      <Project>{ee6ed99f-cb12-4683-b055-d28fc7357a34}</Project>
+      <Name>LibGit2Sharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plugins\AutoCheckForUpdates\AutoCheckForUpdates.csproj">
       <Project>{330F1115-B3DE-47F1-8A7E-D181E59E96E0}</Project>
       <Name>AutoCheckForUpdates</Name>
@@ -192,6 +196,9 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(ProjectDir)..\libgit2sharp\Lib\NativeBinaries\*" "$(TargetDir)NativeBinaries\" /E /D</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

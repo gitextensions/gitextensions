@@ -115,10 +115,6 @@
       <Project>{a426ee0b-e52e-4d74-af24-06797142d7b2}</Project>
       <Name>SpellChecker</Name>
     </ProjectReference>
-    <ProjectReference Include="..\libgit2sharp\LibGit2Sharp\LibGit2Sharp.csproj">
-      <Project>{ee6ed99f-cb12-4683-b055-d28fc7357a34}</Project>
-      <Name>LibGit2Sharp</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-f35e-4b62-a6ec-11ff21a5fa6f}</Project>
       <Name>GitUIPluginInterfaces</Name>
