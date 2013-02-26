@@ -1692,7 +1692,7 @@ namespace GitUI
 
             //For now there is no action that could be done on currentBranch
             string currentBranch = Module.GetSelectedBranch();
-            var allBranches = revision.Heads.Where(h => !h.IsTag && (h.IsHead || h.IsRemote));
+            var allBranches = revision.Heads.Where(h => !h.IsTag && (h.IsHead || h.IsRemote)).ToArray();
             var localBranches = allBranches.Where(b => !b.IsRemote);
 
             var branchesWithNoIdenticalRemotes = allBranches.Where(
