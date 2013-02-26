@@ -423,14 +423,14 @@ namespace GitUI.CommandsDialogs
             var curLocalBranch = branch == localBranch.Text ? null : localBranch.Text;
             if (Fetch.Checked)
             {
-                return new FormRemoteProcess(Module, Module.FetchCmd(source, Branches.Text, curLocalBranch, NoTags.Checked));
+                return new FormRemoteProcess(Module, Module.FetchCmd(source, Branches.Text, curLocalBranch, AllTags.Checked ? true : NoTags.Checked ? false : (bool?)null));
             }
 
             curLocalBranch = CalculateLocalBranch();
             if (Merge.Checked)
-                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, false, NoTags.Checked));
+                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, false, AllTags.Checked ? true : NoTags.Checked ? false : (bool?)null));
             if (Rebase.Checked)
-                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, true, NoTags.Checked));
+                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, true, AllTags.Checked ? true : NoTags.Checked ? false : (bool?)null));
             return null;
         }
 
@@ -608,12 +608,16 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullMerge;
             helpImageDisplayUserControl1.Image2 = Resources.HelpPullMergeFastForward;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
+            AllTags.Enabled = false;
+            ReachableTags.Checked = true;
         }
 
         private void RebaseCheckedChanged(object sender, EventArgs e)
         {
             localBranch.Enabled = false;
             localBranch.Text = branch;
+            AllTags.Enabled = false;
+            ReachableTags.Checked = true;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullRebase;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
         }
@@ -621,6 +625,7 @@ namespace GitUI.CommandsDialogs
         private void FetchCheckedChanged(object sender, EventArgs e)
         {
             localBranch.Enabled = true;
+            AllTags.Enabled = true;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullFetch;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
         }
