@@ -1668,7 +1668,7 @@ auswählen</Value>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
           <Source>Create pull requests ...</Source>
-          <Value>Pull Request erzeugen ...</Value>
+          <Value>Pull Request erzeugen...</Value>
         </TranslationItem>
         <TranslationItem Name="_errorCaption" Property="Text">
           <Source>Error</Source>
@@ -1676,7 +1676,7 @@ auswählen</Value>
         </TranslationItem>
         <TranslationItem Name="_forkCloneRepositoryToolStripMenuItem" Property="Text">
           <Source>Fork/Clone repository ...</Source>
-          <Value>Repository klonen / forken ...</Value>
+          <Value>Repository klonen / forken...</Value>
         </TranslationItem>
         <TranslationItem Name="_hintUnresolvedMergeConflicts" Property="Text">
           <Source>There are unresolved merge conflicts!</Source>
@@ -1768,11 +1768,11 @@ auswählen</Value>
         </TranslationItem>
         <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
           <Source>Apply patch ...</Source>
-          <Value>Patch einspielen ...</Value>
+          <Value>Patch einspielen...</Value>
         </TranslationItem>
         <TranslationItem Name="archiveToolStripMenuItem" Property="Text">
           <Source>Archive revision ...</Source>
-          <Value>Archivieren ...</Value>
+          <Value>Archivieren...</Value>
         </TranslationItem>
         <TranslationItem Name="authorToolStripMenuItem" Property="Text">
           <Source>Author</Source>
@@ -1784,7 +1784,7 @@ auswählen</Value>
         </TranslationItem>
         <TranslationItem Name="bisectToolStripMenuItem" Property="Text">
           <Source>Bisect ...</Source>
-          <Value>Bisect ...</Value>
+          <Value>Bisect...</Value>
         </TranslationItem>
         <TranslationItem Name="blameToolStripMenuItem" Property="Text">
           <Source>Blame</Source>
@@ -1800,7 +1800,7 @@ auswählen</Value>
         </TranslationItem>
         <TranslationItem Name="branchToolStripMenuItem" Property="Text">
           <Source>Create branch ...</Source>
-          <Value>Branch erzeugen ...</Value>
+          <Value>Branch erzeugen...</Value>
         </TranslationItem>
         <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
           <Source>Changelog</Source>
@@ -1808,27 +1808,27 @@ auswählen</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
           <Source>Checkout branch ...</Source>
-          <Value>Branch auschecken ...</Value>
+          <Value>Branch auschecken...</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutToolStripMenuItem" Property="Text">
           <Source>Checkout revision ...</Source>
-          <Value>Revision auschecken ...</Value>
+          <Value>Revision auschecken...</Value>
         </TranslationItem>
         <TranslationItem Name="cherryPickToolStripMenuItem" Property="Text">
           <Source>Cherry pick ...</Source>
-          <Value>Cherry Pick ...</Value>
+          <Value>Cherry Pick...</Value>
         </TranslationItem>
         <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
           <Source>Cleanup repository ...</Source>
-          <Value>Aufräumen ...</Value>
+          <Value>Aufräumen...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
           <Source>Clone SVN repository ...</Source>
-          <Value>SVN Repository klonen ...</Value>
+          <Value>SVN Repository klonen...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
           <Source>Clone repository ...</Source>
-          <Value>Repository klonen ...</Value>
+          <Value>Repository klonen...</Value>
         </TranslationItem>
         <TranslationItem Name="closeToolStripMenuItem" Property="Text">
           <Source>Close</Source>
@@ -1844,7 +1844,7 @@ auswählen</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem" Property="Text">
           <Source>Commit ...</Source>
-          <Value>Commiten ...</Value>
+          <Value>Commiten...</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem1" Property="Text">
           <Source>Commit</Source>
@@ -1872,7 +1872,7 @@ auswählen</Value>
         </TranslationItem>
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
           <Source>Delete branch ...</Source>
-          <Value>Branch löschen ...</Value>
+          <Value>Branch löschen...</Value>
         </TranslationItem>
         <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
           <Source>Delete index.lock</Source>
@@ -1880,7 +1880,7 @@ auswählen</Value>
         </TranslationItem>
         <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
           <Source>Delete tag ...</Source>
-          <Value>Tag löschen ...</Value>
+          <Value>Tag löschen...</Value>
         </TranslationItem>
         <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
           <Source>Diff contains (SLOW)</Source>
@@ -1968,7 +1968,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         </TranslationItem>
         <TranslationItem Name="formatPatchToolStripMenuItem" Property="Text">
           <Source>Format patch ...</Source>
-          <Value>Patch erzeugen ...</Value>
+          <Value>Patch erzeugen...</Value>
         </TranslationItem>
         <TranslationItem Name="generateOrImportKeyToolStripMenuItem" Property="Text">
           <Source>Generate or import key</Source>
@@ -1996,7 +1996,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         </TranslationItem>
         <TranslationItem Name="goToToolStripMenuItem" Property="Text">
           <Source>Go to commit ...</Source>
-          <Value>Commit suchen ...</Value>
+          <Value>Commit suchen...</Value>
         </TranslationItem>
         <TranslationItem Name="hashToolStripMenuItem" Property="Text">
           <Source>Hash</Source>
@@ -2008,7 +2008,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         </TranslationItem>
         <TranslationItem Name="initNewRepositoryToolStripMenuItem" Property="Text">
           <Source>Create new repository ...</Source>
-          <Value>Neues Repository erzeugen ...</Value>
+          <Value>Neues Repository erzeugen...</Value>
         </TranslationItem>
         <TranslationItem Name="kGitToolStripMenuItem" Property="Text">
           <Source>GitK</Source>
@@ -2028,7 +2028,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Source>Merge branches ...</Source>
-          <Value>Branches mergen ...</Value>
+          <Value>Branches mergen...</Value>
         </TranslationItem>
         <TranslationItem Name="mergeToolStripMenuItem" Property="Text">
           <Source>Merge</Source>
@@ -2048,7 +2048,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
           <Source>Open ...</Source>
-          <Value>Öffnen ...</Value>
+          <Value>Öffnen...</Value>
         </TranslationItem>
         <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
           <Source>Open with difftool</Source>
@@ -2068,7 +2068,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         </TranslationItem>
         <TranslationItem Name="patchToolStripMenuItem" Property="Text">
           <Source>View patch file ...</Source>
-          <Value>Patch-Datei anzeigen ...</Value>
+          <Value>Patch-Datei anzeigen...</Value>
         </TranslationItem>
         <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
           <Source>Plugins</Source>
@@ -2076,7 +2076,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem" Property="Text">
           <Source>Pull ...</Source>
-          <Value>Pull ...</Value>
+          <Value>Pull...</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem1" Property="Text">
           <Source>Pull</Source>
@@ -2084,11 +2084,11 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         </TranslationItem>
         <TranslationItem Name="pushToolStripMenuItem" Property="Text">
           <Source>Push ...</Source>
-          <Value>Push ...</Value>
+          <Value>Push...</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem" Property="Text">
           <Source>Rebase ...</Source>
-          <Value>Rebase ...</Value>
+          <Value>Rebase...</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem1" Property="Text">
           <Source>Rebase</Source>
@@ -2132,11 +2132,11 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         </TranslationItem>
         <TranslationItem Name="resetToolStripMenuItem" Property="Text">
           <Source>Reset changes ...</Source>
-          <Value>Änderungen zurücksetzen ...</Value>
+          <Value>Änderungen zurücksetzen...</Value>
         </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
           <Source>Solve mergeconflicts ...</Source>
-          <Value>Merge-Konflikte auflösen ...</Value>
+          <Value>Merge-Konflikte auflösen...</Value>
         </TranslationItem>
         <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
           <Source>Save as...</Source>
@@ -2176,7 +2176,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         </TranslationItem>
         <TranslationItem Name="stashToolStripMenuItem" Property="Text">
           <Source>Stash changes ...</Source>
-          <Value>Änderungen stashen ...</Value>
+          <Value>Änderungen stashen...</Value>
         </TranslationItem>
         <TranslationItem Name="submodulesToolStripMenuItem" Property="Text">
           <Source>Submodules</Source>
@@ -2188,7 +2188,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         </TranslationItem>
         <TranslationItem Name="tagToolStripMenuItem" Property="Text">
           <Source>Create tag ...</Source>
-          <Value>Tag erzeugen ...</Value>
+          <Value>Tag erzeugen...</Value>
         </TranslationItem>
         <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText">
           <Source>Toggle split view layout</Source>
@@ -2240,7 +2240,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         </TranslationItem>
         <TranslationItem Name="verifyGitDatabaseToolStripMenuItem" Property="Text">
           <Source>Recover lost objects ...</Source>
-          <Value>Verlorene Objekte wiederherstellen ...</Value>
+          <Value>Verlorene Objekte wiederherstellen...</Value>
         </TranslationItem>
         <TranslationItem Name="viewDiffToolStripMenuItem" Property="Text">
           <Source>View changes</Source>
