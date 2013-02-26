@@ -129,7 +129,7 @@ namespace GitUI.BuildServerIntegration
                         switch (buildServerType)
                         {
                             case BuildServerType.TeamCity:
-                                return new TeamCityAdapter(projectName, buildServerConfigSource.Configs[buildServerType.ToString()]);
+                                return new TeamCityAdapter(buildServerConfigSource.Configs[buildServerType.ToString()]);
                         }
                     }
                     catch (InvalidOperationException)
