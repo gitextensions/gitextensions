@@ -955,7 +955,7 @@ namespace GitUI.CommandsDialogs
 
         private void StageClick(object sender, EventArgs e)
         {
-            Stage(Unstaged.SelectedItems);
+            Stage(Unstaged.SelectedItems.ToList());
         }
 
         private void StageAll()
@@ -963,7 +963,7 @@ namespace GitUI.CommandsDialogs
             Stage(Unstaged.GitItemStatuses);
         }
 
-        private void Stage(IEnumerable<GitItemStatus> gitItemStatusses)
+        private void Stage(IList<GitItemStatus> gitItemStatusses)
         {
             EnableStageButtons(false);
             try
@@ -1008,7 +1008,7 @@ namespace GitUI.CommandsDialogs
                 else
                 {
                     InitializedStaged();
-                    var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatuses;
+                    var unStagedFiles = Unstaged.GitItemStatuses.ToList();
                     Unstaged.GitItemStatuses = null;
                     var names = new HashSet<string>();
                     foreach (var item in files)
@@ -1098,8 +1098,8 @@ namespace GitUI.CommandsDialogs
                     Module.UnstageFiles(files);
 
                     InitializedStaged();
-                    var stagedFiles = (List<GitItemStatus>)Staged.GitItemStatuses;
-                    var unStagedFiles = (List<GitItemStatus>)Unstaged.GitItemStatuses;
+                    var stagedFiles = Staged.GitItemStatuses.ToList();
+                    var unStagedFiles = Unstaged.GitItemStatuses.ToList();
                     Unstaged.GitItemStatuses = null;
                     foreach (var item in allFiles)
                     {
@@ -1436,11 +1436,10 @@ namespace GitUI.CommandsDialogs
 
         private void generateListOfChangesInSubmodulesChangesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var stagedFiles = (List<GitItemStatus>)Staged.AllItems;
+            var stagedFiles = Staged.AllItems;
 
-            List<string> modules = new List<string>();
-            foreach (var item in stagedFiles.Where(it => it.IsSubmodule))
-                modules.Add(item.Name);
+            List<string> modules = stagedFiles.Where(it => it.IsSubmodule).
+                Select(item => item.Name).ToList();
             if (modules.Count == 0)
                 return;
             StringBuilder sb = new StringBuilder();
@@ -1982,7 +1981,7 @@ namespace GitUI.CommandsDialogs
 
         private void resetSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            var unStagedFiles = (List<GitItemStatus>)Unstaged.SelectedItems;
+            var unStagedFiles = Unstaged.SelectedItems.ToList();
             if (unStagedFiles.Count == 0)
                 return;
 
@@ -2023,7 +2022,7 @@ namespace GitUI.CommandsDialogs
 
         private void updateSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
-            var unStagedFiles = (List<GitItemStatus>)Unstaged.SelectedItems;
+            var unStagedFiles = Unstaged.SelectedItems.ToList();
             if (unStagedFiles.Count == 0)
                 return;
 
@@ -2037,8 +2036,7 @@ namespace GitUI.CommandsDialogs
 
         private void stashSubmoduleChangesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-            var unStagedFiles = (List<GitItemStatus>)Unstaged.SelectedItems;
+            var unStagedFiles = Unstaged.SelectedItems.ToList();
             if (unStagedFiles.Count == 0)
                 return;
 
