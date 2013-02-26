@@ -1621,7 +1621,7 @@ namespace GitUI
                                 {
                                     var frm = new ViewPullRequestsForm(this, gitHoster);
                                     frm.ShowInTaskbar = true;
-                                    frm.Show(owner);
+                                    frm.Show();
                                 });
         }
 
@@ -1667,7 +1667,9 @@ namespace GitUI
             WrapRepoHostingCall("Create pull request", gitHoster,
                                 gh =>
                                 {
-                                    new CreatePullRequestForm(this, gitHoster, chooseRemote, chooseBranch).Show(owner);
+                                    CreatePullRequestForm form = new CreatePullRequestForm(this, gitHoster, chooseRemote, chooseBranch);
+                                    form.ShowInTaskbar = true;
+                                    form.Show();
                                 });
         }
 
