@@ -736,6 +736,10 @@ namespace GitUI
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(Module.WorkingDir)) {
+                    return;
+                }
+
                 RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
 
                 ApplyFilterFromRevisionFilterDialog();

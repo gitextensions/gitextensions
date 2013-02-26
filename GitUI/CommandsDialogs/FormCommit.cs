@@ -1982,7 +1982,7 @@ namespace GitUI.CommandsDialogs
 
         private void resetSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            var unStagedFiles = (List<GitItemStatus>)Unstaged.SelectedItems;
+            List<GitItemStatus> unStagedFiles = this.Unstaged.SelectedItems.ToList();
             if (unStagedFiles.Count == 0)
                 return;
 
