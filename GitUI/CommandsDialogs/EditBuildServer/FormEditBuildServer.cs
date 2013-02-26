@@ -61,10 +61,12 @@ namespace GitUI.CommandsDialogs.EditBuildServer
 
         private TeamCitySettingsUserControl CreateBuildServerSettingsUserControl()
         {
+            var defaultProjectName = Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
+
             switch (GetSelectedBuildServerType())
             {
                 case GitCommands.BuildServerIntegration.BuildServerType.TeamCity:
-                    return new TeamCitySettingsUserControl();
+                    return new TeamCitySettingsUserControl(defaultProjectName);
                 default:
                     return null;
             }
