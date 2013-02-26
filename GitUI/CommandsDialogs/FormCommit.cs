@@ -214,7 +214,7 @@ namespace GitUI.CommandsDialogs
             // Do not remember commit message of fixup or squash commits, since they have
             // a special meaning, and can be dangerous if used inappropriately.
             if (CommitKind.Normal == _commitKind)
-                GitCommands.Commit.SetCommitMessage(Module, Message.Text);
+                GitCommands.CommitHelper.SetCommitMessage(Module, Message.Text);
 
             Settings.CommitDialogSplitter = splitMain.SplitterDistance;
             Settings.CommitDialogRightSplitter = splitRight.SplitterDistance;
@@ -852,7 +852,7 @@ namespace GitUI.CommandsDialogs
                 ScriptManager.RunEventScripts(Module, ScriptEvent.AfterCommit);
 
                 Message.Text = string.Empty;
-                GitCommands.Commit.SetCommitMessage(Module, string.Empty);
+                GitCommands.CommitHelper.SetCommitMessage(Module, string.Empty);
 
                 bool pushCompleted = true;
                 if (push)
@@ -1317,8 +1317,8 @@ namespace GitUI.CommandsDialogs
                 default:
                     message = Module.GetMergeMessage();
 
-                    if (string.IsNullOrEmpty(message) && File.Exists(GitCommands.Commit.GetCommitMessagePath(Module)))
-                        message = File.ReadAllText(GitCommands.Commit.GetCommitMessagePath(Module), Module.CommitEncoding);
+                    if (string.IsNullOrEmpty(message) && File.Exists(GitCommands.CommitHelper.GetCommitMessagePath(Module)))
+                        message = File.ReadAllText(GitCommands.CommitHelper.GetCommitMessagePath(Module), Module.CommitEncoding);
                     break;
             }
 
