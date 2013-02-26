@@ -6,6 +6,7 @@ namespace GitUI.BuildServerIntegration
 {
     public interface IBuildServerAdapter
     {
-        IObservable<BuildInfo> CreateObservable(IScheduler scheduler, DateTime? sinceDate = null);
+        IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null);
+        IObservable<BuildInfo> GetRunningBuilds(IScheduler scheduler);
     }
 }

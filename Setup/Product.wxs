@@ -137,12 +137,6 @@
         <File Source="..\bin\NBug.dll"/>
       </Component>
 
-      <Component Id="EasyHttp.dll" Guid="*">
-        <File Source="..\bin\EasyHttp.dll"/>
-      </Component>
-      <Component Id="JsonFx.dll" Guid="*">
-        <File Source="..\bin\JsonFx.dll"/>
-      </Component>
       <Component Id="System.Reactive.Core.dll" Guid="*">
         <File Source="..\bin\System.Reactive.Core.dll"/>
       </Component>
@@ -155,8 +149,8 @@
       <Component Id="System.Reactive.PlatformServices.dll" Guid="*">
         <File Source="..\bin\System.Reactive.PlatformServices.dll"/>
       </Component>
-      <Component Id="TeamCitySharp.dll" Guid="*">
-        <File Source="..\bin\TeamCitySharp.dll"/>
+      <Component Id="System.Net.Http.dll" Guid="*">
+        <File Source="..\bin\System.Net.Http.dll"/>
       </Component>
       <Component Id="Nini.dll" Guid="*">
         <File Source="..\bin\Nini.dll"/>
@@ -553,13 +547,11 @@
 
       <ComponentRef Id="English.gif"/>
 
-      <ComponentRef Id="EasyHttp.dll" />
-      <ComponentRef Id="JsonFx.dll" />
       <ComponentRef Id="System.Reactive.Core.dll" />
       <ComponentRef Id="System.Reactive.Interfaces.dll" />
       <ComponentRef Id="System.Reactive.Linq.dll" />
       <ComponentRef Id="System.Reactive.PlatformServices.dll" />
-      <ComponentRef Id="TeamCitySharp.dll" />
+      <ComponentRef Id="System.Net.Http.dll" />
       <ComponentRef Id="Nini.dll" />
 
       <!--Remove unused dll, installed in versions <= 2.31-->
