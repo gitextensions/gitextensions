@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             InvalidGitPathLocal.Visible = !canFindGitCmd;
 
-            bool valid = _gitModule.ValidWorkingDir() && canFindGitCmd;
+            bool valid = _gitModule.IsValidGitWorkingDir() && canFindGitCmd;
             UserName.Enabled = valid;
             UserEmail.Enabled = valid;
             Editor.Enabled = valid;
@@ -92,7 +92,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 CommonLogic.SetEncoding(_gitModule.GetFilesEncoding(true), localConfig, "i18n.filesEncoding");
 
                 //Only save local settings when we are inside a valid working dir
-                if (_gitModule.ValidWorkingDir())
+                if (_gitModule.IsValidGitWorkingDir())
                 {
                     localConfig.Save();
                 }
