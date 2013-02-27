@@ -77,8 +77,8 @@ This action will be performed without warning while checking out branch.</Source
           <Value>lettertype naam</Value>
         </TranslationItem>
         <TranslationItem Name="chkEnableAutoScale" Property="Text">
-          <Source>Auto scale user interface when high dpi is used</Source>
-          <Value>Gebruikers interface automatisch schalen wanneer niet standaard dpi wordt gebruikt</Value>
+          <Source>Auto scale user interface when high DPI is used</Source>
+          <Value>Gebruikers interface automatisch schalen wanneer niet standaard DPI wordt gebruikt</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
           <Source>Show current branch in Visual Studio</Source>
@@ -631,7 +631,7 @@ Value:  {2} = {3}</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkAmmend" Property="Text">
-          <Source>Ammend last commit</Source>
+          <Source>Amend last commit</Source>
           <Value>Laatste commit uitbreiden</Value>
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
@@ -1661,16 +1661,16 @@ revision:</Source>
           <Value>Configureer dit menu</Value>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
-          <Source>Create pull requests</Source>
-          <Value>Maak binnenhaal verzoek</Value>
+          <Source>Create pull requests...</Source>
+          <Value>Maak binnenhaal verzoek...</Value>
         </TranslationItem>
         <TranslationItem Name="_errorCaption" Property="Text">
           <Source>Error</Source>
           <Value>Fout</Value>
         </TranslationItem>
         <TranslationItem Name="_forkCloneRepositoryToolStripMenuItem" Property="Text">
-          <Source>Fork/Clone repository</Source>
-          <Value>Kloon/fork opslagplaats</Value>
+          <Source>Fork/Clone repository...</Source>
+          <Value>Kloon/fork opslagplaats...</Value>
         </TranslationItem>
         <TranslationItem Name="_hintUnresolvedMergeConflicts" Property="Text">
           <Source>There are unresolved merge conflicts!</Source>
@@ -1761,12 +1761,12 @@ revision:</Source>
           <Value>Over</Value>
         </TranslationItem>
         <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
-          <Source>Apply patch</Source>
-          <Value>Patch toepassen</Value>
+          <Source>Apply patch...</Source>
+          <Value>Patch toepassen...</Value>
         </TranslationItem>
         <TranslationItem Name="archiveToolStripMenuItem" Property="Text">
-          <Source>Archive revision</Source>
-          <Value>Archiveer</Value>
+          <Source>Archive revision...</Source>
+          <Value>Archiveer...</Value>
         </TranslationItem>
         <TranslationItem Name="authorToolStripMenuItem" Property="Text">
           <Source>Author</Source>
@@ -1777,8 +1777,8 @@ revision:</Source>
           <Value>B &lt;--&gt; Werk directory</Value>
         </TranslationItem>
         <TranslationItem Name="bisectToolStripMenuItem" Property="Text">
-          <Source>Bisect</Source>
-          <Value>Verdeel en heers</Value>
+          <Source>Bisect...</Source>
+          <Value>Verdeel en heers...</Value>
         </TranslationItem>
         <TranslationItem Name="blameToolStripMenuItem" Property="Text">
           <Source>Blame</Source>
@@ -1793,36 +1793,36 @@ revision:</Source>
           <Value>Vertakking</Value>
         </TranslationItem>
         <TranslationItem Name="branchToolStripMenuItem" Property="Text">
-          <Source>Create branch</Source>
-          <Value>Vertakking aanmaken</Value>
+          <Source>Create branch...</Source>
+          <Value>Vertakking aanmaken...</Value>
         </TranslationItem>
         <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
           <Source>Changelog</Source>
           <Value>Versie historie</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
-          <Source>Checkout branch</Source>
-          <Value>Vertakking uitchecken</Value>
+          <Source>Checkout branch...</Source>
+          <Value>Vertakking uitchecken...</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutToolStripMenuItem" Property="Text">
-          <Source>Checkout revision</Source>
-          <Value>Revisie uitchecken</Value>
+          <Source>Checkout revision...</Source>
+          <Value>Revisie uitchecken...</Value>
         </TranslationItem>
         <TranslationItem Name="cherryPickToolStripMenuItem" Property="Text">
-          <Source>Cherry pick</Source>
-          <Value>Cherry pick</Value>
+          <Source>Cherry pick...</Source>
+          <Value>Cherry pick...</Value>
         </TranslationItem>
         <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
-          <Source>Cleanup repository</Source>
-          <Value>Opschonen</Value>
+          <Source>Cleanup repository...</Source>
+          <Value>Opschonen...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
-          <Source>Clone SVN repository</Source>
-          <Value>Kloon SVN opslagplaats</Value>
+          <Source>Clone SVN repository...</Source>
+          <Value>Kloon SVN opslagplaats...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
-          <Source>Clone repository</Source>
-          <Value>Kloon opslagplaats</Value>
+          <Source>Clone repository...</Source>
+          <Value>Kloon opslagplaats...</Value>
         </TranslationItem>
         <TranslationItem Name="closeToolStripMenuItem" Property="Text">
           <Source>Close</Source>
@@ -1837,8 +1837,8 @@ revision:</Source>
           <Value>Commando's</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem" Property="Text">
-          <Source>Commit</Source>
-          <Value>Commit</Value>
+          <Source>Commit...</Source>
+          <Value>Commit...</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem1" Property="Text">
           <Source>Commit</Source>
@@ -1865,16 +1865,16 @@ revision:</Source>
           <Value>Kopieer bestandsnaam naar klembord</Value>
         </TranslationItem>
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
-          <Source>Delete branch</Source>
-          <Value>Verwijder vertakking</Value>
+          <Source>Delete branch...</Source>
+          <Value>Verwijder vertakking...</Value>
         </TranslationItem>
         <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
           <Source>Delete index.lock</Source>
           <Value>Verwijder index.lock</Value>
         </TranslationItem>
         <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
-          <Source>Delete tag</Source>
-          <Value>Verwijder label</Value>
+          <Source>Delete tag...</Source>
+          <Value>Verwijder label...</Value>
         </TranslationItem>
         <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
           <Source>Diff contains (SLOW)</Source>
@@ -1959,8 +1959,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Zoeken</Value>
         </TranslationItem>
         <TranslationItem Name="formatPatchToolStripMenuItem" Property="Text">
-          <Source>Format patch</Source>
-          <Value>Patch maken</Value>
+          <Source>Format patch...</Source>
+          <Value>Patch maken...</Value>
         </TranslationItem>
         <TranslationItem Name="generateOrImportKeyToolStripMenuItem" Property="Text">
           <Source>Generate or import key</Source>
@@ -1987,8 +1987,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Git commando logboek</Value>
         </TranslationItem>
         <TranslationItem Name="goToToolStripMenuItem" Property="Text">
-          <Source>Go to commit</Source>
-          <Value>Ga naar revisie</Value>
+          <Source>Go to commit...</Source>
+          <Value>Ga naar revisie...</Value>
         </TranslationItem>
         <TranslationItem Name="hashToolStripMenuItem" Property="Text">
           <Source>Hash</Source>
@@ -1999,8 +1999,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Help</Value>
         </TranslationItem>
         <TranslationItem Name="initNewRepositoryToolStripMenuItem" Property="Text">
-          <Source>Create new repository</Source>
-          <Value>Nieuwe opslagplaats</Value>
+          <Source>Create new repository...</Source>
+          <Value>Nieuwe opslagplaats...</Value>
         </TranslationItem>
         <TranslationItem Name="kGitToolStripMenuItem" Property="Text">
           <Source>GitK</Source>
@@ -2019,8 +2019,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Beheer submodulen</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
-          <Source>Merge branches</Source>
-          <Value>Vertakkingen samenvoegen</Value>
+          <Source>Merge branches...</Source>
+          <Value>Vertakkingen samenvoegen...</Value>
         </TranslationItem>
         <TranslationItem Name="mergeToolStripMenuItem" Property="Text">
           <Source>Merge</Source>
@@ -2039,8 +2039,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Openen met... (tijdelijk bestand)</Value>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
-          <Source>Open</Source>
-          <Value>Openen</Value>
+          <Source>Open...</Source>
+          <Value>Openen...</Value>
         </TranslationItem>
         <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
           <Source>Open with difftool</Source>
@@ -2059,28 +2059,28 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>B's ouder &lt;--&gt; Werk directory</Value>
         </TranslationItem>
         <TranslationItem Name="patchToolStripMenuItem" Property="Text">
-          <Source>View patch file</Source>
-          <Value>Bekijk patch bestand</Value>
+          <Source>View patch file...</Source>
+          <Value>Bekijk patch bestand...</Value>
         </TranslationItem>
         <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
           <Source>Plugins</Source>
           <Value>Plugins</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem" Property="Text">
-          <Source>Pull</Source>
-          <Value>Ophalen</Value>
+          <Source>Pull...</Source>
+          <Value>Ophalen...</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem1" Property="Text">
           <Source>Pull</Source>
           <Value>Ophalen</Value>
         </TranslationItem>
         <TranslationItem Name="pushToolStripMenuItem" Property="Text">
-          <Source>Push</Source>
-          <Value>Verzenden</Value>
+          <Source>Push...</Source>
+          <Value>Verzenden...</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem" Property="Text">
-          <Source>Rebase</Source>
-          <Value>Rebase</Value>
+          <Source>Rebase...</Source>
+          <Value>Rebase...</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem1" Property="Text">
           <Source>Rebase</Source>
@@ -2123,12 +2123,12 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Terugzetten naar geselecteerde revisie</Value>
         </TranslationItem>
         <TranslationItem Name="resetToolStripMenuItem" Property="Text">
-          <Source>Reset changes</Source>
-          <Value>Alle wijzigingen ongedaan maken</Value>
+          <Source>Reset changes...</Source>
+          <Value>Alle wijzigingen ongedaan maken...</Value>
         </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
-          <Source>Solve mergeconflicts</Source>
-          <Value>Samenvoeg conflicten oplossen</Value>
+          <Source>Solve mergeconflicts...</Source>
+          <Value>Samenvoeg conflicten oplossen...</Value>
         </TranslationItem>
         <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
           <Source>Save as...</Source>
@@ -2167,8 +2167,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Pop weggezette wijzigingen</Value>
         </TranslationItem>
         <TranslationItem Name="stashToolStripMenuItem" Property="Text">
-          <Source>Stash changes</Source>
-          <Value>Wijzigingen wegzetten</Value>
+          <Source>Stash changes...</Source>
+          <Value>Wijzigingen wegzetten...</Value>
         </TranslationItem>
         <TranslationItem Name="submodulesToolStripMenuItem" Property="Text">
           <Source>Submodules</Source>
@@ -2179,8 +2179,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="tagToolStripMenuItem" Property="Text">
-          <Source>Create tag</Source>
-          <Value>Maak label</Value>
+          <Source>Create tag...</Source>
+          <Value>Maak label...</Value>
         </TranslationItem>
         <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText">
           <Source>Toggle split view layout</Source>
@@ -2231,8 +2231,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Handleiding</Value>
         </TranslationItem>
         <TranslationItem Name="verifyGitDatabaseToolStripMenuItem" Property="Text">
-          <Source>Recover lost objects</Source>
-          <Value>Verloren bestanden terughalen</Value>
+          <Source>Recover lost objects...</Source>
+          <Value>Verloren bestanden terughalen...</Value>
         </TranslationItem>
         <TranslationItem Name="viewDiffToolStripMenuItem" Property="Text">
           <Source>View changes</Source>
@@ -3686,8 +3686,8 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
           <Value>Er moeten 2 revisies geselecteerd worden.</Value>
         </TranslationItem>
         <TranslationItem Name="_wrongSmtpSettingsText" Property="Text">
-          <Source>You need to enter a valid smtp in the settings dialog.</Source>
-          <Value>Er is geen smtp server ingesteld in het instellingen dialoog.</Value>
+          <Source>You need to enter a valid SMTP in the settings dialog.</Source>
+          <Value>Er is geen SMTP server ingesteld in het instellingen dialoog.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Subject</Source>
@@ -5792,7 +5792,7 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
           <Value>Context menu</Value>
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="obsolete">
-          <Source>Close process dialog automatically when process is succeeded</Source>
+          <Source>Close process dialog automatically when process succeeds</Source>
           <Value>Sluit proces dialoog automatisch wanneer proces is geslaagd</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowGitCommandLine" Property="Text" type="obsolete">
@@ -6498,7 +6498,7 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="unfinished">
-          <Source>Close Process dialog when process is succeeded</Source>
+          <Source>Close Process dialog when process succeeds</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
@@ -6563,8 +6563,8 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label23" Property="Text">
-          <Source>Smtp server for sending patches by email</Source>
-          <Value>Smtp server voor het versturen van patches per email</Value>
+          <Source>SMTP server for sending patches by email</Source>
+          <Value>SMTP server voor het versturen van patches per email</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text">
           <Source>Revision grid quick search timeout [ms]</Source>
