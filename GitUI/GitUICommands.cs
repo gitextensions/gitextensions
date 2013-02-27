@@ -174,7 +174,7 @@ namespace GitUI
 
         private bool RequiresValidWorkingDir(object owner)
         {
-            if (!Module.ValidWorkingDir())
+            if (!Module.IsValidGitWorkingDir())
             {
                 MessageBoxes.NotValidGitDirectory(owner as IWin32Window);
                 return false;
@@ -692,7 +692,7 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 if (dir == null)
-                    dir = Module.ValidWorkingDir() ? Module.WorkingDir : string.Empty;
+                    dir = Module.IsValidGitWorkingDir() ? Module.WorkingDir : string.Empty;
                 using (var frm = new FormInit(dir, GitModuleChanged)) frm.ShowDialog(owner);
                 return true;
             };

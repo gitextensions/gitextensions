@@ -1076,7 +1076,7 @@ namespace GitCommands
             sb.AppendLine("Submodule " + name);
             sb.AppendLine();
             GitModule module = superproject.GetSubmodule(name);
-            if (module.ValidWorkingDir())
+            if (module.IsValidGitWorkingDir())
             {
                 string error = "";
                 CommitData data = CommitData.GetCommitData(module, hash, ref error);
@@ -1112,7 +1112,7 @@ namespace GitCommands
             sb.AppendLine();
             sb.AppendLine("From:\t" + (status.OldCommit ?? "null"));
             CommitData oldCommitData = null;
-            if (gitmodule.ValidWorkingDir())
+            if (gitmodule.IsValidGitWorkingDir())
             {
                 string error = "";
                 if (status.OldCommit != null)
@@ -1133,7 +1133,7 @@ namespace GitCommands
             string dirty = !status.IsDirty ? "" : " (dirty)";
             sb.AppendLine("To:\t\t" + (status.Commit ?? "null") + dirty);
             CommitData commitData = null;
-            if (gitmodule.ValidWorkingDir())
+            if (gitmodule.IsValidGitWorkingDir())
             {
                 string error = "";
                 if (status.Commit != null)

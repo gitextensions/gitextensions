@@ -499,7 +499,7 @@ namespace GitUI.CommandsDialogs
             foreach (var submoduleName in submodules)
             {
                 GitModule submodule = Module.GetSubmodule(submoduleName);
-                if (!submodule.ValidWorkingDir())
+                if (!submodule.IsValidGitWorkingDir())
                     return false;
             }
             return true;
