@@ -197,7 +197,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)..\libgit2sharp\Lib\NativeBinaries\*" "$(TargetDir)NativeBinaries\" /E /D</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)..\libgit2sharp\Lib\NativeBinaries\*" "$(TargetDir)NativeBinaries\" /E /D /Y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
