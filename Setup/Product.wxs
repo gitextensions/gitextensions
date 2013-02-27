@@ -46,6 +46,10 @@
           <Directory Id="PluginsDir" Name="Plugins"/>
           <Directory Id="InstallerDir" Name="Installer"/>
           <Directory Id="DictionariesDir" Name="Dictionaries"/>
+          <Directory Id="NativeBinariesDir" Name="NativeBinaries">
+            <Directory Id="NativeBinariesX86Dir" Name="x86"/>
+            <Directory Id="NativeBinariesX64Dir" Name="amd64"/>
+          </Directory>
           <Directory Id="TranslationsDir" Name="Translation"/>          
           <Directory Id="IconsDir" Name="Icons"/>
           <Directory Id="DiffScriptsDir" Name="Diff-Scripts"/>
@@ -135,6 +139,9 @@
       </Component>
       <Component Id="NBug.dll" Guid="*">
         <File Source="..\bin\NBug.dll"/>
+      </Component>
+      <Component Id="LibGit2Sharp.dll" Guid="*">
+        <File Source="..\libgit2sharp\LibGit2Sharp\bin\Release\LibGit2Sharp.dll"/>
       </Component>
 
       <!--Remove unused dll, installed in versions <= 2.31-->
@@ -233,9 +240,9 @@
       <Component Id="Gerrit.dll" Guid="*">
         <File Source="..\Plugins\Gerrit\bin\Release\Gerrit.dll"/>
       </Component>
-	  <Component Id="ReleaseNotesGenerator.dll" Guid="*">
-		 <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll"/>
-	  </Component>		
+	    <Component Id="ReleaseNotesGenerator.dll" Guid="*">
+		    <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll"/>
+	    </Component>		
       <Component Id="Newtonsoft.Json.dll" Guid="*">
         <File Source="..\Plugins\Gerrit\Dependencies\Newtonsoft.Json.dll"/>
       </Component>
@@ -283,6 +290,24 @@
       </Component>
       <Component Id="License.txt" Guid="*">
         <File Source="..\Bin\Diff-Scripts\TortoiseSVN License.txt"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="NativeBinariesDir">
+      <Component Id="libgit2.license.txt" Guid="*">
+        <File Source="..\libgit2sharp\LibGit2Sharp\bin\Release\NativeBinaries\libgit2.license.txt"/>
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="NativeBinariesX86Dir">
+      <Component Id="git2x86.dll" Guid="*">
+        <File Id="git2x86.dll" Source="..\libgit2sharp\LibGit2Sharp\bin\Release\NativeBinaries\x86\git2.dll"/>
+      </Component>
+    </DirectoryRef>
+    
+    <DirectoryRef Id="NativeBinariesX64Dir">
+      <Component Id="git2x64.dll" Guid="*">
+        <File Id="git2x64.dll" Source="..\libgit2sharp\LibGit2Sharp\bin\Release\NativeBinaries\amd64\git2.dll"/>
       </Component>
     </DirectoryRef>
     
@@ -506,6 +531,10 @@
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll"/>
       <ComponentRef Id="NBug.dll"/>
+      <ComponentRef Id="LibGit2Sharp.dll"/>
+      <ComponentRef Id="libgit2.license.txt"/>
+      <ComponentRef Id="git2x86.dll"/>
+      <ComponentRef Id="git2x64.dll"/>
       <ComponentRef Id="NetSpell.SpellChecker.dll"/>
       <ComponentRef Id="ResourceManager.dll"/>
       <ComponentRef Id="GitUIPluginInterfaces.dll"/>
