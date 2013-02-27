@@ -198,6 +198,7 @@ namespace GitUI.CommandsDialogs
             _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
             _ResetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
             _ResetSelectedLinesToolStripMenuItem.Image = Reset.Image;
+            resetChanges.ShortcutKeyDisplayString = _ResetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
             _indent = Settings.CommitValidationIndentAfterFirstLine ? "   " : String.Empty;
         }
 
