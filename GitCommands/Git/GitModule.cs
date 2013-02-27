@@ -41,18 +41,28 @@ namespace GitCommands
 
         public GitModule(string workingdir)
         {
-            WorkingDir = workingdir;
+            _workingdir = PathUtil.EnsureTrailingPathSeparator(workingdir);
+
+            if (String.IsNullOrEmpty(_workingdir))
+                return;
+
+            try
+            {
+                _repository = new LibGit2Sharp.Repository(_workingdir);
+            }
+            catch (RepositoryNotFoundException)
+            {
+                _repository = null;
+            }
         }
 
-        private string _workingdir;
+        private readonly string _workingdir;
         private LibGit2Sharp.Repository _repository;
 
         public LibGit2Sharp.Repository Repository
         {
             get
             {
-                if (_repository == null)
-                    _repository = new LibGit2Sharp.Repository(WorkingDir);
                 return _repository;
             }
         }
@@ -62,11 +72,6 @@ namespace GitCommands
             get
             {
                 return _workingdir;
-            }
-            private set
-            {
-                _superprojectInit = false;
-                _workingdir = PathUtil.EnsureTrailingPathSeparator(value);
             }
         }
 
@@ -298,7 +303,7 @@ namespace GitCommands
 
         public bool IsValidGitWorkingDir()
         {
-            return IsValidGitWorkingDir(_workingdir);
+            return _repository != null;
         }
 
         public static bool IsValidGitWorkingDir(string dir)
@@ -308,7 +313,7 @@ namespace GitCommands
 
             try
             {
-                using (var repo = new LibGit2Sharp.Repository(dir))
+                using (new LibGit2Sharp.Repository(dir))
                 {
                     return true;
                 }
@@ -1137,8 +1142,7 @@ namespace GitCommands
 
         public string GetCurrentCheckout()
         {
-            return Repository.Head.Tip.Sha;
-            //return RunGitCmd("log -g -1 HEAD --pretty=format:%H");
+            return IsValidGitWorkingDir() ? _repository.Head.Tip.Sha : "";
         }
 
         public string GetSuperprojectCurrentCheckout()
@@ -2062,7 +2066,9 @@ namespace GitCommands
 
         public string[] GetRemotes(bool allowEmpty)
         {
-            return Repository.Remotes.Select(r => r.Name).ToArray();
+            if (!IsValidGitWorkingDir())
+                return new string[] { };
+            return Repository.Network.Remotes.Select(r => r.Name).ToArray();
         }
 
         public ConfigFile GetLocalConfig()
@@ -2537,12 +2543,7 @@ namespace GitCommands
             string head = GetSelectedBranchFast(repositoryPath);
 
             if (string.IsNullOrEmpty(head))
-            {
-                int exitcode;
-                head = RunGitCmd("symbolic-ref HEAD", out exitcode);
-                if (exitcode == 1)
-                    return DetachedBranch;
-            }
+                return Repository.Head.CanonicalName;
 
             return head;
         }
@@ -2667,6 +2668,9 @@ namespace GitCommands
 
         private string GetTree(bool tags, bool branches)
         {
+            if (!IsValidGitWorkingDir())
+                return "";
+
             if (tags && branches)
             {
                 return Repository.Refs
@@ -2682,11 +2686,14 @@ namespace GitCommands
                     .ToString();
 
             if (branches)
-                return Repository.Branches
-                    .Where(r => !r.IsRemote)
-                    .Select(r => string.Format("{0} {1}", r.Tip.Sha, r.CanonicalName))
-                    .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
-                    .ToString();
+            {
+                var refs = Repository.Branches
+                    .Where(r => !r.IsRemote);
+                var sb = new StringBuilder();
+                foreach (var r in refs.Where(r => r.Tip != null))
+                    sb.AppendLine(string.Format("{0} {1}", r.Tip.Sha, r.CanonicalName));
+                return sb.ToString();
+            }
             return "";
         }
 
