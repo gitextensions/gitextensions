@@ -104,6 +104,10 @@
       <Project>{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}</Project>
       <Name>AutoCompileSubmodules</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Plugins\BackgroundFetch\BackgroundFetch.csproj">
+      <Project>{F261BCD1-F5F7-4664-A230-E52032E6E9FD}</Project>
+      <Name>BackgroundFetch</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plugins\CreateLocalBranches\CreateLocalBranches.csproj">
       <Project>{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}</Project>
       <Name>CreateLocalBranches</Name>
