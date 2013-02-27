@@ -294,29 +294,36 @@ namespace GitCommands
             return GitCommandHelpers.FixPath(path);
         }
 
+        /// <summary>Indicates whether the <see cref="WorkingDir"/> contains a git repository.</summary>
         public bool ValidWorkingDir()
         {
             return ValidWorkingDir(_workingdir);
         }
 
+        /// <summary>Indicates whether the specified directory contains a git repository.</summary>
         public static bool ValidWorkingDir(string dir)
         {
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            if (Directory.Exists(dir + Settings.PathSeparator + ".git") || File.Exists(dir + Settings.PathSeparator + ".git"))
+            string dirPath = dir + Settings.PathSeparator;
+            string path = dirPath + ".git";
+            
+            if (Directory.Exists(path) || File.Exists(path))
                 return true;
 
-            return Directory.Exists(dir + Settings.PathSeparator + "info") &&
-                   Directory.Exists(dir + Settings.PathSeparator + "objects") &&
-                   Directory.Exists(dir + Settings.PathSeparator + "refs");
+            return Directory.Exists(dirPath + "info") &&
+                   Directory.Exists(dirPath + "objects") &&
+                   Directory.Exists(dirPath + "refs");
         }
 
+        /// <summary>Gets the ".git" directory path.</summary>
         public string GetGitDirectory()
         {
             return GetGitDirectory(_workingdir);
         }
 
+        /// <summary>true if ".git" directory does NOT exist.</summary>
         public bool IsBareRepository()
         {
             return IsBareRepository(_workingdir);
@@ -947,6 +954,7 @@ namespace GitCommands
             return fileNames;
         }
 
+        /// <summary>Gets the ".git" directory path.</summary>
         public static string GetGitDirectory(string repositoryPath)
         {
             if (File.Exists(repositoryPath + ".git"))
@@ -1228,6 +1236,7 @@ namespace GitCommands
             return GetSubmodule(submoduleName);
         }
 
+        /// <summary>Gets all current git submodules.</summary>
         public IEnumerable<IGitSubmodule> GetSubmodules()
         {
             var submodules = RunGitCmdAsync("submodule status");
@@ -2577,7 +2586,6 @@ namespace GitCommands
             return RunGitCmd("update-index --remove" + " \"" + FixPath(file) + "\"");
         }
 
-
         public string UnstageFile(string file)
         {
             return RunGitCmd("rm --cached \"" + FixPath(file) + "\"");
@@ -2588,12 +2596,11 @@ namespace GitCommands
             return RunGitCmd("reset HEAD -- \"" + FixPath(file) + "\"");
         }
 
-
+        /// <summary>true if ".git" directory does NOT exist.</summary>
         public static bool IsBareRepository(string repositoryPath)
         {
             return !Directory.Exists(GetGitDirectory(repositoryPath));
         }
-
 
         /// <summary>Dirty but fast. This sometimes fails.</summary>
         public static string GetSelectedBranchFast(string repositoryPath)
@@ -3506,6 +3513,7 @@ namespace GitCommands
             return ValidWorkingDir(workingDir);
         }
 
+        /// <summary>Gets the path to the git application executable.</summary>
         public string GitCommand
         {
             get
@@ -3553,6 +3561,11 @@ namespace GitCommands
             return (_workingdir != null 
                 ? _workingdir.GetHashCode() 
                 : 0);
+        }
+
+        public override string ToString()
+        {
+            return GitWorkingDir;
         }
     }
 }

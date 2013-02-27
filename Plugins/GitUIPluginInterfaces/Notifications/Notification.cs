@@ -7,29 +7,39 @@ namespace GitUIPluginInterfaces.Notifications
     public class Notification
     {
         /// <summary>Creates a new notification with the specified severity and text.</summary>
-        /// <param name="gitModule">Git module associated with the notification.</param>
+        ///// <param name="notifier"><see cref="INotifier"/> which published the notification.</param>
         /// <param name="severity">Severity of the notification.</param>
         /// <param name="text">Text for the notification.</param>
         /// <param name="contextActions">The available actions which are relevant to the notification.</param>
-        public Notification(StatusSeverity severity, string text, params ContextAction[] contextActions)
+        public Notification(
+            //INotifier notifier,
+            StatusSeverity severity,
+            string text,
+            params ContextAction[] contextActions)
             : this(severity, text, DateTime.Now, contextActions) { }
 
         /// <summary>Creates a new notification with the specified severity, text, and time.</summary>
-        /// <param name="gitModule">Git module associated with the notification.</param>
+        ///// <param name="notifier"><see cref="INotifier"/> which published the notification.</param>
         /// <param name="severity">Severity of the notification.</param>
         /// <param name="text">Text for the notification.</param>
         /// <param name="timeOf">The time of the notification.</param>
         /// <param name="contextActions">The available actions which are relevant to the notification.</param>
-        public Notification(StatusSeverity severity, string text, DateTime timeOf, params ContextAction[] contextActions)
+        public Notification(
+            //INotifier notifier, 
+            StatusSeverity severity,
+            string text,
+            DateTime timeOf,
+            params ContextAction[] contextActions)
         {
+            //Notifier = notifier;
             Severity = severity;
             Text = text;
             TimeOf = timeOf;
             ContextActions = contextActions;
         }
 
-        ///// <summary>Gets the git module associated with the notification.</summary>
-        //public IGitModule GitModule { get; set; }
+        /// <summary>Gets the <see cref="INotifier"/> which published the notification.</summary>
+        public INotifier Notifier { get; set; }
         /// <summary>Gets the time of the notification.</summary>
         public DateTime TimeOf { get; private set; }
         /// <summary>Gets the severity of the notification.</summary>

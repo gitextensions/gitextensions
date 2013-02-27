@@ -47,7 +47,7 @@ namespace GitUI.UserControls
                 }
                 UiCommands = uiCommands;
                 Git = uiCommands.Module;
-                Notifier = NotificationManager.Get(Git);
+                Notifier = NotificationManager.Get(uiCommands);
                 IsDraggable = false;
                 ContextActions = new ContextAction[0];
                 AllowDrop = false;

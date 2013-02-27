@@ -279,6 +279,7 @@ namespace GitUI
                                     " is not translated in the constructor. You need to call Translate() right after InitializeComponent().");
         }
 
+        /// <summary>Translates the <see cref="Form"/>'s fields and properties, including child controls.</summary>
         protected void Translate()
         {
             Translator.Translate(this, Settings.Translation);

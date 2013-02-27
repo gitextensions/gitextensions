@@ -543,6 +543,7 @@ namespace GitCommands
         }
 
         private static string _gitCommand;
+        /// <summary>Gets or sets the path to the git application executable.</summary>
         public static string GitCommand
         {
             get { return SafeGet("gitcommand", "git", ref _gitCommand); }
