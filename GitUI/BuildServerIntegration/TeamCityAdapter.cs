@@ -24,6 +24,8 @@ namespace GitUI.BuildServerIntegration
 
         private readonly HttpClient httpClient;
 
+        private readonly IEnumerable<string> buildTypes;
+
         public TeamCityAdapter(IConfig config)
         {
             httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
@@ -39,6 +41,9 @@ namespace GitUI.BuildServerIntegration
             }
 
             ProjectName = config.Get("ProjectName");
+
+            var project = GetProjectFromNameXmlResponse(ProjectName);
+            buildTypes = project.XPathSelectElements("/project/buildTypes/buildType").Select(x => x.Attribute("id").Value);
         }
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
@@ -65,8 +70,6 @@ namespace GitUI.BuildServerIntegration
                                                {
                                                    try
                                                    {
-                                                       var project = GetProjectFromNameXmlResponse(ProjectName);
-                                                       var buildTypes = project.XPathSelectElements("/project/buildTypes/buildType").Select(x => x.Attribute("id").Value);
                                                        var buildIds = buildTypes.SelectMany(
                                                            buildTypeId =>
                                                                GetFilteredBuildsXmlResponse(buildTypeId, sinceDate, running)
