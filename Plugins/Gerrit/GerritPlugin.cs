@@ -171,11 +171,11 @@ namespace Gerrit
 
             // Create the Edit .gitreview button.
 
-            var settingsMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "settingsToolStripMenuItem1");
-            if (settingsMenu == null)
-                throw new Exception("Cannot find settings menu");
+            var repositoryMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "repositoryToolStripMenuItem");
+            if (repositoryMenu == null)
+                throw new Exception("Cannot find Repository menu");
 
-            var mailMapMenuItem = settingsMenu.DropDownItems.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "editmailmapToolStripMenuItem");
+            var mailMapMenuItem = repositoryMenu.DropDownItems.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "editmailmapToolStripMenuItem");
             if (mailMapMenuItem == null)
                 throw new Exception("Cannot find mailmap menu item");
 
@@ -186,8 +186,8 @@ namespace Gerrit
 
             _gitReviewMenuItem.Click += gitReviewMenuItem_Click;
 
-            settingsMenu.DropDownItems.Insert(
-                settingsMenu.DropDownItems.IndexOf(mailMapMenuItem) + 1,
+            repositoryMenu.DropDownItems.Insert(
+                repositoryMenu.DropDownItems.IndexOf(mailMapMenuItem) + 1,
                 _gitReviewMenuItem
             );
 
