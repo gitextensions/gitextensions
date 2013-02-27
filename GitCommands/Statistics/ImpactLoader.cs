@@ -107,7 +107,7 @@ namespace GitCommands.Statistics
                 {
                     IGitModule submodule = Module.GetISubmodule(submoduleName);
 
-                    if (submodule.IsValidGitWorkingDir(submodule.GitWorkingDir))
+                    if (submodule.IsValidGitWorkingDir())
                         LoadModuleInfo(command, submodule, taskState);
 
                 }
