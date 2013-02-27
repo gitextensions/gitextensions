@@ -349,7 +349,11 @@ namespace GitUI
 
             form.FormClosed += formClosed;
             form.ShowInTaskbar = true;
-            form.Show(owner);
+
+            if (Application.OpenForms.Count > 0)
+                form.Show();
+            else
+                form.ShowDialog();
         }
 
         /// <summary>
@@ -1155,7 +1159,7 @@ namespace GitUI
                 return true;
             };
 
-            return DoActionOnRepo(owner, true, true, PreSettings, PostSettings, action);
+            return DoActionOnRepo(owner, false, true, PreSettings, PostSettings, action);
         }
 
         public bool StartSettingsDialog()
@@ -1364,8 +1368,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreBrowse))
                 return false;
 
-            using (var form = new FormBrowse(this, filter))
-                form.ShowDialog(owner);
+            var form = new FormBrowse(this, filter);
+            Application.Run(form);
 
             InvokeEvent(owner, PostBrowse);
 
@@ -1617,7 +1621,7 @@ namespace GitUI
                                 {
                                     var frm = new ViewPullRequestsForm(this, gitHoster);
                                     frm.ShowInTaskbar = true;
-                                    frm.Show(owner);
+                                    frm.Show();
                                 });
         }
 
@@ -1663,7 +1667,9 @@ namespace GitUI
             WrapRepoHostingCall("Create pull request", gitHoster,
                                 gh =>
                                 {
-                                    new CreatePullRequestForm(this, gitHoster, chooseRemote, chooseBranch).Show(owner);
+                                    CreatePullRequestForm form = new CreatePullRequestForm(this, gitHoster, chooseRemote, chooseBranch);
+                                    form.ShowInTaskbar = true;
+                                    form.Show();
                                 });
         }
 
