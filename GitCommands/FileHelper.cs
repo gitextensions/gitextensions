@@ -66,19 +66,40 @@ namespace GitCommands
         /// <returns>null if no info in .gitattributes (or ambiguous). True if marked as binary, false if marked as text</returns>
         private static bool? IsBinaryAccordingToGitAttributes(GitModule aModule, string fileName)
         {
-            string cmd = "check-attr diff -z -- " + fileName;
+            string[] diffvals = { "set", "astextplain", "ada", "bibtext", "cpp", "csharp", "fortran", "html", "java", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "tex" };
+            string cmd = "check-attr -z diff text crlf eol -- " + fileName;
             string result = aModule.RunGitCmd(cmd);
-            var lines = result.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+            var lines = result.Split(new[] { '\n', '\0' }, StringSplitOptions.RemoveEmptyEntries);
+            var attributes = new Dictionary<string, string>();
             foreach (var line in lines)
             {
                 var values = line.Split(':');
-                if (values.Length == 3 && values[1].Trim() == "diff")
-                {
-                    if (values[2].Trim() == "unset")
-                        return true;
-                    if (values[2].Trim() == "set")
-                        return false;
-                }
+                if (values.Length == 3)
+                    attributes.Add(values[1].Trim(), values[2].Trim());
+            }
+
+            string val;
+            if (attributes.TryGetValue("diff", out val))
+            {
+                if (val == "unset")
+                    return true;
+                if (diffvals.Contains(val))
+                    return false;
+            }
+            if (attributes.TryGetValue("text", out val))
+            {
+                if (val != "unset" && val != "unspecified")
+                    return false;
+            }
+            if (attributes.TryGetValue("crlf", out val))
+            {
+                if (val != "unset" && val != "unspecified")
+                    return false;
+            }
+            if (attributes.TryGetValue("eol", out val))
+            {
+                if (val != "unset" && val != "unspecified")
+                    return false;
             }
             return null;
         }

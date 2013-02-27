@@ -370,7 +370,7 @@ namespace GitUI.CommandsDialogs
             toolStripButtonLevelUp.Enabled = hasWorkingDir;
             CommitInfoTabControl.Visible = validWorkingDir;
             fileExplorerToolStripMenuItem.Enabled = validWorkingDir;
-            commandsToolStripMenuItem.Enabled = validWorkingDir;
+            commandsToolStripMenuItem.Visible = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
             branchSelect.Enabled = validWorkingDir;
             toolStripButton1.Enabled = validWorkingDir;
@@ -378,7 +378,8 @@ namespace GitUI.CommandsDialogs
                 _toolStripGitStatus.Enabled = validWorkingDir;
             toolStripButtonPull.Enabled = validWorkingDir;
             toolStripButtonPush.Enabled = validWorkingDir;
-            submodulesToolStripMenuItem.Enabled = validWorkingDir;
+            dashboardToolStripMenuItem.Visible = !validWorkingDir;
+            repositoryToolStripMenuItem.Visible = validWorkingDir;
             UpdatePluginMenu(validWorkingDir);
             gitMaintenanceToolStripMenuItem.Enabled = validWorkingDir;
             editgitignoreToolStripMenuItem1.Enabled = validWorkingDir;
@@ -1313,11 +1314,6 @@ namespace GitUI.CommandsDialogs
                 process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.Name + Settings.PathSeparator.ToString());
                 process.Start();
             }
-        }
-
-        private void ViewDiffToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            UICommands.StartCompareRevisionsDialog(this);
         }
 
         private void CloneToolStripMenuItemClick(object sender, EventArgs e)

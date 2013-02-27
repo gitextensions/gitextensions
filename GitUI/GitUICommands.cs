@@ -1176,7 +1176,7 @@ namespace GitUI
                 return true;
             };
 
-            return DoActionOnRepo(owner, true, true, PreSettings, PostSettings, action);
+            return DoActionOnRepo(owner, false, true, PreSettings, PostSettings, action);
         }
 
         public bool StartSettingsDialog()
