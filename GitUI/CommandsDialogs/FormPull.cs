@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
@@ -423,15 +424,19 @@ namespace GitUI.CommandsDialogs
             var curLocalBranch = branch == localBranch.Text ? null : localBranch.Text;
             if (Fetch.Checked)
             {
-                return new FormRemoteProcess(Module, Module.FetchCmd(source, Branches.Text, curLocalBranch, NoTags.Checked));
+                return new FormRemoteProcess(Module, Module.FetchCmd(source, Branches.Text, curLocalBranch, GetTagsArg()));
             }
+            
+            Debug.Assert(Merge.Checked || Rebase.Checked);
 
             curLocalBranch = CalculateLocalBranch();
-            if (Merge.Checked)
-                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, false, NoTags.Checked));
-            if (Rebase.Checked)
-                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, true, NoTags.Checked));
-            return null;
+
+            return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, Rebase.Checked, GetTagsArg()));            
+        }
+
+        private bool? GetTagsArg()
+        { 
+            return AllTags.Checked ? true : NoTags.Checked ? false : (bool?)null;
         }
 
         private string CalculateLocalBranch()
@@ -608,6 +613,9 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullMerge;
             helpImageDisplayUserControl1.Image2 = Resources.HelpPullMergeFastForward;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
+            AllTags.Enabled = false;
+            if (AllTags.Checked)
+                ReachableTags.Checked = true;
         }
 
         private void RebaseCheckedChanged(object sender, EventArgs e)
@@ -616,13 +624,17 @@ namespace GitUI.CommandsDialogs
             localBranch.Text = branch;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullRebase;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
+            AllTags.Enabled = false;
+            if (AllTags.Checked)
+                ReachableTags.Checked = true;
         }
 
         private void FetchCheckedChanged(object sender, EventArgs e)
         {
-            localBranch.Enabled = true;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullFetch;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
+            localBranch.Enabled = true;
+            AllTags.Enabled = true;
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)

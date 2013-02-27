@@ -77,8 +77,8 @@ This action will be performed without warning while checking out branch.</Source
           <Value>lettertype naam</Value>
         </TranslationItem>
         <TranslationItem Name="chkEnableAutoScale" Property="Text">
-          <Source>Auto scale user interface when high dpi is used</Source>
-          <Value>Gebruikers interface automatisch schalen wanneer niet standaard dpi wordt gebruikt</Value>
+          <Source>Auto scale user interface when high DPI is used</Source>
+          <Value>Gebruikers interface automatisch schalen wanneer niet standaard DPI wordt gebruikt</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
           <Source>Show current branch in Visual Studio</Source>
@@ -631,7 +631,7 @@ Value:  {2} = {3}</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkAmmend" Property="Text">
-          <Source>Ammend last commit</Source>
+          <Source>Amend last commit</Source>
           <Value>Laatste commit uitbreiden</Value>
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
@@ -3686,8 +3686,8 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
           <Value>Er moeten 2 revisies geselecteerd worden.</Value>
         </TranslationItem>
         <TranslationItem Name="_wrongSmtpSettingsText" Property="Text">
-          <Source>You need to enter a valid smtp in the settings dialog.</Source>
-          <Value>Er is geen smtp server ingesteld in het instellingen dialoog.</Value>
+          <Source>You need to enter a valid SMTP in the settings dialog.</Source>
+          <Value>Er is geen SMTP server ingesteld in het instellingen dialoog.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Subject</Source>
@@ -5792,7 +5792,7 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
           <Value>Context menu</Value>
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="obsolete">
-          <Source>Close process dialog automatically when process is succeeded</Source>
+          <Source>Close process dialog automatically when process succeeds</Source>
           <Value>Sluit proces dialoog automatisch wanneer proces is geslaagd</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowGitCommandLine" Property="Text" type="obsolete">
@@ -6498,7 +6498,7 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="unfinished">
-          <Source>Close Process dialog when process is succeeded</Source>
+          <Source>Close Process dialog when process succeeds</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
@@ -6563,8 +6563,8 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label23" Property="Text">
-          <Source>Smtp server for sending patches by email</Source>
-          <Value>Smtp server voor het versturen van patches per email</Value>
+          <Source>SMTP server for sending patches by email</Source>
+          <Value>SMTP server voor het versturen van patches per email</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text">
           <Source>Revision grid quick search timeout [ms]</Source>
