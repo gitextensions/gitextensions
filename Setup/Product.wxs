@@ -137,6 +137,16 @@
         <File Source="..\bin\NBug.dll"/>
       </Component>
 
+      <Component Id="System.Reactive.Core.dll" Guid="*">
+        <File Source="..\bin\System.Reactive.Core.dll"/>
+      </Component>
+      <Component Id="System.Reactive.Interfaces.dll" Guid="*">
+        <File Source="..\bin\System.Reactive.Interfaces.dll"/>
+      </Component>
+      <Component Id="System.Reactive.Linq.dll" Guid="*">
+        <File Source="..\bin\System.Reactive.Linq.dll"/>
+      </Component>
+
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
         <RemoveFile Name="GithubSharp.Core.dll" Id="GithubSharp.Core.dll" On="both"/>
@@ -214,6 +224,9 @@
       </Component>
       <Component Id="AutoCompileSubmodules.dll" Guid="*">
         <File Source="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.dll"/>
+      </Component>
+      <Component Id="BackgroundFetch.dll" Guid="*">
+        <File Source="..\Plugins\BackgroundFetch\bin\Release\BackgroundFetch.dll"/>
       </Component>
       <Component Id="CreateLocalBranches.dll" Guid="*">
         <File Source="..\Plugins\CreateLocalBranches\bin\Release\CreateLocalBranches.dll"/>
@@ -528,6 +541,10 @@
 
       <ComponentRef Id="English.gif"/>
 
+      <ComponentRef Id="System.Reactive.Core.dll" />
+      <ComponentRef Id="System.Reactive.Interfaces.dll" />
+      <ComponentRef Id="System.Reactive.Linq.dll" />
+
       <!--Remove unused dll, installed in versions <= 2.31-->
       <ComponentRef Id="Github.dll"/>
       <!--Remove unused dll, installed in versions <= 2.31-->
@@ -539,6 +556,9 @@
         </Feature>
         <Feature Id="AutoCompileSubmodules" Title="Auto compile submodules" Level="1">
           <ComponentRef Id="AutoCompileSubmodules.dll"/>
+        </Feature>
+        <Feature Id="BackgroundFetch" Title="Periodic background fetch" Level="1">
+          <ComponentRef Id="BackgroundFetch.dll"/>
         </Feature>
         <Feature Id="CreateLocalBranches" Title="Create local branches" Level="1">
           <ComponentRef Id="CreateLocalBranches.dll"/>
