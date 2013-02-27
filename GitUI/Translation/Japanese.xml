@@ -1654,16 +1654,16 @@ revision:</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
-          <Source>Create pull requests</Source>
-          <Value>Pull Requestの作成</Value>
+          <Source>Create pull requests...</Source>
+          <Value>Pull Requestの作成...</Value>
         </TranslationItem>
         <TranslationItem Name="_errorCaption" Property="Text">
           <Source>Error</Source>
           <Value>エラー</Value>
         </TranslationItem>
         <TranslationItem Name="_forkCloneRepositoryToolStripMenuItem" Property="Text">
-          <Source>Fork/Clone repository</Source>
-          <Value>リポジトリのフォーク/クローン</Value>
+          <Source>Fork/Clone repository...</Source>
+          <Value>リポジトリのフォーク/クローン...</Value>
         </TranslationItem>
         <TranslationItem Name="_hintUnresolvedMergeConflicts" Property="Text">
           <Source>There are unresolved merge conflicts!</Source>
@@ -1754,12 +1754,12 @@ revision:</Source>
           <Value>このソフトウェアについて</Value>
         </TranslationItem>
         <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
-          <Source>Apply patch</Source>
-          <Value>パッチの適用</Value>
+          <Source>Apply patch...</Source>
+          <Value>パッチの適用...</Value>
         </TranslationItem>
         <TranslationItem Name="archiveToolStripMenuItem" Property="Text">
-          <Source>Archive revision</Source>
-          <Value>アーカイブ</Value>
+          <Source>Archive revision...</Source>
+          <Value>アーカイブ...</Value>
         </TranslationItem>
         <TranslationItem Name="authorToolStripMenuItem" Property="Text">
           <Source>Author</Source>
@@ -1770,7 +1770,7 @@ revision:</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="bisectToolStripMenuItem" Property="Text" type="unfinished">
-          <Source>Bisect</Source>
+          <Source>Bisect...</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="blameToolStripMenuItem" Property="Text">
@@ -1786,36 +1786,36 @@ revision:</Source>
           <Value>ブランチ</Value>
         </TranslationItem>
         <TranslationItem Name="branchToolStripMenuItem" Property="Text">
-          <Source>Create branch</Source>
-          <Value>ブランチの作成</Value>
+          <Source>Create branch...</Source>
+          <Value>ブランチの作成...</Value>
         </TranslationItem>
         <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
           <Source>Changelog</Source>
           <Value>変更履歴</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
-          <Source>Checkout branch</Source>
-          <Value>ブランチの切替</Value>
+          <Source>Checkout branch...</Source>
+          <Value>ブランチの切替...</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutToolStripMenuItem" Property="Text">
-          <Source>Checkout revision</Source>
-          <Value>リビジョンのチェックアウト</Value>
+          <Source>Checkout revision...</Source>
+          <Value>リビジョンのチェックアウト...</Value>
         </TranslationItem>
         <TranslationItem Name="cherryPickToolStripMenuItem" Property="Text">
-          <Source>Cherry pick</Source>
-          <Value>チェリーピック</Value>
+          <Source>Cherry pick...</Source>
+          <Value>チェリーピック...</Value>
         </TranslationItem>
         <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
-          <Source>Cleanup repository</Source>
-          <Value>クリーンアップ</Value>
+          <Source>Cleanup repository...</Source>
+          <Value>クリーンアップ...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
-          <Source>Clone SVN repository</Source>
-          <Value>SVNリポジトリのクローン</Value>
+          <Source>Clone SVN repository...</Source>
+          <Value>SVNリポジトリのクローン...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
-          <Source>Clone repository</Source>
-          <Value>リポジトリのクローン</Value>
+          <Source>Clone repository...</Source>
+          <Value>リポジトリのクローン...</Value>
         </TranslationItem>
         <TranslationItem Name="closeToolStripMenuItem" Property="Text">
           <Source>Close</Source>
@@ -1830,8 +1830,8 @@ revision:</Source>
           <Value>Gitコマンド</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem" Property="Text">
-          <Source>Commit</Source>
-          <Value>コミット</Value>
+          <Source>Commit...</Source>
+          <Value>コミット...</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem1" Property="Text">
           <Source>Commit</Source>
@@ -1858,16 +1858,16 @@ revision:</Source>
           <Value>ファイル名をクリップボードにコピー</Value>
         </TranslationItem>
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
-          <Source>Delete branch</Source>
-          <Value>ブランチの削除</Value>
+          <Source>Delete branch...</Source>
+          <Value>ブランチの削除...</Value>
         </TranslationItem>
         <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
           <Source>Delete index.lock</Source>
           <Value>index.lockファイルの削除</Value>
         </TranslationItem>
         <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
-          <Source>Delete tag</Source>
-          <Value>タグの削除</Value>
+          <Source>Delete tag...</Source>
+          <Value>タグの削除...</Value>
         </TranslationItem>
         <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
           <Source>Diff contains (SLOW)</Source>
@@ -1952,8 +1952,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>検索</Value>
         </TranslationItem>
         <TranslationItem Name="formatPatchToolStripMenuItem" Property="Text">
-          <Source>Format patch</Source>
-          <Value>Git用パッチの作成</Value>
+          <Source>Format patch...</Source>
+          <Value>Git用パッチの作成...</Value>
         </TranslationItem>
         <TranslationItem Name="generateOrImportKeyToolStripMenuItem" Property="Text">
           <Source>Generate or import key</Source>
@@ -1980,8 +1980,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>コマンド履歴</Value>
         </TranslationItem>
         <TranslationItem Name="goToToolStripMenuItem" Property="Text">
-          <Source>Go to commit</Source>
-          <Value>コミットに移動</Value>
+          <Source>Go to commit...</Source>
+          <Value>コミットに移動...</Value>
         </TranslationItem>
         <TranslationItem Name="hashToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Hash</Source>
@@ -1992,8 +1992,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>ヘルプ</Value>
         </TranslationItem>
         <TranslationItem Name="initNewRepositoryToolStripMenuItem" Property="Text">
-          <Source>Create new repository</Source>
-          <Value>リポジトリの作成</Value>
+          <Source>Create new repository...</Source>
+          <Value>リポジトリの作成...</Value>
         </TranslationItem>
         <TranslationItem Name="kGitToolStripMenuItem" Property="Text">
           <Source>GitK</Source>
@@ -2012,8 +2012,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>サブモジュールの管理</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
-          <Source>Merge branches</Source>
-          <Value>ブランチのマージ</Value>
+          <Source>Merge branches...</Source>
+          <Value>ブランチのマージ...</Value>
         </TranslationItem>
         <TranslationItem Name="mergeToolStripMenuItem" Property="Text">
           <Source>Merge</Source>
@@ -2032,8 +2032,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>プログラムから開く</Value>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
-          <Source>Open</Source>
-          <Value>開く</Value>
+          <Source>Open...</Source>
+          <Value>開く...</Value>
         </TranslationItem>
         <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
           <Source>Open with difftool</Source>
@@ -2052,28 +2052,28 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="patchToolStripMenuItem" Property="Text">
-          <Source>View patch file</Source>
-          <Value>パッチファイルの表示</Value>
+          <Source>View patch file...</Source>
+          <Value>パッチファイルの表示...</Value>
         </TranslationItem>
         <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
           <Source>Plugins</Source>
           <Value>プラグイン</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem" Property="Text">
-          <Source>Pull</Source>
-          <Value>Pull (リモートから取得)</Value>
+          <Source>Pull...</Source>
+          <Value>Pull (リモートから取得)...</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem1" Property="Text">
           <Source>Pull</Source>
           <Value>Pull (リモートから取得)</Value>
         </TranslationItem>
         <TranslationItem Name="pushToolStripMenuItem" Property="Text">
-          <Source>Push</Source>
-          <Value>Push (リモートへ反映)</Value>
+          <Source>Push...</Source>
+          <Value>Push (リモートへ反映)...</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem" Property="Text">
-          <Source>Rebase</Source>
-          <Value>ブランチのリベース</Value>
+          <Source>Rebase...</Source>
+          <Value>ブランチのリベース...</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem1" Property="Text">
           <Source>Rebase</Source>
@@ -2116,12 +2116,12 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>選択しているリビジョンへ戻す</Value>
         </TranslationItem>
         <TranslationItem Name="resetToolStripMenuItem" Property="Text">
-          <Source>Reset changes</Source>
-          <Value>Reset (変更をすべて取り消し)</Value>
+          <Source>Reset changes...</Source>
+          <Value>Reset (変更をすべて取り消し)...</Value>
         </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
-          <Source>Solve mergeconflicts</Source>
-          <Value>競合の解決</Value>
+          <Source>Solve mergeconflicts...</Source>
+          <Value>競合の解決...</Value>
         </TranslationItem>
         <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
           <Source>Save as...</Source>
@@ -2160,8 +2160,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>退避した変更を戻す</Value>
         </TranslationItem>
         <TranslationItem Name="stashToolStripMenuItem" Property="Text">
-          <Source>Stash changes</Source>
-          <Value>Stash (変更の一時退避)</Value>
+          <Source>Stash changes...</Source>
+          <Value>Stash (変更の一時退避)...</Value>
         </TranslationItem>
         <TranslationItem Name="submodulesToolStripMenuItem" Property="Text">
           <Source>Submodules</Source>
@@ -2172,8 +2172,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>すべてのサブモジュールの同期</Value>
         </TranslationItem>
         <TranslationItem Name="tagToolStripMenuItem" Property="Text">
-          <Source>Create tag</Source>
-          <Value>タグの作成</Value>
+          <Source>Create tag...</Source>
+          <Value>タグの作成...</Value>
         </TranslationItem>
         <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText">
           <Source>Toggle split view layout</Source>
@@ -2224,8 +2224,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>ユーザーマニュアル</Value>
         </TranslationItem>
         <TranslationItem Name="verifyGitDatabaseToolStripMenuItem" Property="Text">
-          <Source>Recover lost objects</Source>
-          <Value>消してしまったオブジェクトの復元</Value>
+          <Source>Recover lost objects...</Source>
+          <Value>消してしまったオブジェクトの復元...</Value>
         </TranslationItem>
         <TranslationItem Name="viewDiffToolStripMenuItem" Property="Text">
           <Source>View changes</Source>
