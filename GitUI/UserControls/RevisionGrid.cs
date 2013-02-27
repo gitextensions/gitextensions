@@ -768,7 +768,7 @@ namespace GitUI
                 Revisions.Clear();
                 Error.Visible = false;
 
-                if (!Module.ValidWorkingDir())
+                if (!Module.IsValidGitWorkingDir())
                 {
                     Revisions.Visible = false;
                     NoCommits.Visible = true;

@@ -366,7 +366,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             GitModule module = new GitModule(path);
 
-            if (!module.ValidWorkingDir())
+            if (!module.IsValidGitWorkingDir())
             {
                 DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text, 
                     directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
@@ -434,7 +434,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 {
                     GitModule module = new GitModule(dir);
 
-                    if (!module.ValidWorkingDir())
+                    if (!module.IsValidGitWorkingDir())
                     {
                         DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepositoryOpenIt.Text, 
                             directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNo,
