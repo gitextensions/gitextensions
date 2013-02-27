@@ -135,6 +135,16 @@ namespace GitUI.BuildServerIntegration
             var webUrl = buildXElement.Attribute("webUrl").Value;
             var revisionsElements = buildXElement.XPathSelectElements("revisions/revision");
             var commitHashList = revisionsElements.Select(x => x.Attribute("version").Value).ToArray();
+            var runningAttribute = buildXElement.Attribute("running");
+
+            if (runningAttribute != null && Convert.ToBoolean(runningAttribute.Value))
+            {
+                var runningInfoXElement = buildXElement.Element("running-info");
+                var currentStageText = runningInfoXElement.Attribute("currentStageText").Value;
+
+                statusText = currentStageText;
+            }
+
 
             switch (statusValue)
             {
