@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive.Linq;
+using GitCommands;
 using GitUIPluginInterfaces;
 
 namespace BackgroundFetch
@@ -44,12 +45,14 @@ namespace BackgroundFetch
             if (!int.TryParse(Settings.GetSetting("Fetch every (seconds) - set to 0 to disable"), out fetchInterval))
                 fetchInterval = 0;
 
-            if (fetchInterval > 0 && currentGitUiCommands.GitModule.IsValidGitWorkingDir(currentGitUiCommands.GitModule.GitWorkingDir))
+            var gitModule = (GitModule)currentGitUiCommands.GitModule;
+            if (fetchInterval > 0 && gitModule.IsValidGitWorkingDir(gitModule.GitWorkingDir))
             {
                 cancellationToken =
                     Observable.Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
-                        .Repeat()
-                        .Subscribe(i => currentGitUiCommands.GitCommand("fetch --progress --all"));
+                              .SkipWhile(i => gitModule.IsRunningGitProcess())
+                              .Repeat()
+                              .Subscribe(i => currentGitUiCommands.GitCommand("fetch --progress --all"));
             }
         }
 
