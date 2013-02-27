@@ -75,7 +75,7 @@ This action will be performed without warning while checking out branch.</Source
           <Value>имя шрифта</Value>
         </TranslationItem>
         <TranslationItem Name="chkEnableAutoScale" Property="Text">
-          <Source>Auto scale user interface when high dpi is used</Source>
+          <Source>Auto scale user interface when high DPI is used</Source>
           <Value>Автоматически масштабировать пользовательский интерфейс при высоком DPI</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
@@ -629,7 +629,7 @@ Value:  {2} = {3}</Source>
           <Value>Добавить отслеживание ссылки для вновь запушенной ветви</Value>
         </TranslationItem>
         <TranslationItem Name="chkAmmend" Property="Text">
-          <Source>Ammend last commit</Source>
+          <Source>Amend last commit</Source>
           <Value>Присоединить к последнему коммиту</Value>
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
@@ -3682,7 +3682,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Value />
         </TranslationItem>
         <TranslationItem Name="_wrongSmtpSettingsText" Property="Text" type="unfinished">
-          <Source>You need to enter a valid smtp in the settings dialog.</Source>
+          <Source>You need to enter a valid SMTP in the settings dialog.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
@@ -5761,7 +5761,7 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
           <Value>Контекстное меню</Value>
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="obsolete">
-          <Source>Close process dialog automatically when process is succeeded</Source>
+          <Source>Close process dialog automatically when process succeeds</Source>
           <Value>Закрывать диалог прогресса, когда процесс успешно завершился</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowGitCommandLine" Property="Text" type="obsolete">
@@ -6451,7 +6451,7 @@ Context menu for additional operations</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="unfinished">
-          <Source>Close Process dialog when process is succeeded</Source>
+          <Source>Close Process dialog when process succeeds</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
@@ -6516,8 +6516,8 @@ Context menu for additional operations</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label23" Property="Text">
-          <Source>Smtp server for sending patches by email</Source>
-          <Value>Smtp сервер для отправки патчей почтой</Value>
+          <Source>SMTP server for sending patches by email</Source>
+          <Value>SMTP сервер для отправки патчей почтой</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text" type="unfinished">
           <Source>Revision grid quick search timeout [ms]</Source>
