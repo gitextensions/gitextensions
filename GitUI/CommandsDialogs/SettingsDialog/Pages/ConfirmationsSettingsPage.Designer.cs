@@ -31,7 +31,7 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.CheckoutGB = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.chkAmmend = new System.Windows.Forms.CheckBox();
+            this.chkAmend = new System.Windows.Forms.CheckBox();
             this.chkAutoPopStashAfterPull = new System.Windows.Forms.CheckBox();
             this.chkAddTrackingRef = new System.Windows.Forms.CheckBox();
             this.chkPushNewBranch = new System.Windows.Forms.CheckBox();
@@ -78,7 +78,7 @@
             this.tableLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel3.ColumnCount = 1;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.Controls.Add(this.chkAmmend, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.chkAmend, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.chkAutoPopStashAfterPull, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.chkAddTrackingRef, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this.chkPushNewBranch, 0, 4);
@@ -95,16 +95,16 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(686, 185);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
-            // chkAmmend
+            // chkAmend
             // 
-            this.chkAmmend.AutoSize = true;
-            this.chkAmmend.Location = new System.Drawing.Point(4, 5);
-            this.chkAmmend.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.chkAmmend.Name = "chkAmmend";
-            this.chkAmmend.Size = new System.Drawing.Size(196, 27);
-            this.chkAmmend.TabIndex = 0;
-            this.chkAmmend.Text = "Ammend last commit";
-            this.chkAmmend.UseVisualStyleBackColor = true;
+            this.chkAmend.AutoSize = true;
+            this.chkAmend.Location = new System.Drawing.Point(4, 5);
+            this.chkAmend.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.chkAmend.Name = "chkAmend";
+            this.chkAmend.Size = new System.Drawing.Size(196, 27);
+            this.chkAmend.TabIndex = 0;
+            this.chkAmend.Text = "Amend last commit";
+            this.chkAmend.UseVisualStyleBackColor = true;
             // 
             // chkAutoPopStashAfterPull
             // 
@@ -177,7 +177,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.GroupBox CheckoutGB;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.CheckBox chkAmmend;
+        private System.Windows.Forms.CheckBox chkAmend;
         private System.Windows.Forms.CheckBox chkAutoPopStashAfterPull;
         private System.Windows.Forms.CheckBox chkPushNewBranch;
         private System.Windows.Forms.CheckBox chkAddTrackingRef;

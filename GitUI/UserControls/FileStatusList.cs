@@ -145,7 +145,7 @@ namespace GitUI
             {
                 var hover = FileStatusListView.HitTest(e.Location);
 
-                if (hover.Item != null)
+                if (hover.Item != null && !hover.Item.Selected)
                 {
                     ClearSelected();
 
@@ -156,7 +156,7 @@ namespace GitUI
             //DRAG
             if (e.Button == MouseButtons.Left)
             {
-                if (SelectedItems.Count > 0)
+                if (SelectedItems.Any())
                 {
                     // Remember the point where the mouse down occurred. 
                     // The DragSize indicates the size that the mouse can move 
@@ -212,7 +212,7 @@ namespace GitUI
             if (dragBoxFromMouseDown != Rectangle.Empty &&
                 !dragBoxFromMouseDown.Contains(e.X, e.Y))
             {
-                if (SelectedItems.Count > 0)
+                if (SelectedItems.Any())
                 {
                     StringCollection fileList = new StringCollection();
 
@@ -263,22 +263,22 @@ namespace GitUI
 #endif
 
         [Browsable(false)]
-        public IList<GitItemStatus> AllItems
+        public IEnumerable<GitItemStatus> AllItems
         {
             get
             {
                 return (FileStatusListView.Items.Cast<ListViewItem>().
-                    Select(selectedItem => (GitItemStatus) selectedItem.Tag)).ToList();
+                    Select(selectedItem => (GitItemStatus) selectedItem.Tag));
             }
         }
 
         [Browsable(false)]
-        public IList<GitItemStatus> SelectedItems
+        public IEnumerable<GitItemStatus> SelectedItems
         {
             get
             {
                 return FileStatusListView.SelectedItems.Cast<ListViewItem>().
-                    Select(i => (GitItemStatus)i.Tag).ToList();
+                    Select(i => (GitItemStatus)i.Tag);
             }
         }
 
@@ -295,6 +295,8 @@ namespace GitUI
             set
             {
                 ClearSelected();
+                if (value == null)
+                    return;
                 foreach (ListViewItem item in FileStatusListView.SelectedItems)
                     if (item.Tag == value)
                         item.Selected = true;
