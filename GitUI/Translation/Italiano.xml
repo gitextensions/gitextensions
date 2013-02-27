@@ -783,6 +783,10 @@ Value:  {2} = {3}</Source>
           <Source>Create new repository</Source>
           <Value>Crea nuovo repository</Value>
         </TranslationItem>
+        <TranslationItem Name="_showCurrentBranch" Property="Text" type="unfinished">
+          <Source>Show current branch</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="develop" Property="Text">
           <Source>Develop</Source>
           <Value>Sviluppa</Value>
@@ -852,10 +856,6 @@ Do you want to open it?</Source>
         <TranslationItem Name="_removeCategory" Property="Text">
           <Source>Remove</Source>
           <Value>Rimuovi</Value>
-        </TranslationItem>
-        <TranslationItem Name="_showCurrentBranch" Property="Text" type="unfinished">
-          <Source>Show current branch</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="editToolStripMenuItem" Property="Text">
           <Source>Edit</Source>
