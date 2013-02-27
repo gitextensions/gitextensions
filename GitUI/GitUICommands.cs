@@ -328,6 +328,34 @@ namespace GitUI
 
         }
 
+        public void ShowModelessForm(IWin32Window owner, bool requiresValidWorkingDir, 
+            GitUIEventHandler preEvent, GitUIPostActionEventHandler postEvent, Func<Form> provideForm)
+        {
+            if (requiresValidWorkingDir && !RequiresValidWorkingDir(owner))
+                return;
+
+            if (!InvokeEvent(owner, preEvent))
+                return;
+
+            Form form = provideForm();
+
+            FormClosedEventHandler formClosed = null;
+
+            formClosed = (sender, e) =>
+                {
+                    form.FormClosed -= formClosed;
+                    InvokePostEvent(owner, true, postEvent);
+                };
+
+            form.FormClosed += formClosed;
+            form.ShowInTaskbar = true;
+
+            if (Application.OpenForms.Count > 0)
+                form.Show();
+            else
+                form.ShowDialog();
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -1131,7 +1159,7 @@ namespace GitUI
                 return true;
             };
 
-            return DoActionOnRepo(owner, true, true, PreSettings, PostSettings, action);
+            return DoActionOnRepo(owner, false, true, PreSettings, PostSettings, action);
         }
 
         public bool StartSettingsDialog()
@@ -1340,8 +1368,8 @@ namespace GitUI
             if (!InvokeEvent(owner, PreBrowse))
                 return false;
 
-            using (var form = new FormBrowse(this, filter))
-                form.ShowDialog(owner);
+            var form = new FormBrowse(this, filter);
+            Application.Run(form);
 
             InvokeEvent(owner, PostBrowse);
 
@@ -1355,17 +1383,17 @@ namespace GitUI
 
         public void StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision, bool filterByRevision, bool showBlame)
         {
-            if (!InvokeEvent(owner, PreFileHistory))
-                return;
+            Func<Form> provideForm = () =>
+                {
+                    var form = new FormFileHistory(this, fileName, revision, filterByRevision);
 
-            var form = new FormFileHistory(this, fileName, revision, filterByRevision);
-            form.ShowInTaskbar = true;
-            form.FormClosed += (sender, e) => InvokePostEvent(owner, true, PostFileHistory);
-            
-            if (showBlame)
-                form.SelectBlameTab();
-            
-            form.Show(owner);            
+                    if (showBlame)
+                        form.SelectBlameTab();
+
+                    return form;
+                };
+
+            ShowModelessForm(owner, true, PreFileHistory, PostFileHistory, provideForm);
         }
 
         public void StartFileHistoryDialog(IWin32Window owner, string fileName, GitRevision revision, bool filterByRevision)
@@ -1593,7 +1621,7 @@ namespace GitUI
                                 {
                                     var frm = new ViewPullRequestsForm(this, gitHoster);
                                     frm.ShowInTaskbar = true;
-                                    frm.Show(owner);
+                                    frm.Show();
                                 });
         }
 
@@ -1639,7 +1667,9 @@ namespace GitUI
             WrapRepoHostingCall("Create pull request", gitHoster,
                                 gh =>
                                 {
-                                    new CreatePullRequestForm(this, gitHoster, chooseRemote, chooseBranch).Show(owner);
+                                    CreatePullRequestForm form = new CreatePullRequestForm(this, gitHoster, chooseRemote, chooseBranch);
+                                    form.ShowInTaskbar = true;
+                                    form.Show();
                                 });
         }
 
