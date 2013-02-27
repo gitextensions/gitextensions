@@ -129,14 +129,14 @@ namespace GitExtensions
 
             if (args.Length <= 1 && string.IsNullOrEmpty(workingDir) && Settings.StartWithRecentWorkingDir)
             {
-                if (GitModule.ValidWorkingDir(Settings.RecentWorkingDir))
+                if (GitModule.IsValidGitWorkingDir(Settings.RecentWorkingDir))
                     workingDir = Settings.RecentWorkingDir;
             }
 
             if (string.IsNullOrEmpty(workingDir))
             {
                 string findWorkingDir = GitModule.FindGitWorkingDir(Directory.GetCurrentDirectory());
-                if (GitModule.ValidWorkingDir(findWorkingDir))
+                if (GitModule.IsValidGitWorkingDir(findWorkingDir))
                     workingDir = findWorkingDir;
             }
 
