@@ -78,9 +78,8 @@ namespace GitUI.BuildServerIntegration
 
                                                        foreach (var buildId in buildIds)
                                                        {
-                                                           var id = buildId;
-                                                           var callByUrlTask =
-                                                               GetBuildFromIdXmlResponseAsync(id, cancellationToken)
+                                                           var notifyObserverTask =
+                                                               GetBuildFromIdXmlResponseAsync(buildId, cancellationToken)
                                                                    .ContinueWith(
                                                                        task =>
                                                                            {
@@ -93,7 +92,7 @@ namespace GitUI.BuildServerIntegration
                                                                            },
                                                                        cancellationToken);
 
-                                                           tasks.Add(callByUrlTask);
+                                                           tasks.Add(notifyObserverTask);
                                                            --buildsLeft;
 
                                                            if (tasks.Count == tasks.Capacity || buildsLeft == 0)
