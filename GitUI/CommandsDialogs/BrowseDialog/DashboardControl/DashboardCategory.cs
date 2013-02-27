@@ -23,8 +23,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             new TranslationString("Remove");
         private readonly TranslationString _editCategory =
             new TranslationString("Edit");
-        private readonly TranslationString _showCurrentBranch =
-            new TranslationString("Show current branch");
         private readonly TranslationString _newCategory =
             new TranslationString("New category");
         #endregion
@@ -115,11 +113,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             editMenuItem.Click += editMenuItem_Click;
             contextMenu.Items.Add(editMenuItem);
 
-            var showCurrentBranchMenuItem = new ToolStripMenuItem(_showCurrentBranch.Text);
-            showCurrentBranchMenuItem.Click += showCurrentBranchMenuItem_Click;
-            showCurrentBranchMenuItem.Checked = Settings.DashboardShowCurrentBranch;
-            contextMenu.Items.Add(showCurrentBranchMenuItem);
-
             SuspendLayout();
             flowLayoutPanel.SuspendLayout();
             
@@ -143,12 +136,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         void contextMenu_Opening(object sender, EventArgs e)
         {
             repository = (Repository)(((ContextMenuStrip)sender).SourceControl.Tag);
-        }
-
-        void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
-        {
-            Settings.DashboardShowCurrentBranch = !Settings.DashboardShowCurrentBranch;
-            dashboardCategoryChanged(null, null);
         }
 
         private void MoveItem(bool moveUp)
