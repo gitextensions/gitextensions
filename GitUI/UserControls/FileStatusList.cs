@@ -130,8 +130,11 @@ namespace GitUI
 
             string text = GetItemText(e.Graphics, gitItemStatus);
 
-            e.Graphics.DrawString(text, e.Item.ListView.Font,
-                                  new SolidBrush(e.Item.ForeColor), e.Bounds.Left + ImageSize, e.Bounds.Top);
+            using (var solidBrush = new SolidBrush(e.Item.ForeColor))
+            {
+                e.Graphics.DrawString(text, e.Item.ListView.Font,
+                                      solidBrush, e.Bounds.Left + ImageSize, e.Bounds.Top);
+            }
         }
 
 #if !__MonoCS__ // TODO Drag'n'Drop doesnt work on Mono/Linux
@@ -142,7 +145,7 @@ namespace GitUI
             {
                 var hover = FileStatusListView.HitTest(e.Location);
 
-                if (hover.Item != null)
+                if (hover.Item != null && !hover.Item.Selected)
                 {
                     ClearSelected();
 
@@ -153,7 +156,7 @@ namespace GitUI
             //DRAG
             if (e.Button == MouseButtons.Left)
             {
-                if (SelectedItems.Count > 0)
+                if (SelectedItems.Any())
                 {
                     // Remember the point where the mouse down occurred. 
                     // The DragSize indicates the size that the mouse can move 
@@ -202,14 +205,14 @@ namespace GitUI
 
         void FileStatusListView_MouseMove(object sender, MouseEventArgs e)
         {
-            ListView listBox = sender as ListView;
+            ListView listView = sender as ListView;
 
             //DRAG
             // If the mouse moves outside the rectangle, start the drag.
             if (dragBoxFromMouseDown != Rectangle.Empty &&
                 !dragBoxFromMouseDown.Contains(e.X, e.Y))
             {
-                if (SelectedItems.Count > 0)
+                if (SelectedItems.Any())
                 {
                     StringCollection fileList = new StringCollection();
 
@@ -230,13 +233,13 @@ namespace GitUI
             }
 
             //TOOLTIP
-            if (listBox != null)
+            if (listView != null)
             {
                 var point = new Point(e.X, e.Y);
-                var hover = listBox.HitTest(point);
+                var hover = listView.HitTest(point);
                 if (hover.Item != null)
                 {
-                    GitItemStatus gitItemStatus = (GitItemStatus)hover.Item.Tag;
+                    var gitItemStatus = (GitItemStatus)hover.Item.Tag;
 
                     string text;
                     if (gitItemStatus.IsRenamed || gitItemStatus.IsCopied)
@@ -244,7 +247,7 @@ namespace GitUI
                     else
                         text = gitItemStatus.Name;
 
-                    float fTextWidth = listBox.CreateGraphics().MeasureString(text, listBox.Font).Width + 17;
+                    float fTextWidth = listView.CreateGraphics().MeasureString(text, listView.Font).Width + 17;
 
                     //Use width-itemheight because the icon drawn in front of the text is the itemheight
                     if (fTextWidth > (FileStatusListView.Width - FileStatusListView.GetItemRect(hover.Item.Index).Height))
@@ -260,22 +263,22 @@ namespace GitUI
 #endif
 
         [Browsable(false)]
-        public IList<GitItemStatus> AllItems
+        public IEnumerable<GitItemStatus> AllItems
         {
             get
             {
                 return (FileStatusListView.Items.Cast<ListViewItem>().
-                    Select(selectedItem => (GitItemStatus) selectedItem.Tag)).ToList();
+                    Select(selectedItem => (GitItemStatus) selectedItem.Tag));
             }
         }
 
         [Browsable(false)]
-        public IList<GitItemStatus> SelectedItems
+        public IEnumerable<GitItemStatus> SelectedItems
         {
             get
             {
                 return FileStatusListView.SelectedItems.Cast<ListViewItem>().
-                    Select(i => (GitItemStatus)i.Tag).ToList();
+                    Select(i => (GitItemStatus)i.Tag);
             }
         }
 
@@ -292,6 +295,8 @@ namespace GitUI
             set
             {
                 ClearSelected();
+                if (value == null)
+                    return;
                 foreach (ListViewItem item in FileStatusListView.SelectedItems)
                     if (item.Tag == value)
                         item.Selected = true;
@@ -468,8 +473,7 @@ namespace GitUI
                 else
                     NoFiles.Visible = false;
 
-                //FileStatusListView.HorizontalExtent = 0;
-                int prevSelectedIndex = SelectedIndex;
+                bool empty = FileStatusListView.Items.Count == 0;
                 FileStatusListView.ShowGroups = value != null && value.Count > 1;
                 FileStatusListView.Groups.Clear();
                 FileStatusListView.Items.Clear();
@@ -500,12 +504,31 @@ namespace GitUI
                 FileStatusListView.SetGroupState(ListViewGroupState.Collapsible);
                 if (DataSourceChanged != null)
                     DataSourceChanged(this, new EventArgs());
-                if (!value.Any() && prevSelectedIndex >= 0)
+                if (FileStatusListView.Items.Count > 0)
+                {
+                    SelectFirstVisibleItem();
+                }
+                else if (FileStatusListView.Items.Count == 0 && !empty)
                 {
                     //bug in the ListView control where supplying an empty list will not trigger a SelectedIndexChanged event, so we force it to trigger
                     FileStatusListView_SelectedIndexChanged(this, EventArgs.Empty);
                 }
             }
+        }
+
+        private void SelectFirstVisibleItem()
+        {
+            var group = FileStatusListView.Groups.Cast<ListViewGroup>().
+                FirstOrDefault(gr => gr.Items.Count > 0);
+            if (group != null)
+            {
+                ListViewItem sortedFirstGroupItem = FileStatusListView.Items.Cast<ListViewItem>().
+                    FirstOrDefault(item => item.Group == group);
+                if (sortedFirstGroupItem != null)
+                    sortedFirstGroupItem.Selected = true;
+            }
+            else
+                FileStatusListView.Items[0].Selected = true;
         }
 
         /// <summary>

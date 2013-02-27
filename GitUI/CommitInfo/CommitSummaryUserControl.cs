@@ -60,12 +60,12 @@ namespace GitUI
                     labelDate.Text = string.Format(Strings.GetCommitDateText() + ": {0}", Revision.CommitDate);
                     labelMessage.Text = string.Format("{0}", Revision.Message);
                     
-                    var tagList = Revision.Heads.Where(r => r.IsTag);
+                    var tagList = Revision.Heads.Where(r => r.IsTag).ToList();
                     string tagListStr = string.Join(", ", tagList.Select(h => h.LocalName).ToArray());
                     labelTags.Text = string.Format("{0}", tagListStr.IsNullOrEmpty() ? notAvailable.Text : tagListStr);
                     labelTags.BackColor = tagList.Any() ? tagsBackColor : DefaultBackColor;
 
-                    var branchesList = Revision.Heads.Where(r => r.IsHead);
+                    var branchesList = Revision.Heads.Where(r => r.IsHead).ToList();
                     string branchesListStr = string.Join(", ", branchesList.Select(h => h.LocalName).ToArray());
                     labelBranches.Text = string.Format("{0}", branchesListStr.IsNullOrEmpty() ? notAvailable.Text : branchesListStr);
                     labelBranches.BackColor = branchesList.Any() ? branchesBackColor : DefaultBackColor;
