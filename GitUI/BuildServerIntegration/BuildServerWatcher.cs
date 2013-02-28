@@ -69,7 +69,7 @@ namespace GitUI.BuildServerIntegration
                 return;
 
             var scheduler = NewThreadScheduler.Default;
-            var fullDayObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now.Date);
+            var fullDayObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
             var fullObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler);
             var fromNowObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
             var runningBuildsObservable = _buildServerAdapter.GetRunningBuilds(scheduler);
