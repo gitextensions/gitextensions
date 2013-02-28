@@ -29,7 +29,14 @@ namespace GitUI.UserControls
             set
             {
                 _selectedCommitHash = Module.RevParse(value);
-                textBoxCommitHash.Text = _selectedCommitHash.Substring(0, 10);
+                if (_selectedCommitHash.IsNullOrEmpty())
+                {
+                    textBoxCommitHash.Text = "";
+                }
+                else
+                {
+                    textBoxCommitHash.Text = _selectedCommitHash.Substring(0, 10);
+                }
             }
         }
 
