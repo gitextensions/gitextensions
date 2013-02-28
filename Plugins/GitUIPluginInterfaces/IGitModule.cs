@@ -17,7 +17,7 @@ namespace GitUIPluginInterfaces
 
         string GetGitDirectory();
 
-        bool IsValidGitWorkingDir(string workingDir);
+        bool IsValidGitWorkingDir();
 
         string GitCommand { get; }
 
