@@ -43,10 +43,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.commitPickerSmallControl1 = new GitUI.UserControls.CommitPickerSmallControl();
             this.label3 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.stackOptions.SuspendLayout();
             this.table.SuspendLayout();
             this.panel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // CheckoutAfterCreate
@@ -54,7 +58,7 @@
             this.CheckoutAfterCreate.AutoSize = true;
             this.CheckoutAfterCreate.Checked = true;
             this.CheckoutAfterCreate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CheckoutAfterCreate.Location = new System.Drawing.Point(3, 8);
+            this.CheckoutAfterCreate.Location = new System.Drawing.Point(296, 8);
             this.CheckoutAfterCreate.Name = "CheckoutAfterCreate";
             this.CheckoutAfterCreate.Size = new System.Drawing.Size(139, 19);
             this.CheckoutAfterCreate.TabIndex = 6;
@@ -66,23 +70,22 @@
             this.stackOptions.AutoSize = true;
             this.stackOptions.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.stackOptions.Controls.Add(this.CheckoutAfterCreate);
-            this.stackOptions.Controls.Add(this.Orphan);
-            this.stackOptions.Controls.Add(this.ClearOrphan);
             this.stackOptions.Dock = System.Windows.Forms.DockStyle.Top;
-            this.stackOptions.Location = new System.Drawing.Point(0, 81);
+            this.stackOptions.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.stackOptions.Location = new System.Drawing.Point(3, 84);
             this.stackOptions.Name = "stackOptions";
             this.stackOptions.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
-            this.stackOptions.Size = new System.Drawing.Size(444, 35);
+            this.stackOptions.Size = new System.Drawing.Size(438, 35);
             this.stackOptions.TabIndex = 8;
             // 
             // Orphan
             // 
             this.Orphan.AutoSize = true;
-            this.Orphan.Location = new System.Drawing.Point(148, 8);
+            this.Orphan.Location = new System.Drawing.Point(3, 3);
             this.Orphan.Name = "Orphan";
-            this.Orphan.Size = new System.Drawing.Size(66, 19);
+            this.Orphan.Size = new System.Drawing.Size(101, 19);
             this.Orphan.TabIndex = 7;
-            this.Orphan.Text = "Orphan";
+            this.Orphan.Text = "Create orphan";
             this.toolTip.SetToolTip(this.Orphan, "New branch will have NO parents");
             this.Orphan.UseVisualStyleBackColor = true;
             this.Orphan.CheckedChanged += new System.EventHandler(this.Orphan_CheckedChanged);
@@ -93,11 +96,11 @@
             this.ClearOrphan.Checked = true;
             this.ClearOrphan.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ClearOrphan.Enabled = false;
-            this.ClearOrphan.Location = new System.Drawing.Point(220, 8);
+            this.ClearOrphan.Location = new System.Drawing.Point(110, 3);
             this.ClearOrphan.Name = "ClearOrphan";
-            this.ClearOrphan.Size = new System.Drawing.Size(53, 19);
+            this.ClearOrphan.Size = new System.Drawing.Size(170, 19);
             this.ClearOrphan.TabIndex = 8;
-            this.ClearOrphan.Text = "Clear";
+            this.ClearOrphan.Text = "Clear working dir and index";
             this.toolTip.SetToolTip(this.ClearOrphan, "Remove files from the working tree and from the index");
             this.ClearOrphan.UseVisualStyleBackColor = true;
             // 
@@ -113,20 +116,20 @@
             this.table.Controls.Add(this.BranchNameTextBox, 1, 0);
             this.table.Controls.Add(this.label1, 0, 0);
             this.table.Dock = System.Windows.Forms.DockStyle.Top;
-            this.table.Location = new System.Drawing.Point(0, 40);
+            this.table.Location = new System.Drawing.Point(3, 43);
             this.table.Name = "table";
             this.table.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             this.table.RowCount = 1;
             this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
-            this.table.Size = new System.Drawing.Size(444, 41);
+            this.table.Size = new System.Drawing.Size(438, 41);
             this.table.TabIndex = 6;
             // 
             // Ok
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Ok.Location = new System.Drawing.Point(313, 8);
+            this.Ok.Location = new System.Drawing.Point(307, 8);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(128, 25);
             this.Ok.TabIndex = 4;
@@ -140,7 +143,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BranchNameTextBox.Location = new System.Drawing.Point(86, 8);
             this.BranchNameTextBox.Name = "BranchNameTextBox";
-            this.BranchNameTextBox.Size = new System.Drawing.Size(221, 23);
+            this.BranchNameTextBox.Size = new System.Drawing.Size(215, 23);
             this.BranchNameTextBox.TabIndex = 3;
             // 
             // label1
@@ -160,10 +163,10 @@
             this.panel1.AutoSize = true;
             this.panel1.Controls.Add(this.flowLayoutPanel1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
-            this.panel1.Size = new System.Drawing.Size(444, 40);
+            this.panel1.Size = new System.Drawing.Size(438, 40);
             this.panel1.TabIndex = 9;
             // 
             // flowLayoutPanel1
@@ -175,7 +178,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 5);
             this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(50, 30);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(444, 30);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(438, 30);
             this.flowLayoutPanel1.TabIndex = 1;
             // 
             // label2
@@ -207,19 +210,42 @@
             this.label3.TabIndex = 2;
             this.label3.Text = "or choose another revision.";
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.flowLayoutPanel2);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox1.Location = new System.Drawing.Point(3, 119);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(438, 54);
+            this.groupBox1.TabIndex = 10;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Orphan";
+            // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.Controls.Add(this.Orphan);
+            this.flowLayoutPanel2.Controls.Add(this.ClearOrphan);
+            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 19);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(432, 32);
+            this.flowLayoutPanel2.TabIndex = 0;
+            // 
             // FormCreateBranchAtRevision
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(444, 122);
+            this.ClientSize = new System.Drawing.Size(444, 182);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.stackOptions);
             this.Controls.Add(this.table);
             this.Controls.Add(this.panel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(460, 160);
+            this.MinimumSize = new System.Drawing.Size(460, 220);
             this.Name = "FormCreateBranchAtRevision";
+            this.Padding = new System.Windows.Forms.Padding(3);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create branch";
             this.stackOptions.ResumeLayout(false);
@@ -229,6 +255,9 @@
             this.panel1.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.flowLayoutPanel2.ResumeLayout(false);
+            this.flowLayoutPanel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -250,5 +279,7 @@
         private System.Windows.Forms.Label label2;
         private UserControls.CommitPickerSmallControl commitPickerSmallControl1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
     }
 }
