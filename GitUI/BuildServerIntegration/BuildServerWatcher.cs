@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reactive.Concurrency;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -56,7 +57,10 @@ namespace GitUI.BuildServerIntegration
             CancelBuildStatusFetchOperation();
 
             // Extract the project name from the last part of the directory path. It is assumed that it matches the project name in the CI build server.
-            var projectName = revisionGrid.Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
+            var projectName =
+                revisionGrid.Module.GitWorkingDir.Split(
+                    new[] {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar},
+                    StringSplitOptions.RemoveEmptyEntries).Last();
             _buildServerAdapter = GetBuildServerAdapter(projectName);
 
             UpdateUI();
@@ -68,49 +72,63 @@ namespace GitUI.BuildServerIntegration
             var fullDayObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
             var fullObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler);
             var fromNowObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
+            var runningBuildsObservable = _buildServerAdapter.GetRunningBuilds(scheduler);
 
-            buildStatusCancellationToken =
+            var cancellationToken = new CompositeDisposable();
+
+            buildStatusCancellationToken = cancellationToken;
+
+            cancellationToken.Add(
                 fullDayObservable.Concat(fullObservable)
-                                 .Concat(Observable.Empty<BuildInfo>()
-                                                   .Delay(TimeSpan.FromMinutes(1))
-                                                   .Concat(fromNowObservable)
-                                                   .Repeat())
-                                 .ObserveOn(SynchronizationContext.Current)
-                                 .Subscribe(item =>
-                                     {
-                                         if (buildStatusCancellationToken == null)
-                                             return;
+                    .Concat(Observable.Empty<BuildInfo>()
+                                .Delay(TimeSpan.FromMinutes(1))
+                                .Concat(fromNowObservable)
+                                .Repeat())
+                    .ObserveOn(SynchronizationContext.Current)
+                    .Subscribe(OnBuildInfoUpdate));
 
-                                         foreach (var commitHash in item.CommitHashList)
-                                         {
-                                             string graphRevision;
-                                             int row = revisionGrid.SearchRevision(commitHash, out graphRevision);
-                                             if (row >= 0)
-                                             {
-                                                 var rowData = revisions.GetRowData(row);
-                                                 if (rowData.BuildStatus == null ||
-                                                     item.StartDate > rowData.BuildStatus.StartDate)
-                                                 {
-                                                     rowData.BuildStatus = item;
+            cancellationToken.Add(
+                runningBuildsObservable
+                    .Concat(Observable.Empty<BuildInfo>().Delay(TimeSpan.FromSeconds(10)))
+                    .Repeat()
+                    .ObserveOn(SynchronizationContext.Current)
+                    .Subscribe(OnBuildInfoUpdate));
+        }
 
-                                                     // Ensure that the Build Report tab page visibility is refreshed.
-                                                     if (revisionGrid.GetSelectedRevisions().Contains(rowData))
-                                                     {
-                                                         // HACK: Since there is no INotifyPropertyChanged mechanism in Revision,
-                                                         // we have to rely on the knowledge that FormBrowse listens to the 
-                                                         // SelectionChanged event of RevisionGrid in order to show/hide
-                                                         // the Build Report tab page.
-                                                         var selectedIds = revisions.SelectedIds;
-                                                         revisions.ClearSelection();
-                                                         revisions.SelectedIds = selectedIds;
-                                                     }
+        private void OnBuildInfoUpdate(BuildInfo buildInfo)
+        {
+            if (buildStatusCancellationToken == null)
+                return;
 
-                                                     revisions.UpdateCellValue(4, row);
-                                                     revisions.UpdateCellValue(5, row);
-                                                 }
-                                             }
-                                         }
-                                     });
+            foreach (var commitHash in buildInfo.CommitHashList)
+            {
+                string graphRevision;
+                int row = revisionGrid.SearchRevision(commitHash, out graphRevision);
+                if (row >= 0)
+                {
+                    var rowData = revisions.GetRowData(row);
+                    if (rowData.BuildStatus == null ||
+                        buildInfo.StartDate >= rowData.BuildStatus.StartDate)
+                    {
+                        rowData.BuildStatus = buildInfo;
+
+                        // Ensure that the Build Report tab page visibility is refreshed.
+                        if (revisionGrid.GetSelectedRevisions().Contains(rowData))
+                        {
+                            // HACK: Since there is no INotifyPropertyChanged mechanism in Revision,
+                            // we have to rely on the knowledge that FormBrowse listens to the 
+                            // SelectionChanged event of RevisionGrid in order to show/hide
+                            // the Build Report tab page.
+                            var selectedIds = revisions.SelectedIds;
+                            revisions.ClearSelection();
+                            revisions.SelectedIds = selectedIds;
+                        }
+
+                        revisions.UpdateCellValue(4, row);
+                        revisions.UpdateCellValue(5, row);
+                    }
+                }
+            }
         }
 
         private IBuildServerAdapter GetBuildServerAdapter(string projectName)
