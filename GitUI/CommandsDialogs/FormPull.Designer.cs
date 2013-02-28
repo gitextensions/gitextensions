@@ -492,7 +492,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(690, 400);
+            this.MinimumSize = new System.Drawing.Size(690, 480);
             this.Name = "FormPull";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Pull";
