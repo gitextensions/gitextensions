@@ -27,7 +27,7 @@ If you do not want to use github, I also accept mailed patches. Just make sure t
 ## How to create the installer
 
 * Download and install WiX [http://wix.sourceforge.net/](http://wix.sourceforge.net/)
-* Run Setup\BuildInstallers.bat to build the installers
+* Run Setup\\BuildInstallers.bat to build the installers
 
 ## Links
 
