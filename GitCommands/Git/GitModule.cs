@@ -3469,7 +3469,7 @@ namespace GitCommands
 
         ~GitModule()
         {
-            Dispose(false);
+            Dispose(true);
         }
     }
 }
