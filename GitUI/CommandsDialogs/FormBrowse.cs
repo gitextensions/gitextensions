@@ -285,7 +285,7 @@ namespace GitUI.CommandsDialogs
         {
             syncContext.Post(o =>
             {
-                RefreshButton.Image = indexChanged && Settings.UseFastChecks && Module.ValidWorkingDir()
+                RefreshButton.Image = indexChanged && Settings.UseFastChecks && Module.IsValidGitWorkingDir()
                                           ? GitUI.Properties.Resources.arrow_refresh_dirty
                                           : GitUI.Properties.Resources.arrow_refresh;
             }, this);
@@ -303,7 +303,7 @@ namespace GitUI.CommandsDialogs
                     pluginsToolStripMenuItem.DropDownItems.Add(item);
                 }
                 pluginsLoaded = true;
-                UpdatePluginMenu(Module.ValidWorkingDir());
+                UpdatePluginMenu(Module.IsValidGitWorkingDir());
             }
         }
 
@@ -357,7 +357,7 @@ namespace GitUI.CommandsDialogs
 
             UICommands.RaisePreBrowseInitialize(this);
 
-            bool validWorkingDir = Module.ValidWorkingDir();
+            bool validWorkingDir = Module.IsValidGitWorkingDir();
             bool hasWorkingDir = !string.IsNullOrEmpty(Module.WorkingDir);
             branchSelect.Text = validWorkingDir ? Module.GetSelectedBranch() : "";
             if (hasWorkingDir)
@@ -649,7 +649,7 @@ namespace GitUI.CommandsDialogs
 
         private void CheckForMergeConflicts()
         {
-            bool validWorkingDir = Module.ValidWorkingDir();
+            bool validWorkingDir = Module.IsValidGitWorkingDir();
 
             if (validWorkingDir && Module.InTheMiddleOfBisect())
             {
@@ -1606,7 +1606,7 @@ namespace GitUI.CommandsDialogs
         {
             GitModule module = new GitModule(path);
 
-            if (!module.ValidWorkingDir())
+            if (!module.IsValidGitWorkingDir())
             {
                 DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text,
                     directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
@@ -1773,7 +1773,7 @@ namespace GitUI.CommandsDialogs
             UnregisterPlugins();
             UICommands = new GitUICommands(module);
 
-            if (Module.ValidWorkingDir())
+            if (Module.IsValidGitWorkingDir())
             {
                 Repositories.AddMostRecentRepository(Module.WorkingDir);
                 Settings.RecentWorkingDir = module.WorkingDir;

@@ -43,7 +43,7 @@ namespace GitUI.RevisionGridClasses
 
         private void SetFileSystemWatcher()
         {
-            if (Module.WorkingDirGitDir().IsNullOrEmpty())
+            if (!Module.IsValidGitWorkingDir())
             {
                 GitIndexWatcher.EnableRaisingEvents = false;
                 RefsWatcher.EnableRaisingEvents = false;
@@ -56,12 +56,12 @@ namespace GitUI.RevisionGridClasses
 
                     Path = Module.WorkingDirGitDir();
 
-                    GitIndexWatcher.Path = Module.WorkingDirGitDir();
+                    GitIndexWatcher.Path = Path;
                     GitIndexWatcher.Filter = "index";
                     GitIndexWatcher.IncludeSubdirectories = false;
                     GitIndexWatcher.EnableRaisingEvents = enabled;
 
-                    RefsWatcher.Path = Module.WorkingDirGitDir() + Settings.PathSeparator + "refs";
+                    RefsWatcher.Path = Path + Settings.PathSeparator + "refs";
                     RefsWatcher.IncludeSubdirectories = true;
                     RefsWatcher.EnableRaisingEvents = enabled;
                 }
