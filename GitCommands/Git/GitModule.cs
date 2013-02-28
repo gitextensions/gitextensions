@@ -284,12 +284,12 @@ namespace GitCommands
             return GitCommandHelpers.FixPath(path);
         }
 
-        public bool ValidWorkingDir()
+        public bool IsValidGitWorkingDir()
         {
-            return ValidWorkingDir(_workingdir);
+            return IsValidGitWorkingDir(_workingdir);
         }
 
-        public static bool ValidWorkingDir(string dir)
+        public static bool IsValidGitWorkingDir(string dir)
         {
             if (string.IsNullOrEmpty(dir))
                 return false;
@@ -393,7 +393,7 @@ namespace GitCommands
             {
                 dir = dir.Substring(0, dir.LastIndexOfAny(pathSeparators));
 
-                if (ValidWorkingDir(dir))
+                if (IsValidGitWorkingDir(dir))
                     return dir + Settings.PathSeparator.ToString();
             }
             return startDir;
@@ -1258,7 +1258,7 @@ namespace GitCommands
                     for (int i = 0; i < 3; i++)
                     {
                         if (File.Exists(path + Settings.PathSeparator.ToString() + ".gitmodules") &&
-                            ValidWorkingDir(path + Settings.PathSeparator.ToString()))
+                            IsValidGitWorkingDir(path + Settings.PathSeparator.ToString()))
                         {
                             superprojectPath = path + Settings.PathSeparator.ToString();
                             break;
@@ -1283,7 +1283,7 @@ namespace GitCommands
                         {
                             gitpath = gitpath.Substring(0, pos + 1).Replace('/', '\\');
                             gitpath = Path.GetFullPath(Path.Combine(_workingdir, gitpath));
-                            if (File.Exists(gitpath + ".gitmodules") && ValidWorkingDir(gitpath))
+                            if (File.Exists(gitpath + ".gitmodules") && IsValidGitWorkingDir(gitpath))
                                 superprojectPath = gitpath;
                         }
                     }
@@ -3102,7 +3102,7 @@ namespace GitCommands
 
         public SubmoduleStatus CheckSubmoduleStatus(string commit, string oldCommit, CommitData data, CommitData olddata, bool loaddata = false)
         {
-            if (!ValidWorkingDir() || oldCommit == null)
+            if (!IsValidGitWorkingDir() || oldCommit == null)
                 return SubmoduleStatus.NewSubmodule;
 
             if (commit == null || commit == oldCommit)
@@ -3406,11 +3406,6 @@ namespace GitCommands
             {
                 return WorkingDir;
             }
-        }
-
-        public bool IsValidGitWorkingDir(string workingDir)
-        {
-            return ValidWorkingDir(workingDir);
         }
 
         public string GitCommand
