@@ -20,12 +20,24 @@ namespace GitUI.HelperDialogs
         {
             InitializeComponent();
             Translate();
+
+            commitPickerSmallControl1.UICommandsSource = this;
         }
 
-        public GitRevision Revision { get; set; }
+        GitRevision _revision;
+        public GitRevision Revision
+        {
+            get { return _revision; }
+            set
+            {
+                _revision = value;
+                commitPickerSmallControl1.SelectedCommitHash = _revision.Guid;
+            }
+        }
 
         private void OkClick(object sender, EventArgs e)
         {
+            string commitGuid = commitPickerSmallControl1.SelectedCommitHash;
             var branchName = BranchNameTextBox.Text.Trim();
 
             if (branchName.IsNullOrWhiteSpace())
@@ -42,7 +54,7 @@ namespace GitUI.HelperDialogs
             }
             try
             {
-                if (Revision == null)
+                if (commitGuid == null)
                 {
                     MessageBox.Show(this, _noRevisionSelected.Text, Text);
                     return;
@@ -51,12 +63,11 @@ namespace GitUI.HelperDialogs
                 string cmd;
                 if (Orphan.Checked)
                 {
-                    cmd = GitCommandHelpers.CreateOrphanCmd(branchName, Revision.Guid);
+                    cmd = GitCommandHelpers.CreateOrphanCmd(branchName, commitGuid);
                 }
                 else
                 {
-                    cmd = GitCommandHelpers.BranchCmd(branchName, Revision.Guid,
-                                                                         CheckoutAfterCreate.Checked);
+                    cmd = GitCommandHelpers.BranchCmd(branchName, commitGuid, CheckoutAfterCreate.Checked);
                 }
 
                 bool wasSuccessFul = FormProcess.ShowDialog(this, cmd);
