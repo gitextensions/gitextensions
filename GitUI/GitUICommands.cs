@@ -494,7 +494,7 @@ namespace GitUI
         {
             Func<bool> action = () =>
             {
-                using (var form = new FormCreateBranchAtRevision(this))
+                using (var form = new FormCreateBranch(this))
                 {
                     form.Revision = revision;
                     return form.ShowDialog(owner) == DialogResult.OK;
