@@ -1,4 +1,4 @@
-﻿namespace GitUI
+﻿namespace GitUI.UserControls
 {
     partial class CommitSummaryUserControl
     {
