@@ -447,7 +447,7 @@ namespace GitUI.Editor
             string fullPath = Path.GetFullPath(Path.Combine(Module.WorkingDir, fileName));
             if (fileName.EndsWith("/") || Directory.Exists(fullPath))
             {
-                if (GitModule.ValidWorkingDir(fullPath))
+                if (GitModule.IsValidGitWorkingDir(fullPath))
                 {
                     _async.Load(getSubmoduleText, text => ViewText(fileName, text));
                 }

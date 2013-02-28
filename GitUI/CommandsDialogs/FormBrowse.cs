@@ -17,9 +17,9 @@ using GitUI.Hotkey;
 using GitUI.Plugin;
 using GitUI.Script;
 using GitUIPluginInterfaces;
-using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager.Translation;
 #if !__MonoCS__
+using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
 
 namespace GitUI.CommandsDialogs
@@ -285,7 +285,7 @@ namespace GitUI.CommandsDialogs
         {
             syncContext.Post(o =>
             {
-                RefreshButton.Image = indexChanged && Settings.UseFastChecks && Module.ValidWorkingDir()
+                RefreshButton.Image = indexChanged && Settings.UseFastChecks && Module.IsValidGitWorkingDir()
                                           ? GitUI.Properties.Resources.arrow_refresh_dirty
                                           : GitUI.Properties.Resources.arrow_refresh;
             }, this);
@@ -303,7 +303,7 @@ namespace GitUI.CommandsDialogs
                     pluginsToolStripMenuItem.DropDownItems.Add(item);
                 }
                 pluginsLoaded = true;
-                UpdatePluginMenu(Module.ValidWorkingDir());
+                UpdatePluginMenu(Module.IsValidGitWorkingDir());
             }
         }
 
@@ -357,7 +357,7 @@ namespace GitUI.CommandsDialogs
 
             UICommands.RaisePreBrowseInitialize(this);
 
-            bool validWorkingDir = Module.ValidWorkingDir();
+            bool validWorkingDir = Module.IsValidGitWorkingDir();
             bool hasWorkingDir = !string.IsNullOrEmpty(Module.WorkingDir);
             branchSelect.Text = validWorkingDir ? Module.GetSelectedBranch() : "";
             if (hasWorkingDir)
@@ -367,7 +367,7 @@ namespace GitUI.CommandsDialogs
             toolStripButtonLevelUp.Enabled = hasWorkingDir;
             CommitInfoTabControl.Visible = validWorkingDir;
             fileExplorerToolStripMenuItem.Enabled = validWorkingDir;
-            commandsToolStripMenuItem.Enabled = validWorkingDir;
+            commandsToolStripMenuItem.Visible = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
             branchSelect.Enabled = validWorkingDir;
             toolStripButton1.Enabled = validWorkingDir;
@@ -375,7 +375,8 @@ namespace GitUI.CommandsDialogs
                 _toolStripGitStatus.Enabled = validWorkingDir;
             toolStripButtonPull.Enabled = validWorkingDir;
             toolStripButtonPush.Enabled = validWorkingDir;
-            submodulesToolStripMenuItem.Enabled = validWorkingDir;
+            dashboardToolStripMenuItem.Visible = !validWorkingDir;
+            repositoryToolStripMenuItem.Visible = validWorkingDir;
             UpdatePluginMenu(validWorkingDir);
             gitMaintenanceToolStripMenuItem.Enabled = validWorkingDir;
             editgitignoreToolStripMenuItem1.Enabled = validWorkingDir;
@@ -648,7 +649,7 @@ namespace GitUI.CommandsDialogs
 
         private void CheckForMergeConflicts()
         {
-            bool validWorkingDir = Module.ValidWorkingDir();
+            bool validWorkingDir = Module.IsValidGitWorkingDir();
 
             if (validWorkingDir && Module.InTheMiddleOfBisect())
             {
@@ -802,6 +803,11 @@ namespace GitUI.CommandsDialogs
             if (CommitInfoTabControl.SelectedTab != TreeTabPage)
                 return;
 
+            if (selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.FileTree))
+                return;
+
+            selectedRevisionUpdatedTargets |= UpdateTargets.FileTree;
+
             try
             {
                 GitTree.SuspendLayout();
@@ -874,6 +880,11 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
+            if (selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.DiffList))
+                return;
+
+            selectedRevisionUpdatedTargets |= UpdateTargets.DiffList;
+
             var revisions = RevisionGrid.GetSelectedRevisions();
 
             DiffText.SaveCurrentScrollPos();
@@ -908,6 +919,11 @@ namespace GitUI.CommandsDialogs
         {
             if (CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
                 return;
+
+            if (selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.CommitInfo))
+                return;
+
+            selectedRevisionUpdatedTargets |= UpdateTargets.CommitInfo;
 
             if (RevisionGrid.GetSelectedRevisions().Count == 0)
                 return;
@@ -1097,10 +1113,22 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        [Flags]
+        internal enum UpdateTargets
+        {
+            None = 1,
+            DiffList = 2,
+            FileTree = 4,
+            CommitInfo = 8
+        }
+
+        private UpdateTargets selectedRevisionUpdatedTargets = UpdateTargets.None;
         private void RevisionGridSelectionChanged(object sender, EventArgs e)
         {
             try
             {
+                selectedRevisionUpdatedTargets = UpdateTargets.None;
+
                 var revisions = RevisionGrid.GetSelectedRevisions();
 
                 if (revisions.Count > 0 && GitRevision.IsArtificial(revisions[0].Guid))
@@ -1159,11 +1187,6 @@ namespace GitUI.CommandsDialogs
                 process.StartInfo.WorkingDirectory = Path.Combine(Module.WorkingDir, item.Name + Settings.PathSeparator.ToString());
                 process.Start();
             }
-        }
-
-        private void ViewDiffToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            UICommands.StartCompareRevisionsDialog(this);
         }
 
         private void CloneToolStripMenuItemClick(object sender, EventArgs e)
@@ -1479,9 +1502,11 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            DiffText.ViewPatch(RevisionGrid, DiffFiles.SelectedItem, String.Empty);
+            IList<GitRevision> items = RevisionGrid.GetSelectedRevisions();
+            if (items.Count() == 1)
+                items.Add(new GitRevision(Module, DiffFiles.SelectedItemParent));
+            DiffText.ViewPatch(items, DiffFiles.SelectedItem, String.Empty);
         }
-
 
         private void ChangelogToolStripMenuItemClick(object sender, EventArgs e)
         {
@@ -1581,7 +1606,7 @@ namespace GitUI.CommandsDialogs
         {
             GitModule module = new GitModule(path);
 
-            if (!module.ValidWorkingDir())
+            if (!module.IsValidGitWorkingDir())
             {
                 DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text,
                     directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
@@ -1748,7 +1773,7 @@ namespace GitUI.CommandsDialogs
             UnregisterPlugins();
             UICommands = new GitUICommands(module);
 
-            if (Module.ValidWorkingDir())
+            if (Module.IsValidGitWorkingDir())
             {
                 Repositories.AddMostRecentRepository(Module.WorkingDir);
                 Settings.RecentWorkingDir = module.WorkingDir;
@@ -1890,13 +1915,13 @@ namespace GitUI.CommandsDialogs
 
         private void copyFilenameToClipboardToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedItems.Count == 0)
+            if (!DiffFiles.SelectedItems.Any())
                 return;
 
             var fileNames = new StringBuilder();
             foreach (var item in DiffFiles.SelectedItems)
             {
-                //Only use appendline when multiple items are selected.
+                //Only use append line when multiple items are selected.
                 //This to make it easier to use the text from clipboard when 1 file is selected.
                 if (fileNames.Length > 0)
                     fileNames.AppendLine();
@@ -2059,7 +2084,6 @@ namespace GitUI.CommandsDialogs
             }
 
             UICommands.StartPullRequestsDialog(this, repoHost);
-            UICommands.RepoChangedNotifier.Notify();
         }
 
         private void _createPullRequestToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2294,7 +2318,7 @@ namespace GitUI.CommandsDialogs
 
         private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (DiffFiles.SelectedItems.Count == 0)
+            if (!DiffFiles.SelectedItems.Any())
                 return;
 
             foreach (var item in DiffFiles.SelectedItems)

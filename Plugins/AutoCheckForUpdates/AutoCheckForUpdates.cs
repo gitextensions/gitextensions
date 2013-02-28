@@ -43,7 +43,7 @@ namespace AutoCheckForUpdates
         public override bool Execute(GitUIBaseEventArgs e)
         {
             using (var updateForm = new Updates(e.GitModule.GitVersion) { AutoClose = false })
-                updateForm.ShowDialog(e.OwnerForm as IWin32Window);
+                updateForm.ShowDialog(e.OwnerForm);
             return false;
         }
 

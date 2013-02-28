@@ -60,6 +60,10 @@
     <Reference Include="ICSharpCode.TextEditor">
       <HintPath>..\Bin\ICSharpCode.TextEditor.dll</HintPath>
     </Reference>
+    <Reference Include="NBug, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Bin\NBug.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
