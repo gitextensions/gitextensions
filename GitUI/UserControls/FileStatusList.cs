@@ -20,13 +20,15 @@ namespace GitUI
     {
         private readonly TranslationString _UnsupportedMultiselectAction =
             new TranslationString("Operation not supported");
+        private readonly TranslationString _DiffWithParent =
+            new TranslationString("Diff with parent");
 
         private const int ImageSize = 16;
 
         public FileStatusList()
         {
             InitializeComponent(); Translate();
-            _NoDiffFilesChangesText = NoFiles.Text;
+            _noDiffFilesChangesDefaultText = NoFiles.Text;
 #if !__MonoCS__ // TODO Drag'n'Drop doesn't work on Mono/Linux
             FileStatusListView.MouseMove += FileStatusListView_MouseMove;
             FileStatusListView.MouseDown += FileStatusListView_MouseDown;
@@ -54,7 +56,7 @@ namespace GitUI
 
         private static ImageList _images;
 
-        private string _NoDiffFilesChangesText;
+        private readonly string _noDiffFilesChangesDefaultText;
 
         public void SetNoFilesText(string text)
         {
@@ -82,14 +84,6 @@ namespace GitUI
                     SelectedIndex = 0;
                 FileStatusListView.Focus();
             }
-        }
-
-        void FileStatusListView_MeasureItem(object sender, MeasureItemEventArgs e)
-        {
-            var gitItemStatus = (GitItemStatus)FileStatusListView.Items[e.Index].Tag;
-
-            e.ItemHeight = Math.Max((int)e.Graphics.MeasureString(gitItemStatus.Name, FileStatusListView.Font).Height, ImageSize);
-            //Do NOT set e.ItemWidth because it will crash in MONO
         }
 
         private string GetItemText(Graphics graphics, GitItemStatus gitItemStatus)
@@ -487,7 +481,7 @@ namespace GitUI
                     if (!String.IsNullOrEmpty(pair.Key))
                     {
                         string shortHash = pair.Key.Length > 8 ? pair.Key.Substring(0, 8) : pair.Key;
-                        group = new ListViewGroup("Diff with parent " + shortHash);
+                        group = new ListViewGroup(_DiffWithParent.Text + " " + shortHash);
                         group.Tag = pair.Key;
                         FileStatusListView.Groups.Add(group);
                     }
@@ -527,7 +521,7 @@ namespace GitUI
                 if (sortedFirstGroupItem != null)
                     sortedFirstGroupItem.Selected = true;
             }
-            else
+            else if (FileStatusListView.Items.Count > 0)
                 FileStatusListView.Items[0].Selected = true;
         }
 
@@ -611,7 +605,7 @@ namespace GitUI
 
         public void SetDiffs(List<GitRevision> revisions)
         {
-            NoFiles.Text = _NoDiffFilesChangesText;
+            NoFiles.Text = _noDiffFilesChangesDefaultText;
             switch (revisions.Count)
             {
                 case 0:
