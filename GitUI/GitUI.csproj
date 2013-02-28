@@ -119,10 +119,10 @@
       <DependentUpon>BranchComboBox.cs</DependentUpon>
     </Compile>
     <Compile Include="CommitInfo\CommandEventArgs.cs" />
-    <Compile Include="CommitInfo\CommitSummaryUserControl.cs">
+    <Compile Include="UserControls\CommitSummaryUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommitInfo\CommitSummaryUserControl.Designer.cs">
+    <Compile Include="UserControls\CommitSummaryUserControl.Designer.cs">
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateItem.cs" />
@@ -892,7 +892,7 @@
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommitInfo\CommitSummaryUserControl.resx">
+    <EmbeddedResource Include="UserControls\CommitSummaryUserControl.resx">
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\FormGoToLine.resx">
