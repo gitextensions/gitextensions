@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
             GitModule module = new GitModule(Directory.Text);
             Branch.DisplayMember = "Name";
             IList<GitHead> heads;
-            if (module.ValidWorkingDir())
+            if (module.IsValidGitWorkingDir())
                 heads = module.GetHeads(false);
             else
                 heads = new List<GitHead>();

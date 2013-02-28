@@ -166,7 +166,7 @@ namespace GitCommands
 
             if (string.IsNullOrEmpty(encodingName))
                 result = null;
-            else if (!Settings.availableEncodings.TryGetValue(encodingName, out result))
+            else if (!Settings.AvailableEncodings.TryGetValue(encodingName, out result))
             {
                 try
                 {
@@ -284,12 +284,12 @@ namespace GitCommands
             return GitCommandHelpers.FixPath(path);
         }
 
-        public bool ValidWorkingDir()
+        public bool IsValidGitWorkingDir()
         {
-            return ValidWorkingDir(_workingdir);
+            return IsValidGitWorkingDir(_workingdir);
         }
 
-        public static bool ValidWorkingDir(string dir)
+        public static bool IsValidGitWorkingDir(string dir)
         {
             if (string.IsNullOrEmpty(dir))
                 return false;
@@ -393,7 +393,7 @@ namespace GitCommands
             {
                 dir = dir.Substring(0, dir.LastIndexOfAny(pathSeparators));
 
-                if (ValidWorkingDir(dir))
+                if (IsValidGitWorkingDir(dir))
                     return dir + Settings.PathSeparator.ToString();
             }
             return startDir;
@@ -1258,7 +1258,7 @@ namespace GitCommands
                     for (int i = 0; i < 3; i++)
                     {
                         if (File.Exists(path + Settings.PathSeparator.ToString() + ".gitmodules") &&
-                            ValidWorkingDir(path + Settings.PathSeparator.ToString()))
+                            IsValidGitWorkingDir(path + Settings.PathSeparator.ToString()))
                         {
                             superprojectPath = path + Settings.PathSeparator.ToString();
                             break;
@@ -1283,7 +1283,7 @@ namespace GitCommands
                         {
                             gitpath = gitpath.Substring(0, pos + 1).Replace('/', '\\');
                             gitpath = Path.GetFullPath(Path.Combine(_workingdir, gitpath));
-                            if (File.Exists(gitpath + ".gitmodules") && ValidWorkingDir(gitpath))
+                            if (File.Exists(gitpath + ".gitmodules") && IsValidGitWorkingDir(gitpath))
                                 superprojectPath = gitpath;
                         }
                     }
@@ -1501,7 +1501,7 @@ namespace GitCommands
             return path.Contains(Settings.PathSeparator.ToString()) || path.Contains(Settings.PathSeparatorWrong.ToString());
         }
 
-        public string FetchCmd(string remote, string remoteBranch, string localBranch, bool noTags)
+        public string FetchCmd(string remote, string remoteBranch, string localBranch, bool? fetchTags)
         {
             var progressOption = "";
             if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
@@ -1510,7 +1510,7 @@ namespace GitCommands
             if (string.IsNullOrEmpty(remote) && string.IsNullOrEmpty(remoteBranch) && string.IsNullOrEmpty(localBranch))
                 return "fetch " + progressOption;
 
-            return "fetch " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch, noTags);
+            return "fetch " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch, fetchTags);
         }
 
         public string FetchCmd(string remote, string remoteBranch, string localBranch)
@@ -1529,7 +1529,7 @@ namespace GitCommands
             return "Done";
         }
 
-        public string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase, bool noTags)
+        public string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase, bool? fetchTags)
         {
             var progressOption = "";
             if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
@@ -1544,7 +1544,7 @@ namespace GitCommands
             if (rebase)
                 return "pull --rebase " + progressOption + remote;
 
-            return "pull " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch, noTags);
+            return "pull " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch, fetchTags);
         }
 
         public string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase)
@@ -1552,7 +1552,7 @@ namespace GitCommands
             return PullCmd(remote, remoteBranch, localBranch, rebase, false);
         }
 
-        private string GetFetchArgs(string remote, string remoteBranch, string localBranch, bool noTags)
+        private string GetFetchArgs(string remote, string remoteBranch, string localBranch, bool? fetchTags)
         {
             remote = FixPath(remote);
 
@@ -1583,7 +1583,7 @@ namespace GitCommands
             else
                 localBranchArguments = ":" + "refs/remotes/" + remote.Trim() + "/" + localBranch + "";
 
-            string arguments = noTags ? " --no-tags" : "";
+            string arguments = fetchTags == true ? "--tags" : fetchTags == false ? " --no-tags" : "";
 
             return "\"" + remote.Trim() + "\" " + remoteBranchArguments + localBranchArguments + arguments;
         }
@@ -1800,46 +1800,46 @@ namespace GitCommands
         private static readonly Regex HeadersMatch = new Regex(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$", RegexOptions.Compiled);
         private static readonly Regex QuotedText = new Regex(@"=\?([\w-]+)\?q\?(.*)\?=$", RegexOptions.Compiled);
 
-		public bool InTheMiddleOfInteractiveRebase()
-		{
-			return File.Exists(GetRebaseDir() + "git-rebase-todo");
-		}
-		
-		public IList<PatchFile> GetInteractiveRebasePatchFiles()
-		{
-			string todoFile = GetRebaseDir() + "git-rebase-todo";
-			string[] todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(new char[]{'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries) : null;
+        public bool InTheMiddleOfInteractiveRebase()
+        {
+            return File.Exists(GetRebaseDir() + "git-rebase-todo");
+        }
+        
+        public IList<PatchFile> GetInteractiveRebasePatchFiles()
+        {
+            string todoFile = GetRebaseDir() + "git-rebase-todo";
+            string[] todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(new char[]{'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries) : null;
 
-			IList<PatchFile> patchFiles = new List<PatchFile>();
+            IList<PatchFile> patchFiles = new List<PatchFile>();
 
-			if (todoCommits != null)
-			{
-				foreach (string todoCommit in todoCommits)
-				{
-					if (todoCommit.StartsWith("#"))
-						continue;
+            if (todoCommits != null)
+            {
+                foreach (string todoCommit in todoCommits)
+                {
+                    if (todoCommit.StartsWith("#"))
+                        continue;
 
-					string[] parts = todoCommit.Split(' ');
+                    string[] parts = todoCommit.Split(' ');
 
-					if (parts.Length >= 3)
-					{
-						string error = string.Empty;
-						CommitData data = CommitData.GetCommitData(this, parts[1], ref error);
+                    if (parts.Length >= 3)
+                    {
+                        string error = string.Empty;
+                        CommitData data = CommitData.GetCommitData(this, parts[1], ref error);
 
-						PatchFile nextCommitPatch = new PatchFile();
-						nextCommitPatch.Author = string.IsNullOrEmpty(error) ? data.Author : error;
-						nextCommitPatch.Subject = string.IsNullOrEmpty(error) ? data.Body : error;
-						nextCommitPatch.Name = parts[0];
-						nextCommitPatch.Date = string.IsNullOrEmpty(error) ? data.CommitDate.LocalDateTime.ToString() : error;
-						nextCommitPatch.IsNext = patchFiles.Count == 0;
+                        PatchFile nextCommitPatch = new PatchFile();
+                        nextCommitPatch.Author = string.IsNullOrEmpty(error) ? data.Author : error;
+                        nextCommitPatch.Subject = string.IsNullOrEmpty(error) ? data.Body : error;
+                        nextCommitPatch.Name = parts[0];
+                        nextCommitPatch.Date = string.IsNullOrEmpty(error) ? data.CommitDate.LocalDateTime.ToString() : error;
+                        nextCommitPatch.IsNext = patchFiles.Count == 0;
 
-						patchFiles.Add(nextCommitPatch);
-					}
-				}
-			}
+                        patchFiles.Add(nextCommitPatch);
+                    }
+                }
+            }
 
-			return patchFiles;
-		}
+            return patchFiles;
+        }
 
         public IList<PatchFile> GetRebasePatchFiles()
         {
@@ -3102,7 +3102,7 @@ namespace GitCommands
 
         public SubmoduleStatus CheckSubmoduleStatus(string commit, string oldCommit, CommitData data, CommitData olddata, bool loaddata = false)
         {
-            if (!ValidWorkingDir() || oldCommit == null)
+            if (!IsValidGitWorkingDir() || oldCommit == null)
                 return SubmoduleStatus.NewSubmodule;
 
             if (commit == null || commit == oldCommit)
@@ -3406,11 +3406,6 @@ namespace GitCommands
             {
                 return WorkingDir;
             }
-        }
-
-        public bool IsValidGitWorkingDir(string workingDir)
-        {
-            return ValidWorkingDir(workingDir);
         }
 
         public string GitCommand

@@ -87,14 +87,14 @@ namespace GitUI.CommandsDialogs
 
         private OutputFormat GetSelectedOutputFormat()
         {
-            return radioButtonFormatZip.Checked ? OutputFormat.Zip : OutputFormat.Tar;
+            return _NO_TRANSLATE_radioButtonFormatZip.Checked ? OutputFormat.Zip : OutputFormat.Tar;
         }
 
         private void btnChooseRevision_Click(object sender, EventArgs e)
         {
             using (var chooseForm = new FormChooseCommit(UICommands, SelectedRevision.Guid))
             {
-                if (chooseForm.ShowDialog() == DialogResult.OK && chooseForm.SelectedRevision != null)
+                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
                 {
                     SelectedRevision = chooseForm.SelectedRevision;
                 }

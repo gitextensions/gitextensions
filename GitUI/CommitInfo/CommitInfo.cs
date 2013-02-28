@@ -41,11 +41,11 @@ namespace GitUI.CommitInfo
             {
                 var url = e.LinkText;
                 var data = url.Split(new[] { '#' }, 2);
-                if (data.Length > 1)
-                    url = data[1];
 
                 try
                 {
+                    if (data.Length > 1)
+                        url = data[1];
                     var result = new Uri(url);
                     if (result.Scheme == "gitex")
                     {
@@ -65,7 +65,7 @@ namespace GitUI.CommitInfo
                 using (var process = new Process
                     {
                         EnableRaisingEvents = false,
-                        StartInfo = { FileName = url }
+                        StartInfo = { FileName = e.LinkText }
                     })
                     process.Start();
             }

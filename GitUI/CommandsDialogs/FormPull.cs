@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
@@ -61,6 +62,8 @@ namespace GitUI.CommandsDialogs
                                   Environment.NewLine + "" + Environment.NewLine + "Do you want to continue?");
         private readonly TranslationString _notOnBranchButtons = new TranslationString("Checkout branch|Continue");
         private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch");
+
+        private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
         #endregion
 
         private IList<GitHead> _heads;
@@ -308,10 +311,25 @@ namespace GitUI.CommandsDialogs
             {
                 if (stashed)
                 {
-                    bool messageBoxResult = Settings.AutoPopStashAfterPull ||
-                        MessageBox.Show(owner, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
-                                        MessageBoxButtons.YesNo) == DialogResult.Yes;
-                    if (ShouldStashPop(messageBoxResult, process, true))
+                    bool? messageBoxResult = Settings.AutoPopStashAfterPull;
+                    if (messageBoxResult == null)
+                    {
+                        DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
+                            this,
+                            _applyShashedItemsAgainCaption.Text,
+                            "",
+                            _applyShashedItemsAgain.Text,
+                            "",
+                            "",
+                            _dontShowAgain.Text,
+                            PSTaskDialog.eTaskDialogButtons.YesNo,
+                            PSTaskDialog.eSysIcons.Question,
+                            PSTaskDialog.eSysIcons.Question);
+                        messageBoxResult = (res == DialogResult.Yes);
+                        if (PSTaskDialog.cTaskDialog.VerificationChecked)
+                            Settings.AutoPopStashAfterPull = messageBoxResult;
+                    }
+                    if (ShouldStashPop(messageBoxResult ?? false, process, true))
                     {
                         FormProcess.ShowDialog(owner, Module, "stash pop");
                         MergeConflictHandler.HandleMergeConflicts(UICommands, owner, false);
@@ -406,15 +424,19 @@ namespace GitUI.CommandsDialogs
             var curLocalBranch = branch == localBranch.Text ? null : localBranch.Text;
             if (Fetch.Checked)
             {
-                return new FormRemoteProcess(Module, Module.FetchCmd(source, Branches.Text, curLocalBranch, NoTags.Checked));
+                return new FormRemoteProcess(Module, Module.FetchCmd(source, Branches.Text, curLocalBranch, GetTagsArg()));
             }
+            
+            Debug.Assert(Merge.Checked || Rebase.Checked);
 
             curLocalBranch = CalculateLocalBranch();
-            if (Merge.Checked)
-                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, false, NoTags.Checked));
-            if (Rebase.Checked)
-                return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, true, NoTags.Checked));
-            return null;
+
+            return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, Rebase.Checked, GetTagsArg()));            
+        }
+
+        private bool? GetTagsArg()
+        { 
+            return AllTags.Checked ? true : NoTags.Checked ? false : (bool?)null;
         }
 
         private string CalculateLocalBranch()
@@ -477,7 +499,7 @@ namespace GitUI.CommandsDialogs
             foreach (var submoduleName in submodules)
             {
                 GitModule submodule = Module.GetSubmodule(submoduleName);
-                if (!submodule.ValidWorkingDir())
+                if (!submodule.IsValidGitWorkingDir())
                     return false;
             }
             return true;
@@ -591,6 +613,9 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullMerge;
             helpImageDisplayUserControl1.Image2 = Resources.HelpPullMergeFastForward;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
+            AllTags.Enabled = false;
+            if (AllTags.Checked)
+                ReachableTags.Checked = true;
         }
 
         private void RebaseCheckedChanged(object sender, EventArgs e)
@@ -599,13 +624,17 @@ namespace GitUI.CommandsDialogs
             localBranch.Text = branch;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullRebase;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
+            AllTags.Enabled = false;
+            if (AllTags.Checked)
+                ReachableTags.Checked = true;
         }
 
         private void FetchCheckedChanged(object sender, EventArgs e)
         {
-            localBranch.Enabled = true;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullFetch;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
+            localBranch.Enabled = true;
+            AllTags.Enabled = true;
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)

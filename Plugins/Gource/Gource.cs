@@ -30,7 +30,7 @@ namespace Gource
 
             IGitModule gitUiCommands = eventArgs.GitModule;
             var ownerForm = eventArgs.OwnerForm as IWin32Window;
-            if (!gitUiCommands.IsValidGitWorkingDir(gitUiCommands.GitWorkingDir))
+            if (!gitUiCommands.IsValidGitWorkingDir())
             {
                 MessageBox.Show(ownerForm, "The current directory is not a valid git repository." + Environment.NewLine +
                                 Environment.NewLine + "Gource can be only be started from a valid git repository.");

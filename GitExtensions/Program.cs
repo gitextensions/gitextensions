@@ -27,6 +27,9 @@ namespace GitExtensions
                 NBug.Settings.ExitApplicationImmediately = false;
                 NBug.Settings.WriteLogToDisk = true;
                 NBug.Settings.MaxQueuedReports = 10;
+                NBug.Settings.StopReportingAfter = 90;
+                NBug.Settings.SleepBeforeSend = 30;
+                NBug.Settings.StoragePath = "WindowsTemp";
                 
                 AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
                 Application.ThreadException += NBug.Handler.ThreadException;
@@ -126,14 +129,14 @@ namespace GitExtensions
 
             if (args.Length <= 1 && string.IsNullOrEmpty(workingDir) && Settings.StartWithRecentWorkingDir)
             {
-                if (GitModule.ValidWorkingDir(Settings.RecentWorkingDir))
+                if (GitModule.IsValidGitWorkingDir(Settings.RecentWorkingDir))
                     workingDir = Settings.RecentWorkingDir;
             }
 
             if (string.IsNullOrEmpty(workingDir))
             {
                 string findWorkingDir = GitModule.FindGitWorkingDir(Directory.GetCurrentDirectory());
-                if (GitModule.ValidWorkingDir(findWorkingDir))
+                if (GitModule.IsValidGitWorkingDir(findWorkingDir))
                     workingDir = findWorkingDir;
             }
 
