@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -27,12 +27,12 @@ namespace GitUI.CommandsDialogs
         #endregion
 
         private readonly string _containRevison;
-        private readonly bool _isDirtyDir;
+        private readonly bool? _isDirtyDir;
         private readonly bool _isLoading;
+        private readonly string _rbResetBranchDefaultText;
         private string _remoteName = "";
         private string _newLocalBranchName = "";
         private string _localBranchName = "";
-        private readonly string _rbResetBranchText;
 
         private List<string> _localBranches;
         private List<string> _remoteBranches;
@@ -47,7 +47,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-            _rbResetBranchText = rbResetBranch.Text;
+            _rbResetBranchDefaultText = rbResetBranch.Text;
         }
 
         public FormCheckoutBranch(GitUICommands aCommands, string branch, bool remote)
@@ -91,9 +91,9 @@ namespace GitUI.CommandsDialogs
                 if (Settings.CheckForUncommittedChangesInCheckoutBranch)
                     _isDirtyDir = Module.IsDirtyDir();
                 else
-                    _isDirtyDir = false;
+                    _isDirtyDir = null;
 
-                localChangesGB.Visible = ShowLocalChangesGB();
+                localChangesGB.Visible = IsThereUncommittedChanges();
                 ChangesMode = Settings.CheckoutBranchAction;
             }
             finally
@@ -102,19 +102,19 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private bool ShowLocalChangesGB()
+        private bool IsThereUncommittedChanges()
         {
-            return _isDirtyDir || !Settings.CheckForUncommittedChangesInCheckoutBranch;
+            return _isDirtyDir ?? true;
         }
 
         public DialogResult DoDefaultActionOrShow(IWin32Window owner)
         {
-            if (Settings.AlwaysShowCheckoutBranchDlg ||
-                Branches.Text.IsNullOrWhiteSpace() || Remotebranch.Checked
-                || (_isDirtyDir && !Settings.UseDefaultCheckoutBranchAction))
-                return ShowDialog(owner);
-            else
+            bool localBranchSelected = !Branches.Text.IsNullOrWhiteSpace() && !Remotebranch.Checked;
+            if (!Settings.AlwaysShowCheckoutBranchDlg && localBranchSelected &&
+                (!IsThereUncommittedChanges() || Settings.UseDefaultCheckoutBranchAction))
                 return OkClick();
+            else
+                return ShowDialog(owner);
         }
 
 
@@ -213,22 +213,22 @@ namespace GitUI.CommandsDialogs
             LocalChangesAction changes = ChangesMode;
             Settings.CheckoutBranchAction = changes;
 
-            if (ShowLocalChangesGB())
+            if (IsThereUncommittedChanges() && (Visible || Settings.UseDefaultCheckoutBranchAction))
                 cmd.LocalChanges = changes;
             else
                 cmd.LocalChanges = LocalChangesAction.DontChange;
 
-            IWin32Window _owner = Visible ? this : Owner;
+            IWin32Window owner = Visible ? this : Owner;
 
             //Stash local changes, but only if the setting CheckForUncommittedChangesInCheckoutBranch is true
             bool stash = Settings.CheckForUncommittedChangesInCheckoutBranch &&
                          changes == LocalChangesAction.Stash && Module.IsDirtyDir();
             if (stash)
             {
-                UICommands.Stash(_owner);
+                UICommands.Stash(owner);
             }
 
-            if (UICommands.StartCommandLineProcessDialog(cmd, _owner))
+            if (UICommands.StartCommandLineProcessDialog(cmd, owner))
             {
                 if (stash)
                 {
@@ -316,7 +316,7 @@ namespace GitUI.CommandsDialogs
             }
             bool existsLocalBranch = LocalBranchExists(_localBranchName);
 
-            rbResetBranch.Text = existsLocalBranch ? _rbResetBranchText : _createBranch.Text;
+            rbResetBranch.Text = existsLocalBranch ? _rbResetBranchDefaultText : _createBranch.Text;
             branchName.Text = "'" + _localBranchName + "'";
             txtCustomBranchName.Text = _newLocalBranchName;
         }
