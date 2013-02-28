@@ -1,6 +1,6 @@
-﻿namespace GitUI.HelperDialogs
+﻿namespace GitUI.CommandsDialogs
 {
-    partial class FormCreateBranchAtRevision
+    partial class FormCreateBranch
     {
         /// <summary>
         /// Required designer variable.
