@@ -28,7 +28,7 @@ namespace GitUI.BuildServerIntegration
 
         public TeamCityAdapter(IConfig config)
         {
-            httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
+            httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
 
             var hostName = config.Get("BuildServerUrl");

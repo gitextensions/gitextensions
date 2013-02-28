@@ -15,7 +15,7 @@ namespace GitUI
 
         public static IRepositoryHostPlugin TryGetGitHosterForModule(GitModule aModule)
         {
-            if (!aModule.ValidWorkingDir())
+            if (!aModule.IsValidGitWorkingDir())
                 return null;
 
             return GitHosters.FirstOrDefault(gitHoster => gitHoster.GitModuleIsRelevantToMe(aModule));

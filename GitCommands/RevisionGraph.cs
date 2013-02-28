@@ -208,7 +208,7 @@ namespace GitCommands
         private IList<GitHead> GetHeads()
         {
             var result = Module.GetHeads(true);
-            bool validWorkingDir = Module.ValidWorkingDir();
+            bool validWorkingDir = Module.IsValidGitWorkingDir();
             selectedBranchName = validWorkingDir ? Module.GetSelectedBranch() : string.Empty;
             GitHead selectedHead = result.FirstOrDefault(head => head.Name == selectedBranchName);
 

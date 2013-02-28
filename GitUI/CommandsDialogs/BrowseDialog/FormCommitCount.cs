@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 foreach (var submoduleName in submodules)
                 {
                     GitModule submodule = Module.GetSubmodule(submoduleName);
-                    if (submodule.ValidWorkingDir())
+                    if (submodule.IsValidGitWorkingDir())
                     {
                         var submoduleItems = CommitCounter.GroupAllCommitsByContributor(submodule).Item1;
                         foreach (var keyValuePair in submoduleItems)
