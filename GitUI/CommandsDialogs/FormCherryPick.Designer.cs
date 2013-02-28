@@ -40,7 +40,7 @@
             this.checkAddReference = new System.Windows.Forms.CheckBox();
             this.AutoCommit = new System.Windows.Forms.CheckBox();
             this.BranchInfo = new System.Windows.Forms.Label();
-            this.commitSummaryUserControl1 = new GitUI.CommitSummaryUserControl();
+            this.commitSummaryUserControl1 = new GitUI.UserControls.CommitSummaryUserControl();
             this.mainTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.commitInformationPanel = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -314,7 +314,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.Label ParentsLabel;
         private System.Windows.Forms.CheckBox checkAddReference;
-        private CommitSummaryUserControl commitSummaryUserControl1;
+        private GitUI.UserControls.CommitSummaryUserControl commitSummaryUserControl1;
         private System.Windows.Forms.Button btnChooseRevision;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TableLayoutPanel mainTableLayoutPanel;
