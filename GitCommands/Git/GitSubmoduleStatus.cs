@@ -35,7 +35,7 @@ namespace GitCommands
 
         public CommitData GetCommitData(GitModule submodule)
         {
-            if (submodule == null || !submodule.ValidWorkingDir())
+            if (submodule == null || !submodule.IsValidGitWorkingDir())
                 return null;
 
             string error = "";
@@ -44,7 +44,7 @@ namespace GitCommands
 
         public CommitData GetOldCommitData(GitModule submodule)
         {
-            if (submodule == null || !submodule.ValidWorkingDir())
+            if (submodule == null || !submodule.IsValidGitWorkingDir())
                 return null;
 
             string error = "";

@@ -86,7 +86,7 @@ namespace Gerrit
 
             // Correct enabled/visibility of our menu/tool strip items.
 
-            bool validWorkingDir = e.GitModule.IsValidGitWorkingDir(e.GitModule.GitWorkingDir);
+            bool validWorkingDir = e.GitModule.IsValidGitWorkingDir();
 
             _gitReviewMenuItem.Enabled = validWorkingDir;
 
