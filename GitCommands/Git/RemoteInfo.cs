@@ -171,7 +171,7 @@ namespace GitCommands.Git
 
                     if (line.Contains(PullConfig.RebasesOntoRemote))
                     {// rebase (only one per local)
-                        pulls.Add(new PullConfig(line));
+                        pulls.Add(new PullConfig(this, line));
                         branch = null;
                     }
                     else if (line.Contains("merges with remote"))
@@ -192,8 +192,7 @@ namespace GitCommands.Git
                 pulls.AddRange(
                     dict.Select(
                         firstToFollowers =>
-                            new PullConfig(
-                                firstToFollowers.Key, firstToFollowers.Value)
+                            new PullConfig(this, firstToFollowers.Key, firstToFollowers.Value)
                     )
                 );
                 PullConfigs = pulls;
@@ -368,15 +367,16 @@ namespace GitCommands.Git
             internal static readonly string RebasesOntoRemote = "rebases onto remote";
 
             /// <summary>Creates a new <see cref="PullConfig"/> which rebases onto a remote.</summary>
-            internal PullConfig(string line)
-                : this(line, null, true) { }
+            internal PullConfig(RemoteInfo remote, string line)
+                : this(remote, line, null, true) { }
 
             /// <summary>Creates a new <see cref="PullConfig"/> which merges onto remote(s).</summary>
-            internal PullConfig(string firstLine, IEnumerable<string> proceedingLines)
-                : this(firstLine, proceedingLines, false) { }
+            internal PullConfig(RemoteInfo remote, string firstLine, IEnumerable<string> proceedingLines)
+                : this(remote, firstLine, proceedingLines, false) { }
 
-            PullConfig(string line, IEnumerable<string> proceedingLines, bool isRebase)
+            PullConfig(RemoteInfo remote, string line, IEnumerable<string> proceedingLines, bool isRebase)
             {
+                Remote = remote;
                 line = line.Trim();
                 int gapStart = line.IndexOf(" ");
 
@@ -404,17 +404,19 @@ namespace GitCommands.Git
             }
 
             /// <summary>Gets the remote branch from a line, using the specified marker.</summary>
-            static string GetRemoteBranch(string line, string marker)
+            string GetRemoteBranch(string line, string marker)
             {
-                return
-                    line.Substring(
-                            marker.Length +
-                            line.LastIndexOf(
-                                marker,
-                                StringComparison.InvariantCultureIgnoreCase))
-                        .Trim();
+                string remoteBranch = line.Substring(marker.Length + line.LastIndexOf(marker, StringComparison.InvariantCultureIgnoreCase)).Trim();
+                if (remoteBranch.StartsWith(string.Format("{0}{1}", Remote.Name, GitModule.RefSep)) &&
+                    !Remote.NameToBranch.ContainsKey(remoteBranch))
+                {// anomaly "merges with remote {remote}/branch"
+                    return remoteBranch.SubstringAfterLastSafe(GitModule.RefSep);
+                }// (else no anomaly)
+                return remoteBranch;
             }
 
+            /// <summary>Gets the remote which contains the <see cref="PullConfig"/>.</summary>
+            public RemoteInfo Remote { get; set; }
             /// <summary>Gets the local branch.</summary>
             public string LocalBranch { get; private set; }
             /// <summary>Gets the remote branch(es) which the local is configured to pull from.</summary>
