@@ -123,7 +123,7 @@
             this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
             this.table.Size = new System.Drawing.Size(438, 41);
-            this.table.TabIndex = 6;
+            this.table.TabIndex = 1;
             // 
             // Ok
             // 
@@ -167,7 +167,7 @@
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             this.panel1.Size = new System.Drawing.Size(438, 40);
-            this.panel1.TabIndex = 9;
+            this.panel1.TabIndex = 0;
             // 
             // flowLayoutPanel1
             // 
@@ -248,6 +248,7 @@
             this.Padding = new System.Windows.Forms.Padding(3);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create branch";
+            this.Load += new System.EventHandler(this.FormCreateBranchAtRevision_Load);
             this.stackOptions.ResumeLayout(false);
             this.stackOptions.PerformLayout();
             this.table.ResumeLayout(false);

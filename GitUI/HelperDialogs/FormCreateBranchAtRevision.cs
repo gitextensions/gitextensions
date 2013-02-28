@@ -35,6 +35,11 @@ namespace GitUI.HelperDialogs
             }
         }
 
+        private void FormCreateBranchAtRevision_Load(object sender, EventArgs e)
+        {
+            BranchNameTextBox.Focus();
+        }
+
         private void OkClick(object sender, EventArgs e)
         {
             string commitGuid = commitPickerSmallControl1.SelectedCommitHash;
