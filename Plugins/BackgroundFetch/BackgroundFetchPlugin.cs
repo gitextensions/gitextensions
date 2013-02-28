@@ -46,7 +46,7 @@ namespace BackgroundFetch
                 fetchInterval = 0;
 
             var gitModule = (GitModule)currentGitUiCommands.GitModule;
-            if (fetchInterval > 0 && gitModule.IsValidGitWorkingDir(gitModule.GitWorkingDir))
+            if (fetchInterval > 0 && GitModule.IsValidGitWorkingDir(gitModule.GitWorkingDir))
             {
                 cancellationToken =
                     Observable.Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
