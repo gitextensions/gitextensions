@@ -4,9 +4,9 @@ using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
 
-namespace GitUI.HelperDialogs
+namespace GitUI.CommandsDialogs
 {
-    public sealed partial class FormCreateBranchAtRevision : GitModuleForm
+    public sealed partial class FormCreateBranch : GitModuleForm
     {
         private readonly TranslationString _noRevisionSelected =
             new TranslationString("Select 1 revision to create the branch on.");
@@ -15,7 +15,7 @@ namespace GitUI.HelperDialogs
         private readonly TranslationString _branchNameIsNotValud =
             new TranslationString("“{0}” is not valid branch name.");
 
-        public FormCreateBranchAtRevision(GitUICommands aCommands)
+        public FormCreateBranch(GitUICommands aCommands)
             : base(aCommands)
         {
             InitializeComponent();
