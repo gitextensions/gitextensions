@@ -57,12 +57,12 @@ namespace GitUI.CommandsDialogs
             if (url != null)
             {
                 _NO_TRANSLATE_From.Text = url;
-                if (!Module.ValidWorkingDir())
+                if (!Module.IsValidGitWorkingDir())
                     _NO_TRANSLATE_To.Text = Module.WorkingDir;
             }
             else
             {
-                if (Module.ValidWorkingDir())
+                if (Module.IsValidGitWorkingDir())
                     _NO_TRANSLATE_From.Text = Module.WorkingDir;
                 else
                     _NO_TRANSLATE_To.Text = Module.WorkingDir;

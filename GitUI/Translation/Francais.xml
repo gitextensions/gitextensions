@@ -837,6 +837,10 @@ Valeur: {2} = {3}</Value>
           <Source>Create new repository</Source>
           <Value>Créer un nouveau dépôt</Value>
         </TranslationItem>
+        <TranslationItem Name="_showCurrentBranch" Property="Text">
+          <Source>Show current branch</Source>
+          <Value>Montrer la branche actuelle</Value>
+        </TranslationItem>
         <TranslationItem Name="develop" Property="Text">
           <Source>Develop</Source>
           <Value>Développer</Value>
@@ -911,10 +915,6 @@ Voulez-vous l'ouvrir?</Value>
         <TranslationItem Name="_removeCategory" Property="Text">
           <Source>Remove</Source>
           <Value>Supprimer</Value>
-        </TranslationItem>
-        <TranslationItem Name="_showCurrentBranch" Property="Text">
-          <Source>Show current branch</Source>
-          <Value>Montrer la branche actuelle</Value>
         </TranslationItem>
         <TranslationItem Name="editToolStripMenuItem" Property="Text">
           <Source>Edit</Source>
