@@ -3447,29 +3447,24 @@ namespace GitCommands
 
         #endregion
 
-        private bool disposed = false;
-        public void Dispose()
+        private void DisposeRepository()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (this.disposed)
+            if (_repository == null)
                 return;
 
-            if (disposing && _repository != null)
-                _repository.Dispose();
-
+            _repository.Dispose();
             _repository = null;
+        }
 
-            disposed = true;
+        public void Dispose()
+        {
+            DisposeRepository();
+            GC.SuppressFinalize(this);
         }
 
         ~GitModule()
         {
-            Dispose(false);
+            DisposeRepository();
         }
     }
 }
