@@ -1880,7 +1880,7 @@ namespace GitUI.CommandsDialogs
 
         private void CreateBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartCreateBranchDialog(this);
+            UICommands.StartCreateBranchDialog(this, RevisionGrid.GetSelectedRevisions().FirstOrDefault());
         }
 
         private void RevisionGridDoubleClick(object sender, EventArgs e)
