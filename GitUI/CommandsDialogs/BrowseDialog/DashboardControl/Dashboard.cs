@@ -11,6 +11,7 @@ using GitCommands.Repository;
 using GitUI.Properties;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
+using System.Collections;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
@@ -28,6 +29,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private readonly TranslationString directoryIsNotAValidRepositoryCaption = new TranslationString("Open");
         private readonly TranslationString directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to abort and remove it from the recent repositories list?");
         private readonly TranslationString directoryIsNotAValidRepositoryOpenIt = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to open it?");
+        private readonly TranslationString _showCurrentBranch = new TranslationString("Show current branch");
         private bool initialized;
 
         public Dashboard()
@@ -102,6 +104,56 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             var IssuesItem = new DashboardItem(Resources.bug, issues.Text);
             IssuesItem.Click += IssuesItem_Click;
             DonateCategory.AddItem(IssuesItem);
+
+            //
+            // create Show current branch menu item and add to Dashboard menu
+            //
+            var showCurrentBranchMenuItem = new ToolStripMenuItem(_showCurrentBranch.Text);
+            showCurrentBranchMenuItem.Click += showCurrentBranchMenuItem_Click;
+            showCurrentBranchMenuItem.Checked = GitCommands.Settings.DashboardShowCurrentBranch;
+
+            var menuStrip = FindControl<MenuStrip>(Parent.Parent.Parent, p => true); // TODO: improve: Parent.Parent.Parent == FormBrowse
+            var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
+            dashboardMenu.DropDownItems.Add(showCurrentBranchMenuItem);
+        }
+
+        /// <summary>
+        /// code duplicated from GerritPlugin.cs
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="form"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        private T FindControl<T>(Control form, Func<T, bool> predicate)
+            where T : Control
+        {
+            return FindControl(form.Controls, predicate);
+        }
+
+        /// <summary>
+        /// code duplicated from GerritPlugin.cs
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="controls"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        private T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
+            where T : Control
+        {
+            foreach (Control control in controls)
+            {
+                var result = control as T;
+
+                if (result != null && predicate(result))
+                    return result;
+
+                result = FindControl(control.Controls, predicate);
+
+                if (result != null)
+                    return result;
+            }
+
+            return null;
         }
 
         public void SaveSplitterPositions()
@@ -201,6 +253,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             pictureBox1.BringToFront();
 
             SetSplitterPositions();
+        }
+
+        void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
+        {
+            bool newValue = !GitCommands.Settings.DashboardShowCurrentBranch;
+            GitCommands.Settings.DashboardShowCurrentBranch = newValue;
+            ((ToolStripMenuItem)sender).Checked = newValue;
+            Refresh();
         }
 
         private void SetSplitterPositions()
@@ -306,7 +366,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             GitModule module = new GitModule(path);
 
-            if (!module.ValidWorkingDir())
+            if (!module.IsValidGitWorkingDir())
             {
                 DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepository.Text, 
                     directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNoCancel,
@@ -374,7 +434,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 {
                     GitModule module = new GitModule(dir);
 
-                    if (!module.ValidWorkingDir())
+                    if (!module.IsValidGitWorkingDir())
                     {
                         DialogResult dialogResult = MessageBox.Show(this, directoryIsNotAValidRepositoryOpenIt.Text, 
                             directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNo,

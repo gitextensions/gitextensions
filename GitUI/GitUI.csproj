@@ -126,6 +126,9 @@
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateItem.cs" />
+    <Compile Include="UserControls\ExListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Graph.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Component</SubType>

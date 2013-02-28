@@ -144,7 +144,11 @@ namespace GitUI
         public static string GetSelectedPatch(this FileViewer diffViewer, RevisionGrid grid, GitItemStatus file)
         {
             IList<GitRevision> revisions = grid.GetSelectedRevisions();
+            return GetSelectedPatch(diffViewer, revisions, file);
+        }
 
+        public static string GetSelectedPatch(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file)
+        {
             if (revisions.Count == 0)
                 return null;
 
@@ -160,30 +164,34 @@ namespace GitUI
 
             if (IsItemUntracked(file, firstRevision, secondRevision))
             {
-                var fullPath = Path.Combine(grid.Module.WorkingDir, file.Name);
-                if (Directory.Exists(fullPath) && GitModule.ValidWorkingDir(fullPath))
-                    return GitCommandHelpers.GetSubmoduleText(grid.Module, file.Name.TrimEnd('/'), "");
+                var fullPath = Path.Combine(diffViewer.Module.WorkingDir, file.Name);
+                if (Directory.Exists(fullPath) && GitModule.IsValidGitWorkingDir(fullPath))
+                    return GitCommandHelpers.GetSubmoduleText(diffViewer.Module, file.Name.TrimEnd('/'), "");
                 return FileReader.ReadFileContent(fullPath, diffViewer.Encoding);
             }
 
             if (file.IsSubmodule && file.SubmoduleStatus != null)
-                return GitCommandHelpers.ProcessSubmoduleStatus(grid.Module, file.SubmoduleStatus);
+                return GitCommandHelpers.ProcessSubmoduleStatus(diffViewer.Module, file.SubmoduleStatus);
 
-            PatchApply.Patch patch = GetItemPatch(grid.Module, file, firstRevision, secondRevision,
+            PatchApply.Patch patch = GetItemPatch(diffViewer.Module, file, firstRevision, secondRevision,
                 diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
 
             if (patch == null)
                 return string.Empty;
 
             if (file.IsSubmodule)
-                return GitCommandHelpers.ProcessSubmodulePatch(grid.Module, patch);
+                return GitCommandHelpers.ProcessSubmodulePatch(diffViewer.Module, patch);
             return patch.Text;
         }
 
         public static void ViewPatch(this FileViewer diffViewer, RevisionGrid grid, GitItemStatus file, string defaultText)
         {
             IList<GitRevision> revisions = grid.GetSelectedRevisions();
+            ViewPatch(diffViewer, revisions, file, defaultText);
+        }
 
+        public static void ViewPatch(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file, string defaultText)
+        {
             if (revisions.Count == 1 && (revisions[0].ParentGuids == null || revisions[0].ParentGuids.Length == 0))
             {
                 if (file.TreeGuid.IsNullOrEmpty())
@@ -192,15 +200,15 @@ namespace GitUI
                     diffViewer.ViewGitItem(file.Name, file.TreeGuid);
                 else
                     diffViewer.ViewText(file.Name, 
-                        GitCommandHelpers.GetSubmoduleText(grid.Module, file.Name, file.TreeGuid));
+                        GitCommandHelpers.GetSubmoduleText(diffViewer.Module, file.Name, file.TreeGuid));
             }
             else
             {
                 diffViewer.ViewPatch(() =>
-                                       {
-                                           string selectedPatch = diffViewer.GetSelectedPatch(grid, file);
-                                           return selectedPatch ?? defaultText;
-                                       });
+                    {
+                        string selectedPatch = diffViewer.GetSelectedPatch(revisions, file);
+                        return selectedPatch ?? defaultText;
+                    });
             }
         }
 
