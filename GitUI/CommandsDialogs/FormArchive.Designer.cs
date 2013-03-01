@@ -34,7 +34,7 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this._NO_TRANSLATE_radioButtonFormatZip = new System.Windows.Forms.RadioButton();
             this._NO_TRANSLATE_radioButtonFormatTar = new System.Windows.Forms.RadioButton();
-            this.commitSummaryUserControl1 = new GitUI.CommitSummaryUserControl();
+            this.commitSummaryUserControl1 = new GitUI.UserControls.CommitSummaryUserControl();
             this.btnChooseRevision = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
@@ -224,7 +224,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.RadioButton _NO_TRANSLATE_radioButtonFormatZip;
         private System.Windows.Forms.RadioButton _NO_TRANSLATE_radioButtonFormatTar;
-        private CommitSummaryUserControl commitSummaryUserControl1;
+        private GitUI.UserControls.CommitSummaryUserControl commitSummaryUserControl1;
         private System.Windows.Forms.Button btnChooseRevision;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
