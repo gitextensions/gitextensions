@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
 
-namespace GitUI
+namespace GitUI.UserControls
 {
     /// <summary>
     /// TODO: replace with some better looking RTF control (similar to Commit Tab in main window)
