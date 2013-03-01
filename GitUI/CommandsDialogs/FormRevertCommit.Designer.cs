@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.commitSummaryUserControl1 = new GitUI.CommitSummaryUserControl();
+            this.commitSummaryUserControl1 = new GitUI.UserControls.CommitSummaryUserControl();
             this.ParentsLabel = new System.Windows.Forms.Label();
             this.ParentsList = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -232,7 +232,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.Label BranchInfo;
-        private CommitSummaryUserControl commitSummaryUserControl1;
+        private GitUI.UserControls.CommitSummaryUserControl commitSummaryUserControl1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel parentListPanel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
