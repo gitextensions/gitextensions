@@ -1,66 +1,105 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormCreateBranch : GitModuleForm
+    public sealed partial class FormCreateBranch : GitModuleForm
     {
-        private readonly TranslationString _selectOneRevision = new TranslationString("Select 1 revision to create the branch on.");
-        private readonly TranslationString _branchCaption = new TranslationString("Branch");
-
-                /// <summary>
-        /// For VS designer
-        /// </summary>
-        private FormCreateBranch()
-            : this(null)
-        {
-        }
-
+        private readonly TranslationString _noRevisionSelected =
+            new TranslationString("Select 1 revision to create the branch on.");
+        private readonly TranslationString _branchNameIsEmpty =
+            new TranslationString("Enter branch name.");
+        private readonly TranslationString _branchNameIsNotValud =
+            new TranslationString("“{0}” is not valid branch name.");
 
         public FormCreateBranch(GitUICommands aCommands)
-            : base(true, aCommands)
+            : base(aCommands)
         {
             InitializeComponent();
             Translate();
+
+            commitPickerSmallControl1.UICommandsSource = this;
         }
 
-        private void Ok_Click(object sender, EventArgs e)
+        GitRevision _revision;
+        public GitRevision Revision
         {
+            get { return _revision; }
+            set
+            {
+                _revision = value;
+                commitPickerSmallControl1.SelectedCommitHash = _revision.Guid;
+            }
+        }
+
+        private void FormCreateBranchAtRevision_Load(object sender, EventArgs e)
+        {
+            BranchNameTextBox.Focus();
+        }
+
+        private void OkClick(object sender, EventArgs e)
+        {
+            string commitGuid = commitPickerSmallControl1.SelectedCommitHash;
+            var branchName = BranchNameTextBox.Text.Trim();
+
+            if (branchName.IsNullOrWhiteSpace())
+            {
+                MessageBox.Show(_branchNameIsEmpty.Text, Text);
+                DialogResult = DialogResult.None;
+                return;
+            }
+            if (!Module.CheckBranchFormat(branchName))
+            {
+                MessageBox.Show(string.Format(_branchNameIsNotValud.Text, branchName), Text);
+                DialogResult = DialogResult.None;
+                return;
+            }
             try
             {
-
-                if (RevisionGrid.GetSelectedRevisions().Count != 1)
+                if (commitGuid == null)
                 {
-                    MessageBox.Show(this, _selectOneRevision.Text, _branchCaption.Text);
+                    MessageBox.Show(this, _noRevisionSelected.Text, Text);
                     return;
                 }
 
-                string cmd = GitCommandHelpers.BranchCmd(BName.Text, RevisionGrid.GetSelectedRevisions()[0].Guid, CheckoutAfterCreate.Checked);
-                FormProcess.ShowDialog(this, cmd);
-                UICommands.RepoChangedNotifier.Notify();
+                string cmd;
+                if (Orphan.Checked)
+                {
+                    cmd = GitCommandHelpers.CreateOrphanCmd(branchName, commitGuid);
+                }
+                else
+                {
+                    cmd = GitCommandHelpers.BranchCmd(branchName, commitGuid, CheckoutAfterCreate.Checked);
+                }
 
-                Close();
+                bool wasSuccessFul = FormProcess.ShowDialog(this, cmd);
+                if (Orphan.Checked && wasSuccessFul && ClearOrphan.Checked)
+                {// orphan AND orphan creation success AND clear
+                    cmd = GitCommandHelpers.RemoveCmd();
+                    FormProcess.ShowDialog(this, cmd);
+                }
 
+                DialogResult = DialogResult.OK;
             }
-            catch
+            catch (Exception ex)
             {
+                Trace.WriteLine(ex.Message);
             }
         }
 
-        private void Checkout_Click(object sender, EventArgs e)
+        void Orphan_CheckedChanged(object sender, EventArgs e)
         {
-            UICommands.StartCheckoutBranchDialog(this);
-            RevisionGrid.RefreshRevisions();
-        }
-
-        private void FormBranch_Load(object sender, EventArgs e)
-        {
-            RevisionGrid.Load();
-
-            BName.Focus();
-            AcceptButton = Ok;
+            bool isOrphan = Orphan.Checked;
+            ClearOrphan.Enabled = isOrphan;
+            
+            CheckoutAfterCreate.Enabled = (isOrphan == false);// auto-checkout for orphan
+            if (isOrphan)
+            {
+                CheckoutAfterCreate.Checked = true;
+            }
         }
     }
 }
