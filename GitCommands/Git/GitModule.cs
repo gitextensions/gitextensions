@@ -3108,9 +3108,12 @@ namespace GitCommands
 
         public string GetMergeBase(string a, string b)
         {
-            var aCommit = Repository.Commits.First(c => c.Sha == a);
-            var bCommit = Repository.Commits.First(c => c.Sha == b);
-            return Repository.Commits.FindCommonAncestor(aCommit, bCommit).Sha;
+            var aCommit = Repository.Lookup<Commit>(a);
+            var bCommit = Repository.Lookup<Commit>(b);
+            if (aCommit == null || bCommit == null)
+                return null;
+            var baseCommit = Repository.Commits.FindCommonAncestor(aCommit, bCommit);
+            return baseCommit != null ? baseCommit.Sha : null;
         }
 
         public SubmoduleStatus CheckSubmoduleStatus(string commit, string oldCommit, CommitData data, CommitData olddata, bool loaddata = false)
