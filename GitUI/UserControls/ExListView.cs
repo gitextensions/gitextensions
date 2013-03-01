@@ -49,6 +49,11 @@ namespace GitUI.UserControls
 
     class ExListView : ListView
     {
+        public ExListView()
+        {
+            DoubleBuffered = true;
+        }
+
 #if !__MonoCS__
         #region Win32 Apis
 
@@ -70,6 +75,8 @@ namespace GitUI.UserControls
 
             public const int WM_LBUTTONDOWN = 0x0201;
             public const int WM_LBUTTONUP = 0x0202;
+            public const int WM_PAINT = 0x0F;
+            public const int WM_REFLECT_NOTIFY = 0x204E;
             public const int LVM_FIRST = 0x1000;
             public const int LVM_HITTEST = (LVM_FIRST + 18);
             public const int LVM_SETGROUPINFO = (LVM_FIRST + 147);
@@ -106,6 +113,14 @@ namespace GitUI.UserControls
                 return new POINT(
                     (int)(ulParam & 0x0000ffff),
                     (int)((ulParam & 0xffff0000) >> 16));
+            }
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct NMHDR
+            {
+                public IntPtr hwndFrom;
+                public IntPtr idFrom;
+                public int code;
             }
 
             /// <summary>
@@ -184,21 +199,45 @@ namespace GitUI.UserControls
         }
         #endregion
 
+        private bool _isInWmPaintMsg;
+
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == NativeMethods.WM_LBUTTONUP || m.Msg == NativeMethods.WM_LBUTTONDOWN)
+            switch (m.Msg)
             {
-                var info = new NativeMethods.LVHITTESTINFO();
+                case NativeMethods.WM_PAINT:
+                    _isInWmPaintMsg = true;
+                    base.WndProc(ref m);
+                    _isInWmPaintMsg = false;
+                    break;
+                case NativeMethods.WM_REFLECT_NOTIFY:
+                    var nmhdr = (NativeMethods.NMHDR)m.GetLParam(typeof(NativeMethods.NMHDR));
+                    if (nmhdr.code == -12)
+                    {
+                        // NM_CUSTOMDRAW
+                        if (_isInWmPaintMsg)
+                            base.WndProc(ref m);
+                    }
+                    else
+                        base.WndProc(ref m);
+                    break;
+                case NativeMethods.WM_LBUTTONUP:
+                case NativeMethods.WM_LBUTTONDOWN:
+                    var info = new NativeMethods.LVHITTESTINFO();
 
-                info.pt = NativeMethods.LParamToPOINT((uint)m.LParam);
+                    info.pt = NativeMethods.LParamToPOINT((uint)m.LParam);
 
-                //if the click is on the group header, exit, otherwise send message
-                var handleRef = new HandleRef(this, Handle);
-                if (NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SUBITEMHITTEST, (IntPtr)(-1), ref info) != -1)
-                    if ((info.flags & NativeMethods.LVHITTESTFLAGS.LVHT_EX_GROUP_HEADER) != 0)
-                        return;
+                    //if the click is on the group header, exit, otherwise send message
+                    var handleRef = new HandleRef(this, Handle);
+                    if (NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SUBITEMHITTEST, (IntPtr)(-1), ref info) != -1)
+                        if ((info.flags & NativeMethods.LVHITTESTFLAGS.LVHT_EX_GROUP_HEADER) != 0)
+                            return;
+                    base.WndProc(ref m);
+                    break;
+                default:
+                    base.WndProc(ref m);
+                    break;
             }
-            base.WndProc(ref m);
         }
 
         private static int? GetGroupID(ListViewGroup lstvwgrp)
