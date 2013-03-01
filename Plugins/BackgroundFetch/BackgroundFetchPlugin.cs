@@ -52,7 +52,7 @@ namespace BackgroundFetch
                     Observable.Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
                               .SkipWhile(i => gitModule.IsRunningGitProcess())
                               .Repeat()
-                              .Subscribe(i => currentGitUiCommands.GitCommand("fetch --progress --all"));
+                              .Subscribe(i => gitModule.RunGitCmdAsync("fetch --progress --all"));
             }
         }
 
