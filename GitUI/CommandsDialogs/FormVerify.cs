@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
 
         private void mnuLostObjectsCreateBranch_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormCreateBranchAtRevision(UICommands) { Revision = GetCurrentGitRevision() })
+            using (var frm = new FormCreateBranch(UICommands) { Revision = GetCurrentGitRevision() })
             {
                 var dialogResult = frm.ShowDialog(this);
                 if (dialogResult == DialogResult.OK)
