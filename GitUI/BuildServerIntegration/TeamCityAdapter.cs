@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reactive.Concurrency;
@@ -28,7 +27,7 @@ namespace GitUI.BuildServerIntegration
 
         public TeamCityAdapter(IConfig config)
         {
-            httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(60) };
+            httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
 
             var hostName = config.Get("BuildServerUrl");
@@ -79,7 +78,7 @@ namespace GitUI.BuildServerIntegration
                                                        var tasks = new List<Task>(8);
                                                        var buildsLeft = buildIds.Length;
 
-                                                       foreach (var buildId in buildIds)
+                                                       foreach (var buildId in buildIds.OrderByDescending(int.Parse))
                                                        {
                                                            var notifyObserverTask =
                                                                GetBuildFromIdXmlResponseAsync(buildId, cancellationToken)
