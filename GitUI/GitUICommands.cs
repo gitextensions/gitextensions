@@ -13,6 +13,7 @@ using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
 using Settings = GitCommands.Settings;
+using GitUI.HelperDialogs;
 
 namespace GitUI
 {
@@ -493,21 +494,23 @@ namespace GitUI
             return StartAddFilesDialog(null, null);
         }
 
-        public bool StartCreateBranchDialog(IWin32Window owner)
+        public bool StartCreateBranchDialog(IWin32Window owner, GitRevision revision)
         {
             Func<bool> action = () =>
             {
                 using (var form = new FormCreateBranch(this))
-                    form.ShowDialog(owner);
-                return true;
+                {
+                    form.Revision = revision;
+                    return form.ShowDialog(owner) == DialogResult.OK;
+                }
             };
 
-            return DoActionOnRepo(owner, true, false, PreCreateBranch, PostCreateBranch, action);
+            return DoActionOnRepo(owner, true, true, PreCreateBranch, PostCreateBranch, action);
         }
 
         public bool StartCreateBranchDialog()
         {
-            return StartCreateBranchDialog(null);
+            return StartCreateBranchDialog(null, null);
         }
 
         public bool StartCloneDialog(IWin32Window owner, string url, bool openedFromProtocolHandler, GitModuleChangedEventHandler GitModuleChanged)
