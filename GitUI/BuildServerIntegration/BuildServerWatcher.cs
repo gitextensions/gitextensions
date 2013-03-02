@@ -79,8 +79,10 @@ namespace GitUI.BuildServerIntegration
             buildStatusCancellationToken = cancellationToken;
 
             cancellationToken.Add(
-                fullDayObservable.Concat(fullObservable)
-                    .Concat(Observable.Empty<BuildInfo>()
+                fullDayObservable
+                    .Concat(fullObservable)
+                    .Concat(Observable
+                                .Empty<BuildInfo>()
                                 .Delay(TimeSpan.FromMinutes(1))
                                 .Concat(fromNowObservable)
                                 .Repeat())
