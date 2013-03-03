@@ -1,9 +1,11 @@
 using System;
 using System.IO;
 using System.IO.IsolatedStorage;
+using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -96,18 +98,29 @@ namespace GitUI.BuildServerIntegration
             const string PasswordKey = "Password";
             using (var stream = GetBuildServerOptionsIsolatedStorageStream(buildServerAdapter, FileAccess.Read, FileShare.Read))
             {
-                buildServerConfigSource = new IniConfigSource(stream);
+                var protectedData = new byte[stream.Length];
 
-                var credentialsConfig = buildServerConfigSource.Configs[CredentialsConfigName];
+                stream.Read(protectedData, 0, (int)stream.Length);
 
-                if (credentialsConfig != null)
+                byte[] unprotectedData = ProtectedData.Unprotect(protectedData, null, DataProtectionScope.CurrentUser);
+                using (var memoryStream = new MemoryStream(unprotectedData))
                 {
-                    username = credentialsConfig.GetString(UsernameKey);
-                    password = credentialsConfig.GetString(PasswordKey);
-
-                    if (firstTime)
+                    using (var textReader = new StreamReader(memoryStream, Encoding.UTF8))
                     {
-                        return true;
+                        buildServerConfigSource = new IniConfigSource(textReader);
+                    }
+
+                    var credentialsConfig = buildServerConfigSource.Configs[CredentialsConfigName];
+
+                    if (credentialsConfig != null)
+                    {
+                        username = credentialsConfig.GetString(UsernameKey);
+                        password = credentialsConfig.GetString(PasswordKey);
+
+                        if (firstTime)
+                        {
+                            return true;
+                        }
                     }
                 }
             }
@@ -132,7 +145,16 @@ namespace GitUI.BuildServerIntegration
 
                         using (var stream = GetBuildServerOptionsIsolatedStorageStream(buildServerAdapter, FileAccess.Write, FileShare.None))
                         {
-                            buildServerConfigSource.Save(stream);
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                using (var textWriter = new StreamWriter(memoryStream, Encoding.UTF8))
+                                {
+                                    buildServerConfigSource.Save(textWriter);
+                                }
+
+                                var protectedData = ProtectedData.Protect(memoryStream.ToArray(), null, DataProtectionScope.CurrentUser);
+                                stream.Write(protectedData, 0, protectedData.Length);
+                            }
                         }
 
                         return true;
