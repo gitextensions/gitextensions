@@ -13,10 +13,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public class CheckSettingsLogic : Translate
     {
-        public readonly TranslationString _toolSuggestPath =
+        public readonly TranslationString ToolSuggestPathText =
             new TranslationString("Please enter the path to {0} and press suggest.");
 
-        public readonly TranslationString __mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
+        public readonly TranslationString MergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
 
         readonly CommonLogic _commonLogic;
         readonly GitModule _gitModule;
@@ -286,8 +286,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 SetMergetoolPathText("");
                 SetMergeToolCmdText("");
                 if (!silent)
-                    MessageBox.Show(/*this, */String.Format(_toolSuggestPath.Text, exeName),
-                        __mergeToolSuggestCaption.Text);
+                    MessageBox.Show(/*this, */String.Format(ToolSuggestPathText.Text, exeName),
+                        MergeToolSuggestCaption.Text);
                 return;
             }
 
