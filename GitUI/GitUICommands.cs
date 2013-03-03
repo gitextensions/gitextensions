@@ -1080,13 +1080,13 @@ namespace GitUI
         {
             Func<bool> action = () =>
             {
-                using (var form = new FormCreateTag(this))
+                using (var form = new FormCreateTag(this, null))
                     form.ShowDialog(owner);
 
                 return true;
             };
 
-            return DoActionOnRepo(owner, true, false, PreCreateTag, PostCreateTag, action);
+            return DoActionOnRepo(owner, true, true, PreCreateTag, PostCreateTag, action);
         }
 
         public bool StartCreateTagDialog()
