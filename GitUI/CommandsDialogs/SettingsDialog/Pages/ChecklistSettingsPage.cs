@@ -579,12 +579,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public bool CheckGitCredentialStore()
         {
             gitCredentialWinStore.Visible = true;
-            string value = GitCommandHelpers.GetGlobalConfig().GetValue("credential.helper");
-            bool isValid;
-            if (Settings.RunningOnWindows())
-                isValid = value.Contains("git-credential-winstore.exe");
-            else
-                isValid = !string.IsNullOrEmpty(value);
+
+            bool isValid = _checkSettingsLogic.CheckGitCredentialStore();
 
             if (isValid)
             {

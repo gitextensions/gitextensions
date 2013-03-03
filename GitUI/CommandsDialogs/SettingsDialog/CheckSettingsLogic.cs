@@ -21,9 +21,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         readonly CommonLogic _commonLogic;
         readonly GitModule _gitModule;
 
-        [Obsolete("TODO: Remove this dependency to another Page later!")]
-        public ChecklistSettingsPage ChecklistSettingsPage { get; set; } 
-
         public CheckSettingsLogic(CommonLogic commonLogic, GitModule gitModule)
         {
             _commonLogic = commonLogic;
@@ -60,7 +57,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool SolveGitCredentialStore()
         {
-            if (!ChecklistSettingsPage.CheckGitCredentialStore())
+            if (!CheckGitCredentialStore())
             {
                 string gcsFileName = Settings.GetInstallDir() + @"\GitCredentialWinStore\git-credential-winstore.exe";
                 if (File.Exists(gcsFileName))
@@ -78,6 +75,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 return false;
             }
             return true;
+        }
+
+        public bool CheckGitCredentialStore()
+        {
+            string value = GitCommandHelpers.GetGlobalConfig().GetValue("credential.helper");
+            bool isValid;
+            if (Settings.RunningOnWindows())
+                isValid = value.Contains("git-credential-winstore.exe");
+            else
+                isValid = !string.IsNullOrEmpty(value);
+
+            return isValid;
         }
 
         public bool SolveLinuxToolsDir()
