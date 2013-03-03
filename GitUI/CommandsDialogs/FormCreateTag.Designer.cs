@@ -1,8 +1,8 @@
 ﻿using GitUI.SpellChecker;
 
-namespace GitUI.HelperDialogs
+namespace GitUI.CommandsDialogs
 {
-    partial class FormCreateTagAtRevision
+    partial class FormCreateTag
     {
         /// <summary>
         /// Required designer variable.

@@ -1080,7 +1080,7 @@ namespace GitUI
         {
             Func<bool> action = () =>
             {
-                using (var form = new FormCreateTagAtRevision(this, null))
+                using (var form = new FormCreateTag(this, null))
                     form.ShowDialog(owner);
 
                 return true;
