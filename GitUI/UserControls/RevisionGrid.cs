@@ -18,6 +18,7 @@ using GitUI.RevisionGridClasses;
 using GitUI.Script;
 using Gravatar;
 using ResourceManager.Translation;
+using GitUI.UserControls.RevisionGridClasses;
 
 namespace GitUI
 {
@@ -67,6 +68,7 @@ namespace GitUI
         private RevisionGridLayout layout;
         private int rowHeigth;
         public event GitModuleChangedEventHandler GitModuleChanged;
+        public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
 
         public RevisionGrid()
         {
@@ -214,6 +216,15 @@ namespace GitUI
         public bool ShowUncommitedChangesIfPossible
         {
             get; set;
+        }
+
+        [Description("Do not open the commit info dialog on double click. This is used if the double click event is handled elseswhere.")]
+        [Category("Behavior")]
+        [DefaultValue(false)]
+        public bool DoubleClickDoesNotOpenCommitInfo
+        {
+            get;
+            set;
         }
 
         private IndexWatcher _IndexWatcher;
@@ -1481,7 +1492,16 @@ namespace GitUI
 
         private void RevisionsDoubleClick(object sender, EventArgs e)
         {
-            ViewSelectedRevisions();
+            if (DoubleClickRevision != null)
+            {
+                var selectedRevisions = GetSelectedRevisions();
+                DoubleClickRevision(this, new DoubleClickRevisionEventArgs(selectedRevisions.FirstOrDefault()));
+            }
+
+            if (!DoubleClickDoesNotOpenCommitInfo)
+            {
+                ViewSelectedRevisions();
+            }
         }
 
         public void ViewSelectedRevisions()
