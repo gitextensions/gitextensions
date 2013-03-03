@@ -6,9 +6,9 @@ using GitCommands;
 using GitUI.Script;
 using ResourceManager.Translation;
 
-namespace GitUI.HelperDialogs
+namespace GitUI.CommandsDialogs
 {
-    public sealed partial class FormCreateTagAtRevision : GitModuleForm
+    public sealed partial class FormCreateTag : GitModuleForm
     {
         private readonly TranslationString _messageCaption = new TranslationString("Tag");
 
@@ -21,7 +21,7 @@ namespace GitUI.HelperDialogs
 
         private string currentRemote = "";
 
-        public FormCreateTagAtRevision(GitUICommands aCommands, GitRevision revision)
+        public FormCreateTag(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
         {
             InitializeComponent();
