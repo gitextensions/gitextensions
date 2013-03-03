@@ -135,6 +135,7 @@
     <Compile Include="UserControls\ExListView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UserControls\RevisionGridClasses\DoubleClickRevisionEventArgs.cs" />
     <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Graph.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Component</SubType>
