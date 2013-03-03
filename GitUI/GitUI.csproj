@@ -780,12 +780,6 @@
     <Compile Include="CommandsDialogs\FormSubmodules.Designer.cs">
       <DependentUpon>FormSubmodules.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\FormCreateTag.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\FormCreateTag.Designer.cs">
-      <DependentUpon>FormCreateTag.cs</DependentUpon>
-    </Compile>
     <Compile Include="HelperDialogs\FormCreateTagAtRevision.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1253,10 +1247,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormSubmodules.resx">
       <DependentUpon>FormSubmodules.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\FormCreateTag.resx">
-      <DependentUpon>FormCreateTag.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="HelperDialogs\FormCreateTagAtRevision.resx">
