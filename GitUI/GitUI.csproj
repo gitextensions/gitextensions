@@ -88,6 +88,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
+    <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
