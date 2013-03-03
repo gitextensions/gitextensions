@@ -65,7 +65,7 @@ namespace GitUI
         private string _quickSearchString;
         private RevisionGraph _revisionGraphCommand;
 
-        private BuildServerWatcher _BuildServerWatcher;
+        public BuildServerWatcher BuildServerWatcher { get; private set; }
 
         private RevisionGridLayout layout;
         private int rowHeigth;
@@ -483,7 +483,7 @@ namespace GitUI
             Loading.Visible = true;
             Loading.BringToFront();
 
-            _BuildServerWatcher = new BuildServerWatcher(this, Revisions);
+            BuildServerWatcher = new BuildServerWatcher(this, Revisions);
         }
 
         public new void Load()
@@ -749,7 +749,7 @@ namespace GitUI
 
                 LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
 
-                _BuildServerWatcher.CancelBuildStatusFetchOperation();
+                BuildServerWatcher.CancelBuildStatusFetchOperation();
 
                 DisposeRevisionGraphCommand();
 
@@ -934,7 +934,7 @@ namespace GitUI
                                           SelectInitialRevision();
                                           _isLoading = false;
 
-                                          _BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
+                                          BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
                                       }, this);
             }
 

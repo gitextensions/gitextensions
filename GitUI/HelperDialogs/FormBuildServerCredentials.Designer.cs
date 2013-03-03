@@ -135,6 +135,7 @@
             this.Name = "FormBuildServerCredentials";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Enter credentials";
+            this.Load += new System.EventHandler(this.FormBuildServerCredentials_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
