@@ -20,7 +20,7 @@ namespace GitUI.HelperDialogs
         private readonly TranslationString _pushToCaption = new TranslationString("Push tag to '{0}'");
 
         private string currentRemote = "";
-        
+
         public FormCreateTagAtRevision(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
         {
@@ -29,7 +29,7 @@ namespace GitUI.HelperDialogs
 
             commitPickerSmallControl1.UICommandsSource = this;
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
-            commitPickerSmallControl1.SelectedCommitHash = revision.Guid;
+            commitPickerSmallControl1.SelectedCommitHash = revision == null ? null : revision.Guid;
         }
 
         private void FormTagSmall_Load(object sender, EventArgs e)
