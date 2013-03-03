@@ -220,8 +220,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 MergeToolCmd.SelectAll();
                 MergeToolCmd.SelectedText = "";
                 if (sender != null)
-                    MessageBox.Show(this, String.Format(_checkSettingsLogic._toolSuggestPath.Text, exeName),
-                        _checkSettingsLogic.__mergeToolSuggestCaption.Text);
+                    MessageBox.Show(this, String.Format(_checkSettingsLogic.ToolSuggestPathText.Text, exeName),
+                        _checkSettingsLogic.MergeToolSuggestCaption.Text);
                 return;
             }
             MergetoolPath.SelectAll(); // allow Undo action
@@ -265,7 +265,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 DifftoolCmd.SelectAll();
                 DifftoolCmd.SelectedText = "";
                 if (sender != null)
-                    MessageBox.Show(this, String.Format(_checkSettingsLogic._toolSuggestPath.Text, exeName),
+                    MessageBox.Show(this, String.Format(_checkSettingsLogic.ToolSuggestPathText.Text, exeName),
                         __diffToolSuggestCaption.Text);
                 return;
             }
