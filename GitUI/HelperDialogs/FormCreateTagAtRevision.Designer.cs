@@ -32,7 +32,7 @@ namespace GitUI.HelperDialogs
         {
             this.label1 = new System.Windows.Forms.Label();
             this.Ok = new System.Windows.Forms.Button();
-            this.TName = new System.Windows.Forms.TextBox();
+            this.textBoxTagName = new System.Windows.Forms.TextBox();
             this.annotate = new System.Windows.Forms.CheckBox();
             this.pushTag = new System.Windows.Forms.CheckBox();
             this.tagMessage = new GitUI.SpellChecker.EditNetSpell();
@@ -63,7 +63,7 @@ namespace GitUI.HelperDialogs
             // Ok
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Ok.Location = new System.Drawing.Point(321, 11);
+            this.Ok.Location = new System.Drawing.Point(317, 11);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(108, 23);
             this.Ok.TabIndex = 6;
@@ -71,14 +71,14 @@ namespace GitUI.HelperDialogs
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.OkClick);
             // 
-            // TName
+            // textBoxTagName
             // 
-            this.TName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBoxTagName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TName.Location = new System.Drawing.Point(103, 12);
-            this.TName.Name = "TName";
-            this.TName.Size = new System.Drawing.Size(212, 23);
-            this.TName.TabIndex = 1;
+            this.textBoxTagName.Location = new System.Drawing.Point(103, 12);
+            this.textBoxTagName.Name = "textBoxTagName";
+            this.textBoxTagName.Size = new System.Drawing.Size(208, 23);
+            this.textBoxTagName.TabIndex = 1;
             // 
             // annotate
             // 
@@ -95,7 +95,7 @@ namespace GitUI.HelperDialogs
             // 
             this.pushTag.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pushTag.AutoSize = true;
-            this.pushTag.Location = new System.Drawing.Point(317, 46);
+            this.pushTag.Location = new System.Drawing.Point(313, 46);
             this.pushTag.Name = "pushTag";
             this.pushTag.Size = new System.Drawing.Size(109, 19);
             this.pushTag.TabIndex = 2;
@@ -111,7 +111,7 @@ namespace GitUI.HelperDialogs
             this.tagMessage.Location = new System.Drawing.Point(103, 28);
             this.tagMessage.Margin = new System.Windows.Forms.Padding(2);
             this.tagMessage.Name = "tagMessage";
-            this.tagMessage.Size = new System.Drawing.Size(326, 77);
+            this.tagMessage.Size = new System.Drawing.Size(322, 75);
             this.tagMessage.TabIndex = 5;
             this.tagMessage.TextBoxFont = new System.Drawing.Font("Segoe UI", 9F);
             // 
@@ -148,7 +148,7 @@ namespace GitUI.HelperDialogs
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(438, 224);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(434, 222);
             this.tableLayoutPanel1.TabIndex = 7;
             // 
             // flowLayoutPanel1
@@ -160,7 +160,7 @@ namespace GitUI.HelperDialogs
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(50, 30);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(432, 30);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(428, 30);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
             // label3
@@ -196,13 +196,13 @@ namespace GitUI.HelperDialogs
             // 
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.TName);
+            this.panel1.Controls.Add(this.textBoxTagName);
             this.panel1.Controls.Add(this.Ok);
             this.panel1.Controls.Add(this.pushTag);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 39);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(432, 69);
+            this.panel1.Size = new System.Drawing.Size(428, 69);
             this.panel1.TabIndex = 3;
             // 
             // panel2
@@ -214,7 +214,7 @@ namespace GitUI.HelperDialogs
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(3, 114);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(432, 107);
+            this.panel2.Size = new System.Drawing.Size(428, 105);
             this.panel2.TabIndex = 4;
             // 
             // FormCreateTagAtRevision
@@ -222,10 +222,11 @@ namespace GitUI.HelperDialogs
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(438, 224);
+            this.ClientSize = new System.Drawing.Size(434, 222);
             this.Controls.Add(this.tableLayoutPanel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(450, 260);
             this.Name = "FormCreateTagAtRevision";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create tag";
@@ -245,7 +246,7 @@ namespace GitUI.HelperDialogs
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.TextBox TName;
+        private System.Windows.Forms.TextBox textBoxTagName;
         private System.Windows.Forms.CheckBox annotate;
         private System.Windows.Forms.CheckBox pushTag;
         private EditNetSpell tagMessage;
