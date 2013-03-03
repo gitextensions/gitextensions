@@ -540,7 +540,8 @@ namespace GitCommands
         {
             path = FixPath(path);
 
-            fromBranch = GitModule.GetFullBranchName(fromBranch);
+            // This method is for pushing to remote branches, so fully qualify the
+            // remote branch name with refs/heads/.
             toBranch = GitModule.GetFullBranchName(toBranch);
 
             if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
@@ -1244,7 +1245,7 @@ namespace GitCommands
 
         /// <summary>
         /// Takes a date/time which and determines a friendly string for time from now to be displayed for the relative time from the date.
-        /// It is important to note that times are compared using the current timezone, so the date that is passed in should be converted 
+        /// It is important to note that times are compared using the current timezone, so the date that is passed in should be converted
         /// to the local timezone before passing it in.
         /// </summary>
         /// <param name="originDate">Current date.</param>
