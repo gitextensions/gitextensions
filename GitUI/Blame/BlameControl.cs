@@ -27,10 +27,12 @@ namespace GitUI.Blame
             BlameCommitter.ScrollPosChanged += BlameCommitter_ScrollPosChanged;
             BlameCommitter.MouseMove += BlameCommitter_MouseMove;
             BlameCommitter.MouseLeave += BlameCommitter_MouseLeave;
+            BlameCommitter.SelectedLineChanged += SelectedLineChanged;
+            BlameCommitter.RequestDiffView += ActiveTextAreaControlDoubleClick;
 
             BlameFile.IsReadOnly = true;
             BlameFile.ScrollPosChanged += BlameFile_ScrollPosChanged;
-            BlameFile.SelectedLineChanged += BlameFile_SelectedLineChanged;
+            BlameFile.SelectedLineChanged += SelectedLineChanged;
             BlameFile.RequestDiffView += ActiveTextAreaControlDoubleClick;
             BlameFile.MouseMove += BlameFile_MouseMove;
 
@@ -129,7 +131,7 @@ namespace GitUI.Blame
             }
         }
 
-        void BlameFile_SelectedLineChanged(object sender, int selectedLine)
+        void SelectedLineChanged(object sender, int selectedLine)
         {
             if (_blame == null || selectedLine >= _blame.Lines.Count)
                 return;
