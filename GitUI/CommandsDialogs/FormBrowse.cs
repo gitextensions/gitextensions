@@ -1452,6 +1452,12 @@ namespace GitUI.CommandsDialogs
             UICommands.StartMailMapDialog(this);
         }
 
+        private void EditLocalGitConfigToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var fileName = Path.Combine(Module.WorkingDir, ".git/config");
+            UICommands.StartFileEditorDialog(fileName);
+        }
+
         private void CompressGitDatabaseToolStripMenuItemClick(object sender, EventArgs e)
         {
             FormProcess.ShowModeless(this, "gc");
