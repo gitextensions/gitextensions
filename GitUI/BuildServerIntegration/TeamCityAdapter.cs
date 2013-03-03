@@ -9,38 +9,47 @@ using System.Net.Http.Headers;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using GitCommands;
-using GitUI.HelperDialogs;
-using Gravatar;
 using Nini.Config;
 
 namespace GitUI.BuildServerIntegration
 {
     internal class TeamCityAdapter : IBuildServerAdapter
     {
+        private readonly IBuildServerWatcher buildServerWatcher;
+
         private string ProjectName { get; set; }
 
         private readonly HttpClient httpClient;
 
         private readonly Task<IEnumerable<string>> getBuildTypesTask;
 
-        public TeamCityAdapter(IConfig config)
+        public TeamCityAdapter(IBuildServerWatcher buildServerWatcher, IConfig config)
         {
+            this.buildServerWatcher = buildServerWatcher;
+
             httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
 
             var hostName = config.Get("BuildServerUrl");
             if (!string.IsNullOrEmpty(hostName))
             {
-                var hostRootUri = hostName.Contains("://")
-                                  ? new Uri(hostName, UriKind.Absolute)
-                                  : new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute);
+                var hostRootUri = Uri.CheckSchemeName(hostName)
+                                  ? new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
+                                  : new Uri(hostName, UriKind.Absolute);
                 httpClient.BaseAddress = hostRootUri;
+            }
+
+            string username, password;
+            if (buildServerWatcher.GetBuildServerCredentials(this, true, out username, out password))
+            {
+                // Assign the authentication headers
+                httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
             }
 
             ProjectName = config.Get("ProjectName");
@@ -183,9 +192,9 @@ namespace GitUI.BuildServerIntegration
             return buildInfo;
         }
 
-        public AuthenticationHeaderValue CreateBasicHeader(string username, string password)
+        private static AuthenticationHeaderValue CreateBasicHeader(string username, string password)
         {
-            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(string.Format("{0}:{1}", username, password));
+            byte[] byteArray = Encoding.UTF8.GetBytes(string.Format("{0}:{1}", username, password));
             return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
         }
 
@@ -217,7 +226,7 @@ namespace GitUI.BuildServerIntegration
                                                        string username;
                                                        string password;
 
-                                                       if (GetBuildServerCredentials(this, out username, out password))
+                                                       if (buildServerWatcher.GetBuildServerCredentials(this, false, out username, out password))
                                                        {
                                                            // Assign the authentication headers
                                                            httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
@@ -232,25 +241,6 @@ namespace GitUI.BuildServerIntegration
                                                },
                                            cancellationToken)
                              .Unwrap();
-        }
-
-        private bool GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, out string userName, out string password)
-        {
-            userName = null;
-            password = null;
-
-            using (var form = new FormBuildServerCredentials(buildServerAdapter.UniqueKey))
-            {
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    userName = form.UserName;
-                    password = form.Password;
-
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         private Task<XDocument> GetXmlResponseAsync(string relativePath, CancellationToken cancellationToken)

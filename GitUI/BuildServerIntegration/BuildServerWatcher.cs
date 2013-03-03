@@ -1,19 +1,21 @@
 using System;
 using System.IO;
-using System.Linq;
+using System.IO.IsolatedStorage;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.BuildServerIntegration;
+using GitUI.HelperDialogs;
 using GitUI.RevisionGridClasses;
 using Nini.Config;
 
 namespace GitUI.BuildServerIntegration
 {
-    public class BuildServerWatcher : IDisposable
+    public class BuildServerWatcher : IBuildServerWatcher, IDisposable
     {
         private readonly RevisionGrid revisionGrid;
         private readonly DvcsGraph revisions;
@@ -22,7 +24,7 @@ namespace GitUI.BuildServerIntegration
         private int buildStatusMessageColumnIndex = -1;
 
         private IDisposable buildStatusCancellationToken;
-        private IBuildServerAdapter _buildServerAdapter;
+        private IBuildServerAdapter buildServerAdapter;
 
         public BuildServerWatcher(RevisionGrid revisionGrid, DvcsGraph revisions)
         {
@@ -32,47 +34,23 @@ namespace GitUI.BuildServerIntegration
             AddBuildStatusColumns();
         }
 
-        private void AddBuildStatusColumns()
-        {
-            var buildStatusImageColumn = new DataGridViewImageColumn
-                                             {
-                                                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                                                 Width = 16,
-                                                 ReadOnly = true,
-                                                 SortMode = DataGridViewColumnSortMode.NotSortable
-                                             };
-            var buildMessageTextBoxColumn = new DataGridViewTextBoxColumn
-                                                {
-                                                    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                                                    ReadOnly = true,
-                                                    SortMode = DataGridViewColumnSortMode.NotSortable
-                                                };
-
-            buildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
-            buildStatusMessageColumnIndex = revisions.Columns.Add(buildMessageTextBoxColumn);
-        }
-
         public void LaunchBuildServerInfoFetchOperation()
         {
             CancelBuildStatusFetchOperation();
 
             // Extract the project name from the last part of the directory path. It is assumed that it matches the project name in the CI build server.
-            var projectName =
-                revisionGrid.Module.GitWorkingDir.Split(
-                    new[] {Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar},
-                    StringSplitOptions.RemoveEmptyEntries).Last();
-            _buildServerAdapter = GetBuildServerAdapter(projectName);
+            buildServerAdapter = GetBuildServerAdapter();
 
             UpdateUI();
 
-            if (_buildServerAdapter == null)
+            if (buildServerAdapter == null)
                 return;
 
             var scheduler = NewThreadScheduler.Default;
-            var fullDayObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
-            var fullObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler);
-            var fromNowObservable = _buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
-            var runningBuildsObservable = _buildServerAdapter.GetRunningBuilds(scheduler);
+            var fullDayObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Today - TimeSpan.FromDays(3));
+            var fullObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler);
+            var fromNowObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
+            var runningBuildsObservable = buildServerAdapter.GetRunningBuilds(scheduler);
 
             var cancellationToken = new CompositeDisposable();
 
@@ -95,6 +73,94 @@ namespace GitUI.BuildServerIntegration
                     .Repeat()
                     .ObserveOn(SynchronizationContext.Current)
                     .Subscribe(OnBuildInfoUpdate));
+        }
+
+        public void CancelBuildStatusFetchOperation()
+        {
+            var cancellationToken = Interlocked.Exchange(ref buildStatusCancellationToken, null);
+
+            if (cancellationToken != null)
+            {
+                cancellationToken.Dispose();
+            }
+        }
+
+        public bool GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool firstTime, out string username, out string password)
+        {
+            username = null;
+            password = null;
+
+            IniConfigSource buildServerConfigSource;
+            const string CredentialsConfigName = "Credentials";
+            const string UsernameKey = "Username";
+            const string PasswordKey = "Password";
+            using (var stream = GetBuildServerOptionsIsolatedStorageStream(buildServerAdapter, FileAccess.Read, FileShare.Read))
+            {
+                buildServerConfigSource = new IniConfigSource(stream);
+
+                var credentialsConfig = buildServerConfigSource.Configs[CredentialsConfigName];
+
+                if (credentialsConfig != null)
+                {
+                    username = credentialsConfig.GetString(UsernameKey);
+                    password = credentialsConfig.GetString(PasswordKey);
+
+                    if (firstTime)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            if (!firstTime)
+            {
+                using (var form = new FormBuildServerCredentials(buildServerAdapter.UniqueKey))
+                {
+                    form.UserName = username;
+                    form.Password = password;
+
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        username = form.UserName;
+                        password = form.Password;
+
+                        var credentialsConfig = buildServerConfigSource.Configs[CredentialsConfigName] ??
+                                                buildServerConfigSource.AddConfig(CredentialsConfigName);
+
+                        credentialsConfig.Set(UsernameKey, username);
+                        credentialsConfig.Set(PasswordKey, password);
+
+                        using (var stream = GetBuildServerOptionsIsolatedStorageStream(buildServerAdapter, FileAccess.Write, FileShare.None))
+                        {
+                            buildServerConfigSource.Save(stream);
+                        }
+
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private void AddBuildStatusColumns()
+        {
+            var buildStatusImageColumn = new DataGridViewImageColumn
+                                             {
+                                                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                                                 Width = 16,
+                                                 ReadOnly = true,
+                                                 SortMode = DataGridViewColumnSortMode.NotSortable
+                                             };
+            var buildMessageTextBoxColumn = new DataGridViewTextBoxColumn
+                                                {
+                                                    AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                                                    ReadOnly = true,
+                                                    SortMode = DataGridViewColumnSortMode.NotSortable
+                                                };
+
+            buildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
+            buildStatusMessageColumnIndex = revisions.Columns.Add(buildMessageTextBoxColumn);
         }
 
         private void OnBuildInfoUpdate(BuildInfo buildInfo)
@@ -133,7 +199,7 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
-        private IBuildServerAdapter GetBuildServerAdapter(string projectName)
+        private IBuildServerAdapter GetBuildServerAdapter()
         {
             var fileName = Path.Combine(revisionGrid.Module.GitWorkingDir, ".buildserver");
             if (File.Exists(fileName))
@@ -144,12 +210,14 @@ namespace GitUI.BuildServerIntegration
                 if (buildServerConfig != null)
                 {
                     var buildServerType = (BuildServerType)Enum.Parse(typeof(BuildServerType), buildServerConfig.GetString("ActiveBuildServerType", BuildServerType.None.ToString()));
+                    var config = buildServerConfigSource.Configs[buildServerType.ToString()];
+
                     try
                     {
                         switch (buildServerType)
                         {
                             case BuildServerType.TeamCity:
-                                return new TeamCityAdapter(buildServerConfigSource.Configs[buildServerType.ToString()]);
+                                return new TeamCityAdapter(this, config);
                         }
                     }
                     catch (InvalidOperationException)
@@ -164,19 +232,9 @@ namespace GitUI.BuildServerIntegration
 
         private void UpdateUI()
         {
-            var columnsAreVisible = _buildServerAdapter != null;
+            var columnsAreVisible = buildServerAdapter != null;
             revisions.Columns[buildStatusImageColumnIndex].Visible = columnsAreVisible;
             revisions.Columns[buildStatusMessageColumnIndex].Visible = columnsAreVisible;
-        }
-
-        public void CancelBuildStatusFetchOperation()
-        {
-            var cancellationToken = Interlocked.Exchange(ref buildStatusCancellationToken, null);
-
-            if (cancellationToken != null)
-            {
-                cancellationToken.Dispose();
-            }
         }
 
         public void Dispose()
@@ -191,6 +249,12 @@ namespace GitUI.BuildServerIntegration
             {
                 CancelBuildStatusFetchOperation();
             }
+        }
+
+        private static IsolatedStorageFileStream GetBuildServerOptionsIsolatedStorageStream(IBuildServerAdapter buildServerAdapter, FileAccess fileAccess, FileShare fileShare)
+        {
+            var fileName = string.Format("BuildServer-{0}.options", Convert.ToBase64String(Encoding.UTF8.GetBytes(buildServerAdapter.UniqueKey)));
+            return new IsolatedStorageFileStream(fileName, FileMode.OpenOrCreate, fileAccess, fileShare);
         }
     }
 }
