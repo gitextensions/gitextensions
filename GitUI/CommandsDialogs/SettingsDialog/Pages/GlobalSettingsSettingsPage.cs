@@ -183,7 +183,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void GlobalMergeTool_TextChanged(object sender, EventArgs e)
         {
-            if (loadingSettings)
+            if (IsLoadingSettings)
                 return;
 
             MergetoolPath.Text = _gitModule.GetGlobalSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()));
@@ -288,8 +288,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void GlobalDiffTool_TextChanged(object sender, EventArgs e)
         {
-            if (loadingSettings)
+            if (IsLoadingSettings)
                 return;
+
             string diffTool = GlobalDiffTool.Text.Trim();
             DifftoolPath.Text = _gitModule.GetGlobalSetting(string.Format("difftool.{0}.path", diffTool));
             DifftoolCmd.Text = _gitModule.GetGlobalSetting(string.Format("difftool.{0}.cmd", diffTool));
