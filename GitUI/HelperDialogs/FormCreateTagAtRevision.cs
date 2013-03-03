@@ -19,8 +19,6 @@ namespace GitUI.HelperDialogs
 
         private readonly TranslationString _pushToCaption = new TranslationString("Push tag to '{0}'");
 
-        private readonly GitRevision revision;
-
         private string currentRemote = "";
         
         public FormCreateTagAtRevision(GitUICommands aCommands, GitRevision revision)
@@ -29,12 +27,14 @@ namespace GitUI.HelperDialogs
             InitializeComponent();
             Translate();
 
+            commitPickerSmallControl1.UICommandsSource = this;
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
-            this.revision = revision;
+            commitPickerSmallControl1.SelectedCommitHash = revision.Guid;
         }
 
         private void FormTagSmall_Load(object sender, EventArgs e)
         {
+            textBoxTagName.Focus();
             currentRemote = Module.GetCurrentRemote();
             pushTag.Text = string.Format(_pushToCaption.Text, currentRemote);
         }
@@ -56,7 +56,9 @@ namespace GitUI.HelperDialogs
 
         private string CreateTag()
         {
-            if (revision == null)
+            string revision = commitPickerSmallControl1.SelectedCommitHash;
+
+            if (revision.IsNullOrEmpty())
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                 return string.Empty;
@@ -72,7 +74,7 @@ namespace GitUI.HelperDialogs
                 File.WriteAllText(Module.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
             }
 
-            var s = Module.Tag(TName.Text, revision.Guid, annotate.Checked, ForceTag.Checked);
+            var s = Module.Tag(textBoxTagName.Text, revision, annotate.Checked, ForceTag.Checked);
 
             if (!string.IsNullOrEmpty(s))
                 MessageBox.Show(this, s, _messageCaption.Text);
@@ -81,7 +83,7 @@ namespace GitUI.HelperDialogs
                 return string.Empty;
 
             DialogResult = DialogResult.OK;
-            return TName.Text;
+            return textBoxTagName.Text;
         }
 
         private void PushTag(string tagName)
