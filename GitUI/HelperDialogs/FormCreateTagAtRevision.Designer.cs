@@ -63,11 +63,14 @@ namespace GitUI.HelperDialogs
             // Ok
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Ok.Image = global::GitUI.Properties.Resources.IconTagCreate;
             this.Ok.Location = new System.Drawing.Point(317, 11);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(108, 23);
+            this.Ok.Size = new System.Drawing.Size(108, 25);
             this.Ok.TabIndex = 6;
             this.Ok.Text = "Create tag";
+            this.Ok.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Ok.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.OkClick);
             // 
