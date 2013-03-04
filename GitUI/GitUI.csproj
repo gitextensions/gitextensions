@@ -110,6 +110,12 @@
     <Compile Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.Designer.cs">
+      <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
     <Compile Include="RepoHosts.cs" />
     <Compile Include="UserControls\BranchComboBox.cs">
@@ -886,6 +892,9 @@
     <EmbeddedResource Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.resx">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.resx">
+      <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\CommitPickerSmallControl.resx">
       <DependentUpon>CommitPickerSmallControl.cs</DependentUpon>
