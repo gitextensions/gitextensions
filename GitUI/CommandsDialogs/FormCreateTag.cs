@@ -8,7 +8,7 @@ using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormCreateTag : GitModuleForm
+    public sealed partial class FormCreateTag : GitModuleForm
     {
         private readonly TranslationString _messageCaption = new TranslationString("Tag");
 
@@ -19,30 +19,32 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _pushToCaption = new TranslationString("Push tag to '{0}'");
 
-        private string currentRemote = "";
+        private string _currentRemote = "";
 
-        public FormCreateTag(GitUICommands aCommands)
+        public FormCreateTag(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
         {
             InitializeComponent();
             Translate();
 
+            commitPickerSmallControl1.UICommandsSource = this;
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
+            commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? null : revision.Guid);
         }
 
-        private void FormTagLoad(object sender, EventArgs e)
+        private void FormTagSmall_Load(object sender, EventArgs e)
         {
-            currentRemote = Module.GetCurrentRemote();
-            pushTag.Text = string.Format(_pushToCaption.Text, currentRemote);
-
-            GitRevisions.Load();
+            textBoxTagName.Focus();
+            _currentRemote = Module.GetCurrentRemote();
+            pushTag.Text = string.Format(_pushToCaption.Text, _currentRemote);
         }
-        
-        private void CreateTagClick(object sender, EventArgs e)
+
+        private void OkClick(object sender, EventArgs e)
         {
             try
             {
-                var tagName = CreateTag(sender, e);
+                var tagName = CreateTag();
+
                 if (pushTag.Checked && !string.IsNullOrEmpty(tagName))
                     PushTag(tagName);
             }
@@ -51,10 +53,12 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, ex.Message);
             }
         }
-        
-        private string CreateTag(object sender, EventArgs e)
+
+        private string CreateTag()
         {
-            if (GitRevisions.GetSelectedRevisions().Count != 1)
+            string revision = commitPickerSmallControl1.SelectedCommitHash;
+
+            if (revision.IsNullOrEmpty())
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                 return string.Empty;
@@ -69,38 +73,33 @@ namespace GitUI.CommandsDialogs
 
                 File.WriteAllText(Module.WorkingDirGitDir() + "\\TAGMESSAGE", tagMessage.Text);
             }
-            
-            var s = Module.Tag(Tagname.Text, GitRevisions.GetSelectedRevisions()[0].Guid,
-                                                annotate.Checked, ForceTag.Checked);
+
+            var s = Module.Tag(textBoxTagName.Text, revision, annotate.Checked, ForceTag.Checked);
 
             if (!string.IsNullOrEmpty(s))
                 MessageBox.Show(this, s, _messageCaption.Text);
-            Close();
 
             if (s.Contains("fatal:"))
                 return string.Empty;
-            else
-                UICommands.RepoChangedNotifier.Notify();
 
-            return Tagname.Text;
+            DialogResult = DialogResult.OK;
+            return textBoxTagName.Text;
         }
 
         private void PushTag(string tagName)
         {
-            var pushCmd = GitCommandHelpers.PushTagCmd(currentRemote, tagName, false);
+            var pushCmd = GitCommandHelpers.PushTagCmd(_currentRemote, tagName, false);
 
             ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
 
             using (var form = new FormRemoteProcess(Module, pushCmd)
             {
-                Remote = currentRemote,
-                Text = string.Format(_pushToCaption.Text, currentRemote),
+                Remote = _currentRemote,
+                Text = string.Format(_pushToCaption.Text, _currentRemote),
             })
             {
-                form.ShowDialog();
 
-                if (!form.ErrorOccurred())
-                    UICommands.RepoChangedNotifier.Notify();
+                form.ShowDialog();
 
                 if (!Module.InTheMiddleOfConflictedMerge() &&
                     !Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
@@ -109,7 +108,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
         }
-        
+
         private void AnnotateCheckedChanged(object sender, EventArgs e)
         {
             tagMessage.Enabled = annotate.Checked;

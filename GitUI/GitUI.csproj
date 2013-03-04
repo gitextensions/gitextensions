@@ -110,6 +110,12 @@
     <Compile Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.Designer.cs">
+      <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
     <Compile Include="RepoHosts.cs" />
     <Compile Include="UserControls\BranchComboBox.cs">
@@ -119,16 +125,23 @@
       <DependentUpon>BranchComboBox.cs</DependentUpon>
     </Compile>
     <Compile Include="CommitInfo\CommandEventArgs.cs" />
-    <Compile Include="CommitInfo\CommitSummaryUserControl.cs">
+    <Compile Include="UserControls\CommitPickerSmallControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommitInfo\CommitSummaryUserControl.Designer.cs">
+    <Compile Include="UserControls\CommitPickerSmallControl.Designer.cs">
+      <DependentUpon>CommitPickerSmallControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\CommitSummaryUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\CommitSummaryUserControl.Designer.cs">
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateItem.cs" />
     <Compile Include="UserControls\ExListView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UserControls\RevisionGridClasses\DoubleClickRevisionEventArgs.cs" />
     <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Graph.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Component</SubType>
@@ -572,12 +585,6 @@
     <Compile Include="CommandsDialogs\FormCreateBranch.Designer.cs">
       <DependentUpon>FormCreateBranch.cs</DependentUpon>
     </Compile>
-    <Compile Include="HelperDialogs\FormCreateBranchAtRevision.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="HelperDialogs\FormCreateBranchAtRevision.Designer.cs">
-      <DependentUpon>FormCreateBranchAtRevision.cs</DependentUpon>
-    </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\FormChangeLog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -786,12 +793,6 @@
     <Compile Include="CommandsDialogs\FormCreateTag.Designer.cs">
       <DependentUpon>FormCreateTag.cs</DependentUpon>
     </Compile>
-    <Compile Include="HelperDialogs\FormCreateTagAtRevision.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="HelperDialogs\FormCreateTagAtRevision.Designer.cs">
-      <DependentUpon>FormCreateTagAtRevision.cs</DependentUpon>
-    </Compile>
     <Compile Include="CommandsDialogs\FormVerify.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -892,7 +893,13 @@
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommitInfo\CommitSummaryUserControl.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.resx">
+      <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\CommitPickerSmallControl.resx">
+      <DependentUpon>CommitPickerSmallControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\CommitSummaryUserControl.resx">
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\FormGoToLine.resx">
@@ -1108,10 +1115,6 @@
       <DependentUpon>FormCreateBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="HelperDialogs\FormCreateBranchAtRevision.resx">
-      <DependentUpon>FormCreateBranchAtRevision.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormChangeLog.resx">
       <DependentUpon>FormChangeLog.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1258,10 +1261,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormCreateTag.resx">
       <DependentUpon>FormCreateTag.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="HelperDialogs\FormCreateTagAtRevision.resx">
-      <DependentUpon>FormCreateTagAtRevision.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormVerify.resx">
