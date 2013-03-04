@@ -25,14 +25,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             // to be overridden
         }
 
-        [Obsolete("TODO: is this needed here (per settingpage) or globally for all settings (as it was originally)?")]
-        protected bool loadingSettings;
+        private bool _loadingSettings;
+
+        /// <summary>
+        /// True during execution of LoadSettings(). Usually derived classes
+        /// apply settings to GUI controls. Some of controls trigger events - 
+        /// IsLoadingSettings can be used for example to not execute the event action.
+        /// </summary>
+        protected bool IsLoadingSettings
+        {
+            get { return _loadingSettings; }
+        }
 
         public void LoadSettings()
         {
-            loadingSettings = true;
+            _loadingSettings = true;
             OnLoadSettings();
-            loadingSettings = false;
+            _loadingSettings = false;
         }
 
         ////public void SaveSettings()
