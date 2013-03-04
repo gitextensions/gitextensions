@@ -131,7 +131,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void IconStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (loadingSettings)
+            if (IsLoadingSettings)
                 return;
 
             ShowIconPreview();
@@ -139,7 +139,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void IconColor_CheckedChanged(object sender, EventArgs e)
         {
-            if (loadingSettings)
+            if (IsLoadingSettings)
                 return;
 
             ShowIconPreview();
