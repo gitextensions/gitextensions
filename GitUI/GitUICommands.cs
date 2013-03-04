@@ -298,13 +298,15 @@ namespace GitUI
             return StartDeleteBranchDialog(null, branch);
         }
 
-        public bool StartCheckoutRevisionDialog(IWin32Window owner)
+        public bool StartCheckoutRevisionDialog(IWin32Window owner, string revision = null)
         {
             return DoActionOnRepo(owner, true, true, PreCheckoutRevision, PostCheckoutRevision, () =>
                 {
                     using (var form = new FormCheckoutRevision(this))
-                        form.ShowDialog(owner);
-                    return true;
+                    {
+                        form.SetRevision(revision);
+                        return form.ShowDialog(owner) == DialogResult.OK;
+                    }
                 }
             );
         }

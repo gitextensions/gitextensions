@@ -33,6 +33,11 @@ namespace GitUI.CommandsDialogs
 
         }
 
+        public void SetRevision(string commitHash)
+        {
+            commitPickerSmallControl1.SetSelectedCommitHash(commitHash);
+        }
+
         private void OkClick(object sender, EventArgs e)
         {
             try
@@ -48,6 +53,8 @@ namespace GitUI.CommandsDialogs
                 string command = GitCommandHelpers.CheckoutCmd(commitHash, Force.Checked ? LocalChangesAction.Reset : 0);
 
                 FormProcess.ShowDialog(this, command);
+
+                DialogResult = System.Windows.Forms.DialogResult.OK;
 
                 Close();
             }
