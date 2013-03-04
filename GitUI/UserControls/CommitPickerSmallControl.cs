@@ -38,7 +38,7 @@ namespace GitUI.UserControls
 
             _selectedCommitHash = Module.RevParse(commitHash);
 
-            if (_selectedCommitHash.IsNullOrEmpty() && !commitHash.Trim().IsNullOrEmpty())
+            if (_selectedCommitHash.IsNullOrEmpty() && !commitHash.IsNullOrWhiteSpace())
             {
                 _selectedCommitHash = oldCommitHash;
                 MessageBox.Show("The given commit hash is not valid for this repository and was therefore discarded.");
