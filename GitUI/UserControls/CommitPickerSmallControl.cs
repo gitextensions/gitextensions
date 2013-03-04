@@ -26,17 +26,31 @@ namespace GitUI.UserControls
         public string SelectedCommitHash
         {
             get { return _selectedCommitHash; }
-            set
+        }
+
+        /// <summary>
+        /// shows a message box if commitHash is invalid
+        /// </summary>
+        /// <param name="commitHash"></param>
+        public void SetSelectedCommitHash(string commitHash)
+        {
+            string oldCommitHash = _selectedCommitHash;
+
+            _selectedCommitHash = Module.RevParse(commitHash);
+
+            if (_selectedCommitHash.IsNullOrEmpty() && !commitHash.IsNullOrWhiteSpace())
             {
-                _selectedCommitHash = Module.RevParse(value);
-                if (_selectedCommitHash.IsNullOrEmpty())
-                {
-                    textBoxCommitHash.Text = "";
-                }
-                else
-                {
-                    textBoxCommitHash.Text = _selectedCommitHash.Substring(0, 10);
-                }
+                _selectedCommitHash = oldCommitHash;
+                MessageBox.Show("The given commit hash is not valid for this repository and was therefore discarded.");
+            }
+
+            if (_selectedCommitHash.IsNullOrEmpty())
+            {
+                textBoxCommitHash.Text = "";
+            }
+            else
+            {
+                textBoxCommitHash.Text = _selectedCommitHash.Substring(0, 10);
             }
         }
 
@@ -46,14 +60,14 @@ namespace GitUI.UserControls
             {
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision != null)
                 {
-                    SelectedCommitHash = chooseForm.SelectedRevision.Guid;
+                    SetSelectedCommitHash(chooseForm.SelectedRevision.Guid);
                 }
             }
         }
 
         private void textBoxCommitHash_TextChanged(object sender, EventArgs e)
         {
-            SelectedCommitHash = textBoxCommitHash.Text;
+            SetSelectedCommitHash(textBoxCommitHash.Text.Trim());
         }
     }
 }

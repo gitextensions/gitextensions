@@ -13,16 +13,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public class CheckSettingsLogic : Translate
     {
-        public readonly TranslationString _toolSuggestPath =
+        public readonly TranslationString ToolSuggestPathText =
             new TranslationString("Please enter the path to {0} and press suggest.");
 
-        public readonly TranslationString __mergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
+        public readonly TranslationString MergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
 
         readonly CommonLogic _commonLogic;
         readonly GitModule _gitModule;
-
-        [Obsolete("TODO: Remove this dependency to another Page later!")]
-        public ChecklistSettingsPage ChecklistSettingsPage { get; set; } 
 
         public CheckSettingsLogic(CommonLogic commonLogic, GitModule gitModule)
         {
@@ -60,7 +57,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool SolveGitCredentialStore()
         {
-            if (!ChecklistSettingsPage.CheckGitCredentialStore())
+            if (!CheckGitCredentialStore())
             {
                 string gcsFileName = Settings.GetInstallDir() + @"\GitCredentialWinStore\git-credential-winstore.exe";
                 if (File.Exists(gcsFileName))
@@ -78,6 +75,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 return false;
             }
             return true;
+        }
+
+        public bool CheckGitCredentialStore()
+        {
+            string value = GitCommandHelpers.GetGlobalConfig().GetValue("credential.helper");
+            bool isValid;
+            if (Settings.RunningOnWindows())
+                isValid = value.Contains("git-credential-winstore.exe");
+            else
+                isValid = !string.IsNullOrEmpty(value);
+
+            return isValid;
         }
 
         public bool SolveLinuxToolsDir()
@@ -286,8 +295,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 SetMergetoolPathText("");
                 SetMergeToolCmdText("");
                 if (!silent)
-                    MessageBox.Show(/*this, */String.Format(_toolSuggestPath.Text, exeName),
-                        __mergeToolSuggestCaption.Text);
+                    MessageBox.Show(/*this, */String.Format(ToolSuggestPathText.Text, exeName),
+                        MergeToolSuggestCaption.Text);
                 return;
             }
 

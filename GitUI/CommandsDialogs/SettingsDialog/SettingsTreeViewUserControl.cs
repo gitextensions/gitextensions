@@ -29,18 +29,34 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             SetFindPrompt(true);
         }
 
-        public void AddSettingsPage(ISettingsPage page, SettingsPageReference parentPageReference)
+        /// <summary>
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="parentPageReference"></param>
+        /// <param name="asRoot">only one page can be set as the root page (for the GitExt and Plugin root node)</param>
+        public void AddSettingsPage(ISettingsPage page, SettingsPageReference parentPageReference, bool asRoot = false)
         {
             TreeNode node;
             if (parentPageReference == null)
+            {
+                // add one of the root nodes (e. g. "Git Extensions" or "Plugins"
                 node = treeView1.Nodes.Add(page.GetTitle());
+            }
             else
             {
-                TreeNode parentNode;
-                if (!_Pages2NodeMap.TryGetValue(parentPageReference, out parentNode))
-                    throw new ArgumentException("You have to add parent page first: " + parentPageReference);
+                if (asRoot)
+                {
+                    // e. g. to set the Checklist on the "Git Extensions" node
+                    node = _Pages2NodeMap[parentPageReference];
+                }
+                else
+                {
+                    TreeNode parentNode;
+                    if (!_Pages2NodeMap.TryGetValue(parentPageReference, out parentNode))
+                        throw new ArgumentException("You have to add parent page first: " + parentPageReference);
 
-                node = parentNode.Nodes.Add(page.GetTitle());
+                    node = parentNode.Nodes.Add(page.GetTitle());
+                }
             }
 
             node.Tag = page;
@@ -200,6 +216,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 _isSelectionChangeTriggeredByGoto = true;
                 treeView1.SelectedNode = node;
+                node.Expand();
                 FireSettingsPageSelectedEvent(treeView1.SelectedNode);
                 _isSelectionChangeTriggeredByGoto = false;
             }
