@@ -45,14 +45,14 @@ namespace BackgroundFetch
             if (!int.TryParse(Settings.GetSetting("Fetch every (seconds) - set to 0 to disable"), out fetchInterval))
                 fetchInterval = 0;
 
-            var gitModule = (GitModule)currentGitUiCommands.GitModule;
+            var gitModule = currentGitUiCommands.GitModule;
             if (fetchInterval > 0 && GitModule.IsValidGitWorkingDir(gitModule.GitWorkingDir))
             {
                 cancellationToken =
                     Observable.Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
                               .SkipWhile(i => gitModule.IsRunningGitProcess())
                               .Repeat()
-                              .Subscribe(i => gitModule.RunGitCmdAsync("fetch --progress --all"));
+                              .Subscribe(i => gitModule.RunGitCmdAsync("fetch --all"));
             }
         }
 
