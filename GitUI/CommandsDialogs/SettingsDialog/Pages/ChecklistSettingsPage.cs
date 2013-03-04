@@ -133,7 +133,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _kdiffAsMergeConfigured =
             new TranslationString("KDiff3 is configured as mergetool.");
 
-        public readonly TranslationString _kdiff3NotFoundAuto =
+        private readonly TranslationString _kdiff3NotFoundAuto =
             new TranslationString("Path to kdiff3 could not be found automatically." + Environment.NewLine +
                 "Please make sure KDiff3 is installed or set path manually.");
 
@@ -579,12 +579,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public bool CheckGitCredentialStore()
         {
             gitCredentialWinStore.Visible = true;
-            string value = GitCommandHelpers.GetGlobalConfig().GetValue("credential.helper");
-            bool isValid;
-            if (Settings.RunningOnWindows())
-                isValid = value.Contains("git-credential-winstore.exe");
-            else
-                isValid = !string.IsNullOrEmpty(value);
+
+            bool isValid = _checkSettingsLogic.CheckGitCredentialStore();
 
             if (isValid)
             {
