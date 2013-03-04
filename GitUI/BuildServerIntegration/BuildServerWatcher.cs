@@ -87,13 +87,15 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
-        public bool GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool firstTime, out string username, out string password)
+        public bool GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool firstTime, out bool useGuestAccess, out string username, out string password)
         {
+            useGuestAccess = true;
             username = null;
             password = null;
 
             IniConfigSource buildServerConfigSource;
             const string CredentialsConfigName = "Credentials";
+            const string UseGuestAccessKey = "UseGuestAccess";
             const string UsernameKey = "Username";
             const string PasswordKey = "Password";
             using (var stream = GetBuildServerOptionsIsolatedStorageStream(buildServerAdapter, FileAccess.Read, FileShare.Read))
@@ -116,6 +118,7 @@ namespace GitUI.BuildServerIntegration
 
                         if (credentialsConfig != null)
                         {
+                            useGuestAccess = credentialsConfig.GetBoolean(UseGuestAccessKey, true);
                             username = credentialsConfig.GetString(UsernameKey);
                             password = credentialsConfig.GetString(PasswordKey);
 
@@ -136,17 +139,20 @@ namespace GitUI.BuildServerIntegration
             {
                 using (var form = new FormBuildServerCredentials(buildServerAdapter.UniqueKey))
                 {
+                    form.UseGuestAccess = useGuestAccess;
                     form.UserName = username;
                     form.Password = password;
 
                     if (form.ShowDialog() == DialogResult.OK)
                     {
+                        useGuestAccess = form.UseGuestAccess;
                         username = form.UserName;
                         password = form.Password;
 
                         var credentialsConfig = buildServerConfigSource.Configs[CredentialsConfigName] ??
                                                 buildServerConfigSource.AddConfig(CredentialsConfigName);
 
+                        credentialsConfig.Set(UseGuestAccessKey, useGuestAccess);
                         credentialsConfig.Set(UsernameKey, username);
                         credentialsConfig.Set(PasswordKey, password);
 
