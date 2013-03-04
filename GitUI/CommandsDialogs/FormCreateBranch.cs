@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs
             set
             {
                 _revision = value;
-                commitPickerSmallControl1.SelectedCommitHash = _revision.Guid;
+                commitPickerSmallControl1.SetSelectedCommitHash(_revision.Guid);
             }
         }
 

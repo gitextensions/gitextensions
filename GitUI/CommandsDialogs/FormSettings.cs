@@ -47,16 +47,15 @@ namespace GitUI.CommandsDialogs
             if (aCommands == null)
                 return;
 
-            // NEW:
             settingsTreeView.AddSettingsPage(new GitExtensionsSettingsGroup(), null);
             SettingsPageReference gitExtPageRef = GitExtensionsSettingsGroup.GetPageReference();
             
             _commonLogic = new CommonLogic(Module);
 
             _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module);
+
             var checklistSettingsPage = new ChecklistSettingsPage(_commonLogic, _checkSettingsLogic, Module, this);
-            _checkSettingsLogic.ChecklistSettingsPage = checklistSettingsPage; // TODO
-            settingsTreeView.AddSettingsPage(checklistSettingsPage, gitExtPageRef);
+            settingsTreeView.AddSettingsPage(checklistSettingsPage, gitExtPageRef, true); // as root
 
             settingsTreeView.AddSettingsPage(new GitSettingsPage(_checkSettingsLogic, this), gitExtPageRef);
 
@@ -91,6 +90,7 @@ namespace GitUI.CommandsDialogs
 
             settingsTreeView.AddSettingsPage(new PluginsSettingsGroup(), null);
             SettingsPageReference pluginsPageRef = PluginsSettingsGroup.GetPageReference();
+            settingsTreeView.AddSettingsPage(new PluginRootIntroductionPage(), pluginsPageRef, true); // as root
             foreach (var gitPlugin in LoadedPlugins.Plugins)
             {
                 var settingsPage = PluginSettingsPage.CreateSettingsPageFromPlugin(gitPlugin);

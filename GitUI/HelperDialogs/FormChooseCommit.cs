@@ -33,10 +33,7 @@ namespace GitUI.HelperDialogs
 
         }
 
-        
         public GitCommands.GitRevision SelectedRevision { get; private set; }
-
-        
 
         protected override void OnLoad(EventArgs e)
         {
@@ -52,6 +49,16 @@ namespace GitUI.HelperDialogs
                 SelectedRevision = revisions[0];
                 DialogResult = DialogResult.OK;
 
+                Close();
+            }
+        }
+
+        private void revisionGrid_DoubleClickRevision(object sender, UserControls.RevisionGridClasses.DoubleClickRevisionEventArgs e)
+        {
+            if (e.Revision != null)
+            {
+                SelectedRevision = e.Revision;
+                DialogResult = DialogResult.OK;
                 Close();
             }
         }
