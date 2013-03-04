@@ -21,10 +21,10 @@ namespace GitUI
                 DisposeRevisionGraphCommand();
             }
 
-            if (_BuildServerWatcher != null)
+            if (BuildServerWatcher != null)
             {
-                _BuildServerWatcher.Dispose();
-                _BuildServerWatcher = null;
+                BuildServerWatcher.Dispose();
+                BuildServerWatcher = null;
             }
 
             if (_IndexWatcher != null)
