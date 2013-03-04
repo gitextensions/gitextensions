@@ -146,6 +146,9 @@
       <Component Id="System.Reactive.Linq.dll" Guid="*">
         <File Source="..\bin\System.Reactive.Linq.dll"/>
       </Component>
+      <Component Id="System.Reactive.PlatformServices.dll" Guid="*">
+        <File Source="..\bin\System.Reactive.PlatformServices.dll"/>
+      </Component>
 
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
@@ -544,6 +547,7 @@
       <ComponentRef Id="System.Reactive.Core.dll" />
       <ComponentRef Id="System.Reactive.Interfaces.dll" />
       <ComponentRef Id="System.Reactive.Linq.dll" />
+      <ComponentRef Id="System.Reactive.PlatformServices.dll" />
 
       <!--Remove unused dll, installed in versions <= 2.31-->
       <ComponentRef Id="Github.dll"/>
