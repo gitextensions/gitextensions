@@ -1537,8 +1537,8 @@ namespace GitCommands
 
             if (rebase && !string.IsNullOrEmpty(remoteBranch))
             {
-                return "pull --rebase " + progressOption + remote + " " + 
-                    GetFullBranchName(remoteBranch);
+                return "pull --rebase " + progressOption + remote + " " +
+                    GitCommandHelpers.GetFullBranchName(remoteBranch);
             }
 
             if (rebase)
@@ -1570,14 +1570,14 @@ namespace GitCommands
             {
                 if (remoteBranch.StartsWith("+"))
                     remoteBranch = remoteBranch.Remove(0, 1);
-                remoteBranchArguments = "+" + GetFullBranchName(remoteBranch);
+                remoteBranchArguments = "+" + GitCommandHelpers.GetFullBranchName(remoteBranch);
             }
 
             string localBranchArguments;
             var remoteUrl = GetPathSetting(string.Format(SettingKeyString.RemoteUrl, remote));
 
             if (PathIsUrl(remote) && !string.IsNullOrEmpty(localBranch) && string.IsNullOrEmpty(remoteUrl))
-                localBranchArguments = ":" + GetFullBranchName(localBranch);
+                localBranchArguments = ":" + GitCommandHelpers.GetFullBranchName(localBranch);
             else if (string.IsNullOrEmpty(localBranch) || PathIsUrl(remote) || string.IsNullOrEmpty(remoteUrl))
                 localBranchArguments = "";
             else
@@ -1962,15 +1962,6 @@ namespace GitCommands
             return RunGitCmd(GitCommandHelpers.AbortCmd());
         }
 
-        public string Commit(bool amend)
-        {
-            return Commit(amend, "");
-        }
-
-        public string Commit(bool amend, string author)
-        {
-            return RunGitCmd(CommitCmd(amend, author));
-        }
 
         public string CommitCmd(bool amend)
         {
@@ -2561,13 +2552,6 @@ namespace GitCommands
             if (String.IsNullOrEmpty(remote) || String.IsNullOrEmpty(merge))
                 return "";
             return remote + "/" + (merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge);
-        }
-
-        public static string GetFullBranchName(string branch)
-        {
-            if (branch.StartsWith("refs/"))
-                return branch;
-            return "refs/heads/" + branch;
         }
 
         public IList<GitHead> GetRemoteHeads(string remote, bool tags, bool branches)
