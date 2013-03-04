@@ -33,23 +33,22 @@ namespace GitUI.BuildServerIntegration
         {
             this.buildServerWatcher = buildServerWatcher;
 
-            httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
-
             var hostName = config.Get("BuildServerUrl");
             if (!string.IsNullOrEmpty(hostName))
             {
-                var hostRootUri = Uri.CheckSchemeName(hostName)
-                                  ? new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
-                                  : new Uri(hostName, UriKind.Absolute);
-                httpClient.BaseAddress = hostRootUri;
-            }
+                httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
+                httpClient.BaseAddress = GetHostBaseAddress(hostName, true);
 
-            string username, password;
-            if (buildServerWatcher.GetBuildServerCredentials(this, true, out username, out password))
-            {
-                // Assign the authentication headers
-                httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
+                bool useGuestAccess;
+                string username, password;
+                if (buildServerWatcher.GetBuildServerCredentials(this, true, out useGuestAccess, out username, out password))
+                {
+                    // Assign the authentication headers
+                    httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
+                }
+
+                UpdateHttpClientOptions(hostName, useGuestAccess, username, password);
             }
 
             ProjectName = config.Get("ProjectName");
@@ -64,7 +63,10 @@ namespace GitUI.BuildServerIntegration
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey { get { return httpClient.BaseAddress.Host; } }
+        public string UniqueKey
+        {
+            get { return httpClient.BaseAddress.Host; }
+        }
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
@@ -78,7 +80,7 @@ namespace GitUI.BuildServerIntegration
 
         public IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
-            if (httpClient.BaseAddress == null || string.IsNullOrEmpty(ProjectName))
+            if (httpClient == null || httpClient.BaseAddress == null || string.IsNullOrEmpty(ProjectName))
             {
                 return Observable.Empty<BuildInfo>(scheduler);
             }
@@ -192,6 +194,16 @@ namespace GitUI.BuildServerIntegration
             return buildInfo;
         }
 
+        private static Uri GetHostBaseAddress(string hostName, bool useGuestAccess)
+        {
+            var hostRootUri = Uri.CheckSchemeName(hostName)
+                                  ? new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
+                                  : new Uri(hostName, UriKind.Absolute);
+            hostRootUri = new Uri(hostRootUri, useGuestAccess ? "guestAuth" : "httpAuth");
+
+            return hostRootUri;
+        }
+
         private static AuthenticationHeaderValue CreateBasicHeader(string username, string password)
         {
             byte[] byteArray = Encoding.UTF8.GetBytes(string.Format("{0}:{1}", username, password));
@@ -223,13 +235,13 @@ namespace GitUI.BuildServerIntegration
 
                                                    if (task.Result.StatusCode == HttpStatusCode.Unauthorized)
                                                    {
+                                                       bool useGuestAccess;
                                                        string username;
                                                        string password;
 
-                                                       if (buildServerWatcher.GetBuildServerCredentials(this, false, out username, out password))
+                                                       if (buildServerWatcher.GetBuildServerCredentials(this, false, out useGuestAccess, out username, out password))
                                                        {
-                                                           // Assign the authentication headers
-                                                           httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
+                                                           UpdateHttpClientOptions(httpClient.BaseAddress.Scheme, useGuestAccess, username, password);
 
                                                            return GetStreamAsync(restServicePath, cancellationToken);
                                                        }
@@ -241,6 +253,17 @@ namespace GitUI.BuildServerIntegration
                                                },
                                            cancellationToken)
                              .Unwrap();
+        }
+
+        private void UpdateHttpClientOptions(string hostName, bool useGuestAccess, string username, string password)
+        {
+            httpClient.BaseAddress = GetHostBaseAddress(hostName, useGuestAccess);
+
+            // Assign the authentication headers
+            if (useGuestAccess && !string.IsNullOrEmpty(username))
+            {
+                httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
+            }
         }
 
         private Task<XDocument> GetXmlResponseAsync(string relativePath, CancellationToken cancellationToken)
@@ -260,7 +283,7 @@ namespace GitUI.BuildServerIntegration
 
         private Uri FormatRelativePath(string restServicePath)
         {
-            return new Uri(string.Format("/httpAuth/app/rest/{0}", restServicePath), UriKind.Relative);
+            return new Uri(string.Format("/app/rest/{0}", restServicePath), UriKind.Relative);
         }
 
         private Task<XDocument> GetBuildFromIdXmlResponseAsync(string buildId, CancellationToken cancellationToken)
