@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -19,31 +21,50 @@ namespace GitUI.BuildServerIntegration
 {
     internal class TeamCityAdapter : IBuildServerAdapter
     {
+        private readonly IBuildServerWatcher buildServerWatcher;
+
         private string ProjectName { get; set; }
 
         private readonly HttpClient httpClient;
 
-        private readonly IEnumerable<string> buildTypes;
+        private readonly Task<IEnumerable<string>> getBuildTypesTask;
 
-        public TeamCityAdapter(IConfig config)
+        public TeamCityAdapter(IBuildServerWatcher buildServerWatcher, IConfig config)
         {
+            this.buildServerWatcher = buildServerWatcher;
+
             httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
 
             var hostName = config.Get("BuildServerUrl");
             if (!string.IsNullOrEmpty(hostName))
             {
-                var hostRootUri = hostName.Contains("://")
-                                  ? new Uri(hostName, UriKind.Absolute)
-                                  : new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute);
+                var hostRootUri = Uri.CheckSchemeName(hostName)
+                                  ? new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
+                                  : new Uri(hostName, UriKind.Absolute);
                 httpClient.BaseAddress = hostRootUri;
+            }
+
+            string username, password;
+            if (buildServerWatcher.GetBuildServerCredentials(this, true, out username, out password))
+            {
+                // Assign the authentication headers
+                httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
             }
 
             ProjectName = config.Get("ProjectName");
 
-            var project = GetProjectFromNameXmlResponse(ProjectName);
-            buildTypes = project.XPathSelectElements("/project/buildTypes/buildType").Select(x => x.Attribute("id").Value);
+            getBuildTypesTask =
+                GetProjectFromNameXmlResponseAsync(ProjectName, CancellationToken.None)
+                    .ContinueWith(task => task.Result
+                                              .XPathSelectElements("/project/buildTypes/buildType")
+                                              .Select(x => x.Attribute("id").Value));
         }
+
+        /// <summary>
+        /// Gets a unique key which identifies this build server.
+        /// </summary>
+        public string UniqueKey { get { return httpClient.BaseAddress.Host; } }
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
@@ -62,6 +83,18 @@ namespace GitUI.BuildServerIntegration
                 return Observable.Empty<BuildInfo>(scheduler);
             }
 
+            IEnumerable<string> buildTypes;
+            try
+            {
+                getBuildTypesTask.Wait();
+
+                buildTypes = getBuildTypesTask.Result;
+            }
+            catch (AggregateException)
+            {
+                return Observable.Empty<BuildInfo>(scheduler);
+            }
+
             return Observable.Create<BuildInfo>((observer, cancellationToken) =>
                 Task<IDisposable>.Factory.StartNew(() =>
                     {
@@ -69,44 +102,48 @@ namespace GitUI.BuildServerIntegration
                                                {
                                                    try
                                                    {
-                                                       var buildIds = buildTypes.SelectMany(
-                                                           buildTypeId =>
-                                                               GetFilteredBuildsXmlResponse(buildTypeId, sinceDate, running)
-                                                                   .XPathSelectElements("/builds/build")
-                                                                   .Select(x => x.Attribute("id").Value))
-                                                           .ToArray();
-                                                       var tasks = new List<Task>(8);
-                                                       var buildsLeft = buildIds.Length;
+                                                       var buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, CancellationToken.None, sinceDate, running)).ToArray();
+                                                       var getBuildIdsTask = Task.Factory
+                                                                                 .ContinueWhenAll(buildIdTasks, completedTasks => completedTasks.SelectMany(buildIdTask => buildIdTask.Result.XPathSelectElements("/builds/build").Select(x => x.Attribute("id").Value)).ToArray())
+                                                                                 .ContinueWith(completedTask => buildIdTasks.SelectMany(buildIdTask => buildIdTask.Result.XPathSelectElements("/builds/build").Select(x => x.Attribute("id").Value)).ToArray());
 
-                                                       foreach (var buildId in buildIds.OrderByDescending(int.Parse))
-                                                       {
-                                                           var notifyObserverTask =
-                                                               GetBuildFromIdXmlResponseAsync(buildId, cancellationToken)
-                                                                   .ContinueWith(
-                                                                       task =>
-                                                                           {
-                                                                               var buildDetails = task.Result;
-                                                                               var buildInfo = CreateBuildInfo(buildDetails);
-                                                                               if (buildInfo.CommitHashList.Any())
-                                                                               {
-                                                                                   observer.OnNext(buildInfo);
-                                                                               }
-                                                                           },
-                                                                       cancellationToken);
+                                                       getBuildIdsTask.ContinueWith(
+                                                           buildIdTask =>
+                                                                {
+                                                                    var tasks = new List<Task>(8);
+                                                                    var buildIds = buildIdTask.Result;
+                                                                    var buildsLeft = buildIds.Length;
 
-                                                           tasks.Add(notifyObserverTask);
-                                                           --buildsLeft;
+                                                                    foreach (var buildId in buildIds.OrderByDescending(int.Parse))
+                                                                    {
+                                                                        var notifyObserverTask =
+                                                                            GetBuildFromIdXmlResponseAsync(buildId, cancellationToken)
+                                                                                .ContinueWith(
+                                                                                    task =>
+                                                                                        {
+                                                                                            var buildDetails = task.Result;
+                                                                                            var buildInfo = CreateBuildInfo(buildDetails);
+                                                                                            if (buildInfo.CommitHashList.Any())
+                                                                                            {
+                                                                                                observer.OnNext(buildInfo);
+                                                                                            }
+                                                                                        },
+                                                                                    cancellationToken);
 
-                                                           if (tasks.Count == tasks.Capacity || buildsLeft == 0)
-                                                           {
-                                                               var batchTasks = tasks.ToArray();
-                                                               tasks.Clear();
+                                                                        tasks.Add(notifyObserverTask);
+                                                                        --buildsLeft;
 
-                                                               Task.WaitAll(batchTasks, cancellationToken);
-                                                           }
-                                                       }
+                                                                        if (tasks.Count == tasks.Capacity || buildsLeft == 0)
+                                                                        {
+                                                                            var batchTasks = tasks.ToArray();
+                                                                            tasks.Clear();
 
-                                                       observer.OnCompleted();
+                                                                            Task.WaitAll(batchTasks, cancellationToken);
+                                                                        }
+                                                                    }
+
+                                                                    observer.OnCompleted();
+                                                                });
                                                    }
                                                    catch (OperationCanceledException)
                                                    {
@@ -125,7 +162,6 @@ namespace GitUI.BuildServerIntegration
 
         private static BuildInfo CreateBuildInfo(XDocument buildXmlDocument)
         {
-            BuildInfo.BuildStatus status;
             var buildXElement = buildXmlDocument.Element("build");
             var idValue = buildXElement.Attribute("id").Value;
             var statusValue = buildXElement.Attribute("status").Value;
@@ -144,40 +180,72 @@ namespace GitUI.BuildServerIntegration
                 statusText = currentStageText;
             }
 
-
-            switch (statusValue)
-            {
-                case "SUCCESS":
-                    status = BuildInfo.BuildStatus.Success;
-                    break;
-                case "FAILURE":
-                    status = BuildInfo.BuildStatus.Failure;
-                    break;
-                default:
-                    status = BuildInfo.BuildStatus.Unknown;
-                    break;
-            }
-
             var buildInfo = new BuildInfo
-                                {
-                                    Id = idValue,
-                                    StartDate = DecodeJsonDateTime(startDateText),
-                                    Status = status,
-                                    Description = statusText,
-                                    CommitHashList = commitHashList,
-                                    Url = webUrl
-                                };
+                {
+                    Id = idValue,
+                    StartDate = DecodeJsonDateTime(startDateText),
+                    Status = ParseBuildStatus(statusValue),
+                    Description = statusText,
+                    CommitHashList = commitHashList,
+                    Url = webUrl
+                };
             return buildInfo;
         }
 
-        private Task<Stream> GetStreamAsync(string relativePath)
+        private static AuthenticationHeaderValue CreateBasicHeader(string username, string password)
         {
-            return httpClient.GetStreamAsync(string.Format("/guestAuth/app/rest/{0}", relativePath));
+            byte[] byteArray = Encoding.UTF8.GetBytes(string.Format("{0}:{1}", username, password));
+            return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+        }
+
+        private static BuildInfo.BuildStatus ParseBuildStatus(string statusValue)
+        {
+            switch (statusValue)
+            {
+                case "SUCCESS":
+                    return BuildInfo.BuildStatus.Success;
+                case "FAILURE":
+                    return BuildInfo.BuildStatus.Failure;
+                default:
+                    return BuildInfo.BuildStatus.Unknown;
+            }
+        }
+
+        private Task<Stream> GetStreamAsync(string restServicePath, CancellationToken cancellationToken)
+        {
+            return httpClient.GetAsync(FormatRelativePath(restServicePath), HttpCompletionOption.ResponseHeadersRead)
+                             .ContinueWith(task =>
+                                               {
+                                                   // task.Result.Content.Headers.ContentType.MediaType = "application/xml";
+                                                   // task.Result.Content.Headers.Allow.Add()
+                                                   if (task.Result.IsSuccessStatusCode)
+                                                       return task.Result.Content.ReadAsStreamAsync();
+
+                                                   if (task.Result.StatusCode == HttpStatusCode.Unauthorized)
+                                                   {
+                                                       string username;
+                                                       string password;
+
+                                                       if (buildServerWatcher.GetBuildServerCredentials(this, false, out username, out password))
+                                                       {
+                                                           // Assign the authentication headers
+                                                           httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
+
+                                                           return GetStreamAsync(restServicePath, cancellationToken);
+                                                       }
+
+                                                       throw new OperationCanceledException(task.Result.ReasonPhrase);
+                                                   }
+
+                                                   throw new HttpRequestException(task.Result.ReasonPhrase);
+                                               },
+                                           cancellationToken)
+                             .Unwrap();
         }
 
         private Task<XDocument> GetXmlResponseAsync(string relativePath, CancellationToken cancellationToken)
         {
-            var getStreamTask = GetStreamAsync(relativePath);
+            var getStreamTask = GetStreamAsync(relativePath, cancellationToken);
 
             return getStreamTask.ContinueWith(
                 task =>
@@ -190,9 +258,9 @@ namespace GitUI.BuildServerIntegration
                 cancellationToken);
         }
 
-        private XDocument GetXmlResponse(string relativePath)
+        private Uri FormatRelativePath(string restServicePath)
         {
-            return XDocument.Load(new Uri(httpClient.BaseAddress, string.Format("/guestAuth/app/rest/{0}", relativePath)).AbsoluteUri);
+            return new Uri(string.Format("/httpAuth/app/rest/{0}", restServicePath), UriKind.Relative);
         }
 
         private Task<XDocument> GetBuildFromIdXmlResponseAsync(string buildId, CancellationToken cancellationToken)
@@ -200,12 +268,12 @@ namespace GitUI.BuildServerIntegration
             return GetXmlResponseAsync(string.Format("builds/id:{0}", buildId), cancellationToken);
         }
 
-        private XDocument GetProjectFromNameXmlResponse(string projectName)
+        private Task<XDocument> GetProjectFromNameXmlResponseAsync(string projectName, CancellationToken cancellationToken)
         {
-            return GetXmlResponse(string.Format("projects/name:{0}", projectName));
+            return GetXmlResponseAsync(string.Format("projects/name:{0}", projectName), cancellationToken);
         }
 
-        private XDocument GetFilteredBuildsXmlResponse(string buildTypeId, DateTime? sinceDate = null, bool? running = null)
+        private Task<XDocument> GetFilteredBuildsXmlResponseAsync(string buildTypeId, CancellationToken cancellationToken, DateTime? sinceDate = null, bool? running = null)
         {
             var values = new List<string> { "branch:(default:any)" };
 
@@ -221,9 +289,9 @@ namespace GitUI.BuildServerIntegration
 
             string buildLocator = string.Join(",", values);
             var url = string.Format("buildTypes/id:{0}/builds/?locator={1}", buildTypeId, buildLocator);
-            var filteredBuildsXmlResponse = GetXmlResponse(url);
+            var filteredBuildsXmlResponseTask = GetXmlResponseAsync(url, cancellationToken);
 
-            return filteredBuildsXmlResponse;
+            return filteredBuildsXmlResponseTask;
         }
 
         private static DateTime DecodeJsonDateTime(string dateTimeString)
