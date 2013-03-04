@@ -38,10 +38,11 @@ namespace GitUI.CommandsDialogs
 
                 for (int i = 0; i < parents.Length; i++)
                 {
-                    ParentsList.Items.Add(i + 1 + "");
-                    ParentsList.Items[ParentsList.Items.Count - 1].SubItems.Add(parents[i].Message);
-                    ParentsList.Items[ParentsList.Items.Count - 1].SubItems.Add(parents[i].Author);
-                    ParentsList.Items[ParentsList.Items.Count - 1].SubItems.Add(parents[i].CommitDate.ToShortDateString());
+                    var item = new ListViewItem(i + 1 + "");
+                    item.SubItems.Add(parents[i].Message);
+                    item.SubItems.Add(parents[i].Author);
+                    item.SubItems.Add(parents[i].CommitDate.ToShortDateString());
+                    ParentsList.Items.Add(item);
                 }
                 ParentsList.TopItem.Selected = true;
                 Size size = MinimumSize;
