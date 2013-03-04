@@ -451,11 +451,12 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormLog(this))
-                   form.ShowDialog(owner);
-                return true;
+                {
+                    return form.ShowDialog(owner) == DialogResult.OK;
+                }
             };
 
-            return DoActionOnRepo(owner, true, false, PreCompareRevisions, PostCompareRevisions, action);
+            return DoActionOnRepo(owner, true, true, PreCompareRevisions, PostCompareRevisions, action);
         }
 
         public bool StartCompareRevisionsDialog()
