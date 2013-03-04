@@ -546,9 +546,9 @@ namespace GitCommands
         {
             path = FixPath(path);
 
-            fromBranch = GetFullBranchName(fromBranch);
             // This method is for pushing to remote branches, so fully qualify the
             // remote branch name with refs/heads/.
+            fromBranch = GetFullBranchName(fromBranch);
             toBranch = GetFullBranchName(toBranch);
 
             if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
