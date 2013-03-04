@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
@@ -52,6 +53,7 @@ namespace BackgroundFetch
                     Observable.Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
                               .SkipWhile(i => gitModule.IsRunningGitProcess())
                               .Repeat()
+                              .ObserveOn(ThreadPoolScheduler.Instance)
                               .Subscribe(i => gitModule.RunGitCmdAsync("fetch --all"));
             }
         }
