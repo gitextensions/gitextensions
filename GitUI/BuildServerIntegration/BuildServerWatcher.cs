@@ -98,30 +98,37 @@ namespace GitUI.BuildServerIntegration
             const string PasswordKey = "Password";
             using (var stream = GetBuildServerOptionsIsolatedStorageStream(buildServerAdapter, FileAccess.Read, FileShare.Read))
             {
-                var protectedData = new byte[stream.Length];
-
-                stream.Read(protectedData, 0, (int)stream.Length);
-
-                byte[] unprotectedData = ProtectedData.Unprotect(protectedData, null, DataProtectionScope.CurrentUser);
-                using (var memoryStream = new MemoryStream(unprotectedData))
+                if (stream.Position < stream.Length)
                 {
-                    using (var textReader = new StreamReader(memoryStream, Encoding.UTF8))
+                    var protectedData = new byte[stream.Length];
+
+                    stream.Read(protectedData, 0, (int) stream.Length);
+
+                    byte[] unprotectedData = ProtectedData.Unprotect(protectedData, null, DataProtectionScope.CurrentUser);
+                    using (var memoryStream = new MemoryStream(unprotectedData))
                     {
-                        buildServerConfigSource = new IniConfigSource(textReader);
-                    }
-
-                    var credentialsConfig = buildServerConfigSource.Configs[CredentialsConfigName];
-
-                    if (credentialsConfig != null)
-                    {
-                        username = credentialsConfig.GetString(UsernameKey);
-                        password = credentialsConfig.GetString(PasswordKey);
-
-                        if (firstTime)
+                        using (var textReader = new StreamReader(memoryStream, Encoding.UTF8))
                         {
-                            return true;
+                            buildServerConfigSource = new IniConfigSource(textReader);
+                        }
+
+                        var credentialsConfig = buildServerConfigSource.Configs[CredentialsConfigName];
+
+                        if (credentialsConfig != null)
+                        {
+                            username = credentialsConfig.GetString(UsernameKey);
+                            password = credentialsConfig.GetString(PasswordKey);
+
+                            if (firstTime)
+                            {
+                                return true;
+                            }
                         }
                     }
+                }
+                else
+                {
+                    buildServerConfigSource = new IniConfigSource();
                 }
             }
 
