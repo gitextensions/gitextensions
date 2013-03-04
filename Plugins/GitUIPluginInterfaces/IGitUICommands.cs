@@ -115,7 +115,7 @@ namespace GitUIPluginInterfaces
         bool StartApplyPatchDialog();
         bool StartArchiveDialog();
         bool StartBrowseDialog();
-        bool StartCheckoutBranchDialog();
+        bool StartCheckoutBranch();
         bool StartCheckoutRevisionDialog();
         bool StartCherryPickDialog();
         bool StartCloneDialog();

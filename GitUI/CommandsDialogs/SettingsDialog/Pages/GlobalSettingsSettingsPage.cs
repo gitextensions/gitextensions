@@ -183,7 +183,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void GlobalMergeTool_TextChanged(object sender, EventArgs e)
         {
-            if (loadingSettings)
+            if (IsLoadingSettings)
                 return;
 
             MergetoolPath.Text = _gitModule.GetGlobalSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()));
@@ -220,8 +220,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 MergeToolCmd.SelectAll();
                 MergeToolCmd.SelectedText = "";
                 if (sender != null)
-                    MessageBox.Show(this, String.Format(_checkSettingsLogic._toolSuggestPath.Text, exeName),
-                        _checkSettingsLogic.__mergeToolSuggestCaption.Text);
+                    MessageBox.Show(this, String.Format(_checkSettingsLogic.ToolSuggestPathText.Text, exeName),
+                        _checkSettingsLogic.MergeToolSuggestCaption.Text);
                 return;
             }
             MergetoolPath.SelectAll(); // allow Undo action
@@ -265,7 +265,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 DifftoolCmd.SelectAll();
                 DifftoolCmd.SelectedText = "";
                 if (sender != null)
-                    MessageBox.Show(this, String.Format(_checkSettingsLogic._toolSuggestPath.Text, exeName),
+                    MessageBox.Show(this, String.Format(_checkSettingsLogic.ToolSuggestPathText.Text, exeName),
                         __diffToolSuggestCaption.Text);
                 return;
             }
@@ -288,8 +288,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void GlobalDiffTool_TextChanged(object sender, EventArgs e)
         {
-            if (loadingSettings)
+            if (IsLoadingSettings)
                 return;
+
             string diffTool = GlobalDiffTool.Text.Trim();
             DifftoolPath.Text = _gitModule.GetGlobalSetting(string.Format("difftool.{0}.path", diffTool));
             DifftoolCmd.Text = _gitModule.GetGlobalSetting(string.Format("difftool.{0}.cmd", diffTool));
