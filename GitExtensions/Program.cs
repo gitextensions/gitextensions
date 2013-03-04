@@ -75,7 +75,6 @@ namespace GitExtensions
                     var checkSettingsLogic = new CheckSettingsLogic(commonLogic, uiCommands.Module);
                     using (var checklistSettingsPage = new ChecklistSettingsPage(commonLogic, checkSettingsLogic, uiCommands.Module, null))
                     {
-                        checkSettingsLogic.ChecklistSettingsPage = checklistSettingsPage;
                         if (!checklistSettingsPage.CheckSettings())
                         {
                             checkSettingsLogic.AutoSolveAllSettings();
