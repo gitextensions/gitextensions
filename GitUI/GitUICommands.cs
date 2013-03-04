@@ -298,13 +298,15 @@ namespace GitUI
             return StartDeleteBranchDialog(null, branch);
         }
 
-        public bool StartCheckoutRevisionDialog(IWin32Window owner)
+        public bool StartCheckoutRevisionDialog(IWin32Window owner, string revision = null)
         {
             return DoActionOnRepo(owner, true, true, PreCheckoutRevision, PostCheckoutRevision, () =>
                 {
                     using (var form = new FormCheckoutRevision(this))
-                        form.ShowDialog(owner);
-                    return true;
+                    {
+                        form.SetRevision(revision);
+                        return form.ShowDialog(owner) == DialogResult.OK;
+                    }
                 }
             );
         }
@@ -365,8 +367,8 @@ namespace GitUI
         /// <param name="changesRepo">if successfuly done action changes repo state</param>
         /// <param name="preEvent">Event invoked before performing action</param>
         /// <param name="postEvent">Event invoked after performing action</param>
-        /// <param name="action">Action to do</param>
-        /// <returns>true if action was done, false otherwise</returns>
+        /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>
+        /// <returns>true if action was sccessfully done, false otherwise</returns>
         public bool DoActionOnRepo(IWin32Window owner, bool requiresValidWorkingDir, bool changesRepo, 
             GitUIEventHandler preEvent, GitUIPostActionEventHandler postEvent, Func<bool> action)
         {
@@ -411,7 +413,7 @@ namespace GitUI
             return DoActionOnRepo(null, false, true, null, null, action);
         }
 
-        public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote, string containRevison)
+        public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote, string containRevison)
         {
             return DoActionOnRepo(owner, true, true, PreCheckoutBranch, PostCheckoutBranch, () =>
             {
@@ -421,29 +423,29 @@ namespace GitUI
             );
         }
 
-        public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote)
+        public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote)
         {
-            return StartCheckoutBranchDialog(owner, branch, remote, null);
+            return StartCheckoutBranch(owner, branch, remote, null);
         }
 
-        public bool StartCheckoutBranchDialog(IWin32Window owner, string containRevison)
+        public bool StartCheckoutBranch(IWin32Window owner, string containRevison)
         {
-            return StartCheckoutBranchDialog(owner, "", false, containRevison);
+            return StartCheckoutBranch(owner, "", false, containRevison);
         }
 
-        public bool StartCheckoutBranchDialog(IWin32Window owner)
+        public bool StartCheckoutBranch(IWin32Window owner)
         {
-            return StartCheckoutBranchDialog(owner, "", false, null);
+            return StartCheckoutBranch(owner, "", false, null);
         }
 
-        public bool StartCheckoutBranchDialog()
+        public bool StartCheckoutBranch()
         {
-            return StartCheckoutBranchDialog(null, "", false, null);
+            return StartCheckoutBranch(null, "", false, null);
         }
 
-        public bool StartCheckoutRemoteBranchDialog(IWin32Window owner, string branch)
+        public bool StartCheckoutRemoteBranch(IWin32Window owner, string branch)
         {
-            return StartCheckoutBranchDialog(owner, branch, true);
+            return StartCheckoutBranch(owner, branch, true);
         }
 
         public bool StartCompareRevisionsDialog(IWin32Window owner)
@@ -451,11 +453,12 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormLog(this))
-                   form.ShowDialog(owner);
-                return true;
+                {
+                    return form.ShowDialog(owner) == DialogResult.OK;
+                }
             };
 
-            return DoActionOnRepo(owner, true, false, PreCompareRevisions, PostCompareRevisions, action);
+            return DoActionOnRepo(owner, true, true, PreCompareRevisions, PostCompareRevisions, action);
         }
 
         public bool StartCompareRevisionsDialog()
@@ -1081,9 +1084,9 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormCreateTag(this, null))
-                    form.ShowDialog(owner);
-
-                return true;
+                {
+                    return form.ShowDialog(owner) == DialogResult.OK;
+                }
             };
 
             return DoActionOnRepo(owner, true, true, PreCreateTag, PostCreateTag, action);
@@ -1742,7 +1745,7 @@ namespace GitUI
                     return;
                 case "checkout":
                 case "checkoutbranch":
-                    StartCheckoutBranchDialog();
+                    StartCheckoutBranch();
                     return;
                 case "checkoutrevision":
                     StartCheckoutRevisionDialog();
