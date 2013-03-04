@@ -294,17 +294,16 @@ namespace GitUI.CommandsDialogs
         private bool pluginsLoaded;
         private void LoadPluginsInPluginMenu()
         {
-            if (!pluginsLoaded)
+            if (pluginsLoaded)
+                return;
+            foreach (var plugin in LoadedPlugins.Plugins)
             {
-                foreach (var plugin in LoadedPlugins.Plugins)
-                {
-                    var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
-                    item.Click += ItemClick;
-                    pluginsToolStripMenuItem.DropDownItems.Add(item);
-                }
-                pluginsLoaded = true;
-                UpdatePluginMenu(Module.IsValidGitWorkingDir());
+                var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
+                item.Click += ItemClick;
+                pluginsToolStripMenuItem.DropDownItems.Add(item);
             }
+            pluginsLoaded = true;
+            UpdatePluginMenu(Module.IsValidGitWorkingDir());
         }
 
         /// <summary>
@@ -1287,7 +1286,7 @@ namespace GitUI.CommandsDialogs
 
         private void CheckoutBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartCheckoutBranchDialog(this);
+            UICommands.StartCheckoutBranch(this);
         }
 
         private void StashToolStripMenuItemClick(object sender, EventArgs e)
@@ -1880,7 +1879,7 @@ namespace GitUI.CommandsDialogs
 
         private void CreateBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartCreateBranchDialog(this);
+            UICommands.StartCreateBranchDialog(this, RevisionGrid.GetSelectedRevisions().FirstOrDefault());
         }
 
         private void RevisionGridDoubleClick(object sender, EventArgs e)
@@ -2058,7 +2057,7 @@ namespace GitUI.CommandsDialogs
         void BranchSelectToolStripItem_Click(object sender, EventArgs e)
         {
             var toolStripItem = (ToolStripItem)sender;
-            UICommands.StartCheckoutBranchDialog(this, toolStripItem.Text, false);
+            UICommands.StartCheckoutBranch(this, toolStripItem.Text, false);
         }
 
         private void _forkCloneMenuItem_Click(object sender, EventArgs e)

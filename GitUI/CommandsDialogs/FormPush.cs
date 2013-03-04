@@ -177,7 +177,7 @@ namespace GitUI.CommandsDialogs
             //known remotes anyway.
             if (TabControlTagBranch.SelectedTab == BranchTab && PushToRemote.Checked)
             {
-                //If the current branch is not the default push, and not known by the remote 
+                //If the current branch is not the default push, and not known by the remote
                 //(as far as we know since we are disconnected....)
                 if (RemoteBranch.Text != GetDefaultPushRemote(_NO_TRANSLATE_Remotes.Text) &&
                     !Module.GetHeads(true, true).Any(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text) )
@@ -242,7 +242,16 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                pushCmd = GitCommandHelpers.PushCmd(destination, _NO_TRANSLATE_Branch.Text, RemoteBranch.Text,
+                // Try to make source rev into a fully qualified branch name. If that
+                // doesn't exist, then it must be something other than a branch, so
+                // fall back to using the name just as it was passed in.
+                string srcRev = GitModule.GetFullBranchName(_NO_TRANSLATE_Branch.Text);
+                if (String.IsNullOrEmpty(Module.RevParse(srcRev)))
+                {
+                    srcRev = _NO_TRANSLATE_Branch.Text;
+                }
+
+                pushCmd = GitCommandHelpers.PushCmd(destination, srcRev, RemoteBranch.Text,
                     PushAllBranches.Checked, ForcePushBranches.Checked, track, RecursiveSubmodules.SelectedIndex);
             }
             else if (TabControlTagBranch.SelectedTab == TagTab)
