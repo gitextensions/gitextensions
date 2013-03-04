@@ -28,18 +28,24 @@ namespace GitUI.CommandsDialogs
             Translate();
         }
 
+        private void FormCheckoutLoad(object sender, EventArgs e)
+        {
+
+        }
+
         private void OkClick(object sender, EventArgs e)
         {
             try
             {
-                if (RevisionGrid.GetSelectedRevisions().Count != 1)
+                var commitHash = commitPickerSmallControl1.SelectedCommitHash;
+
+                if (commitHash.IsNullOrEmpty())
                 {
                     MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, _noRevisionSelectedMsgBoxCaption.Text);
                     return;
                 }
 
-                string command = GitCommandHelpers.CheckoutCmd(RevisionGrid.GetSelectedRevisions()[0].Guid, 
-                    Force.Checked ? LocalChangesAction.Reset : 0);
+                string command = GitCommandHelpers.CheckoutCmd(commitHash, Force.Checked ? LocalChangesAction.Reset : 0);
 
                 FormProcess.ShowDialog(this, command);
 
@@ -49,11 +55,6 @@ namespace GitUI.CommandsDialogs
             {
                 Trace.WriteLine(ex.Message);
             }
-        }
-
-        private void FormCheckoutLoad(object sender, EventArgs e)
-        {
-            RevisionGrid.Load();
         }
     }
 }
