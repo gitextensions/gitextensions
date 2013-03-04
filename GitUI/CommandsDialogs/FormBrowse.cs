@@ -1413,7 +1413,7 @@ namespace GitUI.CommandsDialogs
 
         private void CheckoutBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartCheckoutBranchDialog(this);
+            UICommands.StartCheckoutBranch(this);
         }
 
         private void StashToolStripMenuItemClick(object sender, EventArgs e)
@@ -2190,7 +2190,7 @@ namespace GitUI.CommandsDialogs
         void BranchSelectToolStripItem_Click(object sender, EventArgs e)
         {
             var toolStripItem = (ToolStripItem)sender;
-            UICommands.StartCheckoutBranchDialog(this, toolStripItem.Text, false);
+            UICommands.StartCheckoutBranch(this, toolStripItem.Text, false);
         }
 
         private void _forkCloneMenuItem_Click(object sender, EventArgs e)
