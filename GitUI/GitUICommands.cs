@@ -365,8 +365,8 @@ namespace GitUI
         /// <param name="changesRepo">if successfuly done action changes repo state</param>
         /// <param name="preEvent">Event invoked before performing action</param>
         /// <param name="postEvent">Event invoked after performing action</param>
-        /// <param name="action">Action to do</param>
-        /// <returns>true if action was done, false otherwise</returns>
+        /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>
+        /// <returns>true if action was sccessfully done, false otherwise</returns>
         public bool DoActionOnRepo(IWin32Window owner, bool requiresValidWorkingDir, bool changesRepo, 
             GitUIEventHandler preEvent, GitUIPostActionEventHandler postEvent, Func<bool> action)
         {
@@ -1081,9 +1081,9 @@ namespace GitUI
             Func<bool> action = () =>
             {
                 using (var form = new FormCreateTag(this, null))
-                    form.ShowDialog(owner);
-
-                return true;
+                {
+                    return form.ShowDialog(owner) == DialogResult.OK;
+                }
             };
 
             return DoActionOnRepo(owner, true, true, PreCreateTag, PostCreateTag, action);
