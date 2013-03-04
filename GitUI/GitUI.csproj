@@ -88,6 +88,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Bin\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
+    <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -106,6 +107,7 @@
     <Compile Include="BuildServerIntegration\BuildInfoDrawingLogic.cs" />
     <Compile Include="BuildServerIntegration\BuildServerWatcher.cs" />
     <Compile Include="BuildServerIntegration\IBuildServerAdapter.cs" />
+    <Compile Include="BuildServerIntegration\IBuildServerWatcher.cs" />
     <Compile Include="BuildServerIntegration\TeamCityAdapter.cs" />
     <Compile Include="CommandsDialogs\AboutBox.cs">
       <SubType>Form</SubType>
@@ -149,6 +151,12 @@
     </Compile>
     <Compile Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HelperDialogs\FormBuildServerCredentials.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HelperDialogs\FormBuildServerCredentials.Designer.cs">
+      <DependentUpon>FormBuildServerCredentials.cs</DependentUpon>
     </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
     <Compile Include="RepoHosts.cs" />
@@ -936,6 +944,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.resx">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HelperDialogs\FormBuildServerCredentials.resx">
+      <DependentUpon>FormBuildServerCredentials.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\CommitPickerSmallControl.resx">
