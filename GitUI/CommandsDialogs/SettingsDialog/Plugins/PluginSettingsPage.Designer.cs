@@ -88,6 +88,5 @@
         private System.Windows.Forms.Label labelNoSettings;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel panelAutoGenControls;
-        private System.Windows.Forms.Button buttonSave;
     }
 }
