@@ -92,7 +92,7 @@ namespace GitCommands
                 if (String.IsNullOrEmpty(value))
                     Module.UnsetSetting(_mergeSettingName);
                 else
-                    Module.SetSetting(_mergeSettingName, GitModule.GetFullBranchName(value));
+                    Module.SetSetting(_mergeSettingName, GitCommandHelpers.GetFullBranchName(value));
             }
         }
 
