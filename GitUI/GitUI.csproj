@@ -105,8 +105,10 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BuildServerIntegration\BuildInfoDrawingLogic.cs" />
+    <Compile Include="BuildServerIntegration\BuildServerCredentials.cs" />
     <Compile Include="BuildServerIntegration\BuildServerWatcher.cs" />
     <Compile Include="BuildServerIntegration\IBuildServerAdapter.cs" />
+    <Compile Include="BuildServerIntegration\IBuildServerCredentials.cs" />
     <Compile Include="BuildServerIntegration\IBuildServerWatcher.cs" />
     <Compile Include="BuildServerIntegration\TeamCityAdapter.cs" />
     <Compile Include="CommandsDialogs\AboutBox.cs">
