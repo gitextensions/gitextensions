@@ -824,7 +824,7 @@ namespace GitUI.CommandsDialogs
                 {
                     case 0:
                         string revision = _editedCommit != null ? _editedCommit.Guid : "";
-                        if (!UICommands.StartCheckoutBranchDialog(this, revision))
+                        if (!UICommands.StartCheckoutBranch(this, revision))
                             return;
                         break;
                     case -1:

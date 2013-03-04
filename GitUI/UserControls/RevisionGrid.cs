@@ -1841,7 +1841,7 @@ namespace GitUI
                 return;
 
             string branch = toolStripItem.Text;
-            UICommands.StartCheckoutBranchDialog(this, branch, false);
+            UICommands.StartCheckoutBranch(this, branch, false);
         }
 
         private void ToolStripItemClickCheckoutRemoteBranch(object sender, EventArgs e)
@@ -1851,7 +1851,7 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            UICommands.StartCheckoutRemoteBranchDialog(this, toolStripItem.Text);
+            UICommands.StartCheckoutRemoteBranch(this, toolStripItem.Text);
         }
 
         private void ToolStripItemClickMergeBranch(object sender, EventArgs e)
