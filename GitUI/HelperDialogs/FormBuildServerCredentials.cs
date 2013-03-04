@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using GitUI.BuildServerIntegration;
 
 namespace GitUI.HelperDialogs
 {
@@ -12,27 +13,29 @@ namespace GitUI.HelperDialogs
             labelHeader.Text = string.Format(labelHeader.Text, buildServerUniqueKey);
         }
 
-        public bool UseGuestAccess { get; set; }
-
-        public string UserName { get; set; }
-
-        public string Password { get; set; }
+        public IBuildServerCredentials BuildServerCredentials { get; set; }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            UseGuestAccess = radioButtonGuestAccess.Checked;
-            UserName = textBoxUserName.Text;
-            Password = textBoxPassword.Text;
+            if (BuildServerCredentials == null)
+                BuildServerCredentials = new BuildServerCredentials();
+
+            BuildServerCredentials.UseGuestAccess = radioButtonGuestAccess.Checked;
+            BuildServerCredentials.Username = textBoxUserName.Text;
+            BuildServerCredentials.Password = textBoxPassword.Text;
 
             Close();
         }
 
         private void FormBuildServerCredentials_Load(object sender, EventArgs e)
         {
-            radioButtonGuestAccess.Checked = UseGuestAccess;
-            radioButtonAuthenticatedUser.Checked = !UseGuestAccess;
-            textBoxUserName.Text = UserName;
-            textBoxPassword.Text = Password;
+            if (BuildServerCredentials != null)
+            {
+                radioButtonGuestAccess.Checked = BuildServerCredentials.UseGuestAccess;
+                radioButtonAuthenticatedUser.Checked = !BuildServerCredentials.UseGuestAccess;
+                textBoxUserName.Text = BuildServerCredentials.Username;
+                textBoxPassword.Text = BuildServerCredentials.Password;
+            }
 
             UpdateUI();
         }
