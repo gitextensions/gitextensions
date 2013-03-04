@@ -237,7 +237,7 @@ namespace GitUI.CommandsDialogs
                 switch (idx)
                 {
                     case 0:
-                        if (!UICommands.StartCheckoutBranchDialog(owner, ""))
+                        if (!UICommands.StartCheckoutBranch(owner, ""))
                             return DialogResult.Cancel;
                         break;
                     case -1:
