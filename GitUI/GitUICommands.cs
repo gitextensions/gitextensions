@@ -413,7 +413,7 @@ namespace GitUI
             return DoActionOnRepo(null, false, true, null, null, action);
         }
 
-        public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote, string containRevison)
+        public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote, string containRevison)
         {
             return DoActionOnRepo(owner, true, true, PreCheckoutBranch, PostCheckoutBranch, () =>
             {
@@ -423,29 +423,29 @@ namespace GitUI
             );
         }
 
-        public bool StartCheckoutBranchDialog(IWin32Window owner, string branch, bool remote)
+        public bool StartCheckoutBranch(IWin32Window owner, string branch, bool remote)
         {
-            return StartCheckoutBranchDialog(owner, branch, remote, null);
+            return StartCheckoutBranch(owner, branch, remote, null);
         }
 
-        public bool StartCheckoutBranchDialog(IWin32Window owner, string containRevison)
+        public bool StartCheckoutBranch(IWin32Window owner, string containRevison)
         {
-            return StartCheckoutBranchDialog(owner, "", false, containRevison);
+            return StartCheckoutBranch(owner, "", false, containRevison);
         }
 
-        public bool StartCheckoutBranchDialog(IWin32Window owner)
+        public bool StartCheckoutBranch(IWin32Window owner)
         {
-            return StartCheckoutBranchDialog(owner, "", false, null);
+            return StartCheckoutBranch(owner, "", false, null);
         }
 
-        public bool StartCheckoutBranchDialog()
+        public bool StartCheckoutBranch()
         {
-            return StartCheckoutBranchDialog(null, "", false, null);
+            return StartCheckoutBranch(null, "", false, null);
         }
 
-        public bool StartCheckoutRemoteBranchDialog(IWin32Window owner, string branch)
+        public bool StartCheckoutRemoteBranch(IWin32Window owner, string branch)
         {
-            return StartCheckoutBranchDialog(owner, branch, true);
+            return StartCheckoutBranch(owner, branch, true);
         }
 
         public bool StartCompareRevisionsDialog(IWin32Window owner)
@@ -1745,7 +1745,7 @@ namespace GitUI
                     return;
                 case "checkout":
                 case "checkoutbranch":
-                    StartCheckoutBranchDialog();
+                    StartCheckoutBranch();
                     return;
                 case "checkoutrevision":
                     StartCheckoutRevisionDialog();
