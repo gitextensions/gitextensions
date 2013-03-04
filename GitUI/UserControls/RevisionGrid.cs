@@ -44,8 +44,6 @@ namespace GitUI
     [DefaultEvent("DoubleClick")]
     public sealed partial class RevisionGrid : GitModuleControl
     {
-        private readonly TranslationString _areYouSureYouWantCheckout = new TranslationString("Are you sure to checkout the selected revision?");
-        private readonly TranslationString _areYouSureYouWantCheckoutCaption = new TranslationString("Checkout revision");
         private readonly TranslationString _droppingFilesBlocked = new TranslationString("For you own protection dropping more than 10 patch files at once is blocked!");
 
         private const int NODE_DIMENSION = 8;
@@ -1891,11 +1889,8 @@ namespace GitUI
             if (Revisions.RowCount <= LastRow || LastRow < 0)
                 return;
 
-            if (MessageBox.Show(this, _areYouSureYouWantCheckout.Text, _areYouSureYouWantCheckoutCaption.Text,
-                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                return;
-
-            UICommands.StartCheckoutBranchDialog(this, GetRevision(LastRow).Guid, false);
+            string revision = GetRevision(LastRow).Guid;
+            UICommands.StartCheckoutRevisionDialog(this, revision);
         }
 
         private void ArchiveRevisionToolStripMenuItemClick(object sender, EventArgs e)
