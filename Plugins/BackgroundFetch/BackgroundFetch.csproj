@@ -47,6 +47,9 @@
     <Reference Include="System.Reactive.Linq">
       <HintPath>..\..\Bin\System.Reactive.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\..\Bin\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
