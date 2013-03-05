@@ -38,8 +38,6 @@ namespace GitUIPluginInterfaces
 
         string RunCmd(string cmd, string arguments, byte[] stdIn);
 
-        IEnumerable<string> RunGitCmdAsync(string arguments);
-
         string GetSelectedBranch();
 
         bool IsBareRepository();

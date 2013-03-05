@@ -54,7 +54,7 @@ namespace BackgroundFetch
                               .SkipWhile(i => gitModule.IsRunningGitProcess())
                               .Repeat()
                               .ObserveOn(ThreadPoolScheduler.Instance)
-                              .Subscribe(i => gitModule.RunGitCmdAsync("fetch --all"));
+                              .Subscribe(i => currentGitUiCommands.GitCommand("fetch --all"));
             }
         }
 
