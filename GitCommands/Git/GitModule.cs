@@ -308,7 +308,7 @@ namespace GitCommands
 
         public static bool IsValidGitWorkingDir(string dir)
         {
-            if (string.IsNullOrEmpty(dir))
+            if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir))
                 return false;
 
             try
