@@ -138,22 +138,25 @@
       </Component>
 
       <Component Id="System.Reactive.Core.dll" Guid="*">
-        <File Source="..\bin\System.Reactive.Core.dll"/>
+        <File Source="..\GitExtensions\bin\Release\System.Reactive.Core.dll"/>
       </Component>
       <Component Id="System.Reactive.Interfaces.dll" Guid="*">
-        <File Source="..\bin\System.Reactive.Interfaces.dll"/>
+        <File Source="..\GitExtensions\bin\Release\System.Reactive.Interfaces.dll"/>
       </Component>
       <Component Id="System.Reactive.Linq.dll" Guid="*">
-        <File Source="..\bin\System.Reactive.Linq.dll"/>
+        <File Source="..\GitExtensions\bin\Release\System.Reactive.Linq.dll"/>
       </Component>
       <Component Id="System.Reactive.PlatformServices.dll" Guid="*">
-        <File Source="..\bin\System.Reactive.PlatformServices.dll"/>
+        <File Source="..\GitExtensions\bin\Release\System.Reactive.PlatformServices.dll"/>
       </Component>
       <Component Id="System.Net.Http.dll" Guid="*">
-        <File Source="..\bin\System.Net.Http.dll"/>
+        <File Source="..\GitExtensions\bin\Release\System.Net.Http.dll"/>
+      </Component>
+      <Component Id="System.Net.Http.WebRequest.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\Release\System.Net.Http.WebRequest.dll"/>
       </Component>
       <Component Id="Nini.dll" Guid="*">
-        <File Source="..\bin\Nini.dll"/>
+        <File Source="..\GitExtensions\bin\Release\Nini.dll"/>
       </Component>
 
       <!--Remove unused dll, installed in versions <= 2.31-->
@@ -552,6 +555,7 @@
       <ComponentRef Id="System.Reactive.Linq.dll" />
       <ComponentRef Id="System.Reactive.PlatformServices.dll" />
       <ComponentRef Id="System.Net.Http.dll" />
+      <ComponentRef Id="System.Net.Http.WebRequest.dll" />
       <ComponentRef Id="Nini.dll" />
 
       <!--Remove unused dll, installed in versions <= 2.31-->
