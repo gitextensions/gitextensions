@@ -280,5 +280,20 @@ namespace GitUI
             }
         }
 
+        public static void InvokeAsync(this Control control, Action action)
+        {
+            Action checkDisposedAndInvoke = () =>
+                {
+                    if (!control.IsDisposed)
+                        action();
+                };
+
+            if (!control.IsDisposed)
+                if (control.InvokeRequired)
+                    control.BeginInvoke(checkDisposedAndInvoke);
+                else
+                    checkDisposedAndInvoke();
+        }
+
     }
 }
