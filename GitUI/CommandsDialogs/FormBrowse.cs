@@ -90,7 +90,6 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private readonly SynchronizationContext syncContext;
         private Dashboard _dashboard;
         private ToolStripItem _rebase;
         private ToolStripItem _bisect;
@@ -121,8 +120,6 @@ namespace GitUI.CommandsDialogs
         public FormBrowse(GitUICommands aCommands, string filter)
             : base(true, aCommands)
         {
-            syncContext = SynchronizationContext.Current;
-
             InitializeComponent();
 
             // set tab page images
@@ -191,7 +188,7 @@ namespace GitUI.CommandsDialogs
 
         void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
         {
-            RefreshRevisions();
+            this.InvokeAsync(RefreshRevisions);
         }
 
         private void RefreshRevisions()
@@ -283,12 +280,12 @@ namespace GitUI.CommandsDialogs
 
         void _indexWatcher_Changed(bool indexChanged)
         {
-            syncContext.Post(o =>
+            this.InvokeAsync(() =>
             {
                 RefreshButton.Image = indexChanged && Settings.UseFastChecks && Module.IsValidGitWorkingDir()
                                           ? GitUI.Properties.Resources.arrow_refresh_dirty
                                           : GitUI.Properties.Resources.arrow_refresh;
-            }, this);
+            });
         }
 
         private bool pluginsLoaded;
