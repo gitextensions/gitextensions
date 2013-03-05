@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
+using LibGit2Sharp;
 
 namespace GitUI
 {
@@ -262,30 +262,31 @@ namespace GitUI
             }
         }
 
-        private String RunStatusCommand()
+        private StatusEntry[] RunStatusCommand()
         {
-            string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
-            return Module.RunGitCmd(command);
+            var index = Module.Repository.Index;
+            return index.RetrieveStatus().Where(entry => entry.State != FileStatus.Ignored).ToArray();
         }
 
-        private void UpdatedStatusReceived(string updatedStatus)
+        private void UpdatedStatusReceived(StatusEntry[] entries)
         {
             if (CurrentStatus != WorkingStatus.Started)
                 return;
 
             if (statusIsUpToDate)
             {
-                var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(Module, updatedStatus);
-                var stagedCount = allChangedFiles.Count(status => status.IsStaged);
-                var unstagedCount = allChangedFiles.Count - stagedCount;
-                var unstagedSubmodulesCount = allChangedFiles.Count(status => status.IsSubmodule && !status.IsStaged);
+                IList<string> submodules = Module.GetSubmodulesLocalPathes();
+                var stagedCount = entries.Count(status => status.State.HasFlag(FileStatus.Staged));
+                var unstagedCount = entries.Length - stagedCount;
+                var unstagedSubmodulesCount = entries.Count(status => submodules.Contains(status.FilePath) && 
+                    !status.State.HasFlag(FileStatus.Staged));
 
                 Image = GetStatusIcon(stagedCount, unstagedCount, unstagedSubmodulesCount);
 
-                if (allChangedFiles.Count == 0)
+                if (entries.Length == 0)
                     Text = CommitTranslatedString;
                 else
-                    Text = string.Format(CommitTranslatedString + " ({0})", allChangedFiles.Count.ToString());
+                    Text = string.Format(CommitTranslatedString + " ({0})", entries.Length);
             }
             else
                 UpdateImmediately();

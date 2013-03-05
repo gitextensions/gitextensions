@@ -62,7 +62,7 @@ namespace GitCommands
 
         public void Load<T>(Func<T> loadContent, Action<T> onLoaded)
         {
-            Load((state) => { return loadContent(); }, onLoaded);
+            Load((state) => loadContent(), onLoaded);
         }
 
         public void Load<T>(Func<ILoadingTaskState, T> loadContent, Action<T> onLoaded)

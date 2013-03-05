@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs
 
             branch = Module.GetSelectedBranch();
             string currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", branch));
-            if (currentBranchRemote.IsNullOrEmpty() && _NO_TRANSLATE_Remotes.Items.Count >= 3)
+            if (currentBranchRemote.IsNullOrEmpty() && _NO_TRANSLATE_Remotes.Items.Count >= 2)
             {
                 IList<string> remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
                 int i = remotes.IndexOf("origin");
