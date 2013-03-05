@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using GitCommands.Config;
 using GitCommands.Git;
 using JetBrains.Annotations;
@@ -323,6 +322,13 @@ namespace GitCommands
             return CherryPickCmd + " " + arguments + " \"" + cherry + "\"";
         }
 
+        public static string GetFullBranchName(string branch)
+        {
+            if (branch.StartsWith("refs/"))
+                return branch;
+            return "refs/heads/" + branch;
+        }
+
         public static string DeleteBranchCmd(string branchName, bool force, bool remoteBranch)
         {
             StringBuilder cmd = new StringBuilder("branch");
@@ -542,7 +548,8 @@ namespace GitCommands
 
             // This method is for pushing to remote branches, so fully qualify the
             // remote branch name with refs/heads/.
-            toBranch = GitModule.GetFullBranchName(toBranch);
+            fromBranch = GetFullBranchName(fromBranch);
+            toBranch = GetFullBranchName(toBranch);
 
             if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
                 fromBranch = "HEAD";

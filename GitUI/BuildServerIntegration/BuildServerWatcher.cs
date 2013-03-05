@@ -28,6 +28,8 @@ namespace GitUI.BuildServerIntegration
         private IDisposable buildStatusCancellationToken;
         private IBuildServerAdapter buildServerAdapter;
 
+        private readonly object buildServerCredentialsLock = new object();
+
         public BuildServerWatcher(RevisionGrid revisionGrid, DvcsGraph revisions)
         {
             this.revisionGrid = revisionGrid;
@@ -87,61 +89,65 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
-        public bool GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool firstTime, out string username, out string password)
+        public IBuildServerCredentials GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool useStoredCredentialsIfExisting)
         {
-            username = null;
-            password = null;
-
-            IniConfigSource buildServerConfigSource;
-            const string CredentialsConfigName = "Credentials";
-            const string UsernameKey = "Username";
-            const string PasswordKey = "Password";
-            using (var stream = GetBuildServerOptionsIsolatedStorageStream(buildServerAdapter, FileAccess.Read, FileShare.Read))
+            lock (buildServerCredentialsLock)
             {
-                var protectedData = new byte[stream.Length];
+                IBuildServerCredentials buildServerCredentials = new BuildServerCredentials { UseGuestAccess = true };
 
-                stream.Read(protectedData, 0, (int)stream.Length);
-
-                byte[] unprotectedData = ProtectedData.Unprotect(protectedData, null, DataProtectionScope.CurrentUser);
-                using (var memoryStream = new MemoryStream(unprotectedData))
+                IniConfigSource buildServerConfigSource = null;
+                const string CredentialsConfigName = "Credentials";
+                const string UseGuestAccessKey = "UseGuestAccess";
+                const string UsernameKey = "Username";
+                const string PasswordKey = "Password";
+                using (var stream = GetBuildServerOptionsIsolatedStorageStream(buildServerAdapter, FileAccess.Read, FileShare.Read))
                 {
-                    using (var textReader = new StreamReader(memoryStream, Encoding.UTF8))
+                    if (stream.Position < stream.Length)
                     {
-                        buildServerConfigSource = new IniConfigSource(textReader);
-                    }
+                        var protectedData = new byte[stream.Length];
 
-                    var credentialsConfig = buildServerConfigSource.Configs[CredentialsConfigName];
+                        stream.Read(protectedData, 0, (int)stream.Length);
 
-                    if (credentialsConfig != null)
-                    {
-                        username = credentialsConfig.GetString(UsernameKey);
-                        password = credentialsConfig.GetString(PasswordKey);
-
-                        if (firstTime)
+                        byte[] unprotectedData = ProtectedData.Unprotect(protectedData, null, DataProtectionScope.CurrentUser);
+                        using (var memoryStream = new MemoryStream(unprotectedData))
                         {
-                            return true;
+                            using (var textReader = new StreamReader(memoryStream, Encoding.UTF8))
+                            {
+                                buildServerConfigSource = new IniConfigSource(textReader);
+                            }
+
+                            var credentialsConfig = buildServerConfigSource.Configs[CredentialsConfigName];
+
+                            if (credentialsConfig != null)
+                            {
+                                buildServerCredentials.UseGuestAccess = credentialsConfig.GetBoolean(UseGuestAccessKey, true);
+                                buildServerCredentials.Username = credentialsConfig.GetString(UsernameKey);
+                                buildServerCredentials.Password = credentialsConfig.GetString(PasswordKey);
+
+                                if (useStoredCredentialsIfExisting)
+                                {
+                                    return buildServerCredentials;
+                                }
+                            }
                         }
                     }
                 }
-            }
 
-            if (!firstTime)
-            {
-                using (var form = new FormBuildServerCredentials(buildServerAdapter.UniqueKey))
+                if (!useStoredCredentialsIfExisting)
                 {
-                    form.UserName = username;
-                    form.Password = password;
+                    buildServerCredentials = ShowBuildServerCredentialsForm(buildServerAdapter.UniqueKey, buildServerCredentials);
 
-                    if (form.ShowDialog() == DialogResult.OK)
+                    if (buildServerCredentials != null)
                     {
-                        username = form.UserName;
-                        password = form.Password;
+                        if (buildServerConfigSource == null)
+                            buildServerConfigSource = new IniConfigSource();
 
                         var credentialsConfig = buildServerConfigSource.Configs[CredentialsConfigName] ??
                                                 buildServerConfigSource.AddConfig(CredentialsConfigName);
 
-                        credentialsConfig.Set(UsernameKey, username);
-                        credentialsConfig.Set(PasswordKey, password);
+                        credentialsConfig.Set(UseGuestAccessKey, buildServerCredentials.UseGuestAccess);
+                        credentialsConfig.Set(UsernameKey, buildServerCredentials.Username);
+                        credentialsConfig.Set(PasswordKey, buildServerCredentials.Password);
 
                         using (var stream = GetBuildServerOptionsIsolatedStorageStream(buildServerAdapter, FileAccess.Write, FileShare.None))
                         {
@@ -157,12 +163,32 @@ namespace GitUI.BuildServerIntegration
                             }
                         }
 
-                        return true;
+                        return buildServerCredentials;
                     }
+                }
+
+                return null;
+            }
+        }
+
+        private IBuildServerCredentials ShowBuildServerCredentialsForm(string buildServerUniqueKey, IBuildServerCredentials buildServerCredentials)
+        {
+            if (revisionGrid.InvokeRequired)
+            {
+                return (IBuildServerCredentials)revisionGrid.Invoke(new Func<IBuildServerCredentials>(() => ShowBuildServerCredentialsForm(buildServerUniqueKey, buildServerCredentials)));
+            }
+
+            using (var form = new FormBuildServerCredentials(buildServerUniqueKey))
+            {
+                form.BuildServerCredentials = buildServerCredentials;
+
+                if (form.ShowDialog(revisionGrid) == DialogResult.OK)
+                {
+                    return buildServerCredentials;
                 }
             }
 
-            return false;
+            return null;
         }
 
         private void AddBuildStatusColumns()
