@@ -17,8 +17,8 @@ namespace GitCommands
 		/// <param name="force"></param>
 		public GitPushAction(string fromBranch, string toBranch, bool force)
 		{
-            _localBranch = GitModule.GetFullBranchName(fromBranch);
-            _remoteBranch = GitModule.GetFullBranchName(toBranch);
+            _localBranch = GitCommandHelpers.GetFullBranchName(fromBranch);
+            _remoteBranch = GitCommandHelpers.GetFullBranchName(toBranch);
 			_force = force;
 		}
 
@@ -28,7 +28,7 @@ namespace GitCommands
 		/// <param name="deleteBranch"></param>
 		public GitPushAction(string deleteBranch)
 		{
-            _remoteBranch = GitModule.GetFullBranchName(deleteBranch);
+            _remoteBranch = GitCommandHelpers.GetFullBranchName(deleteBranch);
 			_delete = true;
 		}
 

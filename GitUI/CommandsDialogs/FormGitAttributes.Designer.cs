@@ -99,8 +99,8 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormGitAttributes";
             this.Text = "Edit .gitattributes";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMailMapFormClosing);
-            this.Load += new System.EventHandler(this.FormMailMapLoad);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormGitAttributesClosing);
+            this.Load += new System.EventHandler(this.FormGitAttributesLoad);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();

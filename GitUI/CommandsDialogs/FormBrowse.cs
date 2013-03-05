@@ -1150,11 +1150,11 @@ namespace GitUI.CommandsDialogs
             return candidates.Where(fileName => fileName.ToLower().Contains(nameAsLower)).ToList();
         }
 
-        public void OpenWithOnClick(object sender, EventArgs e)
+        private string SaveSelectedItemToTempFile()
         {
             var gitItem = GitTree.SelectedNode.Tag as GitItem;
             if (gitItem == null || !gitItem.IsBlob)
-                return;
+                return null;
 
             var fileName = gitItem.FileName;
             if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
@@ -1164,7 +1164,28 @@ namespace GitUI.CommandsDialogs
 
             fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
             Module.SaveBlobAs(fileName, gitItem.Guid);
-            OsShellUtil.OpenAs(fileName);
+            return fileName;
+        }
+
+        public void OpenWithOnClick(object sender, EventArgs e)
+        {
+            var fileName = SaveSelectedItemToTempFile();
+            if (fileName != null)
+                OsShellUtil.OpenAs(fileName);
+        }
+
+        public void OpenOnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                var fileName = SaveSelectedItemToTempFile();
+                if (fileName != null)
+                    Process.Start(fileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message);
+            }
         }
 
         private void FileTreeContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1178,32 +1199,6 @@ namespace GitUI.CommandsDialogs
             openWithToolStripMenuItem.Enabled = enableItems;
             copyFilenameToClipboardToolStripMenuItem.Enabled = enableItems;
             editCheckedOutFileToolStripMenuItem.Enabled = enableItems;
-        }
-
-        public void OpenOnClick(object sender, EventArgs e)
-        {
-            try
-            {
-                var gitItem = GitTree.SelectedNode.Tag as GitItem;
-                if (gitItem == null || !gitItem.IsBlob)
-                    return;
-
-                var fileName = gitItem.FileName;
-                if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
-                    fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
-                if (fileName.Contains("/") && fileName.LastIndexOf("/") < fileName.Length)
-                    fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
-
-                fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
-
-                Module.SaveBlobAs(fileName, (gitItem).Guid);
-
-                Process.Start(fileName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message);
-            }
         }
 
         protected void LoadInTree(IEnumerable<IGitItem> items, TreeNodeCollection node)
