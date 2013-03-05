@@ -215,7 +215,7 @@ namespace GitUI.CommandsDialogs
             // Do not remember commit message of fixup or squash commits, since they have
             // a special meaning, and can be dangerous if used inappropriately.
             if (CommitKind.Normal == _commitKind)
-                GitCommands.Commit.SetCommitMessage(Module, Message.Text);
+                GitCommands.CommitHelper.SetCommitMessage(Module, Message.Text);
 
             Settings.CommitDialogSplitter = splitMain.SplitterDistance;
             Settings.CommitDialogRightSplitter = splitRight.SplitterDistance;
@@ -433,23 +433,28 @@ namespace GitUI.CommandsDialogs
             if (patch != null && patch.Length > 0)
             {
                 string output = Module.RunGitCmd(args, patch);
-                if (!string.IsNullOrEmpty(output))
-                {
-                    MessageBox.Show(this, output + "\n\n" + SelectedDiff.Encoding.GetString(patch));
-                }
-                if (_currentItemStaged)
-                    Staged.StoreNextIndexToSelect();
-                else
-                    Unstaged.StoreNextIndexToSelect();
-                ScheduleGoToLine();
-                selectedDiffReloaded = false;
-                RescanChanges();                
+                ProcessApplyOutput(output, patch);
             }
+        }
+
+        private void ProcessApplyOutput(string output, byte[] patch)
+        {
+            if (!string.IsNullOrEmpty(output))
+            {
+                MessageBox.Show(this, output + "\n\n" + SelectedDiff.Encoding.GetString(patch));
+            }
+            if (_currentItemStaged)
+                Staged.StoreNextIndexToSelect();
+            else
+                Unstaged.StoreNextIndexToSelect();
+            ScheduleGoToLine();
+            selectedDiffReloaded = false;
+            RescanChanges();
         }
 
         private void ScheduleGoToLine()
         {
-            int SelectedDifflineToSelect = SelectedDiff.GetText().Substring(0, SelectedDiff.GetSelectionPosition()).Count(c => c == '\n');
+            int selectedDifflineToSelect = SelectedDiff.GetText().Substring(0, SelectedDiff.GetSelectionPosition()).Count(c => c == '\n');
             int scrollPosition = SelectedDiff.ScrollPos;
             string selectedFileName = _currentItem.Name;
             Action stageAreaLoaded = null;
@@ -460,7 +465,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (_currentItem != null && _currentItem.Name.Equals(selectedFileName))
                         {
-                            SelectedDiff.GoToLine(SelectedDifflineToSelect);
+                            SelectedDiff.GoToLine(selectedDifflineToSelect);
                             SelectedDiff.ScrollPos = scrollPosition;
                         }
                         SelectedDiff.TextLoaded -= textLoaded;
@@ -487,18 +492,18 @@ namespace GitUI.CommandsDialogs
             // Prepare git command
             string args = "apply --whitespace=nowarn";
 
-           if (_currentItemStaged) //staged
-               args += " --reverse --index";
+            if (_currentItemStaged) //staged
+                args += " --reverse --index";
 
-           byte[] patch;
+            byte[] patch;
 
-           if (_currentItemStaged)
-               patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding, _currentItem.IsNew);
-           else
-               if (_currentItem.IsNew)
-                   patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding, true);
-               else
-                   patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding);
+            if (_currentItemStaged)
+                patch = PatchManager.GetSelectedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding, _currentItem.IsNew);
+            else
+                if (_currentItem.IsNew)
+                    patch = PatchManager.GetSelectedLinesAsNewPatch(Module, _currentItem.Name, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding, true);
+                else
+                    patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, SelectedDiff.GetText(), SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), _currentItemStaged, SelectedDiff.Encoding);
 
             if (patch != null && patch.Length > 0)
             {
@@ -507,19 +512,9 @@ namespace GitUI.CommandsDialogs
                 {
                     //remove file mode warnings on windows
                     Regex regEx = new Regex("warning: .*has type .* expected .*", RegexOptions.Compiled);
-                    output = output.RemoveLines(line => regEx.IsMatch(line));
+                    output = output.RemoveLines(regEx.IsMatch);
                 }
-                if (!string.IsNullOrEmpty(output))
-                {
-                    MessageBox.Show(this, output + "\n\n" + SelectedDiff.Encoding.GetString(patch));
-                }
-                if (_currentItemStaged)
-                    Staged.StoreNextIndexToSelect();
-                else
-                    Unstaged.StoreNextIndexToSelect();
-                ScheduleGoToLine();
-                selectedDiffReloaded = false;
-                RescanChanges();
+                ProcessApplyOutput(output, patch);
             }
         }
 
@@ -853,7 +848,7 @@ namespace GitUI.CommandsDialogs
                 ScriptManager.RunEventScripts(Module, ScriptEvent.AfterCommit);
 
                 Message.Text = string.Empty;
-                GitCommands.Commit.SetCommitMessage(Module, string.Empty);
+                GitCommands.CommitHelper.SetCommitMessage(Module, string.Empty);
 
                 bool pushCompleted = true;
                 if (push)
@@ -1318,8 +1313,8 @@ namespace GitUI.CommandsDialogs
                 default:
                     message = Module.GetMergeMessage();
 
-                    if (string.IsNullOrEmpty(message) && File.Exists(GitCommands.Commit.GetCommitMessagePath(Module)))
-                        message = File.ReadAllText(GitCommands.Commit.GetCommitMessagePath(Module), Module.CommitEncoding);
+                    if (string.IsNullOrEmpty(message) && File.Exists(GitCommands.CommitHelper.GetCommitMessagePath(Module)))
+                        message = File.ReadAllText(GitCommands.CommitHelper.GetCommitMessagePath(Module), Module.CommitEncoding);
                     break;
             }
 
@@ -2148,10 +2143,10 @@ namespace GitUI.CommandsDialogs
 
         private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            openContainingFolder(Unstaged);
+            OpenContainingFolder(Unstaged);
         }
 
-        private void openContainingFolder(FileStatusList list)
+        private void OpenContainingFolder(FileStatusList list)
         {
             foreach (var item in list.SelectedItems)
             {
@@ -2178,7 +2173,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripMenuItem10_Click(object sender, EventArgs e)
         {
-            openContainingFolder(Staged);
+            OpenContainingFolder(Staged);
         }
 
         private void toolStripMenuItem4_Click(object sender, EventArgs e)

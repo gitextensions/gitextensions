@@ -2,7 +2,7 @@ namespace GitUI.BuildServerIntegration
 {
     public interface IBuildServerWatcher
     {
-        bool GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool firstTime, out string userName, out string password);
+        IBuildServerCredentials GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool useStoredCredentialsIfExisting);
 
         void LaunchBuildServerInfoFetchOperation();
 
