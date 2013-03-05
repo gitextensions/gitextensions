@@ -245,7 +245,7 @@ namespace GitUI.CommandsDialogs
                 // Try to make source rev into a fully qualified branch name. If that
                 // doesn't exist, then it must be something other than a branch, so
                 // fall back to using the name just as it was passed in.
-                string srcRev = GitModule.GetFullBranchName(_NO_TRANSLATE_Branch.Text);
+                string srcRev = GitCommandHelpers.GetFullBranchName(_NO_TRANSLATE_Branch.Text);
                 if (String.IsNullOrEmpty(Module.RevParse(srcRev)))
                 {
                     srcRev = _NO_TRANSLATE_Branch.Text;

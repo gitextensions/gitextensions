@@ -16,9 +16,9 @@ namespace GitCommands
         public bool Amend { get; set; }
     }
 
-    public class Commit
+    public class CommitHelper
     {
-        public Commit(CommitDto dto)
+        public CommitHelper(CommitDto dto)
         {
             Dto = dto;
         }
