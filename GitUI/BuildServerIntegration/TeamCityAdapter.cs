@@ -27,29 +27,29 @@ namespace GitUI.BuildServerIntegration
 
         private readonly HttpClient httpClient;
 
+        private string httpClientHostSuffix;
+
         private readonly Task<IEnumerable<string>> getBuildTypesTask;
 
         public TeamCityAdapter(IBuildServerWatcher buildServerWatcher, IConfig config)
         {
             this.buildServerWatcher = buildServerWatcher;
 
-            httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
-
             var hostName = config.Get("BuildServerUrl");
             if (!string.IsNullOrEmpty(hostName))
             {
-                var hostRootUri = Uri.CheckSchemeName(hostName)
-                                  ? new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
-                                  : new Uri(hostName, UriKind.Absolute);
-                httpClient.BaseAddress = hostRootUri;
-            }
+                httpClient = new HttpClient
+                    {
+                        Timeout = TimeSpan.FromMinutes(2),
+                        BaseAddress = Uri.CheckSchemeName(hostName)
+                                          ? new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
+                                          : new Uri(hostName, UriKind.Absolute)
+                    };
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
 
-            string username, password;
-            if (buildServerWatcher.GetBuildServerCredentials(this, true, out username, out password))
-            {
-                // Assign the authentication headers
-                httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
+                var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
+
+                UpdateHttpClientOptions(buildServerCredentials);
             }
 
             ProjectName = config.Get("ProjectName");
@@ -64,7 +64,10 @@ namespace GitUI.BuildServerIntegration
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey { get { return httpClient.BaseAddress.Host; } }
+        public string UniqueKey
+        {
+            get { return httpClient.BaseAddress.Host; }
+        }
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
@@ -78,19 +81,7 @@ namespace GitUI.BuildServerIntegration
 
         public IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
-            if (httpClient.BaseAddress == null || string.IsNullOrEmpty(ProjectName))
-            {
-                return Observable.Empty<BuildInfo>(scheduler);
-            }
-
-            IEnumerable<string> buildTypes;
-            try
-            {
-                getBuildTypesTask.Wait();
-
-                buildTypes = getBuildTypesTask.Result;
-            }
-            catch (AggregateException)
+            if (httpClient == null || httpClient.BaseAddress == null || string.IsNullOrEmpty(ProjectName))
             {
                 return Observable.Empty<BuildInfo>(scheduler);
             }
@@ -102,6 +93,13 @@ namespace GitUI.BuildServerIntegration
                                                {
                                                    try
                                                    {
+                                                       if (getBuildTypesTask.IsFaulted)
+                                                       {
+                                                           observer.OnError(getBuildTypesTask.Exception);
+                                                           return;
+                                                       }
+
+                                                       var buildTypes = getBuildTypesTask.Result;
                                                        var buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, CancellationToken.None, sinceDate, running)).ToArray();
                                                        var getBuildIdsTask = Task.Factory
                                                                                  .ContinueWhenAll(buildIdTasks, completedTasks => completedTasks.SelectMany(buildIdTask => buildIdTask.Result.XPathSelectElements("/builds/build").Select(x => x.Attribute("id").Value)).ToArray())
@@ -214,33 +212,60 @@ namespace GitUI.BuildServerIntegration
         private Task<Stream> GetStreamAsync(string restServicePath, CancellationToken cancellationToken)
         {
             return httpClient.GetAsync(FormatRelativePath(restServicePath), HttpCompletionOption.ResponseHeadersRead)
-                             .ContinueWith(task =>
-                                               {
-                                                   // task.Result.Content.Headers.ContentType.MediaType = "application/xml";
-                                                   // task.Result.Content.Headers.Allow.Add()
-                                                   if (task.Result.IsSuccessStatusCode)
-                                                       return task.Result.Content.ReadAsStreamAsync();
+                             .ContinueWith(
+                                 task =>
+                                     {
+                                         bool unauthorized = task.Result.StatusCode == HttpStatusCode.Unauthorized;
 
-                                                   if (task.Result.StatusCode == HttpStatusCode.Unauthorized)
-                                                   {
-                                                       string username;
-                                                       string password;
+                                         // task.Result.Content.Headers.ContentType.MediaType = "application/xml";
+                                         // task.Result.Content.Headers.Allow.Add()
+                                         if (task.Result.IsSuccessStatusCode)
+                                         {
+                                             if (task.Result.Content.Headers.ContentType.MediaType == "text/html")
+                                             {
+                                                 // TeamCity responds with an HTML page when guest access is denied. Treat this scenario as an HttpStatusCode.Unauthorized.
+                                                 unauthorized = true;
+                                             }
+                                             else
+                                             {
+                                                 return task.Result.Content.ReadAsStreamAsync();
+                                             }
+                                         }
 
-                                                       if (buildServerWatcher.GetBuildServerCredentials(this, false, out username, out password))
-                                                       {
-                                                           // Assign the authentication headers
-                                                           httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(username, password);
+                                         if (unauthorized)
+                                         {
+                                             var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, false);
 
-                                                           return GetStreamAsync(restServicePath, cancellationToken);
-                                                       }
+                                             if (buildServerCredentials != null)
+                                             {
+                                                 UpdateHttpClientOptions(buildServerCredentials);
 
-                                                       throw new OperationCanceledException(task.Result.ReasonPhrase);
-                                                   }
+                                                 return GetStreamAsync(restServicePath, cancellationToken);
+                                             }
 
-                                                   throw new HttpRequestException(task.Result.ReasonPhrase);
-                                               },
-                                           cancellationToken)
+                                             throw new OperationCanceledException(task.Result.ReasonPhrase);
+                                         }
+
+                                         throw new HttpRequestException(task.Result.ReasonPhrase);
+                                     },
+                                 cancellationToken)
                              .Unwrap();
+        }
+
+        private void UpdateHttpClientOptions(IBuildServerCredentials buildServerCredentials)
+        {
+            var useGuestAccess = buildServerCredentials == null || buildServerCredentials.UseGuestAccess;
+
+            if (useGuestAccess)
+            {
+                httpClientHostSuffix = "guestAuth";
+                httpClient.DefaultRequestHeaders.Authorization = null;
+            }
+            else
+            {
+                httpClientHostSuffix = "httpAuth";
+                httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(buildServerCredentials.Username, buildServerCredentials.Password);
+            }
         }
 
         private Task<XDocument> GetXmlResponseAsync(string relativePath, CancellationToken cancellationToken)
@@ -260,7 +285,7 @@ namespace GitUI.BuildServerIntegration
 
         private Uri FormatRelativePath(string restServicePath)
         {
-            return new Uri(string.Format("/httpAuth/app/rest/{0}", restServicePath), UriKind.Relative);
+            return new Uri(string.Format("{0}/app/rest/{1}", httpClientHostSuffix, restServicePath), UriKind.Relative);
         }
 
         private Task<XDocument> GetBuildFromIdXmlResponseAsync(string buildId, CancellationToken cancellationToken)
