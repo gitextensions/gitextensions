@@ -86,7 +86,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void FormMailMapFormClosing(object sender, FormClosingEventArgs e)
+        private void FormGitAttributesClosing(object sender, FormClosingEventArgs e)
         {
             var needToClose = false;
 
@@ -112,7 +112,7 @@ namespace GitUI.CommandsDialogs
                 e.Cancel = true;
         }
 
-        private void FormMailMapLoad(object sender, EventArgs e)
+        private void FormGitAttributesLoad(object sender, EventArgs e)
         {
             if (!Module.IsBareRepository()) return;
             MessageBox.Show(this, noWorkingDir.Text, _noWorkingDirCaption.Text);

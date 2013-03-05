@@ -76,27 +76,7 @@ namespace GitUI.RevisionGridClasses
                 currentRow.Clear();
 
                 foreach (Node aNode in sourceGraph.GetHeads())
-                {
-                    if (aNode.Descendants.Count == 0)
-                    {
-                        // This node is a head, create a new lane for it
-                        Node h = aNode;
-                        if (h.Ancestors.Count == 0)
-                        {
-                            // This is a single entry with no parents or children.
-                            var detail = new LaneJunctionDetail(h);
-                            laneNodes.Add(detail);
-                        }
-                        else
-                        {
-                            foreach (Junction j in h.Ancestors)
-                            {
-                                var detail = new LaneJunctionDetail(j);
-                                laneNodes.Add(detail);
-                            }
-                        }
-                    }
-                }
+                    Update(aNode);
             }
 
             public bool CacheTo(int row)
@@ -112,24 +92,24 @@ namespace GitUI.RevisionGridClasses
 
             public void Update(Node aNode)
             {
-                if (aNode.Descendants.Count == 0)
+                if (aNode.Descendants.Count != 0)
+                    return;
+
+                // This node is a head, create a new lane for it
+                Node h = aNode;
+                if (h.Ancestors.Count != 0)
                 {
-                    // This node is a head, create a new lane for it
-                    Node h = aNode;
-                    if (h.Ancestors.Count == 0)
+                    foreach (Junction j in h.Ancestors)
                     {
-                        // This is a single entry with no parents or children.
-                        var detail = new LaneJunctionDetail(h);
+                        var detail = new LaneJunctionDetail(j);
                         laneNodes.Add(detail);
                     }
-                    else
-                    {
-                        foreach (Junction j in h.Ancestors)
-                        {
-                            var detail = new LaneJunctionDetail(j);
-                            laneNodes.Add(detail);
-                        }
-                    }
+                }
+                else
+                {
+                    // This is a single entry with no parents or children.
+                    var detail = new LaneJunctionDetail(h);
+                    laneNodes.Add(detail);
                 }
             }
 
@@ -208,7 +188,7 @@ namespace GitUI.RevisionGridClasses
                     // Remove the item from the lane, since it is being drawn now.
                     // We need to draw the graph line for this lane. If there are no items 
                     // left in the lane we don't draw it.
-                    int intoLane = advanceLane(curLane);
+                    int intoLane = AdvanceLane(curLane);
                     if (intoLane < curLane)
                     {
                         // AdvanceLane could have removed lanes so we need to start from
@@ -315,7 +295,7 @@ namespace GitUI.RevisionGridClasses
             /// </summary>
             /// <param name="curLane">Index of the lane to advance</param>
             /// <returns>True if there will still be nodes in this lane</returns>
-            private int advanceLane(int curLane)
+            private int AdvanceLane(int curLane)
             {
                 LaneJunctionDetail lane = laneNodes[curLane];
                 int minLane = curLane;
