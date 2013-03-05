@@ -826,9 +826,10 @@ namespace GitUI.CommandsDialogs
                 // Refresh tree
                 GitTree.Nodes.Clear();
                 //restore selected file and scroll position when new selection is done
-                if (RevisionGrid.GetSelectedRevisions().Count > 0)
+                var revisions = RevisionGrid.GetSelectedRevisions();
+                if (revisions.Count > 0 && !revisions[0].IsArtificial())
                 {
-                    LoadInTree(RevisionGrid.GetSelectedRevisions()[0].SubItems, GitTree.Nodes);
+                    LoadInTree(revisions[0].SubItems, GitTree.Nodes);
                     //GitTree.Sort();
                     TreeNode lastMatchedNode = null;
                     // Load state
