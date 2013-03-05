@@ -138,16 +138,16 @@
       </Component>
 
       <Component Id="System.Reactive.Core.dll" Guid="*">
-        <File Source="..\bin\System.Reactive.Core.dll"/>
+        <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Core.dll"/>
       </Component>
       <Component Id="System.Reactive.Interfaces.dll" Guid="*">
-        <File Source="..\bin\System.Reactive.Interfaces.dll"/>
+        <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Interfaces.dll"/>
       </Component>
       <Component Id="System.Reactive.Linq.dll" Guid="*">
-        <File Source="..\bin\System.Reactive.Linq.dll"/>
+        <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Linq.dll"/>
       </Component>
       <Component Id="System.Reactive.PlatformServices.dll" Guid="*">
-        <File Source="..\bin\System.Reactive.PlatformServices.dll"/>
+        <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.PlatformServices.dll"/>
       </Component>
 
       <!--Remove unused dll, installed in versions <= 2.31-->
