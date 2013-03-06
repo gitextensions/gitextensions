@@ -88,74 +88,70 @@ namespace GitUI.BuildServerIntegration
             }
 
             return Observable.Create<BuildInfo>((observer, cancellationToken) =>
-                Task<IDisposable>.Factory.StartNew(() =>
-                    {
-                        scheduler.Schedule(() =>
-                                               {
-                                                   try
-                                                   {
-                                                       if (getBuildTypesTask.IsFaulted)
-                                                       {
-                                                           observer.OnError(getBuildTypesTask.Exception);
-                                                           return;
-                                                       }
+                Task<IDisposable>.Factory.StartNew(
+                    () => scheduler.Schedule(() =>
+                        {
+                            try
+                            {
+                                if (getBuildTypesTask.IsFaulted)
+                                {
+                                    observer.OnError(getBuildTypesTask.Exception);
+                                    return;
+                                }
 
-                                                       var buildTypes = getBuildTypesTask.Result;
-                                                       var buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, CancellationToken.None, sinceDate, running)).ToArray();
-                                                       var getBuildIdsTask = Task.Factory
-                                                                                 .ContinueWhenAll(buildIdTasks, completedTasks => completedTasks.SelectMany(buildIdTask => buildIdTask.Result.XPathSelectElements("/builds/build").Select(x => x.Attribute("id").Value)).ToArray())
-                                                                                 .ContinueWith(completedTask => buildIdTasks.SelectMany(buildIdTask => buildIdTask.Result.XPathSelectElements("/builds/build").Select(x => x.Attribute("id").Value)).ToArray());
+                                var buildTypes = getBuildTypesTask.Result;
+                                var buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, CancellationToken.None, sinceDate, running)).ToArray();
+                                var getBuildIdsTask = Task.Factory
+                                                          .ContinueWhenAll(buildIdTasks, completedTasks => completedTasks.SelectMany(buildIdTask => buildIdTask.Result.XPathSelectElements("/builds/build").Select(x => x.Attribute("id").Value)).ToArray())
+                                                          .ContinueWith(completedTask => buildIdTasks.SelectMany(buildIdTask => buildIdTask.Result.XPathSelectElements("/builds/build").Select(x => x.Attribute("id").Value)).ToArray());
 
-                                                       getBuildIdsTask.ContinueWith(
-                                                           buildIdTask =>
-                                                                {
-                                                                    var tasks = new List<Task>(8);
-                                                                    var buildIds = buildIdTask.Result;
-                                                                    var buildsLeft = buildIds.Length;
+                                getBuildIdsTask.ContinueWith(
+                                    buildIdTask =>
+                                    {
+                                        var tasks = new List<Task>(8);
+                                        var buildIds = buildIdTask.Result;
+                                        var buildsLeft = buildIds.Length;
 
-                                                                    foreach (var buildId in buildIds.OrderByDescending(int.Parse))
-                                                                    {
-                                                                        var notifyObserverTask =
-                                                                            GetBuildFromIdXmlResponseAsync(buildId, cancellationToken)
-                                                                                .ContinueWith(
-                                                                                    task =>
-                                                                                        {
-                                                                                            var buildDetails = task.Result;
-                                                                                            var buildInfo = CreateBuildInfo(buildDetails);
-                                                                                            if (buildInfo.CommitHashList.Any())
-                                                                                            {
-                                                                                                observer.OnNext(buildInfo);
-                                                                                            }
-                                                                                        },
-                                                                                    cancellationToken);
+                                        foreach (var buildId in buildIds.OrderByDescending(int.Parse))
+                                        {
+                                            var notifyObserverTask =
+                                                GetBuildFromIdXmlResponseAsync(buildId, cancellationToken)
+                                                    .ContinueWith(
+                                                        task =>
+                                                        {
+                                                            var buildDetails = task.Result;
+                                                            var buildInfo = CreateBuildInfo(buildDetails);
+                                                            if (buildInfo.CommitHashList.Any())
+                                                            {
+                                                                observer.OnNext(buildInfo);
+                                                            }
+                                                        },
+                                                        cancellationToken);
 
-                                                                        tasks.Add(notifyObserverTask);
-                                                                        --buildsLeft;
+                                            tasks.Add(notifyObserverTask);
+                                            --buildsLeft;
 
-                                                                        if (tasks.Count == tasks.Capacity || buildsLeft == 0)
-                                                                        {
-                                                                            var batchTasks = tasks.ToArray();
-                                                                            tasks.Clear();
+                                            if (tasks.Count == tasks.Capacity || buildsLeft == 0)
+                                            {
+                                                var batchTasks = tasks.ToArray();
+                                                tasks.Clear();
 
-                                                                            Task.WaitAll(batchTasks, cancellationToken);
-                                                                        }
-                                                                    }
+                                                Task.WaitAll(batchTasks, cancellationToken);
+                                            }
+                                        }
 
-                                                                    observer.OnCompleted();
-                                                                });
-                                                   }
-                                                   catch (OperationCanceledException)
-                                                   {
-                                                       // Do nothing, the observer is already stopped
-                                                   }
-                                                   catch (Exception ex)
-                                                   {
-                                                       observer.OnError(ex);
-                                                   }
-                                               });
-
-                        return Disposable.Empty;
-                    }))
+                                        observer.OnCompleted();
+                                    });
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                // Do nothing, the observer is already stopped
+                            }
+                            catch (Exception ex)
+                            {
+                                observer.OnError(ex);
+                            }
+                        })))
                 .OnErrorResumeNext(Observable.Empty<BuildInfo>());
         }
 
