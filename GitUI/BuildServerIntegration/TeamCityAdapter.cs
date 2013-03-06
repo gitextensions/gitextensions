@@ -151,8 +151,7 @@ namespace GitUI.BuildServerIntegration
                             {
                                 observer.OnError(ex);
                             }
-                        })))
-                .OnErrorResumeNext(Observable.Empty<BuildInfo>());
+                        })));
         }
 
         private static BuildInfo CreateBuildInfo(XDocument buildXmlDocument)
