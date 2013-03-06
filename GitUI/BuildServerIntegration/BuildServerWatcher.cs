@@ -56,27 +56,26 @@ namespace GitUI.BuildServerIntegration
             var fromNowObservable = buildServerAdapter.GetFinishedBuildsSince(scheduler, DateTime.Now);
             var runningBuildsObservable = buildServerAdapter.GetRunningBuilds(scheduler);
 
-            var cancellationToken = new CompositeDisposable();
+            var cancellationToken = new CompositeDisposable
+                {
+                    fullDayObservable.OnErrorResumeNext(fullObservable)
+                                     .OnErrorResumeNext(Observable.Empty<BuildInfo>()
+                                                                  .DelaySubscription(TimeSpan.FromMinutes(1))
+                                                                  .OnErrorResumeNext(fromNowObservable)
+                                                                  .Retry()
+                                                                  .Repeat())
+                                     .ObserveOn(SynchronizationContext.Current)
+                                     .Subscribe(OnBuildInfoUpdate),
+
+                    runningBuildsObservable.OnErrorResumeNext(Observable.Empty<BuildInfo>()
+                                                                        .DelaySubscription(TimeSpan.FromSeconds(10)))
+                                           .Retry()
+                                           .Repeat()
+                                           .ObserveOn(SynchronizationContext.Current)
+                                           .Subscribe(OnBuildInfoUpdate)
+                };
 
             buildStatusCancellationToken = cancellationToken;
-
-            cancellationToken.Add(
-                fullDayObservable
-                    .Concat(fullObservable)
-                    .Concat(Observable
-                                .Empty<BuildInfo>()
-                                .Delay(TimeSpan.FromMinutes(1))
-                                .Concat(fromNowObservable)
-                                .Repeat())
-                    .ObserveOn(SynchronizationContext.Current)
-                    .Subscribe(OnBuildInfoUpdate));
-
-            cancellationToken.Add(
-                runningBuildsObservable
-                    .Concat(Observable.Empty<BuildInfo>().Delay(TimeSpan.FromSeconds(10)))
-                    .Repeat()
-                    .ObserveOn(SynchronizationContext.Current)
-                    .Subscribe(OnBuildInfoUpdate));
         }
 
         public void CancelBuildStatusFetchOperation()
