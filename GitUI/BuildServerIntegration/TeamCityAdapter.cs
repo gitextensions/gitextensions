@@ -38,13 +38,12 @@ namespace GitUI.BuildServerIntegration
             var hostName = config.Get("BuildServerUrl");
             if (!string.IsNullOrEmpty(hostName))
             {
-                var hostUri = new Uri(hostName, UriKind.Absolute);
                 httpClient = new HttpClient
                     {
                         Timeout = TimeSpan.FromMinutes(2),
-                        BaseAddress = hostUri.HostNameType == UriHostNameType.Unknown
-                                          ? new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
-                                          : hostUri
+                        BaseAddress = hostName.Contains("://")
+                                          ? new Uri(hostName, UriKind.Absolute)
+                                          : new Uri(string.Format("{0}://{1}", Uri.UriSchemeHttp, hostName), UriKind.Absolute)
                     };
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
 
