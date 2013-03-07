@@ -73,7 +73,6 @@ namespace GitUI.RevisionGridClasses
                 Color.Orange
             };
 
-        private readonly SynchronizationContext syncContext;
         private readonly List<string> toBeSelected = new List<string>();
         private int backgroundScrollTo;
         private Thread backgroundThread;
@@ -103,7 +102,6 @@ namespace GitUI.RevisionGridClasses
 
         public DvcsGraph()
         {
-            syncContext = SynchronizationContext.Current;
             graphData = new Graph();
 
             backgroundThread = new Thread(BackgroundThreadEntry)
@@ -157,7 +155,7 @@ namespace GitUI.RevisionGridClasses
                     return;
                 }
 
-                syncContext.Send(o =>
+                this.InvokeSync(() =>
                     {
                         lock (backgroundEvent) // Make sure the background thread isn't running
                         {
@@ -173,7 +171,7 @@ namespace GitUI.RevisionGridClasses
                                 RebuildGraph();
                             }
                         }
-                    }, this);
+                    });
             }
         }
 
@@ -252,7 +250,9 @@ namespace GitUI.RevisionGridClasses
 
         protected override void Dispose(bool disposing)
         {
-            shouldRun = false;
+            lock (backgroundEvent)
+                shouldRun = false;
+
             if (disposing)
             {
                 if (graphBitmap != null)
@@ -450,11 +450,11 @@ namespace GitUI.RevisionGridClasses
         {
             // We have to post this since the thread owns a lock on GraphData that we'll
             // need in order to re-draw the graph.
-            syncContext.Post(o =>
+            this.InvokeAsync(() =>
                 {
                     ClearDrawCache();
                     Invalidate();
-                }, this);
+                });
         }
 
         private void dataGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -511,6 +511,9 @@ namespace GitUI.RevisionGridClasses
             {
                 lock (backgroundEvent)
                 {
+                    if (!shouldRun)
+                        return;
+
                     int scrollTo;
                     lock (backgroundThread)
                     {
@@ -529,7 +532,7 @@ namespace GitUI.RevisionGridClasses
                     else
                     {
                         //do nothing... do not cache, the graph is invisible
-                        syncContext.Post(o => UpdateRow((int) o), curCount);
+                        this.InvokeAsync(o => UpdateRow((int) o), curCount);
                         Thread.Sleep(100);
                     }
                 }
@@ -556,14 +559,14 @@ namespace GitUI.RevisionGridClasses
                     // Update the row (if needed)
                     if (curCount < visibleBottom || toBeSelected.Count > 0)
                     {
-                        syncContext.Post(o => UpdateRow((int)o), curCount);
+                        this.InvokeAsync(o => UpdateRow((int)o), curCount);
                     }
 
                     int count = 0;
                     if (FirstDisplayedCell != null)
                         count = FirstDisplayedCell.RowIndex + DisplayedRowCount(true);
                     if (curCount == count)
-                        syncContext.Post(state1 => UpdateColumnWidth(), null);
+                        this.InvokeAsync(UpdateColumnWidth);
 
                     curCount = graphData.CachedCount;
                     graphDataCount = curCount;

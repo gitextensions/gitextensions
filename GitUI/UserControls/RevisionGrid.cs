@@ -53,7 +53,6 @@ namespace GitUI
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
-        private readonly SynchronizationContext _syncContext;
         public string LogParam = "--all --boundary";
 
         private bool _initialLoad = true;
@@ -70,8 +69,6 @@ namespace GitUI
 
         public RevisionGrid()
         {
-            _syncContext = SynchronizationContext.Current;
-
             InitLayout();
             InitializeComponent();
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
@@ -857,7 +854,7 @@ namespace GitUI
         private void _revisionGraphCommand_Error(object sender, EventArgs e)
         {
             // This has to happen on the UI thread
-            _syncContext.Send(o =>
+            this.InvokeSync(o =>
                                   {
                                       Error.Visible = true;
                                       //Error.BringToFront();
@@ -917,7 +914,7 @@ namespace GitUI
                 !FilterIsApplied(true))
             {
                 // This has to happen on the UI thread
-                _syncContext.Send(o =>
+                this.InvokeSync(o =>
                                       {
                                           NoGit.Visible = false;
                                           NoCommits.Visible = true;
@@ -929,7 +926,7 @@ namespace GitUI
             else
             {
                 // This has to happen on the UI thread
-                _syncContext.Send(o =>
+                this.InvokeSync(o =>
                                       {
                                           UpdateGraph(null);
                                           Loading.Visible = false;
@@ -1484,7 +1481,7 @@ namespace GitUI
 
         private void RefreshGravatar(Image image)
         {
-            _syncContext.Post(state => Revisions.Refresh(), null);
+            this.InvokeAsync(Revisions.Refresh);
         }
 
 
