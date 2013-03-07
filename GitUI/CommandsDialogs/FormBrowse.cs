@@ -112,10 +112,10 @@ namespace GitUI.CommandsDialogs
         /// For VS designer
         /// </summary>
         private FormBrowse()
-            : this(null, string.Empty)
         {
+            InitializeComponent();
+            Translate();
         }
-
 
         public FormBrowse(GitUICommands aCommands, string filter)
             : base(true, aCommands)
