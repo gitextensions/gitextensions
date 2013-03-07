@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace GitUIPluginInterfaces
 {
@@ -42,5 +41,7 @@ namespace GitUIPluginInterfaces
         string GetSelectedBranch();
 
         bool IsBareRepository();
+
+        bool IsRunningGitProcess();
     }
 }
