@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI;
@@ -37,6 +38,9 @@ namespace GitExtensions
 
             string[] args = Environment.GetCommandLineArgs();
             FormSplash.ShowSplash();
+            //Store here SynchronizationContext.Current, because later sometimes it can be null
+            //see http://stackoverflow.com/questions/11621372/synchronizationcontext-current-is-null-in-continuation-on-the-main-ui-thread
+            GitUIExtensions.UISynchronizationContext = SynchronizationContext.Current;
             Application.DoEvents();
 
             Settings.LoadSettings();

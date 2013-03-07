@@ -2515,6 +2515,13 @@ namespace GitUI.CommandsDialogs
                 _dashboard.SaveSplitterPositions();
         }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            SetWorkingDir("");
+
+            base.OnClosed(e);
+        }
+
         private void CloneSvnToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartSvnCloneDialog(this, DashboardGitModuleChanged);
