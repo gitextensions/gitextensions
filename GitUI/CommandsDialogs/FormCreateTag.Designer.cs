@@ -233,7 +233,7 @@ namespace GitUI.CommandsDialogs
             this.Name = "FormCreateTagAtRevision";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create tag";
-            this.Load += new System.EventHandler(this.FormTagSmall_Load);
+            this.Load += new System.EventHandler(this.FormCreateTag_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();

@@ -251,7 +251,7 @@
             this.Padding = new System.Windows.Forms.Padding(3);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create branch";
-            this.Load += new System.EventHandler(this.FormCreateBranchAtRevision_Load);
+            this.Load += new System.EventHandler(this.FormCreateBranch_Load);
             this.stackOptions.ResumeLayout(false);
             this.stackOptions.PerformLayout();
             this.table.ResumeLayout(false);
