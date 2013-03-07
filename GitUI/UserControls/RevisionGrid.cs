@@ -1549,7 +1549,7 @@ namespace GitUI
 
             UICommands.DoActionOnRepo(() =>
                 {
-                    var frm = new FormCreateBranch(UICommands) { Revision = GetRevision(LastRow) };
+                    var frm = new FormCreateBranch(UICommands, GetRevision(LastRow));
 
                     return frm.ShowDialog(this) == DialogResult.OK;
                 });
