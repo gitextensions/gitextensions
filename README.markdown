@@ -3,7 +3,7 @@
 #### contribute
 * find/create an [issue](https://github.com/bergerjac/gitextensions/issues)
 * fork [repo](https://github.com/bergerjac/gitextensions)
-* branch off of **left-panel/-main**
+* branch off of **left-panel/-main** (any commits NOT within **left-panel/-main** may be squashed)
 * (main files: <code>[Solution]/GuitUI/RepoObjectsTree/*.cs</code>)
 * send pull request
 
