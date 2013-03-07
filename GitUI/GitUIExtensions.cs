@@ -7,11 +7,14 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
 using ICSharpCode.TextEditor.Util;
+using System.Threading;
 
 namespace GitUI
 {
     public static class GitUIExtensions
     {
+
+        public static SynchronizationContext UISynchronizationContext;
 
         /// <summary>
         /// One row selected:
@@ -282,18 +285,36 @@ namespace GitUI
 
         public static void InvokeAsync(this Control control, Action action)
         {
-            Action checkDisposedAndInvoke = () =>
-                {
-                    if (!control.IsDisposed)
-                        action();
-                };
-
-            if (!control.IsDisposed)
-                if (control.InvokeRequired)
-                    control.BeginInvoke(checkDisposedAndInvoke);
-                else
-                    checkDisposedAndInvoke();
+            InvokeAsync(control, _ => action(), null);            
         }
 
+        public static void InvokeAsync(this Control control, SendOrPostCallback action, object state)
+        {
+            SendOrPostCallback checkDisposedAndInvoke = (s) =>
+            {
+                if (!control.IsDisposed)
+                    action(s);
+            };
+
+            if (!control.IsDisposed)
+                UISynchronizationContext.Post(checkDisposedAndInvoke, state);
+        }
+
+        public static void InvokeSync(this Control control, Action action)
+        {
+            InvokeSync(control, _ => action(), null);
+        }
+
+        public static void InvokeSync(this Control control, SendOrPostCallback action, object state)
+        {
+            SendOrPostCallback checkDisposedAndInvoke = (s) =>
+            {
+                if (!control.IsDisposed)
+                    action(s);
+            };
+
+            if (!control.IsDisposed)
+                UISynchronizationContext.Send(checkDisposedAndInvoke, state);
+        }
     }
 }
