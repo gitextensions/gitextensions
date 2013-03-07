@@ -6,6 +6,7 @@ set msbuild="%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe"
 set project=..\GitExtensions.VS2012.sln
 set nuget=..\.nuget\nuget.exe
 set SkipShellExtRegistration=1
+set EnableNuGetPackageRestore=true
 
 set msbuildparams=/p:Configuration=Release /t:Rebuild /nologo /v:m
 
