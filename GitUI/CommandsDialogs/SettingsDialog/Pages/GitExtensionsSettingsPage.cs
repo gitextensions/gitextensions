@@ -30,6 +30,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkCloseProcessDialog.Checked = Settings.CloseProcessDialog;
             chkShowGitCommandLine.Checked = Settings.ShowGitCommandLine;
             chkUseFastChecks.Checked = Settings.UseFastChecks;
+            chkAutoRefreshRevisionGrid.Checked = Settings.AutoRefreshRevisionGrid;
         }
 
         public override void SaveSettings()
@@ -47,6 +48,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Settings.CloseProcessDialog = chkCloseProcessDialog.Checked;
             Settings.ShowGitCommandLine = chkShowGitCommandLine.Checked;
             Settings.UseFastChecks = chkUseFastChecks.Checked;
+            Settings.AutoRefreshRevisionGrid = chkAutoRefreshRevisionGrid.Checked;
             Settings.MaxRevisionGraphCommits = (int)_NO_TRANSLATE_MaxCommits.Value;
             Settings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
             Settings.RevisionGraphShowWorkingDirChanges = chkShowCurrentChangesInRevisionGraph.Checked;

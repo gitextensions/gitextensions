@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using GitCommands.Config;
 using GitCommands.Logging;
 using GitCommands.Repository;
 using Microsoft.Win32;
@@ -493,6 +491,13 @@ namespace GitCommands
         {
             get { return SafeGet("usefastchecks", false, ref _useFastChecks); }
             set { SafeSet("usefastchecks", value, ref _useFastChecks); }
+        }
+
+        private static bool? _autoRefreshRevisionGrid;
+        public static bool AutoRefreshRevisionGrid
+        {
+            get { return SafeGet("autorefreshrevisiongrid", false, ref _autoRefreshRevisionGrid); }
+            set { SafeSet("autorefreshrevisiongrid", value, ref _autoRefreshRevisionGrid); }
         }
 
         private static bool? _showGitNotes;
