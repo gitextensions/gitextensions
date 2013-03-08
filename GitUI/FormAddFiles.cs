@@ -26,15 +26,15 @@ namespace GitUI
         {
         }
 
-        private void AddFilesClick(object sender, EventArgs e)
-        {
-            var argumentFormat = force.Checked ? "add -f \"{0}\"" : "add \"{0}\"";
-            FormProcess.ShowDialog(this, string.Format(argumentFormat, Filter.Text), false);
-        }
-
         private void ShowFilesClick(object sender, EventArgs e)
         {
-            FormProcess.ShowDialog(this, string.Format("add --dry-run \"{0}\"", Filter.Text), false);
+            FormProcess.ShowDialog(this, string.Format("add --dry-run{0} \"{1}\"", force.Checked ? " -f" : "", Filter.Text), false);
+        }
+
+        private void AddFilesClick(object sender, EventArgs e)
+        {
+            if (FormProcess.ShowDialog(this, string.Format("add{0} \"{1}\"", force.Checked ? " -f" : "", Filter.Text), false))
+                Close();
         }
     }
 }

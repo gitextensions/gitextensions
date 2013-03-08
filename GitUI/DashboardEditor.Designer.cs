@@ -29,12 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DashboardEditor));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this._NO_TRANSLATE_Categories = new System.Windows.Forms.ListBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.Remove = new System.Windows.Forms.Button();
             this.Add = new System.Windows.Forms.Button();
+            this._NO_TRANSLATE_Categories = new System.Windows.Forms.ListBox();
             this.CategoriesLabel = new System.Windows.Forms.Label();
             this.RepositoriesGrid = new System.Windows.Forms.DataGridView();
             this.pathDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,16 +54,18 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             this.panel2.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
             // 
-            resources.ApplyResources(this.splitContainer1, "splitContainer1");
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -77,33 +78,80 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.RepositoriesGrid);
             this.splitContainer1.Panel2.Controls.Add(this.panel2);
-            resources.ApplyResources(this.splitContainer1.Panel2, "splitContainer1.Panel2");
+            this.splitContainer1.Panel2.Enabled = false;
+            this.splitContainer1.Size = new System.Drawing.Size(780, 492);
+            this.splitContainer1.SplitterDistance = 192;
+            this.splitContainer1.TabIndex = 1;
             // 
-            // _NO_TRANSLATE_Categories
+            // tableLayoutPanel1
             // 
-            resources.ApplyResources(this._NO_TRANSLATE_Categories, "_NO_TRANSLATE_Categories");
-            this._NO_TRANSLATE_Categories.FormattingEnabled = true;
-            this._NO_TRANSLATE_Categories.Name = "_NO_TRANSLATE_Categories";
-            this._NO_TRANSLATE_Categories.SelectedIndexChanged += new System.EventHandler(this.Categories_SelectedIndexChanged);
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.Remove, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.Add, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 460);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(192, 32);
+            this.tableLayoutPanel1.TabIndex = 3;
             // 
             // Remove
             // 
-            resources.ApplyResources(this.Remove, "Remove");
+            this.Remove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.Remove.AutoSize = true;
+            this.Remove.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Remove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.Remove.Location = new System.Drawing.Point(126, 3);
+            this.Remove.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Remove.Name = "Remove";
+            this.Remove.Size = new System.Drawing.Size(64, 26);
+            this.Remove.TabIndex = 4;
+            this.Remove.Text = "Remove";
             this.Remove.UseVisualStyleBackColor = true;
             this.Remove.Click += new System.EventHandler(this.Remove_Click);
             // 
             // Add
             // 
-            resources.ApplyResources(this.Add, "Add");
+            this.Add.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.Add.AutoSize = true;
+            this.Add.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Add.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.Add.Location = new System.Drawing.Point(2, 3);
+            this.Add.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Add.Name = "Add";
+            this.Add.Size = new System.Drawing.Size(40, 26);
+            this.Add.TabIndex = 3;
+            this.Add.Text = "Add";
             this.Add.UseVisualStyleBackColor = true;
             this.Add.Click += new System.EventHandler(this.Add_Click);
             // 
+            // _NO_TRANSLATE_Categories
+            // 
+            this._NO_TRANSLATE_Categories.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_Categories.FormattingEnabled = true;
+            this._NO_TRANSLATE_Categories.IntegralHeight = false;
+            this._NO_TRANSLATE_Categories.ItemHeight = 16;
+            this._NO_TRANSLATE_Categories.Location = new System.Drawing.Point(0, 27);
+            this._NO_TRANSLATE_Categories.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this._NO_TRANSLATE_Categories.Name = "_NO_TRANSLATE_Categories";
+            this._NO_TRANSLATE_Categories.Size = new System.Drawing.Size(192, 465);
+            this._NO_TRANSLATE_Categories.TabIndex = 1;
+            this._NO_TRANSLATE_Categories.SelectedIndexChanged += new System.EventHandler(this.Categories_SelectedIndexChanged);
+            // 
             // CategoriesLabel
             // 
-            resources.ApplyResources(this.CategoriesLabel, "CategoriesLabel");
+            this.CategoriesLabel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.CategoriesLabel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.CategoriesLabel.Location = new System.Drawing.Point(0, 0);
+            this.CategoriesLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.CategoriesLabel.Name = "CategoriesLabel";
+            this.CategoriesLabel.Size = new System.Drawing.Size(192, 27);
+            this.CategoriesLabel.TabIndex = 0;
+            this.CategoriesLabel.Text = "Categories";
             // 
             // RepositoriesGrid
             // 
@@ -114,32 +162,38 @@
             this.Title,
             this.descriptionDataGridViewTextBoxColumn});
             this.RepositoriesGrid.DataSource = this.repositoryBindingSource;
-            resources.ApplyResources(this.RepositoriesGrid, "RepositoriesGrid");
+            this.RepositoriesGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RepositoriesGrid.Location = new System.Drawing.Point(0, 131);
+            this.RepositoriesGrid.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.RepositoriesGrid.MultiSelect = false;
             this.RepositoriesGrid.Name = "RepositoriesGrid";
             this.RepositoriesGrid.RowHeadersVisible = false;
             this.RepositoriesGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.RepositoriesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.RepositoriesGrid.Size = new System.Drawing.Size(584, 361);
+            this.RepositoriesGrid.TabIndex = 0;
             this.RepositoriesGrid.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.RepositoriesGrid_CellValidating);
             this.RepositoriesGrid.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.RepositoriesGrid_UserDeletingRow);
             // 
             // pathDataGridViewTextBoxColumn
             // 
             this.pathDataGridViewTextBoxColumn.DataPropertyName = "Path";
-            resources.ApplyResources(this.pathDataGridViewTextBoxColumn, "pathDataGridViewTextBoxColumn");
+            this.pathDataGridViewTextBoxColumn.HeaderText = "Path";
             this.pathDataGridViewTextBoxColumn.Name = "pathDataGridViewTextBoxColumn";
+            this.pathDataGridViewTextBoxColumn.Width = 150;
             // 
             // Title
             // 
             this.Title.DataPropertyName = "Title";
-            resources.ApplyResources(this.Title, "Title");
+            this.Title.HeaderText = "Title";
             this.Title.Name = "Title";
+            this.Title.Width = 150;
             // 
             // descriptionDataGridViewTextBoxColumn
             // 
             this.descriptionDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.descriptionDataGridViewTextBoxColumn.DataPropertyName = "Description";
-            resources.ApplyResources(this.descriptionDataGridViewTextBoxColumn, "descriptionDataGridViewTextBoxColumn");
+            this.descriptionDataGridViewTextBoxColumn.HeaderText = "Description";
             this.descriptionDataGridViewTextBoxColumn.Name = "descriptionDataGridViewTextBoxColumn";
             // 
             // repositoryBindingSource
@@ -155,66 +209,103 @@
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.RssFeedType);
-            resources.ApplyResources(this.panel2, "panel2");
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(584, 131);
+            this.panel2.TabIndex = 6;
             // 
             // RepositoriesType
             // 
-            resources.ApplyResources(this.RepositoriesType, "RepositoriesType");
+            this.RepositoriesType.AutoSize = true;
+            this.RepositoriesType.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.RepositoriesType.Location = new System.Drawing.Point(102, 69);
+            this.RepositoriesType.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.RepositoriesType.Name = "RepositoriesType";
+            this.RepositoriesType.Size = new System.Drawing.Size(96, 20);
+            this.RepositoriesType.TabIndex = 8;
+            this.RepositoriesType.Text = "Repositories";
             this.RepositoriesType.UseVisualStyleBackColor = true;
             this.RepositoriesType.Validating += new System.ComponentModel.CancelEventHandler(this.RepositoriesType_Validating);
             // 
             // label1
             // 
-            resources.ApplyResources(this.label1, "label1");
+            this.label1.AutoSize = true;
+            this.label1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label1.Location = new System.Drawing.Point(2, 10);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(51, 16);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Caption";
             // 
             // _NO_TRANSLATE_Caption
             // 
-            resources.ApplyResources(this._NO_TRANSLATE_Caption, "_NO_TRANSLATE_Caption");
+            this._NO_TRANSLATE_Caption.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_Caption.Location = new System.Drawing.Point(102, 8);
+            this._NO_TRANSLATE_Caption.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this._NO_TRANSLATE_Caption.Name = "_NO_TRANSLATE_Caption";
+            this._NO_TRANSLATE_Caption.Size = new System.Drawing.Size(480, 23);
+            this._NO_TRANSLATE_Caption.TabIndex = 9;
             this._NO_TRANSLATE_Caption.TextChanged += new System.EventHandler(this.Caption_TextChanged);
             this._NO_TRANSLATE_Caption.Validating += new System.ComponentModel.CancelEventHandler(this.Caption_Validating);
             // 
             // _NO_TRANSLATE_RssFeed
             // 
-            resources.ApplyResources(this._NO_TRANSLATE_RssFeed, "_NO_TRANSLATE_RssFeed");
+            this._NO_TRANSLATE_RssFeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_RssFeed.Location = new System.Drawing.Point(102, 99);
+            this._NO_TRANSLATE_RssFeed.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this._NO_TRANSLATE_RssFeed.Name = "_NO_TRANSLATE_RssFeed";
+            this._NO_TRANSLATE_RssFeed.Size = new System.Drawing.Size(480, 23);
+            this._NO_TRANSLATE_RssFeed.TabIndex = 12;
             this._NO_TRANSLATE_RssFeed.TextChanged += new System.EventHandler(this.RssFeed_TextChanged);
             this._NO_TRANSLATE_RssFeed.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeed_Validating);
             // 
             // label2
             // 
-            resources.ApplyResources(this.label2, "label2");
+            this.label2.AutoSize = true;
+            this.label2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label2.Location = new System.Drawing.Point(2, 43);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(36, 16);
+            this.label2.TabIndex = 10;
+            this.label2.Text = "Type";
             // 
             // label3
             // 
-            resources.ApplyResources(this.label3, "label3");
+            this.label3.AutoSize = true;
+            this.label3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.label3.Location = new System.Drawing.Point(2, 101);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(61, 16);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "RSS feed";
             // 
             // RssFeedType
             // 
-            resources.ApplyResources(this.RssFeedType, "RssFeedType");
+            this.RssFeedType.AutoSize = true;
+            this.RssFeedType.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.RssFeedType.Location = new System.Drawing.Point(102, 41);
+            this.RssFeedType.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.RssFeedType.Name = "RssFeedType";
+            this.RssFeedType.Size = new System.Drawing.Size(82, 20);
+            this.RssFeedType.TabIndex = 7;
+            this.RssFeedType.Text = "RSS Feed";
             this.RssFeedType.UseVisualStyleBackColor = true;
             this.RssFeedType.CheckedChanged += new System.EventHandler(this.RssFeedType_CheckedChanged);
             this.RssFeedType.Validating += new System.ComponentModel.CancelEventHandler(this.RssFeedType_Validating);
-            // 
-            // tableLayoutPanel1
-            // 
-            resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
-            this.tableLayoutPanel1.Controls.Add(this.Remove, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.Add, 0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             // 
             // DashboardEditor
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.splitContainer1);
-            resources.ApplyResources(this, "$this");
+            this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "DashboardEditor";
+            this.Size = new System.Drawing.Size(780, 492);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -222,12 +313,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 #endif
             this.splitContainer1.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RepositoriesGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }

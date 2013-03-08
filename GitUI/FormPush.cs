@@ -16,7 +16,6 @@ namespace GitUI
 {
     public partial class FormPush : GitModuleForm
     {
-        private const string PuttyText = "PuTTY";
         private const string HeadText = "HEAD";
         private string _currentBranch;
         private string _currentBranchRemote;
@@ -25,14 +24,12 @@ namespace GitUI
         private string selectedBranchRemote;
         private string selectedRemoteBranchName;
 
+        public bool ErrorOccurred { get; private set; }
 
         #region Translation
         private readonly TranslationString _branchNewForRemote =
             new TranslationString("The branch you are about to push seems to be a new branch for the remote." +
                                   Environment.NewLine + "Are you sure you want to push this branch?");
-
-        private readonly TranslationString _cannotLoadPutty =
-            new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
 
         private readonly TranslationString _pushCaption = new TranslationString("Push");
 
@@ -107,15 +104,16 @@ namespace GitUI
             RemotesUpdated(null, null);
         }
 
-        public void PushAndShowDialogWhenFailed(IWin32Window owner)
+        public DialogResult PushAndShowDialogWhenFailed(IWin32Window owner)
         {
             if (!PushChanges(owner))
-                ShowDialog(owner);
+                return ShowDialog(owner);
+            return DialogResult.OK;
         }
 
-        public void PushAndShowDialogWhenFailed()
+        public DialogResult PushAndShowDialogWhenFailed()
         {
-            PushAndShowDialogWhenFailed(null);
+            return PushAndShowDialogWhenFailed(null);
         }
 
         private void PushClick(object sender, EventArgs e)
@@ -157,6 +155,7 @@ namespace GitUI
 
         private bool PushChanges(IWin32Window owner)
         {
+            ErrorOccurred = false;
             if (PushToUrl.Checked && string.IsNullOrEmpty(PushDestination.Text))
             {
                 MessageBox.Show(owner, _selectDestinationDirectory.Text);
@@ -184,11 +183,12 @@ namespace GitUI
                 if (RemoteBranch.Text != GetDefaultPushRemote(_NO_TRANSLATE_Remotes.Text) &&
                     !Module.GetHeads(true, true).Any(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text) )
                     //Ask if this is really what the user wants
-                    if (MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
-                        DialogResult.No)
-                    {
-                        return false;
-                    }
+                    if (!Settings.DontConfirmPushNewBranch)
+                        if (MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
+                            DialogResult.No)
+                        {
+                            return false;
+                        }
             }
 
             if (PushToUrl.Checked)
@@ -208,7 +208,7 @@ namespace GitUI
                 if (GitCommandHelpers.Plink())
                 {
                     if (!File.Exists(Settings.Pageant))
-                        MessageBox.Show(owner, _cannotLoadPutty.Text, PuttyText);
+                        MessageBoxes.PAgentNotFound(owner);
                     else
                         Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
                 }
@@ -232,7 +232,7 @@ namespace GitUI
                             if (!string.IsNullOrEmpty(remoteBranch) && _NO_TRANSLATE_Branch.Text.StartsWith(remoteBranch))
                                 track = false;
 
-                    if (track)
+                    if (track && !Settings.DontConfirmAddTrackingRef)
                     {
                         DialogResult result = MessageBox.Show(String.Format(_updateTrackingReference.Text, selectedLocalBranch.Name, RemoteBranch.Text), _pushCaption.Text, MessageBoxButtons.YesNoCancel);
 
@@ -284,6 +284,7 @@ namespace GitUI
             {
 
                 form.ShowDialog(owner);
+                ErrorOccurred = form.ErrorOccurred();
 
                 if (!Module.InTheMiddleOfConflictedMerge() &&
                     !Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
@@ -317,31 +318,27 @@ namespace GitUI
 
         private bool HandlePushOnExit(ref bool isError, FormProcess form)
         {
-            if (isError)
-            {
-                //auto pull only if current branch was rejected
-                Regex IsRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranch) + ".*" + Regex.Escape(" (non-fast-forward)"), RegexOptions.Compiled);
+            if (!isError)
+                return false;
 
-                if (Settings.AutoPullOnRejected && IsRejected.IsMatch(form.GetOutputString()))
-                    
+            //auto pull only if current branch was rejected
+            Regex IsRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranch) + ".*" + Regex.Escape(" (non-fast-forward)"), RegexOptions.Compiled);
+
+            if (Settings.AutoPullOnRejected && IsRejected.IsMatch(form.GetOutputString()))
+            {
+                if (Settings.PullMerge == Settings.PullAction.Fetch)
+                    form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to fetch.");
+                else if (IsRebasingMergeCommit())
+                    form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine
+                                        + "and one of the commits that are about to be rebased is a merge.");
+                else
                 {
-                    if (Settings.PullMerge == Settings.PullAction.Fetch)
-                        form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to fetch.");
-                    else if (IsRebasingMergeCommit())
-                        form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine
-                                            + "and one of the commits that are about to be rebased is a merge.");
-                    else
+                    bool pullCompleted;
+                    UICommands.StartPullDialog(form.Owner ?? form, true, out pullCompleted);
+                    if (pullCompleted)
                     {
-                        form.Visible = false;
-                        bool pullCompleted;
-                        UICommands.StartPullDialog(form, true, out pullCompleted);
-                        if (pullCompleted)
-                        {
-                            form.Visible = true;
-                            form.Retry();
-                            return true;
-                        }
-                        form.Visible = true;
+                        form.Retry();
+                        return true;
                     }
                 }
             }
@@ -517,7 +514,7 @@ namespace GitUI
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
             if (!File.Exists(Settings.Pageant))
-                MessageBox.Show(this, _cannotLoadPutty.Text, PuttyText);
+                MessageBoxes.PAgentNotFound(this);
             else
                 Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
         }

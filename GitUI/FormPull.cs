@@ -38,9 +38,6 @@ namespace GitUI
         private readonly TranslationString _applyShashedItemsAgainCaption =
             new TranslationString("Auto stash");
 
-        private readonly TranslationString _cannotLoadPutty =
-            new TranslationString("Cannot load SSH key. PuTTY is not configured properly.");
-
         private readonly TranslationString _fetchAllBranchesCanOnlyWithFetch =
             new TranslationString("You can only fetch all remote branches (*) without merge or rebase." +
                                   Environment.NewLine + "If you want to fetch all remote branches, choose fetch." +
@@ -60,9 +57,13 @@ namespace GitUI
 
         private readonly TranslationString _questionInitSubmodulesCaption =
             new TranslationString("Submodules");
-        #endregion
 
-        private const string PuttyCaption = "PuTTY";
+        private readonly TranslationString _notOnBranchMainInstruction = new TranslationString("You are not working on a branch");
+        private readonly TranslationString _notOnBranch = new TranslationString("You cannot \"pull\" when git head detached." +
+                                  Environment.NewLine + "" + Environment.NewLine + "Do you want to continue?");
+        private readonly TranslationString _notOnBranchButtons = new TranslationString("Checkout branch|Continue");
+        private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch");
+        #endregion
 
         private IList<GitHead> _heads;
         public bool ErrorOccurred { get; private set; }
@@ -77,6 +78,8 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+
+            helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
 
             if (aCommands != null)
                 Init();
@@ -222,6 +225,25 @@ namespace GitUI
             if (dr != DialogResult.Yes)
                 return dr;
 
+            if (!Fetch.Checked && Branches.Text.IsNullOrWhiteSpace() && Module.IsDetachedHead())
+            {
+                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
+                                                        _notOnBranchCaption.Text,
+                                                        _notOnBranchMainInstruction.Text,
+                                                        _notOnBranch.Text,
+                                                        _notOnBranchButtons.Text,
+                                                        true);
+                switch (idx)
+                {
+                    case 0:
+                        if (!UICommands.StartCheckoutBranchDialog(owner, ""))
+                            return DialogResult.Cancel;
+                        break;
+                    case -1:
+                        return DialogResult.Cancel;
+                }
+            }
+
             if (PullFromUrl.Checked)
                 Repositories.RepositoryHistory.AddMostRecentRepository(comboBoxPullSource.Text);
 
@@ -288,7 +310,7 @@ namespace GitUI
             {
                 if (stashed)
                 {
-                    bool messageBoxResult =
+                    bool messageBoxResult = Settings.AutoPopStashAfterPull ||
                         MessageBox.Show(owner, _applyShashedItemsAgain.Text, _applyShashedItemsAgainCaption.Text,
                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
                     if (ShouldStashPop(messageBoxResult, process, true))
@@ -399,7 +421,7 @@ namespace GitUI
 
         private string CalculateLocalBranch()
         {
-            if (branch.Equals("(no branch)", StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty(Branches.Text))
+            if (branch.Equals(GitModule.DetachedBranch, StringComparison.Ordinal) || string.IsNullOrEmpty(Branches.Text))
                 branch = null;
             return branch;
         }
@@ -471,7 +493,7 @@ namespace GitUI
             if (File.Exists(Settings.Pageant))
                 Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
             else
-                MessageBox.Show(this, _cannotLoadPutty.Text, PuttyCaption);
+                MessageBoxes.PAgentNotFound(this);
         }
 
         private void FormPullLoad(object sender, EventArgs e)
@@ -568,20 +590,24 @@ namespace GitUI
         {
             localBranch.Enabled = false;
             localBranch.Text = branch;
-            PullImage.BackgroundImage = Resources.merge;
+            helpImageDisplayUserControl1.Image1 = Resources.HelpPullMerge;
+            helpImageDisplayUserControl1.Image2 = Resources.HelpPullMergeFastForward;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
         }
 
         private void RebaseCheckedChanged(object sender, EventArgs e)
         {
             localBranch.Enabled = false;
             localBranch.Text = branch;
-            PullImage.BackgroundImage = Resources.Rebase;
+            helpImageDisplayUserControl1.Image1 = Resources.HelpPullRebase;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
         }
 
         private void FetchCheckedChanged(object sender, EventArgs e)
         {
             localBranch.Enabled = true;
-            PullImage.BackgroundImage = Resources.fetch;
+            helpImageDisplayUserControl1.Image1 = Resources.HelpPullFetch;
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
         }
 
         private void PullSourceValidating(object sender, CancelEventArgs e)

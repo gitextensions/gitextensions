@@ -41,6 +41,8 @@ IDI_ICONPUSH            ICON                    "Resources\\IconPush.ico"
 IDI_ICONTRESETFILETO    ICON                    "Resources\\IconResetFileTo.ico"
 IDI_ICONSETTINGS        ICON                    "Resources\\IconSettings.ico"
 IDI_ICONVIEWCHANGES     ICON                    "Resources\\IconDiff.ico"
+IDI_ICONSTASH           ICON                    "Resources\\IconStash.ico"
+IDI_ICONCREATEREPOSITORY ICON                   "Resources\\IconRepoCreate.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -48,8 +50,8 @@ IDI_ICONVIEWCHANGES     ICON                    "Resources\\IconDiff.ico"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,42,0,0
- PRODUCTVERSION 2,42,0,0
+ FILEVERSION 2,45,0,0
+ PRODUCTVERSION 2,45,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -65,12 +67,12 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
             VALUE "FileDescription", "Git Extensions"
-            VALUE "FileVersion", "2, 42"
+            VALUE "FileVersion", "2.45"
             VALUE "InternalName", "Git Extensions"
-            VALUE "LegalCopyright", "Copyright 2012"
+            VALUE "LegalCopyright", "Copyright 2013"
             VALUE "OriginalFilename", "GitExtensionsShellEx.dll"
             VALUE "ProductName", "Git Extensions"
-            VALUE "ProductVersion", "2, 42"
+            VALUE "ProductVersion", "2.45"
         END
     END
     BLOCK "VarFileInfo"

@@ -74,7 +74,7 @@ namespace GitUI
 
             Revisions.CellPainting += RevisionsCellPainting;
             Revisions.CellFormatting += RevisionsCellFormatting;
-            Revisions.KeyDown += RevisionsKeyDown;
+            Revisions.KeyPress += RevisionsKeyPress;
 
             showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
@@ -132,7 +132,7 @@ namespace GitUI
         [Browsable(false)]
         public int LastScrollPos { get; private set; }
         [Browsable(false)]
-        public IComparable[] LastSelectedRows { get; private set; }
+        public string[] LastSelectedRows { get; private set; }
         [Browsable(false)]
         public Font RefsFont { get; private set; }
         private Font _normalFont;
@@ -275,15 +275,14 @@ namespace GitUI
             quickSearchTimer.Start();
         }
 
-        private void RevisionsKeyDown(object sender, KeyEventArgs e)
+        private void RevisionsKeyPress(object sender, KeyPressEventArgs e)
         {
             var curIndex = -1;
             if (Revisions.SelectedRows.Count > 0)
                 curIndex = Revisions.SelectedRows[0].Index;
 
             curIndex = curIndex >= 0 ? curIndex : 0;
-            int key = e.KeyValue;
-            if (!e.Alt && !e.Control && key == 8 && _quickSearchString.Length > 1) //backspace
+            if (e.KeyChar == 8 && _quickSearchString.Length > 1) //backspace
             {
                 RestartQuickSearchTimer();
 
@@ -295,32 +294,12 @@ namespace GitUI
                 e.Handled = true;
                 ShowQuickSearchString();
             }
-            else if (!e.Alt && !e.Control && (char.IsLetterOrDigit((char)key) || char.IsNumber((char)key) || char.IsSeparator((char)key) || key == 191))
+            else if (!char.IsControl(e.KeyChar))
             {
                 RestartQuickSearchTimer();
 
                 //The code below is meant to fix the weird keyvalues when pressing keys e.g. ".".
-                switch (key)
-                {
-                    case 51:
-                        _quickSearchString = e.Shift ? string.Concat(_quickSearchString, "#").ToLower() : string.Concat(_quickSearchString, "3").ToLower();
-                        break;
-                    case 188:
-                        _quickSearchString = string.Concat(_quickSearchString, ",").ToLower();
-                        break;
-                    case 189:
-                        _quickSearchString = e.Shift ? string.Concat(_quickSearchString, "_").ToLower() : string.Concat(_quickSearchString, "-").ToLower();
-                        break;
-                    case 190:
-                        _quickSearchString = string.Concat(_quickSearchString, ".").ToLower();
-                        break;
-                    case 191:
-                        _quickSearchString = string.Concat(_quickSearchString, "/").ToLower();
-                        break;
-                    default:
-                        _quickSearchString = string.Concat(_quickSearchString, (char)e.KeyValue).ToLower();
-                        break;
-                }
+                _quickSearchString = string.Concat(_quickSearchString, char.ToLower(e.KeyChar));
 
                 FindNextMatch(curIndex, _quickSearchString, false);
                 _lastQuickSearchString = _quickSearchString;
@@ -532,7 +511,7 @@ namespace GitUI
             Revisions.Select();
         }
 
-        public void HighlightBranch(IComparable aId)
+        public void HighlightBranch(string aId)
         {
             Revisions.HighlightBranch(aId);
         }
@@ -808,7 +787,7 @@ namespace GitUI
 
                 IndexWatcher.Reset();
 
-                if (!Settings.ShowGitNotes && !LogParam.Contains(" --not --glob=notes --not"))
+                if (!Settings.ShowGitNotes && LogParam.Contains("--all --boundary") && !LogParam.Contains(" --not --glob=notes --not"))
                     LogParam = LogParam + " --not --glob=notes --not";
 
                 if (Settings.ShowGitNotes && LogParam.Contains(" --not --glob=notes --not"))
@@ -1025,7 +1004,7 @@ namespace GitUI
             }
             else if (_initialSelectedRevision == null)
             {
-                Revisions.SelectedIds = new IComparable[] { CurrentCheckout };
+                Revisions.SelectedIds = new[] { CurrentCheckout };
             }
 
             if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
@@ -1089,7 +1068,7 @@ namespace GitUI
 
             Color foreColor;
 
-            if (!Settings.RevisionGraphDrawNonRelativesGray || !Settings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
+            if (!Settings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
             {
                 foreColor = isRowSelected && IsFilledBranchesLayout()
                     ? SystemColors.HighlightText
@@ -1097,7 +1076,7 @@ namespace GitUI
             }
             else
             {
-                foreColor = Color.LightGray;
+                foreColor = isRowSelected ? SystemColors.HighlightText : Color.Gray;
             }
 
             Brush foreBrush = new SolidBrush(foreColor);
@@ -1488,7 +1467,7 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Count > 0)
             {
-                var form = new FormDiffSmall(UICommands, selectedRevisions[0]);
+                var form = new FormDiffSmall(UICommands, selectedRevisions[0].Guid);
                 form.ShowDialog(this);
             }
             else
@@ -1646,8 +1625,10 @@ namespace GitUI
                 return;
 
             var frm = new FormRevertCommitSmall(UICommands, GetRevision(LastRow));
-            frm.ShowDialog(this);
-            RefreshRevisions();
+            if (frm.ShowDialog(this) == DialogResult.OK)
+            {
+                RefreshRevisions();
+            }
         }
 
         private void FilterToolStripMenuItemClick(object sender, EventArgs e)
@@ -1808,9 +1789,10 @@ namespace GitUI
             if (toolStripItem == null)
                 return;
 
-            UICommands.StartDeleteTagDialog(this, toolStripItem.Text);
-
-            ForceRefreshRevisions();
+            if (UICommands.StartDeleteTagDialog(this, toolStripItem.Text))
+            {
+                ForceRefreshRevisions();
+            }
         }
 
         private void ToolStripItemClickDeleteBranch(object sender, EventArgs e)
@@ -2015,42 +1997,7 @@ namespace GitUI
                 Revisions.Prune();
 
                 if (Revisions.RowCount == 0 && Settings.RevisionGraphShowWorkingDirChanges)
-                {
-                    bool uncommittedChanges = false;
-                    bool stagedChanges = false;
-                    //Only check for tracked files. This usually makes more sense and it performs a lot
-                    //better then checking for untracked files.
-                    // TODO: Check FiltredFileName
-                    if (Module.GetTrackedChangedFiles().Count > 0)
-                        uncommittedChanges = true;
-                    if (Module.GetStagedFiles().Count > 0)
-                        stagedChanges = true;
-
-                    if (uncommittedChanges)
-                    {
-                        //Add working dir as virtual commit
-                        var workingDir = new GitRevision(Module, GitRevision.UncommittedWorkingDirGuid)
-                                             {
-                                                 Message = Strings.GetCurrentWorkingDirChanges(),
-                                                 ParentGuids =
-                                                     stagedChanges
-                                                         ? new[] { GitRevision.IndexGuid }
-                                                         : new[] { FiltredCurrentCheckout }
-                                             };
-                        Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
-                    }
-
-                    if (stagedChanges)
-                    {
-                        //Add index as virtual commit
-                        var index = new GitRevision(Module, GitRevision.IndexGuid)
-                                        {
-                                            Message = Strings.GetCurrentIndex(),
-                                            ParentGuids = new string[] { FiltredCurrentCheckout }
-                                        };
-                        Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
-                    }
-                }
+                    CheckUncommitedChanged();
                 return;
             }
 
@@ -2061,6 +2008,45 @@ namespace GitUI
                 dataType = DvcsGraph.DataType.Special;
 
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
+        }
+
+        private void CheckUncommitedChanged()
+        {
+            bool unstagedChanges = false;
+            bool stagedChanges = false;
+            //Only check for tracked files. This usually makes more sense and it performs a lot
+            //better then checking for untracked files.
+            // TODO: Check FiltredFileName
+            if (Module.GetUnstagedFiles().Count > 0)
+                unstagedChanges = true;
+            if (Module.GetStagedFiles().Count > 0)
+                stagedChanges = true;
+
+            // FiltredCurrentCheckout doesn't works because only calculated after loading all revisions in SelectInitialRevision()
+            if (unstagedChanges)
+            {
+                //Add working dir as virtual commit
+                var workingDir = new GitRevision(Module, GitRevision.UnstagedGuid)
+                                     {
+                                         Message = Strings.GetCurrentUnstagedChanges(),
+                                         ParentGuids =
+                                             stagedChanges
+                                                 ? new[] { GitRevision.IndexGuid }
+                                                 : new[] { FiltredCurrentCheckout }
+                                     };
+                Revisions.Add(workingDir.Guid, workingDir.ParentGuids, DvcsGraph.DataType.Normal, workingDir);
+            }
+
+            if (stagedChanges)
+            {
+                //Add index as virtual commit
+                var index = new GitRevision(Module, GitRevision.IndexGuid)
+                                {
+                                    Message = Strings.GetCurrentIndex(),
+                                    ParentGuids = new[] { FiltredCurrentCheckout }
+                                };
+                Revisions.Add(index.Guid, index.ParentGuids, DvcsGraph.DataType.Normal, index);
+            }
         }
 
         private void drawNonrelativesGrayToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2239,20 +2225,21 @@ namespace GitUI
 
             ForceRefreshRevisions();
         }
+
+        public void OnModuleChanged(GitModule aModule)
+        {
+            if (GitModuleChanged != null)
+                GitModuleChanged(aModule);
+        }
+
         private void InitRepository_Click(object sender, EventArgs e)
         {
-            UICommands.StartInitializeDialog(this, Module.WorkingDir,
-                (module) =>
-                {
-                    if (GitModuleChanged != null)
-                        GitModuleChanged(module);
-                }
-                    );
+            UICommands.StartInitializeDialog(this, Module.WorkingDir, OnModuleChanged);
         }
 
         private void CloneRepository_Click(object sender, EventArgs e)
         {
-            if (UICommands.StartCloneDialog(this))
+            if (UICommands.StartCloneDialog(this, null, OnModuleChanged))
                 ForceRefreshRevisions();
         }
 

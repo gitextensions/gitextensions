@@ -8,28 +8,28 @@ namespace GitCommands
         // public only because of FormTranslate
         public Strings()
         {
-            Translator.Translate(this, Settings.Translation);
+            Translator.Translate(this, Settings.CurrentTranslation);
         }
 
-        private static Strings instance;
+        private static Strings _instance;
 
         private static Strings Instance
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = new Strings();
+                    _instance = new Strings();
                 }
-                return instance;
+                return _instance;
             }
         }
 
         public static void Reinit()
         {
-            if (instance != null)
+            if (_instance != null)
             {
-                instance = new Strings();
+                _instance = new Strings();
             }
         }
 
@@ -78,9 +78,9 @@ namespace GitCommands
             return Instance._childrenText.Text;
         }
 
-        public static string GetCurrentWorkingDirChanges()
+        public static string GetCurrentUnstagedChanges()
         {
-            return Instance._currentWorkingDirChanges.Text;
+            return Instance._currentUnstagedChanges.Text;
         }
 
         public static string GetCurrentIndex()
@@ -102,7 +102,7 @@ namespace GitCommands
         private readonly TranslationString _messageText    = new TranslationString("Message");
         private readonly TranslationString _parentsText    = new TranslationString("Parent(s)");
         private readonly TranslationString _childrenText = new TranslationString("Children");
-        private readonly TranslationString _currentWorkingDirChanges = new TranslationString("Current uncommitted changes");
+        private readonly TranslationString _currentUnstagedChanges = new TranslationString("Current unstaged changes");
         private readonly TranslationString _currentIndex = new TranslationString("Commit index");
         private readonly TranslationString _LoadingData = new TranslationString("Loading data...");
 

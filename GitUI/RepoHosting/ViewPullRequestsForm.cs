@@ -12,11 +12,11 @@ namespace GitUI.RepoHosting
     public partial class ViewPullRequestsForm : GitModuleForm
     {
         #region Translation
-        private readonly TranslationString _strFailedToFetchPullData = new TranslationString("Failed to fetch pull data!\r\n");
-        private readonly TranslationString _strFailedToLoadDiscussionItem = new TranslationString("Failed to post discussion item!\r\n");
-        private readonly TranslationString _strFailedToClosePullRequest = new TranslationString("Failed to close pull request!\r\n");
-        private readonly TranslationString _strFailedToLoadDiffData = new TranslationString("Failed to load diff data!\r\n");
-        private readonly TranslationString _strCouldNotLoadDiscussion = new TranslationString("Could not load discussion!\r\n");
+        private readonly TranslationString _strFailedToFetchPullData = new TranslationString("Failed to fetch pull data!");
+        private readonly TranslationString _strFailedToLoadDiscussionItem = new TranslationString("Failed to post discussion item!");
+        private readonly TranslationString _strFailedToClosePullRequest = new TranslationString("Failed to close pull request!");
+        private readonly TranslationString _strFailedToLoadDiffData = new TranslationString("Failed to load diff data!");
+        private readonly TranslationString _strCouldNotLoadDiscussion = new TranslationString("Could not load discussion!");
         private readonly TranslationString _strError = new TranslationString("Error");
         private readonly TranslationString _strLoading = new TranslationString(" : LOADING : ");
         private readonly TranslationString _strUnableUnderstandPatch = new TranslationString("Error: Unable to understand patch");
@@ -100,7 +100,7 @@ namespace GitUI.RepoHosting
             AsyncLoader.DoAsync<List<IPullRequestInformation>>(
                hostedRepo.GetPullRequests,
                res => { SetPullRequestsData(res); _selectHostedRepoCB.Enabled = true; },
-               ex => MessageBox.Show(this, _strFailedToFetchPullData.Text + ex.Message, _strError.Text)
+               ex => MessageBox.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Message, _strError.Text)
             );
         }
 
@@ -200,7 +200,7 @@ namespace GitUI.RepoHosting
                 LoadDiscussion,
                 ex =>
                 {
-                    MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + ex.Message, _strError.Text);
+                    MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Message, _strError.Text);
                     LoadDiscussion(null);
                 });
         }
@@ -225,7 +225,7 @@ namespace GitUI.RepoHosting
             AsyncLoader.DoAsync(
                 () => _currentPullRequestInfo.DiffData,
                 SplitAndLoadDiff,
-                ex => MessageBox.Show(this, _strFailedToLoadDiffData.Text + ex.Message, _strError.Text));
+                ex => MessageBox.Show(this, _strFailedToLoadDiffData.Text + Environment.NewLine + ex.Message, _strError.Text));
         }
 
         Dictionary<string, string> _diffCache;
@@ -339,7 +339,7 @@ namespace GitUI.RepoHosting
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _strFailedToClosePullRequest.Text + ex.Message, _strError.Text);
+                MessageBox.Show(this, _strFailedToClosePullRequest.Text + Environment.NewLine + ex.Message, _strError.Text);
             }
         }
 
@@ -358,7 +358,7 @@ namespace GitUI.RepoHosting
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _strFailedToLoadDiscussionItem.Text + ex.Message, _strError.Text);
+                MessageBox.Show(this, _strFailedToLoadDiscussionItem.Text + Environment.NewLine + ex.Message, _strError.Text);
             }
         }
 
@@ -383,7 +383,7 @@ namespace GitUI.RepoHosting
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _strFailedToLoadDiscussionItem.Text + ex.Message, _strError.Text);
+                MessageBox.Show(this, _strFailedToLoadDiscussionItem.Text + Environment.NewLine + ex.Message, _strError.Text);
             }
         }
     }

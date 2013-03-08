@@ -16,8 +16,8 @@ namespace GitCommands
 
         public static string CreateCommitLink(string guid)
         {
-            if (GitRevision.UncommittedWorkingDirGuid == guid)
-                return "<a href='gitex://gotocommit/" + guid + "'>" + Strings.GetCurrentWorkingDirChanges() + "</a>";
+            if (GitRevision.UnstagedGuid == guid)
+                return "<a href='gitex://gotocommit/" + guid + "'>" + Strings.GetCurrentUnstagedChanges() + "</a>";
             else if (GitRevision.IndexGuid == guid)
                 return "<a href='gitex://gotocommit/" + guid + "'>" + Strings.GetCurrentIndex() + "</a>";
             else

@@ -28,6 +28,9 @@ namespace PatchApply
 
             ChunkList selectedChunks = ChunkList.GetSelectedChunks(text, selectionPosition, selectionLength, staged, out header);
 
+            if (selectedChunks == null)
+                return null;
+            
             string body = selectedChunks.ToResetUnstagedLinesPatch();
 
             //git apply has problem with dealing with autocrlf

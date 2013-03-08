@@ -156,10 +156,15 @@ namespace GitUI
                     return FindFileInFolders(exeName, kdiff3path, @"KDiff3\",
                                                           regkdiff3path);
                 case "tmerge":
-                    exeName = "TortoiseMerge.exe";
-                    string difftoolPath = FindFileInFolders(exeName, @"TortoiseSVN\bin\");
+                    exeName = "TortoiseGitMerge.exe"; // TortoiseGit 1.8 use new names
+                    string difftoolPath = FindFileInFolders(exeName, @"TortoiseGit\bin\");
                     if (String.IsNullOrEmpty(difftoolPath))
+                    {
+                        exeName = "TortoiseMerge.exe";
                         difftoolPath = FindFileInFolders(exeName, @"TortoiseGit\bin\");
+                        if (String.IsNullOrEmpty(difftoolPath))
+                            difftoolPath = FindFileInFolders(exeName, @"TortoiseSVN\bin\");
+                    }
                     return difftoolPath;
                 case "winmerge":
                     exeName = "winmergeu.exe";
@@ -222,7 +227,8 @@ namespace GitUI
                 case "araxis":
                     exeName = "Compare.exe";
                     return FindFileInFolders(exeName, @"Araxis\Araxis Merge\",
-                                                        @"Araxis 6.5\Araxis Merge\");
+                                                        @"Araxis 6.5\Araxis Merge\",
+                                                        @"Araxis\Araxis Merge v6.5\");
                 case "beyondcompare3":
                     string bcomppath = UnquoteString(GetGlobalSetting("mergetool.beyondcompare3.path"));
 
@@ -245,10 +251,15 @@ namespace GitUI
                     exeName = "p4merge.exe";
                     return FindFileInFolders(exeName, p4mergepath, @"Perforce\");
                 case "tortoisemerge":
-                    exeName = "TortoiseMerge.exe";
-                    string path = FindFileInFolders(exeName, @"TortoiseSVN\bin\");
+                    exeName = "TortoiseGitMerge.exe"; // TortoiseGit 1.8 use new names
+                    string path = FindFileInFolders(exeName, @"TortoiseGit\bin\");
                     if (string.IsNullOrEmpty(path))
+                    {
+                        exeName = "TortoiseMerge.exe";
                         path = FindFileInFolders(exeName, @"TortoiseGit\bin\");
+                        if (string.IsNullOrEmpty(path))
+                            path = FindFileInFolders(exeName, @"TortoiseSVN\bin\");
+                    }
                     return path;
                 case "winmerge":
                     string winmergepath = UnquoteString(GetGlobalSetting("mergetool.winmerge.path"));
@@ -278,9 +289,6 @@ namespace GitUI
             string mergeTool = mergetoolText.ToLowerInvariant();
             switch (mergeTool)
             {
-                case "araxis":
-                    return "\"" + exeFile +
-                                        "\" -wait -merge -3 -a1 \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"";
                 case "beyondcompare3":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"";
                 case "diffmerge":
@@ -294,6 +302,7 @@ namespace GitUI
 
                     return String.Format(command, exeFile);
             }
+            // other commands supported natively by msysgit
             return "";
         }
 

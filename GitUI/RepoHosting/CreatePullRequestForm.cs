@@ -15,7 +15,7 @@ namespace GitUI.RepoHosting
         private readonly TranslationString _strCouldNotLocateARemoteThatBelongsToYourUser = new TranslationString("Could not locate a remote that belongs to your user!");
         private readonly TranslationString _strYouMustSpecifyATitle = new TranslationString("You must specify a title.");
         private readonly TranslationString _strPullRequest = new TranslationString("Pull request");
-        private readonly TranslationString _strFailedToCreatePullRequest = new TranslationString("Failed to create pull request.\r\n");
+        private readonly TranslationString _strFailedToCreatePullRequest = new TranslationString("Failed to create pull request.");
         private readonly TranslationString _strPleaseCloneGitHubRep = new TranslationString("Please clone GitHub repository before pull request.");
         private readonly TranslationString _strDone = new TranslationString("Done");
         private readonly TranslationString _strError = new TranslationString("Error");
@@ -56,8 +56,8 @@ namespace GitUI.RepoHosting
                 {
                     if (foreignHostedRemotes.Length == 0)
                     {
-                        MessageBox.Show(this, _strFailedToCreatePullRequest.Text + _strPleaseCloneGitHubRep.Text, "",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine + 
+                            _strPleaseCloneGitHubRep.Text, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Close();
                         return;
                     }
@@ -190,7 +190,8 @@ namespace GitUI.RepoHosting
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _strFailedToCreatePullRequest.Text + ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine + 
+                    ex.Message, _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

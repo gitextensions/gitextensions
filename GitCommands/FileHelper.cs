@@ -63,52 +63,24 @@ namespace GitCommands
             return HasMatchingExtension(BinaryExtensions, fileName);
         }
 
-        /// <returns>null if no info in .gitattributes. True if marked as binary, false if marked as text</returns>
+        /// <returns>null if no info in .gitattributes (or ambiguous). True if marked as binary, false if marked as text</returns>
         private static bool? IsBinaryAccordingToGitAttributes(GitModule aModule, string fileName)
         {
-            string gitAttributesPath = Path.Combine(aModule.WorkingDir, ".gitattributes");
-            if (File.Exists(gitAttributesPath))
+            string cmd = "check-attr diff -z -- " + fileName;
+            string result = aModule.RunGitCmd(cmd);
+            var lines = result.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in lines)
             {
-                string[] lines = File.ReadAllLines(gitAttributesPath);
-                bool? lastMatchResult = null;
-                foreach (var parts in lines.Select(line => line.Trim().Split(' ')))
+                var values = line.Split(':');
+                if (values.Length == 3 && values[1].Trim() == "diff")
                 {
-                    if (parts.Length < 2 || parts[0][0] == '#')
-                        continue;
-                    if (parts.Contains("binary") || parts.Contains("-text"))
-                    {
-                        try
-                        {
-                            if (Regex.IsMatch(fileName, CreateRegexFromFilePattern(parts[0])))
-                                lastMatchResult = true;
-                        }
-                        catch
-                        {
-                            continue;
-                        }
-                    }
-                    if (parts.Contains("text"))
-                    {
-                        try
-                        {
-                            if (Regex.IsMatch(fileName, CreateRegexFromFilePattern(parts[0])))
-                                lastMatchResult = false;
-                        }
-                        catch
-                        {
-                            continue;
-                        }
-                    }
+                    if (values[2].Trim() == "unset")
+                        return true;
+                    if (values[2].Trim() == "set")
+                        return false;
                 }
-                return lastMatchResult;
             }
-
             return null;
-        }
-
-        private static string CreateRegexFromFilePattern(string pattern)
-        {
-            return pattern.Replace(".", "\\.").Replace("*", ".*").Replace("?", ".");
         }
 
         public static bool IsImage(string fileName)

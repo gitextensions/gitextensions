@@ -25,10 +25,10 @@ namespace GitUI.RepoHosting
         private readonly TranslationString _strWillBeAddedAsARemote = new TranslationString("\"{0}\" will be added as a remote.");
         private readonly TranslationString _strCouldNotAddRemote = new TranslationString("Could not add remote");
         private readonly TranslationString _strNoHomepageDefined = new TranslationString("No homepage defined");
-        private readonly TranslationString _strFailedToFork = new TranslationString("Failed to fork:\r\n");
-        private readonly TranslationString _strSearchFailed = new TranslationString("Search failed!\r\n");
+        private readonly TranslationString _strFailedToFork = new TranslationString("Failed to fork:");
+        private readonly TranslationString _strSearchFailed = new TranslationString("Search failed!");
         private readonly TranslationString _strUserNotFound = new TranslationString("User not found!");
-        private readonly TranslationString _strCouldNotFetchReposOfUser = new TranslationString("Could not fetch repositories of user!\r\n");
+        private readonly TranslationString _strCouldNotFetchReposOfUser = new TranslationString("Could not fetch repositories of user!");
         private readonly TranslationString _strSearching = new TranslationString(" : SEARCHING : ");
         private readonly TranslationString _strSelectOneItem = new TranslationString("You must select exactly one item");
         private readonly TranslationString _strCloneFolderCanNotBeEmpty = new TranslationString("Clone folder can not be empty");
@@ -107,7 +107,8 @@ namespace GitUI.RepoHosting
             AsyncLoader.DoAsync(
                 () => _gitHoster.SearchForRepository(search),
                 HandleSearchResult,
-                ex => { MessageBox.Show(this, _strSearchFailed.Text + ex.Message, _strError.Text); _searchBtn.Enabled = true; });
+                ex => { MessageBox.Show(this, _strSearchFailed.Text + Environment.NewLine + ex.Message,
+                    _strError.Text); _searchBtn.Enabled = true; });
         }
         private void _getFromUserBtn_Click(object sender, EventArgs e)
         {
@@ -124,7 +125,8 @@ namespace GitUI.RepoHosting
                     if (ex.Message.Contains("404"))
                         MessageBox.Show(this, _strUserNotFound.Text, _strError.Text);
                     else
-                        MessageBox.Show(this, _strCouldNotFetchReposOfUser.Text + ex.Message, _strError.Text);
+                        MessageBox.Show(this, _strCouldNotFetchReposOfUser.Text + Environment.NewLine + 
+                            ex.Message, _strError.Text);
                     _searchBtn.Enabled = true;
                 });
         }
@@ -168,7 +170,7 @@ namespace GitUI.RepoHosting
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _strFailedToFork.Text + ex.Message, _strError.Text);
+                MessageBox.Show(this, _strFailedToFork.Text + Environment.NewLine + ex.Message, _strError.Text);
             }
 
             _tabControl.SelectedTab = _myReposPage;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -180,7 +181,7 @@ namespace GitUI
 
                     foreach (GitItemStatus item in SelectedItems)
                     {
-                        string fileName = Module.WorkingDir + item.Name;
+                        string fileName = Path.Combine(Module.WorkingDir, item.Name);
 
                         fileList.Add(fileName.Replace('/', '\\'));
                     }
@@ -355,9 +356,9 @@ namespace GitUI
                     var status = gitItemStatus.SubmoduleStatus;
                     if (status.IsDirty && status.Commit == status.OldCommit)
                         image = Resources.IconSubmoduleDirty;
-                    else if (status.IsCommitNewer)
+                    else if (status.Status == SubmoduleStatus.FastForward || status.Status == SubmoduleStatus.NewerTime)
                         image = status.IsDirty ? Resources.IconSubmoduleRevisionUpDirty : Resources.IconSubmoduleRevisionUp;
-                    else
+                    else if (status.Status == SubmoduleStatus.Rewind || status.Status == SubmoduleStatus.OlderTime)
                         image = status.IsDirty ? Resources.IconSubmoduleRevisionDownDirty : Resources.IconSubmoduleRevisionDown;
                 }                
             }
@@ -511,12 +512,12 @@ namespace GitUI
                         GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
                     else
                     {
-                        if (revision.Guid == GitRevision.UncommittedWorkingDirGuid) //working dir changes
-                            GitItemStatuses = Module.GetUnstagedFiles();
+                        if (revision.Guid == GitRevision.UnstagedGuid) //working dir changes
+                            GitItemStatuses = Module.GetUnstagedFilesWithSubmodulesStatus();
                         else if (revision.Guid == GitRevision.IndexGuid) //index
-                            GitItemStatuses = Module.GetStagedFiles();
+                            GitItemStatuses = Module.GetStagedFilesWithSubmodulesStatus();
                         else
-                            GitItemStatuses = Module.GetDiffFiles(revision.Guid, revision.ParentGuids[0]);
+                            GitItemStatuses = Module.GetDiffFilesWithSubmodulesStatus(revision.Guid, revision.ParentGuids[0]);
                     }
                     break;
 
@@ -528,7 +529,7 @@ namespace GitUI
                         GitItemStatuses = null;
                     }
                     else
-                        GitItemStatuses = Module.GetDiffFiles(revisions[0].Guid, revisions[1].Guid);
+                        GitItemStatuses = Module.GetDiffFilesWithSubmodulesStatus(revisions[0].Guid, revisions[1].Guid);
                     break;
 
                 default: // more than 2 revisions selected => no diff

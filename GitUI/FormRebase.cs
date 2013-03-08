@@ -31,7 +31,8 @@ namespace GitUI
             : base(aCommands)
         {
             InitializeComponent();
-            Translate();        
+            Translate();
+            helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
         }
 
         public FormRebase(GitUICommands aCommands, string defaultBranch)

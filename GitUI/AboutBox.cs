@@ -44,8 +44,8 @@ namespace GitUI
         {
             base.OnLoad(e);
 
-            _NO_TRANSLATE_labelVersionInfo.Text = string.Format("{0}{1} [.Net {2}]", _NO_TRANSLATE_labelVersionInfo.Text, 
-                GitCommands.Settings.GitExtensionsVersionString, Environment.Version.Major.ToString());
+            _NO_TRANSLATE_labelVersionInfo.Text = string.Format("{0}{1}", _NO_TRANSLATE_labelVersionInfo.Text, 
+                GitCommands.Settings.GitExtensionsVersionString);
         }
 
         //Contributers list 
@@ -63,9 +63,10 @@ namespace GitUI
             "Alex Ford, Arne Janbu, Dan Rigby, pravic, Linquize, Clinton Daniel, Reto Schoening, mabako, Tal952, " +
             "Aviad Pineles, Markus Stein, Marcus Bauer, Nay, Joe Phillips, Cameron Will, Donatas Mačiūnas, Jesse Bartley, " +
             "Dave Brotherstone, Pieter van Ginkel, australiensun, Vincent Gravade, Hiroyuki Sato, Isaac Devine, " +
-            "Konstantin Tenzin, Stefan Laut, Jeromy Johnson, Kate von Roeder";
+            "Konstantin Tenzin, Stefan Laut, Jeromy Johnson, Kate von Roeder, Tor Arvid Lund, jberger";
         private const string translators = "Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, " +
-            "xaro, bleis-tift, Ralph Haußmann, Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D'Archivio";
+            "xaro, bleis-tift, Ralph Haußmann, Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D'Archivio, australiensun, " +
+            "Airat Salikhov, Dave Brotherstone, diegoaossas, hogelog, Philippe Miossec";
         private const string designers = "Andréj Telle, Oliver Friedrich";
         private const string other = "";
 

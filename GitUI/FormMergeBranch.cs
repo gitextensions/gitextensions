@@ -14,6 +14,7 @@ namespace GitUI
         {
             InitializeComponent();
             Translate();
+            helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
             _defaultBranch = defaultBranch;
 
             if (Settings.NoFastForwardMerge)
@@ -72,11 +73,6 @@ namespace GitUI
 
         private void advanced_CheckedChanged(object sender, EventArgs e)
         {
-            if (advanced.Checked)
-                this.Height = 320;
-            else
-                this.Height = 280;
-
             NonDefaultMergeStrategy.Visible = advanced.Checked;
             NonDefaultMergeStrategy_CheckedChanged(null, null);
             squash.Visible = advanced.Checked;
@@ -88,6 +84,16 @@ namespace GitUI
                 squash.Checked = false;
                 noCommit.Checked = false;
             }
+        }
+
+        private void fastForward_CheckedChanged(object sender, EventArgs e)
+        {
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
+        }
+
+        private void noFastForward_CheckedChanged(object sender, EventArgs e)
+        {
+            helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
         }
     }
 }

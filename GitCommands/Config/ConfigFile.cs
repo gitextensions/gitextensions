@@ -63,7 +63,7 @@ namespace GitCommands.Config
             if (string.IsNullOrEmpty(Path.GetFileName(_fileName)) || !File.Exists(_fileName))
                 return;
 
-            FindSections(File.ReadAllLines(_fileName, GetEncoding()));
+            FindSections(File.ReadLines(_fileName, GetEncoding()));
         }
 
         private void FindSections(IEnumerable<string> fileLines)

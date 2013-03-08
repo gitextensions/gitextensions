@@ -50,9 +50,9 @@ namespace GitUI.SpellChecker
         {
             get
             {
-				if (TextBox == null)
-					return string.Empty;
-				
+                if (TextBox == null)
+                    return string.Empty;
+                
                 return IsWatermarkShowing ? string.Empty : TextBox.Text;
             }
             set
@@ -107,6 +107,57 @@ namespace GitUI.SpellChecker
                 _WatermarkText = value;
                 ShowWatermark();
             }
+        }
+
+        [Category("Appearance")]
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public int SelectionStart
+        {
+            get
+            {
+                return TextBox.SelectionStart;
+            }
+            set
+            {
+                TextBox.SelectionStart = value;
+            }
+        }
+
+        [Category("Appearance")]
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public virtual int SelectionLength
+        {
+            get
+            {
+                return TextBox.SelectionLength;
+            }
+
+            set
+            {
+                TextBox.SelectionLength = value;
+            }
+        }
+
+        [Category("Appearance")]
+        [Browsable(false)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public virtual string SelectedText
+        {
+            get
+            {
+                return TextBox.SelectedText;
+            }
+            set
+            {
+               TextBox.SelectedText = value;
+            }
+        }
+
+        public void SelectAll()
+        {
+            TextBox.SelectAll();
         }
 
         private void EditNetSpellLoad(object sender, EventArgs e)
@@ -314,7 +365,7 @@ namespace GitUI.SpellChecker
                 .Enabled = (TextBox.SelectedText.Length > 0);
             AddContextMenuItem(selectAllMenuItemText.Text, SelectAllMenuItemClick);
 
-            AddContextMenuSeparator();
+            /*AddContextMenuSeparator();
 
             if (!string.IsNullOrEmpty(_spelling.CurrentWord))
             {
@@ -323,7 +374,7 @@ namespace GitUI.SpellChecker
             }
 
             string entireText = string.Format(translateEntireText.Text, CultureCodeToString(Settings.Dictionary));
-            AddContextMenuItem(entireText, translateText_Click);
+            AddContextMenuItem(entireText, translateText_Click);*/
 
             AddContextMenuSeparator();
 

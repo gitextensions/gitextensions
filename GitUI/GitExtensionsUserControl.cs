@@ -66,20 +66,17 @@ namespace GitUI
 
         protected void Translate()
         {
-            Translator.Translate(this, GitCommands.Settings.Translation);
+            Translator.Translate(this, GitCommands.Settings.CurrentTranslation);
             translated = true;
         }
 
         public virtual void AddTranslationItems(Translation translation)
         {
-            if (!string.IsNullOrEmpty(Text))
-                translation.AddTranslationItem(Name, "$this", "Text", Text);
             TranslationUtl.AddTranslationItemsFromFields(Name, this, translation);
         }
 
         public virtual void TranslateItems(Translation translation)
         {
-            Text = translation.TranslateItem(Name, "$this", "Text", Text);
             TranslationUtl.TranslateItemsFromFields(Name, this, translation);
         }
 
@@ -117,15 +114,5 @@ namespace GitUI
         }
 
         #endregion
-
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // GitExtensionsControl
-            // 
-            this.Name = "GitExtensionsControl";
-            this.ResumeLayout(false);
-        }
     }
 }
