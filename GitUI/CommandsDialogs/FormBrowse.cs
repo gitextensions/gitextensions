@@ -90,7 +90,6 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private readonly SynchronizationContext syncContext;
         private Dashboard _dashboard;
         private ToolStripItem _rebase;
         private ToolStripItem _bisect;
@@ -113,16 +112,14 @@ namespace GitUI.CommandsDialogs
         /// For VS designer
         /// </summary>
         private FormBrowse()
-            : this(null, string.Empty)
         {
+            InitializeComponent();
+            Translate();
         }
-
 
         public FormBrowse(GitUICommands aCommands, string filter)
             : base(true, aCommands)
         {
-            syncContext = SynchronizationContext.Current;
-
             InitializeComponent();
 
             // set tab page images
@@ -191,7 +188,7 @@ namespace GitUI.CommandsDialogs
 
         void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
         {
-            RefreshRevisions();
+            this.InvokeAsync(RefreshRevisions);
         }
 
         private void RefreshRevisions()
@@ -283,12 +280,12 @@ namespace GitUI.CommandsDialogs
 
         void _indexWatcher_Changed(bool indexChanged)
         {
-            syncContext.Post(o =>
+            this.InvokeAsync(() =>
             {
                 RefreshButton.Image = indexChanged && Settings.UseFastChecks && Module.IsValidGitWorkingDir()
                                           ? GitUI.Properties.Resources.arrow_refresh_dirty
                                           : GitUI.Properties.Resources.arrow_refresh;
-            }, this);
+            });
         }
 
         private bool pluginsLoaded;
@@ -1025,11 +1022,11 @@ namespace GitUI.CommandsDialogs
             return candidates.Where(fileName => fileName.ToLower().Contains(nameAsLower)).ToList();
         }
 
-        public void OpenWithOnClick(object sender, EventArgs e)
+        private string SaveSelectedItemToTempFile()
         {
             var gitItem = GitTree.SelectedNode.Tag as GitItem;
             if (gitItem == null || !gitItem.IsBlob)
-                return;
+                return null;
 
             var fileName = gitItem.FileName;
             if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
@@ -1039,7 +1036,28 @@ namespace GitUI.CommandsDialogs
 
             fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
             Module.SaveBlobAs(fileName, gitItem.Guid);
-            OsShellUtil.OpenAs(fileName);
+            return fileName;
+        }
+
+        public void OpenWithOnClick(object sender, EventArgs e)
+        {
+            var fileName = SaveSelectedItemToTempFile();
+            if (fileName != null)
+                OsShellUtil.OpenAs(fileName);
+        }
+
+        public void OpenOnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                var fileName = SaveSelectedItemToTempFile();
+                if (fileName != null)
+                    Process.Start(fileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message);
+            }
         }
 
         private void FileTreeContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1053,32 +1071,6 @@ namespace GitUI.CommandsDialogs
             openWithToolStripMenuItem.Enabled = enableItems;
             copyFilenameToClipboardToolStripMenuItem.Enabled = enableItems;
             editCheckedOutFileToolStripMenuItem.Enabled = enableItems;
-        }
-
-        public void OpenOnClick(object sender, EventArgs e)
-        {
-            try
-            {
-                var gitItem = GitTree.SelectedNode.Tag as GitItem;
-                if (gitItem == null || !gitItem.IsBlob)
-                    return;
-
-                var fileName = gitItem.FileName;
-                if (fileName.Contains("\\") && fileName.LastIndexOf("\\") < fileName.Length)
-                    fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
-                if (fileName.Contains("/") && fileName.LastIndexOf("/") < fileName.Length)
-                    fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
-
-                fileName = (Path.GetTempPath() + fileName).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
-
-                Module.SaveBlobAs(fileName, (gitItem).Guid);
-
-                Process.Start(fileName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message);
-            }
         }
 
         protected void LoadInTree(IEnumerable<IGitItem> items, TreeNodeCollection node)
@@ -2389,6 +2381,13 @@ namespace GitUI.CommandsDialogs
             base.OnClosing(e);
             if (_dashboard != null)
                 _dashboard.SaveSplitterPositions();
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            SetWorkingDir("");
+
+            base.OnClosed(e);
         }
 
         private void CloneSvnToolStripMenuItemClick(object sender, EventArgs e)

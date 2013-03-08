@@ -42,5 +42,7 @@ namespace GitUIPluginInterfaces
         string GetSelectedBranch();
 
         bool IsBareRepository();
+
+        bool IsRunningGitProcess();
     }
 }

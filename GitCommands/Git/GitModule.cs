@@ -1708,11 +1708,7 @@ namespace GitCommands
             {
                 if (!file.IsDeleted)
                     continue;
-                if (process2 == null)
-                    process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --remove --stdin");
-                //process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
-                process2.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
+                UpdateIndex(gitCommand, ref process2, file.Name);
             }
             if (process2 != null)
             {
@@ -1764,11 +1760,7 @@ namespace GitCommands
             {
                 if (!file.IsNew)
                     continue;
-                if (process2 == null)
-                    process2 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --force-remove --stdin");
-                //process2.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding, "\"" + FixPath(file.Name) + "\"" + process2.StandardInput.NewLine);
-                process2.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
+                UpdateIndex(gitCommand, ref process2, file.Name);
             }
             if (process2 != null)
             {
@@ -1780,6 +1772,16 @@ namespace GitCommands
                 output += gitCommand.Output.ToString();
 
             return output;
+        }
+
+        private static void UpdateIndex(GitCommandsInstance gitCommand, ref Process process, string filename)
+        {
+            if (process == null)
+                process = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --remove --stdin");
+            //process2.StandardInput.WriteLine("\"" + FixPath(filename) + "\"");
+            byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding,
+                                                      "\"" + FixPath(filename) + "\"" + process.StandardInput.NewLine);
+            process.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
         }
 
         public bool InTheMiddleOfBisect()
@@ -2712,7 +2714,7 @@ namespace GitCommands
 
                 var completeName = itemsString.Substring(41).Trim();
                 var guid = itemsString.Substring(0, 40);
-                var remoteName = GetRemoteName(completeName, remotes);
+                var remoteName = GitCommandHelpers.GetRemoteName(completeName, remotes);
                 var head = new GitHead(this, guid, completeName, remoteName);
                 if (DefaultHeadPattern.IsMatch(completeName))
                     defaultHeads[remoteName] = head;
@@ -2784,19 +2786,6 @@ namespace GitCommands
             if (info.Trim().StartsWith("fatal") || info.Trim().StartsWith("error:"))
                 return new List<string>();
             return info.Split(new[] { '\r', '\n', '*', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-        }
-
-        public static string GetRemoteName(string completeName, IEnumerable<string> remotes)
-        {
-            string trimmedName = completeName.StartsWith("refs/remotes/") ? completeName.Substring(13) : completeName;
-
-            foreach (string remote in remotes)
-            {
-                if (trimmedName.StartsWith(string.Concat(remote, "/")))
-                    return remote;
-            }
-
-            return string.Empty;
         }
 
         public IList<string> GetFiles(IEnumerable<string> filePatterns)

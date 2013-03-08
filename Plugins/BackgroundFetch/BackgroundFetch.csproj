@@ -3,15 +3,19 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}</ProjectGuid>
+    <ProjectGuid>{F261BCD1-F5F7-4664-A230-E52032E6E9FD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Github3</RootNamespace>
-    <AssemblyName>Github3</AssemblyName>
+    <RootNamespace>BackgroundFetch</RootNamespace>
+    <AssemblyName>BackgroundFetch</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -34,35 +38,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Git.hub, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\Git.hub.dll</HintPath>
-    </Reference>
-    <Reference Include="RestSharp, Version=104.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\RestSharp.104.1\lib\net4-client\RestSharp.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Reactive.Core, Version=2.1.30214.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Rx-Core.2.1.30214.0\lib\Net40\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=2.1.30214.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Rx-Interfaces.2.1.30214.0\lib\Net40\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=2.1.30214.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Rx-Linq.2.1.30214.0\lib\Net40\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices, Version=2.1.30214.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Rx-PlatformServices.2.1.30214.0\lib\Net40\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Github3.cs" />
-    <Compile Include="GithubBranch.cs" />
-    <Compile Include="GithubHostedRemote.cs" />
-    <Compile Include="GithubPullRequest.cs" />
-    <Compile Include="GithubPullRequestDiscussion.cs" />
-    <Compile Include="GithubRepo.cs" />
-    <Compile Include="OAuth.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="OAuth.Designer.cs">
-      <DependentUpon>OAuth.cs</DependentUpon>
-    </Compile>
+    <Compile Include="BackgroundFetchPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -76,30 +75,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="OAuth.resx">
-      <DependentUpon>OAuth.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent Condition=" '$(OS)' == 'Windows_NT' ">copy "$(TargetPath)" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
-copy "$(SolutionDir)\bin\Git.hub.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
-copy "$(SolutionDir)\bin\RestSharp.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
-</PostBuildEvent>
-    <PostBuildEvent Condition=" '$(OS)' != 'Windows_NT' ">cp `echo "$(TargetPath)" | tr -s "//" "/"` "../../../../GitExtensions/bin/$(ConfigurationName)/"
-cp "$(SolutionDir)Bin/Git.hub.dll" "../../../../GitExtensions/bin/$(ConfigurationName)/"
-cp "$(SolutionDir)Bin/RestSharp.dll" "../../../../GitExtensions/bin/$(ConfigurationName)/"
-</PostBuildEvent>
-  </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
-copy "$(SolutionDir)\bin\Git.hub.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
-</PostBuildEvent>
-  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

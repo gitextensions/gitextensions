@@ -20,12 +20,8 @@ namespace GitUI.CommitInfo
         private readonly TranslationString containedInTags = new TranslationString("Contained in tags:");
         private readonly TranslationString containedInNoTag = new TranslationString("Contained in no tag");
 
-        private readonly SynchronizationContext _syncContext;
-
         public CommitInfo()
         {
-            _syncContext = SynchronizationContext.Current;
-
             InitializeComponent();
             Translate();
         }
@@ -184,13 +180,13 @@ namespace GitUI.CommitInfo
         private void loadTagInfo(string revision)
         {
             _tagInfo = GetTagsWhichContainsThisCommit(revision, ShowBranchesAsLinks);
-            _syncContext.Post(  s => updateText(), null);
+            this.InvokeAsync(updateText);
         }
 
         private void loadBranchInfo(string revision)
         {
             _branchInfo = GetBranchesWhichContainsThisCommit(revision, ShowBranchesAsLinks);
-            _syncContext.Post(s => updateText(), null);
+            this.InvokeAsync(updateText);
         }
 
         private void updateText()
