@@ -243,7 +243,16 @@ namespace GitCommands
 
             string commitEncoding = lines[1];
 
-            int startIndex = 2;
+            const int startIndex = 2;
+            string message = ProccessDiffNotes(startIndex, lines);
+
+            //commit message is not reencoded by git when format is given
+            Debug.Assert(commitData.Guid == guid);
+            commitData.Body = aModule.ReEncodeCommitMessage(message, commitEncoding);
+        }
+
+        private static string ProccessDiffNotes(int startIndex, string[] lines)
+        {
             int endIndex = lines.Length - 1;
             if (lines[endIndex] == "Notes:")
                 endIndex--;
@@ -260,9 +269,7 @@ namespace GitCommands
                     bNotesStart = true;
             }
 
-            //commit message is not reencoded by git when format is given
-            Debug.Assert(commitData.Guid == guid);
-            commitData.Body = aModule.ReEncodeCommitMessage(message.ToString(), commitEncoding);
+            return message.ToString();
         }
 
         /// <summary>

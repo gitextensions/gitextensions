@@ -27,12 +27,13 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
-            commitPickerSmallControl1.UICommandsSource = this;
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
-            commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? null : revision.Guid);
+            commitPickerSmallControl1.UICommandsSource = this;
+            if (IsUICommandsInitialized)
+                commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? null : revision.Guid);
         }
 
-        private void FormTagSmall_Load(object sender, EventArgs e)
+        private void FormCreateTag_Load(object sender, EventArgs e)
         {
             textBoxTagName.Focus();
             _currentRemote = Module.GetCurrentRemote();

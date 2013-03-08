@@ -15,27 +15,18 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _branchNameIsNotValud =
             new TranslationString("“{0}” is not valid branch name.");
 
-        public FormCreateBranch(GitUICommands aCommands)
+        public FormCreateBranch(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
         {
             InitializeComponent();
             Translate();
 
             commitPickerSmallControl1.UICommandsSource = this;
+            if (IsUICommandsInitialized)
+                commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? null : revision.Guid);
         }
 
-        GitRevision _revision;
-        public GitRevision Revision
-        {
-            get { return _revision; }
-            set
-            {
-                _revision = value;
-                commitPickerSmallControl1.SetSelectedCommitHash(_revision.Guid);
-            }
-        }
-
-        private void FormCreateBranchAtRevision_Load(object sender, EventArgs e)
+        private void FormCreateBranch_Load(object sender, EventArgs e)
         {
             BranchNameTextBox.Focus();
         }
