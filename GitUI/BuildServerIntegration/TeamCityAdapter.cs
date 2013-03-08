@@ -117,15 +117,17 @@ namespace GitUI.BuildServerIntegration
                                                 GetBuildFromIdXmlResponseAsync(buildId, cancellationToken)
                                                     .ContinueWith(
                                                         task =>
-                                                        {
-                                                            var buildDetails = task.Result;
-                                                            var buildInfo = CreateBuildInfo(buildDetails);
-                                                            if (buildInfo.CommitHashList.Any())
                                                             {
-                                                                observer.OnNext(buildInfo);
-                                                            }
-                                                        },
-                                                        cancellationToken);
+                                                                var buildDetails = task.Result;
+                                                                var buildInfo = CreateBuildInfo(buildDetails);
+                                                                if (buildInfo.CommitHashList.Any())
+                                                                {
+                                                                    observer.OnNext(buildInfo);
+                                                                }
+                                                            },
+                                                        cancellationToken,
+                                                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.NotOnFaulted,
+                                                        TaskScheduler.Current);
 
                                             tasks.Add(notifyObserverTask);
                                             --buildsLeft;
