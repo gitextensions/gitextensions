@@ -427,7 +427,7 @@ S'il vous plait, assurez vous que git (msysgit ou cygwin) est installé ou rense
           <Value>Client SSH inconnu configuré : {0}</Value>
         </TranslationItem>
         <TranslationItem Name="_wrongGitVersion" Property="Text">
-          <Source>Git found but version {0} is not supported. Upgrage to version {1} or later</Source>
+          <Source>Git found but version {0} is not supported. Upgrade to version {1} or later</Source>
           <Value>Git a été trouvé mais la version {0} n'est pas supportée. Mettez à jour vers la version {1} ou supérieure</Value>
         </TranslationItem>
         <TranslationItem Name="gitCredentialWinStore_Fix" Property="Text">
