@@ -240,8 +240,8 @@ namespace GitUI
 
         private void IndexWatcherOnChanged(bool indexChanged)
         {
-            if (Settings.AutoRefreshRevisionGrid)
-                this.InvokeAsync(RefreshRevisions);
+            if (Settings.AutoRefreshRevisionGrid && indexChanged)
+                UICommands.RepoChangedNotifier.Notify();
         }
 
         public void SetInitialRevision(GitRevision initialSelectedRevision)
