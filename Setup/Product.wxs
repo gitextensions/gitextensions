@@ -125,7 +125,7 @@
         <File Source="..\bin\PSTaskDialog.dll"/>
       </Component>
       <Component Id="RestSharp.dll" Guid="*">
-        <File Source="..\bin\RestSharp.dll"/>
+        <File Source="..\packages\RestSharp.104.1\lib\net4-client\RestSharp.dll"/>
       </Component>
       <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
         <File Source="..\bin\Microsoft.WindowsAPICodePack.dll"/>
@@ -134,7 +134,7 @@
         <File Source="..\bin\Microsoft.WindowsAPICodePack.Shell.dll"/>
       </Component>
       <Component Id="NBug.dll" Guid="*">
-        <File Source="..\bin\NBug.dll"/>
+        <File Source="..\packages\NBug.1.1.1\lib\net40-client\NBug.dll"/>
       </Component>
 
       <Component Id="System.Reactive.Core.dll" Guid="*">
@@ -262,7 +262,7 @@
 		 <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll"/>
 	  </Component>		
       <Component Id="Newtonsoft.Json.dll" Guid="*">
-        <File Source="..\Plugins\Gerrit\Dependencies\Newtonsoft.Json.dll"/>
+        <File Source="..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll"/>
       </Component>
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
