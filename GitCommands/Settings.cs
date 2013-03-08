@@ -1013,6 +1013,14 @@ namespace GitCommands
             set { SafeSet("UseFormCommitMessage", value, ref _UseFormCommitMessage); }
         }
 
+        private static bool? _CommitForm_KeepSelectionOnFilesWhenStageUnstage;
+        public static bool CommitForm_KeepSelectionOnFilesWhenStageUnstage
+        {
+            get { return SafeGet("CommitForm_KeepSelectionOnFilesWhenStageUnstage", false, ref _CommitForm_KeepSelectionOnFilesWhenStageUnstage); }
+            set { SafeSet("CommitForm_KeepSelectionOnFilesWhenStageUnstage", value, ref _CommitForm_KeepSelectionOnFilesWhenStageUnstage); }
+        }
+
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";

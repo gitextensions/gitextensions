@@ -717,7 +717,9 @@ namespace GitUI.CommandsDialogs
                 return;
 
             Unstaged.SelectedItem = null;
-            ShowChanges(Staged.SelectedItems.First(), true);
+            GitItemStatus item = Staged.SelectedItems.FirstOrDefault();
+            if (item == null) return;
+            ShowChanges(item, true);
         }
 
         private void UntrackedSelectionChanged(object sender, EventArgs e)
@@ -730,7 +732,8 @@ namespace GitUI.CommandsDialogs
                 return;
 
             Staged.SelectedItem = null;
-            GitItemStatus item = Unstaged.SelectedItems.First();
+            GitItemStatus item = Unstaged.SelectedItems.FirstOrDefault();
+            if (item == null) return;
             ShowChanges(item, false);
 
             if (!item.IsSubmodule)
@@ -956,10 +959,10 @@ namespace GitUI.CommandsDialogs
 
         private void StageAll()
         {
-            Stage(Unstaged.GitItemStatuses);
+            Stage(Unstaged.GitItemStatuses, Unstaged.SelectedItems.ToList());
         }
 
-        private void Stage(IList<GitItemStatus> gitItemStatusses)
+        private void Stage(IList<GitItemStatus> gitItemStatusses, IList<GitItemStatus> selection = null)
         {
             EnableStageButtons(false);
             try
@@ -1022,8 +1025,17 @@ namespace GitUI.CommandsDialogs
                     unStagedFiles.RemoveAll(item => item.IsSubmodule && !item.SubmoduleStatus.IsDirty && unstagedItems.Contains(item));
                     foreach (var item in unstagedItems.Where(item => item.IsSubmodule && item.SubmoduleStatus.IsDirty))
                         item.SubmoduleStatus.Status = SubmoduleStatus.Unknown;
+                    var selectedItems = selection == null ? gitItemStatusses : selection;
+                    GitItemStatus selectedItem = selectedItems.First();
                     Unstaged.GitItemStatuses = unStagedFiles;
-                    Unstaged.SelectStoredNextIndex();
+                    if (Settings.CommitForm_KeepSelectionOnFilesWhenStageUnstage)
+                    {
+                        Staged.Select();
+                        Staged.SelectedItems = selectedItems;
+                        Staged.ActiveSelectedItem = selectedItem;
+                    }
+                    else
+                        Unstaged.SelectStoredNextIndex();
                 }                
 
                 toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
@@ -1134,7 +1146,15 @@ namespace GitUI.CommandsDialogs
                     }
                     Staged.GitItemStatuses = stagedFiles;
                     Unstaged.GitItemStatuses = unStagedFiles;
-                    Staged.SelectStoredNextIndex();
+                    GitItemStatus selectedItem = allFiles.First();
+                    if (Settings.CommitForm_KeepSelectionOnFilesWhenStageUnstage)
+                    {
+                        Unstaged.Select();
+                        Unstaged.SelectedItems = allFiles;
+                        Unstaged.ActiveSelectedItem = selectedItem;
+                    }
+                    else
+                        Staged.SelectStoredNextIndex();
 
                     toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
                 }
