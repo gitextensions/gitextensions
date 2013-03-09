@@ -229,12 +229,20 @@ namespace GitUI
             get
             {
                 if (_IndexWatcher == null)
+                {
                     _IndexWatcher = new IndexWatcher(UICommandsSource);
+                    _IndexWatcher.Changed += IndexWatcherOnChanged;
+                }
 
                 return _IndexWatcher;
             }
         }
 
+        private void IndexWatcherOnChanged(bool indexChanged)
+        {
+            if (Settings.AutoRefreshRevisionGrid && indexChanged)
+                UICommands.RepoChangedNotifier.Notify();
+        }
 
         public void SetInitialRevision(GitRevision initialSelectedRevision)
         {

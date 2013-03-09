@@ -87,11 +87,15 @@ namespace GitUI.RevisionGridClasses
             }
             set
             {
-                indexChanged = value;
                 GitIndexWatcher.EnableRaisingEvents = !IndexChanged;
 
-                if (Changed != null)
-                    Changed(IndexChanged);
+                if (value != indexChanged)
+                {
+                    indexChanged = value;
+
+                    if (Changed != null)
+                        Changed(IndexChanged);
+                }
             }
         }
 

@@ -65,7 +65,7 @@ namespace GitCommands
 
     public class ActionNotifier : LockableNotifier
     {
-        private Action NotifyAction;
+        private readonly Action NotifyAction;
 
         public ActionNotifier(Action aNotifyAction)
         {

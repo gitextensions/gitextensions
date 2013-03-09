@@ -21,6 +21,7 @@ namespace GitUI
 
             if (_IndexWatcher != null)
             {
+                _IndexWatcher.Changed -= IndexWatcherOnChanged;
                 _IndexWatcher.Dispose();
                 _IndexWatcher = null;
             }
