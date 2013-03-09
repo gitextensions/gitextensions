@@ -1,6 +1,8 @@
 ﻿using GitUIPluginInterfaces;
 using System;
 using System.Text;
+using System.Threading;
+
 
 namespace GitCommands
 {
@@ -11,9 +13,9 @@ namespace GitCommands
 
         protected abstract void InternalNotify();
 
-        private void CheckNotify()
+        private void CheckNotify(int aLockCount)
         {
-            if (!IsLocked && notifyRequested)
+            if (aLockCount == 0 && notifyRequested)
             {
                 notifyRequested = false;
                 InternalNotify();
@@ -25,7 +27,7 @@ namespace GitCommands
         public void Notify()
         {
             notifyRequested = true;
-            CheckNotify();
+            CheckNotify(lockCount);
         }
 
         /// <summary>
@@ -33,7 +35,7 @@ namespace GitCommands
         /// </summary>
         public void Lock()
         {
-            lockCount++;
+            Interlocked.Increment(ref lockCount);
         }
 
         /// <summary>
@@ -43,15 +45,15 @@ namespace GitCommands
         /// <param name="requestNotify">true if Notify has to be called</param>
         public void UnLock(bool requestNotify)
         {
-            if (lockCount > 0)
-                lockCount--;
-            else
+            int newCount = Interlocked.Decrement(ref lockCount);
+
+            if (newCount < 0)
                 throw new InvalidOperationException("There was no counterpart call to Lock");
 
             if (requestNotify)
-                Notify();
-            else
-                CheckNotify();
+                notifyRequested = true;
+
+            CheckNotify(newCount);
         }
 
         /// <summary>
