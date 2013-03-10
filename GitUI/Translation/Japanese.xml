@@ -629,7 +629,7 @@ Value:  {2} = {3}</Source>
           <Value>新規ブランチをプッシュする時に追跡先として設定</Value>
         </TranslationItem>
         <TranslationItem Name="chkAmmend" Property="Text">
-          <Source>Ammend last commit</Source>
+          <Source>Amend last commit</Source>
           <Value>コミットやり直し</Value>
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
