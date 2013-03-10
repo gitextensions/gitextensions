@@ -623,7 +623,7 @@ Value:  {2} = {3}</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkAmmend" Property="Text">
-          <Source>Ammend last commit</Source>
+          <Source>Amend last commit</Source>
           <Value>Laatste commit uitbreiden</Value>
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">

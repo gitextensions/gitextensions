@@ -639,7 +639,7 @@ Wert:  {2} = {3}</Value>
           <Value>Eine Tracking Referenz für einen gerade gepushten Branch anlegen</Value>
         </TranslationItem>
         <TranslationItem Name="chkAmmend" Property="Text">
-          <Source>Ammend last commit</Source>
+          <Source>Amend last commit</Source>
           <Value>Letzten Commit korrigieren (Amend)</Value>
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text">
