@@ -684,7 +684,7 @@ Valeur: {2} = {3}</Value>
           <Source>Add a tracking reference for newly pushed branch</Source>
           <Value>Ajouter un suivi de référence pour les branches nouvellement poussées</Value>
         </TranslationItem>
-        <TranslationItem Name="chkAmmend" Property="Text">
+        <TranslationItem Name="chkAmend" Property="Text">
           <Source>Amend last commit</Source>
           <Value>Modifier le dernier commit</Value>
         </TranslationItem>
