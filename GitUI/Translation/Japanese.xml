@@ -636,7 +636,7 @@ Value:  {2} = {3}</Source>
           <Source>Add a tracking reference for newly pushed branch</Source>
           <Value>新規ブランチをプッシュする時に追跡先として設定</Value>
         </TranslationItem>
-        <TranslationItem Name="chkAmmend" Property="Text">
+        <TranslationItem Name="chkAmend" Property="Text">
           <Source>Amend last commit</Source>
           <Value>コミットやり直し</Value>
         </TranslationItem>
