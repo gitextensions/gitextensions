@@ -630,7 +630,7 @@ Value:  {2} = {3}</Source>
           <Source>Add a tracking reference for newly pushed branch</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="chkAmmend" Property="Text">
+        <TranslationItem Name="chkAmend" Property="Text">
           <Source>Amend last commit</Source>
           <Value>Laatste commit uitbreiden</Value>
         </TranslationItem>
