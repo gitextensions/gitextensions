@@ -681,7 +681,7 @@ Valeur: {2} = {3}</Value>
           <Value>Ajouter un suivi de référence pour les branches nouvellement poussées</Value>
         </TranslationItem>
         <TranslationItem Name="chkAmmend" Property="Text">
-          <Source>Ammend last commit</Source>
+          <Source>Amend last commit</Source>
           <Value>Modifier le dernier commit</Value>
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text">
