@@ -4015,7 +4015,7 @@ _ReSharper*/</Value>
         </TranslationItem>
         <TranslationItem Name="Save" Property="Text">
           <Source>Save</Source>
-          <Value>Archivieren</Value>
+          <Value>Speichern</Value>
         </TranslationItem>
         <TranslationItem Name="_cannotAccessGitreview" Property="Text">
           <Source>Failed to save .gitreview.
@@ -4056,10 +4056,8 @@ project=department/project.git
 defaultbranch=master
 defaultremote=review
 defaultrebase=0</Source>
-          <Value>Erstellen Sie die Konfiguration für
-
+          <Value>Erstellen Sie die Konfiguration für 
 .gitreview, um Gerrit einzurichten.
-
 
 Beispiel Konfiguration:
 
@@ -4070,7 +4068,7 @@ port=29418
 project=department/project.git
 defaultbranch=master
 defaultremote=review
-defaultrebase=0	</Value>
+defaultrebase=0</Value>
         </TranslationItem>
         <TranslationItem Name="lnkGitReviewHelp" Property="Text">
           <Source>GitHub page for git-review</Source>
@@ -4403,7 +4401,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
           <Value>Das Gerrit Plugin für GitExtensions integriert Gerrit in GitExtensions. Dieses Plugin basiert auf dem git-review Tool.
 
 Um Gerrit Support für ein Repository zu aktivieren muss eine .gitreview Datei angelegt werden. Dies kann über die Option Einstellungen | Editiere .gitreview Menüoption ausgewählt werden.
-Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Date und dem git-review Tool.</Value>
+Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und dem git-review Befehl.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
