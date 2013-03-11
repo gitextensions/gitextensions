@@ -1,10 +1,9 @@
 Building installers for Git Extensions
 ======================================
 
-1. Download the Windows Installer XML (WiX) 3.0 toolset from
-   [here](http://wix.sourceforge.net/releases/) and install it.
-    * Latest stable version at the time of writing was 3.0.5419
-    * Version 3.5.x is not stable yet
+1. Download the Windows Installer XML (WiX) 3.7 toolset from
+   [here](http://wix.codeplex.com/releases/) and install it.
+    * Latest stable version at the time of writing was 3.7
 
 2. Edit CommonAssemblyInfo.cs and MakeInstallers.bat so that the line which 
    specifies the version is correct for the current release.
