@@ -39,6 +39,25 @@ Following steps will add nuget package management capabilities to your monoDevel
 * A new IDE extension option will appear, select the nuget package management
 * To add nuget packages or maintain it, you right click either on the solution or in the references
 
+On monoDevelop preferences, you will find a new "Nuget" option. Check the box that says "Enable package restore".
+
+If by any reason your xbuild is not downloading and installing the packages, manually run the following command to get all the missing packages.
+
+```
+gitextensions  (master)$ .nuget/Nuget.sh 
+Successfully installed 'NBug 1.1.1'.
+Successfully installed 'NUnit.Mocks 2.6.2'.
+Successfully installed 'NUnit 2.6.2'.
+Successfully installed 'Rx-Main 2.1.30214.0'.
+Successfully installed 'Rx-Core 2.1.30214.0'.
+Successfully installed 'Rx-Interfaces 2.1.30214.0'.
+Successfully installed 'Rx-PlatformServices 2.1.30214.0'.
+Successfully installed 'Rx-Linq 2.1.30214.0'.
+Successfully installed 'Newtonsoft.Json 4.5.11'.
+Successfully installed 'RestSharp 104.1'.
+Successfully installed 'NBug 1.1.1'.
+```
+
 ## Links
 
 * Download page: [http://code.google.com/p/gitextensions/downloads/list](http://code.google.com/p/gitextensions/downloads/list)
