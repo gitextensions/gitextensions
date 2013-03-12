@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -37,6 +38,13 @@ namespace GitCommands
     public sealed class GitModule : IGitModule
     {
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
+
+        static GitModule()
+        {
+            var catalog = new DirectoryCatalog(@".\");
+
+            GitModule.CompositionContainer = new CompositionContainer(catalog);
+        }
 
         public GitModule(string workingdir)
         {
@@ -1801,6 +1809,11 @@ namespace GitCommands
 
         private static readonly Regex HeadersMatch = new Regex(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$", RegexOptions.Compiled);
         private static readonly Regex QuotedText = new Regex(@"=\?([\w-]+)\?q\?(.*)\?=$", RegexOptions.Compiled);
+
+        /// <summary>
+        /// The MEF container.
+        /// </summary>
+        public static CompositionContainer CompositionContainer { get; private set; }
 
         public bool InTheMiddleOfInteractiveRebase()
         {

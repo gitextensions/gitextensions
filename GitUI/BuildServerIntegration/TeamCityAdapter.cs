@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -7,7 +8,6 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reactive.Concurrency;
-using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading;
@@ -19,20 +19,26 @@ using Nini.Config;
 
 namespace GitUI.BuildServerIntegration
 {
+    [Export(typeof(IBuildServerAdapter))]
+    [BuildServerAdapterMetadata("TeamCity")]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
     internal class TeamCityAdapter : IBuildServerAdapter
     {
-        private readonly IBuildServerWatcher buildServerWatcher;
+        private IBuildServerWatcher buildServerWatcher;
 
         private string ProjectName { get; set; }
 
-        private readonly HttpClient httpClient;
+        private HttpClient httpClient;
 
         private string httpClientHostSuffix;
 
-        private readonly Task<IEnumerable<string>> getBuildTypesTask;
+        private Task<IEnumerable<string>> getBuildTypesTask;
 
-        public TeamCityAdapter(IBuildServerWatcher buildServerWatcher, IConfig config)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, IConfig config)
         {
+            if (this.buildServerWatcher != null)
+                throw new InvalidOperationException("Already initialized");
+
             this.buildServerWatcher = buildServerWatcher;
 
             var hostName = config.Get("BuildServerUrl");
