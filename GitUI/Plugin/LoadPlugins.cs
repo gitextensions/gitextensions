@@ -1,18 +1,25 @@
-﻿using System;
+﻿﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace GitUI
 {
     public static class PluginLoader
     {
+        private static readonly string[] ExcludedFiles = new[]
+            {
+                "Microsoft.WindowsAPICodePack.dll",
+                "Microsoft.WindowsAPICodePack.Shell.dll",
+                "git2.dll"
+            };
         public static void Load()
         {
-            lock (GitUI.Plugin.LoadedPlugins.Plugins)
+            lock (Plugin.LoadedPlugins.Plugins)
             {
-                if (GitUI.Plugin.LoadedPlugins.Plugins.Count > 0)
+                if (Plugin.LoadedPlugins.Plugins.Count > 0)
                     return;
 
                 var file = new FileInfo(Application.ExecutablePath);
@@ -28,20 +35,16 @@ namespace GitUI
                                    : new FileInfo[] { };
 #endif
 
-                foreach (var pluginFile in plugins)
+                var pluginFiles = plugins.Where(pluginFile => pluginFile.Name != "git2.dll" && !pluginFile.Name.StartsWith("Microsoft."));
+                foreach (var pluginFile in pluginFiles)
                 {
-                    if (pluginFile.Name.StartsWith("Microsoft."))
-                    {
-                        continue;
-                    }
-
                     try
                     {
                         var types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
                         Debug.WriteLine("Loading plugin...", pluginFile.Name);
                         PluginExtraction.ExtractPluginTypes(types);
                     }
-                    catch (Exception ex)
+                    catch (SystemException ex)
                     {
                         string exInfo = "Exception info:\r\n";
 
