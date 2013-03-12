@@ -980,7 +980,7 @@ namespace GitUI
             if (Settings.MaxRevisionGraphCommits > 0)
                 revListParams += string.Format("--max-count=\"{0}\" ", (int)Settings.MaxRevisionGraphCommits);
 
-            var allrevisions = Module.RunGitCmdAsync(revListParams + initRevision);
+            var allrevisions = Module.ReadGitOutputLines(revListParams + initRevision);
             foreach (var rev in allrevisions)
             {
                 int index;
