@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.BuildServerIntegration;
 using GitUI.HelperDialogs;
 using GitUI.RevisionGridClasses;
 using Nini.Config;
@@ -256,20 +255,26 @@ namespace GitUI.BuildServerIntegration
 
                 if (buildServerConfig != null)
                 {
-                    var buildServerType = (BuildServerType)Enum.Parse(typeof(BuildServerType), buildServerConfig.GetString("ActiveBuildServerType", BuildServerType.None.ToString()));
-                    var config = buildServerConfigSource.Configs[buildServerType.ToString()];
+                    var buildServerType = buildServerConfig.GetString("ActiveBuildServerType");
+                    if (!string.IsNullOrEmpty(buildServerType))
+                    {
+                        var exports = GitModule.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+                        var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
 
-                    try
-                    {
-                        switch (buildServerType)
+                        if (export != null)
                         {
-                            case BuildServerType.TeamCity:
-                                return new TeamCityAdapter(this, config);
+                            try
+                            {
+                                var buildServerAdapter = export.Value;
+                                var config = buildServerConfigSource.Configs[buildServerType];
+                                buildServerAdapter.Initialize(this, config);
+                                return buildServerAdapter;
+                            }
+                            catch (InvalidOperationException)
+                            {
+                                // Invalid arguments, do not return a build server adapter
+                            }
                         }
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        // Invalid arguments, do not return a build server adapter
                     }
                 }
             }

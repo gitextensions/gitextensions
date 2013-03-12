@@ -67,9 +67,6 @@ namespace GitUI.CommandsDialogs.EditBuildServer
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BuildServerType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.BuildServerType.FormattingEnabled = true;
-            this.BuildServerType.Items.AddRange(new object[] {
-            "(None)",
-            "TeamCity"});
             this.BuildServerType.Location = new System.Drawing.Point(112, 62);
             this.BuildServerType.Name = "BuildServerType";
             this.BuildServerType.Size = new System.Drawing.Size(230, 23);

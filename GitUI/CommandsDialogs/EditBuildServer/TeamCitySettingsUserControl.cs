@@ -1,19 +1,28 @@
+using System.ComponentModel.Composition;
 using System.Windows.Forms;
+using GitUI.BuildServerIntegration;
 using Nini.Config;
 
 namespace GitUI.CommandsDialogs.EditBuildServer
 {
-    public partial class TeamCitySettingsUserControl : GitExtensionsControl
+    [Export(typeof(IBuildServerSettingsUserControl))]
+    [BuildServerSettingsUserControlMetadata("TeamCity")]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
+    public partial class TeamCitySettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
     {
-        private readonly string _defaultProjectName;
+        private string _defaultProjectName;
 
-        public TeamCitySettingsUserControl(string defaultProjectName)
+        public TeamCitySettingsUserControl()
         {
-            _defaultProjectName = defaultProjectName;
             InitializeComponent();
             Translate();
 
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+        }
+
+        public void Initialize(string defaultProjectName)
+        {
+            _defaultProjectName = defaultProjectName;
         }
 
         public void LoadSettings(IConfig buildServerConfig)
