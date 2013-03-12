@@ -106,43 +106,51 @@ namespace GitUI.BuildServerIntegration
 
                                 getBuildIdsTask.ContinueWith(
                                     buildIdTask =>
-                                    {
-                                        var tasks = new List<Task>(8);
-                                        var buildIds = buildIdTask.Result;
-                                        var buildsLeft = buildIds.Length;
-
-                                        foreach (var buildId in buildIds.OrderByDescending(int.Parse))
                                         {
-                                            var notifyObserverTask =
-                                                GetBuildFromIdXmlResponseAsync(buildId, cancellationToken)
-                                                    .ContinueWith(
-                                                        task =>
-                                                            {
-                                                                var buildDetails = task.Result;
-                                                                var buildInfo = CreateBuildInfo(buildDetails);
-                                                                if (buildInfo.CommitHashList.Any())
-                                                                {
-                                                                    observer.OnNext(buildInfo);
-                                                                }
-                                                            },
-                                                        cancellationToken,
-                                                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.NotOnFaulted,
-                                                        TaskScheduler.Current);
+                                            var tasks = new List<Task>(8);
+                                            var buildIds = buildIdTask.Result;
+                                            var buildsLeft = buildIds.Length;
 
-                                            tasks.Add(notifyObserverTask);
-                                            --buildsLeft;
-
-                                            if (tasks.Count == tasks.Capacity || buildsLeft == 0)
+                                            foreach (var buildId in buildIds.OrderByDescending(int.Parse))
                                             {
-                                                var batchTasks = tasks.ToArray();
-                                                tasks.Clear();
+                                                var notifyObserverTask =
+                                                    GetBuildFromIdXmlResponseAsync(buildId, cancellationToken)
+                                                        .ContinueWith(
+                                                            task =>
+                                                                {
+                                                                    var buildDetails = task.Result;
+                                                                    var buildInfo = CreateBuildInfo(buildDetails);
+                                                                    if (buildInfo.CommitHashList.Any())
+                                                                    {
+                                                                        observer.OnNext(buildInfo);
+                                                                    }
+                                                                },
+                                                            cancellationToken,
+                                                            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.NotOnFaulted,
+                                                            TaskScheduler.Current);
 
-                                                Task.WaitAll(batchTasks, cancellationToken);
+                                                tasks.Add(notifyObserverTask);
+                                                --buildsLeft;
+
+                                                if (tasks.Count == tasks.Capacity || buildsLeft == 0)
+                                                {
+                                                    var batchTasks = tasks.ToArray();
+                                                    tasks.Clear();
+
+                                                    try
+                                                    {
+                                                        Task.WaitAll(batchTasks, cancellationToken);
+                                                    }
+                                                    catch (OperationCanceledException e)
+                                                    {
+                                                        observer.OnError(e);
+                                                        break;
+                                                    }
+                                                }
                                             }
-                                        }
 
-                                        observer.OnCompleted();
-                                    });
+                                            observer.OnCompleted();
+                                        });
                             }
                             catch (OperationCanceledException)
                             {
