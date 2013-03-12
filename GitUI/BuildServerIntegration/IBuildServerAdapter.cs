@@ -1,11 +1,14 @@
 using System;
 using System.Reactive.Concurrency;
 using GitCommands;
+using Nini.Config;
 
 namespace GitUI.BuildServerIntegration
 {
     public interface IBuildServerAdapter
     {
+        void Initialize(IBuildServerWatcher buildServerWatcher, IConfig config);
+
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
