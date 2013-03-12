@@ -22,7 +22,8 @@ namespace GitCommands.Repository
             try
             {
                 DirInfo = new DirectoryInfo(Repo.Path);
-            }catch(Exception)
+            }
+            catch (SystemException)
             {
                 DirInfo = null;
                 Caption = Repo.Path;

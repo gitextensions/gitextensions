@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void linkGitRevParse_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"http://www.kernel.org/pub/software/scm/git/docs/git-rev-parse.html");
+            Process.Start(@"https://www.kernel.org/pub/software/scm/git/docs/git-rev-parse.html#_specifying_ranges");
         }
 
         private void comboBoxTags_Enter(object sender, EventArgs e)
