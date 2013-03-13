@@ -31,7 +31,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormGoToCommit));
             this.goButton = new System.Windows.Forms.Button();
             this.commitExpression = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -94,10 +93,10 @@
             this.linkGitRevParse.AutoSize = true;
             this.linkGitRevParse.Location = new System.Drawing.Point(19, 112);
             this.linkGitRevParse.Name = "linkGitRevParse";
-            this.linkGitRevParse.Size = new System.Drawing.Size(283, 15);
+            this.linkGitRevParse.Size = new System.Drawing.Size(126, 15);
             this.linkGitRevParse.TabIndex = 0;
             this.linkGitRevParse.TabStop = true;
-            this.linkGitRevParse.Text = "More (git-rev-parse, section SPECIFYING REVISIONS)";
+            this.linkGitRevParse.Text = "More see git-rev-parse";
             this.linkGitRevParse.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkGitRevParse_LinkClicked);
             // 
             // label2
