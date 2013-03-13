@@ -11,7 +11,8 @@ namespace GitCommands
         private IList<IGitItem> _subItems;
         public GitModule Module { get; private set; }
 
-        public GitHead(GitModule module, string guid, string completeName) : this(module, guid, completeName, string.Empty) {}
+        public GitHead(GitModule module, string guid, string completeName)
+            : this(module, guid, completeName, string.Empty) { }
 
         public GitHead(GitModule module, string guid, string completeName, string remote)
         {
@@ -20,10 +21,22 @@ namespace GitCommands
             Selected = false;
             CompleteName = completeName;
             Remote = remote;
-            IsTag = CompleteName.Contains("refs/tags/");
-            IsHead = CompleteName.Contains("refs/heads/");
-            IsRemote = CompleteName.Contains("refs/remotes/");
-            IsBisect = CompleteName.Contains("refs/bisect/");
+            if (CompleteName.StartsWith("refs/heads/"))
+            {
+                IsHead = true;
+            }
+            else if (CompleteName.StartsWith("refs/tags/"))
+            {
+                IsTag = true;
+            }
+            else if (CompleteName.StartsWith("refs/remotes/"))
+            {
+                IsRemote = true;
+            }
+            else if (CompleteName.StartsWith("refs/bisect/"))
+            {
+                IsBisect = true;
+            }
 
             ParseName();
 
@@ -53,9 +66,9 @@ namespace GitCommands
 
         public string TrackingRemote
         {
-            get 
+            get
             {
-                return GetTrackingRemote(Module.GetLocalConfig());    
+                return GetTrackingRemote(Module.GetLocalConfig());
             }
             set
             {
