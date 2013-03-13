@@ -41,7 +41,7 @@ namespace GitCommands
 
         static GitModule()
         {
-            var catalog = new DirectoryCatalog(@".\");
+            var catalog = new DirectoryCatalog(@".\", "*.dll");
 
             GitModule.CompositionContainer = new CompositionContainer(catalog);
         }
