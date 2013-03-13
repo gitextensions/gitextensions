@@ -8,13 +8,5 @@
             Text = "Plugins Settings";
             Translate();
         }
-
-        public override bool IsInstantSavePage
-        {
-            get
-            {
-                return true;
-            }
-        }
     }
 }
