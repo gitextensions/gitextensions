@@ -275,6 +275,13 @@ namespace GitUI
                 return FileStatusListView.SelectedItems.Cast<ListViewItem>().
                     Select(i => (GitItemStatus)i.Tag);
             }
+            set
+            {
+                ClearSelected();
+                foreach (ListViewItem item in FileStatusListView.Items)
+                    if (value.Select(s=>s.Name).Contains(((GitItemStatus)item.Tag).Name))
+                        item.Selected = true; ;
+            }
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -294,6 +301,24 @@ namespace GitUI
                     return;
                 foreach (ListViewItem item in FileStatusListView.SelectedItems)
                     if (item.Tag == value)
+                        item.Selected = true;
+            }
+        }
+
+        /// <summary>
+        /// Property can be used to actually select GitItemStatus entry in the list
+        /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public GitItemStatus ActiveSelectedItem
+        {
+            get { return SelectedItem; }
+            set
+            {
+                if (value == null)
+                    return;
+                foreach (ListViewItem item in FileStatusListView.Items)
+                    if (((GitItemStatus)item.Tag).Name == value.Name)
                         item.Selected = true;
             }
         }
