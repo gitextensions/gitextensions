@@ -3,8 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.BuildServerIntegration;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.BuildServerIntegration;
 using Nini.Config;
 
 namespace GitUI.CommandsDialogs.EditBuildServer
