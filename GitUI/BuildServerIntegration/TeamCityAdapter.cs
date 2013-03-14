@@ -107,8 +107,24 @@ namespace GitUI.BuildServerIntegration
                                 var buildTypes = getBuildTypesTask.Result;
                                 var buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, CancellationToken.None, sinceDate, running)).ToArray();
                                 var getBuildIdsTask = Task.Factory
-                                                          .ContinueWhenAll(buildIdTasks, completedTasks => completedTasks.SelectMany(buildIdTask => buildIdTask.Result.XPathSelectElements("/builds/build").Select(x => x.Attribute("id").Value)).ToArray())
-                                                          .ContinueWith(completedTask => buildIdTasks.SelectMany(buildIdTask => buildIdTask.Result.XPathSelectElements("/builds/build").Select(x => x.Attribute("id").Value)).ToArray());
+                                                          .ContinueWhenAll(
+                                                              buildIdTasks,
+                                                              completedTasks =>
+                                                              completedTasks.Where(task => !task.IsFaulted)
+                                                                            .SelectMany(
+                                                                                buildIdTask =>
+                                                                                buildIdTask.Result
+                                                                                           .XPathSelectElements("/builds/build")
+                                                                                           .Select(x => x.Attribute("id").Value))
+                                                                            .ToArray())
+                                                          .ContinueWith(
+                                                              completedTask =>
+                                                              buildIdTasks.SelectMany(
+                                                                  buildIdTask =>
+                                                                  buildIdTask.Result
+                                                                             .XPathSelectElements("/builds/build")
+                                                                             .Select(x => x.Attribute("id").Value))
+                                                                          .ToArray());
 
                                 getBuildIdsTask.ContinueWith(
                                     buildIdTask =>
@@ -226,17 +242,25 @@ namespace GitUI.BuildServerIntegration
                              .ContinueWith(
                                  task =>
                                      {
-                                         bool unauthorized = task.Result.StatusCode == HttpStatusCode.Unauthorized;
+                                         bool retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
+                                         bool unauthorized = task.IsCompleted && task.Result.StatusCode == HttpStatusCode.Unauthorized;
 
-                                         // task.Result.Content.Headers.ContentType.MediaType = "application/xml";
-                                         // task.Result.Content.Headers.Allow.Add()
                                          if (task.Result.IsSuccessStatusCode)
                                          {
                                              if (task.Result.Content.Headers.ContentType.MediaType == "text/html")
                                              {
-                                                 // TeamCity responds with an HTML page when guest access is denied. Treat this scenario as an HttpStatusCode.Unauthorized.
-                                                 return GetStreamAsync(restServicePath, cancellationToken);
+                                                 // TeamCity responds with an HTML login page when guest access is denied. Retrying the request normally helps.
+                                                 retry = true;
                                              }
+                                             else
+                                             {
+                                                 return task.Result.Content.ReadAsStreamAsync();
+                                             }
+                                         }
+
+                                         if (retry)
+                                         {
+                                             return GetStreamAsync(restServicePath, cancellationToken);
                                          }
 
                                          if (unauthorized)
