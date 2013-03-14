@@ -1679,18 +1679,20 @@ namespace GitCommands
                     output = gitCommand.Output.ToString().Trim();
             }
 
-            Process process2 = null;
+            Lazy<Process> process2 = new Lazy<Process>(() => 
+                gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --remove --stdin"));
+
             foreach (var file in files)
             {
                 if (!file.IsDeleted)
                     continue;
-                UpdateIndex(gitCommand, ref process2, file.Name);
+                UpdateIndex(process2, file.Name);
             }
-            if (process2 != null)
+            if (process2.IsValueCreated)
             {
-                process2.StandardInput.Close();
-                process2.WaitForExit();
-                wereErrors = wereErrors || process2.ExitCode != 0;
+                process2.Value.StandardInput.Close();
+                process2.Value.WaitForExit();
+                wereErrors = wereErrors || process2.Value.ExitCode != 0;
 
                 if (gitCommand.Output != null)
                 {
@@ -1731,17 +1733,19 @@ namespace GitCommands
             if (gitCommand.Output != null)
                 output = gitCommand.Output.ToString();
 
-            Process process2 = null;
+            Lazy<Process> process2 = new Lazy<Process>(() =>
+                gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --force-remove --stdin"));
+
             foreach (var file in files)
             {
                 if (!file.IsNew)
                     continue;
-                UpdateIndex(gitCommand, ref process2, file.Name);
+                UpdateIndex(process2, file.Name);
             }
-            if (process2 != null)
+            if (process2.IsValueCreated)
             {
-                process2.StandardInput.Close();
-                process2.WaitForExit();
+                process2.Value.StandardInput.Close();
+                process2.Value.WaitForExit();
             }
 
             if (gitCommand.Output != null)
@@ -1750,14 +1754,11 @@ namespace GitCommands
             return output;
         }
 
-        private static void UpdateIndex(GitCommandsInstance gitCommand, ref Process process, string filename)
+        private static void UpdateIndex(Lazy<Process> process, string filename)
         {
-            if (process == null)
-                process = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --remove --stdin");
-            //process2.StandardInput.WriteLine("\"" + FixPath(filename) + "\"");
             byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding,
-                                                      "\"" + FixPath(filename) + "\"" + process.StandardInput.NewLine);
-            process.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
+                                                      "\"" + FixPath(filename) + "\"" + process.Value.StandardInput.NewLine);
+            process.Value.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
         }
 
         public bool InTheMiddleOfBisect()
