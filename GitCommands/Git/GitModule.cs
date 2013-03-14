@@ -665,16 +665,51 @@ namespace GitCommands
 
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        private IEnumerable<string> RunCmdAsync(string cmd, string arguments, string stdInput, Encoding encoding)
+        private IEnumerable<string> ReadCmdOutputLines(string cmd, string arguments, string stdInput, Encoding encoding)
         {
             GitCommandHelpers.SetEnvironmentVariable();
             arguments = arguments.Replace("$QUOTE$", "\\\"");
             return GitCommandHelpers.CreateAndStartProcessAsync(arguments, cmd, _workingdir, stdInput, encoding);
         }
 
-        public IEnumerable<string> RunGitCmdAsync(string arguments)
+        public IEnumerable<string> ReadGitOutputLines(string arguments)
         {
-            return RunCmdAsync(Settings.GitCommand, arguments, null, SystemEncoding);
+            return ReadCmdOutputLines(Settings.GitCommand, arguments, null, SystemEncoding);
+        }
+
+        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
+        public void RunGitCmdAndNotWait(string arguments)
+        {
+            GitCommandHelpers.SetEnvironmentVariable();
+
+            string cmd = Settings.GitCommand;
+            Settings.GitLog.Log(cmd + " " + arguments);
+            //process used to execute external commands
+
+            var info = new ProcessStartInfo
+            {
+                UseShellExecute = true,
+                ErrorDialog = true,
+                RedirectStandardOutput = false,
+                RedirectStandardInput = false,
+                RedirectStandardError = false,
+
+                LoadUserProfile = true,
+                CreateNoWindow = false,
+                FileName = cmd,
+                Arguments = arguments,
+                WorkingDirectory = _workingdir,
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
+
+            try
+            {
+                Process.Start(info);
+            }
+            catch (Win32Exception ex)
+            {
+                Trace.WriteLine(ex);
+            }
         }
 
         public string RunBatchFile(string batchFile)
@@ -688,40 +723,6 @@ namespace GitCommands
             string result = RunCmd("cmd.exe", "/C \"" + tempFileName + "\"");
             File.Delete(tempFileName);
             return result;
-        }
-
-        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public void RunCmdAsync(string cmd, string arguments)
-        {
-            GitCommandHelpers.SetEnvironmentVariable();
-
-            Settings.GitLog.Log(cmd + " " + arguments);
-            //process used to execute external commands
-
-            var info = new ProcessStartInfo
-                           {
-                               UseShellExecute = true,
-                               ErrorDialog = true,
-                               RedirectStandardOutput = false,
-                               RedirectStandardInput = false,
-                               RedirectStandardError = false,
-
-                               LoadUserProfile = true,
-                               CreateNoWindow = false,
-                               FileName = cmd,
-                               Arguments = arguments,
-                               WorkingDirectory = _workingdir,
-                               WindowStyle = ProcessWindowStyle.Hidden
-                           };
-
-            try
-            {
-                Process.Start(info);
-            }
-            catch (Win32Exception ex)
-            {
-                Trace.WriteLine(ex);
-            }
         }
 
         public void EditNotes(string revision)
@@ -1247,7 +1248,7 @@ namespace GitCommands
 
         public IEnumerable<IGitSubmodule> GetSubmodules()
         {
-            var submodules = RunGitCmdAsync("submodule status");
+            var submodules = ReadGitOutputLines("submodule status");
 
             string lastLine = null;
 
@@ -3079,11 +3080,9 @@ namespace GitCommands
 
             string args = string.Join(" ", extraDiffArguments, revision2.QuoteNE(), revision1.QuoteNE(), "--", filename, oldFileName);
             if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
-                RunCmdAsync(Settings.GitCommand,
-                            "difftool --gui --no-prompt " + args);
+                RunGitCmdAndNotWait("difftool --gui --no-prompt " + args);
             else
-                output = RunCmd(Settings.GitCommand,
-                                "difftool --no-prompt " + args);
+                output = RunGitCmd("difftool --no-prompt " + args);
             return output;
         }
 

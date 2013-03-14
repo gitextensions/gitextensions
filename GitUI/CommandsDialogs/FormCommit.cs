@@ -1637,26 +1637,21 @@ namespace GitUI.CommandsDialogs
 
         private bool SenderToFileStatusList(object sender, out FileStatusList list)
         {
-            if (sender is ToolStripMenuItem)
-            {
-                ToolStripMenuItem item = sender as ToolStripMenuItem;
-                if (item.Owner is ContextMenuStrip)
-                {
-                    ContextMenuStrip menu = item.Owner as ContextMenuStrip;
-                    if (menu.SourceControl is ListBox)
-                    {
-                        ListBox lb = menu.SourceControl as ListBox;
-                        if (lb.Parent is FileStatusList)
-                        {
-                            list = lb.Parent as FileStatusList;
-                            return true;
-                        }
-                    }
-                }
-
-            }
             list = null;
-            return false;
+            ToolStripMenuItem item = sender as ToolStripMenuItem;
+            if (item == null)
+                return false;
+
+            ContextMenuStrip menu = item.Owner as ContextMenuStrip;
+            if (menu == null)
+                return false;
+
+            ListView lv = menu.SourceControl as ListView;
+            if (lv == null)
+                return false;
+
+            list = lv.Parent as FileStatusList;
+            return (list != null);
         }
 
         private void ViewFileHistoryMenuItem_Click(object sender, EventArgs e)

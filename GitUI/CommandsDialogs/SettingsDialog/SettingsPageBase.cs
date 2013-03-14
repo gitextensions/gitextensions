@@ -83,13 +83,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             List<string> texts = new List<string>();
             foreach (Control child in control.Controls)
             {
-                if (!child.Visible || child is TextBox || 
-                    child is ComboBox || child is NumericUpDown)
-                {// skip: invisible; input controls
+                if (!child.Visible || child is NumericUpDown)
+                {// skip: invisible; some input controls
                     continue;
                 }
+
                 if (child.Enabled && !string.IsNullOrWhiteSpace(child.Text))
                 {// enabled AND not whitespace -> add
+                    // also searches text boxes and comboboxes
+                    // TODO(optional): search through the drop down list of comboboxes
+                    // TODO(optional): convert numeric dropdown values to text
                     texts.Add(child.Text.Trim().ToLowerInvariant());
                 }
                 texts.AddRange(GetChildrenText(child));// recurse
