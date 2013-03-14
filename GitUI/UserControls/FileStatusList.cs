@@ -36,16 +36,16 @@ namespace GitUI
             if (_images == null)
             {
                 _images = new ImageList();
-                _images.Images.Add(Resources.Removed);
-                _images.Images.Add(Resources.Added);
-                _images.Images.Add(Resources.Modified);
-                _images.Images.Add(Resources.Renamed);
-                _images.Images.Add(Resources.Copied);
-                _images.Images.Add(Resources.IconSubmoduleDirty);
-                _images.Images.Add(Resources.IconSubmoduleRevisionUp);
-                _images.Images.Add(Resources.IconSubmoduleRevisionUpDirty);
-                _images.Images.Add(Resources.IconSubmoduleRevisionDown);
-                _images.Images.Add(Resources.IconSubmoduleRevisionDownDirty);
+                _images.Images.Add(Resources.Removed); // 0
+                _images.Images.Add(Resources.Added); // 1
+                _images.Images.Add(Resources.Modified); // 2
+                _images.Images.Add(Resources.Renamed); // 3
+                _images.Images.Add(Resources.Copied); // 4
+                _images.Images.Add(Resources.IconSubmoduleDirty); // 5
+                _images.Images.Add(Resources.IconSubmoduleRevisionUp); // 6
+                _images.Images.Add(Resources.IconSubmoduleRevisionUpDirty); // 7
+                _images.Images.Add(Resources.IconSubmoduleRevisionDown); // 8
+                _images.Images.Add(Resources.IconSubmoduleRevisionDownDirty); // 9
             }
             FileStatusListView.SmallImageList = _images;
             FileStatusListView.LargeImageList = _images;
@@ -115,10 +115,11 @@ namespace GitUI
             if ((e.Bounds.Height - ImageSize) > 1)
                 centeredImageTop = e.Bounds.Top + ((e.Bounds.Height - ImageSize) / 2);
 
-            var image = e.Item.ImageList.Images[e.Item.ImageIndex];
-
-            if (image != null)
+            if (e.Item.ImageIndex != -1)
+            {
+                var image = e.Item.ImageList.Images[e.Item.ImageIndex];
                 e.Graphics.DrawImage(image, e.Bounds.Left, centeredImageTop, ImageSize, ImageSize);
+            }
 
             GitItemStatus gitItemStatus = (GitItemStatus)e.Item.Tag;
 
@@ -384,12 +385,11 @@ namespace GitUI
                     return 2;
 
                 var status = gitItemStatus.SubmoduleStatus;
-                if (status.IsDirty && status.Commit == status.OldCommit)
-                    return 5;
                 if (status.Status == SubmoduleStatus.FastForward || status.Status == SubmoduleStatus.NewerTime)
                     return 6 + (status.IsDirty ? 1 : 0);
                 if (status.Status == SubmoduleStatus.Rewind || status.Status == SubmoduleStatus.OlderTime)
                     return 8 + (status.IsDirty ? 1 : 0);
+                return !status.IsDirty ? 2 : 5;
             }
             else if (gitItemStatus.IsRenamed)
                 return 3;

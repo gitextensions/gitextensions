@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -18,9 +18,9 @@ namespace GitUI
             };
         public static void Load()
         {
-            lock (GitUI.Plugin.LoadedPlugins.Plugins)
+            lock (Plugin.LoadedPlugins.Plugins)
             {
-                if (GitUI.Plugin.LoadedPlugins.Plugins.Count > 0)
+                if (Plugin.LoadedPlugins.Plugins.Count > 0)
                     return;
 
                 var file = new FileInfo(Application.ExecutablePath);
@@ -36,7 +36,7 @@ namespace GitUI
                                    : new FileInfo[] { };
 #endif
 
-                var pluginFiles = plugins.Where(pluginFile => !ExcluedFiles.Contains(pluginFile.Name) || pluginFile.Name.StartsWith("Microsoft."));
+                var pluginFiles = plugins.Where(pluginFile => pluginFile.Name != "git2.dll" && !pluginFile.Name.StartsWith("Microsoft."));
                 foreach (var pluginFile in pluginFiles)
                 {
                     try
@@ -45,7 +45,7 @@ namespace GitUI
                         Debug.WriteLine("Loading plugin...", pluginFile.Name);
                         PluginExtraction.ExtractPluginTypes(types);
                     }
-                    catch (Exception ex)
+                    catch (SystemException ex)
                     {
                         string exInfo = "Exception info:\r\n";
 
