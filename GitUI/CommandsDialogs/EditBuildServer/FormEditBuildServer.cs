@@ -3,7 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.BuildServerIntegration;
+using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.BuildServerIntegration;
 using Nini.Config;
 
 namespace GitUI.CommandsDialogs.EditBuildServer
@@ -25,7 +26,7 @@ namespace GitUI.CommandsDialogs.EditBuildServer
         {
             base.OnRuntimeLoad(e);
 
-            var exports = GitModule.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+            var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
 
             BuildServerType.DataSource = new[] { NoneItem }.Concat(exports.Select(export => export.Metadata.BuildServerType)).ToArray();
 
@@ -66,7 +67,7 @@ namespace GitUI.CommandsDialogs.EditBuildServer
             {
                 var defaultProjectName = Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
 
-                var exports = GitModule.CompositionContainer.GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>();
+                var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>();
                 var selectedExport = exports.SingleOrDefault(export => export.Metadata.BuildServerType == GetSelectedBuildServerType());
                 if (selectedExport != null)
                 {

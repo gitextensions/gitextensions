@@ -1,6 +1,6 @@
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
-using GitUI.BuildServerIntegration;
+using GitUIPluginInterfaces.BuildServerIntegration;
 using Nini.Config;
 
 namespace GitUI.CommandsDialogs.EditBuildServer

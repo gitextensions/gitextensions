@@ -12,6 +12,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
 using GitUI.RevisionGridClasses;
+using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.BuildServerIntegration;
 using Nini.Config;
 
 namespace GitUI.BuildServerIntegration
@@ -258,7 +260,7 @@ namespace GitUI.BuildServerIntegration
                     var buildServerType = buildServerConfig.GetString("ActiveBuildServerType");
                     if (!string.IsNullOrEmpty(buildServerType))
                     {
-                        var exports = GitModule.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+                        var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
                         var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
 
                         if (export != null)
