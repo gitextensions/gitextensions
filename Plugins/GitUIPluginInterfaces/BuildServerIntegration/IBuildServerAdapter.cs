@@ -1,9 +1,8 @@
 using System;
 using System.Reactive.Concurrency;
-using GitCommands;
 using Nini.Config;
 
-namespace GitUI.BuildServerIntegration
+namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     public interface IBuildServerAdapter
     {

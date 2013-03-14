@@ -1,6 +1,6 @@
-﻿using Nini.Config;
+using Nini.Config;
 
-namespace GitUI.BuildServerIntegration
+namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     public interface IBuildServerSettingsUserControl
     {

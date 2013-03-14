@@ -14,7 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using GitCommands;
+using GitUIPluginInterfaces.BuildServerIntegration;
 using Nini.Config;
 
 namespace GitUI.BuildServerIntegration
