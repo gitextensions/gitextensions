@@ -717,7 +717,9 @@ namespace GitUI.CommandsDialogs
                 return;
 
             Unstaged.SelectedItem = null;
-            ShowChanges(Staged.SelectedItems.First(), true);
+            GitItemStatus item = Staged.SelectedItems.FirstOrDefault();
+            if (item == null) return;
+            ShowChanges(item, true);
         }
 
         private void UntrackedSelectionChanged(object sender, EventArgs e)
@@ -730,7 +732,8 @@ namespace GitUI.CommandsDialogs
                 return;
 
             Staged.SelectedItem = null;
-            GitItemStatus item = Unstaged.SelectedItems.First();
+            GitItemStatus item = Unstaged.SelectedItems.FirstOrDefault();
+            if (item == null) return;
             ShowChanges(item, false);
 
             if (!item.IsSubmodule)
