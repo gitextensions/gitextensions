@@ -9,12 +9,6 @@ namespace GitUI
 {
     public static class PluginLoader
     {
-        private static readonly string[] ExcludedFiles = new[]
-            {
-                "Microsoft.WindowsAPICodePack.dll",
-                "Microsoft.WindowsAPICodePack.Shell.dll",
-                "git2.dll"
-            };
         public static void Load()
         {
             lock (Plugin.LoadedPlugins.Plugins)
