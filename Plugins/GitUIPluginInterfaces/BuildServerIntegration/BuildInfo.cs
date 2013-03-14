@@ -1,6 +1,6 @@
 using System;
 
-namespace GitCommands
+namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     public class BuildInfo
     {

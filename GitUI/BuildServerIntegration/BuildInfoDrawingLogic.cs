@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
+using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitUI.BuildServerIntegration
 {

@@ -1,4 +1,4 @@
-namespace GitUI.BuildServerIntegration
+namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     public interface IBuildServerCredentials
     {

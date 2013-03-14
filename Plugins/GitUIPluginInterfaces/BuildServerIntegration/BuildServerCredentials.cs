@@ -1,6 +1,6 @@
-namespace GitUI.BuildServerIntegration
+namespace GitUIPluginInterfaces.BuildServerIntegration
 {
-    class BuildServerCredentials : IBuildServerCredentials
+    public class BuildServerCredentials : IBuildServerCredentials
     {
         public bool UseGuestAccess { get; set; }
 
