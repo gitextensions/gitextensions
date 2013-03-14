@@ -235,11 +235,7 @@ namespace GitUI.BuildServerIntegration
                                              if (task.Result.Content.Headers.ContentType.MediaType == "text/html")
                                              {
                                                  // TeamCity responds with an HTML page when guest access is denied. Treat this scenario as an HttpStatusCode.Unauthorized.
-                                                 unauthorized = true;
-                                             }
-                                             else
-                                             {
-                                                 return task.Result.Content.ReadAsStreamAsync();
+                                                 return GetStreamAsync(restServicePath, cancellationToken);
                                              }
                                          }
 
