@@ -386,7 +386,7 @@ namespace GitUI.BuildServerIntegration
 
         private static string FormatJsonDate(DateTime dateTime)
         {
-            return dateTime.ToString("yyyyMMdd'T'HHmmsszzzz", CultureInfo.InvariantCulture).Replace(":", string.Empty).Replace("+", "-");
+            return dateTime.ToUniversalTime().ToString("yyyyMMdd'T'HHmmss-0000", CultureInfo.InvariantCulture).Replace(":", string.Empty);
         }
     }
 }
