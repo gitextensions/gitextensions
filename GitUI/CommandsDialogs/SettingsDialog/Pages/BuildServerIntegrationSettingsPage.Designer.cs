@@ -1,6 +1,6 @@
-namespace GitUI.CommandsDialogs.EditBuildServer
+namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    partial class FormEditBuildServer
+    partial class BuildServerIntegrationSettingsPage
     {
         /// <summary>
         /// Required designer variable.
@@ -32,11 +32,7 @@ namespace GitUI.CommandsDialogs.EditBuildServer
             this.buildServerSettingsPanel = new System.Windows.Forms.Panel();
             this.BuildServerType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnOK = new System.Windows.Forms.Button();
             label50 = new System.Windows.Forms.Label();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label50
@@ -82,56 +78,17 @@ namespace GitUI.CommandsDialogs.EditBuildServer
             this.label1.TabIndex = 1;
             this.label1.Text = "Build server type";
             // 
-            // panel1
+            // BuildServerIntegrationSettingsPage
             // 
-            this.panel1.Controls.Add(this.btnCancel);
-            this.panel1.Controls.Add(this.btnOK);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 247);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(515, 44);
-            this.panel1.TabIndex = 4;
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(375, 7);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(110, 25);
-            this.btnCancel.TabIndex = 1;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            // 
-            // btnOK
-            // 
-            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(243, 7);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(110, 25);
-            this.btnOK.TabIndex = 0;
-            this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.OK_Click);
-            // 
-            // FormEditBuildServer
-            // 
-            this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(515, 291);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.buildServerSettingsPanel);
             this.Controls.Add(this.BuildServerType);
             this.Controls.Add(this.label1);
             this.Controls.Add(label50);
             this.MinimumSize = new System.Drawing.Size(530, 330);
-            this.Name = "FormEditBuildServer";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Configure .buildserver";
-            this.panel1.ResumeLayout(false);
+            this.Name = "BuildServerIntegrationSettingsPage";
+            this.Size = new System.Drawing.Size(530, 330);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -142,9 +99,6 @@ namespace GitUI.CommandsDialogs.EditBuildServer
         private System.Windows.Forms.Panel buildServerSettingsPanel;
         private System.Windows.Forms.ComboBox BuildServerType;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button btnOK;
 
     }
 }

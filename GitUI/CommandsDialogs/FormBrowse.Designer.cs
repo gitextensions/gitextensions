@@ -201,7 +201,6 @@ namespace GitUI.CommandsDialogs
             this.editgitignoreToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.editgitattributesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editmailmapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editbuildserverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.settingsToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1217,7 +1216,6 @@ namespace GitUI.CommandsDialogs
             this.editgitignoreToolStripMenuItem1, // ok
             this.editgitattributesToolStripMenuItem, // ok
             this.editmailmapToolStripMenuItem, // ok
-            this.editbuildserverToolStripMenuItem, // ok
             this.toolStripSeparator4, // ok
             this.gitMaintenanceToolStripMenuItem, // ok
             this.toolStripSeparator13, // ok
@@ -1748,13 +1746,6 @@ namespace GitUI.CommandsDialogs
             this.editmailmapToolStripMenuItem.Text = "Edit .mailmap";
             this.editmailmapToolStripMenuItem.Click += new System.EventHandler(this.EditMailMapToolStripMenuItemClick);
             // 
-            // editbuildserverToolStripMenuItem
-            // 
-            this.editbuildserverToolStripMenuItem.Name = "editbuildserverToolStripMenuItem";
-            this.editbuildserverToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.editbuildserverToolStripMenuItem.Text = "Edit .buildserver";
-            this.editbuildserverToolStripMenuItem.Click += new System.EventHandler(this.EditBuildServerToolStripMenuItem1Click);
-            // 
             // toolStripSeparator13
             // 
             this.toolStripSeparator13.Name = "toolStripSeparator13";
@@ -2136,7 +2127,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem parentOfALocalToolStripMenuItem;
         private ToolStripMenuItem parentOfBLocalToolStripMenuItem;        
         private ToolStripMenuItem reportAnIssueToolStripMenuItem;
-        private ToolStripMenuItem editbuildserverToolStripMenuItem;
         private TabPage BuildReportTabPage;
         private WebBrowser BuildReportWebBrowser;        
         private ToolStripSeparator toolStripSeparator40;
