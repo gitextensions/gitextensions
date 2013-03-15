@@ -73,6 +73,9 @@ namespace GitUI.CommandsDialogs
             var localSettingsSettingsPage = new LocalSettingsSettingsPage(_commonLogic, _checkSettingsLogic, Module);
             settingsTreeView.AddSettingsPage(localSettingsSettingsPage, gitExtPageRef);
 
+            var buildServerIntegrationSettingsPage = new BuildServerIntegrationSettingsPage(Module);
+            settingsTreeView.AddSettingsPage(buildServerIntegrationSettingsPage, gitExtPageRef);
+
             var _sshSettingsPage = new SshSettingsPage(_commonLogic);
             settingsTreeView.AddSettingsPage(_sshSettingsPage, gitExtPageRef);
             checklistSettingsPage.SshSettingsPage = _sshSettingsPage;

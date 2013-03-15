@@ -6,14 +6,12 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs;
-using GitUI.CommandsDialogs.EditBuildServer;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
 using Settings = GitCommands.Settings;
-using GitUI.HelperDialogs;
 
 namespace GitUI
 {
@@ -1122,19 +1120,6 @@ namespace GitUI
         public bool StartDeleteTagDialog()
         {
             return StartDeleteTagDialog(null, "");
-        }
-
-        public bool StartEditBuildServerDialog(IWin32Window owner)
-        {
-            Func<bool> action = () =>
-                                    {
-                                        using (var form = new FormEditBuildServer(this))
-                                            form.ShowDialog(owner);
-
-                                        return true;
-                                    };
-
-            return DoActionOnRepo(owner, true, true, PreEditBuildServer, PostEditBuildServer, action);
         }
 
         public bool StartEditGitIgnoreDialog(IWin32Window owner)
