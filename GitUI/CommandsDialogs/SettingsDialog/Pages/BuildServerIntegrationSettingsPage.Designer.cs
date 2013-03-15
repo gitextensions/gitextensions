@@ -43,8 +43,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             label50.Name = "label50";
             label50.Size = new System.Drawing.Size(493, 47);
             label50.TabIndex = 0;
-            label50.Text = "Git Extensions can integrate with build servers to supply Continuous Integration " +
-    "information per commit.\r\nSet the build server information below:";
+            label50.Text = "Git Extensions can integrate with build servers to supply per-commit Continuous I" +
+    "ntegration information.\r\nSet the build server information below:";
             // 
             // buildServerSettingsPanel
             // 
