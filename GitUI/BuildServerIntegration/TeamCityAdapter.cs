@@ -111,7 +111,7 @@ namespace GitUI.BuildServerIntegration
                                     .ContinueWhenAll(
                                         buildIdTasks,
                                         completedTasks =>
-                                        completedTasks.Where(task => !task.IsFaulted)
+                                        completedTasks.Where(task => task.Status == TaskStatus.RanToCompletion)
                                                       .SelectMany(
                                                           buildIdTask =>
                                                           buildIdTask.Result
