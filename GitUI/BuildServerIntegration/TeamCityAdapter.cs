@@ -64,7 +64,8 @@ namespace GitUI.BuildServerIntegration
                 GetProjectFromNameXmlResponseAsync(ProjectName, CancellationToken.None)
                     .ContinueWith(task => task.Result
                                               .XPathSelectElements("/project/buildTypes/buildType")
-                                              .Select(x => x.Attribute("id").Value));
+                                              .Select(x => x.Attribute("id").Value),
+                                  TaskContinuationOptions.ExecuteSynchronously);
         }
 
         /// <summary>
@@ -98,81 +99,81 @@ namespace GitUI.BuildServerIntegration
                         {
                             try
                             {
-                                if (getBuildTypesTask.IsFaulted)
+                                if (PropagateTaskAnomalyToObserver(getBuildTypesTask, observer))
                                 {
-                                    observer.OnError(getBuildTypesTask.Exception);
                                     return;
                                 }
 
                                 var buildTypes = getBuildTypesTask.Result;
-                                var buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, CancellationToken.None, sinceDate, running)).ToArray();
-                                var getBuildIdsTask = Task.Factory
-                                                          .ContinueWhenAll(
-                                                              buildIdTasks,
-                                                              completedTasks =>
-                                                              completedTasks.Where(task => !task.IsFaulted)
-                                                                            .SelectMany(
-                                                                                buildIdTask =>
-                                                                                buildIdTask.Result
-                                                                                           .XPathSelectElements("/builds/build")
-                                                                                           .Select(x => x.Attribute("id").Value))
-                                                                            .ToArray())
-                                                          .ContinueWith(
-                                                              completedTask =>
-                                                              buildIdTasks.SelectMany(
-                                                                  buildIdTask =>
-                                                                  buildIdTask.Result
-                                                                             .XPathSelectElements("/builds/build")
-                                                                             .Select(x => x.Attribute("id").Value))
-                                                                          .ToArray());
+                                var buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, cancellationToken, sinceDate, running)).ToArray();
 
-                                getBuildIdsTask.ContinueWith(
-                                    buildIdTask =>
-                                        {
-                                            var tasks = new List<Task>(8);
-                                            var buildIds = buildIdTask.Result;
-                                            var buildsLeft = buildIds.Length;
-
-                                            foreach (var buildId in buildIds.OrderByDescending(int.Parse))
+                                Task.Factory
+                                    .ContinueWhenAll(
+                                        buildIdTasks,
+                                        completedTasks =>
+                                        completedTasks.Where(task => !task.IsFaulted)
+                                                      .SelectMany(
+                                                          buildIdTask =>
+                                                          buildIdTask.Result
+                                                                     .XPathSelectElements("/builds/build")
+                                                                     .Select(x => x.Attribute("id").Value))
+                                                      .ToArray(),
+                                        TaskContinuationOptions.ExecuteSynchronously)
+                                    .ContinueWith(
+                                        buildIdTask =>
                                             {
-                                                var notifyObserverTask =
-                                                    GetBuildFromIdXmlResponseAsync(buildId, cancellationToken)
-                                                        .ContinueWith(
-                                                            task =>
-                                                                {
-                                                                    var buildDetails = task.Result;
-                                                                    var buildInfo = CreateBuildInfo(buildDetails);
-                                                                    if (buildInfo.CommitHashList.Any())
-                                                                    {
-                                                                        observer.OnNext(buildInfo);
-                                                                    }
-                                                                },
-                                                            cancellationToken,
-                                                            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.NotOnFaulted,
-                                                            TaskScheduler.Current);
-
-                                                tasks.Add(notifyObserverTask);
-                                                --buildsLeft;
-
-                                                if (tasks.Count == tasks.Capacity || buildsLeft == 0)
+                                                if (PropagateTaskAnomalyToObserver(buildIdTask, observer))
                                                 {
-                                                    var batchTasks = tasks.ToArray();
-                                                    tasks.Clear();
+                                                    return;
+                                                }
 
-                                                    try
+                                                var tasks = new List<Task>(8);
+                                                var buildIds = buildIdTask.Result;
+                                                var buildsLeft = buildIds.Length;
+
+                                                foreach (var buildId in buildIds.OrderByDescending(int.Parse))
+                                                {
+                                                    var notifyObserverTask =
+                                                        GetBuildFromIdXmlResponseAsync(buildId, cancellationToken)
+                                                            .ContinueWith(
+                                                                task =>
+                                                                    {
+                                                                        var buildDetails = task.Result;
+                                                                        var buildInfo = CreateBuildInfo(buildDetails);
+                                                                        if (buildInfo.CommitHashList.Any())
+                                                                        {
+                                                                            observer.OnNext(buildInfo);
+                                                                        }
+                                                                    },
+                                                                cancellationToken,
+                                                                TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.NotOnFaulted,
+                                                                TaskScheduler.Current);
+
+                                                    tasks.Add(notifyObserverTask);
+                                                    --buildsLeft;
+
+                                                    if (tasks.Count == tasks.Capacity || buildsLeft == 0)
                                                     {
-                                                        Task.WaitAll(batchTasks, cancellationToken);
-                                                    }
-                                                    catch (OperationCanceledException e)
-                                                    {
-                                                        observer.OnError(e);
-                                                        break;
+                                                        var batchTasks = tasks.ToArray();
+                                                        tasks.Clear();
+
+                                                        try
+                                                        {
+                                                            Task.WaitAll(batchTasks, cancellationToken);
+                                                        }
+                                                        catch (OperationCanceledException e)
+                                                        {
+                                                            observer.OnError(e);
+                                                            break;
+                                                        }
                                                     }
                                                 }
-                                            }
 
-                                            observer.OnCompleted();
-                                        });
+                                                observer.OnCompleted();
+                                            },
+                                        cancellationToken,
+                                        TaskContinuationOptions.ExecuteSynchronously,
+                                        TaskScheduler.Current);
                             }
                             catch (OperationCanceledException)
                             {
@@ -183,6 +184,23 @@ namespace GitUI.BuildServerIntegration
                                 observer.OnError(ex);
                             }
                         })));
+        }
+
+        private bool PropagateTaskAnomalyToObserver(Task task, IObserver<BuildInfo> observer)
+        {
+            if (task.IsCanceled)
+            {
+                observer.OnCompleted();
+                return true;
+            }
+
+            if (task.IsFaulted)
+            {
+                observer.OnError(task.Exception);
+                return true;
+            }
+
+            return false;
         }
 
         private static BuildInfo CreateBuildInfo(XDocument buildXmlDocument)
@@ -243,9 +261,9 @@ namespace GitUI.BuildServerIntegration
                                  task =>
                                      {
                                          bool retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
-                                         bool unauthorized = task.IsCompleted && task.Result.StatusCode == HttpStatusCode.Unauthorized;
+                                         bool unauthorized = task.Status == TaskStatus.RanToCompletion && task.Result.StatusCode == HttpStatusCode.Unauthorized;
 
-                                         if (task.Result.IsSuccessStatusCode)
+                                         if (!retry && task.Result.IsSuccessStatusCode)
                                          {
                                              if (task.Result.Content.Headers.ContentType.MediaType == "text/html")
                                              {
