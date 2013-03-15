@@ -963,6 +963,8 @@ namespace GitUI.CommandsDialogs
             {
                 if (CommitInfoTabControl.Controls.Contains(BuildReportTabPage))
                 {
+                    BuildReportWebBrowser.Stop();
+                    BuildReportWebBrowser.Document.Write(string.Empty);
                     CommitInfoTabControl.Controls.Remove(BuildReportTabPage);
                 }
             }
