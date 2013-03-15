@@ -591,10 +591,12 @@ namespace GitUI
             {
                 SuspendLayout();
 
-                var items = FileStatusListView.Items.Cast<GitItemStatus>().ToList();
-                for (var i = 0; i < items.Count; i++)
+                var items = AllItems;
+                int i = 0;
+                foreach (var item in items)
                 {
-                    FileStatusListView.Items[i].Selected = filter.IsMatch(items[i].Name);
+                    FileStatusListView.Items[i].Selected = filter.IsMatch(item.Name);
+                    i++;
                 }
 
                 return FileStatusListView.SelectedIndices.Count;

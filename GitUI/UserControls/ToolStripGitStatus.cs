@@ -249,7 +249,7 @@ namespace GitUI
             {
                 // If the previous status call hasn't exited yet, we'll wait until it is
                 // so we don't queue up a bunch of commands
-                if (Module.IsRunningGitProcess())
+                if (UICommands.RepoChangedNotifier.IsLocked || Module.IsRunningGitProcess())
                 {
                     statusIsUpToDate = false;//tell that computed status isn't up to date
                     return;
