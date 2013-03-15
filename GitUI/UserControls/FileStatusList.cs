@@ -345,9 +345,11 @@ namespace GitUI
             _nextIndexToSelect = _nextIndexToSelect - FileStatusListView.SelectedIndices.Count + 1;
         }
 
-        public void SelectStoredNextIndex()
+        public void SelectStoredNextIndex(int defaultIndex = -1)
         {
             _nextIndexToSelect = Math.Min(_nextIndexToSelect, FileStatusListView.Items.Count - 1);
+            if (_nextIndexToSelect < 0 && defaultIndex > -1)
+                _nextIndexToSelect = Math.Min(defaultIndex, FileStatusListView.Items.Count - 1);
             if (_nextIndexToSelect > -1)
                 SelectedIndex = _nextIndexToSelect;
             _nextIndexToSelect = -1;
