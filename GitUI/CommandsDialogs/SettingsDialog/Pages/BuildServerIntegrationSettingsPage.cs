@@ -7,30 +7,36 @@ using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Nini.Config;
 
-namespace GitUI.CommandsDialogs.EditBuildServer
+namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class FormEditBuildServer : GitModuleForm
+    public partial class BuildServerIntegrationSettingsPage : SettingsPageBase
     {
         private const string NoneItem = "<None>";
+        private readonly GitModule _gitModule;
         private IniConfigSource _buildServerConfigSource;
         private IConfig _buildServerConfig;
 
-        public FormEditBuildServer(GitUICommands aCommands)
-            : base(aCommands)
+        public BuildServerIntegrationSettingsPage(GitModule gitModule)
         {
             InitializeComponent();
+            Text = "Build server integration";
             Translate();
+
+            _gitModule = gitModule;
         }
 
-        protected override void OnRuntimeLoad(EventArgs e)
+        public override bool IsInstantSavePage
         {
-            base.OnRuntimeLoad(e);
+            get { return true; }
+        }
 
+        public override void OnPageShown()
+        {
             var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
 
             BuildServerType.DataSource = new[] { NoneItem }.Concat(exports.Select(export => export.Metadata.BuildServerType)).ToArray();
 
-            var fileName = Path.Combine(Module.WorkingDir, ".buildserver");
+            var fileName = Path.Combine(_gitModule.WorkingDir, ".buildserver");
             if (File.Exists(fileName))
             {
                 _buildServerConfigSource = new IniConfigSource(fileName);
@@ -40,6 +46,39 @@ namespace GitUI.CommandsDialogs.EditBuildServer
             BuildServerType.SelectedItem = _buildServerConfig != null
                                                ? _buildServerConfig.GetString("ActiveBuildServerType", NoneItem)
                                                : NoneItem;
+        }
+
+        public override void SaveSettings()
+        {
+            base.SaveSettings();
+
+            try
+            {
+                var fileName = Path.Combine(_gitModule.WorkingDir, ".buildserver");
+                FileInfoExtensions.MakeFileTemporaryWritable(
+                    fileName,
+                    x =>
+                    {
+                        if (_buildServerConfig == null)
+                        {
+                            _buildServerConfigSource = new IniConfigSource();
+                        }
+
+                        var selectedBuildServerType = GetSelectedBuildServerType();
+
+                        _buildServerConfig = GetBuildServerConfig("General");
+                        _buildServerConfig.Set("ActiveBuildServerType", selectedBuildServerType);
+
+                        var control = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().SingleOrDefault();
+                        if (control != null) control.SaveSettings(GetBuildServerConfig(selectedBuildServerType));
+
+                        _buildServerConfigSource.Save(fileName);
+                    });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.ToString());
+            }
         }
 
         private void ActivateBuildServerSettingsControl()
@@ -65,7 +104,7 @@ namespace GitUI.CommandsDialogs.EditBuildServer
         {
             if (!Equals(BuildServerType.SelectedItem, NoneItem))
             {
-                var defaultProjectName = Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
+                var defaultProjectName = _gitModule.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
 
                 var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>();
                 var selectedExport = exports.SingleOrDefault(export => export.Metadata.BuildServerType == GetSelectedBuildServerType());
@@ -88,39 +127,6 @@ namespace GitUI.CommandsDialogs.EditBuildServer
         private void BuildServerType_SelectedIndexChanged(object sender, System.EventArgs e)
         {
             ActivateBuildServerSettingsControl();
-        }
-
-        private void OK_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                var fileName = Path.Combine(Module.WorkingDir, ".buildserver");
-                FileInfoExtensions.MakeFileTemporaryWritable(
-                    fileName,
-                    x =>
-                        {
-                            if (_buildServerConfig == null)
-                            {
-                                _buildServerConfigSource = new IniConfigSource();
-                            }
-
-                            var selectedBuildServerType = GetSelectedBuildServerType();
-
-                            _buildServerConfig = GetBuildServerConfig("General");
-                            _buildServerConfig.Set("ActiveBuildServerType", selectedBuildServerType);
-
-                            var control = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().SingleOrDefault();
-                            if (control != null) control.SaveSettings(GetBuildServerConfig(selectedBuildServerType));
-
-                            _buildServerConfigSource.Save(fileName);
-                        });
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.ToString());
-            }
-
-            Close();
         }
 
         private IConfig GetBuildServerConfig(string configName)

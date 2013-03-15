@@ -112,6 +112,12 @@
     </Compile>
     <Compile Include="BuildServerIntegration\BuildInfoDrawingLogic.cs" />
     <Compile Include="BuildServerIntegration\BuildServerWatcher.cs" />
+    <Compile Include="BuildServerIntegration\Settings\TeamCitySettingsUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BuildServerIntegration\Settings\TeamCitySettingsUserControl.Designer.cs">
+      <DependentUpon>TeamCitySettingsUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="BuildServerIntegration\TeamCityAdapter.cs" />
     <Compile Include="CommandsDialogs\AboutBox.cs">
       <SubType>Form</SubType>
@@ -124,18 +130,6 @@
     </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.designer.cs">
       <DependentUpon>FormOpenDirectory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CommandsDialogs\EditBuildServer\FormEditBuildServer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\EditBuildServer\FormEditBuildServer.Designer.cs">
-      <DependentUpon>FormEditBuildServer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CommandsDialogs\EditBuildServer\TeamCitySettingsUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\EditBuildServer\TeamCitySettingsUserControl.Designer.cs">
-      <DependentUpon>TeamCitySettingsUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
@@ -155,6 +149,12 @@
     </Compile>
     <Compile Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\BuildServerIntegrationSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\BuildServerIntegrationSettingsPage.Designer.cs">
+      <DependentUpon>BuildServerIntegrationSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="HelperDialogs\FormBuildServerCredentials.cs">
       <SubType>Form</SubType>
@@ -926,18 +926,15 @@
     <Compile Include="CommandsDialogs\CommitDialog\WordWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="BuildServerIntegration\Settings\TeamCitySettingsUserControl.resx">
+      <DependentUpon>TeamCitySettingsUserControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.resx">
       <DependentUpon>FormOpenDirectory.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\EditBuildServer\FormEditBuildServer.resx">
-      <DependentUpon>FormEditBuildServer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\EditBuildServer\TeamCitySettingsUserControl.resx">
-      <DependentUpon>TeamCitySettingsUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.resx">
       <DependentUpon>CreatePullRequestForm.cs</DependentUpon>
@@ -950,6 +947,9 @@
     <EmbeddedResource Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.resx">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\BuildServerIntegrationSettingsPage.resx">
+      <DependentUpon>BuildServerIntegrationSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HelperDialogs\FormBuildServerCredentials.resx">
       <DependentUpon>FormBuildServerCredentials.cs</DependentUpon>

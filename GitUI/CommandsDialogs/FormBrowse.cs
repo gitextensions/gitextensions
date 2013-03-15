@@ -1518,11 +1518,6 @@ namespace GitUI.CommandsDialogs
             UICommands.StartEditGitIgnoreDialog(this);
         }
 
-        private void EditBuildServerToolStripMenuItem1Click(object sender, EventArgs e)
-        {
-            UICommands.StartEditBuildServerDialog(this);
-        }
-
         private void SettingsToolStripMenuItem2Click(object sender, EventArgs e)
         {
             var translation = Settings.Translation;

@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Nini.Config;
 
-namespace GitUI.CommandsDialogs.EditBuildServer
+namespace GitUI.BuildServerIntegration.Settings
 {
     [Export(typeof(IBuildServerSettingsUserControl))]
     [BuildServerSettingsUserControlMetadata("TeamCity")]
