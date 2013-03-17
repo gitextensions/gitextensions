@@ -332,6 +332,13 @@ namespace GitCommands
             set { SafeSet("revisiongraphdrawnonrelativestextgray", value, ref _revisionGraphDrawNonRelativesTextGray); }
         }
 
+        private static bool? _enableBuildServerIntegration;
+        public static bool EnableBuildServerIntegration
+        {
+            get { return SafeGet("enablebuildserverintegration", true, ref _enableBuildServerIntegration); }
+            set { SafeSet("enablebuildserverintegration", value, ref _enableBuildServerIntegration); }
+        }
+
         public static readonly Dictionary<string, Encoding> AvailableEncodings = new Dictionary<string, Encoding>();
         private static readonly Dictionary<string, Encoding> EncodingSettings = new Dictionary<string, Encoding>();
 
