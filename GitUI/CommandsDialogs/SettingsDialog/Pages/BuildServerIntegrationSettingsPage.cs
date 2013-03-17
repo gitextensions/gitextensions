@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
@@ -15,6 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly GitModule _gitModule;
         private IniConfigSource _buildServerConfigSource;
         private IConfig _buildServerConfig;
+        private Task<object> _populateBuildServerTypeTask;
 
         public BuildServerIntegrationSettingsPage(GitModule gitModule)
         {
@@ -23,6 +25,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
 
             _gitModule = gitModule;
+
+
+            _populateBuildServerTypeTask =
+                Task.Factory.StartNew(() =>
+                    {
+                        var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+
+                        return exports.Select(export => export.Metadata.BuildServerType).ToArray();
+                    })
+                    .ContinueWith(
+                        task => BuildServerType.DataSource = new[] { NoneItem }.Concat(task.Result).ToArray(),
+                        TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public override bool IsInstantSavePage
@@ -30,27 +44,34 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             get { return true; }
         }
 
-        public override void OnPageShown()
+        protected override void OnLoadSettings()
         {
-            var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+            base.OnLoadSettings();
 
-            BuildServerType.DataSource = new[] { NoneItem }.Concat(exports.Select(export => export.Metadata.BuildServerType)).ToArray();
+            _populateBuildServerTypeTask.ContinueWith(
+                task =>
+                    {
+                        checkBoxEnableBuildServerIntegration.Checked = Settings.EnableBuildServerIntegration;
 
-            var fileName = Path.Combine(_gitModule.WorkingDir, ".buildserver");
-            if (File.Exists(fileName))
-            {
-                _buildServerConfigSource = new IniConfigSource(fileName);
-                _buildServerConfig = GetBuildServerConfig("General");
-            }
+                        var fileName = Path.Combine(_gitModule.WorkingDir, ".buildserver");
+                        if (File.Exists(fileName))
+                        {
+                            _buildServerConfigSource = new IniConfigSource(fileName);
+                            _buildServerConfig = GetBuildServerConfig("General");
+                        }
 
-            BuildServerType.SelectedItem = _buildServerConfig != null
-                                               ? _buildServerConfig.GetString("ActiveBuildServerType", NoneItem)
-                                               : NoneItem;
+                        BuildServerType.SelectedItem = _buildServerConfig != null
+                                                           ? _buildServerConfig.GetString("ActiveBuildServerType", NoneItem)
+                                                           : NoneItem;
+                    },
+                TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public override void SaveSettings()
         {
             base.SaveSettings();
+
+            Settings.EnableBuildServerIntegration = checkBoxEnableBuildServerIntegration.Checked;
 
             try
             {

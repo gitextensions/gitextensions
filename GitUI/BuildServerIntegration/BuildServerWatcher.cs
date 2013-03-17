@@ -249,32 +249,35 @@ namespace GitUI.BuildServerIntegration
 
         private IBuildServerAdapter GetBuildServerAdapter()
         {
-            var fileName = Path.Combine(revisionGrid.Module.GitWorkingDir, ".buildserver");
-            if (File.Exists(fileName))
+            if (GitCommands.Settings.EnableBuildServerIntegration)
             {
-                var buildServerConfigSource = new IniConfigSource(fileName);
-                var buildServerConfig = buildServerConfigSource.Configs["General"];
-
-                if (buildServerConfig != null)
+                var fileName = Path.Combine(revisionGrid.Module.GitWorkingDir, ".buildserver");
+                if (File.Exists(fileName))
                 {
-                    var buildServerType = buildServerConfig.GetString("ActiveBuildServerType");
-                    if (!string.IsNullOrEmpty(buildServerType))
-                    {
-                        var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
-                        var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
+                    var buildServerConfigSource = new IniConfigSource(fileName);
+                    var buildServerConfig = buildServerConfigSource.Configs["General"];
 
-                        if (export != null)
+                    if (buildServerConfig != null)
+                    {
+                        var buildServerType = buildServerConfig.GetString("ActiveBuildServerType");
+                        if (!string.IsNullOrEmpty(buildServerType))
                         {
-                            try
+                            var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+                            var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
+
+                            if (export != null)
                             {
-                                var buildServerAdapter = export.Value;
-                                var config = buildServerConfigSource.Configs[buildServerType];
-                                buildServerAdapter.Initialize(this, config);
-                                return buildServerAdapter;
-                            }
-                            catch (InvalidOperationException)
-                            {
-                                // Invalid arguments, do not return a build server adapter
+                                try
+                                {
+                                    var buildServerAdapter = export.Value;
+                                    var config = buildServerConfigSource.Configs[buildServerType];
+                                    buildServerAdapter.Initialize(this, config);
+                                    return buildServerAdapter;
+                                }
+                                catch (InvalidOperationException)
+                                {
+                                    // Invalid arguments, do not return a build server adapter
+                                }
                             }
                         }
                     }
