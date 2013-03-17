@@ -67,7 +67,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                         var selectedBuildServerType = GetSelectedBuildServerType();
 
                         _buildServerConfig = GetBuildServerConfig("General");
-                        _buildServerConfig.Set("ActiveBuildServerType", selectedBuildServerType);
+                        _buildServerConfig.Set("ActiveBuildServerType", selectedBuildServerType ?? NoneItem);
 
                         var control = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().SingleOrDefault();
                         if (control != null) control.SaveSettings(GetBuildServerConfig(selectedBuildServerType));
