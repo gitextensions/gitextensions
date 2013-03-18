@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.Text;
 using System.Configuration;
@@ -89,7 +88,7 @@ public class PortableSettingsProvider : SettingsProvider
 
 
     private System.Xml.XmlDocument m_SettingsXML = null;
-    private Xml.XmlDocument SettingsXML
+    private XmlDocument SettingsXML
     {
         get
         {
@@ -132,7 +131,7 @@ public class PortableSettingsProvider : SettingsProvider
             }
             else
             {
-                ret = SettingsXML.SelectSingleNode(SETTINGSROOT + "/" + My.Computer.Name + "/" + setting.Name).InnerText;
+                ret = SettingsXML.SelectSingleNode(SETTINGSROOT + "/" + System.Environment.MachineName + "/" + setting.Name).InnerText;
             }
 
         }
@@ -168,7 +167,7 @@ public class PortableSettingsProvider : SettingsProvider
             }
             else
             {
-                SettingNode = (XmlElement)SettingsXML.SelectSingleNode(SETTINGSROOT + "/" + My.Computer.Name + "/" + propVal.Name);
+                SettingNode = (XmlElement)SettingsXML.SelectSingleNode(SETTINGSROOT + "/" + System.Environment.MachineName + "/" + propVal.Name);
             }
         }
         catch (Exception ex)
@@ -196,17 +195,17 @@ public class PortableSettingsProvider : SettingsProvider
                 //creating a new machine name node if one doesnt exist.
                 try
                 {
-                    MachineNode = (XmlElement)SettingsXML.SelectSingleNode(SETTINGSROOT + "/" + My.Computer.Name);
+                    MachineNode = (XmlElement)SettingsXML.SelectSingleNode(SETTINGSROOT + "/" + System.Environment.MachineName);
                 }
                 catch (Exception ex)
                 {
-                    MachineNode = SettingsXML.CreateElement(My.Computer.Name);
+                    MachineNode = SettingsXML.CreateElement(System.Environment.MachineName);
                     SettingsXML.SelectSingleNode(SETTINGSROOT).AppendChild(MachineNode);
                 }
 
                 if (MachineNode == null)
                 {
-                    MachineNode = SettingsXML.CreateElement(My.Computer.Name);
+                    MachineNode = SettingsXML.CreateElement(System.Environment.MachineName);
                     SettingsXML.SelectSingleNode(SETTINGSROOT).AppendChild(MachineNode);
                 }
 
