@@ -95,95 +95,97 @@ namespace GitUI.BuildServerIntegration
 
             return Observable.Create<BuildInfo>((observer, cancellationToken) =>
                 Task<IDisposable>.Factory.StartNew(
-                    () => scheduler.Schedule(() =>
-                        {
-                            try
+                    () => scheduler.Schedule(() => ObserveBuilds(sinceDate, running, observer, cancellationToken))));
+        }
+
+        private void ObserveBuilds(DateTime? sinceDate, bool? running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (PropagateTaskAnomalyToObserver(getBuildTypesTask, observer))
+                {
+                    return;
+                }
+
+                var buildTypes = getBuildTypesTask.Result;
+                var buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, cancellationToken, sinceDate, running)).ToArray();
+
+                Task.Factory
+                    .ContinueWhenAll(
+                        buildIdTasks,
+                        completedTasks =>
+                        completedTasks.Where(task => task.Status == TaskStatus.RanToCompletion)
+                                      .SelectMany(
+                                          buildIdTask =>
+                                          buildIdTask.Result
+                                                     .XPathSelectElements("/builds/build")
+                                                     .Select(x => x.Attribute("id").Value))
+                                      .ToArray(),
+                        TaskContinuationOptions.ExecuteSynchronously)
+                    .ContinueWith(
+                        buildIdTask =>
                             {
-                                if (PropagateTaskAnomalyToObserver(getBuildTypesTask, observer))
+                                if (PropagateTaskAnomalyToObserver(buildIdTask, observer))
                                 {
                                     return;
                                 }
 
-                                var buildTypes = getBuildTypesTask.Result;
-                                var buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, cancellationToken, sinceDate, running)).ToArray();
+                                var tasks = new List<Task>(8);
+                                var buildIds = buildIdTask.Result;
+                                var buildsLeft = buildIds.Length;
 
-                                Task.Factory
-                                    .ContinueWhenAll(
-                                        buildIdTasks,
-                                        completedTasks =>
-                                        completedTasks.Where(task => task.Status == TaskStatus.RanToCompletion)
-                                                      .SelectMany(
-                                                          buildIdTask =>
-                                                          buildIdTask.Result
-                                                                     .XPathSelectElements("/builds/build")
-                                                                     .Select(x => x.Attribute("id").Value))
-                                                      .ToArray(),
-                                        TaskContinuationOptions.ExecuteSynchronously)
-                                    .ContinueWith(
-                                        buildIdTask =>
-                                            {
-                                                if (PropagateTaskAnomalyToObserver(buildIdTask, observer))
-                                                {
-                                                    return;
-                                                }
-
-                                                var tasks = new List<Task>(8);
-                                                var buildIds = buildIdTask.Result;
-                                                var buildsLeft = buildIds.Length;
-
-                                                foreach (var buildId in buildIds.OrderByDescending(int.Parse))
-                                                {
-                                                    var notifyObserverTask =
-                                                        GetBuildFromIdXmlResponseAsync(buildId, cancellationToken)
-                                                            .ContinueWith(
-                                                                task =>
-                                                                    {
-                                                                        var buildDetails = task.Result;
-                                                                        var buildInfo = CreateBuildInfo(buildDetails);
-                                                                        if (buildInfo.CommitHashList.Any())
-                                                                        {
-                                                                            observer.OnNext(buildInfo);
-                                                                        }
-                                                                    },
-                                                                cancellationToken,
-                                                                TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.NotOnFaulted,
-                                                                TaskScheduler.Current);
-
-                                                    tasks.Add(notifyObserverTask);
-                                                    --buildsLeft;
-
-                                                    if (tasks.Count == tasks.Capacity || buildsLeft == 0)
+                                foreach (var buildId in buildIds.OrderByDescending(int.Parse))
+                                {
+                                    var notifyObserverTask =
+                                        GetBuildFromIdXmlResponseAsync(buildId, cancellationToken)
+                                            .ContinueWith(
+                                                task =>
                                                     {
-                                                        var batchTasks = tasks.ToArray();
-                                                        tasks.Clear();
-
-                                                        try
+                                                        var buildDetails = task.Result;
+                                                        var buildInfo = CreateBuildInfo(buildDetails);
+                                                        if (buildInfo.CommitHashList.Any())
                                                         {
-                                                            Task.WaitAll(batchTasks, cancellationToken);
+                                                            observer.OnNext(buildInfo);
                                                         }
-                                                        catch (OperationCanceledException e)
-                                                        {
-                                                            observer.OnError(e);
-                                                            break;
-                                                        }
-                                                    }
-                                                }
+                                                    },
+                                                cancellationToken,
+                                                TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.NotOnFaulted,
+                                                TaskScheduler.Current);
 
-                                                observer.OnCompleted();
-                                            },
-                                        cancellationToken,
-                                        TaskContinuationOptions.ExecuteSynchronously,
-                                        TaskScheduler.Current);
-                            }
-                            catch (OperationCanceledException)
-                            {
-                                // Do nothing, the observer is already stopped
-                            }
-                            catch (Exception ex)
-                            {
-                                observer.OnError(ex);
-                            }
-                        })));
+                                    tasks.Add(notifyObserverTask);
+                                    --buildsLeft;
+
+                                    if (tasks.Count == tasks.Capacity || buildsLeft == 0)
+                                    {
+                                        var batchTasks = tasks.ToArray();
+                                        tasks.Clear();
+
+                                        try
+                                        {
+                                            Task.WaitAll(batchTasks, cancellationToken);
+                                        }
+                                        catch (OperationCanceledException e)
+                                        {
+                                            observer.OnError(e);
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                observer.OnCompleted();
+                            },
+                        cancellationToken,
+                        TaskContinuationOptions.ExecuteSynchronously,
+                        TaskScheduler.Current);
+            }
+            catch (OperationCanceledException)
+            {
+                // Do nothing, the observer is already stopped
+            }
+            catch (Exception ex)
+            {
+                observer.OnError(ex);
+            }
         }
 
         private bool PropagateTaskAnomalyToObserver(Task task, IObserver<BuildInfo> observer)
