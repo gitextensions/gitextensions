@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUI", "GitUI\GitUI.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitCommands", "GitCommands\GitCommands.csproj", "{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCompileSubmodules", "Plugins\AutoCompileSubmodules\AutoCompileSubmodules\AutoCompileSubmodules.csproj", "{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCompileSubmodules", "Plugins\AutoCompileSubmodules\AutoCompileSubmodules.csproj", "{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUIPluginInterfaces", "Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj", "{27559302-F35E-4B62-A6EC-11FF21A5FA6F}"
 EndProject
