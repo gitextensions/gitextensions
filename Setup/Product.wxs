@@ -226,7 +226,7 @@
         <File Source="..\Plugins\DeleteUnusedBranches\bin\Release\DeleteUnusedBranches.dll"/>
       </Component>
       <Component Id="AutoCompileSubmodules.dll" Guid="*">
-        <File Source="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.dll"/>
+        <File Source="..\Plugins\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.dll"/>
       </Component>
       <Component Id="BackgroundFetch.dll" Guid="*">
         <File Source="..\Plugins\BackgroundFetch\bin\Release\BackgroundFetch.dll"/>
