@@ -25,19 +25,12 @@ namespace GitUI
 
                 var file = new FileInfo(Application.ExecutablePath);
 
-                // Only search for plugins in the plugins folder. This increases performance a little bit.
-                // In DEBUG search for plugins in the root folder to make debugging plugins easier.
-#if DEBUG
-                var plugins = file.Directory.GetFiles("*.dll", SearchOption.AllDirectories);
-#else
                 FileInfo[] plugins =
                                Directory.Exists(Path.Combine(file.Directory.FullName, "Plugins"))
                                    ? new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll")
                                    : new FileInfo[] { };
-#endif
 
-                var pluginFiles = plugins.Where(pluginFile => pluginFile.Name != "git2.dll" && !pluginFile.Name.StartsWith("Microsoft."));
-                foreach (var pluginFile in pluginFiles)
+                foreach (var pluginFile in plugins)
                 {
                     try
                     {
