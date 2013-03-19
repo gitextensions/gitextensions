@@ -1,21 +1,13 @@
 ﻿﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Linq;
 
 namespace GitUI
 {
     public static class PluginLoader
     {
-        private static readonly string[] ExcluedFiles = new[]
-            {
-                "Microsoft.WindowsAPICodePack.dll",
-                "Microsoft.WindowsAPICodePack.Shell.dll",
-                "git2.dll"
-            };
         public static void Load()
         {
             lock (Plugin.LoadedPlugins.Plugins)
@@ -25,10 +17,11 @@ namespace GitUI
 
                 var file = new FileInfo(Application.ExecutablePath);
 
-                FileInfo[] plugins =
-                               Directory.Exists(Path.Combine(file.Directory.FullName, "Plugins"))
-                                   ? new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll")
-                                   : new FileInfo[] { };
+                FileInfo[] plugins;
+                if (Directory.Exists(Path.Combine(file.Directory.FullName, "Plugins")))
+                    plugins = new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll");
+                else
+                    plugins = new FileInfo[] {};
 
                 foreach (var pluginFile in plugins)
                 {
