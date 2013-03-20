@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
@@ -185,7 +186,7 @@ namespace GitUI
         [Browsable(false)]
         private string FiltredCurrentCheckout { get; set; }
         [Browsable(false)]
-        public string SuperprojectCurrentCheckout { get; private set; }
+        public Task<string> SuperprojectCurrentCheckout { get; private set; }
         [Browsable(false)]
         public int LastRow { get; private set; }
 
@@ -741,7 +742,10 @@ namespace GitUI
                 DisposeRevisionGraphCommand();
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
-                var newSuperprojectCurrentCheckout = Module.GetSuperprojectCurrentCheckout();
+                Task<string> newSuperprojectCurrentCheckout =
+                    Task.Factory.StartNew(() => Module.GetSuperprojectCurrentCheckout());
+                newSuperprojectCurrentCheckout.ContinueWith((task) => Refresh(),
+                    TaskScheduler.FromCurrentSynchronizationContext());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -1090,7 +1094,7 @@ namespace GitUI
             var rowFont = NormalFont;
             if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
                 rowFont = HeadFont;
-            else if (revision.Guid == SuperprojectCurrentCheckout)
+            else if (SuperprojectCurrentCheckout.IsCompleted && revision.Guid == SuperprojectCurrentCheckout.Result)
                 rowFont = SuperprojectFont;
 
             switch (column)
