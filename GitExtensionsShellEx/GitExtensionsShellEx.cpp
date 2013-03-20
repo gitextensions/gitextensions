@@ -45,7 +45,7 @@ bool IsVistaOrLater()
         OSVERSIONINFOEX inf;
         SecureZeroMemory(&inf, sizeof(OSVERSIONINFOEX));
         inf.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-        GetVersionEx((OSVERSIONINFO *)&inf);
+        GetVersionEx((OSVERSIONINFO*)&inf);
         version = MAKEWORD(inf.dwMinorVersion, inf.dwMajorVersion);
     }
 
@@ -170,7 +170,7 @@ HBITMAP CGitExtensionsShellEx::IconToBitmapPARGB32(UINT uIcon)
     return hBmp;
 }
 
-HRESULT CGitExtensionsShellEx::Create32BitHBITMAP(HDC hdc, const SIZE *psize, __deref_opt_out void **ppvBits, __out HBITMAP* phBmp)
+HRESULT CGitExtensionsShellEx::Create32BitHBITMAP(HDC hdc, const SIZE* psize, __deref_opt_out void** ppvBits, __out HBITMAP* phBmp)
 {
     *phBmp = NULL;
 
@@ -198,12 +198,12 @@ HRESULT CGitExtensionsShellEx::Create32BitHBITMAP(HDC hdc, const SIZE *psize, __
 
 HRESULT CGitExtensionsShellEx::ConvertBufferToPARGB32(HPAINTBUFFER hPaintBuffer, HDC hdc, HICON hicon, SIZE& sizIcon)
 {
-    RGBQUAD *prgbQuad;
+    RGBQUAD* prgbQuad;
     int cxRow;
     HRESULT hr = pfnGetBufferedPaintBits(hPaintBuffer, &prgbQuad, &cxRow);
     if (SUCCEEDED(hr))
     {
-        ARGB *pargb = reinterpret_cast<ARGB *>(prgbQuad);
+        ARGB* pargb = reinterpret_cast<ARGB*>(prgbQuad);
         if (!HasAlpha(pargb, sizIcon, cxRow))
         {
             ICONINFO info;
@@ -223,7 +223,7 @@ HRESULT CGitExtensionsShellEx::ConvertBufferToPARGB32(HPAINTBUFFER hPaintBuffer,
     return hr;
 }
 
-bool CGitExtensionsShellEx::HasAlpha(__in ARGB *pargb, SIZE& sizImage, int cxRow)
+bool CGitExtensionsShellEx::HasAlpha(__in ARGB* pargb, SIZE& sizImage, int cxRow)
 {
     ULONG cxDelta = cxRow - sizImage.cx;
     for (ULONG y = sizImage.cy; y; --y)
@@ -242,7 +242,7 @@ bool CGitExtensionsShellEx::HasAlpha(__in ARGB *pargb, SIZE& sizImage, int cxRow
     return false;
 }
 
-HRESULT CGitExtensionsShellEx::ConvertToPARGB32(HDC hdc, __inout ARGB *pargb, HBITMAP hbmp, SIZE& sizImage, int cxRow)
+HRESULT CGitExtensionsShellEx::ConvertToPARGB32(HDC hdc, __inout ARGB* pargb, HBITMAP hbmp, SIZE& sizImage, int cxRow)
 {
     BITMAPINFO bmi;
     ZeroMemory(&bmi, sizeof(bmi));
@@ -256,14 +256,14 @@ HRESULT CGitExtensionsShellEx::ConvertToPARGB32(HDC hdc, __inout ARGB *pargb, HB
 
     HRESULT hr = E_OUTOFMEMORY;
     HANDLE hHeap = GetProcessHeap();
-    void *pvBits = HeapAlloc(hHeap, 0, bmi.bmiHeader.biWidth * 4 * bmi.bmiHeader.biHeight);
+    void* pvBits = HeapAlloc(hHeap, 0, bmi.bmiHeader.biWidth * 4 * bmi.bmiHeader.biHeight);
     if (pvBits)
     {
         hr = E_UNEXPECTED;
         if (GetDIBits(hdc, hbmp, 0, bmi.bmiHeader.biHeight, pvBits, &bmi, DIB_RGB_COLORS) == bmi.bmiHeader.biHeight)
         {
             ULONG cxDelta = cxRow - bmi.bmiHeader.biWidth;
-            ARGB *pargbMask = static_cast<ARGB *>(pvBits);
+            ARGB* pargbMask = static_cast<ARGB*>(pvBits);
 
             for (ULONG y = bmi.bmiHeader.biHeight; y; --y)
             {
@@ -538,7 +538,7 @@ STDMETHODIMP CGitExtensionsShellEx::GetCommandString(UINT_PTR idCmd, UINT uFlags
     return E_INVALIDARG;
 }
 
-void CGitExtensionsShellEx::RunGitEx(const TCHAR * command)
+void CGitExtensionsShellEx::RunGitEx(const TCHAR* command)
 {
     CString szFile = m_szFile;
     CString szCommandName = command;
@@ -583,7 +583,7 @@ STDMETHODIMP CGitExtensionsShellEx::HandleMenuMsg(UINT uMsg, WPARAM wParam, LPAR
     return HandleMenuMsg2(uMsg, wParam, lParam, &res);
 }
 
-STDMETHODIMP CGitExtensionsShellEx::HandleMenuMsg2(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT *pResult)
+STDMETHODIMP CGitExtensionsShellEx::HandleMenuMsg2(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 {
     switch (uMsg)
     {
