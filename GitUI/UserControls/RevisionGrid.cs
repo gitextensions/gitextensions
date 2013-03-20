@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
@@ -192,7 +193,7 @@ namespace GitUI
         [Browsable(false)]
         private string FiltredCurrentCheckout { get; set; }
         [Browsable(false)]
-        public string SuperprojectCurrentCheckout { get; private set; }
+        public Task<string> SuperprojectCurrentCheckout { get; private set; }
         [Browsable(false)]
         public int LastRow { get; private set; }
 
@@ -509,22 +510,26 @@ namespace GitUI
             Revisions.Select();
         }
 
-        public void SetSelectedRevision(GitRevision revision)
+        private void SetSelectedRevision(string revision)
         {
             if (revision != null)
             {
                 for (var i = 0; i < Revisions.RowCount; i++)
                 {
-                    if (GetRevision(i).Guid == revision.Guid)
-                    {
+                    if (GetRevision(i).Guid != revision)
+                        continue;
                         SetSelectedIndex(i);
                         return;
                     }
                 }
-            }
 
             Revisions.ClearSelection();
             Revisions.Select();
+        }
+
+        public void SetSelectedRevision(GitRevision revision)
+        {
+            SetSelectedRevision(revision != null ? revision.Guid : null);
         }
 
         public void HighlightBranch(string aId)
@@ -753,7 +758,10 @@ namespace GitUI
                 DisposeRevisionGraphCommand();
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
-                var newSuperprojectCurrentCheckout = Module.GetSuperprojectCurrentCheckout();
+                Task<string> newSuperprojectCurrentCheckout =
+                    Task.Factory.StartNew(() => Module.GetSuperprojectCurrentCheckout());
+                newSuperprojectCurrentCheckout.ContinueWith((task) => Refresh(),
+                    TaskScheduler.FromCurrentSynchronizationContext());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -946,12 +954,19 @@ namespace GitUI
             else
                 FiltredCurrentCheckout = CurrentCheckout;
 
-            if (!string.IsNullOrEmpty(_initialSelectedRevision) && Revisions.SelectedRows.Count == 0)
+            if (LastSelectedRows == null)
             {
+                if (!string.IsNullOrEmpty(_initialSelectedRevision))
+                {
                 string revision;
                 int index = SearchRevision(_initialSelectedRevision, out revision);
                 if (index >= 0)
                     SetSelectedIndex(index);
+            }
+                else
+                {
+                    SetSelectedRevision(FiltredCurrentCheckout);
+        }
             }
         }
 
@@ -1017,10 +1032,6 @@ namespace GitUI
             {
                 Revisions.SelectedIds = LastSelectedRows;
                 LastSelectedRows = null;
-            }
-            else if (_initialSelectedRevision == null)
-            {
-                Revisions.SelectedIds = new[] { CurrentCheckout };
             }
 
             if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
@@ -1100,7 +1111,7 @@ namespace GitUI
                 var rowFont = NormalFont;
                 if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
                     rowFont = HeadFont;
-                else if (revision.Guid == SuperprojectCurrentCheckout)
+            else if (SuperprojectCurrentCheckout.IsCompleted && revision.Guid == SuperprojectCurrentCheckout.Result)
                     rowFont = SuperprojectFont;
 
                 switch (column)
@@ -1994,7 +2005,7 @@ namespace GitUI
             if (Module.GetStagedFiles().Count > 0)
                 stagedChanges = true;
 
-            // FiltredCurrentCheckout doesn't works because only calculated after loading all revisions in SelectInitialRevision()
+            // FiltredCurrentCheckout doesn't works here because only calculated after loading all revisions in SelectInitialRevision()
             if (unstagedChanges)
             {
                 //Add working dir as virtual commit
@@ -2444,7 +2455,7 @@ namespace GitUI
         {
             var r = GetRevision(LastRow);
             if (r.HasParent())
-                SetSelectedRevision(new GitRevision(Module, r.ParentGuids[0]));
+                SetSelectedRevision(r.ParentGuids[0]);
         }
 
         private void goToChildToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2452,7 +2463,7 @@ namespace GitUI
             var r = GetRevision(LastRow);
             var children = GetRevisionChildren(r.Guid);
             if (children.Count > 0)
-                SetSelectedRevision(new GitRevision(Module, children[0]));
+                SetSelectedRevision(children[0]);
         }
     }
 }
