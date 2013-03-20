@@ -1,7 +1,8 @@
 ﻿﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
+﻿using System.Linq;
+﻿using System.Reflection;
 using System.Windows.Forms;
 
 namespace GitUI
@@ -23,12 +24,14 @@ namespace GitUI
                 else
                     plugins = new FileInfo[] {};
 
-                foreach (var pluginFile in plugins)
+                var pluginFiles = plugins.Where(pluginFile => !pluginFile.Name.StartsWith("System.") &&
+                    !pluginFile.Name.StartsWith("ICSharpCode."));
+                foreach (var pluginFile in pluginFiles)
                 {
                     try
                     {
-                        var types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
                         Debug.WriteLine("Loading plugin...", pluginFile.Name);
+                        var types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
                         PluginExtraction.ExtractPluginTypes(types);
                     }
                     catch (SystemException ex)
