@@ -23,12 +23,14 @@ namespace GitUI
                                    ? new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll")
                                    : new FileInfo[] { };
 
-                foreach (var pluginFile in plugins)
+                var pluginFiles = plugins.Where(pluginFile => !pluginFile.Name.StartsWith("System.") &&
+                    !pluginFile.Name.StartsWith("ICSharpCode."));
+                foreach (var pluginFile in pluginFiles)
                 {
                     try
                     {
-                        var types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
                         Debug.WriteLine("Loading plugin...", pluginFile.Name);
+                        var types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
                         PluginExtraction.ExtractPluginTypes(types);
                     }
                     catch (SystemException ex)
