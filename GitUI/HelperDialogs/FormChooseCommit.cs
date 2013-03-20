@@ -58,7 +58,7 @@ namespace GitUI.HelperDialogs
             }
         }
 
-        private void revisionGrid_DoubleClickRevision(object sender, UserControls.RevisionGridClasses.DoubleClickRevisionEventArgs e)
+        private void revisionGrid_DoubleClickRevision(object sender, RevisionGridClasses.DoubleClickRevisionEventArgs e)
         {
             if (e.Revision != null)
             {
