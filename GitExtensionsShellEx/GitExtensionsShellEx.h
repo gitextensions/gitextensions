@@ -68,18 +68,18 @@ public:
     STDMETHODIMP QueryContextMenu(HMENU, UINT, UINT, UINT, UINT);
 
     // IContextMenu2
-    STDMETHODIMP	HandleMenuMsg(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    STDMETHODIMP HandleMenuMsg(UINT uMsg, WPARAM wParam, LPARAM lParam);
     
     // IContextMenu3
-    STDMETHODIMP	HandleMenuMsg2(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT *pResult);
+    STDMETHODIMP HandleMenuMsg2(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT *pResult);
 
     void RunGitEx(const TCHAR * command);
 
     UINT AddMenuItem(HMENU hmenu, LPTSTR text, int resource, UINT firstId, UINT id, UINT position, bool isSubMenu);
 
 protected:
-    TCHAR m_szFile [MAX_PATH];
-    std::map<UINT_PTR, int>	myIDMap;
+    TCHAR m_szFile[MAX_PATH];
+    std::map<UINT_PTR, int> myIDMap;
     std::map<UINT, HBITMAP> bitmaps;
     std::map<int, int> commandsId;
 

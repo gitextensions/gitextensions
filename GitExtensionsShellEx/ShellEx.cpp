@@ -36,7 +36,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID /*lpReserved*/)
 
 STDAPI DllCanUnloadNow()
 {
-    return (_Module.GetLockCount()==0) ? S_OK : S_FALSE;
+    return (_Module.GetLockCount() == 0) ? S_OK : S_FALSE;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -62,19 +62,19 @@ STDAPI DllRegisterServer()
     // is all that's necessary.)
     CRegKey reg;
     LONG    lRet;
-    if ( 0 == (GetVersion() & 0x80000000UL) )
+    if (0 == (GetVersion() & 0x80000000UL))
     {
-        lRet = reg.Open ( HKEY_LOCAL_MACHINE,
+        lRet = reg.Open(HKEY_LOCAL_MACHINE,
             _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved"),
-            KEY_SET_VALUE );
+            KEY_SET_VALUE);
 
-        if ( ERROR_SUCCESS != lRet )
+        if (ERROR_SUCCESS != lRet)
             return E_ACCESSDENIED;
 
-        lRet = reg.SetStringValue ( _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}"), 
-            _T("GitExtensions2") );
+        lRet = reg.SetStringValue(_T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}"), 
+            _T("GitExtensions2"));
 
-        if ( ERROR_SUCCESS != lRet )
+        if (ERROR_SUCCESS != lRet)
             return E_ACCESSDENIED;
     }
 
@@ -86,16 +86,16 @@ STDAPI DllRegisterServer()
         reg.Create(HKEY_CLASSES_ROOT,
             _T("*\\shellex\\ContextMenuHandlers\\GitExtensions2"));
 
-        lRet = reg.Open ( HKEY_CLASSES_ROOT,
+        lRet = reg.Open(HKEY_CLASSES_ROOT,
             _T("*\\shellex\\ContextMenuHandlers\\GitExtensions2"),
-            KEY_SET_VALUE );		
+            KEY_SET_VALUE);
 
-        if ( ERROR_SUCCESS != lRet )
+        if (ERROR_SUCCESS != lRet)
             return E_ACCESSDENIED;
 
-        lRet = reg.SetStringValue ( NULL, _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}") );
+        lRet = reg.SetStringValue(NULL, _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}"));
 
-        if ( ERROR_SUCCESS != lRet )
+        if (ERROR_SUCCESS != lRet)
             return E_ACCESSDENIED;
 
         ///////////////////////
@@ -107,14 +107,14 @@ STDAPI DllRegisterServer()
 
         lRet = reg.Open ( HKEY_CLASSES_ROOT,
             _T("Directory\\shellex\\ContextMenuHandlers\\GitExtensions2"),
-            KEY_SET_VALUE );		
+            KEY_SET_VALUE);
 
-        if ( ERROR_SUCCESS != lRet )
+        if (ERROR_SUCCESS != lRet)
             return E_ACCESSDENIED;
 
-        lRet = reg.SetStringValue ( NULL, _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}") );
+        lRet = reg.SetStringValue(NULL, _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}"));
 
-        if ( ERROR_SUCCESS != lRet )
+        if (ERROR_SUCCESS != lRet)
             return E_ACCESSDENIED;
 
         ///////////////////////
@@ -126,14 +126,14 @@ STDAPI DllRegisterServer()
 
         lRet = reg.Open ( HKEY_CLASSES_ROOT,
             _T("Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2"),
-            KEY_SET_VALUE );		
+            KEY_SET_VALUE);
 
-        if ( ERROR_SUCCESS != lRet )
+        if (ERROR_SUCCESS != lRet)
             return E_ACCESSDENIED;
 
-        lRet = reg.SetStringValue ( NULL, _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}") );
+        lRet = reg.SetStringValue(NULL, _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}"));
 
-        if ( ERROR_SUCCESS != lRet )
+        if (ERROR_SUCCESS != lRet)
             return E_ACCESSDENIED;
 
     }
@@ -154,17 +154,15 @@ STDAPI DllUnregisterServer()
     CRegKey reg;
     LONG    lRet;
 
-    if ( 0 == (GetVersion() & 0x80000000UL) )
+    if (0 == (GetVersion() & 0x80000000UL))
     {
-
-
-        lRet = reg.Open ( HKEY_LOCAL_MACHINE,
+        lRet = reg.Open(HKEY_LOCAL_MACHINE,
             _T("Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved"),
-            KEY_SET_VALUE );
+            KEY_SET_VALUE);
 
-        if ( ERROR_SUCCESS == lRet )
+        if (ERROR_SUCCESS == lRet)
         {
-            lRet = reg.DeleteValue ( _T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}") );
+            lRet = reg.DeleteValue(_T("{3C16B20A-BA16-4156-916F-0A375ECFFE24}"));
         }
     }
 
