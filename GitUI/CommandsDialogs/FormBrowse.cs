@@ -126,6 +126,7 @@ namespace GitUI.CommandsDialogs
             {
                 var imageList = new ImageList();
                 CommitInfoTabControl.ImageList = imageList;
+                imageList.TransparentColor = Color.Red;
                 imageList.ColorDepth = ColorDepth.Depth8Bit;
                 imageList.Images.Add(global::GitUI.Properties.Resources.IconCommit);
                 imageList.Images.Add(global::GitUI.Properties.Resources.IconFileTree);
