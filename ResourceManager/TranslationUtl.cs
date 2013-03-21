@@ -72,10 +72,7 @@ namespace ResourceManager.Translation
                 }
                 else
                 {
-                    IsTranslatableItem = delegate(PropertyInfo propertyInfo)
-                    {
-                        return IsTranslatableItemInComponent(propertyInfo);
-                    };
+                    IsTranslatableItem = IsTranslatableItemInComponent;
                 }
 
                 if (IsTranslatableItem != null)

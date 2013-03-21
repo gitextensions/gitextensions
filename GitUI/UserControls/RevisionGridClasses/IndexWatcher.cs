@@ -7,7 +7,7 @@ namespace GitUI.RevisionGridClasses
     [Serializable]
     public delegate void IndexChangedEventHandler(bool indexChanged);
 
-    public class IndexWatcher : IDisposable
+    public sealed class IndexWatcher : IDisposable
     {
         public event IndexChangedEventHandler Changed;
 
