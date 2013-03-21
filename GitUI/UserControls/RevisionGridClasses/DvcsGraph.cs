@@ -255,10 +255,24 @@ namespace GitUI.RevisionGridClasses
 
             if (disposing)
             {
+                if (whiteBorderPen != null)
+                {
+                    whiteBorderPen.Dispose();
+                    whiteBorderPen = null;
+                }
+                if (blackBorderPen != null)
+                {
+                    blackBorderPen.Dispose();
+                    blackBorderPen = null;
+                }
                 if (graphBitmap != null)
                 {
                     graphBitmap.Dispose();
                     graphBitmap = null;
+                }
+                if (backgroundEvent != null)
+                {
+                    backgroundEvent.Dispose();
                 }
             }
             base.Dispose(disposing);

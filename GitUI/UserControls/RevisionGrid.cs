@@ -49,7 +49,8 @@ namespace GitUI
         private const int NODE_DIMENSION = 8;
         private const int LANE_WIDTH = 13;
         private const int LANE_LINE_WIDTH = 2;
-        private Brush selectedItemBrush;
+        private Brush _selectedItemBrush;
+        private Brush _filledItemBrush; // disposable brush
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
@@ -1088,7 +1089,7 @@ namespace GitUI
             bool isRowSelected = ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected);
 
             if (isRowSelected /*&& !showRevisionCards*/)
-                e.Graphics.FillRectangle(selectedItemBrush, e.CellBounds);
+                e.Graphics.FillRectangle(_selectedItemBrush, e.CellBounds);
             else
                 e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
 
@@ -2284,12 +2285,16 @@ namespace GitUI
                     rowHeigth = 70;
                 }
 
-                selectedItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
-                Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
-                Color.LightBlue, 90, false);
+                if (_filledItemBrush == null)
+                {
+                    _filledItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
+                        Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
+                        Color.LightBlue, 90, false);
+                }
+                _selectedItemBrush = _filledItemBrush;
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, rowHeigth, selectedItemBrush);
+                Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, rowHeigth, _selectedItemBrush);
 
             }
             else
@@ -2301,19 +2306,23 @@ namespace GitUI
                         rowHeigth = (int)graphics.MeasureString("By", NormalFont).Height + 9;
                     }
 
-                    selectedItemBrush = SystemBrushes.Highlight;
+                    _selectedItemBrush = SystemBrushes.Highlight;
                 }
                 else
                 {
                     rowHeigth = 25;
 
-                    selectedItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
-                                                                Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
-                                                                Color.LightBlue, 90, false);
+                    if (_filledItemBrush == null)
+                    {
+                        _filledItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
+                            Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
+                            Color.LightBlue, 90, false);
+                    }
+                    _selectedItemBrush = _filledItemBrush;
                 }
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, rowHeigth, selectedItemBrush);
+                Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, rowHeigth, _selectedItemBrush);
             }
 
             //Hide graph column when there it is disabled OR when a filter is active

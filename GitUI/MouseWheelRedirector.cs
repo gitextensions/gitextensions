@@ -41,7 +41,7 @@ namespace GitUI
             {
                 // WM_MOUSEWHEEL, find the control at screen position m.LParam
                 Point pos = new Point(m.LParam.ToInt32());
-                IntPtr hWnd = WindowFromPoint(pos);
+                IntPtr hWnd = NativeMethods.WindowFromPoint(pos);
                 if (hWnd != IntPtr.Zero && hWnd != m.HWnd && Control.FromHandle(hWnd) != null)
                 {
                     if (_previousHWnd != hWnd)
@@ -54,7 +54,7 @@ namespace GitUI
                     }
                     if (_GEControl)
                     {
-                        SendMessage(hWnd, m.Msg, m.WParam, m.LParam);
+                        NativeMethods.SendMessage(hWnd, m.Msg, m.WParam, m.LParam);
                         return true;
                     }
                 }
@@ -62,10 +62,14 @@ namespace GitUI
             return false;
         }
 
-        // P/Invoke declarations
-        [DllImport("user32.dll")]
-        private static extern IntPtr WindowFromPoint(Point pt);
-        [DllImport("user32.dll")]
-        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
+        private static class NativeMethods
+        {
+            // P/Invoke declarations
+            [DllImport("user32.dll")]
+            public static extern IntPtr WindowFromPoint(Point pt);
+
+            [DllImport("user32.dll")]
+            public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
+        }
     }
 }

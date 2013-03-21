@@ -49,10 +49,13 @@ namespace GitCommands
             string outputString = "";
             if (output != null && output.Length > 0)
             {
-                using (Stream ms = new MemoryStream(output))
+                Stream ms = null;
+                try
                 {
+                    ms = new MemoryStream(output);
                     using (StreamReader reader = new StreamReader(ms, encoding))
                     {
+                        ms = null;
                         reader.Peek();
                         encoding = reader.CurrentEncoding;
                         outputString = reader.ReadToEnd();
@@ -60,16 +63,24 @@ namespace GitCommands
                             return outputString;
                     }
                 }
+                finally
+                {
+                    if (ms != null)
+                        ms.Dispose();
+                }
                 outputString = outputString + Environment.NewLine;
             }
 
             string errorString = null;
             if (error != null && error.Length > 0)
             {
-                using (Stream ms = new MemoryStream(error))
+                Stream ms = null;
+                try
                 {
+                    ms = new MemoryStream(error);
                     using (StreamReader reader = new StreamReader(ms, encoding))
                     {
+                        ms = null;
                         reader.Peek();
                         // .Net automatically detect Unicode encoding in StreamReader
                         encoding = reader.CurrentEncoding;
@@ -77,6 +88,11 @@ namespace GitCommands
                         if (output == null || output.Length == 0)
                             return errorString;
                     }
+                }
+                finally
+                {
+                    if (ms != null)
+                        ms.Dispose();
                 }
             }
 
