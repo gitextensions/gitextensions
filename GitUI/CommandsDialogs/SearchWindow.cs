@@ -101,8 +101,7 @@ namespace GitUI.CommandsDialogs
                 e.SuppressKeyPress = true;
                 Close();
             }
-
-            if (e.KeyCode == Keys.Escape)
+            else if (e.KeyCode == Keys.Escape)
             {
                 listBox1.SelectedItem = null;
                 e.SuppressKeyPress = true;

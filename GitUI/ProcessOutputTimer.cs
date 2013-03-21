@@ -1,9 +1,10 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Timers;
 
 namespace GitUI
 {
-    public class ProcessOutputTimer
+    public sealed class ProcessOutputTimer : IDisposable
     {
         public delegate void DoOutputCallback(string text);
         private Timer _timer; 
@@ -69,6 +70,7 @@ namespace GitUI
             Clear();
             doOutput = null;
             _timer.Dispose();
+            GC.SuppressFinalize(this);
         }
 
     }
