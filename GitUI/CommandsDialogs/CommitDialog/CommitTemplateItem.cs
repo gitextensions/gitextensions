@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace GitUI.CommandsDialogs.CommitDialog
 {
     [Serializable]
-    public class CommitTemplateItem : ISerializable
+    public sealed class CommitTemplateItem : ISerializable
     {
         private string _name;
         public string Name
@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
             Text = String.Empty;
         }
 
-        public CommitTemplateItem(SerializationInfo info, StreamingContext ctxt)
+        private CommitTemplateItem(SerializationInfo info, StreamingContext ctxt)
         {
             Name = (string)info.GetValue("Name", typeof(string));
             Text = (string)info.GetValue("Text", typeof(string));
