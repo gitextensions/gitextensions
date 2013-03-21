@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -75,24 +76,29 @@ namespace NetSpell.SpellChecker.Dictionary
             {
                 TraceWriter.TraceInfo("Loading User Dictionary:{0}", filePath);
 
-                //IsolatedStorageFile isf = IsolatedStorageFile.GetUserStoreForAssembly();
-                //fs = new IsolatedStorageFileStream(_UserFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, isf);
-                FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-                StreamReader sr = new StreamReader(fs, Encoding.UTF8);
-
-                // read line by line
-                while (sr.Peek() >= 0)
+                FileStream fs = null;
+                try
                 {
-                    string tempLine = sr.ReadLine().Trim();
-                    if (tempLine.Length > 0)
+                    fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                    using (var sr = new StreamReader(fs, Encoding.UTF8))
                     {
-                        _userWords.Add(tempLine, tempLine);
+                        fs = null;
+                        // read line by line
+                        while (sr.Peek() >= 0)
+                        {
+                            string tempLine = sr.ReadLine().Trim();
+                            if (tempLine.Length > 0)
+                            {
+                                _userWords.Add(tempLine, tempLine);
+                            }
+                        }
                     }
                 }
-
-                fs.Close();
-                sr.Close();
-                //isf.Close();
+                finally
+                {
+                    if (fs != null)
+                        fs.Dispose();
+                }
 
                 TraceWriter.TraceInfo("Loaded User Dictionary; Words:{0}", _userWords.Count);
             }
@@ -117,20 +123,26 @@ namespace NetSpell.SpellChecker.Dictionary
 
             TraceWriter.TraceInfo("Saving User Dictionary:{0}", filePath);
 
-            //IsolatedStorageFile isf = IsolatedStorageFile.GetUserStoreForAssembly();
-            //FileStream fs = new IsolatedStorageFileStream(_UserFile, FileMode.Create, FileAccess.Write, isf);
-            FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-            StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-            sw.NewLine = "\n";
-
-            foreach (string tempWord in _userWords.Keys)
+            FileStream fs = null;
+            try
             {
-                sw.WriteLine(tempWord);
-            }
+                fs = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+                using (var sw = new StreamWriter(fs, Encoding.UTF8))
+                {
+                    fs = null;
+                    sw.NewLine = "\n";
 
-            sw.Close();
-            fs.Close();
-            //isf.Close();
+                    foreach (string tempWord in _userWords.Keys)
+                    {
+                        sw.WriteLine(tempWord);
+                    }
+                }
+            }
+            finally
+            {
+                if (fs != null)
+                    fs.Dispose();
+            }
 
             TraceWriter.TraceInfo("Saved User Dictionary; Words:{0}", _userWords.Count);
         }
@@ -378,112 +390,122 @@ namespace NetSpell.SpellChecker.Dictionary
             TraceWriter.TraceInfo("Loading Dictionary:{0}", dictionaryPath);
 
             // open dictionary file
-            FileStream fs = new FileStream(dictionaryPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            StreamReader sr = new StreamReader(fs, Encoding.UTF8);
-
-            // read line by line
-            while (sr.Peek() >= 0)
+            FileStream fs = null;
+            try
             {
-                string tempLine = sr.ReadLine().Trim();
-                if (tempLine.Length > 0)
+                fs = new FileStream(dictionaryPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                using (var sr = new StreamReader(fs, Encoding.UTF8))
                 {
-                    // check for section flag
-                    if (tempLine.StartsWith("[") && tempLine.EndsWith("]"))
+                    fs = null;
+
+                    // read line by line
+                    while (sr.Peek() >= 0)
                     {
-                        // set current section that is being parsed
-                        currentSection = tempLine;
-                        continue;
-                    }
+                        string tempLine = sr.ReadLine().Trim();
+                        if (tempLine.Length <= 0)
+                            continue;
+                        // check for section flag
+                        if (tempLine.StartsWith("[") && tempLine.EndsWith("]"))
+                        {
+                            // set current section that is being parsed
+                            currentSection = tempLine;
+                            continue;
+                        }
 
-                    // parse line and place in correct object
-                    switch (currentSection)
-                    {
-                        case "[Copyright]":
-                            Copyright += tempLine + "\r\n";
-                            break;
-                        case "[Try]": // ISpell try chars
-                            TryCharacters += tempLine;
-                            break;
-                        case "[Replace]": // ISpell replace chars
-                            ReplaceCharacters.Add(tempLine);
-                            break;
-                        case "[Prefix]": // MySpell prefix rules
-                        case "[Suffix]": // MySpell suffix rules
+                        // parse line and place in correct object
+                        switch (currentSection)
+                        {
+                            case "[Copyright]":
+                                Copyright += tempLine + "\r\n";
+                                break;
+                            case "[Try]": // ISpell try chars
+                                TryCharacters += tempLine;
+                                break;
+                            case "[Replace]": // ISpell replace chars
+                                ReplaceCharacters.Add(tempLine);
+                                break;
+                            case "[Prefix]": // MySpell prefix rules
+                            case "[Suffix]": // MySpell suffix rules
 
-                            // split line by white space
-                            partMatches = _spaceRegx.Matches(tempLine);
+                                // split line by white space
+                                partMatches = _spaceRegx.Matches(tempLine);
 
-                            // if 3 parts, then new rule  
-                            if (partMatches.Count == 3)
-                            {
-                                currentRule = new AffixRule();
-
-                                // part 1 = affix key
-                                currentRule.Name = partMatches[0].Value;
-                                // part 2 = combine flag
-                                if (partMatches[1].Value == "Y") currentRule.AllowCombine = true;
-                                // part 3 = entry count, not used
-
-                                if (currentSection == "[Prefix]")
+                                // if 3 parts, then new rule  
+                                if (partMatches.Count == 3)
                                 {
-                                    // add to prefix collection
-                                    PrefixRules.Add(currentRule.Name, currentRule);
+                                    currentRule = new AffixRule();
+
+                                    // part 1 = affix key
+                                    currentRule.Name = partMatches[0].Value;
+                                    // part 2 = combine flag
+                                    if (partMatches[1].Value == "Y") currentRule.AllowCombine = true;
+                                    // part 3 = entry count, not used
+
+                                    if (currentSection == "[Prefix]")
+                                    {
+                                        // add to prefix collection
+                                        PrefixRules.Add(currentRule.Name, currentRule);
+                                    }
+                                    else
+                                    {
+                                        // add to suffix collection
+                                        SuffixRules.Add(currentRule.Name, currentRule);
+                                    }
                                 }
-                                else
+                                    //if 4 parts, then entry for current rule
+                                else if (partMatches.Count == 4)
                                 {
-                                    // add to suffix collection
-                                    SuffixRules.Add(currentRule.Name, currentRule);
+                                    // part 1 = affix key
+                                    if (currentRule.Name == partMatches[0].Value)
+                                    {
+                                        AffixEntry entry = new AffixEntry();
+
+                                        // part 2 = strip char
+                                        if (partMatches[1].Value != "0")
+                                            entry.StripCharacters = partMatches[1].Value;
+                                        // part 3 = add chars
+                                        entry.AddCharacters = partMatches[2].Value;
+                                        // part 4 = conditions
+                                        AffixUtility.EncodeConditions(partMatches[3].Value, entry);
+
+                                        currentRule.AffixEntries.Add(entry);
+                                    }
                                 }
-                            }
-                            //if 4 parts, then entry for current rule
-                            else if (partMatches.Count == 4)
-                            {
-                                // part 1 = affix key
-                                if (currentRule.Name == partMatches[0].Value)
+                                break;
+                            case "[Phonetic]": // ASpell phonetic rules
+                                // split line by white space
+                                partMatches = _spaceRegx.Matches(tempLine);
+                                if (partMatches.Count >= 2)
                                 {
-                                    AffixEntry entry = new AffixEntry();
-
-                                    // part 2 = strip char
-                                    if (partMatches[1].Value != "0") entry.StripCharacters = partMatches[1].Value;
-                                    // part 3 = add chars
-                                    entry.AddCharacters = partMatches[2].Value;
-                                    // part 4 = conditions
-                                    AffixUtility.EncodeConditions(partMatches[3].Value, entry);
-
-                                    currentRule.AffixEntries.Add(entry);
+                                    PhoneticRule rule = new PhoneticRule();
+                                    PhoneticUtility.EncodeRule(partMatches[0].Value, ref rule);
+                                    rule.ReplaceString = partMatches[1].Value;
+                                    _phoneticRules.Add(rule);
                                 }
-                            }
-                            break;
-                        case "[Phonetic]": // ASpell phonetic rules
-                            // split line by white space
-                            partMatches = _spaceRegx.Matches(tempLine);
-                            if (partMatches.Count >= 2)
-                            {
-                                PhoneticRule rule = new PhoneticRule();
-                                PhoneticUtility.EncodeRule(partMatches[0].Value, ref rule);
-                                rule.ReplaceString = partMatches[1].Value;
-                                _phoneticRules.Add(rule);
-                            }
-                            break;
-                        case "[Words]": // dictionary word list
-                            // splits word into its parts
-                            string[] parts = tempLine.Split('/');
-                            Word tempWord = new Word();
-                            // part 1 = base word
-                            tempWord.Text = parts[0];
-                            // part 2 = affix keys
-                            if (parts.Length >= 2) tempWord.AffixKeys = parts[1];
-                            // part 3 = phonetic code
-                            if (parts.Length >= 3) tempWord.PhoneticCode = parts[2];
+                                break;
+                            case "[Words]": // dictionary word list
+                                // splits word into its parts
+                                string[] parts = tempLine.Split('/');
+                                Word tempWord = new Word();
+                                // part 1 = base word
+                                tempWord.Text = parts[0];
+                                // part 2 = affix keys
+                                if (parts.Length >= 2) tempWord.AffixKeys = parts[1];
+                                // part 3 = phonetic code
+                                if (parts.Length >= 3) tempWord.PhoneticCode = parts[2];
 
-                            BaseWords.Add(tempWord.Text, tempWord);
-                            break;
-                    } // currentSection switch
-                } // if templine
-            } // read line
-            // close files
-            sr.Close();
-            fs.Close();
+                                BaseWords.Add(tempWord.Text, tempWord);
+                                break;
+                        } // currentSection switch
+                    } // read line
+                    // close files
+                }
+            }
+            finally
+            {
+                if (fs != null)
+                    fs.Dispose();
+            }
 
             TraceWriter.TraceInfo("Dictionary Loaded BaseWords:{0}; PrefixRules:{1}; SuffixRules:{2}; PhoneticRules:{3}",
                 BaseWords.Count, PrefixRules.Count, SuffixRules.Count, PhoneticRules.Count);
