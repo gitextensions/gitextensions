@@ -263,47 +263,50 @@ namespace GitUI.BuildServerIntegration
         {
             return httpClient.GetAsync(FormatRelativePath(restServicePath), HttpCompletionOption.ResponseHeadersRead)
                              .ContinueWith(
-                                 task =>
-                                     {
-                                         bool retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
-                                         bool unauthorized = task.Status == TaskStatus.RanToCompletion && task.Result.StatusCode == HttpStatusCode.Unauthorized;
-
-                                         if (!retry && task.Result.IsSuccessStatusCode)
-                                         {
-                                             if (task.Result.Content.Headers.ContentType.MediaType == "text/html")
-                                             {
-                                                 // TeamCity responds with an HTML login page when guest access is denied. Retrying the request normally helps.
-                                                 retry = true;
-                                             }
-                                             else
-                                             {
-                                                 return task.Result.Content.ReadAsStreamAsync();
-                                             }
-                                         }
-
-                                         if (retry)
-                                         {
-                                             return GetStreamAsync(restServicePath, cancellationToken);
-                                         }
-
-                                         if (unauthorized)
-                                         {
-                                             var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, false);
-
-                                             if (buildServerCredentials != null)
-                                             {
-                                                 UpdateHttpClientOptions(buildServerCredentials);
-
-                                                 return GetStreamAsync(restServicePath, cancellationToken);
-                                             }
-
-                                             throw new OperationCanceledException(task.Result.ReasonPhrase);
-                                         }
-
-                                         throw new HttpRequestException(task.Result.ReasonPhrase);
-                                     },
+                                 task => GetStreamFromHttpResponseAsync(task, restServicePath, cancellationToken),
                                  cancellationToken)
                              .Unwrap();
+        }
+
+        private Task<Stream> GetStreamFromHttpResponseAsync(Task<HttpResponseMessage> task, string restServicePath, CancellationToken cancellationToken)
+        {
+            bool retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
+            bool unauthorized = task.Status == TaskStatus.RanToCompletion &&
+                                task.Result.StatusCode == HttpStatusCode.Unauthorized;
+
+            if (!retry && task.Result.IsSuccessStatusCode)
+            {
+                if (task.Result.Content.Headers.ContentType.MediaType == "text/html")
+                {
+                    // TeamCity responds with an HTML login page when guest access is denied. Retrying the request normally helps.
+                    retry = true;
+                }
+                else
+                {
+                    return task.Result.Content.ReadAsStreamAsync();
+                }
+            }
+
+            if (retry)
+            {
+                return GetStreamAsync(restServicePath, cancellationToken);
+            }
+
+            if (unauthorized)
+            {
+                var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, false);
+
+                if (buildServerCredentials != null)
+                {
+                    UpdateHttpClientOptions(buildServerCredentials);
+
+                    return GetStreamAsync(restServicePath, cancellationToken);
+                }
+
+                throw new OperationCanceledException(task.Result.ReasonPhrase);
+            }
+
+            throw new HttpRequestException(task.Result.ReasonPhrase);
         }
 
         private void UpdateHttpClientOptions(IBuildServerCredentials buildServerCredentials)
