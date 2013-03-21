@@ -274,16 +274,21 @@ namespace GitUI.BuildServerIntegration
             bool unauthorized = task.Status == TaskStatus.RanToCompletion &&
                                 task.Result.StatusCode == HttpStatusCode.Unauthorized;
 
-            if (!retry && task.Result.IsSuccessStatusCode)
+            if (!retry)
             {
-                if (task.Result.Content.Headers.ContentType.MediaType == "text/html")
+                if (task.Result.IsSuccessStatusCode)
                 {
-                    // TeamCity responds with an HTML login page when guest access is denied. Retrying the request normally helps.
-                    retry = true;
-                }
-                else
-                {
-                    return task.Result.Content.ReadAsStreamAsync();
+                    var httpContent = task.Result.Content;
+
+                    if (httpContent.Headers.ContentType.MediaType == "text/html")
+                    {
+                        // TeamCity responds with an HTML login page when guest access is denied. Retrying the request normally helps.
+                        retry = true;
+                    }
+                    else
+                    {
+                        return httpContent.ReadAsStreamAsync();
+                    }
                 }
             }
 
