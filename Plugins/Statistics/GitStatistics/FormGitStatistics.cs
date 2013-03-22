@@ -4,8 +4,8 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Statistics;
 using GitStatistics.PieChart;
 using GitUIPluginInterfaces;
@@ -38,7 +38,7 @@ namespace GitStatistics
         public DirectoryInfo WorkingDir;
         private SynchronizationContext syncContext;
         private LineCounter lineCounter;
-        private AsyncLoader loadThread = new AsyncLoader();
+        private Task loadThread;
         private readonly IGitModule Module;
 
         public FormGitStatistics(IGitModule aModule, string codeFilePattern)
@@ -142,7 +142,7 @@ namespace GitStatistics
             lineCounter = new LineCounter(WorkingDir);
             lineCounter.LinesOfCodeUpdated += lineCounter_LinesOfCodeUpdated;
 
-            loadThread.Load(LoadLinesOfCode, () => { });
+            loadThread = Task.Factory.StartNew(LoadLinesOfCode);
         }
         
         public void LoadLinesOfCode()
@@ -154,7 +154,7 @@ namespace GitStatistics
         {
             LineCounter lineCounter = (LineCounter)sender;
 
-            //Must do this synchronously becuase lineCounter.LinesOfCodePerExtension might change while we are iterating over it otherwise.
+            //Must do this synchronously because lineCounter.LinesOfCodePerExtension might change while we are iterating over it otherwise.
             var extensionValues = new Decimal[lineCounter.LinesOfCodePerExtension.Count];
             var extensionLabels = new string[lineCounter.LinesOfCodePerExtension.Count];
 
@@ -258,7 +258,6 @@ namespace GitStatistics
         private void FormGitStatistics_FormClosing(object sender, FormClosingEventArgs e)
         {
             lineCounter.LinesOfCodeUpdated -= lineCounter_LinesOfCodeUpdated;
-            loadThread.Cancel();
         }
     }
 }

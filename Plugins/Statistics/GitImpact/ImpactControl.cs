@@ -6,12 +6,11 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Statistics;
-using GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitImpact
 {
-    public class ImpactControl : GitExtensionsControl
+    public class ImpactControl : UserControl
     {
         private const int block_width = 60;
         private const int transition_width = 50;
@@ -48,7 +47,6 @@ namespace GitImpact
             Clear();
 
             InitializeComponent();
-            Translate();
 
             // Set DoubleBuffer flag for flicker-free drawing
             this.SetStyle(ControlStyles.AllPaintingInWmPaint |
@@ -426,12 +424,7 @@ namespace GitImpact
 
         private int GenerateIntFromString(string text)
         {
-            int number = 0;
-            foreach (char c in text)
-            {
-                number += (int)c;
-            }
-            return number;
+            return text.Sum(c => (int) c);
         }
 
         /// <summary>
