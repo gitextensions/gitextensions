@@ -82,7 +82,7 @@ namespace GitCommands
             //Default!
             Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
             //to prevent from leaking processes see issue #1092 for details
-            Environment.SetEnvironmentVariable("TERM", "msys");
+            Environment.SetEnvironmentVariable("TERM", "dumb");
         }
 
         public static string GetHomeDir()
