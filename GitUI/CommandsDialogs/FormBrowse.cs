@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -136,7 +137,8 @@ namespace GitUI.CommandsDialogs
             }
 
             RevisionGrid.UICommandsSource = this;
-            AsyncLoader.DoAsync(() => PluginLoader.Load(), () => RegisterPlugins());
+            Task.Factory.StartNew(PluginLoader.Load)
+                .ContinueWith((task) => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());
             RevisionGrid.GitModuleChanged += DashboardGitModuleChanged;
             filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
             _FilterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, RevisionGrid);
