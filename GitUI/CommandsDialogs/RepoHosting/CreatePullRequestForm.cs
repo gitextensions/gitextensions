@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly string _chooseRemote;
         private List<IHostedRemote> _hostedRemotes;
         private string _currentBranch;
-        private AsyncLoader remoteLoader = new AsyncLoader();
+        private readonly AsyncLoader _remoteLoader = new AsyncLoader();
 
         public CreatePullRequestForm(GitUICommands aCommands, IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
             : base(aCommands)
@@ -36,7 +36,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _currentBranch = "";
             InitializeComponent();
             Translate();
-            prevTitle = _titleTB.Text;
+            _prevTitle = _titleTB.Text;
         }
 
         private void CreatePullRequestForm_Load(object sender, EventArgs e)
@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _yourBranchesCB.Text = _strLoading.Text;
             _hostedRemotes = _repoHost.GetHostedRemotesForModule(Module);
             this.Mask();
-            remoteLoader.Load(
+            _remoteLoader.Load(
                 () => _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray(),
                 (IHostedRemote[] foreignHostedRemotes) =>
                 {
@@ -156,15 +156,15 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 ex => { throw ex; });
         }
 
-        private string prevTitle;
+        private string _prevTitle;
 
         private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (prevTitle.Equals(_titleTB.Text) && !_yourBranchesCB.Text.IsNullOrWhiteSpace())
+            if (_prevTitle.Equals(_titleTB.Text) && !_yourBranchesCB.Text.IsNullOrWhiteSpace())
             {
                 var lastMsg = Module.GetPreviousCommitMessages(MyRemote.Name.Combine("/", _yourBranchesCB.Text), 1).FirstOrDefault();
                 _titleTB.Text = lastMsg.TakeUntilStr("\n");
-                prevTitle = _titleTB.Text;
+                _prevTitle = _titleTB.Text;
             }
         }
 

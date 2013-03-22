@@ -108,8 +108,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _commitValidationCaption = new TranslationString("Commit validation");
 
         private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
-
-        private readonly TranslationString _checkBoxAutoWrap = new TranslationString("Auto-wrap");
         #endregion
 
         private readonly SynchronizationContext _syncContext;
@@ -117,15 +115,15 @@ namespace GitUI.CommandsDialogs
         private bool _currentItemStaged;
         private readonly CommitKind _commitKind;
         private readonly GitRevision _editedCommit;
-        private readonly ToolStripMenuItem _StageSelectedLinesToolStripMenuItem;
-        private readonly ToolStripMenuItem _ResetSelectedLinesToolStripMenuItem;
-        private string commitTemplate;
+        private readonly ToolStripMenuItem _stageSelectedLinesToolStripMenuItem;
+        private readonly ToolStripMenuItem _resetSelectedLinesToolStripMenuItem;
+        private string _commitTemplate;
         private bool IsMergeCommit { get; set; }
-        private bool shouldRescanChanges = true;
+        private bool _shouldRescanChanges = true;
         private bool _shouldReloadCommitTemplates = true;
-        private AsyncLoader unstagedLoader;
-        private bool _useFormCommitMessage;
-        private CancellationTokenSource interactiveAddBashCloseWaitCTS;
+        private readonly AsyncLoader _unstagedLoader;
+        private readonly bool _useFormCommitMessage;
+        private CancellationTokenSource _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
         private readonly string _indent;
 
         /// <summary>
@@ -193,12 +191,12 @@ namespace GitUI.CommandsDialogs
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
             SelectedDiff.AddContextMenuSeparator();
-            _StageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, StageSelectedLinesToolStripMenuItemClick);
-            _StageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.StageSelectedFile).ToShortcutKeyDisplayString();
-            _ResetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
-            _ResetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
-            _ResetSelectedLinesToolStripMenuItem.Image = Reset.Image;
-            resetChanges.ShortcutKeyDisplayString = _ResetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
+            _stageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, StageSelectedLinesToolStripMenuItemClick);
+            _stageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.StageSelectedFile).ToShortcutKeyDisplayString();
+            _resetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
+            _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
+            _resetSelectedLinesToolStripMenuItem.Image = Reset.Image;
+            resetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
             _indent = Settings.CommitValidationIndentAfterFirstLine ? "   " : String.Empty;
         }
 
@@ -223,8 +221,8 @@ namespace GitUI.CommandsDialogs
 
         void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _StageSelectedLinesToolStripMenuItem.Enabled = SelectedDiff.HasAnyPatches() || _currentItem != null && _currentItem.IsNew;
-            _ResetSelectedLinesToolStripMenuItem.Enabled = _StageSelectedLinesToolStripMenuItem.Enabled;
+            _stageSelectedLinesToolStripMenuItem.Enabled = SelectedDiff.HasAnyPatches() || _currentItem != null && _currentItem.IsNew;
+            _resetSelectedLinesToolStripMenuItem.Enabled = _stageSelectedLinesToolStripMenuItem.Enabled;
         }
 
         #region Hotkey commands
@@ -302,7 +300,7 @@ namespace GitUI.CommandsDialogs
                 ResetSoftClick(this, null);
                 return true;
             }
-            else if (SelectedDiff.ContainsFocus && _ResetSelectedLinesToolStripMenuItem.Enabled)
+            else if (SelectedDiff.ContainsFocus && _resetSelectedLinesToolStripMenuItem.Enabled)
             {
                 ResetSelectedLinesToolStripMenuItemClick(this, null);
                 return true;
@@ -318,7 +316,7 @@ namespace GitUI.CommandsDialogs
                 StageClick(this, null);
                 return true;
             }
-            else if (SelectedDiff.ContainsFocus && !_currentItemStaged && _StageSelectedLinesToolStripMenuItem.Enabled)
+            else if (SelectedDiff.ContainsFocus && !_currentItemStaged && _stageSelectedLinesToolStripMenuItem.Enabled)
             {
                 StageSelectedLinesToolStripMenuItemClick(this, null);
                 return true;
@@ -334,7 +332,7 @@ namespace GitUI.CommandsDialogs
                 UnstageFilesClick(this, null);
                 return true;
             }
-            else if (SelectedDiff.ContainsFocus && _currentItemStaged && _StageSelectedLinesToolStripMenuItem.Enabled)
+            else if (SelectedDiff.ContainsFocus && _currentItemStaged && _stageSelectedLinesToolStripMenuItem.Enabled)
             {
                 StageSelectedLinesToolStripMenuItemClick(this, null);
                 return true;
@@ -560,9 +558,9 @@ namespace GitUI.CommandsDialogs
             {
                 using (var commitReader = new StreamReader(fileName))
                 {
-                    commitTemplate = commitReader.ReadToEnd().Replace("\r", "");
+                    _commitTemplate = commitReader.ReadToEnd().Replace("\r", "");
                 }
-                Message.Text = commitTemplate;
+                Message.Text = _commitTemplate;
             }
 
             Cursor.Current = Cursors.Default;
@@ -669,9 +667,9 @@ namespace GitUI.CommandsDialogs
                 llShowPreview.Show();
             }
 
-            _StageSelectedLinesToolStripMenuItem.Text = staged ? _unstageSelectedLines.Text : _stageSelectedLines.Text;
-            _StageSelectedLinesToolStripMenuItem.Image = staged ? toolUnstageItem.Image : toolStageItem.Image;
-            _StageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = 
+            _stageSelectedLinesToolStripMenuItem.Text = staged ? _unstageSelectedLines.Text : _stageSelectedLines.Text;
+            _stageSelectedLinesToolStripMenuItem.Image = staged ? toolUnstageItem.Image : toolStageItem.Image;
+            _stageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = 
                 GetShortcutKeys((int) (staged ? Commands.UnStageSelectedFile : Commands.StageSelectedFile)).ToShortcutKeyDisplayString();
         }
 
@@ -824,7 +822,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _mergeConflicts.Text, _mergeConflictsCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (_useFormCommitMessage && (string.IsNullOrEmpty(Message.Text) || Message.Text == commitTemplate))
+            if (_useFormCommitMessage && (string.IsNullOrEmpty(Message.Text) || Message.Text == _commitTemplate))
             {
                 MessageBox.Show(this, _enterCommitMessage.Text, _enterCommitMessageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return;
@@ -967,7 +965,7 @@ namespace GitUI.CommandsDialogs
 
         private void RescanChanges()
         {
-            if (shouldRescanChanges)
+            if (_shouldRescanChanges)
             {
                 toolRefreshItem.Enabled = false;
                 Initialize();
@@ -1186,7 +1184,7 @@ namespace GitUI.CommandsDialogs
 
         private void ResetSoftClick(object sender, EventArgs e)
         {
-            shouldRescanChanges = false;
+            _shouldRescanChanges = false;
             try
             {
                 if (Unstaged.SelectedItem == null)
@@ -1240,7 +1238,7 @@ namespace GitUI.CommandsDialogs
             }
             finally
             {
-                shouldRescanChanges = true;
+                _shouldRescanChanges = true;
             }
             Initialize();
         }
@@ -1387,7 +1385,7 @@ namespace GitUI.CommandsDialogs
                     //When a committemplate is used, skip comments
                     //otherwise: "#" is probably not used for comment but for issue number
                     if (!line.StartsWith("#") ||
-                        string.IsNullOrEmpty(commitTemplate))
+                        string.IsNullOrEmpty(_commitTemplate))
                     {
                         if (lineNumber == 1 && !String.IsNullOrEmpty(line))
                             textWriter.WriteLine();
@@ -2212,23 +2210,19 @@ namespace GitUI.CommandsDialogs
 
             if (bashProcess != null)
             {
-                // Reusing CTS if one has already been created by another unfinished interactive add
-                interactiveAddBashCloseWaitCTS =
-                    interactiveAddBashCloseWaitCTS ??
-                    new CancellationTokenSource();
+                _interactiveAddBashCloseWaitCts.Cancel();
+                _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
                 
                 var formsTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
                 Task.Factory.StartNew(() =>
                 {
                     bashProcess.WaitForExit();
-                    using (bashProcess) { }
-                }).ContinueWith(_ =>
-                {
-                    RescanChanges();
-                },
-                interactiveAddBashCloseWaitCTS.Token,
-                TaskContinuationOptions.NotOnCanceled,
+                        bashProcess.Dispose();
+                    })
+                    .ContinueWith(_ => RescanChanges(),
+                    _interactiveAddBashCloseWaitCts.Token,
+                    TaskContinuationOptions.OnlyOnRanToCompletion,
                 formsTaskScheduler);
             }
         }

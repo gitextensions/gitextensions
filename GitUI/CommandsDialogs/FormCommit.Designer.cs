@@ -22,10 +22,10 @@ namespace GitUI.CommandsDialogs
                 unstagedLoader.Cancel();
             }
 
-            if (disposing && interactiveAddBashCloseWaitCTS != null)
+            if (disposing && _interactiveAddBashCloseWaitCts != null)
             {
-                interactiveAddBashCloseWaitCTS.Cancel();
-                interactiveAddBashCloseWaitCTS = null;
+                _interactiveAddBashCloseWaitCts.Cancel();
+                _interactiveAddBashCloseWaitCts = null;
             }
 
             if (disposing && (components != null))
