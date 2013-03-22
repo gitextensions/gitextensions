@@ -25,13 +25,1246 @@ namespace GitCommands.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("This is a test, only a test......")]
-        public string Testing {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AlwaysShowCheckoutBranchDlg {
             get {
-                return ((string)(this["Testing"]));
+                return ((bool)(this["AlwaysShowCheckoutBranchDlg"]));
             }
             set {
-                this["Testing"] = value;
+                this["AlwaysShowCheckoutBranchDlg"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Translation {
+            get {
+                return ((string)(this["Translation"]));
+            }
+            set {
+                this["Translation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CurrentTranslation {
+            get {
+                return ((string)(this["CurrentTranslation"]));
+            }
+            set {
+                this["CurrentTranslation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UserProfileHomeDir {
+            get {
+                return ((bool)(this["UserProfileHomeDir"]));
+            }
+            set {
+                this["UserProfileHomeDir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CustomHomeDir {
+            get {
+                return ((string)(this["CustomHomeDir"]));
+            }
+            set {
+                this["CustomHomeDir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableAutoScale {
+            get {
+                return ((bool)(this["EnableAutoScale"]));
+            }
+            set {
+                this["EnableAutoScale"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("default")]
+        public string IconColor {
+            get {
+                return ((string)(this["IconColor"]));
+            }
+            set {
+                this["IconColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("default")]
+        public string IconStyle {
+            get {
+                return ((string)(this["IconStyle"]));
+            }
+            set {
+                this["IconStyle"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public int AuthorImageSize {
+            get {
+                return ((int)(this["AuthorImageSize"]));
+            }
+            set {
+                this["AuthorImageSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int AuthorImageCacheDays {
+            get {
+                return ((int)(this["AuthorImageCacheDays"]));
+            }
+            set {
+                this["AuthorImageCacheDays"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowAuthorGravatar {
+            get {
+                return ((bool)(this["ShowAuthorGravatar"]));
+            }
+            set {
+                this["ShowAuthorGravatar"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CloseCommitDialogAfterCommit {
+            get {
+                return ((bool)(this["CloseCommitDialogAfterCommit"]));
+            }
+            set {
+                this["CloseCommitDialogAfterCommit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CloseCommitDialogAfterLastCommit {
+            get {
+                return ((bool)(this["CloseCommitDialogAfterLastCommit"]));
+            }
+            set {
+                this["CloseCommitDialogAfterLastCommit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SettingRefreshCommitDialogOnFormFocus {
+            get {
+                return ((bool)(this["SettingRefreshCommitDialogOnFormFocus"]));
+            }
+            set {
+                this["SettingRefreshCommitDialogOnFormFocus"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool StageInSuperprojectAfterCommit {
+            get {
+                return ((bool)(this["StageInSuperprojectAfterCommit"]));
+            }
+            set {
+                this["StageInSuperprojectAfterCommit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PlaySpecialStartupSound {
+            get {
+                return ((bool)(this["PlaySpecialStartupSound"]));
+            }
+            set {
+                this["PlaySpecialStartupSound"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FollowRenamesInFileHistory {
+            get {
+                return ((bool)(this["FollowRenamesInFileHistory"]));
+            }
+            set {
+                this["FollowRenamesInFileHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FullHistoryInFileHistory {
+            get {
+                return ((bool)(this["FullHistoryInFileHistory"]));
+            }
+            set {
+                this["FullHistoryInFileHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LoadFileHistoryOnShow {
+            get {
+                return ((bool)(this["LoadFileHistoryOnShow"]));
+            }
+            set {
+                this["LoadFileHistoryOnShow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool LoadBlameOnShow {
+            get {
+                return ((bool)(this["LoadBlameOnShow"]));
+            }
+            set {
+                this["LoadBlameOnShow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RevisionGraphShowWorkingDirChanges {
+            get {
+                return ((bool)(this["RevisionGraphShowWorkingDirChanges"]));
+            }
+            set {
+                this["RevisionGraphShowWorkingDirChanges"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool RevisionGraphDrawNonRelativesGray {
+            get {
+                return ((bool)(this["RevisionGraphDrawNonRelativesGray"]));
+            }
+            set {
+                this["RevisionGraphDrawNonRelativesGray"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RevisionGraphDrawNonRelativesTextGray {
+            get {
+                return ((bool)(this["RevisionGraphDrawNonRelativesTextGray"]));
+            }
+            set {
+                this["RevisionGraphDrawNonRelativesTextGray"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("PullAction.Merge")]
+        public global::GitCommands.Properties.PullAction PullMerge {
+            get {
+                return ((global::GitCommands.Properties.PullAction)(this["PullMerge"]));
+            }
+            set {
+                this["PullMerge"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DonSetAsLastPullAction {
+            get {
+                return ((bool)(this["DonSetAsLastPullAction"]));
+            }
+            set {
+                this["DonSetAsLastPullAction"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Smtp {
+            get {
+                return ((string)(this["Smtp"]));
+            }
+            set {
+                this["Smtp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoStash {
+            get {
+                return ((bool)(this["AutoStash"]));
+            }
+            set {
+                this["AutoStash"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("LocalChangesAction.DontChange")]
+        public global::GitCommands.Properties.LocalChangesAction CheckoutBranchAction {
+            get {
+                return ((global::GitCommands.Properties.LocalChangesAction)(this["CheckoutBranchAction"]));
+            }
+            set {
+                this["CheckoutBranchAction"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseDefaultCheckoutBranchAction {
+            get {
+                return ((bool)(this["UseDefaultCheckoutBranchAction"]));
+            }
+            set {
+                this["UseDefaultCheckoutBranchAction"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DontShowHelpImages {
+            get {
+                return ((bool)(this["DontShowHelpImages"]));
+            }
+            set {
+                this["DontShowHelpImages"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DontConfirmAmend {
+            get {
+                return ((bool)(this["DontConfirmAmend"]));
+            }
+            set {
+                this["DontConfirmAmend"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoPopStashAfterPull {
+            get {
+                return ((bool)(this["AutoPopStashAfterPull"]));
+            }
+            set {
+                this["AutoPopStashAfterPull"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoPopStashAfterCheckoutBranch {
+            get {
+                return ((bool)(this["AutoPopStashAfterCheckoutBranch"]));
+            }
+            set {
+                this["AutoPopStashAfterCheckoutBranch"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DontConfirmPushNewBranch {
+            get {
+                return ((bool)(this["DontConfirmPushNewBranch"]));
+            }
+            set {
+                this["DontConfirmPushNewBranch"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DontConfirmAddTrackingRef {
+            get {
+                return ((bool)(this["DontConfirmAddTrackingRef"]));
+            }
+            set {
+                this["DontConfirmAddTrackingRef"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IncludeUntrackedFilesInAutoStash {
+            get {
+                return ((bool)(this["IncludeUntrackedFilesInAutoStash"]));
+            }
+            set {
+                this["IncludeUntrackedFilesInAutoStash"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IncludeUntrackedFilesInManualStash {
+            get {
+                return ((bool)(this["IncludeUntrackedFilesInManualStash"]));
+            }
+            set {
+                this["IncludeUntrackedFilesInManualStash"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool OrderRevisionByDate {
+            get {
+                return ((bool)(this["OrderRevisionByDate"]));
+            }
+            set {
+                this["OrderRevisionByDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("en-US")]
+        public string Dictionary {
+            get {
+                return ((string)(this["Dictionary"]));
+            }
+            set {
+                this["Dictionary"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowGitCommandLine {
+            get {
+                return ((bool)(this["ShowGitCommandLine"]));
+            }
+            set {
+                this["ShowGitCommandLine"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowStashCount {
+            get {
+                return ((bool)(this["ShowStashCount"]));
+            }
+            set {
+                this["ShowStashCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool RelativeDate {
+            get {
+                return ((bool)(this["RelativeDate"]));
+            }
+            set {
+                this["RelativeDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseFastChecks {
+            get {
+                return ((bool)(this["UseFastChecks"]));
+            }
+            set {
+                this["UseFastChecks"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowGitNotes {
+            get {
+                return ((bool)(this["ShowGitNotes"]));
+            }
+            set {
+                this["ShowGitNotes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int RevisionGraphLayout {
+            get {
+                return ((int)(this["RevisionGraphLayout"]));
+            }
+            set {
+                this["RevisionGraphLayout"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowAuthorDate {
+            get {
+                return ((bool)(this["ShowAuthorDate"]));
+            }
+            set {
+                this["ShowAuthorDate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CloseProcessDialog {
+            get {
+                return ((bool)(this["CloseProcessDialog"]));
+            }
+            set {
+                this["CloseProcessDialog"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowCurrentBranchOnly {
+            get {
+                return ((bool)(this["ShowCurrentBranchOnly"]));
+            }
+            set {
+                this["ShowCurrentBranchOnly"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool BranchFilterEnabled {
+            get {
+                return ((bool)(this["BranchFilterEnabled"]));
+            }
+            set {
+                this["BranchFilterEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int CommitDialogSplitter {
+            get {
+                return ((int)(this["CommitDialogSplitter"]));
+            }
+            set {
+                this["CommitDialogSplitter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int CommitDialogRightSplitter {
+            get {
+                return ((int)(this["CommitDialogRightSplitter"]));
+            }
+            set {
+                this["CommitDialogRightSplitter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("750")]
+        public int RevisionGridQuickSearchTimeout {
+            get {
+                return ((int)(this["RevisionGridQuickSearchTimeout"]));
+            }
+            set {
+                this["RevisionGridQuickSearchTimeout"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Identicon")]
+        public string GravatarFallbackService {
+            get {
+                return ((string)(this["GravatarFallbackService"]));
+            }
+            set {
+                this["GravatarFallbackService"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Git")]
+        public string GitCommand {
+            get {
+                return ((string)(this["GitCommand"]));
+            }
+            set {
+                this["GitCommand"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GitBinDir {
+            get {
+                return ((string)(this["GitBinDir"]));
+            }
+            set {
+                this["GitBinDir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100000")]
+        public int MaxRevisionGraphCommits {
+            get {
+                return ((int)(this["MaxRevisionGraphCommits"]));
+            }
+            set {
+                this["MaxRevisionGraphCommits"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RecentWorkingDir {
+            get {
+                return ((string)(this["RecentWorkingDir"]));
+            }
+            set {
+                this["RecentWorkingDir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SettingStartWithRecentWorkingDir {
+            get {
+                return ((bool)(this["SettingStartWithRecentWorkingDir"]));
+            }
+            set {
+                this["SettingStartWithRecentWorkingDir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Plink {
+            get {
+                return ((string)(this["Plink"]));
+            }
+            set {
+                this["Plink"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Puttygen {
+            get {
+                return ((string)(this["Puttygen"]));
+            }
+            set {
+                this["Puttygen"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Pageant {
+            get {
+                return ((string)(this["Pageant"]));
+            }
+            set {
+                this["Pageant"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoStartPageant {
+            get {
+                return ((bool)(this["AutoStartPageant"]));
+            }
+            set {
+                this["AutoStartPageant"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MarkIllFormedLinesInCommitMsg {
+            get {
+                return ((bool)(this["MarkIllFormedLinesInCommitMsg"]));
+            }
+            set {
+                this["MarkIllFormedLinesInCommitMsg"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Gray")]
+        public global::System.Drawing.Color OtherTagColor {
+            get {
+                return ((global::System.Drawing.Color)(this["OtherTagColor"]));
+            }
+            set {
+                this["OtherTagColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DarkBlue")]
+        public global::System.Drawing.Color TagColor {
+            get {
+                return ((global::System.Drawing.Color)(this["TagColor"]));
+            }
+            set {
+                this["TagColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DarkRed")]
+        public global::System.Drawing.Color GraphColor {
+            get {
+                return ((global::System.Drawing.Color)(this["GraphColor"]));
+            }
+            set {
+                this["GraphColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("DarkRed")]
+        public global::System.Drawing.Color BranchColor {
+            get {
+                return ((global::System.Drawing.Color)(this["BranchColor"]));
+            }
+            set {
+                this["BranchColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Green")]
+        public global::System.Drawing.Color RemoteBranchColor {
+            get {
+                return ((global::System.Drawing.Color)(this["RemoteBranchColor"]));
+            }
+            set {
+                this["RemoteBranchColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("230, 230, 230")]
+        public global::System.Drawing.Color DiffSectionColor {
+            get {
+                return ((global::System.Drawing.Color)(this["DiffSectionColor"]));
+            }
+            set {
+                this["DiffSectionColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("255, 200, 200")]
+        public global::System.Drawing.Color DiffRemovedColor {
+            get {
+                return ((global::System.Drawing.Color)(this["DiffRemovedColor"]));
+            }
+            set {
+                this["DiffRemovedColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("255, 150, 150")]
+        public global::System.Drawing.Color DiffRemovedExtraColor {
+            get {
+                return ((global::System.Drawing.Color)(this["DiffRemovedExtraColor"]));
+            }
+            set {
+                this["DiffRemovedExtraColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200, 255, 200")]
+        public global::System.Drawing.Color DiffAddedColor {
+            get {
+                return ((global::System.Drawing.Color)(this["DiffAddedColor"]));
+            }
+            set {
+                this["DiffAddedColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("135, 255, 135")]
+        public global::System.Drawing.Color DiffAddedExtraColor {
+            get {
+                return ((global::System.Drawing.Color)(this["DiffAddedExtraColor"]));
+            }
+            set {
+                this["DiffAddedExtraColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Courier New, 10pt")]
+        public global::System.Drawing.Font DiffFont {
+            get {
+                return ((global::System.Drawing.Font)(this["DiffFont"]));
+            }
+            set {
+                this["DiffFont"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 8.25pt")]
+        public global::System.Drawing.Font CommitFont {
+            get {
+                return ((global::System.Drawing.Font)(this["CommitFont"]));
+            }
+            set {
+                this["CommitFont"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 8.25pt")]
+        public global::System.Drawing.Font Font {
+            get {
+                return ((global::System.Drawing.Font)(this["Font"]));
+            }
+            set {
+                this["Font"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MulticolorBranches {
+            get {
+                return ((bool)(this["MulticolorBranches"]));
+            }
+            set {
+                this["MulticolorBranches"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool StripedBranchChange {
+            get {
+                return ((bool)(this["StripedBranchChange"]));
+            }
+            set {
+                this["StripedBranchChange"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool BranchBorders {
+            get {
+                return ((bool)(this["BranchBorders"]));
+            }
+            set {
+                this["BranchBorders"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowCurrentBranchInVisualStudio {
+            get {
+                return ((bool)(this["ShowCurrentBranchInVisualStudio"]));
+            }
+            set {
+                this["ShowCurrentBranchInVisualStudio"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastFormatPatchDir {
+            get {
+                return ((string)(this["LastFormatPatchDir"]));
+            }
+            set {
+                this["LastFormatPatchDir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DashboardShowCurrentBranch {
+            get {
+                return ((bool)(this["DashboardShowCurrentBranch"]));
+            }
+            set {
+                this["DashboardShowCurrentBranch"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ownScripts {
+            get {
+                return ((string)(this["ownScripts"]));
+            }
+            set {
+                this["ownScripts"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PushAllTags {
+            get {
+                return ((bool)(this["PushAllTags"]));
+            }
+            set {
+                this["PushAllTags"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoPullOnRejected {
+            get {
+                return ((bool)(this["AutoPullOnRejected"]));
+            }
+            set {
+                this["AutoPullOnRejected"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int RecursiveSubmodules {
+            get {
+                return ((int)(this["RecursiveSubmodules"]));
+            }
+            set {
+                this["RecursiveSubmodules"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ShorteningRecentRepoPathStrategy {
+            get {
+                return ((string)(this["ShorteningRecentRepoPathStrategy"]));
+            }
+            set {
+                this["ShorteningRecentRepoPathStrategy"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int MaxMostRecentRepositories {
+            get {
+                return ((int)(this["MaxMostRecentRepositories"]));
+            }
+            set {
+                this["MaxMostRecentRepositories"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int RecentReposComboMinWidth {
+            get {
+                return ((int)(this["RecentReposComboMinWidth"]));
+            }
+            set {
+                this["RecentReposComboMinWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SortMostRecentRepos {
+            get {
+                return ((bool)(this["SortMostRecentRepos"]));
+            }
+            set {
+                this["SortMostRecentRepos"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SortLessRecentRepos {
+            get {
+                return ((bool)(this["SortLessRecentRepos"]));
+            }
+            set {
+                this["SortLessRecentRepos"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool NoFastForwardMerge {
+            get {
+                return ((bool)(this["NoFastForwardMerge"]));
+            }
+            set {
+                this["NoFastForwardMerge"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int CommitValidationMaxCntCharsFirstLine {
+            get {
+                return ((int)(this["CommitValidationMaxCntCharsFirstLine"]));
+            }
+            set {
+                this["CommitValidationMaxCntCharsFirstLine"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int CommitValidationMaxCntCharsPerLine {
+            get {
+                return ((int)(this["CommitValidationMaxCntCharsPerLine"]));
+            }
+            set {
+                this["CommitValidationMaxCntCharsPerLine"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CommitValidationSecondLineMustBeEmpty {
+            get {
+                return ((bool)(this["CommitValidationSecondLineMustBeEmpty"]));
+            }
+            set {
+                this["CommitValidationSecondLineMustBeEmpty"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CommitValidationIndentAfterFirstLine {
+            get {
+                return ((bool)(this["CommitValidationIndentAfterFirstLine"]));
+            }
+            set {
+                this["CommitValidationIndentAfterFirstLine"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CommitValidationAutoWrap {
+            get {
+                return ((bool)(this["CommitValidationAutoWrap"]));
+            }
+            set {
+                this["CommitValidationAutoWrap"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CommitValidationRegEx {
+            get {
+                return ((string)(this["CommitValidationRegEx"]));
+            }
+            set {
+                this["CommitValidationRegEx"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CommitTemplates {
+            get {
+                return ((string)(this["CommitTemplates"]));
+            }
+            set {
+                this["CommitTemplates"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CreateLocalBranchForRemote {
+            get {
+                return ((bool)(this["CreateLocalBranchForRemote"]));
+            }
+            set {
+                this["CreateLocalBranchForRemote"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("110111000111111111")]
+        public string CascadeShellMenuItems {
+            get {
+                return ((string)(this["CascadeShellMenuItems"]));
+            }
+            set {
+                this["CascadeShellMenuItems"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseFormCommitMessage {
+            get {
+                return ((bool)(this["UseFormCommitMessage"]));
+            }
+            set {
+                this["UseFormCommitMessage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsPortable {
+            get {
+                return ((bool)(this["IsPortable"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UsePatienceDiffAlgorithm {
+            get {
+                return ((bool)(this["UsePatienceDiffAlgorithm"]));
+            }
+            set {
+                this["UsePatienceDiffAlgorithm"] = value;
             }
         }
     }

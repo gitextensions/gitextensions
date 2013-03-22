@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Configuration;
-using System.Configuration;
 using System.Windows.Forms;
 using System.Collections.Specialized;
 using Microsoft.Win32;

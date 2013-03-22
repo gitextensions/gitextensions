@@ -55,6 +55,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -95,6 +96,7 @@
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Config\ConfigSection.cs" />
     <Compile Include="Git\GitCommandCache.cs" />
+    <Compile Include="OldSettings.cs" />
     <Compile Include="Patch\PatchProcessor.cs" />
     <Compile Include="PathUtil.cs" />
     <Compile Include="PortableSettingsProvider.cs" />
@@ -134,10 +136,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="gitcommandkey.snk.pfx" />
     <Compile Include="Repository\RecentRepoInfo.cs" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
+      <SubType>Designer</SubType>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
