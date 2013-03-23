@@ -10,13 +10,19 @@ using System.Windows.Forms;
 using GitCommands.Config;
 using GitCommands.Logging;
 using GitCommands.Repository;
-using GitCommands.Properties;
 using Microsoft.Win32;
 
 namespace GitCommands
 {
-    
-    public static class OldSettings
+    public enum LocalChangesAction
+    {
+        DontChange,
+        Merge,
+        Reset,
+        Stash
+    }
+
+    public static class Settings
     {
         //semi-constants
         public static readonly string GitExtensionsVersionString;
@@ -26,7 +32,7 @@ namespace GitCommands
 
         private static readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
 
-        static OldSettings()
+        static Settings()
         {
             Version version = Assembly.GetCallingAssembly().GetName().Version;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
@@ -329,28 +335,35 @@ namespace GitCommands
         }
 
         public static readonly Dictionary<string, Encoding> AvailableEncodings = new Dictionary<string, Encoding>();
-        private static readonly Dictionary<string, Encoding> EncodingOldSettings = new Dictionary<string, Encoding>();
+        private static readonly Dictionary<string, Encoding> EncodingSettings = new Dictionary<string, Encoding>();
 
         internal static bool GetEncoding(string settingName, out Encoding encoding)
         {
-            lock (EncodingOldSettings)
+            lock (EncodingSettings)
             {
-                return EncodingOldSettings.TryGetValue(settingName, out encoding);
+                return EncodingSettings.TryGetValue(settingName, out encoding);
             }
         }
 
         internal static void SetEncoding(string settingName, Encoding encoding)
         {
-            lock (EncodingOldSettings)
+            lock (EncodingSettings)
             {
-                var items = EncodingOldSettings.Keys.Where(item => item.StartsWith(settingName)).ToList();
+                var items = EncodingSettings.Keys.Where(item => item.StartsWith(settingName)).ToList();
                 foreach (var item in items)
-                    EncodingOldSettings.Remove(item);
-                EncodingOldSettings[settingName] = encoding;
+                    EncodingSettings.Remove(item);
+                EncodingSettings[settingName] = encoding;
             }
         }
 
-       
+        public enum PullAction
+        {
+            None,
+            Merge,
+            Rebase,
+            Fetch,
+            FetchAll
+        }
 
         public static PullAction PullMerge
         {
@@ -818,18 +831,18 @@ namespace GitCommands
             }
         }
 
-        public static void SaveOldSettings()
+        public static void SaveSettings()
         {
             try
             {
                 SetValue("gitssh", GitCommandHelpers.GetSsh());
-                Repositories.SaveOldSettings();
+                Repositories.SaveSettings();
             }
             catch
             { }
         }
 
-        public static void LoadOldSettings()
+        public static void LoadSettings()
         {
             Action<Encoding> addEncoding = delegate(Encoding e) { AvailableEncodings[e.HeaderName] = e; };
             addEncoding(Encoding.Default);
@@ -1007,7 +1020,7 @@ namespace GitCommands
 
         public static string GetGitExtensionsDirectory()
         {
-            string fileName = Assembly.GetAssembly(typeof(OldSettings)).Location;
+            string fileName = Assembly.GetAssembly(typeof(Settings)).Location;
             fileName = fileName.Substring(0, fileName.LastIndexOfAny(new[] { '\\', '/' }));
             return fileName;
         }
@@ -1141,7 +1154,7 @@ namespace GitCommands
                 if (o == null || o is T)
                     return (T)o;
                 else
-                    throw new Exception("Incompatible class for OldSettings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
             }
             else
             {

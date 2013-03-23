@@ -26,6 +26,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool AlwaysShowCheckoutBranchDlg {
             get {
                 return ((bool)(this["AlwaysShowCheckoutBranchDlg"]));
@@ -38,6 +39,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string Translation {
             get {
                 return ((string)(this["Translation"]));
@@ -50,6 +52,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string CurrentTranslation {
             get {
                 return ((string)(this["CurrentTranslation"]));
@@ -62,6 +65,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool UserProfileHomeDir {
             get {
                 return ((bool)(this["UserProfileHomeDir"]));
@@ -74,6 +78,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string CustomHomeDir {
             get {
                 return ((string)(this["CustomHomeDir"]));
@@ -86,6 +91,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool EnableAutoScale {
             get {
                 return ((bool)(this["EnableAutoScale"]));
@@ -98,6 +104,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("default")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string IconColor {
             get {
                 return ((string)(this["IconColor"]));
@@ -110,6 +117,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("default")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string IconStyle {
             get {
                 return ((string)(this["IconStyle"]));
@@ -122,6 +130,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public int AuthorImageSize {
             get {
                 return ((int)(this["AuthorImageSize"]));
@@ -134,6 +143,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public int AuthorImageCacheDays {
             get {
                 return ((int)(this["AuthorImageCacheDays"]));
@@ -146,6 +156,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool ShowAuthorGravatar {
             get {
                 return ((bool)(this["ShowAuthorGravatar"]));
@@ -158,6 +169,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool CloseCommitDialogAfterCommit {
             get {
                 return ((bool)(this["CloseCommitDialogAfterCommit"]));
@@ -170,6 +182,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool CloseCommitDialogAfterLastCommit {
             get {
                 return ((bool)(this["CloseCommitDialogAfterLastCommit"]));
@@ -182,6 +195,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool SettingRefreshCommitDialogOnFormFocus {
             get {
                 return ((bool)(this["SettingRefreshCommitDialogOnFormFocus"]));
@@ -194,6 +208,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool StageInSuperprojectAfterCommit {
             get {
                 return ((bool)(this["StageInSuperprojectAfterCommit"]));
@@ -206,6 +221,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool PlaySpecialStartupSound {
             get {
                 return ((bool)(this["PlaySpecialStartupSound"]));
@@ -218,6 +234,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool FollowRenamesInFileHistory {
             get {
                 return ((bool)(this["FollowRenamesInFileHistory"]));
@@ -230,6 +247,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool FullHistoryInFileHistory {
             get {
                 return ((bool)(this["FullHistoryInFileHistory"]));
@@ -242,6 +260,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool LoadFileHistoryOnShow {
             get {
                 return ((bool)(this["LoadFileHistoryOnShow"]));
@@ -254,6 +273,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool LoadBlameOnShow {
             get {
                 return ((bool)(this["LoadBlameOnShow"]));
@@ -266,6 +286,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool RevisionGraphShowWorkingDirChanges {
             get {
                 return ((bool)(this["RevisionGraphShowWorkingDirChanges"]));
@@ -278,6 +299,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool RevisionGraphDrawNonRelativesGray {
             get {
                 return ((bool)(this["RevisionGraphDrawNonRelativesGray"]));
@@ -290,6 +312,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool RevisionGraphDrawNonRelativesTextGray {
             get {
                 return ((bool)(this["RevisionGraphDrawNonRelativesTextGray"]));
@@ -302,6 +325,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("PullAction.Merge")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::GitCommands.Properties.PullAction PullMerge {
             get {
                 return ((global::GitCommands.Properties.PullAction)(this["PullMerge"]));
@@ -314,6 +338,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool DonSetAsLastPullAction {
             get {
                 return ((bool)(this["DonSetAsLastPullAction"]));
@@ -326,6 +351,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string Smtp {
             get {
                 return ((string)(this["Smtp"]));
@@ -338,6 +364,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool AutoStash {
             get {
                 return ((bool)(this["AutoStash"]));
@@ -350,6 +377,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("LocalChangesAction.DontChange")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::GitCommands.Properties.LocalChangesAction CheckoutBranchAction {
             get {
                 return ((global::GitCommands.Properties.LocalChangesAction)(this["CheckoutBranchAction"]));
@@ -362,6 +390,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool UseDefaultCheckoutBranchAction {
             get {
                 return ((bool)(this["UseDefaultCheckoutBranchAction"]));
@@ -374,6 +403,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool DontShowHelpImages {
             get {
                 return ((bool)(this["DontShowHelpImages"]));
@@ -386,6 +416,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool DontConfirmAmend {
             get {
                 return ((bool)(this["DontConfirmAmend"]));
@@ -398,9 +429,10 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool AutoPopStashAfterPull {
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public global::System.Nullable<bool> AutoPopStashAfterPull {
             get {
-                return ((bool)(this["AutoPopStashAfterPull"]));
+                return ((global::System.Nullable<bool>)(this["AutoPopStashAfterPull"]));
             }
             set {
                 this["AutoPopStashAfterPull"] = value;
@@ -410,9 +442,10 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool AutoPopStashAfterCheckoutBranch {
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public global::System.Nullable<bool> AutoPopStashAfterCheckoutBranch {
             get {
-                return ((bool)(this["AutoPopStashAfterCheckoutBranch"]));
+                return ((global::System.Nullable<bool>)(this["AutoPopStashAfterCheckoutBranch"]));
             }
             set {
                 this["AutoPopStashAfterCheckoutBranch"] = value;
@@ -422,6 +455,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool DontConfirmPushNewBranch {
             get {
                 return ((bool)(this["DontConfirmPushNewBranch"]));
@@ -434,6 +468,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool DontConfirmAddTrackingRef {
             get {
                 return ((bool)(this["DontConfirmAddTrackingRef"]));
@@ -446,6 +481,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool IncludeUntrackedFilesInAutoStash {
             get {
                 return ((bool)(this["IncludeUntrackedFilesInAutoStash"]));
@@ -458,6 +494,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool IncludeUntrackedFilesInManualStash {
             get {
                 return ((bool)(this["IncludeUntrackedFilesInManualStash"]));
@@ -470,6 +507,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool OrderRevisionByDate {
             get {
                 return ((bool)(this["OrderRevisionByDate"]));
@@ -482,6 +520,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("en-US")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string Dictionary {
             get {
                 return ((string)(this["Dictionary"]));
@@ -494,6 +533,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool ShowGitCommandLine {
             get {
                 return ((bool)(this["ShowGitCommandLine"]));
@@ -506,6 +546,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool ShowStashCount {
             get {
                 return ((bool)(this["ShowStashCount"]));
@@ -518,6 +559,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool RelativeDate {
             get {
                 return ((bool)(this["RelativeDate"]));
@@ -530,6 +572,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool UseFastChecks {
             get {
                 return ((bool)(this["UseFastChecks"]));
@@ -542,6 +585,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool ShowGitNotes {
             get {
                 return ((bool)(this["ShowGitNotes"]));
@@ -554,6 +598,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public int RevisionGraphLayout {
             get {
                 return ((int)(this["RevisionGraphLayout"]));
@@ -566,6 +611,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool ShowAuthorDate {
             get {
                 return ((bool)(this["ShowAuthorDate"]));
@@ -578,6 +624,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool CloseProcessDialog {
             get {
                 return ((bool)(this["CloseProcessDialog"]));
@@ -590,6 +637,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool ShowCurrentBranchOnly {
             get {
                 return ((bool)(this["ShowCurrentBranchOnly"]));
@@ -602,6 +650,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool BranchFilterEnabled {
             get {
                 return ((bool)(this["BranchFilterEnabled"]));
@@ -614,6 +663,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public int CommitDialogSplitter {
             get {
                 return ((int)(this["CommitDialogSplitter"]));
@@ -626,6 +676,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public int CommitDialogRightSplitter {
             get {
                 return ((int)(this["CommitDialogRightSplitter"]));
@@ -638,6 +689,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("750")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public int RevisionGridQuickSearchTimeout {
             get {
                 return ((int)(this["RevisionGridQuickSearchTimeout"]));
@@ -650,6 +702,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Identicon")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string GravatarFallbackService {
             get {
                 return ((string)(this["GravatarFallbackService"]));
@@ -662,6 +715,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Git")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string GitCommand {
             get {
                 return ((string)(this["GitCommand"]));
@@ -674,6 +728,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string GitBinDir {
             get {
                 return ((string)(this["GitBinDir"]));
@@ -686,6 +741,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("100000")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public int MaxRevisionGraphCommits {
             get {
                 return ((int)(this["MaxRevisionGraphCommits"]));
@@ -698,6 +754,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string RecentWorkingDir {
             get {
                 return ((string)(this["RecentWorkingDir"]));
@@ -710,6 +767,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool SettingStartWithRecentWorkingDir {
             get {
                 return ((bool)(this["SettingStartWithRecentWorkingDir"]));
@@ -722,6 +780,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string Plink {
             get {
                 return ((string)(this["Plink"]));
@@ -734,6 +793,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string Puttygen {
             get {
                 return ((string)(this["Puttygen"]));
@@ -746,6 +806,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string Pageant {
             get {
                 return ((string)(this["Pageant"]));
@@ -758,6 +819,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool AutoStartPageant {
             get {
                 return ((bool)(this["AutoStartPageant"]));
@@ -770,6 +832,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool MarkIllFormedLinesInCommitMsg {
             get {
                 return ((bool)(this["MarkIllFormedLinesInCommitMsg"]));
@@ -782,6 +845,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Gray")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color OtherTagColor {
             get {
                 return ((global::System.Drawing.Color)(this["OtherTagColor"]));
@@ -794,6 +858,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("DarkBlue")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color TagColor {
             get {
                 return ((global::System.Drawing.Color)(this["TagColor"]));
@@ -806,6 +871,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("DarkRed")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color GraphColor {
             get {
                 return ((global::System.Drawing.Color)(this["GraphColor"]));
@@ -818,6 +884,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("DarkRed")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color BranchColor {
             get {
                 return ((global::System.Drawing.Color)(this["BranchColor"]));
@@ -830,6 +897,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Green")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color RemoteBranchColor {
             get {
                 return ((global::System.Drawing.Color)(this["RemoteBranchColor"]));
@@ -842,6 +910,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("230, 230, 230")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color DiffSectionColor {
             get {
                 return ((global::System.Drawing.Color)(this["DiffSectionColor"]));
@@ -854,6 +923,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("255, 200, 200")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color DiffRemovedColor {
             get {
                 return ((global::System.Drawing.Color)(this["DiffRemovedColor"]));
@@ -866,6 +936,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("255, 150, 150")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color DiffRemovedExtraColor {
             get {
                 return ((global::System.Drawing.Color)(this["DiffRemovedExtraColor"]));
@@ -878,6 +949,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("200, 255, 200")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color DiffAddedColor {
             get {
                 return ((global::System.Drawing.Color)(this["DiffAddedColor"]));
@@ -890,6 +962,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("135, 255, 135")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Color DiffAddedExtraColor {
             get {
                 return ((global::System.Drawing.Color)(this["DiffAddedExtraColor"]));
@@ -902,6 +975,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Courier New, 10pt")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Font DiffFont {
             get {
                 return ((global::System.Drawing.Font)(this["DiffFont"]));
@@ -914,6 +988,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 8.25pt")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Font CommitFont {
             get {
                 return ((global::System.Drawing.Font)(this["CommitFont"]));
@@ -926,6 +1001,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Microsoft Sans Serif, 8.25pt")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::System.Drawing.Font Font {
             get {
                 return ((global::System.Drawing.Font)(this["Font"]));
@@ -938,6 +1014,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool MulticolorBranches {
             get {
                 return ((bool)(this["MulticolorBranches"]));
@@ -950,6 +1027,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool StripedBranchChange {
             get {
                 return ((bool)(this["StripedBranchChange"]));
@@ -962,6 +1040,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool BranchBorders {
             get {
                 return ((bool)(this["BranchBorders"]));
@@ -974,6 +1053,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool ShowCurrentBranchInVisualStudio {
             get {
                 return ((bool)(this["ShowCurrentBranchInVisualStudio"]));
@@ -986,6 +1066,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string LastFormatPatchDir {
             get {
                 return ((string)(this["LastFormatPatchDir"]));
@@ -998,6 +1079,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool DashboardShowCurrentBranch {
             get {
                 return ((bool)(this["DashboardShowCurrentBranch"]));
@@ -1010,6 +1092,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string ownScripts {
             get {
                 return ((string)(this["ownScripts"]));
@@ -1022,6 +1105,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool PushAllTags {
             get {
                 return ((bool)(this["PushAllTags"]));
@@ -1034,6 +1118,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool AutoPullOnRejected {
             get {
                 return ((bool)(this["AutoPullOnRejected"]));
@@ -1046,6 +1131,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public int RecursiveSubmodules {
             get {
                 return ((int)(this["RecursiveSubmodules"]));
@@ -1058,6 +1144,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string ShorteningRecentRepoPathStrategy {
             get {
                 return ((string)(this["ShorteningRecentRepoPathStrategy"]));
@@ -1070,6 +1157,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public int MaxMostRecentRepositories {
             get {
                 return ((int)(this["MaxMostRecentRepositories"]));
@@ -1082,6 +1170,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public int RecentReposComboMinWidth {
             get {
                 return ((int)(this["RecentReposComboMinWidth"]));
@@ -1094,6 +1183,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool SortMostRecentRepos {
             get {
                 return ((bool)(this["SortMostRecentRepos"]));
@@ -1106,6 +1196,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool SortLessRecentRepos {
             get {
                 return ((bool)(this["SortLessRecentRepos"]));
@@ -1118,6 +1209,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool NoFastForwardMerge {
             get {
                 return ((bool)(this["NoFastForwardMerge"]));
@@ -1130,6 +1222,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public int CommitValidationMaxCntCharsFirstLine {
             get {
                 return ((int)(this["CommitValidationMaxCntCharsFirstLine"]));
@@ -1142,6 +1235,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public int CommitValidationMaxCntCharsPerLine {
             get {
                 return ((int)(this["CommitValidationMaxCntCharsPerLine"]));
@@ -1154,6 +1248,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool CommitValidationSecondLineMustBeEmpty {
             get {
                 return ((bool)(this["CommitValidationSecondLineMustBeEmpty"]));
@@ -1166,6 +1261,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool CommitValidationIndentAfterFirstLine {
             get {
                 return ((bool)(this["CommitValidationIndentAfterFirstLine"]));
@@ -1178,6 +1274,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool CommitValidationAutoWrap {
             get {
                 return ((bool)(this["CommitValidationAutoWrap"]));
@@ -1190,6 +1287,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string CommitValidationRegEx {
             get {
                 return ((string)(this["CommitValidationRegEx"]));
@@ -1202,6 +1300,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string CommitTemplates {
             get {
                 return ((string)(this["CommitTemplates"]));
@@ -1214,6 +1313,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool CreateLocalBranchForRemote {
             get {
                 return ((bool)(this["CreateLocalBranchForRemote"]));
@@ -1226,6 +1326,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("110111000111111111")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string CascadeShellMenuItems {
             get {
                 return ((string)(this["CascadeShellMenuItems"]));
@@ -1238,6 +1339,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool UseFormCommitMessage {
             get {
                 return ((bool)(this["UseFormCommitMessage"]));
@@ -1259,12 +1361,335 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public bool UsePatienceDiffAlgorithm {
             get {
                 return ((bool)(this["UsePatienceDiffAlgorithm"]));
             }
             set {
                 this["UsePatienceDiffAlgorithm"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public string RepositoryHistory {
+            get {
+                return ((string)(this["RepositoryHistory"]));
+            }
+            set {
+                this["RepositoryHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public string RemoteRepositoryHistory {
+            get {
+                return ((string)(this["RemoteRepositoryHistory"]));
+            }
+            set {
+                this["RemoteRepositoryHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public string Repositories {
+            get {
+                return ((string)(this["Repositories"]));
+            }
+            set {
+                this["Repositories"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public string LastPullActionString {
+            get {
+                return ((string)(this["LastPullActionString"]));
+            }
+            set {
+                this["LastPullActionString"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool StartWithRecentWorkingDir {
+            get {
+                return ((bool)(this["StartWithRecentWorkingDir"]));
+            }
+            set {
+                this["StartWithRecentWorkingDir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool ShowErrorsWhenStagingFiles {
+            get {
+                return ((bool)(this["ShowErrorsWhenStagingFiles"]));
+            }
+            set {
+                this["ShowErrorsWhenStagingFiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool ShowGitStatusInBrowseToolbar {
+            get {
+                return ((bool)(this["ShowGitStatusInBrowseToolbar"]));
+            }
+            set {
+                this["ShowGitStatusInBrowseToolbar"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool CheckForUncommittedChangesInCheckoutBranch {
+            get {
+                return ((bool)(this["CheckForUncommittedChangesInCheckoutBranch"]));
+            }
+            set {
+                this["CheckForUncommittedChangesInCheckoutBranch"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("none")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public string TruncatePathMethod {
+            get {
+                return ((string)(this["TruncatePathMethod"]));
+            }
+            set {
+                this["TruncatePathMethod"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool CheckSettings {
+            get {
+                return ((bool)(this["CheckSettings"]));
+            }
+            set {
+                this["CheckSettings"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool CommitInfoShowContainedInBranchesLocal {
+            get {
+                return ((bool)(this["CommitInfoShowContainedInBranchesLocal"]));
+            }
+            set {
+                this["CommitInfoShowContainedInBranchesLocal"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool CommitInfoShowContainedInBranchesRemote {
+            get {
+                return ((bool)(this["CommitInfoShowContainedInBranchesRemote"]));
+            }
+            set {
+                this["CommitInfoShowContainedInBranchesRemote"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool CommitInfoShowContainedInBranchesRemoteIfNoLocal {
+            get {
+                return ((bool)(this["CommitInfoShowContainedInBranchesRemoteIfNoLocal"]));
+            }
+            set {
+                this["CommitInfoShowContainedInBranchesRemoteIfNoLocal"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool CommitInfoShowContainedInTags {
+            get {
+                return ((bool)(this["CommitInfoShowContainedInTags"]));
+            }
+            set {
+                this["CommitInfoShowContainedInTags"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool ApplyPatchIgnoreWhitespace {
+            get {
+                return ((bool)(this["ApplyPatchIgnoreWhitespace"]));
+            }
+            set {
+                this["ApplyPatchIgnoreWhitespace"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public int UserMenuLocationX {
+            get {
+                return ((int)(this["UserMenuLocationX"]));
+            }
+            set {
+                this["UserMenuLocationX"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public int UserMenuLocationY {
+            get {
+                return ((int)(this["UserMenuLocationY"]));
+            }
+            set {
+                this["UserMenuLocationY"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool StashKeepIndex {
+            get {
+                return ((bool)(this["StashKeepIndex"]));
+            }
+            set {
+                this["StashKeepIndex"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool StashConfirmDropShow {
+            get {
+                return ((bool)(this["StashConfirmDropShow"]));
+            }
+            set {
+                this["StashConfirmDropShow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public string InstallDir {
+            get {
+                return ((string)(this["InstallDir"]));
+            }
+            set {
+                this["InstallDir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public string PluginsSettingsString {
+            get {
+                return ((string)(this["PluginsSettingsString"]));
+            }
+            set {
+                this["PluginsSettingsString"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool UpgradeSettings {
+            get {
+                return ((bool)(this["UpgradeSettings"]));
+            }
+            set {
+                this["UpgradeSettings"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool RefreshCommitDialogOnFormFocus {
+            get {
+                return ((bool)(this["RefreshCommitDialogOnFormFocus"]));
+            }
+            set {
+                this["RefreshCommitDialogOnFormFocus"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastCommitMessage {
+            get {
+                return ((string)(this["LastCommitMessage"]));
+            }
+            set {
+                this["LastCommitMessage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HelpExpandedString {
+            get {
+                return ((string)(this["HelpExpandedString"]));
+            }
+            set {
+                this["HelpExpandedString"] = value;
             }
         }
     }

@@ -96,7 +96,7 @@
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Config\ConfigSection.cs" />
     <Compile Include="Git\GitCommandCache.cs" />
-    <Compile Include="OldSettings.cs" />
+    <None Include="OldSettings.cs" />
     <Compile Include="Patch\PatchProcessor.cs" />
     <Compile Include="PathUtil.cs" />
     <Compile Include="PortableSettingsProvider.cs" />
@@ -126,6 +126,7 @@
     <Compile Include="Repository\RepositoryHistory.cs" />
     <Compile Include="Repository\RepositoryType.cs" />
     <Compile Include="RevisionGraph.cs" />
+    <Compile Include="XmlSerializableDictionary.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
     <Compile Include="Statistics\ImpactLoader.cs" />

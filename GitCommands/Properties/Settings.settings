@@ -2,317 +2,392 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="GitCommands.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="AlwaysShowCheckoutBranchDlg" Type="System.Boolean" Scope="User">
+    <Setting Name="AlwaysShowCheckoutBranchDlg" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="Translation" Type="System.String" Scope="User">
+    <Setting Name="Translation" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="CurrentTranslation" Type="System.String" Scope="User">
+    <Setting Name="CurrentTranslation" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="UserProfileHomeDir" Type="System.Boolean" Scope="User">
+    <Setting Name="UserProfileHomeDir" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="CustomHomeDir" Type="System.String" Scope="User">
+    <Setting Name="CustomHomeDir" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="EnableAutoScale" Type="System.Boolean" Scope="User">
+    <Setting Name="EnableAutoScale" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="IconColor" Type="System.String" Scope="User">
+    <Setting Name="IconColor" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">default</Value>
     </Setting>
-    <Setting Name="IconStyle" Type="System.String" Scope="User">
+    <Setting Name="IconStyle" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">default</Value>
     </Setting>
-    <Setting Name="AuthorImageSize" Type="System.Int32" Scope="User">
+    <Setting Name="AuthorImageSize" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">80</Value>
     </Setting>
-    <Setting Name="AuthorImageCacheDays" Type="System.Int32" Scope="User">
+    <Setting Name="AuthorImageCacheDays" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="ShowAuthorGravatar" Type="System.Boolean" Scope="User">
+    <Setting Name="ShowAuthorGravatar" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="CloseCommitDialogAfterCommit" Type="System.Boolean" Scope="User">
+    <Setting Name="CloseCommitDialogAfterCommit" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="CloseCommitDialogAfterLastCommit" Type="System.Boolean" Scope="User">
+    <Setting Name="CloseCommitDialogAfterLastCommit" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="SettingRefreshCommitDialogOnFormFocus" Type="System.Boolean" Scope="User">
+    <Setting Name="SettingRefreshCommitDialogOnFormFocus" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="StageInSuperprojectAfterCommit" Type="System.Boolean" Scope="User">
+    <Setting Name="StageInSuperprojectAfterCommit" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="PlaySpecialStartupSound" Type="System.Boolean" Scope="User">
+    <Setting Name="PlaySpecialStartupSound" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="FollowRenamesInFileHistory" Type="System.Boolean" Scope="User">
+    <Setting Name="FollowRenamesInFileHistory" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="FullHistoryInFileHistory" Type="System.Boolean" Scope="User">
+    <Setting Name="FullHistoryInFileHistory" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="LoadFileHistoryOnShow" Type="System.Boolean" Scope="User">
+    <Setting Name="LoadFileHistoryOnShow" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="LoadBlameOnShow" Type="System.Boolean" Scope="User">
+    <Setting Name="LoadBlameOnShow" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="RevisionGraphShowWorkingDirChanges" Type="System.Boolean" Scope="User">
+    <Setting Name="RevisionGraphShowWorkingDirChanges" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="RevisionGraphDrawNonRelativesGray" Type="System.Boolean" Scope="User">
+    <Setting Name="RevisionGraphDrawNonRelativesGray" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="RevisionGraphDrawNonRelativesTextGray" Type="System.Boolean" Scope="User">
+    <Setting Name="RevisionGraphDrawNonRelativesTextGray" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="PullMerge" Type="GitCommands.Properties.PullAction" Scope="User">
+    <Setting Name="PullMerge" Roaming="true" Type="GitCommands.Properties.PullAction" Scope="User">
       <Value Profile="(Default)">PullAction.Merge</Value>
     </Setting>
-    <Setting Name="DonSetAsLastPullAction" Type="System.Boolean" Scope="User">
+    <Setting Name="DonSetAsLastPullAction" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="Smtp" Type="System.String" Scope="User">
+    <Setting Name="Smtp" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="AutoStash" Type="System.Boolean" Scope="User">
+    <Setting Name="AutoStash" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="CheckoutBranchAction" Type="GitCommands.Properties.LocalChangesAction" Scope="User">
+    <Setting Name="CheckoutBranchAction" Roaming="true" Type="GitCommands.Properties.LocalChangesAction" Scope="User">
       <Value Profile="(Default)">LocalChangesAction.DontChange</Value>
     </Setting>
-    <Setting Name="UseDefaultCheckoutBranchAction" Type="System.Boolean" Scope="User">
+    <Setting Name="UseDefaultCheckoutBranchAction" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="DontShowHelpImages" Type="System.Boolean" Scope="User">
+    <Setting Name="DontShowHelpImages" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="DontConfirmAmend" Type="System.Boolean" Scope="User">
+    <Setting Name="DontConfirmAmend" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="AutoPopStashAfterPull" Type="System.Boolean" Scope="User">
+    <Setting Name="AutoPopStashAfterPull" Roaming="true" Type="System.Nullable&lt;bool&gt;" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="AutoPopStashAfterCheckoutBranch" Type="System.Boolean" Scope="User">
+    <Setting Name="AutoPopStashAfterCheckoutBranch" Roaming="true" Type="System.Nullable&lt;bool&gt;" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="DontConfirmPushNewBranch" Type="System.Boolean" Scope="User">
+    <Setting Name="DontConfirmPushNewBranch" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="DontConfirmAddTrackingRef" Type="System.Boolean" Scope="User">
+    <Setting Name="DontConfirmAddTrackingRef" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="IncludeUntrackedFilesInAutoStash" Type="System.Boolean" Scope="User">
+    <Setting Name="IncludeUntrackedFilesInAutoStash" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="IncludeUntrackedFilesInManualStash" Type="System.Boolean" Scope="User">
+    <Setting Name="IncludeUntrackedFilesInManualStash" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="OrderRevisionByDate" Type="System.Boolean" Scope="User">
+    <Setting Name="OrderRevisionByDate" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="Dictionary" Type="System.String" Scope="User">
+    <Setting Name="Dictionary" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">en-US</Value>
     </Setting>
-    <Setting Name="ShowGitCommandLine" Type="System.Boolean" Scope="User">
+    <Setting Name="ShowGitCommandLine" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="ShowStashCount" Type="System.Boolean" Scope="User">
+    <Setting Name="ShowStashCount" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="RelativeDate" Type="System.Boolean" Scope="User">
+    <Setting Name="RelativeDate" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="UseFastChecks" Type="System.Boolean" Scope="User">
+    <Setting Name="UseFastChecks" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="ShowGitNotes" Type="System.Boolean" Scope="User">
+    <Setting Name="ShowGitNotes" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="RevisionGraphLayout" Type="System.Int32" Scope="User">
+    <Setting Name="RevisionGraphLayout" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
-    <Setting Name="ShowAuthorDate" Type="System.Boolean" Scope="User">
+    <Setting Name="ShowAuthorDate" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="CloseProcessDialog" Type="System.Boolean" Scope="User">
+    <Setting Name="CloseProcessDialog" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="ShowCurrentBranchOnly" Type="System.Boolean" Scope="User">
+    <Setting Name="ShowCurrentBranchOnly" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="BranchFilterEnabled" Type="System.Boolean" Scope="User">
+    <Setting Name="BranchFilterEnabled" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="CommitDialogSplitter" Type="System.Int32" Scope="User">
+    <Setting Name="CommitDialogSplitter" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">-1</Value>
     </Setting>
-    <Setting Name="CommitDialogRightSplitter" Type="System.Int32" Scope="User">
+    <Setting Name="CommitDialogRightSplitter" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">-1</Value>
     </Setting>
-    <Setting Name="RevisionGridQuickSearchTimeout" Type="System.Int32" Scope="User">
+    <Setting Name="RevisionGridQuickSearchTimeout" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">750</Value>
     </Setting>
-    <Setting Name="GravatarFallbackService" Type="System.String" Scope="User">
+    <Setting Name="GravatarFallbackService" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">Identicon</Value>
     </Setting>
-    <Setting Name="GitCommand" Type="System.String" Scope="User">
+    <Setting Name="GitCommand" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">Git</Value>
     </Setting>
-    <Setting Name="GitBinDir" Type="System.String" Scope="User">
+    <Setting Name="GitBinDir" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="MaxRevisionGraphCommits" Type="System.Int32" Scope="User">
+    <Setting Name="MaxRevisionGraphCommits" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100000</Value>
     </Setting>
-    <Setting Name="RecentWorkingDir" Type="System.String" Scope="User">
+    <Setting Name="RecentWorkingDir" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="SettingStartWithRecentWorkingDir" Type="System.Boolean" Scope="User">
+    <Setting Name="SettingStartWithRecentWorkingDir" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="Plink" Type="System.String" Scope="User">
+    <Setting Name="Plink" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Puttygen" Type="System.String" Scope="User">
+    <Setting Name="Puttygen" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Pageant" Type="System.String" Scope="User">
+    <Setting Name="Pageant" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="AutoStartPageant" Type="System.Boolean" Scope="User">
+    <Setting Name="AutoStartPageant" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="MarkIllFormedLinesInCommitMsg" Type="System.Boolean" Scope="User">
+    <Setting Name="MarkIllFormedLinesInCommitMsg" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="OtherTagColor" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="OtherTagColor" Roaming="true" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Gray</Value>
     </Setting>
-    <Setting Name="TagColor" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="TagColor" Roaming="true" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">DarkBlue</Value>
     </Setting>
-    <Setting Name="GraphColor" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="GraphColor" Roaming="true" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">DarkRed</Value>
     </Setting>
-    <Setting Name="BranchColor" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="BranchColor" Roaming="true" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">DarkRed</Value>
     </Setting>
-    <Setting Name="RemoteBranchColor" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="RemoteBranchColor" Roaming="true" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">Green</Value>
     </Setting>
-    <Setting Name="DiffSectionColor" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="DiffSectionColor" Roaming="true" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">230, 230, 230</Value>
     </Setting>
-    <Setting Name="DiffRemovedColor" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="DiffRemovedColor" Roaming="true" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">255, 200, 200</Value>
     </Setting>
-    <Setting Name="DiffRemovedExtraColor" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="DiffRemovedExtraColor" Roaming="true" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">255, 150, 150</Value>
     </Setting>
-    <Setting Name="DiffAddedColor" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="DiffAddedColor" Roaming="true" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">200, 255, 200</Value>
     </Setting>
-    <Setting Name="DiffAddedExtraColor" Type="System.Drawing.Color" Scope="User">
+    <Setting Name="DiffAddedExtraColor" Roaming="true" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">135, 255, 135</Value>
     </Setting>
-    <Setting Name="DiffFont" Type="System.Drawing.Font" Scope="User">
+    <Setting Name="DiffFont" Roaming="true" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Courier New, 10pt</Value>
     </Setting>
-    <Setting Name="CommitFont" Type="System.Drawing.Font" Scope="User">
+    <Setting Name="CommitFont" Roaming="true" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt</Value>
     </Setting>
-    <Setting Name="Font" Type="System.Drawing.Font" Scope="User">
+    <Setting Name="Font" Roaming="true" Type="System.Drawing.Font" Scope="User">
       <Value Profile="(Default)">Microsoft Sans Serif, 8.25pt</Value>
     </Setting>
-    <Setting Name="MulticolorBranches" Type="System.Boolean" Scope="User">
+    <Setting Name="MulticolorBranches" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="StripedBranchChange" Type="System.Boolean" Scope="User">
+    <Setting Name="StripedBranchChange" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="BranchBorders" Type="System.Boolean" Scope="User">
+    <Setting Name="BranchBorders" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ShowCurrentBranchInVisualStudio" Type="System.Boolean" Scope="User">
+    <Setting Name="ShowCurrentBranchInVisualStudio" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="LastFormatPatchDir" Type="System.String" Scope="User">
+    <Setting Name="LastFormatPatchDir" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="DashboardShowCurrentBranch" Type="System.Boolean" Scope="User">
+    <Setting Name="DashboardShowCurrentBranch" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ownScripts" Type="System.String" Scope="User">
+    <Setting Name="ownScripts" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="PushAllTags" Type="System.Boolean" Scope="User">
+    <Setting Name="PushAllTags" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="AutoPullOnRejected" Type="System.Boolean" Scope="User">
+    <Setting Name="AutoPullOnRejected" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="RecursiveSubmodules" Type="System.Int32" Scope="User">
+    <Setting Name="RecursiveSubmodules" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="ShorteningRecentRepoPathStrategy" Type="System.String" Scope="User">
+    <Setting Name="ShorteningRecentRepoPathStrategy" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="MaxMostRecentRepositories" Type="System.Int32" Scope="User">
+    <Setting Name="MaxMostRecentRepositories" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="RecentReposComboMinWidth" Type="System.Int32" Scope="User">
+    <Setting Name="RecentReposComboMinWidth" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="SortMostRecentRepos" Type="System.Boolean" Scope="User">
+    <Setting Name="SortMostRecentRepos" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="SortLessRecentRepos" Type="System.Boolean" Scope="User">
+    <Setting Name="SortLessRecentRepos" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="NoFastForwardMerge" Type="System.Boolean" Scope="User">
+    <Setting Name="NoFastForwardMerge" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="CommitValidationMaxCntCharsFirstLine" Type="System.Int32" Scope="User">
+    <Setting Name="CommitValidationMaxCntCharsFirstLine" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="CommitValidationMaxCntCharsPerLine" Type="System.Int32" Scope="User">
+    <Setting Name="CommitValidationMaxCntCharsPerLine" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="CommitValidationSecondLineMustBeEmpty" Type="System.Boolean" Scope="User">
+    <Setting Name="CommitValidationSecondLineMustBeEmpty" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="CommitValidationIndentAfterFirstLine" Type="System.Boolean" Scope="User">
+    <Setting Name="CommitValidationIndentAfterFirstLine" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="CommitValidationAutoWrap" Type="System.Boolean" Scope="User">
+    <Setting Name="CommitValidationAutoWrap" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="CommitValidationRegEx" Type="System.String" Scope="User">
+    <Setting Name="CommitValidationRegEx" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="CommitTemplates" Type="System.String" Scope="User">
+    <Setting Name="CommitTemplates" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="CreateLocalBranchForRemote" Type="System.Boolean" Scope="User">
+    <Setting Name="CreateLocalBranchForRemote" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="CascadeShellMenuItems" Type="System.String" Scope="User">
+    <Setting Name="CascadeShellMenuItems" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">110111000111111111</Value>
     </Setting>
-    <Setting Name="UseFormCommitMessage" Type="System.Boolean" Scope="User">
+    <Setting Name="UseFormCommitMessage" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="IsPortable" Type="System.Boolean" Scope="Application">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="UsePatienceDiffAlgorithm" Type="System.Boolean" Scope="User">
+    <Setting Name="UsePatienceDiffAlgorithm" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RepositoryHistory" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="RemoteRepositoryHistory" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Repositories" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LastPullActionString" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="StartWithRecentWorkingDir" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ShowErrorsWhenStagingFiles" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ShowGitStatusInBrowseToolbar" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="CheckForUncommittedChangesInCheckoutBranch" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="TruncatePathMethod" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)">none</Value>
+    </Setting>
+    <Setting Name="CheckSettings" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="CommitInfoShowContainedInBranchesLocal" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="CommitInfoShowContainedInBranchesRemote" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CommitInfoShowContainedInBranchesRemoteIfNoLocal" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CommitInfoShowContainedInTags" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ApplyPatchIgnoreWhitespace" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="UserMenuLocationX" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="UserMenuLocationY" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+    <Setting Name="StashKeepIndex" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="StashConfirmDropShow" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="InstallDir" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PluginsSettingsString" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="UpgradeSettings" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RefreshCommitDialogOnFormFocus" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="LastCommitMessage" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="HelpExpandedString" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>
