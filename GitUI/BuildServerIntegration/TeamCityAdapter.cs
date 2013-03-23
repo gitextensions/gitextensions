@@ -270,6 +270,7 @@ namespace GitUI.BuildServerIntegration
 
         private Task<Stream> GetStreamFromHttpResponseAsync(Task<HttpResponseMessage> task, string restServicePath, CancellationToken cancellationToken)
         {
+#if !__MonoCS__
             bool retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
             bool unauthorized = task.Status == TaskStatus.RanToCompletion &&
                                 task.Result.StatusCode == HttpStatusCode.Unauthorized;
@@ -312,6 +313,9 @@ namespace GitUI.BuildServerIntegration
             }
 
             throw new HttpRequestException(task.Result.ReasonPhrase);
+#else
+            return null;
+#endif
         }
 
         private void UpdateHttpClientOptions(IBuildServerCredentials buildServerCredentials)
