@@ -937,6 +937,9 @@ namespace GitUI.CommandsDialogs
 
         private void FillBuildReport()
         {
+            if(!Settings.RunningOnWindows())
+                return;
+
             var revision = RevisionGrid.GetSelectedRevisions().FirstOrDefault();
             var buildInfoIsAvailable = !(revision == null || revision.BuildStatus == null || string.IsNullOrEmpty(revision.BuildStatus.Url));
 
