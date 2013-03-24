@@ -1246,12 +1246,12 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (_dashboard != null)
-            {
-                _dashboard.Refresh();
-            }
-
             RefreshRevisions();
+        }
+
+        private void RefreshDashboardToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            _dashboard.Refresh();
         }
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
