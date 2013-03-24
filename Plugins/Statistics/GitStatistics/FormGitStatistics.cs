@@ -159,12 +159,7 @@ namespace GitStatistics
             var extensionLabels = new string[lineCounter.LinesOfCodePerExtension.Count];
 
             List<KeyValuePair<string, int>> LinesOfCodePerExtension = new List<KeyValuePair<string, int>>(lineCounter.LinesOfCodePerExtension);
-            LinesOfCodePerExtension.Sort(
-                delegate(KeyValuePair<string, int> first, KeyValuePair<string, int> next)
-                {
-                    return -first.Value.CompareTo(next.Value);
-                }
-            );
+            LinesOfCodePerExtension.Sort((first, next) => -first.Value.CompareTo(next.Value));
 
             var n = 0;
             string linesOfCodePerLanguageText = "";
@@ -178,44 +173,50 @@ namespace GitStatistics
             }
 
             //Sync rest to UI thread
-            syncContext.Post(o =>
-            {
-                TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines + " Lines of test code";
+            syncContext.Post(o => UpdateUI(lineCounter, linesOfCodePerLanguageText, extensionValues, extensionLabels), null);
+        }
 
-                TestCodePie.SetValues(new Decimal[]
-                                      {
-                                          lineCounter.NumberTestCodeLines,
-                                          lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines
-                                      });
- 
-                string percent_t = ((double)lineCounter.NumberTestCodeLines / lineCounter.NumberCodeLines).ToString("P1");
-                string percent_p = ((double)(lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines) / lineCounter.NumberCodeLines).ToString("P1");
-                TestCodePie.ToolTips =
-                    new[]
+        private void UpdateUI(LineCounter lineCounter, string linesOfCodePerLanguageText, decimal[] extensionValues,
+                              string[] extensionLabels)
+        {
+            TotalLinesOfTestCode.Text = lineCounter.NumberTestCodeLines + " Lines of test code";
+
+            TestCodePie.SetValues(new Decimal[]
+                {
+                    lineCounter.NumberTestCodeLines,
+                    lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines
+                });
+
+            string percent_t = ((double) lineCounter.NumberTestCodeLines/lineCounter.NumberCodeLines).ToString("P1");
+            string percent_p =
+                ((double) (lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines)/lineCounter.NumberCodeLines).ToString(
+                    "P1");
+            TestCodePie.ToolTips =
+                new[]
                     {
                         lineCounter.NumberTestCodeLines + " Lines of testcode (" + percent_t + ")",
                         lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines +
                         " Lines of production code (" + percent_p + ")"
                     };
 
-                TestCodeText.Text = lineCounter.NumberTestCodeLines + " Lines of testcode (" + percent_t + ")" + Environment.NewLine +
-                                    (lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines) +
-                                    " Lines of production code (" + percent_p + ")";
+            TestCodeText.Text = lineCounter.NumberTestCodeLines + " Lines of testcode (" + percent_t + ")" + Environment.NewLine +
+                                (lineCounter.NumberCodeLines - lineCounter.NumberTestCodeLines) +
+                                " Lines of production code (" + percent_p + ")";
 
 
-                string percent_blank = ((double)lineCounter.NumberBlankLines / lineCounter.NumberLines).ToString("P1");
-                string percent_comments = ((double)lineCounter.NumberCommentsLines / lineCounter.NumberLines).ToString("P1");
-                string percent_code = ((double)lineCounter.NumberCodeLines / lineCounter.NumberLines).ToString("P1");
-                string percent_designer = ((double)lineCounter.NumberLinesInDesignerFiles / lineCounter.NumberLines).ToString("P1");
-                LinesOfCodePie.SetValues(new Decimal[]
-                                         {
-                                             lineCounter.NumberBlankLines,
-                                             lineCounter.NumberCommentsLines,
-                                             lineCounter.NumberLines,
-                                             lineCounter.NumberLinesInDesignerFiles
-                                         });
-                LinesOfCodePie.ToolTips =
-                    new[]
+            string percent_blank = ((double) lineCounter.NumberBlankLines/lineCounter.NumberLines).ToString("P1");
+            string percent_comments = ((double) lineCounter.NumberCommentsLines/lineCounter.NumberLines).ToString("P1");
+            string percent_code = ((double) lineCounter.NumberCodeLines/lineCounter.NumberLines).ToString("P1");
+            string percent_designer = ((double) lineCounter.NumberLinesInDesignerFiles/lineCounter.NumberLines).ToString("P1");
+            LinesOfCodePie.SetValues(new Decimal[]
+                {
+                    lineCounter.NumberBlankLines,
+                    lineCounter.NumberCommentsLines,
+                    lineCounter.NumberLines,
+                    lineCounter.NumberLinesInDesignerFiles
+                });
+            LinesOfCodePie.ToolTips =
+                new[]
                     {
                         lineCounter.NumberBlankLines + " Blank lines (" + percent_blank + ")",
                         lineCounter.NumberCommentsLines + " Comment lines (" + percent_comments + ")",
@@ -223,18 +224,17 @@ namespace GitStatistics
                         lineCounter.NumberLinesInDesignerFiles + " Lines in designer files (" + percent_designer + ")"
                     };
 
-                LinesOfCodePerTypeText.Text = LinesOfCodePie.ToolTips[0] + Environment.NewLine;
-                LinesOfCodePerTypeText.Text += LinesOfCodePie.ToolTips[1] + Environment.NewLine;
-                LinesOfCodePerTypeText.Text += LinesOfCodePie.ToolTips[2] + Environment.NewLine;
-                LinesOfCodePerTypeText.Text += LinesOfCodePie.ToolTips[3] + Environment.NewLine;
+            LinesOfCodePerTypeText.Text = LinesOfCodePie.ToolTips[0] + Environment.NewLine;
+            LinesOfCodePerTypeText.Text += LinesOfCodePie.ToolTips[1] + Environment.NewLine;
+            LinesOfCodePerTypeText.Text += LinesOfCodePie.ToolTips[2] + Environment.NewLine;
+            LinesOfCodePerTypeText.Text += LinesOfCodePie.ToolTips[3] + Environment.NewLine;
 
-                LinesOfCodePerLanguageText.Text = linesOfCodePerLanguageText;
+            LinesOfCodePerLanguageText.Text = linesOfCodePerLanguageText;
 
-                LinesOfCodeExtensionPie.SetValues(extensionValues);
-                LinesOfCodeExtensionPie.ToolTips = extensionLabels;
+            LinesOfCodeExtensionPie.SetValues(extensionValues);
+            LinesOfCodeExtensionPie.ToolTips = extensionLabels;
 
-                TotalLinesOfCode2.Text = TotalLinesOfCode.Text = lineCounter.NumberCodeLines + " Lines of code";
-            }, null);
+            TotalLinesOfCode2.Text = TotalLinesOfCode.Text = lineCounter.NumberCodeLines + " Lines of code";
         }
 
         private void FormGitStatisticsShown(object sender, EventArgs e)

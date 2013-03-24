@@ -97,11 +97,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _selectHostedRepoCB.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
 
-            AsyncLoader.DoAsync<List<IPullRequestInformation>>(
+            AsyncLoader.DoAsync(
                hostedRepo.GetPullRequests,
                res => { SetPullRequestsData(res); _selectHostedRepoCB.Enabled = true; },
-               ex => MessageBox.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Message, _strError.Text)
-            );
+               ex => MessageBox.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Exception.Message,
+                                       _strError.Text));
         }
 
         private void SetPullRequestsData(List<IPullRequestInformation> infos)
@@ -200,7 +200,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 LoadDiscussion,
                 ex =>
                 {
-                    MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Message, _strError.Text);
+                    MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Exception.Message, _strError.Text);
                     LoadDiscussion(null);
                 });
         }
@@ -225,7 +225,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
             AsyncLoader.DoAsync(
                 () => _currentPullRequestInfo.DiffData,
                 SplitAndLoadDiff,
-                ex => MessageBox.Show(this, _strFailedToLoadDiffData.Text + Environment.NewLine + ex.Message, _strError.Text));
+                ex => MessageBox.Show(this, _strFailedToLoadDiffData.Text + Environment.NewLine + ex.Exception.Message,
+                                    _strError.Text));
         }
 
         Dictionary<string, string> _diffCache;
