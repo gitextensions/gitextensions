@@ -193,6 +193,7 @@ namespace GitUI.CommandsDialogs
             this.synchronizeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pluginSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.repoSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
             this.gitMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGitDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1201,21 +1202,22 @@ namespace GitUI.CommandsDialogs
             // 
             this.repositoryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem,
-            this.fileExplorerToolStripMenuItem, // ok
-            this.toolStripSeparator8, // ok
-            this.manageRemoteRepositoriesToolStripMenuItem1, // ok
-            this.toolStripSeparator43, // ok
-            this.manageSubmodulesToolStripMenuItem, // ok
-            this.updateAllSubmodulesToolStripMenuItem, // ok
-            this.synchronizeAllSubmodulesToolStripMenuItem, // ok
-            this.toolStripSeparator44, // ok
-            this.editgitignoreToolStripMenuItem1, // ok
-            this.editgitattributesToolStripMenuItem, // ok
-            this.editmailmapToolStripMenuItem, // ok
-            this.toolStripSeparator4, // ok
-            this.gitMaintenanceToolStripMenuItem, // ok
-            this.toolStripSeparator13, // ok
-            this.closeToolStripMenuItem, // ok
+            this.fileExplorerToolStripMenuItem,
+            this.toolStripSeparator8,
+            this.manageRemoteRepositoriesToolStripMenuItem1,
+            this.toolStripSeparator43,
+            this.manageSubmodulesToolStripMenuItem,
+            this.updateAllSubmodulesToolStripMenuItem,
+            this.synchronizeAllSubmodulesToolStripMenuItem,
+            this.toolStripSeparator44,
+            this.editgitignoreToolStripMenuItem1,
+            this.editgitattributesToolStripMenuItem,
+            this.editmailmapToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.gitMaintenanceToolStripMenuItem,
+            this.repoSettingsToolStripMenuItem,
+            this.toolStripSeparator13,
+            this.closeToolStripMenuItem
             });
             this.repositoryToolStripMenuItem.Name = "repositoryToolStripMenuItem";
             this.repositoryToolStripMenuItem.Size = new System.Drawing.Size(34, 20);
@@ -1681,6 +1683,13 @@ namespace GitUI.CommandsDialogs
             this.pluginSettingsToolStripMenuItem.Text = "Settings...";
             this.pluginSettingsToolStripMenuItem.Click += new System.EventHandler(this.PluginSettingsToolStripMenuItemClick);
             // 
+            // repoSettingsToolStripMenuItem
+            // 
+            this.repoSettingsToolStripMenuItem.Name = "repoSettingsToolStripMenuItem";
+            this.repoSettingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.repoSettingsToolStripMenuItem.Text = "Repository settings...";
+            this.repoSettingsToolStripMenuItem.Click += new System.EventHandler(this.RepoSettingsToolStripMenuItemClick);
+            // 
             // toolStripSeparator15
             // 
             this.toolStripSeparator15.Name = "toolStripSeparator15";
@@ -2072,6 +2081,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem synchronizeAllSubmodulesToolStripMenuItem;
         private ToolStripMenuItem pluginsToolStripMenuItem;
         private ToolStripMenuItem pluginSettingsToolStripMenuItem;
+        private ToolStripMenuItem repoSettingsToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator15;
         private ToolStripMenuItem gitMaintenanceToolStripMenuItem;
         private ToolStripMenuItem compressGitDatabaseToolStripMenuItem;
