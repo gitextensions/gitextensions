@@ -1654,6 +1654,11 @@ namespace GitUI.CommandsDialogs
             UICommands.StartPluginSettingsDialog(this);
         }
 
+        private void RepoSettingsToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            UICommands.StartRepoSettingsDialog(this);
+        }
+
         private void CloseToolStripMenuItemClick(object sender, EventArgs e)
         {
             SetWorkingDir("");
