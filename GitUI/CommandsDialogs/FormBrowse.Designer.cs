@@ -192,7 +192,7 @@ namespace GitUI.CommandsDialogs
             this.updateAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.synchronizeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pluginSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
             this.gitMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGitDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1667,19 +1667,19 @@ namespace GitUI.CommandsDialogs
             // 
             this.pluginsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripSeparator15,
-            this.settingsToolStripMenuItem,
+            this.pluginSettingsToolStripMenuItem,
             });
             this.pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
             this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.pluginsToolStripMenuItem.Text = "Plugins";
             this.pluginsToolStripMenuItem.DropDownOpening += new System.EventHandler(this.pluginsToolStripMenuItem_DropDownOpening);
             // 
-            // settingsToolStripMenuItem
+            // pluginSettingsToolStripMenuItem
             // 
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.settingsToolStripMenuItem.Text = "Settings...";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItemClick);
+            this.pluginSettingsToolStripMenuItem.Name = "pluginSettingsToolStripMenuItem";
+            this.pluginSettingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.pluginSettingsToolStripMenuItem.Text = "Settings...";
+            this.pluginSettingsToolStripMenuItem.Click += new System.EventHandler(this.PluginSettingsToolStripMenuItemClick);
             // 
             // toolStripSeparator15
             // 
@@ -2071,7 +2071,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem updateAllSubmodulesToolStripMenuItem;
         private ToolStripMenuItem synchronizeAllSubmodulesToolStripMenuItem;
         private ToolStripMenuItem pluginsToolStripMenuItem;
-        private ToolStripMenuItem settingsToolStripMenuItem;
+        private ToolStripMenuItem pluginSettingsToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator15;
         private ToolStripMenuItem gitMaintenanceToolStripMenuItem;
         private ToolStripMenuItem compressGitDatabaseToolStripMenuItem;

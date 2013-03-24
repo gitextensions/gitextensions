@@ -1649,7 +1649,7 @@ namespace GitUI.CommandsDialogs
             ChangeWorkingDir(button.Text);
         }
 
-        private void SettingsToolStripMenuItemClick(object sender, EventArgs e)
+        private void PluginSettingsToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartPluginSettingsDialog(this);
         }
