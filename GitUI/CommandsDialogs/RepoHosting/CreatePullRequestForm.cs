@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     if (branches.Count > 0)
                         _remoteBranchesCB.SelectedIndex = selectItem;
                 },
-                ex => { throw ex; });
+                ex => { ex.Handled = false; });
         }
 
         private IHostedRemote MyRemote
@@ -153,7 +153,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     if (branches.Count > 0)
                         _yourBranchesCB.SelectedIndex = selectItem;
                 },
-                ex => { throw ex; });
+                ex => { ex.Handled = false; });
         }
 
         private string _prevTitle;

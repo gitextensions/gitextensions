@@ -110,7 +110,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
         #endregion
 
-        private readonly SynchronizationContext _syncContext;
+        private readonly TaskScheduler _taskScheduler;
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
         private readonly CommitKind _commitKind;
@@ -124,7 +124,6 @@ namespace GitUI.CommandsDialogs
         private readonly AsyncLoader _unstagedLoader;
         private readonly bool _useFormCommitMessage;
         private CancellationTokenSource _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
-        private readonly string _indent;
 
         /// <summary>
         /// For VS designer
@@ -141,9 +140,9 @@ namespace GitUI.CommandsDialogs
         public FormCommit(GitUICommands aCommands, CommitKind commitKind, GitRevision editedCommit)
             : base(true, aCommands)
         {
-            _syncContext = SynchronizationContext.Current;
+            _taskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
-            unstagedLoader = new AsyncLoader(_syncContext);
+            _unstagedLoader = new AsyncLoader(_taskScheduler);
 
             _useFormCommitMessage = Settings.UseFormCommitMessage;
 
@@ -197,7 +196,6 @@ namespace GitUI.CommandsDialogs
             _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
             _resetSelectedLinesToolStripMenuItem.Image = Reset.Image;
             resetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
-            _indent = Settings.CommitValidationIndentAfterFirstLine ? "   " : String.Empty;
         }
 
         private void FormCommit_Load(object sender, EventArgs e)
@@ -379,10 +377,10 @@ namespace GitUI.CommandsDialogs
                     showUntrackedFilesToolStripMenuItem.Checked);
 
             if (async)
-                unstagedLoader.Load(getAllChangedFilesWithSubmodulesStatus, onComputed);
+                _unstagedLoader.Load(getAllChangedFilesWithSubmodulesStatus, onComputed);
             else
             {
-                unstagedLoader.Cancel();
+                _unstagedLoader.Cancel();
                 onComputed(getAllChangedFilesWithSubmodulesStatus());
             }
         }
@@ -1351,15 +1349,9 @@ namespace GitUI.CommandsDialogs
             if (_useFormCommitMessage && !string.IsNullOrEmpty(message))
                 Message.Text = message;
 
-            ThreadPool.QueueUserWorkItem(
-                o =>
-                {
-                    var text =
-                        string.Format(_formTitle.Text, Module.GetSelectedBranch(),
-                                      Module.WorkingDir);
-
-                    _syncContext.Post(state1 => Text = text, null);
-                });
+            Task.Factory.StartNew(() => string.Format(_formTitle.Text, Module.GetSelectedBranch(),
+                                      Module.WorkingDir))
+                .ContinueWith(task => Text = task.Result, _taskScheduler);
         }
 
         private void SetCommitMessageFromTextBox(string commitMessageText)
