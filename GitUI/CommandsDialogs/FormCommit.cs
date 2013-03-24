@@ -1043,9 +1043,13 @@ namespace GitUI.CommandsDialogs
                                     unstagedItems.Add(item);
                             }
                             unStagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
-                            unStagedFiles.RemoveAll(item => item.IsSubmodule && !item.SubmoduleStatus.IsDirty && unstagedItems.Contains(item));
-                            foreach (var item in unstagedItems.Where(item => item.IsSubmodule && item.SubmoduleStatus.IsDirty))
-                                item.SubmoduleStatus.Status = SubmoduleStatus.Unknown;
+                            unStagedFiles.RemoveAll(item => item.IsSubmodule && item.SubmoduleStatus.IsCompleted && 
+                                !item.SubmoduleStatus.Result.IsDirty && unstagedItems.Contains(item));
+                            foreach (var item in unstagedItems.Where(item => item.IsSubmodule &&
+                                item.SubmoduleStatus.IsCompleted && item.SubmoduleStatus.Result.IsDirty))
+                            {
+                                item.SubmoduleStatus.Result.Status = SubmoduleStatus.Unknown;
+                            }
                             Unstaged.GitItemStatuses = unStagedFiles;
                         });
                     Unstaged.SelectStoredNextIndex();

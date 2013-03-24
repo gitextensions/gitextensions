@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Hotkey;
@@ -359,13 +360,13 @@ namespace GitUI.Editor
         }
 
         public void ViewCurrentChanges(string fileName, string oldFileName, bool staged,
-            bool isSubmodule, GitSubmoduleStatus status)
+            bool isSubmodule, Task<GitSubmoduleStatus> status)
         {
             if (!isSubmodule)
                 _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
                     ViewStagingPatch);
             else if (status != null)
-                _async.Load(() => GitCommandHelpers.ProcessSubmoduleStatus(Module, status), ViewPatch);
+                _async.Load(() => GitCommandHelpers.ProcessSubmoduleStatus(Module, status.Result), ViewPatch);
             else
                 _async.Load(() => GitCommandHelpers.ProcessSubmodulePatch(Module, 
                     Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding)), ViewPatch);
