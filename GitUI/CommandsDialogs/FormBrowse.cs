@@ -351,12 +351,16 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// to avoid showing menu items that should not be there during
         /// the transition from dashboard to repo browser and vice versa
+        /// 
+        /// and reset hotkeys that are shared between mutual exclusive menu items
         /// </summary>
         private void HideVariableMainMenuItems()
         {
             dashboardToolStripMenuItem.Visible = false;
             repositoryToolStripMenuItem.Visible = false;
             commandsToolStripMenuItem.Visible = false;
+            refreshToolStripMenuItem.ShortcutKeys = Keys.None;
+            refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.None;
             menuStrip1.Refresh();
         }
 
@@ -386,6 +390,14 @@ namespace GitUI.CommandsDialogs
             dashboardToolStripMenuItem.Visible = !validWorkingDir;
             repositoryToolStripMenuItem.Visible = validWorkingDir;
             commandsToolStripMenuItem.Visible = validWorkingDir;
+            if (validWorkingDir)
+            {
+                refreshToolStripMenuItem.ShortcutKeys = Keys.F5;
+            }
+            else
+            {
+                refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.F5;
+            }
             UpdatePluginMenu(validWorkingDir);
             gitMaintenanceToolStripMenuItem.Enabled = validWorkingDir;
             editgitignoreToolStripMenuItem1.Enabled = validWorkingDir;
