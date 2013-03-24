@@ -174,7 +174,7 @@ namespace GitUI
             }
 
             if (file.IsSubmodule && file.SubmoduleStatus != null)
-                return GitCommandHelpers.ProcessSubmoduleStatus(diffViewer.Module, file.SubmoduleStatus);
+                return GitCommandHelpers.ProcessSubmoduleStatus(diffViewer.Module, file.SubmoduleStatus.Result);
 
             PatchApply.Patch patch = GetItemPatch(diffViewer.Module, file, firstRevision, secondRevision,
                 diffViewer.GetExtraDiffArguments(), diffViewer.Encoding);
