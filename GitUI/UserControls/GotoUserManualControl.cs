@@ -16,19 +16,50 @@ namespace GitUI.UserControls
         /// <summary>
         /// TODO: make customizable
         /// </summary>
-        private const string ManualLocation = @"file:///D:/data2/projects/gitextensions/GitExtensionsDoc/build/singlehtml";
+        private string ManualLocation;
+
+        /// <summary>
+        /// TODO: make customizable
+        /// </summary>
+        private ManualType ManualType;
 
         public GotoUserManualControl()
         {
             InitializeComponent();
             Translate();
+
+            // set online manual
+            ManualLocation = @"https://gitextensions.readthedocs.org/en/latest";
+            ManualType = ManualType.StandardHtml;
+
+            // set local singlehtml help / TODO: put manual to GitExt setup
+            ////ManualLocation = @"file:///D:/data2/projects/gitextensions/GitExtensionsDoc/build/singlehtml";
+            ////ManualType = ManualType.SingleHtml;
+        }
+
+        bool isLoaded = false;
+
+        private void GotoUserManualControl_Load(object sender, EventArgs e)
+        {
+            isLoaded = true;
+            UpdateTooltip();
         }
 
         string _manualSectionAnchorName;
         public string ManualSectionAnchorName
         {
             get { return _manualSectionAnchorName; }
-            set { _manualSectionAnchorName = value; UpdateTooltip(); }
+            set { _manualSectionAnchorName = value; if (isLoaded) { UpdateTooltip(); } }
+        }
+
+        string _manualSectionSubfolder;
+        /// <summary>
+        /// only needed when ManualType is StandardHtml (not needed for SingleHtml)
+        /// </summary>
+        public string ManualSectionSubfolder
+        {
+            get { return _manualSectionSubfolder; }
+            set { _manualSectionSubfolder = value; if (isLoaded) { UpdateTooltip(); } }
         }
 
         private void UpdateTooltip()
@@ -46,7 +77,17 @@ namespace GitUI.UserControls
 
         private string GetUrl()
         {
-            return string.Format("{0}/index.html#{1}", ManualLocation, ManualSectionAnchorName);
+            switch (ManualType)
+            {
+                case UserControls.ManualType.SingleHtml:
+                    return string.Format("{0}/index.html#{1}", ManualLocation, ManualSectionAnchorName);
+
+                case UserControls.ManualType.StandardHtml:
+                    return string.Format("{0}/{1}/#{2}", ManualLocation, ManualSectionSubfolder, ManualSectionAnchorName);
+
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -72,5 +113,18 @@ namespace GitUI.UserControls
         {
             OpenManual();
         }
+    }
+
+    public enum ManualType
+    {
+        /// <summary>
+        /// all in one html page
+        /// </summary>
+        SingleHtml,
+
+        /// <summary>
+        /// html with subfolders
+        /// </summary>
+        StandardHtml
     }
 }

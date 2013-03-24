@@ -30,12 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.Orphan = new System.Windows.Forms.CheckBox();
+            this.ClearOrphan = new System.Windows.Forms.CheckBox();
             this.Ok = new System.Windows.Forms.Button();
             this.gotoUserManualControl1 = new GitUI.UserControls.GotoUserManualControl();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.Orphan = new System.Windows.Forms.CheckBox();
-            this.ClearOrphan = new System.Windows.Forms.CheckBox();
             this.stackOptions = new System.Windows.Forms.FlowLayoutPanel();
             this.CheckoutAfterCreate = new System.Windows.Forms.CheckBox();
             this.table = new System.Windows.Forms.TableLayoutPanel();
@@ -53,50 +53,6 @@
             this.panel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // Ok
-            // 
-            this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Ok.Image = global::GitUI.Properties.Resources.IconBranchCreate;
-            this.Ok.Location = new System.Drawing.Point(307, 8);
-            this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(128, 25);
-            this.Ok.TabIndex = 4;
-            this.Ok.Text = "Create branch";
-            this.Ok.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Ok.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.OkClick);
-            // 
-            // gotoUserManualControl1
-            // 
-            this.gotoUserManualControl1.Location = new System.Drawing.Point(6, 181);
-            this.gotoUserManualControl1.ManualSectionAnchorName = "create-branch";
-            this.gotoUserManualControl1.Name = "gotoUserManualControl1";
-            this.gotoUserManualControl1.Size = new System.Drawing.Size(60, 18);
-            this.gotoUserManualControl1.TabIndex = 11;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.flowLayoutPanel2);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox1.Location = new System.Drawing.Point(3, 119);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(438, 54);
-            this.groupBox1.TabIndex = 10;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Orphan";
-            // 
-            // flowLayoutPanel2
-            // 
-            this.flowLayoutPanel2.Controls.Add(this.Orphan);
-            this.flowLayoutPanel2.Controls.Add(this.ClearOrphan);
-            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 19);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(432, 32);
-            this.flowLayoutPanel2.TabIndex = 0;
             // 
             // Orphan
             // 
@@ -123,6 +79,51 @@
             this.ClearOrphan.Text = "Clear working dir and index";
             this.toolTip.SetToolTip(this.ClearOrphan, "Remove files from the working tree and from the index");
             this.ClearOrphan.UseVisualStyleBackColor = true;
+            // 
+            // Ok
+            // 
+            this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.Ok.Image = global::GitUI.Properties.Resources.IconBranchCreate;
+            this.Ok.Location = new System.Drawing.Point(307, 8);
+            this.Ok.Name = "Ok";
+            this.Ok.Size = new System.Drawing.Size(128, 25);
+            this.Ok.TabIndex = 4;
+            this.Ok.Text = "Create branch";
+            this.Ok.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.Ok.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.Ok.UseVisualStyleBackColor = true;
+            this.Ok.Click += new System.EventHandler(this.OkClick);
+            // 
+            // gotoUserManualControl1
+            // 
+            this.gotoUserManualControl1.Location = new System.Drawing.Point(6, 181);
+            this.gotoUserManualControl1.ManualSectionAnchorName = "create-branch";
+            this.gotoUserManualControl1.ManualSectionSubfolder = "branches";
+            this.gotoUserManualControl1.Name = "gotoUserManualControl1";
+            this.gotoUserManualControl1.Size = new System.Drawing.Size(60, 18);
+            this.gotoUserManualControl1.TabIndex = 11;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.flowLayoutPanel2);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox1.Location = new System.Drawing.Point(3, 119);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(438, 54);
+            this.groupBox1.TabIndex = 10;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Orphan";
+            // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.Controls.Add(this.Orphan);
+            this.flowLayoutPanel2.Controls.Add(this.ClearOrphan);
+            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 19);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(432, 32);
+            this.flowLayoutPanel2.TabIndex = 0;
             // 
             // stackOptions
             // 
