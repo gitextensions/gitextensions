@@ -104,6 +104,7 @@
             this.gotoUserManualControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.gotoUserManualControl1.Location = new System.Drawing.Point(10, 141);
             this.gotoUserManualControl1.ManualSectionAnchorName = "delete-branch";
+            this.gotoUserManualControl1.ManualSectionSubfolder = "branches";
             this.gotoUserManualControl1.Name = "gotoUserManualControl1";
             this.gotoUserManualControl1.Size = new System.Drawing.Size(60, 18);
             this.gotoUserManualControl1.TabIndex = 8;

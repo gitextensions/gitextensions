@@ -79,6 +79,7 @@
             this.Controls.Add(this.flowLayoutPanel1);
             this.Name = "GotoUserManualControl";
             this.Size = new System.Drawing.Size(60, 18);
+            this.Load += new System.EventHandler(this.GotoUserManualControl_Load);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
