@@ -297,7 +297,7 @@ namespace GitUI.CommandsDialogs
             {
                 var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
                 item.Click += ItemClick;
-                pluginsToolStripMenuItem.DropDownItems.Add(item);
+                pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
             }
             pluginsLoaded = true;
             UpdatePluginMenu(Module.IsValidGitWorkingDir());

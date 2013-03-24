@@ -1134,7 +1134,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
             this.closeToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.closeToolStripMenuItem.Text = "Close";
+            this.closeToolStripMenuItem.Text = "Close (go to Dashboard)";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.CloseToolStripMenuItemClick);
             // 
             // refreshToolStripMenuItem
@@ -1552,7 +1552,7 @@ namespace GitUI.CommandsDialogs
             this.manageRemoteRepositoriesToolStripMenuItem1.Image = global::GitUI.Properties.Resources.IconRemotes;
             this.manageRemoteRepositoriesToolStripMenuItem1.Name = "manageRemoteRepositoriesToolStripMenuItem1";
             this.manageRemoteRepositoriesToolStripMenuItem1.Size = new System.Drawing.Size(222, 22);
-            this.manageRemoteRepositoriesToolStripMenuItem1.Text = "Manage remote repositories";
+            this.manageRemoteRepositoriesToolStripMenuItem1.Text = "Remote repositories...";
             this.manageRemoteRepositoriesToolStripMenuItem1.Click += new System.EventHandler(this.ManageRemoteRepositoriesToolStripMenuItemClick);
             // 
             // toolStripSeparator6
@@ -1607,7 +1607,7 @@ namespace GitUI.CommandsDialogs
             // 
             this._viewPullRequestsToolStripMenuItem.Name = "_viewPullRequestsToolStripMenuItem";
             this._viewPullRequestsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this._viewPullRequestsToolStripMenuItem.Text = "View pull requests";
+            this._viewPullRequestsToolStripMenuItem.Text = "View pull requests...";
             this._viewPullRequestsToolStripMenuItem.Click += new System.EventHandler(this._viewPullRequestsToolStripMenuItem_Click);
             // 
             // _createPullRequestsToolStripMenuItem
@@ -1631,7 +1631,7 @@ namespace GitUI.CommandsDialogs
             this.manageSubmodulesToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconSubmodulesManage;
             this.manageSubmodulesToolStripMenuItem.Name = "manageSubmodulesToolStripMenuItem";
             this.manageSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.manageSubmodulesToolStripMenuItem.Text = "Manage submodules";
+            this.manageSubmodulesToolStripMenuItem.Text = "Submodules...";
             this.manageSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.ManageSubmodulesToolStripMenuItemClick);
             // 
             // toolStripSeparator8
@@ -1656,8 +1656,9 @@ namespace GitUI.CommandsDialogs
             // pluginsToolStripMenuItem
             // 
             this.pluginsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripSeparator15,
             this.settingsToolStripMenuItem,
-            this.toolStripSeparator15});
+            });
             this.pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
             this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.pluginsToolStripMenuItem.Text = "Plugins";
@@ -1667,7 +1668,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Text = "Settings...";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItemClick);
             // 
             // toolStripSeparator15
@@ -1717,21 +1718,21 @@ namespace GitUI.CommandsDialogs
             // 
             this.editgitignoreToolStripMenuItem1.Name = "editgitignoreToolStripMenuItem1";
             this.editgitignoreToolStripMenuItem1.Size = new System.Drawing.Size(164, 22);
-            this.editgitignoreToolStripMenuItem1.Text = "Edit .gitignore";
+            this.editgitignoreToolStripMenuItem1.Text = "Edit .gitignore...";
             this.editgitignoreToolStripMenuItem1.Click += new System.EventHandler(this.EditGitignoreToolStripMenuItem1Click);
             // 
             // editgitattributesToolStripMenuItem
             // 
             this.editgitattributesToolStripMenuItem.Name = "editgitattributesToolStripMenuItem";
             this.editgitattributesToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.editgitattributesToolStripMenuItem.Text = "Edit .gitattributes";
+            this.editgitattributesToolStripMenuItem.Text = "Edit .gitattributes...";
             this.editgitattributesToolStripMenuItem.Click += new System.EventHandler(this.editgitattributesToolStripMenuItem_Click);
             // 
             // editmailmapToolStripMenuItem
             // 
             this.editmailmapToolStripMenuItem.Name = "editmailmapToolStripMenuItem";
             this.editmailmapToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.editmailmapToolStripMenuItem.Text = "Edit .mailmap";
+            this.editmailmapToolStripMenuItem.Text = "Edit .mailmap...";
             this.editmailmapToolStripMenuItem.Click += new System.EventHandler(this.EditMailMapToolStripMenuItemClick);
             // 
             // toolStripSeparator13
@@ -1744,7 +1745,7 @@ namespace GitUI.CommandsDialogs
             this.settingsToolStripMenuItem2.Image = global::GitUI.Properties.Resources.Icon_71;
             this.settingsToolStripMenuItem2.Name = "settingsToolStripMenuItem2";
             this.settingsToolStripMenuItem2.Size = new System.Drawing.Size(164, 22);
-            this.settingsToolStripMenuItem2.Text = "Settings";
+            this.settingsToolStripMenuItem2.Text = "Settings...";
             this.settingsToolStripMenuItem2.Click += new System.EventHandler(this.SettingsToolStripMenuItem2Click);
             // 
             // settingsToolStripMenuItem3
@@ -1752,7 +1753,7 @@ namespace GitUI.CommandsDialogs
             this.settingsToolStripMenuItem3.Image = global::GitUI.Properties.Resources.Icon_71;
             this.settingsToolStripMenuItem3.Name = "settingsToolStripMenuItem3";
             this.settingsToolStripMenuItem3.Size = new System.Drawing.Size(164, 22);
-            this.settingsToolStripMenuItem3.Text = "Settings";
+            this.settingsToolStripMenuItem3.Text = "Settings...";
             this.settingsToolStripMenuItem3.Click += new System.EventHandler(this.SettingsToolStripMenuItem2Click);
             // 
             // helpToolStripMenuItem
