@@ -80,10 +80,7 @@ namespace GitImpact
         public void Stop()
         {
             if (impact_loader != null)
-            {
-                impact_loader.Dispose();
-                impact_loader = null;
-            }
+                impact_loader.Stop();
         }
 
         void ImpactControl_MouseWheel(object sender, MouseEventArgs e)

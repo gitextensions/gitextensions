@@ -53,7 +53,6 @@ namespace GitCommands.Statistics
         }
 
         private CancellationTokenSource _backgroundLoaderTokenSource = new CancellationTokenSource();
-        private Task _backgroundLoader;
         private readonly IGitModule Module;
 
         public ImpactLoader(IGitModule aModule)
@@ -63,25 +62,32 @@ namespace GitCommands.Statistics
 
         ~ImpactLoader()
         {
-            Dispose();
+            Stop();
         }
 
         public void Dispose()
+        {
+            Stop();
+        }
+
+        public void Stop()
         {
             _backgroundLoaderTokenSource.Cancel();
         }
 
         public void Execute()
         {
+            _backgroundLoaderTokenSource.Cancel();
+            _backgroundLoaderTokenSource = new CancellationTokenSource();
             var token = _backgroundLoaderTokenSource.Token;
-            _backgroundLoader = Task.Factory.StartNew(() => execute(token), token);
-            _backgroundLoader.ContinueWith((task) =>
+            Task[] tasks = GetTasks(token);
+            Task.Factory.ContinueWhenAll(tasks, (task) =>
                 {
-                    if (Exited != null)
+                    if (!token.IsCancellationRequested && Exited != null)
                         Exited(this, EventArgs.Empty);
                 },
                 CancellationToken.None,
-                TaskContinuationOptions.OnlyOnRanToCompletion,
+                TaskContinuationOptions.None,
                 TaskScheduler.FromCurrentSynchronizationContext());
         }
 
@@ -89,34 +95,32 @@ namespace GitCommands.Statistics
         public bool ShowSubmodules
         {
             get { return showSubmodules; }
-            set { Dispose(); showSubmodules = value; }
+            set { Stop(); showSubmodules = value; }
         }
 
-        private void execute(CancellationToken token)
+        private Task[] GetTasks(CancellationToken token)
         {
+            List<Task> tasks = new List<Task>();
             string authorName = this.RespectMailmap ? "%aN" : "%an";
 
             string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
 
-            LoadModuleInfo(command, Module);
+            tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, Module, token), token));
 
             if (ShowSubmodules)
             {
                 IList<string> submodules = Module.GetSubmodulesLocalPathes();
                 foreach (var submoduleName in submodules)
                 {
-                    if (token.IsCancellationRequested)
-                        token.ThrowIfCancellationRequested();
                     IGitModule submodule = Module.GetISubmodule(submoduleName);
-
                     if (submodule.IsValidGitWorkingDir())
-                        LoadModuleInfo(command, submodule);
-
+                        tasks.Add(Task.Factory.StartNew(() => LoadModuleInfo(command, submodule, token), token));
                 }
             }
+            return tasks.ToArray();
         }
 
-        private void LoadModuleInfo(string command, IGitModule module)
+        private void LoadModuleInfo(string command, IGitModule module, CancellationToken token)
         {
             using (GitCommandsInstance git = new GitCommandsInstance(module))
             {
@@ -128,7 +132,7 @@ namespace GitCommands.Statistics
                 string line = p.StandardOutput.ReadLine();
 
                 // Analyze commit listing
-                while (!_backgroundLoaderTokenSource.IsCancellationRequested)
+                while (!token.IsCancellationRequested)
                 {
                     Commit commit = new Commit();
 
@@ -147,7 +151,7 @@ namespace GitCommands.Statistics
                     line = line.Substring(4);
 
                     // Split date and author
-                    string[] header = line.Split(new string[] { " --- " }, 2, StringSplitOptions.RemoveEmptyEntries);
+                    string[] header = line.Split(new[] { " --- " }, 2, StringSplitOptions.RemoveEmptyEntries);
                     if (header.Length != 2)
                         continue;
 
@@ -165,7 +169,7 @@ namespace GitCommands.Statistics
                     commit.data.DeletedLines = 0;
 
                     // Parse commit lines
-                    while ((line = p.StandardOutput.ReadLine()) != null && !line.StartsWith("--- ") && !_backgroundLoaderTokenSource.IsCancellationRequested)
+                    while ((line = p.StandardOutput.ReadLine()) != null && !line.StartsWith("--- ") && !token.IsCancellationRequested)
                     {
                         // Skip empty line
                         if (string.IsNullOrEmpty(line))
@@ -181,7 +185,7 @@ namespace GitCommands.Statistics
                         }
                     }
 
-                    if (Updated != null && !_backgroundLoaderTokenSource.IsCancellationRequested)
+                    if (Updated != null && !token.IsCancellationRequested)
                         Updated(commit);
                 }
             }
