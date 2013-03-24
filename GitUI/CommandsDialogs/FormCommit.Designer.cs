@@ -739,7 +739,6 @@ namespace GitUI.CommandsDialogs
             // 
             // resetSelectedFilesToolStripMenuItem
             // 
-            this.resetSelectedFilesToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
             this.resetSelectedFilesToolStripMenuItem.Name = "resetSelectedFilesToolStripMenuItem";
             this.resetSelectedFilesToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.resetSelectedFilesToolStripMenuItem.Text = "Reset selected files";
