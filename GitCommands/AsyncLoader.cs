@@ -76,7 +76,7 @@ namespace GitCommands
                     if (!OnLoadingError(exception))
                         throw;
                 }
-            }, _taskScheduler);
+            }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _taskScheduler);
             return newTask;
         }
 
