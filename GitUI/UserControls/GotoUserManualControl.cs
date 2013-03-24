@@ -24,12 +24,29 @@ namespace GitUI.UserControls
             Translate();
         }
 
-        public string ManualSectionAnchorName { get; set; }
+        string _manualSectionAnchorName;
+        public string ManualSectionAnchorName
+        {
+            get { return _manualSectionAnchorName; }
+            set { _manualSectionAnchorName = value; UpdateTooltip(); }
+        }
+
+        private void UpdateTooltip()
+        {
+            string caption = string.Format("Read more about this feature at {0}", GetUrl());
+            toolTip1.SetToolTip(labelHelpIcon, caption);
+            toolTip1.SetToolTip(linkLabelHelp, caption);
+        }
 
         private void OpenManual()
         {
-            string url = string.Format("{0}/index.html#{1}", ManualLocation, ManualSectionAnchorName);
+            string url = GetUrl();
             OpenUrlInDefaultBrowser(url);
+        }
+
+        private string GetUrl()
+        {
+            return string.Format("{0}/index.html#{1}", ManualLocation, ManualSectionAnchorName);
         }
 
         /// <summary>
