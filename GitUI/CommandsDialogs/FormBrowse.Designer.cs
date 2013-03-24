@@ -125,6 +125,7 @@ namespace GitUI.CommandsDialogs
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.refreshDashboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.recentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
@@ -1111,8 +1112,6 @@ namespace GitUI.CommandsDialogs
             this.cloneToolStripMenuItem,
             this.cloneSVNToolStripMenuItem,
             this.toolStripSeparator40,
-            this.refreshToolStripMenuItem,
-            this.toolStripSeparator42,
             this.settingsToolStripMenuItem2,
             this.toolStripMenuItem1, // (sep)
             this.exitToolStripMenuItem});
@@ -1146,6 +1145,16 @@ namespace GitUI.CommandsDialogs
             this.refreshToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.RefreshToolStripMenuItemClick);
+            // 
+            // refreshDashboardToolStripMenuItem
+            // 
+            this.refreshDashboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.arrow_refresh;
+            this.refreshDashboardToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.refreshDashboardToolStripMenuItem.Name = "refreshDashboardToolStripMenuItem";
+            this.refreshDashboardToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.refreshDashboardToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+            this.refreshDashboardToolStripMenuItem.Text = "Refresh";
+            this.refreshDashboardToolStripMenuItem.Click += new System.EventHandler(this.RefreshDashboardToolStripMenuItemClick);
             // 
             // recentToolStripMenuItem
             // 
@@ -1193,6 +1202,7 @@ namespace GitUI.CommandsDialogs
             // repositoryToolStripMenuItem
             // 
             this.repositoryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.refreshToolStripMenuItem,
             this.fileExplorerToolStripMenuItem, // ok
             this.toolStripSeparator8, // ok
             this.manageRemoteRepositoriesToolStripMenuItem1, // ok
@@ -1620,6 +1630,8 @@ namespace GitUI.CommandsDialogs
             // dashboardToolStripMenuItem
             // 
             this.dashboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.refreshDashboardToolStripMenuItem,
+            this.toolStripSeparator42
                 // TODO: Show current branch
             });
             this.dashboardToolStripMenuItem.Name = "dashboardToolStripMenuItem";
@@ -2011,6 +2023,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem openToolStripMenuItem;
         private ToolStripMenuItem closeToolStripMenuItem;
         private ToolStripMenuItem refreshToolStripMenuItem;
+        private ToolStripMenuItem refreshDashboardToolStripMenuItem;
         private ToolStripMenuItem recentToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItem2;
         private ToolStripSeparator toolStripSeparator12;
