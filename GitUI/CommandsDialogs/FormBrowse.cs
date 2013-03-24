@@ -251,6 +251,7 @@ namespace GitUI.CommandsDialogs
                 TaskbarManager.Instance.ApplicationId = "GitExtensions";
             }
 #endif
+            HideVariableMainMenuItems();
 
             RevisionGrid.Load();
             _FilterBranchHelper.InitToolStripBranchFilter();
@@ -347,6 +348,18 @@ namespace GitUI.CommandsDialogs
                 plugin.Unregister(UICommands);
         }
 
+        /// <summary>
+        /// to avoid showing menu items that should not be there during
+        /// the transition from dashboard to repo browser and vice versa
+        /// </summary>
+        private void HideVariableMainMenuItems()
+        {
+            dashboardToolStripMenuItem.Visible = false;
+            repositoryToolStripMenuItem.Visible = false;
+            commandsToolStripMenuItem.Visible = false;
+            menuStrip1.Refresh();
+        }
+
         private void InternalInitialize(bool hard)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -363,7 +376,6 @@ namespace GitUI.CommandsDialogs
             toolStripButtonLevelUp.Enabled = hasWorkingDir;
             CommitInfoTabControl.Visible = validWorkingDir;
             fileExplorerToolStripMenuItem.Enabled = validWorkingDir;
-            commandsToolStripMenuItem.Visible = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
             branchSelect.Enabled = validWorkingDir;
             toolStripButton1.Enabled = validWorkingDir;
@@ -373,6 +385,7 @@ namespace GitUI.CommandsDialogs
             toolStripButtonPush.Enabled = validWorkingDir;
             dashboardToolStripMenuItem.Visible = !validWorkingDir;
             repositoryToolStripMenuItem.Visible = validWorkingDir;
+            commandsToolStripMenuItem.Visible = validWorkingDir;
             UpdatePluginMenu(validWorkingDir);
             gitMaintenanceToolStripMenuItem.Enabled = validWorkingDir;
             editgitignoreToolStripMenuItem1.Enabled = validWorkingDir;
@@ -1761,6 +1774,7 @@ namespace GitUI.CommandsDialogs
 
         private void SetGitModule(GitModule module)
         {
+            HideVariableMainMenuItems();
             UnregisterPlugins();
             UICommands = new GitUICommands(module);
 
