@@ -10,6 +10,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         readonly CheckSettingsLogic _checkSettingsLogic;
         readonly GitModule _gitModule;
 
+        public static SettingsPageReference GetPageReference()
+        {
+            return new SettingsPageReferenceByType(typeof(LocalSettingsSettingsPage));
+        }
+
         private LocalSettingsSettingsPage()
         {
             InitializeComponent();

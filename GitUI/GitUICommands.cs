@@ -1371,6 +1371,11 @@ namespace GitUI
             return StartPluginSettingsDialog(null);
         }
 
+        public bool StartRepoSettingsDialog(IWin32Window owner)
+        {
+            return StartSettingsDialog(owner, GitUI.CommandsDialogs.SettingsDialog.Pages.LocalSettingsSettingsPage.GetPageReference());
+        }
+
         public bool StartBrowseDialog(IWin32Window owner, string filter)
         {
             if (!InvokeEvent(owner, PreBrowse))
