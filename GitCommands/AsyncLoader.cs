@@ -66,6 +66,7 @@ namespace GitCommands
                     foreach (var e in task.Exception.InnerExceptions)
                         if (!OnLoadingError(e))
                             throw e;
+                    return;
                 }
                 try
                 {
@@ -98,6 +99,7 @@ namespace GitCommands
                     foreach (var e in task.Exception.InnerExceptions)
                         if (!OnLoadingError(e))
                             throw e;
+                    return;
                 }
                 try
                 {
