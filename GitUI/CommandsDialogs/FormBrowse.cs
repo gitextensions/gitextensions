@@ -19,9 +19,9 @@ using GitUI.Plugin;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using ResourceManager.Translation;
+using System.Reflection;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
-using System.Reflection;
 #endif
 
 namespace GitUI.CommandsDialogs
