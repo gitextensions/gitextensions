@@ -29,13 +29,15 @@ If you do not want to use github, I also accept mailed patches. Just make sure t
 * Download and install WiX [http://wixtoolset.org/](http://wixtoolset.org/)
 * Run Setup\\BuildInstallers.bat to build the installers
 
-## Installing Nuget in Monodevelop
+## Installing Nuget in Monodevelop/Xamarin Studio
 
-Following steps will add nuget package management capabilities to your monoDevelop
+Following steps will add nuget package management capabilities to your monoDevelop/Xamarin Studio
+
+OBS: Monodevelop 4.0 is Xamarin Studio
 
 * On monoDevelop find Add-In manager (macOS is on program main menu, other OS's under tools)
 * over the gallery tab, select "Manage repositories..." from the "Repositories" drop-down menu
-* Add a new URL http://mrward.github.com/monodevelop-nuget-addin-repository/3.0.5/main.mrep
+* For monodevelop <= 3.0, add a new URL http://mrward.github.com/monodevelop-nuget-addin-repository/3.0.5/main.mrep otherwise, if using Xamarin Studio use http://mrward.github.com/monodevelop-nuget-addin-repository/4.0/main.mrep
 * A new IDE extension option will appear, select the nuget package management
 * To add nuget packages or maintain it, you right click either on the solution or in the references
 
