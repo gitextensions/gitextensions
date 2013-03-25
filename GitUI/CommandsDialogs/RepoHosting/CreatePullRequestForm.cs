@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -26,6 +26,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly string _chooseRemote;
         private List<IHostedRemote> _hostedRemotes;
         private string _currentBranch;
+        private string _prevTitle;
         private readonly AsyncLoader _remoteLoader = new AsyncLoader();
 
         public CreatePullRequestForm(GitUICommands aCommands, IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
@@ -33,7 +34,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             _repoHost = repoHost;
             _chooseRemote = chooseRemote;
-            _currentBranch = "";
+            _currentBranch = chooseBranch;
             InitializeComponent();
             Translate();
             _prevTitle = _titleTB.Text;
@@ -124,18 +125,16 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             get
             {
-                var myRemote = _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
-                if (myRemote == null)
-                    throw new InvalidOperationException(_strCouldNotLocateARemoteThatBelongsToYourUser.Text);
-                return myRemote;
+                return _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
             }
         }
 
-
         private void LoadMyBranches()
         {
-
             _yourBranchesCB.Items.Clear();
+
+            if (MyRemote == null)
+                return;
 
             AsyncLoader.DoAsync(
                 () => MyRemote.GetHostedRepository().Branches,
@@ -156,11 +155,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 ex => { ex.Handled = false; });
         }
 
-        private string _prevTitle;
-
         private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_prevTitle.Equals(_titleTB.Text) && !_yourBranchesCB.Text.IsNullOrWhiteSpace())
+            if (_prevTitle.Equals(_titleTB.Text) && !_yourBranchesCB.Text.IsNullOrWhiteSpace() && MyRemote != null)
             {
                 var lastMsg = Module.GetPreviousCommitMessages(MyRemote.Name.Combine("/", _yourBranchesCB.Text), 1).FirstOrDefault();
                 _titleTB.Text = lastMsg.TakeUntilStr("\n");
