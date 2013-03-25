@@ -1105,8 +1105,12 @@ namespace GitCommands
             return ProcessSubmoduleStatus(module, status);
         }
 
-        public static string ProcessSubmoduleStatus(GitModule module, GitSubmoduleStatus status)
+        public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status)
         {
+            if (module == null)
+                throw new ArgumentNullException("module");
+            if (status == null)
+                throw new ArgumentNullException("status");
             GitModule gitmodule = module.GetSubmodule(status.Name);
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule " + status.Name + " Change");

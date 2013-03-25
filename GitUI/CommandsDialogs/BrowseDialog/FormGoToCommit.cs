@@ -50,11 +50,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             comboBoxTags.Text = Strings.GetLoadingData();
             _tagsLoader.Load(
-                () => Module.GetTagHeads(GitModule.GetTagHeadsSortOrder.ByCommitDateDescending).Select(g => new GitHeaderGuiWrapper(g)).ToList(),
+                () => Module.GetTagHeads(GitModule.GetTagHeadsSortOrder.ByCommitDateDescending).ToList(),
                 list =>
                 {
                     comboBoxTags.Text = string.Empty;
                     comboBoxTags.DataSource = list;
+                    comboBoxBranches.DisplayMember = "LocalName";
                     if (!comboBoxTags.Text.IsNullOrEmpty())
                     {
                         comboBoxTags.Select(0, comboBoxTags.Text.Length);
@@ -77,7 +78,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
 
             // does not work when using autocomplete, for that we have the _TextChanged method
-            _selectedRevision = Module.RevParse(((GitHeaderGuiWrapper)comboBoxTags.SelectedValue).GitHead.CompleteName);
+            _selectedRevision = Module.RevParse(((GitHead)comboBoxTags.SelectedValue).CompleteName);
             Go();
         }
 
@@ -85,11 +86,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             comboBoxBranches.Text = Strings.GetLoadingData();
             _branchesLoader.Load(
-                () => Module.GetHeads(false).Select(g => new GitHeaderGuiWrapper(g)).ToList(),
+                () => Module.GetHeads(false).ToList(),
                 list =>
                 {
                     comboBoxBranches.Text = string.Empty;
                     comboBoxBranches.DataSource = list;
+                    comboBoxBranches.DisplayMember = "LocalName";
                     if (!comboBoxBranches.Text.IsNullOrEmpty())
                     {
                         comboBoxBranches.Select(0, comboBoxBranches.Text.Length);
@@ -107,31 +109,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void comboBoxBranches_SelectionChangeCommitted(object sender, EventArgs e)
         {
             if (comboBoxBranches.SelectedValue == null)
-            {
                 return;
-            }
 
-            _selectedRevision = Module.RevParse(((GitHeaderGuiWrapper)comboBoxBranches.SelectedValue).GitHead.CompleteName);
+            _selectedRevision = Module.RevParse(((GitHead)comboBoxBranches.SelectedValue).CompleteName);
             Go();
         }
-    }
-
-    /// <summary>
-    /// to override ToString() for display in combobox
-    /// </summary>
-    class GitHeaderGuiWrapper
-    {
-        readonly GitHead _gitHead;
-        public GitHeaderGuiWrapper(GitHead gitHead)
-        {
-            _gitHead = gitHead;
-        }
-
-        public override string ToString()
-        {
-            return _gitHead.LocalName;
-        }
-
-        public GitHead GitHead { get { return _gitHead; } }
     }
 }

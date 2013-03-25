@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -57,11 +58,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                 if (m_repositoryCategory != null && m_repositoryCategory.CategoryType == RepositoryCategoryType.RssFeed)
                 {
-                    AsyncLoader.DoAsync(
-                        () => { m_repositoryCategory.DownloadRssFeed(); return this; },
-                        obj => { obj.InitRepositoryCategory(); },
-                        ex => { }
-                    );
+                    Task.Factory.StartNew(() => m_repositoryCategory.DownloadRssFeed())
+                        .ContinueWith((task) => InitRepositoryCategory(),
+                        TaskScheduler.FromCurrentSynchronizationContext());
                 }
                 else
                 {
