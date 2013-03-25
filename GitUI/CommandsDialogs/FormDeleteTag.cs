@@ -7,9 +7,7 @@ using ResourceManager.Translation;
 namespace GitUI.CommandsDialogs
 {
     public partial class FormDeleteTag : GitModuleForm
-    {
-        private readonly TranslationString _deleteFromCaption = new TranslationString("Delete from '{0}'");
-        
+    { 
         public FormDeleteTag(GitUICommands aCommands, string tag)
             : base(aCommands)
         {
@@ -25,7 +23,7 @@ namespace GitUI.CommandsDialogs
             Tags.DataSource = Module.GetHeads(true, false);
             Tags.Text = Tag as string;
             currentRemote = Module.GetCurrentRemote();
-            deleteTag.Text = string.Format(_deleteFromCaption.Text, currentRemote);
+            remotesComboboxControl1.SelectedRemote = currentRemote;
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -53,11 +51,10 @@ namespace GitUI.CommandsDialogs
             ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
 
             using (var form = new FormRemoteProcess(Module, pushCmd)
-            {
-                Remote = currentRemote,
-                Text = string.Format(_deleteFromCaption.Text, currentRemote),
-            })
-
+                                    {
+                                        ////Remote = currentRemote,
+                                        ////Text = string.Format(_deleteFromCaption.Text, currentRemote),
+                                    })
             {
                 form.ShowDialog();
 
