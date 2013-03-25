@@ -42,6 +42,7 @@ namespace GitUI.BuildServerIntegration
 
             this.buildServerWatcher = buildServerWatcher;
 
+            ProjectName = config.Get("ProjectName");
             var hostName = config.Get("BuildServerUrl");
             if (!string.IsNullOrEmpty(hostName))
             {
@@ -57,16 +58,17 @@ namespace GitUI.BuildServerIntegration
                 var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
 
                 UpdateHttpClientOptions(buildServerCredentials);
+
+                if (!string.IsNullOrEmpty(ProjectName))
+                {
+                    getBuildTypesTask =
+                        GetProjectFromNameXmlResponseAsync(ProjectName, CancellationToken.None)
+                            .ContinueWith(
+                                task => from element in task.Result.XPathSelectElements("/project/buildTypes/buildType")
+                                        select element.Attribute("id").Value,
+                                TaskContinuationOptions.ExecuteSynchronously);
+                }
             }
-
-            ProjectName = config.Get("ProjectName");
-
-            getBuildTypesTask =
-                GetProjectFromNameXmlResponseAsync(ProjectName, CancellationToken.None)
-                    .ContinueWith(task => task.Result
-                                              .XPathSelectElements("/project/buildTypes/buildType")
-                                              .Select(x => x.Attribute("id").Value),
-                                  TaskContinuationOptions.ExecuteSynchronously);
         }
 
         /// <summary>
