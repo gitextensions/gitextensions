@@ -19,7 +19,8 @@ namespace GitExtensions
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (Settings.RunningOnWindows())
+
+            if (!Settings.IsMonoRuntime())
             {
                 NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
 

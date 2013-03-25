@@ -835,6 +835,11 @@ namespace GitCommands
             }
         }
 
+        public static bool IsMonoRuntime()
+        {
+            return Type.GetType("Mono.Runtime") != null;
+        }
+
         public static void SaveSettings()
         {
             try
