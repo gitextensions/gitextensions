@@ -26,17 +26,18 @@ namespace GitUI.RepoHosting
         private readonly string _chooseRemote;
         private List<IHostedRemote> _hostedRemotes;
         private string _currentBranch;
-        private AsyncLoader remoteLoader = new AsyncLoader();
+        private string _prevTitle;
+        private readonly AsyncLoader _remoteLoader = new AsyncLoader();
 
         public CreatePullRequestForm(GitUICommands aCommands, IRepositoryHostPlugin repoHost, string chooseRemote, string chooseBranch)
             : base(aCommands)
         {
             _repoHost = repoHost;
             _chooseRemote = chooseRemote;
-            _currentBranch = "";
+            _currentBranch = chooseBranch;
             InitializeComponent();
             Translate();
-            prevTitle = _titleTB.Text;
+            _prevTitle = _titleTB.Text;
         }
 
         private void CreatePullRequestForm_Load(object sender, EventArgs e)
@@ -50,7 +51,7 @@ namespace GitUI.RepoHosting
             _yourBranchesCB.Text = _strLoading.Text;
             _hostedRemotes = _repoHost.GetHostedRemotesForModule(Module);
             this.Mask();
-            remoteLoader.Load(
+            _remoteLoader.Load(
                 () => _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray(),
                 (IHostedRemote[] foreignHostedRemotes) =>
                 {
@@ -124,46 +125,42 @@ namespace GitUI.RepoHosting
         {
             get
             {
-                var myRemote = _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
-                if (myRemote == null)
-                    throw new InvalidOperationException(_strCouldNotLocateARemoteThatBelongsToYourUser.Text);
-                return myRemote;
+                return _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
             }
         }
 
-
         private void LoadMyBranches()
         {
-
             _yourBranchesCB.Items.Clear();
 
-            AsyncLoader.DoAsync(
-                () => MyRemote.GetHostedRepository().Branches,
-                branches =>
-                {
-                    branches.Sort((a, b) => String.Compare(a.Name, b.Name, true));
-                    int selectItem = 0;
-                    for (int i = 0; i < branches.Count; i++)
-                    {
-                        if (branches[i].Name == _currentBranch)
-                            selectItem = i;
-                        _yourBranchesCB.Items.Add(branches[i].Name);
-                    }
-                    _createBtn.Enabled = true;
-                    if (branches.Count > 0)
-                        _yourBranchesCB.SelectedIndex = selectItem;
-                },
-                ex => { throw ex; });
+            if (MyRemote != null)
+            {
+                AsyncLoader.DoAsync(
+                    () => MyRemote.GetHostedRepository().Branches,
+                    branches =>
+                        {
+                            branches.Sort((a, b) => String.Compare(a.Name, b.Name, true));
+                            int selectItem = 0;
+                            for (int i = 0; i < branches.Count; i++)
+                            {
+                                if (branches[i].Name == _currentBranch)
+                                    selectItem = i;
+                                _yourBranchesCB.Items.Add(branches[i].Name);
+                            }
+                            _createBtn.Enabled = true;
+                            if (branches.Count > 0)
+                                _yourBranchesCB.SelectedIndex = selectItem;
+                        },
+                    ex => { throw ex; });
+            }
         }
-
-        private string prevTitle;
 
         private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (prevTitle.Equals(_titleTB.Text) && !_yourBranchesCB.Text.IsNullOrWhiteSpace())
+            if (_prevTitle.Equals(_titleTB.Text) && !_yourBranchesCB.Text.IsNullOrWhiteSpace() && MyRemote != null)
             {
                 _titleTB.Text = Module.GetPreviousCommitMessage(MyRemote.Name.Combine("/", _yourBranchesCB.Text), 0).TakeUntilStr("\n");
-                prevTitle = _titleTB.Text;
+                _prevTitle = _titleTB.Text;
             }
         }
 
