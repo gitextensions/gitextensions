@@ -964,7 +964,7 @@ namespace GitUI.CommandsDialogs
 
         private void FillBuildReport()
         {
-            if(!Settings.RunningOnWindows())
+            if(Settings.IsMonoRuntime())
                 return;
 
             var revision = RevisionGrid.GetSelectedRevisions().FirstOrDefault();
