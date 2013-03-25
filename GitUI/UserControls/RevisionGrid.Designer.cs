@@ -19,10 +19,10 @@ namespace GitUI
             if (disposing)
             {
                 DisposeRevisionGraphCommand();
-                if (_IndexWatcher != null)
+                if (_indexWatcher != null)
                 {
-                    _IndexWatcher.Dispose();
-                    _IndexWatcher = null;
+                    _indexWatcher.Dispose();
+                    _indexWatcher = null;
                 }
 
                 _selectedItemBrush = null;
