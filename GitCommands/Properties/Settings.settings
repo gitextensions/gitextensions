@@ -41,9 +41,6 @@
     <Setting Name="CloseCommitDialogAfterLastCommit" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="SettingRefreshCommitDialogOnFormFocus" Roaming="true" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="StageInSuperprojectAfterCommit" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
@@ -164,17 +161,14 @@
     <Setting Name="GitCommand" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">Git</Value>
     </Setting>
-    <Setting Name="GitBinDir" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="GitBinDir" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="MaxRevisionGraphCommits" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100000</Value>
     </Setting>
-    <Setting Name="RecentWorkingDir" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="RecentWorkingDir" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="SettingStartWithRecentWorkingDir" Roaming="true" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Plink" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -242,7 +236,7 @@
     <Setting Name="ShowCurrentBranchInVisualStudio" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="LastFormatPatchDir" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="LastFormatPatchDir" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DashboardShowCurrentBranch" Roaming="true" Type="System.Boolean" Scope="User">
@@ -371,7 +365,7 @@
     <Setting Name="StashConfirmDropShow" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="InstallDir" Roaming="true" Type="System.String" Scope="User">
+    <Setting Name="InstallDir" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="PluginsSettingsString" Roaming="true" Type="System.String" Scope="User">
@@ -380,13 +374,13 @@
     <Setting Name="UpgradeSettings" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="RefreshCommitDialogOnFormFocus" Type="System.Boolean" Scope="User">
+    <Setting Name="RefreshCommitDialogOnFormFocus" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="LastCommitMessage" Type="System.String" Scope="User">
+    <Setting Name="LastCommitMessage" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="HelpExpandedString" Type="System.String" Scope="User">
+    <Setting Name="HelpExpandedString" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>
