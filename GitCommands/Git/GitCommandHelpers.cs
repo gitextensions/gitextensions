@@ -1105,8 +1105,12 @@ namespace GitCommands
             return ProcessSubmoduleStatus(module, status);
         }
 
-        public static string ProcessSubmoduleStatus(GitModule module, GitSubmoduleStatus status)
+        public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status)
         {
+            if (module == null)
+                throw new ArgumentNullException("module");
+            if (status == null)
+                throw new ArgumentNullException("status");
             GitModule gitmodule = module.GetSubmodule(status.Name);
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule " + status.Name + " Change");
@@ -1320,17 +1324,20 @@ namespace GitCommands
         }
 
 #if !MONO
-        [DllImport("kernel32.dll")]
-        static extern bool SetConsoleCtrlHandler(IntPtr HandlerRoutine,
-           bool Add);
+        static class NativeMethods
+        {
+            [DllImport("kernel32.dll")]
+            public static extern bool SetConsoleCtrlHandler(IntPtr HandlerRoutine,
+               bool Add);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        static extern bool AttachConsole(int dwProcessId);
+            [DllImport("kernel32.dll", SetLastError = true)]
+            public static extern bool AttachConsole(int dwProcessId);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent,
-           int dwProcessGroupId);
+            [DllImport("kernel32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent,
+               int dwProcessGroupId);
+        }
 #endif
 
         public static void TerminateTree(this Process process)
@@ -1339,9 +1346,9 @@ namespace GitCommands
             if (Settings.RunningOnWindows())
             {
                 // Send Ctrl+C
-                AttachConsole(process.Id);
-                SetConsoleCtrlHandler(IntPtr.Zero, true);
-                GenerateConsoleCtrlEvent(0, 0);
+                NativeMethods.AttachConsole(process.Id);
+                NativeMethods.SetConsoleCtrlHandler(IntPtr.Zero, true);
+                NativeMethods.GenerateConsoleCtrlEvent(0, 0);
                 if (!process.HasExited)
                     System.Threading.Thread.Sleep(500);
                 if (!process.HasExited)

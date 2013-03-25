@@ -60,9 +60,8 @@ namespace GitUI
             _NO_TRANSLATE_toolStripBranches.Items.Clear();
 
             AsyncLoader.DoAsync(() => GetBranchAndTagHeads(local, remote),
-                (List<string> branches) =>
+                branches =>
                 {
-
                     foreach (var branch in branches)
                         _NO_TRANSLATE_toolStripBranches.Items.Add(branch);
 
@@ -72,8 +71,7 @@ namespace GitUI
                         _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.Clear();
                         _NO_TRANSLATE_toolStripBranches.AutoCompleteCustomSource.AddRange(branches.ToArray());
                     }
-                }
-                    );
+                });
         }
 
         private List<string> GetBranchHeads(bool local, bool remote)
