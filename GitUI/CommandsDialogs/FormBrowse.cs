@@ -21,6 +21,7 @@ using GitUIPluginInterfaces;
 using ResourceManager.Translation;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
+using System.Reflection;
 #endif
 
 namespace GitUI.CommandsDialogs
@@ -2860,14 +2861,29 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private string GetMonoVersion()
+        {
+            Type type = Type.GetType("Mono.Runtime");
+            if (type != null)
+            {
+                MethodInfo displayName = type.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
+                if (displayName != null)
+                    return (string)displayName.Invoke(null, null);
+            }
+            return null;
+        }
+
         private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string issueData = "--- GitExtensions";
             try
             {
                 issueData += Settings.GitExtensionsVersionString;
-                issueData += ", " + GitCommandHelpers.VersionInUse.Full;
-                issueData += ", " + System.Environment.OSVersion.ToString();
+                issueData += ", Git " + GitCommandHelpers.VersionInUse.Full;
+                issueData += ", " + Environment.OSVersion;
+                var monoVersion = GetMonoVersion();
+                if (monoVersion != null)
+                    issueData += ", Mono " + monoVersion;
             }
             catch(Exception){}
 
