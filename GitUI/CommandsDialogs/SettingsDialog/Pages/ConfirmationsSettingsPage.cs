@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitCommands.Properties;
 using System.Windows.Forms;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -14,20 +15,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void OnLoadSettings()
         {
-            chkAmend.Checked = Settings.DontConfirmAmend;
-            chkAutoPopStashAfterPull.CheckState = Settings.AutoPopStashAfterPull.ToCheckboxState();
-            chkAutoPopStashAfterCheckout.CheckState = Settings.AutoPopStashAfterCheckoutBranch.ToCheckboxState();
-            chkPushNewBranch.Checked = Settings.DontConfirmPushNewBranch;
-            chkAddTrackingRef.Checked = Settings.DontConfirmAddTrackingRef;
+            chkAmend.Checked = Settings.Default.DontConfirmAmend;
+            chkAutoPopStashAfterPull.CheckState = Settings.Default.AutoPopStashAfterPull.ToCheckboxState();
+            chkAutoPopStashAfterCheckout.CheckState = Settings.Default.AutoPopStashAfterCheckoutBranch.ToCheckboxState();
+            chkPushNewBranch.Checked = Settings.Default.DontConfirmPushNewBranch;
+            chkAddTrackingRef.Checked = Settings.Default.DontConfirmAddTrackingRef;
         }
 
         public override void SaveSettings()
         {
-            Settings.DontConfirmAmend = chkAmend.Checked;
-            Settings.AutoPopStashAfterPull = chkAutoPopStashAfterPull.CheckState.ToBoolean();
-            Settings.AutoPopStashAfterCheckoutBranch = chkAutoPopStashAfterCheckout.CheckState.ToBoolean();
-            Settings.DontConfirmPushNewBranch = chkPushNewBranch.Checked;
-            Settings.DontConfirmAddTrackingRef = chkAddTrackingRef.Checked;
+            Settings.Default.DontConfirmAmend = chkAmend.Checked;
+            Settings.Default.AutoPopStashAfterPull = chkAutoPopStashAfterPull.CheckState.ToBoolean();
+            Settings.Default.AutoPopStashAfterCheckoutBranch = chkAutoPopStashAfterCheckout.CheckState.ToBoolean();
+            Settings.Default.DontConfirmPushNewBranch = chkPushNewBranch.Checked;
+            Settings.Default.DontConfirmAddTrackingRef = chkAddTrackingRef.Checked;
         }
 
         public static SettingsPageReference GetPageReference()

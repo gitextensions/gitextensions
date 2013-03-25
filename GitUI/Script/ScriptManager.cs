@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
+using GitCommands.Properties;
 
 namespace GitUI.Script
 {
@@ -17,7 +18,7 @@ namespace GitUI.Script
         {
             if (Scripts == null)
             {
-                DeserializeFromXml(Settings.ownScripts);
+                DeserializeFromXml(Settings.Default.ownScripts);
             }
 
             return Scripts;

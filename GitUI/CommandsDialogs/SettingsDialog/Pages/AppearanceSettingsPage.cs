@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Properties;
 using ResourceManager.Translation;
 using Gravatar;
 using System.IO;
@@ -45,58 +46,58 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void OnLoadSettings()
         {
-            chkEnableAutoScale.Checked = Settings.EnableAutoScale;
+            chkEnableAutoScale.Checked = Settings.Default.EnableAutoScale;
 
-            chkShowCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
-            _NO_TRANSLATE_DaysToCacheImages.Value = Settings.AuthorImageCacheDays;
-            _NO_TRANSLATE_authorImageSize.Value = Settings.AuthorImageSize;
-            ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
-            noImageService.Text = Settings.GravatarFallbackService;
+            chkShowCurrentBranchInVisualStudio.Checked = Settings.Default.ShowCurrentBranchInVisualStudio;
+            _NO_TRANSLATE_DaysToCacheImages.Value = Settings.Default.AuthorImageCacheDays;
+            _NO_TRANSLATE_authorImageSize.Value = Settings.Default.AuthorImageSize;
+            ShowAuthorGravatar.Checked = Settings.Default.ShowAuthorGravatar;
+            noImageService.Text = Settings.Default.GravatarFallbackService;
 
             Language.Items.Clear();
             Language.Items.Add("English");
             Language.Items.AddRange(Translator.GetAllTranslations());
-            Language.Text = Settings.Translation;
+            Language.Text = Settings.Default.Translation;
 
-            _NO_TRANSLATE_truncatePathMethod.Text = Settings.TruncatePathMethod;
+            _NO_TRANSLATE_truncatePathMethod.Text = Settings.Default.TruncatePathMethod;
 
-            Dictionary.Text = Settings.Dictionary;
+            Dictionary.Text = Settings.Default.Dictionary;
 
-            chkShowRelativeDate.Checked = Settings.RelativeDate;
+            chkShowRelativeDate.Checked = Settings.Default.RelativeDate;
 
-            SetCurrentApplicationFont(Settings.Font);
-            SetCurrentDiffFont(Settings.DiffFont);
-            SetCurrentCommitFont(Settings.CommitFont);
+            SetCurrentApplicationFont(Settings.Default.Font);
+            SetCurrentDiffFont(Settings.Default.DiffFont);
+            SetCurrentCommitFont(Settings.Default.CommitFont);
 
         }
 
         public override void SaveSettings()
         {
-            Settings.EnableAutoScale = chkEnableAutoScale.Checked;
-            Settings.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
-            Settings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
+            Settings.Default.EnableAutoScale = chkEnableAutoScale.Checked;
+            Settings.Default.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
+            Settings.Default.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
 
-            if ((int)_NO_TRANSLATE_authorImageSize.Value != Settings.AuthorImageSize)
+            if ((int)_NO_TRANSLATE_authorImageSize.Value != Settings.Default.AuthorImageSize)
             {
-                Settings.AuthorImageSize = (int)_NO_TRANSLATE_authorImageSize.Value;
+                Settings.Default.AuthorImageSize = (int)_NO_TRANSLATE_authorImageSize.Value;
                 GravatarService.ClearImageCache();
             }
 
-            Settings.Translation = Language.Text;
+            Settings.Default.Translation = Language.Text;
             Strings.Reinit();
 
-            Settings.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
+            Settings.Default.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 
-            Settings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
-            Settings.GravatarFallbackService = noImageService.Text;
+            Settings.Default.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
+            Settings.Default.GravatarFallbackService = noImageService.Text;
 
-            Settings.RelativeDate = chkShowRelativeDate.Checked;
+            Settings.Default.RelativeDate = chkShowRelativeDate.Checked;
 
-            Settings.Dictionary = Dictionary.Text;
+            Settings.Default.Dictionary = Dictionary.Text;
 
-            Settings.DiffFont = _diffFont;
-            Settings.Font = _applicationFont;
-            Settings.CommitFont = commitFont;
+            Settings.Default.DiffFont = _diffFont;
+            Settings.Default.Font = _applicationFont;
+            Settings.Default.CommitFont = commitFont;
         }
 
         private void Dictionary_DropDown(object sender, EventArgs e)

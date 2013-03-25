@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using GitUIPluginInterfaces;
+using GitCommands.Properties;
 
 namespace GitCommands.Statistics
 {
@@ -120,7 +121,7 @@ namespace GitCommands.Statistics
             {
                 git.StreamOutput = true;
                 git.CollectOutput = false;
-                Process p = git.CmdStartProcess(Settings.GitCommand, command);
+                Process p = git.CmdStartProcess(Settings.Default.GitCommand, command);
 
                 // Read line
                 string line = p.StandardOutput.ReadLine();

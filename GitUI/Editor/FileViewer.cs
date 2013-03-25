@@ -9,6 +9,7 @@ using GitCommands;
 using GitUI.Hotkey;
 using ICSharpCode.TextEditor.Util;
 using PatchApply;
+using GitCommands.Properties;
 
 namespace GitUI.Editor
 {
@@ -30,7 +31,7 @@ namespace GitUI.Editor
 
             GitUICommandsSourceSet += FileViewer_GitUICommandsSourceSet;
 
-            if (GitCommands.Settings.RunningOnWindows())
+            if (GitCommands.Properties.Settings.Default.RunningOnWindows())
                 _internalFileViewer = new FileViewerWindows();
             else
                 _internalFileViewer = new FileViewerMono();
@@ -165,7 +166,7 @@ namespace GitUI.Editor
         protected override void OnRuntimeLoad(EventArgs e)
         {
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            Font = Settings.DiffFont;
+            Font = Settings.Default.DiffFont;
         }
 
         void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)

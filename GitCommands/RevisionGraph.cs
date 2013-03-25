@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using GitCommands.Config;
+using GitCommands.Properties;
 
 namespace GitCommands
 {
@@ -141,7 +142,7 @@ namespace GitCommands
             // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
             // the filename is the next line after the commit-format defined above.
 
-            if (Settings.OrderRevisionByDate)
+            if (Settings.Default.OrderRevisionByDate)
             {
                 LogParam = " --date-order " + LogParam;
             }
@@ -167,7 +168,7 @@ namespace GitCommands
                     startInfo.StandardErrorEncoding = GitModule.LosslessEncoding;
                 };
 
-                Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
+                Process p = gitGetGraphCommand.CmdStartProcess(Settings.Default.GitCommand, arguments);
                 
                 if (taskState.IsCanceled())
                     return;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using GitCommands;
 using GitUIPluginInterfaces;
+using GitCommands.Properties;
 
 namespace GitUI
 {
@@ -17,12 +18,12 @@ namespace GitUI
 
         public void AddSetting(string name, string defaultValue)
         {
-            var value = Settings.GetValue<string>(pluginName + name, null);
+            var value = Settings.Default.PluginsSettings[pluginName + name];
 
             if (value == null)
             {
                 settings.Add(name, defaultValue);
-                Settings.SetValue(pluginName + name, defaultValue);
+                Settings.Default.setPluginSetting(pluginName + name, defaultValue);
             }
             else
             {
@@ -37,15 +38,15 @@ namespace GitUI
 
             settings[name] = value;
 
-            Settings.SetValue(pluginName + name, value);
+            Settings.Default.setPluginSetting(pluginName + name, value);
         }
 
         public string GetSetting(string name) 
         {
             if (!settings.ContainsKey(name))
-                throw new ArgumentOutOfRangeException("name", "Cannot find setting. Dit you add the setting in the Register() function of the plugin?");
+                throw new ArgumentOutOfRangeException("name", "Cannot find setting. Did you add the setting in the Register() function of the plugin?");
 
-            var value = Settings.GetValue<string>(pluginName + name, null);
+            var value = Settings.Default.getPluginSetting(pluginName + name);
             
             if (value == null)
                 return settings[name];

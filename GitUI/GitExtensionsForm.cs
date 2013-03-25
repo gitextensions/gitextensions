@@ -10,14 +10,14 @@ using GitUI.Properties;
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
 using ResourceManager.Translation;
-using Settings = GitCommands.Settings;
+using Settings = GitCommands.Properties.Settings;
 using System.Collections.Generic;
 
 namespace GitUI
 {
     public class GitExtensionsForm : Form, ITranslate
     {
-        internal static Icon ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
+        internal static Icon ApplicationIcon = GetApplicationIcon(Settings.Default.IconStyle, Settings.Default.IconColor);
 
         private bool _translated;
         private bool _enablePositionRestore;
@@ -50,7 +50,7 @@ namespace GitUI
                 SavePosition(this.GetType().Name);
 
 #if !__MonoCS__
-            if (GitCommands.Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (GitCommands.Properties.Settings.Default.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {
@@ -112,14 +112,14 @@ namespace GitUI
 
         private void SetFont()
         {
-            Font = Settings.Font;
+            Font = Settings.Default.Font;
         }
 
         #region icon
 
         protected void RotateApplicationIcon()
         {
-            ApplicationIcon = GetApplicationIcon(Settings.IconStyle, Settings.IconColor);
+            ApplicationIcon = GetApplicationIcon(Settings.Default.IconStyle, Settings.Default.IconColor);
             Icon = ApplicationIcon;
         }
         
@@ -244,7 +244,7 @@ namespace GitUI
 
         protected override void OnLoad(EventArgs e)
         {
-            if (Settings.EnableAutoScale)
+            if (Settings.Default.EnableAutoScale)
                 AutoScaleMode = AutoScaleMode.Dpi;
             else
                 AutoScaleMode = AutoScaleMode.None;
@@ -270,7 +270,7 @@ namespace GitUI
 
         protected void Translate()
         {
-            Translator.Translate(this, Settings.CurrentTranslation);
+            Translator.Translate(this, Settings.Default.CurrentTranslation);
             _translated = true;
         }
 
@@ -282,7 +282,7 @@ namespace GitUI
         private bool _windowCentred;
 
         /// <summary>
-        ///   Restores the position of a form from the user settings. Does
+        ///   Restores the position of a form from the user Settings.Default. Does
         ///   nothing if there is no entry for the form in the settings, or the
         ///   setting would be invisible on the current display configuration.
         /// </summary>
@@ -344,7 +344,7 @@ namespace GitUI
         }
 
         /// <summary>
-        ///   Save the position of a form to the user settings. Hides the window
+        ///   Save the position of a form to the user Settings.Default. Hides the window
         ///   as a side-effect.
         /// </summary>
         /// <param name = "name">The name to use when writing the position to the

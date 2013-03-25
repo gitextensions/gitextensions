@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Properties;
 using GitCommands.Git;
 using ResourceManager.Translation;
 
@@ -88,13 +89,13 @@ namespace GitUI.CommandsDialogs
 
                 //The dirty check is very expensive on large repositories. Without this setting
                 //the checkout branch dialog is too slow.
-                if (Settings.CheckForUncommittedChangesInCheckoutBranch)
+                if (Settings.Default.CheckForUncommittedChangesInCheckoutBranch)
                     _isDirtyDir = Module.IsDirtyDir();
                 else
                     _isDirtyDir = null;
 
                 localChangesGB.Visible = IsThereUncommittedChanges();
-                ChangesMode = Settings.CheckoutBranchAction;
+                ChangesMode = Settings.Default.CheckoutBranchAction;
             }
             finally
             {
@@ -110,8 +111,8 @@ namespace GitUI.CommandsDialogs
         public DialogResult DoDefaultActionOrShow(IWin32Window owner)
         {
             bool localBranchSelected = !Branches.Text.IsNullOrWhiteSpace() && !Remotebranch.Checked;
-            if (!Settings.AlwaysShowCheckoutBranchDlg && localBranchSelected &&
-                (!IsThereUncommittedChanges() || Settings.UseDefaultCheckoutBranchAction))
+            if (!Settings.Default.AlwaysShowCheckoutBranchDlg && localBranchSelected &&
+                (!IsThereUncommittedChanges() || Settings.Default.UseDefaultCheckoutBranchAction))
                 return OkClick();
             else
                 return ShowDialog(owner);
@@ -143,7 +144,7 @@ namespace GitUI.CommandsDialogs
             else
                 Branches.Text = null;
             remoteOptionsPanel.Visible = Remotebranch.Checked;
-            rbCreateBranchWithCustomName.Checked = Settings.CreateLocalBranchForRemote;
+            rbCreateBranchWithCustomName.Checked = Settings.Default.CreateLocalBranchForRemote;
         }
 
         private LocalChangesAction ChangesMode
@@ -211,9 +212,9 @@ namespace GitUI.CommandsDialogs
             }
 
             LocalChangesAction changes = ChangesMode;
-            Settings.CheckoutBranchAction = changes;
+            Settings.Default.CheckoutBranchAction = changes;
 
-            if (IsThereUncommittedChanges() && (Visible || Settings.UseDefaultCheckoutBranchAction))
+            if (IsThereUncommittedChanges() && (Visible || Settings.Default.UseDefaultCheckoutBranchAction))
                 cmd.LocalChanges = changes;
             else
                 cmd.LocalChanges = LocalChangesAction.DontChange;
@@ -221,7 +222,7 @@ namespace GitUI.CommandsDialogs
             IWin32Window owner = Visible ? this : Owner;
 
             //Stash local changes, but only if the setting CheckForUncommittedChangesInCheckoutBranch is true
-            bool stash = Settings.CheckForUncommittedChangesInCheckoutBranch &&
+            bool stash = Settings.Default.CheckForUncommittedChangesInCheckoutBranch &&
                          changes == LocalChangesAction.Stash && Module.IsDirtyDir();
             if (stash)
             {
@@ -232,7 +233,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (stash)
                 {
-                    bool? messageBoxResult = Settings.AutoPopStashAfterCheckoutBranch;
+                    bool? messageBoxResult = Settings.Default.AutoPopStashAfterCheckoutBranch;
                     if (messageBoxResult == null)
                     {
                         DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
@@ -248,7 +249,7 @@ namespace GitUI.CommandsDialogs
                             PSTaskDialog.eSysIcons.Question);
                         messageBoxResult = (res == DialogResult.Yes);
                         if (PSTaskDialog.cTaskDialog.VerificationChecked)
-                            Settings.AutoPopStashAfterCheckoutBranch = messageBoxResult;
+                            Settings.Default.AutoPopStashAfterCheckoutBranch = messageBoxResult;
                     }
                     if (messageBoxResult ?? false)
                     {

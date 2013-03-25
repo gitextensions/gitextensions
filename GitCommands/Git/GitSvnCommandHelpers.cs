@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using GitCommands.Properties;
 
 namespace GitCommands
 {
@@ -56,7 +57,7 @@ namespace GitCommands
 
         public static string GetConfigSvnRemoteFetch(GitModule aModule)
         {
-            return aModule.RunCmd(Settings.GitCommand, "config svn-remote.svn.fetch");
+            return aModule.RunCmd(Settings.Default.GitCommand, "config svn-remote.svn.fetch");
         }
 
         public static string RebaseCmd()
@@ -84,12 +85,12 @@ namespace GitCommands
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            string path = dir + Settings.PathSeparator.ToString() + ".git" + Settings.PathSeparator.ToString() + "svn";
+            string path = dir + Settings.Default.PathSeparator.ToString() + ".git" + Settings.Default.PathSeparator.ToString() + "svn";
             if (Directory.Exists(path) || File.Exists(path))
                 return true;
 
             return !dir.Contains(".git") &&
-                   Directory.Exists(dir + Settings.PathSeparator.ToString() + "svn");
+                   Directory.Exists(dir + Settings.Default.PathSeparator.ToString() + "svn");
         }
     }
 }

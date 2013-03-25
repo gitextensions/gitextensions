@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Properties;
 
 namespace GitUI.RevisionGridClasses
 {
@@ -733,7 +734,7 @@ namespace GitUI.RevisionGridClasses
             {
                 if (_revisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected)
                     return _revisionGraphDrawStyle;
-                if (Settings.RevisionGraphDrawNonRelativesGray)
+                if (Settings.Default.RevisionGraphDrawNonRelativesGray)
                     return RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
                 return RevisionGraphDrawStyleEnum.Normal;
             }
@@ -755,8 +756,8 @@ namespace GitUI.RevisionGridClasses
             if (!aJunction.HighLight && RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected)
                 return nonRelativeColor;
 
-            if (!Settings.MulticolorBranches)
-                return Settings.GraphColor;
+            if (!Settings.Default.MulticolorBranches)
+                return Settings.Default.GraphColor;
 
             // This is the order to grab the colors in.
             int[] preferedColors = { 4, 8, 6, 10, 2, 5, 7, 3, 9, 1, 11 };
@@ -1030,9 +1031,9 @@ namespace GitUI.RevisionGridClasses
                         Pen brushLineColorPen = null;
                         try
                         {
-                            bool drawBorder = Settings.BranchBorders && highLight; //hide border for "non-relatives"
+                            bool drawBorder = Settings.Default.BranchBorders && highLight; //hide border for "non-relatives"
 
-                            if (curColors.Count == 1 || !Settings.StripedBranchChange)
+                            if (curColors.Count == 1 || !Settings.Default.StripedBranchChange)
                             {
                                 if (curColors[0] != nonRelativeColor)
                                 {
@@ -1134,7 +1135,7 @@ namespace GitUI.RevisionGridClasses
                                  (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
                                  (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.Normal);
 
-                bool drawBorder = Settings.BranchBorders && highlight;
+                bool drawBorder = Settings.Default.BranchBorders && highlight;
 
                 if (nodeColors.Count == 1)
                 {

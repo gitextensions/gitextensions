@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using GitCommands.Properties;
 
 namespace GitCommands
 {
@@ -49,7 +50,7 @@ namespace GitCommands
 
         public static string GetCommitMessagePath(GitModule module)
         {
-            return module.WorkingDirGitDir() + Settings.PathSeparator.ToString() + "COMMITMESSAGE";
+            return module.WorkingDirGitDir() + Settings.Default.PathSeparator.ToString() + "COMMITMESSAGE";
         }
     }
 }

@@ -14,7 +14,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         protected GroupSettingsPage(string aTitle)
         {
             Title = aTitle;
-            Translator.Translate(this, GitCommands.Settings.CurrentTranslation);
+            Translator.Translate(this, GitCommands.Properties.Settings.Default.CurrentTranslation);
         }
 
         public string GetTitle()

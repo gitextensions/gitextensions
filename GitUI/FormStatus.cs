@@ -30,7 +30,7 @@ namespace GitUI
             InitializeComponent();
             Translate();
             if (UseDialogSettings)
-                KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
+                KeepDialogOpen.Checked = !GitCommands.Properties.Settings.Default.CloseProcessDialog;
             else
                 KeepDialogOpen.Hide();
         }
@@ -83,7 +83,7 @@ namespace GitUI
                         ProgressBar.Value = Math.Min(100, progressValue);
 
 #if !__MonoCS__
-                        if (GitCommands.Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+                        if (GitCommands.Properties.Settings.Default.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
                         {
                             try
                             {
@@ -149,7 +149,7 @@ namespace GitUI
             AcceptButton = Ok;
             Abort.Enabled = false;
 #if !__MonoCS__
-            if (GitCommands.Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (GitCommands.Properties.Settings.Default.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {
@@ -179,7 +179,7 @@ namespace GitUI
                 Visible = true;
             }
 
-            if (isSuccess && (showOnError || (UseDialogSettings && GitCommands.Settings.CloseProcessDialog)))
+            if (isSuccess && (showOnError || (UseDialogSettings && GitCommands.Properties.Settings.Default.CloseProcessDialog)))
             {
                 Close();
             }
@@ -245,7 +245,7 @@ namespace GitUI
         private void FormStatus_FormClosed(object sender, FormClosedEventArgs e)
         {
 #if !__MonoCS__
-            if (GitCommands.Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (GitCommands.Properties.Settings.Default.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {
@@ -259,7 +259,7 @@ namespace GitUI
         private void Start()
         {
 #if !__MonoCS__
-            if (GitCommands.Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (GitCommands.Properties.Settings.Default.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 try
                 {
@@ -303,7 +303,7 @@ namespace GitUI
 
         private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
         {
-            GitCommands.Settings.CloseProcessDialog = !KeepDialogOpen.Checked;
+            GitCommands.Properties.Settings.Default.CloseProcessDialog = !KeepDialogOpen.Checked;
         }
     }
 }

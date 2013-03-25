@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs
 {
@@ -274,7 +275,7 @@ namespace GitUI.CommandsDialogs
                 sshURL = Url.Text;
             Module.RunRealCmdDetached(
                 "cmd.exe",
-                string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, sshURL));
+                string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Default.Plink, sshURL));
         }
 
         private void PruneClick(object sender, EventArgs e)

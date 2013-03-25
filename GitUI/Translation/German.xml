@@ -275,7 +275,7 @@ Diese Aktion wird dann ohne Warnung beim Auschecken eines Branch angewendet.</Va
           <Value>Git Credential Win Store ist als Passwortverwaltung installiert.</Value>
         </TranslationItem>
         <TranslationItem Name="_gitNotFound" Property="Text">
-          <Source>Git not found. To solve this problem you can set the correct path in settings.</Source>
+          <Source>Git not found. To solve this problem you can set the correct path in Settings.Default.</Source>
           <Value>Git wurde nicht gefunden. Um das Problem zu lösen setzen Sie bitte den korrekten Pfad in den Einstellungen.</Value>
         </TranslationItem>
         <TranslationItem Name="_gitVersionFound" Property="Text">
@@ -317,7 +317,7 @@ Stellen Sie sicher dass die Linux Tools installiert sind (z.B. durch mysysgit od
           <Value>Linux Tools (sh) wurde auf Ihrem Computer gefunden.</Value>
         </TranslationItem>
         <TranslationItem Name="_linuxToolsSshNotFound" Property="Text">
-          <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in settings.</Source>
+          <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in Settings.Default.</Source>
           <Value>Linux Tools (sh) konnte auf Ihrem Computer nicht gefunden werden. Lösen Sie das Problem indem Sie den korrekten Pfad in den Einstellungen festlegen.</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeToolXConfigured" Property="Text">
@@ -5892,7 +5892,7 @@ Wollen Sie den korrekten Befehl nun eingeben? Wenn nicht - werden globale und lo
           <Value>Falscher Pfad</Value>
         </TranslationItem>
         <TranslationItem Name="_loadingSettingsFailed" Property="Text">
-          <Source>Could not load settings.</Source>
+          <Source>Could not load Settings.Default.</Source>
           <Value>Einstellungen konnten nicht geladen werden.</Value>
         </TranslationItem>
         <TranslationItem Name="buttonApply" Property="Text">
@@ -6881,7 +6881,7 @@ bei der Benutzung auftreten.</Value>
         <TranslationItem Name="label9" Property="Text">
           <Source>You need to set the correct path to 
 git before you can change
-global settings.
+global Settings.Default.
 </Source>
           <Value>Sie müssen den korrekten Pfad
 zu Git angeben bevor Sie die
@@ -6992,7 +6992,7 @@ beim aktuellen Repository
         <TranslationItem Name="label21" Property="Text">
           <Source>You need to set the correct path to 
 git before you can change
-local settings.
+local Settings.Default.
 </Source>
           <Value>Sie müssen den korrekten Pfad
 zu Git angeben bevor Sie die

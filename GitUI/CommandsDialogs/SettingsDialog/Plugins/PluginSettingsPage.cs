@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
         }
 
         /// <summary>
-        /// from FormPluginSettings.LoadSettings()
+        /// from FormPluginSettings.Default.LoadSettings()
         /// </summary>
         private void CreateAndInitPluginSettingsControls()
         {
@@ -124,7 +124,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
         }
 
         /// <summary>
-        /// from FormPluginSettings.SaveSettings()
+        /// from FormPluginSettings.Default.SaveSettings()
         /// </summary>
         private void SavePluginSettingsFromGeneratedControls()
         {

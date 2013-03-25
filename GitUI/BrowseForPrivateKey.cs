@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Properties;
 
 namespace GitUI
 {
@@ -47,7 +48,7 @@ namespace GitUI
         /// </summary>
         public static bool LoadKey(IWin32Window parent, string path)
         {
-            if (!File.Exists(Settings.Pageant))
+            if (!File.Exists(Settings.Default.Pageant))
             {
                 MessageBoxes.PAgentNotFound(parent);
                 return false;

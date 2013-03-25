@@ -1,4 +1,5 @@
 ﻿using System;
+using GitCommands.Properties;
 
 namespace GitCommands.Repository
 {
@@ -42,9 +43,9 @@ namespace GitCommands.Repository
 
             if (!Repository.PathIsUrl(repo))
             {
-                repo = repo.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
-                if (!repo.EndsWith(Settings.PathSeparator.ToString()))
-                repo += Settings.PathSeparator.ToString();
+                repo = repo.Replace(Settings.Default.PathSeparatorWrong, Settings.Default.PathSeparator);
+                if (!repo.EndsWith(Settings.Default.PathSeparator.ToString()))
+                repo += Settings.Default.PathSeparator.ToString();
             }
 
             Repository.RepositoryAnchor anchor = Repository.RepositoryAnchor.None;

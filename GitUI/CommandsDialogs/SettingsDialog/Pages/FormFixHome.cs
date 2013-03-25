@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -105,13 +106,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void LoadSettings()
         {
-            if (!string.IsNullOrEmpty(Settings.CustomHomeDir))
+            if (!string.IsNullOrEmpty(Settings.Default.CustomHomeDir))
             {
                 defaultHome.Checked = userprofileHome.Checked = false;
                 otherHome.Checked = true;
-                otherHomeDir.Text = Settings.CustomHomeDir;
+                otherHomeDir.Text = Settings.Default.CustomHomeDir;
             }
-            else if (Settings.UserProfileHomeDir)
+            else if (Settings.Default.UserProfileHomeDir)
             {
                 defaultHome.Checked = otherHome.Checked = false;
                 userprofileHome.Checked = true;
@@ -125,7 +126,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             try
             {
                 string userHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
-                if (!string.IsNullOrEmpty(userHomeDir) && File.Exists(userHomeDir + Settings.PathSeparator.ToString() + ".gitconfig"))
+                if (!string.IsNullOrEmpty(userHomeDir) && File.Exists(userHomeDir + Settings.Default.PathSeparator.ToString() + ".gitconfig"))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundHome.Text, userHomeDir));
                     defaultHome.Checked = true;
@@ -140,7 +141,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             try
             {
-                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")) && File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + Settings.PathSeparator.ToString() + ".gitconfig"))
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")) && File.Exists(Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH") + Settings.Default.PathSeparator.ToString() + ".gitconfig"))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundHomedrive.Text, Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH")));
                     defaultHome.Checked = true;
@@ -155,7 +156,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             try
             {
-                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERPROFILE")) && File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + Settings.PathSeparator.ToString() + ".gitconfig"))
+                if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERPROFILE")) && File.Exists(Environment.GetEnvironmentVariable("USERPROFILE") + Settings.Default.PathSeparator.ToString() + ".gitconfig"))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundUserprofile.Text, Environment.GetEnvironmentVariable("USERPROFILE")));
                     userprofileHome.Checked = true;
@@ -170,7 +171,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             try
             {
-                if (!string.IsNullOrEmpty(Environment.GetFolderPath(Environment.SpecialFolder.Personal)) && File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + Settings.PathSeparator.ToString() + ".gitconfig"))
+                if (!string.IsNullOrEmpty(Environment.GetFolderPath(Environment.SpecialFolder.Personal)) && File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + Settings.Default.PathSeparator.ToString() + ".gitconfig"))
                 {
                     MessageBox.Show(this, string.Format(_gitconfigFoundPersonalFolder.Text, Environment.GetFolderPath(Environment.SpecialFolder.Personal)));
                     otherHome.Checked = true;
@@ -197,12 +198,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     MessageBox.Show(this, _noHomeDirectorySpecified.Text);
                     return;
                 }
-                Settings.CustomHomeDir = otherHomeDir.Text;
+                Settings.Default.CustomHomeDir = otherHomeDir.Text;
             }
             else
-                Settings.CustomHomeDir = "";
+                Settings.Default.CustomHomeDir = "";
 
-            Settings.UserProfileHomeDir = userprofileHome.Checked;
+            Settings.Default.UserProfileHomeDir = userprofileHome.Checked;
 
             GitCommandHelpers.SetEnvironmentVariable(true);
             if (!Directory.Exists(Environment.GetEnvironmentVariable("HOME")) || string.IsNullOrEmpty(Environment.GetEnvironmentVariable("HOME")))

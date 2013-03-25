@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs
 {
@@ -55,10 +56,10 @@ namespace GitUI.CommandsDialogs
             FileChanges.SelectionChanged += FileChangesSelectionChanged;
             FileChanges.DisableContextMenu();
 
-            followFileHistoryToolStripMenuItem.Checked = Settings.FollowRenamesInFileHistory;
-            fullHistoryToolStripMenuItem.Checked = Settings.FullHistoryInFileHistory;
-            loadHistoryOnShowToolStripMenuItem.Checked = Settings.LoadFileHistoryOnShow;
-            loadBlameOnShowToolStripMenuItem.Checked = Settings.LoadBlameOnShow;
+            followFileHistoryToolStripMenuItem.Checked = Settings.Default.FollowRenamesInFileHistory;
+            fullHistoryToolStripMenuItem.Checked = Settings.Default.FullHistoryInFileHistory;
+            loadHistoryOnShowToolStripMenuItem.Checked = Settings.Default.LoadFileHistoryOnShow;
+            loadBlameOnShowToolStripMenuItem.Checked = Settings.Default.LoadBlameOnShow;
 
             if (filterByRevision && revision != null && revision.Guid != null)
                 filterBranchHelper.SetBranchFilter(revision.Guid, false);
@@ -73,7 +74,7 @@ namespace GitUI.CommandsDialogs
         {
             base.OnRuntimeLoad(e);
 
-            bool autoLoad = (tabControl1.SelectedTab == BlameTab && Settings.LoadBlameOnShow) || Settings.LoadFileHistoryOnShow;
+            bool autoLoad = (tabControl1.SelectedTab == BlameTab && Settings.Default.LoadBlameOnShow) || Settings.Default.LoadFileHistoryOnShow;
 
             if (autoLoad)
                 LoadFileHistory();
@@ -119,7 +120,7 @@ namespace GitUI.CommandsDialogs
             //The section below contains native windows (kernel32) calls
             //and breaks on Linux. Only use it on Windows. Casing is only
             //a Windows problem anyway.
-            if (Settings.RunningOnWindows() && File.Exists(fullFilePath))
+            if (Settings.Default.RunningOnWindows() && File.Exists(fullFilePath))
             {
                 // grab the 8.3 file path
                 var shortPath = new StringBuilder(4096);
@@ -139,7 +140,7 @@ namespace GitUI.CommandsDialogs
             FileName = fileName;
 
             string filter;
-            if (Settings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
+            if (Settings.Default.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
             {
                 // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
                 //
@@ -153,7 +154,7 @@ namespace GitUI.CommandsDialogs
                 var gitGetGraphCommand = new GitCommandsInstance(Module) { StreamOutput = true, CollectOutput = false };
 
                 string arg = "log --format=\"%n\" --name-only --follow -- \"" + fileName + "\"";
-                Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arg);
+                Process p = gitGetGraphCommand.CmdStartProcess(Settings.Default.GitCommand, arg);
 
                 // the sequence of (quoted) file names - start with the initial filename for the search.
                 var listOfFileNames = new StringBuilder("\"" + fileName + "\"");
@@ -183,7 +184,7 @@ namespace GitUI.CommandsDialogs
                 filter = " --parents -- \"" + fileName + "\"";
             }
 
-            if (Settings.FullHistoryInFileHistory)
+            if (Settings.Default.FullHistoryInFileHistory)
             {
                 filter = string.Concat(" --full-history --simplify-by-decoration ", filter);
             }
@@ -292,7 +293,7 @@ namespace GitUI.CommandsDialogs
                 if (string.IsNullOrEmpty(orgFileName))
                     orgFileName = FileName;
 
-                string fullName = Module.WorkingDir + orgFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+                string fullName = Module.WorkingDir + orgFileName.Replace(Settings.Default.PathSeparatorWrong, Settings.Default.PathSeparator);
 
                 using (var fileDialog = new SaveFileDialog
                 {
@@ -317,16 +318,16 @@ namespace GitUI.CommandsDialogs
 
         private void followFileHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.FollowRenamesInFileHistory = !Settings.FollowRenamesInFileHistory;
-            followFileHistoryToolStripMenuItem.Checked = Settings.FollowRenamesInFileHistory;
+            Settings.Default.FollowRenamesInFileHistory = !Settings.Default.FollowRenamesInFileHistory;
+            followFileHistoryToolStripMenuItem.Checked = Settings.Default.FollowRenamesInFileHistory;
 
             LoadFileHistory();
         }
 
         private void fullHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.FullHistoryInFileHistory = !Settings.FullHistoryInFileHistory;
-            fullHistoryToolStripMenuItem.Checked = Settings.FullHistoryInFileHistory;
+            Settings.Default.FullHistoryInFileHistory = !Settings.Default.FullHistoryInFileHistory;
+            fullHistoryToolStripMenuItem.Checked = Settings.Default.FullHistoryInFileHistory;
             LoadFileHistory();
         }
 
@@ -381,14 +382,14 @@ namespace GitUI.CommandsDialogs
 
         private void loadHistoryOnShowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.LoadFileHistoryOnShow = !Settings.LoadFileHistoryOnShow;
-            loadHistoryOnShowToolStripMenuItem.Checked = Settings.LoadFileHistoryOnShow;
+            Settings.Default.LoadFileHistoryOnShow = !Settings.Default.LoadFileHistoryOnShow;
+            loadHistoryOnShowToolStripMenuItem.Checked = Settings.Default.LoadFileHistoryOnShow;
         }
 
         private void loadBlameOnShowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.LoadBlameOnShow = !Settings.LoadBlameOnShow;
-            loadBlameOnShowToolStripMenuItem.Checked = Settings.LoadBlameOnShow;
+            Settings.Default.LoadBlameOnShow = !Settings.Default.LoadBlameOnShow;
+            loadBlameOnShowToolStripMenuItem.Checked = Settings.Default.LoadBlameOnShow;
         }
 
         private void Blame_CommandClick(object sender, CommitInfo.CommandEventArgs e)

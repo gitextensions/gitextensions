@@ -8,6 +8,7 @@ using GitCommands;
 using GitUI.CommandsDialogs.ResolveConflictsDialog;
 using GitUI.Hotkey;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs
 {
@@ -121,7 +122,7 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
             Directory.SetCurrentDirectory(Module.WorkingDir);
-            Module.RunRealCmd(Settings.GitCommand, "mergetool");
+            Module.RunRealCmd(Settings.Default.GitCommand, "mergetool");
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -207,7 +208,7 @@ namespace GitUI.CommandsDialogs
 
         private string FixPath(string path)
         {
-            return (path ?? "").Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+            return (path ?? "").Replace(Settings.Default.PathSeparatorWrong, Settings.Default.PathSeparator);
         }
 
         private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>()
@@ -222,7 +223,7 @@ namespace GitUI.CommandsDialogs
 
         private bool TryMergeWithScript(string fileName, string baseFileName, string remoteFileName, string localFileName)
         {
-            if (!Settings.RunningOnWindows())
+            if (!Settings.Default.RunningOnWindows())
                 return false;
 
             try
@@ -232,7 +233,7 @@ namespace GitUI.CommandsDialogs
                     return false;
 
                 string dir = Path.GetDirectoryName(Application.ExecutablePath) +
-                    Settings.PathSeparator + "Diff-Scripts" + Settings.PathSeparator;
+                    Settings.Default.PathSeparator + "Diff-Scripts" + Settings.Default.PathSeparator;
                 if (Directory.Exists(dir))
                 {
                     string mergeScript = "";
@@ -733,19 +734,19 @@ namespace GitUI.CommandsDialogs
         
         private static string GetShortFileName(string fileName)
         {
-            if (fileName.Contains(Settings.PathSeparator.ToString()) && fileName.LastIndexOf(Settings.PathSeparator.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeparator) + 1);
-            if (fileName.Contains(Settings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(Settings.PathSeparatorWrong.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeparatorWrong) + 1);
+            if (fileName.Contains(Settings.Default.PathSeparator.ToString()) && fileName.LastIndexOf(Settings.Default.PathSeparator.ToString()) < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf(Settings.Default.PathSeparator) + 1);
+            if (fileName.Contains(Settings.Default.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(Settings.Default.PathSeparatorWrong.ToString()) < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf(Settings.Default.PathSeparatorWrong) + 1);
             return fileName;
         }
 
         private static string GetDirectoryFromFileName(string fileName)
         {
-            if (fileName.Contains(Settings.PathSeparator.ToString()) && fileName.LastIndexOf(Settings.PathSeparator.ToString()) < fileName.Length)
-                fileName = fileName.Substring(0, fileName.LastIndexOf(Settings.PathSeparator));
-            if (fileName.Contains(Settings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(Settings.PathSeparatorWrong.ToString()) < fileName.Length)
-                fileName = fileName.Substring(0, fileName.LastIndexOf(Settings.PathSeparatorWrong));
+            if (fileName.Contains(Settings.Default.PathSeparator.ToString()) && fileName.LastIndexOf(Settings.Default.PathSeparator.ToString()) < fileName.Length)
+                fileName = fileName.Substring(0, fileName.LastIndexOf(Settings.Default.PathSeparator));
+            if (fileName.Contains(Settings.Default.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(Settings.Default.PathSeparatorWrong.ToString()) < fileName.Length)
+                fileName = fileName.Substring(0, fileName.LastIndexOf(Settings.Default.PathSeparatorWrong));
             return fileName;
         }
 
@@ -882,7 +883,7 @@ namespace GitUI.CommandsDialogs
                         form.AddMessageLine(string.Format(stageFilename.Text, filename));
                         string output = Module.RunCmd
                             (
-                            Settings.GitCommand, "add -- \"" + filename + "\""
+                            Settings.Default.GitCommand, "add -- \"" + filename + "\""
                             );
                         form.AddMessageLine(output);
                         form.Done(string.IsNullOrEmpty(output));

@@ -275,7 +275,7 @@ This action will be performed without warning while checking out branch.</Source
           <Value>Git認証管理ツール (Win Store) が正しくインストールされています。</Value>
         </TranslationItem>
         <TranslationItem Name="_gitNotFound" Property="Text">
-          <Source>Git not found. To solve this problem you can set the correct path in settings.</Source>
+          <Source>Git not found. To solve this problem you can set the correct path in Settings.Default.</Source>
           <Value>Gitが見つかりません。問題を解決するため正しいパスを設定してください。</Value>
         </TranslationItem>
         <TranslationItem Name="_gitVersionFound" Property="Text">
@@ -317,7 +317,7 @@ msysgit や cygwin のようなLinuxツールのインストール先を手動�
           <Value>Linuxツール (sh) は正しくインストールされています。</Value>
         </TranslationItem>
         <TranslationItem Name="_linuxToolsSshNotFound" Property="Text">
-          <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in settings.</Source>
+          <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in Settings.Default.</Source>
           <Value>Linuxツール (sh) は見つかりませんでした。正しいインストール先を設定してください。</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeToolXConfigured" Property="Text">
@@ -5714,7 +5714,7 @@ GitExtensionsを利用するには正しいパスを設定する必要があり�
           <Value />
         </TranslationItem>
         <TranslationItem Name="_loadingSettingsFailed" Property="Text" type="unfinished">
-          <Source>Could not load settings.</Source>
+          <Source>Could not load Settings.Default.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="buttonApply" Property="Text">
@@ -6669,11 +6669,11 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         <TranslationItem Name="label9" Property="Text">
           <Source>You need to set the correct path to 
 git before you can change
-global settings.
+global Settings.Default.
 </Source>
           <Value>You need to set the correct path to 
 git before you can change
-global settings.</Value>
+global Settings.Default.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6777,11 +6777,11 @@ repository.</Source>
         <TranslationItem Name="label21" Property="Text">
           <Source>You need to set the correct path to 
 git before you can change
-local settings.
+local Settings.Default.
 </Source>
           <Value>You need to set the correct path to 
 git before you can change
-local settings.</Value>
+local Settings.Default.</Value>
         </TranslationItem>
         <TranslationItem Name="label30" Property="Text">
           <Source>Keep backup (.orig) after merge</Source>

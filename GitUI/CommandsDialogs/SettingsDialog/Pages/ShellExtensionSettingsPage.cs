@@ -1,5 +1,6 @@
 ﻿using System;
 using GitCommands;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -14,9 +15,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void OnLoadSettings()
         {
-            for (int i = 0; i < Settings.CascadeShellMenuItems.Length; i++)
+            for (int i = 0; i < Settings.Default.CascadeShellMenuItems.Length; i++)
             {
-                chlMenuEntries.SetItemChecked(i, Settings.CascadeShellMenuItems[i] == '1');
+                chlMenuEntries.SetItemChecked(i, Settings.Default.CascadeShellMenuItems[i] == '1');
             }            
         }
 
@@ -36,7 +37,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
             }
 
-            Settings.CascadeShellMenuItems = l_CascadeShellMenuItems;            
+            Settings.Default.CascadeShellMenuItems = l_CascadeShellMenuItems;            
         }
     }
 }

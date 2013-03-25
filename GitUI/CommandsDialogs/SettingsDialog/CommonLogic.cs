@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using ResourceManager.Translation;
 using System.IO;
 using GitCommands.Config;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -132,7 +133,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public void FillEncodings(ComboBox combo)
         {
-            combo.Items.AddRange(Settings.AvailableEncodings.Values.ToArray());
+            combo.Items.AddRange(Settings.Default.AvailableEncodings.Values.ToArray());
             combo.DisplayMember = "EncodingName";
         }
 

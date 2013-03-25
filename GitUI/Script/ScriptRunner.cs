@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
+using GitCommands.Properties;
 
 namespace GitUI.Script
 {
@@ -346,7 +347,7 @@ namespace GitUI.Script
             //Make sure we are able to run git, even if git is not in the path
             if (originalCommand.Equals("git", System.StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("{git}", System.StringComparison.CurrentCultureIgnoreCase))
-                return Settings.GitCommand;
+                return Settings.Default.GitCommand;
 
             if (originalCommand.Equals("gitextensions", System.StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("{gitextensions}", System.StringComparison.CurrentCultureIgnoreCase) ||

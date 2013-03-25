@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI
 {
@@ -26,7 +27,7 @@ namespace GitUI
         // internal for FormTranslate
         internal MessageBoxes()
         {
-            Translator.Translate(this, Settings.CurrentTranslation);
+            Translator.Translate(this, Settings.Default.CurrentTranslation);
         }
 
         private static MessageBoxes instance;

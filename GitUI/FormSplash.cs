@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI
 {
@@ -64,13 +65,13 @@ namespace GitUI
         {
             base.OnLoad(e);
 
-            _NO_TRANSLATE_versionLabel.Text = string.Format(_version.Text, Settings.GitExtensionsVersionString);
+            _NO_TRANSLATE_versionLabel.Text = string.Format(_version.Text, Settings.Default.GitExtensionsVersionString);
 
-            if (Settings.RunningOnUnix())
+            if (Settings.Default.RunningOnUnix())
                 _NO_TRANSLATE_osLabel.Text = "Unix";
-            if (Settings.RunningOnMacOSX())
+            if (Settings.Default.RunningOnMacOSX())
                 _NO_TRANSLATE_osLabel.Text = "MacOSX";
-            if (Settings.RunningOnWindows())
+            if (Settings.Default.RunningOnWindows())
                 _NO_TRANSLATE_osLabel.Text = "Windows";
         }
     }

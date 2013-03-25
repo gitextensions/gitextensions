@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI
 {
@@ -131,7 +132,7 @@ namespace GitUI
                         {
                             Module.RunRealCmd(
                                 "cmd.exe",
-                                string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, remoteUrl));
+                                string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Default.Plink, remoteUrl));
 
                             Retry();
                             return true;
@@ -154,9 +155,9 @@ namespace GitUI
                         string remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
 
                         if (string.IsNullOrEmpty(remoteUrl))
-                            Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");
+                            Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Default.Plink + "\" " + Remote + "\"");
                         else
-                            Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + remoteUrl + "\"");
+                            Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Default.Plink + "\" " + remoteUrl + "\"");
 
                         restart = true;
                     }

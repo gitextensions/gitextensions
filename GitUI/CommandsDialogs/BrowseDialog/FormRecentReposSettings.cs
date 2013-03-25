@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Properties;
 using GitCommands.Repository;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -25,21 +26,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void LoadSettings()
         {
-            SetShorteningStrategy(Settings.ShorteningRecentRepoPathStrategy);
-            sortMostRecentRepos.Checked = Settings.SortMostRecentRepos;
-            sortLessRecentRepos.Checked = Settings.SortLessRecentRepos;
-            _NO_TRANSLATE_maxRecentRepositories.Value = Settings.MaxMostRecentRepositories;
-            comboMinWidthEdit.Value = Settings.RecentReposComboMinWidth;
+            SetShorteningStrategy(Settings.Default.ShorteningRecentRepoPathStrategy);
+            sortMostRecentRepos.Checked = Settings.Default.SortMostRecentRepos;
+            sortLessRecentRepos.Checked = Settings.Default.SortLessRecentRepos;
+            _NO_TRANSLATE_maxRecentRepositories.Value = Settings.Default.MaxMostRecentRepositories;
+            comboMinWidthEdit.Value = Settings.Default.RecentReposComboMinWidth;
 
         }
 
         private void SaveSettings()
         {
-            Settings.ShorteningRecentRepoPathStrategy = GetShorteningStrategy();
-            Settings.SortMostRecentRepos = sortMostRecentRepos.Checked;
-            Settings.SortLessRecentRepos = sortLessRecentRepos.Checked;
-            Settings.MaxMostRecentRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
-            Settings.RecentReposComboMinWidth = (int)comboMinWidthEdit.Value;
+            Settings.Default.ShorteningRecentRepoPathStrategy = GetShorteningStrategy();
+            Settings.Default.SortMostRecentRepos = sortMostRecentRepos.Checked;
+            Settings.Default.SortLessRecentRepos = sortLessRecentRepos.Checked;
+            Settings.Default.MaxMostRecentRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
+            Settings.Default.RecentReposComboMinWidth = (int)comboMinWidthEdit.Value;
         }
 
         private string GetShorteningStrategy()

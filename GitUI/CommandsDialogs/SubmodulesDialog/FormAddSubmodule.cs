@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GitCommands;
 using GitCommands.Repository;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs.SubmodulesDialog
 {
@@ -74,13 +75,13 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         private void DirectoryTextUpdate(object sender, EventArgs e)
         {
             var path = Directory.Text;
-            path = path.TrimEnd(new[] { Settings.PathSeparator, Settings.PathSeparatorWrong });
+            path = path.TrimEnd(new[] { Settings.Default.PathSeparator, Settings.Default.PathSeparatorWrong });
 
             if (path.EndsWith(".git"))
                 path = path.Replace(".git", "");
 
-            if (path.Contains(Settings.PathSeparator.ToString()) || path.Contains(Settings.PathSeparatorWrong.ToString()))
-                LocalPath.Text = path.Substring(path.LastIndexOfAny(new[] { Settings.PathSeparator, Settings.PathSeparatorWrong }) + 1);
+            if (path.Contains(Settings.Default.PathSeparator.ToString()) || path.Contains(Settings.Default.PathSeparatorWrong.ToString()))
+                LocalPath.Text = path.Substring(path.LastIndexOfAny(new[] { Settings.Default.PathSeparator, Settings.Default.PathSeparatorWrong }) + 1);
         }
     }
 }

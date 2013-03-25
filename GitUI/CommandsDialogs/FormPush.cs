@@ -10,6 +10,7 @@ using GitCommands.Config;
 using GitCommands.Repository;
 using GitUI.Script;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs
 {
@@ -61,8 +62,8 @@ namespace GitUI.CommandsDialogs
 
             //can't be set in OnLoad, because after PushAndShowDialogWhenFailed()
             //they are reset to false
-            PushAllTags.Checked = Settings.PushAllTags;
-            AutoPullOnRejected.Checked = Settings.AutoPullOnRejected;
+            PushAllTags.Checked = Settings.Default.PushAllTags;
+            AutoPullOnRejected.Checked = Settings.Default.AutoPullOnRejected;
             if (aCommands != null)
                 Init();
         }
@@ -72,7 +73,7 @@ namespace GitUI.CommandsDialogs
             if (GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesCheck)
             {
                 RecursiveSubmodules.Enabled = true;
-                RecursiveSubmodules.SelectedIndex = Settings.RecursiveSubmodules;
+                RecursiveSubmodules.SelectedIndex = Settings.Default.RecursiveSubmodules;
                 if (!GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesOnDemand)
                     RecursiveSubmodules.Items.RemoveAt(2);
             }
@@ -182,7 +183,7 @@ namespace GitUI.CommandsDialogs
                 if (RemoteBranch.Text != GetDefaultPushRemote(_NO_TRANSLATE_Remotes.Text) &&
                     !Module.GetHeads(true, true).Any(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text) )
                     //Ask if this is really what the user wants
-                    if (!Settings.DontConfirmPushNewBranch)
+                    if (!Settings.Default.DontConfirmPushNewBranch)
                         if (MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
                             DialogResult.No)
                         {
@@ -192,9 +193,9 @@ namespace GitUI.CommandsDialogs
 
             if (PushToUrl.Checked)
                 Repositories.AddMostRecentRepository(PushDestination.Text);
-            Settings.PushAllTags = PushAllTags.Checked;
-            Settings.AutoPullOnRejected = AutoPullOnRejected.Checked;
-            Settings.RecursiveSubmodules = RecursiveSubmodules.SelectedIndex;
+            Settings.Default.PushAllTags = PushAllTags.Checked;
+            Settings.Default.AutoPullOnRejected = AutoPullOnRejected.Checked;
+            Settings.Default.RecursiveSubmodules = RecursiveSubmodules.SelectedIndex;
 
             var remote = "";
             string destination;
@@ -206,7 +207,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (GitCommandHelpers.Plink())
                 {
-                    if (!File.Exists(Settings.Pageant))
+                    if (!File.Exists(Settings.Default.Pageant))
                         MessageBoxes.PAgentNotFound(owner);
                     else
                         Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
@@ -231,7 +232,7 @@ namespace GitUI.CommandsDialogs
                             if (!string.IsNullOrEmpty(remoteBranch) && _NO_TRANSLATE_Branch.Text.StartsWith(remoteBranch))
                                 track = false;
 
-                    if (track && !Settings.DontConfirmAddTrackingRef)
+                    if (track && !Settings.Default.DontConfirmAddTrackingRef)
                     {
                         DialogResult result = MessageBox.Show(String.Format(_updateTrackingReference.Text, selectedLocalBranch.Name, RemoteBranch.Text), _pushCaption.Text, MessageBoxButtons.YesNoCancel);
 
@@ -278,7 +279,7 @@ namespace GitUI.CommandsDialogs
             ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
 
             //controls can be accessed only from UI thread
-            candidateForRebasingMergeCommit = Settings.PullMerge == Settings.PullAction.Rebase && PushToRemote.Checked && !PushAllBranches.Checked && TabControlTagBranch.SelectedTab == BranchTab;
+            candidateForRebasingMergeCommit = Settings.Default.PullMerge == PullAction.Rebase && PushToRemote.Checked && !PushAllBranches.Checked && TabControlTagBranch.SelectedTab == BranchTab;
             selectedBranch = _NO_TRANSLATE_Branch.Text;
             selectedBranchRemote = _NO_TRANSLATE_Remotes.Text;
             selectedRemoteBranchName = RemoteBranch.Text;
@@ -332,9 +333,9 @@ namespace GitUI.CommandsDialogs
             //auto pull only if current branch was rejected
             Regex IsRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranch) + ".*" + Regex.Escape(" (non-fast-forward)"), RegexOptions.Compiled);
 
-            if (Settings.AutoPullOnRejected && IsRejected.IsMatch(form.GetOutputString()))
+            if (Settings.Default.AutoPullOnRejected && IsRejected.IsMatch(form.GetOutputString()))
             {
-                if (Settings.PullMerge == Settings.PullAction.Fetch)
+                if (Settings.Default.PullMerge == PullAction.Fetch)
                     form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to fetch.");
                 else if (IsRebasingMergeCommit())
                     form.AppendOutputLine(Environment.NewLine + "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine
@@ -521,7 +522,7 @@ namespace GitUI.CommandsDialogs
 
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
-            if (!File.Exists(Settings.Pageant))
+            if (!File.Exists(Settings.Default.Pageant))
                 MessageBoxes.PAgentNotFound(this);
             else
                 Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);

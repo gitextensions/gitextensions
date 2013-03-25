@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Properties;
 using GitUI;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -19,7 +20,7 @@ namespace GitExtensions
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (Settings.RunningOnWindows())
+            if (Settings.Default.RunningOnWindows())
             {
                 NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
 
@@ -43,8 +44,8 @@ namespace GitExtensions
             GitUIExtensions.UISynchronizationContext = SynchronizationContext.Current;
             Application.DoEvents();
 
-            Settings.LoadSettings();
-            if (Settings.RunningOnWindows())
+            
+            if (Settings.Default.RunningOnWindows())
             {
                 //Quick HOME check:
                 FormSplash.SetAction("Checking home path...");
@@ -56,7 +57,7 @@ namespace GitExtensions
             FormSplash.SetAction("Loading plugins...");
             Application.DoEvents();
 
-            if (string.IsNullOrEmpty(Settings.Translation))
+            if (string.IsNullOrEmpty(Settings.Default.Translation))
             {
                 using (var formChoose = new FormChooseTranslation())
                 {
@@ -67,9 +68,8 @@ namespace GitExtensions
             try
             {
                 if (Application.UserAppDataRegistry == null ||
-                    Settings.GetValue<string>("checksettings", null) == null ||
-                    !Settings.GetValue<string>("checksettings", null).Equals("false", StringComparison.OrdinalIgnoreCase) ||
-                    string.IsNullOrEmpty(Settings.GitCommand))
+                    Settings.Default.CheckSettings== null ||
+                    string.IsNullOrEmpty(Settings.Default.GitCommand))
                 {
                     FormSplash.SetAction("Checking settings...");
                     Application.DoEvents();
@@ -94,7 +94,7 @@ namespace GitExtensions
 
             FormSplash.HideSplash();
 
-            if (Settings.RunningOnWindows())
+            if (Settings.Default.RunningOnWindows())
                 MouseWheelRedirector.Active = true;
 
             GitUICommands uCommands = new GitUICommands(GetWorkingDir(args));
@@ -108,7 +108,7 @@ namespace GitExtensions
                 uCommands.RunCommand(args);
             }
 
-            Settings.SaveSettings();
+            Settings.Default.Save();
         }
 
         private static string GetWorkingDir(string[] args)
@@ -130,10 +130,10 @@ namespace GitExtensions
                 //    Repositories.RepositoryHistory.AddMostRecentRepository(Module.WorkingDir);
             }
 
-            if (args.Length <= 1 && string.IsNullOrEmpty(workingDir) && Settings.StartWithRecentWorkingDir)
+            if (args.Length <= 1 && string.IsNullOrEmpty(workingDir) && Settings.Default.StartWithRecentWorkingDir)
             {
-                if (GitModule.IsValidGitWorkingDir(Settings.RecentWorkingDir))
-                    workingDir = Settings.RecentWorkingDir;
+                if (GitModule.IsValidGitWorkingDir(Settings.Default.RecentWorkingDir))
+                    workingDir = Settings.Default.RecentWorkingDir;
             }
 
             if (string.IsNullOrEmpty(workingDir))

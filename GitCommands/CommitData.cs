@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.Diagnostics;
+using GitCommands.Properties;
 
 namespace GitCommands
 {
@@ -141,7 +142,7 @@ namespace GitCommands
                     "log -1 --pretty=\"format:" + ShortLogFormat + "\" {0}", sha1);
             var info =
                 module.RunCmd(
-                    Settings.GitCommand,
+                    Settings.Default.GitCommand,
                     arguments,
                     GitModule.LosslessEncoding
                     );
@@ -183,7 +184,7 @@ namespace GitCommands
                     "log -1 --pretty=\"format:"+LogFormat+"\" {0}", sha1);
             var info =
                 module.RunCmd(
-                    Settings.GitCommand,
+                    Settings.Default.GitCommand,
                     arguments,
                     GitModule.LosslessEncoding
                     );

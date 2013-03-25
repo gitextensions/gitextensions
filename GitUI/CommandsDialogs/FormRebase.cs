@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs
 {
@@ -33,7 +34,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-            helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
+            helpImageDisplayUserControl1.Visible = !Settings.Default.DontShowHelpImages;
         }
 
         public FormRebase(GitUICommands aCommands, string defaultBranch)

@@ -1,6 +1,7 @@
 ﻿using System;
 using GitCommands;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs
 {
@@ -14,10 +15,10 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-            helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
+            helpImageDisplayUserControl1.Visible = !Settings.Default.DontShowHelpImages;
             _defaultBranch = defaultBranch;
 
-            if (Settings.NoFastForwardMerge)
+            if (Settings.Default.NoFastForwardMerge)
             {
                 noFastForward.Checked = true;
             }
@@ -46,7 +47,7 @@ namespace GitUI.CommandsDialogs
 
         private void OkClick(object sender, EventArgs e)
         {
-            Settings.NoFastForwardMerge = noFastForward.Checked;
+            Settings.Default.NoFastForwardMerge = noFastForward.Checked;
 
             var successfullyMerged = FormProcess.ShowDialog(this, 
                 GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(), fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));

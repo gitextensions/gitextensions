@@ -137,7 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="gitcommandkey.snk.pfx" />
     <Compile Include="Repository\RecentRepoInfo.cs" />
     <None Include="Properties\Settings.settings">

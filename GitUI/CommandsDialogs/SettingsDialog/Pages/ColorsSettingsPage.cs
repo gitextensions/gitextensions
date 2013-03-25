@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitUI.Editor;
 using GitCommands;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -22,58 +23,58 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void OnLoadSettings()
         {
-            MulticolorBranches.Checked = Settings.MulticolorBranches;
+            MulticolorBranches.Checked = Settings.Default.MulticolorBranches;
             MulticolorBranches_CheckedChanged(null, null);
 
-            DrawNonRelativesGray.Checked = Settings.RevisionGraphDrawNonRelativesGray;
-            DrawNonRelativesTextGray.Checked = Settings.RevisionGraphDrawNonRelativesTextGray;
-            BranchBorders.Checked = Settings.BranchBorders;
-            StripedBanchChange.Checked = Settings.StripedBranchChange;
+            DrawNonRelativesGray.Checked = Settings.Default.RevisionGraphDrawNonRelativesGray;
+            DrawNonRelativesTextGray.Checked = Settings.Default.RevisionGraphDrawNonRelativesTextGray;
+            BranchBorders.Checked = Settings.Default.BranchBorders;
+            StripedBanchChange.Checked = Settings.Default.StripedBranchChange;
 
-            _NO_TRANSLATE_ColorGraphLabel.BackColor = Settings.GraphColor;
-            _NO_TRANSLATE_ColorGraphLabel.Text = Settings.GraphColor.Name;
+            _NO_TRANSLATE_ColorGraphLabel.BackColor = Settings.Default.GraphColor;
+            _NO_TRANSLATE_ColorGraphLabel.Text = Settings.Default.GraphColor.Name;
             _NO_TRANSLATE_ColorGraphLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorGraphLabel.BackColor);
-            _NO_TRANSLATE_ColorTagLabel.BackColor = Settings.TagColor;
-            _NO_TRANSLATE_ColorTagLabel.Text = Settings.TagColor.Name;
+            _NO_TRANSLATE_ColorTagLabel.BackColor = Settings.Default.TagColor;
+            _NO_TRANSLATE_ColorTagLabel.Text = Settings.Default.TagColor.Name;
             _NO_TRANSLATE_ColorTagLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorTagLabel.BackColor);
-            _NO_TRANSLATE_ColorBranchLabel.BackColor = Settings.BranchColor;
-            _NO_TRANSLATE_ColorBranchLabel.Text = Settings.BranchColor.Name;
+            _NO_TRANSLATE_ColorBranchLabel.BackColor = Settings.Default.BranchColor;
+            _NO_TRANSLATE_ColorBranchLabel.Text = Settings.Default.BranchColor.Name;
             _NO_TRANSLATE_ColorBranchLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorBranchLabel.BackColor);
-            _NO_TRANSLATE_ColorRemoteBranchLabel.BackColor = Settings.RemoteBranchColor;
-            _NO_TRANSLATE_ColorRemoteBranchLabel.Text = Settings.RemoteBranchColor.Name;
+            _NO_TRANSLATE_ColorRemoteBranchLabel.BackColor = Settings.Default.RemoteBranchColor;
+            _NO_TRANSLATE_ColorRemoteBranchLabel.Text = Settings.Default.RemoteBranchColor.Name;
             _NO_TRANSLATE_ColorRemoteBranchLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorRemoteBranchLabel.BackColor);
-            _NO_TRANSLATE_ColorOtherLabel.BackColor = Settings.OtherTagColor;
-            _NO_TRANSLATE_ColorOtherLabel.Text = Settings.OtherTagColor.Name;
+            _NO_TRANSLATE_ColorOtherLabel.BackColor = Settings.Default.OtherTagColor;
+            _NO_TRANSLATE_ColorOtherLabel.Text = Settings.Default.OtherTagColor.Name;
             _NO_TRANSLATE_ColorOtherLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorOtherLabel.BackColor);
 
-            _NO_TRANSLATE_ColorAddedLineLabel.BackColor = Settings.DiffAddedColor;
-            _NO_TRANSLATE_ColorAddedLineLabel.Text = Settings.DiffAddedColor.Name;
+            _NO_TRANSLATE_ColorAddedLineLabel.BackColor = Settings.Default.DiffAddedColor;
+            _NO_TRANSLATE_ColorAddedLineLabel.Text = Settings.Default.DiffAddedColor.Name;
             _NO_TRANSLATE_ColorAddedLineLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorAddedLineLabel.BackColor);
-            _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor = Settings.DiffAddedExtraColor;
-            _NO_TRANSLATE_ColorAddedLineDiffLabel.Text = Settings.DiffAddedExtraColor.Name;
+            _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor = Settings.Default.DiffAddedExtraColor;
+            _NO_TRANSLATE_ColorAddedLineDiffLabel.Text = Settings.Default.DiffAddedExtraColor.Name;
             _NO_TRANSLATE_ColorAddedLineDiffLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor);
 
-            _NO_TRANSLATE_ColorRemovedLine.BackColor = Settings.DiffRemovedColor;
-            _NO_TRANSLATE_ColorRemovedLine.Text = Settings.DiffRemovedColor.Name;
+            _NO_TRANSLATE_ColorRemovedLine.BackColor = Settings.Default.DiffRemovedColor;
+            _NO_TRANSLATE_ColorRemovedLine.Text = Settings.Default.DiffRemovedColor.Name;
             _NO_TRANSLATE_ColorRemovedLine.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorRemovedLine.BackColor);
-            _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor = Settings.DiffRemovedExtraColor;
-            _NO_TRANSLATE_ColorRemovedLineDiffLabel.Text = Settings.DiffRemovedExtraColor.Name;
+            _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor = Settings.Default.DiffRemovedExtraColor;
+            _NO_TRANSLATE_ColorRemovedLineDiffLabel.Text = Settings.Default.DiffRemovedExtraColor.Name;
             _NO_TRANSLATE_ColorRemovedLineDiffLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor);
-            _NO_TRANSLATE_ColorSectionLabel.BackColor = Settings.DiffSectionColor;
-            _NO_TRANSLATE_ColorSectionLabel.Text = Settings.DiffSectionColor.Name;
+            _NO_TRANSLATE_ColorSectionLabel.BackColor = Settings.Default.DiffSectionColor;
+            _NO_TRANSLATE_ColorSectionLabel.Text = Settings.Default.DiffSectionColor.Name;
             _NO_TRANSLATE_ColorSectionLabel.ForeColor =
                 ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorSectionLabel.BackColor);
 
-            string iconColor = Settings.IconColor.ToLower();
+            string iconColor = Settings.Default.IconColor.ToLower();
             DefaultIcon.Checked = iconColor == "default";
             BlueIcon.Checked = iconColor == "blue";
             GreenIcon.Checked = iconColor == "green";
@@ -82,32 +83,32 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             YellowIcon.Checked = iconColor == "yellow";
             RandomIcon.Checked = iconColor == "random";
 
-            IconStyle.Text = Settings.IconStyle;
+            IconStyle.Text = Settings.Default.IconStyle;
 
             ShowIconPreview();            
         }
 
         public override void SaveSettings()
         {
-            Settings.MulticolorBranches = MulticolorBranches.Checked;
-            Settings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
-            Settings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
-            Settings.BranchBorders = BranchBorders.Checked;
-            Settings.StripedBranchChange = StripedBanchChange.Checked;
-            Settings.GraphColor = _NO_TRANSLATE_ColorGraphLabel.BackColor;
-            Settings.TagColor = _NO_TRANSLATE_ColorTagLabel.BackColor;
-            Settings.BranchColor = _NO_TRANSLATE_ColorBranchLabel.BackColor;
-            Settings.RemoteBranchColor = _NO_TRANSLATE_ColorRemoteBranchLabel.BackColor;
-            Settings.OtherTagColor = _NO_TRANSLATE_ColorOtherLabel.BackColor;
+            Settings.Default.MulticolorBranches = MulticolorBranches.Checked;
+            Settings.Default.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
+            Settings.Default.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
+            Settings.Default.BranchBorders = BranchBorders.Checked;
+            Settings.Default.StripedBranchChange = StripedBanchChange.Checked;
+            Settings.Default.GraphColor = _NO_TRANSLATE_ColorGraphLabel.BackColor;
+            Settings.Default.TagColor = _NO_TRANSLATE_ColorTagLabel.BackColor;
+            Settings.Default.BranchColor = _NO_TRANSLATE_ColorBranchLabel.BackColor;
+            Settings.Default.RemoteBranchColor = _NO_TRANSLATE_ColorRemoteBranchLabel.BackColor;
+            Settings.Default.OtherTagColor = _NO_TRANSLATE_ColorOtherLabel.BackColor;
 
-            Settings.DiffAddedColor = _NO_TRANSLATE_ColorAddedLineLabel.BackColor;
-            Settings.DiffRemovedColor = _NO_TRANSLATE_ColorRemovedLine.BackColor;
-            Settings.DiffAddedExtraColor = _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor;
-            Settings.DiffRemovedExtraColor = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor;
-            Settings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
+            Settings.Default.DiffAddedColor = _NO_TRANSLATE_ColorAddedLineLabel.BackColor;
+            Settings.Default.DiffRemovedColor = _NO_TRANSLATE_ColorRemovedLine.BackColor;
+            Settings.Default.DiffAddedExtraColor = _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor;
+            Settings.Default.DiffRemovedExtraColor = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor;
+            Settings.Default.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
 
-            Settings.IconColor = GetSelectedApplicationIconColor();
-            Settings.IconStyle = IconStyle.Text;            
+            Settings.Default.IconColor = GetSelectedApplicationIconColor();
+            Settings.Default.IconStyle = IconStyle.Text;            
         }
 
         private string GetSelectedApplicationIconColor()

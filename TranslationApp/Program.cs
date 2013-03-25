@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands.Properties;
 
 namespace TranslationApp
 {
@@ -18,7 +19,7 @@ namespace TranslationApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (Settings.RunningOnWindows())
+            if (Settings.Default.RunningOnWindows())
             {
                 NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
 

@@ -227,7 +227,7 @@
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(193, 45);
             this.label9.TabIndex = 19;
-            this.label9.Text = "You need to set the correct path to \r\ngit before you can change\r\nglobal settings." +
+            this.label9.Text = "You need to set the correct path to \r\ngit before you can change\r\nglobal Settings.Default." +
     "\r\n";
             // 
             // pictureBox1

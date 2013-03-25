@@ -11,8 +11,9 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
-using Settings = GitCommands.Settings;
+using Settings = GitCommands.Properties.Settings;
 using GitUI.HelperDialogs;
+using GitCommands.Properties;
 
 namespace GitUI
 {
@@ -210,13 +211,13 @@ namespace GitUI
             try
             {
                 gravatarFallBack =
-                    (FallBackService)Enum.Parse(typeof(FallBackService), Settings.GravatarFallbackService);
+                    (FallBackService)Enum.Parse(typeof(FallBackService), Settings.Default.GravatarFallbackService);
             }
             catch
             {
-                Settings.GravatarFallbackService = gravatarFallBack.ToString();
+                Settings.Default.GravatarFallbackService = gravatarFallBack.ToString();
             }
-            GravatarService.CacheImage(email + ".png", email, Settings.AuthorImageSize,
+            GravatarService.CacheImage(email + ".png", email, Settings.Default.AuthorImageSize,
                 gravatarFallBack);
         }
 
@@ -318,7 +319,7 @@ namespace GitUI
 
         public void Stash(IWin32Window owner)
         {
-            var arguments = GitCommandHelpers.StashSaveCmd(Settings.IncludeUntrackedFilesInAutoStash);
+            var arguments = GitCommandHelpers.StashSaveCmd(Settings.Default.IncludeUntrackedFilesInAutoStash);
             FormProcess.ShowDialog(owner, Module, arguments);
         }
 
@@ -640,7 +641,7 @@ namespace GitUI
         {
             Func<bool> action = () =>
             {
-                return FormProcess.ShowDialog(owner, Module, Settings.GitCommand, GitSvnCommandHelpers.DcommitCmd());
+                return FormProcess.ShowDialog(owner, Module, Settings.Default.GitCommand, GitSvnCommandHelpers.DcommitCmd());
             };
 
             return DoActionOnRepo(owner, true, true, PreSvnDcommit, PostSvnDcommit, action);
@@ -655,7 +656,7 @@ namespace GitUI
         {
             Func<bool> action = () =>
             {
-                FormProcess.ShowDialog(owner, Module, Settings.GitCommand, GitSvnCommandHelpers.RebaseCmd());
+                FormProcess.ShowDialog(owner, Module, Settings.Default.GitCommand, GitSvnCommandHelpers.RebaseCmd());
                 return true;
             };
 
@@ -671,7 +672,7 @@ namespace GitUI
         {
             Func<bool> action = () =>
             {
-                return FormProcess.ShowDialog(owner, Module, Settings.GitCommand, GitSvnCommandHelpers.FetchCmd());
+                return FormProcess.ShowDialog(owner, Module, Settings.Default.GitCommand, GitSvnCommandHelpers.FetchCmd());
             };
 
             return DoActionOnRepo(owner, true, true, PreSvnFetch, PostSvnFetch, action);
@@ -2011,13 +2012,13 @@ namespace GitUI
         private static void UpdateSettingsBasedOnArguments(Dictionary<string, string> arguments)
         {
             if (arguments.ContainsKey("merge"))
-                Settings.PullMerge = Settings.PullAction.Merge;
+                Settings.Default.PullMerge = PullAction.Merge;
             if (arguments.ContainsKey("rebase"))
-                Settings.PullMerge = Settings.PullAction.Rebase;
+                Settings.Default.PullMerge = PullAction.Rebase;
             if (arguments.ContainsKey("fetch"))
-                Settings.PullMerge = Settings.PullAction.Fetch;
+                Settings.Default.PullMerge = PullAction.Fetch;
             if (arguments.ContainsKey("autostash"))
-                Settings.AutoStash = true;
+                Settings.Default.AutoStash = true;
         }
 
         internal void RaisePreBrowseInitialize(IWin32Window owner)

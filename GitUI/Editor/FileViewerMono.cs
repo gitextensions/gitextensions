@@ -277,7 +277,7 @@ namespace GitUI.Editor
 
                 if (line[0] == '+')
                 {
-                    var color = Settings.DiffAddedColor;
+                    var color = Settings.Default.DiffAddedColor;
                     TextEditor.Select(TextEditor.GetFirstCharIndexFromLine(lineNumber), line.Length);
                     TextEditor.SelectionColor = ColorHelper.GetForeColorForBackColor(color);
                     TextEditor.SelectionBackColor = color;
@@ -285,14 +285,14 @@ namespace GitUI.Editor
                 }
                 if (line[0] == '-')
                 {
-                    var color = Settings.DiffRemovedColor;
+                    var color = Settings.Default.DiffRemovedColor;
                     TextEditor.Select(TextEditor.GetFirstCharIndexFromLine(lineNumber), line.Length);
                     TextEditor.SelectionColor = ColorHelper.GetForeColorForBackColor(color);
                     TextEditor.SelectionBackColor = color;
                 }
                 if (line[0] == '@')
                 {
-                    var color = Settings.DiffSectionColor;
+                    var color = Settings.Default.DiffSectionColor;
                     TextEditor.Select(TextEditor.GetFirstCharIndexFromLine(lineNumber), line.Length);
                     TextEditor.SelectionColor = ColorHelper.GetForeColorForBackColor(color);
                     TextEditor.SelectionBackColor = color;
@@ -346,7 +346,7 @@ namespace GitUI.Editor
                 Color color;
                 if (lineSegment3.Length - beginOffset - reverseOffset > 0)
                 {
-                    color = Settings.DiffAddedExtraColor;
+                    color = Settings.Default.DiffAddedExtraColor;
                     TextEditor.Select(TextEditor.GetFirstCharIndexFromLine(line + 2) + beginOffset, lineSegment3.Length - beginOffset - reverseOffset);
                     TextEditor.SelectionColor = ColorHelper.GetForeColorForBackColor(color);
                     TextEditor.SelectionBackColor = color;
@@ -354,7 +354,7 @@ namespace GitUI.Editor
 
                 if (lineSegment2.Length - beginOffset - reverseOffset > 0)
                 {
-                    color = Settings.DiffRemovedExtraColor;
+                    color = Settings.Default.DiffRemovedExtraColor;
                     TextEditor.Select(TextEditor.GetFirstCharIndexFromLine(line + 1) + beginOffset, lineSegment2.Length - beginOffset - reverseOffset);
                     TextEditor.SelectionColor = ColorHelper.GetForeColorForBackColor(color);
                     TextEditor.SelectionBackColor = color;

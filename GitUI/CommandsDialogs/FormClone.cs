@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs
 {
@@ -80,8 +81,8 @@ namespace GitUI.CommandsDialogs
                 branchListLoader.Cancel();
 
                 var dirTo = _NO_TRANSLATE_To.Text;
-                if (!dirTo.EndsWith(Settings.PathSeparator.ToString()) && !dirTo.EndsWith(Settings.PathSeparatorWrong.ToString()))
-                    dirTo += Settings.PathSeparator.ToString();
+                if (!dirTo.EndsWith(Settings.Default.PathSeparator.ToString()) && !dirTo.EndsWith(Settings.Default.PathSeparatorWrong.ToString()))
+                    dirTo += Settings.Default.PathSeparator.ToString();
 
                 dirTo += _NO_TRANSLATE_NewDirectory.Text;
 
@@ -93,7 +94,7 @@ namespace GitUI.CommandsDialogs
 
                 var cloneCmd = GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
                             CentralRepository.Checked, cbIntializeAllSubmodules.Checked, Branches.Text, null);
-                using (var fromProcess = new FormRemoteProcess(Module, Settings.GitCommand, cloneCmd))
+                using (var fromProcess = new FormRemoteProcess(Module, Settings.Default.GitCommand, cloneCmd))
                 {
                     fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
                     fromProcess.ShowDialog(this);

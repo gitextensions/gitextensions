@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
@@ -13,7 +14,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void FormDashboardEditor_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Settings.SaveSettings();
+            Settings.Default.Save();
         }
     }
 }
