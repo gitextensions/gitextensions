@@ -1,5 +1,6 @@
 ﻿using System;
-﻿
+using System.Threading.Tasks;
+
 namespace GitCommands
 {
     public class GitItemStatus
@@ -47,7 +48,7 @@ namespace GitCommands
         public bool IsSubmodule { get; set; }
         public string RenameCopyPercentage { get; set; }
 
-        public GitSubmoduleStatus SubmoduleStatus { get; set; }
+        public Task<GitSubmoduleStatus> SubmoduleStatus { get; set; }
 
         public override string ToString()
         {

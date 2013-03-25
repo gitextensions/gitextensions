@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
@@ -2348,12 +2349,16 @@ namespace GitCommands
             foreach (var item in status)
                 if (item.IsSubmodule)
                 {
-                    item.SubmoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, item.Name, item.OldName, item.IsStaged);
-                    if (item.SubmoduleStatus.Commit != item.SubmoduleStatus.OldCommit)
-                    {
-                        var submodule = item.SubmoduleStatus.GetSubmodule(this);
-                        item.SubmoduleStatus.CheckSubmoduleStatus(submodule);
-                    }
+                    item.SubmoduleStatus = Task.Factory.StartNew(() =>
+                        {
+                            var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, item.Name, item.OldName, item.IsStaged);
+                            if (submoduleStatus.Commit != submoduleStatus.OldCommit)
+                            {
+                                var submodule = submoduleStatus.GetSubmodule(this);
+                                submoduleStatus.CheckSubmoduleStatus(submodule);
+                            }
+                            return submoduleStatus;
+                        });
                 }
         }
 
@@ -2362,14 +2367,18 @@ namespace GitCommands
             foreach (var item in status)
                 if (item.IsSubmodule)
                 {
-                    Patch patch = GetSingleDiff(from, to, item.Name, item.OldName, "", SystemEncoding);
-                    string text = patch != null ? patch.Text : "";
-                    item.SubmoduleStatus = GitCommandHelpers.GetSubmoduleStatus(text);
-                    if (item.SubmoduleStatus.Commit != item.SubmoduleStatus.OldCommit)
+                    item.SubmoduleStatus = Task.Factory.StartNew(() =>
                     {
-                        var submodule = item.SubmoduleStatus.GetSubmodule(this);
-                        item.SubmoduleStatus.CheckSubmoduleStatus(submodule);
-                    }
+                        Patch patch = GetSingleDiff(from, to, item.Name, item.OldName, "", SystemEncoding);
+                        string text = patch != null ? patch.Text : "";
+                        var submoduleStatus = GitCommandHelpers.GetSubmoduleStatus(text);
+                        if (submoduleStatus.Commit != submoduleStatus.OldCommit)
+                        {
+                            var submodule = submoduleStatus.GetSubmodule(this);
+                            submoduleStatus.CheckSubmoduleStatus(submodule);
+                        }
+                        return submoduleStatus;
+                    });
                 }
         }
 

@@ -45,7 +45,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\FxCopRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -54,6 +54,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\FxCopRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PSTaskDialog">
@@ -140,6 +141,12 @@
     <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateItem.cs" />
     <Compile Include="UserControls\ExListView.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\GotoUserManualControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\GotoUserManualControl.Designer.cs">
+      <DependentUpon>GotoUserManualControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\RevisionGridClasses\DoubleClickRevisionEventArgs.cs" />
     <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Graph.cs">
@@ -1010,6 +1017,9 @@
       <DependentUpon>DashboardItem.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\GotoUserManualControl.resx">
+      <DependentUpon>GotoUserManualControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RevisionGridClasses\DvcsGraph.resx">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1537,6 +1547,7 @@
     <None Include="Resources\Icons\IconRevertCommit.png" />
     <None Include="Resources\Icons\HelpPullMergeFastForward.png" />
     <None Include="Resources\Icons\HelpCommandMergeFastForward.png" />
+    <None Include="Resources\Icons\IconGotoManual.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

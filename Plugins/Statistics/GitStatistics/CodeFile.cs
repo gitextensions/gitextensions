@@ -55,18 +55,11 @@ namespace GitStatistics
 
             using (var sr = new StreamReader(File.FullName, true))
             {
-                try
+                while (!sr.EndOfStream)
                 {
-                    while (!sr.EndOfStream)
-                    {
-                        var line = sr.ReadLine();
-                        if (line != null)
-                            IncrementLineCountsFromLine(line.Trim());
-                    }
-                }
-                finally
-                {
-                    sr.Close();
+                    var line = sr.ReadLine();
+                    if (line != null)
+                        IncrementLineCountsFromLine(line.Trim());
                 }
             }
         }

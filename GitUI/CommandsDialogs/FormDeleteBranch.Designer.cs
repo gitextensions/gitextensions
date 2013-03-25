@@ -35,6 +35,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ForceDelete = new System.Windows.Forms.CheckBox();
             this.Branches = new GitUI.BranchComboBox();
+            this.gotoUserManualControl1 = new GitUI.UserControls.GotoUserManualControl();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -98,12 +99,23 @@
             this.Branches.Size = new System.Drawing.Size(284, 21);
             this.Branches.TabIndex = 2;
             // 
+            // gotoUserManualControl1
+            // 
+            this.gotoUserManualControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.gotoUserManualControl1.Location = new System.Drawing.Point(10, 141);
+            this.gotoUserManualControl1.ManualSectionAnchorName = "delete-branch";
+            this.gotoUserManualControl1.ManualSectionSubfolder = "branches";
+            this.gotoUserManualControl1.Name = "gotoUserManualControl1";
+            this.gotoUserManualControl1.Size = new System.Drawing.Size(60, 18);
+            this.gotoUserManualControl1.TabIndex = 8;
+            // 
             // FormDeleteBranch
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(448, 162);
+            this.Controls.Add(this.gotoUserManualControl1);
             this.Controls.Add(this.Branches);
             this.Controls.Add(this.ForceDelete);
             this.Controls.Add(this.pictureBox1);
@@ -131,5 +143,6 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.CheckBox ForceDelete;
         private BranchComboBox Branches;
+        private UserControls.GotoUserManualControl gotoUserManualControl1;
     }
 }

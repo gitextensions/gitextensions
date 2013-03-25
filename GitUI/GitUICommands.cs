@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -1368,6 +1369,11 @@ namespace GitUI
             return StartPluginSettingsDialog(null);
         }
 
+        public bool StartRepoSettingsDialog(IWin32Window owner)
+        {
+            return StartSettingsDialog(owner, GitUI.CommandsDialogs.SettingsDialog.Pages.LocalSettingsSettingsPage.GetPageReference());
+        }
+
         public bool StartBrowseDialog(IWin32Window owner, string filter)
         {
             if (!InvokeEvent(owner, PreBrowse))
@@ -1863,7 +1869,7 @@ namespace GitUI
             var searchWindow = new SearchWindow<string>(FindFileMatches);
             Application.Run(searchWindow);
             if (searchWindow.SelectedItem != null)
-                Console.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
+                Debug.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
         }
 
         private void RunBrowseCommand(string[] args)

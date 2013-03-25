@@ -149,17 +149,27 @@ namespace GitCommands.Repository
             try
             {
                 var serializer = new XmlSerializer(typeof(BindingList<RepositoryCategory>));
-                using (var stringReader = new StringReader(xml))
-                using (var xmlReader = new XmlTextReader(stringReader))
+                StringReader stringReader = null;
+                try
                 {
-                    repositories = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
-                    if (repositories != null)
+                    stringReader = new StringReader(xml);
+                    using (var xmlReader = new XmlTextReader(stringReader))
                     {
-                        foreach (var repositoryCategory in repositories)
+                        stringReader = null;
+                        repositories = serializer.Deserialize(xmlReader) as BindingList<RepositoryCategory>;
+                        if (repositories != null)
                         {
-                            repositoryCategory.SetIcon();
+                            foreach (var repositoryCategory in repositories)
+                            {
+                                repositoryCategory.SetIcon();
+                            }
                         }
                     }
+                }
+                finally
+                {
+                    if (stringReader != null)
+                        stringReader.Dispose();
                 }
             }
             catch (Exception ex)
@@ -193,15 +203,25 @@ namespace GitCommands.Repository
             try
             {
                 var serializer = new XmlSerializer(typeof(RepositoryHistory));
-                using (var stringReader = new StringReader(xml))
-                using (var xmlReader = new XmlTextReader(stringReader))
+                StringReader stringReader = null;
+                try
                 {
-                    var obj = serializer.Deserialize(xmlReader) as RepositoryHistory;
-                    if (obj != null)
+                    stringReader = new StringReader(xml);
+                    using (var xmlReader = new XmlTextReader(stringReader))
                     {
-                        history = obj;
-                        history.SetIcon();
+                        stringReader = null;
+                        var obj = serializer.Deserialize(xmlReader) as RepositoryHistory;
+                        if (obj != null)
+                        {
+                            history = obj;
+                            history.SetIcon();
+                        }
                     }
+                }
+                finally
+                {
+                    if (stringReader != null)
+                        stringReader.Dispose();
                 }
             }
             catch (Exception ex)
