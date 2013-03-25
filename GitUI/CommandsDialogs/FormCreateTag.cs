@@ -37,6 +37,8 @@ namespace GitUI.CommandsDialogs
         {
             textBoxTagName.Focus();
             _currentRemote = Module.GetCurrentRemote();
+            if (String.IsNullOrEmpty(_currentRemote))
+                _currentRemote = "origin";
             pushTag.Text = string.Format(_pushToCaption.Text, _currentRemote);
         }
 
