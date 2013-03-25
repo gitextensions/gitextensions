@@ -14,9 +14,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private const string NoneItem = "<None>";
         private readonly GitModule _gitModule;
+        private readonly Task<object> _populateBuildServerTypeTask;
         private IniConfigSource _buildServerConfigSource;
         private IConfig _buildServerConfig;
-        private Task<object> _populateBuildServerTypeTask;
 
         public BuildServerIntegrationSettingsPage(GitModule gitModule)
         {
@@ -76,25 +76,31 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             try
             {
                 var fileName = Path.Combine(_gitModule.WorkingDir, ".buildserver");
-                FileInfoExtensions.MakeFileTemporaryWritable(
-                    fileName,
-                    x =>
-                    {
-                        if (_buildServerConfig == null)
-                        {
-                            _buildServerConfigSource = new IniConfigSource();
-                        }
+                var selectedBuildServerType = GetSelectedBuildServerType();
 
-                        var selectedBuildServerType = GetSelectedBuildServerType();
+                if (File.Exists(fileName) || selectedBuildServerType != NoneItem)
+                {
+                    FileInfoExtensions.MakeFileTemporaryWritable(
+                        fileName,
+                        x =>
+                            {
+                                if (_buildServerConfig == null)
+                                {
+                                    _buildServerConfigSource = new IniConfigSource();
+                                }
 
-                        _buildServerConfig = GetBuildServerConfig("General");
-                        _buildServerConfig.Set("ActiveBuildServerType", selectedBuildServerType ?? NoneItem);
+                                _buildServerConfig = GetBuildServerConfig("General");
+                                _buildServerConfig.Set("ActiveBuildServerType", selectedBuildServerType ?? NoneItem);
 
-                        var control = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().SingleOrDefault();
-                        if (control != null) control.SaveSettings(GetBuildServerConfig(selectedBuildServerType));
+                                var control =
+                                    buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>()
+                                                            .SingleOrDefault();
+                                if (control != null)
+                                    control.SaveSettings(GetBuildServerConfig(selectedBuildServerType));
 
-                        _buildServerConfigSource.Save(fileName);
-                    });
+                                _buildServerConfigSource.Save(fileName);
+                            });
+                }
             }
             catch (Exception ex)
             {
