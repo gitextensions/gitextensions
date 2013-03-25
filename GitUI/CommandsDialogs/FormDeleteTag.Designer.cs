@@ -29,22 +29,34 @@
         private void InitializeComponent()
         {
             this.Ok = new System.Windows.Forms.Button();
+            this.deleteTag = new System.Windows.Forms.CheckBox();
             this.Tags = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.deleteTag = new System.Windows.Forms.CheckBox();
+            this.remotesComboboxControl1 = new GitUI.UserControls.RemotesComboboxControl();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Ok
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.ForeColor = System.Drawing.Color.Black;
-            this.Ok.Location = new System.Drawing.Point(369, 10);
+            this.Ok.Location = new System.Drawing.Point(379, 10);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 23);
+            this.Ok.Size = new System.Drawing.Size(75, 25);
             this.Ok.TabIndex = 8;
             this.Ok.Text = "Delete";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.OkClick);
+            // 
+            // deleteTag
+            // 
+            this.deleteTag.AutoSize = true;
+            this.deleteTag.Location = new System.Drawing.Point(10, 81);
+            this.deleteTag.Name = "deleteTag";
+            this.deleteTag.Size = new System.Drawing.Size(262, 19);
+            this.deleteTag.TabIndex = 11;
+            this.deleteTag.Text = "Delete tag also from the following remote(s):";
+            this.deleteTag.UseVisualStyleBackColor = true;
             // 
             // Tags
             // 
@@ -55,7 +67,7 @@
             this.Tags.FormattingEnabled = true;
             this.Tags.Location = new System.Drawing.Point(126, 12);
             this.Tags.Name = "Tags";
-            this.Tags.Size = new System.Drawing.Size(237, 23);
+            this.Tags.Size = new System.Drawing.Size(247, 23);
             this.Tags.TabIndex = 7;
             // 
             // label1
@@ -68,30 +80,39 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Select tag";
             // 
-            // deleteTag
+            // remotesComboboxControl1
             // 
-            this.deleteTag.AutoSize = true;
-            this.deleteTag.Location = new System.Drawing.Point(126, 41);
-            this.deleteTag.Name = "deleteTag";
-            this.deleteTag.Size = new System.Drawing.Size(131, 19);
-            this.deleteTag.TabIndex = 11;
-            this.deleteTag.Text = "Delete tag from \'{0}\'";
-            this.deleteTag.UseVisualStyleBackColor = true;
+            this.remotesComboboxControl1.Location = new System.Drawing.Point(10, 106);
+            this.remotesComboboxControl1.Name = "remotesComboboxControl1";
+            this.remotesComboboxControl1.SelectedRemote = null;
+            this.remotesComboboxControl1.Size = new System.Drawing.Size(270, 25);
+            this.remotesComboboxControl1.TabIndex = 12;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(7, 52);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(315, 15);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "This will delete the selected tag from the (local) repository.";
             // 
             // FormDeleteTag
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(454, 72);
+            this.ClientSize = new System.Drawing.Size(464, 142);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.remotesComboboxControl1);
             this.Controls.Add(this.deleteTag);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.Tags);
             this.Controls.Add(this.label1);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1000, 110);
+            this.MaximumSize = new System.Drawing.Size(1000, 180);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(470, 110);
+            this.MinimumSize = new System.Drawing.Size(470, 180);
             this.Name = "FormDeleteTag";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Delete tag";
@@ -107,5 +128,7 @@
         private System.Windows.Forms.ComboBox Tags;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox deleteTag;
+        private UserControls.RemotesComboboxControl remotesComboboxControl1;
+        private System.Windows.Forms.Label label2;
     }
 }
