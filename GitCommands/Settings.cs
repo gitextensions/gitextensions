@@ -432,6 +432,12 @@ namespace GitCommands
             set { SetBool("AutoPopStashAfterCheckoutBranch", value); }
         }
 
+        public static bool? AutoPullOnPushRejected
+        {
+            get { return GetBool("AutoPullOnPushRejected", null); }
+            set { SetBool("AutoPullOnPushRejected", value); }
+        }
+
         public static bool DontConfirmPushNewBranch
         {
             get { return GetBool("DontConfirmPushNewBranch", false).Value; }
@@ -890,13 +896,6 @@ namespace GitCommands
         {
             get { return SafeGet("pushalltags", false, ref _pushAllTags); }
             set { SafeSet("pushalltags", value, ref _pushAllTags); }
-        }
-
-        private static bool? _AutoPullOnRejected;
-        public static bool AutoPullOnRejected
-        {
-            get { return SafeGet("AutoPullOnRejected", false, ref _AutoPullOnRejected); }
-            set { SafeSet("AutoPullOnRejected", value, ref _AutoPullOnRejected); }
         }
 
         private static int? _RecursiveSubmodules;
