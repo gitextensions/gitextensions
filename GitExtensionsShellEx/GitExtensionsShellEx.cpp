@@ -338,7 +338,8 @@ bool CGitExtensionsShellEx::IsValidGitDir(TCHAR m_szFile[])
     return false;
 }
 
-STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(HMENU hMenu, UINT menuIndex, UINT uidFirstCmd, UINT uidLastCmd, UINT uFlags)
+STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
+    HMENU hMenu, UINT menuIndex, UINT uidFirstCmd, UINT uidLastCmd, UINT uFlags)
 {
     // If the flags include CMF_DEFAULTONLY then we shouldn't do anything.
     if (uFlags & CMF_DEFAULTONLY)
@@ -506,7 +507,8 @@ bool CGitExtensionsShellEx::DisplayInSubmenu(CString settings, int id)
     }
 }
 
-STDMETHODIMP CGitExtensionsShellEx::GetCommandString(UINT_PTR idCmd, UINT uFlags, UINT* pwReserved, LPSTR pszName, UINT cchMax)
+STDMETHODIMP CGitExtensionsShellEx::GetCommandString(
+    UINT_PTR idCmd, UINT uFlags, UINT* pwReserved, LPSTR pszName, UINT cchMax)
 {
     USES_CONVERSION;
 
