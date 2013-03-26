@@ -1738,7 +1738,7 @@ namespace GitUI.CommandsDialogs
             this._createPullRequestsToolStripMenuItem});
             this._repositoryHostsToolStripMenuItem.Name = "_repositoryHostsToolStripMenuItem";
             this._repositoryHostsToolStripMenuItem.Size = new System.Drawing.Size(130, 24);
-            this._repositoryHostsToolStripMenuItem.Text = "Repository hosts";
+            this._repositoryHostsToolStripMenuItem.Text = "(Repository hosts)";
             // 
             // _forkCloneRepositoryToolStripMenuItem
             // 
