@@ -7,11 +7,13 @@ namespace GitCommands
 {
     public sealed class GitRevision : IGitItem
     {
+        /// <summary>40 characters of 0's</summary>
         public const string UnstagedGuid = "0000000000000000000000000000000000000000";
+        /// <summary>40 characters of 1's</summary>
         public const string IndexGuid = "1111111111111111111111111111111111111111";
+        /// <summary>40 characters of a-f or any digit.</summary>
         public const string Sha1HashPattern = @"[a-f\d]{40}";
-        public static readonly Regex Sha1HashRegex = new Regex("^" + GitRevision.Sha1HashPattern + "$", RegexOptions.Compiled);
-
+        public static readonly Regex Sha1HashRegex = new Regex("^" + Sha1HashPattern + "$", RegexOptions.Compiled);
 
         public String[] ParentGuids;
         private IList<IGitItem> _subItems;
