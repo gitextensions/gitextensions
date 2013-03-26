@@ -308,7 +308,7 @@ namespace GitCommands
 
             string dirPath = dir + Settings.PathSeparator;
             string path = dirPath + ".git";
-            
+
             if (Directory.Exists(path) || File.Exists(path))
                 return true;
 
@@ -658,6 +658,14 @@ namespace GitCommands
         public string RunGit(string arguments, out int exitCode)
         {
             return RunGitCmd(arguments, out exitCode);
+        }
+
+        /// <summary>Runs a 'git' command with the specified args.</summary>
+        public GitCommandResult GitCmd(string args)
+        {
+            int exitCode;
+            string output = RunGit(args, out exitCode);
+            return new GitCommandResult(output, exitCode == 0);
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
@@ -2109,7 +2117,9 @@ namespace GitCommands
             return
                 GetRemotes(false)
                 .Select(remote =>
-                    new RemoteInfo(RunGitCmd(string.Format("remote show {0}", remote))));
+                    new RemoteInfo(
+                        RunGitCmd(string.Format("remote show {0}", remote)),
+                        RunGitCmd(string.Format("ls-remote --heads {0}", remote))));
         }
 
         /// <summary>Executes the specified 'git remote' command.</summary>
@@ -2131,19 +2141,19 @@ namespace GitCommands
         /// <summary>Gets the number of commits which appear in a remote branch that are NOT in another branch/revision.
         /// <remarks>Indicates how many commits the local branch is behind the remote branch; possibly for pulling.</remarks></summary>
         /// <param name="behindRevision">Revision/branch to check how many commits it's behind.</param>
-        /// <param name="remoteBranch">Remote branch.</param>
-        public int GetCommitDiffCount(string behindRevision, RemoteInfo.RemoteBranch remoteBranch)
+        /// <param name="remoteTrackingBranch">Remote branch.</param>
+        public int GetCommitDiffCount(string behindRevision, RemoteInfo.RemoteTrackingBranch remoteTrackingBranch)
         {
-            return GetCommitDiffCount(behindRevision, remoteBranch.FullPath);
+            return GetCommitDiffCount(behindRevision, remoteTrackingBranch.FullPath);
         }
 
         /// <summary>Gets the number of commits which appear in a local branch/revision that are NOT in a remote branch.
         /// <remarks>Indicates how many commits the local branch is ahead of the remote branch.</remarks></summary>
-        /// <param name="remoteBranch">Remote branch to check the number of commits it's behind.</param>
+        /// <param name="remoteTrackingBranch">Remote branch to check the number of commits it's behind.</param>
         /// <param name="aheadRevision">Local revision/branch.</param>
-        public int GetCommitDiffCount(RemoteInfo.RemoteBranch remoteBranch, string aheadRevision)
+        public int GetCommitDiffCount(RemoteInfo.RemoteTrackingBranch remoteTrackingBranch, string aheadRevision)
         {
-            return GetCommitDiffCount(remoteBranch.FullPath, aheadRevision);
+            return GetCommitDiffCount(remoteTrackingBranch.FullPath, aheadRevision);
         }
 
         /// <summary>Indicates whether a branch/revision is behind another branch/revision.</summary>
@@ -2156,18 +2166,18 @@ namespace GitCommands
 
         /// <summary>Indicates whether a local branch/revision is behind a remote branch; possibly for pulling.</summary>
         /// <param name="behindRevision">Local branch/revision to check if it's behind.</param>
-        /// <param name="remoteBranch">Remote branch.</param>
-        public bool IsBranchBehind(string behindRevision, RemoteInfo.RemoteBranch remoteBranch)
+        /// <param name="remoteTrackingBranch">Remote branch.</param>
+        public bool IsBranchBehind(string behindRevision, RemoteInfo.RemoteTrackingBranch remoteTrackingBranch)
         {
-            return IsBranchBehind(behindRevision, remoteBranch.FullPath);
+            return IsBranchBehind(behindRevision, remoteTrackingBranch.FullPath);
         }
 
         /// <summary>Indicates whether a remote branch is lacking commits that are in a local branch/revision.</summary>
         /// <param name="aheadRevision">Local branch/revision.</param>
-        /// <param name="remoteBranch">Remote branch to check if it's behind.</param>
-        public bool IsRemoteBranchBehind(RemoteInfo.RemoteBranch remoteBranch, string aheadRevision)
+        /// <param name="remoteTrackingBranch">Remote branch to check if it's behind.</param>
+        public bool IsRemoteBranchBehind(RemoteInfo.RemoteTrackingBranch remoteTrackingBranch, string aheadRevision)
         {
-            return IsBranchBehind(remoteBranch.FullPath, aheadRevision);
+            return IsBranchBehind(remoteTrackingBranch.FullPath, aheadRevision);
         }
 
         /// <summary>Compares commits between a (control) branch and another (test) branch.</summary>
@@ -3551,15 +3561,15 @@ namespace GitCommands
 
         bool Equals(GitModule other)
         {
-            return 
-                string.Equals(_workingdir, other._workingdir) && 
+            return
+                string.Equals(_workingdir, other._workingdir) &&
                 Equals(_superprojectModule, other._superprojectModule);
         }
 
         public override int GetHashCode()
         {
-            return (_workingdir != null 
-                ? _workingdir.GetHashCode() 
+            return (_workingdir != null
+                ? _workingdir.GetHashCode()
                 : 0);
         }
 

@@ -1643,8 +1643,9 @@
     <None Include="Resources\Icons\Cut.png" />
     <Content Include="Resources\Icons\BlankIcon.png" />
     <Content Include="Resources\Icons\BranchFrom.png" />
-    <None Include="Resources\Icons\BranchStale.png" />
+    <None Include="Resources\Icons\BranchUntracked.png" />
     <None Include="Resources\Icons\BranchNew.png" />
+    <None Include="Resources\Icons\BranchStale.png" />
     <Content Include="Resources\Icons\HeadBranch.png" />
     <Content Include="Resources\Icons\Information.png" />
     <Content Include="Resources\Icons\Namespace.png" />

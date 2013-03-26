@@ -22,24 +22,24 @@ namespace GitCommands.Git
         /// <summary>Creates a 'git remote' command to track/un-track specified branches.</summary>
         /// <param name="remote">Remote whose branches to set.</param>
         /// <param name="option">Indicates the add/remove/reset action to perform.</param>
-        /// <param name="branches">Branches to track/un-track.</param>
-        public GitRemote(RemoteInfo remote, SetBranches option, params RemoteInfo.RemoteBranch[] branches)
+        /// <param name="trackingBranches">Branches to track/un-track.</param>
+        public GitRemote(RemoteInfo remote, SetBranches option, params RemoteInfo.RemoteTrackingBranch[] trackingBranches)
         {// 'git remote set-branches [--add] <name> <branch> <branch> ...'
             string add = (option == SetBranches.Append)
                     ? "--add" // add to tracked branches
                     : "";// reset then track/untrack branches
 
-            IEnumerable<RemoteInfo.RemoteBranch> cmdBranches;
+            IEnumerable<RemoteInfo.RemoteTrackingBranch> cmdBranches;
             if (option == SetBranches.UnTrack)
             {// un-track
-                var keepers = new HashSet<RemoteInfo.RemoteBranch>(remote.Branches);
-                keepers.ExceptWith(branches);
+                var keepers = new HashSet<RemoteInfo.RemoteTrackingBranch>(remote.RemoteTrackingBranches);
+                keepers.ExceptWith(trackingBranches);
                 cmdBranches = keepers;
 
             }
             else
             {
-                cmdBranches = branches.AsEnumerable();
+                cmdBranches = trackingBranches.AsEnumerable();
             }
 
             string branchesString = string.Join(" ", cmdBranches);
@@ -48,21 +48,21 @@ namespace GitCommands.Git
         }
 
         /// <summary>Add the specified remote-tracking branches.</summary>
-        public static GitRemote Track(RemoteInfo remote, params RemoteInfo.RemoteBranch[] branches)
+        public static GitRemote Track(RemoteInfo remote, params RemoteInfo.RemoteTrackingBranch[] trackingBranches)
         {
-            return new GitRemote(remote, SetBranches.Append, branches);
+            return new GitRemote(remote, SetBranches.Append, trackingBranches);
         }
 
         /// <summary>Un-track the specified remote-tracking branches.</summary>
-        public static GitRemote UnTrack(RemoteInfo remote, params RemoteInfo.RemoteBranch[] branches)
+        public static GitRemote UnTrack(RemoteInfo remote, params RemoteInfo.RemoteTrackingBranch[] trackingBranches)
         {
-            return new GitRemote(remote, SetBranches.UnTrack, branches);
+            return new GitRemote(remote, SetBranches.UnTrack, trackingBranches);
         }
 
         /// <summary>Reset the current remote-tracking branches and only track the specified branches.</summary>
-        public static GitRemote TrackOnly(RemoteInfo remote, params RemoteInfo.RemoteBranch[] branches)
+        public static GitRemote TrackOnly(RemoteInfo remote, params RemoteInfo.RemoteTrackingBranch[] trackingBranches)
         {
-            return new GitRemote(remote, SetBranches.Reset, branches);
+            return new GitRemote(remote, SetBranches.Reset, trackingBranches);
         }
 
 

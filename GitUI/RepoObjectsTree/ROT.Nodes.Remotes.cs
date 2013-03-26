@@ -5,7 +5,6 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
-using RemoteBranch = GitCommands.Git.RemoteInfo.RemoteBranch;
 
 namespace GitUI.UserControls
 {
@@ -75,24 +74,29 @@ namespace GitUI.UserControls
             nodes.Add(treeNode);
             treeNode.Nodes.AddRange(remoteNode.Children.Select(child =>
             {
-                RemoteBranch remoteBranch = child.Value;
+                RemoteInfo.RemoteTrackingBranch remoteTrackingBranch = child.Value;
                 string imgKey = branchKey;
-                string toolTip = remoteBranch.Name;//Module.CompareCommits();
-                if (remoteBranch.IsHead)
+                string toolTip = remoteTrackingBranch.Name;//Module.CompareCommits();
+                ContextMenuStrip menu;
+                if (remoteTrackingBranch.IsHead)
                 {
                     imgKey = headBranchKey;
                 }
-                else if (remoteBranch.Status == RemoteBranch.State.Stale)
+                else if (remoteTrackingBranch.Status == RemoteInfo.RemoteTrackingBranch.State.Stale)
                 {
                     imgKey = remoteBranchStaleKey;
-                    toolTip = string.Format(Strings.RemoteBranchStaleTipFormat.Text, remoteBranch.Name);
+                    toolTip = string.Format(Strings.RemoteBranchStaleTipFormat.Text, remoteTrackingBranch.Name);
                 }
-                else if (remoteBranch.Status == RemoteBranch.State.New)
+                else if (remoteTrackingBranch.Status == RemoteInfo.RemoteTrackingBranch.State.New)
                 {
                     imgKey = remoteBranchNewKey;
-                    toolTip = string.Format(Strings.RemoteBranchNewTipFormat.Text, remoteBranch.Name);
+                    toolTip = string.Format(Strings.RemoteBranchNewTipFormat.Text, remoteTrackingBranch.Name);
                 }
-                TreeNode childTreeNode = new TreeNode(remoteBranch.Name)
+                else if (false)
+                {// explicitly UN-tracked -> grey, sort to bottom of list
+                    
+                }
+                TreeNode childTreeNode = new TreeNode(remoteTrackingBranch.Name)
                 {
                     ContextMenuStrip = menuRemoteBranch,
                     ImageKey = imgKey,
@@ -110,15 +114,15 @@ namespace GitUI.UserControls
         sealed class RemoteNode : ParentNode<RemoteInfo, RemoteBranchNode>
         {
             public RemoteNode(RemoteInfo remote, GitUICommands uiCommands)
-                : base(uiCommands, remote, remote.Branches.Select(b => new RemoteBranchNode(uiCommands, b))) { }
+                : base(uiCommands, remote, remote.RemoteTrackingBranches.Select(b => new RemoteBranchNode(uiCommands, b))) { }
         }
 
         /// <summary>Remote-tracking branch node.</summary>
-        sealed class RemoteBranchNode : Node<RemoteBranch>
+        sealed class RemoteBranchNode : Node<RemoteInfo.RemoteTrackingBranch>
         {
             public RemoteBranchNode(GitUICommands uiCommands,
-                 RemoteBranch branch)
-                : base(branch, uiCommands)
+                 RemoteInfo.RemoteTrackingBranch trackingBranch)
+                : base(trackingBranch, uiCommands)
             {
                 IsDraggable = true;
             }
