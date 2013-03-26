@@ -57,6 +57,7 @@
             this.deleteTag.TabIndex = 11;
             this.deleteTag.Text = "Delete tag also from the following remote(s):";
             this.deleteTag.UseVisualStyleBackColor = true;
+            this.deleteTag.CheckedChanged += new System.EventHandler(this.deleteTag_CheckedChanged);
             // 
             // Tags
             // 
@@ -84,7 +85,7 @@
             // 
             this.remotesComboboxControl1.Location = new System.Drawing.Point(10, 106);
             this.remotesComboboxControl1.Name = "remotesComboboxControl1";
-            this.remotesComboboxControl1.SelectedRemote = null;
+            this.remotesComboboxControl1.SelectedRemote = "";
             this.remotesComboboxControl1.Size = new System.Drawing.Size(270, 25);
             this.remotesComboboxControl1.TabIndex = 12;
             // 

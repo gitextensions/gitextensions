@@ -15,9 +15,25 @@ namespace GitUI.UserControls
         {
             InitializeComponent();
             Translate();
+            AllowMultiselect = false;
         }
 
         public string SelectedRemote { get { return (string)comboBoxRemotes.Text; } set { comboBoxRemotes.Text = value; } }
+
+        bool _allowMultiselect;
+        public bool AllowMultiselect
+        {
+            get { return _allowMultiselect; }
+            set
+            {
+                _allowMultiselect = value;
+                buttonSelectMultipleRemotes.Visible = _allowMultiselect;
+                if (_allowMultiselect)
+                {
+                    throw new NotImplementedException();
+                }
+            }
+        }
 
         private void RemotesComboboxControl_Load(object sender, EventArgs e)
         {
