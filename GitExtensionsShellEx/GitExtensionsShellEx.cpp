@@ -42,10 +42,10 @@ bool IsVistaOrLater()
     static int version = -1;
     if (version == -1)
     {
-        OSVERSIONINFOEX         inf;
+        OSVERSIONINFOEX inf;
         SecureZeroMemory(&inf, sizeof(OSVERSIONINFOEX));
         inf.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-        GetVersionEx((OSVERSIONINFO *)&inf);
+        GetVersionEx((OSVERSIONINFO*)&inf);
         version = MAKEWORD(inf.dwMinorVersion, inf.dwMajorVersion);
     }
 
@@ -56,7 +56,7 @@ CGitExtensionsShellEx::CGitExtensionsShellEx()
 {
     if (IsVistaOrLater())
     {
-        HMODULE hUxTheme = ::GetModuleHandle (_T("UXTHEME.DLL"));
+        HMODULE hUxTheme = ::GetModuleHandle(_T("UXTHEME.DLL"));
 
         pfnGetBufferedPaintBits = (FN_GetBufferedPaintBits)::GetProcAddress(hUxTheme, "GetBufferedPaintBits");
         pfnBeginBufferedPaint = (FN_BeginBufferedPaint)::GetProcAddress(hUxTheme, "BeginBufferedPaint");
@@ -64,8 +64,7 @@ CGitExtensionsShellEx::CGitExtensionsShellEx()
     }
 }
 
-STDMETHODIMP CGitExtensionsShellEx::Initialize (
-    LPCITEMIDLIST pidlFolder, LPDATAOBJECT pDataObj, HKEY hProgID )
+STDMETHODIMP CGitExtensionsShellEx::Initialize(LPCITEMIDLIST pidlFolder, LPDATAOBJECT pDataObj, HKEY hProgID)
 {
     FORMATETC fmt = { CF_HDROP, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
     STGMEDIUM stg = { TYMED_HGLOBAL };
@@ -79,31 +78,31 @@ STDMETHODIMP CGitExtensionsShellEx::Initialize (
         return S_OK;
 
     // Look for CF_HDROP data in the data object.
-    if (FAILED( pDataObj->GetData ( &fmt, &stg ) ))
+    if (FAILED( pDataObj->GetData(&fmt, &stg)))
     {
         // Nope! Return an "invalid argument" error back to Explorer.
         return E_INVALIDARG;
     }
 
     // Get a pointer to the actual data.
-    hDrop = (HDROP) GlobalLock ( stg.hGlobal );
+    hDrop = (HDROP)GlobalLock(stg.hGlobal);
 
     // Make sure it worked.
-    if ( NULL == hDrop )
+    if (NULL == hDrop)
         return E_INVALIDARG;
 
     // Sanity check - make sure there is at least one filename.
-    UINT uNumFiles = DragQueryFile ( hDrop, 0xFFFFFFFF, NULL, 0 );
+    UINT uNumFiles = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
     HRESULT hr = S_OK;
 
     if (uNumFiles == 0)
         hr = E_INVALIDARG;
     // Get the name of the first file and store it in our member variable m_szFile.
-    else if (!DragQueryFile( hDrop, 0, m_szFile, MAX_PATH ))
+    else if (!DragQueryFile(hDrop, 0, m_szFile, MAX_PATH))
         hr = E_INVALIDARG;
 
-    GlobalUnlock ( stg.hGlobal );
-    ReleaseStgMedium ( &stg );
+    GlobalUnlock(stg.hGlobal);
+    ReleaseStgMedium(&stg);
 
     return hr;
 }
@@ -166,12 +165,12 @@ HBITMAP CGitExtensionsShellEx::IconToBitmapPARGB32(UINT uIcon)
 
     DestroyIcon(hIcon);
 
-    if(hBmp)
+    if (hBmp)
         bitmaps.insert(bitmap_it, std::make_pair(uIcon, hBmp));
     return hBmp;
 }
 
-HRESULT CGitExtensionsShellEx::Create32BitHBITMAP(HDC hdc, const SIZE *psize, __deref_opt_out void **ppvBits, __out HBITMAP* phBmp)
+HRESULT CGitExtensionsShellEx::Create32BitHBITMAP(HDC hdc, const SIZE* psize, __deref_opt_out void** ppvBits, __out HBITMAP* phBmp)
 {
     *phBmp = NULL;
 
@@ -199,12 +198,12 @@ HRESULT CGitExtensionsShellEx::Create32BitHBITMAP(HDC hdc, const SIZE *psize, __
 
 HRESULT CGitExtensionsShellEx::ConvertBufferToPARGB32(HPAINTBUFFER hPaintBuffer, HDC hdc, HICON hicon, SIZE& sizIcon)
 {
-    RGBQUAD *prgbQuad;
+    RGBQUAD* prgbQuad;
     int cxRow;
     HRESULT hr = pfnGetBufferedPaintBits(hPaintBuffer, &prgbQuad, &cxRow);
     if (SUCCEEDED(hr))
     {
-        ARGB *pargb = reinterpret_cast<ARGB *>(prgbQuad);
+        ARGB* pargb = reinterpret_cast<ARGB*>(prgbQuad);
         if (!HasAlpha(pargb, sizIcon, cxRow))
         {
             ICONINFO info;
@@ -224,7 +223,7 @@ HRESULT CGitExtensionsShellEx::ConvertBufferToPARGB32(HPAINTBUFFER hPaintBuffer,
     return hr;
 }
 
-bool CGitExtensionsShellEx::HasAlpha(__in ARGB *pargb, SIZE& sizImage, int cxRow)
+bool CGitExtensionsShellEx::HasAlpha(__in ARGB* pargb, SIZE& sizImage, int cxRow)
 {
     ULONG cxDelta = cxRow - sizImage.cx;
     for (ULONG y = sizImage.cy; y; --y)
@@ -243,7 +242,7 @@ bool CGitExtensionsShellEx::HasAlpha(__in ARGB *pargb, SIZE& sizImage, int cxRow
     return false;
 }
 
-HRESULT CGitExtensionsShellEx::ConvertToPARGB32(HDC hdc, __inout ARGB *pargb, HBITMAP hbmp, SIZE& sizImage, int cxRow)
+HRESULT CGitExtensionsShellEx::ConvertToPARGB32(HDC hdc, __inout ARGB* pargb, HBITMAP hbmp, SIZE& sizImage, int cxRow)
 {
     BITMAPINFO bmi;
     ZeroMemory(&bmi, sizeof(bmi));
@@ -257,14 +256,14 @@ HRESULT CGitExtensionsShellEx::ConvertToPARGB32(HDC hdc, __inout ARGB *pargb, HB
 
     HRESULT hr = E_OUTOFMEMORY;
     HANDLE hHeap = GetProcessHeap();
-    void *pvBits = HeapAlloc(hHeap, 0, bmi.bmiHeader.biWidth * 4 * bmi.bmiHeader.biHeight);
+    void* pvBits = HeapAlloc(hHeap, 0, bmi.bmiHeader.biWidth * 4 * bmi.bmiHeader.biHeight);
     if (pvBits)
     {
         hr = E_UNEXPECTED;
         if (GetDIBits(hdc, hbmp, 0, bmi.bmiHeader.biHeight, pvBits, &bmi, DIB_RGB_COLORS) == bmi.bmiHeader.biHeight)
         {
             ULONG cxDelta = cxRow - bmi.bmiHeader.biWidth;
-            ARGB *pargbMask = static_cast<ARGB *>(pvBits);
+            ARGB* pargbMask = static_cast<ARGB*>(pvBits);
 
             for (ULONG y = bmi.bmiHeader.biHeight; y; --y)
             {
@@ -339,20 +338,19 @@ bool CGitExtensionsShellEx::IsValidGitDir(TCHAR m_szFile[])
     return false;
 }
 
-STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu  (
-    HMENU hMenu, UINT menuIndex, UINT uidFirstCmd,
-    UINT uidLastCmd, UINT uFlags )
+STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
+    HMENU hMenu, UINT menuIndex, UINT uidFirstCmd, UINT uidLastCmd, UINT uFlags)
 {
     // If the flags include CMF_DEFAULTONLY then we shouldn't do anything.
-    if ( uFlags & CMF_DEFAULTONLY )
+    if (uFlags & CMF_DEFAULTONLY)
         return S_OK;
 
     CString szCascadeShellMenuItems = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions\\GitExtensions", L"CascadeShellMenuItems");
     if (szCascadeShellMenuItems.IsEmpty())
         szCascadeShellMenuItems = "110111000111111111";
-    bool CascadeContextMenu = szCascadeShellMenuItems.Find('1') != -1;
+    bool cascadeContextMenu = szCascadeShellMenuItems.Find('1') != -1;
     HMENU popupMenu = NULL;
-    if (CascadeContextMenu)
+    if (cascadeContextMenu)
         popupMenu = CreateMenu();
 
     bool isValidDir = IsValidGitDir(m_szFile);
@@ -453,10 +451,10 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu  (
 
     ++id;
 
-    if (CascadeContextMenu)
+    if (cascadeContextMenu)
     {
         MENUITEMINFO info;
-        info.cbSize = sizeof( MENUITEMINFO );
+        info.cbSize = sizeof(MENUITEMINFO);
         info.fMask = MIIM_STRING | MIIM_ID | MIIM_BITMAP | MIIM_SUBMENU;
         info.wID = uidFirstCmd + 1;
         info.hbmpItem = IsVistaOrLater() ? IconToBitmapPARGB32(IDI_GITEXTENSIONS) : HBMMENU_CALLBACK;
@@ -483,7 +481,7 @@ UINT CGitExtensionsShellEx::AddMenuItem(HMENU hMenu, LPTSTR text, int resource, 
         myIDMap[id] = resource;
         myIDMap[uidFirstCmd + id] = resource;
     }
-    mii.wID	= uidFirstCmd + id;
+    mii.wID = uidFirstCmd + id;
     std::wstring textEx;
     if (isSubMenu)
         mii.dwTypeData = text;
@@ -502,37 +500,38 @@ bool CGitExtensionsShellEx::DisplayInSubmenu(CString settings, int id)
     if (settings.GetLength() < id)
     {
         return true;
-    } else
+    }
+    else
     {
         return (settings[id] != '0');
     }
 }
 
-STDMETHODIMP CGitExtensionsShellEx::GetCommandString (
-    UINT_PTR idCmd, UINT uFlags, UINT* pwReserved, LPSTR pszName, UINT cchMax )
+STDMETHODIMP CGitExtensionsShellEx::GetCommandString(
+    UINT_PTR idCmd, UINT uFlags, UINT* pwReserved, LPSTR pszName, UINT cchMax)
 {
     USES_CONVERSION;
 
     // Check idCmd, it must be 0 since we have only one menu item.
-    if ( 0 != idCmd )
+    if (0 != idCmd)
         return E_INVALIDARG;
 
     // If Explorer is asking for a help string, copy our string into the
     // supplied buffer.
-    if ( uFlags & GCS_HELPTEXT )
+    if (uFlags & GCS_HELPTEXT)
     {
         LPCTSTR szText = _T("Git shell extensions");
 
-        if ( uFlags & GCS_UNICODE )
+        if (uFlags & GCS_UNICODE)
         {
             // We need to cast pszName to a Unicode string, and then use the
             // Unicode string copy API.
-            lstrcpynW ( (LPWSTR) pszName, T2CW(szText), cchMax );
+            lstrcpynW((LPWSTR)pszName, T2CW(szText), cchMax);
         }
         else
         {
             // Use the ANSI string copy API to return the help string.
-            lstrcpynA ( pszName, T2CA(szText), cchMax );	
+            lstrcpynA (pszName, T2CA(szText), cchMax);
         }
 
         return S_OK;
@@ -541,7 +540,7 @@ STDMETHODIMP CGitExtensionsShellEx::GetCommandString (
     return E_INVALIDARG;
 }
 
-void CGitExtensionsShellEx::RunGitEx(const TCHAR * command)
+void CGitExtensionsShellEx::RunGitEx(const TCHAR* command)
 {
     CString szFile = m_szFile;
     CString szCommandName = command;
@@ -561,39 +560,39 @@ void CGitExtensionsShellEx::RunGitEx(const TCHAR * command)
     if (dir.GetLength() == 0)
         dir = GetRegistryValue(HKEY_LOCAL_MACHINE, L"SOFTWARE\\GitExtensions\\GitExtensions", L"InstallDir");
 
-    ShellExecute(NULL, L"open", L"GitExtensions.exe", args, dir, SW_SHOWNORMAL); 
+    ShellExecute(NULL, L"open", L"GitExtensions.exe", args, dir, SW_SHOWNORMAL);
 }
 
-STDMETHODIMP CGitExtensionsShellEx::InvokeCommand ( LPCMINVOKECOMMANDINFO pCmdInfo )
+STDMETHODIMP CGitExtensionsShellEx::InvokeCommand(LPCMINVOKECOMMANDINFO pCmdInfo)
 {
     // If lpVerb really points to a string, ignore this function call and bail out.
-    if ( pCmdInfo == NULL ||0 != HIWORD( pCmdInfo->lpVerb ) )
+    if (pCmdInfo == NULL || 0 != HIWORD(pCmdInfo->lpVerb))
         return E_INVALIDARG;
 
-    int invokeId = LOWORD( pCmdInfo->lpVerb);
+    int invokeId = LOWORD(pCmdInfo->lpVerb);
 
-    auto it = commandsId.find( invokeId );
-    if ( it != commandsId.end() ) {
-        RunGitEx(gitExCommandNames[ it->second ]);
+    auto it = commandsId.find(invokeId);
+    if (it != commandsId.end()) {
+        RunGitEx(gitExCommandNames[it->second]);
         return S_OK;
     }
     return E_INVALIDARG;
 }
 
-STDMETHODIMP CGitExtensionsShellEx::HandleMenuMsg( UINT uMsg, WPARAM wParam, LPARAM lParam )
-{	
+STDMETHODIMP CGitExtensionsShellEx::HandleMenuMsg(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
     LRESULT res;
     return HandleMenuMsg2(uMsg, wParam, lParam, &res);
 }
 
-STDMETHODIMP CGitExtensionsShellEx::HandleMenuMsg2( UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT *pResult )
+STDMETHODIMP CGitExtensionsShellEx::HandleMenuMsg2(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 {
     switch (uMsg)
     {
     case WM_MEASUREITEM:
         {
             MEASUREITEMSTRUCT* lpmis = (MEASUREITEMSTRUCT*)lParam;
-            if (lpmis==NULL)
+            if (lpmis == NULL)
                 break;
             lpmis->itemWidth = 16;
             lpmis->itemHeight = 16;
@@ -605,8 +604,8 @@ STDMETHODIMP CGitExtensionsShellEx::HandleMenuMsg2( UINT uMsg, WPARAM wParam, LP
         {
             LPCTSTR resource;
             DRAWITEMSTRUCT* lpdis = (DRAWITEMSTRUCT*)lParam;
-            if ((lpdis==NULL)||(lpdis->CtlType != ODT_MENU))
-                return S_OK;		//not for a menu
+            if (lpdis == NULL || lpdis->CtlType != ODT_MENU)
+                return S_OK;  // not for a menu
             auto it = myIDMap.find(lpdis->itemID);
             if (it == myIDMap.end())
                 return S_OK;
@@ -633,7 +632,7 @@ STDMETHODIMP CGitExtensionsShellEx::HandleMenuMsg2( UINT uMsg, WPARAM wParam, LP
     return S_OK;
 }
 
-CString CGitExtensionsShellEx::GetRegistryValue( HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path )
+CString CGitExtensionsShellEx::GetRegistryValue(HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path)
 {
     CString result = "";
     HKEY key;
@@ -643,10 +642,12 @@ CString CGitExtensionsShellEx::GetRegistryValue( HKEY hOpenKey, LPCTSTR szKey, L
     unsigned long type;
 
     long res = RegOpenKeyEx(hOpenKey,szKey, 0, KEY_READ | KEY_WOW64_32KEY, &key);
-    if (res != ERROR_SUCCESS) {
+    if (res != ERROR_SUCCESS)
+    {
         return "";
     }
-    if (RegQueryValueEx(key, path, 0, &type, (BYTE*)&tempStr[0], &taille) != ERROR_SUCCESS) {
+    if (RegQueryValueEx(key, path, 0, &type, (BYTE*)&tempStr[0], &taille) != ERROR_SUCCESS)
+    {
         RegCloseKey(key);
         return "";
     }

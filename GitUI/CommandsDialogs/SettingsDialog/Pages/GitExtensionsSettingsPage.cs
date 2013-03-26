@@ -26,7 +26,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowCurrentChangesInRevisionGraph.Checked = Settings.Default.RevisionGraphShowWorkingDirChanges;
             chkShowStashCountInBrowseWindow.Checked = Settings.Default.ShowStashCount;
             chkShowGitStatusInToolbar.Checked = Settings.Default.ShowGitStatusInBrowseToolbar;
-            SmtpServer.Text = Settings.Default.Smtp;
+            SmtpServer.Text = Settings.Default.SmtpServer;
+            SmtpServerPort.Text = Settings.Default.SmtpPort.ToString();
+            chkUseSSL.Checked = Settings.Default.SmtpUseSsl;
             _NO_TRANSLATE_MaxCommits.Value = Settings.Default.MaxRevisionGraphCommits;
             chkCloseProcessDialog.Checked = Settings.Default.CloseProcessDialog;
             chkShowGitCommandLine.Checked = Settings.Default.ShowGitCommandLine;
@@ -44,7 +46,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Settings.Default.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
             Settings.Default.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;
             Settings.Default.ShowGitStatusInBrowseToolbar = chkShowGitStatusInToolbar.Checked;
-            Settings.Default.Smtp = SmtpServer.Text;
+            Settings.Default.SmtpServer = SmtpServer.Text;
+            int port;
+            if (int.TryParse(SmtpServerPort.Text, out port))
+                Settings.Default.SmtpPort = port;
+            Settings.Default.SmtpUseSsl = chkUseSSL.Checked;
             Settings.Default.CloseProcessDialog = chkCloseProcessDialog.Checked;
             Settings.Default.ShowGitCommandLine = chkShowGitCommandLine.Checked;
             Settings.Default.UseFastChecks = chkUseFastChecks.Checked;
@@ -52,6 +58,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Settings.Default.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
             Settings.Default.RevisionGraphShowWorkingDirChanges = chkShowCurrentChangesInRevisionGraph.Checked;
             Settings.Default.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
+        }
+
+        private void chkUseSSL_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (!chkUseSSL.Checked)
+            {
+                if (SmtpServerPort.Text == "587")
+                    SmtpServerPort.Text = "465";
+            }
+            else
+            {
+                if (SmtpServerPort.Text == "465")
+                    SmtpServerPort.Text = "587";
+            }
         }
     }
 }

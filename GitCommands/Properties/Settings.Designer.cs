@@ -337,14 +337,14 @@ namespace GitCommands.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("smtp.gmail.com")]
         [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public string Smtp {
+        public string SmtpServer {
             get {
-                return ((string)(this["Smtp"]));
+                return ((string)(this["SmtpServer"]));
             }
             set {
-                this["Smtp"] = value;
+                this["SmtpServer"] = value;
             }
         }
         
@@ -1662,6 +1662,32 @@ namespace GitCommands.Properties {
         public bool IsPortable {
             get {
                 return ((bool)(this["IsPortable"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("465")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public int SmtpPort {
+            get {
+                return ((int)(this["SmtpPort"]));
+            }
+            set {
+                this["SmtpPort"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
+        public bool SmtpUseSsl {
+            get {
+                return ((bool)(this["SmtpUseSsl"]));
+            }
+            set {
+                this["SmtpUseSsl"] = value;
             }
         }
     }

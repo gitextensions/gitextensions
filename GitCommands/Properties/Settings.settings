@@ -74,8 +74,8 @@
     <Setting Name="DonSetAsLastPullAction" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="Smtp" Roaming="true" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+    <Setting Name="SmtpServer" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)">smtp.gmail.com</Value>
     </Setting>
     <Setting Name="AutoStash" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -381,6 +381,12 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="IsPortable" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="SmtpPort" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">465</Value>
+    </Setting>
+    <Setting Name="SmtpUseSsl" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>

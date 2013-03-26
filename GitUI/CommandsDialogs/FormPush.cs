@@ -356,8 +356,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 IWin32Window owner = form;
-                if (Settings.Default.AutoPullOnPushRejected == null ||
-                    Settings.Default.PullMerge == PullAction.Fetch)
+                if (Settings.Default.AutoPullOnPushRejected == null)
                 {
                     bool cancel = false;
                     int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
@@ -366,7 +365,7 @@ namespace GitUI.CommandsDialogs
                                     _pullRepository.Text,
                                     "",
                                     "",
-                                    Settings.Default.PullMerge == PullAction.Fetch ? "" : _dontShowAgain.Text,
+                                    _dontShowAgain.Text,
                                     _pullRepositoryButtons.Text,
                                     true,
                                     0,
