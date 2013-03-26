@@ -17,12 +17,21 @@ namespace GitUI
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-                DisposeRevisionGraphCommand();
-
-            if (_IndexWatcher != null)
             {
-                _IndexWatcher.Dispose();
-                _IndexWatcher = null;
+                DisposeRevisionGraphCommand();
+                if (_IndexWatcher != null)
+                {
+                    _IndexWatcher.Dispose();
+                    _IndexWatcher = null;
+                }
+
+                _selectedItemBrush = null;
+
+                if (_filledItemBrush != null)
+                {
+                    _filledItemBrush.Dispose();
+                    _filledItemBrush = null;
+                }
             }
 
             if (disposing && (components != null))

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -256,10 +257,24 @@ namespace GitUI.RevisionGridClasses
 
             if (disposing)
             {
+                if (whiteBorderPen != null)
+                {
+                    whiteBorderPen.Dispose();
+                    whiteBorderPen = null;
+                }
+                if (blackBorderPen != null)
+                {
+                    blackBorderPen.Dispose();
+                    blackBorderPen = null;
+                }
                 if (graphBitmap != null)
                 {
                     graphBitmap.Dispose();
                     graphBitmap = null;
+                }
+                if (backgroundEvent != null)
+                {
+                    backgroundEvent.Dispose();
                 }
             }
             base.Dispose(disposing);
@@ -549,7 +564,7 @@ namespace GitUI.RevisionGridClasses
                     // Cache the next item
                     if (!graphData.CacheTo(curCount))
                     {
-                        Console.WriteLine("Cached item FAILED {0}", curCount.ToString());
+                        Debug.WriteLine("Cached item FAILED {0}", curCount.ToString());
                         lock (backgroundThread)
                         {
                             backgroundScrollTo = curCount;
@@ -934,7 +949,7 @@ namespace GitUI.RevisionGridClasses
                 {
                     // This shouldn't be happening...If it does, clear the cache so we
                     // eventually pick it up.
-                    Console.WriteLine("Draw lane {0} NO DATA", rowIndex.ToString());
+                    Debug.WriteLine("Draw lane {0} NO DATA", rowIndex.ToString());
                     ClearDrawCache();
                     return false;
                 }

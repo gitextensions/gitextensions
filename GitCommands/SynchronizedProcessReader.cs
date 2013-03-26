@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -30,7 +28,7 @@ namespace GitCommands
 
         /// <summary>
         /// This function reads the output to a byte[]. This function is used because it doesn't need to know the
-        /// corract encoding.
+        /// correct encoding.
         /// </summary>
         public static void ReadBytes(Process process, out byte[] stdOutput, out byte[] stdError)
         {
@@ -74,8 +72,5 @@ namespace GitCommands
             }
             return buffer;
         }
-
-
-
     }
 }

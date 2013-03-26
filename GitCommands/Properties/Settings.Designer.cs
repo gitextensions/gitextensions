@@ -363,7 +363,7 @@ namespace GitCommands.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("LocalChangesAction.DontChange")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::GitCommands.Properties.LocalChangesAction CheckoutBranchAction {
             get {
@@ -752,6 +752,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string Plink {
             get {
                 return ((string)(this["Plink"]));
@@ -764,6 +765,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string Puttygen {
             get {
                 return ((string)(this["Puttygen"]));
@@ -776,6 +778,7 @@ namespace GitCommands.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public string Pageant {
             get {
                 return ((string)(this["Pageant"]));
@@ -1085,14 +1088,13 @@ namespace GitCommands.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
-        public bool AutoPullOnRejected {
+        public global::System.Nullable<bool> AutoPullOnPushRejected {
             get {
-                return ((bool)(this["AutoPullOnRejected"]));
+                return ((global::System.Nullable<bool>)(this["AutoPullOnPushRejected"]));
             }
             set {
-                this["AutoPullOnRejected"] = value;
+                this["AutoPullOnPushRejected"] = value;
             }
         }
         

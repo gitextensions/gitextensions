@@ -18,7 +18,7 @@ namespace GitUI
 
         public void AddSetting(string name, string defaultValue)
         {
-            var value = Settings.Default.PluginsSettings[pluginName + name];
+            var value = Settings.Default.getPluginSetting (pluginName + name);
 
             if (value == null)
             {

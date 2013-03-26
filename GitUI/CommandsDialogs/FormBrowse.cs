@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -18,6 +19,7 @@ using GitUI.Plugin;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using ResourceManager.Translation;
+using System.Reflection;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
 using GitCommands.Properties;
@@ -137,7 +139,8 @@ namespace GitUI.CommandsDialogs
             }
 
             RevisionGrid.UICommandsSource = this;
-            AsyncLoader.DoAsync(() => PluginLoader.Load(), () => RegisterPlugins());
+            Task.Factory.StartNew(PluginLoader.Load)
+                .ContinueWith((task) => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());
             RevisionGrid.GitModuleChanged += DashboardGitModuleChanged;
             filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
             _FilterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, RevisionGrid);
@@ -252,6 +255,7 @@ namespace GitUI.CommandsDialogs
                 TaskbarManager.Instance.ApplicationId = "GitExtensions";
             }
 #endif
+            HideVariableMainMenuItems();
 
             RevisionGrid.Load();
             _FilterBranchHelper.InitToolStripBranchFilter();
@@ -298,7 +302,7 @@ namespace GitUI.CommandsDialogs
             {
                 var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
                 item.Click += ItemClick;
-                pluginsToolStripMenuItem.DropDownItems.Add(item);
+                pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
             }
             pluginsLoaded = true;
             UpdatePluginMenu(Module.IsValidGitWorkingDir());
@@ -348,6 +352,22 @@ namespace GitUI.CommandsDialogs
                 plugin.Unregister(UICommands);
         }
 
+        /// <summary>
+        /// to avoid showing menu items that should not be there during
+        /// the transition from dashboard to repo browser and vice versa
+        /// 
+        /// and reset hotkeys that are shared between mutual exclusive menu items
+        /// </summary>
+        private void HideVariableMainMenuItems()
+        {
+            dashboardToolStripMenuItem.Visible = false;
+            repositoryToolStripMenuItem.Visible = false;
+            commandsToolStripMenuItem.Visible = false;
+            refreshToolStripMenuItem.ShortcutKeys = Keys.None;
+            refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.None;
+            menuStrip1.Refresh();
+        }
+
         private void InternalInitialize(bool hard)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -364,7 +384,6 @@ namespace GitUI.CommandsDialogs
             toolStripButtonLevelUp.Enabled = hasWorkingDir;
             CommitInfoTabControl.Visible = validWorkingDir;
             fileExplorerToolStripMenuItem.Enabled = validWorkingDir;
-            commandsToolStripMenuItem.Visible = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
             branchSelect.Enabled = validWorkingDir;
             toolStripButton1.Enabled = validWorkingDir;
@@ -374,6 +393,15 @@ namespace GitUI.CommandsDialogs
             toolStripButtonPush.Enabled = validWorkingDir;
             dashboardToolStripMenuItem.Visible = !validWorkingDir;
             repositoryToolStripMenuItem.Visible = validWorkingDir;
+            commandsToolStripMenuItem.Visible = validWorkingDir;
+            if (validWorkingDir)
+            {
+                refreshToolStripMenuItem.ShortcutKeys = Keys.F5;
+            }
+            else
+            {
+                refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.F5;
+            }
             UpdatePluginMenu(validWorkingDir);
             gitMaintenanceToolStripMenuItem.Enabled = validWorkingDir;
             editgitignoreToolStripMenuItem1.Enabled = validWorkingDir;
@@ -1234,12 +1262,12 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (_dashboard != null)
-            {
-                _dashboard.Refresh();
-            }
-
             RefreshRevisions();
+        }
+
+        private void RefreshDashboardToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            _dashboard.Refresh();
         }
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
@@ -1625,9 +1653,14 @@ namespace GitUI.CommandsDialogs
             ChangeWorkingDir(button.Text);
         }
 
-        private void SettingsToolStripMenuItemClick(object sender, EventArgs e)
+        private void PluginSettingsToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartPluginSettingsDialog(this);
+        }
+
+        private void RepoSettingsToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            UICommands.StartRepoSettingsDialog(this);
         }
 
         private void CloseToolStripMenuItemClick(object sender, EventArgs e)
@@ -1762,6 +1795,7 @@ namespace GitUI.CommandsDialogs
 
         private void SetGitModule(GitModule module)
         {
+            HideVariableMainMenuItems();
             UnregisterPlugins();
             UICommands = new GitUICommands(module);
 
@@ -2828,14 +2862,29 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private string GetMonoVersion()
+        {
+            Type type = Type.GetType("Mono.Runtime");
+            if (type != null)
+            {
+                MethodInfo displayName = type.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
+                if (displayName != null)
+                    return (string)displayName.Invoke(null, null);
+            }
+            return null;
+        }
+
         private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string issueData = "--- GitExtensions";
             try
             {
                 issueData += Settings.Default.GitExtensionsVersionString;
-                issueData += ", " + GitCommandHelpers.VersionInUse.Full;
-                issueData += ", " + System.Environment.OSVersion.ToString();
+                issueData += ", Git " + GitCommandHelpers.VersionInUse.Full;
+                issueData += ", " + Environment.OSVersion;
+                var monoVersion = GetMonoVersion();
+                if (monoVersion != null)
+                    issueData += ", Mono " + monoVersion;
             }
             catch(Exception){}
 

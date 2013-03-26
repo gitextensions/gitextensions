@@ -9,8 +9,12 @@ namespace GitUI
 {
     internal sealed class PathFormatter
     {
-        [DllImport("shlwapi.dll")]
-        private static extern bool PathCompactPathEx([Out] StringBuilder pszOut, string szPath, int cchMax, int dwFlags);
+        private static class NativeMethods
+        {
+            [DllImport("shlwapi.dll")]
+            public static extern bool PathCompactPathEx([Out] StringBuilder pszOut, string szPath, int cchMax,
+                                                         int dwFlags);
+        }
 
         private readonly Graphics _graphics;
         private readonly Font _font;
@@ -40,9 +44,9 @@ namespace GitUI
                 Settings.Default.RunningOnWindows()) //The win32 method PathCompactPathEx is only supported on Windows
             {
                 var result = new StringBuilder(length);
-                PathCompactPathEx(result, path, length, 0);
+                NativeMethods.PathCompactPathEx(result, path, length, 0);
                 return result.ToString();
-            } else
+            }
             if (truncatePathMethod.Equals("trimStart", StringComparison.OrdinalIgnoreCase))
             {
                 return "..." + path.Substring(path.Length - length);

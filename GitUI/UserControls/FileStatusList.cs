@@ -6,6 +6,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
@@ -383,10 +385,11 @@ namespace GitUI
                 return 1;
             if (gitItemStatus.IsChanged)
             {
-                if (!gitItemStatus.IsSubmodule || gitItemStatus.SubmoduleStatus == null)
+                if (!gitItemStatus.IsSubmodule || gitItemStatus.SubmoduleStatus == null ||
+                    !gitItemStatus.SubmoduleStatus.IsCompleted)
                     return 2;
 
-                var status = gitItemStatus.SubmoduleStatus;
+                var status = gitItemStatus.SubmoduleStatus.Result;
                 if (status.Status == SubmoduleStatus.FastForward || status.Status == SubmoduleStatus.NewerTime)
                     return 6 + (status.IsDirty ? 1 : 0);
                 if (status.Status == SubmoduleStatus.Rewind || status.Status == SubmoduleStatus.OlderTime)
@@ -491,6 +494,13 @@ namespace GitUI
                     {
                         var listItem = new ListViewItem(item.Name, group);
                         listItem.ImageIndex = GetItemImageIndex(item);
+                        if (item.SubmoduleStatus != null && !item.SubmoduleStatus.IsCompleted)
+                        {
+                            item.SubmoduleStatus.ContinueWith((task) => listItem.ImageIndex = GetItemImageIndex(item),
+                                                              CancellationToken.None,
+                                                              TaskContinuationOptions.OnlyOnRanToCompletion,
+                                                              TaskScheduler.FromCurrentSynchronizationContext());
+                        }
                         listItem.Tag = item;
                         list.Add(listItem);
                     }

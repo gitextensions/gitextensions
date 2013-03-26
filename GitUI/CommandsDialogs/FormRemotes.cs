@@ -91,7 +91,7 @@ namespace GitUI.CommandsDialogs
             FillUrlDropDown();
             FillPushUrlDropDown();
 
-            Remotes.DataSource = Module.GetRemotes();
+            Remotes.DataSource = Module.GetRemotes(false);
 
             var heads = Module.GetHeads(false, true);
             RemoteBranches.DataSource = heads;

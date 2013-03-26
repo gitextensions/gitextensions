@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
@@ -18,7 +19,6 @@ using GitUI.RevisionGridClasses;
 using GitUI.Script;
 using Gravatar;
 using ResourceManager.Translation;
-using GitUI.UserControls.RevisionGridClasses;
 using GitCommands.Properties;
 
 namespace GitUI
@@ -50,7 +50,8 @@ namespace GitUI
         private const int NODE_DIMENSION = 8;
         private const int LANE_WIDTH = 13;
         private const int LANE_LINE_WIDTH = 2;
-        private Brush selectedItemBrush;
+        private Brush _selectedItemBrush;
+        private Brush _filledItemBrush; // disposable brush
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
@@ -63,8 +64,8 @@ namespace GitUI
         private string _quickSearchString;
         private RevisionGraph _revisionGraphCommand;
 
-        private RevisionGridLayout layout;
-        private int rowHeigth;
+        private RevisionGridLayout _layout;
+        private int _rowHeigth;
         public event GitModuleChangedEventHandler GitModuleChanged;
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
 
@@ -193,7 +194,7 @@ namespace GitUI
         [Browsable(false)]
         private string FiltredCurrentCheckout { get; set; }
         [Browsable(false)]
-        public string SuperprojectCurrentCheckout { get; private set; }
+        public Task<string> SuperprojectCurrentCheckout { get; private set; }
         [Browsable(false)]
         public int LastRow { get; private set; }
 
@@ -510,22 +511,26 @@ namespace GitUI
             Revisions.Select();
         }
 
-        public void SetSelectedRevision(GitRevision revision)
+        private void SetSelectedRevision(string revision)
         {
             if (revision != null)
             {
                 for (var i = 0; i < Revisions.RowCount; i++)
                 {
-                    if (GetRevision(i).Guid == revision.Guid)
-                    {
+                    if (GetRevision(i).Guid != revision)
+                        continue;
                         SetSelectedIndex(i);
                         return;
                     }
                 }
-            }
 
             Revisions.ClearSelection();
             Revisions.Select();
+        }
+
+        public void SetSelectedRevision(GitRevision revision)
+        {
+            SetSelectedRevision(revision != null ? revision.Guid : null);
         }
 
         public void HighlightBranch(string aId)
@@ -754,7 +759,10 @@ namespace GitUI
                 DisposeRevisionGraphCommand();
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
-                var newSuperprojectCurrentCheckout = Module.GetSuperprojectCurrentCheckout();
+                Task<string> newSuperprojectCurrentCheckout =
+                    Task.Factory.StartNew(() => Module.GetSuperprojectCurrentCheckout());
+                newSuperprojectCurrentCheckout.ContinueWith((task) => Refresh(),
+                    TaskScheduler.FromCurrentSynchronizationContext());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -947,12 +955,19 @@ namespace GitUI
             else
                 FiltredCurrentCheckout = CurrentCheckout;
 
-            if (!string.IsNullOrEmpty(_initialSelectedRevision) && Revisions.SelectedRows.Count == 0)
+            if (LastSelectedRows == null)
             {
-                string revision;
-                int index = SearchRevision(_initialSelectedRevision, out revision);
-                if (index >= 0)
-                    SetSelectedIndex(index);
+                if (!string.IsNullOrEmpty(_initialSelectedRevision))
+                {
+                    string revision;
+                    int index = SearchRevision(_initialSelectedRevision, out revision);
+                    if (index >= 0)
+                        SetSelectedIndex(index);
+                }
+                else
+                {
+                    SetSelectedRevision(FiltredCurrentCheckout);
+                }
             }
         }
 
@@ -1019,10 +1034,6 @@ namespace GitUI
                 Revisions.SelectedIds = LastSelectedRows;
                 LastSelectedRows = null;
             }
-            else if (_initialSelectedRevision == null)
-            {
-                Revisions.SelectedIds = new[] { CurrentCheckout };
-            }
 
             if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
             {
@@ -1079,7 +1090,7 @@ namespace GitUI
             bool isRowSelected = ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected);
 
             if (isRowSelected /*&& !showRevisionCards*/)
-                e.Graphics.FillRectangle(selectedItemBrush, e.CellBounds);
+                e.Graphics.FillRectangle(_selectedItemBrush, e.CellBounds);
             else
                 e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
 
@@ -1101,7 +1112,7 @@ namespace GitUI
                 var rowFont = NormalFont;
                 if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
                     rowFont = HeadFont;
-                else if (revision.Guid == SuperprojectCurrentCheckout)
+                else if (SuperprojectCurrentCheckout.IsCompleted && revision.Guid == SuperprojectCurrentCheckout.Result)
                     rowFont = SuperprojectFont;
 
                 switch (column)
@@ -1234,7 +1245,7 @@ namespace GitUI
                             if (IsCardLayout())
                             {
                                 int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
-                                int gravatarSize = rowHeigth - textHeight - 12;
+                                int gravatarSize = _rowHeigth - textHeight - 12;
                                 int gravatarTop = e.CellBounds.Top + textHeight + 6;
                                 int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
 
@@ -1255,7 +1266,7 @@ namespace GitUI
                                 string authorText;
                                 string timeText;
 
-                                if (rowHeigth >= 60)
+                                if (_rowHeigth >= 60)
                                 {
                                     authorText = revision.Author;
                                     timeText = TimeToString(Settings.Default.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate);
@@ -1975,7 +1986,7 @@ namespace GitUI
             }
 
             var dataType = DvcsGraph.DataType.Normal;
-            if (rev.Guid == CurrentCheckout)
+            if (rev.Guid == FiltredCurrentCheckout)
                 dataType = DvcsGraph.DataType.Active;
             else if (rev.Heads.Count > 0)
                 dataType = DvcsGraph.DataType.Special;
@@ -1995,7 +2006,7 @@ namespace GitUI
             if (Module.GetStagedFiles().Count > 0)
                 stagedChanges = true;
 
-            // FiltredCurrentCheckout doesn't works because only calculated after loading all revisions in SelectInitialRevision()
+            // FiltredCurrentCheckout doesn't works here because only calculated after loading all revisions in SelectInitialRevision()
             if (unstagedChanges)
             {
                 //Add working dir as virtual commit
@@ -2254,7 +2265,7 @@ namespace GitUI
 
         private void SetRevisionsLayout()
         {
-            layout = Enum.IsDefined(typeof(RevisionGridLayout), Settings.Default.RevisionGraphLayout)
+            _layout = Enum.IsDefined(typeof(RevisionGridLayout), Settings.Default.RevisionGraphLayout)
                          ? (RevisionGridLayout)Settings.Default.RevisionGraphLayout
                          : RevisionGridLayout.SmallWithGraph;
 
@@ -2268,19 +2279,23 @@ namespace GitUI
                 if (Settings.Default.RevisionGraphLayout == (int)RevisionGridLayout.Card
                     || Settings.Default.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph)
                 {
-                    rowHeigth = 45;
+                    _rowHeigth = 45;
                 }
                 else
                 {
-                    rowHeigth = 70;
+                    _rowHeigth = 70;
                 }
 
-                selectedItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
-                Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
-                Color.LightBlue, 90, false);
+                if (_filledItemBrush == null)
+                {
+                    _filledItemBrush = new LinearGradientBrush(new Rectangle(0, 0, _rowHeigth, _rowHeigth),
+                        Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
+                        Color.LightBlue, 90, false);
+                }
+                _selectedItemBrush = _filledItemBrush;
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, rowHeigth, selectedItemBrush);
+                Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, _rowHeigth, _selectedItemBrush);
 
             }
             else
@@ -2289,22 +2304,26 @@ namespace GitUI
                 {
                     using (var graphics = Graphics.FromHwnd(Handle))
                     {
-                        rowHeigth = (int)graphics.MeasureString("By", NormalFont).Height + 9;
+                        _rowHeigth = (int)graphics.MeasureString("By", NormalFont).Height + 9;
                     }
 
-                    selectedItemBrush = SystemBrushes.Highlight;
+                    _selectedItemBrush = SystemBrushes.Highlight;
                 }
                 else
                 {
-                    rowHeigth = 25;
+                    _rowHeigth = 25;
 
-                    selectedItemBrush = new LinearGradientBrush(new Rectangle(0, 0, rowHeigth, rowHeigth),
-                                                                Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
-                                                                Color.LightBlue, 90, false);
+                    if (_filledItemBrush == null)
+                    {
+                        _filledItemBrush = new LinearGradientBrush(new Rectangle(0, 0, _rowHeigth, _rowHeigth),
+                            Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
+                            Color.LightBlue, 90, false);
+                    }
+                    _selectedItemBrush = _filledItemBrush;
                 }
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, rowHeigth, selectedItemBrush);
+                Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, _rowHeigth, _selectedItemBrush);
             }
 
             //Hide graph column when there it is disabled OR when a filter is active
@@ -2321,23 +2340,23 @@ namespace GitUI
 
         private bool IsFilledBranchesLayout()
         {
-            return layout == RevisionGridLayout.FilledBranchesSmall || layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
+            return _layout == RevisionGridLayout.FilledBranchesSmall || _layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
         }
 
         private bool IsCardLayout()
         {
-            return layout == RevisionGridLayout.Card
-                   || layout == RevisionGridLayout.CardWithGraph
-                   || layout == RevisionGridLayout.LargeCard
-                   || layout == RevisionGridLayout.LargeCardWithGraph;
+            return _layout == RevisionGridLayout.Card
+                   || _layout == RevisionGridLayout.CardWithGraph
+                   || _layout == RevisionGridLayout.LargeCard
+                   || _layout == RevisionGridLayout.LargeCardWithGraph;
         }
 
         private bool IsGraphLayout()
         {
-            return layout == RevisionGridLayout.SmallWithGraph
-                   || layout == RevisionGridLayout.CardWithGraph
-                   || layout == RevisionGridLayout.LargeCardWithGraph
-                   || layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
+            return _layout == RevisionGridLayout.SmallWithGraph
+                   || _layout == RevisionGridLayout.CardWithGraph
+                   || _layout == RevisionGridLayout.LargeCardWithGraph
+                   || _layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
         }
 
         #region Hotkey commands
@@ -2445,7 +2464,7 @@ namespace GitUI
         {
             var r = GetRevision(LastRow);
             if (r.HasParent())
-                SetSelectedRevision(new GitRevision(Module, r.ParentGuids[0]));
+                SetSelectedRevision(r.ParentGuids[0]);
         }
 
         private void goToChildToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2453,7 +2472,7 @@ namespace GitUI
             var r = GetRevision(LastRow);
             var children = GetRevisionChildren(r.Guid);
             if (children.Count > 0)
-                SetSelectedRevision(new GitRevision(Module, children[0]));
+                SetSelectedRevision(children[0]);
         }
     }
 }

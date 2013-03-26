@@ -25,7 +25,7 @@ namespace GitCommands.Properties
             XmlSerializer keySerializer = new XmlSerializer(typeof(TKey));
             XmlSerializer valueSerializer = new XmlSerializer(typeof(TValue));
             bool wasEmpty = reader.IsEmptyElement;
-
+            
             reader.Read();
 
             if (wasEmpty)

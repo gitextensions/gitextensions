@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using PatchApply;
@@ -96,13 +97,17 @@ namespace GitUI.CommandsDialogs
             else if(gitStash == currentWorkingDirStashItem)
             {
                 toolStripButton_customMessage.Enabled = true;
-                AsyncLoader.DoAsync(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
+                Task.Factory.StartNew(() => Module.GetAllChangedFiles())
+                    .ContinueWith((task) => LoadGitItemStatuses(task.Result),
+                        TaskScheduler.FromCurrentSynchronizationContext());
                 Clear.Enabled = false; // disallow Drop  (of current working dir)
                 Apply.Enabled = false; // disallow Apply (of current working dir)
             }
             else
             {
-                AsyncLoader.DoAsync(() => Module.GetStashDiffFiles(gitStash.Name), LoadGitItemStatuses);
+                Task.Factory.StartNew(() => Module.GetStashDiffFiles(gitStash.Name))
+                    .ContinueWith((task) => LoadGitItemStatuses(task.Result),
+                        TaskScheduler.FromCurrentSynchronizationContext());
                 Clear.Enabled = true; // allow Drop
                 Apply.Enabled = true; // allow Apply
             }

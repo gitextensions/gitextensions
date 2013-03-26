@@ -190,6 +190,10 @@ namespace GitUI
             outpuTimer.Clear();
             MessageTextBox.Text = "";
             MessageTextBox.Visible = false;
+            lock (_outputString)
+            {
+                _outputString.Clear();
+            }
             ProgressBar.Visible = true;
             Ok.Enabled = false;
             ActiveControl = null;

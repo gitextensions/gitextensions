@@ -82,7 +82,7 @@ namespace GitCommands
             {
                 ex.Data.Add("command", cmd);
                 ex.Data.Add("arguments", arguments);
-                throw ex;
+                throw;
             }
         }
 

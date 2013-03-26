@@ -45,11 +45,11 @@ namespace GitCommands.Properties
         public readonly char PathSeparator = '\\';
         public readonly char PathSeparatorWrong = '/';
         public string ApplicationDataPath { get; private set; }
-       
+
         public XmlSerializableDictionary<string, GitCommands.Properties.PullAction> LastPullAction { get; private set; }
         public XmlSerializableDictionary<string, string> PluginsSettings { get; private set; }
         public XmlSerializableDictionary<string, bool> HelpExpanded { get; private set; }
-        
+
         public CommandLogger GitLog { get; private set; }
         public string GravatarCachePath
         {
@@ -62,15 +62,15 @@ namespace GitCommands.Properties
             //
             // this.SettingChanging += this.SettingChangingEventHandler;
             //
-             this.SettingsSaving += this.SettingsSavingEventHandler;
+            this.SettingsSaving += this.SettingsSavingEventHandler;
             //
 
-             Action<Encoding> addEncoding = delegate(Encoding e) { AvailableEncodings[e.HeaderName] = e; };
-             addEncoding(Encoding.Default);
-             addEncoding(new ASCIIEncoding());
-             addEncoding(new UnicodeEncoding());
-             addEncoding(new UTF7Encoding());
-             addEncoding(new UTF8Encoding());
+            Action<Encoding> addEncoding = delegate(Encoding e) { AvailableEncodings[e.HeaderName] = e; };
+            addEncoding(Encoding.Default);
+            addEncoding(new ASCIIEncoding());
+            addEncoding(new UnicodeEncoding());
+            addEncoding(new UTF7Encoding());
+            addEncoding(new UTF8Encoding());
 
             Version version = Assembly.GetCallingAssembly().GetName().Version;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
@@ -144,7 +144,7 @@ namespace GitCommands.Properties
 
         private void PropertyChangedEventHandler(object sender, PropertyChangedEventArgs e)
         {
-            string[] ignore = { "LastPullActionString", "PluginsSettingsString","UpgradeSettings" };
+            string[] ignore = { "LastPullActionString", "PluginsSettingsString", "UpgradeSettings" };
             bool IgnoreSetting = false;
             foreach (string ig in ignore)
             {
@@ -177,10 +177,11 @@ namespace GitCommands.Properties
             }
             return sb;
         }
-        private void ReadXMLDicSettings<T>(XmlSerializableDictionary<string, T> Dic, string StringSetting)
+        private XmlSerializableDictionary<string, T> ReadXMLDicSettings<T>(XmlSerializableDictionary<string, T> Dic, string StringSetting)
         {
             Dic = new XmlSerializableDictionary<string, T>();
-
+            if (!string.IsNullOrWhiteSpace(StringSetting))
+            { 
             using (System.IO.StringReader str = new System.IO.StringReader(StringSetting))
             {
                 using (System.Xml.XmlTextReader xr = new System.Xml.XmlTextReader(str))
@@ -188,20 +189,22 @@ namespace GitCommands.Properties
                     Dic.ReadXml(xr);
                 }
             }
+            }
+            return Dic;
         }
 
         private void ReadHelpExpanded()
         {
-            ReadXMLDicSettings(HelpExpanded, this.HelpExpandedString);
+            HelpExpanded = ReadXMLDicSettings(HelpExpanded, this.HelpExpandedString);
         }
         private void ReadLastPullAction()
         {
-            ReadXMLDicSettings(LastPullAction, this.LastPullActionString);
+            LastPullAction = ReadXMLDicSettings(LastPullAction, this.LastPullActionString);
 
         }
         private void ReadPluginsSettings()
         {
-            ReadXMLDicSettings(PluginsSettings, this.PluginsSettingsString);
+            PluginsSettings = ReadXMLDicSettings(PluginsSettings, this.PluginsSettingsString);
 
         }
         private void SaveHelpExpanded()
@@ -228,15 +231,15 @@ namespace GitCommands.Properties
             else
                 return null;
         }
-        public bool getHelpExpanded(string ID,bool DefaultValue)
+        public bool getHelpExpanded(string ID, bool DefaultValue)
         {
             if (HelpExpanded.ContainsKey(ID))
                 return HelpExpanded[ID];
             else
-            return DefaultValue;
+                return DefaultValue;
         }
 
-        public void setHelpExpanded(string ID,bool Value)
+        public void setHelpExpanded(string ID, bool Value)
         {
             if (HelpExpanded.ContainsKey(ID))
                 HelpExpanded[ID] = Value;
@@ -244,14 +247,14 @@ namespace GitCommands.Properties
                 HelpExpanded.Add(ID, Value);
         }
 
-        public void setPluginSetting(string SettingName,string Value)
+        public void setPluginSetting(string SettingName, string Value)
         {
             if (string.IsNullOrWhiteSpace(SettingName))
                 return;
             if (PluginsSettings.ContainsKey(SettingName))
-                 PluginsSettings[SettingName]=Value;
+                PluginsSettings[SettingName] = Value;
             else
-                PluginsSettings.Add(SettingName,Value);
+                PluginsSettings.Add(SettingName, Value);
         }
         private void SettingsSavingEventHandler(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -304,7 +307,10 @@ namespace GitCommands.Properties
                     return false;
             }
         }
-
+        public bool IsMonoRuntime()
+        {
+            return Type.GetType("Mono.Runtime") != null;
+        }
         public bool RunningOnMacOSX()
         {
             switch (Environment.OSVersion.Platform)

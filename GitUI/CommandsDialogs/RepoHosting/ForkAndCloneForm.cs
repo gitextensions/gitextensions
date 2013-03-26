@@ -92,7 +92,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 ex =>
                 {
                     _myReposLV.Items.Clear();
-                    this._helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, _gitHoster.Description) + "\r\n\r\nException: " + ex.Message + "\r\n\r\n" + this._helpTextLbl.Text;
+                    _helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, _gitHoster.Description) + 
+                        "\r\n\r\nException: " + ex.Exception.Message + "\r\n\r\n" + _helpTextLbl.Text;
                 });
         }
 
@@ -108,8 +109,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
             AsyncLoader.DoAsync(
                 () => _gitHoster.SearchForRepository(search),
                 HandleSearchResult,
-                ex => { MessageBox.Show(this, _strSearchFailed.Text + Environment.NewLine + ex.Message,
-                    _strError.Text); _searchBtn.Enabled = true; });
+                ex =>
+                {
+                    MessageBox.Show(this, _strSearchFailed.Text + Environment.NewLine + ex.Exception.Message,
+                        _strError.Text);
+                    _searchBtn.Enabled = true;
+                });
         }
         private void _getFromUserBtn_Click(object sender, EventArgs e)
         {
@@ -123,11 +128,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 HandleSearchResult,
                 ex =>
                 {
-                    if (ex.Message.Contains("404"))
+                    if (ex.Exception.Message.Contains("404"))
                         MessageBox.Show(this, _strUserNotFound.Text, _strError.Text);
                     else
-                        MessageBox.Show(this, _strCouldNotFetchReposOfUser.Text + Environment.NewLine + 
-                            ex.Message, _strError.Text);
+                        MessageBox.Show(this, _strCouldNotFetchReposOfUser.Text + Environment.NewLine +
+                            ex.Exception.Message, _strError.Text);
                     _searchBtn.Enabled = true;
                 });
         }

@@ -81,7 +81,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="CheckoutBranchAction" Roaming="true" Type="GitCommands.Properties.LocalChangesAction" Scope="User">
-      <Value Profile="(Default)">LocalChangesAction.DontChange</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="UseDefaultCheckoutBranchAction" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -248,8 +248,8 @@
     <Setting Name="PushAllTags" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="AutoPullOnRejected" Roaming="true" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+    <Setting Name="AutoPullOnPushRejected" Roaming="true" Type="System.Nullable&lt;bool&gt;" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="RecursiveSubmodules" Roaming="true" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>

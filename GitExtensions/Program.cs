@@ -20,7 +20,8 @@ namespace GitExtensions
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (Settings.Default.RunningOnWindows())
+
+            if (!Settings.Default.IsMonoRuntime())
             {
                 NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
 
@@ -67,8 +68,8 @@ namespace GitExtensions
 
             try
             {
-                if (Application.UserAppDataRegistry == null ||
-                    Settings.Default.CheckSettings== null ||
+                if ((Application.UserAppDataRegistry == null && Settings.Default.IsPortable==false )||
+                    Settings.Default.CheckSettings ||
                     string.IsNullOrEmpty(Settings.Default.GitCommand))
                 {
                     FormSplash.SetAction("Checking settings...");
