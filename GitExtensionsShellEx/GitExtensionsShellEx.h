@@ -68,18 +68,18 @@ public:
     STDMETHODIMP QueryContextMenu(HMENU, UINT, UINT, UINT, UINT);
 
     // IContextMenu2
-    STDMETHODIMP	HandleMenuMsg(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    STDMETHODIMP HandleMenuMsg(UINT uMsg, WPARAM wParam, LPARAM lParam);
     
     // IContextMenu3
-    STDMETHODIMP	HandleMenuMsg2(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT *pResult);
+    STDMETHODIMP HandleMenuMsg2(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT* pResult);
 
-    void RunGitEx(const TCHAR * command);
+    void RunGitEx(const TCHAR* command);
 
     UINT AddMenuItem(HMENU hmenu, LPTSTR text, int resource, UINT firstId, UINT id, UINT position, bool isSubMenu);
 
 protected:
-    TCHAR m_szFile [MAX_PATH];
-    std::map<UINT_PTR, int>	myIDMap;
+    TCHAR m_szFile[MAX_PATH];
+    std::map<UINT_PTR, int> myIDMap;
     std::map<UINT, HBITMAP> bitmaps;
     std::map<int, int> commandsId;
 
@@ -91,10 +91,10 @@ protected:
     bool DisplayInSubmenu(CString settings, int id);
 
     HBITMAP IconToBitmapPARGB32(UINT uIcon);
-    HRESULT Create32BitHBITMAP(HDC hdc, const SIZE *psize, __deref_opt_out void **ppvBits, __out HBITMAP* phBmp);
+    HRESULT Create32BitHBITMAP(HDC hdc, const SIZE* psize, __deref_opt_out void** ppvBits, __out HBITMAP* phBmp);
     HRESULT ConvertBufferToPARGB32(HPAINTBUFFER hPaintBuffer, HDC hdc, HICON hicon, SIZE& sizIcon);
-    bool HasAlpha(__in ARGB *pargb, SIZE& sizImage, int cxRow);
-    HRESULT ConvertToPARGB32(HDC hdc, __inout ARGB *pargb, HBITMAP hbmp, SIZE& sizImage, int cxRow);
+    bool HasAlpha(__in ARGB* pargb, SIZE& sizImage, int cxRow);
+    HRESULT ConvertToPARGB32(HDC hdc, __inout ARGB* pargb, HBITMAP hbmp, SIZE& sizImage, int cxRow);
 
     bool ValidWorkingDir(const std::wstring& dir);
     bool IsValidGitDir(TCHAR m_szFile[]);
