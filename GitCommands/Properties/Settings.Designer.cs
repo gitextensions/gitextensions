@@ -311,7 +311,7 @@ namespace GitCommands.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("PullAction.Merge")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Merge")]
         [global::System.Configuration.SettingsManageabilityAttribute(global::System.Configuration.SettingsManageability.Roaming)]
         public global::GitCommands.Properties.PullAction PullMerge {
             get {
@@ -1319,15 +1319,6 @@ namespace GitCommands.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool IsPortable {
-            get {
-                return ((bool)(this["IsPortable"]));
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
@@ -1662,6 +1653,15 @@ namespace GitCommands.Properties {
             }
             set {
                 this["HelpExpandedString"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsPortable {
+            get {
+                return ((bool)(this["IsPortable"]));
             }
         }
     }

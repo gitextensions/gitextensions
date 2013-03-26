@@ -69,7 +69,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="PullMerge" Roaming="true" Type="GitCommands.Properties.PullAction" Scope="User">
-      <Value Profile="(Default)">PullAction.Merge</Value>
+      <Value Profile="(Default)">Merge</Value>
     </Setting>
     <Setting Name="DonSetAsLastPullAction" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -302,9 +302,6 @@
     <Setting Name="UseFormCommitMessage" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="IsPortable" Type="System.Boolean" Scope="Application">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="UsePatienceDiffAlgorithm" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -382,6 +379,9 @@
     </Setting>
     <Setting Name="HelpExpandedString" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="IsPortable" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

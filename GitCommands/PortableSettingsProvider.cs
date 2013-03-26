@@ -16,7 +16,14 @@ public class PortableSettingsProvider : SettingsProvider
     //XML Root Node
     const string SETTINGSROOT = "Settings";
 
-   
+    public override string Name
+    {
+        get
+        {
+            
+            return "PortableSettingsProvider";
+        }
+    }
     public override string ApplicationName
     {
         get
@@ -177,7 +184,7 @@ public class PortableSettingsProvider : SettingsProvider
         //Check to see if the node exists, if so then set its new value
         if ((SettingNode != null))
         {
-            SettingNode.InnerText = propVal.SerializedValue.ToString();
+            SettingNode.InnerText = (propVal.SerializedValue != null) ? propVal.SerializedValue.ToString() : string.Empty;
         }
         else
         {
@@ -185,7 +192,7 @@ public class PortableSettingsProvider : SettingsProvider
             {
                 //Store the value as an element of the Settings Root Node
                 SettingNode = SettingsXML.CreateElement(propVal.Name);
-                SettingNode.InnerText = propVal.SerializedValue.ToString();
+                SettingNode.InnerText = (propVal.SerializedValue != null) ? propVal.SerializedValue.ToString() : string.Empty;
                 SettingsXML.SelectSingleNode(SETTINGSROOT).AppendChild(SettingNode);
             }
             else
@@ -209,7 +216,7 @@ public class PortableSettingsProvider : SettingsProvider
                 }
 
                 SettingNode = SettingsXML.CreateElement(propVal.Name);
-                SettingNode.InnerText = propVal.SerializedValue.ToString();
+                SettingNode.InnerText = (propVal.SerializedValue != null) ? propVal.SerializedValue.ToString() : string.Empty;
                 MachineNode.AppendChild(SettingNode);
             }
         }

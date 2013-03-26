@@ -88,14 +88,12 @@ namespace GitCommands.Properties
 
             GitLog = new CommandLogger();
 
-            ReadLastPullAction();
-            ReadPluginsSettings();
-            ReadHelpExpanded();
+          
 
             //Make applicationdatapath version dependent
             if (this.IsPortable)
             {
-                ApplicationDataPath = Assembly.GetCallingAssembly().Location;
+                ApplicationDataPath = System.IO.Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
                 SetupPortableProvider();
             }
             else
@@ -103,11 +101,14 @@ namespace GitCommands.Properties
                 ApplicationDataPath = Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
 
             }
+            ReadLastPullAction();
+            ReadPluginsSettings();
+            ReadHelpExpanded();
         }
         private void SetupPortableProvider()
         {
 
-            this.Save();
+            
 
             PortableSettingsProvider pv = new PortableSettingsProvider();
             this.Providers.Add(pv);
@@ -135,28 +136,27 @@ namespace GitCommands.Properties
 
             foreach (SettingsProperty prop in props)
                 prop.Provider = pv;
-
-            pv.GetPropertyValues(this.Context, props);
-
-
+            this.Reload();
+            
 
         }
-
+        
         private void PropertyChangedEventHandler(object sender, PropertyChangedEventArgs e)
         {
-            string[] ignore = { "LastPullActionString", "PluginsSettingsString", "UpgradeSettings" };
-            bool IgnoreSetting = false;
-            foreach (string ig in ignore)
-            {
+            ////Auto Save functionality if needed.
+            //string[] ignore = { "LastPullActionString", "PluginsSettingsString", "UpgradeSettings" };
+            //bool IgnoreSetting = false;
+            //foreach (string ig in ignore)
+            //{
 
-                if (e.PropertyName == ig)
-                {
-                    IgnoreSetting = true;
-                    break;
-                }
-            }
-            if (!IgnoreSetting)
-                this.Save();
+            //    if (e.PropertyName == ig)
+            //    {
+            //        IgnoreSetting = true;
+            //        break;
+            //    }
+            //}
+            //if (!IgnoreSetting)
+            //    this.Save();
         }
         private void SettingChangingEventHandler(object sender, System.Configuration.SettingChangingEventArgs e)
         {
@@ -172,7 +172,10 @@ namespace GitCommands.Properties
             {
                 using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(sw))
                 {
+                    xtw.WriteStartElement("dictionary");
+                    
                     Dic.WriteXml(xtw);
+                    xtw.WriteEndElement();
                 }
             }
             return sb;
@@ -186,7 +189,7 @@ namespace GitCommands.Properties
             {
                 using (System.Xml.XmlTextReader xr = new System.Xml.XmlTextReader(str))
                 {
-                    Dic.ReadXml(xr);
+                   Dic.ReadXml(xr);
                 }
             }
             }

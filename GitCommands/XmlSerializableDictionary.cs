@@ -28,35 +28,36 @@ namespace GitCommands.Properties
             
             reader.Read();
 
-            if (wasEmpty)
+            if (wasEmpty||reader.IsEmptyElement)
                 return;
-
-            while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+            if (reader.ReadToDescendant("item"))
             {
+                while (reader.NodeType != System.Xml.XmlNodeType.EndElement)
+                {
 
-                reader.ReadStartElement("item");
-                reader.ReadStartElement("key");
+                    reader.ReadStartElement("item");
+                    reader.ReadStartElement("key");
 
-                TKey key = (TKey)keySerializer.Deserialize(reader);
-                reader.ReadEndElement();
-
-
-                reader.ReadStartElement("value");
-                TValue value = (TValue)valueSerializer.Deserialize(reader);
-                reader.ReadEndElement();
+                    TKey key = (TKey)keySerializer.Deserialize(reader);
+                    reader.ReadEndElement();
 
 
-
-                this.Add(key, value);
+                    reader.ReadStartElement("value");
+                    TValue value = (TValue)valueSerializer.Deserialize(reader);
+                    reader.ReadEndElement();
 
 
 
-                reader.ReadEndElement();
+                    this.Add(key, value);
 
-                reader.MoveToContent();
 
+
+                    reader.ReadEndElement();
+
+                    reader.MoveToContent();
+
+                }
             }
-
             reader.ReadEndElement();
 
         }
