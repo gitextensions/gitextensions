@@ -66,10 +66,23 @@ namespace GitUI.UserControls
             RegisterClick<StashNode>(mnubtnStashDrop, stash => stash.Delete());
             RegisterClick<StashNode>(mnubtnStashBranch, stash => stash.CreateBranch());
 
-            RegisterClick<RemoteBranchNode>(mnubtnRemoteBranchCreateBranch, remoteBranch => remoteBranch.CreateBranch());
-            RegisterClick<RemoteBranchNode>(mnubtnRemoteFetch, remoteBranch => remoteBranch.Fetch());
-            RegisterClick<RemoteBranchNode>(mnubtnRemoteBranchUnTrack, remoteBranch => remoteBranch.UnTrack());
-            RegisterClick<RemoteBranchNode>(mnubtnRemoteBranchDelete, remoteBranch => remoteBranch.Delete());
+            RegisterClick<RemoteBranchNode>(mnubtnTrackedFetch, remoteBranch => remoteBranch.Fetch());
+            RegisterClick<RemoteBranchNode>(mnubtnTrackedPull, remoteBranch => remoteBranch.Pull());
+            RegisterClick<RemoteBranchNode>(mnubtnTrackedCreateBranch, remoteBranch => remoteBranch.CreateBranch());
+            RegisterClick<RemoteBranchNode>(mnubtnTrackedUnTrack, remoteBranch => remoteBranch.UnTrack());
+            RegisterClick<RemoteBranchNode>(mnubtnTrackedDelete, remoteBranch => remoteBranch.Delete());
+
+            // TODO: context actions for RemoteBranchNode depending on its current state 
+            // can either create additional remote branch Node classes OR use method overloads
+
+            //RegisterClick<RemoteBranchUnTrackedNode>(mnubtnUntrackedFetch, remoteBranch => remoteBranch.Fetch());
+            //RegisterClick<RemoteBranchUnTrackedNode>(mnubtnUntrackedTrack, remoteBranch => remoteBranch.Track());
+
+            //RegisterClick<RemoteBranchStaleNode>(mnubtnStaleRemove, remoteBranch => remoteBranch.Remove());
+
+            //RegisterClick<RemoteBranchNode>(mnubtnNewFetch, remoteBranch => remoteBranch.Fetch());
+            //RegisterClick<RemoteBranchNode>(mnubtnNewCreateBranch, remoteBranch => remoteBranch.CreateBranch());
+     
         }
 
 

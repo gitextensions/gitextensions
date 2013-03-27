@@ -74,11 +74,20 @@ namespace GitUI.UserControls
             this.mnubtnCreateBranchWithin = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnDeleteAllBranches = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnDeleteAllBranchesForce = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuRemoteBranch = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mnubtnRemoteBranchFetch = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnubtnRemoteBranchCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnubtnRemoteBranchUnTrack = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnubtnRemoteBranchDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuRemoteBranchTracked = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuRemoteBranchStale = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuRemoteBranchNew = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.menuRemoteBranchUnTracked = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnubtnTrackedPull = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnTrackedFetch = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnTrackedCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnStaleRemove = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnNewFetch = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnNewCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnTrackedDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnTrackedUnTrack = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnUntrackedTrack = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnUntrackedFetch = new System.Windows.Forms.ToolStripMenuItem();
             this.menuBranches.SuspendLayout();
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
@@ -87,7 +96,10 @@ namespace GitUI.UserControls
             this.menuRemote.SuspendLayout();
             this.menuStash.SuspendLayout();
             this.menuBranchPath.SuspendLayout();
-            this.menuRemoteBranch.SuspendLayout();
+            this.menuRemoteBranchTracked.SuspendLayout();
+            this.menuRemoteBranchStale.SuspendLayout();
+            this.menuRemoteBranchNew.SuspendLayout();
+            this.menuRemoteBranchUnTracked.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuBranches
@@ -409,47 +421,119 @@ namespace GitUI.UserControls
             this.mnubtnDeleteAllBranchesForce.Text = "Force Delete All";
             this.mnubtnDeleteAllBranchesForce.ToolTipText = "Delete all child branches, regardless of their merged status";
             // 
-            // menuRemoteBranch
+            // menuRemoteBranchTracked
             // 
-            this.menuRemoteBranch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnubtnRemoteBranchFetch,
-            this.mnubtnRemoteBranchCreateBranch,
-            this.mnubtnRemoteBranchUnTrack,
-            this.mnubtnRemoteBranchDelete});
-            this.menuRemoteBranch.Name = "contextmenuBranch";
-            this.menuRemoteBranch.Size = new System.Drawing.Size(158, 92);
+            this.menuRemoteBranchTracked.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnubtnTrackedPull,
+            this.mnubtnTrackedFetch,
+            this.mnubtnTrackedCreateBranch,
+            this.mnubtnTrackedUnTrack,
+            this.mnubtnTrackedDelete});
+            this.menuRemoteBranchTracked.Name = "menuRemoteBranchTracked";
+            this.menuRemoteBranchTracked.Size = new System.Drawing.Size(158, 114);
             // 
-            // mnubtnRemoteBranchFetch
+            // menuRemoteBranchStale
             // 
-            this.mnubtnRemoteBranchFetch.Image = global::GitUI.Properties.Resources.IconStage;
-            this.mnubtnRemoteBranchFetch.Name = "mnubtnRemoteBranchFetch";
-            this.mnubtnRemoteBranchFetch.Size = new System.Drawing.Size(157, 22);
-            this.mnubtnRemoteBranchFetch.Text = "Fetch";
-            this.mnubtnRemoteBranchFetch.ToolTipText = "Fetch from this remote branch only";
+            this.menuRemoteBranchStale.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnubtnStaleRemove});
+            this.menuRemoteBranchStale.Name = "menuRemoteBranchTracked";
+            this.menuRemoteBranchStale.Size = new System.Drawing.Size(118, 26);
             // 
-            // mnubtnRemoteBranchCreateBranch
+            // menuRemoteBranchNew
             // 
-            this.mnubtnRemoteBranchCreateBranch.Image = global::GitUI.Properties.Resources.BranchFrom;
-            this.mnubtnRemoteBranchCreateBranch.Name = "mnubtnRemoteBranchCreateBranch";
-            this.mnubtnRemoteBranchCreateBranch.Size = new System.Drawing.Size(157, 22);
-            this.mnubtnRemoteBranchCreateBranch.Text = "Create branch...";
-            this.mnubtnRemoteBranchCreateBranch.ToolTipText = "Create a new branch from the remote-tracking branch";
+            this.menuRemoteBranchNew.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnubtnNewFetch,
+            this.mnubtnNewCreateBranch});
+            this.menuRemoteBranchNew.Name = "menuRemoteBranchTracked";
+            this.menuRemoteBranchNew.Size = new System.Drawing.Size(158, 48);
             // 
-            // mnubtnRemoteBranchUnTrack
+            // menuRemoteBranchUnTracked
             // 
-            this.mnubtnRemoteBranchUnTrack.Image = global::GitUI.Properties.Resources.DeleteSoft;
-            this.mnubtnRemoteBranchUnTrack.Name = "mnubtnRemoteBranchUnTrack";
-            this.mnubtnRemoteBranchUnTrack.Size = new System.Drawing.Size(157, 22);
-            this.mnubtnRemoteBranchUnTrack.Text = "Un-Track";
-            this.mnubtnRemoteBranchUnTrack.ToolTipText = "Stop tracking the remote branch (it will NOT be deleted)";
+            this.menuRemoteBranchUnTracked.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnubtnUntrackedTrack,
+            this.mnubtnUntrackedFetch});
+            this.menuRemoteBranchUnTracked.Name = "menuRemoteBranchTracked";
+            this.menuRemoteBranchUnTracked.Size = new System.Drawing.Size(153, 70);
             // 
-            // mnubtnRemoteBranchDelete
+            // mnubtnTrackedPull
             // 
-            this.mnubtnRemoteBranchDelete.Image = global::GitUI.Properties.Resources.DeleteRed;
-            this.mnubtnRemoteBranchDelete.Name = "mnubtnRemoteBranchDelete";
-            this.mnubtnRemoteBranchDelete.Size = new System.Drawing.Size(157, 22);
-            this.mnubtnRemoteBranchDelete.Text = "Delete";
-            this.mnubtnRemoteBranchDelete.ToolTipText = "Delete the remote branch on the remote repository";
+            this.mnubtnTrackedPull.Image = global::GitUI.Properties.Resources.Icon_4;
+            this.mnubtnTrackedPull.Name = "mnubtnTrackedPull";
+            this.mnubtnTrackedPull.Size = new System.Drawing.Size(157, 22);
+            this.mnubtnTrackedPull.Text = "Pull";
+            this.mnubtnTrackedPull.ToolTipText = "Download updates and merge into it\'s local branch";
+            // 
+            // mnubtnTrackedFetch
+            // 
+            this.mnubtnTrackedFetch.Image = global::GitUI.Properties.Resources.IconStage;
+            this.mnubtnTrackedFetch.Name = "mnubtnTrackedFetch";
+            this.mnubtnTrackedFetch.Size = new System.Drawing.Size(157, 22);
+            this.mnubtnTrackedFetch.Text = "Fetch";
+            this.mnubtnTrackedFetch.ToolTipText = "Download updates from the remote branch";
+            // 
+            // mnubtnTrackedCreateBranch
+            // 
+            this.mnubtnTrackedCreateBranch.Image = global::GitUI.Properties.Resources.BranchFrom;
+            this.mnubtnTrackedCreateBranch.Name = "mnubtnTrackedCreateBranch";
+            this.mnubtnTrackedCreateBranch.Size = new System.Drawing.Size(157, 22);
+            this.mnubtnTrackedCreateBranch.Text = "Create Branch...";
+            this.mnubtnTrackedCreateBranch.ToolTipText = "Create a local branch from the remote branch";
+            // 
+            // mnubtnStaleRemove
+            // 
+            this.mnubtnStaleRemove.Image = global::GitUI.Properties.Resources.DeleteRed;
+            this.mnubtnStaleRemove.Name = "mnubtnStaleRemove";
+            this.mnubtnStaleRemove.Size = new System.Drawing.Size(117, 22);
+            this.mnubtnStaleRemove.Text = "Remove";
+            this.mnubtnStaleRemove.ToolTipText = "Remove the local copy";
+            // 
+            // mnubtnNewFetch
+            // 
+            this.mnubtnNewFetch.Image = global::GitUI.Properties.Resources.IconStage;
+            this.mnubtnNewFetch.Name = "mnubtnNewFetch";
+            this.mnubtnNewFetch.Size = new System.Drawing.Size(157, 22);
+            this.mnubtnNewFetch.Text = "Fetch";
+            this.mnubtnNewFetch.ToolTipText = "Fetch the new remote branch";
+            // 
+            // mnubtnNewCreateBranch
+            // 
+            this.mnubtnNewCreateBranch.Image = global::GitUI.Properties.Resources.BranchFrom;
+            this.mnubtnNewCreateBranch.Name = "mnubtnNewCreateBranch";
+            this.mnubtnNewCreateBranch.Size = new System.Drawing.Size(157, 22);
+            this.mnubtnNewCreateBranch.Text = "Create Branch...";
+            this.mnubtnNewCreateBranch.ToolTipText = "Fetch then create a local branch from the remote branch";
+            // 
+            // mnubtnTrackedDelete
+            // 
+            this.mnubtnTrackedDelete.Image = global::GitUI.Properties.Resources.DeleteRed;
+            this.mnubtnTrackedDelete.Name = "mnubtnTrackedDelete";
+            this.mnubtnTrackedDelete.Size = new System.Drawing.Size(157, 22);
+            this.mnubtnTrackedDelete.Text = "Delete";
+            this.mnubtnTrackedDelete.ToolTipText = "Delete the branch on the remote repository";
+            // 
+            // mnubtnTrackedUnTrack
+            // 
+            this.mnubtnTrackedUnTrack.Image = global::GitUI.Properties.Resources.DeleteSoft;
+            this.mnubtnTrackedUnTrack.Name = "mnubtnTrackedUnTrack";
+            this.mnubtnTrackedUnTrack.Size = new System.Drawing.Size(157, 22);
+            this.mnubtnTrackedUnTrack.Text = "Un-Track";
+            this.mnubtnTrackedUnTrack.ToolTipText = "Un-track the remote branch and remove the local copy";
+            // 
+            // mnubtnUntrackedTrack
+            // 
+            this.mnubtnUntrackedTrack.Image = global::GitUI.Properties.Resources.BranchNew;
+            this.mnubtnUntrackedTrack.Name = "mnubtnUntrackedTrack";
+            this.mnubtnUntrackedTrack.Size = new System.Drawing.Size(152, 22);
+            this.mnubtnUntrackedTrack.Text = "Track";
+            this.mnubtnUntrackedTrack.ToolTipText = "Locally track the remote branch";
+            // 
+            // mnubtnUntrackedFetch
+            // 
+            this.mnubtnUntrackedFetch.Image = global::GitUI.Properties.Resources.IconStage;
+            this.mnubtnUntrackedFetch.Name = "mnubtnUntrackedFetch";
+            this.mnubtnUntrackedFetch.Size = new System.Drawing.Size(152, 22);
+            this.mnubtnUntrackedFetch.Text = "Fetch && Track";
+            this.mnubtnUntrackedFetch.ToolTipText = "Fetch the remote branch and track it locally";
             // 
             // RepoObjectsTree
             // 
@@ -465,7 +549,10 @@ namespace GitUI.UserControls
             this.menuRemote.ResumeLayout(false);
             this.menuStash.ResumeLayout(false);
             this.menuBranchPath.ResumeLayout(false);
-            this.menuRemoteBranch.ResumeLayout(false);
+            this.menuRemoteBranchTracked.ResumeLayout(false);
+            this.menuRemoteBranchStale.ResumeLayout(false);
+            this.menuRemoteBranchNew.ResumeLayout(false);
+            this.menuRemoteBranchUnTracked.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -509,14 +596,23 @@ namespace GitUI.UserControls
         private ToolStripMenuItem mnubtnCreateBranchWithin;
         private ToolStripMenuItem mnubtnDeleteAllBranches;
         private ToolStripMenuItem mnubtnDeleteAllBranchesForce;
-        private ContextMenuStrip menuRemoteBranch;
-        private ToolStripMenuItem mnubtnRemoteBranchFetch;
-        private ToolStripMenuItem mnubtnRemoteBranchCreateBranch;
-        private ToolStripMenuItem mnubtnRemoteBranchUnTrack;
-        private ToolStripMenuItem mnubtnRemoteBranchDelete;
         private ContextMenuStrip menuMain;
         private ToolStripMenuItem mnubtnCollapseAll;
         private ToolStripMenuItem mnubtnExpandAll;
         private ToolStripMenuItem mnubtnReload;
+        private ContextMenuStrip menuRemoteBranchTracked;
+        private ContextMenuStrip menuRemoteBranchStale;
+        private ContextMenuStrip menuRemoteBranchNew;
+        private ContextMenuStrip menuRemoteBranchUnTracked;
+        private ToolStripMenuItem mnubtnTrackedPull;
+        private ToolStripMenuItem mnubtnTrackedFetch;
+        private ToolStripMenuItem mnubtnTrackedCreateBranch;
+        private ToolStripMenuItem mnubtnStaleRemove;
+        private ToolStripMenuItem mnubtnNewFetch;
+        private ToolStripMenuItem mnubtnNewCreateBranch;
+        private ToolStripMenuItem mnubtnTrackedUnTrack;
+        private ToolStripMenuItem mnubtnTrackedDelete;
+        private ToolStripMenuItem mnubtnUntrackedTrack;
+        private ToolStripMenuItem mnubtnUntrackedFetch;
     }
 }
