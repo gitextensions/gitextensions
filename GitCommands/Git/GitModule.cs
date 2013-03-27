@@ -2323,9 +2323,10 @@ namespace GitCommands
             foreach (var item in status)
                 if (item.IsSubmodule)
                 {
-                    item.SubmoduleStatus = Task.Factory.StartNew(() =>
+                    var localItem = item;
+                    localItem.SubmoduleStatus = Task.Factory.StartNew(() =>
                         {
-                            var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, item.Name, item.OldName, item.IsStaged);
+                            var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, localItem.Name, localItem.OldName, localItem.IsStaged);
                             if (submoduleStatus.Commit != submoduleStatus.OldCommit)
                             {
                                 var submodule = submoduleStatus.GetSubmodule(this);

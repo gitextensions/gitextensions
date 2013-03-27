@@ -46,7 +46,7 @@
             this.labelDate.AutoSize = true;
             this.labelDate.Location = new System.Drawing.Point(232, 89);
             this.labelDate.Name = "labelDate";
-            this.labelDate.Size = new System.Drawing.Size(68, 13);
+            this.labelDate.Size = new System.Drawing.Size(80, 15);
             this.labelDate.TabIndex = 13;
             this.labelDate.Text = "Commit date:";
             // 
@@ -106,9 +106,9 @@
             this.labelTagsCaption.AutoSize = true;
             this.labelTagsCaption.Location = new System.Drawing.Point(11, 112);
             this.labelTagsCaption.Name = "labelTagsCaption";
-            this.labelTagsCaption.Size = new System.Drawing.Size(34, 13);
+            this.labelTagsCaption.Size = new System.Drawing.Size(43, 15);
             this.labelTagsCaption.TabIndex = 17;
-            this.labelTagsCaption.Text = "Tags:";
+            this.labelTagsCaption.Text = "Tag(s):";
             // 
             // labelBranchesCaption
             // 
@@ -116,9 +116,9 @@
             this.labelBranchesCaption.AutoSize = true;
             this.labelBranchesCaption.Location = new System.Drawing.Point(11, 135);
             this.labelBranchesCaption.Name = "labelBranchesCaption";
-            this.labelBranchesCaption.Size = new System.Drawing.Size(55, 13);
+            this.labelBranchesCaption.Size = new System.Drawing.Size(66, 15);
             this.labelBranchesCaption.TabIndex = 18;
-            this.labelBranchesCaption.Text = "Branches:";
+            this.labelBranchesCaption.Text = "Branch(es):";
             // 
             // labelAuthorCaption
             // 
@@ -126,13 +126,12 @@
             this.labelAuthorCaption.AutoSize = true;
             this.labelAuthorCaption.Location = new System.Drawing.Point(12, 89);
             this.labelAuthorCaption.Name = "labelAuthorCaption";
-            this.labelAuthorCaption.Size = new System.Drawing.Size(41, 13);
+            this.labelAuthorCaption.Size = new System.Drawing.Size(47, 15);
             this.labelAuthorCaption.TabIndex = 19;
             this.labelAuthorCaption.Text = "Author:";
             // 
             // groupBox1
             // 
-            this.groupBox1.BackColor = System.Drawing.Color.Lavender;
             this.groupBox1.Controls.Add(this.labelAuthorCaption);
             this.groupBox1.Controls.Add(this.labelBranchesCaption);
             this.groupBox1.Controls.Add(this.labelTagsCaption);

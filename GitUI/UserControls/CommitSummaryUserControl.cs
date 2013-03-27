@@ -48,14 +48,13 @@ namespace GitUI.UserControls
             {
                 _revision = value;
 
-                groupBox1.Text = Strings.GetCommitHashText() + ": ";
                 labelAuthorCaption.Text = Strings.GetAuthorText() + ":";
                 labelTagsCaption.Text = tagsCaption;
                 labelBranchesCaption.Text = branchesCaption;
 
                 if (Revision != null)
                 {
-                    groupBox1.Text += string.Format("{0}", Revision.Guid);
+                    groupBox1.Text = Revision.Guid.Substring(0, 10);
                     labelAuthor.Text = string.Format("{0}", Revision.Author);
                     labelDate.Text = string.Format(Strings.GetCommitDateText() + ": {0}", Revision.CommitDate);
                     labelMessage.Text = string.Format("{0}", Revision.Message);
@@ -63,16 +62,30 @@ namespace GitUI.UserControls
                     var tagList = Revision.Heads.Where(r => r.IsTag).ToList();
                     string tagListStr = string.Join(", ", tagList.Select(h => h.LocalName).ToArray());
                     labelTags.Text = string.Format("{0}", tagListStr.IsNullOrEmpty() ? notAvailable.Text : tagListStr);
-                    labelTags.BackColor = tagList.Any() ? tagsBackColor : DefaultBackColor;
-
+                    if (tagList.Any())
+                    {
+                        labelTags.BackColor = tagsBackColor;
+                    }
+                    else
+                    {
+                        labelTags.Font = new Font(labelTags.Font, FontStyle.Regular);
+                    }
+                    
                     var branchesList = Revision.Heads.Where(r => r.IsHead).ToList();
                     string branchesListStr = string.Join(", ", branchesList.Select(h => h.LocalName).ToArray());
                     labelBranches.Text = string.Format("{0}", branchesListStr.IsNullOrEmpty() ? notAvailable.Text : branchesListStr);
-                    labelBranches.BackColor = branchesList.Any() ? branchesBackColor : DefaultBackColor;
+                    if (branchesList.Any())
+                    {
+                        labelBranches.BackColor = branchesBackColor;
+                    }
+                    else
+                    {
+                        labelBranches.Font = new Font(labelBranches.Font, FontStyle.Regular);
+                    }
                 }
                 else
                 {
-                    groupBox1.Text += noRevision.Text;
+                    groupBox1.Text = noRevision.Text;
                     labelAuthor.Text = "---";
                     labelDate.Text = "---";
                     labelMessage.Text = "---";
@@ -95,6 +108,5 @@ namespace GitUI.UserControls
         {
             labelMessage.MaximumSize = new Size(groupBox1.Width - 15, labelMessage.MaximumSize.Height);
         }
-
     }
 }
