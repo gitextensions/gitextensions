@@ -490,7 +490,7 @@ namespace GitUI
                         group.Tag = pair.Key;
                         FileStatusListView.Groups.Add(group);
                     }
-                    foreach (var item in pair.Value)
+                    pair.Value.ForEach(item =>
                     {
                         var listItem = new ListViewItem(item.Name, group);
                         listItem.ImageIndex = GetItemImageIndex(item);
@@ -503,7 +503,7 @@ namespace GitUI
                         }
                         listItem.Tag = item;
                         list.Add(listItem);
-                    }
+                    });
                 }
                 FileStatusListView.Items.AddRange(list.ToArray());
                 FileStatusListView.EndUpdate();
