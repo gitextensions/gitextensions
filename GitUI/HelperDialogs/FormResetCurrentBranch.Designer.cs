@@ -29,16 +29,13 @@
         private void InitializeComponent()
         {
             this._NO_TRANSLATE_BranchInfo = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_Commit = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_Author = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_Message = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_Date = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Hard = new System.Windows.Forms.RadioButton();
             this.Mixed = new System.Windows.Forms.RadioButton();
             this.Soft = new System.Windows.Forms.RadioButton();
             this.Ok = new System.Windows.Forms.Button();
             this.Cancel = new System.Windows.Forms.Button();
+            this.commitSummaryUserControl1 = new GitUI.UserControls.CommitSummaryUserControl();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,54 +44,18 @@
             this._NO_TRANSLATE_BranchInfo.AutoSize = true;
             this._NO_TRANSLATE_BranchInfo.Location = new System.Drawing.Point(13, 13);
             this._NO_TRANSLATE_BranchInfo.Name = "_NO_TRANSLATE_BranchInfo";
-            this._NO_TRANSLATE_BranchInfo.Size = new System.Drawing.Size(83, 15);
+            this._NO_TRANSLATE_BranchInfo.Size = new System.Drawing.Size(129, 15);
             this._NO_TRANSLATE_BranchInfo.TabIndex = 0;
-            this._NO_TRANSLATE_BranchInfo.Text = "##Reset {0} to:";
-            // 
-            // _NO_TRANSLATE_Commit
-            // 
-            this._NO_TRANSLATE_Commit.AutoSize = true;
-            this._NO_TRANSLATE_Commit.Location = new System.Drawing.Point(31, 34);
-            this._NO_TRANSLATE_Commit.Name = "_NO_TRANSLATE_Commit";
-            this._NO_TRANSLATE_Commit.Size = new System.Drawing.Size(85, 15);
-            this._NO_TRANSLATE_Commit.TabIndex = 1;
-            this._NO_TRANSLATE_Commit.Text = "##Commit: {0}";
-            // 
-            // _NO_TRANSLATE_Author
-            // 
-            this._NO_TRANSLATE_Author.AutoSize = true;
-            this._NO_TRANSLATE_Author.Location = new System.Drawing.Point(31, 57);
-            this._NO_TRANSLATE_Author.Name = "_NO_TRANSLATE_Author";
-            this._NO_TRANSLATE_Author.Size = new System.Drawing.Size(78, 15);
-            this._NO_TRANSLATE_Author.TabIndex = 2;
-            this._NO_TRANSLATE_Author.Text = "##Author: {0}";
-            // 
-            // _NO_TRANSLATE_Message
-            // 
-            this._NO_TRANSLATE_Message.AutoSize = true;
-            this._NO_TRANSLATE_Message.Location = new System.Drawing.Point(31, 106);
-            this._NO_TRANSLATE_Message.Name = "_NO_TRANSLATE_Message";
-            this._NO_TRANSLATE_Message.Size = new System.Drawing.Size(87, 15);
-            this._NO_TRANSLATE_Message.TabIndex = 3;
-            this._NO_TRANSLATE_Message.Text = "##Message: {0}";
-            // 
-            // _NO_TRANSLATE_Date
-            // 
-            this._NO_TRANSLATE_Date.AutoSize = true;
-            this._NO_TRANSLATE_Date.Location = new System.Drawing.Point(31, 82);
-            this._NO_TRANSLATE_Date.Name = "_NO_TRANSLATE_Date";
-            this._NO_TRANSLATE_Date.Size = new System.Drawing.Size(111, 15);
-            this._NO_TRANSLATE_Date.TabIndex = 4;
-            this._NO_TRANSLATE_Date.Text = "##Commit date: {0}";
+            this._NO_TRANSLATE_BranchInfo.Text = "##Reset branch \'{0}\' to:";
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.Hard);
             this.groupBox1.Controls.Add(this.Mixed);
             this.groupBox1.Controls.Add(this.Soft);
-            this.groupBox1.Location = new System.Drawing.Point(16, 133);
+            this.groupBox1.Location = new System.Drawing.Point(16, 217);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(510, 100);
+            this.groupBox1.Size = new System.Drawing.Size(380, 150);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Reset type";
@@ -102,39 +63,42 @@
             // Hard
             // 
             this.Hard.AutoSize = true;
-            this.Hard.Location = new System.Drawing.Point(7, 68);
+            this.Hard.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.Hard.Location = new System.Drawing.Point(13, 102);
             this.Hard.Name = "Hard";
-            this.Hard.Size = new System.Drawing.Size(500, 19);
+            this.Hard.Size = new System.Drawing.Size(323, 34);
             this.Hard.TabIndex = 2;
-            this.Hard.Text = "Hard: reset working dir and index (discard ALL local changes, even uncommitted ch" +
-    "anges)";
-            this.Hard.UseVisualStyleBackColor = true;
+            this.Hard.Text = "Hard: reset working dir and index\r\n(discard ALL local changes, even uncommitted c" +
+    "hanges)";
+            this.Hard.UseVisualStyleBackColor = false;
             // 
             // Mixed
             // 
             this.Mixed.AutoSize = true;
+            this.Mixed.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.Mixed.Checked = true;
-            this.Mixed.Location = new System.Drawing.Point(7, 44);
+            this.Mixed.Location = new System.Drawing.Point(13, 64);
             this.Mixed.Name = "Mixed";
             this.Mixed.Size = new System.Drawing.Size(276, 19);
             this.Mixed.TabIndex = 1;
             this.Mixed.TabStop = true;
             this.Mixed.Text = "Mixed: leave working dir untouched, reset index";
-            this.Mixed.UseVisualStyleBackColor = true;
+            this.Mixed.UseVisualStyleBackColor = false;
             // 
             // Soft
             // 
             this.Soft.AutoSize = true;
-            this.Soft.Location = new System.Drawing.Point(7, 20);
+            this.Soft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.Soft.Location = new System.Drawing.Point(13, 28);
             this.Soft.Name = "Soft";
             this.Soft.Size = new System.Drawing.Size(257, 19);
             this.Soft.TabIndex = 0;
             this.Soft.Text = "Soft: leave working dir and index untouched";
-            this.Soft.UseVisualStyleBackColor = true;
+            this.Soft.UseVisualStyleBackColor = false;
             // 
             // Ok
             // 
-            this.Ok.Location = new System.Drawing.Point(335, 239);
+            this.Ok.Location = new System.Drawing.Point(302, 373);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(91, 25);
             this.Ok.TabIndex = 6;
@@ -144,7 +108,7 @@
             // 
             // Cancel
             // 
-            this.Cancel.Location = new System.Drawing.Point(432, 239);
+            this.Cancel.Location = new System.Drawing.Point(399, 373);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(91, 25);
             this.Cancel.TabIndex = 7;
@@ -152,18 +116,24 @@
             this.Cancel.UseVisualStyleBackColor = true;
             this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
             // 
+            // commitSummaryUserControl1
+            // 
+            this.commitSummaryUserControl1.Location = new System.Drawing.Point(16, 41);
+            this.commitSummaryUserControl1.MinimumSize = new System.Drawing.Size(440, 160);
+            this.commitSummaryUserControl1.Name = "commitSummaryUserControl1";
+            this.commitSummaryUserControl1.Revision = null;
+            this.commitSummaryUserControl1.Size = new System.Drawing.Size(477, 160);
+            this.commitSummaryUserControl1.TabIndex = 8;
+            // 
             // FormResetCurrentBranch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(538, 269);
+            this.ClientSize = new System.Drawing.Size(502, 410);
+            this.Controls.Add(this.commitSummaryUserControl1);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.Ok);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this._NO_TRANSLATE_Date);
-            this.Controls.Add(this._NO_TRANSLATE_Message);
-            this.Controls.Add(this._NO_TRANSLATE_Author);
-            this.Controls.Add(this._NO_TRANSLATE_Commit);
             this.Controls.Add(this._NO_TRANSLATE_BranchInfo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -182,15 +152,12 @@
         #endregion
 
         private System.Windows.Forms.Label _NO_TRANSLATE_BranchInfo;
-        private System.Windows.Forms.Label _NO_TRANSLATE_Commit;
-        private System.Windows.Forms.Label _NO_TRANSLATE_Author;
-        private System.Windows.Forms.Label _NO_TRANSLATE_Message;
-        private System.Windows.Forms.Label _NO_TRANSLATE_Date;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton Hard;
         private System.Windows.Forms.RadioButton Mixed;
         private System.Windows.Forms.RadioButton Soft;
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.Button Cancel;
+        private UserControls.CommitSummaryUserControl commitSummaryUserControl1;
     }
 }
