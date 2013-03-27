@@ -383,10 +383,24 @@ namespace GitCommands
         }
 
         private static string _smtp;
-        public static string Smtp
+        public static string SmtpServer
         {
-            get { return SafeGet("smtp", "", ref _smtp); }
-            set { SafeSet("smtp", value, ref _smtp); }
+            get { return SafeGet("SmtpServer", "smtp.gmail.com", ref _smtp); }
+            set { SafeSet("SmtpServer", value, ref _smtp); }
+        }
+
+        private static int? _smtpPort;
+        public static int SmtpPort
+        {
+            get { return SafeGet("SmtpPort", 465, ref _smtpPort); }
+            set { SafeSet("SmtpPort", value, ref _smtpPort); }
+        }
+
+        private static bool? _smtpUseSSL;
+        public static bool SmtpUseSsl
+        {
+            get { return SafeGet("SmtpUseSsl", true, ref _smtpUseSSL); }
+            set { SafeSet("SmtpUseSsl", value, ref _smtpUseSSL); }
         }
         
         private static bool? _autoStash;

@@ -46,16 +46,17 @@ namespace GitUI
     public sealed partial class RevisionGrid : GitModuleControl
     {
         private readonly TranslationString _droppingFilesBlocked = new TranslationString("For you own protection dropping more than 10 patch files at once is blocked!");
+        private readonly TranslationString _cannotHighlightSelectedBranch = new TranslationString("Cannot highlight selected branch when revision graph is loading.");
 
-        private const int NODE_DIMENSION = 8;
-        private const int LANE_WIDTH = 13;
-        private const int LANE_LINE_WIDTH = 2;
+        private const int NodeDimension = 8;
+        private const int LaneWidth = 13;
+        private const int LaneLineWidth = 2;
         private Brush _selectedItemBrush;
         private Brush _filledItemBrush; // disposable brush
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
-        public string LogParam = "--all --boundary";
+        private string _logParam = "--all --boundary";
 
         private bool _initialLoad = true;
         private string _initialSelectedRevision;
@@ -226,16 +227,16 @@ namespace GitUI
             set;
         }
 
-        private IndexWatcher _IndexWatcher;
+        private IndexWatcher _indexWatcher;
         [Browsable(false)]
         public IndexWatcher IndexWatcher
         {
             get
             {
-                if (_IndexWatcher == null)
-                    _IndexWatcher = new IndexWatcher(UICommandsSource);
+                if (_indexWatcher == null)
+                    _indexWatcher = new IndexWatcher(UICommandsSource);
 
-                return _IndexWatcher;
+                return _indexWatcher;
             }
         }
 
@@ -818,11 +819,11 @@ namespace GitUI
 
                 IndexWatcher.Reset();
 
-                if (!Settings.ShowGitNotes && LogParam.Contains("--all --boundary") && !LogParam.Contains(" --not --glob=notes --not"))
-                    LogParam = LogParam + " --not --glob=notes --not";
+                if (!Settings.ShowGitNotes && _logParam.Contains("--all --boundary") && !_logParam.Contains(" --not --glob=notes --not"))
+                    _logParam = _logParam + " --not --glob=notes --not";
 
-                if (Settings.ShowGitNotes && LogParam.Contains(" --not --glob=notes --not"))
-                    LogParam = LogParam.Replace("  --not --glob=notes --not", string.Empty);
+                if (Settings.ShowGitNotes && _logParam.Contains(" --not --glob=notes --not"))
+                    _logParam = _logParam.Replace("  --not --glob=notes --not", string.Empty);
 
                 RevisionGridInMemFilter revisionFilterIMF = RevisionGridInMemFilter.CreateIfNeeded(_revisionFilter.GetInMemAuthorFilter(),
                                                                                                    _revisionFilter.GetInMemCommitterFilter(),
@@ -840,12 +841,11 @@ namespace GitUI
                 else
                     revGraphIMF = filterBarIMF;
 
-                _revisionGraphCommand = new RevisionGraph(Module) { BranchFilter = BranchFilter, LogParam = LogParam + _revisionFilter.GetFilter() + Filter + FixedFilter };
+                _revisionGraphCommand = new RevisionGraph(Module) { BranchFilter = BranchFilter, LogParam = _logParam + _revisionFilter.GetFilter() + Filter + FixedFilter };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
                 _revisionGraphCommand.InMemFilter = revGraphIMF;
-                //_revisionGraphCommand.BeginUpdate += ((s, e) => Revisions.Invoke((Action) (() => Revisions.Clear())));
                 _revisionGraphCommand.Execute();
                 LoadRevisions();
                 SetRevisionsLayout();
@@ -858,10 +858,10 @@ namespace GitUI
             }
         }
 
-        private static readonly Regex potentialShaPattern = new Regex(@"^[a-f0-9]{5,}", RegexOptions.Compiled);
+        private static readonly Regex PotentialShaPattern = new Regex(@"^[a-f0-9]{5,}", RegexOptions.Compiled);
         public static bool MessageFilterCouldBeSHA(string filter)
         {
-            bool result = potentialShaPattern.IsMatch(filter);
+            bool result = PotentialShaPattern.IsMatch(filter);
 
             return result;
         }
@@ -1670,11 +1670,11 @@ namespace GitUI
             BranchFilter = _revisionFilter.GetBranchFilter();
 
             if (!Settings.BranchFilterEnabled)
-                LogParam = "--all --boundary";
+                _logParam = "--all --boundary";
             else if (Settings.ShowCurrentBranchOnly)
-                LogParam = "";
+                _logParam = "";
             else
-                LogParam = BranchFilter.Length > 0
+                _logParam = BranchFilter.Length > 0
                                ? String.Empty
                                : "--all --boundary";
         }
@@ -2311,7 +2311,7 @@ namespace GitUI
                 _selectedItemBrush = _filledItemBrush;
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, _rowHeigth, _selectedItemBrush);
+                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth, _selectedItemBrush);
 
             }
             else
@@ -2339,7 +2339,7 @@ namespace GitUI
                 }
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NODE_DIMENSION, LANE_WIDTH, LANE_LINE_WIDTH, _rowHeigth, _selectedItemBrush);
+                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth, _selectedItemBrush);
             }
 
             //Hide graph column when there it is disabled OR when a filter is active
@@ -2448,7 +2448,7 @@ namespace GitUI
         {
             if (_revisionGraphCommand != null)
             {
-                MessageBox.Show("Cannot highlight selected branch when revision graph is loading.");
+                MessageBox.Show(_cannotHighlightSelectedBranch.Text);
                 return;
             }
             Revisions.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
