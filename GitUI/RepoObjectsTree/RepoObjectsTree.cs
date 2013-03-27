@@ -19,9 +19,6 @@ namespace GitUI.UserControls
         {
             InitializeComponent();
 
-            NotificationFeed notificationFeed = new NotificationFeed(UICommandsSource);
-            toolbarMain.Items.Insert(0, notificationFeed);
-
             Translate();
 
             RegisterContextActions();
@@ -90,6 +87,8 @@ namespace GitUI.UserControls
                 // (once from initial UICommandsSource being set)
                 // (once from FormBrowse Initialize())
                 isFirst = false;
+                NotificationFeed notificationFeed = new NotificationFeed(UICommandsSource);
+                toolbarMain.Items.Insert(0, notificationFeed);
             }
             else
             {
