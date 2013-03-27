@@ -887,7 +887,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                if (Unstaged.GitItemStatuses.Any(gitItemStatus => gitItemStatus.IsTracked))
+                if (Unstaged.GitItemStatuses.Any())
                 {
                     InitializedStaged();
                     return;
