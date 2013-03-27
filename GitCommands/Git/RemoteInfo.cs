@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -41,9 +42,12 @@ namespace GitCommands.Git
         internal string HeadBranchName { get; set; }
         /// <summary>Gets the HEAD branch, which is the default branch when the remote is cloned.</summary>
         public RemoteBranch HeadBranch { get; internal set; }
-        /// <summary>Gets the branches on the remote repo.</summary>
-        public IEnumerable<RemoteBranch> Branches { get { return _Branches; } }
-        private ObservableCollection<RemoteBranch> _Branches;
+        /// <summary>Gets the existing branches on the remote repo.</summary>
+        public IEnumerable<RemoteBranch> RemoteBranches { get { return _RemoteBranches; } }
+        ObservableCollection<RemoteBranch> _RemoteBranches;
+        /// <summary>Gets the local remote-tracking branches for the remote repo.</summary>
+        public IEnumerable<RemoteTrackingBranch> RemoteTrackingBranches { get { return _RemoteTrackingBranches; } }
+        private ObservableCollection<RemoteTrackingBranch> _RemoteTrackingBranches;
         /// <summary>Gets the configured pull branches.</summary>
         public IEnumerable<PullConfig> PullConfigs { get; private set; }
         /// <summary>Gets the configured push branches.</summary>
@@ -54,18 +58,29 @@ namespace GitCommands.Git
         ///  and deleted refs will be removed from the remote end.</remarks></para></summary>
         public bool IsMirror { get; private set; }
 
-        /// <summary>Gets a key/value list of the branches. RemoteBranch.Name -> RemoteBranch</summary>
-        public IDictionary<string, RemoteBranch> NameToBranch { get; private set; }
+        /// <summary>Gets a key/value list of the remote-tracking branches.
+        /// RemoteTrackingBranch.Name -> RemoteTrackingBranch</summary>
+        public IDictionary<string, RemoteTrackingBranch> NameToRemoteTrackingBranch { get; private set; }
+        /// <summary>Gets a key/value list of the remote branches.
+        /// RemoteBranch.Name -> RemoteBranch</summary>
+        public IDictionary<string, RemoteBranch> NameToRemoteBranch { get; private set; }
 
         /// <summary>Creates a new <see cref="RemoteInfo"/> by parsing the <code>git remote show {remote}</code> output.</summary>
-        internal RemoteInfo(string remoteShowOutput)
+        /// <param name="remoteShowOutput">output from 'git remote show {remote}'</param>
+        /// <param name="lsRemoteOutput">output from 'git ls-remote --heads {remote}'</param>
+        internal RemoteInfo(string remoteShowOutput, string lsRemoteOutput)
         {
+            // $ git ls-remote --heads {remote}
+            // {SHA-1}   refs/heads/{branch}
+            // ...
+
             // https://github.com/git/git/blob/d1ede/builtin/remote.c#L1087
             // $ git remote show {remote}
             //   * remote jberger
             //     Fetch URL: https://github.com/bergerjac/gitextensions.git
             //     Push  URL: https://github.com/bergerjac/gitextensions.git
             //     HEAD branch: left-panel/-main
+            //     ...
 
             #region Header
             var lines = remoteShowOutput.SplitLinesThenTrim().ToList();
@@ -113,7 +128,7 @@ namespace GitCommands.Git
 
             #endregion Header
 
-            #region Remote Branches
+            #region Remote-Tracking Branches
             //   Remote branches:
             //     LibGit2Sharp                 tracked
             //     ...
@@ -123,31 +138,30 @@ namespace GitCommands.Git
             if (lines[i].StartsWith("Remote branch"))
             {
                 i += 1;// increment
-                _Branches = new ObservableCollection<RemoteBranch>(
+                _RemoteTrackingBranches = new ObservableCollection<RemoteTrackingBranch>(
                     lines
                         .Skip(i)
                         .TakeWhile(line => !line.StartsWith("Local"))
-                        .Select(line => new RemoteBranch(line, this)));
-                NameToBranch = Branches.ToDictionary(branch => branch.Name);
-                _Branches.CollectionChanged += (o, e) =>
+                        .Select(line => new RemoteTrackingBranch(line, this)));
+                NameToRemoteTrackingBranch = RemoteTrackingBranches.ToDictionary(branch => branch.Name);
+                _RemoteTrackingBranches.CollectionChanged += (o, e) =>
                 {
                     if (e.Action == NotifyCollectionChangedAction.Remove)
                     {
-                        NameToBranch.Remove(((RemoteBranch)e.OldItems[0]).Name);
+                        NameToRemoteTrackingBranch.Remove(((RemoteTrackingBranch)e.OldItems[0]).Name);
                     }
-
                 };
             }
             else
             {
-                _Branches = new ObservableCollection<RemoteBranch>();
-                NameToBranch = new Dictionary<string, RemoteBranch>(0);
+                _RemoteTrackingBranches = new ObservableCollection<RemoteTrackingBranch>();
+                NameToRemoteTrackingBranch = new Dictionary<string, RemoteTrackingBranch>(0);
             }
 
-            i += Branches.Count();
+            i += RemoteTrackingBranches.Count();
             if (i >= lines.Count) { return; }// [8] >= 8 items (IndexOutOfRangeEx)
 
-            #endregion Remote Branches
+            #endregion Remote-Tracking Branches
 
             #region Pull
             //   Local branch configured for 'git pull':
@@ -171,7 +185,7 @@ namespace GitCommands.Git
 
                     if (line.Contains(PullConfig.RebasesOntoRemote))
                     {// rebase (only one per local)
-                        pulls.Add(new PullConfig(line));
+                        pulls.Add(new PullConfig(this, line));
                         branch = null;
                     }
                     else if (line.Contains("merges with remote"))
@@ -192,8 +206,7 @@ namespace GitCommands.Git
                 pulls.AddRange(
                     dict.Select(
                         firstToFollowers =>
-                            new PullConfig(
-                                firstToFollowers.Key, firstToFollowers.Value)
+                            new PullConfig(this, firstToFollowers.Key, firstToFollowers.Value)
                     )
                 );
                 PullConfigs = pulls;
@@ -201,10 +214,13 @@ namespace GitCommands.Git
                 {
                     foreach (string remoteBranch in pullConfig.RemoteBranches)
                     {
-                        NameToBranch[remoteBranch].InternalPullConfigs.Add(pullConfig);
+                        RemoteTrackingBranch remoteTrackingBranch;
+                        if (NameToRemoteTrackingBranch.TryGetValue(remoteBranch, out remoteTrackingBranch))
+                        {
+                            remoteTrackingBranch.InternalPullConfigs.Add(pullConfig);
+                        }
                     }
                 }
-
             }
             else
             {
@@ -234,7 +250,11 @@ namespace GitCommands.Git
                     .ToArray();
                 foreach (PushConfig pushConfig in PushConfigs)
                 {
-                    NameToBranch[pushConfig.RemoteBranch].PushConfig = pushConfig;
+                    RemoteTrackingBranch remoteTrackingBranch;
+                    if (NameToRemoteTrackingBranch.TryGetValue(pushConfig.RemoteBranch, out remoteTrackingBranch))
+                    {
+                        remoteTrackingBranch.PushConfig = pushConfig;
+                    }
                 }
             }
             else
@@ -242,6 +262,29 @@ namespace GitCommands.Git
                 PushConfigs = Enumerable.Empty<PushConfig>();
             }
             #endregion Push
+
+            // HeadBranchName must be set BEFORE this line
+            #region Remote Branches
+
+            _RemoteBranches = new ObservableCollection<RemoteBranch>(
+                    from branch in lsRemoteOutput.SplitLinesThenTrim()
+                    select new RemoteBranch(this, branch, HeadBranchName));
+            NameToRemoteBranch = _RemoteBranches.ToDictionary(branch => branch.Name);
+
+            #endregion Remote Branches
+
+            #region Match {remote branch} to {remote-tracking branch}
+            foreach (RemoteTrackingBranch trackingBranch in
+                   RemoteTrackingBranches.Where(branch => branch.Status != RemoteTrackingBranch.State.Stale))
+            {// skip stale tracking branches (stale == deleted on the remote repo)
+                RemoteBranch match;
+                if (NameToRemoteBranch.TryGetValue(trackingBranch.Name, out match))
+                {// found match -> 
+                    match.TrackingBranch = trackingBranch;
+                    trackingBranch.RemoteBranch = match;
+                }
+            }
+            #endregion Match {remote branch} to {remote-tracking branch}
         }
 
         /// <summary>Gets a URL from a line.</summary>
@@ -255,30 +298,77 @@ namespace GitCommands.Git
         /// <summary>Creates a <see cref="GitPush"/> to push from a local branch to a remote branch.</summary>
         public GitPush CreatePush(RemoteBranch remoteBranch, string localBranch)
         {
-            return new GitPush(Name, localBranch, remoteBranch.Name);
+            return new GitPush(Name, localBranch, remoteBranch.FullRefName);
         }
 
         /// <summary>Removes the specified remote-tracking branches.</summary>
-        public void UnTrack(params RemoteBranch[] remoteBranches)
+        public void UnTrack(params RemoteTrackingBranch[] remoteTrackingBranches)
         {
-            foreach (RemoteBranch remoteBranch in remoteBranches)
+            foreach (RemoteTrackingBranch remoteBranch in remoteTrackingBranches)
             {
-                _Branches.Remove(remoteBranch);
+                _RemoteTrackingBranches.Remove(remoteBranch);
             }
             // 'git remote' command should be executed and successful before removing
             //return GitRemote.UnTrack(this, remoteBranches);
         }
 
-        /// <summary>Remote-tracking branch.</summary>
-        [System.Diagnostics.DebuggerDisplay("{Name} ({Status})")]
+        /// <summary>Branch existing on a remote repository.</summary>
         public class RemoteBranch
+        {
+            /// <summary>40</summary>
+            static readonly int Sha1Length = GitRevision.IndexGuid.Length;
+
+            /// <summary>Gets the remote repository that the branch exists on.</summary>
+            public RemoteInfo Remote { get; private set; }
+            /// <summary>Full name of the ref. <example>"refs/heads/master"</example></summary>
+            public string FullRefName { get; private set; }
+            /// <summary>Name of the ref. <example>"master"</example></summary>
+            public string Name { get; private set; }
+            /// <summary>Gets the SHA-1 of the branch.</summary>
+            public string Sha1 { get; private set; }
+            /// <summary>Indicates whether this is the HEAD branch, which is the default branch when the remote is cloned.</summary>
+            public bool IsHead { get; private set; }
+            /// <summary>Gets the local remote-tracking branch.
+            /// <remarks>May be null if not tracked.</remarks></summary>
+            public RemoteTrackingBranch TrackingBranch { get; internal set; }
+
+            public RemoteBranch(RemoteInfo remote, string remoteBranchLine, string headBranchName)
+            {
+                Remote = remote;
+                // $ git ls-remote --heads {remote}
+                // {SHA-1}   refs/heads/{branch}
+
+                Sha1 = remoteBranchLine.Substring(0, Sha1Length);
+                var temp = remoteBranchLine.Substring(Sha1Length).Trim();// remove SHA-1, then trim
+                FullRefName = temp;
+                Name = FullRefName.Substring(GitHead.RefsHeadsPrefix.Length);// remove "refs/heads/"
+
+                IsHead = Equals(Name, headBranchName);
+                if (IsHead)
+                {
+                    remote.HeadBranch = this;
+                }
+            }
+
+            /// <summary>Creates a <see cref="GitPush"/> to push from the specified local branch to this <see cref="RemoteBranch"/>.</summary>
+            public GitPush CreatePush(string localBranch)
+            {
+                return Remote.CreatePush(this, localBranch);
+            }
+
+        }
+
+        /// <summary>Remote-tracking branch. 
+        /// <remarks>Read-only intermediary branch between a local branch and a remote branch.</remarks></summary>
+        [DebuggerDisplay("{Name} ({Status})")]
+        public class RemoteTrackingBranch
         {
             //  Remote branches:
             //    LibGit2Sharp     tracked
             //    LibGit2Sharp     new (next fetch will store in remotes/{remote})"
             //    LibGit2Sharp     stale (use 'git remote prune' to remove)"
 
-            internal RemoteBranch(string line, RemoteInfo remote)
+            internal RemoteTrackingBranch(string line, RemoteInfo remote)
             {
                 int gapStart = line.IndexOf(" ");
                 Name = line.Substring(0, gapStart);// branch name ends right before first space  
@@ -293,7 +383,7 @@ namespace GitCommands.Git
                         {
                             // refs/remotes/berger/left-panel/remotes     stale (use 'git remote prune' to remove)
                             // release/2.32                               tracked
-                            string staleName = string.Format("refs/remotes/{0}/", remote.Name);
+                            string staleName = string.Format("{0}{1}/", GitHead.RefsRemotesPrefix, remote.Name);
                             if (Name.StartsWith(staleName))
                             {// stale remote branch starts with "refs/remotes/{0}/"
                                 Name = Name.Substring(staleName.Length);
@@ -310,37 +400,38 @@ namespace GitCommands.Git
                     remote.Name,
                     GitModule.RefSep,
                     Name);
-                IsHead = Equals(Name, remote.HeadBranchName);
-                if (IsHead)
-                {
-                    remote.HeadBranch = this;
-                }
+
             }
 
-            /// <summary>Gets the full name of the branch. "master"</summary>
+            /// <summary>Gets the full name of the remote-tracking branch. "master"</summary>
             public string Name { get; private set; }
-            /// <summary>Gets the full path of the remote branch. "origin/master"</summary>
+            /// <summary>Gets the full path of the remote-tracking branch. "origin/master"</summary>
             public string FullPath { get; private set; }
-            /// <summary>Gets the remote of the remote branch.</summary>
+            ///// <summary>Gets the full ref name of the remote-tracking branch. "refs/remotes/origin/master"</summary>
+            //public string FullRefName { get; private set; }
+            /// <summary>Gets the remote of the remote-tracking branch.</summary>
             public RemoteInfo Remote { get; private set; }
             /// <summary>Gets the state of the branch.</summary>
             public State Status { get; private set; }
-            /// <summary>Indicates whether this is the HEAD branch, which is the default branch when the remote is cloned.</summary>
-            public bool IsHead { get; private set; }
-
             /// <summary>Gets the configurations which local branch(es) may be setup to pull from this branch.</summary>
             public IEnumerable<PullConfig> PullConfigs { get { return InternalPullConfigs; } }
             internal IList<PullConfig> InternalPullConfigs { get; private set; }
-            /// <summary>Gets the implied push configuration, if any, for this remote branch.</summary>
+            /// <summary>Gets the implied push configuration, if any, for this remote-tracking branch.</summary>
             public PushConfig PushConfig { get; internal set; }
+            /// <summary>Gets the remote branch.
+            /// <remarks>May be null if the remote-tracking branch is stale;
+            /// may be invalid if the remote branch has since been deleted.</remarks></summary>
+            public RemoteBranch RemoteBranch { get; internal set; }
+            /// <summary>Indicates whether the related remote branch is the HEAD branch on the remote repo.</summary>
+            public bool IsHead { get { return RemoteBranch != null && RemoteBranch.IsHead; } }
 
-            /// <summary>Returns the <see cref="RemoteBranch"/>'s <see cref="Name"/>.</summary>
+            /// <summary>Returns the <see cref="RemoteTrackingBranch"/>'s <see cref="Name"/>.</summary>
             public override string ToString() { return Name; }
 
-            /// <summary>Creates a <see cref="GitPush"/> to push from the specified local branch to this <see cref="RemoteBranch"/>.</summary>
+            /// <summary>Creates a <see cref="GitPush"/> to push from the specified local branch to the related <see cref="RemoteBranch"/>.</summary>
             public GitPush CreatePush(string localBranch)
             {
-                return Remote.CreatePush(this, localBranch);
+                return Remote.CreatePush(RemoteBranch, localBranch);
             }
 
             static Dictionary<string, State> ValidStates =
@@ -348,7 +439,7 @@ namespace GitCommands.Git
                 .Skip(1)// skip Unknown
                 .ToDictionary(state => state.ToString().ToLower());// e.g. "tracked" -> Tracked
 
-            /// <summary>Specifies the state of a <see cref="RemoteBranch"/>.</summary>
+            /// <summary>Specifies the state of a <see cref="RemoteTrackingBranch"/>.</summary>
             public enum State
             {
                 Unknown,
@@ -368,15 +459,16 @@ namespace GitCommands.Git
             internal static readonly string RebasesOntoRemote = "rebases onto remote";
 
             /// <summary>Creates a new <see cref="PullConfig"/> which rebases onto a remote.</summary>
-            internal PullConfig(string line)
-                : this(line, null, true) { }
+            internal PullConfig(RemoteInfo remote, string line)
+                : this(remote, line, null, true) { }
 
             /// <summary>Creates a new <see cref="PullConfig"/> which merges onto remote(s).</summary>
-            internal PullConfig(string firstLine, IEnumerable<string> proceedingLines)
-                : this(firstLine, proceedingLines, false) { }
+            internal PullConfig(RemoteInfo remote, string firstLine, IEnumerable<string> proceedingLines)
+                : this(remote, firstLine, proceedingLines, false) { }
 
-            PullConfig(string line, IEnumerable<string> proceedingLines, bool isRebase)
+            PullConfig(RemoteInfo remote, string line, IEnumerable<string> proceedingLines, bool isRebase)
             {
+                Remote = remote;
                 line = line.Trim();
                 int gapStart = line.IndexOf(" ");
 
@@ -404,17 +496,19 @@ namespace GitCommands.Git
             }
 
             /// <summary>Gets the remote branch from a line, using the specified marker.</summary>
-            static string GetRemoteBranch(string line, string marker)
+            string GetRemoteBranch(string line, string marker)
             {
-                return
-                    line.Substring(
-                            marker.Length +
-                            line.LastIndexOf(
-                                marker,
-                                StringComparison.InvariantCultureIgnoreCase))
-                        .Trim();
+                string remoteBranch = line.Substring(marker.Length + line.LastIndexOf(marker, StringComparison.InvariantCultureIgnoreCase)).Trim();
+                if (remoteBranch.StartsWith(string.Format("{0}{1}", Remote.Name, GitModule.RefSep)) &&
+                    !Remote.NameToRemoteTrackingBranch.ContainsKey(remoteBranch))
+                {// anomaly "merges with remote {remote}/branch"
+                    return remoteBranch.SubstringAfterLastSafe(GitModule.RefSep);
+                }// (else no anomaly)
+                return remoteBranch;
             }
 
+            /// <summary>Gets the remote which contains the <see cref="PullConfig"/>.</summary>
+            public RemoteInfo Remote { get; set; }
             /// <summary>Gets the local branch.</summary>
             public string LocalBranch { get; private set; }
             /// <summary>Gets the remote branch(es) which the local is configured to pull from.</summary>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
+using GitUIPluginInterfaces.Notifications;
 
 namespace GitUI.UserControls
 {
@@ -61,7 +62,9 @@ namespace GitUI.UserControls
 
             public void Delete()
             {
-                Git.StashDelete(Value.Name);
+                NotifyIf(Git.StashDelete(Value.Name),
+                    () => new Notification(StatusSeverity.Success, "Stash dropped/deleted."),
+                    () => new Notification(StatusSeverity.Fail, "Failed to drop/delete stash."));
             }
 
             public void ShowDiff()

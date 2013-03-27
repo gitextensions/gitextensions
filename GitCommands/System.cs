@@ -171,6 +171,22 @@ namespace System
         {
             return value.SplitThenTrim(NewLineSeparator);
         }
+
+        /// <summary>Gets the text after the last separator.
+        /// If NO separator OR ends with separator, returns the original value.</summary>
+        public static string SubstringAfterLastSafe(this string value, string separator)
+        {// ex: "origin/master" -> "master"
+            if (value.EndsWith(separator) || !value.Contains(separator))
+            {// "origin/master/" OR "master" -> return original
+                return value;
+            }
+            return value.Substring(1 + value.LastIndexOf(separator, StringComparison.InvariantCultureIgnoreCase));
+        }
+        public static string SubstringAfterFirst(this string value, string separator)
+        {
+            return value.Substring(1 + value.IndexOf(separator, StringComparison.InvariantCultureIgnoreCase));
+        }
+
     }
 
     public static class BoolExtensions

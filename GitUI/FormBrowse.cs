@@ -18,7 +18,6 @@ using GitUI.RepoHosting;
 using GitUI.Script;
 using GitUI.Statistics;
 using GitUIPluginInterfaces;
-
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
@@ -118,7 +117,7 @@ namespace GitUI
             syncContext = SynchronizationContext.Current;
 
             InitializeComponent();
-           
+
             // set tab page images
             {
                 var imageList = new ImageList();
@@ -418,7 +417,7 @@ namespace GitUI
 
             repoObjectsTree.Reload();
             UICommands.RaisePostBrowseInitialize(this);
-            
+
             Cursor.Current = Cursors.Default;
         }
 
@@ -1205,7 +1204,7 @@ namespace GitUI
                     return;
                 }
                 else
-                { 
+                {
                     bSilent = true;
                     Module.LastPullActionToPullMerge();
                 }

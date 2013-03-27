@@ -239,13 +239,30 @@
     </Compile>
     <Compile Include="IGitUICommandsSource.cs" />
     <Compile Include="IndexWatcher.cs" />
-    <Compile Include="StatusFeed.cs" />
     <Compile Include="MenuStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="MessageBoxes.cs" />
     <Compile Include="MouseWheelRedirector.cs" />
     <Compile Include="MergeToolsHelper.cs" />
+    <Compile Include="Notifications\NotificationFeed.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Notifications\NotificationList.cs" />
+    <Compile Include="Notifications\NotificationManager.cs" />
+    <Compile Include="Notifications\NotificationPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Notifications\NotificationPopup.Designer.cs">
+      <DependentUpon>NotificationPopup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Notifications\NotificationsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Notifications\NotificationsForm.Designer.cs">
+      <DependentUpon>NotificationsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Notifications\NotifierHelpers.cs" />
     <Compile Include="PathFormatter.cs" />
     <Compile Include="Editor\FileViewer.cs">
       <SubType>UserControl</SubType>
@@ -1076,6 +1093,9 @@
       <DependentUpon>FormHotkeys.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Notifications\NotificationPopup.resx">
+      <DependentUpon>NotificationPopup.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RepoHosting\CreatePullRequestForm.resx">
       <DependentUpon>CreatePullRequestForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1624,11 +1644,18 @@
     <None Include="Resources\Icons\DeleteSoft.png" />
     <None Include="Resources\Icons\ShowDiff.png" />
     <None Include="Resources\Icons\Cut.png" />
+    <Content Include="Resources\Icons\BlankIcon.png" />
     <Content Include="Resources\Icons\BranchFrom.png" />
-    <None Include="Resources\Icons\BranchStale.png" />
+    <None Include="Resources\Icons\BranchUntracked.png" />
     <None Include="Resources\Icons\BranchNew.png" />
+    <None Include="Resources\Icons\BranchStale.png" />
     <Content Include="Resources\Icons\HeadBranch.png" />
+    <Content Include="Resources\Icons\Information.png" />
     <Content Include="Resources\Icons\Namespace.png" />
+    <Content Include="Resources\Icons\NotifyError.png" />
+    <Content Include="Resources\Icons\NotifyInfo.png" />
+    <Content Include="Resources\Icons\NotifySuccess.png" />
+    <Content Include="Resources\Icons\NotifyWarn.png" />
     <Content Include="Resources\Icons\RemoteMirror.png" />
     <Content Include="Resources\Icons\RemoteRepo.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />

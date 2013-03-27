@@ -32,7 +32,7 @@ namespace GitCommands
     }
 
     /// <summary>Provides manipulation with git module. 
-    /// <remarks>Several instances may be created for submodules</remarks></summary>
+    /// <remarks>Several instances may be created for submodules.</remarks></summary>
     [DebuggerDisplay("GitModule ( {_workingdir} )")]
     public sealed class GitModule : IGitModule
     {
@@ -294,29 +294,36 @@ namespace GitCommands
             return GitCommandHelpers.FixPath(path);
         }
 
+        /// <summary>Indicates whether the <see cref="WorkingDir"/> contains a git repository.</summary>
         public bool ValidWorkingDir()
         {
             return ValidWorkingDir(_workingdir);
         }
 
+        /// <summary>Indicates whether the specified directory contains a git repository.</summary>
         public static bool ValidWorkingDir(string dir)
         {
             if (string.IsNullOrEmpty(dir))
                 return false;
 
-            if (Directory.Exists(dir + Settings.PathSeparator + ".git") || File.Exists(dir + Settings.PathSeparator + ".git"))
+            string dirPath = dir + Settings.PathSeparator;
+            string path = dirPath + ".git";
+
+            if (Directory.Exists(path) || File.Exists(path))
                 return true;
 
-            return Directory.Exists(dir + Settings.PathSeparator + "info") &&
-                   Directory.Exists(dir + Settings.PathSeparator + "objects") &&
-                   Directory.Exists(dir + Settings.PathSeparator + "refs");
+            return Directory.Exists(dirPath + "info") &&
+                   Directory.Exists(dirPath + "objects") &&
+                   Directory.Exists(dirPath + "refs");
         }
 
+        /// <summary>Gets the ".git" directory path.</summary>
         public string GetGitDirectory()
         {
             return GetGitDirectory(_workingdir);
         }
 
+        /// <summary>true if ".git" directory does NOT exist.</summary>
         public bool IsBareRepository()
         {
             return IsBareRepository(_workingdir);
@@ -642,6 +649,7 @@ namespace GitCommands
             return RunGitCmd(arguments, null, encoding);
         }
 
+        /// <summary>Runs a git command. "git {arguments}"</summary>
         public string RunGit(string arguments)
         {
             return RunGitCmd(arguments);
@@ -650,6 +658,14 @@ namespace GitCommands
         public string RunGit(string arguments, out int exitCode)
         {
             return RunGitCmd(arguments, out exitCode);
+        }
+
+        /// <summary>Runs a 'git' command with the specified args.</summary>
+        public GitCommandResult GitCmd(string args)
+        {
+            int exitCode;
+            string output = RunGit(args, out exitCode);
+            return new GitCommandResult(output, exitCode == 0);
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
@@ -946,6 +962,7 @@ namespace GitCommands
             return fileNames;
         }
 
+        /// <summary>Gets the ".git" directory path.</summary>
         public static string GetGitDirectory(string repositoryPath)
         {
             if (File.Exists(repositoryPath + ".git"))
@@ -1227,6 +1244,7 @@ namespace GitCommands
             return GetSubmodule(submoduleName);
         }
 
+        /// <summary>Gets all current git submodules.</summary>
         public IEnumerable<IGitSubmodule> GetSubmodules()
         {
             var submodules = RunGitCmdAsync("submodule status");
@@ -1393,14 +1411,10 @@ namespace GitCommands
 
         /// <summary>Remove a single stashed state from the stash list. 
         /// <remarks>When no stash is given, removes the latest one.</remarks></summary>
-        public string StashDelete(string stash = null)
+        public GitCommandResult StashDelete(string stash = null)
         {
-            return RunGit(
-               string.Format(
-                   "stash drop {0}",
-                   stash
-               )
-           );
+            string stashDelete = RunGit(string.Format("stash drop {0}", stash));
+            return new GitCommandResult(stashDelete, stashDelete.Contains("Dropped"));
         }
 
         public string ResetSoft(string commit)
@@ -2103,7 +2117,9 @@ namespace GitCommands
             return
                 GetRemotes(false)
                 .Select(remote =>
-                    new RemoteInfo(RunGitCmd(string.Format("remote show {0}", remote))));
+                    new RemoteInfo(
+                        RunGitCmd(string.Format("remote show {0}", remote)),
+                        RunGitCmd(string.Format("ls-remote --heads {0}", remote))));
         }
 
         /// <summary>Executes the specified 'git remote' command.</summary>
@@ -2125,19 +2141,19 @@ namespace GitCommands
         /// <summary>Gets the number of commits which appear in a remote branch that are NOT in another branch/revision.
         /// <remarks>Indicates how many commits the local branch is behind the remote branch; possibly for pulling.</remarks></summary>
         /// <param name="behindRevision">Revision/branch to check how many commits it's behind.</param>
-        /// <param name="remoteBranch">Remote branch.</param>
-        public int GetCommitDiffCount(string behindRevision, RemoteInfo.RemoteBranch remoteBranch)
+        /// <param name="remoteTrackingBranch">Remote branch.</param>
+        public int GetCommitDiffCount(string behindRevision, RemoteInfo.RemoteTrackingBranch remoteTrackingBranch)
         {
-            return GetCommitDiffCount(behindRevision, remoteBranch.FullPath);
+            return GetCommitDiffCount(behindRevision, remoteTrackingBranch.FullPath);
         }
 
         /// <summary>Gets the number of commits which appear in a local branch/revision that are NOT in a remote branch.
         /// <remarks>Indicates how many commits the local branch is ahead of the remote branch.</remarks></summary>
-        /// <param name="remoteBranch">Remote branch to check the number of commits it's behind.</param>
+        /// <param name="remoteTrackingBranch">Remote branch to check the number of commits it's behind.</param>
         /// <param name="aheadRevision">Local revision/branch.</param>
-        public int GetCommitDiffCount(RemoteInfo.RemoteBranch remoteBranch, string aheadRevision)
+        public int GetCommitDiffCount(RemoteInfo.RemoteTrackingBranch remoteTrackingBranch, string aheadRevision)
         {
-            return GetCommitDiffCount(remoteBranch.FullPath, aheadRevision);
+            return GetCommitDiffCount(remoteTrackingBranch.FullPath, aheadRevision);
         }
 
         /// <summary>Indicates whether a branch/revision is behind another branch/revision.</summary>
@@ -2150,18 +2166,18 @@ namespace GitCommands
 
         /// <summary>Indicates whether a local branch/revision is behind a remote branch; possibly for pulling.</summary>
         /// <param name="behindRevision">Local branch/revision to check if it's behind.</param>
-        /// <param name="remoteBranch">Remote branch.</param>
-        public bool IsBranchBehind(string behindRevision, RemoteInfo.RemoteBranch remoteBranch)
+        /// <param name="remoteTrackingBranch">Remote branch.</param>
+        public bool IsBranchBehind(string behindRevision, RemoteInfo.RemoteTrackingBranch remoteTrackingBranch)
         {
-            return IsBranchBehind(behindRevision, remoteBranch.FullPath);
+            return IsBranchBehind(behindRevision, remoteTrackingBranch.FullPath);
         }
 
         /// <summary>Indicates whether a remote branch is lacking commits that are in a local branch/revision.</summary>
         /// <param name="aheadRevision">Local branch/revision.</param>
-        /// <param name="remoteBranch">Remote branch to check if it's behind.</param>
-        public bool IsRemoteBranchBehind(RemoteInfo.RemoteBranch remoteBranch, string aheadRevision)
+        /// <param name="remoteTrackingBranch">Remote branch to check if it's behind.</param>
+        public bool IsRemoteBranchBehind(RemoteInfo.RemoteTrackingBranch remoteTrackingBranch, string aheadRevision)
         {
-            return IsBranchBehind(remoteBranch.FullPath, aheadRevision);
+            return IsBranchBehind(remoteTrackingBranch.FullPath, aheadRevision);
         }
 
         /// <summary>Compares commits between a (control) branch and another (test) branch.</summary>
@@ -2580,7 +2596,6 @@ namespace GitCommands
             return RunGitCmd("update-index --remove" + " \"" + FixPath(file) + "\"");
         }
 
-
         public string UnstageFile(string file)
         {
             return RunGitCmd("rm --cached \"" + FixPath(file) + "\"");
@@ -2591,12 +2606,11 @@ namespace GitCommands
             return RunGitCmd("reset HEAD -- \"" + FixPath(file) + "\"");
         }
 
-
+        /// <summary>true if ".git" directory does NOT exist.</summary>
         public static bool IsBareRepository(string repositoryPath)
         {
             return !Directory.Exists(GetGitDirectory(repositoryPath));
         }
-
 
         /// <summary>Dirty but fast. This sometimes fails.</summary>
         public static string GetSelectedBranchFast(string repositoryPath)
@@ -3521,6 +3535,7 @@ namespace GitCommands
             return ValidWorkingDir(workingDir);
         }
 
+        /// <summary>Gets the path to the git application executable.</summary>
         public string GitCommand
         {
             get
@@ -3546,5 +3561,33 @@ namespace GitCommands
         }
 
         #endregion
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null) { return false; }
+            if (obj == this) { return true; }
+
+            GitModule other = obj as GitModule;
+            return (other != null) && Equals(other);
+        }
+
+        bool Equals(GitModule other)
+        {
+            return
+                string.Equals(_workingdir, other._workingdir) &&
+                Equals(_superprojectModule, other._superprojectModule);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_workingdir != null
+                ? _workingdir.GetHashCode()
+                : 0);
+        }
+
+        public override string ToString()
+        {
+            return GitWorkingDir;
+        }
     }
 }

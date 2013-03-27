@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Blame;
-using GitUI.Plugin;
+using GitUI.Notifications;
 using GitUI.RepoHosting;
 using GitUI.Tag;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Notifications;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
 using PatchApply;
@@ -32,6 +32,7 @@ namespace GitUI
                     InvokeEvent(null, PostRepositoryChanged);
                 }
             );
+            Notifications = NotificationManager.Get(this);
         }
 
         public GitUICommands(string workingDir)
@@ -227,7 +228,10 @@ namespace GitUI
                 gravatarFallBack);
         }
 
-        public Icon FormIcon { get { return GitExtensionsForm.ApplicationIcon; } } 
+        public Icon FormIcon { get { return GitExtensionsForm.ApplicationIcon; } }
+
+        /// <summary>Gets notifications implementation.</summary>
+        public INotifications Notifications { get; private set; }
 
         public bool StartBatchFileProcessDialog(object owner, string batchFile)
         {
@@ -329,7 +333,7 @@ namespace GitUI
 
         public void InvokeEventOnClose(Form form, GitUIEventHandler ev)
         {
-            form.FormClosed += (object o, FormClosedEventArgs ea) =>
+            form.FormClosed += (o, ea) =>
             {
                 InvokeEvent(form == null ? null : form.Owner, ev);
             };
@@ -845,8 +849,8 @@ namespace GitUI
                         else
                             Directory.Delete(path, true);
                     }
-                    catch (System.IO.IOException) { }
-                    catch (System.UnauthorizedAccessException) { }
+                    catch (IOException) { }
+                    catch (UnauthorizedAccessException) { }
                 }
             }
 
@@ -1540,10 +1544,7 @@ namespace GitUI
         public void StartCreatePullRequest(IWin32Window owner, IRepositoryHostPlugin gitHoster, string chooseRemote, string chooseBranch)
         {
             WrapRepoHostingCall("Create pull request", gitHoster,
-                                gh =>
-                                {
-                                    new CreatePullRequestForm(this, gitHoster, chooseRemote, chooseBranch).Show(owner);
-                                });
+                                gh => new CreatePullRequestForm(this, gitHoster, chooseRemote, chooseBranch).Show(owner));
         }
 
         public void RunCommand(string[] args)
@@ -1589,8 +1590,7 @@ namespace GitUI
             switch (args[1])
             {
                 case "about":
-                    var frm = new AboutBox();
-                    frm.StartPosition = FormStartPosition.CenterScreen;
+                    var frm = new AboutBox { StartPosition = FormStartPosition.CenterScreen };
                     Application.Run(frm);
                     return;
                 case "add":
@@ -1714,8 +1714,7 @@ namespace GitUI
                     }
                     break;
             }
-            var frmCmdLine = new FormCommandlineHelp();
-            frmCmdLine.StartPosition = FormStartPosition.CenterScreen;
+            var frmCmdLine = new FormCommandlineHelp { StartPosition = FormStartPosition.CenterScreen };
             Application.Run(frmCmdLine);
         }
 
@@ -1792,7 +1791,7 @@ namespace GitUI
             using (var formEditor = new FormEditor(this, args[2]))
             {
                 if (formEditor.ShowDialog() == DialogResult.Cancel)
-                    System.Environment.ExitCode = -1;
+                    Environment.ExitCode = -1;
             }
         }
 
@@ -1931,7 +1930,7 @@ namespace GitUI
 
             public string CommandOutput { get; private set; }
 
-            public readonly GitModule Module;
+            readonly GitModule Module;
 
             public event GitRemoteCommandCompletedEventHandler Completed;
 
@@ -1974,6 +1973,22 @@ namespace GitUI
 
                 return e.Handled;
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            GitUICommands other = obj as GitUICommands;
+            return (other != null) && Equals(other);
+        }
+
+        bool Equals(GitUICommands other)
+        {
+            return Equals(Module, other.Module);
+        }
+
+        public override int GetHashCode()
+        {
+            return Module.GetHashCode();
         }
     }
 }

@@ -5,7 +5,6 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
-using RemoteBranch = GitCommands.Git.RemoteInfo.RemoteBranch;
 
 namespace GitUI.UserControls
 {
@@ -33,6 +32,7 @@ namespace GitUI.UserControls
         static readonly string remotesKey = Guid.NewGuid().ToString();
         static readonly string remoteBranchStaleKey = Guid.NewGuid().ToString();
         static readonly string remoteBranchNewKey = Guid.NewGuid().ToString();
+        static readonly string remoteBranchUnTrackedKey = Guid.NewGuid().ToString();
 
 
         /// <summary>Reloads the remotes.</summary>
@@ -75,26 +75,36 @@ namespace GitUI.UserControls
             nodes.Add(treeNode);
             treeNode.Nodes.AddRange(remoteNode.Children.Select(child =>
             {
-                RemoteBranch remoteBranch = child.Value;
+                RemoteInfo.RemoteTrackingBranch remoteTrackingBranch = child.Value;
                 string imgKey = branchKey;
-                string toolTip = remoteBranch.Name;//Module.CompareCommits();
-                if (remoteBranch.IsHead)
+                string toolTip = remoteTrackingBranch.Name;//Module.CompareCommits();
+                ContextMenuStrip menu = menuRemoteBranchTracked;
+                if (remoteTrackingBranch.IsHead)
                 {
                     imgKey = headBranchKey;
                 }
-                else if (remoteBranch.Status == RemoteBranch.State.Stale)
+                else if (remoteTrackingBranch.Status == RemoteInfo.RemoteTrackingBranch.State.Stale)
                 {
                     imgKey = remoteBranchStaleKey;
-                    toolTip = string.Format(Strings.RemoteBranchStaleTipFormat.Text, remoteBranch.Name);
+                    toolTip = string.Format(Strings.RemoteBranchStaleTipFormat.Text, remoteTrackingBranch.Name);
+                    menu = menuRemoteBranchStale;
                 }
-                else if (remoteBranch.Status == RemoteBranch.State.New)
+                else if (remoteTrackingBranch.Status == RemoteInfo.RemoteTrackingBranch.State.New)
                 {
                     imgKey = remoteBranchNewKey;
-                    toolTip = string.Format(Strings.RemoteBranchNewTipFormat.Text, remoteBranch.Name);
+                    toolTip = string.Format(Strings.RemoteBranchNewTipFormat.Text, remoteTrackingBranch.Name);
+                    menu = menuRemoteBranchNew;
                 }
-                TreeNode childTreeNode = new TreeNode(remoteBranch.Name)
+                else if (false)
+                {// explicitly UN-tracked -> grey, sort to bottom of list
+                    // need to parse from settings
+                    throw new NotImplementedException();
+                    imgKey = remoteBranchUnTrackedKey;
+                    menu = menuRemoteBranchUnTracked;
+                }
+                TreeNode childTreeNode = new TreeNode(remoteTrackingBranch.Name)
                 {
-                    ContextMenuStrip = menuRemoteBranch,
+                    ContextMenuStrip = menu,
                     ImageKey = imgKey,
                     SelectedImageKey = imgKey,
                     ToolTipText = toolTip,
@@ -106,19 +116,19 @@ namespace GitUI.UserControls
             return treeNode;
         }
 
-        /// <summary>Remote repo node.</summary>
+        /// <summary><see cref="Node"/> for a remote repo.</summary>
         sealed class RemoteNode : ParentNode<RemoteInfo, RemoteBranchNode>
         {
             public RemoteNode(RemoteInfo remote, GitUICommands uiCommands)
-                : base(uiCommands, remote, remote.Branches.Select(b => new RemoteBranchNode(uiCommands, b))) { }
+                : base(uiCommands, remote, remote.RemoteTrackingBranches.Select(b => new RemoteBranchNode(uiCommands, b))) { }
         }
 
-        /// <summary>Remote-tracking branch node.</summary>
-        sealed class RemoteBranchNode : Node<RemoteBranch>
+        /// <summary><see cref="Node"/> for a branch on a remote repo.</summary>
+        sealed class RemoteBranchNode : Node<RemoteInfo.RemoteTrackingBranch>
         {
             public RemoteBranchNode(GitUICommands uiCommands,
-                 RemoteBranch branch)
-                : base(branch, uiCommands)
+                 RemoteInfo.RemoteTrackingBranch trackingBranch)
+                : base(trackingBranch, uiCommands)
             {
                 IsDraggable = true;
             }
@@ -136,8 +146,8 @@ namespace GitUI.UserControls
                         {
                             // local is ahead and publishable (remote has NOT diverged)
                             Git.Push(push);
-                            throw new NotImplementedException("Need to tell user about fail or success.");
-                            // if fail because remote diverged between checks (unlikely) -> tell user to fetch/merge or pull
+                            throw new NotImplementedException("tell user about fail or success.");
+                            // if fail because remote diverged since Git.CompareCommits conditional (unlikely) -> tell user to fetch/merge or pull
                         }
                         else
                         {
@@ -148,16 +158,31 @@ namespace GitUI.UserControls
                 return new[] { dropLocalBranch, };
             }
 
-            public void CreateBranch()
-            {
-                throw new NotImplementedException();
-            }
-
+            /// <summary>Download updates from the remote branch.</summary>
             public void Fetch()
             {
+                //Value.Fetch();
+                throw new NotImplementedException("create a GitFetch command (similar to GitPush class)");
+            }
+
+            public void Pull()
+            {
                 throw new NotImplementedException();
             }
 
+            /// <summary>Create a local branch from the remote branch.</summary>
+            public void CreateBranch()
+            {
+                if (Value.Status == RemoteInfo.RemoteTrackingBranch.State.New)
+                {
+                    Fetch();
+                }
+
+                throw new NotImplementedException("be able to specify source branch");
+                //UiCommands.StartCreateBranchDialog(Value.FullPath);
+            }
+
+            /// <summary>Un-track the remote branch and remove the local copy.</summary>
             public void UnTrack()
             {
                 string error = Git.RemoteCmd(GitRemote.UnTrack(Value.Remote, Value));
@@ -168,14 +193,20 @@ namespace GitUI.UserControls
                     TreeNode.Parent.Nodes.Remove(TreeNode);
                     Value.Remote.UnTrack(Value);
                 }
-                //throw new NotImplementedException();   
+                throw new NotImplementedException("this one actually works, but need to change UI state and more testing");
             }
 
+            /// <summary>Delete the branch on the remote repository.</summary>
             public void Delete()
             {
                 // needs BIG WARNING
-                throw new NotImplementedException();
+
+                //GitPush pushDelete = Value.RemoteBranch.Delete();
+
+                throw new NotImplementedException("show warning; implement GitPush RemoteBranch.Delete()");
             }
+
+
         }
 
     }

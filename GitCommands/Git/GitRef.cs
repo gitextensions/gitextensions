@@ -11,6 +11,16 @@ namespace GitCommands
         private readonly string _mergeSettingName;
         private readonly string _remoteSettingName;
         private IList<IGitItem> _subItems;
+       
+        /// <summary>"refs/tags/"</summary>
+        public static readonly string RefsTagsPrefix = "refs/tags/";
+        /// <summary>"refs/heads/"</summary>
+        public static readonly string RefsHeadsPrefix = "refs/heads/";
+        /// <summary>"refs/remotes/"</summary>
+        public static readonly string RefsRemotesPrefix = "refs/remotes/";
+        /// <summary>"refs/bisect/"</summary>
+        public static readonly string RefsBisectPrefix = "refs/bisect/";
+       
         public GitModule Module { get; private set; }
 
         public GitRef(GitModule module, string guid, string completeName) : this(module, guid, completeName, string.Empty) { }
@@ -22,10 +32,10 @@ namespace GitCommands
             Selected = false;
             CompleteName = completeName;
             Remote = remote;
-            IsTag = CompleteName.Contains("refs/tags/");
-            IsHead = CompleteName.Contains(GitHeadsPrefix);
-            IsRemote = CompleteName.Contains("refs/remotes/");
-            IsBisect = CompleteName.Contains("refs/bisect/");
+            IsTag = CompleteName.Contains(RefsTagsPrefix);
+            IsHead = CompleteName.Contains(RefsHeadsPrefix);
+            IsRemote = CompleteName.Contains(RefsRemotesPrefix);
+            IsBisect = CompleteName.Contains(RefsBisectPrefix);
 
             ParseName();
 
@@ -105,7 +115,7 @@ namespace GitCommands
                 if (String.IsNullOrEmpty(value))
                     Module.UnsetSetting(_mergeSettingName);
                 else
-                    Module.SetSetting(_mergeSettingName, GitHeadsPrefix + value);
+                    Module.SetSetting(_mergeSettingName, RefsHeadsPrefix + value);
             }
         }
 
@@ -117,7 +127,7 @@ namespace GitCommands
         public string GetMergeWith(ConfigFile configFile)
         {
             string merge = configFile.GetValue(_mergeSettingName);
-            return merge.StartsWith(GitHeadsPrefix) ? merge.Substring(11) : merge;
+            return merge.StartsWith(RefsHeadsPrefix) ? merge.Substring(11) : merge;
 
         }
 

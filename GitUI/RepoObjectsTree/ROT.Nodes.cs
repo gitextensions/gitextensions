@@ -6,6 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
+using GitUI.Notifications;
+using GitUIPluginInterfaces.Notifications;
 
 namespace GitUI.UserControls
 {
@@ -44,6 +47,7 @@ namespace GitUI.UserControls
                 }
                 UiCommands = uiCommands;
                 Git = uiCommands.Module;
+                Notifier = NotificationManager.Get(uiCommands);
                 IsDraggable = false;
                 ContextActions = new ContextAction[0];
                 AllowDrop = false;
@@ -66,6 +70,7 @@ namespace GitUI.UserControls
             internal virtual void OnDoubleClick() { }
             public virtual IEnumerable<ContextAction> ContextActions { get; protected set; }
 
+            #region Drag/Drop
             /// <summary>true if the <see cref="Node"/> is draggable.</summary>
             public virtual bool IsDraggable { get; protected set; }
             /// <summary>true if the <see cref="Node"/> will accept a dropped object.</summary>
@@ -84,44 +89,6 @@ namespace GitUI.UserControls
             /// <summary>Gets the valid <see cref="DragDropAction"/>s.</summary>
             protected virtual IEnumerable<DragDropAction> CreateDragDropActions() { return new DragDropAction[0]; }
             Lazy<IEnumerable<DragDropAction>> dragDropActions;
-
-            /// <summary>Gets the <see cref="Node"/> from a <see cref="TreeNode"/>'s tag.</summary>
-            public static Node GetNode(TreeNode treeNode)
-            {
-                return (Node)treeNode.Tag;
-            }
-
-            /// <summary>Casts the <see cref="System.Windows.Forms.TreeNode.Tag"/> to a <see cref="Node"/>.</summary>
-            public static Node GetNodeSafe(TreeNode treeNode)
-            {
-                return GetNodeSafe<Node>(treeNode);
-            }
-
-            /// <summary>Casts the <see cref="System.Windows.Forms.TreeNode.Tag"/> to a <see cref="Node"/>.</summary>
-            public static TNode GetNodeSafe<TNode>(TreeNode treeNode)
-                where TNode : Node
-            {
-                return treeNode.Tag as TNode;
-            }
-
-            /// <summary>Executes an action if <see cref="TreeNode"/> holds a <see cref="Node"/>.</summary>
-            public static bool OnNode(TreeNode treeNode, Action<Node> action)
-            {
-                return OnNode<Node>(treeNode, action);
-            }
-
-            /// <summary>Executes an action if <see cref="TreeNode"/> holds a <see cref="Node"/>.</summary>
-            public static bool OnNode<TNode>(TreeNode treeNode, Action<TNode> action)
-                where TNode : Node
-            {
-                TNode node = GetNodeSafe<TNode>(treeNode);
-                if (node != null)
-                {
-                    action(node);
-                    return true;
-                }
-                return false;
-            }
 
             /// <summary>Valid drag-drop action.</summary>
             protected class DragDropAction
@@ -165,6 +132,66 @@ namespace GitUI.UserControls
                         return (t != null) && canDrop(t);
                     }, obj => onDrop(obj as TDragged)) { }
             }
+            #endregion Drag/Drop
+
+            protected INotifier Notifier { get; private set; }
+
+            /// <summary>Wraps <see cref="INotifier.Notify"/>.</summary>
+            protected void Notify(Notification notification)
+            {
+                Notifier.Notify(notification);
+            }
+
+            /// <summary>Depending on a git command's result, publishes a notification.</summary>
+            /// <param name="result">Result of the git command.</param>
+            /// <param name="successNotification">Notification to publish if successful.</param>
+            /// <param name="failNotification">Notification to publish if failed.</param>
+            protected void NotifyIf(
+                        GitCommandResult result,
+                        Func<Notification> successNotification,
+                        Func<Notification> failNotification)
+            {
+                Notifier.NotifyIf(result, successNotification, failNotification);
+            }
+
+            /// <summary>Gets the <see cref="Node"/> from a <see cref="TreeNode"/>'s tag.</summary>
+            public static Node GetNode(TreeNode treeNode)
+            {
+                return (Node)treeNode.Tag;
+            }
+
+            /// <summary>Casts the <see cref="System.Windows.Forms.TreeNode.Tag"/> to a <see cref="Node"/>.</summary>
+            public static Node GetNodeSafe(TreeNode treeNode)
+            {
+                return GetNodeSafe<Node>(treeNode);
+            }
+
+            /// <summary>Casts the <see cref="System.Windows.Forms.TreeNode.Tag"/> to a <see cref="Node"/>.</summary>
+            public static TNode GetNodeSafe<TNode>(TreeNode treeNode)
+                where TNode : Node
+            {
+                return treeNode.Tag as TNode;
+            }
+
+            /// <summary>Executes an action if <see cref="TreeNode"/> holds a <see cref="Node"/>.</summary>
+            public static bool OnNode(TreeNode treeNode, Action<Node> action)
+            {
+                return OnNode<Node>(treeNode, action);
+            }
+
+            /// <summary>Executes an action if <see cref="TreeNode"/> holds a <see cref="Node"/>.</summary>
+            public static bool OnNode<TNode>(TreeNode treeNode, Action<TNode> action)
+                where TNode : Node
+            {
+                TNode node = GetNodeSafe<TNode>(treeNode);
+                if (node != null)
+                {
+                    action(node);
+                    return true;
+                }
+                return false;
+            }
+
         }
 
         /// <summary>Node with a value</summary>

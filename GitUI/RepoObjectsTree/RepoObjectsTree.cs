@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Notifications;
 using GitUI.Properties;
 
 namespace GitUI.UserControls
@@ -18,7 +18,7 @@ namespace GitUI.UserControls
         public RepoObjectsTree()
         {
             InitializeComponent();
-            
+
             Translate();
 
             RegisterContextActions();
@@ -34,6 +34,7 @@ namespace GitUI.UserControls
             imgList.Images.Add(headBranchKey, Resources.HeadBranch);
             imgList.Images.Add(remoteBranchStaleKey, Resources.BranchStale);
             imgList.Images.Add(remoteBranchNewKey, Resources.BranchNew);
+            imgList.Images.Add(remoteBranchUnTrackedKey, Resources.BranchUntracked);
 
             treeMain.ShowNodeToolTips = true;
             treeMain.NodeMouseClick += OnNodeClick;
@@ -87,6 +88,8 @@ namespace GitUI.UserControls
                 // (once from initial UICommandsSource being set)
                 // (once from FormBrowse Initialize())
                 isFirst = false;
+                NotificationFeed notificationFeed = new NotificationFeed(UICommandsSource);
+                toolbarMain.Items.Insert(0, notificationFeed);
             }
             else
             {
@@ -140,16 +143,6 @@ namespace GitUI.UserControls
             //    new CancellationToken(),
             //    TaskContinuationOptions.NotOnCanceled,
             //    uiScheduler);
-        }
-
-        void ExpandAll_Click(object sender, EventArgs e)
-        {
-            treeMain.ExpandAll();
-        }
-
-        void CollapseAll_Click(object sender, EventArgs e)
-        {
-            treeMain.CollapseAll();
         }
     }
 }

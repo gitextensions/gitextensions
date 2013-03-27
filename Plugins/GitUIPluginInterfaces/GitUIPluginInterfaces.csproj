@@ -53,6 +53,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\Statistics\GitImpact\bin\Debug\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +68,9 @@
     <Compile Include="IGitPluginForRepository.cs" />
     <Compile Include="IGitModule.cs" />
     <Compile Include="IGitRemoteCommand.cs" />
+    <Compile Include="Notifications\ContextAction.cs" />
+    <Compile Include="Notifications\INotifications.cs" />
+    <Compile Include="Notifications\Notification.cs" />
     <Compile Include="ILockableNotifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryHosts\IRepositoryHostPlugin.cs" />
@@ -77,6 +83,7 @@
     <Compile Include="RepositoryHosts\IPasswordHelper.cs" />
     <Compile Include="RepositoryHosts\IHostedRemote.cs" />
     <Compile Include="RepositoryHosts\IPullRequestInformation.cs" />
+    <Compile Include="Notifications\StatusSeverity.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

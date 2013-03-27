@@ -80,6 +80,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{9DA0D1
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApplication1", "WindowsFormsApplication1\WindowsFormsApplication1.csproj", "{0549C4E7-7609-4F52-8C85-78B8BB1C4315}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -378,6 +380,18 @@ Global
 		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Release|x64.ActiveCfg = Release|Any CPU
 		{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}.Release|x86.ActiveCfg = Release|Any CPU
+		{0549C4E7-7609-4F52-8C85-78B8BB1C4315}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0549C4E7-7609-4F52-8C85-78B8BB1C4315}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0549C4E7-7609-4F52-8C85-78B8BB1C4315}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{0549C4E7-7609-4F52-8C85-78B8BB1C4315}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{0549C4E7-7609-4F52-8C85-78B8BB1C4315}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0549C4E7-7609-4F52-8C85-78B8BB1C4315}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0549C4E7-7609-4F52-8C85-78B8BB1C4315}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0549C4E7-7609-4F52-8C85-78B8BB1C4315}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0549C4E7-7609-4F52-8C85-78B8BB1C4315}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0549C4E7-7609-4F52-8C85-78B8BB1C4315}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{0549C4E7-7609-4F52-8C85-78B8BB1C4315}.Release|x64.ActiveCfg = Release|Any CPU
+		{0549C4E7-7609-4F52-8C85-78B8BB1C4315}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
