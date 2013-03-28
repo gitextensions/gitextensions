@@ -183,6 +183,27 @@ namespace System.Linq
                 source[i] = transformer(source[i]);
         }
 
+        public static void AddAll<T>(this IList<T> list, IEnumerable<T> elementsToAdd)
+        {
+            foreach (T t in elementsToAdd)
+                list.Add(t);
+        }
 
+        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
+        {
+            foreach (T t in enumerable)
+                action(t);
+        }
+
+        public static IEnumerable<T> Unwrap<T>(this IEnumerable<IEnumerable<T>> enumerable)
+        {
+            if (enumerable == null)
+                yield break;
+
+            foreach (var subEnum in enumerable)
+                if (subEnum != null)
+                    foreach (T t in subEnum)
+                        yield return t;
+        }
     }
 }
