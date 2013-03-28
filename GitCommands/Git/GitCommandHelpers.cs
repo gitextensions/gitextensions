@@ -809,9 +809,10 @@ namespace GitCommands
         public static ConfigFile GetGlobalConfig()
         {
             string configPath = Path.Combine(GetHomeDir(), ".config", "git", "config");
-            if (File.Exists(configPath))
-                return new ConfigFile(configPath, false);
-            return new ConfigFile(Path.Combine(GetHomeDir(), ".gitconfig"), false);
+            if (!File.Exists(configPath))
+                configPath = Path.Combine(GetHomeDir(), ".gitconfig");
+
+            return ConfigFilesCache.Global.GetConfigFile(configPath, false).ConfigFile;
         }
 
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool untrackedFiles)

@@ -44,6 +44,24 @@ namespace GitCommands
             WorkingDir = workingdir;
         }
 
+        public void Dispose()
+        {
+            DisposeImpl();
+            GC.SuppressFinalize(this);
+        }
+
+        private void DisposeImpl()
+        {
+            _SubmoduleConfigFile.SafeDispose();
+            _LocalConfig.SafeDispose();
+            _GitExtensionsConfig.SafeDispose();
+        }
+
+        ~GitModule()
+        {
+            DisposeImpl();
+        }
+
         private string _workingdir;
 
         public string WorkingDir
@@ -1175,9 +1193,13 @@ namespace GitCommands
             return revisionsTab.Any(ex);
         }
 
+        private CachedConfigFile _SubmoduleConfigFile;
         public ConfigFile GetSubmoduleConfigFile()
         {
-            return new ConfigFile(_workingdir + ".gitmodules", true);
+            if(_SubmoduleConfigFile == null)
+                _SubmoduleConfigFile = ConfigFilesCache.Global.GetConfigFile(_workingdir + ".gitmodules", true);
+
+            return _SubmoduleConfigFile.ConfigFile;
         }
 
         public string GetCurrentSubmoduleLocalPath()
@@ -2055,14 +2077,23 @@ namespace GitCommands
             return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
+        private CachedConfigFile _LocalConfig;
         public ConfigFile GetLocalConfig()
         {
-            return new ConfigFile(WorkingDirGitDir() + Settings.PathSeparator.ToString() + "config", true);
+            if (_LocalConfig == null)
+                _LocalConfig = ConfigFilesCache.Global.GetConfigFile(Path.Combine(WorkingDirGitDir(), "config"), true);
+
+            return _LocalConfig.ConfigFile;
         }
 
+
+        private CachedConfigFile _GitExtensionsConfig;
         public ConfigFile GetGitExtensionsConfig()
         {
-            return new ConfigFile(FullPath(".gitextensions"), true);
+            if (_GitExtensionsConfig == null)
+                _GitExtensionsConfig = ConfigFilesCache.Global.GetConfigFile(FullPath(".gitextensions"), true);
+
+            return _GitExtensionsConfig.ConfigFile;
         }
 
         public string GetSetting(string setting)
