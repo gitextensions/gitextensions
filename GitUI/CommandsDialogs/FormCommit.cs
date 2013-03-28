@@ -2212,8 +2212,8 @@ namespace GitUI.CommandsDialogs
                 var formsTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
                 Task.Factory.StartNew(() =>
-                {
-                    bashProcess.WaitForExit();
+                    {
+                        bashProcess.WaitForExit();
                         bashProcess.Dispose();
                     })
                     .ContinueWith(_ => RescanChanges(),
