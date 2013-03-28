@@ -1268,7 +1268,7 @@ namespace GitUI.CommandsDialogs
 
         private void SolveMergeConflictsClick(object sender, EventArgs e)
         {
-            if (UICommands.StartResolveConflictsDialog(this))
+            if (UICommands.StartResolveConflictsDialog(this, false))
                 Initialize();
         }
 
