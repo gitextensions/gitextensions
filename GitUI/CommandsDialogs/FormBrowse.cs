@@ -962,6 +962,9 @@ namespace GitUI.CommandsDialogs
                 RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
+        private TabPage BuildReportTabPage;
+        private WebBrowser BuildReportWebBrowser;
+        
         private void FillBuildReport()
         {
             if(Settings.IsMonoRuntime())
@@ -972,6 +975,11 @@ namespace GitUI.CommandsDialogs
 
             if (buildInfoIsAvailable)
             {
+                if (this.BuildReportTabPage == null)
+                {
+                    CreateBuildReportTabPage();
+                }
+
                 var isFavIconMissing = BuildReportTabPage.ImageIndex < 0;
 
                 if (isFavIconMissing || CommitInfoTabControl.SelectedTab == BuildReportTabPage)
@@ -991,13 +999,29 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                if (CommitInfoTabControl.Controls.Contains(BuildReportTabPage))
+                if (BuildReportTabPage != null && CommitInfoTabControl.Controls.Contains(BuildReportTabPage))
                 {
                     BuildReportWebBrowser.Stop();
                     BuildReportWebBrowser.Document.Write(string.Empty);
                     CommitInfoTabControl.Controls.Remove(BuildReportTabPage);
                 }
             }
+        }
+
+        private void CreateBuildReportTabPage()
+        {
+            this.BuildReportTabPage = new TabPage
+                {
+                    Padding = new Padding(3),
+                    TabIndex = this.CommitInfoTabControl.Controls.Count,
+                    Text = "Build Report",
+                    UseVisualStyleBackColor = true
+                };
+            this.BuildReportWebBrowser = new WebBrowser
+                {
+                    Dock = DockStyle.Fill
+                };
+            this.BuildReportTabPage.Controls.Add(this.BuildReportWebBrowser);
         }
 
         private void BuildReportWebBrowserOnNavigated(object sender, WebBrowserNavigatedEventArgs webBrowserNavigatedEventArgs)
