@@ -496,14 +496,15 @@ namespace GitUI
                         listItem.ImageIndex = GetItemImageIndex(item);
                         if (item.SubmoduleStatus != null && !item.SubmoduleStatus.IsCompleted)
                         {
-                            item.SubmoduleStatus.ContinueWith((task) => listItem.ImageIndex = GetItemImageIndex(item),
+                            var capturedItem = item;
+                            item.SubmoduleStatus.ContinueWith((task) => listItem.ImageIndex = GetItemImageIndex(capturedItem),
                                                               CancellationToken.None,
                                                               TaskContinuationOptions.OnlyOnRanToCompletion,
                                                               TaskScheduler.FromCurrentSynchronizationContext());
                         }
                         listItem.Tag = item;
                         list.Add(listItem);
-                    }
+                    };
                 }
                 FileStatusListView.Items.AddRange(list.ToArray());
                 FileStatusListView.EndUpdate();

@@ -375,6 +375,14 @@ namespace GitUI.CommandsDialogs
 
             UICommands.RaisePreBrowseInitialize(this);
 
+            // check for updates
+            if (Settings.LastUpdateCheck.AddDays(7) < DateTime.Now)
+            {
+                Settings.LastUpdateCheck = DateTime.Now;
+                using (var updateForm = new FormUpdates(Module.GitVersion) { AutoClose = true })
+                    updateForm.ShowDialog(Owner);
+            }
+
             bool validWorkingDir = Module.IsValidGitWorkingDir();
             bool hasWorkingDir = !string.IsNullOrEmpty(Module.WorkingDir);
             branchSelect.Text = validWorkingDir ? Module.GetSelectedBranch() : "";
@@ -3044,6 +3052,11 @@ namespace GitUI.CommandsDialogs
             catch(Exception){}
 
             Process.Start(@"https://github.com/gitextensions/gitextensions/issues/new?body=" + WebUtility.HtmlEncode(issueData));            
+        }
+        private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var updateForm = new FormUpdates(Module.GitVersion))
+                updateForm.ShowDialog(Owner);
         }
     }
 }
