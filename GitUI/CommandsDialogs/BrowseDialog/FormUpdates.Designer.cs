@@ -1,6 +1,6 @@
-﻿namespace AutoCheckForUpdates
+﻿namespace GitUI.CommandsDialogs.BrowseDialog
 {
-    partial class Updates
+    partial class FormUpdates
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Updates));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormUpdates));
             this.closeButton = new System.Windows.Forms.Button();
             this.UpdateLabel = new System.Windows.Forms.Label();
             this.link = new System.Windows.Forms.LinkLabel();
@@ -40,9 +40,10 @@
             // 
             // closeButton
             // 
-            this.closeButton.Location = new System.Drawing.Point(365, 66);
+            this.closeButton.Location = new System.Drawing.Point(456, 82);
+            this.closeButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(75, 23);
+            this.closeButton.Size = new System.Drawing.Size(94, 29);
             this.closeButton.TabIndex = 0;
             this.closeButton.Text = "Close";
             this.closeButton.UseVisualStyleBackColor = true;
@@ -51,18 +52,20 @@
             // UpdateLabel
             // 
             this.UpdateLabel.AutoSize = true;
-            this.UpdateLabel.Location = new System.Drawing.Point(13, 13);
+            this.UpdateLabel.Location = new System.Drawing.Point(16, 16);
+            this.UpdateLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.UpdateLabel.Name = "UpdateLabel";
-            this.UpdateLabel.Size = new System.Drawing.Size(114, 13);
+            this.UpdateLabel.Size = new System.Drawing.Size(152, 17);
             this.UpdateLabel.TabIndex = 1;
             this.UpdateLabel.Text = "Searching for updates.";
             // 
             // link
             // 
             this.link.AutoSize = true;
-            this.link.Location = new System.Drawing.Point(13, 37);
+            this.link.Location = new System.Drawing.Point(16, 46);
+            this.link.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.link.Name = "link";
-            this.link.Size = new System.Drawing.Size(41, 13);
+            this.link.Size = new System.Drawing.Size(54, 17);
             this.link.TabIndex = 2;
             this.link.TabStop = true;
             this.link.Text = "version";
@@ -70,9 +73,10 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(16, 37);
+            this.progressBar1.Location = new System.Drawing.Point(20, 46);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(424, 23);
+            this.progressBar1.Size = new System.Drawing.Size(530, 29);
             this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar1.TabIndex = 3;
             // 
@@ -84,28 +88,30 @@
             // linkChangeLog
             // 
             this.linkChangeLog.AutoSize = true;
-            this.linkChangeLog.Location = new System.Drawing.Point(14, 71);
+            this.linkChangeLog.Location = new System.Drawing.Point(18, 89);
+            this.linkChangeLog.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.linkChangeLog.Name = "linkChangeLog";
-            this.linkChangeLog.Size = new System.Drawing.Size(92, 13);
+            this.linkChangeLog.Size = new System.Drawing.Size(119, 17);
             this.linkChangeLog.TabIndex = 2;
             this.linkChangeLog.TabStop = true;
             this.linkChangeLog.Text = "Show ChangeLog";
             this.linkChangeLog.Visible = false;
             this.linkChangeLog.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkChangeLog_LinkClicked);
             // 
-            // Updates
+            // FormUpdates
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(452, 100);
+            this.ClientSize = new System.Drawing.Size(565, 125);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.linkChangeLog);
             this.Controls.Add(this.link);
             this.Controls.Add(this.UpdateLabel);
             this.Controls.Add(this.closeButton);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Updates";
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Name = "FormUpdates";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Check for update";
             this.Shown += new System.EventHandler(this.UpdatesShown);

@@ -286,6 +286,7 @@ namespace GitUI.CommandsDialogs
             ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
 
             //controls can be accessed only from UI thread
+            Module.LastPullActionToPullMerge();
             _candidateForRebasingMergeCommit = Settings.PullMerge == Settings.PullAction.Rebase && PushToRemote.Checked && !PushAllBranches.Checked && TabControlTagBranch.SelectedTab == BranchTab;
             _selectedBranch = _NO_TRANSLATE_Branch.Text;
             _selectedBranchRemote = _NO_TRANSLATE_Remotes.Text;
@@ -370,10 +371,10 @@ namespace GitUI.CommandsDialogs
                     switch (idx)
                     {
                         case 0:
-                            Module.LastPullAction = Settings.PullAction.Rebase;
+                            Settings.PullMerge = Settings.PullAction.Rebase;
                             break;
                         case 1:
-                            Module.LastPullAction = Settings.PullAction.Merge;
+                            Settings.PullMerge = Settings.PullAction.Merge;
                             break;
                         default:
                             cancel = true;
@@ -387,7 +388,7 @@ namespace GitUI.CommandsDialogs
                         return false;
                 }
 
-                if (Module.LastPullAction == Settings.PullAction.Fetch)
+                if (Settings.PullMerge == Settings.PullAction.Fetch)
                 {
                     form.AppendOutputLine(Environment.NewLine +
                         "Can not perform auto pull, when merge option is set to fetch.");

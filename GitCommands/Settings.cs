@@ -385,10 +385,24 @@ namespace GitCommands
         }
 
         private static string _smtp;
-        public static string Smtp
+        public static string SmtpServer
         {
-            get { return SafeGet("smtp", "", ref _smtp); }
-            set { SafeSet("smtp", value, ref _smtp); }
+            get { return SafeGet("SmtpServer", "smtp.gmail.com", ref _smtp); }
+            set { SafeSet("SmtpServer", value, ref _smtp); }
+        }
+
+        private static int? _smtpPort;
+        public static int SmtpPort
+        {
+            get { return SafeGet("SmtpPort", 465, ref _smtpPort); }
+            set { SafeSet("SmtpPort", value, ref _smtpPort); }
+        }
+
+        private static bool? _smtpUseSSL;
+        public static bool SmtpUseSsl
+        {
+            get { return SafeGet("SmtpUseSsl", true, ref _smtpUseSSL); }
+            set { SafeSet("SmtpUseSsl", value, ref _smtpUseSSL); }
         }
         
         private static bool? _autoStash;
@@ -844,6 +858,11 @@ namespace GitCommands
             }
         }
 
+        public static bool IsMonoRuntime()
+        {
+            return Type.GetType("Mono.Runtime") != null;
+        }
+
         public static void SaveSettings()
         {
             try
@@ -1019,6 +1038,13 @@ namespace GitCommands
             set { SafeSet("UseFormCommitMessage", value, ref _UseFormCommitMessage); }
         }
 
+        private static DateTime? _lastUpdateCheck;
+        public static DateTime LastUpdateCheck
+        {
+            get { return SafeGet("LastUpdateCheck", default(DateTime), ref _lastUpdateCheck); }
+            set { SafeSet("LastUpdateCheck", value, ref _lastUpdateCheck); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
@@ -1051,9 +1077,21 @@ namespace GitCommands
             return SafeGet(key, defaultValue, ref field, x => x.Parse(defaultValue));
         }
 
+        private static DateTime SafeGet(string key, DateTime? defaultValue, ref DateTime? field)
+        {
+            return SafeGet(key, defaultValue, ref field,
+                x =>
+                {
+                    DateTime result;
+                    if (DateTime.TryParseExact(x, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                        return result;
+                    return null;
+                }).GetValueOrDefault();
+        }
+
         private static bool SafeGet(string key, bool defaultValue, ref bool? field)
         {
-            return SafeGet(key, defaultValue, ref field, x => x == "True").Value;
+            return SafeGet(key, defaultValue, ref field, x => x == "True").GetValueOrDefault();
         }
 
         private static int SafeGet(string key, int defaultValue, ref int? field)
@@ -1062,12 +1100,18 @@ namespace GitCommands
             {
                 int result;
                 return int.TryParse(x, out result) ? result : defaultValue;
-            }).Value;
+            }).GetValueOrDefault();
         }
 
         private static Color SafeGet(string key, Color defaultValue, ref Color? field)
         {
-            return SafeGet(key, defaultValue, ref field, x => ColorTranslator.FromHtml(x)).Value;
+            return SafeGet(key, defaultValue, ref field, x => ColorTranslator.FromHtml(x)).GetValueOrDefault();
+        }
+
+        private static void SafeSet(string key, DateTime? value, ref DateTime? field)
+        {
+            field = value;
+            SetValue(key, field != null ? field.Value.ToString("yyyy/M/dd", CultureInfo.InvariantCulture) : null);
         }
 
         private static void SafeSet<T>(string key, T value, ref T field)

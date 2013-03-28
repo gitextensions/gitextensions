@@ -58,14 +58,15 @@ namespace GitCommands
             Cancel();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
-            var newTask = Task.Factory.StartNew(() => loadContent(token), token);
-            newTask.ContinueWith((task) =>
+            return Task.Factory.StartNew(() => loadContent(token), token)
+                .ContinueWith((task) =>
             {
                 if (task.IsFaulted)
                 {
                     foreach (var e in task.Exception.InnerExceptions)
                         if (!OnLoadingError(e))
                             throw e;
+                    return;
                 }
                 try
                 {
@@ -77,7 +78,6 @@ namespace GitCommands
                         throw;
                 }
             }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _taskScheduler);
-            return newTask;
         }
 
         public Task<T> Load<T>(Func<T> loadContent, Action<T> onLoaded)
@@ -90,26 +90,28 @@ namespace GitCommands
             Cancel();
             _cancelledTokenSource = new CancellationTokenSource();
             var token = _cancelledTokenSource.Token;
-            var newTask = Task.Factory.StartNew(() => loadContent(token), token);
-            newTask.ContinueWith((task) =>
+            return Task.Factory.StartNew(() => loadContent(token), token)
+                .ContinueWith((task) =>
             {
                 if (task.IsFaulted)
                 {
                     foreach (var e in task.Exception.InnerExceptions)
                         if (!OnLoadingError(e))
                             throw e;
+                    return default(T);
                 }
                 try
                 {
                     onLoaded(task.Result);
+                    return task.Result;
                 }
                 catch (Exception exception)
                 {
                     if (!OnLoadingError(exception))
                         throw;
+                    return default(T);
                 }
             }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _taskScheduler);
-            return newTask;
         }
 
         public void Cancel()

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Mail;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.CommandsDialogs.FormatPatchDialog;
 using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs
@@ -39,8 +41,9 @@ namespace GitUI.CommandsDialogs
         public FormFormatPatch(GitUICommands aCommands)
             : base(aCommands)
         {
-            InitializeComponent(); 
+            InitializeComponent();
             Translate();
+            MailFrom.Text = Module.GetEffectiveSetting("user.email");
         }
 
         private void Browse_Click(object sender, EventArgs e)
@@ -77,7 +80,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (!SaveToDir.Checked && string.IsNullOrEmpty(MailAddress.Text))
+            if (!SaveToDir.Checked && string.IsNullOrEmpty(MailTo.Text))
             {
                 MessageBox.Show(this, _noEmailEnteredText.Text);
                 return;
@@ -89,7 +92,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (!SaveToDir.Checked && string.IsNullOrEmpty(Settings.Smtp))
+            if (!SaveToDir.Checked && string.IsNullOrEmpty(Settings.SmtpServer))
             {
                 MessageBox.Show(this, _wrongSmtpSettingsText.Text);
                 return;
@@ -156,7 +159,7 @@ namespace GitUI.CommandsDialogs
             {
                 result += Environment.NewLine + Environment.NewLine;
                 if (SendMail(savePatchesToDir))
-                    result += _sendMailResult.Text + " " + MailAddress.Text;
+                    result += _sendMailResult.Text + " " + MailTo.Text;
                 else
                     result += _sendMailResultFailed.Text;
 
@@ -177,12 +180,12 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                string from = Module.GetEffectiveSetting("user.email");
+                string from = MailFrom.Text;
 
                 if (string.IsNullOrEmpty(from))
                     MessageBox.Show(this, _noGitMailConfigured.Text);
 
-                string to = MailAddress.Text;
+                string to = MailTo.Text;
 
                 using (var mail = new MailMessage(from, to, MailSubject.Text, MailBody.Text))
                 {
@@ -192,7 +195,19 @@ namespace GitUI.CommandsDialogs
                         mail.Attachments.Add(attacheMent);
                     }
 
-                    var smtpClient = new SmtpClient(Settings.Smtp);
+                    var smtpClient = new SmtpClient(Settings.SmtpServer);
+                    smtpClient.Port = Settings.SmtpPort;
+                    smtpClient.EnableSsl = Settings.SmtpUseSsl;
+                    using (var credentials = new SmtpCredentials())
+                    {
+                        credentials.login.Text = from;
+                        if (credentials.ShowDialog(this) == DialogResult.OK)
+                            smtpClient.Credentials = new NetworkCredential(credentials.login.Text, credentials.password.Text);
+                        else
+                            smtpClient.Credentials = CredentialCache.DefaultNetworkCredentials;
+                    }
+                    ServicePointManager.ServerCertificateValidationCallback =
+                        (sender, certificate, chain, errors) => true;
                     smtpClient.Send(mail);
                 }
             }
@@ -207,7 +222,8 @@ namespace GitUI.CommandsDialogs
         private void SaveToDir_CheckedChanged(object sender, EventArgs e)
         {
             OutputPath.Enabled = SaveToDir.Checked;
-            MailAddress.Enabled = !SaveToDir.Checked;
+            MailFrom.Enabled = !SaveToDir.Checked;
+            MailTo.Enabled = !SaveToDir.Checked;
             MailSubject.Enabled = !SaveToDir.Checked;
             MailBody.Enabled = !SaveToDir.Checked;
         }

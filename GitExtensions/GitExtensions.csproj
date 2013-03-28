@@ -103,11 +103,6 @@
       <Project>{ee6ed99f-cb12-4683-b055-d28fc7357a34}</Project>
       <Name>LibGit2Sharp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Plugins\AutoCheckForUpdates\AutoCheckForUpdates.csproj">
-      <Project>{330F1115-B3DE-47F1-8A7E-D181E59E96E0}</Project>
-      <Name>AutoCheckForUpdates</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules.csproj">
       <Project>{7e5433f4-dd13-4d8e-95b2-59b4ffe7d636}</Project>
       <Name>AutoCompileSubmodules</Name>
