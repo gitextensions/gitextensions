@@ -223,8 +223,6 @@ namespace GitUI.CommandsDialogs
             this.menuStrip1 = new GitUI.MenuStripEx();
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.BuildReportWebBrowser = new System.Windows.Forms.WebBrowser();
-            this.BuildReportTabPage = new System.Windows.Forms.TabPage();
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).BeginInit();
 #endif
@@ -261,7 +259,6 @@ namespace GitUI.CommandsDialogs
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).BeginInit();
-            this.BuildReportTabPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolPanel
@@ -647,7 +644,6 @@ namespace GitUI.CommandsDialogs
             this.CommitInfoTabControl.Controls.Add(this.CommitInfoTabPage);
             this.CommitInfoTabControl.Controls.Add(this.TreeTabPage);
             this.CommitInfoTabControl.Controls.Add(this.DiffTabPage);
-            this.CommitInfoTabControl.Controls.Add(this.BuildReportTabPage);
             this.CommitInfoTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CommitInfoTabControl.Location = new System.Drawing.Point(0, 0);
             this.CommitInfoTabControl.Name = "CommitInfoTabControl";
@@ -1908,26 +1904,6 @@ namespace GitUI.CommandsDialogs
             this.menuStrip1.Size = new System.Drawing.Size(923, 24);
             this.menuStrip1.TabIndex = 3;
             // 
-            // BuildReportWebBrowser
-            // 
-            this.BuildReportWebBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BuildReportWebBrowser.Location = new System.Drawing.Point(3, 3);
-            this.BuildReportWebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.BuildReportWebBrowser.Name = "BuildReportWebBrowser";
-            this.BuildReportWebBrowser.Size = new System.Drawing.Size(909, 253);
-            this.BuildReportWebBrowser.TabIndex = 0;
-            // 
-            // BuildReportTabPage
-            // 
-            this.BuildReportTabPage.Controls.Add(this.BuildReportWebBrowser);
-            this.BuildReportTabPage.Location = new System.Drawing.Point(4, 24);
-            this.BuildReportTabPage.Name = "BuildReportTabPage";
-            this.BuildReportTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.BuildReportTabPage.Size = new System.Drawing.Size(915, 259);
-            this.BuildReportTabPage.TabIndex = 3;
-            this.BuildReportTabPage.Text = "Build Report";
-            this.BuildReportTabPage.UseVisualStyleBackColor = true;
-            // 
             // FormBrowse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -1981,7 +1957,6 @@ namespace GitUI.CommandsDialogs
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gitRevisionBindingSource)).EndInit();
-            this.BuildReportTabPage.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2172,8 +2147,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem parentOfALocalToolStripMenuItem;
         private ToolStripMenuItem parentOfBLocalToolStripMenuItem;        
         private ToolStripMenuItem reportAnIssueToolStripMenuItem;
-        private TabPage BuildReportTabPage;
-        private WebBrowser BuildReportWebBrowser;        
         private ToolStripSeparator toolStripSeparator40;
         private ToolStripSeparator toolStripSeparator41;
         private ToolStripSeparator toolStripSeparator42;
