@@ -92,6 +92,12 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.designer.cs">
       <DependentUpon>FormOpenDirectory.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\FormUpdates.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\FormUpdates.Designer.cs">
+      <DependentUpon>FormUpdates.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +116,12 @@
     </Compile>
     <Compile Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.Designer.cs">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\FormatPatchDialog\SmtpCredentials.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\FormatPatchDialog\SmtpCredentials.Designer.cs">
+      <DependentUpon>SmtpCredentials.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.cs">
       <SubType>UserControl</SubType>
@@ -888,6 +900,10 @@
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.resx">
       <DependentUpon>FormOpenDirectory.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormUpdates.resx">
+      <DependentUpon>FormUpdates.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.resx">
       <DependentUpon>CreatePullRequestForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -899,6 +915,9 @@
     <EmbeddedResource Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.resx">
       <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\FormatPatchDialog\SmtpCredentials.resx">
+      <DependentUpon>SmtpCredentials.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.resx">
       <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>

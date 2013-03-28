@@ -226,9 +226,6 @@
     </DirectoryRef>
 
     <DirectoryRef Id="PluginsDir">
-      <Component Id="AutoCheckForUpdates.dll" Guid="*">
-        <File Source="..\Plugins\AutoCheckForUpdates\bin\Release\AutoCheckForUpdates.dll"/>
-      </Component>
       <Component Id="DeleteUnusedBranches.dll" Guid="*">
         <File Source="..\Plugins\DeleteUnusedBranches\bin\Release\DeleteUnusedBranches.dll"/>
       </Component>
@@ -584,9 +581,6 @@
       <ComponentRef Id="GithubSharp.Core.dll"/>
 
       <Feature Id="Plugins" Title="Plugins" Level="1">
-        <Feature Id="AutoCheckForUpdates" Title="Check for updates" Level="1">
-          <ComponentRef Id="AutoCheckForUpdates.dll"/>
-        </Feature>
         <Feature Id="AutoCompileSubmodules" Title="Auto compile submodules" Level="1">
           <ComponentRef Id="AutoCompileSubmodules.dll"/>
         </Feature>
