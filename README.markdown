@@ -37,13 +37,13 @@ OBS: Monodevelop 4.0 is Xamarin Studio
 
 * On monoDevelop find Add-In manager (macOS is on program main menu, other OS's under tools)
 * over the gallery tab, select "Manage repositories..." from the "Repositories" drop-down menu
-* For monodevelop <= 3.0, add a new URL http://mrward.github.com/monodevelop-nuget-addin-repository/3.0.5/main.mrep otherwise, if using Xamarin Studio use http://mrward.github.com/monodevelop-nuget-addin-repository/4.0/main.mrep
+* For monodevelop <= 3.0.5, add a new URL http://mrward.github.com/monodevelop-nuget-addin-repository/3.0.5/main.mrep otherwise, if using Xamarin Studio use http://mrward.github.com/monodevelop-nuget-addin-repository/4.0/main.mrep
 * A new IDE extension option will appear, select the nuget package management
 * To add nuget packages or maintain it, you right click either on the solution or in the references
 
 On monoDevelop preferences, you will find a new "Nuget" option. Check the box that says "Enable package restore".
 
-If by any reason your xbuild is not downloading and installing the packages, manually run the following command to get all the missing packages.
+If by any reason your xbuild is not downloading and installing the packages, manually run the following command to get all the missing packages. Make sure you run it at the top level directory of your solution, like the example below:
 
 ```
 gitextensions  (master)$ .nuget/Nuget.sh 
