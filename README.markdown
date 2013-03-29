@@ -31,13 +31,13 @@ If you do not want to use github, I also accept mailed patches. Just make sure t
 
 ## Installing Nuget in Monodevelop/Xamarin Studio
 
-Following steps will add nuget package management capabilities to your monoDevelop/Xamarin Studio
+Following steps will add nuget package management capabilities to your monoDevelop/Xamarin Studio. Installing nuget requires at least Monodevelop version 3.0.5.
 
 OBS: Monodevelop 4.0 is Xamarin Studio
 
 * On monoDevelop find Add-In manager (macOS is on program main menu, other OS's under tools)
 * over the gallery tab, select "Manage repositories..." from the "Repositories" drop-down menu
-* For monodevelop <= 3.0.5, add a new URL http://mrward.github.com/monodevelop-nuget-addin-repository/3.0.5/main.mrep otherwise, if using Xamarin Studio use http://mrward.github.com/monodevelop-nuget-addin-repository/4.0/main.mrep
+* For monodevelop 3.0.5, add a new URL http://mrward.github.com/monodevelop-nuget-addin-repository/3.0.5/main.mrep otherwise, if using Xamarin Studio use http://mrward.github.com/monodevelop-nuget-addin-repository/4.0/main.mrep
 * A new IDE extension option will appear, select the nuget package management
 * To add nuget packages or maintain it, you right click either on the solution or in the references
 
