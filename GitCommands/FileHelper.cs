@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace GitCommands
 {
@@ -75,7 +73,7 @@ namespace GitCommands
             {
                 var values = line.Split(':');
                 if (values.Length == 3)
-                    attributes.Add(values[1].Trim(), values[2].Trim());
+                    attributes[values[1].Trim()] = values[2].Trim();
             }
 
             string val;
