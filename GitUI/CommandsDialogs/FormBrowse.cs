@@ -104,9 +104,9 @@ namespace GitUI.CommandsDialogs
         private bool _toolbarButtonsCreated;
 #endif
         private bool _dontUpdateOnIndexChange;
-        private ToolStripGitStatus _toolStripGitStatus;
-        private FilterRevisionsHelper filterRevisionsHelper;
-        private FilterBranchHelper _FilterBranchHelper;
+        private readonly ToolStripGitStatus _toolStripGitStatus;
+        private readonly FilterRevisionsHelper _filterRevisionsHelper;
+        private readonly FilterBranchHelper _filterBranchHelper;
 
         private const string DiffTabPageTitleBase = "Diff";
 
@@ -141,15 +141,15 @@ namespace GitUI.CommandsDialogs
             Task.Factory.StartNew(PluginLoader.Load)
                 .ContinueWith((task) => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());
             RevisionGrid.GitModuleChanged += DashboardGitModuleChanged;
-            filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
-            _FilterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, RevisionGrid);
+            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
+            _filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, RevisionGrid);
             Translate();
 
             if (Settings.ShowGitStatusInBrowseToolbar)
             {
                 _toolStripGitStatus = new ToolStripGitStatus
                                  {
-                                     ImageTransparentColor = System.Drawing.Color.Magenta
+                                     ImageTransparentColor = Color.Magenta
                                  };
                 if (aCommands != null)
                     _toolStripGitStatus.UICommandsSource = this;
@@ -160,7 +160,7 @@ namespace GitUI.CommandsDialogs
             }
             RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
             DiffText.ExtraDiffArgumentsChanged += DiffTextExtraDiffArgumentsChanged;
-            filterRevisionsHelper.SetFilter(filter);
+            _filterRevisionsHelper.SetFilter(filter);
             DiffText.SetFileLoader(getNextPatchFile);
 
             GitTree.ImageList = new ImageList();
@@ -259,7 +259,7 @@ namespace GitUI.CommandsDialogs
             HideVariableMainMenuItems();
 
             RevisionGrid.Load();
-            _FilterBranchHelper.InitToolStripBranchFilter();
+            _filterBranchHelper.InitToolStripBranchFilter();
 
             Cursor.Current = Cursors.WaitCursor;
             InternalInitialize(false);
@@ -424,7 +424,7 @@ namespace GitUI.CommandsDialogs
             _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
             if (RepoHosts.GitHosters.Count == 1)
                 _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
-            _FilterBranchHelper.InitToolStripBranchFilter();
+            _filterBranchHelper.InitToolStripBranchFilter();
             if (hard && hasWorkingDir)
                 ShowRevisions();
             RefreshWorkingDirCombo();
@@ -671,9 +671,9 @@ namespace GitUI.CommandsDialogs
         {
             if (Settings.ShowStashCount)
             {
-                int stashCount = Module.GetStashes().Count;
-                toolStripSplitStash.Text = string.Format(_stashCount.Text, stashCount,
-                                                         stashCount != 1 ? _stashPlural.Text : _stashSingular.Text);
+                AsyncLoader.DoAsync(() => Module.GetStashes().Count,
+                    (result) => toolStripSplitStash.Text = string.Format(_stashCount.Text, result,
+                        result != 1 ? _stashPlural.Text : _stashSingular.Text));
             }
             else
             {
@@ -1722,14 +1722,6 @@ namespace GitUI.CommandsDialogs
             UICommands.RepoChangedNotifier.Notify();
         }
 
-        private void UpdateAllSubmodulesForSuperProjectToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            var module = (sender as ToolStripMenuItem).Tag as GitModule;
-            GitUICommands uiCommands = new GitUICommands(module);
-            if (uiCommands.StartUpdateSubmodulesDialog(this))
-                UICommands.RepoChangedNotifier.Notify();
-        }
-
         private void UpdateAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartUpdateSubmodulesDialog(this);
@@ -2626,15 +2618,15 @@ namespace GitUI.CommandsDialogs
         public override void AddTranslationItems(Translation translation)
         {
             base.AddTranslationItems(translation);
-            TranslationUtl.AddTranslationItemsFromFields(Name, filterRevisionsHelper, translation);
-            TranslationUtl.AddTranslationItemsFromFields(Name, _FilterBranchHelper, translation);
+            TranslationUtl.AddTranslationItemsFromFields(Name, _filterRevisionsHelper, translation);
+            TranslationUtl.AddTranslationItemsFromFields(Name, _filterBranchHelper, translation);
         }
 
         public override void TranslateItems(Translation translation)
         {
             base.TranslateItems(translation);
-            TranslationUtl.TranslateItemsFromFields(Name, filterRevisionsHelper, translation);
-            TranslationUtl.TranslateItemsFromFields(Name, _FilterBranchHelper, translation);
+            TranslationUtl.TranslateItemsFromFields(Name, _filterRevisionsHelper, translation);
+            TranslationUtl.TranslateItemsFromFields(Name, _filterBranchHelper, translation);
         }
 
         private IList<GitItemStatus> FindDiffFilesMatches(string name)
