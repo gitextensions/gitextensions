@@ -129,7 +129,7 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.designer.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.Designer.cs">
       <DependentUpon>FormOpenDirectory.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\FormUpdates.cs">
@@ -1737,5 +1737,5 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
 </Project>

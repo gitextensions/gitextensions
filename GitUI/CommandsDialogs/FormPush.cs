@@ -52,10 +52,10 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pullRepository =
             new TranslationString("The push was rejected because the tip of your current branch is behind its remote counterpart. " +
                 "Merge the remote changes before pushing again." + Environment.NewLine + Environment.NewLine + 
-                "Do you want pull latest changes?");
-        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with rebase|Pull with merge|Cancel");
+                "Do you want to pull the latest changes?");
+        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with rebase|Pull with merge|Pull with default pull action|Cancel");
         private readonly TranslationString _pullRepositoryCaption = new TranslationString("Push was rejected");
-        private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
+        private readonly TranslationString _dontShowAgain = new TranslationString("Remember my decision.");
 
         #endregion
 
@@ -286,8 +286,7 @@ namespace GitUI.CommandsDialogs
             ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
 
             //controls can be accessed only from UI thread
-            Module.LastPullActionToPullMerge();
-            _candidateForRebasingMergeCommit = Settings.PullMerge == Settings.PullAction.Rebase && PushToRemote.Checked && !PushAllBranches.Checked && TabControlTagBranch.SelectedTab == BranchTab;
+            _candidateForRebasingMergeCommit = PushToRemote.Checked && !PushAllBranches.Checked && TabControlTagBranch.SelectedTab == BranchTab;
             _selectedBranch = _NO_TRANSLATE_Branch.Text;
             _selectedBranchRemote = _NO_TRANSLATE_Remotes.Text;
             _selectedRemoteBranchName = RemoteBranch.Text;
@@ -319,7 +318,7 @@ namespace GitUI.CommandsDialogs
 
         private bool IsRebasingMergeCommit()
         {
-            if (_candidateForRebasingMergeCommit)
+            if (Settings.PullMerge == Settings.PullAction.Rebase && _candidateForRebasingMergeCommit)
             {
                 if (_selectedBranch == _currentBranch && _selectedBranchRemote == _currentBranchRemote)
                 {
@@ -343,18 +342,8 @@ namespace GitUI.CommandsDialogs
 
             if (IsRejected.IsMatch(form.GetOutputString()))
             {
-                if (Settings.AutoPullOnPushRejected == false)
-                    return false;
-                if (IsRebasingMergeCommit())
-                {
-                    form.AppendOutputLine(Environment.NewLine +
-                        "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine +
-                        "and one of the commits that are about to be rebased is a merge.");
-                    return false;
-                }
-
                 IWin32Window owner = form;
-                if (Settings.AutoPullOnPushRejected == null)
+                if (Settings.AutoPullOnPushRejectedAction == null)
                 {
                     bool cancel = false;
                     int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
@@ -368,25 +357,48 @@ namespace GitUI.CommandsDialogs
                                     true,
                                     0,
                                     0);
+                    bool rememberDecision = PSTaskDialog.cTaskDialog.VerificationChecked;
                     switch (idx)
                     {
                         case 0:
                             Settings.PullMerge = Settings.PullAction.Rebase;
+                            if (rememberDecision)
+                            {
+                                Settings.AutoPullOnPushRejectedAction = Settings.PullMerge;
+                            }
                             break;
                         case 1:
                             Settings.PullMerge = Settings.PullAction.Merge;
+                            if (rememberDecision)
+                            {
+                                Settings.AutoPullOnPushRejectedAction = Settings.PullMerge;
+                            }
+                            break;
+                        case 2:
+                            if (rememberDecision)
+                            {
+                                Settings.AutoPullOnPushRejectedAction = Settings.PullAction.Default;
+                            }
+                            if (Module.LastPullAction == Settings.PullAction.None)
+                            {
+                                return false;
+                            }
+                            Module.LastPullActionToPullMerge();
                             break;
                         default:
                             cancel = true;
+                            if (rememberDecision)
+                            {
+                                Settings.AutoPullOnPushRejectedAction = Settings.PullAction.None;
+                            }
                             break;
-                    }
-                    if (PSTaskDialog.cTaskDialog.VerificationChecked)
-                    {
-                        Settings.AutoPullOnPushRejected = !cancel;
                     }
                     if (cancel)
                         return false;
                 }
+
+                if (Settings.AutoPullOnPushRejectedAction == Settings.PullAction.None)
+                    return false;
 
                 if (Settings.PullMerge == Settings.PullAction.Fetch)
                 {
@@ -394,6 +406,15 @@ namespace GitUI.CommandsDialogs
                         "Can not perform auto pull, when merge option is set to fetch.");
                     return false;
                 }
+
+                if (IsRebasingMergeCommit())
+                {
+                    form.AppendOutputLine(Environment.NewLine +
+                        "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine +
+                        "and one of the commits that are about to be rebased is a merge.");
+                    return false;
+                }
+
                 bool pullCompleted;
                 UICommands.StartPullDialog(owner, true, out pullCompleted);
                 if (pullCompleted)
