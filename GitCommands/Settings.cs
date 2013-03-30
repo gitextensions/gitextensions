@@ -369,7 +369,8 @@ namespace GitCommands
             Merge,
             Rebase,
             Fetch,
-            FetchAll
+            FetchAll,
+            Default
         }
 
         public static PullAction PullMerge
@@ -448,10 +449,10 @@ namespace GitCommands
             set { SetBool("AutoPopStashAfterCheckoutBranch", value); }
         }
 
-        public static bool? AutoPullOnPushRejected
+        public static PullAction? AutoPullOnPushRejectedAction
         {
-            get { return GetBool("AutoPullOnPushRejected", null); }
-            set { SetBool("AutoPullOnPushRejected", value); }
+            get { return GetEnum<PullAction?>("AutoPullOnPushRejectedAction", null); }
+            set { SetEnum<PullAction?>("AutoPullOnPushRejectedAction", value); }
         }
 
         public static bool DontConfirmPushNewBranch
