@@ -348,7 +348,7 @@ namespace GitUI
                         timerRefresh.Start();
                         _workTreeWatcher.EnableRaisingEvents = true;
                         _gitDirWatcher.EnableRaisingEvents = !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
-                        UpdateImmediately();
+                        ScheduleDeferredUpdate();
                         Visible = true;
                         return;
                     default:
