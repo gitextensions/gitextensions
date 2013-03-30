@@ -232,6 +232,8 @@ namespace GitCommands
 
         void FinishRevision()
         {
+            if (_revision != null && _revision.Guid == null)
+                _revision = null;
             if (_revision != null)
             {
                 if (_revision.Name == null)                
@@ -241,7 +243,7 @@ namespace GitCommands
             }
             if (_revision == null || _revision.Guid.Trim(_hexChars).Length == 0)
             {
-                if ((_revision == null) || (InMemFilter == null) || InMemFilter.PassThru(_revision))
+                if (_revision == null || InMemFilter == null || InMemFilter.PassThru(_revision))
                 {
                     if (_revision != null)
                         RevisionCount++;

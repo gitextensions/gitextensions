@@ -138,6 +138,7 @@ namespace GitUI.CommandsDialogs
             }
 
             RevisionGrid.UICommandsSource = this;
+            Repositories.LoadRepositoryHistoryAsync();
             Task.Factory.StartNew(PluginLoader.Load)
                 .ContinueWith((task) => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());
             RevisionGrid.GitModuleChanged += DashboardGitModuleChanged;
@@ -965,9 +966,7 @@ namespace GitUI.CommandsDialogs
 
             var revision = RevisionGrid.GetSelectedRevisions()[0];
             var children = RevisionGrid.GetRevisionChildren(revision.Guid);
-
-            if (revision != null)
-                RevisionInfo.SetRevisionWithChildren(revision, children);
+            RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
         private TabPage BuildReportTabPage;
