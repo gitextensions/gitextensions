@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -9,34 +10,40 @@ namespace GitCommands.Repository
 {
     public static class Repositories
     {
-        private static RepositoryHistory _repositoryHistory;
+        private static Task<RepositoryHistory> _repositoryHistory;
         private static RepositoryHistory _remoteRepositoryHistory;
         private static BindingList<RepositoryCategory> _repositoryCategories;
 
-        public static RepositoryHistory RepositoryHistory
+        public static Task<RepositoryHistory> LoadRepositoryHistoryAsync()
         {
-            get
+            if (_repositoryHistory != null)
+                return _repositoryHistory;
+            _repositoryHistory = Task.Factory.StartNew(() => LoadRepositoryHistory());
+            return _repositoryHistory;
+        }
+
+        private static RepositoryHistory LoadRepositoryHistory()
+        {
+            var repositoryHistory = new RepositoryHistory();
+            object setting = Settings.GetValue<string>("history", null);
+            if (setting == null)
             {
-                if (_repositoryHistory != null)
-                    return _repositoryHistory;
+                repositoryHistory = new RepositoryHistory();
+                return repositoryHistory;
+            }
 
-                object setting = Settings.GetValue<string>("history", null);
-                if (setting == null)
+            repositoryHistory = DeserializeHistoryFromXml(setting.ToString());
+            if (repositoryHistory != null)
+            {
+                AssignRepositoryHistoryFromCategories(repositoryHistory, null);
+
+                // migration from old version (move URL history to _remoteRepositoryHistory)
+                if (Settings.GetValue<string>("history remote", null) == null)
                 {
-                    _repositoryHistory = new RepositoryHistory();
-                    return _repositoryHistory;
-                }
-
-                _repositoryHistory = DeserializeHistoryFromXml(setting.ToString());
-                if (_repositoryHistory != null)
-                {
-                    AssignRepositoryHistoryFromCategories(null);
-
-                    // migration from old version (move URL history to _remoteRepositoryHistory)
-                    if (Settings.GetValue<string>("history remote", null) == null)
+                    lock (_remoteRepositoryHistory)
                     {
                         _remoteRepositoryHistory = new RepositoryHistory();
-                        foreach (Repository repo in _repositoryHistory.Repositories)
+                        foreach (Repository repo in repositoryHistory.Repositories)
                         {
                             if (repo.IsRemote)
                             {
@@ -46,45 +53,52 @@ namespace GitCommands.Repository
                         }
                         foreach (Repository repo in _remoteRepositoryHistory.Repositories)
                         {
-                            _repositoryHistory.RemoveRepository(repo);
+                            repositoryHistory.RemoveRepository(repo);
                         }
                     }
                 }
-
-                return _repositoryHistory ?? (_repositoryHistory = new RepositoryHistory());
             }
-            private set
+
+            return repositoryHistory ?? new RepositoryHistory();
+        }
+
+        public static RepositoryHistory RepositoryHistory
+        {
+            get
             {
-                _repositoryHistory = value;
+                if (_repositoryHistory == null)
+                    LoadRepositoryHistoryAsync();
+                return _repositoryHistory.Result;
             }
-
         }
 
         public static RepositoryHistory RemoteRepositoryHistory
         {
             get
             {
-                if (_remoteRepositoryHistory == null)
+                lock (_remoteRepositoryHistory)
                 {
-                    object setting = Settings.GetValue<string>("history remote", null);
-                    if (setting != null)
+                    if (_remoteRepositoryHistory == null)
                     {
-                        _remoteRepositoryHistory = DeserializeHistoryFromXml(setting.ToString());
+                        object setting = Settings.GetValue<string>("history remote", null);
+                        if (setting != null)
+                        {
+                            _remoteRepositoryHistory = DeserializeHistoryFromXml(setting.ToString());
+                        }
                     }
-                }
 
-                return _remoteRepositoryHistory ?? (_remoteRepositoryHistory = new RepositoryHistory());
+                    return _remoteRepositoryHistory ?? (_remoteRepositoryHistory = new RepositoryHistory());
+                }
             }
             private set
             {
                 _remoteRepositoryHistory = value;
             }
-
         }
 
-        private static void AssignRepositoryHistoryFromCategories(string path)
+        private static void AssignRepositoryHistoryFromCategories(RepositoryHistory repositoryHistory, string path)
         {
-            foreach (Repository repo in RepositoryHistory.Repositories)
+            foreach (Repository repo in repositoryHistory.Repositories)
             {
                 if (path == null || path.Equals(repo.Path, StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -93,6 +107,11 @@ namespace GitCommands.Repository
                         repo.Assign(catRepo);
                 }
             }        
+        }
+
+        private static void AssignRepositoryHistoryFromCategories(string path)
+        {
+            AssignRepositoryHistoryFromCategories(RepositoryHistory, path);
         }
 
         private static Repository FindFirstCategoryRepository(string path)
@@ -234,7 +253,7 @@ namespace GitCommands.Repository
         public static void SaveSettings()
         {
             if (_repositoryHistory != null)
-                Settings.SetValue("history", Repositories.SerializeHistoryIntoXml(_repositoryHistory));
+                Settings.SetValue("history", Repositories.SerializeHistoryIntoXml(_repositoryHistory.Result));
             if (_remoteRepositoryHistory != null)
                 Settings.SetValue("history remote", Repositories.SerializeHistoryIntoXml(_remoteRepositoryHistory));
             if (_repositoryCategories != null)
