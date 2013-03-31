@@ -16,18 +16,8 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.dataGridColumnGraph = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
             this.SuspendLayout();
-            // 
-            // dataGridColumnGraph
-            // 
-            this.dataGridColumnGraph.Frozen = true;
-            this.dataGridColumnGraph.HeaderText = "";
-            this.dataGridColumnGraph.Name = "dataGridColumnGraph";
-            this.dataGridColumnGraph.ReadOnly = true;
-            this.dataGridColumnGraph.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.dataGridColumnGraph.Width = 70;
             // 
             // DvcsGraph
             // 
@@ -43,8 +33,6 @@
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.dataGridColumnGraph});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -72,13 +60,8 @@
             this.Resize += new System.EventHandler(this.dataGrid_Resize);
             ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
             this.ResumeLayout(false);
-
         }
 
         #endregion
-
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridColumnGraph;
-
-
     }
 }
