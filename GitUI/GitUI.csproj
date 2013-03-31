@@ -1638,7 +1638,6 @@
     <Content Include="Translation\Russian.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Properties\DataSources\FormTranslate.TranslateItem.datasource" />
     <None Include="Resources\Icons\Cow_sunglass.png" />
     <None Include="Resources\Icons\Cow_xmass.png" />
     <None Include="Resources\Icons\develop.ico" />
