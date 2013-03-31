@@ -1252,7 +1252,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 { 
-                    bSilent = true;
+                    bSilent = (sender == toolStripButtonPull);
                     Module.LastPullActionToPullMerge();
                 }
             }
