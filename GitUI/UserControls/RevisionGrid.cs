@@ -56,7 +56,7 @@ namespace GitUI
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
 
-        private string _logParam = "--all --boundary";
+        private RefsFiltringOptions _refsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
 
         private bool _initialLoad = true;
         private string _initialSelectedRevision;
@@ -819,11 +819,11 @@ namespace GitUI
 
                 IndexWatcher.Reset();
 
-                if (!Settings.ShowGitNotes && _logParam.Contains("--all --boundary") && !_logParam.Contains(" --not --glob=notes --not"))
-                    _logParam = _logParam + " --not --glob=notes --not";
+                if (!Settings.ShowGitNotes && (_refsOptions & (RefsFiltringOptions.All | RefsFiltringOptions.Boundary)) == (RefsFiltringOptions.All | RefsFiltringOptions.Boundary))
+                    _refsOptions |= RefsFiltringOptions.ShowGitNotes;
 
-                if (Settings.ShowGitNotes && _logParam.Contains(" --not --glob=notes --not"))
-                    _logParam = _logParam.Replace("  --not --glob=notes --not", string.Empty);
+                if (Settings.ShowGitNotes)
+                    _refsOptions &= ~RefsFiltringOptions.ShowGitNotes;
 
                 RevisionGridInMemFilter revisionFilterIMF = RevisionGridInMemFilter.CreateIfNeeded(_revisionFilter.GetInMemAuthorFilter(),
                                                                                                    _revisionFilter.GetInMemCommitterFilter(),
@@ -841,7 +841,7 @@ namespace GitUI
                 else
                     revGraphIMF = filterBarIMF;
 
-                _revisionGraphCommand = new RevisionGraph(Module) { BranchFilter = BranchFilter, LogParam = _logParam + _revisionFilter.GetFilter() + Filter + FixedFilter };
+                _revisionGraphCommand = new RevisionGraph(Module) { BranchFilter = BranchFilter, RefsOptions = _refsOptions, Filter = _revisionFilter.GetFilter() + Filter + FixedFilter };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
@@ -1670,13 +1670,13 @@ namespace GitUI
             BranchFilter = _revisionFilter.GetBranchFilter();
 
             if (!Settings.BranchFilterEnabled)
-                _logParam = "--all --boundary";
+                _refsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
             else if (Settings.ShowCurrentBranchOnly)
-                _logParam = "";
+                _refsOptions = 0;
             else
-                _logParam = BranchFilter.Length > 0
-                               ? String.Empty
-                               : "--all --boundary";
+                _refsOptions = BranchFilter.Length > 0
+                               ? 0
+                               : RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
         }
 
         private void RevertCommitToolStripMenuItemClick(object sender, EventArgs e)
