@@ -212,6 +212,12 @@
     <Compile Include="UserControls\GotoUserManualControl.Designer.cs">
       <DependentUpon>GotoUserManualControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\RemotesComboboxControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\RemotesComboboxControl.Designer.cs">
+      <DependentUpon>RemotesComboboxControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\RevisionGridClasses\DoubleClickRevisionEventArgs.cs" />
     <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Graph.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
@@ -1100,6 +1106,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\GotoUserManualControl.resx">
       <DependentUpon>GotoUserManualControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\RemotesComboboxControl.resx">
+      <DependentUpon>RemotesComboboxControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RevisionGridClasses\DvcsGraph.resx">
       <DependentUpon>DvcsGraph.cs</DependentUpon>

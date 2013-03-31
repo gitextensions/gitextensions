@@ -48,12 +48,12 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _yes = new TranslationString("Yes");
         private readonly TranslationString _no = new TranslationString("No");
 
-        private readonly TranslationString _pullRepositoryMainInstruction = new TranslationString("Pull latest changes from remote repostory");
+        private readonly TranslationString _pullRepositoryMainInstruction = new TranslationString("Pull latest changes from remote repository");
         private readonly TranslationString _pullRepository =
             new TranslationString("The push was rejected because the tip of your current branch is behind its remote counterpart. " +
                 "Merge the remote changes before pushing again." + Environment.NewLine + Environment.NewLine + 
                 "Do you want to pull the latest changes?");
-        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with rebase|Pull with merge|Pull with default pull action|Cancel");
+        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with default pull action|Pull with rebase|Pull with merge|Cancel");
         private readonly TranslationString _pullRepositoryCaption = new TranslationString("Push was rejected");
         private readonly TranslationString _dontShowAgain = new TranslationString("Remember my decision.");
 
@@ -318,7 +318,7 @@ namespace GitUI.CommandsDialogs
 
         private bool IsRebasingMergeCommit()
         {
-            if (Settings.PullMerge == Settings.PullAction.Rebase && _candidateForRebasingMergeCommit)
+            if (Settings.FormPullAction == Settings.PullAction.Rebase && _candidateForRebasingMergeCommit)
             {
                 if (_selectedBranch == _currentBranch && _selectedBranchRemote == _currentBranchRemote)
                 {
@@ -361,20 +361,6 @@ namespace GitUI.CommandsDialogs
                     switch (idx)
                     {
                         case 0:
-                            Settings.PullMerge = Settings.PullAction.Rebase;
-                            if (rememberDecision)
-                            {
-                                Settings.AutoPullOnPushRejectedAction = Settings.PullMerge;
-                            }
-                            break;
-                        case 1:
-                            Settings.PullMerge = Settings.PullAction.Merge;
-                            if (rememberDecision)
-                            {
-                                Settings.AutoPullOnPushRejectedAction = Settings.PullMerge;
-                            }
-                            break;
-                        case 2:
                             if (rememberDecision)
                             {
                                 Settings.AutoPullOnPushRejectedAction = Settings.PullAction.Default;
@@ -383,7 +369,21 @@ namespace GitUI.CommandsDialogs
                             {
                                 return false;
                             }
-                            Module.LastPullActionToPullMerge();
+                            Module.LastPullActionToFormPullAction();
+                            break;
+                        case 1:
+                            Settings.FormPullAction = Settings.PullAction.Rebase;
+                            if (rememberDecision)
+                            {
+                                Settings.AutoPullOnPushRejectedAction = Settings.FormPullAction;
+                            }
+                            break;
+                        case 2:
+                            Settings.FormPullAction = Settings.PullAction.Merge;
+                            if (rememberDecision)
+                            {
+                                Settings.AutoPullOnPushRejectedAction = Settings.FormPullAction;
+                            }
                             break;
                         default:
                             cancel = true;
@@ -400,7 +400,7 @@ namespace GitUI.CommandsDialogs
                 if (Settings.AutoPullOnPushRejectedAction == Settings.PullAction.None)
                     return false;
 
-                if (Settings.PullMerge == Settings.PullAction.Fetch)
+                if (Settings.FormPullAction == Settings.PullAction.Fetch)
                 {
                     form.AppendOutputLine(Environment.NewLine +
                         "Can not perform auto pull, when merge option is set to fetch.");

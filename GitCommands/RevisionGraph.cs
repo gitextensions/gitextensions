@@ -8,6 +8,18 @@ using System.Threading;
 
 namespace GitCommands
 {
+    [Flags]
+    public enum RefsFiltringOptions
+    {
+        Branches = 1,       // --branches
+        Remotes = 2,        // --remotes
+        Tags = 4,           // --tags
+        Stashes = 8,        //
+        All = 15,           // --all
+        Boundary = 16,      // --boundary
+        ShowGitNotes = 32   // --not --glob=notes --not
+    }
+
     public abstract class RevisionGraphInMemFilter
     {
         public abstract bool PassThru(GitRevision rev);
@@ -95,7 +107,8 @@ namespace GitCommands
             _backgroundLoader.Cancel();
         }
 
-        public string LogParam = "HEAD --all";//--branches --remotes --tags";
+        public RefsFiltringOptions RefsOptions = RefsFiltringOptions.All | RefsFiltringOptions.Boundary;
+        public string Filter = String.Empty;
         public string BranchFilter = String.Empty;
         public RevisionGraphInMemFilter InMemFilter;
         private string _selectedBranchName;
@@ -140,18 +153,35 @@ namespace GitCommands
             // when called from FileHistory and FollowRenamesInFileHistory is enabled the "--name-only" argument is set.
             // the filename is the next line after the commit-format defined above.
 
+            string logParam;
             if (Settings.OrderRevisionByDate)
             {
-                LogParam = " --date-order " + LogParam;
+                logParam = " --date-order";
             }
             else
             {
-                LogParam = " --topo-order " + LogParam;
+                logParam = " --topo-order";
             }
+
+            if ((RefsOptions & RefsFiltringOptions.All) == RefsFiltringOptions.All)
+                logParam += " --all";
+            else
+            {
+                if ((RefsOptions & RefsFiltringOptions.Branches) == RefsFiltringOptions.Branches)
+                    logParam = " --branches";
+                if ((RefsOptions & RefsFiltringOptions.Remotes) == RefsFiltringOptions.Remotes)
+                    logParam += " --remotes";
+                if ((RefsOptions & RefsFiltringOptions.Tags) == RefsFiltringOptions.Tags)
+                    logParam += " --tags";
+            }
+            if ((RefsOptions & RefsFiltringOptions.Boundary) == RefsFiltringOptions.Boundary)
+                logParam += " --boundary";
+            if ((RefsOptions & RefsFiltringOptions.ShowGitNotes) == RefsFiltringOptions.ShowGitNotes)
+                logParam += " --not --glob=notes --not";
 
             string arguments = String.Format(CultureInfo.InvariantCulture,
                 "log -z {2} --pretty=format:\"{1}\" {0}",
-                LogParam,
+                logParam,
                 formatString,
                 BranchFilter);
 
