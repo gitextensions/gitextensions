@@ -318,7 +318,7 @@ namespace GitUI.CommandsDialogs
 
         private bool IsRebasingMergeCommit()
         {
-            if (Settings.PullMerge == Settings.PullAction.Rebase && _candidateForRebasingMergeCommit)
+            if (Settings.FormPullAction == Settings.PullAction.Rebase && _candidateForRebasingMergeCommit)
             {
                 if (_selectedBranch == _currentBranch && _selectedBranchRemote == _currentBranchRemote)
                 {
@@ -369,20 +369,20 @@ namespace GitUI.CommandsDialogs
                             {
                                 return false;
                             }
-                            Module.LastPullActionToPullMerge();
+                            Module.LastPullActionToFormPullAction();
                             break;
                         case 1:
-                            Settings.PullMerge = Settings.PullAction.Rebase;
+                            Settings.FormPullAction = Settings.PullAction.Rebase;
                             if (rememberDecision)
                             {
-                                Settings.AutoPullOnPushRejectedAction = Settings.PullMerge;
+                                Settings.AutoPullOnPushRejectedAction = Settings.FormPullAction;
                             }
                             break;
                         case 2:
-                            Settings.PullMerge = Settings.PullAction.Merge;
+                            Settings.FormPullAction = Settings.PullAction.Merge;
                             if (rememberDecision)
                             {
-                                Settings.AutoPullOnPushRejectedAction = Settings.PullMerge;
+                                Settings.AutoPullOnPushRejectedAction = Settings.FormPullAction;
                             }
                             break;
                         default:
@@ -400,7 +400,7 @@ namespace GitUI.CommandsDialogs
                 if (Settings.AutoPullOnPushRejectedAction == Settings.PullAction.None)
                     return false;
 
-                if (Settings.PullMerge == Settings.PullAction.Fetch)
+                if (Settings.FormPullAction == Settings.PullAction.Fetch)
                 {
                     form.AppendOutputLine(Environment.NewLine +
                         "Can not perform auto pull, when merge option is set to fetch.");

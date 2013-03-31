@@ -1253,14 +1253,14 @@ namespace GitUI.CommandsDialogs
                 else
                 { 
                     bSilent = (sender == toolStripButtonPull);
-                    Module.LastPullActionToPullMerge();
+                    Module.LastPullActionToFormPullAction();
                 }
             }
             else
             {
                 bSilent = sender != pullToolStripMenuItem1;
                 RefreshPullIcon();
-                Module.LastPullActionToPullMerge();
+                Module.LastPullActionToFormPullAction();
             }
 
             UICommands.StartPullDialog(this, bSilent);
@@ -2536,9 +2536,9 @@ namespace GitUI.CommandsDialogs
                 Module.LastPullAction = Settings.PullAction.None;
             PullToolStripMenuItemClick(sender, e);
 
-            //restore Settings.PullMerge value
+            //restore Settings.FormPullAction value
             if (Settings.DonSetAsLastPullAction)
-                Module.LastPullActionToPullMerge();
+                Module.LastPullActionToFormPullAction();
         }
 
         private void RefreshPullIcon()
@@ -2581,10 +2581,10 @@ namespace GitUI.CommandsDialogs
             bool pullCompelted;
 
             UICommands.StartPullDialog(this, true, out pullCompelted, true);
-            
-            //restore Settings.PullMerge value
+
+            //restore Settings.FormPullAction value
             if (Settings.DonSetAsLastPullAction)
-                Module.LastPullActionToPullMerge();
+                Module.LastPullActionToFormPullAction();
         }
 
         private void resetFileToAToolStripMenuItem_Click(object sender, EventArgs e)
