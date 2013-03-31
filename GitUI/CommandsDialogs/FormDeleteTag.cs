@@ -7,9 +7,7 @@ using ResourceManager.Translation;
 namespace GitUI.CommandsDialogs
 {
     public partial class FormDeleteTag : GitModuleForm
-    {
-        private readonly TranslationString _deleteFromCaption = new TranslationString("Delete from '{0}'");
-        
+    { 
         public FormDeleteTag(GitUICommands aCommands, string tag)
             : base(aCommands)
         {
@@ -17,15 +15,13 @@ namespace GitUI.CommandsDialogs
             Tag = tag;
         }
 
-        private string currentRemote = "";
-
         private void FormDeleteTagLoad(object sender, EventArgs e)
         {
             Tags.DisplayMember = "Name";
             Tags.DataSource = Module.GetHeads(true, false);
             Tags.Text = Tag as string;
-            currentRemote = Module.GetCurrentRemote();
-            deleteTag.Text = string.Format(_deleteFromCaption.Text, currentRemote);
+            remotesComboboxControl1.SelectedRemote = Module.GetCurrentRemote();
+            EnableOrDisableRemotesCombobox();
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -48,16 +44,15 @@ namespace GitUI.CommandsDialogs
 
         private void RemoveRemoteTag(string tagName)
         {
-            var pushCmd = string.Format("push \"{0}\" :refs/tags/{1}", currentRemote, tagName);
+            var pushCmd = string.Format("push \"{0}\" :refs/tags/{1}", remotesComboboxControl1.SelectedRemote, tagName);
 
             ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
 
             using (var form = new FormRemoteProcess(Module, pushCmd)
-            {
-                Remote = currentRemote,
-                Text = string.Format(_deleteFromCaption.Text, currentRemote),
-            })
-
+                                    {
+                                        ////Remote = currentRemote,
+                                        ////Text = string.Format(_deleteFromCaption.Text, currentRemote),
+                                    })
             {
                 form.ShowDialog();
 
@@ -67,6 +62,16 @@ namespace GitUI.CommandsDialogs
                     ScriptManager.RunEventScripts(Module, ScriptEvent.AfterPush);
                 }
             }
+        }
+
+        private void deleteTag_CheckedChanged(object sender, EventArgs e)
+        {
+            EnableOrDisableRemotesCombobox();
+        }
+
+        private void EnableOrDisableRemotesCombobox()
+        {
+            remotesComboboxControl1.Enabled = deleteTag.Checked;
         }
     }
 }
