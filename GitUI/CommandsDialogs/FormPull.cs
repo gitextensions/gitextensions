@@ -85,9 +85,9 @@ namespace GitUI.CommandsDialogs
             if (aCommands != null)
                 Init();
 
-            Merge.Checked = Settings.PullMerge == Settings.PullAction.Merge;
-            Rebase.Checked = Settings.PullMerge == Settings.PullAction.Rebase;
-            Fetch.Checked = Settings.PullMerge == Settings.PullAction.Fetch;
+            Merge.Checked = Settings.FormPullAction == Settings.PullAction.Merge;
+            Rebase.Checked = Settings.FormPullAction == Settings.PullAction.Rebase;
+            Fetch.Checked = Settings.FormPullAction == Settings.PullAction.Fetch;
             localBranch.Enabled = Fetch.Checked;
             AutoStash.Checked = Settings.AutoStash;
             ErrorOccurred = false;
@@ -483,11 +483,11 @@ namespace GitUI.CommandsDialogs
         private void UpdateSettingsDuringPull()
         {
             if (Merge.Checked)
-                Settings.PullMerge = Settings.PullAction.Merge;
+                Settings.FormPullAction = Settings.PullAction.Merge;
             if (Rebase.Checked)
-                Settings.PullMerge = Settings.PullAction.Rebase;
+                Settings.FormPullAction = Settings.PullAction.Rebase;
             if (Fetch.Checked)
-                Settings.PullMerge = Settings.PullAction.Fetch;
+                Settings.FormPullAction = Settings.PullAction.Fetch;
 
             Settings.AutoStash = AutoStash.Checked;
         }
