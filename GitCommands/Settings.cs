@@ -364,10 +364,10 @@ namespace GitCommands
             Default
         }
 
-        public static PullAction PullMerge
+        public static PullAction FormPullAction
         {
-            get { return GetEnum<PullAction>("pullmerge", PullAction.Merge); }
-            set { SetEnum<PullAction>("pullmerge", value); }
+            get { return GetEnum("FormPullAction", PullAction.Merge); }
+            set { SetEnum("FormPullAction", value); }
         }
 
         public static bool DonSetAsLastPullAction

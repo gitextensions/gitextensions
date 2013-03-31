@@ -272,12 +272,12 @@ namespace GitCommands
             set { Settings.SetEnum("LastPullAction_" + WorkingDir, value); }
         }
 
-        public void LastPullActionToPullMerge()
+        public void LastPullActionToFormPullAction()
         {
             if (LastPullAction == Settings.PullAction.FetchAll)
-                Settings.PullMerge = Settings.PullAction.Fetch;
+                Settings.FormPullAction = Settings.PullAction.Fetch;
             else if (LastPullAction != Settings.PullAction.None)
-                Settings.PullMerge = LastPullAction;
+                Settings.FormPullAction = LastPullAction;
         }
 
         private static string FixPath(string path)
