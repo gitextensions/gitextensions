@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
@@ -40,21 +41,18 @@ namespace GitCommands.Repository
                 // migration from old version (move URL history to _remoteRepositoryHistory)
                 if (Settings.GetValue<string>("history remote", null) == null)
                 {
-                    lock (_remoteRepositoryHistory)
+                    _remoteRepositoryHistory = new RepositoryHistory();
+                    foreach (Repository repo in repositoryHistory.Repositories)
                     {
-                        _remoteRepositoryHistory = new RepositoryHistory();
-                        foreach (Repository repo in repositoryHistory.Repositories)
+                        if (repo.IsRemote)
                         {
-                            if (repo.IsRemote)
-                            {
-                                repo.Path = repo.Path.Replace('\\', '/');
-                                _remoteRepositoryHistory.AddRepository(repo);
-                            }
+                            repo.Path = repo.Path.Replace('\\', '/');
+                            _remoteRepositoryHistory.AddRepository(repo);
                         }
-                        foreach (Repository repo in _remoteRepositoryHistory.Repositories)
-                        {
-                            repositoryHistory.RemoveRepository(repo);
-                        }
+                    }
+                    foreach (Repository repo in _remoteRepositoryHistory.Repositories)
+                    {
+                        repositoryHistory.RemoveRepository(repo);
                     }
                 }
             }
@@ -76,19 +74,18 @@ namespace GitCommands.Repository
         {
             get
             {
-                lock (_remoteRepositoryHistory)
+                if (_repositoryHistory != null && _repositoryHistory.Status == TaskStatus.Running)
+                    _repositoryHistory.Wait();
+                if (_remoteRepositoryHistory == null)
                 {
-                    if (_remoteRepositoryHistory == null)
+                    object setting = Settings.GetValue<string>("history remote", null);
+                    if (setting != null)
                     {
-                        object setting = Settings.GetValue<string>("history remote", null);
-                        if (setting != null)
-                        {
-                            _remoteRepositoryHistory = DeserializeHistoryFromXml(setting.ToString());
-                        }
+                        _remoteRepositoryHistory = DeserializeHistoryFromXml(setting.ToString());
                     }
-
-                    return _remoteRepositoryHistory ?? (_remoteRepositoryHistory = new RepositoryHistory());
                 }
+
+                return _remoteRepositoryHistory ?? (_remoteRepositoryHistory = new RepositoryHistory());
             }
             private set
             {
@@ -116,11 +113,10 @@ namespace GitCommands.Repository
 
         private static Repository FindFirstCategoryRepository(string path)
         {
-            foreach (RepositoryCategory category in Repositories.RepositoryCategories)
+            foreach (Repository repo in RepositoryCategories.SelectMany(category => category.Repositories))
             {
-                foreach (Repository repo in category.Repositories)
-                    if (repo.Path != null && repo.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase))
-                        return repo;
+                if (repo.Path != null && repo.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase))
+                    return repo;
             }
             return null;        
         }
@@ -136,7 +132,6 @@ namespace GitCommands.Repository
                     {
                         _repositoryCategories = DeserializeRepositories(setting.ToString());
                     }
-
                 }
 
                 return _repositoryCategories ?? (_repositoryCategories = new BindingList<RepositoryCategory>());

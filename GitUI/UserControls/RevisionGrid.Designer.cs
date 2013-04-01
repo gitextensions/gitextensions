@@ -250,12 +250,12 @@ namespace GitUI
             this.toolStripSeparator8,
             this.checkoutBranchToolStripMenuItem,
             this.mergeBranchToolStripMenuItem,
-            this.resetCurrentBranchToHereToolStripMenuItem,
             this.rebaseOnToolStripMenuItem,
+            this.resetCurrentBranchToHereToolStripMenuItem,
             this.toolStripSeparator3,
             this.createNewBranchToolStripMenuItem,
-            this.deleteBranchToolStripMenuItem,
             this.renameBranchToolStripMenuItem,
+            this.deleteBranchToolStripMenuItem,
             this.toolStripSeparator5,
             this.createTagToolStripMenuItem,
             this.deleteTagToolStripMenuItem,
@@ -272,7 +272,7 @@ namespace GitUI
             this.toolStripSeparator7,
             this.runScriptToolStripMenuItem});
             this.mainContextMenu.Name = "CreateTag";
-            this.mainContextMenu.Size = new System.Drawing.Size(265, 598);
+            this.mainContextMenu.Size = new System.Drawing.Size(265, 620);
             this.mainContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTagOpening);
             // 
             // markRevisionAsBadToolStripMenuItem
