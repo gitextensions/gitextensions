@@ -35,6 +35,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,7 +58,7 @@
   <ItemGroup>
     <Reference Include="NBug, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\NBug.dll</HintPath>
+      <HintPath>..\packages\NBug.1.1.1\lib\net40-client\NBug.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -81,6 +83,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -96,29 +99,40 @@
       <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
       <Name>GitUI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Plugins\AutoCheckForUpdates\AutoCheckForUpdates.csproj">
-      <Project>{330F1115-B3DE-47F1-8A7E-D181E59E96E0}</Project>
-      <Name>AutoCheckForUpdates</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules\AutoCompileSubmodules.csproj">
-      <Project>{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}</Project>
+    <ProjectReference Include="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules.csproj">
+      <Project>{7e5433f4-dd13-4d8e-95b2-59b4ffe7d636}</Project>
       <Name>AutoCompileSubmodules</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\BackgroundFetch\BackgroundFetch.csproj">
+      <Project>{F261BCD1-F5F7-4664-A230-E52032E6E9FD}</Project>
+      <Name>BackgroundFetch</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\CreateLocalBranches\CreateLocalBranches.csproj">
       <Project>{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}</Project>
       <Name>CreateLocalBranches</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\DeleteUnusedBranches\DeleteUnusedBranches.csproj">
       <Project>{921F0443-C3A1-4A09-82E8-C4AFB9654943}</Project>
       <Name>DeleteUnusedBranches</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\FindLargeFiles\FindLargeFiles.csproj">
       <Project>{F261BCD1-F5F7-4664-A229-E52032E6E9FD}</Project>
       <Name>FindLargeFiles</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\Gerrit\Gerrit.csproj">
+      <Project>{ec6988f6-0e8e-42d2-8e41-e562c5fb65bc}</Project>
+      <Name>Gerrit</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\Github3\Github3.csproj">
       <Project>{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}</Project>
       <Name>Github3</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
@@ -127,22 +141,27 @@
     <ProjectReference Include="..\Plugins\Gource\Gource.csproj">
       <Project>{687A73BB-12A0-4AF7-B420-4A9C47DB75CB}</Project>
       <Name>Gource</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\ProxySwitcher\ProxySwitcher.csproj">
       <Project>{274F449F-7472-4248-9A57-8CA665A75B5D}</Project>
       <Name>ProxySwitcher</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\ReleaseNotesGenerator\ReleaseNotesGenerator.csproj">
       <Project>{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8}</Project>
       <Name>ReleaseNotesGenerator</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\Statistics\GitImpact\GitImpact.csproj">
       <Project>{0B131F9D-BB10-4C3E-9656-5AB858158DE5}</Project>
       <Name>GitImpact</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\Statistics\GitStatistics\GitStatistics.csproj">
       <Project>{92B57383-233E-46AE-8A86-6E98BF349A72}</Project>
       <Name>GitStatistics</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
@@ -192,6 +211,10 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>$(ProjectDir)copy_plugins.cmd $(ConfigurationName)</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

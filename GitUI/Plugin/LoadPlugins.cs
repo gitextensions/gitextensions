@@ -1,8 +1,9 @@
-﻿using System;
+﻿﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace GitUI
 {
@@ -10,38 +11,29 @@ namespace GitUI
     {
         public static void Load()
         {
-            lock (GitUI.Plugin.LoadedPlugins.Plugins)
+            lock (Plugin.LoadedPlugins.Plugins)
             {
-                if (GitUI.Plugin.LoadedPlugins.Plugins.Count > 0)
+                if (Plugin.LoadedPlugins.Plugins.Count > 0)
                     return;
 
                 var file = new FileInfo(Application.ExecutablePath);
 
-                // Only search for plugins in the plugins folder. This increases performance a little bit.
-                // In DEBUG search for plugins in the root folder to make debugging plugins easier.
-#if DEBUG
-                var plugins = file.Directory.GetFiles("*.dll", SearchOption.AllDirectories);
-#else
                 FileInfo[] plugins =
                                Directory.Exists(Path.Combine(file.Directory.FullName, "Plugins"))
                                    ? new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll")
                                    : new FileInfo[] { };
-#endif
 
-                foreach (var pluginFile in plugins)
+                var pluginFiles = plugins.Where(pluginFile => !pluginFile.Name.StartsWith("System.") &&
+                    !pluginFile.Name.StartsWith("ICSharpCode."));
+                foreach (var pluginFile in pluginFiles)
                 {
-                    if (pluginFile.Name.StartsWith("Microsoft."))
-                    {
-                        continue;
-                    }
-
                     try
                     {
-                        var types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
                         Debug.WriteLine("Loading plugin...", pluginFile.Name);
+                        var types = Assembly.LoadFile(pluginFile.FullName).GetTypes();
                         PluginExtraction.ExtractPluginTypes(types);
                     }
-                    catch (Exception ex)
+                    catch (SystemException ex)
                     {
                         string exInfo = "Exception info:\r\n";
 

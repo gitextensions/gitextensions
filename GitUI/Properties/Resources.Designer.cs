@@ -224,15 +224,15 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///### Version 2.43
-        ///* Fixed issue 47: Support non-standard SSH port for Test Connection
-        ///* Fixed issue 85: Integrated git-credential-winstore to installer to handle HTTP authentication
-        ///* Fixed issue 407: Added links to parent commit, branches and tags to commit info
-        ///* Fixed issue 517: Added button to go to superproject
-        ///* Fixed issue 528: Correctly terminate processes tree on abort
-        ///* Fixed issue 650: Enable reset for unstaged files
-        ///* Fixed issue 737: Support local commit.template
-        /// [rest of string was truncated]&quot;;.
+        ///### Version 2.44
+        ///* Fixed issue 710: Added icons to shell extensions
+        ///* Fixed issue 1336: Prefix context menu entries with
+        ///* Fixed issue 1354: Dashboard item description label is cut off at the top
+        ///* Fixed issue 1371: Different icons for submodule status icons
+        ///* Fixed issue 1388: Created icons for submodules
+        ///* Fixed issue 1396: Mergetool command suggest button does not work
+        ///* Fixed issue 1397: Shell exceptions broken
+        ///* Fixed issue 1407: Reorder context menu items in commit dial [rest of string was truncated]&quot;;.
         /// </summary>
         public static string ChangeLog {
             get {
@@ -1125,6 +1125,16 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap IconGotoCommit {
             get {
                 object obj = ResourceManager.GetObject("IconGotoCommit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconGotoManual {
+            get {
+                object obj = ResourceManager.GetObject("IconGotoManual", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -40,6 +40,7 @@ namespace GitUIPluginInterfaces
         event GitUIPostActionEventHandler PostRemotes;
         event GitUIEventHandler PostRepositoryChanged;
         event GitUIPostActionEventHandler PostResolveConflicts;
+        event GitUIPostActionEventHandler PostRevertCommit;
         event GitUIPostActionEventHandler PostSettings;
         event GitUIPostActionEventHandler PostStash;
         event GitUIPostActionEventHandler PostSvnClone;
@@ -81,6 +82,7 @@ namespace GitUIPluginInterfaces
         event GitUIEventHandler PreRename;
         event GitUIEventHandler PreRemotes;
         event GitUIEventHandler PreResolveConflicts;
+        event GitUIEventHandler PreRevertCommit;
         event GitUIEventHandler PreSettings;
         event GitUIEventHandler PreStash;
         event GitUIEventHandler PreSvnClone;
@@ -117,7 +119,7 @@ namespace GitUIPluginInterfaces
         bool StartApplyPatchDialog();
         bool StartArchiveDialog();
         bool StartBrowseDialog();
-        bool StartCheckoutBranchDialog();
+        bool StartCheckoutBranch();
         bool StartCheckoutRevisionDialog();
         bool StartCherryPickDialog();
         bool StartCloneDialog();
@@ -129,7 +131,7 @@ namespace GitUIPluginInterfaces
         bool StartDeleteBranchDialog(string branch);
         bool StartDeleteTagDialog();
         bool StartEditGitIgnoreDialog();
-        bool StartFileHistoryDialog(string fileName);
+        void StartFileHistoryDialog(string fileName);
         bool StartFormatPatchDialog();
         bool StartGitCommandProcessDialog(string arguments);
         bool StartInitializeDialog();

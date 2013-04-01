@@ -53,15 +53,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NBug, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Bin\NBug.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="NBug">
+      <HintPath>..\packages\NBug.1.1.1\lib\net40-client\NBug.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
@@ -89,6 +88,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -140,10 +140,6 @@
     <ProjectReference Include="..\GitUI\GitUI.csproj">
       <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
       <Name>GitUI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\AutoCheckForUpdates\AutoCheckForUpdates.csproj">
-      <Project>{330F1115-B3DE-47F1-8A7E-D181E59E96E0}</Project>
-      <Name>AutoCheckForUpdates</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\CreateLocalBranches\CreateLocalBranches.csproj">
       <Project>{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}</Project>

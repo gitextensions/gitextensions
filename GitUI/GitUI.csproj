@@ -47,7 +47,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\FxCopRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -56,6 +56,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\FxCopRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PSTaskDialog">
@@ -68,19 +69,21 @@
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Reactive.Core">
-      <HintPath>..\packages\Rx-Core.2.1.30204.0\lib\Net40\System.Reactive.Core.dll</HintPath>
+      <HintPath>..\packages\Rx-Core.2.1.30214.0\lib\Net40\System.Reactive.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Reactive.Interfaces">
-      <HintPath>..\packages\Rx-Interfaces.2.1.30204.0\lib\Net40\System.Reactive.Interfaces.dll</HintPath>
+      <HintPath>..\packages\Rx-Interfaces.2.1.30214.0\lib\Net40\System.Reactive.Interfaces.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Reactive.Linq">
-      <HintPath>..\packages\Rx-Linq.2.1.30204.0\lib\Net40\System.Reactive.Linq.dll</HintPath>
+      <HintPath>..\packages\Rx-Linq.2.1.30214.0\lib\Net40\System.Reactive.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Reactive.PlatformServices">
-      <HintPath>..\packages\Rx-PlatformServices.2.1.30204.0\lib\Net40\System.Reactive.PlatformServices.dll</HintPath>
+      <HintPath>..\packages\Rx-PlatformServices.2.1.30214.0\lib\Net40\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
     <Reference Include="System.Reactive.Windows.Forms">
-      <HintPath>..\packages\Rx-WinForms.2.1.30204.0\lib\Net40\System.Reactive.Windows.Forms.dll</HintPath>
+      <HintPath>..\packages\Rx-WinForms.2.1.30214.0\lib\Net40\System.Reactive.Windows.Forms.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Data" />
@@ -96,35 +99,105 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AboutBox.cs">
+    <Compile Include="CommandsDialogs\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AboutBox.Designer.cs">
+    <Compile Include="CommandsDialogs\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="BranchComboBox.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.Designer.cs">
+      <DependentUpon>FormOpenDirectory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\FormUpdates.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\FormUpdates.Designer.cs">
+      <DependentUpon>FormUpdates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.Designer.cs">
+      <DependentUpon>CreatePullRequestForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\RepoHosting\DiscussionHtmlCreator.cs" />
+    <Compile Include="CommandsDialogs\RepoHosting\ForkAndCloneForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\RepoHosting\ForkAndCloneForm.Designer.cs">
+      <DependentUpon>ForkAndCloneForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.Designer.cs">
+      <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\FormatPatchDialog\SmtpCredentials.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\FormatPatchDialog\SmtpCredentials.Designer.cs">
+      <DependentUpon>SmtpCredentials.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\MergeToolsHelper.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="BranchComboBox.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.Designer.cs">
+      <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Hotkey\KeysExtensions.cs" />
+    <Compile Include="RepoHosts.cs" />
+    <Compile Include="Script\ScriptRunner.cs" />
+    <Compile Include="UserControls\BranchComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\BranchComboBox.Designer.cs">
       <DependentUpon>BranchComboBox.cs</DependentUpon>
     </Compile>
     <Compile Include="CommitInfo\CommandEventArgs.cs" />
-    <Compile Include="CommitInfo\CommitSummaryUserControl.cs">
+    <Compile Include="UserControls\CommitPickerSmallControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommitInfo\CommitSummaryUserControl.Designer.cs">
+    <Compile Include="UserControls\CommitPickerSmallControl.Designer.cs">
+      <DependentUpon>CommitPickerSmallControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\CommitSummaryUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\CommitSummaryUserControl.Designer.cs">
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommitTemplateItem.cs" />
-    <Compile Include="DvcsGraph.Graph.cs">
+    <Compile Include="CommandsDialogs\CommitDialog\CommitTemplateItem.cs" />
+    <Compile Include="UserControls\ExListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControls\GotoUserManualControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\GotoUserManualControl.Designer.cs">
+      <DependentUpon>GotoUserManualControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\PathFormatter.cs" />
+    <Compile Include="UserControls\RemotesComboboxControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\RemotesComboboxControl.Designer.cs">
+      <DependentUpon>RemotesComboboxControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\RevisionGridClasses\DoubleClickRevisionEventArgs.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Graph.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="DvcsGraph.Junction.cs">
+    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Junction.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="DvcsGraph.Lanes.cs">
+    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Lanes.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
@@ -136,69 +209,69 @@
     </Compile>
     <Compile Include="FilterBranchHelper.cs" />
     <Compile Include="FilterRevisionsHelper.cs" />
-    <Compile Include="FormCheckoutBranch.cs">
+    <Compile Include="CommandsDialogs\FormCheckoutBranch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormChooseCommit.cs">
+    <Compile Include="HelperDialogs\FormChooseCommit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormChooseCommit.Designer.cs">
+    <Compile Include="HelperDialogs\FormChooseCommit.Designer.cs">
       <DependentUpon>FormChooseCommit.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCommitTemplateSettings.cs">
+    <Compile Include="CommandsDialogs\CommitDialog\FormCommitTemplateSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCheckoutBranch.Designer.cs">
+    <Compile Include="CommandsDialogs\FormCheckoutBranch.Designer.cs">
       <DependentUpon>FormCheckoutBranch.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCommitTemplateSettings.Designer.cs">
+    <Compile Include="CommandsDialogs\CommitDialog\FormCommitTemplateSettings.Designer.cs">
       <DependentUpon>FormCommitTemplateSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormRecentReposSettings.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormRecentReposSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormRecentReposSettings.Designer.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormRecentReposSettings.Designer.cs">
       <DependentUpon>FormRecentReposSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormRenameBranch.cs">
+    <Compile Include="CommandsDialogs\FormRenameBranch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormRenameBranch.Designer.cs">
+    <Compile Include="CommandsDialogs\FormRenameBranch.Designer.cs">
       <DependentUpon>FormRenameBranch.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataGridViewCheckBoxColumnHeaderCell.cs" />
+    <Compile Include="CommandsDialogs\DataGridViewCheckBoxHeaderCell.cs" />
     <Compile Include="Editor\RichTextBoxXhtmlSupportExtension.cs" />
-    <Compile Include="FormContributors.cs">
+    <Compile Include="CommandsDialogs\AboutBoxDialog\FormContributors.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormContributors.Designer.cs">
+    <Compile Include="CommandsDialogs\AboutBoxDialog\FormContributors.Designer.cs">
       <DependentUpon>FormContributors.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormGoToCommit.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormGoToCommit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormGoToCommit.Designer.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormGoToCommit.Designer.cs">
       <DependentUpon>FormGoToCommit.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormResetChanges.cs">
+    <Compile Include="CommandsDialogs\FormResetChanges.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormResetChanges.Designer.cs">
+    <Compile Include="CommandsDialogs\FormResetChanges.Designer.cs">
       <DependentUpon>FormResetChanges.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormSelectMultipleBranches.cs">
+    <Compile Include="HelperDialogs\FormSelectMultipleBranches.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormSelectMultipleBranches.Designer.cs">
+    <Compile Include="HelperDialogs\FormSelectMultipleBranches.Designer.cs">
       <DependentUpon>FormSelectMultipleBranches.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormSvnClone.cs">
+    <Compile Include="CommandsDialogs\FormSvnClone.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormSvnClone.Designer.cs">
+    <Compile Include="CommandsDialogs\FormSvnClone.Designer.cs">
       <DependentUpon>FormSvnClone.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormVerify.LostObject.cs">
+    <Compile Include="CommandsDialogs\FormVerify.LostObject.cs">
       <DependentUpon>FormVerify.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
@@ -212,39 +285,31 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\SystemExtensions.cs" />
     <Compile Include="Helpers\TreeViewExtensions.cs" />
-    <Compile Include="Help\HelpImageDisplayUserControl.cs">
+    <Compile Include="UserControls\HelpImageDisplayUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Help\HelpImageDisplayUserControl.Designer.cs">
+    <Compile Include="UserControls\HelpImageDisplayUserControl.Designer.cs">
       <DependentUpon>HelpImageDisplayUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Hotkey\ControlHotkeys.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ControlHotkeys.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Hotkey\ControlHotkeys.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ControlHotkeys.Designer.cs">
       <DependentUpon>ControlHotkeys.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Hotkey\FormHotkeys.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Hotkey\FormHotkeys.Designer.cs">
-      <DependentUpon>FormHotkeys.cs</DependentUpon>
     </Compile>
     <Compile Include="Hotkey\HotkeyCommand.cs" />
     <Compile Include="Hotkey\HotkeySettings.cs" />
     <Compile Include="Hotkey\HotkeySettingsManager.cs" />
-    <Compile Include="Hotkey\KeysExtensions.cs" />
-    <Compile Include="Hotkey\TextboxHotkey.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\TextboxHotkey.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="IGitUICommandsSource.cs" />
-    <Compile Include="IndexWatcher.cs" />
-    <Compile Include="MenuStripEx.cs">
+    <Compile Include="UserControls\RevisionGridClasses\IndexWatcher.cs" />
+    <Compile Include="UserControls\MenuStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="MessageBoxes.cs" />
     <Compile Include="MouseWheelRedirector.cs" />
-    <Compile Include="MergeToolsHelper.cs" />
     <Compile Include="Notifications\NotificationFeed.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -263,29 +328,28 @@
       <DependentUpon>NotificationsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Notifications\NotifierHelpers.cs" />
-    <Compile Include="PathFormatter.cs" />
     <Compile Include="Editor\FileViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Editor\FileViewer.Designer.cs">
       <DependentUpon>FileViewer.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormViewPatch.cs">
+    <Compile Include="CommandsDialogs\FormViewPatch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormViewPatch.Designer.cs">
+    <Compile Include="CommandsDialogs\FormViewPatch.Designer.cs">
       <DependentUpon>FormViewPatch.cs</DependentUpon>
     </Compile>
-    <Compile Include="Blame\BlameControl.cs">
+    <Compile Include="UserControls\BlameControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Blame\BlameControl.Designer.cs">
+    <Compile Include="UserControls\BlameControl.Designer.cs">
       <DependentUpon>BlameControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Blame\FormBlame.cs">
+    <Compile Include="CommandsDialogs\FormBlame.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Blame\FormBlame.Designer.cs">
+    <Compile Include="CommandsDialogs\FormBlame.Designer.cs">
       <DependentUpon>FormBlame.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\FileViewerWindows.cs">
@@ -301,43 +365,43 @@
       <DependentUpon>FileViewerMono.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\IFileViewer.cs" />
-    <Compile Include="FormBisect.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormBisect.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormBisect.Designer.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormBisect.Designer.cs">
       <DependentUpon>FormBisect.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormChooseTranslation.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormChooseTranslation.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormChooseTranslation.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormChooseTranslation.Designer.cs">
       <DependentUpon>FormChooseTranslation.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormEditor.cs">
+    <Compile Include="CommandsDialogs\FormEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormEditor.Designer.cs">
+    <Compile Include="CommandsDialogs\FormEditor.Designer.cs">
       <DependentUpon>FormEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormGitAttributes.cs">
+    <Compile Include="CommandsDialogs\FormGitAttributes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormGitAttributes.Designer.cs">
+    <Compile Include="CommandsDialogs\FormGitAttributes.Designer.cs">
       <DependentUpon>FormGitAttributes.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormFixHome.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormFixHome.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormRunScriptSpecify.cs">
+    <Compile Include="HelperDialogs\FormRunScriptSpecify.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormRunScriptSpecify.Designer.cs">
+    <Compile Include="HelperDialogs\FormRunScriptSpecify.Designer.cs">
       <DependentUpon>FormRunScriptSpecify.cs</DependentUpon>
     </Compile>
     <Compile Include="FormStatus.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormFixHome.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormFixHome.Designer.cs">
       <DependentUpon>FormFixHome.cs</DependentUpon>
     </Compile>
     <Compile Include="FormStatus.Designer.cs">
@@ -352,17 +416,17 @@
     <Compile Include="GitExtensionsUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FormBrowse.cs">
+    <Compile Include="CommandsDialogs\FormBrowse.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormBrowse.Designer.cs">
+    <Compile Include="CommandsDialogs\FormBrowse.Designer.cs">
       <DependentUpon>FormBrowse.cs</DependentUpon>
     </Compile>
     <Compile Include="Editor\ColorHelper.cs" />
-    <Compile Include="FormCommit.cs">
+    <Compile Include="CommandsDialogs\FormCommit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCommit.Designer.cs">
+    <Compile Include="CommandsDialogs\FormCommit.Designer.cs">
       <DependentUpon>FormCommit.cs</DependentUpon>
     </Compile>
     <Compile Include="CommitInfo\CommitInfo.cs">
@@ -371,49 +435,49 @@
     <Compile Include="CommitInfo\CommitInfo.Designer.cs">
       <DependentUpon>CommitInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dashboard.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\Dashboard.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Dashboard.Designer.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\Dashboard.Designer.cs">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </Compile>
-    <Compile Include="DashboardCategory.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardCategory.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DashboardCategory.Designer.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardCategory.Designer.cs">
       <DependentUpon>DashboardCategory.cs</DependentUpon>
     </Compile>
-    <Compile Include="DashboardEditor.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DashboardEditor.Designer.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardEditor.Designer.cs">
       <DependentUpon>DashboardEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="DashboardItem.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="DashboardItem.Designer.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardItem.Designer.cs">
       <DependentUpon>DashboardItem.cs</DependentUpon>
     </Compile>
-    <Compile Include="DvcsGraph.cs">
+    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="DvcsGraph.Designer.cs">
+    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Designer.cs">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
     </Compile>
-    <Compile Include="FileStatusList.cs">
+    <Compile Include="UserControls\FileStatusList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="FileStatusList.Designer.cs">
+    <Compile Include="UserControls\FileStatusList.Designer.cs">
       <DependentUpon>FileStatusList.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCherryPick.cs">
+    <Compile Include="CommandsDialogs\FormCherryPick.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCherryPick.Designer.cs">
+    <Compile Include="CommandsDialogs\FormCherryPick.Designer.cs">
       <DependentUpon>FormCherryPick.cs</DependentUpon>
     </Compile>
-    <Compile Include="GitFileTreeComparer.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\GitFileTreeComparer.cs" />
     <Compile Include="Google.cs" />
     <Compile Include="Lemmings.cs" />
     <Compile Include="Plugin\GitPluginSettingsContainer.cs" />
@@ -429,143 +493,122 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RepoHosting\CreatePullRequestForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RepoHosting\CreatePullRequestForm.Designer.cs">
-      <DependentUpon>CreatePullRequestForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RepoHosting\DiscussionHtmlCreator.cs" />
-    <Compile Include="RepoHosting\ForkAndCloneForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RepoHosting\ForkAndCloneForm.Designer.cs">
-      <DependentUpon>ForkAndCloneForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="RepoHosting\RepoHosts.cs" />
-    <Compile Include="RepoHosting\ViewPullRequestsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RepoHosting\ViewPullRequestsForm.Designer.cs">
-      <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="RepoObjectsTree\ROT.ContextActions.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Properties\UiSettings.cs" />
-    <Compile Include="Script\RunScript.cs" />
     <Compile Include="Script\ScriptInfo.cs" />
     <Compile Include="Script\ScriptManager.cs" />
-    <Compile Include="SettingsDialog\CheckSettingsLogic.cs" />
-    <Compile Include="SettingsDialog\CommonLogic.cs" />
-    <Compile Include="SettingsDialog\ISettingsPage.cs" />
-    <Compile Include="SettingsDialog\ISettingsPageHost.cs" />
-    <Compile Include="SettingsDialog\Pages\AdvancedSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\CheckSettingsLogic.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\CommonLogic.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\ISettingsPage.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\ISettingsPageHost.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\AdvancedSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\AdvancedSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\AdvancedSettingsPage.Designer.cs">
       <DependentUpon>AdvancedSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\AppearanceSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\AppearanceSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\AppearanceSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\AppearanceSettingsPage.Designer.cs">
       <DependentUpon>AppearanceSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\ChecklistSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ChecklistSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\ChecklistSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ChecklistSettingsPage.Designer.cs">
       <DependentUpon>ChecklistSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\ColorsSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ColorsSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\ColorsSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ColorsSettingsPage.Designer.cs">
       <DependentUpon>ColorsSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\ConfirmationsSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ConfirmationsSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\ConfirmationsSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ConfirmationsSettingsPage.Designer.cs">
       <DependentUpon>ConfirmationsSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\SettingsGroupPages.cs" />
-    <Compile Include="SettingsDialog\Pages\GitExtensionsSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\SettingsGroupPages.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitExtensionsSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\GitExtensionsSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitExtensionsSettingsPage.Designer.cs">
       <DependentUpon>GitExtensionsSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\GitSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\GitSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitSettingsPage.Designer.cs">
       <DependentUpon>GitSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\GlobalSettingsSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GlobalSettingsSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\GlobalSettingsSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GlobalSettingsSettingsPage.Designer.cs">
       <DependentUpon>GlobalSettingsSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\GroupSettingsPage.cs" />
-    <Compile Include="SettingsDialog\Pages\HotkeysSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\GroupSettingsPage.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\HotkeysSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\HotkeysSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\HotkeysSettingsPage.Designer.cs">
       <DependentUpon>HotkeysSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\LocalSettingsSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\LocalSettingsSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\LocalSettingsSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\LocalSettingsSettingsPage.Designer.cs">
       <DependentUpon>LocalSettingsSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\ScriptsSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ScriptsSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\ScriptsSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ScriptsSettingsPage.Designer.cs">
       <DependentUpon>ScriptsSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\ShellExtensionSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ShellExtensionSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\ShellExtensionSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ShellExtensionSettingsPage.Designer.cs">
       <DependentUpon>ShellExtensionSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\SshSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\SshSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\SshSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\SshSettingsPage.Designer.cs">
       <DependentUpon>SshSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\StartPageSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\StartPageSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Pages\StartPageSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\StartPageSettingsPage.Designer.cs">
       <DependentUpon>StartPageSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\Plugins\PluginSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\Plugins\PluginSettingsPage.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginSettingsPage.Designer.cs">
       <DependentUpon>PluginSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\SettingsPageBase.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\SettingsPageBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\SettingsPageReference.cs" />
-    <Compile Include="SettingsDialog\SettingsTreeViewUserControl.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\SettingsPageReference.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\SettingsTreeViewUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\SettingsTreeViewUserControl.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\SettingsTreeViewUserControl.Designer.cs">
       <DependentUpon>SettingsTreeViewUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\SimpleHelpDisplayDialog.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\SimpleHelpDisplayDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\SimpleHelpDisplayDialog.Designer.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\SimpleHelpDisplayDialog.Designer.cs">
       <DependentUpon>SimpleHelpDisplayDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="SpellChecker\EditNetSpell.cs">
@@ -574,188 +617,182 @@
     <Compile Include="SpellChecker\EditNetSpell.Designer.cs">
       <DependentUpon>EditNetSpell.cs</DependentUpon>
     </Compile>
-    <Compile Include="FindAndReplaceForm.cs">
+    <Compile Include="Editor\FindAndReplaceForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FindAndReplaceForm.Designer.cs">
+    <Compile Include="Editor\FindAndReplaceForm.Designer.cs">
       <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormAddFiles.cs">
+    <Compile Include="CommandsDialogs\FormAddFiles.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormAddFiles.Designer.cs">
+    <Compile Include="CommandsDialogs\FormAddFiles.Designer.cs">
       <DependentUpon>FormAddFiles.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormAddSubmodule.cs">
+    <Compile Include="CommandsDialogs\SubmodulesDialog\FormAddSubmodule.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormAddSubmodule.Designer.cs">
+    <Compile Include="CommandsDialogs\SubmodulesDialog\FormAddSubmodule.Designer.cs">
       <DependentUpon>FormAddSubmodule.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormAddToGitIgnore.cs">
+    <Compile Include="CommandsDialogs\FormAddToGitIgnore.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormAddToGitIgnore.Designer.cs">
+    <Compile Include="CommandsDialogs\FormAddToGitIgnore.Designer.cs">
       <DependentUpon>FormAddToGitIgnore.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormArchive.cs">
+    <Compile Include="CommandsDialogs\FormArchive.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormArchive.Designer.cs">
+    <Compile Include="CommandsDialogs\FormArchive.Designer.cs">
       <DependentUpon>FormArchive.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormBranch.cs">
+    <Compile Include="CommandsDialogs\FormCreateBranch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormBranch.Designer.cs">
-      <DependentUpon>FormBranch.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\FormCreateBranch.Designer.cs">
+      <DependentUpon>FormCreateBranch.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormBranchSmall.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormChangeLog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormBranchSmall.Designer.cs">
-      <DependentUpon>FormBranchSmall.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormChangeLog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormChangeLog.Designer.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormChangeLog.Designer.cs">
       <DependentUpon>FormChangeLog.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCheckout.cs">
+    <Compile Include="CommandsDialogs\FormCheckoutRevision.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCheckout.Designer.cs">
-      <DependentUpon>FormCheckout.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\FormCheckoutRevision.Designer.cs">
+      <DependentUpon>FormCheckoutRevision.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCleanupRepository.cs">
+    <Compile Include="CommandsDialogs\FormCleanupRepository.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCleanupRepository.Designer.cs">
+    <Compile Include="CommandsDialogs\FormCleanupRepository.Designer.cs">
       <DependentUpon>FormCleanupRepository.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormClone.cs">
+    <Compile Include="CommandsDialogs\FormClone.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormClone.Designer.cs">
+    <Compile Include="CommandsDialogs\FormClone.Designer.cs">
       <DependentUpon>FormClone.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormCommandlineHelp.cs">
+    <Compile Include="CommandsDialogs\FormCommandlineHelp.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormCommandlineHelp.Designer.cs">
+    <Compile Include="CommandsDialogs\FormCommandlineHelp.Designer.cs">
       <DependentUpon>FormCommandlineHelp.cs</DependentUpon>
     </Compile>
-    <Compile Include="Statistics\FormCommitCount.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormCommitCount.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Statistics\FormCommitCount.Designer.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormCommitCount.Designer.cs">
       <DependentUpon>FormCommitCount.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormDashboardCategoryTitle.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardCategoryTitle.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormDashboardCategoryTitle.Designer.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardCategoryTitle.Designer.cs">
       <DependentUpon>FormDashboardCategoryTitle.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormDashboardEditor.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormDashboardEditor.Designer.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardEditor.Designer.cs">
       <DependentUpon>FormDashboardEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormDeleteBranch.cs">
+    <Compile Include="CommandsDialogs\FormDeleteBranch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormDeleteBranch.Designer.cs">
+    <Compile Include="CommandsDialogs\FormDeleteBranch.Designer.cs">
       <DependentUpon>FormDeleteBranch.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tag\FormDeleteTag.cs">
+    <Compile Include="CommandsDialogs\FormDeleteTag.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Tag\FormDeleteTag.Designer.cs">
+    <Compile Include="CommandsDialogs\FormDeleteTag.Designer.cs">
       <DependentUpon>FormDeleteTag.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormDiff.cs">
+    <Compile Include="CommandsDialogs\FormLog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormDiff.Designer.cs">
-      <DependentUpon>FormDiff.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\FormLog.Designer.cs">
+      <DependentUpon>FormLog.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormDiffSmall.cs">
+    <Compile Include="HelperDialogs\FormCommitDiff.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormDiffSmall.Designer.cs">
-      <DependentUpon>FormDiffSmall.cs</DependentUpon>
+    <Compile Include="HelperDialogs\FormCommitDiff.Designer.cs">
+      <DependentUpon>FormCommitDiff.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormDonate.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormDonate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormDonate.Designer.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormDonate.Designer.cs">
       <DependentUpon>FormDonate.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormEdit.cs">
+    <Compile Include="HelperDialogs\FormEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormEdit.Designer.cs">
+    <Compile Include="HelperDialogs\FormEdit.Designer.cs">
       <DependentUpon>FormEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormFileHistory.cs">
+    <Compile Include="CommandsDialogs\FormFileHistory.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormFileHistory.Designer.cs">
+    <Compile Include="CommandsDialogs\FormFileHistory.Designer.cs">
       <DependentUpon>FormFileHistory.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormFormatPatch.cs">
+    <Compile Include="CommandsDialogs\FormFormatPatch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormFormatPatch.Designer.cs">
+    <Compile Include="CommandsDialogs\FormFormatPatch.Designer.cs">
       <DependentUpon>FormFormatPatch.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormGitIgnore.cs">
+    <Compile Include="CommandsDialogs\FormGitIgnore.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormGitIgnore.Designer.cs">
+    <Compile Include="CommandsDialogs\FormGitIgnore.Designer.cs">
       <DependentUpon>FormGitIgnore.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormInit.cs">
+    <Compile Include="CommandsDialogs\FormInit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormInit.Designer.cs">
+    <Compile Include="CommandsDialogs\FormInit.Designer.cs">
       <DependentUpon>FormInit.cs</DependentUpon>
     </Compile>
     <Compile Include="BrowseForPrivateKey.cs" />
-    <Compile Include="FormMailMap.cs">
+    <Compile Include="CommandsDialogs\FormMailMap.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormMailMap.Designer.cs">
+    <Compile Include="CommandsDialogs\FormMailMap.Designer.cs">
       <DependentUpon>FormMailMap.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormMergeBranch.cs">
+    <Compile Include="CommandsDialogs\FormMergeBranch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormMergeBranch.Designer.cs">
+    <Compile Include="CommandsDialogs\FormMergeBranch.Designer.cs">
       <DependentUpon>FormMergeBranch.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormModifiedDeletedCreated.cs">
+    <Compile Include="CommandsDialogs\ResolveConflictsDialog\FormModifiedDeletedCreated.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormModifiedDeletedCreated.Designer.cs">
+    <Compile Include="CommandsDialogs\ResolveConflictsDialog\FormModifiedDeletedCreated.Designer.cs">
       <DependentUpon>FormModifiedDeletedCreated.cs</DependentUpon>
     </Compile>
     <Compile Include="FormProcess.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPull.cs">
+    <Compile Include="CommandsDialogs\FormPull.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPull.Designer.cs">
+    <Compile Include="CommandsDialogs\FormPull.Designer.cs">
       <DependentUpon>FormPull.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPush.cs">
+    <Compile Include="CommandsDialogs\FormPush.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormPush.Designer.cs">
+    <Compile Include="CommandsDialogs\FormPush.Designer.cs">
       <DependentUpon>FormPush.cs</DependentUpon>
     </Compile>
     <Compile Include="FormPuttyError.cs">
@@ -764,121 +801,103 @@
     <Compile Include="FormPuttyError.Designer.cs">
       <DependentUpon>FormPuttyError.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormRebase.cs">
+    <Compile Include="CommandsDialogs\FormRebase.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormRebase.Designer.cs">
+    <Compile Include="CommandsDialogs\FormRebase.Designer.cs">
       <DependentUpon>FormRebase.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormRemotes.cs">
+    <Compile Include="CommandsDialogs\FormRemotes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormRemotes.Designer.cs">
+    <Compile Include="CommandsDialogs\FormRemotes.Designer.cs">
       <DependentUpon>FormRemotes.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormResetCurrentBranch.cs">
+    <Compile Include="HelperDialogs\FormResetCurrentBranch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormResetCurrentBranch.Designer.cs">
+    <Compile Include="HelperDialogs\FormResetCurrentBranch.Designer.cs">
       <DependentUpon>FormResetCurrentBranch.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormResolveConflicts.cs">
+    <Compile Include="CommandsDialogs\FormResolveConflicts.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormResolveConflicts.Designer.cs">
+    <Compile Include="CommandsDialogs\FormResolveConflicts.Designer.cs">
       <DependentUpon>FormResolveConflicts.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormRevert.cs">
+    <Compile Include="CommandsDialogs\FormRevertCommit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormRevert.Designer.cs">
-      <DependentUpon>FormRevert.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\FormRevertCommit.Designer.cs">
+      <DependentUpon>FormRevertCommit.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormRevertCommitSmall.cs">
+    <Compile Include="UserControls\RevisionGridClasses\FormRevisionFilter.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormRevertCommitSmall.Designer.cs">
-      <DependentUpon>FormRevertCommitSmall.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormRevisionFilter.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormRevisionFilter.Designer.cs">
+    <Compile Include="UserControls\RevisionGridClasses\FormRevisionFilter.Designer.cs">
       <DependentUpon>FormRevisionFilter.cs</DependentUpon>
     </Compile>
-    <Compile Include="SettingsDialog\FormSettings.cs">
+    <Compile Include="CommandsDialogs\FormSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsDialog\FormSettings.Designer.cs">
+    <Compile Include="CommandsDialogs\FormSettings.Designer.cs">
       <DependentUpon>FormSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormStash.cs">
+    <Compile Include="CommandsDialogs\FormStash.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormStash.Designer.cs">
+    <Compile Include="CommandsDialogs\FormStash.Designer.cs">
       <DependentUpon>FormStash.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormSubmodules.cs">
+    <Compile Include="CommandsDialogs\FormSubmodules.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormSubmodules.Designer.cs">
+    <Compile Include="CommandsDialogs\FormSubmodules.Designer.cs">
       <DependentUpon>FormSubmodules.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tag\FormTag.cs">
+    <Compile Include="CommandsDialogs\FormCreateTag.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Tag\FormTag.Designer.cs">
-      <DependentUpon>FormTag.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\FormCreateTag.Designer.cs">
+      <DependentUpon>FormCreateTag.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tag\FormTagSmall.cs">
+    <Compile Include="CommandsDialogs\FormVerify.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Tag\FormTagSmall.Designer.cs">
-      <DependentUpon>FormTagSmall.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormVerify.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormVerify.Designer.cs">
+    <Compile Include="CommandsDialogs\FormVerify.Designer.cs">
       <DependentUpon>FormVerify.cs</DependentUpon>
     </Compile>
     <Compile Include="GitExtensionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GitLogForm.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormGitLog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GitLogForm.Designer.cs">
-      <DependentUpon>GitLogForm.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\BrowseDialog\FormGitLog.Designer.cs">
+      <DependentUpon>FormGitLog.cs</DependentUpon>
     </Compile>
     <Compile Include="GitUICommands.cs" />
     <Compile Include="GitUIEventArgs.cs" />
     <Compile Include="Plugin\LoadedPlugins.cs" />
-    <Compile Include="GravatarControl.cs">
+    <Compile Include="UserControls\GravatarControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GravatarControl.Designer.cs">
+    <Compile Include="UserControls\GravatarControl.Designer.cs">
       <DependentUpon>GravatarControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="MergeConflictHandler.cs" />
-    <Compile Include="FormApplyPatch.cs">
+    <Compile Include="CommandsDialogs\MergeConflictHandler.cs" />
+    <Compile Include="CommandsDialogs\FormApplyPatch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormApplyPatch.Designer.cs">
+    <Compile Include="CommandsDialogs\FormApplyPatch.Designer.cs">
       <DependentUpon>FormApplyPatch.cs</DependentUpon>
     </Compile>
     <Compile Include="Native.cs" />
-    <Compile Include="FormOpenDirectory.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormOpenDirectory.Designer.cs">
-      <DependentUpon>FormOpenDirectory.cs</DependentUpon>
-    </Compile>
     <Compile Include="OsShellUtil.cs" />
-    <Compile Include="PatchGrid.cs">
+    <Compile Include="UserControls\PatchGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="PatchGrid.Designer.cs">
+    <Compile Include="UserControls\PatchGrid.Designer.cs">
       <DependentUpon>PatchGrid.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
@@ -886,27 +905,27 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="RevisionGrid.cs">
+    <Compile Include="UserControls\RevisionGrid.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="RevisionGrid.Designer.cs">
+    <Compile Include="UserControls\RevisionGrid.Designer.cs">
       <DependentUpon>RevisionGrid.cs</DependentUpon>
     </Compile>
-    <Compile Include="SearchWindow.cs">
+    <Compile Include="CommandsDialogs\SearchWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SearchWindow.Designer.cs">
+    <Compile Include="CommandsDialogs\SearchWindow.Designer.cs">
       <DependentUpon>SearchWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
-    <Compile Include="ToolStripEx.cs">
+    <Compile Include="UserControls\ToolStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ToolStripGitStatus.cs">
+    <Compile Include="UserControls\ToolStripGitStatus.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ToolStripGitStatus.Designer.cs">
+    <Compile Include="UserControls\ToolStripGitStatus.Designer.cs">
       <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
     </Compile>
     <Compile Include="SpellChecker\TextPos.cs" />
@@ -944,73 +963,101 @@
     <Compile Include="RepoObjectsTree\ROT.Nodes.Tags.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="WarningToolStripItem.cs">
+    <Compile Include="UserControls\WarningToolStripItem.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="WindowPositionList.cs" />
-    <Compile Include="WordWrapper.cs" />
+    <Compile Include="CommandsDialogs\CommitDialog\WordWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="AboutBox.resx">
+    <EmbeddedResource Include="CommandsDialogs\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommitInfo\CommitSummaryUserControl.resx">
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.resx">
+      <DependentUpon>FormOpenDirectory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormUpdates.resx">
+      <DependentUpon>FormUpdates.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.resx">
+      <DependentUpon>CreatePullRequestForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\RepoHosting\ForkAndCloneForm.resx">
+      <DependentUpon>ForkAndCloneForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\RepoHosting\ViewPullRequestsForm.resx">
+      <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\FormatPatchDialog\SmtpCredentials.resx">
+      <DependentUpon>SmtpCredentials.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.resx">
+      <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\CommitPickerSmallControl.resx">
+      <DependentUpon>CommitPickerSmallControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\CommitSummaryUserControl.resx">
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\FormGoToLine.resx">
       <DependentUpon>FormGoToLine.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormChooseCommit.resx">
+    <EmbeddedResource Include="HelperDialogs\FormChooseCommit.resx">
       <DependentUpon>FormChooseCommit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCommitTemplateSettings.resx">
+    <EmbeddedResource Include="CommandsDialogs\CommitDialog\FormCommitTemplateSettings.resx">
       <DependentUpon>FormCommitTemplateSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCheckoutBranch.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormCheckoutBranch.resx">
       <DependentUpon>FormCheckoutBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormRecentReposSettings.resx">
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormRecentReposSettings.resx">
       <DependentUpon>FormRecentReposSettings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormRenameBranch.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormRenameBranch.resx">
       <DependentUpon>FormRenameBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="BranchComboBox.resx">
+    <EmbeddedResource Include="UserControls\BranchComboBox.resx">
       <DependentUpon>BranchComboBox.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editor\FileViewer.resx">
       <DependentUpon>FileViewer.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormContributors.resx">
+    <EmbeddedResource Include="CommandsDialogs\AboutBoxDialog\FormContributors.resx">
       <DependentUpon>FormContributors.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormGoToCommit.resx">
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormGoToCommit.resx">
       <DependentUpon>FormGoToCommit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormResetChanges.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormResetChanges.resx">
       <DependentUpon>FormResetChanges.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormSelectMultipleBranches.resx">
+    <EmbeddedResource Include="HelperDialogs\FormSelectMultipleBranches.resx">
       <DependentUpon>FormSelectMultipleBranches.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormSvnClone.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormSvnClone.resx">
       <DependentUpon>FormSvnClone.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormViewPatch.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormViewPatch.resx">
       <DependentUpon>FormViewPatch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Blame\BlameControl.resx">
+    <EmbeddedResource Include="UserControls\BlameControl.resx">
       <DependentUpon>BlameControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Blame\FormBlame.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormBlame.resx">
       <DependentUpon>FormBlame.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1022,27 +1069,27 @@
       <DependentUpon>FileViewerMono.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormBisect.resx">
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormBisect.resx">
       <DependentUpon>FormBisect.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormChooseTranslation.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\FormChooseTranslation.resx">
       <DependentUpon>FormChooseTranslation.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormEditor.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormEditor.resx">
       <DependentUpon>FormEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormGitAttributes.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormGitAttributes.resx">
       <DependentUpon>FormGitAttributes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormBrowse.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormBrowse.resx">
       <DependentUpon>FormBrowse.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCommit.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormCommit.resx">
       <DependentUpon>FormCommit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1050,243 +1097,229 @@
       <DependentUpon>CommitInfo.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dashboard.resx">
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\Dashboard.resx">
       <DependentUpon>Dashboard.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="DashboardCategory.resx">
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardCategory.resx">
       <DependentUpon>DashboardCategory.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="DashboardEditor.resx">
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardEditor.resx">
       <DependentUpon>DashboardEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="DashboardItem.resx">
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardItem.resx">
       <DependentUpon>DashboardItem.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="DvcsGraph.resx">
+    <EmbeddedResource Include="UserControls\GotoUserManualControl.resx">
+      <DependentUpon>GotoUserManualControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\RemotesComboboxControl.resx">
+      <DependentUpon>RemotesComboboxControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\RevisionGridClasses\DvcsGraph.resx">
       <DependentUpon>DvcsGraph.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FileStatusList.resx">
+    <EmbeddedResource Include="UserControls\FileStatusList.resx">
       <DependentUpon>FileStatusList.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCherryPick.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormCherryPick.resx">
       <DependentUpon>FormCherryPick.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormRunScriptSpecify.resx">
+    <EmbeddedResource Include="HelperDialogs\FormRunScriptSpecify.resx">
       <DependentUpon>FormRunScriptSpecify.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Help\HelpImageDisplayUserControl.resx">
+    <EmbeddedResource Include="UserControls\HelpImageDisplayUserControl.resx">
       <DependentUpon>HelpImageDisplayUserControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Hotkey\ControlHotkeys.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ControlHotkeys.resx">
       <DependentUpon>ControlHotkeys.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Hotkey\FormHotkeys.resx">
-      <DependentUpon>FormHotkeys.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Notifications\NotificationPopup.resx">
       <DependentUpon>NotificationPopup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="RepoHosting\CreatePullRequestForm.resx">
-      <DependentUpon>CreatePullRequestForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RepoHosting\ForkAndCloneForm.resx">
-      <DependentUpon>ForkAndCloneForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RepoHosting\ViewPullRequestsForm.resx">
-      <DependentUpon>ViewPullRequestsForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Script\SimplePrompt.resx">
       <DependentUpon>SimplePrompt.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Pages\AdvancedSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\AdvancedSettingsPage.resx">
       <DependentUpon>AdvancedSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Pages\AppearanceSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\AppearanceSettingsPage.resx">
       <DependentUpon>AppearanceSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Pages\ChecklistSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ChecklistSettingsPage.resx">
       <DependentUpon>ChecklistSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Pages\ColorsSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ColorsSettingsPage.resx">
       <DependentUpon>ColorsSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Pages\ConfirmationsSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ConfirmationsSettingsPage.resx">
       <DependentUpon>ConfirmationsSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Pages\GitExtensionsSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GitExtensionsSettingsPage.resx">
       <DependentUpon>GitExtensionsSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Pages\GitSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GitSettingsPage.resx">
       <DependentUpon>GitSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Pages\GlobalSettingsSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GlobalSettingsSettingsPage.resx">
       <DependentUpon>GlobalSettingsSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Pages\HotkeysSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\HotkeysSettingsPage.resx">
       <DependentUpon>HotkeysSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Pages\LocalSettingsSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\LocalSettingsSettingsPage.resx">
       <DependentUpon>LocalSettingsSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Pages\ScriptsSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ScriptsSettingsPage.resx">
       <DependentUpon>ScriptsSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Pages\ShellExtensionSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ShellExtensionSettingsPage.resx">
       <DependentUpon>ShellExtensionSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Pages\SshSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\SshSettingsPage.resx">
       <DependentUpon>SshSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Pages\StartPageSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\StartPageSettingsPage.resx">
       <DependentUpon>StartPageSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\Plugins\PluginSettingsPage.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginSettingsPage.resx">
       <DependentUpon>PluginSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\SettingsTreeViewUserControl.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\SettingsTreeViewUserControl.resx">
       <DependentUpon>SettingsTreeViewUserControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\SimpleHelpDisplayDialog.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\SimpleHelpDisplayDialog.resx">
       <DependentUpon>SimpleHelpDisplayDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SpellChecker\EditNetSpell.resx">
       <DependentUpon>EditNetSpell.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FindAndReplaceForm.resx">
+    <EmbeddedResource Include="Editor\FindAndReplaceForm.resx">
       <DependentUpon>FindAndReplaceForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormAddFiles.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormAddFiles.resx">
       <DependentUpon>FormAddFiles.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormAddSubmodule.resx">
+    <EmbeddedResource Include="CommandsDialogs\SubmodulesDialog\FormAddSubmodule.resx">
       <DependentUpon>FormAddSubmodule.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormAddToGitIgnore.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormAddToGitIgnore.resx">
       <DependentUpon>FormAddToGitIgnore.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormArchive.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormArchive.resx">
       <DependentUpon>FormArchive.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormBranch.resx">
-      <DependentUpon>FormBranch.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\FormCreateBranch.resx">
+      <DependentUpon>FormCreateBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormBranchSmall.resx">
-      <DependentUpon>FormBranchSmall.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormChangeLog.resx">
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormChangeLog.resx">
       <DependentUpon>FormChangeLog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCheckout.resx">
-      <DependentUpon>FormCheckout.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\FormCheckoutRevision.resx">
+      <DependentUpon>FormCheckoutRevision.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCleanupRepository.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormCleanupRepository.resx">
       <DependentUpon>FormCleanupRepository.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormClone.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormClone.resx">
       <DependentUpon>FormClone.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormCommandlineHelp.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormCommandlineHelp.resx">
       <DependentUpon>FormCommandlineHelp.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Statistics\FormCommitCount.resx">
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormCommitCount.resx">
       <DependentUpon>FormCommitCount.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormDashboardCategoryTitle.resx">
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardCategoryTitle.resx">
       <DependentUpon>FormDashboardCategoryTitle.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormDashboardEditor.resx">
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardEditor.resx">
       <DependentUpon>FormDashboardEditor.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormDeleteBranch.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormDeleteBranch.resx">
       <DependentUpon>FormDeleteBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tag\FormDeleteTag.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormDeleteTag.resx">
       <DependentUpon>FormDeleteTag.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormDiff.resx">
-      <DependentUpon>FormDiff.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\FormLog.resx">
+      <DependentUpon>FormLog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormDiffSmall.resx">
-      <DependentUpon>FormDiffSmall.cs</DependentUpon>
+    <EmbeddedResource Include="HelperDialogs\FormCommitDiff.resx">
+      <DependentUpon>FormCommitDiff.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormDonate.resx">
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormDonate.resx">
       <DependentUpon>FormDonate.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormEdit.resx">
+    <EmbeddedResource Include="HelperDialogs\FormEdit.resx">
       <DependentUpon>FormEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormFileHistory.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormFileHistory.resx">
       <DependentUpon>FormFileHistory.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormFixHome.resx">
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\FormFixHome.resx">
       <DependentUpon>FormFixHome.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormFormatPatch.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormFormatPatch.resx">
       <DependentUpon>FormFormatPatch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormGitIgnore.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormGitIgnore.resx">
       <DependentUpon>FormGitIgnore.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormInit.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormInit.resx">
       <DependentUpon>FormInit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormMailMap.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormMailMap.resx">
       <DependentUpon>FormMailMap.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormMergeBranch.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormMergeBranch.resx">
       <DependentUpon>FormMergeBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormModifiedDeletedCreated.resx">
+    <EmbeddedResource Include="CommandsDialogs\ResolveConflictsDialog\FormModifiedDeletedCreated.resx">
       <DependentUpon>FormModifiedDeletedCreated.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPull.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormPull.resx">
       <DependentUpon>FormPull.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormPush.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormPush.resx">
       <DependentUpon>FormPush.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1294,35 +1327,31 @@
       <DependentUpon>FormPuttyError.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormRebase.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormRebase.resx">
       <DependentUpon>FormRebase.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormRemotes.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormRemotes.resx">
       <DependentUpon>FormRemotes.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormResetCurrentBranch.resx">
+    <EmbeddedResource Include="HelperDialogs\FormResetCurrentBranch.resx">
       <DependentUpon>FormResetCurrentBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormResolveConflicts.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormResolveConflicts.resx">
       <DependentUpon>FormResolveConflicts.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormRevert.resx">
-      <DependentUpon>FormRevert.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\FormRevertCommit.resx">
+      <DependentUpon>FormRevertCommit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormRevertCommitSmall.resx">
-      <DependentUpon>FormRevertCommitSmall.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormRevisionFilter.resx">
+    <EmbeddedResource Include="UserControls\RevisionGridClasses\FormRevisionFilter.resx">
       <DependentUpon>FormRevisionFilter.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SettingsDialog\FormSettings.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormSettings.resx">
       <DependentUpon>FormSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1330,7 +1359,7 @@
       <DependentUpon>FormSplash.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormStash.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormStash.resx">
       <DependentUpon>FormStash.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1338,19 +1367,15 @@
       <DependentUpon>FormStatus.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormSubmodules.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormSubmodules.resx">
       <DependentUpon>FormSubmodules.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tag\FormTag.resx">
-      <DependentUpon>FormTag.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\FormCreateTag.resx">
+      <DependentUpon>FormCreateTag.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tag\FormTagSmall.resx">
-      <DependentUpon>FormTagSmall.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormVerify.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormVerify.resx">
       <DependentUpon>FormVerify.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1358,23 +1383,19 @@
       <DependentUpon>GitExtensionsUserControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="GitLogForm.resx">
-      <DependentUpon>GitLogForm.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormGitLog.resx">
+      <DependentUpon>FormGitLog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="GravatarControl.resx">
+    <EmbeddedResource Include="UserControls\GravatarControl.resx">
       <DependentUpon>GravatarControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormApplyPatch.resx">
+    <EmbeddedResource Include="CommandsDialogs\FormApplyPatch.resx">
       <DependentUpon>FormApplyPatch.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormOpenDirectory.resx">
-      <DependentUpon>FormOpenDirectory.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PatchGrid.resx">
+    <EmbeddedResource Include="UserControls\PatchGrid.resx">
       <DependentUpon>PatchGrid.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1383,15 +1404,15 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="RevisionGrid.resx">
+    <EmbeddedResource Include="UserControls\RevisionGrid.resx">
       <DependentUpon>RevisionGrid.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ToolStripGitStatus.resx">
+    <EmbeddedResource Include="UserControls\ToolStripGitStatus.resx">
       <DependentUpon>ToolStripGitStatus.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SearchWindow.resx">
+    <EmbeddedResource Include="CommandsDialogs\SearchWindow.resx">
       <DependentUpon>SearchWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1434,7 +1455,7 @@
     <Compile Include="FormRemoteProcess.Designer.cs">
       <DependentUpon>FormRemoteProcess.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormVerify.SortableLostObjectsList.cs">
+    <Compile Include="CommandsDialogs\FormVerify.SortableLostObjectsList.cs">
       <DependentUpon>FormVerify.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
@@ -1607,7 +1628,6 @@
     <None Include="Resources\Icons\IconResetFileTo.png" />
     <None Include="Resources\Icons\IconGotoCommit.png" />
     <None Include="Resources\Icons\IconSelectBranch.png" />
-    <None Include="Resources\Icons\IconSelectCommit.png" />
     <None Include="Resources\Icons\IconSelectRevision.png" />
     <None Include="Resources\Icons\IconEditGitIgnore.png" />
     <None Include="Resources\Icons\IconAddToGitIgnore.png" />
@@ -1658,6 +1678,7 @@
     <Content Include="Resources\Icons\NotifyWarn.png" />
     <Content Include="Resources\Icons\RemoteMirror.png" />
     <Content Include="Resources\Icons\RemoteRepo.png" />
+    <None Include="Resources\Icons\IconGotoManual.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1724,7 +1745,6 @@
     <Content Include="Translation\Russian.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Properties\DataSources\FormTranslate.TranslateItem.datasource" />
     <None Include="Resources\Icons\Cow_sunglass.png" />
     <None Include="Resources\Icons\Cow_xmass.png" />
     <None Include="Resources\Icons\develop.ico" />

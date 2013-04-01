@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using GitCommands.Config;
 using GitCommands.Logging;
 using GitCommands.Repository;
 using Microsoft.Win32;
@@ -31,11 +29,17 @@ namespace GitCommands
         public static readonly char PathSeparatorWrong = '/';
 
         private static readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
+
         static Settings()
         {
             Version version = Assembly.GetCallingAssembly().GetName().Version;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
-            GitExtensionsVersionInt = version.Major * 100 + (version.Minor < 100 ? version.Minor : 99);
+            GitExtensionsVersionInt = version.Major * 100 + version.Minor;
+            if (version.Build > 0)
+            {
+                GitExtensionsVersionString += '.' + version.Build.ToString();
+                GitExtensionsVersionInt = GitExtensionsVersionInt * 100 + version.Build;
+            }
             if (!RunningOnWindows())
             {
                 PathSeparator = '/';
@@ -328,22 +332,26 @@ namespace GitCommands
             set { SafeSet("revisiongraphdrawnonrelativestextgray", value, ref _revisionGraphDrawNonRelativesTextGray); }
         }
 
-        public static readonly Dictionary<string, Encoding> availableEncodings = new Dictionary<string, Encoding>();
+        public static readonly Dictionary<string, Encoding> AvailableEncodings = new Dictionary<string, Encoding>();
+        private static readonly Dictionary<string, Encoding> EncodingSettings = new Dictionary<string, Encoding>();
 
         internal static bool GetEncoding(string settingName, out Encoding encoding)
         {
-            object o;
-            bool result = ByNameMap.TryGetValue(settingName, out o);
-            encoding = o as Encoding;
-            return result;
+            lock (EncodingSettings)
+            {
+                return EncodingSettings.TryGetValue(settingName, out encoding);
+            }
         }
 
         internal static void SetEncoding(string settingName, Encoding encoding)
         {
-            var items = (from item in ByNameMap.Keys where item.StartsWith(settingName) select item).ToList();
-            foreach (var item in items)
-                ByNameMap.Remove(item);
-            ByNameMap[settingName] = encoding;
+            lock (EncodingSettings)
+            {
+                var items = EncodingSettings.Keys.Where(item => item.StartsWith(settingName)).ToList();
+                foreach (var item in items)
+                    EncodingSettings.Remove(item);
+                EncodingSettings[settingName] = encoding;
+            }
         }
 
         public enum PullAction
@@ -352,13 +360,14 @@ namespace GitCommands
             Merge,
             Rebase,
             Fetch,
-            FetchAll
+            FetchAll,
+            Default
         }
 
-        public static PullAction PullMerge
+        public static PullAction FormPullAction
         {
-            get { return GetEnum<PullAction>("pullmerge", PullAction.Merge); }
-            set { SetEnum<PullAction>("pullmerge", value); }
+            get { return GetEnum("FormPullAction", PullAction.Merge); }
+            set { SetEnum("FormPullAction", value); }
         }
 
         public static bool DonSetAsLastPullAction
@@ -368,10 +377,24 @@ namespace GitCommands
         }
 
         private static string _smtp;
-        public static string Smtp
+        public static string SmtpServer
         {
-            get { return SafeGet("smtp", "", ref _smtp); }
-            set { SafeSet("smtp", value, ref _smtp); }
+            get { return SafeGet("SmtpServer", "smtp.gmail.com", ref _smtp); }
+            set { SafeSet("SmtpServer", value, ref _smtp); }
+        }
+
+        private static int? _smtpPort;
+        public static int SmtpPort
+        {
+            get { return SafeGet("SmtpPort", 465, ref _smtpPort); }
+            set { SafeSet("SmtpPort", value, ref _smtpPort); }
+        }
+
+        private static bool? _smtpUseSSL;
+        public static bool SmtpUseSsl
+        {
+            get { return SafeGet("SmtpUseSsl", true, ref _smtpUseSSL); }
+            set { SafeSet("SmtpUseSsl", value, ref _smtpUseSSL); }
         }
         
         private static bool? _autoStash;
@@ -399,16 +422,28 @@ namespace GitCommands
             set { SetBool("DontShowHelpImages", value); }
         }
 
-        public static bool DontConfirmAmmend
+        public static bool DontConfirmAmend
         {
-            get { return GetBool("DontConfirmAmmend", false).Value; }
-            set { SetBool("DontConfirmAmmend", value); }
+            get { return GetBool("DontConfirmAmend", false).Value; }
+            set { SetBool("DontConfirmAmend", value); }
         }
 
-        public static bool AutoPopStashAfterPull
+        public static bool? AutoPopStashAfterPull
         {
-            get { return GetBool("AutoPopStashAfterPull", false).Value; }
+            get { return GetBool("AutoPopStashAfterPull", null); }
             set { SetBool("AutoPopStashAfterPull", value); }
+        }
+
+        public static bool? AutoPopStashAfterCheckoutBranch
+        {
+            get { return GetBool("AutoPopStashAfterCheckoutBranch", null); }
+            set { SetBool("AutoPopStashAfterCheckoutBranch", value); }
+        }
+
+        public static PullAction? AutoPullOnPushRejectedAction
+        {
+            get { return GetEnum<PullAction?>("AutoPullOnPushRejectedAction", null); }
+            set { SetEnum<PullAction?>("AutoPullOnPushRejectedAction", value); }
         }
 
         public static bool DontConfirmPushNewBranch
@@ -817,6 +852,11 @@ namespace GitCommands
             }
         }
 
+        public static bool IsMonoRuntime()
+        {
+            return Type.GetType("Mono.Runtime") != null;
+        }
+
         public static void SaveSettings()
         {
             try
@@ -830,7 +870,7 @@ namespace GitCommands
 
         public static void LoadSettings()
         {
-            Action<Encoding> addEncoding = delegate(Encoding e) { availableEncodings[e.HeaderName] = e; };
+            Action<Encoding> addEncoding = delegate(Encoding e) { AvailableEncodings[e.HeaderName] = e; };
             addEncoding(Encoding.Default);
             addEncoding(new ASCIIEncoding());
             addEncoding(new UnicodeEncoding());
@@ -871,13 +911,6 @@ namespace GitCommands
         {
             get { return SafeGet("pushalltags", false, ref _pushAllTags); }
             set { SafeSet("pushalltags", value, ref _pushAllTags); }
-        }
-
-        private static bool? _AutoPullOnRejected;
-        public static bool AutoPullOnRejected
-        {
-            get { return SafeGet("AutoPullOnRejected", false, ref _AutoPullOnRejected); }
-            set { SafeSet("AutoPullOnRejected", value, ref _AutoPullOnRejected); }
         }
 
         private static int? _RecursiveSubmodules;
@@ -999,6 +1032,13 @@ namespace GitCommands
             set { SafeSet("UseFormCommitMessage", value, ref _UseFormCommitMessage); }
         }
 
+        private static DateTime? _lastUpdateCheck;
+        public static DateTime LastUpdateCheck
+        {
+            get { return SafeGet("LastUpdateCheck", default(DateTime), ref _lastUpdateCheck); }
+            set { SafeSet("LastUpdateCheck", value, ref _lastUpdateCheck); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
@@ -1031,9 +1071,21 @@ namespace GitCommands
             return SafeGet(key, defaultValue, ref field, x => x.Parse(defaultValue));
         }
 
+        private static DateTime SafeGet(string key, DateTime? defaultValue, ref DateTime? field)
+        {
+            return SafeGet(key, defaultValue, ref field,
+                x =>
+                {
+                    DateTime result;
+                    if (DateTime.TryParseExact(x, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                        return result;
+                    return null;
+                }).GetValueOrDefault();
+        }
+
         private static bool SafeGet(string key, bool defaultValue, ref bool? field)
         {
-            return SafeGet(key, defaultValue, ref field, x => x == "True").Value;
+            return SafeGet(key, defaultValue, ref field, x => x == "True").GetValueOrDefault();
         }
 
         private static int SafeGet(string key, int defaultValue, ref int? field)
@@ -1042,12 +1094,18 @@ namespace GitCommands
             {
                 int result;
                 return int.TryParse(x, out result) ? result : defaultValue;
-            }).Value;
+            }).GetValueOrDefault();
         }
 
         private static Color SafeGet(string key, Color defaultValue, ref Color? field)
         {
-            return SafeGet(key, defaultValue, ref field, x => ColorTranslator.FromHtml(x)).Value;
+            return SafeGet(key, defaultValue, ref field, x => ColorTranslator.FromHtml(x)).GetValueOrDefault();
+        }
+
+        private static void SafeSet(string key, DateTime? value, ref DateTime? field)
+        {
+            field = value;
+            SetValue(key, field != null ? field.Value.ToString("yyyy/M/dd", CultureInfo.InvariantCulture) : null);
         }
 
         private static void SafeSet<T>(string key, T value, ref T field)
@@ -1231,15 +1289,18 @@ namespace GitCommands
             if (parts.Length < 2)
                 return defaultValue;
 
-            CultureInfo ci;
-            if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
-                ci = CultureInfo.InvariantCulture;
-            else
-                ci = CultureInfo.InstalledUICulture;
-
             try
             {
-                return new Font(parts[0], Single.Parse(parts[1], ci));
+                string fontSize;
+                if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
+                    fontSize = parts[1];
+                else
+                {
+                    fontSize = parts[1].Replace(",", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
+                    fontSize = fontSize.Replace(".", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
+                }
+
+                return new Font(parts[0], Single.Parse(fontSize, CultureInfo.InvariantCulture));
             }
             catch (Exception)
             {

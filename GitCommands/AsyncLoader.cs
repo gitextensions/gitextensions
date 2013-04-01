@@ -1,24 +1,22 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace GitCommands
 {
     public class AsyncLoader
     {
-        private readonly SynchronizationContext _syncContext;
-        private readonly object _taskLock;
-        private ILoadingTask _currentTask;
+        private readonly TaskScheduler _taskScheduler;
+        private CancellationTokenSource _cancelledTokenSource;
 
         public AsyncLoader()
-            : this(SynchronizationContext.Current)
+            : this(TaskScheduler.FromCurrentSynchronizationContext())
         {
         }
 
-        public AsyncLoader(SynchronizationContext syncContext)
+        public AsyncLoader(TaskScheduler taskScheduler)
         {
-            _syncContext = syncContext;
-            _taskLock = new object();
-            _currentTask = new LoadingTask<object>();
+            _taskScheduler = taskScheduler;
         }
 
         public event EventHandler<AsyncErrorEventArgs> LoadingError = delegate { };
@@ -31,165 +29,103 @@ namespace GitCommands
         /// <param name="doMe">The stuff we want to do. Should return whatever continueWith expects.</param>
         /// <param name="continueWith">Do this on original sync context.</param>
         /// <param name="onError">Do this on original sync context if doMe barfs.</param>
-        public static void DoAsync<T>(Func<T> doMe, Action<T> continueWith, Action<Exception> onError)
+        public static Task<T> DoAsync<T>(Func<T> doMe, Action<T> continueWith, Action<AsyncErrorEventArgs> onError)
         {
             AsyncLoader loader = new AsyncLoader();
-            loader.LoadingError += (object sender, AsyncErrorEventArgs e) => { onError(e.Exception);  };
-            loader.Load(doMe, continueWith);
+            loader.LoadingError += (sender, e) => onError(e);
+            return loader.Load(doMe, continueWith);
         }
 
-        public static void DoAsync<T>(Func<T> doMe, Action<T> continueWith)
+        public static Task<T> DoAsync<T>(Func<T> doMe, Action<T> continueWith)
         {
             AsyncLoader loader = new AsyncLoader();
-            loader.Load(doMe, continueWith);
+            return loader.Load(doMe, continueWith);
         }
 
-        public static void DoAsync(Action doMe, Action continueWith)
+        public static Task DoAsync(Action doMe, Action continueWith)
         {
             AsyncLoader loader = new AsyncLoader();
-            loader.Load(doMe, continueWith);
+            return loader.Load(doMe, continueWith);
         }
-        
-        public void Load(Action<ILoadingTaskState> loadContent, Action onLoaded)
+
+        public Task Load(Action loadContent, Action onLoaded)
         { 
-            Load((state) => { loadContent(state); return true; }, (b) => onLoaded() );
+            return Load((token) => loadContent(), onLoaded);
         }
 
-        public void Load(Action loadContent, Action onLoaded)
+        public Task Load(Action<CancellationToken> loadContent, Action onLoaded)
         {
-            Load(() => { loadContent(); return true; }, (b) => onLoaded());
-        }
-
-        public void Load<T>(Func<T> loadContent, Action<T> onLoaded)
-        {
-            Load((state) => { return loadContent(); }, onLoaded);
-        }
-
-        public void Load<T>(Func<ILoadingTaskState, T> loadContent, Action<T> onLoaded)
-        {
-            var newTask = new LoadingTask<T>(_syncContext, loadContent, onLoaded, OnLoadingError);
-
-            lock (_taskLock)
+            Cancel();
+            _cancelledTokenSource = new CancellationTokenSource();
+            var token = _cancelledTokenSource.Token;
+            return Task.Factory.StartNew(() => loadContent(token), token)
+                .ContinueWith((task) =>
             {
-                _currentTask.Cancel();
-                _currentTask = newTask;
-            }
+                if (task.IsFaulted)
+                {
+                    foreach (var e in task.Exception.InnerExceptions)
+                        if (!OnLoadingError(e))
+                            throw e;
+                    return;
+                }
+                try
+                {
+                    onLoaded();
+                }
+                catch (Exception exception)
+                {
+                    if (!OnLoadingError(exception))
+                        throw;
+                }
+            }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _taskScheduler);
+        }
 
-            newTask.RunAsync();
+        public Task<T> Load<T>(Func<T> loadContent, Action<T> onLoaded)
+        {
+            return Load((token) => loadContent(), onLoaded);
+        }
+
+        public Task<T> Load<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
+        {
+            Cancel();
+            _cancelledTokenSource = new CancellationTokenSource();
+            var token = _cancelledTokenSource.Token;
+            return Task.Factory.StartNew(() => loadContent(token), token)
+                .ContinueWith((task) =>
+            {
+                if (task.IsFaulted)
+                {
+                    foreach (var e in task.Exception.InnerExceptions)
+                        if (!OnLoadingError(e))
+                            throw e;
+                    return default(T);
+                }
+                try
+                {
+                    onLoaded(task.Result);
+                    return task.Result;
+                }
+                catch (Exception exception)
+                {
+                    if (!OnLoadingError(exception))
+                        throw;
+                    return default(T);
+                }
+            }, CancellationToken.None, TaskContinuationOptions.NotOnCanceled, _taskScheduler);
         }
 
         public void Cancel()
         {
-            lock (_taskLock)
-            {
-                _currentTask.Cancel();
-            }        
+            if (_cancelledTokenSource != null)
+                _cancelledTokenSource.Cancel();
         }
 
-        private void OnLoadingError(Exception exception)
+        private bool OnLoadingError(Exception exception)
         {
-            LoadingError(this, new AsyncErrorEventArgs(exception));
+            var args = new AsyncErrorEventArgs(exception);
+            LoadingError(this, args);
+            return args.Handled;
         }
-
-        #region Nested type: ILoadingTask
-
-        private interface ILoadingTask
-        {
-            void RunAsync();
-
-            void Cancel();
-        }
-
-        #endregion
-
-        #region Nested type: LoadingTask
-
-        private sealed class LoadingTask<T> : ILoadingTask, ILoadingTaskState
-        {
-            private readonly Func<ILoadingTaskState, T> _loadContent;
-            private readonly Action<Exception> _onError;
-            private readonly Action<T> _onLoaded;
-            private readonly SynchronizationContext _syncContext;
-            private volatile bool _cancelled;
-
-            public LoadingTask()
-            {
-                _cancelled = true;
-            }
-
-            public LoadingTask(SynchronizationContext syncContext, Func<ILoadingTaskState, T> loadContent,
-                               Action<T> onLoaded, Action<Exception> onError)
-            {
-                _syncContext = syncContext;
-                _loadContent = loadContent;
-                _onLoaded = onLoaded;
-                _onError = onError;
-            }
-
-            #region ILoadingTask Members
-
-            public void Cancel()
-            {
-                _cancelled = true;
-            }
-
-            public bool IsCanceled()
-            {
-                return _cancelled;
-            }
-
-            public void RunAsync()
-            {
-                if (_cancelled) return;
-                RunOnWorker(
-                    () =>
-                    {
-                        try
-                        {
-                            if (_cancelled) return;
-                            var content = _loadContent(this);
-
-                            RunOnUiThread(
-                                () =>
-                                {
-                                    try
-                                    {
-                                        _onLoaded(content);
-                                    }
-                                    catch (Exception exception)
-                                    {
-                                        _onError(exception);
-                                    }
-                                });
-                        }
-                        catch (Exception exception)
-                        {
-                            RunOnUiThread(() => _onError(exception));
-                        }
-                    });
-            }
-
-            #endregion
-
-            private static void RunOnWorker(Action action)
-            {
-                ThreadPool.QueueUserWorkItem(_ => action());
-            }
-
-            private void RunOnUiThread(Action action)
-            {
-                if (_cancelled) 
-                    return;
-
-                _syncContext.Post(_ =>
-                    {
-                        if (!_cancelled)
-                            action();
-                    }, null);
-            }
-        }
-
-        #endregion
     }
 
     public class AsyncErrorEventArgs : EventArgs
@@ -197,30 +133,11 @@ namespace GitCommands
         public AsyncErrorEventArgs(Exception exception)
         {
             Exception = exception;
+            Handled = true;
         }
 
         public Exception Exception { get; private set; }
+
+        public bool Handled { get; set; }
     }
-
-    public interface ILoadingTaskState
-    {
-        bool IsCanceled();
-    }
-
-    public class FixedLoadingTaskState : ILoadingTaskState
-    {
-        private bool canceled;
-
-        public FixedLoadingTaskState(bool canceled)
-        {
-            this.canceled = canceled;
-        }
-
-        public bool IsCanceled()
-        {
-            return canceled;
-        }
-
-    }
-
 }

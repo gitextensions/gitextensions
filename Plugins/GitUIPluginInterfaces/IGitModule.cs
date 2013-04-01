@@ -21,7 +21,7 @@ namespace GitUIPluginInterfaces
         string GetGitDirectory();
 
         /// <summary>Indicates whether the specified directory contains a git repository.</summary>
-        bool IsValidGitWorkingDir(string workingDir);
+        bool IsValidGitWorkingDir();
 
         /// <summary>Gets the path to the git application executable.</summary>
         string GitCommand { get; }
@@ -49,5 +49,7 @@ namespace GitUIPluginInterfaces
 
         /// <summary>true if ".git" directory does NOT exist.</summary>
         bool IsBareRepository();
+
+        bool IsRunningGitProcess();
     }
 }

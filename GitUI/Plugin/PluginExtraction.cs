@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using GitUI;
 using GitUI.Plugin;
-using GitUI.RepoHosting;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 

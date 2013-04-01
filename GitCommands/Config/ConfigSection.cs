@@ -67,9 +67,10 @@ namespace GitCommands.Config
 
             path = path.Trim();
 
-            path = path.StartsWith("\\\\")
-                ? path.Replace("\\", "\\\\")//for using unc paths -> these need to be backward slashes
-                : path.Replace('\\', '/');  //for directories -> git only supports forward slashes
+            if (path.StartsWith("\\\\")) //for using unc paths -> these need to be backward slashes
+                path = path.Replace("\\", "\\\\");
+            else //for directories -> git only supports forward slashes
+                path = path.Replace('\\', '/');
 
             return path.Replace("$QUOTE$", "\\\"");
         }
@@ -124,12 +125,14 @@ namespace GitCommands.Config
 
         public bool Equals(ConfigSection other)
         {
-            StringComparison sc = SubSectionCaseSensitive
-                ? StringComparison.Ordinal
-                : StringComparison.OrdinalIgnoreCase;
-
+            StringComparison sc;
+            if (SubSectionCaseSensitive)
+                sc = StringComparison.Ordinal;
+            else
+                sc = StringComparison.OrdinalIgnoreCase;
+            
             return
-                string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) && 
                 string.Equals(SubSection, other.SubSection, sc);
         }
     }

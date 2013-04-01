@@ -94,7 +94,7 @@
     <Compile Include="LinqExtensions.cs" />
     <Compile Include="LockableNotifier.cs" />
     <Compile Include="Logging\CommandLogger.cs" />
-    <Compile Include="Commit.cs" />
+    <Compile Include="CommitHelper.cs" />
     <Compile Include="CommitInformation.cs" />
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Config\ConfigSection.cs" />

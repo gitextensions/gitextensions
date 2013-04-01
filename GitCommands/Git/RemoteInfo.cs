@@ -341,7 +341,7 @@ namespace GitCommands.Git
                 Sha1 = remoteBranchLine.Substring(0, Sha1Length);
                 var temp = remoteBranchLine.Substring(Sha1Length).Trim();// remove SHA-1, then trim
                 FullRefName = temp;
-                Name = FullRefName.Substring(GitHead.RefsHeadsPrefix.Length);// remove "refs/heads/"
+                Name = FullRefName.Substring(GitRef.RefsHeadsPrefix.Length);// remove "refs/heads/"
 
                 IsHead = Equals(Name, headBranchName);
                 if (IsHead)
@@ -383,7 +383,7 @@ namespace GitCommands.Git
                         {
                             // refs/remotes/berger/left-panel/remotes     stale (use 'git remote prune' to remove)
                             // release/2.32                               tracked
-                            string staleName = string.Format("{0}{1}/", GitHead.RefsRemotesPrefix, remote.Name);
+                            string staleName = string.Format("{0}{1}/", GitRef.RefsRemotesPrefix, remote.Name);
                             if (Name.StartsWith(staleName))
                             {// stale remote branch starts with "refs/remotes/{0}/"
                                 Name = Name.Substring(staleName.Length);

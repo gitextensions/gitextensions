@@ -1,4 +1,5 @@
-﻿using ResourceManager.Translation;
+﻿using GitCommands;
+using ResourceManager.Translation;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +18,23 @@ namespace TranslationApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            if (Settings.RunningOnWindows())
+            {
+                NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
+
+                // Uncomment the following after testing to see that NBug is working as configured
+                NBug.Settings.ReleaseMode = true;
+                NBug.Settings.ExitApplicationImmediately = false;
+                NBug.Settings.WriteLogToDisk = true;
+                NBug.Settings.MaxQueuedReports = 10;
+                NBug.Settings.StopReportingAfter = 90;
+                NBug.Settings.SleepBeforeSend = 30;
+                NBug.Settings.StoragePath = "WindowsTemp";
+
+                AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
+                Application.ThreadException += NBug.Handler.ThreadException;
+            }
+
             // required for translation
             GitUI.PluginLoader.Load();
             string[] args = Environment.GetCommandLineArgs();

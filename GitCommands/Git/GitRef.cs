@@ -32,10 +32,10 @@ namespace GitCommands
             Selected = false;
             CompleteName = completeName;
             Remote = remote;
-            IsTag = CompleteName.Contains(RefsTagsPrefix);
-            IsHead = CompleteName.Contains(RefsHeadsPrefix);
-            IsRemote = CompleteName.Contains(RefsRemotesPrefix);
-            IsBisect = CompleteName.Contains(RefsBisectPrefix);
+            IsTag = CompleteName.StartsWith(RefsTagsPrefix);
+            IsHead = CompleteName.StartsWith(RefsHeadsPrefix);
+            IsRemote = CompleteName.StartsWith(RefsRemotesPrefix);
+            IsBisect = CompleteName.StartsWith(RefsBisectPrefix);
 
             ParseName();
 
@@ -115,7 +115,7 @@ namespace GitCommands
                 if (String.IsNullOrEmpty(value))
                     Module.UnsetSetting(_mergeSettingName);
                 else
-                    Module.SetSetting(_mergeSettingName, RefsHeadsPrefix + value);
+                    Module.SetSetting(_mergeSettingName, GitCommandHelpers.GetFullBranchName(value));
             }
         }
 
@@ -128,7 +128,6 @@ namespace GitCommands
         {
             string merge = configFile.GetValue(_mergeSettingName);
             return merge.StartsWith(RefsHeadsPrefix) ? merge.Substring(11) : merge;
-
         }
 
 

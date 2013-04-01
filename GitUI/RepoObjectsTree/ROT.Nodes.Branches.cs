@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces.Notifications;
 
 namespace GitUI.UserControls
@@ -269,7 +270,7 @@ namespace GitUI.UserControls
 
             public void Checkout()
             {
-                UiCommands.StartCheckoutBranchDialog(FullPath, false);
+                UiCommands.StartCheckoutBranch(FullPath, false);
             }
 
             public void CreateBranch()
@@ -683,9 +684,8 @@ namespace GitUI.UserControls
                         branch => true,
                         branch =>
                         {
-                            using (
-                                FormBranchSmall branchForm = new FormBranchSmall(
-                                    UiCommands, branch.FullPath))
+                            using (FormCheckoutBranch branchForm = new FormCheckoutBranch(
+                                    UiCommands, branch.FullPath, false))
                             {
                                 branchForm.ShowDialog();
                             }

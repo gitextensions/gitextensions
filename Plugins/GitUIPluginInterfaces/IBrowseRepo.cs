@@ -7,6 +7,6 @@ namespace GitUIPluginInterfaces
 {
     public interface IBrowseRepo
     {
-        void GoToRevision(string revision);
+        void SetSelectedRevision(string revision);
     }
 }

@@ -82,7 +82,7 @@ namespace TranslationApp
                 if (curItem.Status == TranslationType.Unfinished)
                 {
                     if (!String.IsNullOrEmpty(curItem.TranslatedValue) &&
-                        curItem.OldNeutralValue == null && curItem.NeutralValue != item.NeutralValue)
+                        curItem.OldNeutralValue == null && !curItem.IsSourceEqual(item.NeutralValue))
                         curItem.OldNeutralValue = curItem.NeutralValue;
                 }
                 else
@@ -115,7 +115,10 @@ namespace TranslationApp
             foreach (var untranlatedItem in untranlatedItems)
             {
                 untranlatedItem.TranslatedValue = dict[untranlatedItem.NeutralValue];
-                untranlatedItem.Status = TranslationType.Unfinished;
+                if (untranlatedItem.TranslatedValue.IndexOfAny(new[] { ' ', '\t', '\n' }) != -1)
+                    untranlatedItem.Status = TranslationType.Translated;
+                else
+                    untranlatedItem.Status = TranslationType.Unfinished;
             }
             return translateItems;
         }

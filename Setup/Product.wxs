@@ -125,7 +125,7 @@
         <File Source="..\bin\PSTaskDialog.dll"/>
       </Component>
       <Component Id="RestSharp.dll" Guid="*">
-        <File Source="..\bin\RestSharp.dll"/>
+        <File Source="..\packages\RestSharp.104.1\lib\net4-client\RestSharp.dll"/>
       </Component>
       <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
         <File Source="..\bin\Microsoft.WindowsAPICodePack.dll"/>
@@ -134,7 +134,20 @@
         <File Source="..\bin\Microsoft.WindowsAPICodePack.Shell.dll"/>
       </Component>
       <Component Id="NBug.dll" Guid="*">
-        <File Source="..\bin\NBug.dll"/>
+        <File Source="..\packages\NBug.1.1.1\lib\net40-client\NBug.dll"/>
+      </Component>
+
+      <Component Id="System.Reactive.Core.dll" Guid="*">
+        <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Core.dll"/>
+      </Component>
+      <Component Id="System.Reactive.Interfaces.dll" Guid="*">
+        <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Interfaces.dll"/>
+      </Component>
+      <Component Id="System.Reactive.Linq.dll" Guid="*">
+        <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Linq.dll"/>
+      </Component>
+      <Component Id="System.Reactive.PlatformServices.dll" Guid="*">
+        <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.PlatformServices.dll"/>
       </Component>
 
       <!--Remove unused dll, installed in versions <= 2.31-->
@@ -206,14 +219,14 @@
     </DirectoryRef>
 
     <DirectoryRef Id="PluginsDir">
-      <Component Id="AutoCheckForUpdates.dll" Guid="*">
-        <File Source="..\Plugins\AutoCheckForUpdates\bin\Release\AutoCheckForUpdates.dll"/>
-      </Component>
       <Component Id="DeleteUnusedBranches.dll" Guid="*">
         <File Source="..\Plugins\DeleteUnusedBranches\bin\Release\DeleteUnusedBranches.dll"/>
       </Component>
       <Component Id="AutoCompileSubmodules.dll" Guid="*">
-        <File Source="..\Plugins\AutoCompileSubmodules\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.dll"/>
+        <File Source="..\Plugins\AutoCompileSubmodules\bin\Release\AutoCompileSubmodules.dll"/>
+      </Component>
+      <Component Id="BackgroundFetch.dll" Guid="*">
+        <File Source="..\Plugins\BackgroundFetch\bin\Release\BackgroundFetch.dll"/>
       </Component>
       <Component Id="CreateLocalBranches.dll" Guid="*">
         <File Source="..\Plugins\CreateLocalBranches\bin\Release\CreateLocalBranches.dll"/>
@@ -233,8 +246,11 @@
       <Component Id="Gerrit.dll" Guid="*">
         <File Source="..\Plugins\Gerrit\bin\Release\Gerrit.dll"/>
       </Component>
+	  <Component Id="ReleaseNotesGenerator.dll" Guid="*">
+		 <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll"/>
+	  </Component>		
       <Component Id="Newtonsoft.Json.dll" Guid="*">
-        <File Source="..\Plugins\Gerrit\Dependencies\Newtonsoft.Json.dll"/>
+        <File Source="..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll"/>
       </Component>
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
@@ -525,17 +541,22 @@
 
       <ComponentRef Id="English.gif"/>
 
+      <ComponentRef Id="System.Reactive.Core.dll" />
+      <ComponentRef Id="System.Reactive.Interfaces.dll" />
+      <ComponentRef Id="System.Reactive.Linq.dll" />
+      <ComponentRef Id="System.Reactive.PlatformServices.dll" />
+
       <!--Remove unused dll, installed in versions <= 2.31-->
       <ComponentRef Id="Github.dll"/>
       <!--Remove unused dll, installed in versions <= 2.31-->
       <ComponentRef Id="GithubSharp.Core.dll"/>
 
       <Feature Id="Plugins" Title="Plugins" Level="1">
-        <Feature Id="AutoCheckForUpdates" Title="Check for updates" Level="1">
-          <ComponentRef Id="AutoCheckForUpdates.dll"/>
-        </Feature>
         <Feature Id="AutoCompileSubmodules" Title="Auto compile submodules" Level="1">
           <ComponentRef Id="AutoCompileSubmodules.dll"/>
+        </Feature>
+        <Feature Id="BackgroundFetch" Title="Periodic background fetch" Level="1">
+          <ComponentRef Id="BackgroundFetch.dll"/>
         </Feature>
         <Feature Id="CreateLocalBranches" Title="Create local branches" Level="1">
           <ComponentRef Id="CreateLocalBranches.dll"/>
@@ -568,7 +589,10 @@
         <Feature Id="ProxySwitcher" Title="ProxySwitcher" Level="1">
           <ComponentRef Id="ProxySwitcher.dll"/>
         </Feature>
-      </Feature>
+        <Feature Id="ReleaseNotesGenerator" Title="ReleaseNotesGenerator" Level="1">
+		  <ComponentRef Id="ReleaseNotesGenerator.dll"/>
+		</Feature>
+	  </Feature>
 
       <Feature Id="Icons" Title="Extra application icons" Level="2">
         <ComponentRef Id="Blue.ico"/>

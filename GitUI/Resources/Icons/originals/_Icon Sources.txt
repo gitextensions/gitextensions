@@ -11,7 +11,18 @@ zoom-2.png
 IconArchive
 -----------
 cherry-icon.png: http://www.iconarchive.com/show/fruit-icons-by-miniartx/cherry-icon.html
-glossy-3d-blue-hourglass-icon64.png http://www.iconarchive.com/show/clean-3d-icons-by-mysitemyway/glossy-3d-blue-hourglass-icon.html
+glossy-3d-blue-hourglass-icon64.png: http://www.iconarchive.com/show/clean-3d-icons-by-mysitemyway/glossy-3d-blue-hourglass-icon.html
+
+1359436327_Manual.png: http://www.iconfinder.com/iconsets/Boolean#readme
+    Boolean : The Pixel Icon City
+    Version : 1.0
+    Copyright (C) 2010 Prax08. Some rights reserved.
+    These icons are licensed under Creative Commons Attribution
+    3.0 license. Know the freedom you get with Creative Commons here :
+    http://creativecommons.org/licenses/by/3.0/
+    If you want to support me or use them in your commercial works : prax08@gmail.com
+    Be sure to pour in your suggestions and well wishes over at :
+    http://prax-08.deviantart.com
 
 IconFinder
 ----------
@@ -33,3 +44,11 @@ Revert16.png
 RvisionHistory16.png
   both: recreated from bmp
    
+branch-led-orig.png
+-------------------
+http://www.iconfinder.com/browse/iconset/ledicons/, License:
+    Read me
+    You can do whatever you want with these icons (use on web or in desktop applications) as long as you don?t pass them off as your own and remove this readme file. A credit statement and a link back to
+    http://led24.de/iconset/ or http://led24.de/ would be appreciated.
+    Follow us on twitter http://twitter.com/gasyoun or email leds24@gmail.com
+    512 icons 20/05/2009

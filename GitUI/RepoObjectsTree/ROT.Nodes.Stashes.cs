@@ -47,7 +47,7 @@ namespace GitUI.UserControls
             internal override void OnSelected()
             {
                 base.OnSelected();
-                UiCommands.BrowseRepo.GoToRevision(Value.Name);
+                UiCommands.BrowseRepo.SetSelectedRevision(Value.Name);
             }
 
             public void Pop()

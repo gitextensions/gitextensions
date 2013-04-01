@@ -132,11 +132,11 @@ namespace TranslationApp
             translateCategories.Items.Clear();
             allCategories.Name = allText.Text;
             translateCategories.Items.Add(allCategories);
-            FillNeutralTranslation(neutralTranslation);
+            FillNeutralTranslation();
             translateCategories.Items.AddRange(neutralTranslation.GetTranslationCategories().ToArray());
         }
 
-        private void FillNeutralTranslation(Translation neutralTranslation)
+        private void FillNeutralTranslation()
         {
             try
             {
@@ -488,7 +488,8 @@ namespace TranslationApp
 
             foreach (TranslationItemWithCategory translateItem in translationItems)
             {
-                if (string.IsNullOrEmpty(translateItem.TranslatedValue))
+                if ((translateItem.Status != TranslationType.Unfinished || translateItem.Status == TranslationType.New) &&
+                    string.IsNullOrEmpty(translateItem.TranslatedValue))
                     translateItem.TranslatedValue = Google.TranslateText(translateItem.NeutralValue, "en", GetSelectedLanguageCode());
 
                 UpdateProgress();
@@ -520,8 +521,7 @@ namespace TranslationApp
             else if (e.Control && e.KeyCode == Keys.Down)
             {
                 e.Handled = true;
-                translatedText.SelectionStart = 0;
-                translatedText.SelectionLength = translatedText.TextLength;
+                translatedText.SelectAll();
                 translatedText.SelectedText = neutralText.Text;
             }
         }

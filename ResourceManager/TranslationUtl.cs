@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -179,6 +178,7 @@ namespace ResourceManager.Translation
                 {
                     foreach (Type type in assembly.GetTypes())
                     {
+                        //TODO: Check if class contain TranslationString but doesn't implement ITranslate
                         if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
                         {
                             translatableTypes.Add(type);

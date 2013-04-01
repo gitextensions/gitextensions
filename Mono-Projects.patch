@@ -1,0 +1,378 @@
+diff --git a/GitCommands/GitCommands.csproj b/GitCommands/GitCommands.csproj
+index 791bea2..c3b8041 100644
+--- a/GitCommands/GitCommands.csproj
++++ b/GitCommands/GitCommands.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <Import Project="..\FxCop.targets" />
+   <PropertyGroup>
+@@ -34,7 +34,6 @@
+     <UseApplicationTrust>false</UseApplicationTrust>
+     <BootstrapperEnabled>true</BootstrapperEnabled>
+     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+diff --git a/GitCommands/app.config b/GitCommands/app.config
+index 19fac17..a6308d9 100644
+--- a/GitCommands/app.config
++++ b/GitCommands/app.config
+@@ -1,3 +1,3 @@
+ <?xml version="1.0"?>
+ <configuration>
+-	<startup><supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0,Profile=Client"/></startup></configuration>
++	<startup><supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/></startup></configuration>
+diff --git a/GitExtensions/GitExtensions.csproj b/GitExtensions/GitExtensions.csproj
+index f33be4d..3e6c610 100644
+--- a/GitExtensions/GitExtensions.csproj
++++ b/GitExtensions/GitExtensions.csproj
+@@ -34,7 +34,6 @@
+     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+     <UseApplicationTrust>false</UseApplicationTrust>
+     <BootstrapperEnabled>true</BootstrapperEnabled>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+     <RestorePackages>true</RestorePackages>
+   </PropertyGroup>
+diff --git a/GitExtensions/app.config b/GitExtensions/app.config
+index ccc27d3..dc6d84c 100644
+--- a/GitExtensions/app.config
++++ b/GitExtensions/app.config
+@@ -6,7 +6,7 @@
+     </sectionGroup>
+   </configSections>
+   <startup>
+-    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0,Profile=Client"/>
++    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/>
+   </startup>
+   <runtime>
+     <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+diff --git a/GitUI/GitUI.csproj b/GitUI/GitUI.csproj
+index 40f1919..5582c4c 100644
+--- a/GitUI/GitUI.csproj
++++ b/GitUI/GitUI.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <Import Project="..\FxCop.targets" />
+   <PropertyGroup>
+@@ -34,7 +34,6 @@
+     <UseApplicationTrust>false</UseApplicationTrust>
+     <BootstrapperEnabled>true</BootstrapperEnabled>
+     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+diff --git a/GitUI/app.config b/GitUI/app.config
+index d2bc218..43b413e 100644
+--- a/GitUI/app.config
++++ b/GitUI/app.config
+@@ -6,7 +6,7 @@
+    <section name="GitUI.Properties.Settings" type="System.Configuration.ClientSettingsSection, System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" allowExeDefinition="MachineToLocalUser" requirePermission="false"/>
+   </sectionGroup>
+  </configSections>
+-	<startup><supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0,Profile=Client"/></startup>
++	<startup><supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/></startup>
+  <userSettings>
+   <GitUI.Properties.Settings>
+    <setting name="Hotkeys" serializeAs="String">
+diff --git a/Gravatar/Gravatar.csproj b/Gravatar/Gravatar.csproj
+index e3e0578..69e3fe5 100644
+--- a/Gravatar/Gravatar.csproj
++++ b/Gravatar/Gravatar.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+@@ -31,7 +31,6 @@
+     <IsWebBootstrapper>false</IsWebBootstrapper>
+     <UseApplicationTrust>false</UseApplicationTrust>
+     <BootstrapperEnabled>true</BootstrapperEnabled>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+diff --git a/NetSpell.SpellChecker/SpellChecker.csproj b/NetSpell.SpellChecker/SpellChecker.csproj
+index 8dab5db..fbade75 100644
+--- a/NetSpell.SpellChecker/SpellChecker.csproj
++++ b/NetSpell.SpellChecker/SpellChecker.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <ProjectType>Local</ProjectType>
+@@ -44,7 +44,6 @@
+     <UseApplicationTrust>false</UseApplicationTrust>
+     <BootstrapperEnabled>true</BootstrapperEnabled>
+     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <OutputPath>bin\Debug\</OutputPath>
+diff --git a/Plugins/AutoCompileSubmodules/AutoCompileSubmodules.csproj b/Plugins/AutoCompileSubmodules/AutoCompileSubmodules.csproj
+index 4ce9ba2..afbc3fd 100644
+--- a/Plugins/AutoCompileSubmodules/AutoCompileSubmodules.csproj
++++ b/Plugins/AutoCompileSubmodules/AutoCompileSubmodules.csproj
+@@ -31,7 +31,6 @@
+     <IsWebBootstrapper>false</IsWebBootstrapper>
+     <UseApplicationTrust>false</UseApplicationTrust>
+     <BootstrapperEnabled>true</BootstrapperEnabled>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+diff --git a/Plugins/BackgroundFetch/BackgroundFetch.csproj b/Plugins/BackgroundFetch/BackgroundFetch.csproj
+index a5d77f8..be154a2 100644
+--- a/Plugins/BackgroundFetch/BackgroundFetch.csproj
++++ b/Plugins/BackgroundFetch/BackgroundFetch.csproj
+@@ -16,7 +16,6 @@
+     </FileUpgradeFlags>
+     <OldToolsVersion>3.5</OldToolsVersion>
+     <UpgradeBackupLocation />
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+     <RestorePackages>true</RestorePackages>
+   </PropertyGroup>
+diff --git a/Plugins/CreateLocalBranches/CreateLocalBranches.csproj b/Plugins/CreateLocalBranches/CreateLocalBranches.csproj
+index f61faf2..1031cd3 100644
+--- a/Plugins/CreateLocalBranches/CreateLocalBranches.csproj
++++ b/Plugins/CreateLocalBranches/CreateLocalBranches.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+@@ -12,7 +12,6 @@
+     <AssemblyName>CreateLocalBranches</AssemblyName>
+     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+     <FileAlignment>512</FileAlignment>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+diff --git a/Plugins/DeleteUnusedBranches/DeleteUnusedBranches.csproj b/Plugins/DeleteUnusedBranches/DeleteUnusedBranches.csproj
+index d864c6e..7332c15 100644
+--- a/Plugins/DeleteUnusedBranches/DeleteUnusedBranches.csproj
++++ b/Plugins/DeleteUnusedBranches/DeleteUnusedBranches.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+@@ -16,7 +16,6 @@
+     </FileUpgradeFlags>
+     <OldToolsVersion>3.5</OldToolsVersion>
+     <UpgradeBackupLocation />
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+diff --git a/Plugins/FindLargeFiles/FindLargeFiles.csproj b/Plugins/FindLargeFiles/FindLargeFiles.csproj
+index 05e85de..faf5f20 100644
+--- a/Plugins/FindLargeFiles/FindLargeFiles.csproj
++++ b/Plugins/FindLargeFiles/FindLargeFiles.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+@@ -16,7 +16,6 @@
+     </FileUpgradeFlags>
+     <OldToolsVersion>3.5</OldToolsVersion>
+     <UpgradeBackupLocation />
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+diff --git a/Plugins/Gerrit/Gerrit.csproj b/Plugins/Gerrit/Gerrit.csproj
+index c0b6912..0556bbb 100644
+--- a/Plugins/Gerrit/Gerrit.csproj
++++ b/Plugins/Gerrit/Gerrit.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+@@ -12,7 +12,6 @@
+     <AssemblyName>Gerrit</AssemblyName>
+     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+     <FileAlignment>512</FileAlignment>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+     <RestorePackages>true</RestorePackages>
+   </PropertyGroup>
+diff --git a/Plugins/GitUIPluginInterfaces/GitUIPluginInterfaces.csproj b/Plugins/GitUIPluginInterfaces/GitUIPluginInterfaces.csproj
+index 6cb93ef..fa2c7a1 100644
+--- a/Plugins/GitUIPluginInterfaces/GitUIPluginInterfaces.csproj
++++ b/Plugins/GitUIPluginInterfaces/GitUIPluginInterfaces.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+@@ -31,7 +31,6 @@
+     <IsWebBootstrapper>false</IsWebBootstrapper>
+     <UseApplicationTrust>false</UseApplicationTrust>
+     <BootstrapperEnabled>true</BootstrapperEnabled>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+diff --git a/Plugins/Github3/Github3.csproj b/Plugins/Github3/Github3.csproj
+index d3e1c98..9008204 100644
+--- a/Plugins/Github3/Github3.csproj
++++ b/Plugins/Github3/Github3.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+@@ -12,7 +12,6 @@
+     <AssemblyName>Github3</AssemblyName>
+     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+     <FileAlignment>512</FileAlignment>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+     <RestorePackages>true</RestorePackages>
+   </PropertyGroup>
+diff --git a/Plugins/Gource/Gource.csproj b/Plugins/Gource/Gource.csproj
+index 95bc936..902d545 100644
+--- a/Plugins/Gource/Gource.csproj
++++ b/Plugins/Gource/Gource.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+@@ -31,7 +31,6 @@
+     <IsWebBootstrapper>false</IsWebBootstrapper>
+     <UseApplicationTrust>false</UseApplicationTrust>
+     <BootstrapperEnabled>true</BootstrapperEnabled>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+diff --git a/Plugins/ProxySwitcher/ProxySwitcher.csproj b/Plugins/ProxySwitcher/ProxySwitcher.csproj
+index f7a8c18..c48b572 100644
+--- a/Plugins/ProxySwitcher/ProxySwitcher.csproj
++++ b/Plugins/ProxySwitcher/ProxySwitcher.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+@@ -12,7 +12,6 @@
+     <AssemblyName>ProxySwitcher</AssemblyName>
+     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+     <FileAlignment>512</FileAlignment>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+diff --git a/Plugins/ReleaseNotesGenerator/ReleaseNotesGenerator.csproj b/Plugins/ReleaseNotesGenerator/ReleaseNotesGenerator.csproj
+index 922d674..da09b50 100644
+--- a/Plugins/ReleaseNotesGenerator/ReleaseNotesGenerator.csproj
++++ b/Plugins/ReleaseNotesGenerator/ReleaseNotesGenerator.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+@@ -12,7 +12,6 @@
+     <AssemblyName>ReleaseNotesGenerator</AssemblyName>
+     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+     <FileAlignment>512</FileAlignment>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+diff --git a/Plugins/Statistics/GitImpact/GitImpact.csproj b/Plugins/Statistics/GitImpact/GitImpact.csproj
+index 4ff4a5a..2c8a4d5 100644
+--- a/Plugins/Statistics/GitImpact/GitImpact.csproj
++++ b/Plugins/Statistics/GitImpact/GitImpact.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+@@ -12,7 +12,6 @@
+     <AssemblyName>GitImpact</AssemblyName>
+     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+     <FileAlignment>512</FileAlignment>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+diff --git a/Plugins/Statistics/GitStatistics/GitStatistics.csproj b/Plugins/Statistics/GitStatistics/GitStatistics.csproj
+index bef78ad..1cefba6 100644
+--- a/Plugins/Statistics/GitStatistics/GitStatistics.csproj
++++ b/Plugins/Statistics/GitStatistics/GitStatistics.csproj
+@@ -31,7 +31,6 @@
+     <IsWebBootstrapper>false</IsWebBootstrapper>
+     <UseApplicationTrust>false</UseApplicationTrust>
+     <BootstrapperEnabled>true</BootstrapperEnabled>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+diff --git a/ResourceManager/ResourceManager.csproj b/ResourceManager/ResourceManager.csproj
+index bfa3f9b..3c1c73c 100644
+--- a/ResourceManager/ResourceManager.csproj
++++ b/ResourceManager/ResourceManager.csproj
+@@ -31,7 +31,6 @@
+     <IsWebBootstrapper>false</IsWebBootstrapper>
+     <UseApplicationTrust>false</UseApplicationTrust>
+     <BootstrapperEnabled>true</BootstrapperEnabled>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+   </PropertyGroup>
+   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+     <DebugSymbols>true</DebugSymbols>
+diff --git a/TranslationApp/TranslationApp.csproj b/TranslationApp/TranslationApp.csproj
+index 048db1a..a0af6ca 100644
+--- a/TranslationApp/TranslationApp.csproj
++++ b/TranslationApp/TranslationApp.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <Import Project="..\FxCop.targets" />
+   <PropertyGroup>
+@@ -33,7 +33,6 @@
+     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+     <UseApplicationTrust>false</UseApplicationTrust>
+     <BootstrapperEnabled>true</BootstrapperEnabled>
+-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+     <RestorePackages>true</RestorePackages>
+   </PropertyGroup>
+diff --git a/TranslationApp/app.config b/TranslationApp/app.config
+index 433fc20..ae6c4ac 100644
+--- a/TranslationApp/app.config
++++ b/TranslationApp/app.config
+@@ -1,7 +1,7 @@
+ <?xml version="1.0"?>
+ <configuration>
+   <startup>
+-    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0,Profile=Client"/>
++    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0"/>
+   </startup>
+   <connectionStrings></connectionStrings>
+ </configuration>

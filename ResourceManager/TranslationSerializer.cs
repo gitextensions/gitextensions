@@ -22,10 +22,20 @@ namespace ResourceManager.Translation
                 return null;
 
             XmlSerializer serializer = new XmlSerializer(typeof(Translation));
-            using (TextReader stringReader = new StreamReader(path))
-            using (XmlTextReader xmlReader = new XmlTextReader(stringReader))
+            TextReader stringReader = null;
+            try
             {
-                return (Translation)serializer.Deserialize(xmlReader);
+                stringReader = new StreamReader(path);
+                using (XmlTextReader xmlReader = new XmlTextReader(stringReader))
+                {
+                    stringReader = null;
+                    return (Translation)serializer.Deserialize(xmlReader);
+                }
+            }
+            finally
+            {
+                if (stringReader != null)
+                    stringReader.Dispose();
             }
         }
     }

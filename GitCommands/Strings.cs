@@ -12,16 +12,16 @@ namespace GitCommands
             Translator.Translate(this, Settings.CurrentTranslation);
         }
 
-        private static Strings instance;
+        private static Lazy<Strings> _instance = new Lazy<Strings>();
 
         /// <summary>Lazy-initialized instance of the <see cref="Strings"/> class.</summary>
-        public static Strings Instance { get { return instance ?? (instance = new Strings()); } }
+        public static Strings Instance { get { return _instance.Value; } }
 
         public static void Reinit()
         {
-            if (instance != null)
+            if (_instance.IsValueCreated)
             {
-                instance = new Strings();
+                _instance = new Lazy<Strings>();
             }
         }
 

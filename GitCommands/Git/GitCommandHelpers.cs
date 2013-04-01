@@ -85,8 +85,10 @@ namespace GitCommands
 
             //Default!
             Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
-            //to prevent from leaking processes see issue #1092 for details
-            Environment.SetEnvironmentVariable("TERM", "msys");
+            // To prevent leaking processes and suppress ANSI sequences, set TERM to "dumb".
+            // Don't use "msys" because that still allows ANSI sequences.
+            // See issues #1092 and #1313.
+            Environment.SetEnvironmentVariable("TERM", "dumb");
         }
 
         public static string GetHomeDir()
@@ -325,6 +327,13 @@ namespace GitCommands
         {
             string CherryPickCmd = commit ? "cherry-pick" : "cherry-pick --no-commit";
             return CherryPickCmd + " " + arguments + " \"" + cherry + "\"";
+        }
+
+        public static string GetFullBranchName(string branch)
+        {
+            if (branch.StartsWith("refs/"))
+                return branch;
+            return "refs/heads/" + branch;
         }
 
         public static string DeleteBranchCmd(string branchName, bool force, bool remoteBranch)
@@ -571,6 +580,11 @@ namespace GitCommands
             bool all, bool force, bool track, int recursiveSubmodules)
         {
             remote = FixPath(remote);
+
+            // This method is for pushing to remote branches, so fully qualify the
+            // remote branch name with refs/heads/.
+            fromBranch = GetFullBranchName(fromBranch);
+            toBranch = GetFullBranchName(toBranch);
 
             if (string.IsNullOrEmpty(fromBranch) && !string.IsNullOrEmpty(toBranch))
                 fromBranch = "HEAD";
@@ -883,15 +897,16 @@ namespace GitCommands
             return stringBuilder.ToString();
         }
 
-        public static GitSubmoduleStatus GetSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged)
+        public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged)
         {
-            string text = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
+            PatchApply.Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
+            string text = patch != null ? patch.Text : "";
             return GetSubmoduleStatus(text);
         }
 
-        public static GitSubmoduleStatus GetSubmoduleChanges(GitModule module, string submodule)
+        public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string submodule)
         {
-            return GetSubmoduleChanges(module, submodule, submodule, false);
+            return GetCurrentSubmoduleChanges(module, submodule, submodule, false);
         }
 
         public static GitSubmoduleStatus GetSubmoduleStatus(string text)
@@ -1090,7 +1105,7 @@ namespace GitCommands
             sb.AppendLine("Submodule " + name);
             sb.AppendLine();
             GitModule module = superproject.GetSubmodule(name);
-            if (module.ValidWorkingDir())
+            if (module.IsValidGitWorkingDir())
             {
                 string error = "";
                 CommitData data = CommitData.GetCommitData(module, hash, ref error);
@@ -1110,9 +1125,19 @@ namespace GitCommands
             return sb.ToString();
         }
 
-        public static string ProcessSubmodulePatch(GitModule module, string text)
+        public static string ProcessSubmodulePatch(GitModule module, PatchApply.Patch patch)
         {
+            string text = patch != null ? patch.Text : null;
             var status = GetSubmoduleStatus(text);
+            return ProcessSubmoduleStatus(module, status);
+        }
+
+        public static string ProcessSubmoduleStatus([NotNull] GitModule module, [NotNull] GitSubmoduleStatus status)
+        {
+            if (module == null)
+                throw new ArgumentNullException("module");
+            if (status == null)
+                throw new ArgumentNullException("status");
             GitModule gitmodule = module.GetSubmodule(status.Name);
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule " + status.Name + " Change");
@@ -1120,7 +1145,7 @@ namespace GitCommands
             sb.AppendLine();
             sb.AppendLine("From:\t" + (status.OldCommit ?? "null"));
             CommitData oldCommitData = null;
-            if (gitmodule.ValidWorkingDir())
+            if (gitmodule.IsValidGitWorkingDir())
             {
                 string error = "";
                 if (status.OldCommit != null)
@@ -1141,7 +1166,7 @@ namespace GitCommands
             string dirty = !status.IsDirty ? "" : " (dirty)";
             sb.AppendLine("To:\t\t" + (status.Commit ?? "null") + dirty);
             CommitData commitData = null;
-            if (gitmodule.ValidWorkingDir())
+            if (gitmodule.IsValidGitWorkingDir())
             {
                 string error = "";
                 if (status.Commit != null)
@@ -1258,7 +1283,7 @@ namespace GitCommands
 
         /// <summary>
         /// Takes a date/time which and determines a friendly string for time from now to be displayed for the relative time from the date.
-        /// It is important to note that times are compared using the current timezone, so the date that is passed in should be converted 
+        /// It is important to note that times are compared using the current timezone, so the date that is passed in should be converted
         /// to the local timezone before passing it in.
         /// </summary>
         /// <param name="originDate">Current date.</param>
@@ -1291,15 +1316,15 @@ namespace GitCommands
             }
             if (displayWeeks && delta < 30 * 24 * 60 * 60)
             {
-                int weeks = Convert.ToInt32(Math.Floor(ts.Days / 7.0));
+                int weeks = Convert.ToInt32(ts.Days / 7.0);
                 return Strings.GetNWeeksAgoText(weeks);
             }
-            if (delta < 12 * 30 * 24 * 60 * 60)
+            if (delta < 365 * 24 * 60 * 60)
             {
-                int months = Convert.ToInt32(Math.Floor(ts.Days / 30.0));
+                int months = Convert.ToInt32(ts.Days / 30.0);
                 return Strings.GetNMonthsAgoText(months);
             }
-            int years = Convert.ToInt32(Math.Floor(ts.Days / 365.0));
+            int years = Convert.ToInt32(ts.Days / 365.0);
             return Strings.GetNYearsAgoText(years);
         }
 
@@ -1327,17 +1352,20 @@ namespace GitCommands
         }
 
 #if !MONO
-        [DllImport("kernel32.dll")]
-        static extern bool SetConsoleCtrlHandler(IntPtr HandlerRoutine,
-           bool Add);
+        static class NativeMethods
+        {
+            [DllImport("kernel32.dll")]
+            public static extern bool SetConsoleCtrlHandler(IntPtr HandlerRoutine,
+               bool Add);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        static extern bool AttachConsole(int dwProcessId);
+            [DllImport("kernel32.dll", SetLastError = true)]
+            public static extern bool AttachConsole(int dwProcessId);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent,
-           int dwProcessGroupId);
+            [DllImport("kernel32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent,
+               int dwProcessGroupId);
+        }
 #endif
 
         public static void TerminateTree(this Process process)
@@ -1346,9 +1374,9 @@ namespace GitCommands
             if (Settings.RunningOnWindows())
             {
                 // Send Ctrl+C
-                AttachConsole(process.Id);
-                SetConsoleCtrlHandler(IntPtr.Zero, true);
-                GenerateConsoleCtrlEvent(0, 0);
+                NativeMethods.AttachConsole(process.Id);
+                NativeMethods.SetConsoleCtrlHandler(IntPtr.Zero, true);
+                NativeMethods.GenerateConsoleCtrlEvent(0, 0);
                 if (!process.HasExited)
                     System.Threading.Thread.Sleep(500);
                 if (!process.HasExited)

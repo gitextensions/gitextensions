@@ -43,14 +43,14 @@ Deze applicatie is verspreid in de hoop dat het bruikbaar is voor anderen, maar 
           <Source>Always show checkout dialog</Source>
           <Value>Altijd het dialoog voor vertakking uitchecken weergeven</Value>
         </TranslationItem>
-        <TranslationItem Name="chkDontSHowHelpImages" Property="Text" type="unfinished">
+        <TranslationItem Name="chkDontSHowHelpImages" Property="Text">
           <Source>Don't show help images</Source>
-          <Value />
+          <Value>Verberg help plaatjes</Value>
         </TranslationItem>
-        <TranslationItem Name="chkUseLocalChangesAction" Property="Text" type="unfinished">
+        <TranslationItem Name="chkUseLocalChangesAction" Property="Text">
           <Source>Use last chosen "local changes" action as default action.
 This action will be performed without warning while checking out branch.</Source>
-          <Value />
+          <Value>Gebruik de laatst gekozen "Locale wijzigingen" actie als de standaard actie. Deze actie zal worden uitgevoerd bij het uitchecken van een vertakking, zonder waarschuwing.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -68,17 +68,17 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Get author image from gravatar.com</Source>
           <Value>Haal plaatje van auteur op bij gravatar.com</Value>
         </TranslationItem>
-        <TranslationItem Name="_noDictFilesFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_noDictFilesFound" Property="Text">
           <Source>No dictionary files found in: {0}</Source>
-          <Value />
+          <Value>Geen woordenboeken gevonden in: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="applicationFontChangeButton" Property="Text" type="unfinished">
+        <TranslationItem Name="applicationFontChangeButton" Property="Text">
           <Source>font name</Source>
-          <Value />
+          <Value>lettertype naam</Value>
         </TranslationItem>
-        <TranslationItem Name="chkEnableAutoScale" Property="Text" type="unfinished">
-          <Source>Auto scale user interface when high dpi is used</Source>
-          <Value />
+        <TranslationItem Name="chkEnableAutoScale" Property="Text">
+          <Source>Auto scale user interface when high DPI is used</Source>
+          <Value>Gebruikers interface automatisch schalen wanneer niet standaard DPI wordt gebruikt</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowCurrentBranchInVisualStudio" Property="Text">
           <Source>Show current branch in Visual Studio</Source>
@@ -88,9 +88,13 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Show relative date instead of full date</Source>
           <Value>Toon relatieve datum in plaats van volledige datum</Value>
         </TranslationItem>
-        <TranslationItem Name="diffFontChangeButton" Property="Text" type="unfinished">
+        <TranslationItem Name="commitFontChangeButton" Property="Text">
           <Source>font name</Source>
-          <Value />
+          <Value>lettertype naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="diffFontChangeButton" Property="Text">
+          <Source>font name</Source>
+          <Value>lettertype naam</Value>
         </TranslationItem>
         <TranslationItem Name="downloadDictionary" Property="Text">
           <Source>Download dictionary</Source>
@@ -116,13 +120,17 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Help translate</Source>
           <Value>Help met vertalen</Value>
         </TranslationItem>
-        <TranslationItem Name="label22" Property="Text" type="unfinished">
+        <TranslationItem Name="label22" Property="Text">
           <Source>Dictionary for spelling checker</Source>
-          <Value />
+          <Value>Woordenboek gebruikt voor spellingscontroler</Value>
         </TranslationItem>
-        <TranslationItem Name="label26" Property="Text" type="unfinished">
+        <TranslationItem Name="label26" Property="Text">
           <Source>Application font</Source>
-          <Value />
+          <Value>Applicatie lettertype</Value>
+        </TranslationItem>
+        <TranslationItem Name="label34" Property="Text">
+          <Source>Commit font</Source>
+          <Value>Commit lettertype</Value>
         </TranslationItem>
         <TranslationItem Name="label44" Property="Text">
           <Source>Image size</Source>
@@ -178,18 +186,6 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="BrowseForPrivateKey">
-      <translationItems>
-        <TranslationItem Name="_pageantNotFound" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>De SSH sleutel kan niet worden geladen. PuTTY is niet juist geconfigureerd.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_pageantNotFoundCaption" Property="Text">
-          <Source>PuTTY</Source>
-          <Value>PuTTY</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="ChecklistSettingsPage">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -236,123 +232,123 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Repair</Source>
           <Value>Repareren</Value>
         </TranslationItem>
-        <TranslationItem Name="_adviceDiffToolConfiguration" Property="Text" type="unfinished">
+        <TranslationItem Name="_adviceDiffToolConfiguration" Property="Text">
           <Source>You should configure a diff tool to show file diff in external program (kdiff3 for example).</Source>
-          <Value />
+          <Value>Er is geen externe vergelijkingstool ingesteld voor het tonen van bestandsverschillen. (bijvoorbeeld kdiff3)</Value>
         </TranslationItem>
-        <TranslationItem Name="_cantRegisterShellExtension" Property="Text" type="unfinished">
+        <TranslationItem Name="_cantRegisterShellExtension" Property="Text">
           <Source>Could not register the shell extension because '{0}' could not be found.</Source>
-          <Value />
+          <Value>De shell extensions kunnen niet worden geregistreerd omdat '{0}' niet kan worden gevonden.</Value>
         </TranslationItem>
-        <TranslationItem Name="_configureMergeTool" Property="Text" type="unfinished">
+        <TranslationItem Name="_configureMergeTool" Property="Text">
           <Source>You need to configure merge tool in order to solve mergeconflicts (kdiff3 for example).</Source>
-          <Value />
+          <Value>U moet een samenvoegtool kiezen om samenvoeg conflicten op te kunnen lossen (bijvoorbeeld KDiff3).</Value>
         </TranslationItem>
-        <TranslationItem Name="_credentialHelperInstalled" Property="Text" type="unfinished">
+        <TranslationItem Name="_credentialHelperInstalled" Property="Text">
           <Source>Git credential helper is installed.</Source>
-          <Value />
+          <Value>Git credential helper is geinstalleerd</Value>
         </TranslationItem>
-        <TranslationItem Name="_customMergeToolXConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_customMergeToolXConfigured" Property="Text">
           <Source>There is a custom mergetool configured: {0}</Source>
-          <Value />
+          <Value>Er is een maatwerk vergelijkingstool ingesteld: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="_diffToolXConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_diffToolXConfigured" Property="Text">
           <Source>There is a difftool configured: {0}</Source>
-          <Value />
+          <Value>Er is een vergelijkingstool ingesteld: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="_emailSet" Property="Text" type="unfinished">
+        <TranslationItem Name="_emailSet" Property="Text">
           <Source>A username and an email address are configured.</Source>
-          <Value />
+          <Value>Er is een gebruikersnaam en wachtwoord ingesteld.</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitCanBeRun" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitCanBeRun" Property="Text">
           <Source>Git can be run using: {0}</Source>
-          <Value />
+          <Value>Git kan worden uitgevoerd als: {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitCanBeRunCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitCanBeRunCaption" Property="Text">
           <Source>Locate git</Source>
-          <Value />
+          <Value>Git opzoeken</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitCredentialWinStoreHelperInstalled" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitCredentialWinStoreHelperInstalled" Property="Text">
           <Source>Git Credential Win Store is installed as credential helper.</Source>
-          <Value />
+          <Value>Git Credential Win Store is ingesteld als credential helper.</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitNotFound" Property="Text">
           <Source>Git not found. To solve this problem you can set the correct path in settings.</Source>
-          <Value />
+          <Value>Git kan niet gevonden worden op deze computer. Om dit probleem op te lossen dient u zelf het juiste pad te configureren.</Value>
         </TranslationItem>
-        <TranslationItem Name="_gitVersionFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_gitVersionFound" Property="Text">
           <Source>Git {0} is found on your computer.</Source>
-          <Value />
+          <Value>Git {0}, is gevonden op de computer.</Value>
         </TranslationItem>
-        <TranslationItem Name="_kdiffAsDiffConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_kdiffAsDiffConfigured" Property="Text">
           <Source>KDiff3 is configured as difftool.</Source>
-          <Value />
+          <Value>KDiff3 is geconfigureerd als vergelijkingstool.</Value>
         </TranslationItem>
-        <TranslationItem Name="_kdiffAsDiffConfiguredButNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_kdiffAsDiffConfiguredButNotFound" Property="Text">
           <Source>KDiff3 is configured as difftool, but the path to kdiff.exe is not configured.</Source>
-          <Value />
+          <Value>KDiff3 is geconfigureerd als vergelijkingstool, maar het pad naar kdiff.exe is niet geconfigureerd.</Value>
         </TranslationItem>
-        <TranslationItem Name="_kdiffAsMergeConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_kdiffAsMergeConfigured" Property="Text">
           <Source>KDiff3 is configured as mergetool.</Source>
-          <Value />
+          <Value>KDiff3 is geconfigureerd als vergelijkingstool.</Value>
         </TranslationItem>
-        <TranslationItem Name="_kdiffAsMergeConfiguredButNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_kdiffAsMergeConfiguredButNotFound" Property="Text">
           <Source>KDiff3 is configured as mergetool, but the path to kdiff.exe is not configured.</Source>
-          <Value />
+          <Value>KDiff3 is geconfigureerd als vergelijkingstool, maar het pad naar kdiff.exe is niet geconfigureerd.</Value>
         </TranslationItem>
-        <TranslationItem Name="_languageConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_languageConfigured" Property="Text">
           <Source>The configured language is {0}.</Source>
-          <Value />
+          <Value>De ingestelde taal is {0}.</Value>
         </TranslationItem>
         <TranslationItem Name="_linuxToolsShNotFound" Property="Text" type="unfinished">
           <Source>The path to linux tools (sh) could not be found automatically.
 Please make sure there are linux tools installed (through msysgit or cygwin) or set the correct path manually.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_linuxToolsShNotFoundCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_linuxToolsShNotFoundCaption" Property="Text">
           <Source>Locate linux tools</Source>
-          <Value />
+          <Value>Linux tools opzoeken</Value>
         </TranslationItem>
-        <TranslationItem Name="_linuxToolsSshFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_linuxToolsSshFound" Property="Text">
           <Source>Linux tools (sh) found on your computer.</Source>
-          <Value />
+          <Value>Linux tools (sh) gevonden op deze computer</Value>
         </TranslationItem>
-        <TranslationItem Name="_linuxToolsSshNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_linuxToolsSshNotFound" Property="Text">
           <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in settings.</Source>
-          <Value />
+          <Value>Linux tools (sh) niet gevonden. Op dit probleem op te lossen moet het juiste pad ingesteld worden in het instellingen dialoog.</Value>
         </TranslationItem>
-        <TranslationItem Name="_mergeToolXConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_mergeToolXConfigured" Property="Text">
           <Source>There is a custom mergetool configured.</Source>
-          <Value />
+          <Value>Er is een maatwerk vergelijkingstool geconfigureerd.</Value>
         </TranslationItem>
-        <TranslationItem Name="_mergeToolXConfiguredNeedsCmd" Property="Text" type="unfinished">
+        <TranslationItem Name="_mergeToolXConfiguredNeedsCmd" Property="Text">
           <Source>{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.</Source>
-          <Value />
+          <Value>{0} is geconfigureerd als vergelijkingstool, dit is een maatwerk vergelijkingstool en heeft een maatwerk commando nodig.</Value>
         </TranslationItem>
-        <TranslationItem Name="_noCredentialsHelperInstalled" Property="Text" type="unfinished">
+        <TranslationItem Name="_noCredentialsHelperInstalled" Property="Text">
           <Source>No credential helper installed.</Source>
-          <Value />
+          <Value>Geen 'credential helper' geinstalleerd</Value>
         </TranslationItem>
-        <TranslationItem Name="_noCredentialsHelperInstalledTryGCS" Property="Text" type="unfinished">
+        <TranslationItem Name="_noCredentialsHelperInstalledTryGCS" Property="Text">
           <Source>No credential helper could be installed. Try to install git-credential-winstore.exe.</Source>
-          <Value />
+          <Value>Geen 'credential helper' kan worden ingesteld. Probeer op 'git-credential-winstore.exe' te installeren.</Value>
         </TranslationItem>
-        <TranslationItem Name="_noDiffToolConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_noDiffToolConfigured" Property="Text">
           <Source>There is no difftool configured. Do you want to configure kdiff3 as your difftool?
 Select no if you want to configure a different difftool yourself.</Source>
-          <Value />
+          <Value>Er is geen vergelijkingstool geinstalleerd.. Wilt u KDiff3 instellen als vergellijkingstool? Kies nee als u een eigen tool wilt kiezen.</Value>
         </TranslationItem>
         <TranslationItem Name="_noDiffToolConfiguredCaption" Property="Text">
           <Source>Difftool</Source>
           <Value>Difftool</Value>
         </TranslationItem>
-        <TranslationItem Name="_noEmailSet" Property="Text" type="unfinished">
+        <TranslationItem Name="_noEmailSet" Property="Text">
           <Source>You need to configure a username and an email address.</Source>
-          <Value />
+          <Value>Er is geen gebruikersnaam of wachtwoord ingesteld. Dit is nodig voor een correcte werking.</Value>
         </TranslationItem>
-        <TranslationItem Name="_noLanguageConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_noLanguageConfigured" Property="Text">
           <Source>There is no language configured for Git Extensions.</Source>
-          <Value />
+          <Value>Er is geen taal ingesteld voor Git Extensions</Value>
         </TranslationItem>
         <TranslationItem Name="_noMergeToolConfigured" Property="Text" type="unfinished">
           <Source>There is no mergetool configured. Do you want to configure kdiff3 as your mergetool?
@@ -367,25 +363,21 @@ Select no if you want to configure a different mergetool yourself.</Source>
           <Source>Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_plinkputtyGenpageantNotFound" Property="Text" type="unfinished">
+        <TranslationItem Name="_plinkputtyGenpageantNotFound" Property="Text">
           <Source>PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.</Source>
-          <Value />
+          <Value>PuTTY is geconfigureerd als SSH client maar plink.exe, puttygen.exe en/of pageant.exe kunnen niet gevonden worden.</Value>
         </TranslationItem>
-        <TranslationItem Name="_puttyConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_puttyConfigured" Property="Text">
           <Source>SSH client PuTTY is configured properly.</Source>
-          <Value />
+          <Value>SSh client PuTTY is goed geconfigureerd.</Value>
         </TranslationItem>
-        <TranslationItem Name="_puttyFoundAuto" Property="Text" type="unfinished">
+        <TranslationItem Name="_puttyFoundAuto" Property="Text">
           <Source>All paths needed for PuTTY could be automatically found and are set.</Source>
-          <Value />
+          <Value>Alle paden benodigd voor PuTTY zijn automatisch ingesteld.</Value>
         </TranslationItem>
-        <TranslationItem Name="_puttyFoundAutoCaption" Property="Text">
-          <Source>PuTTY</Source>
-          <Value>PuTTY</Value>
-        </TranslationItem>
-        <TranslationItem Name="_registryKeyGitExtensionsCorrect" Property="Text" type="unfinished">
+        <TranslationItem Name="_registryKeyGitExtensionsCorrect" Property="Text">
           <Source>GitExtensions is properly registered.</Source>
-          <Value />
+          <Value>GitExtensions is juist geregistreerd</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsFaulty" Property="Text" type="unfinished">
           <Source>Invalid installation directory stored in [Software\GitExtensions\GitExtensions\InstallDir].</Source>
@@ -395,41 +387,41 @@ Select no if you want to configure a different mergetool yourself.</Source>
           <Source>Registry entry missing [Software\GitExtensions\GitExtensions\InstallDir].</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_shCanBeRun" Property="Text" type="unfinished">
+        <TranslationItem Name="_shCanBeRun" Property="Text">
           <Source>Command sh can be run using: {0}sh</Source>
-          <Value />
+          <Value>Commando sh kan uitgevoerd worden middels: {0}sh</Value>
         </TranslationItem>
-        <TranslationItem Name="_shCanBeRunCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_shCanBeRunCaption" Property="Text">
           <Source>Locate linux tools</Source>
-          <Value />
+          <Value>Linux tools opzoeken</Value>
         </TranslationItem>
         <TranslationItem Name="_shellExtNeedsToBeRegistered" Property="Text" type="unfinished">
           <Source>{0} needs to be registered in order to use the shell extensions.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_shellExtNoInstalled" Property="Text" type="unfinished">
+        <TranslationItem Name="_shellExtNoInstalled" Property="Text">
           <Source>Shell extensions are not installed. Run the installer to install the shell extensions.</Source>
-          <Value />
+          <Value>Shell extensions zijn niet geinstalleerd. Voer de installatie procedure opnieuw uit om deze te installeren.</Value>
         </TranslationItem>
-        <TranslationItem Name="_shellExtRegistered" Property="Text" type="unfinished">
+        <TranslationItem Name="_shellExtRegistered" Property="Text">
           <Source>Shell extensions registered properly.</Source>
-          <Value />
+          <Value>Shell extensions goed geregistreerd.</Value>
         </TranslationItem>
         <TranslationItem Name="_solveGitCommandFailed" Property="Text" type="unfinished">
           <Source>The command to run git could not be determined automatically.
 Please make sure git (msysgit or cygwin) is installed or set the correct command manually.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_solveGitCommandFailedCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_solveGitCommandFailedCaption" Property="Text">
           <Source>Locate git</Source>
-          <Value />
+          <Value>Git opzoeken</Value>
         </TranslationItem>
-        <TranslationItem Name="_unknownSshClient" Property="Text" type="unfinished">
+        <TranslationItem Name="_unknownSshClient" Property="Text">
           <Source>Unknown SSH client configured: {0}.</Source>
-          <Value />
+          <Value>Onbekende SSH client geconfigureerd: {0}.</Value>
         </TranslationItem>
         <TranslationItem Name="_wrongGitVersion" Property="Text" type="unfinished">
-          <Source>Git found but version {0} is not supported. Upgrage to version {1} or later</Source>
+          <Source>Git found but version {0} is not supported. Upgrade to version {1} or later</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="gitCredentialWinStore_Fix" Property="Text">
@@ -638,9 +630,9 @@ Value:  {2} = {3}</Source>
           <Source>Add a tracking reference for newly pushed branch</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="chkAmmend" Property="Text" type="unfinished">
-          <Source>Ammend last commit</Source>
-          <Value />
+        <TranslationItem Name="chkAmend" Property="Text">
+          <Source>Amend last commit</Source>
+          <Value>Laatste commit uitbreiden</Value>
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
           <Source>Apply stashed changes (Stash will be popped automatically after successful pull)</Source>
@@ -711,8 +703,7 @@ Value:  {2} = {3}</Source>
           <Value>Error</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text">
-          <Source>Failed to create pull request.
-</Source>
+          <Source>Failed to create pull request.</Source>
           <Value>Fout tijdens aanmaken binnenhaal verzoek.</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">
@@ -791,6 +782,10 @@ Value:  {2} = {3}</Source>
           <Source>Create new repository</Source>
           <Value>Maak een nieuwe opslagplaats</Value>
         </TranslationItem>
+        <TranslationItem Name="_showCurrentBranch" Property="Text">
+          <Source>Show current branch</Source>
+          <Value>Toon huidige vertakking</Value>
+        </TranslationItem>
         <TranslationItem Name="develop" Property="Text">
           <Source>Develop</Source>
           <Value>Coderen</Value>
@@ -833,9 +828,9 @@ Do you want to open it?</Source>
     </TranslationCategory>
     <TranslationCategory Name="DashboardCategory">
       <translationItems>
-        <TranslationItem Name="$this" Property="Title" type="unfinished">
+        <TranslationItem Name="$this" Property="Title">
           <Source>##Title</Source>
-          <Value />
+          <Value>##Title</Value>
         </TranslationItem>
         <TranslationItem Name="_editCategory" Property="Text">
           <Source>Edit</Source>
@@ -860,10 +855,6 @@ Do you want to open it?</Source>
         <TranslationItem Name="_removeCategory" Property="Text">
           <Source>Remove</Source>
           <Value>Verwijder</Value>
-        </TranslationItem>
-        <TranslationItem Name="_showCurrentBranch" Property="Text">
-          <Source>Show current branch</Source>
-          <Value>Toon huidige vertakking</Value>
         </TranslationItem>
         <TranslationItem Name="editToolStripMenuItem" Property="Text">
           <Source>Edit</Source>
@@ -1230,8 +1221,7 @@ Do you want to open it?</Source>
           <Value>Kan geen externe opslagplaats toevoegen.</Value>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotFetchReposOfUser" Property="Text">
-          <Source>Could not fetch repositories of user!
-</Source>
+          <Source>Could not fetch repositories of user!</Source>
           <Value>Kan de opslagplaatsen van de gebruiker niet ophalen!</Value>
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
@@ -1239,8 +1229,7 @@ Do you want to open it?</Source>
           <Value>Error</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToFork" Property="Text">
-          <Source>Failed to fork:
-</Source>
+          <Source>Failed to fork:</Source>
           <Value>Fork mislukt:</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToGetRepos" Property="Text">
@@ -1260,8 +1249,7 @@ Do you want to open it?</Source>
           <Value>Geen homepage gedefinieerd</Value>
         </TranslationItem>
         <TranslationItem Name="_strSearchFailed" Property="Text">
-          <Source>Search failed!
-</Source>
+          <Source>Search failed!</Source>
           <Value>Zoeken mislukt!</Value>
         </TranslationItem>
         <TranslationItem Name="_strSearching" Property="Text">
@@ -1578,38 +1566,6 @@ revision:</Source>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormBranch">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Create Branch</Source>
-          <Value>Vertakking aanmaken</Value>
-        </TranslationItem>
-        <TranslationItem Name="Checkout" Property="Text">
-          <Source>Checkout branch</Source>
-          <Value>Vertakking uitchecken</Value>
-        </TranslationItem>
-        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
-          <Source>Checkout after create</Source>
-          <Value>Uitchecken na aanmaken</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Source>Create branch</Source>
-          <Value>Vertakking aanmaken</Value>
-        </TranslationItem>
-        <TranslationItem Name="_branchCaption" Property="Text">
-          <Source>Branch</Source>
-          <Value>Vertakking</Value>
-        </TranslationItem>
-        <TranslationItem Name="_selectOneRevision" Property="Text">
-          <Source>Select 1 revision to create the branch on.</Source>
-          <Value>Selecteer 1 revisie om de vertakking op aan te maken.</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Source>Branch name</Source>
-          <Value>Vertakking naam</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="FormBranchSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -1628,9 +1584,9 @@ revision:</Source>
           <Source>Create branch</Source>
           <Value>Vertakking aanmaken</Value>
         </TranslationItem>
-        <TranslationItem Name="Orphan" Property="Text" type="unfinished">
+        <TranslationItem Name="Orphan" Property="Text">
           <Source>Orphan</Source>
-          <Value />
+          <Value>Orphan</Value>
         </TranslationItem>
         <TranslationItem Name="_branchNameIsEmpty" Property="Text">
           <Source>Enter branch name.</Source>
@@ -1680,17 +1636,17 @@ revision:</Source>
           <Source>Refresh</Source>
           <Value>Verversen</Value>
         </TranslationItem>
-        <TranslationItem Name="SvnDcommitToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="SvnDcommitToolStripMenuItem" Property="Text">
           <Source>SVN DCommit</Source>
-          <Value />
+          <Value>SVN DCommit</Value>
         </TranslationItem>
-        <TranslationItem Name="SvnFetchToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="SvnFetchToolStripMenuItem" Property="Text">
           <Source>SVN Fetch</Source>
-          <Value />
+          <Value>SVN Fetch</Value>
         </TranslationItem>
-        <TranslationItem Name="SvnRebaseToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="SvnRebaseToolStripMenuItem" Property="Text">
           <Source>SVN Rebase</Source>
-          <Value />
+          <Value>SVN Rebase</Value>
         </TranslationItem>
         <TranslationItem Name="TreeTabPage" Property="Text">
           <Source>File tree</Source>
@@ -1705,16 +1661,16 @@ revision:</Source>
           <Value>Configureer dit menu</Value>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestsToolStripMenuItem" Property="Text">
-          <Source>Create pull requests</Source>
-          <Value>Maak binnenhaal verzoek</Value>
+          <Source>Create pull requests...</Source>
+          <Value>Maak binnenhaal verzoek...</Value>
         </TranslationItem>
         <TranslationItem Name="_errorCaption" Property="Text">
           <Source>Error</Source>
           <Value>Fout</Value>
         </TranslationItem>
         <TranslationItem Name="_forkCloneRepositoryToolStripMenuItem" Property="Text">
-          <Source>Fork/Clone repository</Source>
-          <Value>Kloon/fork opslagplaats</Value>
+          <Source>Fork/Clone repository...</Source>
+          <Value>Kloon/fork opslagplaats...</Value>
         </TranslationItem>
         <TranslationItem Name="_hintUnresolvedMergeConflicts" Property="Text">
           <Source>There are unresolved merge conflicts!</Source>
@@ -1792,37 +1748,37 @@ revision:</Source>
           <Source>You are in the middle of a rebase</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="aBToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="aBToolStripMenuItem" Property="Text">
           <Source>A &lt;--&gt; B</Source>
-          <Value />
+          <Value>A&lt;--&gt; B</Value>
         </TranslationItem>
-        <TranslationItem Name="aLocalToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="aLocalToolStripMenuItem" Property="Text">
           <Source>A &lt;--&gt; Working dir</Source>
-          <Value />
+          <Value>A &lt;--&gt; Werk directory</Value>
         </TranslationItem>
         <TranslationItem Name="aboutToolStripMenuItem" Property="Text">
           <Source>About</Source>
           <Value>Over</Value>
         </TranslationItem>
         <TranslationItem Name="applyPatchToolStripMenuItem" Property="Text">
-          <Source>Apply patch</Source>
-          <Value>Patch toepassen</Value>
+          <Source>Apply patch...</Source>
+          <Value>Patch toepassen...</Value>
         </TranslationItem>
         <TranslationItem Name="archiveToolStripMenuItem" Property="Text">
-          <Source>Archive revision</Source>
-          <Value>Archiveer</Value>
+          <Source>Archive revision...</Source>
+          <Value>Archiveer...</Value>
         </TranslationItem>
         <TranslationItem Name="authorToolStripMenuItem" Property="Text">
           <Source>Author</Source>
           <Value>Auteur</Value>
         </TranslationItem>
-        <TranslationItem Name="bLocalToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="bLocalToolStripMenuItem" Property="Text">
           <Source>B &lt;--&gt; Working dir</Source>
-          <Value />
+          <Value>B &lt;--&gt; Werk directory</Value>
         </TranslationItem>
         <TranslationItem Name="bisectToolStripMenuItem" Property="Text">
-          <Source>Bisect</Source>
-          <Value>Verdeel en heers</Value>
+          <Source>Bisect...</Source>
+          <Value>Verdeel en heers...</Value>
         </TranslationItem>
         <TranslationItem Name="blameToolStripMenuItem" Property="Text">
           <Source>Blame</Source>
@@ -1837,36 +1793,36 @@ revision:</Source>
           <Value>Vertakking</Value>
         </TranslationItem>
         <TranslationItem Name="branchToolStripMenuItem" Property="Text">
-          <Source>Create branch</Source>
-          <Value>Vertakking aanmaken</Value>
+          <Source>Create branch...</Source>
+          <Value>Vertakking aanmaken...</Value>
         </TranslationItem>
         <TranslationItem Name="changelogToolStripMenuItem" Property="Text">
           <Source>Changelog</Source>
           <Value>Versie historie</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
-          <Source>Checkout branch</Source>
-          <Value>Vertakking uitchecken</Value>
+          <Source>Checkout branch...</Source>
+          <Value>Vertakking uitchecken...</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutToolStripMenuItem" Property="Text">
-          <Source>Checkout revision</Source>
-          <Value>Revisie uitchecken</Value>
+          <Source>Checkout revision...</Source>
+          <Value>Revisie uitchecken...</Value>
         </TranslationItem>
         <TranslationItem Name="cherryPickToolStripMenuItem" Property="Text">
-          <Source>Cherry pick</Source>
-          <Value>Cherry pick</Value>
+          <Source>Cherry pick...</Source>
+          <Value>Cherry pick...</Value>
         </TranslationItem>
         <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
-          <Source>Cleanup repository</Source>
-          <Value>Opschonen</Value>
+          <Source>Cleanup repository...</Source>
+          <Value>Opschonen...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
-          <Source>Clone SVN repository</Source>
-          <Value>Kloon SVN opslagplaats</Value>
+          <Source>Clone SVN repository...</Source>
+          <Value>Kloon SVN opslagplaats...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
-          <Source>Clone repository</Source>
-          <Value>Kloon opslagplaats</Value>
+          <Source>Clone repository...</Source>
+          <Value>Kloon opslagplaats...</Value>
         </TranslationItem>
         <TranslationItem Name="closeToolStripMenuItem" Property="Text">
           <Source>Close</Source>
@@ -1881,8 +1837,8 @@ revision:</Source>
           <Value>Commando's</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem" Property="Text">
-          <Source>Commit</Source>
-          <Value>Commit</Value>
+          <Source>Commit...</Source>
+          <Value>Commit...</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem1" Property="Text">
           <Source>Commit</Source>
@@ -1909,16 +1865,16 @@ revision:</Source>
           <Value>Kopieer bestandsnaam naar klembord</Value>
         </TranslationItem>
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
-          <Source>Delete branch</Source>
-          <Value>Verwijder vertakking</Value>
+          <Source>Delete branch...</Source>
+          <Value>Verwijder vertakking...</Value>
         </TranslationItem>
         <TranslationItem Name="deleteIndexlockToolStripMenuItem" Property="Text">
           <Source>Delete index.lock</Source>
           <Value>Verwijder index.lock</Value>
         </TranslationItem>
         <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
-          <Source>Delete tag</Source>
-          <Value>Verwijder label</Value>
+          <Source>Delete tag...</Source>
+          <Value>Verwijder label...</Value>
         </TranslationItem>
         <TranslationItem Name="diffContainsToolStripMenuItem" Property="Text">
           <Source>Diff contains (SLOW)</Source>
@@ -1938,9 +1894,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Donate</Source>
           <Value>Doneer</Value>
         </TranslationItem>
-        <TranslationItem Name="dontSetAsDefaultToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="dontSetAsDefaultToolStripMenuItem" Property="Text">
           <Source>Don't set as default</Source>
-          <Value />
+          <Value>Niet als standaard instellen</Value>
         </TranslationItem>
         <TranslationItem Name="editCheckedOutFileToolStripMenuItem" Property="Text">
           <Source>Edit working dir file</Source>
@@ -1966,13 +1922,13 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Expand all (takes a while on large trees)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="fetchAllToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="fetchAllToolStripMenuItem" Property="Text">
           <Source>Fetch all</Source>
-          <Value />
+          <Value>Alles ophalen</Value>
         </TranslationItem>
-        <TranslationItem Name="fetchToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="fetchToolStripMenuItem" Property="Text">
           <Source>Fetch</Source>
-          <Value />
+          <Value>Ophalen</Value>
         </TranslationItem>
         <TranslationItem Name="fileExplorerToolStripMenuItem" Property="Text">
           <Source>File Explorer</Source>
@@ -2003,8 +1959,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Zoeken</Value>
         </TranslationItem>
         <TranslationItem Name="formatPatchToolStripMenuItem" Property="Text">
-          <Source>Format patch</Source>
-          <Value>Patch maken</Value>
+          <Source>Format patch...</Source>
+          <Value>Patch maken...</Value>
         </TranslationItem>
         <TranslationItem Name="generateOrImportKeyToolStripMenuItem" Property="Text">
           <Source>Generate or import key</Source>
@@ -2031,8 +1987,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Git commando logboek</Value>
         </TranslationItem>
         <TranslationItem Name="goToToolStripMenuItem" Property="Text">
-          <Source>Go to commit</Source>
-          <Value>Ga naar revisie</Value>
+          <Source>Go to commit...</Source>
+          <Value>Ga naar revisie...</Value>
         </TranslationItem>
         <TranslationItem Name="hashToolStripMenuItem" Property="Text">
           <Source>Hash</Source>
@@ -2043,8 +1999,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Help</Value>
         </TranslationItem>
         <TranslationItem Name="initNewRepositoryToolStripMenuItem" Property="Text">
-          <Source>Create new repository</Source>
-          <Value>Nieuwe opslagplaats</Value>
+          <Source>Create new repository...</Source>
+          <Value>Nieuwe opslagplaats...</Value>
         </TranslationItem>
         <TranslationItem Name="kGitToolStripMenuItem" Property="Text">
           <Source>GitK</Source>
@@ -2063,8 +2019,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Beheer submodulen</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
-          <Source>Merge branches</Source>
-          <Value>Vertakkingen samenvoegen</Value>
+          <Source>Merge branches...</Source>
+          <Value>Vertakkingen samenvoegen...</Value>
         </TranslationItem>
         <TranslationItem Name="mergeToolStripMenuItem" Property="Text">
           <Source>Merge</Source>
@@ -2083,8 +2039,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Openen met... (tijdelijk bestand)</Value>
         </TranslationItem>
         <TranslationItem Name="openToolStripMenuItem" Property="Text">
-          <Source>Open</Source>
-          <Value>Openen</Value>
+          <Source>Open...</Source>
+          <Value>Openen...</Value>
         </TranslationItem>
         <TranslationItem Name="openWithDifftoolToolStripMenuItem" Property="Text">
           <Source>Open with difftool</Source>
@@ -2094,37 +2050,37 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Open working dir file with...</Source>
           <Value>Open uitgecheckt bestand  met...</Value>
         </TranslationItem>
-        <TranslationItem Name="parentOfALocalToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="parentOfALocalToolStripMenuItem" Property="Text">
           <Source>A's parent &lt;--&gt; Working dir</Source>
-          <Value />
+          <Value>A's ouder &lt;--&gt; Werk directory</Value>
         </TranslationItem>
-        <TranslationItem Name="parentOfBLocalToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="parentOfBLocalToolStripMenuItem" Property="Text">
           <Source>B's parent &lt;--&gt; Working dir</Source>
-          <Value />
+          <Value>B's ouder &lt;--&gt; Werk directory</Value>
         </TranslationItem>
         <TranslationItem Name="patchToolStripMenuItem" Property="Text">
-          <Source>View patch file</Source>
-          <Value>Bekijk patch bestand</Value>
+          <Source>View patch file...</Source>
+          <Value>Bekijk patch bestand...</Value>
         </TranslationItem>
         <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
           <Source>Plugins</Source>
           <Value>Plugins</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem" Property="Text">
-          <Source>Pull</Source>
-          <Value>Ophalen</Value>
+          <Source>Pull...</Source>
+          <Value>Ophalen...</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem1" Property="Text">
           <Source>Pull</Source>
           <Value>Ophalen</Value>
         </TranslationItem>
         <TranslationItem Name="pushToolStripMenuItem" Property="Text">
-          <Source>Push</Source>
-          <Value>Verzenden</Value>
+          <Source>Push...</Source>
+          <Value>Verzenden...</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem" Property="Text">
-          <Source>Rebase</Source>
-          <Value>Rebase</Value>
+          <Source>Rebase...</Source>
+          <Value>Rebase...</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem1" Property="Text">
           <Source>Rebase</Source>
@@ -2146,33 +2102,33 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Remotes</Source>
           <Value>Externe opslagplaatsen</Value>
         </TranslationItem>
-        <TranslationItem Name="reportAnIssueToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="reportAnIssueToolStripMenuItem" Property="Text">
           <Source>Report an issue</Source>
-          <Value />
+          <Value>Rapporteer een probleem</Value>
         </TranslationItem>
-        <TranslationItem Name="resetFileToAToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="resetFileToAToolStripMenuItem" Property="Text">
           <Source>A</Source>
-          <Value />
+          <Value>A</Value>
         </TranslationItem>
-        <TranslationItem Name="resetFileToRemoteToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="resetFileToRemoteToolStripMenuItem" Property="Text">
           <Source>B</Source>
-          <Value />
+          <Value>B</Value>
         </TranslationItem>
-        <TranslationItem Name="resetFileToToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="resetFileToToolStripMenuItem" Property="Text">
           <Source>Reset file(s) to</Source>
-          <Value />
+          <Value>Betand(en) terugzetten naar</Value>
         </TranslationItem>
-        <TranslationItem Name="resetToThisRevisionToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="resetToThisRevisionToolStripMenuItem" Property="Text">
           <Source>Reset to selected revision</Source>
-          <Value />
+          <Value>Terugzetten naar geselecteerde revisie</Value>
         </TranslationItem>
         <TranslationItem Name="resetToolStripMenuItem" Property="Text">
-          <Source>Reset changes</Source>
-          <Value>Alle wijzigingen ongedaan maken</Value>
+          <Source>Reset changes...</Source>
+          <Value>Alle wijzigingen ongedaan maken...</Value>
         </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
-          <Source>Solve mergeconflicts</Source>
-          <Value>Samenvoeg conflicten oplossen</Value>
+          <Source>Solve mergeconflicts...</Source>
+          <Value>Samenvoeg conflicten oplossen...</Value>
         </TranslationItem>
         <TranslationItem Name="saveAsToolStripMenuItem" Property="Text">
           <Source>Save as...</Source>
@@ -2211,8 +2167,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Pop weggezette wijzigingen</Value>
         </TranslationItem>
         <TranslationItem Name="stashToolStripMenuItem" Property="Text">
-          <Source>Stash changes</Source>
-          <Value>Wijzigingen wegzetten</Value>
+          <Source>Stash changes...</Source>
+          <Value>Wijzigingen wegzetten...</Value>
         </TranslationItem>
         <TranslationItem Name="submodulesToolStripMenuItem" Property="Text">
           <Source>Submodules</Source>
@@ -2223,8 +2179,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="tagToolStripMenuItem" Property="Text">
-          <Source>Create tag</Source>
-          <Value>Maak label</Value>
+          <Source>Create tag...</Source>
+          <Value>Maak label...</Value>
         </TranslationItem>
         <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText">
           <Source>Toggle split view layout</Source>
@@ -2275,8 +2231,8 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Value>Handleiding</Value>
         </TranslationItem>
         <TranslationItem Name="verifyGitDatabaseToolStripMenuItem" Property="Text">
-          <Source>Recover lost objects</Source>
-          <Value>Verloren bestanden terughalen</Value>
+          <Source>Recover lost objects...</Source>
+          <Value>Verloren bestanden terughalen...</Value>
         </TranslationItem>
         <TranslationItem Name="viewDiffToolStripMenuItem" Property="Text">
           <Source>View changes</Source>
@@ -2305,30 +2261,6 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         <TranslationItem Name="$this" Property="Text">
           <Source>Change log</Source>
           <Value>Verlander logboek</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormCheckout">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Checkout revision</Source>
-          <Value>Check revisie uit</Value>
-        </TranslationItem>
-        <TranslationItem Name="Force" Property="Text">
-          <Source>Force</Source>
-          <Value>Forceer</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Source>Checkout</Source>
-          <Value>Uitchecken</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text">
-          <Source>Select 1 revision to checkout.</Source>
-          <Value>Selecteer 1 revisie om uit te checken</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noRevisionSelectedMsgBoxCaption" Property="Text">
-          <Source>Checkout</Source>
-          <Value>Checkout</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2405,6 +2337,30 @@ Voer een geldige naam in of selecteeer een voorgedefinieerde keuze.</Value>
         <TranslationItem Name="defaultActionChx" Property="Text" type="obsolete">
           <Source>Remember as default action</Source>
           <Value>Onthoud als standaard actie</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCheckoutRevision">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Checkout revision</Source>
+          <Value>Revisie uitchecken</Value>
+        </TranslationItem>
+        <TranslationItem Name="Force" Property="Text">
+          <Source>Force</Source>
+          <Value>Forceer</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Source>Checkout</Source>
+          <Value>Checkout</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text">
+          <Source>Select 1 revision to checkout.</Source>
+          <Value>Selecteer 1 revisie om uit te checken</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelectedMsgBoxCaption" Property="Text">
+          <Source>Checkout</Source>
+          <Value>Checkout</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2695,9 +2651,9 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
 </Source>
           <Value>Er zijn niet opgeloste samenvoeg conflicten</Value>
         </TranslationItem>
-        <TranslationItem Name="StageInSuperproject" Property="Text" type="unfinished">
+        <TranslationItem Name="StageInSuperproject" Property="Text">
           <Source>Stage in Superproject</Source>
-          <Value />
+          <Value>Klaarzetten in Superproject</Value>
         </TranslationItem>
         <TranslationItem Name="_ResetSelectedLinesToolStripMenuItem" Property="Text">
           <Source>Reset selected line(s)</Source>
@@ -2720,6 +2676,10 @@ Weet u zeker dat u door wilt gaan?</Value>
         <TranslationItem Name="_amendCommitCaption" Property="Text">
           <Source>Amend commit</Source>
           <Value>Commit uitbreiden</Value>
+        </TranslationItem>
+        <TranslationItem Name="_checkBoxAutoWrap" Property="Text" type="unfinished">
+          <Source>Auto-wrap</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text" type="unfinished">
           <Source>Commit Message is requested during commit</Source>
@@ -2910,13 +2870,13 @@ Weet u zeker dat u wilt doorgaan?</Value>
           <Source>Close dialog after each commit</Source>
           <Value>Sluit dialoog na iedere commit</Value>
         </TranslationItem>
-        <TranslationItem Name="commitCursorColumnLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="commitCursorColumnLabel" Property="Text">
           <Source>Col</Source>
-          <Value />
+          <Value>Kol</Value>
         </TranslationItem>
-        <TranslationItem Name="commitCursorLineLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="commitCursorLineLabel" Property="Text">
           <Source>Ln</Source>
-          <Value />
+          <Value>Ln</Value>
         </TranslationItem>
         <TranslationItem Name="commitMessageToolStripMenuItem" Property="Text">
           <Source>Commit &amp;message</Source>
@@ -3174,6 +3134,10 @@ Kies 'Nee' om nieuwe bestanden te behouden.</Value>
           <Source>Commit validation</Source>
           <Value>Commit validatie</Value>
         </TranslationItem>
+        <TranslationItem Name="labelAutoWrap" Property="Text" type="unfinished">
+          <Source>Auto-wrap commit message (except subject line)</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="labelCommitTemplate" Property="Text">
           <Source>Commit template:</Source>
           <Value>Commit templet:</Value>
@@ -3196,6 +3160,10 @@ Kies 'Nee' om nieuwe bestanden te behouden.</Value>
         </TranslationItem>
         <TranslationItem Name="labelSecondLineEmpty" Property="Text" type="unfinished">
           <Source>Second line must be empty:</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="labelUseIndent" Property="Text" type="unfinished">
+          <Source>Indent lines after first line:</Source>
           <Value />
         </TranslationItem>
       </translationItems>
@@ -3229,6 +3197,86 @@ Kies 'Nee' om nieuwe bestanden te behouden.</Value>
         <TranslationItem Name="translatorsLabel" Property="Text">
           <Source>Translators</Source>
           <Value>Vertalers</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCreateBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Create Branch</Source>
+          <Value>Vertakking aanmaken</Value>
+        </TranslationItem>
+        <TranslationItem Name="Checkout" Property="Text">
+          <Source>Checkout branch</Source>
+          <Value>Vertakking uitchecken</Value>
+        </TranslationItem>
+        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
+          <Source>Checkout after create</Source>
+          <Value>Vertakking uitchecken na aanmaken</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Source>Create branch</Source>
+          <Value>Vertakking aanmaken</Value>
+        </TranslationItem>
+        <TranslationItem Name="_branchCaption" Property="Text">
+          <Source>Branch</Source>
+          <Value>Vertakking</Value>
+        </TranslationItem>
+        <TranslationItem Name="_selectOneRevision" Property="Text">
+          <Source>Select 1 revision to create the branch on.</Source>
+          <Value>Selecteer 1 revisie om de vertakking op aan te maken.</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Source>Branch name</Source>
+          <Value>Naam vertakking</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCreateTagAtRevision">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Create tag</Source>
+          <Value>Maak label</Value>
+        </TranslationItem>
+        <TranslationItem Name="ForceTag" Property="Text">
+          <Source>Force</Source>
+          <Value>Forceer</Value>
+        </TranslationItem>
+        <TranslationItem Name="Ok" Property="Text">
+          <Source>Create tag</Source>
+          <Value>Maak label</Value>
+        </TranslationItem>
+        <TranslationItem Name="_messageCaption" Property="Text">
+          <Source>Tag</Source>
+          <Value>Label</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelected" Property="Text">
+          <Source>Select 1 revision to create the tag on.</Source>
+          <Value>Selecteer 1 revisie om het label op aan te maken.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noTagMassage" Property="Text">
+          <Source>Please enter a tag message</Source>
+          <Value>Voer een label bericht in</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pushToCaption" Property="Text">
+          <Source>Push tag to '{0}'</Source>
+          <Value>Verzenden label naar {0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="annotate" Property="Text">
+          <Source>Create annotated tag</Source>
+          <Value>Maak geannoteerd label</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Source>Tag name</Source>
+          <Value>Label naam</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text">
+          <Source>Message</Source>
+          <Value>Bericht</Value>
+        </TranslationItem>
+        <TranslationItem Name="pushTag" Property="Text">
+          <Source>Push tag to '{0}'</Source>
+          <Value>Verzenden label naar {0}</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3323,13 +3371,13 @@ verwijderen die niet is samengevoegd, selecteer de optie 'Geforceerd verwijderen
           <Source>Delete</Source>
           <Value>Verwijderen</Value>
         </TranslationItem>
-        <TranslationItem Name="_deleteFromCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_deleteFromCaption" Property="Text">
           <Source>Delete from '{0}'</Source>
-          <Value />
+          <Value>Verwijderen van '{0}'</Value>
         </TranslationItem>
-        <TranslationItem Name="deleteTag" Property="Text" type="unfinished">
+        <TranslationItem Name="deleteTag" Property="Text">
           <Source>Delete tag from '{0}'</Source>
-          <Value />
+          <Value>Verwijder label van '{0}'</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select tag</Source>
@@ -3451,13 +3499,13 @@ Klik op de knop voor meer informatie over het maken van donaties.</Value>
           <Source>Full history</Source>
           <Value>Volledige historie</Value>
         </TranslationItem>
-        <TranslationItem Name="loadBlameOnShowToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="loadBlameOnShowToolStripMenuItem" Property="Text">
           <Source>Load blame on show</Source>
-          <Value />
+          <Value>Laad blame bij openen</Value>
         </TranslationItem>
-        <TranslationItem Name="loadHistoryOnShowToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="loadHistoryOnShowToolStripMenuItem" Property="Text">
           <Source>Load history on show</Source>
-          <Value />
+          <Value>Laad history bij openen</Value>
         </TranslationItem>
         <TranslationItem Name="manipuleerCommitToolStripMenuItem" Property="Text">
           <Source>Manipulate commit</Source>
@@ -3601,49 +3649,45 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
           <Source>Current branch:</Source>
           <Value>Huidige vertakking:</Value>
         </TranslationItem>
-        <TranslationItem Name="_noEmailEnteredText" Property="Text" type="unfinished">
+        <TranslationItem Name="_noEmailEnteredText" Property="Text">
           <Source>You need to enter an email address.</Source>
-          <Value />
+          <Value>Er is geen email adres ingevuld.</Value>
         </TranslationItem>
-        <TranslationItem Name="_noGitMailConfigured" Property="Text" type="unfinished">
+        <TranslationItem Name="_noGitMailConfigured" Property="Text">
           <Source>There is no email address configured in the settings dialog.</Source>
-          <Value />
+          <Value>Er is geen email adres geconfigureerd in het instellingen dialoog.</Value>
         </TranslationItem>
-        <TranslationItem Name="_noOutputPathEnteredText" Property="Text" type="unfinished">
+        <TranslationItem Name="_noOutputPathEnteredText" Property="Text">
           <Source>You need to enter an output path.</Source>
-          <Value />
+          <Value>Er is geen directory ingevuld.</Value>
         </TranslationItem>
-        <TranslationItem Name="_noSubjectEnteredText" Property="Text" type="unfinished">
+        <TranslationItem Name="_noSubjectEnteredText" Property="Text">
           <Source>You need to enter a mail subject.</Source>
-          <Value />
+          <Value>Er is geen onderwerp ingevuld.</Value>
         </TranslationItem>
-        <TranslationItem Name="_patchResultCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_patchResultCaption" Property="Text">
           <Source>Patch result</Source>
-          <Value />
+          <Value>Patch resultaat</Value>
         </TranslationItem>
-        <TranslationItem Name="_sendMailResult" Property="Text" type="unfinished">
-          <Source>
-
-Send to:</Source>
+        <TranslationItem Name="_sendMailResult" Property="Text">
+          <Source>Send to:</Source>
           <Value>Verzenden naar:</Value>
         </TranslationItem>
-        <TranslationItem Name="_sendMailResultFailed" Property="Text" type="unfinished">
-          <Source>
-
-Failed to send mail.</Source>
-          <Value />
+        <TranslationItem Name="_sendMailResultFailed" Property="Text">
+          <Source>Failed to send mail.</Source>
+          <Value>Fout tijdens verzenden email.</Value>
         </TranslationItem>
-        <TranslationItem Name="_twoRevisionsNeededCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_twoRevisionsNeededCaption" Property="Text">
           <Source>Patch error</Source>
-          <Value />
+          <Value>Patch fout</Value>
         </TranslationItem>
-        <TranslationItem Name="_twoRevisionsNeededText" Property="Text" type="unfinished">
+        <TranslationItem Name="_twoRevisionsNeededText" Property="Text">
           <Source>You need to select two revisions</Source>
-          <Value />
+          <Value>Er moeten 2 revisies geselecteerd worden.</Value>
         </TranslationItem>
-        <TranslationItem Name="_wrongSmtpSettingsText" Property="Text" type="unfinished">
-          <Source>You need to enter a valid smtp in the settings dialog.</Source>
-          <Value />
+        <TranslationItem Name="_wrongSmtpSettingsText" Property="Text">
+          <Source>You need to enter a valid SMTP in the settings dialog.</Source>
+          <Value>Er is geen SMTP server ingesteld in het instellingen dialoog.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Subject</Source>
@@ -3947,6 +3991,26 @@ _ReSharper*/
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormGitLog">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Log</Source>
+          <Value>Logboek</Value>
+        </TranslationItem>
+        <TranslationItem Name="alwaysOnTopCheckBox" Property="Text">
+          <Source>Always on top</Source>
+          <Value>Always on top</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPageCommandCache" Property="Text">
+          <Source>Command cache</Source>
+          <Value>Commando cache</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPageCommandLog" Property="Text">
+          <Source>Command log</Source>
+          <Value>Commando log</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormGitReview">
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
@@ -4029,13 +4093,13 @@ defaultrebase=0</Source>
 - branch name</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text" type="unfinished">
+        <TranslationItem Name="label3" Property="Text">
           <Source>Go to tag:</Source>
-          <Value />
+          <Value>Ga naar label:</Value>
         </TranslationItem>
-        <TranslationItem Name="label4" Property="Text" type="unfinished">
+        <TranslationItem Name="label4" Property="Text">
           <Source>Go to branch:</Source>
-          <Value />
+          <Value>Ga naar vertakking:</Value>
         </TranslationItem>
         <TranslationItem Name="linkGitRevParse" Property="Text" type="unfinished">
           <Source>More (git-rev-parse, section SPECIFYING REVISIONS)</Source>
@@ -4053,21 +4117,13 @@ defaultrebase=0</Source>
           <Source>Cancel</Source>
           <Value>Annuleren</Value>
         </TranslationItem>
-        <TranslationItem Name="lineLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="lineLabel" Property="Text">
           <Source>Line number</Source>
-          <Value />
+          <Value>Lijn nummer</Value>
         </TranslationItem>
         <TranslationItem Name="okBtn" Property="Text">
           <Source>OK</Source>
           <Value>OK</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormHotkeys">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Hotkeys</Source>
-          <Value>Sneltoetsen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4298,6 +4354,30 @@ De aanpassingen worden ook in gemeenschappelijke oorspronkelijke vertakking uitg
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="FormOpenDirectory">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text">
+          <Source>Open local repository</Source>
+          <Value>Open repository</Value>
+        </TranslationItem>
+        <TranslationItem Name="Load" Property="Text">
+          <Source>Open</Source>
+          <Value>Open</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningOpenFailed" Property="Text">
+          <Source>Directory does not exist.</Source>
+          <Value>Directorie bestaat niet.</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningOpenFailedCaption" Property="Text">
+          <Source>Error</Source>
+          <Value>Error</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text">
+          <Source>Directory</Source>
+          <Value>Directorie</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="FormPluginInformation">
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
@@ -4390,10 +4470,6 @@ Are you sure you want to rebase this merge?</Source>
         <TranslationItem Name="_areYouSureYouWantToRebaseMergeCaption" Property="Text" type="unfinished">
           <Source>Rebase merge commit?</Source>
           <Value />
-        </TranslationItem>
-        <TranslationItem Name="_cannotLoadPutty" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>De SSH sleutel kan niet worden geladen. PuTTY is niet juist geconfigureerd.</Value>
         </TranslationItem>
         <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text">
           <Source>You can only fetch all remote branches (*) without merge or rebase.
@@ -4564,10 +4640,6 @@ This will initialize and update all submodules recursive.</Source>
 Are you sure you want to push this branch?</Source>
           <Value>U staat op het punt een vertakking te verzenden die nog niet bekend is op de externe opslagplaats.
 Weet u zeker dat u deze vertakking wilt verzenden?</Value>
-        </TranslationItem>
-        <TranslationItem Name="_cannotLoadPutty" Property="Text">
-          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
-          <Value>Kan SSH sleutel niet laden. PuTTY is niet juist geconfigureerd.</Value>
         </TranslationItem>
         <TranslationItem Name="_createPullRequestCB" Property="Text">
           <Source>Create pull request after push</Source>
@@ -4744,9 +4816,9 @@ Er is niets te doen.</Value>
           <Source>&gt;Solve conflicts&lt;</Source>
           <Value>&gt;Conflicten oplossen&lt;</Value>
         </TranslationItem>
-        <TranslationItem Name="chkAutosquash" Property="Text" type="unfinished">
+        <TranslationItem Name="chkAutosquash" Property="Text">
           <Source>Autosquash</Source>
-          <Value />
+          <Value>Autosquash</Value>
         </TranslationItem>
         <TranslationItem Name="chkInteractive" Property="Text">
           <Source>Interactive Rebase</Source>
@@ -4756,9 +4828,9 @@ Er is niets te doen.</Value>
           <Source>Preserve Merges</Source>
           <Value>Samenvoegingen bewaren</Value>
         </TranslationItem>
-        <TranslationItem Name="chkSpecificRange" Property="Text" type="unfinished">
+        <TranslationItem Name="chkSpecificRange" Property="Text">
           <Source>Specific range</Source>
-          <Value />
+          <Value>Specifieke range</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Rebase current branch on top of another branch</Source>
@@ -4776,9 +4848,9 @@ Er is niets te doen.</Value>
           <Source>Current branch:</Source>
           <Value>Huidige vertakking:</Value>
         </TranslationItem>
-        <TranslationItem Name="lblRangeFrom" Property="Text" type="unfinished">
+        <TranslationItem Name="lblRangeFrom" Property="Text">
           <Source>From (exc.)</Source>
-          <Value />
+          <Value>Vanaf (excl.)</Value>
         </TranslationItem>
         <TranslationItem Name="lblRangeTo" Property="Text">
           <Source>To</Source>
@@ -4792,17 +4864,17 @@ Er is niets te doen.</Value>
     </TranslationCategory>
     <TranslationCategory Name="FormRecentReposSettings">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Recent repositories settings</Source>
-          <Value />
+          <Value>Instelleingen voor recente opslagplaatsen</Value>
         </TranslationItem>
         <TranslationItem Name="Abort" Property="Text">
           <Source>Cancel</Source>
           <Value>Annuleren</Value>
         </TranslationItem>
-        <TranslationItem Name="MostRecentLabel" Property="Text" type="unfinished">
+        <TranslationItem Name="MostRecentLabel" Property="Text">
           <Source>Most recent repositories</Source>
-          <Value />
+          <Value>Meest recente opslagplaatsen</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>OK</Source>
@@ -4820,45 +4892,45 @@ Er is niets te doen.</Value>
           <Source>Combobox minimum width (0 = Autosize)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="dontShortenRB" Property="Text" type="unfinished">
+        <TranslationItem Name="dontShortenRB" Property="Text">
           <Source>Do not shorten  </Source>
-          <Value />
+          <Value>Niet inkorten</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Less recent repositories</Source>
-          <Value />
+          <Value>Mist recente opslagplaatsen</Value>
         </TranslationItem>
-        <TranslationItem Name="maxRecentRepositories" Property="Text" type="unfinished">
+        <TranslationItem Name="maxRecentRepositories" Property="Text">
           <Source>Maximum number of most recent repositories</Source>
-          <Value />
+          <Value>Maximale aantal van meest recente opslagplaatsen</Value>
         </TranslationItem>
-        <TranslationItem Name="middleDotRB" Property="Text" type="unfinished">
+        <TranslationItem Name="middleDotRB" Property="Text">
           <Source>Replace middle part with dots </Source>
-          <Value />
+          <Value>Vervang middelste deel met puntjes</Value>
         </TranslationItem>
-        <TranslationItem Name="mostSigDirRB" Property="Text" type="unfinished">
+        <TranslationItem Name="mostSigDirRB" Property="Text">
           <Source>The most significant directory </Source>
-          <Value />
+          <Value>De meeste belangrijke directory</Value>
         </TranslationItem>
         <TranslationItem Name="removeAnchorToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Remove anchor</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="removeRecentToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="removeRecentToolStripMenuItem" Property="Text">
           <Source>Remove from recent repositories</Source>
-          <Value />
+          <Value>Verwijder van meest recente opslagplaatsen</Value>
         </TranslationItem>
-        <TranslationItem Name="shorteningGB" Property="Text" type="unfinished">
+        <TranslationItem Name="shorteningGB" Property="Text">
           <Source>Shortening strategy</Source>
-          <Value />
+          <Value>Inkort methode</Value>
         </TranslationItem>
-        <TranslationItem Name="sortLessRecentRepos" Property="Text" type="unfinished">
+        <TranslationItem Name="sortLessRecentRepos" Property="Text">
           <Source>Sort less recent repositories alphabetically</Source>
-          <Value />
+          <Value>Sorteer minst recente opslagplaatsen alfabetisch</Value>
         </TranslationItem>
-        <TranslationItem Name="sortMostRecentRepos" Property="Text" type="unfinished">
+        <TranslationItem Name="sortMostRecentRepos" Property="Text">
           <Source>Sort most recent repositories alphabetically</Source>
-          <Value />
+          <Value>Sorteer meest recente opslagplaatsen alfabetisch</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -5048,9 +5120,9 @@ De waarde is teruggezet naar een lege waarde.</Value>
           <Source>Rename</Source>
           <Value>Hernoem</Value>
         </TranslationItem>
-        <TranslationItem Name="_branchRenameFailed" Property="Text" type="unfinished">
+        <TranslationItem Name="_branchRenameFailed" Property="Text">
           <Source>Rename failed.</Source>
-          <Value />
+          <Value>Hernoemen mislukt.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>New name</Source>
@@ -5072,17 +5144,17 @@ De waarde is teruggezet naar een lege waarde.</Value>
           <Source>Reset</Source>
           <Value>Resetten</Value>
         </TranslationItem>
-        <TranslationItem Name="cbDeleteNewFilesAndDirectories" Property="Text" type="unfinished">
+        <TranslationItem Name="cbDeleteNewFilesAndDirectories" Property="Text">
           <Source>Also delete new files and/or directories</Source>
-          <Value />
+          <Value>Ook nieuwe bestanden en/of directories</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>Are you sure you want to reset your changes?</Source>
-          <Value />
+          <Value>Weet u zeker dat u de wijzigingen ongedaan wilt maken?</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>This will delete any uncommitted work.</Source>
-          <Value />
+          <Value>Deze actie maakt al het niet gecommitte werk ongedaan.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -5223,15 +5295,15 @@ Do you want to reset changes?</Source>
           <Source>All files (*.*)</Source>
           <Value>Alle bestanden (*.*)</Value>
         </TranslationItem>
-        <TranslationItem Name="_areYouSureYouWantDeleteFiles" Property="Text" type="unfinished">
+        <TranslationItem Name="_areYouSureYouWantDeleteFiles" Property="Text">
           <Source>Are you sure you want to DELETE all changes?
 
 This action cannot be made undone.</Source>
-          <Value />
+          <Value>Weet u zeker dat u de wijzigingen wilt verwijderen? Deze actie kan niet ongedaan gemaakt worden.</Value>
         </TranslationItem>
-        <TranslationItem Name="_areYouSureYouWantDeleteFilesCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_areYouSureYouWantDeleteFilesCaption" Property="Text">
           <Source>WARNING!</Source>
-          <Value />
+          <Value>WAARSCHUWING!</Value>
         </TranslationItem>
         <TranslationItem Name="_binaryFileWarningCaption" Property="Text">
           <Source>Warning</Source>
@@ -5277,13 +5349,13 @@ This action cannot be made undone.</Source>
           <Source>Current format (*.{0})</Source>
           <Value>Huidige formaat (*.{0})</Value>
         </TranslationItem>
-        <TranslationItem Name="_failureWhileOpenFile" Property="Text" type="unfinished">
+        <TranslationItem Name="_failureWhileOpenFile" Property="Text">
           <Source>Open temporary file failed.</Source>
-          <Value />
+          <Value>Openen van tijdelijk bestand mislukt.</Value>
         </TranslationItem>
-        <TranslationItem Name="_failureWhileSaveFile" Property="Text" type="unfinished">
+        <TranslationItem Name="_failureWhileSaveFile" Property="Text">
           <Source>Save file failed.</Source>
-          <Value />
+          <Value>Bestand opslaan mislukt.</Value>
         </TranslationItem>
         <TranslationItem Name="_noBaseFileMergeCaption" Property="Text">
           <Source>Merge</Source>
@@ -5544,33 +5616,7 @@ Wilt u dit script gebruiken om samen te voegen?</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormRevert">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Revert file changes</Source>
-          <Value>Bestandswijzigingen terugzetten</Value>
-        </TranslationItem>
-        <TranslationItem Name="Revert" Property="Text">
-          <Source>Revert changes</Source>
-          <Value>Wijzigingen terugzetten</Value>
-        </TranslationItem>
-        <TranslationItem Name="_resetChangesCaption" Property="Text">
-          <Source>Reset changes</Source>
-          <Value>Wijzigingen terugzetten</Value>
-        </TranslationItem>
-        <TranslationItem Name="_undoChangesIn" Property="Text" type="unfinished">
-          <Source>Undo changes in:
-{0}?</Source>
-          <Value>Wijzigingen terugzetten in:
-{0}?</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnCancel" Property="Text">
-          <Source>Cancel</Source>
-          <Value>Annuleren</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormRevertCommitSmall">
+    <TranslationCategory Name="FormRevertCommit">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Revert commit</Source>
@@ -5578,7 +5624,7 @@ Wilt u dit script gebruiken om samen te voegen?</Value>
         </TranslationItem>
         <TranslationItem Name="AutoCommit" Property="Text">
           <Source>Automatically create a commit</Source>
-          <Value>Maak automatisch een commit aan</Value>
+          <Value>Maak automatisch een nieuwe commit aan wanneer er geen samenvoeg problemen zijn.</Value>
         </TranslationItem>
         <TranslationItem Name="BranchInfo" Property="Text">
           <Source>Revert this commit:</Source>
@@ -5699,13 +5745,13 @@ You need to set the correct path to be able to use GitExtensions.
 Do you want to set the correct command now? If not Global and Local Settings will not be saved.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_cantFindGitMessageCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_cantFindGitMessageCaption" Property="Text">
           <Source>Incorrect path</Source>
-          <Value />
+          <Value>Foutief pad</Value>
         </TranslationItem>
-        <TranslationItem Name="_loadingSettingsFailed" Property="Text" type="unfinished">
+        <TranslationItem Name="_loadingSettingsFailed" Property="Text">
           <Source>Could not load settings.</Source>
-          <Value />
+          <Value>Kan instellingen niet laden</Value>
         </TranslationItem>
         <TranslationItem Name="buttonApply" Property="Text">
           <Source>Apply</Source>
@@ -5715,9 +5761,9 @@ Do you want to set the correct command now? If not Global and Local Settings wil
           <Source>Cancel</Source>
           <Value>Annuleren</Value>
         </TranslationItem>
-        <TranslationItem Name="buttonDiscard" Property="Text" type="unfinished">
+        <TranslationItem Name="buttonDiscard" Property="Text">
           <Source>Discard</Source>
-          <Value />
+          <Value>Verwerpen</Value>
         </TranslationItem>
         <TranslationItem Name="buttonOk" Property="Text">
           <Source>OK</Source>
@@ -5737,16 +5783,16 @@ te kunnen wijzigen.</Value>
 Thus the Cancel and Discard button will have no effect for this page.</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="labelSettingsPageTitle" Property="Text" type="unfinished">
+        <TranslationItem Name="labelSettingsPageTitle" Property="Text">
           <Source>...title...</Source>
-          <Value />
+          <Value>...titel...</Value>
         </TranslationItem>
         <TranslationItem Name="addToRevisionGridContextMenuDataGridViewCheckBoxColumn" Property="HeaderText" type="obsolete">
           <Source>Context menu</Source>
           <Value>Context menu</Value>
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="obsolete">
-          <Source>Close process dialog automatically when process is succeeded</Source>
+          <Source>Close process dialog automatically when process succeeds</Source>
           <Value>Sluit proces dialoog automatisch wanneer proces is geslaagd</Value>
         </TranslationItem>
         <TranslationItem Name="chkShowGitCommandLine" Property="Text" type="obsolete">
@@ -5761,37 +5807,9 @@ Thus the Cancel and Discard button will have no effect for this page.</Source>
           <Source>Limit number of commits that will be loaded at startup.</Source>
           <Value>Aantal commits dat word opgehaald bij het opstarten.</Value>
         </TranslationItem>
-        <TranslationItem Name="label20" Property="Text" type="obsolete">
-          <Source>You only need local settings
-if you want to override the 
-global settings for the current
-repository.</Source>
-          <Value>Lokale instellingen zijn alleen 
-nodig om globale instellingen 
-te overschrijven voor deze 
-repository.</Value>
-        </TranslationItem>
-        <TranslationItem Name="label21" Property="Text" type="obsolete">
-          <Source>You need to set the correct path to 
-git before you can change
-local settings.
-</Source>
-          <Value>Het juiste pad naar git.cmd moet 
-gezet zijn om lokale instellingen te 
-kunnen wijzigen.</Value>
-        </TranslationItem>
         <TranslationItem Name="label22" Property="Text" type="obsolete">
           <Source>Dictionary for spelling checker.</Source>
           <Value>Woordenboek voor spellings controle</Value>
-        </TranslationItem>
-        <TranslationItem Name="label9" Property="Text" type="obsolete">
-          <Source>You need to set the correct path to 
-git before you can change
-global settings.
-</Source>
-          <Value>Het juiste pad naar git.cmd moet 
-gezet zijn om globale instellingen 
-te kunnen wijzigen.</Value>
         </TranslationItem>
         <TranslationItem Name="tpGitExtensions" Property="Text" type="obsolete">
           <Source>Git extensions</Source>
@@ -6001,9 +6019,9 @@ Do you want to trust this host key and then try again?</Source>
           <Source>Authors file "{0}" does not exists. Continue without authors file?</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_questionContinueWithoutAuthorsCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_questionContinueWithoutAuthorsCaption" Property="Text">
           <Source>Authors file</Source>
-          <Value />
+          <Value>Bestand van auteur</Value>
         </TranslationItem>
         <TranslationItem Name="_questionOpenRepo" Property="Text">
           <Source>The repository has been cloned successfully.
@@ -6027,57 +6045,53 @@ Wilt u de nieuwe repository "{0}" openen?</Value>
           <Source>Branches:</Source>
           <Value>Vertakkingen:</Value>
         </TranslationItem>
-        <TranslationItem Name="cbTags" Property="Text" type="unfinished">
+        <TranslationItem Name="cbTags" Property="Text">
           <Source>Tags:</Source>
-          <Value />
+          <Value>Labels:</Value>
         </TranslationItem>
         <TranslationItem Name="cbTrunk" Property="Text" type="unfinished">
           <Source>Trunk:</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox1" Property="Text">
           <Source>Advanced settings</Source>
-          <Value />
+          <Value>Geavanceerde instellingen</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="unfinished">
           <Source>Svn repository to clone</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Destination</Source>
-          <Value />
+          <Value>Bestemming</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text" type="unfinished">
           <Source>Subdirectory to create</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label4" Property="Text" type="unfinished">
+        <TranslationItem Name="label4" Property="Text">
           <Source>Authors file</Source>
-          <Value />
+          <Value>Bestand van auteur</Value>
         </TranslationItem>
-        <TranslationItem Name="label5" Property="Text" type="unfinished">
+        <TranslationItem Name="label5" Property="Text">
           <Source>From:</Source>
-          <Value />
+          <Value>Van:</Value>
         </TranslationItem>
-        <TranslationItem Name="label6" Property="Text" type="unfinished">
+        <TranslationItem Name="label6" Property="Text">
           <Source>Username</Source>
-          <Value />
+          <Value>Gebruikersnaam</Value>
         </TranslationItem>
         <TranslationItem Name="okButton" Property="Text">
           <Source>Clone</Source>
           <Value>Kloon</Value>
         </TranslationItem>
-        <TranslationItem Name="tbBranches" Property="Text" type="unfinished">
+        <TranslationItem Name="tbBranches" Property="Text" type="obsolete">
           <Source>branches</Source>
-          <Value />
+          <Value>vertakkingen</Value>
         </TranslationItem>
-        <TranslationItem Name="tbTags" Property="Text" type="unfinished">
+        <TranslationItem Name="tbTags" Property="Text" type="obsolete">
           <Source>tags</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="tbTrunk" Property="Text" type="unfinished">
-          <Source>trunk</Source>
-          <Value />
+          <Value>labels</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6114,54 +6128,6 @@ Wilt u de nieuwe repository "{0}" openen?</Value>
         <TranslationItem Name="btnCreateTag" Property="Text">
           <Source>Create tag</Source>
           <Value>Maak label</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Source>Tag name</Source>
-          <Value>Label naam</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Source>Message</Source>
-          <Value>Bericht</Value>
-        </TranslationItem>
-        <TranslationItem Name="pushTag" Property="Text">
-          <Source>Push tag to '{0}'</Source>
-          <Value>Label verzenden</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormTagSmall">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Create tag</Source>
-          <Value>Maak label</Value>
-        </TranslationItem>
-        <TranslationItem Name="ForceTag" Property="Text">
-          <Source>Force</Source>
-          <Value>Forceer</Value>
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Source>Create tag</Source>
-          <Value>Maak label</Value>
-        </TranslationItem>
-        <TranslationItem Name="_messageCaption" Property="Text">
-          <Source>Tag</Source>
-          <Value>Label</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noRevisionSelected" Property="Text">
-          <Source>Select 1 revision to create the tag on.</Source>
-          <Value>FormTag	_noRevisionSelected	Text	Select 1 revision to create the tag on.	Selecteer 1 revisie om het label op aan te maken.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noTagMassage" Property="Text">
-          <Source>Please enter a tag message</Source>
-          <Value>Voer label bericht in</Value>
-        </TranslationItem>
-        <TranslationItem Name="_pushToCaption" Property="Text">
-          <Source>Push tag to '{0}'</Source>
-          <Value>Verzenden label naar {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="annotate" Property="Text">
-          <Source>Create annotated tag</Source>
-          <Value>Maak geannoteerd label</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Tag name</Source>
@@ -6449,6 +6415,70 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="GerritPlugin">
+      <translationItems>
+        <TranslationItem Name="_downloadGerritChange" Property="Text" type="unfinished">
+          <Source>Download Gerrit Change</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_editGitReview" Property="Text" type="unfinished">
+          <Source>Edit .gitreview</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHook" Property="Text" type="unfinished">
+          <Source>Install Hook</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookFailed" Property="Text" type="unfinished">
+          <Source>Could not download the commit-msg file. Please install the commit-msg hook manually.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookMessage" Property="Text" type="unfinished">
+          <Source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_installCommitMsgHookShortText" Property="Text" type="unfinished">
+          <Source>Install commit-msg hook</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pluginDescription" Property="Text" type="unfinished">
+          <Source>Gerrit Code Review</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_publishGerritChange" Property="Text" type="unfinished">
+          <Source>Publish Gerrit Change</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GerritSettings">
+      <translationItems>
+        <TranslationItem Name="_settingsError" Property="Text" type="unfinished">
+          <Source>Error loading .gitreview file.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorDefaultRemoteNotPresent" Property="Text" type="unfinished">
+          <Source>The remote "{0}" specified with the "defaultremote" setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorFileNotFound" Property="Text" type="unfinished">
+          <Source>Cannot find the ".gitreview" file in the working directory.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorHostNotEntered" Property="Text" type="unfinished">
+          <Source>The "host" setting in the .gitreview file is mandatory.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorPortNotNumeric" Property="Text" type="unfinished">
+          <Source>The "port" specified in the .gitreview file may only contain digits.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_settingsErrorProjectNotEntered" Property="Text" type="unfinished">
+          <Source>The "project" setting in the .gitreview file is mandatory.</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="GitExtensionsSettingsGroup">
       <translationItems>
         <TranslationItem Name="$this" Property="Title">
@@ -6468,7 +6498,7 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text" type="unfinished">
-          <Source>Close Process dialog when process is succeeded</Source>
+          <Source>Close Process dialog when process succeeds</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkFollowRenamesInFileHistory" Property="Text">
@@ -6533,32 +6563,12 @@ and deze zal weer in het commit overzicht zichtbaar worden.</Value>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label23" Property="Text">
-          <Source>Smtp server for sending patches by email</Source>
-          <Value>Smtp server voor het versturen van patches per email</Value>
+          <Source>SMTP server for sending patches by email</Source>
+          <Value>SMTP server voor het versturen van patches per email</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text">
           <Source>Revision grid quick search timeout [ms]</Source>
           <Value>Revisie lijst snel zoek timout [ms]</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="GitLogForm">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Log</Source>
-          <Value>Logboek</Value>
-        </TranslationItem>
-        <TranslationItem Name="alwaysOnTopCheckBox" Property="Text" type="unfinished">
-          <Source>Always on top</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="tabPageCommandCache" Property="Text">
-          <Source>Command cache</Source>
-          <Value>Commando cache</Value>
-        </TranslationItem>
-        <TranslationItem Name="tabPageCommandLog" Property="Text">
-          <Source>Command log</Source>
-          <Value>Commando log</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6707,9 +6717,9 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
           <Source>Editor</Source>
           <Value>Editor</Value>
         </TranslationItem>
-        <TranslationItem Name="label60" Property="Text" type="unfinished">
+        <TranslationItem Name="label60" Property="Text">
           <Source>Files content encoding</Source>
-          <Value />
+          <Value>Encoding van bestandsinhoud</Value>
         </TranslationItem>
         <TranslationItem Name="label7" Property="Text">
           <Source>Mergetool</Source>
@@ -6772,14 +6782,14 @@ te kunnen wijzigen.</Value>
     </TranslationCategory>
     <TranslationCategory Name="HelpImageDisplayUserControl">
       <translationItems>
-        <TranslationItem Name="linkLabelHide" Property="Text" type="unfinished">
+        <TranslationItem Name="linkLabelHide" Property="Text">
           <Source>Hide help</Source>
-          <Value />
+          <Value>Verberg help</Value>
         </TranslationItem>
-        <TranslationItem Name="linkLabelShowHelp" Property="Text" type="unfinished">
+        <TranslationItem Name="linkLabelShowHelp" Property="Text">
           <Source>Show
 help</Source>
-          <Value />
+          <Value>Toon help</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6840,9 +6850,9 @@ kunnen wijzigen.</Value>
           <Source>Editor</Source>
           <Value>Editor</Value>
         </TranslationItem>
-        <TranslationItem Name="label61" Property="Text" type="unfinished">
+        <TranslationItem Name="label61" Property="Text">
           <Source>Files content encoding</Source>
-          <Value />
+          <Value>Encoding van bestandsinhoud</Value>
         </TranslationItem>
         <TranslationItem Name="label8" Property="Text">
           <Source>Mergetool</Source>
@@ -6872,9 +6882,9 @@ kunnen wijzigen.</Value>
           <Source>You are in the middle of a patch apply, continue patch apply?</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_middleOfPatchApplyCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="_middleOfPatchApplyCaption" Property="Text">
           <Source>Patch apply</Source>
-          <Value />
+          <Value>Patch toepassen</Value>
         </TranslationItem>
         <TranslationItem Name="_middleOfRebase" Property="Text" type="unfinished">
           <Source>You are in the middle of a rebase, continue rebase?</Source>
@@ -6892,6 +6902,10 @@ kunnen wijzigen.</Value>
           <Source>The current directory is not a valid git-svn repository.</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="unfinished">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>De SSH sleutel kan niet worden geladen. PuTTY is niet juist geconfigureerd.</Value>
+        </TranslationItem>
         <TranslationItem Name="_unableGetSVNInformation" Property="Text" type="unfinished">
           <Source>Unable to determine upstream SVN information.</Source>
           <Value />
@@ -6906,30 +6920,6 @@ kunnen wijzigen.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="Open">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Open local repository</Source>
-          <Value>Open repository</Value>
-        </TranslationItem>
-        <TranslationItem Name="Load" Property="Text">
-          <Source>Open</Source>
-          <Value>Open</Value>
-        </TranslationItem>
-        <TranslationItem Name="_warningOpenFailed" Property="Text">
-          <Source>Directory does not exist.</Source>
-          <Value>Directorie bestaat niet.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_warningOpenFailedCaption" Property="Text">
-          <Source>Error</Source>
-          <Value>Fout</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Source>Directory</Source>
-          <Value>Directorie</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="PatchGrid">
       <translationItems>
         <TranslationItem Name="FileName" Property="HeaderText">
@@ -6939,6 +6929,10 @@ kunnen wijzigen.</Value>
         <TranslationItem Name="Status" Property="HeaderText">
           <Source>Status</Source>
           <Value>Status</Value>
+        </TranslationItem>
+        <TranslationItem Name="_unableToShowPatchDetails" Property="Text" type="unfinished">
+          <Source>Unable to show details of patch file.</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="authorDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Author</Source>
@@ -7198,6 +7192,10 @@ Als dit een centrale opslagplaats is (zonder werk directory)
           <Source>Tag</Source>
           <Value>Label</Value>
         </TranslationItem>
+        <TranslationItem Name="toolStripMenuItemView" Property="Text">
+          <Source>View</Source>
+          <Value>Bekijk</Value>
+        </TranslationItem>
         <TranslationItem Name="_currentWorkingDirChanges" Property="Text" type="obsolete">
           <Source>Current uncommitted changes</Source>
           <Value>Huidige wijzigingen</Value>
@@ -7291,9 +7289,9 @@ the cascaded context menu:</Source>
     </TranslationCategory>
     <TranslationCategory Name="SshSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>SSH</Source>
-          <Value />
+          <Value>SSH</Value>
         </TranslationItem>
         <TranslationItem Name="AutostartPageant" Property="Text">
           <Source>Automatically start authentication client when a private key is configured for a remote</Source>
@@ -7367,9 +7365,9 @@ voor windows gebruikers.</Value>
     </TranslationCategory>
     <TranslationCategory Name="Strings">
       <translationItems>
-        <TranslationItem Name="_LoadingData" Property="Text" type="unfinished">
+        <TranslationItem Name="_LoadingData" Property="Text">
           <Source>Loading data...</Source>
-          <Value />
+          <Value>Data laden...</Value>
         </TranslationItem>
         <TranslationItem Name="_authorDateText" Property="Text">
           <Source>Author date</Source>
@@ -7399,9 +7397,9 @@ voor windows gebruikers.</Value>
           <Source>Commit index</Source>
           <Value>Commit index</Value>
         </TranslationItem>
-        <TranslationItem Name="_currentUnstagedChanges" Property="Text" type="unfinished">
+        <TranslationItem Name="_currentUnstagedChanges" Property="Text">
           <Source>Current unstaged changes</Source>
-          <Value />
+          <Value>Huidige niet klaargezette wijzigingen</Value>
         </TranslationItem>
         <TranslationItem Name="_dateText" Property="Text">
           <Source>Date</Source>
@@ -7471,6 +7469,10 @@ voor windows gebruikers.</Value>
           <Source>{0} years ago</Source>
           <Value>{0} jaar geleden</Value>
         </TranslationItem>
+        <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
+          <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>
+          <Value>De SSH sleutel kan niet worden geladen. PuTTY is niet juist geconfigureerd.</Value>
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="ViewPullRequestsForm">
@@ -7507,33 +7509,28 @@ voor windows gebruikers.</Value>
           <Source>Could not add remote with name {0} and URL {1}</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text" type="unfinished">
-          <Source>Could not load discussion!
-</Source>
-          <Value />
+        <TranslationItem Name="_strCouldNotLoadDiscussion" Property="Text">
+          <Source>Could not load discussion!</Source>
+          <Value>Kan de discussie niet laden!</Value>
         </TranslationItem>
         <TranslationItem Name="_strError" Property="Text">
           <Source>Error</Source>
           <Value>Fout</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToClosePullRequest" Property="Text" type="unfinished">
-          <Source>Failed to close pull request!
-</Source>
+          <Source>Failed to close pull request!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToFetchPullData" Property="Text" type="unfinished">
-          <Source>Failed to fetch pull data!
-</Source>
+          <Source>Failed to fetch pull data!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiffData" Property="Text" type="unfinished">
-          <Source>Failed to load diff data!
-</Source>
+          <Source>Failed to load diff data!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiscussionItem" Property="Text" type="unfinished">
-          <Source>Failed to post discussion item!
-</Source>
+          <Source>Failed to post discussion item!</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">
@@ -7560,6 +7557,74 @@ Details: Is {1} expected {2}</Source>
         <TranslationItem Name="columnHeader4" Property="Text">
           <Source>Created</Source>
           <Value>Aangemaakt</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormBranch">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
+          <Source>Create Branch</Source>
+          <Value>Vertakking aanmaken</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCheckout">
+      <translationItems>
+        <TranslationItem Name="_noRevisionSelectedMsgBox" Property="Text" type="obsolete">
+          <Source>Select 1 revision to checkout.</Source>
+          <Value>Selecteer 1 revisie om uit te checken</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRevert">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
+          <Source>Revert file changes</Source>
+          <Value>Bestandswijzigingen terugzetten</Value>
+        </TranslationItem>
+        <TranslationItem Name="Revert" Property="Text" type="obsolete">
+          <Source>Revert changes</Source>
+          <Value>Wijzigingen terugzetten</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormRevertCommitSmall">
+      <translationItems>
+        <TranslationItem Name="BranchInfo" Property="Text" type="obsolete">
+          <Source>Revert this commit:</Source>
+          <Value>Maak deze commit ongedaan:</Value>
+        </TranslationItem>
+        <TranslationItem Name="Revert" Property="Text" type="obsolete">
+          <Source>Revert this commit</Source>
+          <Value>Maak deze commit ongedaan:</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="GitLogForm">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
+          <Source>Log</Source>
+          <Value>Logboek</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPageCommandCache" Property="Text" type="obsolete">
+          <Source>Command cache</Source>
+          <Value>Commando cache</Value>
+        </TranslationItem>
+        <TranslationItem Name="tabPageCommandLog" Property="Text" type="obsolete">
+          <Source>Command log</Source>
+          <Value>Commando log</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="Open">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="obsolete">
+          <Source>Open local repository</Source>
+          <Value>Open repository</Value>
+        </TranslationItem>
+        <TranslationItem Name="_warningOpenFailed" Property="Text" type="obsolete">
+          <Source>Directory does not exist.</Source>
+          <Value>Directorie bestaat niet.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

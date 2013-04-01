@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -12,21 +11,21 @@ using ResourceManager.Translation;
 
 namespace Gerrit
 {
-    public class GerritPlugin : GitPluginBase, IGitPluginForRepository
+    public class GerritPlugin : GitPluginBase, IGitPluginForRepository, ITranslate
     {
+        #region Translation
+        private readonly TranslationString _pluginDescription = new TranslationString("Gerrit Code Review");
+        private readonly TranslationString _editGitReview = new TranslationString("Edit .gitreview...");
+        private readonly TranslationString _downloadGerritChange = new TranslationString("Download Gerrit Change");
+        private readonly TranslationString _publishGerritChange = new TranslationString("Publish Gerrit Change");
+        private readonly TranslationString _installCommitMsgHook = new TranslationString("Install Hook");
+        private readonly TranslationString _installCommitMsgHookShortText = new TranslationString("Install commit-msg hook");
+        private readonly TranslationString _installCommitMsgHookMessage = new TranslationString("Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?");
+        private readonly TranslationString _installCommitMsgHookFailed = new TranslationString("Could not download the commit-msg file. Please install the commit-msg hook manually.");
+        #endregion
+
         private static readonly Dictionary<string, bool> _validatedHooks = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
         private static readonly object _syncRoot = new object();
-
-        #region Translation
-        private static readonly TranslationString _pluginDescription = new TranslationString("Gerrit Code Review");
-        private static readonly TranslationString _editGitReview = new TranslationString("Edit .gitreview");
-        private static readonly TranslationString _downloadGerritChange = new TranslationString("Download Gerrit Change");
-        private static readonly TranslationString _publishGerritChange = new TranslationString("Publish Gerrit Change");
-        private static readonly TranslationString _installCommitMsgHook = new TranslationString("Install Hook");
-        private static readonly TranslationString _installCommitMsgHookShortText = new TranslationString("Install commit-msg hook");
-        private static readonly TranslationString _installCommitMsgHookMessage = new TranslationString("Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?");
-        private static readonly TranslationString _installCommitMsgHookFailed = new TranslationString("Could not download the commit-msg file. Please install the commit-msg hook manually.");
-        #endregion
 
         private bool _initialized;
         private ToolStripItem[] _gerritMenuItems;
@@ -34,6 +33,12 @@ namespace Gerrit
         private Form _mainForm;
         private IGitUICommands _gitUiCommands;
         private ToolStripButton _installCommitMsgMenuItem;
+        
+        // public only because of FormTranslate
+        public GerritPlugin()
+        {
+            Translator.Translate(this, GitCommands.Settings.CurrentTranslation);
+        }
 
         public override string Description
         {
@@ -54,6 +59,16 @@ namespace Gerrit
             _gitUiCommands = null;
         }
 
+        public virtual void AddTranslationItems(Translation translation)
+        {
+            TranslationUtl.AddTranslationItemsFromFields(GetType().Name, this, translation);
+        }
+
+        public virtual void TranslateItems(Translation translation)
+        {
+            TranslationUtl.TranslateItemsFromFields(GetType().Name, this, translation);
+        }
+
         void gitUiCommands_PostRegisterPlugin(object sender, GitUIBaseEventArgs e)
         {
             UpdateGerritMenuItems(e);
@@ -71,7 +86,7 @@ namespace Gerrit
 
             // Correct enabled/visibility of our menu/tool strip items.
 
-            bool validWorkingDir = e.GitModule.IsValidGitWorkingDir(e.GitModule.GitWorkingDir);
+            bool validWorkingDir = e.GitModule.IsValidGitWorkingDir();
 
             _gitReviewMenuItem.Enabled = validWorkingDir;
 
@@ -156,11 +171,11 @@ namespace Gerrit
 
             // Create the Edit .gitreview button.
 
-            var settingsMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "settingsToolStripMenuItem1");
-            if (settingsMenu == null)
-                throw new Exception("Cannot find settings menu");
+            var repositoryMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "repositoryToolStripMenuItem");
+            if (repositoryMenu == null)
+                throw new Exception("Cannot find Repository menu");
 
-            var mailMapMenuItem = settingsMenu.DropDownItems.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "editmailmapToolStripMenuItem");
+            var mailMapMenuItem = repositoryMenu.DropDownItems.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "editmailmapToolStripMenuItem");
             if (mailMapMenuItem == null)
                 throw new Exception("Cannot find mailmap menu item");
 
@@ -171,8 +186,8 @@ namespace Gerrit
 
             _gitReviewMenuItem.Click += gitReviewMenuItem_Click;
 
-            settingsMenu.DropDownItems.Insert(
-                settingsMenu.DropDownItems.IndexOf(mailMapMenuItem) + 1,
+            repositoryMenu.DropDownItems.Insert(
+                repositoryMenu.DropDownItems.IndexOf(mailMapMenuItem) + 1,
                 _gitReviewMenuItem
             );
 
