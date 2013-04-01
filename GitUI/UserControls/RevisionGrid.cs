@@ -338,10 +338,11 @@ namespace GitUI
             if (Revisions.RowCount == 0)
                 return;
 
-            var searchResult =
-                reverse
-                    ? SearchInReverseOrder(startIndex, searchString)
-                    : SearchForward(startIndex, searchString);
+            int? searchResult;
+            if (reverse)
+                searchResult = SearchInReverseOrder(startIndex, searchString);
+            else
+                searchResult = SearchForward(startIndex, searchString);
 
             if (!searchResult.HasValue)
                 return;
