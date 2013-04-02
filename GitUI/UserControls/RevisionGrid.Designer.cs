@@ -304,10 +304,10 @@ namespace GitUI
             // copyToClipboardToolStripMenuItem
             // 
             this.copyToClipboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.hashToolStripMenuItem,
             this.messageToolStripMenuItem,
             this.authorToolStripMenuItem,
             this.dateToolStripMenuItem,
-            this.hashToolStripMenuItem,
             this.toolStripSeparator6,
             this.branchNameToolStripMenuItem,
             this.tagToolStripMenuItem});
