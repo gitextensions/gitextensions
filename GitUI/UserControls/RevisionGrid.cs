@@ -1786,7 +1786,7 @@ namespace GitUI
                         var toolStripItem2 = new ToolStripMenuItem(head.Name);
                         ////toolStripItem2.Click += ToolStripItemClickDeleteBranch; // todo
                         pushToDropDown.Items.Add(toolStripItem2);
-                        AddRemotesDropDown(toolStripItem2, CreateRemotesDropDown(head.CompleteName));
+                        AddRemotesDropDown(toolStripItem2, CreateRemotesDropDown(head));
                     }
                 }
 
@@ -1809,7 +1809,7 @@ namespace GitUI
             foreach (var tag in tags)
             {
                 var item = (ToolStripMenuItem)pushToDropDown.Items.Add(tag.Name);
-                AddRemotesDropDown(item, CreateRemotesDropDown(tag.CompleteName));
+                AddRemotesDropDown(item, CreateRemotesDropDown(tag));
             }
 
             deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
@@ -1844,13 +1844,13 @@ namespace GitUI
             RefreshOwnScripts();
         }
 
-        private ContextMenuStrip CreateRemotesDropDown(string sourceRef)
+        private ContextMenuStrip CreateRemotesDropDown(GitHead headToPush)
         {
             var remotesDropDown = new ContextMenuStrip();
             foreach (var remote in Module.GetRemotes(false))
             {
                 var item = remotesDropDown.Items.Add(remote);
-                item.Tag = sourceRef;
+                item.Tag = headToPush;
                 item.Click += ToolStripItemClickPush;
             }
             return remotesDropDown;
@@ -1936,8 +1936,9 @@ namespace GitUI
         private void ToolStripItemClickPush(object sender, EventArgs e)
         {
             var remoteItem = (ToolStripItem)sender;
-            string sourceItem = (string)remoteItem.Tag;
-            Debug.WriteLine(string.Format("{0} / {1}", remoteItem, sourceItem));
+            var sourceItem = (GitHead)remoteItem.Tag;
+            Debug.WriteLine(string.Format("{0} / {1}", remoteItem, sourceItem.CompleteName));
+            UICommands.StartPushDialog(this, remoteItem.Name, sourceItem);
         }
 
         private void CheckoutRevisionToolStripMenuItemClick(object sender, EventArgs e)

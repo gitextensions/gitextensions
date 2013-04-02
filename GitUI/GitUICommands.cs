@@ -1432,7 +1432,7 @@ namespace GitUI
             StartFileHistoryDialog(fileName, null);
         }
 
-        public bool StartPushDialog(IWin32Window owner, bool pushOnShow, out bool pushCompleted)
+        public bool StartPushDialog(IWin32Window owner, bool pushOnShow, out bool pushCompleted, string pushTo = null, GitHead headToPush = null)
         {
             bool pushed = false;
 
@@ -1469,6 +1469,12 @@ namespace GitUI
         public bool StartPushDialog(bool pushOnShow)
         {
             return StartPushDialog(null, pushOnShow);
+        }
+
+        public bool StartPushDialog(IWin32Window owner, string pushTo, GitHead headToPush)
+        {
+            bool pushCompleted;
+            return StartPushDialog(owner, false, out pushCompleted, pushTo, headToPush);
         }
 
         public bool StartApplyPatchDialog(IWin32Window owner, string patchFile)
