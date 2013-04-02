@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -257,7 +258,16 @@ namespace GitUI.CommandsDialogs
                 Diff.ViewPatch(FileChanges, file, "You need to select at least one revision to view diff.");
             }
 
+            if (!Settings.IsMonoRuntime())
+            {
+                if (BuildReportTabPageExtension == null)
+                    BuildReportTabPageExtension = new BuildReportTabPageExtension(tabControl1);
+
+                BuildReportTabPageExtension.FillBuildReport(revision);
+            }
         }
+
+        private BuildReportTabPageExtension BuildReportTabPageExtension;
 
         private void TabControl1SelectedIndexChanged(object sender, EventArgs e)
         {
