@@ -367,6 +367,7 @@ namespace GitUI.CommandsDialogs
             commandsToolStripMenuItem.Visible = false;
             refreshToolStripMenuItem.ShortcutKeys = Keys.None;
             refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.None;
+            _repositoryHostsToolStripMenuItem.Visible = false;
             menuStrip1.Refresh();
         }
 
@@ -2506,8 +2507,6 @@ namespace GitUI.CommandsDialogs
                 ).ToList();
         }
 
-
-
         private void findInDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GitItemStatus selectedItem;
@@ -2523,7 +2522,6 @@ namespace GitUI.CommandsDialogs
             {
                 DiffFiles.SelectedItem = selectedItem;
             }
-
         }
 
         private void dontSetAsDefaultToolStripMenuItem_Click(object sender, EventArgs e)
