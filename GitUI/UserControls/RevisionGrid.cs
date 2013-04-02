@@ -19,6 +19,7 @@ using GitUI.RevisionGridClasses;
 using GitUI.Script;
 using Gravatar;
 using ResourceManager.Translation;
+using System.Diagnostics;
 
 namespace GitUI
 {
@@ -1702,12 +1703,11 @@ namespace GitUI
             var rebaseDropDown = new ContextMenuStrip();
             var renameDropDown = new ContextMenuStrip();
             var pushToDropDown = new ContextMenuStrip();
-            var remotesDropDown = new ContextMenuStrip();
 
             var tagNameCopy = new ContextMenuStrip();
             var branchNameCopy = new ContextMenuStrip();
 
-            var tags = new List<string>();
+            var tags = new List<GitHead>();
 
             foreach (var head in revision.Heads.Where(h => h.IsTag))
             {
@@ -1717,7 +1717,7 @@ namespace GitUI
                 deleteTagDropDown.Items.Add(toolStripItem);
                 tagName.Click += copyToClipBoard;
                 tagNameCopy.Items.Add(tagName);
-                tags.Add(head.Name);
+                tags.Add(head);
             }
 
             //For now there is no action that could be done on currentBranch
@@ -1786,7 +1786,7 @@ namespace GitUI
                         var toolStripItem2 = new ToolStripMenuItem(head.Name);
                         ////toolStripItem2.Click += ToolStripItemClickDeleteBranch; // todo
                         pushToDropDown.Items.Add(toolStripItem2);
-                        AddRemotesDropDown(toolStripItem2, remotesDropDown);
+                        AddRemotesDropDown(toolStripItem2, CreateRemotesDropDown(head.CompleteName));
                     }
                 }
 
@@ -1806,15 +1806,10 @@ namespace GitUI
                 pushToDropDown.Items.Add(new ToolStripSeparator());
             }
 
-            foreach (var remote in Module.GetRemotes(false))
+            foreach (var tag in tags)
             {
-                remotesDropDown.Items.Add(remote);
-            }
-
-            foreach (string tag in tags)
-            {
-                var item = (ToolStripMenuItem)pushToDropDown.Items.Add(tag);
-                AddRemotesDropDown(item, remotesDropDown);
+                var item = (ToolStripMenuItem)pushToDropDown.Items.Add(tag.Name);
+                AddRemotesDropDown(item, CreateRemotesDropDown(tag.CompleteName));
             }
 
             deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
@@ -1847,6 +1842,18 @@ namespace GitUI
             toolStripSeparator6.Enabled = branchNameToolStripMenuItem.Enabled || tagToolStripMenuItem.Enabled;
 
             RefreshOwnScripts();
+        }
+
+        private ContextMenuStrip CreateRemotesDropDown(string sourceRef)
+        {
+            var remotesDropDown = new ContextMenuStrip();
+            foreach (var remote in Module.GetRemotes(false))
+            {
+                var item = remotesDropDown.Items.Add(remote);
+                item.Tag = sourceRef;
+                item.Click += ToolStripItemClickPush;
+            }
+            return remotesDropDown;
         }
 
         private void AddRemotesDropDown(ToolStripMenuItem item, ContextMenuStrip remotesDropDown)
@@ -1924,6 +1931,13 @@ namespace GitUI
                 return;
 
             UICommands.StartRenameDialog(this, toolStripItem.Text);
+        }
+
+        private void ToolStripItemClickPush(object sender, EventArgs e)
+        {
+            var remoteItem = (ToolStripItem)sender;
+            string sourceItem = (string)remoteItem.Tag;
+            Debug.WriteLine(string.Format("{0} / {1}", remoteItem, sourceItem));
         }
 
         private void CheckoutRevisionToolStripMenuItemClick(object sender, EventArgs e)
