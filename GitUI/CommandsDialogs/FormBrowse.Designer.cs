@@ -1797,7 +1797,7 @@ namespace GitUI.CommandsDialogs
             this.settingsToolStripMenuItem3.Image = global::GitUI.Properties.Resources.Icon_71;
             this.settingsToolStripMenuItem3.Name = "settingsToolStripMenuItem3";
             this.settingsToolStripMenuItem3.Size = new System.Drawing.Size(184, 24);
-            this.settingsToolStripMenuItem3.Text = "Settings";
+            this.settingsToolStripMenuItem3.Text = "Settings...";
             this.settingsToolStripMenuItem3.Click += new System.EventHandler(this.SettingsToolStripMenuItem2Click);
             // 
             // helpToolStripMenuItem
