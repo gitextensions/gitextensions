@@ -1701,9 +1701,13 @@ namespace GitUI
             var mergeBranchDropDown = new ContextMenuStrip();
             var rebaseDropDown = new ContextMenuStrip();
             var renameDropDown = new ContextMenuStrip();
+            var pushToDropDown = new ContextMenuStrip();
+            var remotesDropDown = new ContextMenuStrip();
 
             var tagNameCopy = new ContextMenuStrip();
             var branchNameCopy = new ContextMenuStrip();
+
+            var tags = new List<string>();
 
             foreach (var head in revision.Heads.Where(h => h.IsTag))
             {
@@ -1713,6 +1717,7 @@ namespace GitUI
                 deleteTagDropDown.Items.Add(toolStripItem);
                 tagName.Click += copyToClipBoard;
                 tagNameCopy.Items.Add(tagName);
+                tags.Add(head.Name);
             }
 
             //For now there is no action that could be done on currentBranch
@@ -1756,7 +1761,6 @@ namespace GitUI
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
 
-
             foreach (var head in allBranches)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
@@ -1777,11 +1781,17 @@ namespace GitUI
                     toolStripItem = new ToolStripMenuItem(head.Name);
                     toolStripItem.Click += ToolStripItemClickRenameBranch;
                     renameDropDown.Items.Add(toolStripItem); //Add to rename branch
+
+                    {
+                        var toolStripItem2 = new ToolStripMenuItem(head.Name);
+                        ////toolStripItem2.Click += ToolStripItemClickDeleteBranch; // todo
+                        pushToDropDown.Items.Add(toolStripItem2);
+                        AddRemotesDropDown(toolStripItem2, remotesDropDown);
+                    }
                 }
 
                 if (!head.Name.Equals(currentBranch))
                 {
-
                     toolStripItem = new ToolStripMenuItem(head.Name);
                     if (head.IsRemote)
                         toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
@@ -1789,6 +1799,22 @@ namespace GitUI
                         toolStripItem.Click += ToolStripItemClickCheckoutBranch;
                     checkoutBranchDropDown.Items.Add(toolStripItem);
                 }
+            }
+
+            if (tags.Any())
+            {
+                pushToDropDown.Items.Add(new ToolStripSeparator());
+            }
+
+            foreach (var remote in Module.GetRemotes(false))
+            {
+                remotesDropDown.Items.Add(remote);
+            }
+
+            foreach (string tag in tags)
+            {
+                var item = (ToolStripMenuItem)pushToDropDown.Items.Add(tag);
+                AddRemotesDropDown(item, remotesDropDown);
             }
 
             deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
@@ -1809,6 +1835,9 @@ namespace GitUI
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
             renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
 
+            pushToRemoteToolStripMenuItem.DropDown = pushToDropDown;
+            pushToRemoteToolStripMenuItem.Enabled = pushToDropDown.Items.Count > 0;
+
             branchNameToolStripMenuItem.DropDown = branchNameCopy;
             branchNameToolStripMenuItem.Enabled = branchNameCopy.Items.Count > 0;
 
@@ -1818,6 +1847,12 @@ namespace GitUI
             toolStripSeparator6.Enabled = branchNameToolStripMenuItem.Enabled || tagToolStripMenuItem.Enabled;
 
             RefreshOwnScripts();
+        }
+
+        private void AddRemotesDropDown(ToolStripMenuItem item, ContextMenuStrip remotesDropDown)
+        {
+            item.Text = string.Format("'{0}' to", item.Text);
+            item.DropDown = remotesDropDown;
         }
 
         private void ToolStripItemClickDeleteTag(object sender, EventArgs e)
@@ -2456,6 +2491,11 @@ namespace GitUI
                 if (item.DropDown != null && item.DropDown.Items.Count == 1)
                     item.DropDown.Items[0].PerformClick();
             }
+        }
+
+        private void pushToRemoteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
         }
 
         private void goToParentToolStripMenuItem_Click(object sender, EventArgs e)
