@@ -29,38 +29,47 @@ namespace GitUI.CommandsDialogs
             var buildInfoIsAvailable =
                 !(revision == null || revision.BuildStatus == null || string.IsNullOrEmpty(revision.BuildStatus.Url));
 
-            if (buildInfoIsAvailable)
+            tabControl.SuspendLayout();
+
+            try
             {
-                if (this.BuildReportTabPage == null)
+                if (buildInfoIsAvailable)
                 {
-                    CreateBuildReportTabPage(tabControl);
-                }
-
-                var isFavIconMissing = BuildReportTabPage.ImageIndex < 0;
-
-                if (isFavIconMissing || tabControl.SelectedTab == BuildReportTabPage)
-                {
-                    BuildReportWebBrowser.Navigate(revision.BuildStatus.Url);
-
-                    if (isFavIconMissing)
+                    if (this.BuildReportTabPage == null)
                     {
-                        BuildReportWebBrowser.Navigated += BuildReportWebBrowserOnNavigated;
+                        CreateBuildReportTabPage(tabControl);
+                    }
+
+                    var isFavIconMissing = BuildReportTabPage.ImageIndex < 0;
+
+                    if (isFavIconMissing || tabControl.SelectedTab == BuildReportTabPage)
+                    {
+                        BuildReportWebBrowser.Navigate(revision.BuildStatus.Url);
+
+                        if (isFavIconMissing)
+                        {
+                            BuildReportWebBrowser.Navigated += BuildReportWebBrowserOnNavigated;
+                        }
+                    }
+
+                    if (!tabControl.Controls.Contains(BuildReportTabPage))
+                    {
+                        tabControl.Controls.Add(BuildReportTabPage);
                     }
                 }
-
-                if (!tabControl.Controls.Contains(BuildReportTabPage))
+                else
                 {
-                    tabControl.Controls.Add(BuildReportTabPage);
+                    if (BuildReportTabPage != null && tabControl.Controls.Contains(BuildReportTabPage))
+                    {
+                        BuildReportWebBrowser.Stop();
+                        BuildReportWebBrowser.Document.Write(string.Empty);
+                        tabControl.Controls.Remove(BuildReportTabPage);
+                    }
                 }
             }
-            else
+            finally
             {
-                if (BuildReportTabPage != null && tabControl.Controls.Contains(BuildReportTabPage))
-                {
-                    BuildReportWebBrowser.Stop();
-                    BuildReportWebBrowser.Document.Write(string.Empty);
-                    tabControl.Controls.Remove(BuildReportTabPage);
-                }
+                tabControl.ResumeLayout();
             }
         }
 
