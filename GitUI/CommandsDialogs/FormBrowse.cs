@@ -365,6 +365,7 @@ namespace GitUI.CommandsDialogs
             commandsToolStripMenuItem.Visible = false;
             refreshToolStripMenuItem.ShortcutKeys = Keys.None;
             refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.None;
+            _repositoryHostsToolStripMenuItem.Visible = false;
             menuStrip1.Refresh();
         }
 
