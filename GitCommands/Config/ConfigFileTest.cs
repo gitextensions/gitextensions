@@ -57,12 +57,12 @@ namespace GitCommandsTest.Config
             content.AppendLine("key3=value3");
             return content.ToString();
         }
-		
-		private void AddConfigValue(string cfgFile, string section, string value)
-		{
-			string args = "config -f " + "\"" +cfgFile + "\"" + " --add " + section + " " + value;
-			Module.RunGitCmd(args);			
-		}
+        
+        private void AddConfigValue(string cfgFile, string section, string value)
+        {
+            string args = "config -f " + "\"" +cfgFile + "\"" + " --add " + section + " " + value;
+            Module.RunGitCmd(args);			
+        }
 
         [TestMethod]
         public void TestWithInvalidFileName()
@@ -390,9 +390,9 @@ namespace GitCommandsTest.Config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
             ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
-            Assert.IsTrue(configFile.GetConfigSections().Count == 3);
+            Assert.IsTrue(configFile.ConfigSections.Count == 3);
             configFile.RemoveConfigSection("section1");
-            Assert.IsTrue(configFile.GetConfigSections().Count == 2);
+            Assert.IsTrue(configFile.ConfigSections.Count == 2);
             Assert.IsFalse(configFile.HasConfigSection("section1"));
         }
 
@@ -610,46 +610,46 @@ namespace GitCommandsTest.Config
         public void CaseSensitive()
         {
 
-			// create test data
-			{
+            // create test data
+            {
                 ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
                 configFile.SetValue("branch.BranchName1.remote", "origin1");
                 configFile.Save();
 
-				AddConfigValue(GetConfigFileName(), "branch.\"BranchName2\".remote", "origin2");
-				AddConfigValue(GetConfigFileName(), "branch.\"branchName2\".remote", "origin3");
-			}
+                AddConfigValue(GetConfigFileName(), "branch.\"BranchName2\".remote", "origin2");
+                AddConfigValue(GetConfigFileName(), "branch.\"branchName2\".remote", "origin3");
+            }
             // verify
             {
 
-				ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new ConfigFile(GetConfigFileName(), true);
 
-				string remote = "branch.BranchName1.remote";
-				Assert.AreEqual("origin1", configFile.GetValue(remote), remote);
-				
-				remote = "branch.branchName1.remote";
-				Assert.AreNotEqual("origin1", configFile.GetValue(remote), remote);
-				
-				remote = "branch \"BranchName1\".remote";
-				Assert.AreEqual("origin1", configFile.GetValue(remote), remote);
-				
-				remote = "branch \"BranchName2\".remote";
-				Assert.AreEqual("origin2", configFile.GetValue(remote), remote);
-				
-				remote = "branch \"branchName2\".remote";
-				Assert.AreNotEqual("origin2", configFile.GetValue(remote), remote);
-				
-				remote = "branch \"branchName2\".remote";
-				Assert.AreEqual("origin3", configFile.GetValue(remote), remote);
-				
-				remote = "branch \"branchname2\".remote";
-				Assert.AreEqual("", configFile.GetValue(remote), remote);
-				
+                string remote = "branch.BranchName1.remote";
+                Assert.AreEqual("origin1", configFile.GetValue(remote), remote);
+                
+                remote = "branch.branchName1.remote";
+                Assert.AreNotEqual("origin1", configFile.GetValue(remote), remote);
+                
+                remote = "branch \"BranchName1\".remote";
+                Assert.AreEqual("origin1", configFile.GetValue(remote), remote);
+                
+                remote = "branch \"BranchName2\".remote";
+                Assert.AreEqual("origin2", configFile.GetValue(remote), remote);
+                
+                remote = "branch \"branchName2\".remote";
+                Assert.AreNotEqual("origin2", configFile.GetValue(remote), remote);
+                
+                remote = "branch \"branchName2\".remote";
+                Assert.AreEqual("origin3", configFile.GetValue(remote), remote);
+                
+                remote = "branch \"branchname2\".remote";
+                Assert.AreEqual("", configFile.GetValue(remote), remote);
+                
             }
         }
-		
-		
-		/// <summary>
+        
+        
+        /// <summary>
         /// Always delete the test config file after each test
         /// </summary>
         [TestCleanup]
