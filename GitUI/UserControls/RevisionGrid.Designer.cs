@@ -304,10 +304,10 @@ namespace GitUI
             // copyToClipboardToolStripMenuItem
             // 
             this.copyToClipboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.hashToolStripMenuItem,
             this.messageToolStripMenuItem,
             this.authorToolStripMenuItem,
             this.dateToolStripMenuItem,
-            this.hashToolStripMenuItem,
             this.toolStripSeparator6,
             this.branchNameToolStripMenuItem,
             this.tagToolStripMenuItem});
@@ -315,6 +315,7 @@ namespace GitUI
             this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
             this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.copyToClipboardToolStripMenuItem.Text = "Copy to clipboard";
+            this.copyToClipboardToolStripMenuItem.DropDownOpened += new System.EventHandler(this.copyToClipboardToolStripMenuItem_DropDownOpened);
             // 
             // messageToolStripMenuItem
             // 
