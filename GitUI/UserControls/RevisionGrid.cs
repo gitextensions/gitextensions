@@ -1938,7 +1938,7 @@ namespace GitUI
             var remoteItem = (ToolStripItem)sender;
             var sourceItem = (GitHead)remoteItem.Tag;
             Debug.WriteLine(string.Format("{0} / {1}", remoteItem, sourceItem.CompleteName));
-            UICommands.StartPushDialog(this, remoteItem.Name, sourceItem);
+            UICommands.StartPushDialog(this, remoteItem.Text, sourceItem);
         }
 
         private void CheckoutRevisionToolStripMenuItemClick(object sender, EventArgs e)

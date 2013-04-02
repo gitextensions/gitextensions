@@ -1440,6 +1440,16 @@ namespace GitUI
             {
                 using (var form = new FormPush(this))
                 {
+                    if (pushTo != null)
+                    {
+                        form.SetSelectedRemote(pushTo);
+                    }
+
+                    if (headToPush != null)
+                    {
+                        form.SetSelectedHeadToPush(headToPush);
+                    }
+
                     DialogResult dlgResult;
                     if (pushOnShow)
                         dlgResult = form.PushAndShowDialogWhenFailed(owner);
