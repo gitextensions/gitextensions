@@ -62,12 +62,12 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         {
             GitModule module = new GitModule(Directory.Text);
             Branch.DisplayMember = "Name";
-            IList<GitHead> heads;
+            IList<GitRef> heads;
             if (module.IsValidGitWorkingDir())
-                heads = module.GetHeads(false);
+                heads = module.GetRefs(false);
             else
-                heads = new List<GitHead>();
-            heads.Insert(0, GitHead.NoHead(module));
+                heads = new List<GitRef>();
+            heads.Insert(0, GitRef.NoHead(module));
             Branch.DataSource = heads;
         }
 

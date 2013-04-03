@@ -365,6 +365,7 @@ namespace GitUI.CommandsDialogs
             commandsToolStripMenuItem.Visible = false;
             refreshToolStripMenuItem.ShortcutKeys = Keys.None;
             refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.None;
+            _repositoryHostsToolStripMenuItem.Visible = false;
             menuStrip1.Refresh();
         }
 
@@ -1253,15 +1254,15 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 { 
-                    bSilent = true;
-                    Module.LastPullActionToPullMerge();
+                    bSilent = (sender == toolStripButtonPull);
+                    Module.LastPullActionToFormPullAction();
                 }
             }
             else
             {
                 bSilent = sender != pullToolStripMenuItem1;
                 RefreshPullIcon();
-                Module.LastPullActionToPullMerge();
+                Module.LastPullActionToFormPullAction();
             }
 
             UICommands.StartPullDialog(this, bSilent);
@@ -2065,7 +2066,7 @@ namespace GitUI.CommandsDialogs
         private void CurrentBranchDropDownOpening(object sender, EventArgs e)
         {
             branchSelect.DropDownItems.Clear();
-            foreach (var branch in Module.GetHeads(false))
+            foreach (var branch in Module.GetRefs(false))
             {
                 var toolStripItem = branchSelect.DropDownItems.Add(branch.Name);
                 toolStripItem.Click += BranchSelectToolStripItem_Click;
@@ -2473,24 +2474,24 @@ namespace GitUI.CommandsDialogs
             TranslationUtl.TranslateItemsFromFields(Name, _filterBranchHelper, translation);
         }
 
-        private IList<GitItemStatus> FindDiffFilesMatches(string name)
-        {
-            var candidates = DiffFiles.GitItemStatuses;
-
-            string nameAsLower = name.ToLower();
-
-            return candidates.Where(item =>
-                {
-                    return item.Name != null && item.Name.ToLower().Contains(nameAsLower)
-                        || item.OldName != null && item.OldName.ToLower().Contains(nameAsLower);
-                }
-                ).ToList();
-        }
-
-
-
         private void findInDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
+            var candidates = DiffFiles.GitItemStatuses;
+
+            Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>
+            {
+
+                string nameAsLower = name.ToLower();
+
+                return candidates.Where(item =>
+                    {
+                        return item.Name != null && item.Name.ToLower().Contains(nameAsLower)
+                            || item.OldName != null && item.OldName.ToLower().Contains(nameAsLower);
+                    }
+                    ).ToList();
+            };
+
             GitItemStatus selectedItem;
             using (var searchWindow = new SearchWindow<GitItemStatus>(FindDiffFilesMatches)
             {
@@ -2504,7 +2505,6 @@ namespace GitUI.CommandsDialogs
             {
                 DiffFiles.SelectedItem = selectedItem;
             }
-
         }
 
         private void dontSetAsDefaultToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2537,9 +2537,9 @@ namespace GitUI.CommandsDialogs
                 Module.LastPullAction = Settings.PullAction.None;
             PullToolStripMenuItemClick(sender, e);
 
-            //restore Settings.PullMerge value
+            //restore Settings.FormPullAction value
             if (Settings.DonSetAsLastPullAction)
-                Module.LastPullActionToPullMerge();
+                Module.LastPullActionToFormPullAction();
         }
 
         private void RefreshPullIcon()
@@ -2582,10 +2582,10 @@ namespace GitUI.CommandsDialogs
             bool pullCompelted;
 
             UICommands.StartPullDialog(this, true, out pullCompelted, true);
-            
-            //restore Settings.PullMerge value
+
+            //restore Settings.FormPullAction value
             if (Settings.DonSetAsLastPullAction)
-                Module.LastPullActionToPullMerge();
+                Module.LastPullActionToFormPullAction();
         }
 
         private void resetFileToAToolStripMenuItem_Click(object sender, EventArgs e)

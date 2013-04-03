@@ -74,8 +74,7 @@
             // 
             // GotoUserManualControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.flowLayoutPanel1);
             this.Name = "GotoUserManualControl";
             this.Size = new System.Drawing.Size(60, 18);
