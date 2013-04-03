@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs
             try
             {
                 Cursor = Cursors.Default;
-                branchListLoader.Cancel();
+                _branchListLoader.Cancel();
 
                 var dirTo = _NO_TRANSLATE_To.Text;
                 if (!dirTo.EndsWith(Settings.PathSeparator.ToString()) && !dirTo.EndsWith(Settings.PathSeparatorWrong.ToString()))
@@ -259,7 +259,7 @@ namespace GitUI.CommandsDialogs
             ToTextUpdate(sender, e);
         }
 
-        private AsyncLoader branchListLoader = new AsyncLoader();
+        private readonly AsyncLoader _branchListLoader = new AsyncLoader();
 
         private void UpdateBranches(IList<GitRef> branchList)
         {
@@ -277,7 +277,7 @@ namespace GitUI.CommandsDialogs
             Branches.DisplayMember = "LocalName";
             string from = _NO_TRANSLATE_From.Text;
             Cursor = Cursors.AppStarting;
-            branchListLoader.Load(() => { return Module.GetRemoteHeads(from, false, true); }, UpdateBranches);
+            _branchListLoader.Load(() => Module.GetRemoteRefs(from, false, true), UpdateBranches);
         }
     }
 }

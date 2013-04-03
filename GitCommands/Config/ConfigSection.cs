@@ -130,9 +130,9 @@ namespace GitCommands.Config
                 sc = StringComparison.Ordinal;
             else
                 sc = StringComparison.OrdinalIgnoreCase;
-            
+
             return
-                string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) && 
+                string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) &&
                 string.Equals(SubSection, other.SubSection, sc);
         }
     }

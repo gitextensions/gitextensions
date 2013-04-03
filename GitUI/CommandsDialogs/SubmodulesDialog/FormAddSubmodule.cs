@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
             Branch.DisplayMember = "Name";
             IList<GitRef> heads;
             if (module.IsValidGitWorkingDir())
-                heads = module.GetHeads(false);
+                heads = module.GetRefs(false);
             else
                 heads = new List<GitRef>();
             heads.Insert(0, GitRef.NoHead(module));

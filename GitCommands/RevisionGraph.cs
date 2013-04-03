@@ -63,7 +63,7 @@ namespace GitCommands
 
         private const string CommitBegin = "<(__BEGIN_COMMIT__)>"; // Something unlikely to show up in a comment
 
-        private Dictionary<string, List<GitRef>> _heads;
+        private Dictionary<string, List<GitRef>> _refs;
 
         private enum ReadStep
         {
@@ -129,7 +129,7 @@ namespace GitCommands
         private void ProccessGitLog(CancellationToken taskState)
         {
             RevisionCount = 0;
-            _heads = GetHeads().ToDictionaryOfList(head => head.Guid);
+            _refs = GetRefs().ToDictionaryOfList(head => head.Guid);
 
             string formatString =
                 /* <COMMIT>       */ CommitBegin + "%n" +
@@ -234,23 +234,23 @@ namespace GitCommands
                 Exited(this, EventArgs.Empty);            
         }
 
-        private IList<GitRef> GetHeads()
+        private IList<GitRef> GetRefs()
         {
-            var result = _module.GetHeads(true);
+            var result = _module.GetRefs(true);
             bool validWorkingDir = _module.IsValidGitWorkingDir();
             _selectedBranchName = validWorkingDir ? _module.GetSelectedBranch() : string.Empty;
-            GitRef selectedHead = result.FirstOrDefault(head => head.Name == _selectedBranchName);
+            GitRef selectedRef = result.FirstOrDefault(head => head.Name == _selectedBranchName);
 
-            if (selectedHead != null)
+            if (selectedRef != null)
             {
-                selectedHead.Selected = true;
+                selectedRef.Selected = true;
 
                 var localConfigFile = _module.GetLocalConfig();
 
                 var selectedHeadMergeSource =
                     result.FirstOrDefault(head => head.IsRemote
-                                        && selectedHead.GetTrackingRemote(localConfigFile) == head.Remote
-                                        && selectedHead.GetMergeWith(localConfigFile) == head.LocalName);
+                                        && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
+                                        && selectedRef.GetMergeWith(localConfigFile) == head.LocalName);
 
                 if (selectedHeadMergeSource != null)
                     selectedHeadMergeSource.SelectedHeadMergeSource = true;
@@ -316,9 +316,9 @@ namespace GitCommands
                 case ReadStep.Hash:
                     _revision.Guid = line;
 
-                    List<GitRef> headList;
-                    if (_heads.TryGetValue(_revision.Guid, out headList))
-                        _revision.Heads.AddRange(headList);
+                    List<GitRef> gitRefs;
+                    if (_refs.TryGetValue(_revision.Guid, out gitRefs))
+                        _revision.Refs.AddRange(gitRefs);
                     
                     break;
 

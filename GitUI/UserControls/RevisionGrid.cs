@@ -629,12 +629,12 @@ namespace GitUI
             Revision.AuthorDate = date;
             DateTime.TryParse(Infos[4], out date);
             Revision.CommitDate = date;
-            var heads = Module.GetHeads(true, true);
-            foreach (var head in heads)
+            var refs = Module.GetRefs(true, true);
+            foreach (var gitRef in refs)
             {
-                if (head.Guid.Equals(Revision.Guid))
+                if (gitRef.Guid.Equals(Revision.Guid))
                 {
-                    Revision.Heads.Add(head);
+                    Revision.Refs.Add(gitRef);
                 }
             }
             return Revision;
@@ -1130,11 +1130,11 @@ namespace GitUI
                                     new LinearGradientBrush(cellRectangle,
                                                             Color.FromArgb(255, 220, 220, 231),
                                                             Color.FromArgb(255, 240, 240, 250), 90, false), cellRectangle);
-                                    using (var pen = new Pen(Color.FromArgb(255, 200, 200, 200), 1))
-                                    {
-                                        e.Graphics.DrawRectangle(pen, cellRectangle);
-                            }
+                                using (var pen = new Pen(Color.FromArgb(255, 200, 200, 200), 1))
+                                {
+                                    e.Graphics.DrawRectangle(pen, cellRectangle);
                                 }
+                            }
                             else
                             {
                                 e.Graphics.FillRectangle(
@@ -1144,27 +1144,27 @@ namespace GitUI
                             }
 
                             if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
-                                {
-                                    using (var penSelectionBackColor = new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1))
-                                        e.Graphics.DrawRectangle(penSelectionBackColor, cellRectangle);
-                        }
+                            {
+                                using (var penSelectionBackColor = new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1))
+                                    e.Graphics.DrawRectangle(penSelectionBackColor, cellRectangle);
                             }
+                        }
 
                         float offset = baseOffset;
-                        var heads = revision.Heads;
+                        var gitRefs = revision.Refs;
 
-                        if (heads.Count > 0)
+                        if (gitRefs.Count > 0)
                         {
-                            heads.Sort((left, right) =>
-                                           {
-                                               if (left.IsTag != right.IsTag)
-                                                   return right.IsTag.CompareTo(left.IsTag);
-                                               if (left.IsRemote != right.IsRemote)
-                                                   return left.IsRemote.CompareTo(right.IsRemote);
-                                               return left.Name.CompareTo(right.Name);
-                                           });
+                            gitRefs.Sort((left, right) =>
+                                       {
+                                           if (left.IsTag != right.IsTag)
+                                               return right.IsTag.CompareTo(left.IsTag);
+                                           if (left.IsRemote != right.IsRemote)
+                                               return left.IsRemote.CompareTo(right.IsRemote);
+                                           return left.Name.CompareTo(right.Name);
+                                       });
 
-                                foreach (var head in heads.Where(head => (!head.IsRemote || ShowRemoteBranches.Checked)))
+                            foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || ShowRemoteBranches.Checked)))
                             {
                                 Font refsFont;
 
@@ -1182,30 +1182,29 @@ namespace GitUI
                                     refsFont = RefsFont;
                                 }
 
-                                Color headColor = GetHeadColor(head);
+                                Color headColor = GetHeadColor(gitRef);
                                 Brush textBrush = new SolidBrush(headColor);
 
                                 string headName;
-                                PointF location;
 
                                 if (IsCardLayout())
                                 {
-                                    headName = head.Name;
+                                    headName = gitRef.Name;
                                     offset += e.Graphics.MeasureString(headName, refsFont).Width + 6;
-                                    location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
+                                    PointF location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
                                     var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
                                                          e.Graphics.MeasureString(headName, RefsFont).Height);
-                                        e.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
-                                                             location.Y - 1, size.Width + 3, size.Height + 2);
-                                        e.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
-                                                             location.Y - 1, size.Width + 3, size.Height + 2);
+                                    e.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
+                                                         location.Y - 1, size.Width + 3, size.Height + 2);
+                                    e.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
+                                                         location.Y - 1, size.Width + 3, size.Height + 2);
                                     e.Graphics.DrawString(headName, refsFont, textBrush, location);
                                 }
                                 else
                                 {
                                     headName = IsFilledBranchesLayout()
-                                                   ? head.Name
-                                                   : string.Concat("[", head.Name, "] ");
+                                                       ? gitRef.Name
+                                                       : string.Concat("[", gitRef.Name, "] ");
 
                                     var headBounds = AdjustCellBounds(e.CellBounds, offset);
                                     SizeF textSize = e.Graphics.MeasureString(headName, refsFont);
@@ -1221,8 +1220,8 @@ namespace GitUI
                                                                                headBounds.Y,
                                                                                RoundToEven(textSize.Width + 3),
                                                                                RoundToEven(textSize.Height), 3,
-                                                                               head.Selected,
-                                                                               head.SelectedHeadMergeSource);
+                                                                               gitRef.Selected,
+                                                                               gitRef.SelectedHeadMergeSource);
 
                                         offset += extraOffset;
                                         headBounds.Offset((int)(extraOffset + 1), 0);
@@ -1355,15 +1354,15 @@ namespace GitUI
                                  cellBounds.Width - (int)offset, cellBounds.Height);
         }
 
-        private static Color GetHeadColor(GitRef head)
+        private static Color GetHeadColor(GitRef gitRef)
         {
-            return head.IsTag
-                       ? Settings.TagColor
-                       : head.IsHead
-                             ? Settings.BranchColor
-                             : head.IsRemote
-                                   ? Settings.RemoteBranchColor
-                                   : Settings.OtherTagColor;
+            if (gitRef.IsTag)
+                return Settings.TagColor;
+            if (gitRef.IsHead)
+                return Settings.BranchColor;
+            if (gitRef.IsRemote)
+                return Settings.RemoteBranchColor;
+            return Settings.OtherTagColor;
         }
 
         private float RoundToEven(float value)
@@ -1705,7 +1704,7 @@ namespace GitUI
             var tagNameCopy = new ContextMenuStrip();
             var branchNameCopy = new ContextMenuStrip();
 
-            foreach (var head in revision.Heads.Where(h => h.IsTag))
+            foreach (var head in revision.Refs.Where(h => h.IsTag))
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
                 ToolStripItem tagName = new ToolStripMenuItem(head.Name);
@@ -1717,7 +1716,7 @@ namespace GitUI
 
             //For now there is no action that could be done on currentBranch
             string currentBranch = Module.GetSelectedBranch();
-            var allBranches = revision.Heads.Where(h => !h.IsTag && (h.IsHead || h.IsRemote)).ToArray();
+            var allBranches = revision.Refs.Where(h => !h.IsTag && (h.IsHead || h.IsRemote)).ToArray();
             var localBranches = allBranches.Where(b => !b.IsRemote);
 
             var branchesWithNoIdenticalRemotes = allBranches.Where(
@@ -1986,7 +1985,7 @@ namespace GitUI
             var dataType = DvcsGraph.DataType.Normal;
             if (rev.Guid == FiltredCurrentCheckout)
                 dataType = DvcsGraph.DataType.Active;
-            else if (rev.Heads.Count > 0)
+            else if (rev.Refs.Count > 0)
                 dataType = DvcsGraph.DataType.Special;
 
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);

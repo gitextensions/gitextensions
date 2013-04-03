@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
@@ -248,7 +249,7 @@ namespace GitUI.Script
                                                              List<GitRef> selectedBranches, List<GitRef> selectedTags)
         {
             GitRevision selectedRevision = RevisionGrid.GetRevision(RevisionGrid.LastRow);
-            foreach (GitRef head in selectedRevision.Heads)
+            foreach (GitRef head in selectedRevision.Refs)
             {
                 if (head.IsTag)
                     selectedTags.Add(head);
@@ -275,35 +276,30 @@ namespace GitUI.Script
         {
             if (option.StartsWith("{c") && currentRevision == null)
             {
-                IList<GitRef> heads;
+                IList<GitRef> refs;
 
                 if (RevisionGrid == null)
                 {
-                    heads = new List<GitRef>();
                     string currentRevisionGuid = aModule.GetCurrentCheckout();
-                    foreach (GitRef head in aModule.GetHeads(true, true))
-                    {
-                        if (head.Guid == currentRevisionGuid)
-                            heads.Add(head);
+                    refs = aModule.GetRefs(true, true).Where(gitRef => gitRef.Guid == currentRevisionGuid).ToList();
                     }
-                }
                 else
                 {
                     currentRevision = RevisionGrid.GetCurrentRevision();
-                    heads = currentRevision.Heads;
+                    refs = currentRevision.Refs;
                 }
 
-                foreach (GitRef head in heads)
+                foreach (GitRef gitRef in refs)
                 {
-                    if (head.IsTag)
-                        currentTags.Add(head);
-                    else if (head.IsHead || head.IsRemote)
+                    if (gitRef.IsTag)
+                        currentTags.Add(gitRef);
+                    else if (gitRef.IsHead || gitRef.IsRemote)
                     {
-                        currentBranches.Add(head);
-                        if (head.IsRemote)
-                            currentRemoteBranches.Add(head);
+                        currentBranches.Add(gitRef);
+                        if (gitRef.IsRemote)
+                            currentRemoteBranches.Add(gitRef);
                         else
-                            currentLocalBranches.Add(head);
+                            currentLocalBranches.Add(gitRef);
                     }
                 }
             }

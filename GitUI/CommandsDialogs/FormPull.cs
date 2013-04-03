@@ -66,9 +66,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
         #endregion
 
-        private IList<GitRef> _heads;
         public bool ErrorOccurred { get; private set; }
-        private string branch;
+        private IList<GitRef> _heads;
+        private string _branch;
 
         private FormPull()
             : this(null, null)
@@ -102,8 +102,8 @@ namespace GitUI.CommandsDialogs
         {            
             UpdateRemotesList();
 
-            branch = Module.GetSelectedBranch();
-            string currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", branch));
+            _branch = Module.GetSelectedBranch();
+            string currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", _branch));
             if (currentBranchRemote.IsNullOrEmpty() && _NO_TRANSLATE_Remotes.Items.Count >= 3)
             {
                 IList<string> remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
@@ -112,7 +112,7 @@ namespace GitUI.CommandsDialogs
             }
             else
                 _NO_TRANSLATE_Remotes.Text = currentBranchRemote;
-            localBranch.Text = branch;
+            localBranch.Text = _branch;
         }
 
         private void UpdateRemotesList()
@@ -165,7 +165,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (PullFromUrl.Checked)
                 {
-                    _heads = Module.GetHeads(false, true);
+                    _heads = Module.GetRefs(false, true);
                 }
                 else
                 {
@@ -178,7 +178,7 @@ namespace GitUI.CommandsDialogs
                     // doesn't return heads that are new on the server. This can be updated using
                     // update branch info in the manage remotes dialog.
                     _heads = new List<GitRef>();
-                    foreach (var head in Module.GetHeads(true, true))
+                    foreach (var head in Module.GetRefs(true, true))
                     {
                         if (!head.IsRemote ||
                             !head.Name.StartsWith(_NO_TRANSLATE_Remotes.Text, StringComparison.CurrentCultureIgnoreCase))
@@ -421,7 +421,7 @@ namespace GitUI.CommandsDialogs
 
         private FormProcess CreateFormProcess(string source)
         {
-            var curLocalBranch = branch == localBranch.Text ? null : localBranch.Text;
+            var curLocalBranch = _branch == localBranch.Text ? null : localBranch.Text;
             if (Fetch.Checked)
             {
                 return new FormRemoteProcess(Module, Module.FetchCmd(source, Branches.Text, curLocalBranch, GetTagsArg()));
@@ -441,9 +441,9 @@ namespace GitUI.CommandsDialogs
 
         private string CalculateLocalBranch()
         {
-            if (branch.Equals(GitModule.DetachedBranch, StringComparison.Ordinal) || string.IsNullOrEmpty(Branches.Text))
-                branch = null;
-            return branch;
+            if (_branch.Equals(GitModule.DetachedBranch, StringComparison.Ordinal) || string.IsNullOrEmpty(Branches.Text))
+                _branch = null;
+            return _branch;
         }
 
         private string CalculateSource()
@@ -456,7 +456,7 @@ namespace GitUI.CommandsDialogs
 
         private bool MergeCommitExists()
         {
-            return Module.ExistsMergeCommit(CalculateRemoteBranchName(), branch);
+            return Module.ExistsMergeCommit(CalculateRemoteBranchName(), _branch);
         }
 
         private string CalculateRemoteBranchName()
@@ -474,7 +474,7 @@ namespace GitUI.CommandsDialogs
             {
                 return Branches.Text;
             }
-            string remoteBranchName = Module.GetSetting(string.Format("branch.{0}.merge", branch));
+            string remoteBranchName = Module.GetSetting(string.Format("branch.{0}.merge", _branch));
             if (!remoteBranchName.IsNullOrEmpty())
                 remoteBranchName = Module.RunGitCmd(string.Format("name-rev --name-only \"{0}\"", remoteBranchName)).Trim();
             return remoteBranchName;
@@ -609,7 +609,7 @@ namespace GitUI.CommandsDialogs
         private void MergeCheckedChanged(object sender, EventArgs e)
         {
             localBranch.Enabled = false;
-            localBranch.Text = branch;
+            localBranch.Text = _branch;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullMerge;
             helpImageDisplayUserControl1.Image2 = Resources.HelpPullMergeFastForward;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
@@ -621,7 +621,7 @@ namespace GitUI.CommandsDialogs
         private void RebaseCheckedChanged(object sender, EventArgs e)
         {
             localBranch.Enabled = false;
-            localBranch.Text = branch;
+            localBranch.Text = _branch;
             helpImageDisplayUserControl1.Image1 = Resources.HelpPullRebase;
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = false;

@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs
             var selectedHead = Module.GetSelectedBranch();
             currentBranchLabel.Text = selectedHead;
 
-            Branches.BranchesToSelect = Module.GetHeads(true, true);
+            Branches.BranchesToSelect = Module.GetRefs(true, true);
 
             if (_defaultBranch != null)
                 Branches.SetSelectedText(_defaultBranch);

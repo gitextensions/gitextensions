@@ -203,7 +203,8 @@ namespace GitUI.CommandsDialogs
                 //(as far as we know since we are disconnected....)
                 DefaultPushConfig defaultPush = GetDefaultPush(SelectedRemote);
                 if (defaultPush == null || RemoteBranch.Text != defaultPush.RemoteBranch &&
-                    !Module.GetHeads(true, true).Any(x => x.Remote == SelectedRemote && x.LocalName == RemoteBranch.Text))
+                    !Module.GetRefs(true, true).Any(x => x.Remote == SelectedRemote && x.LocalName == RemoteBranch.Text))
+                {
                     //Ask if this is really what the user wants
                     if (!Settings.DontConfirmPushNewBranch)
                         if (MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
@@ -211,6 +212,7 @@ namespace GitUI.CommandsDialogs
                         {
                             return false;
                         }
+                }
             }
 
             if (PushToUrl.Checked)
@@ -459,7 +461,7 @@ namespace GitUI.CommandsDialogs
                     curBranch = HeadText;
             }
 
-            foreach (var head in Module.GetHeads(false, true))
+            foreach (var head in Module.GetRefs(false, true))
                 _NO_TRANSLATE_Branch.Items.Add(head);
 
             LocalBranch = curBranch;
@@ -478,7 +480,7 @@ namespace GitUI.CommandsDialogs
             if (!string.IsNullOrEmpty(LocalBranch))
                 RemoteBranch.Items.Add(LocalBranch);
 
-            foreach (var head in Module.GetHeads(false, true))
+            foreach (var head in Module.GetRefs(false, true))
                 if (!RemoteBranch.Items.Contains(head))
                     RemoteBranch.Items.Add(head);
         }
@@ -619,7 +621,7 @@ namespace GitUI.CommandsDialogs
         {
             TagComboBox.DisplayMember = "Name";
             /// var tags = Module.GetTagHeads(GitModule.GetTagHeadsOption.OrderByCommitDateDescending); // comment out to sort by commit date
-            var tags = Module.GetTagHeads(GitModule.GetTagHeadsSortOrder.ByName);
+            var tags = Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByName);
             TagComboBox.DataSource = tags;
         }
 
@@ -660,8 +662,8 @@ namespace GitUI.CommandsDialogs
             if (remote == "")
                 return;
 
-            var localHeads = Module.GetHeads(false, true);
-            var remoteHeads = Module.GetRemoteHeads(remote, false, true);
+            var localHeads = Module.GetRefs(false, true);
+            var remoteHeads = Module.GetRemoteRefs(remote, false, true);
 
             // Add all the local branches.
             foreach (var head in localHeads)

@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             comboBoxTags.Text = Strings.GetLoadingData();
             _tagsLoader.Load(
-                () => Module.GetTagHeads(GitModule.GetTagHeadsSortOrder.ByCommitDateDescending).ToList(),
+                () => Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByCommitDateDescending).ToList(),
                 list =>
                 {
                     comboBoxTags.Text = string.Empty;
@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void comboBoxTags_TextChanged(object sender, EventArgs e)
         {
-            // TODO: try to get GitHead and then CompleteName
+            // TODO: try to get GitRef and then CompleteName
             _selectedRevision = Module.RevParse(comboBoxTags.Text);
         }
 
@@ -86,7 +86,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             comboBoxBranches.Text = Strings.GetLoadingData();
             _branchesLoader.Load(
-                () => Module.GetHeads(false).ToList(),
+                () => Module.GetRefs(false).ToList(),
                 list =>
                 {
                     comboBoxBranches.Text = string.Empty;
@@ -102,7 +102,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void comboBoxBranches_TextChanged(object sender, EventArgs e)
         {
-            // TODO: try to get GitHead and then CompleteName
+            // TODO: try to get GitRef and then CompleteName
             _selectedRevision = Module.RevParse(comboBoxBranches.Text);
         }
 

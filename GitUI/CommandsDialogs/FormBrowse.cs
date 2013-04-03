@@ -2082,7 +2082,7 @@ namespace GitUI.CommandsDialogs
         private void CurrentBranchDropDownOpening(object sender, EventArgs e)
         {
             branchSelect.DropDownItems.Clear();
-            foreach (var branch in Module.GetHeads(false))
+            foreach (var branch in Module.GetRefs(false))
             {
                 var toolStripItem = branchSelect.DropDownItems.Add(branch.Name);
                 toolStripItem.Click += BranchSelectToolStripItem_Click;

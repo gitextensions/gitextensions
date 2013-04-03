@@ -23,7 +23,8 @@ namespace GitCommands
        
         public GitModule Module { get; private set; }
 
-        public GitRef(GitModule module, string guid, string completeName) : this(module, guid, completeName, string.Empty) { }
+        public GitRef(GitModule module, string guid, string completeName)
+            : this(module, guid, completeName, string.Empty) { }
 
         public GitRef(GitModule module, string guid, string completeName, string remote)
         {
@@ -96,8 +97,8 @@ namespace GitCommands
 
         /// <summary>
         /// This method is a faster than the property above. The property reads the config file
-        /// every time it is accessed. This method accepts a configfile what makes it faster when loading
-        /// the revisiongraph.
+        /// every time it is accessed. This method accepts a config file what makes it faster when loading
+        /// the revision graph.
         /// </summary>
         public string GetTrackingRemote(ConfigFile configFile)
         {
@@ -134,11 +135,6 @@ namespace GitCommands
         public static GitRef NoHead(GitModule module)
         {
             return new GitRef(module, null, "");
-        }
-
-        public static GitRef AllHeads(GitModule module)
-        {
-            return new GitRef(module, null, "*");
         }
 
         #region IGitItem Members
