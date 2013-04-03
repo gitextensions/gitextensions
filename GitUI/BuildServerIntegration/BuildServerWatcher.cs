@@ -9,7 +9,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
-using GitCommands;
 using GitUI.HelperDialogs;
 using GitUI.RevisionGridClasses;
 using GitUIPluginInterfaces;
@@ -227,18 +226,6 @@ namespace GitUI.BuildServerIntegration
                         buildInfo.StartDate >= rowData.BuildStatus.StartDate)
                     {
                         rowData.BuildStatus = buildInfo;
-
-                        // Ensure that the Build Report tab page visibility is refreshed.
-                        if (revisionGrid.GetSelectedRevisions().Contains(rowData))
-                        {
-                            // HACK: Since there is no INotifyPropertyChanged mechanism in Revision,
-                            // we have to rely on the knowledge that FormBrowse listens to the 
-                            // SelectionChanged event of RevisionGrid in order to show/hide
-                            // the Build Report tab page.
-                            var selectedIds = revisions.SelectedIds;
-                            revisions.ClearSelection();
-                            revisions.SelectedIds = selectedIds;
-                        }
 
                         revisions.UpdateCellValue(4, row);
                         revisions.UpdateCellValue(5, row);
