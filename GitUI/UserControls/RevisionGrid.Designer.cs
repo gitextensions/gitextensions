@@ -407,7 +407,6 @@ namespace GitUI
             this.pushToRemoteToolStripMenuItem.Name = "pushToRemoteToolStripMenuItem";
             this.pushToRemoteToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.pushToRemoteToolStripMenuItem.Text = "Push";
-            this.pushToRemoteToolStripMenuItem.Click += new System.EventHandler(this.pushToRemoteToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 

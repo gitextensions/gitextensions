@@ -1784,7 +1784,8 @@ namespace GitUI
 
                     {
                         var toolStripItem2 = new ToolStripMenuItem(head.Name);
-                        ////toolStripItem2.Click += ToolStripItemClickDeleteBranch; // todo
+                        toolStripItem2.Click += ToolStripItemPushBranchOrTag;
+                        toolStripItem2.Tag = head;
                         pushToDropDown.Items.Add(toolStripItem2);
                         AddRemotesDropDown(toolStripItem2, CreateRemotesDropDown(head));
                     }
@@ -1809,6 +1810,8 @@ namespace GitUI
             foreach (var tag in tags)
             {
                 var item = (ToolStripMenuItem)pushToDropDown.Items.Add(tag.Name);
+                item.Click += ToolStripItemPushBranchOrTag;
+                item.Tag = tag;
                 AddRemotesDropDown(item, CreateRemotesDropDown(tag));
             }
 
@@ -1931,6 +1934,13 @@ namespace GitUI
                 return;
 
             UICommands.StartRenameDialog(this, toolStripItem.Text);
+        }
+
+        private void ToolStripItemPushBranchOrTag(object sender, EventArgs e)
+        {
+            var headItem = (ToolStripItem)sender;
+            var head = (GitHead)headItem.Tag;
+            UICommands.StartPushDialog(this, null, head);
         }
 
         private void ToolStripItemClickPush(object sender, EventArgs e)
@@ -2506,11 +2516,6 @@ namespace GitUI
                 if (item.DropDown != null && item.DropDown.Items.Count == 1)
                     item.DropDown.Items[0].PerformClick();
             }
-        }
-
-        private void pushToRemoteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
         }
 
         private void goToParentToolStripMenuItem_Click(object sender, EventArgs e)
