@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Properties;
 
 namespace GitUI
 {
@@ -37,7 +38,7 @@ namespace GitUI
         {
             ProcessCallback = processStart;
             AbortCallback = processAbort;
-            ProcessString = process ?? Settings.GitCommand;
+            ProcessString = process ?? Settings.Default.GitCommand;
             ProcessArguments = arguments;
             Remote = "";
             ProcessInput = input;

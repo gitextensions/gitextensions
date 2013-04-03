@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using GitCommands.Config;
 using GitCommands.Git;
 using JetBrains.Annotations;
+using GitCommands.Properties;
 
 namespace GitCommands
 {
@@ -53,18 +54,18 @@ namespace GitCommands
         public static void SetEnvironmentVariable(bool reload)
         {
             string path = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
-            if (!string.IsNullOrEmpty(Settings.GitBinDir) && !path.Contains(Settings.GitBinDir))
-                Environment.SetEnvironmentVariable("PATH", string.Concat(path, ";", Settings.GitBinDir), EnvironmentVariableTarget.Process);
+            if (!string.IsNullOrEmpty(Settings.Default.GitBinDir) && !path.Contains(Settings.Default.GitBinDir))
+                Environment.SetEnvironmentVariable("PATH", string.Concat(path, ";", Settings.Default.GitBinDir), EnvironmentVariableTarget.Process);
 
-            if (!string.IsNullOrEmpty(Settings.CustomHomeDir))
+            if (!string.IsNullOrEmpty(Settings.Default.CustomHomeDir))
             {
                 Environment.SetEnvironmentVariable(
                     "HOME",
-                    Settings.CustomHomeDir);
+                    Settings.Default.CustomHomeDir);
                 return;
             }
 
-            if (Settings.UserProfileHomeDir)
+            if (Settings.Default.UserProfileHomeDir)
             {
                 Environment.SetEnvironmentVariable(
                     "HOME",
@@ -95,7 +96,7 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(UserHomeDir))
                 return UserHomeDir;
 
-            if (Settings.RunningOnWindows())
+            if (Settings.Default.RunningOnWindows())
             {
                 return WindowsDefaultHomeDir;
             }
@@ -169,7 +170,7 @@ namespace GitCommands
             string quotedCmd = cmd;
             if (quotedCmd.IndexOf(' ') != -1)
                 quotedCmd = quotedCmd.Quote();
-            Settings.GitLog.Log(quotedCmd + " " + arguments);
+            Settings.Default.GitLog.Log(quotedCmd + " " + arguments);
             //process used to execute external commands
 
             //data is read from base stream, so encoding doesn't matter
@@ -208,7 +209,7 @@ namespace GitCommands
             string quotedCmd = cmd;
             if (quotedCmd.IndexOf(' ') != -1)
                 quotedCmd = quotedCmd.Quote();
-            Settings.GitLog.Log(quotedCmd + " " + arguments);
+            Settings.Default.GitLog.Log(quotedCmd + " " + arguments);
             //process used to execute external commands
 
             var startInfo = CreateProcessStartInfo(null);
@@ -241,7 +242,7 @@ namespace GitCommands
             string quotedCmd = cmd;
             if (quotedCmd.IndexOf(' ') != -1)
                 quotedCmd = quotedCmd.Quote();
-            Settings.GitLog.Log(quotedCmd + " " + arguments);
+            Settings.Default.GitLog.Log(quotedCmd + " " + arguments);
 
             //process used to execute external commands
             using (var process = new Process { StartInfo = CreateProcessStartInfo(null) })
@@ -308,7 +309,7 @@ namespace GitCommands
             {
                 if (_versionInUse == null || _versionInUse.IsUnknown)
                 {
-                    var result = RunCmd(Settings.GitCommand, "--version");
+                    var result = RunCmd(Settings.Default.GitCommand, "--version");
                     _versionInUse = new GitVersion(result);
                 }
 
@@ -639,7 +640,7 @@ namespace GitCommands
 
         public static bool PathIsUrl(string path)
         {
-            return path.Contains(Settings.PathSeparator.ToString()) || path.Contains(Settings.PathSeparatorWrong.ToString());
+            return path.Contains(Settings.Default.PathSeparator.ToString()) || path.Contains(Settings.Default.PathSeparatorWrong.ToString());
         }
 
         public static string ContinueRebaseCmd()
@@ -1343,7 +1344,7 @@ namespace GitCommands
         public static void TerminateTree(this Process process)
         {
 #if !MONO
-            if (Settings.RunningOnWindows())
+            if (Settings.Default.RunningOnWindows())
             {
                 // Send Ctrl+C
                 NativeMethods.AttachConsole(process.Id);

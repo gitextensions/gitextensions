@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         ////}
 
         /// <summary>
-        /// use GitCommands.Settings to load settings in derived classes
+        /// use GitCommands.Properties.Settings to load settings in derived classes
         /// </summary>
         protected virtual void OnLoadSettings()
         {
@@ -58,7 +58,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         /// <summary>
-        /// use GitCommands.Settings to save settings in derived classes
+        /// use GitCommands.Properties.Settings to save settings in derived classes
         /// </summary>
         public virtual void SaveSettings()
         {

@@ -8,6 +8,7 @@ using GitCommands;
 using GitCommands.Repository;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs.RepoHosting
 {
@@ -280,7 +281,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir);
 
-            FormRemoteProcess formRemoteProcess = new FormRemoteProcess(new GitModule(null), Settings.GitCommand, cmd);
+            FormRemoteProcess formRemoteProcess = new FormRemoteProcess(new GitModule(null), Settings.Default.GitCommand, cmd);
             formRemoteProcess.Remote = repoSrc;
             formRemoteProcess.ShowDialog();
 

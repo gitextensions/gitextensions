@@ -273,7 +273,7 @@ This action will be performed without warning while checking out branch.</Source
           <Value>Git Credential Win Store is ingesteld als credential helper.</Value>
         </TranslationItem>
         <TranslationItem Name="_gitNotFound" Property="Text">
-          <Source>Git not found. To solve this problem you can set the correct path in settings.</Source>
+          <Source>Git not found. To solve this problem you can set the correct path in Settings.Default.</Source>
           <Value>Git kan niet gevonden worden op deze computer. Om dit probleem op te lossen dient u zelf het juiste pad te configureren.</Value>
         </TranslationItem>
         <TranslationItem Name="_gitVersionFound" Property="Text">
@@ -314,7 +314,7 @@ Please make sure there are linux tools installed (through msysgit or cygwin) or 
           <Value>Linux tools (sh) gevonden op deze computer</Value>
         </TranslationItem>
         <TranslationItem Name="_linuxToolsSshNotFound" Property="Text">
-          <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in settings.</Source>
+          <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in Settings.Default.</Source>
           <Value>Linux tools (sh) niet gevonden. Op dit probleem op te lossen moet het juiste pad ingesteld worden in het instellingen dialoog.</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeToolXConfigured" Property="Text">
@@ -5750,7 +5750,7 @@ Do you want to set the correct command now? If not Global and Local Settings wil
           <Value>Foutief pad</Value>
         </TranslationItem>
         <TranslationItem Name="_loadingSettingsFailed" Property="Text">
-          <Source>Could not load settings.</Source>
+          <Source>Could not load Settings.Default.</Source>
           <Value>Kan instellingen niet laden</Value>
         </TranslationItem>
         <TranslationItem Name="buttonApply" Property="Text">
@@ -6728,7 +6728,7 @@ wanneer deze leeg is. Verander het standaard gedrag alleen wanneer problemen opt
         <TranslationItem Name="label9" Property="Text">
           <Source>You need to set the correct path to 
 git before you can change
-global settings.
+global Settings.Default.
 </Source>
           <Value>Het juiste pad naar git.cmd moet 
 gezet zijn om globale instellingen 
@@ -6836,7 +6836,7 @@ repository.</Value>
         <TranslationItem Name="label21" Property="Text">
           <Source>You need to set the correct path to 
 git before you can change
-local settings.
+local Settings.Default.
 </Source>
           <Value>Het juiste pad naar git.cmd moet 
 gezet zijn om lokale instellingen te 

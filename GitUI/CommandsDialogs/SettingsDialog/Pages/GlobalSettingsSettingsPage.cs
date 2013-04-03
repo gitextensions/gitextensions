@@ -4,6 +4,7 @@ using GitCommands;
 using System.IO;
 using GitCommands.Config;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -108,7 +109,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 globalAutocrlf = globalConfig.GetValue("core.autocrlf").ToLower();
             }
-            else if (!string.IsNullOrEmpty(Settings.GitBinDir))
+            else if (!string.IsNullOrEmpty(Settings.Default.GitBinDir))
             {
                 try
                 {
@@ -117,7 +118,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     //practice this is only used to core.autocrlf. If there are more cases, we might
                     //need to consider a better solution.
                     var configFile =
-                        new ConfigFile(Path.GetDirectoryName(Settings.GitBinDir).Replace("bin", "etc\\gitconfig"), false);
+                        new ConfigFile(Path.GetDirectoryName(Settings.Default.GitBinDir).Replace("bin", "etc\\gitconfig"), false);
                     globalAutocrlf = configFile.GetValue("core.autocrlf").ToLower();
                 }
                 catch
@@ -200,7 +201,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void MergeToolCmdSuggest_Click(object sender, EventArgs e)
         {
-            if (!Settings.RunningOnWindows())
+            if (!Settings.Default.RunningOnWindows())
                 return;
 
             _gitModule.SetGlobalPathSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
@@ -245,7 +246,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void DiffToolCmdSuggest_Click(object sender, EventArgs e)
         {
-            if (!Settings.RunningOnWindows())
+            if (!Settings.Default.RunningOnWindows())
                 return;
 
             _gitModule.SetGlobalPathSetting(string.Format("difftool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());

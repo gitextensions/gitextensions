@@ -7,6 +7,7 @@ using GitCommands;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using GitCommands.Properties;
 
 namespace Gerrit
 {
@@ -46,7 +47,7 @@ namespace Gerrit
             var sshCmd = GitCommandHelpers.GetSsh();
             if (GitCommandHelpers.Plink())
             {
-                sshCmd = Settings.Plink;
+                sshCmd = Settings.Default.Plink;
             }
             if (string.IsNullOrEmpty(sshCmd))
             {
@@ -98,7 +99,7 @@ namespace Gerrit
 
             if (GitCommandHelpers.Plink())
             {
-                if (!File.Exists(Settings.Pageant))
+                if (!File.Exists(Settings.Default.Pageant))
                     MessageBoxes.PAgentNotFound(owner);
                 else
                     aModule.StartPageantForRemote(remote);

@@ -7,6 +7,7 @@ using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Plugins;
 using GitUI.Plugin;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs
 {
@@ -15,7 +16,7 @@ namespace GitUI.CommandsDialogs
         #region Translation
 
         private readonly TranslationString _loadingSettingsFailed =
-            new TranslationString("Could not load settings.");
+            new TranslationString("Could not load Settings.Default.");
 
         private readonly TranslationString _cantFindGitMessage =
             new TranslationString("The command to run git is not configured correct." + Environment.NewLine +
@@ -208,14 +209,14 @@ namespace GitUI.CommandsDialogs
                 settingsPage.SaveSettings();
             }
 
-            if (Settings.RunningOnWindows())
+            if (Settings.Default.RunningOnWindows())
                 FormFixHome.CheckHomePath();
 
             // TODO: to which settings page does this belong?
             GitCommandHelpers.SetEnvironmentVariable(true);
 
             // TODO: this method has a generic sounding name but only saves some specific settings
-            Settings.SaveSettings();
+            Settings.Default.Save();
 
             return true;
         }

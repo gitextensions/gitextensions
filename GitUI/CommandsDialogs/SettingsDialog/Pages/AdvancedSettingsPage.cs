@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -13,16 +14,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void OnLoadSettings()
         {
-            chkAlwaysShowCheckoutDlg.Checked = Settings.AlwaysShowCheckoutBranchDlg;
-            chkUseLocalChangesAction.Checked = Settings.UseDefaultCheckoutBranchAction;
-            chkDontSHowHelpImages.Checked = Settings.DontShowHelpImages;
+            chkAlwaysShowCheckoutDlg.Checked = Settings.Default.AlwaysShowCheckoutBranchDlg;
+            chkUseLocalChangesAction.Checked = Settings.Default.UseDefaultCheckoutBranchAction;
+            chkDontSHowHelpImages.Checked = Settings.Default.DontShowHelpImages;
         }
 
         public override void SaveSettings()
         {
-            Settings.AlwaysShowCheckoutBranchDlg = chkAlwaysShowCheckoutDlg.Checked;
-            Settings.UseDefaultCheckoutBranchAction = chkUseLocalChangesAction.Checked;
-            Settings.DontShowHelpImages = chkDontSHowHelpImages.Checked;
+            Settings.Default.AlwaysShowCheckoutBranchDlg = chkAlwaysShowCheckoutDlg.Checked;
+            Settings.Default.UseDefaultCheckoutBranchAction = chkUseLocalChangesAction.Checked;
+            Settings.Default.DontShowHelpImages = chkDontSHowHelpImages.Checked;
         }
 
         public static SettingsPageReference GetPageReference()

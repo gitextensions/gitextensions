@@ -148,7 +148,7 @@
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(193, 45);
             this.label21.TabIndex = 19;
-            this.label21.Text = "You need to set the correct path to \r\ngit before you can change\r\nlocal settings.\r" +
+            this.label21.Text = "You need to set the correct path to \r\ngit before you can change\r\nlocal Settings.Default.\r" +
     "\n";
             // 
             // pictureBox3

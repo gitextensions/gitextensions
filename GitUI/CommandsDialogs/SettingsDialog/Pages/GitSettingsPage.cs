@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using GitCommands;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -36,8 +37,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public override void OnPageShown()
         {
-            GitPath.Text = Settings.GitCommand;
-            GitBinPath.Text = Settings.GitBinDir;
+            GitPath.Text = Settings.Default.GitCommand;
+            GitBinPath.Text = Settings.Default.GitBinDir;
         }
 
         protected override void OnLoadSettings()
@@ -45,14 +46,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             GitCommandHelpers.SetEnvironmentVariable();
             homeIsSetToLabel.Text = string.Concat(_homeIsSetToString.Text, " ", GitCommandHelpers.GetHomeDir());
 
-            GitPath.Text = Settings.GitCommand;
-            GitBinPath.Text = Settings.GitBinDir;
+            GitPath.Text = Settings.Default.GitCommand;
+            GitBinPath.Text = Settings.Default.GitBinDir;
         }
 
         public override void SaveSettings()
         {
-            Settings.GitCommand = GitPath.Text;
-            Settings.GitBinDir = GitBinPath.Text;
+            Settings.Default.GitCommand = GitPath.Text;
+            Settings.Default.GitBinDir = GitBinPath.Text;
         }
 
         private void BrowseGitPath_Click(object sender, EventArgs e)
@@ -61,7 +62,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             using (var browseDialog = new OpenFileDialog
             {
-                FileName = Settings.GitCommand,
+                FileName = Settings.Default.GitCommand,
                 Filter = "Git.cmd (git.cmd)|git.cmd|Git.exe (git.exe)|git.exe|Git (git)|git"
             })
             {
@@ -77,7 +78,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             _checkSettingsLogic.SolveLinuxToolsDir();
 
-            using (var browseDialog = new FolderBrowserDialog { SelectedPath = Settings.GitBinDir })
+            using (var browseDialog = new FolderBrowserDialog { SelectedPath = Settings.Default.GitBinDir })
             {
 
                 if (browseDialog.ShowDialog(this) == DialogResult.OK)
@@ -93,7 +94,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             ////    if (loadingSettings)
             ////        return;
 
-            ////    Settings.GitCommand = GitPath.Text;
+            ////    Settings.Default.GitCommand = GitPath.Text;
             ////    OnLoadSettings();
         }
 

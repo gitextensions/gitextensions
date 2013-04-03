@@ -1,4 +1,5 @@
 ﻿using System;
+using GitCommands.Properties;
 using ResourceManager.Translation;
 
 namespace GitCommands
@@ -8,7 +9,7 @@ namespace GitCommands
         // public only because of FormTranslate
         public Strings()
         {
-            Translator.Translate(this, Settings.CurrentTranslation);
+            Translator.Translate(this, Settings.Default.CurrentTranslation);
         }
 
         private static Strings _instance;

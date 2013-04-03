@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using GitCommands.Properties;
 
 namespace GitCommands
 {
@@ -50,7 +51,7 @@ namespace GitCommands
 
                     foreach (GitItem item in subItems)
                     {
-                        item.FileName = FileName + Settings.PathSeparator.ToString() + item.FileName;
+                        item.FileName = FileName + Settings.Default.PathSeparator.ToString() + item.FileName;
                     }
                 }
 

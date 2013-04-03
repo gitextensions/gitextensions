@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
+using GitCommands.Properties;
 
 namespace GitUI.Hotkey
 {
@@ -29,7 +30,7 @@ namespace GitUI.Hotkey
         private static List<Keys> UsedKeys = new List<Keys>();
 
         /// <summary>
-        /// Returns wheter the hotkey is already assigned.
+        /// Returns whether the hotkey is already assigned.
         /// </summary>
         /// <param name="keyData"></param>
         /// <returns></returns>
@@ -68,7 +69,7 @@ namespace GitUI.Hotkey
                 return allkeys;
             }
 
-            //return settings != null ? settings.Commands : null;
+            //return settings != null ? Settings.Default.Commands : null;
             return null;
         }
 

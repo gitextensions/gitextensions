@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -23,7 +24,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             InitializeComponent();
 
-            Font = Settings.Font;
+            Font = Settings.Default.Font;
 
             _origTextBoxFont = textBoxFind.Font;
             SetFindPrompt(true);

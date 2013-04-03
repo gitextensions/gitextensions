@@ -25,7 +25,7 @@ namespace PatchApply
         /// <summary>
         /// Diff part of patch is printed verbatim, everything else (header, warnings, ...) is printed in git encoding (GitModule.SystemEncoding) 
         /// Since patch may contain diff for more than one file, it would be nice to obtaining encoding for each of file
-        /// from .gitattributes, for now there is used one encoding, common for every file in repo (Settings.FilesEncoding)
+        /// from .gitattributes, for now there is used one encoding, common for every file in repo (Settings.Default.FilesEncoding)
         /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
         /// </summary>
         /// <param name="textReader"></param>

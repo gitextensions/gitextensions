@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using GitCommands;
 using Microsoft.Win32;
 using System.IO;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -30,10 +31,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void OnLoadSettings()
         {
-            PlinkPath.Text = Settings.Plink;
-            PuttygenPath.Text = Settings.Puttygen;
-            PageantPath.Text = Settings.Pageant;
-            AutostartPageant.Checked = Settings.AutoStartPageant;
+            PlinkPath.Text = Settings.Default.Plink;
+            PuttygenPath.Text = Settings.Default.Puttygen;
+            PageantPath.Text = Settings.Default.Pageant;
+            AutostartPageant.Checked = Settings.Default.AutoStartPageant;
 
             if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
                 OpenSSH.Checked = true;
@@ -50,10 +51,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public override void SaveSettings()
         {
-            Settings.Plink = PlinkPath.Text;
-            Settings.Puttygen = PuttygenPath.Text;
-            Settings.Pageant = PageantPath.Text;
-            Settings.AutoStartPageant = AutostartPageant.Checked;
+            Settings.Default.Plink = PlinkPath.Text;
+            Settings.Default.Puttygen = PuttygenPath.Text;
+            Settings.Default.Pageant = PageantPath.Text;
+            Settings.Default.AutoStartPageant = AutostartPageant.Checked;
 
             if (OpenSSH.Checked)
                 GitCommandHelpers.UnsetSsh();
@@ -98,12 +99,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             yield return _commonLogic.GetRegistryValue(Registry.LocalMachine,
                                                         "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1",
                                                         "InstallLocation");
-            yield return Settings.GetInstallDir() + @"\PuTTY\";
+            yield return Settings.Default.InstallDir + @"\PuTTY\";
         }
 
         public bool AutoFindPuttyPaths()
         {
-            if (!Settings.RunningOnWindows())
+            if (!Settings.Default.RunningOnWindows())
                 return false;
 
             foreach (var path in GetPuttyLocations())

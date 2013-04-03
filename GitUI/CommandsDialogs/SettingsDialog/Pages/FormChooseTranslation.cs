@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -45,8 +46,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                                                Width = imageWidth,
                                                BackgroundImageLayout = ImageLayout.Stretch
                                            };
-                if (File.Exists(Translator.GetTranslationDir() + Settings.PathSeparator + translation + ".gif"))
-                    translationImage.BackgroundImage = Image.FromFile(Translator.GetTranslationDir() + Settings.PathSeparator + translation + ".gif");
+                if (File.Exists(Translator.GetTranslationDir() + Settings.Default.PathSeparator + translation + ".gif"))
+                    translationImage.BackgroundImage = Image.FromFile(Translator.GetTranslationDir() + Settings.Default.PathSeparator + translation + ".gif");
                 else
                     translationImage.BackColor = Color.Black;
 
@@ -75,14 +76,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         void translationImage_Click(object sender, EventArgs e)
         {
-            Settings.Translation = ((Control)sender).Tag.ToString();
+            Settings.Default.Translation = ((Control)sender).Tag.ToString();
             Close();
         }
 
         private void FormChooseTranslation_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (string.IsNullOrEmpty(Settings.Translation))
-                Settings.Translation = "English";
+            if (string.IsNullOrEmpty(Settings.Default.Translation))
+                Settings.Default.Translation = "English";
         }
     }
 }

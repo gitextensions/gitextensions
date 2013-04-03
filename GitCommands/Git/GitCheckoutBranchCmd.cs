@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GitCommands.Properties;
 
 namespace GitCommands.Git
 {

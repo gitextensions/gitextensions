@@ -274,7 +274,7 @@ This action will be performed without warning while checking out branch.</Source
           <Value />
         </TranslationItem>
         <TranslationItem Name="_gitNotFound" Property="Text" type="unfinished">
-          <Source>Git not found. To solve this problem you can set the correct path in settings.</Source>
+          <Source>Git not found. To solve this problem you can set the correct path in Settings.Default.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_gitVersionFound" Property="Text" type="unfinished">
@@ -315,7 +315,7 @@ Please make sure there are linux tools installed (through msysgit or cygwin) or 
           <Value />
         </TranslationItem>
         <TranslationItem Name="_linuxToolsSshNotFound" Property="Text" type="unfinished">
-          <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in settings.</Source>
+          <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in Settings.Default.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_mergeToolXConfigured" Property="Text" type="unfinished">
@@ -5722,7 +5722,7 @@ Do you want to set the correct command now? If not Global and Local Settings wil
           <Value />
         </TranslationItem>
         <TranslationItem Name="_loadingSettingsFailed" Property="Text" type="unfinished">
-          <Source>Could not load settings.</Source>
+          <Source>Could not load Settings.Default.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="buttonApply" Property="Text" type="unfinished">
@@ -6673,7 +6673,7 @@ sarà impostata, se vuota, a %HOMEDRIVE%%HOMEPATH%. Cambiare il comportamento de
         <TranslationItem Name="label9" Property="Text">
           <Source>You need to set the correct path to 
 git before you can change
-global settings.
+global Settings.Default.
 </Source>
           <Value>Bisogna impostare il percorso corretto di git
 prima di poter cambiare le impostazioni
@@ -6781,7 +6781,7 @@ corrente.</Value>
         <TranslationItem Name="label21" Property="Text">
           <Source>You need to set the correct path to 
 git before you can change
-local settings.
+local Settings.Default.
 </Source>
           <Value>Bisogna impostare il percorso corretto di
 git prima di poter cambiare le impostazioni

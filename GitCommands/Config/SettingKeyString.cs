@@ -3,7 +3,7 @@
 namespace GitCommands.Config
 {
     /// <summary>
-    /// Defines the strings to access certain git config settings.
+    /// Defines the strings to access certain git config Settings.Default.
     /// Goal is to eliminate duplicate string constants in the code.
     /// </summary>
     public class SettingKeyString

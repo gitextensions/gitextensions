@@ -278,7 +278,7 @@ Cette action sera effectuée sans avertissment durant le chargement d'une branch
           <Value>L'assistant de certificat Git Credential Win Store est installé.</Value>
         </TranslationItem>
         <TranslationItem Name="_gitNotFound" Property="Text">
-          <Source>Git not found. To solve this problem you can set the correct path in settings.</Source>
+          <Source>Git not found. To solve this problem you can set the correct path in Settings.Default.</Source>
           <Value>Git non trouvé. Pour corriger ce problème vous devez entrer un chemin valide. </Value>
         </TranslationItem>
         <TranslationItem Name="_gitVersionFound" Property="Text">
@@ -320,7 +320,7 @@ Veuillez vérifier que des outils linux sont installés (mysysgit ou cygwin) ou 
           <Value>Les outils Linux (sh) ont été trouvés sur votre ordinateur.</Value>
         </TranslationItem>
         <TranslationItem Name="_linuxToolsSshNotFound" Property="Text">
-          <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in settings.</Source>
+          <Source>Linux tools (sh) not found. To solve this problem you can set the correct path in Settings.Default.</Source>
           <Value>Outils Linux (sh) non-trouvés. Pour corriger ce problème vous devez entrer un chemin valide.</Value>
         </TranslationItem>
         <TranslationItem Name="_mergeToolXConfigured" Property="Text">
@@ -5839,7 +5839,7 @@ Voulez-vous mettre la commande correcte maintenant? Si non, les paramètres Glob
           <Value>Chemin incorrect</Value>
         </TranslationItem>
         <TranslationItem Name="_loadingSettingsFailed" Property="Text">
-          <Source>Could not load settings.</Source>
+          <Source>Could not load Settings.Default.</Source>
           <Value>Impossible de charger les paramètres.</Value>
         </TranslationItem>
         <TranslationItem Name="buttonApply" Property="Text" type="unfinished">
@@ -6834,7 +6834,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         <TranslationItem Name="label9" Property="Text">
           <Source>You need to set the correct path to 
 git before you can change
-global settings.
+global Settings.Default.
 </Source>
           <Value>Vous devez entrer un chemin valide
  vers git avant de pouvoir modifier
@@ -6941,7 +6941,7 @@ repository.</Source>
         <TranslationItem Name="label21" Property="Text">
           <Source>You need to set the correct path to 
 git before you can change
-local settings.
+local Settings.Default.
 </Source>
           <Value>Vous devez entrer un chemin valide
  vers git avant de pouvoir modifier

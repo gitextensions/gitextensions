@@ -28,7 +28,7 @@ namespace GitUI
 
     /// <summary>
     ///   A Hashtable for storing WindowPosition objects with the ability to
-    ///   serialize them to the user's settings.
+    ///   serialize them to the user's Settings.
     /// </summary>
     public class WindowPositionList : Hashtable, IXmlSerializable
     {

@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Properties;
 
 namespace PatchApply
 {
@@ -605,7 +606,7 @@ namespace PatchApply
             if (result != null)
             {
                 result = result.Combine("\n", "--");
-                result = result.Combine("\n", Application.ProductName + " " + Settings.GitExtensionsVersionString);
+                result = result.Combine("\n", Application.ProductName + " " + Settings.Default.GitExtensionsVersionString);
             }
             return result;
         

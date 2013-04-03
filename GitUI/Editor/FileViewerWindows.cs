@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
+using GitCommands.Properties;
 
 namespace GitUI.Editor
 {
@@ -235,7 +236,7 @@ namespace GitUI.Editor
 
             if (lineAdded.Length - beginOffset - reverseOffset > 0)
             {
-                color = Settings.DiffAddedExtraColor;
+                color = Settings.Default.DiffAddedExtraColor;
                 markerStrategy.AddMarker(new TextMarker(lineAdded.Offset + beginOffset,
                                                         lineAdded.Length - beginOffset - reverseOffset,
                                                         TextMarkerType.SolidBlock, color,
@@ -244,7 +245,7 @@ namespace GitUI.Editor
 
             if (lineRemoved.Length - beginOffset - reverseOffset > 0)
             {
-                color = Settings.DiffRemovedExtraColor;
+                color = Settings.Default.DiffRemovedExtraColor;
                 markerStrategy.AddMarker(new TextMarker(lineRemoved.Offset + beginOffset,
                                                         lineRemoved.Length - beginOffset - reverseOffset,
                                                         TextMarkerType.SolidBlock, color,
@@ -337,9 +338,9 @@ namespace GitUI.Editor
                 if (line == document.TotalNumberOfLines - 1)
                     forceAbort = true;
 
-                ProcessLineSegment(ref line, lineSegment, '+', Settings.DiffAddedColor);
-                ProcessLineSegment(ref line, lineSegment, '-', Settings.DiffRemovedColor);
-                ProcessLineSegment(ref line, lineSegment, '@', Settings.DiffSectionColor);
+                ProcessLineSegment(ref line, lineSegment, '+', Settings.Default.DiffAddedColor);
+                ProcessLineSegment(ref line, lineSegment, '-', Settings.Default.DiffRemovedColor);
+                ProcessLineSegment(ref line, lineSegment, '@', Settings.Default.DiffSectionColor);
             }
         }
 

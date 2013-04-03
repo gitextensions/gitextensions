@@ -9,6 +9,7 @@ using GitCommands;
 using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.SpellChecker
 {
@@ -228,7 +229,7 @@ namespace GitUI.SpellChecker
 
         private void LoadDictionary()
         {
-            string dictionaryFile = string.Concat(Settings.GetDictionaryDir(), Settings.Dictionary, ".dic");
+            string dictionaryFile = string.Concat(Settings.GetDictionaryDir(), Settings.Default.Dictionary, ".dic");
 
             if (_wordDictionary == null || _wordDictionary.DictionaryFile != dictionaryFile)
             {
@@ -278,7 +279,7 @@ namespace GitUI.SpellChecker
 
         private void MarkLines()
         {
-            if (!Settings.MarkIllFormedLinesInCommitMsg)
+            if (!Settings.Default.MarkIllFormedLinesInCommitMsg)
                 return;
             var numLines = TextBox.Lines.Length;
             var chars = 0;
@@ -407,11 +408,11 @@ namespace GitUI.SpellChecker
 
             if (!string.IsNullOrEmpty(_spelling.CurrentWord))
             {
-                string text = string.Format(translateCurrentWord.Text, _spelling.CurrentWord, CultureCodeToString(Settings.Dictionary));
+                string text = string.Format(translateCurrentWord.Text, _spelling.CurrentWord, CultureCodeToString(Settings.Default.Dictionary));
                 AddContextMenuItem(text, translate_Click);
             }
 
-            string entireText = string.Format(translateEntireText.Text, CultureCodeToString(Settings.Dictionary));
+            string entireText = string.Format(translateEntireText.Text, CultureCodeToString(Settings.Default.Dictionary));
             AddContextMenuItem(entireText, translateText_Click);*/
 
             AddContextMenuSeparator();
@@ -425,7 +426,7 @@ namespace GitUI.SpellChecker
 
                 var noDicToolStripMenuItem = new ToolStripMenuItem("None");
                 noDicToolStripMenuItem.Click += DicToolStripMenuItemClick;
-                if (Settings.Dictionary == "None")
+                if (Settings.Default.Dictionary == "None")
                     noDicToolStripMenuItem.Checked = true;
 
 
@@ -442,7 +443,7 @@ namespace GitUI.SpellChecker
                     var dicToolStripMenuItem = new ToolStripMenuItem(dic);
                     dicToolStripMenuItem.Click += DicToolStripMenuItemClick;
 
-                    if (Settings.Dictionary == dic)
+                    if (Settings.Default.Dictionary == dic)
                         dicToolStripMenuItem.Checked = true;
 
                     toolStripDropDown.Items.Add(dicToolStripMenuItem);
@@ -460,7 +461,7 @@ namespace GitUI.SpellChecker
             var mi =
                 new ToolStripMenuItem(markIllFormedLinesText.Text)
                     {
-                        Checked = Settings.MarkIllFormedLinesInCommitMsg
+                        Checked = Settings.Default.MarkIllFormedLinesInCommitMsg
                     };
             mi.Click += MarkIllFormedLinesInCommitMsgClick;
             SpellCheckContextMenu.Items.Add(mi);
@@ -482,7 +483,7 @@ namespace GitUI.SpellChecker
         {
             try
             {
-                TextBox.Text = Google.TranslateText(TextBox.Text, "", new CultureInfo(Settings.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName);
+                TextBox.Text = Google.TranslateText(TextBox.Text, "", new CultureInfo(Settings.Default.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName);
             }
             catch (Exception ex)
             {
@@ -494,7 +495,7 @@ namespace GitUI.SpellChecker
         {
             try
             {
-                _spelling.ReplaceWord(Google.TranslateText(_spelling.CurrentWord, "", new CultureInfo(Settings.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName));
+                _spelling.ReplaceWord(Google.TranslateText(_spelling.CurrentWord, "", new CultureInfo(Settings.Default.Dictionary.Replace('_', '-')).TwoLetterISOLanguageName));
             }
             catch (Exception ex)
             {
@@ -522,7 +523,7 @@ namespace GitUI.SpellChecker
 
         private void MarkIllFormedLinesInCommitMsgClick(object sender, EventArgs e)
         {
-            Settings.MarkIllFormedLinesInCommitMsg = !Settings.MarkIllFormedLinesInCommitMsg;
+            Settings.Default.MarkIllFormedLinesInCommitMsg = !Settings.Default.MarkIllFormedLinesInCommitMsg;
             CheckSpelling();
         }
 
@@ -534,7 +535,7 @@ namespace GitUI.SpellChecker
 
         private void DicToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Settings.Dictionary = ((ToolStripItem)sender).Text;
+            Settings.Default.Dictionary = ((ToolStripItem)sender).Text;
             LoadDictionary();
             CheckSpelling();
         }
@@ -560,7 +561,7 @@ namespace GitUI.SpellChecker
                 OnTextChanged(e);
             }
 
-            if (Settings.Dictionary == "None" || TextBox.Text.Length < 4)
+            if (Settings.Default.Dictionary == "None" || TextBox.Text.Length < 4)
                 return;
 
             SpellCheckTimer.Enabled = false;

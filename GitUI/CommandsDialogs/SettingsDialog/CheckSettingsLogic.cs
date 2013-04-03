@@ -7,6 +7,7 @@ using System.IO;
 using Microsoft.Win32;
 using System.Windows.Forms;
 using ResourceManager.Translation;
+using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -28,7 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool AutoSolveAllSettings()
         {
-            if (!Settings.RunningOnWindows())
+            if (!Settings.Default.RunningOnWindows())
                 return SolveGitCommand();
 
             bool valid = true;
@@ -58,13 +59,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (!CheckGitCredentialStore())
             {
-                string gcsFileName = Settings.GetInstallDir() + @"\GitCredentialWinStore\git-credential-winstore.exe";
+                string gcsFileName = Settings.Default.InstallDir + @"\GitCredentialWinStore\git-credential-winstore.exe";
                 if (File.Exists(gcsFileName))
                 {
                     ConfigFile config = GitCommandHelpers.GetGlobalConfig();
-                    if (Settings.RunningOnWindows())
+                    if (Settings.Default.RunningOnWindows())
                         config.SetValue("credential.helper", "!\\\"" + GitCommandHelpers.FixPath(gcsFileName) + "\\\"");
-                    else if (Settings.RunningOnMacOSX())
+                    else if (Settings.Default.RunningOnMacOSX())
                         config.SetValue("credential.helper", "osxkeychain");
                     else
                         config.SetValue("credential.helper", "cache --timeout=300"); // 5 min
@@ -80,7 +81,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             string value = GitCommandHelpers.GetGlobalConfig().GetValue("credential.helper");
             bool isValid;
-            if (Settings.RunningOnWindows())
+            if (Settings.Default.RunningOnWindows())
                 isValid = value.Contains("git-credential-winstore.exe");
             else
                 isValid = !string.IsNullOrEmpty(value);
@@ -90,13 +91,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool SolveLinuxToolsDir()
         {
-            if (!Settings.RunningOnWindows())
+            if (!Settings.Default.RunningOnWindows())
             {
-                Settings.GitBinDir = "";
+                Settings.Default.GitBinDir = "";
                 return true;
             }
 
-            string gitpath = Settings.GitCommand
+            string gitpath = Settings.Default.GitCommand
                 .Replace(@"\cmd\git.exe", @"\bin\")
                 .Replace(@"\cmd\git.cmd", @"\bin\")
                 .Replace(@"\bin\git.exe", @"\bin\");
@@ -104,14 +105,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 if (File.Exists(gitpath + "sh.exe") || File.Exists(gitpath + "sh"))
                 {
-                    Settings.GitBinDir = gitpath;
+                    Settings.Default.GitBinDir = gitpath;
                     return true;
                 }
             }
 
             if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
             {
-                Settings.GitBinDir = "";
+                Settings.Default.GitBinDir = "";
                 return true;
             }
 
@@ -121,7 +122,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 {
                     if (File.Exists(path + @"bin\sh.exe") || File.Exists(path + @"bin\sh"))
                     {
-                        Settings.GitBinDir = path + @"bin\";
+                        Settings.Default.GitBinDir = path + @"bin\";
                         return true;
                     }
                 }
@@ -151,8 +152,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private IEnumerable<string> GetWindowsCommandLocations()
         {
-            if (!string.IsNullOrEmpty(Settings.GitCommand) && File.Exists(Settings.GitCommand))
-                yield return Settings.GitCommand;
+            if (!string.IsNullOrEmpty(Settings.Default.GitCommand) && File.Exists(Settings.Default.GitCommand))
+                yield return Settings.Default.GitCommand;
             foreach (var path in GetGitLocations())
             {
                 if (Directory.Exists(path + @"bin\"))
@@ -176,7 +177,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             if (Directory.Exists(fileName))
             {
-                Settings.SetInstallDir(fileName);
+                Settings.Default.InstallDir=fileName;
                 return true;
             }
 
@@ -185,7 +186,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool SolveGitCommand()
         {
-            if (Settings.RunningOnWindows())
+            if (Settings.Default.RunningOnWindows())
             {
                 var command = (from cmd in GetWindowsCommandLocations()
                                let output = _gitModule.RunCmd(cmd, string.Empty)
@@ -194,12 +195,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
                 if (command != null)
                 {
-                    Settings.GitCommand = command;
+                    Settings.Default.GitCommand = command;
                     return true;
                 }
                 return false;
             }
-            Settings.GitCommand = "git";
+            Settings.Default.GitCommand = "git";
             return !string.IsNullOrEmpty(_gitModule.RunGitCmd(""));
         }
 

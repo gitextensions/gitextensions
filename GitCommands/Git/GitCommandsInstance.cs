@@ -4,6 +4,7 @@ using System.Security.Permissions;
 using System.Text;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
+using GitCommands.Properties;
 
 namespace GitCommands
 {
@@ -41,11 +42,11 @@ namespace GitCommands
                 string quotedCmd = cmd;
                 if (quotedCmd.IndexOf(' ') != -1)
                     quotedCmd = quotedCmd.Quote();
-                Settings.GitLog.Log(quotedCmd + " " + arguments);
+                Settings.Default.GitLog.Log(quotedCmd + " " + arguments);
 
                 //process used to execute external commands
                 var process = new Process { StartInfo = GitCommandHelpers.CreateProcessStartInfo(null) };
-                process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
+                process.StartInfo.CreateNoWindow = (!ssh && !Settings.Default.ShowGitCommandLine);
                 process.StartInfo.FileName = cmd;
                 process.StartInfo.Arguments = arguments;
                 process.StartInfo.WorkingDirectory = WorkingDirectory;

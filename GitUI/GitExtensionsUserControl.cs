@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Properties;
 using ResourceManager.Translation;
 
 namespace GitUI
@@ -12,7 +13,7 @@ namespace GitUI
     {
         public GitExtensionsControl()
         {
-            Font = Settings.Font;
+            Font = Settings.Default.Font;
 
             Load += GitExtensionsControl_Load;
         }
@@ -66,7 +67,7 @@ namespace GitUI
 
         protected void Translate()
         {
-            Translator.Translate(this, GitCommands.Settings.CurrentTranslation);
+            Translator.Translate(this, GitCommands.Properties.Settings.Default.CurrentTranslation);
             translated = true;
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using GitCommands;
+using GitCommands.Properties;
 
 namespace GitUI.RevisionGridClasses
 {
@@ -10,8 +11,8 @@ namespace GitUI.RevisionGridClasses
             InitializeComponent();
             Translate();
 
-            LimitCheck.Checked = Settings.MaxRevisionGraphCommits > 0;
-            _NO_TRANSLATE_Limit.Value = Settings.MaxRevisionGraphCommits;
+            LimitCheck.Checked = Settings.Default.MaxRevisionGraphCommits > 0;
+            _NO_TRANSLATE_Limit.Value = Settings.Default.MaxRevisionGraphCommits;
         }
 
         private void FormRevisionFilterLoad(object sender, EventArgs e)
@@ -26,13 +27,13 @@ namespace GitUI.RevisionGridClasses
 
         private void OnBranchFilterCheckedChanged(object sender, EventArgs e)
         {
-            Settings.BranchFilterEnabled = BranchFilterCheck.Checked;
+            Settings.Default.BranchFilterEnabled = BranchFilterCheck.Checked;
             EnableFilters();
         }
 
         private void OnShowCurrentBranchOnlyCheckedChanged(object sender, EventArgs e)
         {
-            Settings.ShowCurrentBranchOnly = CurrentBranchOnlyCheck.Checked;
+            Settings.Default.ShowCurrentBranchOnly = CurrentBranchOnlyCheck.Checked;
             EnableFilters();
         }
 
@@ -46,8 +47,8 @@ namespace GitUI.RevisionGridClasses
             _NO_TRANSLATE_Limit.Enabled = LimitCheck.Checked;
             FileFilter.Enabled = FileFilterCheck.Checked;
 
-            BranchFilterCheck.Checked = Settings.BranchFilterEnabled;
-            CurrentBranchOnlyCheck.Checked = Settings.ShowCurrentBranchOnly;
+            BranchFilterCheck.Checked = Settings.Default.BranchFilterEnabled;
+            CurrentBranchOnlyCheck.Checked = Settings.Default.ShowCurrentBranchOnly;
 
             CurrentBranchOnlyCheck.Enabled = BranchFilterCheck.Checked;
             BranchFilter.Enabled = BranchFilterCheck.Checked &&
@@ -121,7 +122,7 @@ namespace GitUI.RevisionGridClasses
 
         public string GetBranchFilter()
         {
-            if (!Settings.BranchFilterEnabled || Settings.ShowCurrentBranchOnly)
+            if (!Settings.Default.BranchFilterEnabled || Settings.Default.ShowCurrentBranchOnly)
                 return String.Empty;
 
             return BranchFilter.Text;
