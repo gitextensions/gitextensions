@@ -2566,15 +2566,15 @@ namespace GitCommands
             return remote + "/" + (merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge);
         }
 
-        public IList<GitHead> GetRemoteHeads(string remote, bool tags, bool branches)
+        public IList<GitRef> GetRemoteRefs(string remote, bool tags, bool branches)
         {
             remote = FixPath(remote);
 
-            var tree = GetTreeFromRemoteHeads(remote, tags, branches);
-            return GetTreeHeads(tree);
+            var tree = GetTreeFromRemoteRefs(remote, tags, branches);
+            return GetTreeRefs(tree);
         }
 
-        private string GetTreeFromRemoteHeads(string remote, bool tags, bool branches)
+        private string GetTreeFromRemoteRefs(string remote, bool tags, bool branches)
         {
             if (tags && branches)
                 return RunGitCmd("ls-remote --heads --tags \"" + remote + "\"");
@@ -2585,20 +2585,20 @@ namespace GitCommands
             return "";
         }
 
-        public IList<GitHead> GetHeads()
+        public IList<GitRef> GetRefs()
         {
-            return GetHeads(true, true);
+            return GetRefs(true, true);
         }
 
-        public IList<GitHead> GetHeads(bool tags)
+        public IList<GitRef> GetRefs(bool tags)
         {
-            return GetHeads(tags, true);
+            return GetRefs(tags, true);
         }
 
-        public IList<GitHead> GetHeads(bool tags, bool branches)
+        public IList<GitRef> GetRefs(bool tags, bool branches)
         {
             var tree = GetTree(tags, branches);
-            return GetTreeHeads(tree);
+            return GetTreeRefs(tree);
         }
 
         /// <summary>
@@ -2606,13 +2606,13 @@ namespace GitCommands
         /// </summary>
         /// <param name="orderByCommitDate">true: slower!</param>
         /// <returns></returns>
-        public IList<GitHead> GetTagHeads(GetTagHeadsSortOrder option)
+        public IList<GitRef> GetTagRefs(GetTagRefsSortOrder option)
         {
-            var list = GetHeads(true, false);
+            var list = GetRefs(true, false);
 
-            var sortedList = new List<GitHead>();
+            var sortedList = new List<GitRef>();
 
-            if (option == GetTagHeadsSortOrder.ByCommitDateAscending)
+            if (option == GetTagRefsSortOrder.ByCommitDateAscending)
             {
                 sortedList = list.OrderBy(head =>
                 {
@@ -2620,7 +2620,7 @@ namespace GitCommands
                     return r.CommitDate;
                 }).ToList();
             }
-            else if (option == GetTagHeadsSortOrder.ByCommitDateDescending)
+            else if (option == GetTagRefsSortOrder.ByCommitDateDescending)
             {
                 sortedList = list.OrderByDescending(head =>
                 {
@@ -2629,12 +2629,12 @@ namespace GitCommands
                 }).ToList();
             }
             else
-                sortedList = new List<GitHead>(list);
+                sortedList = new List<GitRef>(list);
 
             return sortedList;
         }
 
-        public enum GetTagHeadsSortOrder
+        public enum GetTagRefsSortOrder
         {
             /// <summary>
             /// default
@@ -2670,12 +2670,12 @@ namespace GitCommands
             return "";
         }
 
-        private IList<GitHead> GetTreeHeads(string tree)
+        private IList<GitRef> GetTreeRefs(string tree)
         {
             var itemsStrings = tree.Split('\n');
 
-            var heads = new List<GitHead>();
-            var defaultHeads = new Dictionary<string, GitHead>(); // remote -> HEAD
+            var gitRefs = new List<GitRef>();
+            var defaultHeads = new Dictionary<string, GitRef>(); // remote -> HEAD
             var remotes = GetRemotes(false);
 
             foreach (var itemsString in itemsStrings)
@@ -2686,23 +2686,23 @@ namespace GitCommands
                 var completeName = itemsString.Substring(41).Trim();
                 var guid = itemsString.Substring(0, 40);
                 var remoteName = GitCommandHelpers.GetRemoteName(completeName, remotes);
-                var head = new GitHead(this, guid, completeName, remoteName);
+                var head = new GitRef(this, guid, completeName, remoteName);
                 if (DefaultHeadPattern.IsMatch(completeName))
                     defaultHeads[remoteName] = head;
                 else
-                    heads.Add(head);
+                    gitRefs.Add(head);
             }
 
             // do not show default head if remote has a branch on the same commit
-            GitHead defaultHead;
-            foreach (var head in heads.Where(head => defaultHeads.TryGetValue(head.Remote, out defaultHead) && head.Guid == defaultHead.Guid))
+            GitRef defaultHead;
+            foreach (var gitRef in gitRefs.Where(head => defaultHeads.TryGetValue(head.Remote, out defaultHead) && head.Guid == defaultHead.Guid))
             {
-                defaultHeads.Remove(head.Remote);
+                defaultHeads.Remove(gitRef.Remote);
             }
 
-            heads.AddRange(defaultHeads.Values);
+            gitRefs.AddRange(defaultHeads.Values);
 
-            return heads;
+            return gitRefs;
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs
         private void FormDeleteTagLoad(object sender, EventArgs e)
         {
             Tags.DisplayMember = "Name";
-            Tags.DataSource = Module.GetHeads(true, false);
+            Tags.DataSource = Module.GetRefs(true, false);
             Tags.Text = Tag as string;
             remotesComboboxControl1.SelectedRemote = Module.GetCurrentRemote();
             EnableOrDisableRemotesCombobox();

@@ -15,17 +15,17 @@ namespace GitCommands
 
         public String[] ParentGuids;
         private IList<IGitItem> _subItems;
-        private readonly List<GitHead> heads = new List<GitHead>();
-        private readonly GitModule Module;
+        private readonly List<GitRef> _refs = new List<GitRef>();
+        private readonly GitModule _module;
 
         public GitRevision(GitModule aModule, string guid)
         {
             Guid = guid;
             Message = "";
-            Module = aModule;
+            _module = aModule;
         }
 
-        public List<GitHead> Heads { get { return heads; } }
+        public List<GitRef> Refs { get { return _refs; } }
 
         public string TreeGuid { get; set; }
 
@@ -47,7 +47,7 @@ namespace GitCommands
 
         public IEnumerable<IGitItem> SubItems
         {
-            get { return _subItems ?? (_subItems = Module.GetTree(TreeGuid, false)); }
+            get { return _subItems ?? (_subItems = _module.GetTree(TreeGuid, false)); }
         }
 
         #endregion
@@ -64,7 +64,7 @@ namespace GitCommands
 
         public bool MatchesSearchString(string searchString)
         {
-            if (Heads.Any(gitHead => gitHead.Name.ToLower().Contains(searchString)))
+            if (Refs.Any(gitHead => gitHead.Name.ToLower().Contains(searchString)))
                 return true;
 
             if ((searchString.Length > 2) && Guid.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))

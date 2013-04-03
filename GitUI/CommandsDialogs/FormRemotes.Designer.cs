@@ -120,7 +120,7 @@ namespace GitUI.CommandsDialogs
             // 
             // gitHeadBindingSource
             // 
-            this.gitHeadBindingSource.DataSource = typeof(GitCommands.GitHead);
+            this.gitHeadBindingSource.DataSource = typeof(GitCommands.GitRef);
             // 
             // tabControl1
             // 
