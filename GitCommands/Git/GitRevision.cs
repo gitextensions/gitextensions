@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
-    public sealed class GitRevision : IGitItem
+    public sealed class GitRevision : IGitItem, INotifyPropertyChanged
     {
         public const string UnstagedGuid = "0000000000000000000000000000000000000000";
         public const string IndexGuid = "1111111111111111111111111111111111111111";
@@ -18,6 +20,7 @@ namespace GitCommands
         private IList<IGitItem> _subItems;
         private readonly List<GitHead> heads = new List<GitHead>();
         private readonly GitModule Module;
+        private BuildInfo _buildStatus;
 
         public GitRevision(GitModule aModule, string guid)
         {
@@ -37,7 +40,16 @@ namespace GitCommands
         public string CommitterEmail { get; set; }
         public DateTime CommitDate { get; set; }
 
-        public BuildInfo BuildStatus { get; set; }
+        public BuildInfo BuildStatus
+        {
+            get { return _buildStatus; }
+            set
+            {
+                if (Equals(value, _buildStatus)) return;
+                _buildStatus = value;
+                OnPropertyChanged("BuildStatus");
+            }
+        }
 
         public string Message { get; set; }
         //UTF-8 when is null or empty
@@ -92,6 +104,15 @@ namespace GitCommands
         public bool HasParent()
         {
             return ParentGuids != null && ParentGuids.Length > 0;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

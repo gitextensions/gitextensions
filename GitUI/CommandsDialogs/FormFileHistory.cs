@@ -263,7 +263,7 @@ namespace GitUI.CommandsDialogs
                 if (BuildReportTabPageExtension == null)
                     BuildReportTabPageExtension = new BuildReportTabPageExtension(tabControl1);
 
-                BuildReportTabPageExtension.FillBuildReport(revision);
+                BuildReportTabPageExtension.FillBuildReport(selectedRows.Count == 1 ? revision : null);
             }
         }
 
