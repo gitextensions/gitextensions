@@ -1432,7 +1432,7 @@ namespace GitUI
             StartFileHistoryDialog(fileName, null);
         }
 
-        public bool StartPushDialog(IWin32Window owner, bool pushOnShow, out bool pushCompleted, string pushTo = null, GitHead headToPush = null)
+        public bool StartPushDialog(IWin32Window owner, bool pushOnShow, out bool pushCompleted, string pushTo = null, GitRef refToPush = null)
         {
             bool pushed = false;
 
@@ -1445,9 +1445,9 @@ namespace GitUI
                         form.SetSelectedRemote(pushTo);
                     }
 
-                    if (headToPush != null)
+                    if (refToPush != null)
                     {
-                        form.SetSelectedHeadToPush(headToPush);
+                        form.SetSelectedRefToPush(refToPush);
                     }
 
                     DialogResult dlgResult;
@@ -1481,10 +1481,10 @@ namespace GitUI
             return StartPushDialog(null, pushOnShow);
         }
 
-        public bool StartPushDialog(IWin32Window owner, string pushTo, GitHead headToPush)
+        public bool StartPushDialog(IWin32Window owner, string pushTo, GitRef refToPush)
         {
             bool pushCompleted;
-            return StartPushDialog(owner, false, out pushCompleted, pushTo, headToPush);
+            return StartPushDialog(owner, false, out pushCompleted, pushTo, refToPush);
         }
 
         public bool StartApplyPatchDialog(IWin32Window owner, string patchFile)

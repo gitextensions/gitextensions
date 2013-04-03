@@ -1706,8 +1706,9 @@ namespace GitUI
             var tagNameCopy = new ContextMenuStrip();
             var branchNameCopy = new ContextMenuStrip();
 
-            var tags = new List<GitHead>();
+            var tags = new List<GitRef>();
 
+            foreach (var head in revision.Refs.Where(h => h.IsTag))
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
                 ToolStripItem tagName = new ToolStripMenuItem(head.Name);
@@ -1845,13 +1846,13 @@ namespace GitUI
             RefreshOwnScripts();
         }
 
-        private ContextMenuStrip CreateRemotesDropDown(GitHead headToPush)
+        private ContextMenuStrip CreateRemotesDropDown(GitRef refToPush)
         {
             var remotesDropDown = new ContextMenuStrip();
             foreach (var remote in Module.GetRemotes(false))
             {
                 var item = remotesDropDown.Items.Add(remote);
-                item.Tag = headToPush;
+                item.Tag = refToPush;
                 item.Click += ToolStripItemClickPush;
             }
             return remotesDropDown;
@@ -1937,16 +1938,16 @@ namespace GitUI
         private void ToolStripItemPushBranchOrTag(object sender, EventArgs e)
         {
             var headItem = (ToolStripItem)sender;
-            var head = (GitHead)headItem.Tag;
-            UICommands.StartPushDialog(this, null, head);
+            var gitRef = (GitRef)headItem.Tag;
+            UICommands.StartPushDialog(this, null, gitRef);
         }
 
         private void ToolStripItemClickPush(object sender, EventArgs e)
         {
             var remoteItem = (ToolStripItem)sender;
-            var sourceItem = (GitHead)remoteItem.Tag;
-            Debug.WriteLine(string.Format("{0} / {1}", remoteItem, sourceItem.CompleteName));
-            UICommands.StartPushDialog(this, remoteItem.Text, sourceItem);
+            var refToPush = (GitRef)remoteItem.Tag;
+            Debug.WriteLine(string.Format("{0} <-- {1}", remoteItem, refToPush.CompleteName));
+            UICommands.StartPushDialog(this, remoteItem.Text, refToPush);
         }
 
         private void CheckoutRevisionToolStripMenuItemClick(object sender, EventArgs e)
