@@ -141,5 +141,17 @@ namespace GitUI.CommandsDialogs
             Initialize();
             UseWaitCursor = false;
         }
+
+        private void Pull_Click(object sender, EventArgs e)
+        {
+            var submodule = Module.GetSubmodule(SubModuleLocalPath.Text);
+            if (submodule == null)
+                return;
+            GitUICommands uiCommands = new GitUICommands(submodule);
+            uiCommands.StartPullDialog(this);
+            UseWaitCursor = true;
+            Initialize();
+            UseWaitCursor = false;
+        }
     }
 }

@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Properties;
 using ResourceManager.Translation;
 using Gravatar;
 using System.IO;
@@ -26,7 +25,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Text = "Appearance";
             Translate();
 
-            noImageService.Items.AddRange(GravatarService.DynamicServices.Cast<object>().ToArray());
+            NoImageService.Items.AddRange(GravatarService.DynamicServices.Cast<object>().ToArray());
         }
 
         protected override string GetCommaSeparatedKeywordList()
@@ -46,58 +45,81 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void OnLoadSettings()
         {
-            chkEnableAutoScale.Checked = Settings.Default.EnableAutoScale;
+            chkEnableAutoScale.Checked = Settings.EnableAutoScale;
 
-            chkShowCurrentBranchInVisualStudio.Checked = Settings.Default.ShowCurrentBranchInVisualStudio;
-            _NO_TRANSLATE_DaysToCacheImages.Value = Settings.Default.AuthorImageCacheDays;
-            _NO_TRANSLATE_authorImageSize.Value = Settings.Default.AuthorImageSize;
-            ShowAuthorGravatar.Checked = Settings.Default.ShowAuthorGravatar;
-            noImageService.Text = Settings.Default.GravatarFallbackService;
+            chkShowCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
+            _NO_TRANSLATE_DaysToCacheImages.Value = Settings.AuthorImageCacheDays;
+            if (Settings.AuthorImageSize <= 120)
+                AuthorImageSize.SelectedIndex = 0;
+            else if (Settings.AuthorImageSize <= 200)
+                AuthorImageSize.SelectedIndex = 1;
+            else if (Settings.AuthorImageSize <= 280)
+                AuthorImageSize.SelectedIndex = 2;
+            else
+                AuthorImageSize.SelectedIndex = 3;
+            ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
+            NoImageService.Text = Settings.GravatarFallbackService;
 
             Language.Items.Clear();
             Language.Items.Add("English");
             Language.Items.AddRange(Translator.GetAllTranslations());
-            Language.Text = Settings.Default.Translation;
+            Language.Text = Settings.Translation;
 
-            _NO_TRANSLATE_truncatePathMethod.Text = Settings.Default.TruncatePathMethod;
+            _NO_TRANSLATE_truncatePathMethod.Text = Settings.TruncatePathMethod;
 
-            Dictionary.Text = Settings.Default.Dictionary;
+            Dictionary.Text = Settings.Dictionary;
 
-            chkShowRelativeDate.Checked = Settings.Default.RelativeDate;
+            chkShowRelativeDate.Checked = Settings.RelativeDate;
 
-            SetCurrentApplicationFont(Settings.Default.Font);
-            SetCurrentDiffFont(Settings.Default.DiffFont);
-            SetCurrentCommitFont(Settings.Default.CommitFont);
+            SetCurrentApplicationFont(Settings.Font);
+            SetCurrentDiffFont(Settings.DiffFont);
+            SetCurrentCommitFont(Settings.CommitFont);
 
         }
 
         public override void SaveSettings()
         {
-            Settings.Default.EnableAutoScale = chkEnableAutoScale.Checked;
-            Settings.Default.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
-            Settings.Default.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
+            Settings.EnableAutoScale = chkEnableAutoScale.Checked;
+            Settings.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
+            Settings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
 
-            if ((int)_NO_TRANSLATE_authorImageSize.Value != Settings.Default.AuthorImageSize)
+            int authorImageSize;
+            switch (AuthorImageSize.SelectedIndex)
             {
-                Settings.Default.AuthorImageSize = (int)_NO_TRANSLATE_authorImageSize.Value;
+                case 1:
+                    authorImageSize = 160;
+                    break;
+                case 2:
+                    authorImageSize = 240;
+                    break;
+                case 3:
+                    authorImageSize = 320;
+                    break;
+                default:
+                    authorImageSize = 80;
+                    break;
+            }
+            if (authorImageSize != Settings.AuthorImageSize)
+            {
+                Settings.AuthorImageSize = authorImageSize;
                 GravatarService.ClearImageCache();
             }
 
-            Settings.Default.Translation = Language.Text;
+            Settings.Translation = Language.Text;
             Strings.Reinit();
 
-            Settings.Default.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
+            Settings.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 
-            Settings.Default.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
-            Settings.Default.GravatarFallbackService = noImageService.Text;
+            Settings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
+            Settings.GravatarFallbackService = NoImageService.Text;
 
-            Settings.Default.RelativeDate = chkShowRelativeDate.Checked;
+            Settings.RelativeDate = chkShowRelativeDate.Checked;
 
-            Settings.Default.Dictionary = Dictionary.Text;
+            Settings.Dictionary = Dictionary.Text;
 
-            Settings.Default.DiffFont = _diffFont;
-            Settings.Default.Font = _applicationFont;
-            Settings.Default.CommitFont = commitFont;
+            Settings.DiffFont = _diffFont;
+            Settings.Font = _applicationFont;
+            Settings.CommitFont = commitFont;
         }
 
         private void Dictionary_DropDown(object sender, EventArgs e)

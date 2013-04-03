@@ -15,7 +15,7 @@ namespace Gerrit
     {
         #region Translation
         private readonly TranslationString _pluginDescription = new TranslationString("Gerrit Code Review");
-        private readonly TranslationString _editGitReview = new TranslationString("Edit .gitreview...");
+        private readonly TranslationString _editGitReview = new TranslationString("Edit .gitreview");
         private readonly TranslationString _downloadGerritChange = new TranslationString("Download Gerrit Change");
         private readonly TranslationString _publishGerritChange = new TranslationString("Publish Gerrit Change");
         private readonly TranslationString _installCommitMsgHook = new TranslationString("Install Hook");

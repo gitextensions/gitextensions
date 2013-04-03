@@ -2,72 +2,83 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using GitCommands.Properties;
 
 namespace GitCommands.Repository
 {
     public static class Repositories
     {
-        private static RepositoryHistory _repositoryHistory;
+        private static Task<RepositoryHistory> _repositoryHistory;
         private static RepositoryHistory _remoteRepositoryHistory;
         private static BindingList<RepositoryCategory> _repositoryCategories;
+
+        public static Task<RepositoryHistory> LoadRepositoryHistoryAsync()
+        {
+            if (_repositoryHistory != null)
+                return _repositoryHistory;
+            _repositoryHistory = Task.Factory.StartNew(() => LoadRepositoryHistory());
+            return _repositoryHistory;
+        }
+
+        private static RepositoryHistory LoadRepositoryHistory()
+        {
+            var repositoryHistory = new RepositoryHistory();
+            object setting = Settings.GetValue<string>("history", null);
+            if (setting == null)
+            {
+                repositoryHistory = new RepositoryHistory();
+                return repositoryHistory;
+            }
+
+            repositoryHistory = DeserializeHistoryFromXml(setting.ToString());
+            if (repositoryHistory != null)
+            {
+                AssignRepositoryHistoryFromCategories(repositoryHistory, null);
+
+                // migration from old version (move URL history to _remoteRepositoryHistory)
+                if (Settings.GetValue<string>("history remote", null) == null)
+                {
+                    _remoteRepositoryHistory = new RepositoryHistory();
+                    foreach (Repository repo in repositoryHistory.Repositories)
+                    {
+                        if (repo.IsRemote)
+                        {
+                            repo.Path = repo.Path.Replace('\\', '/');
+                            _remoteRepositoryHistory.AddRepository(repo);
+                        }
+                    }
+                    foreach (Repository repo in _remoteRepositoryHistory.Repositories)
+                    {
+                        repositoryHistory.RemoveRepository(repo);
+                    }
+                }
+            }
+
+            return repositoryHistory ?? new RepositoryHistory();
+        }
 
         public static RepositoryHistory RepositoryHistory
         {
             get
             {
-                if (_repositoryHistory != null)
-                    return _repositoryHistory;
-
-                object setting = Settings.Default.RepositoryHistory;
-                if (setting == null)
-                {
-                    _repositoryHistory = new RepositoryHistory();
-                    return _repositoryHistory;
-                }
-
-                _repositoryHistory = DeserializeHistoryFromXml(setting.ToString());
-                if (_repositoryHistory != null)
-                {
-                    AssignRepositoryHistoryFromCategories(null);
-
-                    // migration from old version (move URL history to _remoteRepositoryHistory)
-                    if (Settings.Default.RemoteRepositoryHistory == null)
-                    {
-                        _remoteRepositoryHistory = new RepositoryHistory();
-                        foreach (Repository repo in _repositoryHistory.Repositories)
-                        {
-                            if (repo.IsRemote)
-                            {
-                                repo.Path = repo.Path.Replace('\\', '/');
-                                _remoteRepositoryHistory.AddRepository(repo);
-                            }
-                        }
-                        foreach (Repository repo in _remoteRepositoryHistory.Repositories)
-                        {
-                            _repositoryHistory.RemoveRepository(repo);
-                        }
-                    }
-                }
-
-                return _repositoryHistory ?? (_repositoryHistory = new RepositoryHistory());
+                if (_repositoryHistory == null)
+                    LoadRepositoryHistoryAsync();
+                return _repositoryHistory.Result;
             }
-            private set
-            {
-                _repositoryHistory = value;
-            }
-
         }
 
         public static RepositoryHistory RemoteRepositoryHistory
         {
             get
             {
+                if (_repositoryHistory != null && _repositoryHistory.Status == TaskStatus.Running)
+                    _repositoryHistory.Wait();
                 if (_remoteRepositoryHistory == null)
                 {
-                    object setting = Settings.Default.RemoteRepositoryHistory;
+                    object setting = Settings.GetValue<string>("history remote", null);
                     if (setting != null)
                     {
                         _remoteRepositoryHistory = DeserializeHistoryFromXml(setting.ToString());
@@ -80,12 +91,11 @@ namespace GitCommands.Repository
             {
                 _remoteRepositoryHistory = value;
             }
-
         }
 
-        private static void AssignRepositoryHistoryFromCategories(string path)
+        private static void AssignRepositoryHistoryFromCategories(RepositoryHistory repositoryHistory, string path)
         {
-            foreach (Repository repo in RepositoryHistory.Repositories)
+            foreach (Repository repo in repositoryHistory.Repositories)
             {
                 if (path == null || path.Equals(repo.Path, StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -96,13 +106,17 @@ namespace GitCommands.Repository
             }        
         }
 
+        private static void AssignRepositoryHistoryFromCategories(string path)
+        {
+            AssignRepositoryHistoryFromCategories(RepositoryHistory, path);
+        }
+
         private static Repository FindFirstCategoryRepository(string path)
         {
-            foreach (RepositoryCategory category in Repositories.RepositoryCategories)
+            foreach (Repository repo in RepositoryCategories.SelectMany(category => category.Repositories))
             {
-                foreach (Repository repo in category.Repositories)
-                    if (repo.Path != null && repo.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase))
-                        return repo;
+                if (repo.Path != null && repo.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase))
+                    return repo;
             }
             return null;        
         }
@@ -113,12 +127,11 @@ namespace GitCommands.Repository
             {
                 if (_repositoryCategories == null)
                 {
-                    object setting = Settings.Default.Repositories;
+                    object setting = Settings.GetValue<string>("repositories", null);
                     if (setting != null)
                     {
                         _repositoryCategories = DeserializeRepositories(setting.ToString());
                     }
-
                 }
 
                 return _repositoryCategories ?? (_repositoryCategories = new BindingList<RepositoryCategory>());
@@ -235,11 +248,11 @@ namespace GitCommands.Repository
         public static void SaveSettings()
         {
             if (_repositoryHistory != null)
-                Settings.Default.RepositoryHistory= Repositories.SerializeHistoryIntoXml(_repositoryHistory);
+                Settings.SetValue("history", Repositories.SerializeHistoryIntoXml(_repositoryHistory.Result));
             if (_remoteRepositoryHistory != null)
-                Settings.Default.RemoteRepositoryHistory= Repositories.SerializeHistoryIntoXml(_remoteRepositoryHistory);
+                Settings.SetValue("history remote", Repositories.SerializeHistoryIntoXml(_remoteRepositoryHistory));
             if (_repositoryCategories != null)
-                Settings.Default.Repositories= SerializeRepositories(_repositoryCategories);
+                Settings.SetValue("repositories", SerializeRepositories(_repositoryCategories));
         }
 
         public static void AddCategory(string title)

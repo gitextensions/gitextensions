@@ -45,21 +45,21 @@ namespace GitUI.RevisionGridClasses
 
         #endregion
 
-        private int NODE_DIMENSION = 8;
-        private int LANE_WIDTH = 13;
-        private int LANE_LINE_WIDTH = 2;
-        private const int MAX_LANES = 40;
-        private Brush selectionBrush;
+        private int _nodeDimension = 8;
+        private int _laneWidth = 13;
+        private int _laneLineWidth = 2;
+        private const int MaxLanes = 40;
+        private Brush _selectionBrush;
         
-        private Pen whiteBorderPen;
-        private Pen blackBorderPen;
+        private Pen _whiteBorderPen;
+        private Pen _blackBorderPen;
 
-        private readonly AutoResetEvent backgroundEvent = new AutoResetEvent(false);
-        private readonly Graph graphData;
-        private readonly Dictionary<Junction, int> junctionColors = new Dictionary<Junction, int>();
-        private readonly Color nonRelativeColor = Color.LightGray;
+        private readonly AutoResetEvent _backgroundEvent = new AutoResetEvent(false);
+        private readonly Graph _graphData;
+        private readonly Dictionary<Junction, int> _junctionColors = new Dictionary<Junction, int>();
+        private readonly Color _nonRelativeColor = Color.LightGray;
         
-        private readonly Color[] possibleColors =
+        private readonly Color[] _possibleColors =
             {
                 Color.Red,
                 Color.MistyRose,
@@ -75,44 +75,44 @@ namespace GitUI.RevisionGridClasses
                 Color.Orange
             };
 
-        private readonly List<string> toBeSelected = new List<string>();
-        private int backgroundScrollTo;
-        private Thread backgroundThread;
-        private volatile bool shouldRun = true;
-        private int cacheCount; // Number of elements in the cache.
-        private int cacheCountMax; // Number of elements allowed in the cache. Is based on control height.
-        private int cacheHead = -1; // The 'slot' that is the head of the circular bitmap
-        private int cacheHeadRow; // The node row that is in the head slot
-        private FilterType filterMode = FilterType.None;
-        private Bitmap graphBitmap;
-        private int graphDataCount;
-        private Graphics graphWorkArea;
-        private int rowHeight; // Height of elements in the cache. Is equal to the control's row height.
-        private int visibleBottom;
-        private int visibleTop;
+        private readonly List<string> _toBeSelected = new List<string>();
+        private int _backgroundScrollTo;
+        private readonly Thread _backgroundThread;
+        private volatile bool _shouldRun = true;
+        private int _cacheCount; // Number of elements in the cache.
+        private int _cacheCountMax; // Number of elements allowed in the cache. Is based on control height.
+        private int _cacheHead = -1; // The 'slot' that is the head of the circular bitmap
+        private int _cacheHeadRow; // The node row that is in the head slot
+        private FilterType _filterMode = FilterType.None;
+        private Bitmap _graphBitmap;
+        private int _graphDataCount;
+        private Graphics _graphWorkArea;
+        private int _rowHeight; // Height of elements in the cache. Is equal to the control's row height.
+        private int _visibleBottom;
+        private int _visibleTop;
 
-        public void SetDimensions(int node_dimension, int lane_width, int lane_line_width, int row_height, Brush selectionBrush)
+        public void SetDimensions(int nodeDimension, int laneWidth, int laneLineWidth, int rowHeight, Brush selectionBrush)
         {
-            RowTemplate.Height = row_height;
-            NODE_DIMENSION = node_dimension;
-            LANE_WIDTH = lane_width;
-            LANE_LINE_WIDTH = lane_line_width;
-            this.selectionBrush = selectionBrush;
+            RowTemplate.Height = rowHeight;
+            _nodeDimension = nodeDimension;
+            _laneWidth = laneWidth;
+            _laneLineWidth = laneLineWidth;
+            this._selectionBrush = selectionBrush;
 
             dataGrid_Resize(null, null);
         }
 
         public DvcsGraph()
         {
-            graphData = new Graph();
+            _graphData = new Graph();
 
-            backgroundThread = new Thread(BackgroundThreadEntry)
+            _backgroundThread = new Thread(BackgroundThreadEntry)
                                    {
                                        IsBackground = true,
                                        Priority = ThreadPriority.BelowNormal,
                                        Name = "DvcsGraph.backgroundThread"
                                    };
-            backgroundThread.Start();
+            _backgroundThread.Start();
 
             InitializeComponent();
 
@@ -123,19 +123,36 @@ namespace GitUI.RevisionGridClasses
             RowsDefaultCellStyle.Font = SystemFonts.DefaultFont;
             RowHeadersDefaultCellStyle.Font = SystemFonts.DefaultFont;
             RowTemplate.DefaultCellStyle.Font = SystemFonts.DefaultFont;
-            dataGridColumnGraph.DefaultCellStyle.Font = SystemFonts.DefaultFont;
 
-            whiteBorderPen = new Pen(Brushes.White, LANE_LINE_WIDTH + 2);
-            blackBorderPen = new Pen(Brushes.Black, LANE_LINE_WIDTH + 1);
+            _whiteBorderPen = new Pen(Brushes.White, _laneLineWidth + 2);
+            _blackBorderPen = new Pen(Brushes.Black, _laneLineWidth + 1);
             
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             CellPainting += dataGrid_CellPainting;
             ColumnWidthChanged += dataGrid_ColumnWidthChanged;
             Scroll += dataGrid_Scroll;
-            graphData.Updated += graphData_Updated;
+            _graphData.Updated += graphData_Updated;
 
             VirtualMode = true;
             Clear();
+        }
+
+        protected override void OnCreateControl()
+        {
+            DataGridViewColumn dataGridColumnGraph;
+            if (ColumnCount <= 0 || Columns[0].HeaderText != "")
+                dataGridColumnGraph = new DataGridViewTextBoxColumn();
+            else
+                dataGridColumnGraph = Columns[0];
+            dataGridColumnGraph.HeaderText = "";
+            dataGridColumnGraph.Frozen = true;
+            dataGridColumnGraph.Name = "dataGridColumnGraph";
+            dataGridColumnGraph.ReadOnly = true;
+            dataGridColumnGraph.SortMode = DataGridViewColumnSortMode.NotSortable;
+            dataGridColumnGraph.Width = 70;
+            dataGridColumnGraph.DefaultCellStyle.Font = SystemFonts.DefaultFont;
+            if (ColumnCount == 0 || Columns[0].HeaderText != "")
+                Columns.Insert(0, dataGridColumnGraph);
         }
 
         public void ShowAuthor(bool show)
@@ -148,28 +165,28 @@ namespace GitUI.RevisionGridClasses
         [Category("Behavior")]
         public FilterType FilterMode
         {
-            get { return filterMode; }
+            get { return _filterMode; }
             set
             {
                 // TODO: We only need to rebuild the graph if switching to or from hide
-                if (filterMode == value)
+                if (_filterMode == value)
                 {
                     return;
                 }
 
                 this.InvokeSync(() =>
                     {
-                        lock (backgroundEvent) // Make sure the background thread isn't running
+                        lock (_backgroundEvent) // Make sure the background thread isn't running
                         {
-                            lock (backgroundThread)
+                            lock (_backgroundThread)
                             {
-                                backgroundScrollTo = 0;
-                                graphDataCount = 0;
+                                _backgroundScrollTo = 0;
+                                _graphDataCount = 0;
                             }
-                            lock (graphData)
+                            lock (_graphData)
                             {
-                                filterMode = value;
-                                graphData.IsFilter = (filterMode & FilterType.Hide) == FilterType.Hide;
+                                _filterMode = value;
+                                _graphData.IsFilter = (_filterMode & FilterType.Hide) == FilterType.Hide;
                                 RebuildGraph();
                             }
                         }
@@ -190,7 +207,7 @@ namespace GitUI.RevisionGridClasses
                 var data = new object[SelectedRows.Count];
                 for (int i = 0; i < SelectedRows.Count; i++)
                 {
-                    data[i] = graphData[i].Node.Data;
+                    data[i] = _graphData[i].Node.Data;
                 }
                 return data;
             }
@@ -209,18 +226,18 @@ namespace GitUI.RevisionGridClasses
                 var data = new string[SelectedRows.Count];
                 for (int i = 0; i < SelectedRows.Count; i++)
                 {
-                    if (graphData[SelectedRows[i].Index] != null)
-                        data[i] = graphData[SelectedRows[i].Index].Node.Id;
+                    if (_graphData[SelectedRows[i].Index] != null)
+                        data[i] = _graphData[SelectedRows[i].Index].Node.Id;
                 }
                 return data;
             }
             set
             {
-                lock (graphData)
+                lock (_graphData)
                 {
                     ClearSelection();
                     CurrentCell = null;
-                    toBeSelected.Clear();
+                    _toBeSelected.Clear();
                     if (value == null)
                     {
                         return;
@@ -243,7 +260,7 @@ namespace GitUI.RevisionGridClasses
                         else
                         {
                             // Remember this node, and if we see it again, select it.
-                            toBeSelected.Add(rowItem);
+                            _toBeSelected.Add(rowItem);
                         }
                     }
                 }
@@ -252,29 +269,29 @@ namespace GitUI.RevisionGridClasses
 
         protected override void Dispose(bool disposing)
         {
-            lock (backgroundEvent)
-                shouldRun = false;
+            lock (_backgroundEvent)
+                _shouldRun = false;
 
             if (disposing)
             {
-                if (whiteBorderPen != null)
+                if (_whiteBorderPen != null)
                 {
-                    whiteBorderPen.Dispose();
-                    whiteBorderPen = null;
+                    _whiteBorderPen.Dispose();
+                    _whiteBorderPen = null;
                 }
-                if (blackBorderPen != null)
+                if (_blackBorderPen != null)
                 {
-                    blackBorderPen.Dispose();
-                    blackBorderPen = null;
+                    _blackBorderPen.Dispose();
+                    _blackBorderPen = null;
                 }
-                if (graphBitmap != null)
+                if (_graphBitmap != null)
                 {
-                    graphBitmap.Dispose();
-                    graphBitmap = null;
+                    _graphBitmap.Dispose();
+                    _graphBitmap = null;
                 }
-                if (backgroundEvent != null)
+                if (_backgroundEvent != null)
                 {
-                    backgroundEvent.Dispose();
+                    _backgroundEvent.Dispose();
                 }
             }
             base.Dispose(disposing);
@@ -288,14 +305,14 @@ namespace GitUI.RevisionGridClasses
         {
             Columns[0].Visible = true;
             //updateData();
-            backgroundEvent.Set();
+            _backgroundEvent.Set();
         }
 
         public void HideRevisionGraph()
         {
             Columns[0].Visible = false;
             //updateData();
-            backgroundEvent.Set();
+            _backgroundEvent.Set();
         }
 
         [DefaultValue(true)]
@@ -310,9 +327,9 @@ namespace GitUI.RevisionGridClasses
 
         public void Add(string aId, string[] aParentIds, DataType aType, GitRevision aData)
         {
-            lock (graphData)
+            lock (_graphData)
             {
-                graphData.Add(aId, aParentIds, aType, aData);
+                _graphData.Add(aId, aParentIds, aType, aData);
             }
 
             UpdateData();
@@ -320,46 +337,46 @@ namespace GitUI.RevisionGridClasses
 
         public void Clear()
         {
-            lock (backgroundThread)
+            lock (_backgroundThread)
             {
-                backgroundScrollTo = 0;
+                _backgroundScrollTo = 0;
             }
-            lock (graphData)
+            lock (_graphData)
             {
                 SetRowCount(0);
-                junctionColors.Clear();
-                graphData.Clear();
-                graphDataCount = 0;
+                _junctionColors.Clear();
+                _graphData.Clear();
+                _graphDataCount = 0;
                 RebuildGraph();
             }
-            filterMode = FilterType.None;
+            _filterMode = FilterType.None;
         }
 
         public void FilterClear()
         {
-            lock (graphData)
+            lock (_graphData)
             {
-                foreach (Node n in graphData.Nodes.Values)
+                foreach (Node n in _graphData.Nodes.Values)
                 {
                     n.IsFiltered = false;
                 }
-                graphData.IsFilter = false;
+                _graphData.IsFilter = false;
             }
         }
 
         public void Filter(string aId)
         {
-            lock (graphData)
+            lock (_graphData)
             {
-                graphData.Filter(aId);
+                _graphData.Filter(aId);
             }
         }
 
         public bool RowIsRelative(int aRow)
         {
-            lock (graphData)
+            lock (_graphData)
             {
-                Graph.ILaneRow row = graphData[aRow];
+                Graph.ILaneRow row = _graphData[aRow];
                 if (row == null)
                 {
                     return false;
@@ -374,18 +391,18 @@ namespace GitUI.RevisionGridClasses
 
         public GitRevision GetRowData(int aRow)
         {
-            lock (graphData)
+            lock (_graphData)
             {
-                Graph.ILaneRow row = graphData[aRow];
+                Graph.ILaneRow row = _graphData[aRow];
                 return row == null ? null : row.Node.Data;
             }
         }
 
         public string GetRowId(int aRow)
         {
-            lock (graphData)
+            lock (_graphData)
             {
-                Graph.ILaneRow row = graphData[aRow];
+                Graph.ILaneRow row = _graphData[aRow];
                 if (row == null)
                 {
                     return null;
@@ -396,28 +413,28 @@ namespace GitUI.RevisionGridClasses
 
         public int FindRow(string aId)
         {
-            lock (graphData)
+            lock (_graphData)
             {
                 int i;
-                for (i = 0; i < graphData.CachedCount; i++)
+                for (i = 0; i < _graphData.CachedCount; i++)
                 {
-                    if (graphData[i] != null && graphData[i].Node.Id.CompareTo(aId) == 0)
+                    if (_graphData[i] != null && _graphData[i].Node.Id.CompareTo(aId) == 0)
                     {
                         break;
                     }
                 }
 
-                return i == graphData.Count ? -1 : i;
+                return i == _graphData.Count ? -1 : i;
             }
         }
 
         public void Prune()
         {
             int count;
-            lock (graphData)
+            lock (_graphData)
             {
-                graphData.Prune();
-                count = graphData.Count;
+                _graphData.Prune();
+                count = _graphData.Count;
             }
             SetRowCount(count);
         }
@@ -425,8 +442,8 @@ namespace GitUI.RevisionGridClasses
         private void RebuildGraph()
         {
             // Redraw
-            cacheHead = -1;
-            cacheHeadRow = 0;
+            _cacheHead = -1;
+            _cacheHeadRow = 0;
             ClearDrawCache();
             UpdateData();
             Invalidate(true);
@@ -448,7 +465,7 @@ namespace GitUI.RevisionGridClasses
                 return;
             }
 
-            lock (backgroundThread)
+            lock (_backgroundThread)
             {
                 if (CurrentCell == null)
                 {
@@ -483,15 +500,15 @@ namespace GitUI.RevisionGridClasses
                 dataGrid_Scroll(null, null);
             }
 
-            lock (graphData)
+            lock (_graphData)
             {
-                Graph.ILaneRow row = graphData[e.RowIndex];
+                Graph.ILaneRow row = _graphData[e.RowIndex];
                 if (row == null || (e.State & DataGridViewElementStates.Visible) == 0)
                     return;
                 if (e.ColumnIndex != 0)
                     return;
                 var brush = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected
-                                ? selectionBrush : Brushes.White;
+                                ? _selectionBrush : Brushes.White;
                 e.Graphics.FillRectangle(brush, e.CellBounds);
 
                 Rectangle srcRect = DrawGraph(e.RowIndex);
@@ -499,7 +516,7 @@ namespace GitUI.RevisionGridClasses
                 {
                     e.Graphics.DrawImage
                         (
-                            graphBitmap,
+                            _graphBitmap,
                             e.CellBounds,
                             srcRect,
                             GraphicsUnit.Pixel
@@ -523,24 +540,24 @@ namespace GitUI.RevisionGridClasses
 
         private void BackgroundThreadEntry()
         {
-            while (shouldRun && backgroundEvent.WaitOne())
+            while (_shouldRun && _backgroundEvent.WaitOne())
             {
-                lock (backgroundEvent)
+                lock (_backgroundEvent)
                 {
-                    if (!shouldRun)
+                    if (!_shouldRun)
                         return;
 
                     int scrollTo;
-                    lock (backgroundThread)
+                    lock (_backgroundThread)
                     {
-                        scrollTo = backgroundScrollTo;
+                        scrollTo = _backgroundScrollTo;
                     }
 
                     int curCount;
-                    lock (graphData)
+                    lock (_graphData)
                     {
-                        curCount = graphDataCount;
-                        graphDataCount = graphData.CachedCount;
+                        curCount = _graphDataCount;
+                        _graphDataCount = _graphData.CachedCount;
                     }
 
                     if (RevisionGraphVisible)
@@ -559,21 +576,21 @@ namespace GitUI.RevisionGridClasses
         {
             while (curCount < scrollTo)
             {
-                lock (graphData)
+                lock (_graphData)
                 {
                     // Cache the next item
-                    if (!graphData.CacheTo(curCount))
+                    if (!_graphData.CacheTo(curCount))
                     {
                         Debug.WriteLine("Cached item FAILED {0}", curCount.ToString());
-                        lock (backgroundThread)
+                        lock (_backgroundThread)
                         {
-                            backgroundScrollTo = curCount;
+                            _backgroundScrollTo = curCount;
                         }
                         break;
                     }
 
                     // Update the row (if needed)
-                    if (curCount < visibleBottom || toBeSelected.Count > 0)
+                    if (curCount < _visibleBottom || _toBeSelected.Count > 0)
                     {
                         this.InvokeAsync(o => UpdateRow((int)o), curCount);
                     }
@@ -584,26 +601,26 @@ namespace GitUI.RevisionGridClasses
                     if (curCount == count)
                         this.InvokeAsync(UpdateColumnWidth);
 
-                    curCount = graphData.CachedCount;
-                    graphDataCount = curCount;
+                    curCount = _graphData.CachedCount;
+                    _graphDataCount = curCount;
                 }
             }
         }
 
         private void UpdateData()
         {
-            lock (backgroundThread)
+            lock (_backgroundThread)
             {
-                visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
-                visibleBottom = rowHeight > 0 ? visibleTop + (Height / rowHeight) : visibleTop;
+                _visibleTop = FirstDisplayedCell == null ? 0 : FirstDisplayedCell.RowIndex;
+                _visibleBottom = _rowHeight > 0 ? _visibleTop + (Height / _rowHeight) : _visibleTop;
 
                 //Add 2 for safe merge (1 for rounding and 1 for whitespace)....
-                if (visibleBottom + 2 > graphData.Count)
+                if (_visibleBottom + 2 > _graphData.Count)
                 {
                     //Currently we are doing some important work; we are recieving
                     //rows that the user is viewing
                     SetBackgroundThreadToNormalPriority();
-                    if (Loading != null && graphData.Count > RowCount)// && graphData.Count != RowCount)
+                    if (Loading != null && _graphData.Count > RowCount)// && graphData.Count != RowCount)
                     {
                         Loading(true);
                     }
@@ -620,47 +637,47 @@ namespace GitUI.RevisionGridClasses
                     }
                 }
 
-                if (visibleBottom > graphData.Count)
+                if (_visibleBottom > _graphData.Count)
                 {
-                    visibleBottom = graphData.Count;
+                    _visibleBottom = _graphData.Count;
                 }
 
-                int targetBottom = visibleBottom + 2000;
-                targetBottom = Math.Min(targetBottom, graphData.Count);
-                if (backgroundScrollTo < targetBottom)
+                int targetBottom = _visibleBottom + 2000;
+                targetBottom = Math.Min(targetBottom, _graphData.Count);
+                if (_backgroundScrollTo < targetBottom)
                 {
-                    backgroundScrollTo = targetBottom;
-                    backgroundEvent.Set();
+                    _backgroundScrollTo = targetBottom;
+                    _backgroundEvent.Set();
                 }
             }
         }
 
         private void SetBackgroundThreadToNormalPriority()
         {
-            backgroundThread.Priority = ThreadPriority.Normal;
+            _backgroundThread.Priority = ThreadPriority.Normal;
         }
 
         private void SetBackgroundThreadToLowPriority()
         {
-            backgroundThread.Priority = ThreadPriority.BelowNormal;
+            _backgroundThread.Priority = ThreadPriority.BelowNormal;
         }
 
         private void UpdateRow(int row)
         {
-            lock (graphData)
+            lock (_graphData)
             {
-                if (RowCount < graphData.Count)
+                if (RowCount < _graphData.Count)
                 {
-                    SetRowCount(graphData.Count);
+                    SetRowCount(_graphData.Count);
                 }
 
                 // Check to see if the newly added item should be selected
-                if (graphData.Count > row)
+                if (_graphData.Count > row)
                 {
-                    string id = graphData[row].Node.Id;
-                    if (toBeSelected.Contains(id))
+                    string id = _graphData[row].Node.Id;
+                    if (_toBeSelected.Contains(id))
                     {
-                        toBeSelected.Remove(id);
+                        _toBeSelected.Remove(id);
                         Rows[row].Selected = true;
                         if (CurrentCell == null)
                         {
@@ -673,7 +690,7 @@ namespace GitUI.RevisionGridClasses
                 }
 
 
-                if (visibleBottom < graphDataCount)
+                if (_visibleBottom < _graphDataCount)
                 {
                     //All data for the current view is loaded! Lower the thread priority.
                     SetBackgroundThreadToLowPriority();
@@ -696,28 +713,33 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
+        private DataGridViewColumn ColumnGraph
+        {
+            get { return Columns[0]; }
+        }
+
         private void UpdateColumnWidth()
         {
-            lock (graphData)
+            lock (_graphData)
             {
                 // Auto scale width on scroll
-                if (dataGridColumnGraph.Visible)
+                if (ColumnGraph.Visible)
                 {
                     int laneCount = 2;
-                    if (graphData != null)
+                    if (_graphData != null)
                     {
                         int width = 1;
-                        int start = VerticalScrollBar.Value / rowHeight;
+                        int start = VerticalScrollBar.Value / _rowHeight;
                         int stop = start + DisplayedRowCount(true);
-                        for (int i = start; i < stop && graphData[i] != null; i++)
+                        for (int i = start; i < stop && _graphData[i] != null; i++)
                         {
-                            width = Math.Max(graphData[i].Count, width);
+                            width = Math.Max(_graphData[i].Count, width);
                         }
 
-                        laneCount = Math.Min(Math.Max(laneCount, width), MAX_LANES);
+                        laneCount = Math.Min(Math.Max(laneCount, width), MaxLanes);
                     }
-                    if (dataGridColumnGraph.Width != LANE_WIDTH * laneCount && LANE_WIDTH * laneCount > dataGridColumnGraph.MinimumWidth)
-                        dataGridColumnGraph.Width = LANE_WIDTH * laneCount;
+                    if (ColumnGraph.Width != _laneWidth * laneCount && _laneWidth * laneCount > ColumnGraph.MinimumWidth)
+                        ColumnGraph.Width = _laneWidth * laneCount;
                 }
             }
         }
@@ -765,11 +787,11 @@ namespace GitUI.RevisionGridClasses
         {
             //Draw non-relative branches gray
             if (!aJunction.IsRelative && RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.DrawNonRelativesGray)
-                return nonRelativeColor;
+                return _nonRelativeColor;
 
             //Draw non-highlighted branches gray
             if (!aJunction.HighLight && RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected)
-                return nonRelativeColor;
+                return _nonRelativeColor;
 
             if (!Settings.Default.MulticolorBranches)
                 return Settings.Default.GraphColor;
@@ -778,9 +800,9 @@ namespace GitUI.RevisionGridClasses
             int[] preferedColors = { 4, 8, 6, 10, 2, 5, 7, 3, 9, 1, 11 };
 
             int colorIndex;
-            if (junctionColors.TryGetValue(aJunction, out colorIndex))
+            if (_junctionColors.TryGetValue(aJunction, out colorIndex))
             {
-                return possibleColors[colorIndex];
+                return _possibleColors[colorIndex];
             }
 
             // Get adjacent junctions
@@ -792,7 +814,7 @@ namespace GitUI.RevisionGridClasses
             adjacentJunctions.AddRange(aJunction.Parent.Descendants);
             foreach (Junction peer in adjacentJunctions)
             {
-                if (junctionColors.TryGetValue(peer, out colorIndex))
+                if (_junctionColors.TryGetValue(peer, out colorIndex))
                 {
                     adjacentColors.Add(colorIndex);
                 }
@@ -812,7 +834,7 @@ namespace GitUI.RevisionGridClasses
                 int i;
                 for (i = 0; i < preferedColors.Length; i++)
                 {
-                    colorIndex = (start + preferedColors[i]) % possibleColors.Length;
+                    colorIndex = (start + preferedColors[i]) % _possibleColors.Length;
                     if (!adjacentColors.Contains(colorIndex))
                     {
                         break;
@@ -825,8 +847,8 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            junctionColors[aJunction] = colorIndex;
-            return possibleColors[colorIndex];
+            _junctionColors[aJunction] = colorIndex;
+            return _possibleColors[colorIndex];
         }
 
         public override void Refresh()
@@ -837,42 +859,42 @@ namespace GitUI.RevisionGridClasses
 
         private void ClearDrawCache()
         {
-            cacheHead = 0;
-            cacheCount = 0;
+            _cacheHead = 0;
+            _cacheCount = 0;
         }
 
         private Rectangle DrawGraph(int aNeededRow)
         {
-            lock (graphData)
+            lock (_graphData)
             {
-                if (aNeededRow < 0 || graphData.Count == 0 || graphData.Count <= aNeededRow)
+                if (aNeededRow < 0 || _graphData.Count == 0 || _graphData.Count <= aNeededRow)
                 {
                     return Rectangle.Empty;
                 }
 
                 #region Make sure the graph cache bitmap is setup
 
-                int height = cacheCountMax * rowHeight;
-                int width = dataGridColumnGraph.Width;
-                if (graphBitmap == null ||
+                int height = _cacheCountMax * _rowHeight;
+                int width = ColumnGraph.Width;
+                if (_graphBitmap == null ||
                     //Resize the bitmap when the with or height is changed. The height won't change very often.
                     //The with changes more often, when branches become visible/invisible.
                     //Try to be 'smart' and not resize the bitmap for each little change. Enlarge when needed
                     //but never shrink the bitmap since the huge performance hit is worse than the little extra memory.
-                    graphBitmap.Width < width || graphBitmap.Height != height)
+                    _graphBitmap.Width < width || _graphBitmap.Height != height)
                 {
-                    if (graphBitmap != null)
+                    if (_graphBitmap != null)
                     {
-                        graphBitmap.Dispose();
-                        graphBitmap = null;
+                        _graphBitmap.Dispose();
+                        _graphBitmap = null;
                     }
                     if (width > 0 && height > 0)
                     {
-                        graphBitmap = new Bitmap(Math.Max(width, LANE_WIDTH * 3), height, PixelFormat.Format32bppPArgb);
-                        graphWorkArea = Graphics.FromImage(graphBitmap);
-                        graphWorkArea.SmoothingMode = SmoothingMode.AntiAlias;
-                        cacheHead = 0;
-                        cacheCount = 0;
+                        _graphBitmap = new Bitmap(Math.Max(width, _laneWidth * 3), height, PixelFormat.Format32bppPArgb);
+                        _graphWorkArea = Graphics.FromImage(_graphBitmap);
+                        _graphWorkArea.SmoothingMode = SmoothingMode.AntiAlias;
+                        _cacheHead = 0;
+                        _cacheCount = 0;
                     }
                     else
                     {
@@ -883,46 +905,46 @@ namespace GitUI.RevisionGridClasses
                 #endregion
 
                 // Compute how much the head needs to move to show the requested item. 
-                int neededHeadAdjustment = aNeededRow - cacheHead;
+                int neededHeadAdjustment = aNeededRow - _cacheHead;
                 if (neededHeadAdjustment > 0)
                 {
-                    neededHeadAdjustment -= cacheCountMax - 1;
+                    neededHeadAdjustment -= _cacheCountMax - 1;
                     if (neededHeadAdjustment < 0)
                     {
                         neededHeadAdjustment = 0;
                     }
                 }
                 int newRows = 0;
-                if (cacheCount < cacheCountMax)
+                if (_cacheCount < _cacheCountMax)
                 {
-                    newRows = (aNeededRow - cacheCount) + 1;
+                    newRows = (aNeededRow - _cacheCount) + 1;
                 }
 
                 // Adjust the head of the cache
-                cacheHead = cacheHead + neededHeadAdjustment;
-                cacheHeadRow = (cacheHeadRow + neededHeadAdjustment) % cacheCountMax;
-                if (cacheHeadRow < 0)
+                _cacheHead = _cacheHead + neededHeadAdjustment;
+                _cacheHeadRow = (_cacheHeadRow + neededHeadAdjustment) % _cacheCountMax;
+                if (_cacheHeadRow < 0)
                 {
-                    cacheHeadRow = cacheCountMax + cacheHeadRow;
+                    _cacheHeadRow = _cacheCountMax + _cacheHeadRow;
                 }
 
                 int start;
                 int end;
                 if (newRows > 0)
                 {
-                    start = cacheHead + cacheCount;
-                    cacheCount = Math.Min(cacheCount + newRows, cacheCountMax);
-                    end = cacheHead + cacheCount;
+                    start = _cacheHead + _cacheCount;
+                    _cacheCount = Math.Min(_cacheCount + newRows, _cacheCountMax);
+                    end = _cacheHead + _cacheCount;
                 }
                 else if (neededHeadAdjustment > 0)
                 {
-                    end = cacheHead + cacheCount;
-                    start = Math.Max(cacheHead, end - neededHeadAdjustment);
+                    end = _cacheHead + _cacheCount;
+                    start = Math.Max(_cacheHead, end - neededHeadAdjustment);
                 }
                 else if (neededHeadAdjustment < 0)
                 {
-                    start = cacheHead;
-                    end = start + Math.Min(cacheCountMax, -neededHeadAdjustment);
+                    start = _cacheHead;
+                    end = start + Math.Min(_cacheCountMax, -neededHeadAdjustment);
                 }
                 else
                 {
@@ -944,7 +966,7 @@ namespace GitUI.RevisionGridClasses
         {
             for (int rowIndex = start; rowIndex < end; rowIndex++)
             {
-                Graph.ILaneRow row = graphData[rowIndex];
+                Graph.ILaneRow row = _graphData[rowIndex];
                 if (row == null)
                 {
                     // This shouldn't be happening...If it does, clear the cache so we
@@ -954,37 +976,37 @@ namespace GitUI.RevisionGridClasses
                     return false;
                 }
 
-                Region oldClip = graphWorkArea.Clip;
+                Region oldClip = _graphWorkArea.Clip;
 
                 // Get the x,y value of the current item's upper left in the cache
-                int curCacheRow = (cacheHeadRow + rowIndex - cacheHead) % cacheCountMax;
+                int curCacheRow = (_cacheHeadRow + rowIndex - _cacheHead) % _cacheCountMax;
                 int x = 0;
-                int y = curCacheRow * rowHeight;
+                int y = curCacheRow * _rowHeight;
 
-                var laneRect = new Rectangle(0, y, Width, rowHeight);
+                var laneRect = new Rectangle(0, y, Width, _rowHeight);
                 if (rowIndex == start || curCacheRow == 0)
                 {
                     // Draw previous row first. Clip top to row. We also need to clear the area
                     // before we draw since nothing else would clear the top 1/2 of the item to draw.
-                    graphWorkArea.RenderingOrigin = new Point(x, y - rowHeight);
+                    _graphWorkArea.RenderingOrigin = new Point(x, y - _rowHeight);
                     var newClip = new Region(laneRect);
-                    graphWorkArea.Clip = newClip;
-                    graphWorkArea.Clear(Color.Transparent);
-                    DrawItem(graphWorkArea, graphData[rowIndex - 1]);
-                    graphWorkArea.Clip = oldClip;
+                    _graphWorkArea.Clip = newClip;
+                    _graphWorkArea.Clear(Color.Transparent);
+                    DrawItem(_graphWorkArea, _graphData[rowIndex - 1]);
+                    _graphWorkArea.Clip = oldClip;
                 }
 
                 bool isLast = (rowIndex == end - 1);
                 if (isLast)
                 {
                     var newClip = new Region(laneRect);
-                    graphWorkArea.Clip = newClip;
+                    _graphWorkArea.Clip = newClip;
                 }
 
-                graphWorkArea.RenderingOrigin = new Point(x, y);
-                bool success = DrawItem(graphWorkArea, row);
+                _graphWorkArea.RenderingOrigin = new Point(x, y);
+                bool success = DrawItem(_graphWorkArea, row);
 
-                graphWorkArea.Clip = oldClip;
+                _graphWorkArea.Clip = oldClip;
 
                 if (!success)
                 {
@@ -1000,9 +1022,9 @@ namespace GitUI.RevisionGridClasses
             return new Rectangle
                 (
                 0,
-                (cacheHeadRow + aNeededRow - cacheHead) % cacheCountMax * RowTemplate.Height,
+                (_cacheHeadRow + aNeededRow - _cacheHead) % _cacheCountMax * RowTemplate.Height,
                 width,
-                rowHeight
+                _rowHeight
                 );
         }
 
@@ -1018,8 +1040,8 @@ namespace GitUI.RevisionGridClasses
             // Clip to the area we're drawing in, but draw 1 pixel past so
             // that the top/bottom of the line segment's anti-aliasing isn't
             // visible in the final rendering.
-            int top = wa.RenderingOrigin.Y + rowHeight / 2;
-            var laneRect = new Rectangle(0, top, Width, rowHeight);
+            int top = wa.RenderingOrigin.Y + _rowHeight / 2;
+            var laneRect = new Rectangle(0, top, Width, _rowHeight);
             Region oldClip = wa.Clip;
             var newClip = new Region(laneRect);
             newClip.Intersect(oldClip);
@@ -1029,7 +1051,7 @@ namespace GitUI.RevisionGridClasses
             //for (int r = 0; r < 2; r++)
                 for (int lane = 0; lane < row.Count; lane++)
                 {
-                    int mid = wa.RenderingOrigin.X + (int)((lane + 0.5) * LANE_WIDTH);
+                    int mid = wa.RenderingOrigin.X + (int)((lane + 0.5) * _laneWidth);
 
                     for (int item = 0; item < row.LaneInfoCount(lane); item++)
                     {
@@ -1050,28 +1072,28 @@ namespace GitUI.RevisionGridClasses
 
                             if (curColors.Count == 1 || !Settings.Default.StripedBranchChange)
                             {
-                                if (curColors[0] != nonRelativeColor)
+                                if (curColors[0] != _nonRelativeColor)
                                 {
                                     brushLineColor = new SolidBrush(curColors[0]);
                                 }
-                                else if (curColors.Count > 1 && curColors[1] != nonRelativeColor)
+                                else if (curColors.Count > 1 && curColors[1] != _nonRelativeColor)
                                 {
                                     brushLineColor = new SolidBrush(curColors[1]);
                                 }
                                 else
                                 {
                                     drawBorder = false;
-                                    brushLineColor = new SolidBrush(nonRelativeColor);
+                                    brushLineColor = new SolidBrush(_nonRelativeColor);
                                 }
                             }
                             else
                             {
-                                Color lastRealColor = curColors.LastOrDefault(c => c != nonRelativeColor);
+                                Color lastRealColor = curColors.LastOrDefault(c => c != _nonRelativeColor);
 
 
                                 if (lastRealColor.IsEmpty)
                                 {
-                                    brushLineColor = new SolidBrush(nonRelativeColor);
+                                    brushLineColor = new SolidBrush(_nonRelativeColor);
                                     drawBorder = false;
                                 }
                                 else
@@ -1085,16 +1107,16 @@ namespace GitUI.RevisionGridClasses
                                 Pen penLine = null;
                                 if (i == 0)
                                 {
-                                    penLine = whiteBorderPen;
+                                    penLine = _whiteBorderPen;
                                 }
                                 else if (i == 1)
                                 {
-                                    penLine = blackBorderPen;
+                                    penLine = _blackBorderPen;
                                 }
                                 else
                                 {
                                     if (brushLineColorPen == null)
-                                        brushLineColorPen = new Pen(brushLineColor, LANE_LINE_WIDTH);
+                                        brushLineColorPen = new Pen(brushLineColor, _laneLineWidth);
                                     penLine = brushLineColorPen;
                                 }
 
@@ -1104,7 +1126,7 @@ namespace GitUI.RevisionGridClasses
                                         (
                                             penLine,
                                             new Point(mid, top - 1),
-                                            new Point(mid, top + rowHeight + 2)
+                                            new Point(mid, top + _rowHeight + 2)
                                         );
                                 }
                                 else
@@ -1113,9 +1135,9 @@ namespace GitUI.RevisionGridClasses
                                         (
                                             penLine,
                                             new Point(mid, top - 1),
-                                            new Point(mid, top + rowHeight + 2),
-                                            new Point(mid + (laneInfo.ConnectLane - lane) * LANE_WIDTH, top - 1),
-                                            new Point(mid + (laneInfo.ConnectLane - lane) * LANE_WIDTH, top + rowHeight + 2)
+                                            new Point(mid, top + _rowHeight + 2),
+                                            new Point(mid + (laneInfo.ConnectLane - lane) * _laneWidth, top - 1),
+                                            new Point(mid + (laneInfo.ConnectLane - lane) * _laneWidth, top + _rowHeight + 2)
                                         );
                                 }
                             }
@@ -1136,10 +1158,10 @@ namespace GitUI.RevisionGridClasses
                 // Draw node
                 var nodeRect = new Rectangle
                     (
-                    wa.RenderingOrigin.X + (LANE_WIDTH - NODE_DIMENSION) / 2 + row.NodeLane * LANE_WIDTH,
-                    wa.RenderingOrigin.Y + (rowHeight - NODE_DIMENSION) / 2,
-                    NODE_DIMENSION,
-                    NODE_DIMENSION
+                    wa.RenderingOrigin.X + (_laneWidth - _nodeDimension) / 2 + row.NodeLane * _laneWidth,
+                    wa.RenderingOrigin.Y + (_rowHeight - _nodeDimension) / 2,
+                    _nodeDimension,
+                    _nodeDimension
                     );
 
                 Brush nodeBrush;
@@ -1154,18 +1176,18 @@ namespace GitUI.RevisionGridClasses
 
                 if (nodeColors.Count == 1)
                 {
-                    nodeBrush = new SolidBrush(highlight ? nodeColors[0] : nonRelativeColor);
-                    if (nodeColors[0] == nonRelativeColor) drawBorder = false;
+                    nodeBrush = new SolidBrush(highlight ? nodeColors[0] : _nonRelativeColor);
+                    if (nodeColors[0] == _nonRelativeColor) drawBorder = false;
                 }
                 else
                 {
                     nodeBrush = new LinearGradientBrush(nodeRect, nodeColors[0], nodeColors[1],
                                                         LinearGradientMode.Horizontal);
-                    if (nodeColors.All(c => c == nonRelativeColor)) 
+                    if (nodeColors.All(c => c == _nonRelativeColor)) 
                         drawBorder = false;
                 }
 
-                if (filterMode == FilterType.Highlight && row.Node.IsFiltered)
+                if (_filterMode == FilterType.Highlight && row.Node.IsFiltered)
                 {
                     Rectangle highlightRect = nodeRect;
                     highlightRect.Inflate(2, 3);
@@ -1210,14 +1232,14 @@ namespace GitUI.RevisionGridClasses
 
         public void HighlightBranch(string aId)
         {
-            graphData.HighlightBranch(aId);
+            _graphData.HighlightBranch(aId);
         }
 
         private void dataGrid_Resize(object sender, EventArgs e)
         {
-            rowHeight = RowTemplate.Height;
+            _rowHeight = RowTemplate.Height;
             // Keep an extra page in the cache
-            cacheCountMax = Height * 2 / rowHeight + 1;
+            _cacheCountMax = Height * 2 / _rowHeight + 1;
             ClearDrawCache();
             dataGrid_Scroll(null, null);
         }

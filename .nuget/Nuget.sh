@@ -1,4 +1,7 @@
 #!/bin/sh
 
-cd packages
-for x in `find ../ -name packages.config`;do mono --runtime=v4.0.30319 ../.nuget/nuget.exe install $x;done
+if [ ! -d 'packages' ]; then
+	mkdir packages
+fi
+
+find ./ -name packages.config -exec mono --runtime=v4.0.30319 .nuget/NuGet.exe install {} -o packages \;

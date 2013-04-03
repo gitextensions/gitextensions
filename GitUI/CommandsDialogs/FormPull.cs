@@ -10,8 +10,7 @@ using GitCommands.Repository;
 using GitUI.Properties;
 using GitUI.Script;
 using ResourceManager.Translation;
-using Settings = GitCommands.Properties.Settings;
-using GitCommands.Properties;
+using Settings = GitCommands.Settings;
 
 namespace GitUI.CommandsDialogs
 {
@@ -81,16 +80,16 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
-            helpImageDisplayUserControl1.Visible = !Settings.Default.DontShowHelpImages;
+            helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
 
             if (aCommands != null)
                 Init();
 
-            Merge.Checked = Settings.Default.PullMerge == PullAction.Merge;
-            Rebase.Checked = Settings.Default.PullMerge == PullAction.Rebase;
-            Fetch.Checked = Settings.Default.PullMerge == PullAction.Fetch;
+            Merge.Checked = Settings.FormPullAction == Settings.PullAction.Merge;
+            Rebase.Checked = Settings.FormPullAction == Settings.PullAction.Rebase;
+            Fetch.Checked = Settings.FormPullAction == Settings.PullAction.Fetch;
             localBranch.Enabled = Fetch.Checked;
-            AutoStash.Checked = Settings.Default.AutoStash;
+            AutoStash.Checked = Settings.AutoStash;
             ErrorOccurred = false;
 
             if (!string.IsNullOrEmpty(defaultRemoteBranch))
@@ -312,7 +311,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (stashed)
                 {
-                    bool? messageBoxResult = Settings.Default.AutoPopStashAfterPull;
+                    bool? messageBoxResult = Settings.AutoPopStashAfterPull;
                     if (messageBoxResult == null)
                     {
                         DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
@@ -328,7 +327,7 @@ namespace GitUI.CommandsDialogs
                             PSTaskDialog.eSysIcons.Question);
                         messageBoxResult = (res == DialogResult.Yes);
                         if (PSTaskDialog.cTaskDialog.VerificationChecked)
-                            Settings.Default.AutoPopStashAfterPull = messageBoxResult;
+                            Settings.AutoPopStashAfterPull = messageBoxResult;
                     }
                     if (ShouldStashPop(messageBoxResult ?? false, process, true))
                     {
@@ -484,13 +483,13 @@ namespace GitUI.CommandsDialogs
         private void UpdateSettingsDuringPull()
         {
             if (Merge.Checked)
-                Settings.Default.PullMerge = PullAction.Merge;
+                Settings.FormPullAction = Settings.PullAction.Merge;
             if (Rebase.Checked)
-                Settings.Default.PullMerge = PullAction.Rebase;
+                Settings.FormPullAction = Settings.PullAction.Rebase;
             if (Fetch.Checked)
-                Settings.Default.PullMerge = PullAction.Fetch;
+                Settings.FormPullAction = Settings.PullAction.Fetch;
 
-            Settings.Default.AutoStash = AutoStash.Checked;
+            Settings.AutoStash = AutoStash.Checked;
         }
 
         private bool IsSubmodulesIntialized()
@@ -511,7 +510,7 @@ namespace GitUI.CommandsDialogs
             if (!GitCommandHelpers.Plink())
                 return;
 
-            if (File.Exists(Settings.Default.Pageant))
+            if (File.Exists(Settings.Pageant))
                 Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
             else
                 MessageBoxes.PAgentNotFound(this);

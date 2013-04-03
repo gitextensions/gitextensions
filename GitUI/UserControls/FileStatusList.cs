@@ -294,9 +294,13 @@ namespace GitUI
                 ClearSelected();
                 if (value == null)
                     return;
-                foreach (ListViewItem item in FileStatusListView.SelectedItems)
+                foreach (ListViewItem item in FileStatusListView.Items)
                     if (item.Tag == value)
+                    {
                         item.Selected = true;
+                        item.EnsureVisible();
+                        return;
+                    }
             }
         }
 
@@ -449,21 +453,15 @@ namespace GitUI
             GitItemStatusesWithParents = dictionary;
         }
 
+        private GitItemsWithParents _itemsDictionary = new Dictionary<string, IList<GitItemStatus>>();
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public GitItemsWithParents GitItemStatusesWithParents
         {
             get
             {
-                var dictionary = new Dictionary<string, IList<GitItemStatus>>();
-                foreach (ListViewItem item in FileStatusListView.Items)
-                {
-                    string parentRev = item.Group != null ? item.Group.Tag as string : "";
-                    if (!dictionary.ContainsKey(parentRev))
-                        dictionary.Add(parentRev, new List<GitItemStatus>());
-                    dictionary[parentRev].Add((GitItemStatus)item.Tag);
-                }
-                return dictionary;
+                return _itemsDictionary;
             }
             set
             {
@@ -476,6 +474,7 @@ namespace GitUI
                 FileStatusListView.ShowGroups = value != null && value.Count > 1;
                 FileStatusListView.Groups.Clear();
                 FileStatusListView.Items.Clear();
+                _itemsDictionary = new Dictionary<string, IList<GitItemStatus>>();
                 if (value == null)
                     return;
                 FileStatusListView.BeginUpdate();
@@ -496,16 +495,24 @@ namespace GitUI
                         listItem.ImageIndex = GetItemImageIndex(item);
                         if (item.SubmoduleStatus != null && !item.SubmoduleStatus.IsCompleted)
                         {
-                            item.SubmoduleStatus.ContinueWith((task) => listItem.ImageIndex = GetItemImageIndex(item),
+                            var capturedItem = item;
+                            item.SubmoduleStatus.ContinueWith((task) => listItem.ImageIndex = GetItemImageIndex(capturedItem),
                                                               CancellationToken.None,
                                                               TaskContinuationOptions.OnlyOnRanToCompletion,
                                                               TaskScheduler.FromCurrentSynchronizationContext());
                         }
                         listItem.Tag = item;
                         list.Add(listItem);
-                    }
+                    };
                 }
                 FileStatusListView.Items.AddRange(list.ToArray());
+                foreach (ListViewItem item in FileStatusListView.Items)
+                {
+                    string parentRev = item.Group != null ? item.Group.Tag as string : "";
+                    if (!_itemsDictionary.ContainsKey(parentRev))
+                        _itemsDictionary.Add(parentRev, new List<GitItemStatus>());
+                    _itemsDictionary[parentRev].Add((GitItemStatus)item.Tag);
+                }
                 FileStatusListView.EndUpdate();
                 FileStatusListView.SetGroupState(ListViewGroupState.Collapsible);
                 if (DataSourceChanged != null)

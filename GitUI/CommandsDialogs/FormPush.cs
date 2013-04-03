@@ -10,7 +10,6 @@ using GitCommands.Config;
 using GitCommands.Repository;
 using GitUI.Script;
 using ResourceManager.Translation;
-using GitCommands.Properties;
 
 namespace GitUI.CommandsDialogs
 {
@@ -49,14 +48,14 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _yes = new TranslationString("Yes");
         private readonly TranslationString _no = new TranslationString("No");
 
-        private readonly TranslationString _pullRepositoryMainInstruction = new TranslationString("Pull latest changes from remote repostory");
+        private readonly TranslationString _pullRepositoryMainInstruction = new TranslationString("Pull latest changes from remote repository");
         private readonly TranslationString _pullRepository =
             new TranslationString("The push was rejected because the tip of your current branch is behind its remote counterpart. " +
                 "Merge the remote changes before pushing again." + Environment.NewLine + Environment.NewLine + 
-                "Do you want pull latest changes?");
-        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with rebase|Pull with merge|Cancel");
+                "Do you want to pull the latest changes?");
+        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with default pull action|Pull with rebase|Pull with merge|Cancel");
         private readonly TranslationString _pullRepositoryCaption = new TranslationString("Push was rejected");
-        private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
+        private readonly TranslationString _dontShowAgain = new TranslationString("Remember my decision.");
 
         #endregion
 
@@ -72,7 +71,7 @@ namespace GitUI.CommandsDialogs
 
             //can't be set in OnLoad, because after PushAndShowDialogWhenFailed()
             //they are reset to false
-            PushAllTags.Checked = Settings.Default.PushAllTags;
+            PushAllTags.Checked = Settings.PushAllTags;
             if (aCommands != null)
                 Init();
         }
@@ -82,7 +81,7 @@ namespace GitUI.CommandsDialogs
             if (GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesCheck)
             {
                 RecursiveSubmodules.Enabled = true;
-                RecursiveSubmodules.SelectedIndex = Settings.Default.RecursiveSubmodules;
+                RecursiveSubmodules.SelectedIndex = Settings.RecursiveSubmodules;
                 if (!GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesOnDemand)
                     RecursiveSubmodules.Items.RemoveAt(2);
             }
@@ -192,7 +191,7 @@ namespace GitUI.CommandsDialogs
                 if (RemoteBranch.Text != GetDefaultPushRemote(_NO_TRANSLATE_Remotes.Text) &&
                     !Module.GetHeads(true, true).Any(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text) )
                     //Ask if this is really what the user wants
-                    if (!Settings.Default.DontConfirmPushNewBranch)
+                    if (!Settings.DontConfirmPushNewBranch)
                         if (MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
                             DialogResult.No)
                         {
@@ -202,9 +201,8 @@ namespace GitUI.CommandsDialogs
 
             if (PushToUrl.Checked)
                 Repositories.AddMostRecentRepository(PushDestination.Text);
-            Settings.Default.PushAllTags = PushAllTags.Checked;
-            Settings.Default.RecursiveSubmodules = RecursiveSubmodules.SelectedIndex;
-   
+            Settings.PushAllTags = PushAllTags.Checked;
+            Settings.RecursiveSubmodules = RecursiveSubmodules.SelectedIndex;
 
             var remote = "";
             string destination;
@@ -216,7 +214,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (GitCommandHelpers.Plink())
                 {
-                    if (!File.Exists(Settings.Default.Pageant))
+                    if (!File.Exists(Settings.Pageant))
                         MessageBoxes.PAgentNotFound(owner);
                     else
                         Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
@@ -241,7 +239,7 @@ namespace GitUI.CommandsDialogs
                             if (!string.IsNullOrEmpty(remoteBranch) && _NO_TRANSLATE_Branch.Text.StartsWith(remoteBranch))
                                 track = false;
 
-                    if (track && !Settings.Default.DontConfirmAddTrackingRef)
+                    if (track && !Settings.DontConfirmAddTrackingRef)
                     {
                         DialogResult result = MessageBox.Show(String.Format(_updateTrackingReference.Text, selectedLocalBranch.Name, RemoteBranch.Text), _pushCaption.Text, MessageBoxButtons.YesNoCancel);
 
@@ -288,8 +286,7 @@ namespace GitUI.CommandsDialogs
             ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
 
             //controls can be accessed only from UI thread
-            Module.LastPullActionToPullMerge();
-            _candidateForRebasingMergeCommit = Settings.Default.PullMerge == PullAction.Rebase && PushToRemote.Checked && !PushAllBranches.Checked && TabControlTagBranch.SelectedTab == BranchTab;
+            _candidateForRebasingMergeCommit = PushToRemote.Checked && !PushAllBranches.Checked && TabControlTagBranch.SelectedTab == BranchTab;
             _selectedBranch = _NO_TRANSLATE_Branch.Text;
             _selectedBranchRemote = _NO_TRANSLATE_Remotes.Text;
             _selectedRemoteBranchName = RemoteBranch.Text;
@@ -321,7 +318,7 @@ namespace GitUI.CommandsDialogs
 
         private bool IsRebasingMergeCommit()
         {
-            if (_candidateForRebasingMergeCommit)
+            if (Settings.FormPullAction == Settings.PullAction.Rebase && _candidateForRebasingMergeCommit)
             {
                 if (_selectedBranch == _currentBranch && _selectedBranchRemote == _currentBranchRemote)
                 {
@@ -345,18 +342,8 @@ namespace GitUI.CommandsDialogs
 
             if (IsRejected.IsMatch(form.GetOutputString()))
             {
-                if (Settings.Default.AutoPullOnPushRejected == false)
-                    return false;
-                if (IsRebasingMergeCommit())
-                {
-                    form.AppendOutputLine(Environment.NewLine +
-                        "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine +
-                        "and one of the commits that are about to be rebased is a merge.");
-                    return false;
-                }
-
                 IWin32Window owner = form;
-                if (Settings.Default.AutoPullOnPushRejected == null)
+                if (Settings.AutoPullOnPushRejectedAction == null)
                 {
                     bool cancel = false;
                     int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
@@ -370,32 +357,64 @@ namespace GitUI.CommandsDialogs
                                     true,
                                     0,
                                     0);
+                    bool rememberDecision = PSTaskDialog.cTaskDialog.VerificationChecked;
                     switch (idx)
                     {
                         case 0:
-                            Settings.Default.PullMerge = PullAction.Rebase;
+                            if (rememberDecision)
+                            {
+                                Settings.AutoPullOnPushRejectedAction = Settings.PullAction.Default;
+                            }
+                            if (Module.LastPullAction == Settings.PullAction.None)
+                            {
+                                return false;
+                            }
+                            Module.LastPullActionToFormPullAction();
                             break;
                         case 1:
-                            Settings.Default.PullMerge = PullAction.Merge;
+                            Settings.FormPullAction = Settings.PullAction.Rebase;
+                            if (rememberDecision)
+                            {
+                                Settings.AutoPullOnPushRejectedAction = Settings.FormPullAction;
+                            }
+                            break;
+                        case 2:
+                            Settings.FormPullAction = Settings.PullAction.Merge;
+                            if (rememberDecision)
+                            {
+                                Settings.AutoPullOnPushRejectedAction = Settings.FormPullAction;
+                            }
                             break;
                         default:
                             cancel = true;
+                            if (rememberDecision)
+                            {
+                                Settings.AutoPullOnPushRejectedAction = Settings.PullAction.None;
+                            }
                             break;
-                    }
-                    if (PSTaskDialog.cTaskDialog.VerificationChecked)
-                    {
-                        Settings.Default.AutoPullOnPushRejected = !cancel;
                     }
                     if (cancel)
                         return false;
                 }
 
-                if (Settings.Default.PullMerge == PullAction.Fetch)
+                if (Settings.AutoPullOnPushRejectedAction == Settings.PullAction.None)
+                    return false;
+
+                if (Settings.FormPullAction == Settings.PullAction.Fetch)
                 {
                     form.AppendOutputLine(Environment.NewLine +
                         "Can not perform auto pull, when merge option is set to fetch.");
                     return false;
                 }
+
+                if (IsRebasingMergeCommit())
+                {
+                    form.AppendOutputLine(Environment.NewLine +
+                        "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine +
+                        "and one of the commits that are about to be rebased is a merge.");
+                    return false;
+                }
+
                 bool pullCompleted;
                 UICommands.StartPullDialog(owner, true, out pullCompleted);
                 if (pullCompleted)
@@ -575,7 +594,7 @@ namespace GitUI.CommandsDialogs
 
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
-            if (!File.Exists(Settings.Default.Pageant))
+            if (!File.Exists(Settings.Pageant))
                 MessageBoxes.PAgentNotFound(this);
             else
                 Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
