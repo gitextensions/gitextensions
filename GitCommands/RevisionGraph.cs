@@ -180,10 +180,11 @@ namespace GitCommands
                 logParam += " --not --glob=notes --not";
 
             string arguments = String.Format(CultureInfo.InvariantCulture,
-                "log -z {2} --pretty=format:\"{1}\" {0}",
+                "log -z {2} --pretty=format:\"{1}\" {0} {3}",
                 logParam,
                 formatString,
-                BranchFilter);
+                BranchFilter,
+                Filter);
 
             using (GitCommandsInstance gitGetGraphCommand = new GitCommandsInstance(_module))
             {

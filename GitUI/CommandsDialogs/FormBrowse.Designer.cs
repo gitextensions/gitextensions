@@ -1247,7 +1247,7 @@ namespace GitUI.CommandsDialogs
             this.settingsToolStripMenuItem2.Image = global::GitUI.Properties.Resources.Icon_71;
             this.settingsToolStripMenuItem2.Name = "settingsToolStripMenuItem2";
             this.settingsToolStripMenuItem2.Size = new System.Drawing.Size(232, 24);
-            this.settingsToolStripMenuItem2.Text = "Settings...";
+            this.settingsToolStripMenuItem2.Text = "Settings";
             this.settingsToolStripMenuItem2.Click += new System.EventHandler(this.SettingsToolStripMenuItem2Click);
             // 
             // toolStripMenuItem1
@@ -1371,21 +1371,21 @@ namespace GitUI.CommandsDialogs
             // 
             this.editgitignoreToolStripMenuItem1.Name = "editgitignoreToolStripMenuItem1";
             this.editgitignoreToolStripMenuItem1.Size = new System.Drawing.Size(261, 24);
-            this.editgitignoreToolStripMenuItem1.Text = "Edit .gitignore...";
+            this.editgitignoreToolStripMenuItem1.Text = "Edit .gitignore";
             this.editgitignoreToolStripMenuItem1.Click += new System.EventHandler(this.EditGitignoreToolStripMenuItem1Click);
             // 
             // editgitattributesToolStripMenuItem
             // 
             this.editgitattributesToolStripMenuItem.Name = "editgitattributesToolStripMenuItem";
             this.editgitattributesToolStripMenuItem.Size = new System.Drawing.Size(261, 24);
-            this.editgitattributesToolStripMenuItem.Text = "Edit .gitattributes...";
+            this.editgitattributesToolStripMenuItem.Text = "Edit .gitattributes";
             this.editgitattributesToolStripMenuItem.Click += new System.EventHandler(this.editgitattributesToolStripMenuItem_Click);
             // 
             // editmailmapToolStripMenuItem
             // 
             this.editmailmapToolStripMenuItem.Name = "editmailmapToolStripMenuItem";
             this.editmailmapToolStripMenuItem.Size = new System.Drawing.Size(261, 24);
-            this.editmailmapToolStripMenuItem.Text = "Edit .mailmap...";
+            this.editmailmapToolStripMenuItem.Text = "Edit .mailmap";
             this.editmailmapToolStripMenuItem.Click += new System.EventHandler(this.EditMailMapToolStripMenuItemClick);
             // 
             // toolStripSeparator4
@@ -1430,7 +1430,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.repoSettingsToolStripMenuItem.Name = "repoSettingsToolStripMenuItem";
             this.repoSettingsToolStripMenuItem.Size = new System.Drawing.Size(261, 24);
-            this.repoSettingsToolStripMenuItem.Text = "Repository settings...";
+            this.repoSettingsToolStripMenuItem.Text = "Repository settings";
             this.repoSettingsToolStripMenuItem.Click += new System.EventHandler(this.RepoSettingsToolStripMenuItemClick);
             // 
             // toolStripSeparator13
@@ -1784,7 +1784,7 @@ namespace GitUI.CommandsDialogs
             this._createPullRequestsToolStripMenuItem});
             this._repositoryHostsToolStripMenuItem.Name = "_repositoryHostsToolStripMenuItem";
             this._repositoryHostsToolStripMenuItem.Size = new System.Drawing.Size(130, 24);
-            this._repositoryHostsToolStripMenuItem.Text = "Repository hosts";
+            this._repositoryHostsToolStripMenuItem.Text = "(Repository hosts)";
             // 
             // _forkCloneRepositoryToolStripMenuItem
             // 
@@ -1835,7 +1835,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.pluginSettingsToolStripMenuItem.Name = "pluginSettingsToolStripMenuItem";
             this.pluginSettingsToolStripMenuItem.Size = new System.Drawing.Size(152, 24);
-            this.pluginSettingsToolStripMenuItem.Text = "Settings...";
+            this.pluginSettingsToolStripMenuItem.Text = "Settings";
             this.pluginSettingsToolStripMenuItem.Click += new System.EventHandler(this.PluginSettingsToolStripMenuItemClick);
             // 
             // settingsToolStripMenuItem3

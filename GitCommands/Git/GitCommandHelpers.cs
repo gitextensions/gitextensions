@@ -85,10 +85,8 @@ namespace GitCommands
 
             //Default!
             Environment.SetEnvironmentVariable("HOME", GetDefaultHomeDir());
-            // To prevent leaking processes and suppress ANSI sequences, set TERM to "dumb".
-            // Don't use "msys" because that still allows ANSI sequences.
-            // See issues #1092 and #1313.
-            Environment.SetEnvironmentVariable("TERM", "dumb");
+            //to prevent from leaking processes see issue #1092 for details
+            Environment.SetEnvironmentVariable("TERM", "msys");
         }
 
         public static string GetHomeDir()

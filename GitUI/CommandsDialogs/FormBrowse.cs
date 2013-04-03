@@ -378,6 +378,7 @@ namespace GitUI.CommandsDialogs
             commandsToolStripMenuItem.Visible = false;
             refreshToolStripMenuItem.ShortcutKeys = Keys.None;
             refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.None;
+            _repositoryHostsToolStripMenuItem.Visible = false;
             menuStrip1.Refresh();
         }
 
@@ -2493,24 +2494,24 @@ namespace GitUI.CommandsDialogs
             TranslationUtl.TranslateItemsFromFields(Name, _filterBranchHelper, translation);
         }
 
-        private IList<GitItemStatus> FindDiffFilesMatches(string name)
-        {
-            var candidates = DiffFiles.GitItemStatuses;
-
-            string nameAsLower = name.ToLower();
-
-            return candidates.Where(item =>
-                {
-                    return item.Name != null && item.Name.ToLower().Contains(nameAsLower)
-                        || item.OldName != null && item.OldName.ToLower().Contains(nameAsLower);
-                }
-                ).ToList();
-        }
-
-
-
         private void findInDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
+            var candidates = DiffFiles.GitItemStatuses;
+
+            Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>
+            {
+
+                string nameAsLower = name.ToLower();
+
+                return candidates.Where(item =>
+                    {
+                        return item.Name != null && item.Name.ToLower().Contains(nameAsLower)
+                            || item.OldName != null && item.OldName.ToLower().Contains(nameAsLower);
+                    }
+                    ).ToList();
+            };
+
             GitItemStatus selectedItem;
             using (var searchWindow = new SearchWindow<GitItemStatus>(FindDiffFilesMatches)
             {
@@ -2524,7 +2525,6 @@ namespace GitUI.CommandsDialogs
             {
                 DiffFiles.SelectedItem = selectedItem;
             }
-
         }
 
         private void dontSetAsDefaultToolStripMenuItem_Click(object sender, EventArgs e)
