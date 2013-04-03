@@ -2065,7 +2065,7 @@ namespace GitUI.CommandsDialogs
         private void CurrentBranchDropDownOpening(object sender, EventArgs e)
         {
             branchSelect.DropDownItems.Clear();
-            foreach (var branch in Module.GetHeads(false))
+            foreach (var branch in Module.GetRefs(false))
             {
                 var toolStripItem = branchSelect.DropDownItems.Add(branch.Name);
                 toolStripItem.Click += BranchSelectToolStripItem_Click;
@@ -2473,22 +2473,24 @@ namespace GitUI.CommandsDialogs
             TranslationUtl.TranslateItemsFromFields(Name, _filterBranchHelper, translation);
         }
 
-        private IList<GitItemStatus> FindDiffFilesMatches(string name)
-        {
-            var candidates = DiffFiles.GitItemStatuses;
-
-            string nameAsLower = name.ToLower();
-
-            return candidates.Where(item =>
-                {
-                    return item.Name != null && item.Name.ToLower().Contains(nameAsLower)
-                        || item.OldName != null && item.OldName.ToLower().Contains(nameAsLower);
-                }
-                ).ToList();
-        }
-
         private void findInDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
+
+            var candidates = DiffFiles.GitItemStatuses;
+
+            Func<string, IList<GitItemStatus>> FindDiffFilesMatches = (string name) =>
+            {
+
+                string nameAsLower = name.ToLower();
+
+                return candidates.Where(item =>
+                    {
+                        return item.Name != null && item.Name.ToLower().Contains(nameAsLower)
+                            || item.OldName != null && item.OldName.ToLower().Contains(nameAsLower);
+                    }
+                    ).ToList();
+            };
+
             GitItemStatus selectedItem;
             using (var searchWindow = new SearchWindow<GitItemStatus>(FindDiffFilesMatches)
             {
