@@ -75,7 +75,7 @@ namespace GitUI.RevisionGridClasses
                 laneNodes.Clear();
                 currentRow.Clear();
 
-                foreach (Node aNode in sourceGraph.GetHeads())
+                foreach (Node aNode in sourceGraph.GetRefs())
                     Update(aNode);
             }
 

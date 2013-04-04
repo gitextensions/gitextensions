@@ -324,7 +324,7 @@ namespace GitUI.CommandsDialogs
         private IList<string> GetLocalBranches()
         {
             if (_localBranches == null)
-                _localBranches = Module.GetHeads(false).Select(b => b.Name).ToList();
+                _localBranches = Module.GetRefs(false).Select(b => b.Name).ToList();
 
             return _localBranches;
         }
@@ -332,7 +332,7 @@ namespace GitUI.CommandsDialogs
         private IList<string> GetRemoteBranches()
         {
             if (_remoteBranches == null)
-                _remoteBranches = Module.GetHeads(true, true).Where(h => h.IsRemote && !h.IsTag).Select(b => b.Name).ToList();
+                _remoteBranches = Module.GetRefs(true, true).Where(h => h.IsRemote && !h.IsTag).Select(b => b.Name).ToList();
 
             return _remoteBranches;
         }
