@@ -420,10 +420,13 @@ namespace GitUI
         {
             get
             {
+                var result = new List<GitItemStatus>();
                 var data = GitItemStatusesWithParents;
-                if (data != null && data.Count > 0)
-                    return data.ElementAt(0).Value;
-                return new List<GitItemStatus>();
+                if (data != null)
+                    foreach (var plist in data.Values)
+                        result.AddAll(plist);
+
+                return result;
             }
             set
             {

@@ -308,7 +308,7 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            public IEnumerable<Node> GetHeads()
+            public IEnumerable<Node> GetRefs()
             {
                 var nodes = new List<Node>();
                 foreach (Junction j in junctions)
@@ -347,7 +347,7 @@ namespace GitUI.RevisionGridClasses
                 var L = new Queue<Node>();
                 var S = new Queue<Node>();
                 var P = new Queue<Node>();
-                foreach (Node h in GetHeads())
+                foreach (Node h in GetRefs())
                 {
                     foreach (Junction j in h.Ancestors)
                     {

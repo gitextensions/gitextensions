@@ -1469,7 +1469,7 @@ namespace GitUI.CommandsDialogs
                 return;
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule" + (modules.Count == 1 ? " " : "s ") +
-                String.Join(", ", modules.Keys) + " updated.");
+                String.Join(", ", modules.Keys) + " updated");
             sb.AppendLine();
             foreach (var item in modules)
             {

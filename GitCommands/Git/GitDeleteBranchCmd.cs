@@ -6,10 +6,10 @@ namespace GitCommands
 {
     public sealed class GitDeleteBranchCmd : GitCommand
     {
-        private readonly ICollection<GitHead> branches;
+        private readonly ICollection<GitRef> branches;
         private readonly bool force;
 
-        public GitDeleteBranchCmd(IEnumerable<GitHead> branches, bool force)
+        public GitDeleteBranchCmd(IEnumerable<GitRef> branches, bool force)
         {
             if (branches == null)
                 throw new ArgumentNullException("branches");

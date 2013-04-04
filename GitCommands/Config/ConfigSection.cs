@@ -51,7 +51,7 @@ namespace GitCommands.Config
         public string SectionName { get; set; }
         public string SubSection { get; set; }
         public bool SubSectionCaseSensitive { get; set; }
-        
+
         internal static string UnescapeString(string value)
         {
             // The .gitconfig escapes some character sequences -> 
@@ -80,7 +80,7 @@ namespace GitCommands.Config
             if (string.IsNullOrEmpty(value))
                 Keys.Remove(key);
             else
-                Keys[key] = new List<string> {value};
+                Keys[key] = new List<string> { value };
         }
 
         public void SetPathValue(string setting, string value)
@@ -113,14 +113,14 @@ namespace GitCommands.Config
 
         public override string ToString()
         {
-			string result = "[" + SectionName;
-			if (!SubSection.IsNullOrEmpty())
-				if (SubSectionCaseSensitive)
-					result = result + " \"" + SubSection + "\"";
-			    else
-				    result = result + "." + SubSection;
-			result = result + "]";
-			return result;
+            string result = "[" + SectionName;
+            if (!SubSection.IsNullOrEmpty())
+                if (SubSectionCaseSensitive)
+                    result = result + " \"" + SubSection + "\"";
+                else
+                    result = result + "." + SubSection;
+            result = result + "]";
+            return result;
         }
 
         public bool Equals(ConfigSection other)
@@ -134,6 +134,5 @@ namespace GitCommands.Config
             return string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) && 
                 string.Equals(SubSection, other.SubSection, sc);
         }
-
     }
 }
