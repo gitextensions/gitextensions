@@ -260,7 +260,7 @@ namespace GitUI.CommandsDialogs
 
         private void DeleteLostFoundTags()
         {
-            foreach (var head in Module.GetHeads(true, false))
+            foreach (var head in Module.GetRefs(true, false))
             {
                 if (head.Name.StartsWith(RestoredObjectsTagPrefix))
                     Module.DeleteTag(head.Name);
