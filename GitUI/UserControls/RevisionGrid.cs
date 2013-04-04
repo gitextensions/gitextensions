@@ -299,7 +299,7 @@ namespace GitUI
         private void RevisionsKeyPress(object sender, KeyPressEventArgs e)
         {
             var curIndex = -1;
-            if (Revisions.SelectedRows.Count > 0)
+            if (Revisions.SelectedRows.Any())
                 curIndex = Revisions.SelectedRows[0].Index;
 
             curIndex = curIndex >= 0 ? curIndex : 0;
@@ -546,7 +546,7 @@ namespace GitUI
 
         private void RevisionsSelectionChanged(object sender, EventArgs e)
         {
-            if (Revisions.SelectedRows.Count > 0)
+            if (Revisions.SelectedRows.Any())
                 LastRow = Revisions.SelectedRows[0].Index;
 
             SelectionTimer.Enabled = false;
@@ -1162,7 +1162,7 @@ namespace GitUI
                             float offset = baseOffset;
                             var gitRefs = revision.Refs;
 
-                            if (gitRefs.Count > 0)
+                            if (gitRefs.Any())
                             {
                                 gitRefs.Sort((left, right) =>
                                                {
@@ -1529,7 +1529,7 @@ namespace GitUI
         public void ViewSelectedRevisions()
         {
             var selectedRevisions = GetSelectedRevisions();
-            if (selectedRevisions.Count > 0)
+            if (selectedRevisions.Any())
             {
                 var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
                 form.ShowDialog(this);
@@ -1809,28 +1809,28 @@ namespace GitUI
             }
 
             deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
-            deleteTagToolStripMenuItem.Enabled = deleteTagDropDown.Items.Count > 0;
+            deleteTagToolStripMenuItem.Enabled = deleteTagDropDown.Items.Any();
 
             deleteBranchToolStripMenuItem.DropDown = deleteBranchDropDown;
-            deleteBranchToolStripMenuItem.Enabled = deleteBranchDropDown.Items.Count > 0;
+            deleteBranchToolStripMenuItem.Enabled = deleteBranchDropDown.Items.Any();
 
             checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
-            checkoutBranchToolStripMenuItem.Enabled = checkoutBranchDropDown.Items.Count > 0;
+            checkoutBranchToolStripMenuItem.Enabled = checkoutBranchDropDown.Items.Any();
 
             mergeBranchToolStripMenuItem.DropDown = mergeBranchDropDown;
-            mergeBranchToolStripMenuItem.Enabled = mergeBranchDropDown.Items.Count > 0;
+            mergeBranchToolStripMenuItem.Enabled = mergeBranchDropDown.Items.Any();
 
             rebaseOnToolStripMenuItem.DropDown = rebaseDropDown;
-            rebaseOnToolStripMenuItem.Enabled = rebaseDropDown.Items.Count > 0;
+            rebaseOnToolStripMenuItem.Enabled = rebaseDropDown.Items.Any();
 
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
-            renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
+            renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Any();
 
             branchNameToolStripMenuItem.DropDown = branchNameCopy;
-            branchNameToolStripMenuItem.Enabled = branchNameCopy.Items.Count > 0;
+            branchNameToolStripMenuItem.Enabled = branchNameCopy.Items.Any();
 
             tagToolStripMenuItem.DropDown = tagNameCopy;
-            tagToolStripMenuItem.Enabled = tagNameCopy.Items.Count > 0;
+            tagToolStripMenuItem.Enabled = tagNameCopy.Items.Any();
 
             toolStripSeparator6.Enabled = branchNameToolStripMenuItem.Enabled || tagToolStripMenuItem.Enabled;
 
@@ -2003,7 +2003,7 @@ namespace GitUI
             var dataType = DvcsGraph.DataType.Normal;
             if (rev.Guid == FiltredCurrentCheckout)
                 dataType = DvcsGraph.DataType.Active;
-            else if (rev.Refs.Count > 0)
+            else if (rev.Refs.Any())
                 dataType = DvcsGraph.DataType.Special;
 
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
@@ -2016,9 +2016,9 @@ namespace GitUI
             //Only check for tracked files. This usually makes more sense and it performs a lot
             //better then checking for untracked files.
             // TODO: Check FiltredFileName
-            if (Module.GetUnstagedFiles().Count > 0)
+            if (Module.GetUnstagedFiles().Any())
                 unstagedChanges = true;
-            if (Module.GetStagedFiles().Count > 0)
+            if (Module.GetStagedFiles().Any())
                 stagedChanges = true;
 
             // FiltredCurrentCheckout doesn't works here because only calculated after loading all revisions in SelectInitialRevision()
@@ -2429,7 +2429,7 @@ namespace GitUI
         private void NextQuickSearch(bool down)
         {
             var curIndex = -1;
-            if (Revisions.SelectedRows.Count > 0)
+            if (Revisions.SelectedRows.Any())
                 curIndex = Revisions.SelectedRows[0].Index;
 
             RestartQuickSearchTimer();
@@ -2458,7 +2458,7 @@ namespace GitUI
         {
             var revisions = GetSelectedRevisions();
             if (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected &&
-                revisions.Count > 0)
+                revisions.Any())
             {
                 HighlightBranch(revisions[0].Guid);
                 Refresh();
@@ -2486,7 +2486,7 @@ namespace GitUI
         {
             var r = GetRevision(LastRow);
             var children = GetRevisionChildren(r.Guid);
-            if (children.Count > 0)
+            if (children.Any())
                 SetSelectedRevision(children[0]);
         }
 
