@@ -105,7 +105,7 @@
     <Compile Include="Git\GitItemStatus.cs" />
     <Compile Include="Git\GitPushAction.cs" />
     <Compile Include="Git\GitRevision.cs" />
-    <Compile Include="Git\GitHead.cs" />
+    <Compile Include="Git\GitRef.cs" />
     <Compile Include="Git\GitItem.cs" />
     <Compile Include="Git\GitStash.cs" />
     <Compile Include="Git\GitSubmodule.cs" />
