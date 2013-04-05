@@ -228,7 +228,8 @@ namespace GitUI.CommandsDialogs
 
         private void DashboardGitModuleChanged(GitModule module)
         {
-            HideDashboard();
+            if (_dashboard.Visible)
+                HideDashboard();
             SetGitModule(module);
         }
 
@@ -1812,6 +1813,7 @@ namespace GitUI.CommandsDialogs
 #endif
             }
 
+            HideDashboard();
             UICommands.RepoChangedNotifier.Notify();
             RevisionGrid.IndexWatcher.Reset();
             RegisterPlugins();
