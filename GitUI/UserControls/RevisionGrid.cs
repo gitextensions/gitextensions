@@ -299,7 +299,7 @@ namespace GitUI
         private void RevisionsKeyPress(object sender, KeyPressEventArgs e)
         {
             var curIndex = -1;
-            if (Revisions.SelectedRows.Any())
+            if (Revisions.SelectedRows.Count > 0)
                 curIndex = Revisions.SelectedRows[0].Index;
 
             curIndex = curIndex >= 0 ? curIndex : 0;
@@ -546,7 +546,7 @@ namespace GitUI
 
         private void RevisionsSelectionChanged(object sender, EventArgs e)
         {
-            if (Revisions.SelectedRows.Any())
+            if (Revisions.SelectedRows.Count > 0)
                 LastRow = Revisions.SelectedRows[0].Index;
 
             SelectionTimer.Enabled = false;
@@ -1809,28 +1809,28 @@ namespace GitUI
             }
 
             deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
-            deleteTagToolStripMenuItem.Enabled = deleteTagDropDown.Items.Any();
+            deleteTagToolStripMenuItem.Enabled = deleteTagDropDown.Items.Count > 0;
 
             deleteBranchToolStripMenuItem.DropDown = deleteBranchDropDown;
-            deleteBranchToolStripMenuItem.Enabled = deleteBranchDropDown.Items.Any();
+            deleteBranchToolStripMenuItem.Enabled = deleteBranchDropDown.Items.Count > 0;
 
             checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
-            checkoutBranchToolStripMenuItem.Enabled = checkoutBranchDropDown.Items.Any();
+            checkoutBranchToolStripMenuItem.Enabled = checkoutBranchDropDown.Items.Count > 0;
 
             mergeBranchToolStripMenuItem.DropDown = mergeBranchDropDown;
-            mergeBranchToolStripMenuItem.Enabled = mergeBranchDropDown.Items.Any();
+            mergeBranchToolStripMenuItem.Enabled = mergeBranchDropDown.Items.Count > 0;
 
             rebaseOnToolStripMenuItem.DropDown = rebaseDropDown;
-            rebaseOnToolStripMenuItem.Enabled = rebaseDropDown.Items.Any();
+            rebaseOnToolStripMenuItem.Enabled = rebaseDropDown.Items.Count > 0;
 
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
-            renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Any();
+            renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
 
             branchNameToolStripMenuItem.DropDown = branchNameCopy;
-            branchNameToolStripMenuItem.Enabled = branchNameCopy.Items.Any();
+            branchNameToolStripMenuItem.Enabled = branchNameCopy.Items.Count > 0;
 
             tagToolStripMenuItem.DropDown = tagNameCopy;
-            tagToolStripMenuItem.Enabled = tagNameCopy.Items.Any();
+            tagToolStripMenuItem.Enabled = tagNameCopy.Items.Count > 0;
 
             toolStripSeparator6.Enabled = branchNameToolStripMenuItem.Enabled || tagToolStripMenuItem.Enabled;
 
@@ -2429,7 +2429,7 @@ namespace GitUI
         private void NextQuickSearch(bool down)
         {
             var curIndex = -1;
-            if (Revisions.SelectedRows.Any())
+            if (Revisions.SelectedRows.Count > 0)
                 curIndex = Revisions.SelectedRows[0].Index;
 
             RestartQuickSearchTimer();

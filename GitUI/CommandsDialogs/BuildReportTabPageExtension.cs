@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -13,8 +14,9 @@ namespace GitUI.CommandsDialogs
     {
         private readonly TabControl tabControl;
 
-        private TabPage BuildReportTabPage;
-        private WebBrowser BuildReportWebBrowser;
+        private TabPage buildReportTabPage;
+        private WebBrowser buildReportWebBrowser;
+        private GitRevision selectedGitRevision;
 
         public BuildReportTabPageExtension(TabControl tabControl)
         {
@@ -26,6 +28,10 @@ namespace GitUI.CommandsDialogs
             if (Settings.IsMonoRuntime())
                 return;
 
+            if (selectedGitRevision != null) selectedGitRevision.PropertyChanged -= RevisionPropertyChanged;
+            selectedGitRevision = revision;
+            if (selectedGitRevision != null) selectedGitRevision.PropertyChanged += RevisionPropertyChanged;
+
             var buildInfoIsAvailable =
                 !(revision == null || revision.BuildStatus == null || string.IsNullOrEmpty(revision.BuildStatus.Url));
 
@@ -35,35 +41,35 @@ namespace GitUI.CommandsDialogs
             {
                 if (buildInfoIsAvailable)
                 {
-                    if (this.BuildReportTabPage == null)
+                    if (buildReportTabPage == null)
                     {
                         CreateBuildReportTabPage(tabControl);
                     }
 
-                    var isFavIconMissing = BuildReportTabPage.ImageIndex < 0;
+                    var isFavIconMissing = buildReportTabPage.ImageIndex < 0;
 
-                    if (isFavIconMissing || tabControl.SelectedTab == BuildReportTabPage)
+                    if (isFavIconMissing || tabControl.SelectedTab == buildReportTabPage)
                     {
-                        BuildReportWebBrowser.Navigate(revision.BuildStatus.Url);
+                        buildReportWebBrowser.Navigate(revision.BuildStatus.Url);
 
                         if (isFavIconMissing)
                         {
-                            BuildReportWebBrowser.Navigated += BuildReportWebBrowserOnNavigated;
+                            buildReportWebBrowser.Navigated += BuildReportWebBrowserOnNavigated;
                         }
                     }
 
-                    if (!tabControl.Controls.Contains(BuildReportTabPage))
+                    if (!tabControl.Controls.Contains(buildReportTabPage))
                     {
-                        tabControl.Controls.Add(BuildReportTabPage);
+                        tabControl.Controls.Add(buildReportTabPage);
                     }
                 }
                 else
                 {
-                    if (BuildReportTabPage != null && tabControl.Controls.Contains(BuildReportTabPage))
+                    if (buildReportTabPage != null && tabControl.Controls.Contains(buildReportTabPage))
                     {
-                        BuildReportWebBrowser.Stop();
-                        BuildReportWebBrowser.Document.Write(string.Empty);
-                        tabControl.Controls.Remove(BuildReportTabPage);
+                        buildReportWebBrowser.Stop();
+                        buildReportWebBrowser.Document.Write(string.Empty);
+                        tabControl.Controls.Remove(buildReportTabPage);
                     }
                 }
             }
@@ -73,28 +79,37 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void RevisionPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "BuildStatus")
+            {
+                // Refresh the selected Git revision
+                this.FillBuildReport(this.selectedGitRevision);    
+            }
+        }
+
         private void CreateBuildReportTabPage(TabControl tabControl)
         {
-            this.BuildReportTabPage = new TabPage
+            this.buildReportTabPage = new TabPage
                 {
                     Padding = new Padding(3),
                     TabIndex = tabControl.Controls.Count,
                     Text = "Build Report",
                     UseVisualStyleBackColor = true
                 };
-            this.BuildReportWebBrowser = new WebBrowser
+            this.buildReportWebBrowser = new WebBrowser
                 {
                     Dock = DockStyle.Fill
                 };
-            this.BuildReportTabPage.Controls.Add(this.BuildReportWebBrowser);
+            this.buildReportTabPage.Controls.Add(this.buildReportWebBrowser);
         }
 
         private void BuildReportWebBrowserOnNavigated(object sender,
                                                       WebBrowserNavigatedEventArgs webBrowserNavigatedEventArgs)
         {
-            BuildReportWebBrowser.Navigated -= BuildReportWebBrowserOnNavigated;
+            buildReportWebBrowser.Navigated -= BuildReportWebBrowserOnNavigated;
 
-            var favIconUrl = DetermineFavIconUrl(BuildReportWebBrowser.Document);
+            var favIconUrl = DetermineFavIconUrl(buildReportWebBrowser.Document);
 
             if (favIconUrl != null)
             {
@@ -108,11 +123,11 @@ namespace GitUI.CommandsDialogs
                                     var favIconImage = Image.FromStream(imageStream)
                                                             .GetThumbnailImage(16, 16, null, IntPtr.Zero);
                                     var imageCollection = tabControl.ImageList.Images;
-                                    var imageIndex = BuildReportTabPage.ImageIndex;
+                                    var imageIndex = buildReportTabPage.ImageIndex;
 
                                     if (imageIndex < 0)
                                     {
-                                        BuildReportTabPage.ImageIndex = imageCollection.Count;
+                                        buildReportTabPage.ImageIndex = imageCollection.Count;
                                         imageCollection.Add(favIconImage);
                                     }
                                     else
