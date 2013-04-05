@@ -1150,7 +1150,7 @@ namespace GitCommands
                     oldCommitData = CommitData.GetCommitData(gitmodule, status.OldCommit, ref error);
                 if (oldCommitData != null)
                 {
-                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + oldCommitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(oldCommitData.CommitDate) + ")");
                     var delim = new char[] { '\n', '\r' };
                     var lines = oldCommitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
                     foreach (var curline in lines)
@@ -1171,7 +1171,7 @@ namespace GitCommands
                     commitData = CommitData.GetCommitData(gitmodule, status.Commit, ref error);
                 if (commitData != null)
                 {
-                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(commitData.CommitDate) + ")");
                     var delim = new char[] { '\n', '\r' };
                     var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
                     foreach (var curline in lines)
@@ -1329,6 +1329,12 @@ namespace GitCommands
         public static string GetRelativeDateString(DateTime originDate, DateTime previousDate)
         {
             return GetRelativeDateString(originDate, previousDate, true);
+        }
+
+        public static string GetFullDateString(DateTimeOffset datetime)
+        {
+            // previous format "ddd MMM dd HH':'mm':'ss yyyy"
+            return datetime.LocalDateTime.ToString("G");
         }
 
         // look into patch file and try to figure out if it's a raw diff (i.e from git diff -p)
