@@ -977,10 +977,11 @@ namespace GitUI.CommandsDialogs
             if(Settings.IsMonoRuntime())
                 return;
 
+            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
+            var revision = selectedRevisions.Count == 1 ? selectedRevisions.Single() : null;
+
             if (BuildReportTabPageExtension == null)
                 BuildReportTabPageExtension = new BuildReportTabPageExtension(CommitInfoTabControl);
-
-            var revision = RevisionGrid.GetSelectedRevisions().FirstOrDefault();
 
             BuildReportTabPageExtension.FillBuildReport(revision);
         }
