@@ -206,7 +206,7 @@ namespace GitUI.UserControls
             internal override void OnSelected()
             {
                 base.OnSelected();
-                UiCommands.BrowseGoToRevision(FullPath);
+                UiCommands.BrowseGoToRef(FullPath);
             }
             protected override IEnumerable<DragDropAction> CreateDragDropActions()
             {

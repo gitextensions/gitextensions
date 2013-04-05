@@ -211,9 +211,9 @@ namespace GitUI.CommandsDialogs
         }
     
         #region IBrowseRepo
-        public void SetSelectedRevision(string revision)
+        public void GoToRef(string refName)
         {
-            RevisionGrid.SetSelectedRevision(new GitRevision(Module, revision));
+            RevisionGrid.GoToRef(refName);
         }
 
         #endregion
@@ -2223,7 +2223,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (formGoToCommit.ShowDialog(this) == DialogResult.OK)
                 {
-                   SetSelectedRevision(formGoToCommit.GetRevision());
+                   GoToRef(formGoToCommit.GetSelectedRefName());
                 }
             }
         }

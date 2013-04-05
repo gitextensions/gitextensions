@@ -7,7 +7,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public sealed partial class FormGoToCommit : GitModuleForm
     {
-        string _selectedRevision;
+        string _selectedRefName;
         private readonly AsyncLoader _tagsLoader;
         private readonly AsyncLoader _branchesLoader;
 
@@ -20,14 +20,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _branchesLoader = new AsyncLoader();
         }
 
-        public string GetRevision()
+        public string GetSelectedRefName()
         {
-            return _selectedRevision;
+            return _selectedRefName;
         }
 
         private void commitExpression_TextChanged(object sender, EventArgs e)
         {
-            _selectedRevision = Module.RevParse(commitExpression.Text.Trim());
+            _selectedRefName = commitExpression.Text.Trim();
         }
 
         private void Go()
@@ -67,7 +67,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void comboBoxTags_TextChanged(object sender, EventArgs e)
         {
             // TODO: try to get GitRef and then CompleteName
-            _selectedRevision = Module.RevParse(comboBoxTags.Text);
+            _selectedRefName = comboBoxTags.Text;
         }
 
         private void comboBoxTags_SelectionChangeCommitted(object sender, EventArgs e)
@@ -78,7 +78,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
 
             // does not work when using autocomplete, for that we have the _TextChanged method
-            _selectedRevision = Module.RevParse(((GitRef)comboBoxTags.SelectedValue).CompleteName);
+            _selectedRefName = ((GitRef)comboBoxTags.SelectedValue).CompleteName;
             Go();
         }
 
@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void comboBoxBranches_TextChanged(object sender, EventArgs e)
         {
             // TODO: try to get GitRef and then CompleteName
-            _selectedRevision = Module.RevParse(comboBoxBranches.Text);
+            _selectedRefName = comboBoxBranches.Text;
         }
 
         private void comboBoxBranches_SelectionChangeCommitted(object sender, EventArgs e)
@@ -111,7 +111,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (comboBoxBranches.SelectedValue == null)
                 return;
 
-            _selectedRevision = Module.RevParse(((GitRef)comboBoxBranches.SelectedValue).CompleteName);
+            _selectedRefName = ((GitRef)comboBoxBranches.SelectedValue).CompleteName;
             Go();
         }
     }

@@ -2062,10 +2062,10 @@ namespace GitUI
             InvokeEvent(owner, PostRegisterPlugin);
         }
 
-        public void BrowseGoToRevision(string revision)
+        public void BrowseGoToRef(string refName)
         {
             if (BrowseRepo != null)
-                BrowseRepo.SetSelectedRevision(revision);
+                BrowseRepo.GoToRef(refName);
         }
 
         public IGitRemoteCommand CreateRemoteCommand()
