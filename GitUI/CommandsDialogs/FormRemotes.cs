@@ -92,7 +92,7 @@ namespace GitUI.CommandsDialogs
 
             Remotes.DataSource = Module.GetRemotes(false);
 
-            var heads = Module.GetHeads(false, true);
+            var heads = Module.GetRefs(false, true);
             RemoteBranches.DataSource = heads;
 
             RemoteBranches.DataError += RemoteBranchesDataError;
@@ -183,9 +183,9 @@ namespace GitUI.CommandsDialogs
         {
             ConfigFile localConfig = Module.GetLocalConfig();
 
-            foreach (var remoteHead in Module.GetHeads(true, true))
+            foreach (var remoteHead in Module.GetRefs(true, true))
             {
-                foreach (var localHead in Module.GetHeads(true, true))
+                foreach (var localHead in Module.GetRefs(true, true))
                 {
                     if (!remoteHead.IsRemote ||
                         localHead.IsRemote ||
@@ -287,7 +287,7 @@ namespace GitUI.CommandsDialogs
             if (RemoteBranches.SelectedRows.Count != 1)
                 return;
 
-            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitHead;
+            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitRef;
 
             if (head == null)
                 return;
@@ -309,7 +309,7 @@ namespace GitUI.CommandsDialogs
             if (RemoteBranches.SelectedRows.Count != 1)
                 return;
 
-            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitHead;
+            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitRef;
 
             if (head == null)
                 return;
@@ -327,7 +327,7 @@ namespace GitUI.CommandsDialogs
             if (string.IsNullOrEmpty(remoteUrl))
                 return;
 
-            foreach (var remoteHead in Module.GetHeads(true, true))
+            foreach (var remoteHead in Module.GetRefs(true, true))
             {
                 if (remoteHead.IsRemote &&
                     remoteHead.Name.ToLower().Contains(currentSelectedRemote.ToLower()) /*&&
@@ -341,7 +341,7 @@ namespace GitUI.CommandsDialogs
             if (RemoteBranches.SelectedRows.Count != 1)
                 return;
 
-            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitHead;
+            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitRef;
             if (head == null)
                 return;
 
@@ -353,7 +353,7 @@ namespace GitUI.CommandsDialogs
             if (RemoteBranches.SelectedRows.Count != 1)
                 return;
 
-            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitHead;
+            var head = RemoteBranches.SelectedRows[0].DataBoundItem as GitRef;
             if (head == null)
                 return;
 

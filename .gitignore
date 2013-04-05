@@ -55,3 +55,4 @@ UpgradeLog*.htm*
 
 #nuget
 packages/
+GitExtensions.*.sln.VisualState.xml

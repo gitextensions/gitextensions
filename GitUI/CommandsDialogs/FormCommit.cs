@@ -887,7 +887,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                if (Unstaged.GitItemStatuses.Any(gitItemStatus => gitItemStatus.IsTracked))
+                if (Unstaged.GitItemStatuses.Any())
                 {
                     InitializedStaged();
                     return;
@@ -1232,6 +1232,9 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
+                if (Settings.RevisionGraphShowWorkingDirChanges)
+                    UICommands.RepoChangedNotifier.Notify();
+
                 if (filesInUse.Count > 0)
                     MessageBox.Show(this, "The following files are currently in use and will not be reset:" + Environment.NewLine + "\u2022 " + string.Join(Environment.NewLine + "\u2022 ", filesInUse), "Files In Use");
 
@@ -1268,7 +1271,7 @@ namespace GitUI.CommandsDialogs
 
         private void SolveMergeConflictsClick(object sender, EventArgs e)
         {
-            if (UICommands.StartResolveConflictsDialog(this))
+            if (UICommands.StartResolveConflictsDialog(this, false))
                 Initialize();
         }
 
@@ -1466,7 +1469,7 @@ namespace GitUI.CommandsDialogs
                 return;
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule" + (modules.Count == 1 ? " " : "s ") +
-                String.Join(", ", modules.Keys) + " updated.");
+                String.Join(", ", modules.Keys) + " updated");
             sb.AppendLine();
             foreach (var item in modules)
             {
@@ -2212,8 +2215,8 @@ namespace GitUI.CommandsDialogs
                 var formsTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
                 Task.Factory.StartNew(() =>
-                {
-                    bashProcess.WaitForExit();
+                    {
+                        bashProcess.WaitForExit();
                         bashProcess.Dispose();
                     })
                     .ContinueWith(_ => RescanChanges(),
