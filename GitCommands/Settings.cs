@@ -41,7 +41,7 @@ namespace GitCommands
 
         private static readonly XmlSerializableDictionary<String, object> ByNameMap = new XmlSerializableDictionary<String, object>();
         static System.Timers.Timer SaveTimer = new System.Timers.Timer(SAVETIME);
-
+        private static bool UseTimer = true;
 
         static Settings()
         {
@@ -879,14 +879,19 @@ namespace GitCommands
         {
             return Type.GetType("Mono.Runtime") != null;
         }
-
+        
         public static void SaveSettings()
         {
             try
             {
+                UseTimer = false;
+                
                 SetValue("gitssh", GitCommandHelpers.GetSsh());
                 Repositories.SaveSettings();
-
+                
+                UseTimer=true;
+                
+                SaveXMLDictionarySettings(ByNameMap, Path.Combine(ApplicationDataPath,SettingsFileName));
             }
             catch
             { }
@@ -1336,7 +1341,8 @@ namespace GitCommands
                  (key, existingVal) =>
                  { return value; });
             Debug.WriteLine("SetValue Setting:{0} Time:{1}", name, DateTime.Now.ToLongTimeString());
-            StartSaveTimer();
+            if(UseTimer)
+                StartSaveTimer();
 
             //VersionIndependentRegKey.DeleteValue(name);
 
