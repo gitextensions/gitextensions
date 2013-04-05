@@ -987,7 +987,7 @@ namespace GitUI
             }
         }
 
-        internal int SearchRevision(string initRevision, out string graphRevision)
+        internal int TrySearchRevision(string initRevision, out string graphRevision)
         {
             var rows = Revisions
                 .Rows
@@ -1002,6 +1002,19 @@ namespace GitUI
                 return idx.Index;
             }
 
+            graphRevision = null;
+            return -1;
+        }
+
+        private int SearchRevision(string initRevision, out string graphRevision)
+        {
+            int index = TrySearchRevision(initRevision, out graphRevision);
+            if (index >= 0)
+                return index;
+
+            var rows = Revisions
+                .Rows
+                .Cast<DataGridViewRow>();
             var dict = rows
                 .ToDictionary(row => GetRevision(row.Index).Guid, row => row.Index);
             var revListParams = "rev-list ";
@@ -1013,18 +1026,12 @@ namespace GitUI
                 revListParams += string.Format("--max-count=\"{0}\" ", (int)Settings.MaxRevisionGraphCommits);
 
             var allrevisions = Module.ReadGitOutputLines(revListParams + initRevision);
-            foreach (var rev in allrevisions)
-            {
-                int index;
-                if (dict.TryGetValue(rev, out index))
-                {
-                    graphRevision = rev;
-                    return index;
-                }
-            }
-            graphRevision = null;
+            graphRevision = allrevisions.FirstOrDefault(rev => dict.TryGetValue(rev, out index));
+            if (graphRevision != null)
+                return index;
             return -1;
         }
+
         private static string GetDateHeaderText()
         {
             return Settings.ShowAuthorDate ? Strings.GetAuthorDateText() : Strings.GetCommitDateText();
