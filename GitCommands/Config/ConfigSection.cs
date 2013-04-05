@@ -51,28 +51,13 @@ namespace GitCommands.Config
         public string SectionName { get; set; }
         public string SubSection { get; set; }
         public bool SubSectionCaseSensitive { get; set; }
-        
-        internal static string UnescapeString(string value)
+
+        internal static string FixPath(string path)
         {
-            // The .gitconfig escapes some character sequences -> 
-            // \" = "
-            // \\ = \
-            return value.Replace("\\\"", "\"").Replace("\\\\", "\\");
-        }
-
-        internal static string EscapeString(string path)
-        {
-            // The .gitconfig escapes some character sequences
-            path = path.Replace("\"", "$QUOTE$");
-
-            path = path.Trim();
-
             if (path.StartsWith("\\\\")) //for using unc paths -> these need to be backward slashes
-                path = path.Replace("\\", "\\\\");
-            else //for directories -> git only supports forward slashes
-                path = path.Replace('\\', '/');
+                return path;
 
-            return path.Replace("$QUOTE$", "\\\"");
+            return path.Replace('\\', '/');
         }
 
         public void SetValue(string key, string value)
@@ -80,12 +65,12 @@ namespace GitCommands.Config
             if (string.IsNullOrEmpty(value))
                 Keys.Remove(key);
             else
-                Keys[key] = new List<string> {value};
+                Keys[key] = new List<string> { value };
         }
 
         public void SetPathValue(string setting, string value)
         {
-            SetValue(setting, EscapeString(value));
+            SetValue(setting, FixPath(value));
         }
 
         public void AddValue(string key, string value)
@@ -103,7 +88,7 @@ namespace GitCommands.Config
 
         public string GetPathValue(string setting)
         {
-            return UnescapeString(GetValue(setting));
+            return GetValue(setting);
         }
 
         public IList<string> GetValues(string key)
@@ -113,14 +98,18 @@ namespace GitCommands.Config
 
         public override string ToString()
         {
-			string result = "[" + SectionName;
-			if (!SubSection.IsNullOrEmpty())
-				if (SubSectionCaseSensitive)
-					result = result + " \"" + SubSection + "\"";
-			    else
-				    result = result + "." + SubSection;
-			result = result + "]";
-			return result;
+            string result = "[" + SectionName;
+            if (!SubSection.IsNullOrEmpty())
+            {
+                var escSubSection = SubSection.Replace("\"", "\\\"");
+                escSubSection = escSubSection.Replace("\\", "\\\\");
+
+                if (!SubSectionCaseSensitive)
+                    escSubSection = escSubSection.ToLower();
+                result = result + " \"" + escSubSection + "\"";
+            }
+            result = result + "]";
+            return result;
         }
 
         public bool Equals(ConfigSection other)
@@ -134,7 +123,6 @@ namespace GitCommands.Config
             return string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) && 
                 string.Equals(SubSection, other.SubSection, sc);
         }
-
     }
 
     public static class ConfigSectionExt

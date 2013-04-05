@@ -360,13 +360,14 @@ namespace GitCommands
             Merge,
             Rebase,
             Fetch,
-            FetchAll
+            FetchAll,
+            Default
         }
 
-        public static PullAction PullMerge
+        public static PullAction FormPullAction
         {
-            get { return GetEnum<PullAction>("pullmerge", PullAction.Merge); }
-            set { SetEnum<PullAction>("pullmerge", value); }
+            get { return GetEnum("FormPullAction", PullAction.Merge); }
+            set { SetEnum("FormPullAction", value); }
         }
 
         public static bool DonSetAsLastPullAction
@@ -439,10 +440,10 @@ namespace GitCommands
             set { SetBool("AutoPopStashAfterCheckoutBranch", value); }
         }
 
-        public static bool? AutoPullOnPushRejected
+        public static PullAction? AutoPullOnPushRejectedAction
         {
-            get { return GetBool("AutoPullOnPushRejected", null); }
-            set { SetBool("AutoPullOnPushRejected", value); }
+            get { return GetNullableEnum<PullAction>("AutoPullOnPushRejectedAction", null); }
+            set { SetNullableEnum<PullAction>("AutoPullOnPushRejectedAction", value); }
         }
 
         public static bool DontConfirmPushNewBranch
@@ -1029,6 +1030,13 @@ namespace GitCommands
             set { SafeSet("UseFormCommitMessage", value, ref _UseFormCommitMessage); }
         }
 
+        private static DateTime? _lastUpdateCheck;
+        public static DateTime LastUpdateCheck
+        {
+            get { return SafeGet("LastUpdateCheck", default(DateTime), ref _lastUpdateCheck); }
+            set { SafeSet("LastUpdateCheck", value, ref _lastUpdateCheck); }
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
@@ -1061,9 +1069,21 @@ namespace GitCommands
             return SafeGet(key, defaultValue, ref field, x => x.Parse(defaultValue));
         }
 
+        private static DateTime SafeGet(string key, DateTime? defaultValue, ref DateTime? field)
+        {
+            return SafeGet(key, defaultValue, ref field,
+                x =>
+                {
+                    DateTime result;
+                    if (DateTime.TryParseExact(x, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                        return result;
+                    return null;
+                }).GetValueOrDefault();
+        }
+
         private static bool SafeGet(string key, bool defaultValue, ref bool? field)
         {
-            return SafeGet(key, defaultValue, ref field, x => x == "True").Value;
+            return SafeGet(key, defaultValue, ref field, x => x == "True").GetValueOrDefault();
         }
 
         private static int SafeGet(string key, int defaultValue, ref int? field)
@@ -1072,12 +1092,18 @@ namespace GitCommands
             {
                 int result;
                 return int.TryParse(x, out result) ? result : defaultValue;
-            }).Value;
+            }).GetValueOrDefault();
         }
 
         private static Color SafeGet(string key, Color defaultValue, ref Color? field)
         {
-            return SafeGet(key, defaultValue, ref field, x => ColorTranslator.FromHtml(x)).Value;
+            return SafeGet(key, defaultValue, ref field, x => ColorTranslator.FromHtml(x)).GetValueOrDefault();
+        }
+
+        private static void SafeSet(string key, DateTime? value, ref DateTime? field)
+        {
+            field = value;
+            SetValue(key, field != null ? field.Value.ToString("yyyy/M/dd", CultureInfo.InvariantCulture) : null);
         }
 
         private static void SafeSet<T>(string key, T value, ref T field)
@@ -1222,6 +1248,24 @@ namespace GitCommands
             {
                 var val = x.ToString();
                 return (T)Enum.Parse(typeof(T), val, true);
+            });
+        }
+
+        public static void SetNullableEnum<T>(string name, T? value) where T : struct
+        {
+            SetByName<T?>(name, value, x => x.HasValue ? x.ToString() : string.Empty);
+        }
+
+        public static T? GetNullableEnum<T>(string name, T? defaultValue) where T : struct
+        {
+            return GetByName<T?>(name, defaultValue, x =>
+            {
+                var val = x.ToString();
+
+                if (val.IsNullOrEmpty())
+                    return null;
+
+                return (T?)Enum.Parse(typeof(T), val, true);
             });
         }
 

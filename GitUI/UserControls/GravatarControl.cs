@@ -104,11 +104,11 @@ namespace GitUI
             UpdateGravatar();
         }
 
-        private void SmallToolStripMenuItemClick(object sender, EventArgs e)
+
+        private void toolStripMenuItemClick(object sender, EventArgs e)
         {
             var toolStripItem = (ToolStripItem)sender;
-
-            Settings.AuthorImageSize = int.Parse(toolStripItem.Text);
+            Settings.AuthorImageSize = int.Parse((string)toolStripItem.Tag);
             GravatarService.ClearImageCache();
             UpdateGravatar();
         }

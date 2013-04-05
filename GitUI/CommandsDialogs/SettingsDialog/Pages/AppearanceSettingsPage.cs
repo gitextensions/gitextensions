@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Text = "Appearance";
             Translate();
 
-            noImageService.Items.AddRange(GravatarService.DynamicServices.Cast<object>().ToArray());
+            NoImageService.Items.AddRange(GravatarService.DynamicServices.Cast<object>().ToArray());
         }
 
         protected override string GetCommaSeparatedKeywordList()
@@ -49,9 +49,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             chkShowCurrentBranchInVisualStudio.Checked = Settings.ShowCurrentBranchInVisualStudio;
             _NO_TRANSLATE_DaysToCacheImages.Value = Settings.AuthorImageCacheDays;
-            _NO_TRANSLATE_authorImageSize.Value = Settings.AuthorImageSize;
+            if (Settings.AuthorImageSize <= 120)
+                AuthorImageSize.SelectedIndex = 0;
+            else if (Settings.AuthorImageSize <= 200)
+                AuthorImageSize.SelectedIndex = 1;
+            else if (Settings.AuthorImageSize <= 280)
+                AuthorImageSize.SelectedIndex = 2;
+            else
+                AuthorImageSize.SelectedIndex = 3;
             ShowAuthorGravatar.Checked = Settings.ShowAuthorGravatar;
-            noImageService.Text = Settings.GravatarFallbackService;
+            NoImageService.Text = Settings.GravatarFallbackService;
 
             Language.Items.Clear();
             Language.Items.Add("English");
@@ -76,9 +83,25 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Settings.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;
             Settings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
 
-            if ((int)_NO_TRANSLATE_authorImageSize.Value != Settings.AuthorImageSize)
+            int authorImageSize;
+            switch (AuthorImageSize.SelectedIndex)
             {
-                Settings.AuthorImageSize = (int)_NO_TRANSLATE_authorImageSize.Value;
+                case 1:
+                    authorImageSize = 160;
+                    break;
+                case 2:
+                    authorImageSize = 240;
+                    break;
+                case 3:
+                    authorImageSize = 320;
+                    break;
+                default:
+                    authorImageSize = 80;
+                    break;
+            }
+            if (authorImageSize != Settings.AuthorImageSize)
+            {
+                Settings.AuthorImageSize = authorImageSize;
                 GravatarService.ClearImageCache();
             }
 
@@ -88,7 +111,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Settings.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 
             Settings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
-            Settings.GravatarFallbackService = noImageService.Text;
+            Settings.GravatarFallbackService = NoImageService.Text;
 
             Settings.RelativeDate = chkShowRelativeDate.Checked;
 

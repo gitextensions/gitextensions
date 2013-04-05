@@ -126,7 +126,7 @@ namespace GitUI.CommandsDialogs
 
             var modules = Module.GetSubmoduleConfigFile();
             modules.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
-            if (modules.GetConfigSections().Count > 0)
+            if (modules.ConfigSections.Count > 0)
             {
                 modules.Save();
                 Module.StageFile(".gitmodules");
@@ -138,6 +138,18 @@ namespace GitUI.CommandsDialogs
             configFile.RemoveConfigSection("submodule \"" + SubModuleName.Text + "\"");
             configFile.Save();
 
+            Initialize();
+            UseWaitCursor = false;
+        }
+
+        private void Pull_Click(object sender, EventArgs e)
+        {
+            var submodule = Module.GetSubmodule(SubModuleLocalPath.Text);
+            if (submodule == null)
+                return;
+            GitUICommands uiCommands = new GitUICommands(submodule);
+            uiCommands.StartPullDialog(this);
+            UseWaitCursor = true;
             Initialize();
             UseWaitCursor = false;
         }

@@ -6,9 +6,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace AutoCheckForUpdates
+namespace GitUI.CommandsDialogs.BrowseDialog
 {
-    public partial class Updates : Form
+    public partial class FormUpdates : Form
     {
         public bool AutoClose;
         public string CurrentVersion;
@@ -17,7 +17,7 @@ namespace AutoCheckForUpdates
         private const string FilesUrl = "gitextensions.googlecode.com/files/GitExtensions";
         private readonly SynchronizationContext syncContext;
 
-        public Updates(string currentVersion)
+        public FormUpdates(string currentVersion)
         {
             syncContext = SynchronizationContext.Current;
             InitializeComponent();

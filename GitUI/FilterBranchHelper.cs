@@ -59,7 +59,7 @@ namespace GitUI
 
             _NO_TRANSLATE_toolStripBranches.Items.Clear();
 
-            AsyncLoader.DoAsync(() => GetBranchAndTagHeads(local, remote),
+            AsyncLoader.DoAsync(() => GetBranchAndTagRefs(local, remote),
                 branches =>
                 {
                     foreach (var branch in branches)
@@ -79,44 +79,44 @@ namespace GitUI
             var list = new List<string>();
             if (local && remote)
             {
-                var branches = Module.GetHeads(true, true);
+                var branches = Module.GetRefs(true, true);
                 list.AddRange(branches.Where(branch => !branch.IsTag).Select(branch => branch.Name));
             }
             else if (local)
             {
-                var branches = Module.GetHeads(false);
+                var branches = Module.GetRefs(false);
                 list.AddRange(branches.Select(branch => branch.Name));
             }
             else if (remote)
             {
-                var branches = Module.GetHeads(true, true);
+                var branches = Module.GetRefs(true, true);
                 list.AddRange(branches.Where(branch => branch.IsRemote && !branch.IsTag).Select(branch => branch.Name));
             }
             return list;
         }
 
-        private IEnumerable<string> GetTagsHeads(bool local, bool remote)
+        private IEnumerable<string> GetTagsRefs(bool local, bool remote)
         {
             var list = new List<string>();
             if (!remote)
                 return list;
             if (local)
             {
-                var tags = Module.GetHeads(true, true);
+                var tags = Module.GetRefs(true, true);
                 list.AddRange(tags.Where(tag => tag.IsTag).Select(tag => tag.Name));
             }
             else
             {
-                var tags = Module.GetHeads(true, true);
+                var tags = Module.GetRefs(true, true);
                 list.AddRange(tags.Where(tag => tag.IsRemote && tag.IsTag).Select(tag => tag.Name));
             }
             return list;
         }
 
-        private List<string> GetBranchAndTagHeads(bool local, bool remote)
+        private List<string> GetBranchAndTagRefs(bool local, bool remote)
         {
             var list = GetBranchHeads(local, remote);
-            list.AddRange(GetTagsHeads(local, remote));
+            list.AddRange(GetTagsRefs(local, remote));
             return list;
         }
 
@@ -151,7 +151,7 @@ namespace GitUI
             string filter = _NO_TRANSLATE_toolStripBranches.Text;
             _NO_TRANSLATE_toolStripBranches.Items.Clear();
             var index = _NO_TRANSLATE_toolStripBranches.Text.Length;
-            var branches = GetBranchAndTagHeads(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
+            var branches = GetBranchAndTagRefs(localToolStripMenuItem.Checked, remoteToolStripMenuItem.Checked);
             _NO_TRANSLATE_toolStripBranches.Items.AddRange(branches.Where(branch => branch.Contains(filter)).ToArray());
             _NO_TRANSLATE_toolStripBranches.SelectionStart = index;
         }
