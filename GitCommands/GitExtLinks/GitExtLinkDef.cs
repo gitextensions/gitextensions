@@ -166,11 +166,11 @@ namespace GitCommands.GitExtLinks
             List<IEnumerable<GitExtLink>> links = new List<IEnumerable<GitExtLink>>();
 
             if (SearchInParts.Contains(RevisionPart.LocalBranches))
-                foreach (var head in revision.Heads.Where(b => !b.IsRemote))
+                foreach (var head in revision.Refs.Where(b => !b.IsRemote))
                     links.Add(ParsePart(head.LocalName));
 
             if (SearchInParts.Contains(RevisionPart.RemoteBranches))
-                foreach (var head in revision.Heads.Where(b => b.IsRemote))
+                foreach (var head in revision.Refs.Where(b => b.IsRemote))
                     links.Add(ParsePart(head.LocalName));
 
             if (SearchInParts.Contains(RevisionPart.Message))

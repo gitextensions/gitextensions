@@ -16,11 +16,11 @@
         {
             get
             {
-#if !__MonoCS__ // animated GIFs are not supported in Mono/Linux
-                return loadingpanel_animated;
-#else
-                return loadingpanel_static;
-#endif
+                if(GitCommands.Settings.IsMonoRuntime())
+                    return loadingpanel_static;
+                else
+                    return loadingpanel_animated;
+
             }
         }
     }

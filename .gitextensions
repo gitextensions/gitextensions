@@ -1,7 +1,7 @@
 [GitExtLinkDef "outDef"]
 	Disabled = False
-	SearchPattern = (\s*(,|and)?\s*#\d+)+
-	NestedSearchPattern = (\d+)+
+	SearchPattern = "(\\s*(,|and)?\\s*#\\d+)+"
+	NestedSearchPattern = (\\d+)+
 	RevisionParts = Message RemoteBranches LocalBranches
 	LinkFormat0 = https://github.com/gitextensions/gitextensions/issues/{0}
 	LinkCaption0 = Issue {0}
