@@ -329,8 +329,6 @@ namespace GitCommands.Config
                     switch (c)
                     {
                         case '\\':
-                            token.Append(c);
-                            break;
                         case '"':
                             token.Append(c);
                             break;
@@ -407,8 +405,6 @@ namespace GitCommands.Config
                     switch (c)
                     {
                         case '\\':
-                            valueToken.Append(c);
-                            break;
                         case '"':
                             valueToken.Append(c);
                             break;
@@ -450,13 +446,6 @@ namespace GitCommands.Config
                             _quotedValue = !_quotedValue;
                             return ReadValue;
                         case ';':
-                            if (_quotedValue)
-                            {
-                                valueToken.Append(c);
-                                return ReadValue;
-                            }
-                            NewValue();
-                            return ReadComment;
                         case '#':
                             if (_quotedValue)
                             {
@@ -486,15 +475,11 @@ namespace GitCommands.Config
                     case '[':
                         return ReadSection;
                     case ' ':
-                        return ReadUnknown;
                     case '\t':
-                        return ReadUnknown;
                     case '\n':
-                        return ReadUnknown;
                     case '\r':
                         return ReadUnknown;
                     case ';':
-                        return ReadComment;
                     case '#':
                         return ReadComment;
                     default:
