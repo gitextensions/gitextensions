@@ -144,12 +144,19 @@ namespace TranslationApp
                 GitCommands.Settings.CurrentTranslation = "";
 
                 List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
+                progressBar.Maximum = translatableTypes.Count;
+                progressBar.Visible = true;
 
-                foreach (Type type in translatableTypes)
+                for (int index = 0; index < translatableTypes.Count; index++)
                 {
+                    Type type = translatableTypes[index];
                     ITranslate obj = TranslationUtl.CreateInstanceOfClass(type) as ITranslate;
                     if (obj != null)
                         obj.AddTranslationItems(neutralTranslation);
+
+                    progressBar.Value = index;
+                    if (index % 10 == 0)
+                        Update();
                 }
             }
             finally
@@ -158,6 +165,7 @@ namespace TranslationApp
                 
                 //Restore translation
                 GitCommands.Settings.CurrentTranslation = null;
+                progressBar.Visible = false;
             }
         }
 
