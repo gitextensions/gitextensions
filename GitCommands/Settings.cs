@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.IO;
@@ -1303,7 +1302,7 @@ namespace GitCommands
 
         private static void SaveXMLDictionarySettings<T>(XmlSerializableDictionary<string, T> Dic, String FilePath)
         {
-            Debug.WriteLine("SaveXMLDictionarySettings  Time:{0}",  (object) DateTime.Now.ToLongTimeString());
+            
             try
             {
 
@@ -1354,7 +1353,7 @@ namespace GitCommands
             ByNameMap.AddOrUpdate(name, value,
                  (key, existingVal) =>
                  { return value; });
-            Debug.WriteLine("SetValue Setting:{0} Time:{1}", name, DateTime.Now.ToLongTimeString());
+            
             if(UseTimer)
                 StartSaveTimer();
 
