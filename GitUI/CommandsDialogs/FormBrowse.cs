@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs
             Repositories.LoadRepositoryHistoryAsync();
             Task.Factory.StartNew(PluginLoader.Load)
                 .ContinueWith((task) => RegisterPlugins(), TaskScheduler.FromCurrentSynchronizationContext());
-            RevisionGrid.GitModuleChanged += DashboardGitModuleChanged;
+            RevisionGrid.GitModuleChanged += SetGitModule;
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripTextBoxFilter, toolStripDropDownButton1, RevisionGrid, toolStripLabel2, this);
             _filterBranchHelper = new FilterBranchHelper(toolStripBranches, toolStripDropDownButton2, RevisionGrid);
             Translate();
@@ -211,7 +211,7 @@ namespace GitUI.CommandsDialogs
             if (_dashboard == null)
             {
                 _dashboard = new Dashboard();
-                _dashboard.GitModuleChanged += DashboardGitModuleChanged;
+                _dashboard.GitModuleChanged += SetGitModule;
                 toolPanel.Panel2.Controls.Add(_dashboard);
                 _dashboard.Dock = DockStyle.Fill;
             }
@@ -224,14 +224,8 @@ namespace GitUI.CommandsDialogs
 
         private void HideDashboard()
         {
-            if (_dashboard != null)
+            if (_dashboard != null && _dashboard.Visible)
                 _dashboard.Visible = false;
-        }
-
-        private void DashboardGitModuleChanged(GitModule module)
-        {
-            HideDashboard();
-            SetGitModule(module);
         }
 
         private void GitTree_AfterSelect(object sender, TreeViewEventArgs e)
@@ -1238,7 +1232,7 @@ namespace GitUI.CommandsDialogs
 
         private void CloneToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartCloneDialog(this, string.Empty, false, DashboardGitModuleChanged);
+            UICommands.StartCloneDialog(this, string.Empty, false, SetGitModule);
         }
 
         private void CommitToolStripMenuItemClick(object sender, EventArgs e)
@@ -1248,7 +1242,7 @@ namespace GitUI.CommandsDialogs
 
         private void InitNewRepositoryToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartInitializeDialog(this, DashboardGitModuleChanged);
+            UICommands.StartInitializeDialog(this, SetGitModule);
         }
 
         private void PushToolStripMenuItemClick(object sender, EventArgs e)
@@ -1833,6 +1827,7 @@ namespace GitUI.CommandsDialogs
 #endif
             }
 
+            HideDashboard();
             UICommands.RepoChangedNotifier.Notify();
             RevisionGrid.IndexWatcher.Reset();
             RegisterPlugins();
@@ -2111,7 +2106,7 @@ namespace GitUI.CommandsDialogs
         {
             if (RepoHosts.GitHosters.Count > 0)
             {
-                UICommands.StartCloneForkFromHoster(this, RepoHosts.GitHosters[0], DashboardGitModuleChanged);
+                UICommands.StartCloneForkFromHoster(this, RepoHosts.GitHosters[0], SetGitModule);
                 UICommands.RepoChangedNotifier.Notify();
             }
             else
@@ -2446,7 +2441,7 @@ namespace GitUI.CommandsDialogs
 
         private void CloneSvnToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartSvnCloneDialog(this, DashboardGitModuleChanged);
+            UICommands.StartSvnCloneDialog(this, SetGitModule);
         }
 
         private void SvnRebaseToolStripMenuItem_Click(object sender, EventArgs e)
