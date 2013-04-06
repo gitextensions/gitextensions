@@ -1353,7 +1353,7 @@ namespace GitCommands
         {
             object o;
            
-            if (ByNameMap.TryGetValue(name, out o) && !(o.GetType()==typeof(String)))
+            if (ByNameMap.TryGetValue(name, out o) && !typeof(T).IsEnum)
             {
                 if (o == null || o is T )
                     return (T)o;
