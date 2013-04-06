@@ -71,7 +71,12 @@ namespace GitCommands
                 ApplicationDataPath = Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
 
             }
-
+            string settingsFile = Path.Combine(ApplicationDataPath, SettingsFileName);
+            if (!File.Exists(settingsFile))
+            {
+                ImportFromRegistry();
+                SaveXMLDictionarySettings(ByNameMap, settingsFile);
+            }
             SaveTimer.Enabled = false;
             SaveTimer.AutoReset = false;
             SaveTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnSaveTimer);
@@ -1206,11 +1211,20 @@ namespace GitCommands
             return Properties.Settings.Default.IsPortable;
 
         }
-        //TODO: Setup import from registry into new storage.
-        private static void ImportFromRegistry()
+        
+        public static void ImportFromRegistry()
         {
-            //T value = (T)VersionIndependentRegKey.GetValue(name, null);
-        }
+            lock (ByNameMap)
+            {
+                foreach (String name in VersionIndependentRegKey.GetValueNames())
+                {
+                    object value = VersionIndependentRegKey.GetValue(name, null);
+                    ByNameMap.AddOrUpdate(name, value, (key, existingVal) =>
+                     { return value; });
+                    
+                }
+            }
+            }
 
         private static DateTime GetLastFileModificationUTC(String FilePath)
         {
