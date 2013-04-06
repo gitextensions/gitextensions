@@ -472,8 +472,8 @@ namespace GitCommands
 
         public static PullAction? AutoPullOnPushRejectedAction
         {
-            get { return GetEnum<PullAction?>("AutoPullOnPushRejectedAction", null); }
-            set { SetEnum<PullAction?>("AutoPullOnPushRejectedAction", value); }
+            get { return GetNullableEnum<PullAction>("AutoPullOnPushRejectedAction", null); }
+            set { SetNullableEnum<PullAction>("AutoPullOnPushRejectedAction", value); }
         }
 
         public static bool DontConfirmPushNewBranch
@@ -1427,6 +1427,24 @@ namespace GitCommands
             {
                 var val = x.ToString();
                 return (T)Enum.Parse(typeof(T), val, true);
+            });
+        }
+
+        public static void SetNullableEnum<T>(string name, T? value) where T : struct
+        {
+            SetByName<T?>(name, value, x => x.HasValue ? x.ToString() : string.Empty);
+        }
+
+        public static T? GetNullableEnum<T>(string name, T? defaultValue) where T : struct
+        {
+            return GetByName<T?>(name, defaultValue, x =>
+            {
+                var val = x.ToString();
+
+                if (val.IsNullOrEmpty())
+                    return null;
+
+                return (T?)Enum.Parse(typeof(T), val, true);
             });
         }
 
