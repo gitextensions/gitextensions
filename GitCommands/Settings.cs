@@ -1353,10 +1353,12 @@ namespace GitCommands
         {
             object o;
            
-            if (ByNameMap.TryGetValue(name, out o) && !typeof(T).IsEnum)
+            if (ByNameMap.TryGetValue(name, out o))
             {
-                if (o == null || o is T )
+                if (o == null || o is T)
                     return (T)o;
+                else if (decode != null && decode(o) is T)
+                    return decode(o);
                 else
                     throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
             }
