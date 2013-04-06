@@ -59,7 +59,7 @@ namespace GitUI.UserControls
                     labelDate.Text = string.Format(Strings.GetCommitDateText() + ": {0}", Revision.CommitDate);
                     labelMessage.Text = string.Format("{0}", Revision.Message);
                     
-                    var tagList = Revision.Heads.Where(r => r.IsTag).ToList();
+                    var tagList = Revision.Refs.Where(r => r.IsTag).ToList();
                     string tagListStr = string.Join(", ", tagList.Select(h => h.LocalName).ToArray());
                     labelTags.Text = string.Format("{0}", tagListStr.IsNullOrEmpty() ? notAvailable.Text : tagListStr);
                     if (tagList.Any())
@@ -71,7 +71,7 @@ namespace GitUI.UserControls
                         labelTags.Font = new Font(labelTags.Font, FontStyle.Regular);
                     }
                     
-                    var branchesList = Revision.Heads.Where(r => r.IsHead).ToList();
+                    var branchesList = Revision.Refs.Where(r => r.IsHead).ToList();
                     string branchesListStr = string.Join(", ", branchesList.Select(h => h.LocalName).ToArray());
                     labelBranches.Text = string.Format("{0}", branchesListStr.IsNullOrEmpty() ? notAvailable.Text : branchesListStr);
                     if (branchesList.Any())

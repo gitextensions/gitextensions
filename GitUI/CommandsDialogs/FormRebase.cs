@@ -55,7 +55,7 @@ namespace GitUI.CommandsDialogs
             Currentbranch.Text = selectedHead;
 
             Branches.DisplayMember = "Name";
-            Branches.DataSource = Module.GetHeads(true, true);
+            Branches.DataSource = Module.GetRefs(true, true);
 
             if (_defaultBranch != null)
                 Branches.Text = _defaultBranch;
@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
             Branches.Select();
 
             cboTo.DisplayMember = "Name";
-            cboTo.DataSource = Module.GetHeads(false, true);
+            cboTo.DataSource = Module.GetRefs(false, true);
 
             if (_defaultToBranch != null)
                 cboTo.Text = _defaultToBranch;
