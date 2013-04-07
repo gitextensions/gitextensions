@@ -158,6 +158,12 @@ namespace GitUI.UserControls
                 return new[] { dropLocalBranch, };
             }
 
+            internal override void OnSelected()
+            {
+                base.OnSelected();
+                UiCommands.BrowseRepo.GoToRef(Value.FullPath);
+            }
+
             /// <summary>Download updates from the remote branch.</summary>
             public void Fetch()
             {
