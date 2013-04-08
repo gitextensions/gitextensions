@@ -10,7 +10,7 @@ using System;
 using GitCommands;
 using System.Collections.Generic;
 
-namespace GitCommandsTest.Git
+namespace GitExtensionsTest.Git
 {
     [TestClass]
     public class GitCommandsHelperTest

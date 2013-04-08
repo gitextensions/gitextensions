@@ -7,9 +7,9 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{AC8FDEDF-6390-4F87-BBC3-1A974810B589}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>GitCommandsTest</RootNamespace>
-    <AssemblyName>GitCommandsTests</AssemblyName>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RootNamespace>GitExtensionsTest</RootNamespace>
+    <AssemblyName>GitExtensionsTest</AssemblyName>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -21,7 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
-    <CodeAnalysisRuleSet>..\..\FxCopRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\FxCopRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -33,48 +33,58 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>..\..\FxCopRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\FxCopRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="nunit.mocks, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NUnit.Mocks.2.6.2\lib\nunit.mocks.dll</HintPath>
+      <HintPath>..\packages\NUnit.Mocks.2.6.2\lib\nunit.mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommitInformationTest.cs" />
-    <Compile Include="Config\ConfigFileTest.cs" />
-    <Compile Include="Git\GitCommandHelpersTest.cs" />
-    <Compile Include="Git\EncodingHelperTest.cs" />
-    <Compile Include="Helpers\FileInfoExtensions.cs" />
-    <Compile Include="Helpers\FileInfoExtensionsTest.cs" />
-    <Compile Include="Patch\PatchManagerTest.cs" />
-    <Compile Include="Patch\PatchTest.cs" />
+    <Compile Include="GitCommands\CommitInformationTest.cs" />
+    <Compile Include="GitCommands\Config\ConfigFileTest.cs" />
+    <Compile Include="GitCommands\Git\GitCommandHelpersTest.cs" />
+    <Compile Include="GitCommands\Git\EncodingHelperTest.cs" />
+    <Compile Include="GitCommands\Helpers\FileInfoExtensions.cs" />
+    <Compile Include="GitCommands\Helpers\FileInfoExtensionsTest.cs" />
+    <Compile Include="GitCommands\Patch\PatchManagerTest.cs" />
+    <Compile Include="GitCommands\Patch\PatchTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Git\GitBlameTest.cs" />
-    <Compile Include="Git\GitBlameHeaderTest.cs" />
-    <Compile Include="Git\GitCheckoutBranchCmdTest.cs" />
-    <Compile Include="Git\GitCommandCacheTest.cs" />
+    <Compile Include="GitCommands\Git\GitBlameTest.cs" />
+    <Compile Include="GitCommands\Git\GitBlameHeaderTest.cs" />
+    <Compile Include="GitCommands\Git\GitCheckoutBranchCmdTest.cs" />
+    <Compile Include="GitCommands\Git\GitCommandCacheTest.cs" />
+    <Compile Include="Translation\TranslationTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
+    <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+    <ProjectReference Include="..\GitUI\GitUI.csproj">
+      <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
+      <Name>GitUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
+      <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
+      <Name>ResourceManager</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Patch\testdata\" />
+    <Folder Include="GitCommands\Patch\testdata\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

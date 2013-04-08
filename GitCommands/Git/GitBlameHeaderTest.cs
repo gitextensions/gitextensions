@@ -12,7 +12,7 @@ using GitCommands;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace GitCommandsTest.Git
+namespace GitExtensionsTest.Git
 {
     
     [TestClass]

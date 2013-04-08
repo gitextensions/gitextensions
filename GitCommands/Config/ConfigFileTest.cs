@@ -14,7 +14,7 @@ using System.IO;
 using GitCommands;
 using GitCommands.Config;
 
-namespace GitCommandsTest.Config
+namespace GitExtensionsTest.Config
 {
     /// <summary>
     /// Tests for configfile class. 
