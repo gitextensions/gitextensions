@@ -1365,22 +1365,26 @@ namespace GitCommands
         public static T GetByName<T>(string name, T defaultValue, Func<object, T> decode)
         {
             object o;
-           
+
             if (ByNameMap.TryGetValue(name, out o))
             {
                 if (o == null || o is T)
                     return (T)o;
-                else if (decode != null && decode(o) is T)
-                    return decode(o);
                 else
-                    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                {
+                    if (decode == null)
+                        throw new ArgumentNullException("decode", string.Format("The decode parameter is null and the {0} setting being retrieved is not stored as {1}." +
+                            "In order to retrieve the value the decode parameter must be passed with a way to convert {2} to {1}.", name, typeof(T).FullName, o.GetType().FullName));
+                    else
+                        return decode(o);
+                }
             }
             else
             {
                 o = GetValue<object>(name, null);
                 T result = o == null ? defaultValue : decode(o);
 
-                //ByNameMap[name] = result;
+                ByNameMap[name] = o; 
                 return result;
             }
         }
