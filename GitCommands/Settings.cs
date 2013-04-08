@@ -1350,11 +1350,12 @@ namespace GitCommands
 
         public static void SetValue<T>(string name, T value)
         {
-            ByNameMap.AddOrUpdate(name, value,
-                 (key, existingVal) =>
-                 { return value; });
-            
-            if(UseTimer)
+            lock (ByNameMap)
+                ByNameMap.AddOrUpdate(name, value,
+         (key, existingVal) =>
+         { return value; });
+
+            if (UseTimer)
                 StartSaveTimer();
 
             //VersionIndependentRegKey.DeleteValue(name);
@@ -1383,8 +1384,8 @@ namespace GitCommands
             {
                 o = GetValue<object>(name, null);
                 T result = o == null ? defaultValue : decode(o);
-
-                ByNameMap[name] = o; 
+                lock (ByNameMap)
+                    ByNameMap[name] = o;
                 return result;
             }
         }
@@ -1400,7 +1401,8 @@ namespace GitCommands
             else
                 o = encode(value);
             SetValue<object>(name, o);
-            //ByNameMap[name] = value;
+            lock(ByNameMap)
+                ByNameMap[name] = o;
         }
 
         public static bool? GetBool(string name, bool? defaultValue)
