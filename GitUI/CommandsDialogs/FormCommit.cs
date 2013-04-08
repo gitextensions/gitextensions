@@ -624,7 +624,14 @@ namespace GitUI.CommandsDialogs
             var inTheMiddleOfConflictedMerge = Module.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
             Unstaged.SelectStoredNextIndex(0);
-            Staged.SelectStoredNextIndex();
+            if (Unstaged.GitItemStatuses.Any())
+            {
+                Staged.SelectStoredNextIndex();
+            }
+            else
+            {
+                Staged.SelectStoredNextIndex(0);
+            }
 
             if (OnStageAreaLoaded != null)
                 OnStageAreaLoaded();
