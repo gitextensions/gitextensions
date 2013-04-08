@@ -37,6 +37,7 @@ namespace GitUI.UserControls
             imgList.Images.Add(remoteBranchUnTrackedKey, Resources.BranchUntracked);
 
             treeMain.ShowNodeToolTips = true;
+            treeMain.HideSelection = false;
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
         }

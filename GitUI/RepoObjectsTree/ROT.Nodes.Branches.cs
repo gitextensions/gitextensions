@@ -182,6 +182,7 @@ namespace GitUI.UserControls
                 if (IsActive)
                 {
                     TreeNode.NodeFont = new Font(TreeNode.NodeFont, FontStyle.Bold);
+                    TreeNode.TreeView.SelectedNode = TreeNode;
                 }
             }
 
