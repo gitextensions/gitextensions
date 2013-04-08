@@ -1213,6 +1213,7 @@ namespace GitCommands
         
         public static void ImportFromRegistry()
         {
+           
             lock (ByNameMap)
             {
                 foreach (String name in VersionIndependentRegKey.GetValueNames())
@@ -1370,7 +1371,17 @@ namespace GitCommands
             if (ByNameMap.TryGetValue(name, out o))
             {
                 if (o == null || o is T)
-                    return (T)o;
+                    if (typeof(T) == typeof(bool?) && o == null && defaultValue != null)
+                        return defaultValue;
+                    else
+                        try
+                        {
+                            return (T)o;
+                        }
+                        catch (NullReferenceException)
+                        {
+                            return defaultValue;
+                        }
                 else
                 {
                     if (decode == null)
