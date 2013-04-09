@@ -24,8 +24,12 @@ namespace GitExtensionsTest.Translation
     public class TranslationTest
     {
 
+#if !__MonoCS__
         [TestMethod]
         [STAThread]
+#else
+        [Ignore]
+#endif
         public void CreateInstanceOfClass()
         {
             // just reference to GitUI
