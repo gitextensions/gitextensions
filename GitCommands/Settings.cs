@@ -26,7 +26,7 @@ namespace GitCommands
 
     public static class Settings
     {
-        
+
         //semi-constants
 
         public static readonly string GitExtensionsVersionString;
@@ -38,7 +38,8 @@ namespace GitCommands
 
         private static DateTime? LastFileRead = null;
 
-        private static readonly XmlSerializableDictionary<String, object> ByNameMap = new XmlSerializableDictionary<String, object>();
+        private static readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
+        private static readonly XmlSerializableDictionary<String, object> EncodedNameMap = new XmlSerializableDictionary<String, object>();
         static System.Timers.Timer SaveTimer = new System.Timers.Timer(SAVETIME);
         private static bool UseTimer = true;
 
@@ -74,7 +75,7 @@ namespace GitCommands
             if (!File.Exists(settingsFile))
             {
                 ImportFromRegistry();
-                SaveXMLDictionarySettings(ByNameMap, settingsFile);
+                SaveXMLDictionarySettings(EncodedNameMap, settingsFile);
             }
             SaveTimer.Enabled = false;
             SaveTimer.AutoReset = false;
@@ -384,7 +385,7 @@ namespace GitCommands
         }
 
         public enum PullAction
-        { 
+        {
             None,
             Merge,
             Rebase,
@@ -883,19 +884,19 @@ namespace GitCommands
         {
             return Type.GetType("Mono.Runtime") != null;
         }
-        
+
         public static void SaveSettings()
         {
             try
             {
                 UseTimer = false;
-                
+
                 SetValue("gitssh", GitCommandHelpers.GetSsh());
                 Repositories.SaveSettings();
-                
-                UseTimer=true;
-                
-                SaveXMLDictionarySettings(ByNameMap, Path.Combine(ApplicationDataPath,SettingsFileName));
+
+                UseTimer = true;
+
+                SaveXMLDictionarySettings(EncodedNameMap, Path.Combine(ApplicationDataPath, SettingsFileName));
             }
             catch
             { }
@@ -1180,25 +1181,23 @@ namespace GitCommands
 
                 try
                 {
-                    lock (ByNameMap)
+                    lock (Dic)
                     {
 
-                        XmlReaderSettings rSettings=new XmlReaderSettings
+                        XmlReaderSettings rSettings = new XmlReaderSettings
                         {
-                            IgnoreWhitespace=true
+                            IgnoreWhitespace = true
                         };
-                        using (System.Xml.XmlReader xr = XmlReader.Create(FilePath,rSettings))
+                        using (System.Xml.XmlReader xr = XmlReader.Create(FilePath, rSettings))
                         {
-                            
+
                             Dic.ReadXml(xr);
                             LastFileRead = DateTime.UtcNow;
                         }
                     }
                 }
-                catch (IOException ex)
+                catch (IOException)
                 {
-
-
                     throw;
                 }
 
@@ -1210,21 +1209,21 @@ namespace GitCommands
             return Properties.Settings.Default.IsPortable;
 
         }
-        
+
         public static void ImportFromRegistry()
         {
-           
-            lock (ByNameMap)
+
+            lock (EncodedNameMap)
             {
                 foreach (String name in VersionIndependentRegKey.GetValueNames())
                 {
                     object value = VersionIndependentRegKey.GetValue(name, null);
-                    ByNameMap.AddOrUpdate(name, value, (key, existingVal) =>
+                    EncodedNameMap.AddOrUpdate(name, value, (key, existingVal) =>
                      { return value; });
-                    
+
                 }
             }
-            }
+        }
 
         private static DateTime GetLastFileModificationUTC(String FilePath)
         {
@@ -1246,7 +1245,19 @@ namespace GitCommands
         {
             DateTime lastMod = GetLastFileModificationUTC(FilePath);
             if (!LastFileRead.HasValue || lastMod > LastFileRead.Value)
-                ReadXMLDicSettings(ByNameMap, FilePath);
+            { 
+                ReadXMLDicSettings(EncodedNameMap, FilePath);
+                lock (EncodedNameMap)
+                {
+                    foreach (string k in EncodedNameMap.Keys)
+                    {
+                        if (ByNameMap.Keys.Contains(k))
+                            ByNameMap[k] = EncodedNameMap[k];
+                        else
+                            ByNameMap.Add(k, EncodedNameMap[k]);
+                    }
+                }
+            }
 
             object o;
             if (ByNameMap.TryGetValue(name, out o))
@@ -1303,14 +1314,14 @@ namespace GitCommands
 
         private static void SaveXMLDictionarySettings<T>(XmlSerializableDictionary<string, T> Dic, String FilePath)
         {
-            
+
             try
             {
 
 
                 using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(FilePath, Encoding.UTF8))
                 {
-                    lock (ByNameMap)
+                    lock (Dic)
                     {
                         xtw.Formatting = Formatting.Indented;
                         xtw.WriteStartDocument();
@@ -1322,18 +1333,18 @@ namespace GitCommands
                 }
                 LastFileRead = GetLastFileModificationUTC(FilePath);
             }
-               
-            catch (IOException ex)
+
+            catch (IOException)
             {
 
                 throw;
             }
 
         }
-        //Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME miliseconds after the last setvalue is called
+        //Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME milliseconds after the last setvalue is called
         private static void OnSaveTimer(object source, System.Timers.ElapsedEventArgs e)
         {
-            SaveXMLDictionarySettings(ByNameMap, Path.Combine(ApplicationDataPath, SettingsFileName));
+            SaveXMLDictionarySettings(EncodedNameMap, Path.Combine(ApplicationDataPath, SettingsFileName));
             System.Timers.Timer t = (System.Timers.Timer)source;
             t.Stop();
         }
@@ -1351,10 +1362,17 @@ namespace GitCommands
 
         public static void SetValue<T>(string name, T value)
         {
-            lock (ByNameMap)
-                ByNameMap.AddOrUpdate(name, value,
+            lock (EncodedNameMap)
+                EncodedNameMap.AddOrUpdate(name, value,
          (key, existingVal) =>
          { return value; });
+
+            if (ByNameMap.ContainsKey(name))
+                ByNameMap[name] = value;
+            else
+                ByNameMap.Add(name, value);
+
+
 
             if (UseTimer)
                 StartSaveTimer();
@@ -1371,32 +1389,34 @@ namespace GitCommands
             if (ByNameMap.TryGetValue(name, out o))
             {
                 if (o == null || o is T)
-                    if (typeof(T) == typeof(bool?) && o == null && defaultValue != null)
+                    try
+                    {
+                        return (T)o;
+                    }
+                    catch (NullReferenceException)
+                    {
                         return defaultValue;
-                    else
-                        try
-                        {
-                            return (T)o;
-                        }
-                        catch (NullReferenceException)
-                        {
-                            return defaultValue;
-                        }
+                    }
+                //else
+                //    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
                 else
                 {
                     if (decode == null)
                         throw new ArgumentNullException("decode", string.Format("The decode parameter is null and the {0} setting being retrieved is not stored as {1}." +
                             "In order to retrieve the value the decode parameter must be passed with a way to convert {2} to {1}.", name, typeof(T).FullName, o.GetType().FullName));
                     else
-                        return decode(o);
+                    {
+                        T decoded = decode(o);
+                        ByNameMap[name] = decoded;
+                        return decoded;
+                    }
                 }
             }
             else
             {
                 o = GetValue<object>(name, null);
                 T result = o == null ? defaultValue : decode(o);
-                lock (ByNameMap)
-                    ByNameMap[name] = o;
+                ByNameMap.Add(name, result);
                 return result;
             }
         }
@@ -1412,8 +1432,7 @@ namespace GitCommands
             else
                 o = encode(value);
             SetValue<object>(name, o);
-            lock(ByNameMap)
-                ByNameMap[name] = o;
+            ByNameMap[name] = value;
         }
 
         public static bool? GetBool(string name, bool? defaultValue)
