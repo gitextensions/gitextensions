@@ -35,7 +35,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceManager", "Resource
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpellChecker", "NetSpell.SpellChecker\SpellChecker.csproj", "{A426EE0B-E52E-4D74-AF24-06797142D7B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitCommandsTest", "GitExtensionsTest\GitCommands\GitCommandsTest.csproj", "{AC8FDEDF-6390-4F87-BBC3-1A974810B589}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensionsTest", "GitExtensionsTest\GitExtensionsTest.csproj", "{AC8FDEDF-6390-4F87-BBC3-1A974810B589}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions.Mono", "GitExtensions\GitExtensions.Mono.csproj", "{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}"
 EndProject

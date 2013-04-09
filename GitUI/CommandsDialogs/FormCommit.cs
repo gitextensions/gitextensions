@@ -624,7 +624,14 @@ namespace GitUI.CommandsDialogs
             var inTheMiddleOfConflictedMerge = Module.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
             Unstaged.SelectStoredNextIndex(0);
-            Staged.SelectStoredNextIndex();
+            if (Unstaged.GitItemStatuses.Any())
+            {
+                Staged.SelectStoredNextIndex();
+            }
+            else
+            {
+                Staged.SelectStoredNextIndex(0);
+            }
 
             if (OnStageAreaLoaded != null)
                 OnStageAreaLoaded();
@@ -1469,7 +1476,7 @@ namespace GitUI.CommandsDialogs
                 return;
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule" + (modules.Count == 1 ? " " : "s ") +
-                String.Join(", ", modules.Keys) + " updated.");
+                String.Join(", ", modules.Keys) + " updated");
             sb.AppendLine();
             foreach (var item in modules)
             {
