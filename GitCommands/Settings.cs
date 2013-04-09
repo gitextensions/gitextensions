@@ -13,7 +13,6 @@ using GitCommands.Logging;
 using GitCommands.Repository;
 using Microsoft.Win32;
 
-
 namespace GitCommands
 {
     public enum LocalChangesAction
@@ -26,9 +25,7 @@ namespace GitCommands
 
     public static class Settings
     {
-
         //semi-constants
-
         public static readonly string GitExtensionsVersionString;
         public static readonly int GitExtensionsVersionInt;
         public static readonly char PathSeparator = '\\';
@@ -67,7 +64,7 @@ namespace GitCommands
             }
             else
             {
-                //Make applicationdatapath version dependent
+                //Make applicationdatapath version independent
                 ApplicationDataPath = Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
 
             }
@@ -913,13 +910,6 @@ namespace GitCommands
 
             try
             {
-                //TransferVerDependentReg();
-            }
-            catch
-            { }
-
-            try
-            {
                 GitCommandHelpers.SetSsh(GetValue<string>("gitssh", null));
             }
             catch
@@ -1212,15 +1202,12 @@ namespace GitCommands
 
         public static void ImportFromRegistry()
         {
-
             lock (EncodedNameMap)
             {
                 foreach (String name in VersionIndependentRegKey.GetValueNames())
                 {
                     object value = VersionIndependentRegKey.GetValue(name, null);
-                    EncodedNameMap.AddOrUpdate(name, value, (key, existingVal) =>
-                     { return value; });
-
+                    EncodedNameMap[name] = value;
                 }
             }
         }
@@ -1243,82 +1230,39 @@ namespace GitCommands
 
         public static T GetValue<T>(string name, T defaultValue, String FilePath)
         {
-            DateTime lastMod = GetLastFileModificationUTC(FilePath);
-            if (!LastFileRead.HasValue || lastMod > LastFileRead.Value)
-            { 
-                ReadXMLDicSettings(EncodedNameMap, FilePath);
-                lock (EncodedNameMap)
+            lock (EncodedNameMap)
+            {
+                DateTime lastMod = GetLastFileModificationUTC(FilePath);
+                if (!LastFileRead.HasValue || lastMod > LastFileRead.Value)
                 {
-                    foreach (string k in EncodedNameMap.Keys)
-                    {
-                        if (ByNameMap.Keys.Contains(k))
-                            ByNameMap[k] = EncodedNameMap[k];
-                        else
-                            ByNameMap.Add(k, EncodedNameMap[k]);
-                    }
+                    ReadXMLDicSettings(EncodedNameMap, FilePath);
+                }
+
+                object o;
+                if (EncodedNameMap.TryGetValue(name, out o))
+                {
+                    if (o == null || o is T)
+                        return (T)o;
+                    else
+                        throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                }
+                else
+                {
+                    return defaultValue;
                 }
             }
-
-            object o;
-            if (ByNameMap.TryGetValue(name, out o))
-            {
-                if (o == null || o is T)
-                    return (T)o;
-                else
-                    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
-            }
-            else
-
-                return defaultValue;
-
         }
+
         public static T GetValue<T>(string name, T defaultValue)
         {
-            //T value = (T)VersionIndependentRegKey.GetValue(name, null);
             string fPath = Path.Combine(ApplicationDataPath, SettingsFileName);
             return GetValue(name, defaultValue, fPath);
-
-        }
-
-        //temporary code to transfer version dependent registry caused that there was no way to set value to null
-        //if there was the same named key in version dependent registry
-        private static void TransferVerDependentReg()
-        {
-            bool? transfered = GetBool("TransferedVerDependentReg", false);
-            if (!transfered.Value)
-            {
-                string r = Application.UserAppDataRegistry.Name.Replace(Application.ProductVersion, "1.0.0.0");
-                r = r.Substring(Registry.CurrentUser.Name.Length + 1, r.Length - Registry.CurrentUser.Name.Length - 1);
-                RegistryKey versionDependentRegKey = Registry.CurrentUser.OpenSubKey(r, true);
-                SetBool("TransferedVerDependentReg", true);
-                if (versionDependentRegKey == null)
-                    return;
-
-                try
-                {
-                    foreach (string key in versionDependentRegKey.GetValueNames())
-                    {
-                        object val = versionDependentRegKey.GetValue(key);
-                        object independentVal = VersionIndependentRegKey.GetValue(key, null);
-                        if (independentVal == null)
-                            SetValue<object>(key, val);
-                    }
-                }
-                finally
-                {
-                    versionDependentRegKey.Close();
-                }
-            }
-
         }
 
         private static void SaveXMLDictionarySettings<T>(XmlSerializableDictionary<string, T> Dic, String FilePath)
         {
-
             try
             {
-
-
                 using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(FilePath, Encoding.UTF8))
                 {
                     lock (Dic)
@@ -1333,10 +1277,8 @@ namespace GitCommands
                 }
                 LastFileRead = GetLastFileModificationUTC(FilePath);
             }
-
             catch (IOException)
             {
-
                 throw;
             }
 
@@ -1344,9 +1286,9 @@ namespace GitCommands
         //Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME milliseconds after the last setvalue is called
         private static void OnSaveTimer(object source, System.Timers.ElapsedEventArgs e)
         {
-            SaveXMLDictionarySettings(EncodedNameMap, Path.Combine(ApplicationDataPath, SettingsFileName));
             System.Timers.Timer t = (System.Timers.Timer)source;
             t.Stop();
+            SaveXMLDictionarySettings(EncodedNameMap, Path.Combine(ApplicationDataPath, SettingsFileName));
         }
 
         static void StartSaveTimer()
@@ -1363,23 +1305,15 @@ namespace GitCommands
         public static void SetValue<T>(string name, T value)
         {
             lock (EncodedNameMap)
-                EncodedNameMap.AddOrUpdate(name, value,
-         (key, existingVal) =>
-         { return value; });
-
-            if (ByNameMap.ContainsKey(name))
-                ByNameMap[name] = value;
-            else
-                ByNameMap.Add(name, value);
-
-
+            {
+                if (value == null)
+                    EncodedNameMap.Remove(name);
+                else
+                    EncodedNameMap[name] = value;
+            }
 
             if (UseTimer)
                 StartSaveTimer();
-
-            //VersionIndependentRegKey.DeleteValue(name);
-
-
         }
 
         public static T GetByName<T>(string name, T defaultValue, Func<object, T> decode)
@@ -1389,31 +1323,19 @@ namespace GitCommands
             if (ByNameMap.TryGetValue(name, out o))
             {
                 if (o == null || o is T)
-                    try
-                    {
-                        return (T)o;
-                    }
-                    catch (NullReferenceException)
-                    {
-                        return defaultValue;
-                    }
-                //else
-                //    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                {
+                    return (T)o;
+                }
                 else
                 {
-                    if (decode == null)
-                        throw new ArgumentNullException("decode", string.Format("The decode parameter is null and the {0} setting being retrieved is not stored as {1}." +
-                            "In order to retrieve the value the decode parameter must be passed with a way to convert {2} to {1}.", name, typeof(T).FullName, o.GetType().FullName));
-                    else
-                    {
-                        T decoded = decode(o);
-                        ByNameMap[name] = decoded;
-                        return decoded;
-                    }
+                    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
                 }
             }
             else
             {
+                if (decode == null)
+                    throw new ArgumentNullException("decode", string.Format("The decode parameter for setting {0} is null.", name));
+
                 o = GetValue<object>(name, null);
                 T result = o == null ? defaultValue : decode(o);
                 ByNameMap.Add(name, result);
@@ -1427,10 +1349,12 @@ namespace GitCommands
             if (ByNameMap.TryGetValue(name, out o))
                 if (Object.Equals(o, value))
                     return;
+
             if (value == null)
                 o = null;
             else
                 o = encode(value);
+
             SetValue<object>(name, o);
             ByNameMap[name] = value;
         }
