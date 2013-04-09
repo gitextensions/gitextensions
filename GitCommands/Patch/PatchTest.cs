@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace GitExtensionsTest.Patch
+namespace GitExtensionsTest.PatchTest
 {
     [TestClass]
     class PatchTest
