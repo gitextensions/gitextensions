@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.IO;
 using NUnit.Framework;
 using PatchApply;
-using TestContext = NUnit.Framework.TestContext;
+using TestContext = System.Object;
 using TestClass = NUnit.Framework.TestFixtureAttribute;
 using TestMethod = NUnit.Framework.TestAttribute;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace GitExtensionsTest.Patches
         {
             byte[] patchBytes;
 
-            using (var reader = new StreamReader(Path.Combine(TestContext.CurrentContext.TestDirectory, fileName)))
+            using (var reader = new StreamReader(fileName))
             {
                 patchBytes = new BinaryReader(reader.BaseStream).ReadBytes((int)reader.BaseStream.Length);
             }
