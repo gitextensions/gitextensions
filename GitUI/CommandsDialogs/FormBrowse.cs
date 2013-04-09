@@ -2744,9 +2744,9 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateSubmodulesList()
         {
+            RemoveSubmoduleButtons();
             _previousUpdateTime = DateTime.Now;
             _submodulesStatusImagesCTS = new CancellationTokenSource();
-            RemoveSubmoduleButtons();
 
             foreach (var submodule in Module.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName))
             {
