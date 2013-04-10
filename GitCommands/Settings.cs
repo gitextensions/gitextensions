@@ -1077,11 +1077,8 @@ namespace GitCommands
 
         private static T SafeGet<T>(string key, T defaultValue, ref T field, Func<string, T> converter)
         {
-            if (field == null && VersionIndependentRegKey != null)
-            {
-                var value = GetValue<object>(key, null);
-                field = value == null ? defaultValue : converter(value.ToString());
-            }
+            var value = GetValue<object>(key, null);
+            field = value == null ? defaultValue : converter(value.ToString());
             return field;
         }
 
