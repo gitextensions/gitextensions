@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Serialization;
 using GitCommands.Logging;
 using GitCommands.Repository;
 using Microsoft.Win32;
@@ -27,8 +30,15 @@ namespace GitCommands
         public static readonly int GitExtensionsVersionInt;
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
+        private static readonly string SettingsFileName = "GitExtensions.settings";
+        private static readonly double SAVETIME = 2000;
+
+        private static DateTime? LastFileRead = null;
 
         private static readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
+        private static readonly XmlSerializableDictionary<String, object> EncodedNameMap = new XmlSerializableDictionary<String, object>();
+        static System.Timers.Timer SaveTimer = new System.Timers.Timer(SAVETIME);
+        private static bool UseTimer = true;
 
         static Settings()
         {
@@ -48,8 +58,25 @@ namespace GitCommands
 
             GitLog = new CommandLogger();
 
-            //Make applicationdatapath version dependent
-            ApplicationDataPath = Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
+            if (IsPortable())
+            {
+                ApplicationDataPath = GetGitExtensionsDirectory();
+            }
+            else
+            {
+                //Make applicationdatapath version independent
+                ApplicationDataPath = Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
+
+            }
+            string settingsFile = Path.Combine(ApplicationDataPath, SettingsFileName);
+            if (!File.Exists(settingsFile))
+            {
+                ImportFromRegistry();
+                SaveXMLDictionarySettings(EncodedNameMap, settingsFile);
+            }
+            SaveTimer.Enabled = false;
+            SaveTimer.AutoReset = false;
+            SaveTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnSaveTimer);
         }
 
         private static int? _UserMenuLocationX;
@@ -396,7 +423,7 @@ namespace GitCommands
             get { return SafeGet("SmtpUseSsl", true, ref _smtpUseSSL); }
             set { SafeSet("SmtpUseSsl", value, ref _smtpUseSSL); }
         }
-        
+
         private static bool? _autoStash;
         public static bool AutoStash
         {
@@ -457,7 +484,7 @@ namespace GitCommands
             get { return GetBool("DontConfirmAddTrackingRef", false).Value; }
             set { SetBool("DontConfirmAddTrackingRef", value); }
         }
-        
+
         private static bool? _includeUntrackedFilesInAutoStash;
         public static bool IncludeUntrackedFilesInAutoStash
         {
@@ -859,8 +886,14 @@ namespace GitCommands
         {
             try
             {
+                UseTimer = false;
+
                 SetValue("gitssh", GitCommandHelpers.GetSsh());
                 Repositories.SaveSettings();
+
+                UseTimer = true;
+
+                SaveXMLDictionarySettings(EncodedNameMap, Path.Combine(ApplicationDataPath, SettingsFileName));
             }
             catch
             { }
@@ -874,13 +907,6 @@ namespace GitCommands
             addEncoding(new UnicodeEncoding());
             addEncoding(new UTF7Encoding());
             addEncoding(new UTF8Encoding());
-
-            try
-            {
-                TransferVerDependentReg();
-            }
-            catch
-            { }
 
             try
             {
@@ -1051,11 +1077,8 @@ namespace GitCommands
 
         private static T SafeGet<T>(string key, T defaultValue, ref T field, Func<string, T> converter)
         {
-            if (field == null && VersionIndependentRegKey != null)
-            {
-                var value = GetValue<object>(key, null);
-                field = value == null ? defaultValue : converter(value.ToString());
-            }
+            var value = GetValue<object>(key, null);
+            field = value == null ? defaultValue : converter(value.ToString());
             return field;
         }
 
@@ -1137,73 +1160,182 @@ namespace GitCommands
                 return _VersionIndependentRegKey;
             }
         }
-
-        public static T GetValue<T>(string name, T defaultValue)
+        private static void ReadXMLDicSettings<T>(XmlSerializableDictionary<string, T> Dic, string FilePath)
         {
-            T value = (T)VersionIndependentRegKey.GetValue(name, null);
 
-            if (value != null)
-                return value;
-          
-            return defaultValue;
-        }
-
-        //temporary code to transfer version dependent registry caused that there was no way to set value to null
-        //if there was the same named key in version dependent registry
-        private static void TransferVerDependentReg()
-        {
-            bool? transfered = GetBool("TransferedVerDependentReg", false);
-            if (!transfered.Value)
+            if (File.Exists(FilePath))
             {
-                string r = Application.UserAppDataRegistry.Name.Replace(Application.ProductVersion, "1.0.0.0");
-                r = r.Substring(Registry.CurrentUser.Name.Length + 1, r.Length - Registry.CurrentUser.Name.Length - 1);
-                RegistryKey versionDependentRegKey = Registry.CurrentUser.OpenSubKey(r, true);
-                SetBool("TransferedVerDependentReg", true);
-                if (versionDependentRegKey == null)
-                    return;
 
                 try
                 {
-                    foreach (string key in versionDependentRegKey.GetValueNames())
+                    lock (Dic)
                     {
-                        object val = versionDependentRegKey.GetValue(key);
-                        object independentVal = VersionIndependentRegKey.GetValue(key, null);
-                        if (independentVal == null)
-                            SetValue<object>(key, val);
+
+                        XmlReaderSettings rSettings = new XmlReaderSettings
+                        {
+                            IgnoreWhitespace = true
+                        };
+                        using (System.Xml.XmlReader xr = XmlReader.Create(FilePath, rSettings))
+                        {
+
+                            Dic.ReadXml(xr);
+                            LastFileRead = DateTime.UtcNow;
+                        }
                     }
                 }
-                finally
+                catch (IOException)
                 {
-                    versionDependentRegKey.Close();
+                    throw;
+                }
+
+            }
+
+        }
+        public static bool IsPortable()
+        {
+            return Properties.Settings.Default.IsPortable;
+
+        }
+
+        public static void ImportFromRegistry()
+        {
+            lock (EncodedNameMap)
+            {
+                foreach (String name in VersionIndependentRegKey.GetValueNames())
+                {
+                    object value = VersionIndependentRegKey.GetValue(name, null);
+                    EncodedNameMap[name] = value;
                 }
             }
-            
+        }
+
+        private static DateTime GetLastFileModificationUTC(String FilePath)
+        {
+            try
+            {
+                if (File.Exists(FilePath))
+                    return File.GetLastWriteTimeUtc(FilePath);
+                else
+                    return DateTime.MaxValue;
+            }
+            catch (Exception)
+            {
+                return DateTime.MaxValue;
+            }
+
+        }
+
+        public static T GetValue<T>(string name, T defaultValue, String FilePath)
+        {
+            lock (EncodedNameMap)
+            {
+                DateTime lastMod = GetLastFileModificationUTC(FilePath);
+                if (!LastFileRead.HasValue || lastMod > LastFileRead.Value)
+                {
+                    ReadXMLDicSettings(EncodedNameMap, FilePath);
+                }
+
+                object o;
+                if (EncodedNameMap.TryGetValue(name, out o))
+                {
+                    if (o == null || o is T)
+                        return (T)o;
+                    else
+                        throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                }
+                else
+                {
+                    return defaultValue;
+                }
+            }
+        }
+
+        public static T GetValue<T>(string name, T defaultValue)
+        {
+            string fPath = Path.Combine(ApplicationDataPath, SettingsFileName);
+            return GetValue(name, defaultValue, fPath);
+        }
+
+        private static void SaveXMLDictionarySettings<T>(XmlSerializableDictionary<string, T> Dic, String FilePath)
+        {
+            try
+            {
+                using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(FilePath, Encoding.UTF8))
+                {
+                    lock (Dic)
+                    {
+                        xtw.Formatting = Formatting.Indented;
+                        xtw.WriteStartDocument();
+                        xtw.WriteStartElement("dictionary");
+
+                        Dic.WriteXml(xtw);
+                        xtw.WriteEndElement();
+                    }
+                }
+                LastFileRead = GetLastFileModificationUTC(FilePath);
+            }
+            catch (IOException)
+            {
+                throw;
+            }
+
+        }
+        //Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME milliseconds after the last setvalue is called
+        private static void OnSaveTimer(object source, System.Timers.ElapsedEventArgs e)
+        {
+            System.Timers.Timer t = (System.Timers.Timer)source;
+            t.Stop();
+            SaveXMLDictionarySettings(EncodedNameMap, Path.Combine(ApplicationDataPath, SettingsFileName));
+        }
+
+        static void StartSaveTimer()
+        {
+            //Resets timer so that the last call will let the timer event run and will cause the settings to be saved.
+            SaveTimer.Stop();
+            SaveTimer.AutoReset = true;
+            SaveTimer.Interval = SAVETIME;
+            SaveTimer.AutoReset = false;
+
+            SaveTimer.Start();
         }
 
         public static void SetValue<T>(string name, T value)
         {
-            if (value == null)
-                VersionIndependentRegKey.DeleteValue(name);
-            else
-                VersionIndependentRegKey.SetValue(name, value);
+            lock (EncodedNameMap)
+            {
+                if (value == null)
+                    EncodedNameMap.Remove(name);
+                else
+                    EncodedNameMap[name] = value;
+            }
+
+            if (UseTimer)
+                StartSaveTimer();
         }
 
         public static T GetByName<T>(string name, T defaultValue, Func<object, T> decode)
         {
             object o;
+
             if (ByNameMap.TryGetValue(name, out o))
             {
-                if( o == null || o is T)
+                if (o == null || o is T)
+                {
                     return (T)o;
+                }
                 else
+                {
                     throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                }
             }
             else
             {
+                if (decode == null)
+                    throw new ArgumentNullException("decode", string.Format("The decode parameter for setting {0} is null.", name));
+
                 o = GetValue<object>(name, null);
                 T result = o == null ? defaultValue : decode(o);
-
-                ByNameMap[name] = result;
+                ByNameMap.Add(name, result);
                 return result;
             }
         }
@@ -1214,17 +1346,20 @@ namespace GitCommands
             if (ByNameMap.TryGetValue(name, out o))
                 if (Object.Equals(o, value))
                     return;
+
             if (value == null)
                 o = null;
             else
                 o = encode(value);
+
             SetValue<object>(name, o);
             ByNameMap[name] = value;
         }
 
         public static bool? GetBool(string name, bool? defaultValue)
         {
-            return GetByName<bool?>(name, defaultValue, x => {
+            return GetByName<bool?>(name, defaultValue, x =>
+            {
                 var val = x.ToString().ToLower();
                 if (val == "true") return true;
                 if (val == "false") return false;
@@ -1279,7 +1414,7 @@ namespace GitCommands
             return GetByName<string>(name, defaultValue, x => x.ToString());
         }
 
-        public static string PrefixedName(string prefix, string name) 
+        public static string PrefixedName(string prefix, string name)
         {
             return prefix == null ? name : prefix + '_' + name;
         }
