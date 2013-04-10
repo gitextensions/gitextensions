@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -72,7 +73,7 @@ namespace GitCommands
 
 
 
-            foreach (TKey key in this.Keys)
+            foreach (TKey key in from k in this.Keys orderby k select k)
             {
                 writer.WriteStartElement("item");
 
