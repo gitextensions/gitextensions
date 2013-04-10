@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -11,7 +10,7 @@ namespace GitCommands
     [XmlRoot("dictionary")]
 
     public class XmlSerializableDictionary<TKey, TValue>
-            : ConcurrentDictionary<TKey, TValue>, IXmlSerializable
+            : Dictionary<TKey, TValue>, IXmlSerializable
     {
 
         #region IXmlSerializable Members
@@ -52,10 +51,8 @@ namespace GitCommands
 
 
 
-                    this.AddOrUpdate(key, value, (keyv, existingVal) =>
-                    { return value; });
 
-
+                    this[key] = value;
 
                     reader.ReadEndElement();
 
