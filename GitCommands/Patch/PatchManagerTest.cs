@@ -59,7 +59,7 @@ namespace GitExtensionsTest.Patches
             expectedPatch.AppendTextLine("-asdkjaldskjlaksd");
             expectedPatch.AppendTextLine("+changed again");
 
-            manager.LoadPatch(Encoding.UTF8.GetString(LoadTestPatchDataBytes(SmallPatchFile)), false, Encoding.UTF8);
+            manager.LoadPatch(expectedPatch.Text, false, Encoding.UTF8);
 
             Patch createdPatch = manager.Patches.First();
             Assert.AreEqual(expectedPatch.Text, createdPatch.Text);
