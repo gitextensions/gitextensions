@@ -36,7 +36,7 @@ namespace GitCommands
         private static DateTime? LastFileRead = null;
 
         private static readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
-        private static readonly XmlSerializableDictionary<String, object> EncodedNameMap = new XmlSerializableDictionary<String, object>();
+        private static readonly XmlSerializableDictionary<string, string> EncodedNameMap = new XmlSerializableDictionary<string, string>();
         static System.Timers.Timer SaveTimer = new System.Timers.Timer(SAVETIME);
         private static bool UseTimer = true;
 
@@ -79,11 +79,10 @@ namespace GitCommands
             SaveTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnSaveTimer);
         }
 
-        private static int? _UserMenuLocationX;
         public static int UserMenuLocationX
         {
-            get { return SafeGet("usermenulocationx", -1, ref _UserMenuLocationX); }
-            set { SafeSet("usermenulocationx", value, ref _UserMenuLocationX); }
+            get { return GetInt("usermenulocationx", -1); }
+            set { SetInt("usermenulocationx", value); }
         }
 
         private static int? _UserMenuLocationY;
@@ -175,7 +174,7 @@ namespace GitCommands
 
         public static bool AlwaysShowCheckoutBranchDlg
         {
-            get { return GetBool("AlwaysShowCheckoutBranchDlg", false).Value; }
+            get { return GetBool("AlwaysShowCheckoutBranchDlg", false); }
             set { SetBool("AlwaysShowCheckoutBranchDlg", value); }
         }
 
@@ -328,13 +327,13 @@ namespace GitCommands
 
         public static bool LoadFileHistoryOnShow
         {
-            get { return GetBool("LoadFileHistoryOnShow", true).Value; }
+            get { return GetBool("LoadFileHistoryOnShow", true); }
             set { SetBool("LoadFileHistoryOnShow", value); }
         }
 
         public static bool LoadBlameOnShow
         {
-            get { return GetBool("LoadBlameOnShow", true).Value; }
+            get { return GetBool("LoadBlameOnShow", true); }
             set { SetBool("LoadBlameOnShow", value); }
         }
 
@@ -399,7 +398,7 @@ namespace GitCommands
 
         public static bool DonSetAsLastPullAction
         {
-            get { return GetBool("DonSetAsLastPullAction", true).Value; }
+            get { return GetBool("DonSetAsLastPullAction", true); }
             set { SetBool("DonSetAsLastPullAction", value); }
         }
 
@@ -439,31 +438,31 @@ namespace GitCommands
 
         public static bool UseDefaultCheckoutBranchAction
         {
-            get { return GetBool("UseDefaultCheckoutBranchAction", false).Value; }
+            get { return GetBool("UseDefaultCheckoutBranchAction", false); }
             set { SetBool("UseDefaultCheckoutBranchAction", value); }
         }
 
         public static bool DontShowHelpImages
         {
-            get { return GetBool("DontShowHelpImages", false).Value; }
+            get { return GetBool("DontShowHelpImages", false); }
             set { SetBool("DontShowHelpImages", value); }
         }
 
         public static bool DontConfirmAmend
         {
-            get { return GetBool("DontConfirmAmend", false).Value; }
+            get { return GetBool("DontConfirmAmend", false); }
             set { SetBool("DontConfirmAmend", value); }
         }
 
         public static bool? AutoPopStashAfterPull
         {
-            get { return GetBool("AutoPopStashAfterPull", null); }
+            get { return GetBool("AutoPopStashAfterPull"); }
             set { SetBool("AutoPopStashAfterPull", value); }
         }
 
         public static bool? AutoPopStashAfterCheckoutBranch
         {
-            get { return GetBool("AutoPopStashAfterCheckoutBranch", null); }
+            get { return GetBool("AutoPopStashAfterCheckoutBranch"); }
             set { SetBool("AutoPopStashAfterCheckoutBranch", value); }
         }
 
@@ -475,13 +474,13 @@ namespace GitCommands
 
         public static bool DontConfirmPushNewBranch
         {
-            get { return GetBool("DontConfirmPushNewBranch", false).Value; }
+            get { return GetBool("DontConfirmPushNewBranch", false); }
             set { SetBool("DontConfirmPushNewBranch", value); }
         }
 
         public static bool DontConfirmAddTrackingRef
         {
-            get { return GetBool("DontConfirmAddTrackingRef", false).Value; }
+            get { return GetBool("DontConfirmAddTrackingRef", false); }
             set { SetBool("DontConfirmAddTrackingRef", value); }
         }
 
@@ -654,7 +653,7 @@ namespace GitCommands
 
         public static bool StartWithRecentWorkingDir
         {
-            get { return GetBool("StartWithRecentWorkingDir", false).Value; }
+            get { return GetBool("StartWithRecentWorkingDir", false); }
             set { SetBool("StartWithRecentWorkingDir", value); }
         }
 
@@ -696,94 +695,82 @@ namespace GitCommands
 
         #region Colors
 
-        private static Color? _otherTagColor;
         public static Color OtherTagColor
         {
-            get { return SafeGet("othertagcolor", Color.Gray, ref _otherTagColor); }
-            set { SafeSet("othertagcolor", value, ref _otherTagColor); }
+            get { return GetColor("othertagcolor", Color.Gray); }
+            set { SetColor("othertagcolor", value); }
         }
-        private static Color? _tagColor;
+
         public static Color TagColor
         {
-            get { return SafeGet("tagcolor", Color.DarkBlue, ref _tagColor); }
-            set { SafeSet("tagcolor", value, ref _tagColor); }
+            get { return GetColor("tagcolor", Color.DarkBlue); }
+            set { SetColor("tagcolor", value); }
         }
 
-        private static Color? _graphColor;
         public static Color GraphColor
         {
-            get { return SafeGet("graphcolor", Color.DarkRed, ref _graphColor); }
-            set { SafeSet("graphcolor", value, ref _graphColor); }
+            get { return GetColor("graphcolor", Color.DarkRed); }
+            set { SetColor("graphcolor", value); }
         }
 
-        private static Color? _branchColor;
         public static Color BranchColor
         {
-            get { return SafeGet("branchcolor", Color.DarkRed, ref _branchColor); }
-            set { SafeSet("branchcolor", value, ref _branchColor); }
+            get { return GetColor("branchcolor", Color.DarkRed); }
+            set { SetColor("branchcolor", value); }
         }
 
-        private static Color? _remoteBranchColor;
         public static Color RemoteBranchColor
         {
-            get { return SafeGet("remotebranchcolor", Color.Green, ref _remoteBranchColor); }
-            set { SafeSet("remotebranchcolor", value, ref _remoteBranchColor); }
+            get { return GetColor("remotebranchcolor", Color.Green); }
+            set { SetColor("remotebranchcolor", value); }
         }
 
-        private static Color? _diffSectionColor;
         public static Color DiffSectionColor
         {
-            get { return SafeGet("diffsectioncolor", Color.FromArgb(230, 230, 230), ref _diffSectionColor); }
-            set { SafeSet("diffsectioncolor", value, ref _diffSectionColor); }
+            get { return GetColor("diffsectioncolor", Color.FromArgb(230, 230, 230)); }
+            set { SetColor("diffsectioncolor", value); }
         }
 
-        private static Color? _diffRemovedColor;
         public static Color DiffRemovedColor
         {
-            get { return SafeGet("diffremovedcolor", Color.FromArgb(255, 200, 200), ref _diffRemovedColor); }
-            set { SafeSet("diffremovedcolor", value, ref _diffRemovedColor); }
+            get { return GetColor("diffremovedcolor", Color.FromArgb(255, 200, 200)); }
+            set { SetColor("diffremovedcolor", value); }
         }
 
-        private static Color? _diffRemovedExtraColor;
         public static Color DiffRemovedExtraColor
         {
-            get { return SafeGet("diffremovedextracolor", Color.FromArgb(255, 150, 150), ref _diffRemovedExtraColor); }
-            set { SafeSet("diffremovedextracolor", value, ref _diffRemovedExtraColor); }
+            get { return GetColor("diffremovedextracolor", Color.FromArgb(255, 150, 150)); }
+            set { SetColor("diffremovedextracolor", value); }
         }
 
-        private static Color? _diffAddedColor;
         public static Color DiffAddedColor
         {
-            get { return SafeGet("diffaddedcolor", Color.FromArgb(200, 255, 200), ref _diffAddedColor); }
-            set { SafeSet("diffaddedcolor", value, ref _diffAddedColor); }
+            get { return GetColor("diffaddedcolor", Color.FromArgb(200, 255, 200)); }
+            set { SetColor("diffaddedcolor", value); }
         }
 
-        private static Color? _diffAddedExtraColor;
         public static Color DiffAddedExtraColor
         {
-            get { return SafeGet("diffaddedextracolor", Color.FromArgb(135, 255, 135), ref _diffAddedExtraColor); }
-            set { SafeSet("diffaddedextracolor", value, ref _diffAddedExtraColor); }
+            get { return GetColor("diffaddedextracolor", Color.FromArgb(135, 255, 135)); }
+            set { SetColor("diffaddedextracolor", value); }
         }
 
-        private static Font _diffFont;
         public static Font DiffFont
         {
-            get { return SafeGet("difffont", new Font("Courier New", 10), ref _diffFont); }
-            set { SafeSet("difffont", value, ref _diffFont); }
+            get { return GetFont("difffont", new Font("Courier New", 10)); }
+            set { SetFont("difffont", value); }
         }
 
-        private static Font _commitFont;
         public static Font CommitFont
         {
-            get { return SafeGet("commitfont", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size), ref _commitFont); }
-            set { SafeSet("commitfont", value, ref _commitFont); }
+            get { return GetFont("commitfont", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size)); }
+            set { SetFont("commitfont", value); }
         }
 
-        private static Font _font;
         public static Font Font
         {
-            get { return SafeGet("font", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size), ref _font); }
-            set { SafeSet("font", value, ref _font); }
+            get { return GetFont("font", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size)); }
+            set { SetFont("font", value); }
         }
 
         #endregion
@@ -832,13 +819,13 @@ namespace GitCommands
 
         public static string GetInstallDir()
         {
-            return GetValue("InstallDir", "");
+            return GetString("InstallDir", string.Empty);
         }
 
         public static void SetInstallDir(string dir)
         {
             if (VersionIndependentRegKey != null)
-                SetValue("InstallDir", dir);
+                SetString("InstallDir", dir);
         }
 
         public static bool RunningOnWindows()
@@ -888,7 +875,7 @@ namespace GitCommands
             {
                 UseTimer = false;
 
-                SetValue("gitssh", GitCommandHelpers.GetSsh());
+                SetString("gitssh", GitCommandHelpers.GetSsh());
                 Repositories.SaveSettings();
 
                 UseTimer = true;
@@ -910,7 +897,7 @@ namespace GitCommands
 
             try
             {
-                GitCommandHelpers.SetSsh(GetValue<string>("gitssh", null));
+                GitCommandHelpers.SetSsh(GetString("gitssh", null));
             }
             catch
             { }
@@ -1056,11 +1043,11 @@ namespace GitCommands
             set { SafeSet("UseFormCommitMessage", value, ref _UseFormCommitMessage); }
         }
 
-        private static DateTime? _lastUpdateCheck;
+        private static DateTime _lastUpdateCheck;
         public static DateTime LastUpdateCheck
         {
             get { return SafeGet("LastUpdateCheck", default(DateTime), ref _lastUpdateCheck); }
-            set { SafeSet("LastUpdateCheck", value, ref _lastUpdateCheck); }
+            set { SetDate("LastUpdateCheck", value); }
         }
 
         public static string GetGitExtensionsFullPath()
@@ -1075,33 +1062,20 @@ namespace GitCommands
             return fileName;
         }
 
-        private static T SafeGet<T>(string key, T defaultValue, ref T field, Func<string, T> converter)
+        private static T SafeGet<T>(string key, T defaultValue, ref T field, Func<string, T> decode)
         {
-            var value = GetValue<object>(key, null);
-            field = value == null ? defaultValue : converter(value.ToString());
+            field = GetByName(key, defaultValue, decode);
             return field;
         }
 
         private static string SafeGet(string key, string defaultValue, ref string field)
         {
-            return SafeGet(key, defaultValue, ref field, x => x);
+            return GetString(key, defaultValue);
         }
 
-        private static Font SafeGet(string key, Font defaultValue, ref Font field)
+        private static DateTime SafeGet(string key, DateTime defaultValue, ref DateTime field)
         {
-            return SafeGet(key, defaultValue, ref field, x => x.Parse(defaultValue));
-        }
-
-        private static DateTime SafeGet(string key, DateTime? defaultValue, ref DateTime? field)
-        {
-            return SafeGet(key, defaultValue, ref field,
-                x =>
-                {
-                    DateTime result;
-                    if (DateTime.TryParseExact(x, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
-                        return result;
-                    return null;
-                }).GetValueOrDefault();
+            return GetDate(key, defaultValue);
         }
 
         private static bool SafeGet(string key, bool defaultValue, ref bool? field)
@@ -1111,42 +1085,37 @@ namespace GitCommands
 
         private static int SafeGet(string key, int defaultValue, ref int? field)
         {
-            return SafeGet(key, defaultValue, ref field, x =>
-            {
-                int result;
-                return int.TryParse(x, out result) ? result : defaultValue;
-            }).GetValueOrDefault();
-        }
-
-        private static Color SafeGet(string key, Color defaultValue, ref Color? field)
-        {
-            return SafeGet(key, defaultValue, ref field, x => ColorTranslator.FromHtml(x)).GetValueOrDefault();
+            return GetInt(key, defaultValue);
         }
 
         private static void SafeSet(string key, DateTime? value, ref DateTime? field)
         {
             field = value;
-            SetValue(key, field != null ? field.Value.ToString("yyyy/M/dd", CultureInfo.InvariantCulture) : null);
+            SetDate(key, value);
         }
 
-        private static void SafeSet<T>(string key, T value, ref T field)
+        private static void SafeSet(string key, int? value, ref int? field)
         {
-            if (Object.Equals(field, value))
-                return;
             field = value;
-            SetValue(key, field);
+            SetInt(key, value);
         }
 
-        private static void SafeSet(string key, Color value, ref Color? field)
+        private static void SafeSet(string key, string value, ref string field)
         {
             field = value;
-            SetValue(key, ColorTranslator.ToHtml(field.Value));
+            SetString(key, value);
         }
 
-        private static void SafeSet(string key, Font value, ref Font field)
+        private static void SafeSet(string key, bool? value, ref bool? field)
         {
             field = value;
-            SetValue(key, field.AsString());
+            SetBool(key, value);
+        }
+
+        private static void SafeSet<T>(string key, T value, ref T field, Func<T, string> encode)
+        {
+            field = value;
+            SetByName(key, value, encode);
         }
 
         private static RegistryKey _VersionIndependentRegKey;
@@ -1204,7 +1173,8 @@ namespace GitCommands
                 foreach (String name in VersionIndependentRegKey.GetValueNames())
                 {
                     object value = VersionIndependentRegKey.GetValue(name, null);
-                    EncodedNameMap[name] = value;
+                    if (value != null)
+                        EncodedNameMap[name] = value.ToString();
                 }
             }
         }
@@ -1223,37 +1193,6 @@ namespace GitCommands
                 return DateTime.MaxValue;
             }
 
-        }
-
-        public static T GetValue<T>(string name, T defaultValue, String FilePath)
-        {
-            lock (EncodedNameMap)
-            {
-                DateTime lastMod = GetLastFileModificationUTC(FilePath);
-                if (!LastFileRead.HasValue || lastMod > LastFileRead.Value)
-                {
-                    ReadXMLDicSettings(EncodedNameMap, FilePath);
-                }
-
-                object o;
-                if (EncodedNameMap.TryGetValue(name, out o))
-                {
-                    if (o == null || o is T)
-                        return (T)o;
-                    else
-                        throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
-                }
-                else
-                {
-                    return defaultValue;
-                }
-            }
-        }
-
-        public static T GetValue<T>(string name, T defaultValue)
-        {
-            string fPath = Path.Combine(ApplicationDataPath, SettingsFileName);
-            return GetValue(name, defaultValue, fPath);
         }
 
         private static void SaveXMLDictionarySettings<T>(XmlSerializableDictionary<string, T> Dic, String FilePath)
@@ -1299,7 +1238,7 @@ namespace GitCommands
             SaveTimer.Start();
         }
 
-        public static void SetValue<T>(string name, T value)
+        private static void SetValue(string name, string value)
         {
             lock (EncodedNameMap)
             {
@@ -1313,7 +1252,29 @@ namespace GitCommands
                 StartSaveTimer();
         }
 
-        public static T GetByName<T>(string name, T defaultValue, Func<object, T> decode)
+        public static string GetFreshValue(string name, String FilePath)
+        {
+            lock (EncodedNameMap)
+            {
+                DateTime lastMod = GetLastFileModificationUTC(FilePath);
+                if (!LastFileRead.HasValue || lastMod > LastFileRead.Value)
+                {
+                    ReadXMLDicSettings(EncodedNameMap, FilePath);
+                }
+
+                string o = null;
+                EncodedNameMap.TryGetValue(name, out o);
+                return o;
+            }
+        }
+
+        private static string GetValue(string name)
+        {
+            string fPath = Path.Combine(ApplicationDataPath, SettingsFileName);
+            return GetFreshValue(name, fPath);
+        }
+
+        public static T GetByName<T>(string name, T defaultValue, Func<string, T> decode)
         {
             object o;
 
@@ -1333,32 +1294,33 @@ namespace GitCommands
                 if (decode == null)
                     throw new ArgumentNullException("decode", string.Format("The decode parameter for setting {0} is null.", name));
 
-                o = GetValue<object>(name, null);
-                T result = o == null ? defaultValue : decode(o);
+                string s = GetValue(name);
+                T result = s == null ? defaultValue : decode(s);
                 ByNameMap.Add(name, result);
                 return result;
             }
         }
 
-        public static void SetByName<T>(string name, T value, Func<T, object> encode)
+        public static void SetByName<T>(string name, T value, Func<T, string> encode)
         {
             object o;
             if (ByNameMap.TryGetValue(name, out o))
                 if (Object.Equals(o, value))
                     return;
 
+            string s;
             if (value == null)
-                o = null;
+                s = null;
             else
-                o = encode(value);
+                s = encode(value);
 
-            SetValue<object>(name, o);
+            SetValue(name, s);
             ByNameMap[name] = value;
         }
 
-        public static bool? GetBool(string name, bool? defaultValue)
+        public static bool? GetBool(string name)
         {
-            return GetByName<bool?>(name, defaultValue, x =>
+            return GetByName<bool?>(name, null, x =>
             {
                 var val = x.ToString().ToLower();
                 if (val == "true") return true;
@@ -1367,9 +1329,85 @@ namespace GitCommands
             });
         }
 
+        public static bool GetBool(string name, bool defaultValue)
+        {
+            return GetBool(name) ?? defaultValue;
+        }
+
         public static void SetBool(string name, bool? value)
         {
             SetByName<bool?>(name, value, (bool? b) => b.Value ? "true" : "false");
+        }
+
+        public static void SetInt(string name, int? value)
+        {
+            SetByName<int?>(name, value, (int? b) => b.HasValue ? b.ToString() : null);
+        }
+
+        public static int? GetInt(string name)
+        {
+            return GetByName<int?>(name, null, x =>
+            {
+                int result;
+                if (int.TryParse(x, out result))
+                {
+                    return result;
+                }
+
+                return null;
+            });
+        }
+
+        public static DateTime GetDate(string name, DateTime defaultValue)
+        {
+            return GetDate(name) ?? defaultValue;
+        }
+
+        public static void SetDate(string name, DateTime? value)
+        {
+            SetByName<DateTime?>(name, value, (DateTime? b) => b.HasValue ? b.Value.ToString("yyyy/M/dd", CultureInfo.InvariantCulture) : null);
+        }
+
+        public static DateTime? GetDate(string name)
+        {
+            return GetByName<DateTime?>(name, null, x =>
+            {
+                DateTime result;
+                if (DateTime.TryParseExact(x, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                    return result;
+
+                return null;
+            });
+        }
+
+        public static int GetInt(string name, int defaultValue)
+        {
+            return GetInt(name) ?? defaultValue;
+        }
+
+        public static void SetFont(string name, Font value)
+        {
+            SetByName<Font>(name, value, x => x.AsString());
+        }
+
+        public static Font GetFont(string name, Font defaultValue)
+        {
+            return GetByName<Font>(name, defaultValue, x => x.Parse(defaultValue));
+        }
+
+        public static void SetColor(string name, Color? value)
+        {
+            SetByName<Color?>(name, value, x => x.HasValue ? ColorTranslator.ToHtml(x.Value) : null);
+        }
+
+        public static Color? GetColor(string name)
+        {
+            return GetByName<Color?>(name, null, x => ColorTranslator.FromHtml(x));
+        }
+
+        public static Color GetColor(string name, Color defaultValue)
+        {
+            return GetColor(name) ?? defaultValue;
         }
 
         public static void SetEnum<T>(string name, T value)
