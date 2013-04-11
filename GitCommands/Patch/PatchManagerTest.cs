@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using GitCommands;
 using NUnit.Framework;
 using PatchApply;
 using TestContext = System.Object;
@@ -12,7 +14,6 @@ namespace GitExtensionsTest.Patches
     [TestClass]
     public class PatchManagerTest
     {
-        private const string SmallPatchFile = @"GitCommands/Patch/testdata/small.patch";
         private const string BigPatchFile = @"GitCommands/Patch/testdata/big.patch";
         private const string BigBinPatchFile = @"GitCommands/Patch/testdata/bigBin.patch";
 
@@ -35,29 +36,35 @@ namespace GitExtensionsTest.Patches
             return patchBytes;
         }
 
+        public Patch CreateSmallPatchExample()
+        {
+            TestPatch testPatch = new TestPatch();
+            Encoding fileEncoding = GitModule.LosslessEncoding;
+            testPatch.Patch.Type = Patch.PatchType.ChangeFile;
+            testPatch.Patch.Apply = true;
+            testPatch.Patch.PatchHeader = "diff --git a/thisisatest.txt b/thisisatest.txt";
+            testPatch.Patch.PatchIndex = "index 5e4dce2..5eb1e6f 100644";
+            testPatch.Patch.FileNameA = "thisisatest.txt";
+            testPatch.Patch.FileNameB = "thisisatest.txt";
+            testPatch.AppendHeaderLine(testPatch.Patch.PatchHeader);
+            testPatch.AppendHeaderLine(testPatch.Patch.PatchIndex);
+            testPatch.AppendHeaderLine("--- a/" + testPatch.Patch.FileNameA);
+            testPatch.AppendHeaderLine("+++ b/" + testPatch.Patch.FileNameB);
+            testPatch.AppendDiffLine("@@ -1,2 +1,2 @@", fileEncoding);
+            testPatch.AppendDiffLine(" iiiiii", fileEncoding);
+            testPatch.AppendDiffLine("-ąśdkjaldskjlaksd", fileEncoding);
+            testPatch.AppendDiffLine("+changed again€", fileEncoding);
+
+            return testPatch.Patch;
+        }
+
         [TestMethod]
-        public void TestLoadPatch()
+        public void TestCorrectlyLoadPatch()
         {
             PatchManager manager = NewManager();
-            Patch expectedPatch = new Patch
-                                      {
-                                          Type = Patch.PatchType.ChangeFile,
-                                          Apply = true,
-                                          PatchHeader = "diff --git a/thisisatest.txt b/thisisatest.txt",
-                                          PatchIndex = "index 5e4dce2..5eb1e6f 100644",
-                                          FileNameA = "thisisatest.txt",
-                                          FileNameB = "thisisatest.txt"
-                                      };
-            expectedPatch.AppendTextLine(expectedPatch.PatchHeader);
-            expectedPatch.AppendTextLine(expectedPatch.PatchIndex);
-            expectedPatch.AppendTextLine("--- a/thisisatest.txt");
-            expectedPatch.AppendTextLine("+++ b/thisisatest.txt");
-            expectedPatch.AppendTextLine("@@ -1,2 +1,2 @@");
-            expectedPatch.AppendTextLine("iiiiii");
-            expectedPatch.AppendTextLine("-asdkjaldskjlaksd");
-            expectedPatch.AppendTextLine("+changed again");
+            Patch expectedPatch = CreateSmallPatchExample();
 
-            manager.LoadPatch(expectedPatch.Text, false, Encoding.UTF8);
+            manager.LoadPatch(expectedPatch.Text, false, GitModule.LosslessEncoding);
 
             Patch createdPatch = manager.Patches.First();
             Assert.AreEqual(expectedPatch.Text, createdPatch.Text);
@@ -68,7 +75,7 @@ namespace GitExtensionsTest.Patches
         public void TestCorrectlyLoadsTheRightNumberOfDiffsInAPatchFile()
         {
             PatchManager manager = NewManager();
-            var testPatch = Encoding.UTF8.GetString(LoadTestPatchDataBytes(BigPatchFile));
+            var testPatch = GitModule.LosslessEncoding.GetString(LoadTestPatchDataBytes(BigPatchFile));
             manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(17, manager.Patches.Count);
@@ -78,7 +85,7 @@ namespace GitExtensionsTest.Patches
         public void TestCorrectlyLoadsTheRightFilenamesInAPatchFile()
         {
             PatchManager manager = NewManager();
-            var testPatch = Encoding.UTF8.GetString(LoadTestPatchDataBytes(BigPatchFile));
+            var testPatch = GitModule.LosslessEncoding.GetString(LoadTestPatchDataBytes(BigPatchFile));
             manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(17, manager.Patches.Select(p => p.FileNameA).Distinct().Count());
@@ -89,7 +96,7 @@ namespace GitExtensionsTest.Patches
         public void TestCorrectlyLoadsBinaryPatch()
         {
             PatchManager manager = NewManager();
-            var testPatch = Encoding.UTF8.GetString(LoadTestPatchDataBytes(BigBinPatchFile));
+            var testPatch = GitModule.LosslessEncoding.GetString(LoadTestPatchDataBytes(BigBinPatchFile));
             manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(248, manager.Patches.Count(p => p.File == Patch.FileType.Binary));
@@ -99,7 +106,7 @@ namespace GitExtensionsTest.Patches
         public void TestCorrectlyLoadsOneNewFile()
         {
             PatchManager manager = NewManager();
-            var testPatch = Encoding.UTF8.GetString(LoadTestPatchDataBytes(BigPatchFile));
+            var testPatch = GitModule.LosslessEncoding.GetString(LoadTestPatchDataBytes(BigPatchFile));
             manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(1, manager.Patches.Count(p => p.Type == Patch.PatchType.NewFile));
@@ -109,7 +116,7 @@ namespace GitExtensionsTest.Patches
         public void TestCorrectlyLoadsOneDeleteFile()
         {
             PatchManager manager = NewManager();
-            var testPatch = Encoding.UTF8.GetString(LoadTestPatchDataBytes(BigPatchFile));
+            var testPatch = GitModule.LosslessEncoding.GetString(LoadTestPatchDataBytes(BigPatchFile));
             manager.LoadPatch(testPatch, false, Encoding.UTF8);
 
             Assert.AreEqual(1, manager.Patches.Count(p => p.Type == Patch.PatchType.DeleteFile));
@@ -119,13 +126,13 @@ namespace GitExtensionsTest.Patches
         public void TestCorrectlyLoadsChangeFiles()
         {
             PatchManager manager = NewManager();
-            var testBigPatch = Encoding.UTF8.GetString(LoadTestPatchDataBytes(BigPatchFile));
-            var testSmallPatch = Encoding.UTF8.GetString(LoadTestPatchDataBytes(SmallPatchFile));
-            
+            var testBigPatch = GitModule.LosslessEncoding.GetString(LoadTestPatchDataBytes(BigPatchFile));
+            var testSmallPatch = CreateSmallPatchExample();
+
             manager.LoadPatch(testBigPatch, false, Encoding.UTF8);
             Assert.AreEqual(15, manager.Patches.Count(p => p.Type == Patch.PatchType.ChangeFile));
 
-            manager.LoadPatch(testSmallPatch, false, Encoding.UTF8);
+            manager.LoadPatch(testSmallPatch.Text, false, Encoding.UTF8);
             Assert.AreEqual(1, manager.Patches.Count(p => p.Type == Patch.PatchType.ChangeFile));
         }
 

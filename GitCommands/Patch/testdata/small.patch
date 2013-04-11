@@ -1,8 +1,0 @@
-diff --git a/thisisatest.txt b/thisisatest.txt
-index 5e4dce2..5eb1e6f 100644
---- a/thisisatest.txt
-+++ b/thisisatest.txt
-@@ -1,2 +1,2 @@
-iiiiii
--asdkjaldskjlaksd
-+changed again
