@@ -133,5 +133,32 @@ namespace GitExtensionsTest.Patches
         {
             return new PatchManager();
         }
+
+        public class TestPatch
+        {
+            public Patch Patch { get; private set; }
+            public StringBuilder PatchOutput { get; private set; }
+
+            public TestPatch()
+            {
+                Patch = new Patch();
+                PatchOutput = new StringBuilder();
+            }
+
+            public void AppendHeaderLine(string line)
+            {
+                Patch.AppendTextLine(line);
+                PatchOutput.Append(GitModule.ReEncodeString(line, GitModule.SystemEncoding, GitModule.LosslessEncoding));
+                PatchOutput.Append("\n");
+            }
+
+            public void AppendDiffLine(string line, Encoding fileEncoding)
+            {
+                Patch.AppendTextLine(line);
+                PatchOutput.Append(GitModule.ReEncodeString(line, fileEncoding, GitModule.LosslessEncoding));
+                PatchOutput.Append("\n");
+            }
+
+        }
     }
 }
