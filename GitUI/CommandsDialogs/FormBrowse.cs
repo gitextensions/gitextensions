@@ -1684,7 +1684,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                Process.Start(Settings.GetInstallDir() + "\\GitExtensionsUserManual.pdf");
+                Process.Start(Path.Combine(Settings.GetInstallDir(), "GitExtensionsUserManual.pdf"));
             }
             catch (Exception ex)
             {
