@@ -750,7 +750,7 @@ namespace GitCommands
 
         public static string GetDictionaryDir()
         {
-            return GetInstallDir() + "\\Dictionaries\\";
+            return Path.Combine(GetInstallDir(), "Dictionaries");
         }
 
         public static string GetInstallDir()
@@ -966,14 +966,12 @@ namespace GitCommands
 
         public static string GetGitExtensionsFullPath()
         {
-            return GetGitExtensionsDirectory() + "\\GitExtensions.exe";
+            return Application.ExecutablePath;
         }
 
         public static string GetGitExtensionsDirectory()
         {
-            string fileName = Assembly.GetAssembly(typeof(Settings)).Location;
-            fileName = fileName.Substring(0, fileName.LastIndexOfAny(new[] { '\\', '/' }));
-            return fileName;
+            return Path.GetDirectoryName(GetGitExtensionsFullPath());
         }
 
         private static RegistryKey _VersionIndependentRegKey;
