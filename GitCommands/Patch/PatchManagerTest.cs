@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.IO;
 using NUnit.Framework;
 using PatchApply;
@@ -33,7 +32,6 @@ namespace GitExtensionsTest.Patches
                 patchBytes = new BinaryReader(reader.BaseStream).ReadBytes((int)reader.BaseStream.Length);
             }
 
-            Debug.WriteLine("TEST");
             return patchBytes;
         }
 
