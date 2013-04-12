@@ -329,11 +329,10 @@ namespace GitCommands
             set { SetBool("revisiongraphdrawnonrelativestextgray", value); }
         }
 
-        private static bool? _enableBuildServerIntegration;
         public static bool EnableBuildServerIntegration
         {
-            get { return SafeGet("enablebuildserverintegration", true, ref _enableBuildServerIntegration); }
-            set { SafeSet("enablebuildserverintegration", value, ref _enableBuildServerIntegration); }
+            get { return GetBool("enablebuildserverintegration", true); }
+            set { SetBool("enablebuildserverintegration", value); }
         }
 
         public static readonly Dictionary<string, Encoding> AvailableEncodings = new Dictionary<string, Encoding>();
