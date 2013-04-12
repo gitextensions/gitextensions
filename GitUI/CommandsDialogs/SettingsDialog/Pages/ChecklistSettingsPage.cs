@@ -482,11 +482,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private static bool getCheckAtStartupChecked(bool bValid)
         {
-            var retValue = Settings.GetValue<string>("checksettings", null) == null || Settings.GetValue<string>("checksettings", null) == "true";
+            var retValue = Settings.GetBool("checksettings", true);
 
             if (bValid && retValue)
             {
-                Settings.SetValue("checksettings", false);
+                Settings.SetBool("checksettings", false);
                 retValue = false;
             }
             return retValue;
