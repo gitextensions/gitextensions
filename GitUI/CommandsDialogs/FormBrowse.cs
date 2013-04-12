@@ -115,7 +115,7 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// For VS designer
         /// </summary>
-        private FormBrowse()
+        private 0FormBrowse()
         {
             InitializeComponent();
             Translate();
@@ -189,7 +189,7 @@ namespace GitUI.CommandsDialogs
                 RefreshPullIcon();
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             }
-            dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+            
         }
 
         void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
@@ -2939,6 +2939,11 @@ namespace GitUI.CommandsDialogs
         {
             using (var updateForm = new FormUpdates(Module.GitVersion))
                 updateForm.ShowDialog(Owner);
+        }
+
+        private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
+        {
+            dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
         }
     }
 
