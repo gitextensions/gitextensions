@@ -58,7 +58,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (!CheckGitCredentialStore())
             {
-                string gcsFileName = Settings.GetInstallDir() + @"\GitCredentialWinStore\git-credential-winstore.exe";
+                string gcsFileName = Path.Combine(Settings.GetInstallDir(), @"GitCredentialWinStore\git-credential-winstore.exe");
                 if (File.Exists(gcsFileName))
                 {
                     ConfigFile config = GitCommandHelpers.GetGlobalConfig();
