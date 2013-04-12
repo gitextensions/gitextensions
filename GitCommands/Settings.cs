@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Serialization;
 using GitCommands.Logging;
 using GitCommands.Repository;
 using Microsoft.Win32;
@@ -27,11 +30,35 @@ namespace GitCommands
         public static readonly int GitExtensionsVersionInt;
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
+        private static readonly string SettingsFileName = "GitExtensions.settings";
+        private static readonly double SAVETIME = 2000;
+
+        private static DateTime? LastFileRead = null;
 
         private static readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
+        private static readonly XmlSerializableDictionary<string, string> EncodedNameMap = new XmlSerializableDictionary<string, string>();
+        static System.Timers.Timer SaveTimer = new System.Timers.Timer(SAVETIME);
+        private static bool UseTimer = true;
+
+        public static Lazy<string> ApplicationDataPath;
+        private static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
 
         static Settings()
         {
+            ApplicationDataPath = new Lazy<string>(() =>
+                {
+                    if (IsPortable())
+                    {
+                        return GetGitExtensionsDirectory();
+                    }
+                    else
+                    {
+                        //Make applicationdatapath version independent
+                        return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
+                    }
+                }
+            );
+            
             Version version = Assembly.GetCallingAssembly().GetName().Version;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
             GitExtensionsVersionInt = version.Major * 100 + version.Minor;
@@ -47,79 +74,75 @@ namespace GitCommands
             }
 
             GitLog = new CommandLogger();
-
-            //Make applicationdatapath version dependent
-            ApplicationDataPath = Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
+            
+            if (!File.Exists(SettingsFilePath))
+            {
+                ImportFromRegistry();
+                SaveXMLDictionarySettings(EncodedNameMap, SettingsFilePath);
+            }
+            SaveTimer.Enabled = false;
+            SaveTimer.AutoReset = false;
+            SaveTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnSaveTimer);
         }
 
-        private static int? _UserMenuLocationX;
         public static int UserMenuLocationX
         {
-            get { return SafeGet("usermenulocationx", -1, ref _UserMenuLocationX); }
-            set { SafeSet("usermenulocationx", value, ref _UserMenuLocationX); }
+            get { return GetInt("usermenulocationx", -1); }
+            set { SetInt("usermenulocationx", value); }
         }
 
-        private static int? _UserMenuLocationY;
         public static int UserMenuLocationY
         {
-            get { return SafeGet("usermenulocationy", -1, ref _UserMenuLocationY); }
-            set { SafeSet("usermenulocationy", value, ref _UserMenuLocationY); }
+            get { return GetInt("usermenulocationy", -1); }
+            set { SetInt("usermenulocationy", value); }
         }
 
-        private static bool? _stashKeepIndex;
         public static bool StashKeepIndex
         {
-            get { return SafeGet("stashkeepindex", false, ref _stashKeepIndex); }
-            set { SafeSet("stashkeepindex", value, ref _stashKeepIndex); }
+            get { return GetBool("stashkeepindex", false); }
+            set { SetBool("stashkeepindex", value); }
         }
 
-        private static bool? _stashConfirmDropShow;
         public static bool StashConfirmDropShow
         {
-            get { return SafeGet("stashconfirmdropshow", true, ref _stashConfirmDropShow); }
-            set { SafeSet("stashconfirmdropshow", value, ref _stashConfirmDropShow); }
+            get { return GetBool("stashconfirmdropshow", true); }
+            set { SetBool("stashconfirmdropshow", value); }
         }
 
-        private static bool? _applyPatchIgnoreWhitespace;
         public static bool ApplyPatchIgnoreWhitespace
         {
-            get { return SafeGet("applypatchignorewhitespace", false, ref _applyPatchIgnoreWhitespace); }
-            set { SafeSet("applypatchignorewhitespace", value, ref _applyPatchIgnoreWhitespace); }
+            get { return GetBool("applypatchignorewhitespace", false); }
+            set { SetBool("applypatchignorewhitespace", value); }
         }
 
-        private static bool? _usePatienceDiffAlgorithm;
         public static bool UsePatienceDiffAlgorithm
         {
-            get { return SafeGet("usepatiencediffalgorithm", false, ref _usePatienceDiffAlgorithm); }
-            set { SafeSet("usepatiencediffalgorithm", value, ref _usePatienceDiffAlgorithm); }
+            get { return GetBool("usepatiencediffalgorithm", false); }
+            set { SetBool("usepatiencediffalgorithm", value); }
         }
 
-        private static bool? _showErrorsWhenStagingFiles;
         public static bool ShowErrorsWhenStagingFiles
         {
-            get { return SafeGet("showerrorswhenstagingfiles", true, ref _showErrorsWhenStagingFiles); }
-            set { SafeSet("showerrorswhenstagingfiles", value, ref _showErrorsWhenStagingFiles); }
+            get { return GetBool("showerrorswhenstagingfiles", true); }
+            set { SetBool("showerrorswhenstagingfiles", value); }
         }
 
-        private static string _lastCommitMessage;
         public static string LastCommitMessage
         {
-            get { return SafeGet("lastCommitMessage", "", ref _lastCommitMessage); }
-            set { SafeSet("lastCommitMessage", value, ref _lastCommitMessage); }
+            get { return GetString("lastCommitMessage", ""); }
+            set { SetString("lastCommitMessage", value); }
         }
 
-        private static string _truncatePathMethod;
         public static string TruncatePathMethod
         {
-            get { return SafeGet("truncatepathmethod", "none", ref _truncatePathMethod); }
-            set { SafeSet("truncatepathmethod", value, ref _truncatePathMethod); }
+            get { return GetString("truncatepathmethod", "none"); }
+            set { SetString("truncatepathmethod", value); }
         }
 
-        private static bool? _showGitStatusInBrowseToolbar;
         public static bool ShowGitStatusInBrowseToolbar
         {
-            get { return SafeGet("showgitstatusinbrowsetoolbar", true, ref _showGitStatusInBrowseToolbar); }
-            set { SafeSet("showgitstatusinbrowsetoolbar", value, ref _showGitStatusInBrowseToolbar); }
+            get { return GetBool("showgitstatusinbrowsetoolbar", true); }
+            set { SetBool("showgitstatusinbrowsetoolbar", value); }
         }
 
         public static bool CommitInfoShowContainedInBranches
@@ -132,59 +155,51 @@ namespace GitCommands
             }
         }
 
-        private static bool? _commitInfoShowContainedInBranchesLocal;
         public static bool CommitInfoShowContainedInBranchesLocal
         {
-            get { return SafeGet("commitinfoshowcontainedinbrancheslocal", true, ref _commitInfoShowContainedInBranchesLocal); }
-            set { SafeSet("commitinfoshowcontainedinbrancheslocal", value, ref _commitInfoShowContainedInBranchesLocal); }
+            get { return GetBool("commitinfoshowcontainedinbrancheslocal", true); }
+            set { SetBool("commitinfoshowcontainedinbrancheslocal", value); }
         }
 
-        private static bool? _checkForUncommittedChangesInCheckoutBranch;
         public static bool CheckForUncommittedChangesInCheckoutBranch
         {
-            get { return SafeGet("checkforuncommittedchangesincheckoutbranch", false, ref _checkForUncommittedChangesInCheckoutBranch); }
-            set { SafeSet("checkforuncommittedchangesincheckoutbranch", value, ref _checkForUncommittedChangesInCheckoutBranch); }
+            get { return GetBool("checkforuncommittedchangesincheckoutbranch", false); }
+            set { SetBool("checkforuncommittedchangesincheckoutbranch", value); }
         }
 
         public static bool AlwaysShowCheckoutBranchDlg
         {
-            get { return GetBool("AlwaysShowCheckoutBranchDlg", false).Value; }
+            get { return GetBool("AlwaysShowCheckoutBranchDlg", false); }
             set { SetBool("AlwaysShowCheckoutBranchDlg", value); }
         }
 
-        private static bool? _commitInfoShowContainedInBranchesRemote;
         public static bool CommitInfoShowContainedInBranchesRemote
         {
-            get { return SafeGet("commitinfoshowcontainedinbranchesremote", false, ref _commitInfoShowContainedInBranchesRemote); }
-            set { SafeSet("commitinfoshowcontainedinbranchesremote", value, ref _commitInfoShowContainedInBranchesRemote); }
+            get { return GetBool("commitinfoshowcontainedinbranchesremote", false); }
+            set { SetBool("commitinfoshowcontainedinbranchesremote", value); }
         }
 
-        private static bool? _commitInfoShowContainedInBranchesRemoteIfNoLocal;
         public static bool CommitInfoShowContainedInBranchesRemoteIfNoLocal
         {
-            get { return SafeGet("commitinfoshowcontainedinbranchesremoteifnolocal", false, ref _commitInfoShowContainedInBranchesRemoteIfNoLocal); }
-            set { SafeSet("commitinfoshowcontainedinbranchesremoteifnolocal", value, ref _commitInfoShowContainedInBranchesRemoteIfNoLocal); }
+            get { return GetBool("commitinfoshowcontainedinbranchesremoteifnolocal", false); }
+            set { SetBool("commitinfoshowcontainedinbranchesremoteifnolocal", value); }
         }
 
-        private static bool? _commitInfoShowContainedInTags;
         public static bool CommitInfoShowContainedInTags
         {
-            get { return SafeGet("commitinfoshowcontainedintags", true, ref _commitInfoShowContainedInTags); }
-            set { SafeSet("commitinfoshowcontainedintags", value, ref _commitInfoShowContainedInTags); }
+            get { return GetBool("commitinfoshowcontainedintags", true); }
+            set { SetBool("commitinfoshowcontainedintags", value); }
         }
-
-        public static string ApplicationDataPath { get; private set; }
 
         public static string GravatarCachePath
         {
-            get { return ApplicationDataPath + "Images\\"; }
+            get { return ApplicationDataPath.Value + "Images\\"; }
         }
 
-        private static string _translation;
         public static string Translation
         {
-            get { return SafeGet("translation", "", ref _translation); }
-            set { SafeSet("translation", value, ref _translation); }
+            get { return GetString("translation", ""); }
+            set { SetString("translation", value); }
         }
 
         private static string _currentTranslation;
@@ -194,142 +209,124 @@ namespace GitCommands
             set { _currentTranslation = value; }
         }
 
-        private static bool? _userProfileHomeDir;
         public static bool UserProfileHomeDir
         {
-            get { return SafeGet("userprofilehomedir", false, ref _userProfileHomeDir); }
-            set { SafeSet("userprofilehomedir", value, ref _userProfileHomeDir); }
+            get { return GetBool("userprofilehomedir", false); }
+            set { SetBool("userprofilehomedir", value); }
         }
 
-        private static string _customHomeDir;
         public static string CustomHomeDir
         {
-            get { return SafeGet("customhomedir", "", ref _customHomeDir); }
-            set { SafeSet("customhomedir", value, ref _customHomeDir); }
+            get { return GetString("customhomedir", ""); }
+            set { SetString("customhomedir", value); }
         }
 
-        private static bool? _enableAutoScale;
         public static bool EnableAutoScale
         {
-            get { return SafeGet("enableautoscale", true, ref _enableAutoScale); }
-            set { SafeSet("enableautoscale", value, ref _enableAutoScale); }
+            get { return GetBool("enableautoscale", true); }
+            set { SetBool("enableautoscale", value); }
         }
 
-        private static string _iconColor;
         public static string IconColor
         {
-            get { return SafeGet("iconcolor", "default", ref _iconColor); }
-            set { SafeSet("iconcolor", value, ref _iconColor); }
+            get { return GetString("iconcolor", "default"); }
+            set { SetString("iconcolor", value); }
         }
 
-        private static string _iconStyle;
         public static string IconStyle
         {
-            get { return SafeGet("iconstyle", "default", ref _iconStyle); }
-            set { SafeSet("iconstyle", value, ref _iconStyle); }
+            get { return GetString("iconstyle", "default"); }
+            set { SetString("iconstyle", value); }
         }
 
-        private static int? _authorImageSize;
         public static int AuthorImageSize
         {
-            get { return SafeGet("authorimagesize", 80, ref _authorImageSize); }
-            set { SafeSet("authorimagesize", value, ref _authorImageSize); }
+            get { return GetInt("authorimagesize", 80); }
+            set { SetInt("authorimagesize", value); }
         }
 
-        private static int? _authorImageCacheDays;
         public static int AuthorImageCacheDays
         {
-            get { return SafeGet("authorimagecachedays", 5, ref _authorImageCacheDays); }
-            set { SafeSet("authorimagecachedays", value, ref _authorImageCacheDays); }
+            get { return GetInt("authorimagecachedays", 5); }
+            set { SetInt("authorimagecachedays", value); }
         }
 
-        private static bool? _showAuthorGravatar;
         public static bool ShowAuthorGravatar
         {
-            get { return SafeGet("showauthorgravatar", true, ref _showAuthorGravatar); }
-            set { SafeSet("showauthorgravatar", value, ref _showAuthorGravatar); }
+            get { return GetBool("showauthorgravatar", true); }
+            set { SetBool("showauthorgravatar", value); }
         }
 
-        private static bool? _closeCommitDialogAfterCommit;
         public static bool CloseCommitDialogAfterCommit
         {
-            get { return SafeGet("closecommitdialogaftercommit", true, ref _closeCommitDialogAfterCommit); }
-            set { SafeSet("closecommitdialogaftercommit", value, ref _closeCommitDialogAfterCommit); }
+            get { return GetBool("closecommitdialogaftercommit", true); }
+            set { SetBool("closecommitdialogaftercommit", value); }
         }
 
-        private static bool? _closeCommitDialogAfterLastCommit;
         public static bool CloseCommitDialogAfterLastCommit
         {
-            get { return SafeGet("closecommitdialogafterlastcommit", true, ref _closeCommitDialogAfterLastCommit); }
-            set { SafeSet("closecommitdialogafterlastcommit", value, ref _closeCommitDialogAfterLastCommit); }
+            get { return GetBool("closecommitdialogafterlastcommit", true); }
+            set { SetBool("closecommitdialogafterlastcommit", value); }
         }
 
-        private static bool? _refreshCommitDialogOnFormFocus;
         public static bool RefreshCommitDialogOnFormFocus
         {
-            get { return SafeGet("refreshcommitdialogonformfocus", false, ref _refreshCommitDialogOnFormFocus); }
-            set { SafeSet("refreshcommitdialogonformfocus", value, ref _refreshCommitDialogOnFormFocus); }
+            get { return GetBool("refreshcommitdialogonformfocus", false); }
+            set { SetBool("refreshcommitdialogonformfocus", value); }
         }
 
-        private static bool? _stageInSuperprojectAfterCommit;
         public static bool StageInSuperprojectAfterCommit
         {
-            get { return SafeGet("stageinsuperprojectaftercommit", true, ref _stageInSuperprojectAfterCommit); }
-            set { SafeSet("stageinsuperprojectaftercommit", value, ref _stageInSuperprojectAfterCommit); }
+            get { return GetBool("stageinsuperprojectaftercommit", true); }
+            set { SetBool("stageinsuperprojectaftercommit", value); }
         }
 
-        private static bool? _PlaySpecialStartupSound;
         public static bool PlaySpecialStartupSound
         {
-            get { return SafeGet("PlaySpecialStartupSound", false, ref _PlaySpecialStartupSound); }
-            set { SafeSet("PlaySpecialStartupSound", value, ref _PlaySpecialStartupSound); }
+            get { return GetBool("PlaySpecialStartupSound", false); }
+            set { SetBool("PlaySpecialStartupSound", value); }
         }
 
-        private static bool? _followRenamesInFileHistory;
         public static bool FollowRenamesInFileHistory
         {
-            get { return SafeGet("followrenamesinfilehistory", true, ref _followRenamesInFileHistory); }
-            set { SafeSet("followrenamesinfilehistory", value, ref _followRenamesInFileHistory); }
+            get { return GetBool("followrenamesinfilehistory", true); }
+            set { SetBool("followrenamesinfilehistory", value); }
         }
 
-        private static bool? _fullHistoryInFileHistory;
         public static bool FullHistoryInFileHistory
         {
-            get { return SafeGet("fullhistoryinfilehistory", false, ref _fullHistoryInFileHistory); }
-            set { SafeSet("fullhistoryinfilehistory", value, ref _fullHistoryInFileHistory); }
+            get { return GetBool("fullhistoryinfilehistory", false); }
+            set { SetBool("fullhistoryinfilehistory", value); }
         }
 
         public static bool LoadFileHistoryOnShow
         {
-            get { return GetBool("LoadFileHistoryOnShow", true).Value; }
+            get { return GetBool("LoadFileHistoryOnShow", true); }
             set { SetBool("LoadFileHistoryOnShow", value); }
         }
 
         public static bool LoadBlameOnShow
         {
-            get { return GetBool("LoadBlameOnShow", true).Value; }
+            get { return GetBool("LoadBlameOnShow", true); }
             set { SetBool("LoadBlameOnShow", value); }
         }
 
-        private static bool? _revisionGraphShowWorkingDirChanges;
         public static bool RevisionGraphShowWorkingDirChanges
         {
-            get { return SafeGet("revisiongraphshowworkingdirchanges", false, ref _revisionGraphShowWorkingDirChanges); }
-            set { SafeSet("revisiongraphshowworkingdirchanges", value, ref _revisionGraphShowWorkingDirChanges); }
+            get { return GetBool("revisiongraphshowworkingdirchanges", false); }
+            set { SetBool("revisiongraphshowworkingdirchanges", value); }
         }
 
-        private static bool? _revisionGraphDrawNonRelativesGray;
         public static bool RevisionGraphDrawNonRelativesGray
         {
-            get { return SafeGet("revisiongraphdrawnonrelativesgray", true, ref _revisionGraphDrawNonRelativesGray); }
-            set { SafeSet("revisiongraphdrawnonrelativesgray", value, ref _revisionGraphDrawNonRelativesGray); }
+            get { return GetBool("revisiongraphdrawnonrelativesgray", true); }
+            set { SetBool("revisiongraphdrawnonrelativesgray", value); }
         }
 
-        private static bool? _revisionGraphDrawNonRelativesTextGray;
         public static bool RevisionGraphDrawNonRelativesTextGray
         {
-            get { return SafeGet("revisiongraphdrawnonrelativestextgray", false, ref _revisionGraphDrawNonRelativesTextGray); }
-            set { SafeSet("revisiongraphdrawnonrelativestextgray", value, ref _revisionGraphDrawNonRelativesTextGray); }
+            get { return GetBool("revisiongraphdrawnonrelativestextgray", false); }
+            set { SetBool("revisiongraphdrawnonrelativestextgray", value); }
         }
 
         public static readonly Dictionary<string, Encoding> AvailableEncodings = new Dictionary<string, Encoding>();
@@ -372,36 +369,32 @@ namespace GitCommands
 
         public static bool DonSetAsLastPullAction
         {
-            get { return GetBool("DonSetAsLastPullAction", true).Value; }
+            get { return GetBool("DonSetAsLastPullAction", true); }
             set { SetBool("DonSetAsLastPullAction", value); }
         }
 
-        private static string _smtp;
         public static string SmtpServer
         {
-            get { return SafeGet("SmtpServer", "smtp.gmail.com", ref _smtp); }
-            set { SafeSet("SmtpServer", value, ref _smtp); }
+            get { return GetString("SmtpServer", "smtp.gmail.com"); }
+            set { SetString("SmtpServer", value); }
         }
 
-        private static int? _smtpPort;
         public static int SmtpPort
         {
-            get { return SafeGet("SmtpPort", 465, ref _smtpPort); }
-            set { SafeSet("SmtpPort", value, ref _smtpPort); }
+            get { return GetInt("SmtpPort", 465); }
+            set { SetInt("SmtpPort", value); }
         }
 
-        private static bool? _smtpUseSSL;
         public static bool SmtpUseSsl
         {
-            get { return SafeGet("SmtpUseSsl", true, ref _smtpUseSSL); }
-            set { SafeSet("SmtpUseSsl", value, ref _smtpUseSSL); }
+            get { return GetBool("SmtpUseSsl", true); }
+            set { SetBool("SmtpUseSsl", value); }
         }
-        
-        private static bool? _autoStash;
+
         public static bool AutoStash
         {
-            get { return SafeGet("autostash", false, ref _autoStash); }
-            set { SafeSet("autostash", value, ref _autoStash); }
+            get { return GetBool("autostash", false); }
+            set { SetBool("autostash", value); }
         }
 
         public static LocalChangesAction CheckoutBranchAction
@@ -412,31 +405,31 @@ namespace GitCommands
 
         public static bool UseDefaultCheckoutBranchAction
         {
-            get { return GetBool("UseDefaultCheckoutBranchAction", false).Value; }
+            get { return GetBool("UseDefaultCheckoutBranchAction", false); }
             set { SetBool("UseDefaultCheckoutBranchAction", value); }
         }
 
         public static bool DontShowHelpImages
         {
-            get { return GetBool("DontShowHelpImages", false).Value; }
+            get { return GetBool("DontShowHelpImages", false); }
             set { SetBool("DontShowHelpImages", value); }
         }
 
         public static bool DontConfirmAmend
         {
-            get { return GetBool("DontConfirmAmend", false).Value; }
+            get { return GetBool("DontConfirmAmend", false); }
             set { SetBool("DontConfirmAmend", value); }
         }
 
         public static bool? AutoPopStashAfterPull
         {
-            get { return GetBool("AutoPopStashAfterPull", null); }
+            get { return GetBool("AutoPopStashAfterPull"); }
             set { SetBool("AutoPopStashAfterPull", value); }
         }
 
         public static bool? AutoPopStashAfterCheckoutBranch
         {
-            get { return GetBool("AutoPopStashAfterCheckoutBranch", null); }
+            get { return GetBool("AutoPopStashAfterCheckoutBranch"); }
             set { SetBool("AutoPopStashAfterCheckoutBranch", value); }
         }
 
@@ -448,160 +441,140 @@ namespace GitCommands
 
         public static bool DontConfirmPushNewBranch
         {
-            get { return GetBool("DontConfirmPushNewBranch", false).Value; }
+            get { return GetBool("DontConfirmPushNewBranch", false); }
             set { SetBool("DontConfirmPushNewBranch", value); }
         }
 
         public static bool DontConfirmAddTrackingRef
         {
-            get { return GetBool("DontConfirmAddTrackingRef", false).Value; }
+            get { return GetBool("DontConfirmAddTrackingRef", false); }
             set { SetBool("DontConfirmAddTrackingRef", value); }
         }
-        
-        private static bool? _includeUntrackedFilesInAutoStash;
+
         public static bool IncludeUntrackedFilesInAutoStash
         {
-            get { return SafeGet("includeUntrackedFilesInAutoStash", true, ref _includeUntrackedFilesInAutoStash); }
-            set { SafeSet("includeUntrackedFilesInAutoStash", value, ref _includeUntrackedFilesInAutoStash); }
+            get { return GetBool("includeUntrackedFilesInAutoStash", true); }
+            set { SetBool("includeUntrackedFilesInAutoStash", value); }
         }
 
-        private static bool? _includeUntrackedFilesInManualStash;
         public static bool IncludeUntrackedFilesInManualStash
         {
-            get { return SafeGet("includeUntrackedFilesInManualStash", true, ref _includeUntrackedFilesInManualStash); }
-            set { SafeSet("includeUntrackedFilesInManualStash", value, ref _includeUntrackedFilesInManualStash); }
+            get { return GetBool("includeUntrackedFilesInManualStash", true); }
+            set { SetBool("includeUntrackedFilesInManualStash", value); }
         }
 
-        private static bool? _orderRevisionByDate;
         public static bool OrderRevisionByDate
         {
-            get { return SafeGet("orderrevisionbydate", true, ref _orderRevisionByDate); }
-            set { SafeSet("orderrevisionbydate", value, ref _orderRevisionByDate); }
+            get { return GetBool("orderrevisionbydate", true); }
+            set { SetBool("orderrevisionbydate", value); }
         }
 
-        private static string _dictionary;
         public static string Dictionary
         {
-            get { return SafeGet("dictionary", "en-US", ref _dictionary); }
-            set { SafeSet("dictionary", value, ref _dictionary); }
+            get { return GetString("dictionary", "en-US"); }
+            set { SetString("dictionary", value); }
         }
 
-        private static bool? _showGitCommandLine;
         public static bool ShowGitCommandLine
         {
-            get { return SafeGet("showgitcommandline", false, ref _showGitCommandLine); }
-            set { SafeSet("showgitcommandline", value, ref _showGitCommandLine); }
+            get { return GetBool("showgitcommandline", false); }
+            set { SetBool("showgitcommandline", value); }
         }
 
-        private static bool? _showStashCount;
         public static bool ShowStashCount
         {
-            get { return SafeGet("showstashcount", false, ref _showStashCount); }
-            set { SafeSet("showstashcount", value, ref _showStashCount); }
+            get { return GetBool("showstashcount", false); }
+            set { SetBool("showstashcount", value); }
         }
 
-        private static bool? _relativeDate;
         public static bool RelativeDate
         {
-            get { return SafeGet("relativedate", true, ref _relativeDate); }
-            set { SafeSet("relativedate", value, ref _relativeDate); }
+            get { return GetBool("relativedate", true); }
+            set { SetBool("relativedate", value); }
         }
 
-        private static bool? _useFastChecks;
         public static bool UseFastChecks
         {
-            get { return SafeGet("usefastchecks", false, ref _useFastChecks); }
-            set { SafeSet("usefastchecks", value, ref _useFastChecks); }
+            get { return GetBool("usefastchecks", false); }
+            set { SetBool("usefastchecks", value); }
         }
 
-        private static bool? _showGitNotes;
         public static bool ShowGitNotes
         {
-            get { return SafeGet("showgitnotes", false, ref _showGitNotes); }
-            set { SafeSet("showgitnotes", value, ref _showGitNotes); }
+            get { return GetBool("showgitnotes", false); }
+            set { SetBool("showgitnotes", value); }
         }
 
-        private static int? _revisionGraphLayout;
         public static int RevisionGraphLayout
         {
-            get { return SafeGet("revisiongraphlayout", 2, ref _revisionGraphLayout); }
-            set { SafeSet("revisiongraphlayout", value, ref _revisionGraphLayout); }
+            get { return GetInt("revisiongraphlayout", 2); }
+            set { SetInt("revisiongraphlayout", value); }
         }
 
-        private static bool? _showAuthorDate;
         public static bool ShowAuthorDate
         {
-            get { return SafeGet("showauthordate", true, ref _showAuthorDate); }
-            set { SafeSet("showauthordate", value, ref _showAuthorDate); }
+            get { return GetBool("showauthordate", true); }
+            set { SetBool("showauthordate", value); }
         }
 
-        private static bool? _closeProcessDialog;
         public static bool CloseProcessDialog
         {
-            get { return SafeGet("closeprocessdialog", false, ref _closeProcessDialog); }
-            set { SafeSet("closeprocessdialog", value, ref _closeProcessDialog); }
+            get { return GetBool("closeprocessdialog", false); }
+            set { SetBool("closeprocessdialog", value); }
         }
 
-        private static bool? _showCurrentBranchOnly;
         public static bool ShowCurrentBranchOnly
         {
-            get { return SafeGet("showcurrentbranchonly", false, ref _showCurrentBranchOnly); }
-            set { SafeSet("showcurrentbranchonly", value, ref _showCurrentBranchOnly); }
+            get { return GetBool("showcurrentbranchonly", false); }
+            set { SetBool("showcurrentbranchonly", value); }
         }
 
-        private static bool? _branchFilterEnabled;
         public static bool BranchFilterEnabled
         {
-            get { return SafeGet("branchfilterenabled", false, ref _branchFilterEnabled); }
-            set { SafeSet("branchfilterenabled", value, ref _branchFilterEnabled); }
+            get { return GetBool("branchfilterenabled", false); }
+            set { SetBool("branchfilterenabled", value); }
         }
 
-        private static int? _commitDialogSplitter;
         public static int CommitDialogSplitter
         {
-            get { return SafeGet("commitdialogsplitter", -1, ref _commitDialogSplitter); }
-            set { SafeSet("commitdialogsplitter", value, ref _commitDialogSplitter); }
+            get { return GetInt("commitdialogsplitter", -1); }
+            set { SetInt("commitdialogsplitter", value); }
         }
 
-        private static int? _commitDialogRightSplitter;
         public static int CommitDialogRightSplitter
         {
-            get { return SafeGet("commitdialogrightsplitter", -1, ref _commitDialogRightSplitter); }
-            set { SafeSet("commitdialogrightsplitter", value, ref _commitDialogRightSplitter); }
+            get { return GetInt("commitdialogrightsplitter", -1); }
+            set { SetInt("commitdialogrightsplitter", value); }
         }
 
-        private static int? _revisionGridQuickSearchTimeout;
         public static int RevisionGridQuickSearchTimeout
         {
-            get { return SafeGet("revisiongridquicksearchtimeout", 750, ref _revisionGridQuickSearchTimeout); }
-            set { SafeSet("revisiongridquicksearchtimeout", value, ref _revisionGridQuickSearchTimeout); }
+            get { return GetInt("revisiongridquicksearchtimeout", 750); }
+            set { SetInt("revisiongridquicksearchtimeout", value); }
         }
 
-        private static string _gravatarFallbackService;
         public static string GravatarFallbackService
         {
-            get { return SafeGet("gravatarfallbackservice", "Identicon", ref _gravatarFallbackService); }
-            set { SafeSet("gravatarfallbackservice", value, ref _gravatarFallbackService); }
+            get { return GetString("gravatarfallbackservice", "Identicon"); }
+            set { SetString("gravatarfallbackservice", value); }
         }
 
-        private static string _gitCommand;
         /// <summary>Gets or sets the path to the git application executable.</summary>
         public static string GitCommand
         {
-            get { return SafeGet("gitcommand", "git", ref _gitCommand); }
-            set { SafeSet("gitcommand", value, ref _gitCommand); }
+            get { return GetString("gitcommand", "git"); }
+            set { SetString("gitcommand", value); }
         }
 
-        private static string _gitBinDir;
         public static string GitBinDir
         {
-            get { return SafeGet("gitbindir", "", ref _gitBinDir); }
+            get { return GetString("gitbindir", ""); }
             set
             {
                 var temp = value;
                 if (temp.Length > 0 && temp[temp.Length - 1] != PathSeparator)
                     temp += PathSeparator;
-                SafeSet("gitbindir", temp, ref _gitBinDir);
+                SetString("gitbindir", temp);
 
                 //if (string.IsNullOrEmpty(_gitBinDir))
                 //    return;
@@ -613,11 +586,10 @@ namespace GitCommands
             }
         }
 
-        private static int? _maxRevisionGraphCommits;
         public static int MaxRevisionGraphCommits
         {
-            get { return SafeGet("maxrevisiongraphcommits", 100000, ref _maxRevisionGraphCommits); }
-            set { SafeSet("maxrevisiongraphcommits", value, ref _maxRevisionGraphCommits); }
+            get { return GetInt("maxrevisiongraphcommits", 100000); }
+            set { SetInt("maxrevisiongraphcommits", value); }
         }
 
         public static string RecentWorkingDir
@@ -628,176 +600,154 @@ namespace GitCommands
 
         public static bool StartWithRecentWorkingDir
         {
-            get { return GetBool("StartWithRecentWorkingDir", false).Value; }
+            get { return GetBool("StartWithRecentWorkingDir", false); }
             set { SetBool("StartWithRecentWorkingDir", value); }
         }
 
         public static CommandLogger GitLog { get; private set; }
 
-        private static string _plink;
         public static string Plink
         {
-            get { return SafeGet("plink", "", ref _plink); }
-            set { SafeSet("plink", value, ref _plink); }
+            get { return GetString("plink", ""); }
+            set { SetString("plink", value); }
         }
-        private static string _puttygen;
         public static string Puttygen
         {
-            get { return SafeGet("puttygen", "", ref _puttygen); }
-            set { SafeSet("puttygen", value, ref _puttygen); }
+            get { return GetString("puttygen", ""); }
+            set { SetString("puttygen", value); }
         }
 
-        private static string _pageant;
         /// <summary>Gets the path to Pageant (SSH auth agent).</summary>
         public static string Pageant
         {
-            get { return SafeGet("pageant", "", ref _pageant); }
-            set { SafeSet("pageant", value, ref _pageant); }
+            get { return GetString("pageant", ""); }
+            set { SetString("pageant", value); }
         }
 
-        private static bool? _autoStartPageant;
         public static bool AutoStartPageant
         {
-            get { return SafeGet("autostartpageant", true, ref _autoStartPageant); }
-            set { SafeSet("autostartpageant", value, ref _autoStartPageant); }
+            get { return GetBool("autostartpageant", true); }
+            set { SetBool("autostartpageant", value); }
         }
 
-        private static bool? _markIllFormedLinesInCommitMsg;
         public static bool MarkIllFormedLinesInCommitMsg
         {
-            get { return SafeGet("markillformedlinesincommitmsg", false, ref _markIllFormedLinesInCommitMsg); }
-            set { SafeSet("markillformedlinesincommitmsg", value, ref _markIllFormedLinesInCommitMsg); }
+            get { return GetBool("markillformedlinesincommitmsg", false); }
+            set { SetBool("markillformedlinesincommitmsg", value); }
         }
 
         #region Colors
 
-        private static Color? _otherTagColor;
         public static Color OtherTagColor
         {
-            get { return SafeGet("othertagcolor", Color.Gray, ref _otherTagColor); }
-            set { SafeSet("othertagcolor", value, ref _otherTagColor); }
+            get { return GetColor("othertagcolor", Color.Gray); }
+            set { SetColor("othertagcolor", value); }
         }
-        private static Color? _tagColor;
+
         public static Color TagColor
         {
-            get { return SafeGet("tagcolor", Color.DarkBlue, ref _tagColor); }
-            set { SafeSet("tagcolor", value, ref _tagColor); }
+            get { return GetColor("tagcolor", Color.DarkBlue); }
+            set { SetColor("tagcolor", value); }
         }
 
-        private static Color? _graphColor;
         public static Color GraphColor
         {
-            get { return SafeGet("graphcolor", Color.DarkRed, ref _graphColor); }
-            set { SafeSet("graphcolor", value, ref _graphColor); }
+            get { return GetColor("graphcolor", Color.DarkRed); }
+            set { SetColor("graphcolor", value); }
         }
 
-        private static Color? _branchColor;
         public static Color BranchColor
         {
-            get { return SafeGet("branchcolor", Color.DarkRed, ref _branchColor); }
-            set { SafeSet("branchcolor", value, ref _branchColor); }
+            get { return GetColor("branchcolor", Color.DarkRed); }
+            set { SetColor("branchcolor", value); }
         }
 
-        private static Color? _remoteBranchColor;
         public static Color RemoteBranchColor
         {
-            get { return SafeGet("remotebranchcolor", Color.Green, ref _remoteBranchColor); }
-            set { SafeSet("remotebranchcolor", value, ref _remoteBranchColor); }
+            get { return GetColor("remotebranchcolor", Color.Green); }
+            set { SetColor("remotebranchcolor", value); }
         }
 
-        private static Color? _diffSectionColor;
         public static Color DiffSectionColor
         {
-            get { return SafeGet("diffsectioncolor", Color.FromArgb(230, 230, 230), ref _diffSectionColor); }
-            set { SafeSet("diffsectioncolor", value, ref _diffSectionColor); }
+            get { return GetColor("diffsectioncolor", Color.FromArgb(230, 230, 230)); }
+            set { SetColor("diffsectioncolor", value); }
         }
 
-        private static Color? _diffRemovedColor;
         public static Color DiffRemovedColor
         {
-            get { return SafeGet("diffremovedcolor", Color.FromArgb(255, 200, 200), ref _diffRemovedColor); }
-            set { SafeSet("diffremovedcolor", value, ref _diffRemovedColor); }
+            get { return GetColor("diffremovedcolor", Color.FromArgb(255, 200, 200)); }
+            set { SetColor("diffremovedcolor", value); }
         }
 
-        private static Color? _diffRemovedExtraColor;
         public static Color DiffRemovedExtraColor
         {
-            get { return SafeGet("diffremovedextracolor", Color.FromArgb(255, 150, 150), ref _diffRemovedExtraColor); }
-            set { SafeSet("diffremovedextracolor", value, ref _diffRemovedExtraColor); }
+            get { return GetColor("diffremovedextracolor", Color.FromArgb(255, 150, 150)); }
+            set { SetColor("diffremovedextracolor", value); }
         }
 
-        private static Color? _diffAddedColor;
         public static Color DiffAddedColor
         {
-            get { return SafeGet("diffaddedcolor", Color.FromArgb(200, 255, 200), ref _diffAddedColor); }
-            set { SafeSet("diffaddedcolor", value, ref _diffAddedColor); }
+            get { return GetColor("diffaddedcolor", Color.FromArgb(200, 255, 200)); }
+            set { SetColor("diffaddedcolor", value); }
         }
 
-        private static Color? _diffAddedExtraColor;
         public static Color DiffAddedExtraColor
         {
-            get { return SafeGet("diffaddedextracolor", Color.FromArgb(135, 255, 135), ref _diffAddedExtraColor); }
-            set { SafeSet("diffaddedextracolor", value, ref _diffAddedExtraColor); }
+            get { return GetColor("diffaddedextracolor", Color.FromArgb(135, 255, 135)); }
+            set { SetColor("diffaddedextracolor", value); }
         }
 
-        private static Font _diffFont;
         public static Font DiffFont
         {
-            get { return SafeGet("difffont", new Font("Courier New", 10), ref _diffFont); }
-            set { SafeSet("difffont", value, ref _diffFont); }
+            get { return GetFont("difffont", new Font("Courier New", 10)); }
+            set { SetFont("difffont", value); }
         }
 
-        private static Font _commitFont;
         public static Font CommitFont
         {
-            get { return SafeGet("commitfont", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size), ref _commitFont); }
-            set { SafeSet("commitfont", value, ref _commitFont); }
+            get { return GetFont("commitfont", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size)); }
+            set { SetFont("commitfont", value); }
         }
 
-        private static Font _font;
         public static Font Font
         {
-            get { return SafeGet("font", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size), ref _font); }
-            set { SafeSet("font", value, ref _font); }
+            get { return GetFont("font", new Font(SystemFonts.MessageBoxFont.Name, SystemFonts.MessageBoxFont.Size)); }
+            set { SetFont("font", value); }
         }
 
         #endregion
 
-        private static bool? _multicolorBranches;
         public static bool MulticolorBranches
         {
-            get { return SafeGet("multicolorbranches", true, ref _multicolorBranches); }
-            set { SafeSet("multicolorbranches", value, ref _multicolorBranches); }
+            get { return GetBool("multicolorbranches", true); }
+            set { SetBool("multicolorbranches", value); }
         }
 
-        private static bool? _stripedBranchChange;
         public static bool StripedBranchChange
         {
-            get { return SafeGet("stripedbranchchange", true, ref _stripedBranchChange); }
-            set { SafeSet("stripedbranchchange", value, ref _stripedBranchChange); }
+            get { return GetBool("stripedbranchchange", true); }
+            set { SetBool("stripedbranchchange", value); }
         }
 
-        private static bool? _branchBorders;
         public static bool BranchBorders
         {
-            get { return SafeGet("branchborders", true, ref _branchBorders); }
-            set { SafeSet("branchborders", value, ref _branchBorders); }
+            get { return GetBool("branchborders", true); }
+            set { SetBool("branchborders", value); }
         }
 
-        private static bool? _showCurrentBranchInVisualStudio;
         public static bool ShowCurrentBranchInVisualStudio
         {
             //This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
             //other changes in the Visual Studio plugin itself.
-            get { return SafeGet("showcurrentbranchinvisualstudio", true, ref _showCurrentBranchInVisualStudio); }
-            set { SafeSet("showcurrentbranchinvisualstudio", value, ref _showCurrentBranchInVisualStudio); }
+            get { return GetBool("showcurrentbranchinvisualstudio", true); }
+            set { SetBool("showcurrentbranchinvisualstudio", value); }
         }
 
-        private static string _lastFormatPatchDir;
         public static string LastFormatPatchDir
         {
-            get { return SafeGet("lastformatpatchdir", "", ref _lastFormatPatchDir); }
-            set { SafeSet("lastformatpatchdir", value, ref _lastFormatPatchDir); }
+            get { return GetString("lastformatpatchdir", ""); }
+            set { SetString("lastformatpatchdir", value); }
         }
 
         public static string GetDictionaryDir()
@@ -807,13 +757,12 @@ namespace GitCommands
 
         public static string GetInstallDir()
         {
-            return GetValue("InstallDir", "");
+            return GetString("InstallDir", string.Empty);
         }
 
         public static void SetInstallDir(string dir)
         {
-            if (VersionIndependentRegKey != null)
-                SetValue("InstallDir", dir);
+            SetString("InstallDir", dir);
         }
 
         public static bool RunningOnWindows()
@@ -861,8 +810,14 @@ namespace GitCommands
         {
             try
             {
-                SetValue("gitssh", GitCommandHelpers.GetSsh());
+                UseTimer = false;
+
+                SetString("gitssh", GitCommandHelpers.GetSsh());
                 Repositories.SaveSettings();
+
+                UseTimer = true;
+
+                SaveXMLDictionarySettings(EncodedNameMap, SettingsFilePath);
             }
             catch
             { }
@@ -879,164 +834,136 @@ namespace GitCommands
 
             try
             {
-                TransferVerDependentReg();
-            }
-            catch
-            { }
-
-            try
-            {
-                GitCommandHelpers.SetSsh(GetValue<string>("gitssh", null));
+                GitCommandHelpers.SetSsh(GetString("gitssh", null));
             }
             catch
             { }
         }
 
-        private static bool? _dashboardShowCurrentBranch;
         public static bool DashboardShowCurrentBranch
         {
-            get { return SafeGet("dashboardshowcurrentbranch", true, ref _dashboardShowCurrentBranch); }
-            set { SafeSet("dashboardshowcurrentbranch", value, ref _dashboardShowCurrentBranch); }
+            get { return GetBool("dashboardshowcurrentbranch", true); }
+            set { SetBool("dashboardshowcurrentbranch", value); }
         }
 
-        private static string _ownScripts;
         public static string ownScripts
         {
-            get { return SafeGet("ownScripts", "", ref _ownScripts); }
-            set { SafeSet("ownScripts", value, ref _ownScripts); }
+            get { return GetString("ownScripts", ""); }
+            set { SetString("ownScripts", value); }
         }
 
-        private static bool? _pushAllTags;
         public static bool PushAllTags
         {
-            get { return SafeGet("pushalltags", false, ref _pushAllTags); }
-            set { SafeSet("pushalltags", value, ref _pushAllTags); }
+            get { return GetBool("pushalltags", false); }
+            set { SetBool("pushalltags", value); }
         }
 
-        private static int? _RecursiveSubmodules;
         public static int RecursiveSubmodules
         {
-            get { return SafeGet("RecursiveSubmodules", 1, ref _RecursiveSubmodules); }
-            set { SafeSet("RecursiveSubmodules", value, ref _RecursiveSubmodules); }
+            get { return GetInt("RecursiveSubmodules", 1); }
+            set { SetInt("RecursiveSubmodules", value); }
         }
 
-        private static string _ShorteningRecentRepoPathStrategy;
         public static string ShorteningRecentRepoPathStrategy
         {
-            get { return SafeGet("ShorteningRecentRepoPathStrategy", "", ref _ShorteningRecentRepoPathStrategy); }
-            set { SafeSet("ShorteningRecentRepoPathStrategy", value, ref _ShorteningRecentRepoPathStrategy); }
+            get { return GetString("ShorteningRecentRepoPathStrategy", ""); }
+            set { SetString("ShorteningRecentRepoPathStrategy", value); }
         }
 
-        private static int? _MaxMostRecentRepositories;
         public static int MaxMostRecentRepositories
         {
-            get { return SafeGet("MaxMostRecentRepositories", 0, ref _MaxMostRecentRepositories); }
-            set { SafeSet("MaxMostRecentRepositories", value, ref _MaxMostRecentRepositories); }
+            get { return GetInt("MaxMostRecentRepositories", 0); }
+            set { SetInt("MaxMostRecentRepositories", value); }
         }
 
-        private static int? _RecentReposComboMinWidth;
         public static int RecentReposComboMinWidth
         {
-            get { return SafeGet("RecentReposComboMinWidth", 0, ref _RecentReposComboMinWidth); }
-            set { SafeSet("RecentReposComboMinWidth", value, ref _RecentReposComboMinWidth); }
+            get { return GetInt("RecentReposComboMinWidth", 0); }
+            set { SetInt("RecentReposComboMinWidth", value); }
         }
 
-        private static bool? _SortMostRecentRepos;
         public static bool SortMostRecentRepos
         {
-            get { return SafeGet("SortMostRecentRepos", false, ref _SortMostRecentRepos); }
-            set { SafeSet("SortMostRecentRepos", value, ref _SortMostRecentRepos); }
+            get { return GetBool("SortMostRecentRepos", false); }
+            set { SetBool("SortMostRecentRepos", value); }
         }
 
-        private static bool? _SortLessRecentRepos;
         public static bool SortLessRecentRepos
         {
-            get { return SafeGet("SortLessRecentRepos", false, ref _SortLessRecentRepos); }
-            set { SafeSet("SortLessRecentRepos", value, ref _SortLessRecentRepos); }
+            get { return GetBool("SortLessRecentRepos", false); }
+            set { SetBool("SortLessRecentRepos", value); }
         }
 
-        private static bool? _NoFastForwardMerge;
         public static bool NoFastForwardMerge
         {
-            get { return SafeGet("NoFastForwardMerge", false, ref _NoFastForwardMerge); }
-            set { SafeSet("NoFastForwardMerge", value, ref _NoFastForwardMerge); }
+            get { return GetBool("NoFastForwardMerge", false); }
+            set { SetBool("NoFastForwardMerge", value); }
         }
 
-        private static int? _CommitValidationMaxCntCharsFirstLine;
         public static int CommitValidationMaxCntCharsFirstLine
         {
-            get { return SafeGet("CommitValidationMaxCntCharsFirstLine", 0, ref _CommitValidationMaxCntCharsFirstLine); }
-            set { SafeSet("CommitValidationMaxCntCharsFirstLine", value, ref _CommitValidationMaxCntCharsFirstLine); }
+            get { return GetInt("CommitValidationMaxCntCharsFirstLine", 0); }
+            set { SetInt("CommitValidationMaxCntCharsFirstLine", value); }
         }
 
-        private static int? _CommitValidationMaxCntCharsPerLine;
         public static int CommitValidationMaxCntCharsPerLine
         {
-            get { return SafeGet("CommitValidationMaxCntCharsPerLine", 0, ref _CommitValidationMaxCntCharsPerLine); }
-            set { SafeSet("CommitValidationMaxCntCharsPerLine", value, ref _CommitValidationMaxCntCharsPerLine); }
+            get { return GetInt("CommitValidationMaxCntCharsPerLine", 0); }
+            set { SetInt("CommitValidationMaxCntCharsPerLine", value); }
         }
 
-        private static bool? _CommitValidationSecondLineMustBeEmpty;
         public static bool CommitValidationSecondLineMustBeEmpty
         {
-            get { return SafeGet("CommitValidationSecondLineMustBeEmpty", false, ref _CommitValidationSecondLineMustBeEmpty); }
-            set { SafeSet("CommitValidationSecondLineMustBeEmpty", value, ref _CommitValidationSecondLineMustBeEmpty); }
+            get { return GetBool("CommitValidationSecondLineMustBeEmpty", false); }
+            set { SetBool("CommitValidationSecondLineMustBeEmpty", value); }
         }
 
-        private static bool? _CommitValidationIndentAfterFirstLine;
         public static bool CommitValidationIndentAfterFirstLine
         {
-            get { return SafeGet("CommitValidationIndentAfterFirstLine", true, ref _CommitValidationIndentAfterFirstLine); }
-            set { SafeSet("CommitValidationIndentAfterFirstLine", value, ref _CommitValidationIndentAfterFirstLine); }
+            get { return GetBool("CommitValidationIndentAfterFirstLine", true); }
+            set { SetBool("CommitValidationIndentAfterFirstLine", value); }
         }
 
-        private static bool? _CommitValidationAutoWrap;
         public static bool CommitValidationAutoWrap
         {
-            get { return SafeGet("CommitValidationAutoWrap", true, ref _CommitValidationAutoWrap); }
-            set { SafeSet("CommitValidationAutoWrap", value, ref _CommitValidationAutoWrap); }
+            get { return GetBool("CommitValidationAutoWrap", true); }
+            set { SetBool("CommitValidationAutoWrap", value); }
         }
 
-        private static string _CommitValidationRegEx;
         public static string CommitValidationRegEx
         {
-            get { return SafeGet("CommitValidationRegEx", String.Empty, ref _CommitValidationRegEx); }
-            set { SafeSet("CommitValidationRegEx", value, ref _CommitValidationRegEx); }
+            get { return GetString("CommitValidationRegEx", String.Empty); }
+            set { SetString("CommitValidationRegEx", value); }
         }
 
-        private static string _CommitTemplates;
         public static string CommitTemplates
         {
-            get { return SafeGet("CommitTemplates", String.Empty, ref _CommitTemplates); }
-            set { SafeSet("CommitTemplates", value, ref _CommitTemplates); }
+            get { return GetString("CommitTemplates", String.Empty); }
+            set { SetString("CommitTemplates", value); }
         }
 
-        private static bool? _CreateLocalBranchForRemote;
         public static bool CreateLocalBranchForRemote
         {
-            get { return SafeGet("CreateLocalBranchForRemote", false, ref _CreateLocalBranchForRemote); }
-            set { SafeSet("CreateLocalBranchForRemote", value, ref _CreateLocalBranchForRemote); }
+            get { return GetBool("CreateLocalBranchForRemote", false); }
+            set { SetBool("CreateLocalBranchForRemote", value); }
         }
 
-        private static string _CascadeShellMenuItems;
         public static string CascadeShellMenuItems
         {
-            get { return SafeGet("CascadeShellMenuItems", "110111000111111111", ref _CascadeShellMenuItems); }
-            set { SafeSet("CascadeShellMenuItems", value, ref _CascadeShellMenuItems); }
+            get { return GetString("CascadeShellMenuItems", "110111000111111111"); }
+            set { SetString("CascadeShellMenuItems", value); }
         }
 
-        private static bool? _UseFormCommitMessage;
         public static bool UseFormCommitMessage
         {
-            get { return SafeGet("UseFormCommitMessage", true, ref _UseFormCommitMessage); }
-            set { SafeSet("UseFormCommitMessage", value, ref _UseFormCommitMessage); }
+            get { return GetBool("UseFormCommitMessage", true); }
+            set { SetBool("UseFormCommitMessage", value); }
         }
 
-        private static DateTime? _lastUpdateCheck;
         public static DateTime LastUpdateCheck
         {
-            get { return SafeGet("LastUpdateCheck", default(DateTime), ref _lastUpdateCheck); }
-            set { SafeSet("LastUpdateCheck", value, ref _lastUpdateCheck); }
+            get { return GetDate("LastUpdateCheck", default(DateTime)); }
+            set { SetDate("LastUpdateCheck", value); }
         }
 
         public static string GetGitExtensionsFullPath()
@@ -1051,83 +978,6 @@ namespace GitCommands
             return fileName;
         }
 
-        private static T SafeGet<T>(string key, T defaultValue, ref T field, Func<string, T> converter)
-        {
-            if (field == null && VersionIndependentRegKey != null)
-            {
-                var value = GetValue<object>(key, null);
-                field = value == null ? defaultValue : converter(value.ToString());
-            }
-            return field;
-        }
-
-        private static string SafeGet(string key, string defaultValue, ref string field)
-        {
-            return SafeGet(key, defaultValue, ref field, x => x);
-        }
-
-        private static Font SafeGet(string key, Font defaultValue, ref Font field)
-        {
-            return SafeGet(key, defaultValue, ref field, x => x.Parse(defaultValue));
-        }
-
-        private static DateTime SafeGet(string key, DateTime? defaultValue, ref DateTime? field)
-        {
-            return SafeGet(key, defaultValue, ref field,
-                x =>
-                {
-                    DateTime result;
-                    if (DateTime.TryParseExact(x, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
-                        return result;
-                    return null;
-                }).GetValueOrDefault();
-        }
-
-        private static bool SafeGet(string key, bool defaultValue, ref bool? field)
-        {
-            return SafeGet(key, defaultValue, ref field, x => x == "True").GetValueOrDefault();
-        }
-
-        private static int SafeGet(string key, int defaultValue, ref int? field)
-        {
-            return SafeGet(key, defaultValue, ref field, x =>
-            {
-                int result;
-                return int.TryParse(x, out result) ? result : defaultValue;
-            }).GetValueOrDefault();
-        }
-
-        private static Color SafeGet(string key, Color defaultValue, ref Color? field)
-        {
-            return SafeGet(key, defaultValue, ref field, x => ColorTranslator.FromHtml(x)).GetValueOrDefault();
-        }
-
-        private static void SafeSet(string key, DateTime? value, ref DateTime? field)
-        {
-            field = value;
-            SetValue(key, field != null ? field.Value.ToString("yyyy/M/dd", CultureInfo.InvariantCulture) : null);
-        }
-
-        private static void SafeSet<T>(string key, T value, ref T field)
-        {
-            if (Object.Equals(field, value))
-                return;
-            field = value;
-            SetValue(key, field);
-        }
-
-        private static void SafeSet(string key, Color value, ref Color? field)
-        {
-            field = value;
-            SetValue(key, ColorTranslator.ToHtml(field.Value));
-        }
-
-        private static void SafeSet(string key, Font value, ref Font field)
-        {
-            field = value;
-            SetValue(key, field.AsString());
-        }
-
         private static RegistryKey _VersionIndependentRegKey;
 
         private static RegistryKey VersionIndependentRegKey
@@ -1139,94 +989,202 @@ namespace GitCommands
                 return _VersionIndependentRegKey;
             }
         }
-
-        public static T GetValue<T>(string name, T defaultValue)
+        private static void ReadXMLDicSettings<T>(XmlSerializableDictionary<string, T> Dic, string FilePath)
         {
-            T value = (T)VersionIndependentRegKey.GetValue(name, null);
 
-            if (value != null)
-                return value;
-          
-            return defaultValue;
-        }
-
-        //temporary code to transfer version dependent registry caused that there was no way to set value to null
-        //if there was the same named key in version dependent registry
-        private static void TransferVerDependentReg()
-        {
-            bool? transfered = GetBool("TransferedVerDependentReg", false);
-            if (!transfered.Value)
+            if (File.Exists(FilePath))
             {
-                string r = Application.UserAppDataRegistry.Name.Replace(Application.ProductVersion, "1.0.0.0");
-                r = r.Substring(Registry.CurrentUser.Name.Length + 1, r.Length - Registry.CurrentUser.Name.Length - 1);
-                RegistryKey versionDependentRegKey = Registry.CurrentUser.OpenSubKey(r, true);
-                SetBool("TransferedVerDependentReg", true);
-                if (versionDependentRegKey == null)
-                    return;
 
                 try
                 {
-                    foreach (string key in versionDependentRegKey.GetValueNames())
+                    lock (Dic)
                     {
-                        object val = versionDependentRegKey.GetValue(key);
-                        object independentVal = VersionIndependentRegKey.GetValue(key, null);
-                        if (independentVal == null)
-                            SetValue<object>(key, val);
+
+                        XmlReaderSettings rSettings = new XmlReaderSettings
+                        {
+                            IgnoreWhitespace = true
+                        };
+                        using (System.Xml.XmlReader xr = XmlReader.Create(FilePath, rSettings))
+                        {
+
+                            Dic.ReadXml(xr);
+                            LastFileRead = DateTime.UtcNow;
+                        }
                     }
                 }
-                finally
+                catch (IOException)
                 {
-                    versionDependentRegKey.Close();
+                    throw;
+                }
+
+            }
+
+        }
+        public static bool IsPortable()
+        {
+            return Properties.Settings.Default.IsPortable;
+
+        }
+
+        public static void ImportFromRegistry()
+        {
+            lock (EncodedNameMap)
+            {
+                foreach (String name in VersionIndependentRegKey.GetValueNames())
+                {
+                    object value = VersionIndependentRegKey.GetValue(name, null);
+                    if (value != null)
+                        EncodedNameMap[name] = value.ToString();
                 }
             }
-            
         }
 
-        public static void SetValue<T>(string name, T value)
+        private static DateTime GetLastFileModificationUTC(String FilePath)
         {
-            if (value == null)
-                VersionIndependentRegKey.DeleteValue(name);
-            else
-                VersionIndependentRegKey.SetValue(name, value);
+            try
+            {
+                if (File.Exists(FilePath))
+                    return File.GetLastWriteTimeUtc(FilePath);
+                else
+                    return DateTime.MaxValue;
+            }
+            catch (Exception)
+            {
+                return DateTime.MaxValue;
+            }
+
         }
 
-        public static T GetByName<T>(string name, T defaultValue, Func<object, T> decode)
+        private static void SaveXMLDictionarySettings<T>(XmlSerializableDictionary<string, T> Dic, String FilePath)
+        {
+            try
+            {
+                using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(FilePath, Encoding.UTF8))
+                {
+                    lock (Dic)
+                    {
+                        xtw.Formatting = Formatting.Indented;
+                        xtw.WriteStartDocument();
+                        xtw.WriteStartElement("dictionary");
+
+                        Dic.WriteXml(xtw);
+                        xtw.WriteEndElement();
+                    }
+                }
+                LastFileRead = GetLastFileModificationUTC(FilePath);
+            }
+            catch (IOException)
+            {
+                throw;
+            }
+
+        }
+        //Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME milliseconds after the last setvalue is called
+        private static void OnSaveTimer(object source, System.Timers.ElapsedEventArgs e)
+        {
+            System.Timers.Timer t = (System.Timers.Timer)source;
+            t.Stop();
+            SaveXMLDictionarySettings(EncodedNameMap, SettingsFilePath);
+        }
+
+        static void StartSaveTimer()
+        {
+            //Resets timer so that the last call will let the timer event run and will cause the settings to be saved.
+            SaveTimer.Stop();
+            SaveTimer.AutoReset = true;
+            SaveTimer.Interval = SAVETIME;
+            SaveTimer.AutoReset = false;
+
+            SaveTimer.Start();
+        }
+
+        private static bool NeedRefresh()
+        {
+            DateTime lastMod = GetLastFileModificationUTC(SettingsFilePath);
+            return !LastFileRead.HasValue || lastMod > LastFileRead.Value;
+        }
+
+        private static void SetValue(string name, string value)
+        {
+            lock (EncodedNameMap)
+            {
+                //will refresh EncodedNameMap if needed
+                string inMemValue = GetValue(name);
+                
+                if (string.Equals(inMemValue, value))
+                    return;
+
+                if (value == null)
+                    EncodedNameMap.Remove(name);
+                else
+                    EncodedNameMap[name] = value;
+            }
+
+            if (UseTimer)
+                StartSaveTimer();
+        }
+
+        private static string GetValue(string name)
+        {
+            lock (EncodedNameMap)
+            {
+                if (NeedRefresh())
+                {
+                    ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
+                }
+
+                string o = null;
+                EncodedNameMap.TryGetValue(name, out o);
+                return o;
+            }
+        }
+
+        public static T GetByName<T>(string name, T defaultValue, Func<string, T> decode)
         {
             object o;
+
+            if (NeedRefresh())
+                ByNameMap.Clear();
+
             if (ByNameMap.TryGetValue(name, out o))
             {
-                if( o == null || o is T)
+                if (o == null || o is T)
+                {
                     return (T)o;
+                }
                 else
+                {
                     throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                }
             }
             else
             {
-                o = GetValue<object>(name, null);
-                T result = o == null ? defaultValue : decode(o);
+                if (decode == null)
+                    throw new ArgumentNullException("decode", string.Format("The decode parameter for setting {0} is null.", name));
 
+                string s = GetValue(name);
+                T result = s == null ? defaultValue : decode(s);
                 ByNameMap[name] = result;
                 return result;
             }
         }
 
-        public static void SetByName<T>(string name, T value, Func<T, object> encode)
+        public static void SetByName<T>(string name, T value, Func<T, string> encode)
         {
-            object o;
-            if (ByNameMap.TryGetValue(name, out o))
-                if (Object.Equals(o, value))
-                    return;
+            string s;
             if (value == null)
-                o = null;
+                s = null;
             else
-                o = encode(value);
-            SetValue<object>(name, o);
+                s = encode(value);
+
+            SetValue(name, s);
             ByNameMap[name] = value;
         }
 
-        public static bool? GetBool(string name, bool? defaultValue)
+        public static bool? GetBool(string name)
         {
-            return GetByName<bool?>(name, defaultValue, x => {
+            return GetByName<bool?>(name, null, x =>
+            {
                 var val = x.ToString().ToLower();
                 if (val == "true") return true;
                 if (val == "false") return false;
@@ -1234,9 +1192,85 @@ namespace GitCommands
             });
         }
 
+        public static bool GetBool(string name, bool defaultValue)
+        {
+            return GetBool(name) ?? defaultValue;
+        }
+
         public static void SetBool(string name, bool? value)
         {
             SetByName<bool?>(name, value, (bool? b) => b.Value ? "true" : "false");
+        }
+
+        public static void SetInt(string name, int? value)
+        {
+            SetByName<int?>(name, value, (int? b) => b.HasValue ? b.ToString() : null);
+        }
+
+        public static int? GetInt(string name)
+        {
+            return GetByName<int?>(name, null, x =>
+            {
+                int result;
+                if (int.TryParse(x, out result))
+                {
+                    return result;
+                }
+
+                return null;
+            });
+        }
+
+        public static DateTime GetDate(string name, DateTime defaultValue)
+        {
+            return GetDate(name) ?? defaultValue;
+        }
+
+        public static void SetDate(string name, DateTime? value)
+        {
+            SetByName<DateTime?>(name, value, (DateTime? b) => b.HasValue ? b.Value.ToString("yyyy/M/dd", CultureInfo.InvariantCulture) : null);
+        }
+
+        public static DateTime? GetDate(string name)
+        {
+            return GetByName<DateTime?>(name, null, x =>
+            {
+                DateTime result;
+                if (DateTime.TryParseExact(x, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                    return result;
+
+                return null;
+            });
+        }
+
+        public static int GetInt(string name, int defaultValue)
+        {
+            return GetInt(name) ?? defaultValue;
+        }
+
+        public static void SetFont(string name, Font value)
+        {
+            SetByName<Font>(name, value, x => x.AsString());
+        }
+
+        public static Font GetFont(string name, Font defaultValue)
+        {
+            return GetByName<Font>(name, defaultValue, x => x.Parse(defaultValue));
+        }
+
+        public static void SetColor(string name, Color? value)
+        {
+            SetByName<Color?>(name, value, x => x.HasValue ? ColorTranslator.ToHtml(x.Value) : null);
+        }
+
+        public static Color? GetColor(string name)
+        {
+            return GetByName<Color?>(name, null, x => ColorTranslator.FromHtml(x));
+        }
+
+        public static Color GetColor(string name, Color defaultValue)
+        {
+            return GetColor(name) ?? defaultValue;
         }
 
         public static void SetEnum<T>(string name, T value)
@@ -1278,10 +1312,10 @@ namespace GitCommands
 
         public static string GetString(string name, string defaultValue)
         {
-            return GetByName<string>(name, defaultValue, x => x.ToString());
+            return GetByName<string>(name, defaultValue, x => x);
         }
 
-        public static string PrefixedName(string prefix, string name) 
+        public static string PrefixedName(string prefix, string name)
         {
             return prefix == null ? name : prefix + '_' + name;
         }

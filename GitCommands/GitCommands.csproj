@@ -102,6 +102,11 @@
     <Compile Include="Patch\PatchProcessor.cs" />
     <Compile Include="PathUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Repository\Repository.cs" />
     <Compile Include="Repository\RepositoryCategory.cs" />
     <Compile Include="Git\GitBlame.cs" />
@@ -129,11 +134,16 @@
     <Compile Include="FileInfoExtensions.cs" />
     <Compile Include="SynchronizedProcessReader.cs" />
     <Compile Include="System.cs" />
+    <Compile Include="XmlSerializableDictionary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="gitcommandkey.snk.pfx" />
     <Compile Include="Repository\RecentRepoInfo.cs" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
