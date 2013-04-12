@@ -315,7 +315,7 @@ namespace GitUI.CommandsDialogs
                     if (messageBoxResult == null)
                     {
                         DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
-                            this,
+                            owner,
                             _applyShashedItemsAgainCaption.Text,
                             "",
                             _applyShashedItemsAgain.Text,
