@@ -158,7 +158,7 @@ namespace GitUI.Help
 
         private bool LoadIsExpandedValueFromSettings(bool defaultValue)
         {
-            return Settings.GetBool("HelpIsExpanded" + GetId(), defaultValue).Value;
+            return Settings.GetBool("HelpIsExpanded" + GetId(), defaultValue);
         }
 
         private void UpdateControlSize()
