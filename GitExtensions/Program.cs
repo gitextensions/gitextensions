@@ -68,8 +68,7 @@ namespace GitExtensions
             try
             {
                 if (Application.UserAppDataRegistry == null ||
-                    Settings.GetValue<string>("checksettings", null) == null ||
-                    !Settings.GetValue<string>("checksettings", null).Equals("false", StringComparison.OrdinalIgnoreCase) ||
+                    Settings.GetBool("checksettings", true) ||
                     string.IsNullOrEmpty(Settings.GitCommand))
                 {
                     FormSplash.SetAction("Checking settings...");
