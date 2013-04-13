@@ -58,7 +58,7 @@ namespace GitCommands
                     }
                 }
             );
-            
+
             Version version = Assembly.GetCallingAssembly().GetName().Version;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
             GitExtensionsVersionInt = version.Major * 100 + version.Minor;
@@ -74,7 +74,7 @@ namespace GitCommands
             }
 
             GitLog = new CommandLogger();
-            
+
             if (!File.Exists(SettingsFilePath))
             {
                 ImportFromRegistry();
@@ -1106,7 +1106,7 @@ namespace GitCommands
             {
                 //will refresh EncodedNameMap if needed
                 string inMemValue = GetValue(name);
-                
+
                 if (string.Equals(inMemValue, value))
                     return;
 
@@ -1139,31 +1139,31 @@ namespace GitCommands
         {
             object o;
             lock (ByNameMap)
-            { 
-            if (NeedRefresh())
-                ByNameMap.Clear();
-
-            if (ByNameMap.TryGetValue(name, out o))
             {
-                if (o == null || o is T)
+                if (NeedRefresh())
+                    ByNameMap.Clear();
+
+                if (ByNameMap.TryGetValue(name, out o))
                 {
-                    return (T)o;
+                    if (o == null || o is T)
+                    {
+                        return (T)o;
+                    }
+                    else
+                    {
+                        throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                    }
                 }
                 else
                 {
-                    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
-                }
-            }
-            else
-            {
-                if (decode == null)
-                    throw new ArgumentNullException("decode", string.Format("The decode parameter for setting {0} is null.", name));
+                    if (decode == null)
+                        throw new ArgumentNullException("decode", string.Format("The decode parameter for setting {0} is null.", name));
 
-                string s = GetValue(name);
-                T result = s == null ? defaultValue : decode(s);
-                ByNameMap[name] = result;
-                return result;
-            }
+                    string s = GetValue(name);
+                    T result = s == null ? defaultValue : decode(s);
+                    ByNameMap[name] = result;
+                    return result;
+                }
             }
         }
 
@@ -1176,8 +1176,8 @@ namespace GitCommands
                 s = encode(value);
 
             SetValue(name, s);
-           lock(ByNameMap)
-            ByNameMap[name] = value;
+            lock (ByNameMap)
+                ByNameMap[name] = value;
         }
 
         public static bool? GetBool(string name)
