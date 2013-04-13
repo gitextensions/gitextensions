@@ -1138,7 +1138,8 @@ namespace GitCommands
         public static T GetByName<T>(string name, T defaultValue, Func<string, T> decode)
         {
             object o;
-
+            lock (ByNameMap)
+            { 
             if (NeedRefresh())
                 ByNameMap.Clear();
 
@@ -1163,6 +1164,7 @@ namespace GitCommands
                 ByNameMap[name] = result;
                 return result;
             }
+            }
         }
 
         public static void SetByName<T>(string name, T value, Func<T, string> encode)
@@ -1174,6 +1176,7 @@ namespace GitCommands
                 s = encode(value);
 
             SetValue(name, s);
+           lock(ByNameMap)
             ByNameMap[name] = value;
         }
 
