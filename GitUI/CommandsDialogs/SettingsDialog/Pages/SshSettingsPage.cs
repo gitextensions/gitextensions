@@ -98,7 +98,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             yield return _commonLogic.GetRegistryValue(Registry.LocalMachine,
                                                         "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1",
                                                         "InstallLocation");
-            yield return Settings.GetInstallDir() + @"\PuTTY\";
+            yield return Path.Combine(Settings.GetInstallDir(), @"PuTTY\");
         }
 
         public bool AutoFindPuttyPaths()
