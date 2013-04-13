@@ -72,5 +72,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     SmtpServerPort.Text = "587";
             }
         }
+
+        public static SettingsPageReference GetPageReference()
+        {
+            return new SettingsPageReferenceByType(typeof(GitExtensionsSettingsPage));
+        }        
     }
 }
