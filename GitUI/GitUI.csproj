@@ -123,6 +123,12 @@
     <Compile Include="CommandsDialogs\FormatPatchDialog\SmtpCredentials.Designer.cs">
       <DependentUpon>SmtpCredentials.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\RevisionLinksSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\RevisionLinksSettingsPage.Designer.cs">
+      <DependentUpon>RevisionLinksSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -924,6 +930,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormatPatchDialog\SmtpCredentials.resx">
       <DependentUpon>SmtpCredentials.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\RevisionLinksSettingsPage.resx">
+      <DependentUpon>RevisionLinksSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.resx">
       <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>

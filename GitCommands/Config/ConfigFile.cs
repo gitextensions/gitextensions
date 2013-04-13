@@ -314,6 +314,11 @@ namespace GitCommands.Config
                 {
                     parseFunc = parseFunc(_fileContent[pos]);
                 }
+
+                if (_fileContent.Length > 0 && !_fileContent.EndsWith("\n"))
+                {
+                    parseFunc('\n');
+                }
             }
 
             private void NewSection()

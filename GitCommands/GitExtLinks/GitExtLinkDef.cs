@@ -14,7 +14,6 @@ namespace GitCommands.GitExtLinks
         public enum RevisionPart
         { 
             Message,
-            Hash,
             LocalBranches,
             RemoteBranches
         }
@@ -167,22 +166,19 @@ namespace GitCommands.GitExtLinks
 
             if (SearchInParts.Contains(RevisionPart.LocalBranches))
                 foreach (var head in revision.Refs.Where(b => !b.IsRemote))
-                    links.Add(ParsePart(head.LocalName));
+                    links.Add(ParsePart(head.LocalName, revision));
 
             if (SearchInParts.Contains(RevisionPart.RemoteBranches))
                 foreach (var head in revision.Refs.Where(b => b.IsRemote))
-                    links.Add(ParsePart(head.LocalName));
+                    links.Add(ParsePart(head.LocalName, revision));
 
             if (SearchInParts.Contains(RevisionPart.Message))
-                links.Add(ParsePart(revision.Message));
-
-            if (SearchInParts.Contains(RevisionPart.Hash))
-                links.Add(ParsePart(revision.Guid));
+                links.Add(ParsePart(revision.Message, revision));
 
             return links.Unwrap();
         }
 
-        public IEnumerable<GitExtLink> ParsePart(string part)
+        public IEnumerable<GitExtLink> ParsePart(string part, GitRevision revision)
         {
             if (SearchPattern.IsNullOrEmpty())
                 yield break;
@@ -212,7 +208,7 @@ namespace GitCommands.GitExtLinks
             {
                 foreach (var format in LinkFormats)
                 {
-                    yield return format.ToGitExtLink(match);
+                    yield return format.ToGitExtLink(match, revision);
                 }
             }
         }
@@ -235,7 +231,7 @@ namespace GitCommands.GitExtLinks
         public string Format { get; set; }
         public bool IsValid { get; private set; }
 
-        public GitExtLink ToGitExtLink(Match match)
+        public GitExtLink ToGitExtLink(Match match, GitRevision revision)
         {
             GitExtLink link = new GitExtLink();
 
@@ -248,7 +244,8 @@ namespace GitCommands.GitExtLinks
                 }
 
                 link.Caption = string.Format(Caption, groups.ToArray());
-                link.URI = string.Format(Format, groups.ToArray());
+                link.URI = Format.Replace("%COMMIT_HASH%", revision.Guid);
+                link.URI = string.Format(link.URI, groups.ToArray());
                 IsValid = true;
             }
             catch (Exception e)
