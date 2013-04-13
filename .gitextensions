@@ -1,4 +1,4 @@
-[GitExtLinkDef "outDef"]
+[GitExtLinkDef "GitHub - issues"]
 	Disabled = False
 	SearchPattern = "(\\s*(,|and)?\\s*#\\d+)+"
 	NestedSearchPattern = (\\d+)+
@@ -6,3 +6,11 @@
 	LinkFormat0 = https://github.com/gitextensions/gitextensions/issues/{0}
 	LinkCaption0 = Issue {0}
 	LinkFormatCount = 1
+[GitExtLinkDef "GitHub - commit"]
+	Disabled = False
+	SearchPattern = ".*"
+	NestedSearchPattern = 
+	RevisionParts = Message
+	LinkFormat0 = https://github.com/gitextensions/gitextensions/commit/%COMMIT_HASH%
+	LinkCaption0 = View on GitHub
+	LinkFormatCount = 1	

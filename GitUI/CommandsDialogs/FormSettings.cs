@@ -61,6 +61,9 @@ namespace GitUI.CommandsDialogs
 
             settingsTreeView.AddSettingsPage(new GitExtensionsSettingsPage(), gitExtPageRef);
 
+            SettingsPageReference gitExtensionsPageRef = GitExtensionsSettingsPage.GetPageReference();
+            settingsTreeView.AddSettingsPage(new RevisionLinksSettingsPage(Module), gitExtensionsPageRef);
+
             settingsTreeView.AddSettingsPage(new AppearanceSettingsPage(), gitExtPageRef);
 
             settingsTreeView.AddSettingsPage(new ColorsSettingsPage(), gitExtPageRef);
