@@ -84,8 +84,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         int cver=int.Parse(CurrentVersion);
 
                             
-                        if (match.Value.Equals(FilesUrl + CurrentVersion + "SetupComplete.msi") ||
-                            ver<cver)
+                        if (ver<cver)
                             continue;
                         
                         UpdateFound = true;
