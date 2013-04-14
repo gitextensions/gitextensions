@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
-using GitCommands;
+using LibGit2Sharp;
 
 namespace PatchApply
 {
@@ -119,11 +120,7 @@ namespace PatchApply
 
         private void HandleChangeFilePatchType(Encoding filesContentEncoding)
         {
-            var fileLines = new List<string>();
-            foreach (string s in LoadFile(FileNameA, filesContentEncoding).Split('\n'))
-            {
-                fileLines.Add(s);
-            }
+            var fileLines = LoadFile(FileNameA, filesContentEncoding).Split('\n').ToList();
 
             int lineNumber = 0;
             foreach (string line in Text.Split('\n'))
@@ -182,7 +179,7 @@ namespace PatchApply
                     if (line.Length > 1)
                         insertLine = line.Substring(1);
 
-                    //Is the patch allready applied?
+                    //Is the patch already applied?
                     if (fileLines.Count > lineNumber && fileLines[lineNumber].CompareTo(insertLine) == 0)
                     {
                         Rate -= 20;

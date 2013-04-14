@@ -28,92 +28,132 @@ namespace PatchApply
         /// from .gitattributes, for now there is used one encoding, common for every file in repo (Settings.FilesEncoding)
         /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
         /// </summary>
-        /// <param name="textReader"></param>
+        /// <param name="lines">patch lines</param>
+        /// <param name="lineIndex">start index</param>
         /// <returns></returns>
-        public List<Patch> CreatePatchesFromString(String patchText)
+        public Patch CreatePatchFromString(string[] lines, ref int lineIndex)
+        {
+            if (lineIndex >= lines.Length)
+                return null;
+
+            string input = lines[lineIndex];
+            if (!IsStartOfANewPatch(input))
+                return null;
+
+            PatchProcessorState state = PatchProcessorState.InHeader;
+            Patch patch = new Patch();
+            input = GitModule.ReEncodeFileNameFromLossless(input);
+            patch.PatchHeader = input;
+            patch.Type = Patch.PatchType.ChangeFile;
+            ExtractPatchFilenames(patch);
+            patch.AppendText(input);
+            if (lineIndex < lines.Length - 1)
+                patch.AppendText("\n");
+
+            for (int i = lineIndex + 1; i < lines.Length; i++)
+            {
+                input = lines[i];
+
+                if (IsStartOfANewPatch(input))
+                {
+                    lineIndex = i;
+                    return patch;
+                }
+
+                if (i < lines.Length - 1)
+                    input += "\n";
+
+                if (state == PatchProcessorState.InBody)
+                {
+                    patch.AppendText(input);
+                    continue;
+                }
+
+                if (IsChunkHeader(input))
+                {
+                    state = PatchProcessorState.InBody;
+                    ValidateInput(ref input, patch, state);
+                    patch.AppendText(input);
+                    continue;
+                }
+
+                //header lines are encoded in GitModule.SystemEncoding
+                input = GitModule.ReEncodeStringFromLossless(input, GitModule.SystemEncoding);
+                if (IsIndexLine(input))
+                {
+                    patch.PatchIndex = input;
+                    patch.AppendText(input);
+                    continue;
+                }
+
+                if (SetPatchType(input, patch))
+                {
+
+                }
+                else if (IsUnlistedBinaryFileDelete(input))
+                {
+                    if (patch.Type != Patch.PatchType.DeleteFile)
+                        throw new FormatException("Change not parsed correct: " + input);
+
+                    patch.File = Patch.FileType.Binary;
+                    patch = null;
+                    state = PatchProcessorState.OutsidePatch;
+                }
+                else if (IsUnlistedBinaryNewFile(input))
+                {
+                    if (patch.Type != Patch.PatchType.NewFile)
+                        throw new FormatException("Change not parsed correct: " + input);
+
+                    patch.File = Patch.FileType.Binary;
+                    //TODO: NOT SUPPORTED!
+                    patch.Apply = false;
+                    patch = null;
+                    state = PatchProcessorState.OutsidePatch;
+                }
+                else if (IsBinaryPatch(input))
+                {
+                    patch.File = Patch.FileType.Binary;
+
+                    //TODO: NOT SUPPORTED!
+                    patch.Apply = false;
+                    patch = null;
+                    state = PatchProcessorState.OutsidePatch;
+                }
+                ValidateInput(ref input, patch, state);
+                patch.AppendText(input);
+            }
+
+            lineIndex = lines.Length;
+            return patch;
+        }
+
+        public Patch CreatePatchFromString(string patchText)
+        {
+            string[] lines = patchText.Split('\n');
+            int i = 0;
+            Patch patch = CreatePatchFromString(lines, ref i);
+            return patch;
+        }
+
+        /// <summary>
+        /// Diff part of patch is printed verbatim, everything else (header, warnings, ...) is printed in git encoding (GitModule.SystemEncoding) 
+        /// Since patch may contain diff for more than one file, it would be nice to obtaining encoding for each of file
+        /// from .gitattributes, for now there is used one encoding, common for every file in repo (Settings.FilesEncoding)
+        /// File path can be quoted see core.quotepath, it is unquoted by GitCommandHelpers.ReEncodeFileNameFromLossless
+        /// </summary>
+        /// <param name="patchText"></param>
+        /// <returns></returns>
+        public IEnumerable<Patch> CreatePatchesFromString(String patchText)
         {
             var patches = new List<Patch>();
-            Patch patch = null;
-            bool validate;
-            string input;
             PatchProcessorState state = PatchProcessorState.OutsidePatch;
             string[] lines = patchText.Split('\n');
             for(int i = 0; i < lines.Length; i++)
             {
-                input = lines[i];
-                validate = true;
-                if (IsStartOfANewPatch(input))
-                {
-                    state = PatchProcessorState.InHeader;
-                    validate = false;
-                    patch = new Patch();
-                    patches.Add(patch);
-                    input = GitModule.ReEncodeFileNameFromLossless(input);
-                    patch.PatchHeader = input;
-                    patch.Type = Patch.PatchType.ChangeFile;
-                    ExtractPatchFilenames(patch);
-                }
-                else if (state == PatchProcessorState.InHeader)
-                {
-                    if (IsChunkHeader(input))
-                        state = PatchProcessorState.InBody;
-                    else
-                    {
-                        //header lines are encoded in GitModule.SystemEncoding
-                        input = GitModule.ReEncodeStringFromLossless(input, GitModule.SystemEncoding);
-                        if (IsIndexLine(input))
-                        {                            
-                            validate = false;
-                            patch.PatchIndex = input;
-                        }
-                        else
-                        {
-                            if (SetPatchType(input, patch))
-                            { }
-                            else if (IsUnlistedBinaryFileDelete(input))
-                            {
-                                if (patch.Type != Patch.PatchType.DeleteFile)
-                                    throw new FormatException("Change not parsed correct: " + input);
-
-                                patch.File = Patch.FileType.Binary;
-                                patch = null;
-                                state = PatchProcessorState.OutsidePatch;
-                            }
-                            else if (IsUnlistedBinaryNewFile(input))
-                            {
-                                if (patch.Type != Patch.PatchType.NewFile)
-                                    throw new FormatException("Change not parsed correct: " + input);
-
-                                patch.File = Patch.FileType.Binary;
-                                //TODO: NOT SUPPORTED!
-                                patch.Apply = false;
-                                patch = null;
-                                state = PatchProcessorState.OutsidePatch;
-                            }
-                            else if (IsBinaryPatch(input))
-                            {
-                                patch.File = Patch.FileType.Binary;
-
-                                //TODO: NOT SUPPORTED!
-                                patch.Apply = false;
-                                patch = null;
-                                state = PatchProcessorState.OutsidePatch;
-                            }
-                        }
-                    }
-                }
-
-                if (state != PatchProcessorState.OutsidePatch)
-                {
-                    if (validate)
-                        ValidateInput(ref input, patch, state);
-                    patch.AppendText(input);
-                    if (i < lines.Length - 1)
-                        patch.AppendText("\n");
-                }
+                Patch patch = CreatePatchFromString(lines, ref i);
+                if (patch != null)
+                    yield return patch;
             }
-
-            return patches;
         }
 
         private static bool IsIndexLine(string input)
