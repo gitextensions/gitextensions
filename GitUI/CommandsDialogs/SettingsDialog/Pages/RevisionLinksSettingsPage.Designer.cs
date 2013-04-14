@@ -76,7 +76,7 @@
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -90,8 +90,9 @@
             this.splitContainer1.Panel2.Controls.Add(this.LinksGrid);
             this.splitContainer1.Panel2.Controls.Add(this.panel1);
             this.splitContainer1.Panel2.Controls.Add(this.detailPanel);
-            this.splitContainer1.Size = new System.Drawing.Size(688, 469);
+            this.splitContainer1.Size = new System.Drawing.Size(803, 613);
             this.splitContainer1.SplitterDistance = 192;
+            this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 2;
             // 
             // tableLayoutPanel1
@@ -103,11 +104,12 @@
             this.tableLayoutPanel1.Controls.Add(this.Remove, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.Add, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 440);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 578);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(192, 29);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(192, 35);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
             // Remove
@@ -116,10 +118,10 @@
             this.Remove.AutoSize = true;
             this.Remove.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Remove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Remove.Location = new System.Drawing.Point(134, 3);
-            this.Remove.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.Remove.Location = new System.Drawing.Point(125, 4);
+            this.Remove.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.Remove.Name = "Remove";
-            this.Remove.Size = new System.Drawing.Size(56, 23);
+            this.Remove.Size = new System.Drawing.Size(65, 27);
             this.Remove.TabIndex = 4;
             this.Remove.Text = "Remove";
             this.Remove.UseVisualStyleBackColor = true;
@@ -131,10 +133,10 @@
             this.Add.AutoSize = true;
             this.Add.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Add.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Add.Location = new System.Drawing.Point(2, 3);
-            this.Add.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.Add.Location = new System.Drawing.Point(2, 4);
+            this.Add.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.Add.Name = "Add";
-            this.Add.Size = new System.Drawing.Size(36, 23);
+            this.Add.Size = new System.Drawing.Size(42, 27);
             this.Add.TabIndex = 3;
             this.Add.Text = "Add";
             this.Add.UseVisualStyleBackColor = true;
@@ -146,10 +148,11 @@
             this._NO_TRANSLATE_Categories.Dock = System.Windows.Forms.DockStyle.Fill;
             this._NO_TRANSLATE_Categories.FormattingEnabled = true;
             this._NO_TRANSLATE_Categories.IntegralHeight = false;
-            this._NO_TRANSLATE_Categories.Location = new System.Drawing.Point(0, 22);
-            this._NO_TRANSLATE_Categories.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this._NO_TRANSLATE_Categories.ItemHeight = 17;
+            this._NO_TRANSLATE_Categories.Location = new System.Drawing.Point(0, 29);
+            this._NO_TRANSLATE_Categories.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this._NO_TRANSLATE_Categories.Name = "_NO_TRANSLATE_Categories";
-            this._NO_TRANSLATE_Categories.Size = new System.Drawing.Size(192, 447);
+            this._NO_TRANSLATE_Categories.Size = new System.Drawing.Size(192, 584);
             this._NO_TRANSLATE_Categories.TabIndex = 1;
             this._NO_TRANSLATE_Categories.SelectedIndexChanged += new System.EventHandler(this._NO_TRANSLATE_Categories_SelectedIndexChanged);
             // 
@@ -160,7 +163,7 @@
             this.CategoriesLabel.Location = new System.Drawing.Point(0, 0);
             this.CategoriesLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.CategoriesLabel.Name = "CategoriesLabel";
-            this.CategoriesLabel.Size = new System.Drawing.Size(192, 22);
+            this.CategoriesLabel.Size = new System.Drawing.Size(192, 29);
             this.CategoriesLabel.TabIndex = 0;
             this.CategoriesLabel.Text = "Categories";
             // 
@@ -171,14 +174,14 @@
             this.CaptionCol,
             this.URICol});
             this.LinksGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LinksGrid.Location = new System.Drawing.Point(0, 168);
-            this.LinksGrid.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.LinksGrid.Location = new System.Drawing.Point(0, 214);
+            this.LinksGrid.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
             this.LinksGrid.MultiSelect = false;
             this.LinksGrid.Name = "LinksGrid";
             this.LinksGrid.RowHeadersVisible = false;
             this.LinksGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.LinksGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.LinksGrid.Size = new System.Drawing.Size(492, 301);
+            this.LinksGrid.Size = new System.Drawing.Size(606, 399);
             this.LinksGrid.TabIndex = 8;
             // 
             // CaptionCol
@@ -201,10 +204,11 @@
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel1.Controls.Add(this.label6);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 148);
+            this.panel1.Location = new System.Drawing.Point(0, 191);
+            this.panel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 3);
-            this.panel1.Size = new System.Drawing.Size(492, 20);
+            this.panel1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 4);
+            this.panel1.Size = new System.Drawing.Size(606, 23);
             this.panel1.TabIndex = 7;
             // 
             // label6
@@ -212,10 +216,10 @@
             this.label6.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label6.AutoSize = true;
             this.label6.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label6.Location = new System.Drawing.Point(206, 4);
+            this.label6.Location = new System.Drawing.Point(240, 2);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(30, 13);
+            this.label6.Size = new System.Drawing.Size(36, 17);
             this.label6.TabIndex = 21;
             this.label6.Text = "Links";
             // 
@@ -226,9 +230,10 @@
             this.detailPanel.Controls.Add(this.tableLayoutPanel3);
             this.detailPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.detailPanel.Location = new System.Drawing.Point(0, 0);
+            this.detailPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.detailPanel.Name = "detailPanel";
-            this.detailPanel.Padding = new System.Windows.Forms.Padding(0, 3, 0, 6);
-            this.detailPanel.Size = new System.Drawing.Size(492, 148);
+            this.detailPanel.Padding = new System.Windows.Forms.Padding(0, 4, 0, 8);
+            this.detailPanel.Size = new System.Drawing.Size(606, 191);
             this.detailPanel.TabIndex = 6;
             // 
             // tableLayoutPanel3
@@ -249,7 +254,8 @@
             this.tableLayoutPanel3.Controls.Add(this.nestedPatternLab, 0, 4);
             this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel1, 1, 2);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 3);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 4);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 5;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -257,38 +263,40 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(492, 139);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(606, 179);
             this.tableLayoutPanel3.TabIndex = 14;
             // 
             // _NO_TRANSLATE_SearchPatternEdit
             // 
             this._NO_TRANSLATE_SearchPatternEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_SearchPatternEdit.Location = new System.Drawing.Point(86, 88);
-            this._NO_TRANSLATE_SearchPatternEdit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this._NO_TRANSLATE_SearchPatternEdit.Location = new System.Drawing.Point(102, 114);
+            this._NO_TRANSLATE_SearchPatternEdit.Margin = new System.Windows.Forms.Padding(2, 5, 2, 5);
             this._NO_TRANSLATE_SearchPatternEdit.Name = "_NO_TRANSLATE_SearchPatternEdit";
-            this._NO_TRANSLATE_SearchPatternEdit.Size = new System.Drawing.Size(404, 21);
+            this._NO_TRANSLATE_SearchPatternEdit.Size = new System.Drawing.Size(502, 25);
             this._NO_TRANSLATE_SearchPatternEdit.TabIndex = 22;
+            this._NO_TRANSLATE_SearchPatternEdit.Leave += new System.EventHandler(this._NO_TRANSLATE_SearchPatternEdit_Leave);
             // 
             // _NO_TRANSLATE_NestedPatternEdit
             // 
             this._NO_TRANSLATE_NestedPatternEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_NestedPatternEdit.Location = new System.Drawing.Point(86, 115);
-            this._NO_TRANSLATE_NestedPatternEdit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this._NO_TRANSLATE_NestedPatternEdit.Location = new System.Drawing.Point(102, 149);
+            this._NO_TRANSLATE_NestedPatternEdit.Margin = new System.Windows.Forms.Padding(2, 5, 2, 5);
             this._NO_TRANSLATE_NestedPatternEdit.Name = "_NO_TRANSLATE_NestedPatternEdit";
-            this._NO_TRANSLATE_NestedPatternEdit.Size = new System.Drawing.Size(404, 21);
+            this._NO_TRANSLATE_NestedPatternEdit.Size = new System.Drawing.Size(502, 25);
             this._NO_TRANSLATE_NestedPatternEdit.TabIndex = 21;
+            this._NO_TRANSLATE_NestedPatternEdit.Leave += new System.EventHandler(this._NO_TRANSLATE_NestedPatternEdit_Leave);
             // 
             // label4
             // 
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label4.AutoSize = true;
             this.label4.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label4.Location = new System.Drawing.Point(2, 92);
+            this.label4.Location = new System.Drawing.Point(2, 118);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(79, 13);
+            this.label4.Size = new System.Drawing.Size(93, 17);
             this.label4.TabIndex = 19;
             this.label4.Text = "Search pattern";
             // 
@@ -303,57 +311,64 @@
             this.tableLayoutPanel2.Controls.Add(this.EnabledChx, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.localScopeRB, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.repositoryScopeRB, 0, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(87, 30);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(103, 39);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(208, 23);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(237, 29);
             this.tableLayoutPanel2.TabIndex = 18;
             // 
             // EnabledChx
             // 
             this.EnabledChx.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.EnabledChx.AutoSize = true;
-            this.EnabledChx.Location = new System.Drawing.Point(141, 3);
+            this.EnabledChx.Location = new System.Drawing.Point(160, 4);
+            this.EnabledChx.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.EnabledChx.Name = "EnabledChx";
-            this.EnabledChx.Size = new System.Drawing.Size(64, 17);
+            this.EnabledChx.Size = new System.Drawing.Size(74, 21);
             this.EnabledChx.TabIndex = 21;
             this.EnabledChx.Text = "Enabled";
             this.EnabledChx.UseVisualStyleBackColor = true;
+            this.EnabledChx.CheckedChanged += new System.EventHandler(this.EnabledChx_CheckedChanged);
             // 
             // localScopeRB
             // 
             this.localScopeRB.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.localScopeRB.AutoSize = true;
-            this.localScopeRB.Location = new System.Drawing.Point(86, 3);
+            this.localScopeRB.Location = new System.Drawing.Point(98, 4);
+            this.localScopeRB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.localScopeRB.Name = "localScopeRB";
-            this.localScopeRB.Size = new System.Drawing.Size(49, 17);
+            this.localScopeRB.Size = new System.Drawing.Size(56, 21);
             this.localScopeRB.TabIndex = 2;
             this.localScopeRB.TabStop = true;
             this.localScopeRB.Text = "Local";
             this.localScopeRB.UseVisualStyleBackColor = true;
+            this.localScopeRB.CheckedChanged += new System.EventHandler(this.repositoryScopeRB_CheckedChanged);
             // 
             // repositoryScopeRB
             // 
             this.repositoryScopeRB.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.repositoryScopeRB.AutoSize = true;
-            this.repositoryScopeRB.Location = new System.Drawing.Point(3, 3);
+            this.repositoryScopeRB.Location = new System.Drawing.Point(3, 4);
+            this.repositoryScopeRB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.repositoryScopeRB.Name = "repositoryScopeRB";
-            this.repositoryScopeRB.Size = new System.Drawing.Size(77, 17);
+            this.repositoryScopeRB.Size = new System.Drawing.Size(89, 21);
             this.repositoryScopeRB.TabIndex = 1;
             this.repositoryScopeRB.TabStop = true;
             this.repositoryScopeRB.Text = "Repository";
             this.repositoryScopeRB.UseVisualStyleBackColor = true;
+            this.repositoryScopeRB.CheckedChanged += new System.EventHandler(this.repositoryScopeRB_CheckedChanged);
             // 
             // label2
             // 
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label2.AutoSize = true;
             this.label2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label2.Location = new System.Drawing.Point(2, 35);
+            this.label2.Location = new System.Drawing.Point(2, 45);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(36, 13);
+            this.label2.Size = new System.Drawing.Size(44, 17);
             this.label2.TabIndex = 17;
             this.label2.Text = "Scope";
             // 
@@ -362,10 +377,10 @@
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label3.AutoSize = true;
             this.label3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label3.Location = new System.Drawing.Point(2, 64);
+            this.label3.Location = new System.Drawing.Point(2, 82);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(51, 13);
+            this.label3.Size = new System.Drawing.Size(61, 17);
             this.label3.TabIndex = 15;
             this.label3.Text = "Search in";
             // 
@@ -374,10 +389,10 @@
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label1.AutoSize = true;
             this.label1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label1.Location = new System.Drawing.Point(2, 7);
+            this.label1.Location = new System.Drawing.Point(2, 9);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(34, 13);
+            this.label1.Size = new System.Drawing.Size(43, 17);
             this.label1.TabIndex = 7;
             this.label1.Text = "Name";
             // 
@@ -385,10 +400,10 @@
             // 
             this._NO_TRANSLATE_Name.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_Name.Location = new System.Drawing.Point(86, 3);
-            this._NO_TRANSLATE_Name.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this._NO_TRANSLATE_Name.Location = new System.Drawing.Point(102, 5);
+            this._NO_TRANSLATE_Name.Margin = new System.Windows.Forms.Padding(2, 5, 2, 5);
             this._NO_TRANSLATE_Name.Name = "_NO_TRANSLATE_Name";
-            this._NO_TRANSLATE_Name.Size = new System.Drawing.Size(404, 21);
+            this._NO_TRANSLATE_Name.Size = new System.Drawing.Size(502, 25);
             this._NO_TRANSLATE_Name.TabIndex = 10;
             this._NO_TRANSLATE_Name.Leave += new System.EventHandler(this._NO_TRANSLATE_Name_Leave);
             // 
@@ -397,10 +412,10 @@
             this.nestedPatternLab.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.nestedPatternLab.AutoSize = true;
             this.nestedPatternLab.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.nestedPatternLab.Location = new System.Drawing.Point(2, 119);
+            this.nestedPatternLab.Location = new System.Drawing.Point(2, 153);
             this.nestedPatternLab.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.nestedPatternLab.Name = "nestedPatternLab";
-            this.nestedPatternLab.Size = new System.Drawing.Size(80, 13);
+            this.nestedPatternLab.Size = new System.Drawing.Size(96, 17);
             this.nestedPatternLab.TabIndex = 20;
             this.nestedPatternLab.Text = "Nested pattern";
             // 
@@ -411,40 +426,47 @@
             this.flowLayoutPanel1.Controls.Add(this.MessageChx);
             this.flowLayoutPanel1.Controls.Add(this.LocalBranchChx);
             this.flowLayoutPanel1.Controls.Add(this.RemoteBranchChx);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(87, 59);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(103, 76);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(271, 23);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(315, 29);
             this.flowLayoutPanel1.TabIndex = 23;
             // 
             // MessageChx
             // 
             this.MessageChx.AutoSize = true;
-            this.MessageChx.Location = new System.Drawing.Point(3, 3);
+            this.MessageChx.Location = new System.Drawing.Point(3, 4);
+            this.MessageChx.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MessageChx.Name = "MessageChx";
-            this.MessageChx.Size = new System.Drawing.Size(68, 17);
+            this.MessageChx.Size = new System.Drawing.Size(80, 21);
             this.MessageChx.TabIndex = 0;
             this.MessageChx.Text = "Message";
             this.MessageChx.UseVisualStyleBackColor = true;
+            this.MessageChx.CheckedChanged += new System.EventHandler(this.MessageChx_CheckedChanged);
             // 
             // LocalBranchChx
             // 
             this.LocalBranchChx.AutoSize = true;
-            this.LocalBranchChx.Location = new System.Drawing.Point(77, 3);
+            this.LocalBranchChx.Location = new System.Drawing.Point(89, 4);
+            this.LocalBranchChx.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.LocalBranchChx.Name = "LocalBranchChx";
-            this.LocalBranchChx.Size = new System.Drawing.Size(86, 17);
+            this.LocalBranchChx.Size = new System.Drawing.Size(101, 21);
             this.LocalBranchChx.TabIndex = 1;
             this.LocalBranchChx.Text = "Local branch";
             this.LocalBranchChx.UseVisualStyleBackColor = true;
+            this.LocalBranchChx.CheckedChanged += new System.EventHandler(this.MessageChx_CheckedChanged);
             // 
             // RemoteBranchChx
             // 
             this.RemoteBranchChx.AutoSize = true;
-            this.RemoteBranchChx.Location = new System.Drawing.Point(169, 3);
+            this.RemoteBranchChx.Location = new System.Drawing.Point(196, 4);
+            this.RemoteBranchChx.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.RemoteBranchChx.Name = "RemoteBranchChx";
-            this.RemoteBranchChx.Size = new System.Drawing.Size(99, 17);
+            this.RemoteBranchChx.Size = new System.Drawing.Size(116, 21);
             this.RemoteBranchChx.TabIndex = 2;
             this.RemoteBranchChx.Text = "Remote branch";
             this.RemoteBranchChx.UseVisualStyleBackColor = true;
+            this.RemoteBranchChx.CheckedChanged += new System.EventHandler(this.MessageChx_CheckedChanged);
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -455,11 +477,12 @@
             // 
             // RevisionLinksSettingsPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "RevisionLinksSettingsPage";
-            this.Size = new System.Drawing.Size(688, 469);
+            this.Size = new System.Drawing.Size(803, 613);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
