@@ -370,13 +370,13 @@ namespace GitUI.CommandsDialogs
             ShowDialogWhenChanges(null);
         }
 
-        private void ComputeUnstagedFiles(Action<IList<GitItemStatus>> onComputed, bool async)
+        private void ComputeUnstagedFiles(Action<IList<GitItemStatus>> onComputed, bool DoAsync)
         {
             Func < IList < GitItemStatus >> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked);
 
-            if (async)
+            if (DoAsync)
                 _unstagedLoader.Load(getAllChangedFilesWithSubmodulesStatus, onComputed);
             else
             {
