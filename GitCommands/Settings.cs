@@ -1100,6 +1100,16 @@ namespace GitCommands
             return !LastFileRead.HasValue || lastMod > LastFileRead.Value;
         }
 
+        private static void EnsureSettingsAreUpToDate()
+        {
+            if (NeedRefresh())
+            {
+                ByNameMap.Clear();
+                EncodedNameMap.Clear();
+                ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
+            }
+        }
+
         private static void SetValue(string name, string value)
         {
             lock (EncodedNameMap)
@@ -1124,11 +1134,7 @@ namespace GitCommands
         {
             lock (EncodedNameMap)
             {
-                if (NeedRefresh())
-                {
-                    ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
-                }
-
+                EnsureSettingsAreUpToDate();
                 string o = null;
                 EncodedNameMap.TryGetValue(name, out o);
                 return o;
@@ -1138,30 +1144,31 @@ namespace GitCommands
         public static T GetByName<T>(string name, T defaultValue, Func<string, T> decode)
         {
             object o;
-
-            if (NeedRefresh())
-                ByNameMap.Clear();
-
-            if (ByNameMap.TryGetValue(name, out o))
+            lock (EncodedNameMap)
             {
-                if (o == null || o is T)
+                EnsureSettingsAreUpToDate();
+
+                if (ByNameMap.TryGetValue(name, out o))
                 {
-                    return (T)o;
+                    if (o == null || o is T)
+                    {
+                        return (T)o;
+                    }
+                    else
+                    {
+                        throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                    }
                 }
                 else
                 {
-                    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
-                }
-            }
-            else
-            {
-                if (decode == null)
-                    throw new ArgumentNullException("decode", string.Format("The decode parameter for setting {0} is null.", name));
+                    if (decode == null)
+                        throw new ArgumentNullException("decode", string.Format("The decode parameter for setting {0} is null.", name));
 
-                string s = GetValue(name);
-                T result = s == null ? defaultValue : decode(s);
-                ByNameMap[name] = result;
-                return result;
+                    string s = GetValue(name);
+                    T result = s == null ? defaultValue : decode(s);
+                    ByNameMap[name] = result;
+                    return result;
+                }
             }
         }
 
@@ -1173,8 +1180,11 @@ namespace GitCommands
             else
                 s = encode(value);
 
-            SetValue(name, s);
-            ByNameMap[name] = value;
+            lock (EncodedNameMap)
+            {
+                SetValue(name, s);
+                ByNameMap[name] = value;
+            }
         }
 
         public static bool? GetBool(string name)
