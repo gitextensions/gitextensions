@@ -872,7 +872,7 @@ namespace GitCommands
 
         public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged)
         {
-            PatchApply.Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
+            PatchApply.Patch patch = module.GetCurrentChangesUseGit(fileName, oldFileName, staged, "", module.FilesEncoding);
             string text = patch != null ? patch.Text : "";
             return GetSubmoduleStatus(text);
         }

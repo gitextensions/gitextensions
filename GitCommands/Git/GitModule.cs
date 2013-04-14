@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Config;
@@ -49,11 +50,47 @@ namespace GitCommands
 
             try
             {
-                _repository = new LibGit2Sharp.Repository(_workingdir);
+                using (LibGit2SharpThreadLock(this))
+                {
+                    _repository = new LibGit2Sharp.Repository(_workingdir);
+                }
             }
             catch (RepositoryNotFoundException)
             {
                 _repository = null;
+            }
+        }
+
+        public static Func<GitModule, IDisposable> LibGit2SharpThreadLock = WithThreadLock;
+
+        internal static void EnableThreadLock(GitModule module)
+        {
+            LibGit2SharpThreadLock = WithThreadLock;
+        }
+
+        private static IDisposable WithoutThreadLock(GitModule module)
+        {
+            return null;
+        }
+
+        private static IDisposable WithThreadLock(GitModule module)
+        {
+            return new DisposableThreadLockWrapper(module);
+        }
+
+        private class DisposableThreadLockWrapper : IDisposable
+        {
+            private object lockObject;
+
+            public DisposableThreadLockWrapper(GitModule module)
+            {
+                lockObject = module;
+                Monitor.Enter(lockObject);
+            }
+
+            public void Dispose()
+            {
+                Monitor.Exit(lockObject);
             }
         }
 
@@ -1144,7 +1181,10 @@ namespace GitCommands
 
         public string GetCurrentCheckout()
         {
-            return IsValidGitWorkingDir() ? _repository.Head.Tip.Sha : "";
+            using (LibGit2SharpThreadLock(this))
+            {
+                return IsValidGitWorkingDir() ? _repository.Head.Tip.Sha : "";
+            }
         }
 
         public string GetSuperprojectCurrentCheckout()
@@ -2477,7 +2517,7 @@ namespace GitCommands
             return GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Count > 0;
         }
 
-        public Patch GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
+        public Patch GetCurrentChangesUseGit(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
             fileName = string.Concat("\"", FixPath(fileName), "\"");
             if (!string.IsNullOrEmpty(oldFileName))
@@ -2495,6 +2535,31 @@ namespace GitCommands
             patchManager.LoadPatch(result, false, encoding);
 
             return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
+        }
+
+        public Patch GetCurrentChangesUseLibGit2(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
+        {
+            using (LibGit2SharpThreadLock(this))
+            {
+                var changes = Repository.Diff.Compare(Repository.Head.Tip.Tree,
+                                                      staged ? DiffTargets.Index : DiffTargets.WorkingDirectory)
+                    .FirstOrDefault(entryChanges => entryChanges.Path == fileName || entryChanges.OldPath == fileName);
+
+                if (changes == null)
+                    return null;
+
+                var patchManager = new PatchManager();
+                patchManager.LoadPatch(changes.Patch, false, encoding);
+
+                return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
+            }
+        }
+
+        public Patch GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
+        {
+            if (!Settings.UseLibGit2ForDiff)
+                return GetCurrentChangesUseGit(fileName, oldFileName, staged, extraDiffArguments, encoding);
+            return GetCurrentChangesUseLibGit2(fileName, oldFileName, staged, extraDiffArguments, encoding);
         }
 
         public string StageFile(string file)
@@ -2685,28 +2750,33 @@ namespace GitCommands
             if (!IsValidGitWorkingDir())
                 return "";
 
-            if (tags && branches)
+            using (GitModule.LibGit2SharpThreadLock(this))
             {
-                return Repository.Refs
-                    .Select(r => string.Format("{0} {1}", r.ResolveToDirectReference().TargetIdentifier, r.CanonicalName))
-                    .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
-                    .ToString();
-            }
+                if (tags && branches)
+                {
+                    return Repository.Refs
+                        .Select(
+                            r =>
+                            string.Format("{0} {1}", r.ResolveToDirectReference().TargetIdentifier, r.CanonicalName))
+                        .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
+                        .ToString();
+                }
 
-            if (tags)
-                return Repository.Tags
-                    .Select(r => string.Format("{0} {1}", r.Target.Sha, r.CanonicalName))
-                    .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
-                    .ToString();
+                if (tags)
+                    return Repository.Tags
+                        .Select(r => string.Format("{0} {1}", r.Target.Sha, r.CanonicalName))
+                        .Aggregate(new StringBuilder(), (sb, s) => sb.AppendLine(s))
+                        .ToString();
 
-            if (branches)
-            {
-                var refs = Repository.Branches
-                    .Where(r => !r.IsRemote);
-                var sb = new StringBuilder();
-                foreach (var r in refs.Where(r => r.Tip != null))
-                    sb.AppendLine(string.Format("{0} {1}", r.Tip.Sha, r.CanonicalName));
-                return sb.ToString();
+                if (branches)
+                {
+                    var refs = Repository.Branches
+                        .Where(r => !r.IsRemote);
+                    var sb = new StringBuilder();
+                    foreach (var r in refs.Where(r => r.Tip != null))
+                        sb.AppendLine(string.Format("{0} {1}", r.Tip.Sha, r.CanonicalName));
+                    return sb.ToString();
+                }
             }
             return "";
         }
@@ -2877,16 +2947,19 @@ namespace GitCommands
         //TODO: submodules should be implemented in libgit2sharp
         public List<IGitItem> GetTreeNew(string id, bool full)
         {
-            var tree = Repository.Lookup<Tree>(id);
-            return tree.Where(t => t.Type == GitObjectType.Tree || t.Type == GitObjectType.Blob)
-                       .Select(t => (IGitItem) new GitItem(this)
-                                                {
-                                                    Mode = ((int) t.Mode).ToString(),
-                                                    ItemType = t.Type.ToString().ToLower(),
-                                                    Guid = t.Target.Sha,
-                                                    Name = t.Name,
-                                                    FileName = t.Name
-                                                }).ToList();
+            using (GitModule.LibGit2SharpThreadLock(this))
+            {
+                var tree = Repository.Lookup<Tree>(id);
+                return tree.Where(t => t.Type == GitObjectType.Tree || t.Type == GitObjectType.Blob)
+                    .Select(t => (IGitItem) new GitItem(this)
+                        {
+                            Mode = ((int) t.Mode).ToString(),
+                            ItemType = t.Type.ToString().ToLower(),
+                            Guid = t.Target.Sha,
+                            Name = t.Name,
+                            FileName = t.Name
+                        }).ToList();
+            }
         }
 
         public List<IGitItem> GetTreeOld(string id, bool full)
@@ -2988,8 +3061,11 @@ namespace GitCommands
 
         public string GetFileText(string id, Encoding encoding)
         {
-            var blob = Repository.Lookup<LibGit2Sharp.Blob>(new ObjectId(id));
-            return encoding.GetString(blob.Content);
+            using (GitModule.LibGit2SharpThreadLock(this))
+            {
+                var blob = Repository.Lookup<LibGit2Sharp.Blob>(new ObjectId(id));
+                return encoding.GetString(blob.Content);
+            }
         }
 
         public string GetFileBlobHash(string fileName, string revision)
@@ -3032,7 +3108,10 @@ namespace GitCommands
 
         public Stream GetFileStream(string blob)
         {
-            return Repository.Lookup<Blob>(new ObjectId(blob)).ContentStream;
+            using (GitModule.LibGit2SharpThreadLock(this))
+            {
+                return Repository.Lookup<Blob>(new ObjectId(blob)).ContentStream;
+            }
         }
 
         public IEnumerable<string> GetPreviousCommitMessages(int count)
@@ -3107,12 +3186,15 @@ namespace GitCommands
 
         public string GetMergeBase(string a, string b)
         {
-            var aCommit = Repository.Lookup<Commit>(a);
-            var bCommit = Repository.Lookup<Commit>(b);
-            if (aCommit == null || bCommit == null)
-                return null;
-            var baseCommit = Repository.Commits.FindCommonAncestor(aCommit, bCommit);
-            return baseCommit != null ? baseCommit.Sha : null;
+            using (GitModule.LibGit2SharpThreadLock(this))
+            {
+                var aCommit = Repository.Lookup<Commit>(a);
+                var bCommit = Repository.Lookup<Commit>(b);
+                if (aCommit == null || bCommit == null)
+                    return null;
+                var baseCommit = Repository.Commits.FindCommonAncestor(aCommit, bCommit);
+                return baseCommit != null ? baseCommit.Sha : null;
+            }
         }
 
         public SubmoduleStatus CheckSubmoduleStatus(string commit, string oldCommit, CommitData data, CommitData olddata, bool loaddata = false)

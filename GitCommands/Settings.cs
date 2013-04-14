@@ -985,6 +985,12 @@ namespace GitCommands
                 return _VersionIndependentRegKey;
             }
         }
+
+        public static bool UseLibGit2ForDiff
+        {
+            get { return false; }
+        }
+
         private static void ReadXMLDicSettings<T>(XmlSerializableDictionary<string, T> Dic, string FilePath)
         {
 
