@@ -2365,7 +2365,8 @@ namespace GitCommands
 
         private void GetSubmoduleStatus(IList<GitItemStatus> status, string from, string to)
         {
-            foreach (var item in status)
+            status.ForEach(item =>
+            {
                 if (item.IsSubmodule)
                 {
                     item.SubmoduleStatus = Task.Factory.StartNew(() =>
@@ -2381,6 +2382,7 @@ namespace GitCommands
                         return submoduleStatus;
                     });
                 }
+            });
         }
 
         public IList<GitItemStatus> GetTrackedChangedFiles()
