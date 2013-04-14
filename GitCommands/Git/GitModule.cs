@@ -2251,7 +2251,7 @@ namespace GitCommands
                     p.FileNameA.Equals(fileB) && p.FileNameB.Equals(fileA))
                     return p;
 
-            return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
+            return patchManager.Patches.LastOrDefault();
         }
 
         public Patch GetSingleDiff(string @from, string to, string fileName, string extraDiffArguments, Encoding encoding)
@@ -2531,10 +2531,7 @@ namespace GitCommands
                 args = string.Concat("diff -M -C --cached", extraDiffArguments, " -- ", fileName, " ", oldFileName);
 
             String result = RunGitCmd(args, LosslessEncoding);
-            var patchManager = new PatchManager();
-            patchManager.LoadPatch(result, false, encoding);
-
-            return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
+            return PatchProcessor.CreatePatchFromString(result, encoding);
         }
 
         public Patch GetCurrentChangesUseLibGit2(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
@@ -2548,10 +2545,7 @@ namespace GitCommands
                 if (changes == null)
                     return null;
 
-                var patchManager = new PatchManager();
-                patchManager.LoadPatch(changes.Patch, false, encoding);
-
-                return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
+                return PatchProcessor.CreatePatchFromString(changes.Patch, encoding);
             }
         }
 
