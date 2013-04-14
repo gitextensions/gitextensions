@@ -127,11 +127,12 @@ namespace PatchApply
             return patch;
         }
 
-        public Patch CreatePatchFromString(string patchText)
+        public static Patch CreatePatchFromString(string patchText, Encoding filesContentEncoding)
         {
+            var processor = new PatchProcessor(filesContentEncoding);
             string[] lines = patchText.Split('\n');
             int i = 0;
-            Patch patch = CreatePatchFromString(lines, ref i);
+            Patch patch = processor.CreatePatchFromString(lines, ref i);
             return patch;
         }
 
