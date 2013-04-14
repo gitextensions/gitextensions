@@ -1,16 +1,17 @@
 [GitExtLinkDef "GitHub - issues"]
-	Disabled = False
 	SearchPattern = "(\\s*(,|and)?\\s*#\\d+)+"
 	NestedSearchPattern = (\\d+)+
-	RevisionParts = Message RemoteBranches LocalBranches
+	RevisionParts = Message
 	LinkFormat0 = https://github.com/gitextensions/gitextensions/issues/{0}
 	LinkCaption0 = Issue {0}
 	LinkFormatCount = 1
 [GitExtLinkDef "GitHub - commit"]
-	Disabled = False
-	SearchPattern = ".*"
-	NestedSearchPattern = 
+	SearchPattern = .*
 	RevisionParts = Message
 	LinkFormat0 = https://github.com/gitextensions/gitextensions/commit/%COMMIT_HASH%
 	LinkCaption0 = View on GitHub
-	LinkFormatCount = 1	
+	LinkFormat1 = c:\\cmd\\buildGitExt.cmd %COMMIT_HASH%
+	LinkCaption1 = Build
+	LinkFormat2 = c:\\cmd\\BisectOK_GitExt.cmd %COMMIT_HASH%
+	LinkCaption2 = Bisect valid
+	LinkFormatCount = 3

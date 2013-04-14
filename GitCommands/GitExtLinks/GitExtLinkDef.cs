@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -24,7 +25,7 @@ namespace GitCommands.GitExtLinks
         public const string LinkFormatKey = "LinkFormat";
         public const string LinkFormatCountKey = "LinkFormatCount";
         public const string GitExtLinkDefKey = "GitExtLinkDef";
-        public const string DisabledKey = "Disabled";
+        public const string EnabledKey = "Enabled";
         public const string RevisionPartsKey = "RevisionParts";
         
         /// <summary>Short name for this link def</summary>
@@ -73,7 +74,7 @@ namespace GitCommands.GitExtLinks
         /// <summary>
         /// Non-local link def can be locally disabled
         /// </summary>
-        public bool Disabled { get; set; }
+        public bool Enabled { get; set; }
         /// <summary>
         /// Scope of this link def
         /// true - def is stored in repository local config file
@@ -83,7 +84,7 @@ namespace GitCommands.GitExtLinks
         /// <summary>
         /// List of formats to be applied for each revision part matched by SearchPattern
         /// </summary>
-        public IList<GitExtLinkFormat> LinkFormats = new List<GitExtLinkFormat>();
+        public IList<GitExtLinkFormat> LinkFormats = new BindingList<GitExtLinkFormat>();
 
         public GitExtLinkDef()
         {
@@ -105,7 +106,7 @@ namespace GitCommands.GitExtLinks
             linkDef.Name = section.SubSection;
             linkDef.SearchPattern = section.GetValue(SearchPatternKey);
             linkDef.NestedSearchPattern = section.GetValue(NestedSearchPatternKey);
-            linkDef.Disabled = section.GetValueAsBool(DisabledKey, false);
+            linkDef.Enabled = section.GetValueAsBool(EnabledKey, true);
             linkDef.Local = local;
             linkDef.SearchInParts.Clear();
             var partsStr = section.GetValue(RevisionPartsKey);
@@ -134,14 +135,19 @@ namespace GitCommands.GitExtLinks
             return linkDef;
         }
 
-        public ConfigSection ToConfigSection(bool local)
+        public ConfigSection ToConfigSection(bool locallyDisabled)
         {
             ConfigSection section = new ConfigSection(GitExtLinkDefKey, true);
             section.SubSection = Name;
-            section.SetValueAsBool(DisabledKey, Disabled);
-            //non local def can be disabled locally
+            //repo-scoped def can be disabled locally only
+            if (Local || locallyDisabled)
+            {
+                section.SetValueAsBool(EnabledKey, Enabled);
+            }
+
+            //repo-scoped def can be disabled locally
             //don't store additional data
-            if (!local || !Disabled)
+            if (!locallyDisabled)
             {
                 section.SetValue(SearchPatternKey, SearchPattern);
                 section.SetValue(NestedSearchPatternKey, NestedSearchPattern);
@@ -157,6 +163,7 @@ namespace GitCommands.GitExtLinks
                 }
                 section.AddValue(LinkFormatCountKey, i.ToString());
             }
+
             return section;
         }
 
@@ -219,7 +226,7 @@ namespace GitCommands.GitExtLinks
             yield return SearchPattern;
             yield return SearchInParts;
             yield return NestedSearchPattern;
-            yield return Disabled;
+            yield return Enabled;
             yield return Local;
             yield return LinkFormats;
         }

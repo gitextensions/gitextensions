@@ -60,6 +60,11 @@ namespace GitCommands.Config
             return path.Replace('\\', '/');
         }
 
+        public bool HasValue(string key)
+        {
+            return Keys.ContainsKey(key);
+        }
+
         public void SetValue(string key, string value)
         {
             if (string.IsNullOrEmpty(value))
@@ -130,8 +135,13 @@ namespace GitCommands.Config
         public static bool GetValueAsBool(this ConfigSection section, string name, bool defaultValue)
         {
             bool result = defaultValue;
-            string value = section.GetValue(name);
-            bool.TryParse(value, out result);
+            
+            if (section.HasValue(name))
+            {
+                string value = section.GetValue(name);
+                bool.TryParse(value, out result);
+            }
+
             return result;
         }
 
