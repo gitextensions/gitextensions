@@ -58,7 +58,7 @@ namespace GitCommands
                     }
                 }
             );
-
+            
             Version version = Assembly.GetCallingAssembly().GetName().Version;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
             GitExtensionsVersionInt = version.Major * 100 + version.Minor;
@@ -74,7 +74,7 @@ namespace GitCommands
             }
 
             GitLog = new CommandLogger();
-
+            
             if (!File.Exists(SettingsFilePath))
             {
                 ImportFromRegistry();
@@ -1100,13 +1100,23 @@ namespace GitCommands
             return !LastFileRead.HasValue || lastMod > LastFileRead.Value;
         }
 
+        private static void EnsureSettingsAreUpToDate()
+        {
+            if (NeedRefresh())
+            {
+                ByNameMap.Clear();
+                EncodedNameMap.Clear();
+                ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
+            }
+        }
+
         private static void SetValue(string name, string value)
         {
             lock (EncodedNameMap)
             {
                 //will refresh EncodedNameMap if needed
                 string inMemValue = GetValue(name);
-
+                
                 if (string.Equals(inMemValue, value))
                     return;
 
@@ -1124,11 +1134,7 @@ namespace GitCommands
         {
             lock (EncodedNameMap)
             {
-                if (NeedRefresh())
-                {
-                    ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
-                }
-
+                EnsureSettingsAreUpToDate();
                 string o = null;
                 EncodedNameMap.TryGetValue(name, out o);
                 return o;
@@ -1138,10 +1144,9 @@ namespace GitCommands
         public static T GetByName<T>(string name, T defaultValue, Func<string, T> decode)
         {
             object o;
-            lock (ByNameMap)
+            lock (EncodedNameMap)
             {
-                if (NeedRefresh())
-                    ByNameMap.Clear();
+                EnsureSettingsAreUpToDate();
 
                 if (ByNameMap.TryGetValue(name, out o))
                 {
@@ -1175,9 +1180,11 @@ namespace GitCommands
             else
                 s = encode(value);
 
-            SetValue(name, s);
-            lock (ByNameMap)
+            lock (EncodedNameMap)
+            {
+                SetValue(name, s);
                 ByNameMap[name] = value;
+            }
         }
 
         public static bool? GetBool(string name)
