@@ -74,15 +74,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 {
                     string response = e.Result;
                     // search for string like "http://gitextensions.googlecode.com/files/GitExtensions170SetupComplete.msi"
-                    var regEx = new Regex(FilesUrl + @"\d{3,6}SetupComplete.msi");
-
+                    var regEx = new Regex(FilesUrl + @"(?<ver>\d{3,6})SetupComplete.msi");
+                    
                     var matches = regEx.Matches(response);
 
                     foreach (Match match in matches)
                     {
-                        if (match.Value.Equals(FilesUrl + CurrentVersion + "SetupComplete.msi"))
-                            continue;
+                        int ver=int.Parse(match.Groups["ver"].Value);
+                        int cver=int.Parse(CurrentVersion);
 
+                            
+                        if (ver<=cver)
+                            continue;
+                        
                         UpdateFound = true;
                         UpdateUrl = "http://" + match.Value;
                         Done();
