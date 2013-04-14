@@ -94,7 +94,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 _NO_TRANSLATE_Name.Text = SelectedCategory.Name;
                 localScopeRB.Checked = SelectedCategory.Local;
                 repositoryScopeRB.Checked = !SelectedCategory.Local;
-                EnabledChx.Checked = !SelectedCategory.Disabled;
+                EnabledChx.Checked = SelectedCategory.Enabled;
                 MessageChx.Checked = SelectedCategory.SearchInParts.Contains(GitExtLinkDef.RevisionPart.Message);
                 LocalBranchChx.Checked = SelectedCategory.SearchInParts.Contains(GitExtLinkDef.RevisionPart.LocalBranches);
                 RemoteBranchChx.Checked = SelectedCategory.SearchInParts.Contains(GitExtLinkDef.RevisionPart.RemoteBranches);
@@ -110,7 +110,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             newCategory.Name = "<new>";
             newCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.Message);
             newCategory.Local = true;
-            newCategory.Disabled = false;
+            newCategory.Enabled = false;
             parser.LinkDefs.Add(newCategory);
             ReloadCategories();
             _NO_TRANSLATE_Categories.SelectedItem = newCategory;
@@ -143,6 +143,60 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 selected.Name = _NO_TRANSLATE_Name.Text;
                 ReloadCategories();
                 _NO_TRANSLATE_Categories.SelectedItem = selected;
+            }
+        }
+
+        private void repositoryScopeRB_CheckedChanged(object sender, EventArgs e)
+        {
+            if (SelectedCategory != null)
+            {
+                SelectedCategory.Local = localScopeRB.Checked;
+            }
+        }
+
+        private void EnabledChx_CheckedChanged(object sender, EventArgs e)
+        {
+            if (SelectedCategory != null)
+            {
+                SelectedCategory.Enabled = EnabledChx.Checked;
+            }
+        }
+
+        private void MessageChx_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if (SelectedCategory != null)
+            {
+                SelectedCategory.SearchInParts.Clear();
+
+                if (MessageChx.Checked)
+                {
+                    SelectedCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.Message);
+                }
+                if (LocalBranchChx.Checked)
+                {
+                    SelectedCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.LocalBranches);
+                }
+                if (RemoteBranchChx.Checked)
+                {
+                    SelectedCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.RemoteBranches);
+                }
+            }
+        }
+
+        private void _NO_TRANSLATE_SearchPatternEdit_Leave(object sender, EventArgs e)
+        {
+            if (SelectedCategory != null)
+            {
+                SelectedCategory.SearchPattern = _NO_TRANSLATE_SearchPatternEdit.Text.Trim();
+            }
+        }
+
+        private void _NO_TRANSLATE_NestedPatternEdit_Leave(object sender, EventArgs e)
+        {
+            if (SelectedCategory != null)
+            {
+                SelectedCategory.NestedSearchPattern = _NO_TRANSLATE_NestedPatternEdit.Text.Trim();
             }
         }
 

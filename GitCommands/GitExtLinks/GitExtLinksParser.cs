@@ -20,7 +20,10 @@ namespace GitCommands.GitExtLinks
 
         public IEnumerable<GitExtLink> Parse(GitRevision revision)
         {
-            return LinkDefs.Select(linkDef => linkDef.Parse(revision)).Unwrap();
+            return LinkDefs.
+                Where(linkDef => linkDef.Enabled).
+                Select(linkDef => linkDef.Parse(revision)).
+                Unwrap();
         }
 
         public void LoadFromConfig()
@@ -40,7 +43,7 @@ namespace GitCommands.GitExtLinks
             { 
                 GitExtLinkDef repoDef;
                 if (repoDefs.TryGetValue(localDef.Name, out repoDef))
-                    repoDef.Disabled = localDef.Disabled;
+                    repoDef.Enabled = localDef.Enabled;
                 else
                     LinkDefs.Add(localDef);
             }
@@ -60,10 +63,10 @@ namespace GitCommands.GitExtLinks
             config.RemoveConfigSections(GitExtLinkDef.GitExtLinkDefKey);
 
             foreach (GitExtLinkDef linkDef in LinkDefs.Where(link => link.Local))
-                config.AddConfigSection(linkDef.ToConfigSection(true));
+                config.AddConfigSection(linkDef.ToConfigSection(false));
 
-            //store in local config fact of disabling link def
-            foreach (GitExtLinkDef linkDef in LinkDefs.Where(link => !link.Local && link.Disabled))
+            //store in local config fact of disabling repo-scoped link def
+            foreach (GitExtLinkDef linkDef in LinkDefs.Where(link => !link.Local && !link.Enabled))
                 config.AddConfigSection(linkDef.ToConfigSection(true));
 
             config.Save();
