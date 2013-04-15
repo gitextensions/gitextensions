@@ -194,8 +194,7 @@ namespace GitUI.CommandsDialogs
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
                 UICommands.BrowseRepo = this;                
             }
-
-            dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+            
         }
 
         void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
@@ -1700,7 +1699,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                Process.Start(Settings.GetInstallDir() + "\\GitExtensionsUserManual.pdf");
+                Process.Start(Path.Combine(Settings.GetInstallDir(), "GitExtensionsUserManual.pdf"));
             }
             catch (Exception ex)
             {
@@ -2958,6 +2957,11 @@ namespace GitUI.CommandsDialogs
         {
             using (var updateForm = new FormUpdates(Module.GitVersion))
                 updateForm.ShowDialog(Owner);
+        }
+
+        private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
+        {
+            dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
         }
     }
 
