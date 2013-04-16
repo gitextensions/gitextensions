@@ -761,12 +761,29 @@ namespace GitCommands
 
         public static string GetInstallDir()
         {
-            return GetString("InstallDir", string.Empty);
+#if DEBUG
+#if INSTALL_DIR_FROM_REG
+            VersionIndependentRegKey.GetValue("InstallDir", string.Empty);
+#else
+            string gitExtDir = GetGitExtensionsDirectory().TrimEnd('\\').TrimEnd('/');
+            string debugPath = @"GitExtensions\bin\Debug";
+            int len = debugPath.Length;
+            var path = gitExtDir.Substring(gitExtDir.Length - len);
+            if (debugPath.Replace('\\', '/').Equals(path.Replace('\\', '/')))
+            {
+                string projectPath = gitExtDir.Substring(0, len + 2);
+                return Path.Combine(projectPath, "Bin");
+            }
+#endif
+#endif
+
+            return GetGitExtensionsDirectory();            
         }
 
+        //for repair only
         public static void SetInstallDir(string dir)
         {
-            SetString("InstallDir", dir);
+            VersionIndependentRegKey.SetValue("InstallDir", dir);
         }
 
         public static bool RunningOnWindows()
