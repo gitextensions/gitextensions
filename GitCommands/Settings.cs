@@ -1133,9 +1133,12 @@ namespace GitCommands
         {
             if (NeedRefresh())
             {
-                ByNameMap.Clear();
-                EncodedNameMap.Clear();
-                ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
+                lock (EncodedNameMap)
+                {
+                    ByNameMap.Clear();
+                    EncodedNameMap.Clear();
+                    ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
+                }
             }
         }
 
