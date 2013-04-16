@@ -79,7 +79,7 @@ namespace GitCommands
             {
                 ImportFromRegistry();
                 SaveXMLDictionarySettings(EncodedNameMap, SettingsFilePath);
-        }
+            }
             SaveTimer.Enabled = false;
             SaveTimer.AutoReset = false;
             SaveTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnSaveTimer);
@@ -755,12 +755,29 @@ namespace GitCommands
 
         public static string GetInstallDir()
         {
-            return GetString("InstallDir", string.Empty);
+#if DEBUG
+#if INSTALL_DIR_FROM_REG
+            VersionIndependentRegKey.GetValue("InstallDir", string.Empty);
+#else
+            string gitExtDir = GetGitExtensionsDirectory().TrimEnd('\\').TrimEnd('/');
+            string debugPath = @"GitExtensions\bin\Debug";
+            int len = debugPath.Length;
+            var path = gitExtDir.Substring(gitExtDir.Length - len);
+            if (debugPath.Replace('\\', '/').Equals(path.Replace('\\', '/')))
+            {
+                string projectPath = gitExtDir.Substring(0, len + 2);
+                return Path.Combine(projectPath, "Bin");
+            }
+#endif
+#endif
+
+            return GetGitExtensionsDirectory();            
         }
 
+        //for repair only
         public static void SetInstallDir(string dir)
         {
-            SetString("InstallDir", dir);
+            VersionIndependentRegKey.SetValue("InstallDir", dir);
         }
 
         public static bool RunningOnWindows()
@@ -836,7 +853,7 @@ namespace GitCommands
             }
             catch
             { }
-            }
+        }
 
         public static bool DashboardShowCurrentBranch
         {
@@ -995,31 +1012,32 @@ namespace GitCommands
         {
 
             if (File.Exists(FilePath))
-        {
+            {
 
                 try
-        {
+                {
                     lock (Dic)
                     {
 
                         XmlReaderSettings rSettings = new XmlReaderSettings
-        {
+                        {
                             IgnoreWhitespace = true
                         };
                         using (System.Xml.XmlReader xr = XmlReader.Create(FilePath, rSettings))
-                {
+                        {
 
                             Dic.ReadXml(xr);
                             LastFileRead = DateTime.UtcNow;
-        }
+                        }
                     }
                 }
-                catch (IOException)
-        {
+                catch (IOException e)
+                {
+                    System.Diagnostics.Debug.WriteLine(e.Message);
                     throw;
-        }
+                }
 
-        }
+            }
 
         }
         public static bool IsPortable()
@@ -1061,9 +1079,11 @@ namespace GitCommands
         {
             try
             {
-                using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(FilePath, Encoding.UTF8))
+                var tmpFile = FilePath + ".tmp";
+                lock (Dic)
                 {
-                    lock (Dic)
+
+                    using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(tmpFile, Encoding.UTF8))
                     {
                         xtw.Formatting = Formatting.Indented;
                         xtw.WriteStartDocument();
@@ -1071,12 +1091,21 @@ namespace GitCommands
 
                         Dic.WriteXml(xtw);
                         xtw.WriteEndElement();
+                    }
+                    if (File.Exists(FilePath))
+                    {
+                        File.Replace(tmpFile, FilePath, FilePath + ".backup", true);
+                    }
+                    else
+                    {
+                        File.Move(tmpFile, FilePath);
+                    }
+                    LastFileRead = GetLastFileModificationUTC(FilePath);
+                }
             }
-        }
-                LastFileRead = GetLastFileModificationUTC(FilePath);
-            }
-            catch (IOException)
+            catch (IOException e)
             {
+                System.Diagnostics.Debug.WriteLine(e.Message);
                 throw;
             }
 
@@ -1107,30 +1136,33 @@ namespace GitCommands
         }
 
         private static void EnsureSettingsAreUpToDate()
-                {
+        {
             if (NeedRefresh())
-                    {
-                ByNameMap.Clear();
-                EncodedNameMap.Clear();
-                ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
-                    }
+            {
+                lock (EncodedNameMap)
+                {
+                    ByNameMap.Clear();
+                    EncodedNameMap.Clear();
+                    ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
                 }
+            }
+        }
 
         private static void SetValue(string name, string value)
-                {
+        {
             lock (EncodedNameMap)
             {
                 //will refresh EncodedNameMap if needed
                 string inMemValue = GetValue(name);
-            
+                
                 if (string.Equals(inMemValue, value))
                     return;
 
-            if (value == null)
+                if (value == null)
                     EncodedNameMap.Remove(name);
-            else
+                else
                     EncodedNameMap[name] = value;
-        }
+            }
 
             if (UseTimer)
                 StartSaveTimer();
@@ -1154,28 +1186,28 @@ namespace GitCommands
             {
                 EnsureSettingsAreUpToDate();
 
-            if (ByNameMap.TryGetValue(name, out o))
-            {
+                if (ByNameMap.TryGetValue(name, out o))
+                {
                     if (o == null || o is T)
                     {
-                    return (T)o;
+                        return (T)o;
                     }
-                else
+                    else
                     {
-                    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
-            }
+                        throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                    }
                 }
-            else
-            {
+                else
+                {
                     if (decode == null)
                         throw new ArgumentNullException("decode", string.Format("The decode parameter for setting {0} is null.", name));
 
                     string s = GetValue(name);
                     T result = s == null ? defaultValue : decode(s);
-                ByNameMap[name] = result;
-                return result;
+                    ByNameMap[name] = result;
+                    return result;
+                }
             }
-        }
         }
 
         public static void SetByName<T>(string name, T value, Func<T, string> encode)
@@ -1189,8 +1221,8 @@ namespace GitCommands
             lock (EncodedNameMap)
             {
                 SetValue(name, s);
-            ByNameMap[name] = value;
-        }
+                ByNameMap[name] = value;
+            }
         }
 
         public static bool? GetBool(string name)
