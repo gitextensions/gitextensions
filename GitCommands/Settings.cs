@@ -1025,8 +1025,9 @@ namespace GitCommands
                         }
                     }
                 }
-                catch (IOException)
+                catch (IOException e)
                 {
+                    System.Diagnostics.Debug.WriteLine(e.Message);
                     throw;
                 }
 
@@ -1072,9 +1073,11 @@ namespace GitCommands
         {
             try
             {
-                using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(FilePath, Encoding.UTF8))
+                var tmpFile = FilePath + ".tmp";
+                lock (Dic)
                 {
-                    lock (Dic)
+
+                    using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(tmpFile, Encoding.UTF8))
                     {
                         xtw.Formatting = Formatting.Indented;
                         xtw.WriteStartDocument();
@@ -1083,11 +1086,20 @@ namespace GitCommands
                         Dic.WriteXml(xtw);
                         xtw.WriteEndElement();
                     }
+                    if (File.Exists(FilePath))
+                    {
+                        File.Replace(tmpFile, FilePath, FilePath + ".backup", true);
+                    }
+                    else
+                    {
+                        File.Move(tmpFile, FilePath);
+                    }
+                    LastFileRead = GetLastFileModificationUTC(FilePath);
                 }
-                LastFileRead = GetLastFileModificationUTC(FilePath);
             }
-            catch (IOException)
+            catch (IOException e)
             {
+                System.Diagnostics.Debug.WriteLine(e.Message);
                 throw;
             }
 
@@ -1121,9 +1133,12 @@ namespace GitCommands
         {
             if (NeedRefresh())
             {
-                ByNameMap.Clear();
-                EncodedNameMap.Clear();
-                ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
+                lock (EncodedNameMap)
+                {
+                    ByNameMap.Clear();
+                    EncodedNameMap.Clear();
+                    ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
+                }
             }
         }
 
