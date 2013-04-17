@@ -127,6 +127,12 @@ namespace GitCommands
             set { SetBool("showerrorswhenstagingfiles", value); }
         }
 
+	    public static bool DisableCommitAndPush
+	    {
+		    get { return GetBool("disablecommitandpush", false); }
+		    set { SetBool("disablecommitandpush", value); }
+	    }
+
         public static string LastCommitMessage
         {
             get { return GetString("lastCommitMessage", ""); }
