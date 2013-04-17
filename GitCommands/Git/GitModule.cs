@@ -349,17 +349,7 @@ namespace GitCommands
             if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir))
                 return false;
 
-            try
-            {
-                using (new LibGit2Sharp.Repository(dir))
-                {
-                    return true;
-                }
-            }
-            catch (RepositoryNotFoundException)
-            {
-                return false;
-            }
+            return LibGit2Sharp.Repository.IsValid(dir);
         }
 
         public string GetGitDirectory()
