@@ -614,7 +614,7 @@ namespace GitUI.CommandsDialogs
             Loading.Visible = false;
             LoadingStaged.Visible = false;
             Commit.Enabled = true;
-            CommitAndPush.Enabled = true;
+            CommitAndPush.Enabled = !Settings.DisableCommitAndPush;
             Amend.Enabled = true;
             Reset.Enabled = DoChangesExist();
 
