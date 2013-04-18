@@ -82,7 +82,13 @@ namespace GitCommands.Config
             _fileWatcher.EnableRaisingEvents = false;
             _configFile = new Lazy<ConfigFile>(() =>
                 {
-                    _fileWatcher.EnableRaisingEvents = true;
+                    try
+                    {
+                        _fileWatcher.EnableRaisingEvents = true;
+                    }
+                    catch (ArgumentException)
+                    {
+                    }
                     return new ConfigFile(_fileName, _local);
                 });
         }
