@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Settings.SmtpUseSsl = chkUseSSL.Checked;
             Settings.CloseProcessDialog = chkCloseProcessDialog.Checked;
             Settings.ShowGitCommandLine = chkShowGitCommandLine.Checked;
-	        Settings.DisableCommitAndPush = chkDisableCommitAndPush.Checked;
+            Settings.DisableCommitAndPush = chkDisableCommitAndPush.Checked;
             Settings.UseFastChecks = chkUseFastChecks.Checked;
             Settings.MaxRevisionGraphCommits = (int)_NO_TRANSLATE_MaxCommits.Value;
             Settings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
