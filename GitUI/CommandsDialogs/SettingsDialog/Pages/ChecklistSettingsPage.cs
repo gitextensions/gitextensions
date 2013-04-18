@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using Microsoft.Win32;
 using System.IO;
 using ResourceManager.Translation;
@@ -461,7 +462,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 bValid = CheckDiffToolConfiguration() && bValid;
                 bValid = CheckTranslationConfigSettings() && bValid;
 
-                if (Settings.RunningOnWindows())
+                if (EnvUtils.RunningOnWindows())
                 {
                     bValid = CheckGitExtensionsInstall() && bValid;
                     bValid = CheckGitExtensionRegistrySettings() && bValid;
@@ -608,7 +609,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 DiffTool.Text = _adviceDiffToolConfiguration.Text;
                 return false;
             }
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
             {
                 if (CheckSettingsLogic.GetGlobalDiffToolFromConfig().Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -644,7 +645,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return false;
             }
 
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
             {
                 if (_commonLogic.IsMergeTool("kdiff3"))
                 {
@@ -703,7 +704,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private bool CheckGitExtensionRegistrySettings()
         {
-            if (!Settings.RunningOnWindows())
+            if (!EnvUtils.RunningOnWindows())
                 return true;
 
             ShellExtensionsRegistered.Visible = true;
@@ -743,7 +744,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private bool CheckGitExtensionsInstall()
         {
-            if (!Settings.RunningOnWindows())
+            if (!EnvUtils.RunningOnWindows())
                 return true;
 
             GitExtensionsInstall.Visible = true;

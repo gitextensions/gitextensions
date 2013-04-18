@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitCommands.Utils;
 using ResourceManager.Translation;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace TranslationApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
             {
                 NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
 

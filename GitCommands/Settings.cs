@@ -11,6 +11,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using GitCommands.Logging;
 using GitCommands.Repository;
+using GitCommands.Utils;
 using Microsoft.Win32;
 
 namespace GitCommands
@@ -67,7 +68,7 @@ namespace GitCommands
                 GitExtensionsVersionString += '.' + version.Build.ToString();
                 GitExtensionsVersionInt = GitExtensionsVersionInt * 100 + version.Build;
             }
-            if (!RunningOnWindows())
+            if (!EnvUtils.RunningOnWindows())
             {
                 PathSeparator = '/';
                 PathSeparatorWrong = '\\';
@@ -778,47 +779,6 @@ namespace GitCommands
         public static void SetInstallDir(string dir)
         {
             VersionIndependentRegKey.SetValue("InstallDir", dir);
-        }
-
-        public static bool RunningOnWindows()
-        {
-            switch (Environment.OSVersion.Platform)
-            {
-                case PlatformID.Win32NT:
-                case PlatformID.Win32S:
-                case PlatformID.Win32Windows:
-                case PlatformID.WinCE:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public static bool RunningOnUnix()
-        {
-            switch (Environment.OSVersion.Platform)
-            {
-                case PlatformID.Unix:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public static bool RunningOnMacOSX()
-        {
-            switch (Environment.OSVersion.Platform)
-            {
-                case PlatformID.MacOSX:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public static bool IsMonoRuntime()
-        {
-            return Type.GetType("Mono.Runtime") != null;
         }
 
         public static void SaveSettings()
