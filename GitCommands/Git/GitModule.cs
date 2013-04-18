@@ -2526,17 +2526,14 @@ namespace GitCommands
 
         public Patch GetCurrentChangesUseLibGit2(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
-            using (LibGit2SharpThreadLock(this))
-            {
-                var changes = Repository.Diff.Compare(Repository.Head.Tip.Tree,
-                                                      staged ? DiffTargets.Index : DiffTargets.WorkingDirectory)
-                    .FirstOrDefault(entryChanges => entryChanges.Path == fileName || entryChanges.OldPath == fileName);
+            var changes = Repository.Diff.Compare(Repository.Head.Tip.Tree,
+                                                  staged ? DiffTargets.Index : DiffTargets.WorkingDirectory,
+                                                  new[] { fileName }).FirstOrDefault();
 
-                if (changes == null)
-                    return null;
+            if (changes == null)
+                return null;
 
-                return PatchProcessor.CreatePatchFromString(changes.Patch, encoding);
-            }
+            return PatchProcessor.CreatePatchFromString(changes.Patch, encoding);
         }
 
         public Patch GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
