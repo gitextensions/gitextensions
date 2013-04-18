@@ -20,7 +20,7 @@ namespace GitUI.CommitInfo
         private readonly TranslationString containedInNoBranch = new TranslationString("Contained in no branch");
         private readonly TranslationString containedInTags = new TranslationString("Contained in tags:");
         private readonly TranslationString containedInNoTag = new TranslationString("Contained in no tag");
-        private readonly TranslationString trsLinksRelatedToRevision = new TranslationString("Related links");
+        private readonly TranslationString trsLinksRelatedToRevision = new TranslationString("Related links:");
 
         public CommitInfo()
         {
@@ -54,7 +54,7 @@ namespace GitUI.CommitInfo
                             }
                             return;
                         }
-                        else if (result.Scheme.Equals(Uri.UriSchemeHttp) || result.Scheme.Equals(Uri.UriSchemeHttps))
+                        else
                         {
                             url = result.AbsoluteUri;
                         }
