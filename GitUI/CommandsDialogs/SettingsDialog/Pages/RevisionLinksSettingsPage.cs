@@ -167,19 +167,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (SelectedCategory != null)
             {
-                SelectedCategory.SearchInParts.Clear();
-
                 if (MessageChx.Checked)
                 {
                     SelectedCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.Message);
                 }
-                if (LocalBranchChx.Checked)
+                else
                 {
-                    SelectedCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.LocalBranches);
-                }
-                if (RemoteBranchChx.Checked)
-                {
-                    SelectedCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.RemoteBranches);
+                    SelectedCategory.SearchInParts.Remove(GitExtLinkDef.RevisionPart.Message);
                 }
             }
         }
@@ -200,6 +194,34 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
+        private void LocalBranchChx_CheckedChanged(object sender, EventArgs e)
+        {
+            if (SelectedCategory != null)
+            {
+                if (LocalBranchChx.Checked)
+                {
+                    SelectedCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.LocalBranches);
+                }
+                else
+                {
+                    SelectedCategory.SearchInParts.Remove(GitExtLinkDef.RevisionPart.LocalBranches);
+                }
+            }
+        }
 
+        private void RemoteBranchChx_CheckedChanged(object sender, EventArgs e)
+        {
+            if (SelectedCategory != null)
+            {
+                if (RemoteBranchChx.Checked)
+                {
+                    SelectedCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.RemoteBranches);
+                }
+                else
+                {
+                    SelectedCategory.SearchInParts.Remove(GitExtLinkDef.RevisionPart.RemoteBranches);
+                }
+            }
+        }
     }
 }

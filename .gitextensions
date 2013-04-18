@@ -1,7 +1,7 @@
 [GitExtLinkDef "GitHub - issues"]
 	SearchPattern = "(\\s*(,|and)?\\s*#\\d+)+"
 	NestedSearchPattern = (\\d+)+
-	RevisionParts = Message
+	RevisionParts = Message LocalBranches RemoteBranches
 	LinkFormat0 = https://github.com/gitextensions/gitextensions/issues/{0}
 	LinkCaption0 = Issue {0}
 	LinkFormatCount = 1
