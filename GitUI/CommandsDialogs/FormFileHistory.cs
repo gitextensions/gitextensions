@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs
@@ -119,7 +120,7 @@ namespace GitUI.CommandsDialogs
             //The section below contains native windows (kernel32) calls
             //and breaks on Linux. Only use it on Windows. Casing is only
             //a Windows problem anyway.
-            if (Settings.RunningOnWindows() && File.Exists(fullFilePath))
+            if (EnvUtils.RunningOnWindows() && File.Exists(fullFilePath))
             {
                 // grab the 8.3 file path
                 var shortPath = new StringBuilder(4096);
