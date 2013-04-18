@@ -9,6 +9,7 @@ using System.Net;
 using System.Windows.Forms;
 using System.Xml;
 using GitCommands;
+using GitCommands.Utils;
 
 namespace GitUI.Editor.RichTextBoxExtension
 {
@@ -1105,7 +1106,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static void SetXHTMLText(this RichTextBox rtb, string xhtmlText)
         {
-            if (!Settings.RunningOnWindows())
+            if (!EnvUtils.RunningOnWindows())
             {
                 SetXHTMLTextAsPlainText(rtb, xhtmlText);
                 return;
