@@ -2744,21 +2744,26 @@ namespace GitUI.CommandsDialogs
 
         private Task GetSubmoduleStatusImageAsync(ToolStripMenuItem mi, GitModule module, string submodulePath)
         {
+            if (String.IsNullOrEmpty(submodulePath))
+            {
+                mi.Image = Resources.IconFolderSubmodule;
+                return null;
+            }
             var token = _submodulesStatusImagesCTS.Token;
             return Task.Factory.StartNew(() =>
-            {
-                var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(module, submodulePath);
-                if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                 {
-                    var submodule = submoduleStatus.GetSubmodule(module);
-                    submoduleStatus.CheckSubmoduleStatus(submodule);
-                }
-                return submoduleStatus;
-            }, token)
-            .ContinueWith((task) => mi.Image = GetItemImage(task.Result),
-                CancellationToken.None,
-                TaskContinuationOptions.OnlyOnRanToCompletion,
-                TaskScheduler.FromCurrentSynchronizationContext());
+                    var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(module, submodulePath);
+                    if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
+                    {
+                        var submodule = submoduleStatus.GetSubmodule(module);
+                        submoduleStatus.CheckSubmoduleStatus(submodule);
+                    }
+                    return submoduleStatus;
+                }, token)
+                .ContinueWith((task) => mi.Image = GetItemImage(task.Result),
+                    CancellationToken.None,
+                    TaskContinuationOptions.OnlyOnRanToCompletion,
+                    TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void UpdateSubmodulesList()
@@ -2775,8 +2780,9 @@ namespace GitUI.CommandsDialogs
                     name = name + " " + GetModuleBranch(path);
 
                 var smi = AddSubmoduleToMenu(name, path);
-                var submoduleName = submodule;
-                GetSubmoduleStatusImageAsync(smi, Module, submoduleName);
+                var module = Module.GetSubmodule(submodule);
+                var submoduleName = module.GetCurrentSubmoduleLocalPath();
+                GetSubmoduleStatusImageAsync(smi, module.SuperprojectModule, submoduleName);
             }
 
             bool containSubmodules = toolStripButtonLevelUp.DropDownItems.Count != 0;
@@ -2798,15 +2804,16 @@ namespace GitUI.CommandsDialogs
                         name = name + " " + GetModuleBranch(path);
 
                     var smi = AddSubmoduleToMenu(name, supersuperproject);
-                    var submoduleName = Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
-                    GetSubmoduleStatusImageAsync(smi, supersuperproject, submoduleName);
+                    smi.Image = Resources.IconFolderSubmodule;
                 }
 
                 {
                     var name = "Superproject: ";
+                    GitModule parentModule = Module.SuperprojectModule;
                     string localpath = "";
                     if (Module.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
                     {
+                        parentModule = supersuperproject;
                         localpath = Module.SuperprojectModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
                         localpath = localpath.Replace(Settings.PathSeparator, Settings.PathSeparatorWrong).TrimEnd(
                                 Settings.PathSeparatorWrong);
@@ -2819,7 +2826,7 @@ namespace GitUI.CommandsDialogs
                         name = name + " " + GetModuleBranch(path);
 
                     var smi = AddSubmoduleToMenu(name, Module.SuperprojectModule);
-                    GetSubmoduleStatusImageAsync(smi, Module.SuperprojectModule, localpath);
+                    GetSubmoduleStatusImageAsync(smi, parentModule, localpath);
                 }
 
                 var submodules = supersuperproject.GetSubmodulesLocalPathes().OrderBy(submoduleName => submoduleName);
@@ -2835,19 +2842,15 @@ namespace GitUI.CommandsDialogs
                         string path = supersuperproject.GetSubmoduleFullPath(submodule);
                         if (Settings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
                             name = name + " " + GetModuleBranch(path);
-                        //var module = supersuperproject.GetSubmodule(submodule);
-                        //var status = GitCommandHelpers.GetSubmoduleChanges(module.SuperprojectModule,
-                        //    module.GetCurrentSubmoduleLocalPath());
-                        //if (status != null && status.IsDirty)
-                        //    name = name + "-dirty";
                         var submenu = AddSubmoduleToMenu(name, path);
                         if (submodule == localpath)
                         {
                             currentSubmoduleName = Module.GetCurrentSubmoduleLocalPath();
                             submenu.Font = new Font(submenu.Font, FontStyle.Bold);
                         }
-                        var submoduleName = submodule;
-                        GetSubmoduleStatusImageAsync(submenu, Module, submoduleName);
+                        var module = supersuperproject.GetSubmodule(submodule);
+                        var submoduleName = module.GetCurrentSubmoduleLocalPath();
+                        GetSubmoduleStatusImageAsync(submenu, module.SuperprojectModule, submoduleName);
                     }
                 }
             }

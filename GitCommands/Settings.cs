@@ -757,12 +757,29 @@ namespace GitCommands
 
         public static string GetInstallDir()
         {
-            return GetString("InstallDir", string.Empty);
+#if DEBUG
+#if INSTALL_DIR_FROM_REG
+            VersionIndependentRegKey.GetValue("InstallDir", string.Empty);
+#else
+            string gitExtDir = GetGitExtensionsDirectory().TrimEnd('\\').TrimEnd('/');
+            string debugPath = @"GitExtensions\bin\Debug";
+            int len = debugPath.Length;
+            var path = gitExtDir.Substring(gitExtDir.Length - len);
+            if (debugPath.Replace('\\', '/').Equals(path.Replace('\\', '/')))
+            {
+                string projectPath = gitExtDir.Substring(0, len + 2);
+                return Path.Combine(projectPath, "Bin");
+            }
+#endif
+#endif
+
+            return GetGitExtensionsDirectory();            
         }
 
+        //for repair only
         public static void SetInstallDir(string dir)
         {
-            SetString("InstallDir", dir);
+            VersionIndependentRegKey.SetValue("InstallDir", dir);
         }
 
         public static bool RunningOnWindows()
@@ -1010,8 +1027,9 @@ namespace GitCommands
                         }
                     }
                 }
-                catch (IOException)
+                catch (IOException e)
                 {
+                    System.Diagnostics.Debug.WriteLine(e.Message);
                     throw;
                 }
 
@@ -1057,9 +1075,11 @@ namespace GitCommands
         {
             try
             {
-                using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(FilePath, Encoding.UTF8))
+                var tmpFile = FilePath + ".tmp";
+                lock (Dic)
                 {
-                    lock (Dic)
+
+                    using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(tmpFile, Encoding.UTF8))
                     {
                         xtw.Formatting = Formatting.Indented;
                         xtw.WriteStartDocument();
@@ -1068,11 +1088,20 @@ namespace GitCommands
                         Dic.WriteXml(xtw);
                         xtw.WriteEndElement();
                     }
+                    if (File.Exists(FilePath))
+                    {
+                        File.Replace(tmpFile, FilePath, FilePath + ".backup", true);
+                    }
+                    else
+                    {
+                        File.Move(tmpFile, FilePath);
+                    }
+                    LastFileRead = GetLastFileModificationUTC(FilePath);
                 }
-                LastFileRead = GetLastFileModificationUTC(FilePath);
             }
-            catch (IOException)
+            catch (IOException e)
             {
+                System.Diagnostics.Debug.WriteLine(e.Message);
                 throw;
             }
 
@@ -1106,9 +1135,12 @@ namespace GitCommands
         {
             if (NeedRefresh())
             {
-                ByNameMap.Clear();
-                EncodedNameMap.Clear();
-                ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
+                lock (EncodedNameMap)
+                {
+                    ByNameMap.Clear();
+                    EncodedNameMap.Clear();
+                    ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
+                }
             }
         }
 
