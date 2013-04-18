@@ -84,7 +84,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         int cver=int.Parse(CurrentVersion);
 
                             
-                        if (ver<=cver)
+                        if (ver <= cver)
                             continue;
                         
                         UpdateFound = true;
