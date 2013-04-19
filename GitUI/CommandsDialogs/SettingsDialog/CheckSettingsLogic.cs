@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Utils;
 using System.IO;
 using Microsoft.Win32;
 using System.Windows.Forms;
@@ -28,7 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool AutoSolveAllSettings()
         {
-            if (!Settings.RunningOnWindows())
+            if (!EnvUtils.RunningOnWindows())
                 return SolveGitCommand();
 
             bool valid = true;
@@ -62,9 +63,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 if (File.Exists(gcsFileName))
                 {
                     ConfigFile config = GitCommandHelpers.GetGlobalConfig();
-                    if (Settings.RunningOnWindows())
+                    if (EnvUtils.RunningOnWindows())
                         config.SetValue("credential.helper", "!\\\"" + GitCommandHelpers.FixPath(gcsFileName) + "\\\"");
-                    else if (Settings.RunningOnMacOSX())
+                    else if (EnvUtils.RunningOnMacOSX())
                         config.SetValue("credential.helper", "osxkeychain");
                     else
                         config.SetValue("credential.helper", "cache --timeout=300"); // 5 min
@@ -80,7 +81,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             string value = GitCommandHelpers.GetGlobalConfig().GetValue("credential.helper");
             bool isValid;
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
                 isValid = value.Contains("git-credential-winstore.exe");
             else
                 isValid = !string.IsNullOrEmpty(value);
@@ -90,7 +91,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool SolveLinuxToolsDir()
         {
-            if (!Settings.RunningOnWindows())
+            if (!EnvUtils.RunningOnWindows())
             {
                 Settings.GitBinDir = "";
                 return true;
@@ -185,7 +186,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool SolveGitCommand()
         {
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
             {
                 var command = (from cmd in GetWindowsCommandLocations()
                                let output = _gitModule.RunCmd(cmd, string.Empty)

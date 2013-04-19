@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
@@ -504,7 +505,7 @@ namespace GitUI.CommandsDialogs
             if (patch != null && patch.Length > 0)
             {
                 string output = Module.RunGitCmd(args, patch);
-                if (Settings.RunningOnWindows())
+                if (EnvUtils.RunningOnWindows())
                 {
                     //remove file mode warnings on windows
                     Regex regEx = new Regex("warning: .*has type .* expected .*", RegexOptions.Compiled);

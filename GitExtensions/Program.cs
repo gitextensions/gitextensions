@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using GitUI;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -20,7 +21,7 @@ namespace GitExtensions
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            if (!Settings.IsMonoRuntime())
+            if (!EnvUtils.IsMonoRuntime())
             {
                 NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
 
@@ -45,7 +46,7 @@ namespace GitExtensions
             Application.DoEvents();
 
             Settings.LoadSettings();
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
             {
                 //Quick HOME check:
                 FormSplash.SetAction("Checking home path...");
@@ -94,7 +95,7 @@ namespace GitExtensions
 
             FormSplash.HideSplash();
 
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
                 MouseWheelRedirector.Active = true;
 
             GitUICommands uCommands = new GitUICommands(GetWorkingDir(args));
