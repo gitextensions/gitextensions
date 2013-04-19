@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using GitUI.Script;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -28,7 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public override void OnPageShown()
         {
-			if (Settings.RunningOnWindows())
+			if (EnvUtils.RunningOnWindows())
 			{
 				System.Resources.ResourceManager rm =
 					new System.Resources.ResourceManager("GitUI.Properties.Resources",

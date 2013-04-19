@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using GitCommands;
+using GitCommands.Utils;
 using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
@@ -93,14 +94,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             if (string.IsNullOrEmpty(pathFromConfig) || !File.Exists(pathFromConfig))
             {
                 string kdiff3path = pathFromConfig;
-                if (Settings.RunningOnUnix())
+                if (EnvUtils.RunningOnUnix())
                 {
                     // Maybe command -v is better, but didn't work
                     kdiff3path = GitCommandHelpers.RunCmd("which", "kdiff3").Replace("\n", string.Empty);
                     if (string.IsNullOrEmpty(kdiff3path))
                         return null;
                 }
-                else if (Settings.RunningOnWindows())
+                else if (EnvUtils.RunningOnWindows())
                 {
                     string regkdiff3path = GetRegistryValue(Registry.LocalMachine, "SOFTWARE\\KDiff3", "");
                     if (regkdiff3path != "")
