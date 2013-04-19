@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
+using GitCommands.Utils;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.Hotkey;
@@ -247,7 +248,7 @@ namespace GitUI.CommandsDialogs
         private void BrowseLoad(object sender, EventArgs e)
         {
 #if !__MonoCS__
-            if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 TaskbarManager.Instance.ApplicationId = "GitExtensions";
             }
@@ -546,7 +547,7 @@ namespace GitUI.CommandsDialogs
         private void UpdateJumplist(bool validWorkingDir)
         {
 #if !__MonoCS__
-            if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 if (validWorkingDir)
                 {
@@ -585,7 +586,7 @@ namespace GitUI.CommandsDialogs
         private void CreateOrUpdateTaskBarButtons(bool validRepo)
         {
 #if !__MonoCS__
-            if (Settings.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+            if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
                 if (!_toolbarButtonsCreated)
                 {

@@ -336,7 +336,11 @@ namespace GitUI
             {
                 ClearSelected();
                 if (value >= 0)
+                {
                     FileStatusListView.Items[value].Selected = true;
+                    FileStatusListView.Items[value].Focused = true;
+                    FileStatusListView.Items[value].EnsureVisible();
+                }
             }
         }
 
