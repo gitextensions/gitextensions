@@ -415,7 +415,7 @@
             this.chkDisableCommitAndPush.Name = "chkDisableCommitAndPush";
             this.chkDisableCommitAndPush.Size = new System.Drawing.Size(270, 17);
             this.chkDisableCommitAndPush.TabIndex = 55;
-            this.chkDisableCommitAndPush.Text = "Disable Command and Push button in commit dialog";
+            this.chkDisableCommitAndPush.Text = "Disable Commit and Push button in commit dialog";
             this.chkDisableCommitAndPush.UseVisualStyleBackColor = true;
             // 
             // GitExtensionsSettingsPage
