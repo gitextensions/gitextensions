@@ -179,11 +179,16 @@ namespace GitCommands
             if ((RefsOptions & RefsFiltringOptions.ShowGitNotes) == RefsFiltringOptions.ShowGitNotes)
                 logParam += " --not --glob=notes --not";
 
+            string branchFilter = BranchFilter;
+            if ((!string.IsNullOrWhiteSpace(BranchFilter)) && 
+                (BranchFilter.IndexOfAny(new[] {'?', '*', '['}) >= 0))
+                branchFilter = "--branches=" + BranchFilter;
+
             string arguments = String.Format(CultureInfo.InvariantCulture,
                 "log -z {2} --pretty=format:\"{1}\" {0} {3}",
                 logParam,
                 formatString,
-                BranchFilter,
+                branchFilter,
                 Filter);
 
             using (GitCommandsInstance gitGetGraphCommand = new GitCommandsInstance(_module))
