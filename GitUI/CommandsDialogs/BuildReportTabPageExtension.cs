@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 
 namespace GitUI.CommandsDialogs
 {
@@ -25,7 +26,7 @@ namespace GitUI.CommandsDialogs
 
         public void FillBuildReport(GitRevision revision)
         {
-            if (Settings.IsMonoRuntime())
+            if (EnvUtils.IsMonoRuntime())
                 return;
 
             if (selectedGitRevision != null) selectedGitRevision.PropertyChanged -= RevisionPropertyChanged;
