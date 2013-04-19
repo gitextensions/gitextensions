@@ -259,7 +259,7 @@ namespace GitUI.CommandsDialogs
                 Diff.ViewPatch(FileChanges, file, "You need to select at least one revision to view diff.");
             }
 
-            if (!Settings.IsMonoRuntime())
+            if (!EnvUtils.IsMonoRuntime())
             {
                 if (BuildReportTabPageExtension == null)
                     BuildReportTabPageExtension = new BuildReportTabPageExtension(tabControl1);

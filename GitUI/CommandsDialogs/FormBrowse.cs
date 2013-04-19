@@ -971,7 +971,7 @@ namespace GitUI.CommandsDialogs
         
         private void FillBuildReport()
         {
-            if(Settings.IsMonoRuntime())
+            if(EnvUtils.IsMonoRuntime())
                 return;
 
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
