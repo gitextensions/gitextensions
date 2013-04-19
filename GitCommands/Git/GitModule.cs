@@ -1041,6 +1041,15 @@ namespace GitCommands
             }
         }
 
+        public Process RunPowerShell(string powerShellCommand = null)
+        {
+            string args = "";
+            if (!string.IsNullOrWhiteSpace(powerShellCommand))
+                args = powerShellCommand.Replace("\"", "\\\"") + "\"";
+
+            return RunRealCmdDetached("powershell.exe", args);
+        }
+
         public string Init(bool bare, bool shared)
         {
             if (bare && shared)
