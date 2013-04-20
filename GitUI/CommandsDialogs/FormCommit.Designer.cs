@@ -341,13 +341,6 @@ namespace GitUI.CommandsDialogs
             this.interactiveAddtoolStripMenuItem.Text = "Interactive Add";
             this.interactiveAddtoolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
-            // fileTooltip
-            // 
-            this.fileTooltip.AutomaticDelay = 0;
-            this.fileTooltip.AutoPopDelay = 500;
-            this.fileTooltip.InitialDelay = 0;
-            this.fileTooltip.ReshowDelay = 0;
-            // 
             // StageInSuperproject
             // 
             this.StageInSuperproject.AutoSize = true;
