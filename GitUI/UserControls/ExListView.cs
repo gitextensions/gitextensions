@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 
 namespace GitUI.UserControls
 {
@@ -281,7 +282,7 @@ namespace GitUI.UserControls
         public void SetGroupState(ListViewGroupState state)
         {
 #if !__MonoCS__
-            if (!Settings.RunningOnWindows() || Environment.OSVersion.Version.Major < 6)   //Only Vista and forward 
+            if (!EnvUtils.RunningOnWindows() || Environment.OSVersion.Version.Major < 6)   //Only Vista and forward 
                 // allows collapse of ListViewGroups
                 return;
             foreach (ListViewGroup lvg in Groups)

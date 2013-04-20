@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using GitCommands;
+using GitCommands.Utils;
 
 namespace GitUI
 {
@@ -40,7 +41,7 @@ namespace GitUI
 
             string truncatePathMethod = Settings.TruncatePathMethod;
             if (truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) &&
-                Settings.RunningOnWindows()) //The win32 method PathCompactPathEx is only supported on Windows
+                EnvUtils.RunningOnWindows()) //The win32 method PathCompactPathEx is only supported on Windows
             {
                 var result = new StringBuilder(length);
                 NativeMethods.PathCompactPathEx(result, path, length, 0);
@@ -57,7 +58,7 @@ namespace GitUI
         public string FormatTextForDrawing(int width, string name, string oldName)
         {
             string truncatePathMethod = Settings.TruncatePathMethod;
-            if ((!truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) || !Settings.RunningOnWindows()) &&
+            if ((!truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) || !EnvUtils.RunningOnWindows()) &&
                 !truncatePathMethod.Equals("trimStart", StringComparison.OrdinalIgnoreCase))
                 return FormatString(name, oldName, 0, false);
 
