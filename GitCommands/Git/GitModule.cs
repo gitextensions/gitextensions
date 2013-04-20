@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Config;
+using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using PatchApply;
@@ -998,7 +999,7 @@ namespace GitCommands
 
         public void RunGitK()
         {
-            if (Settings.RunningOnUnix())
+            if (EnvUtils.RunningOnUnix())
             {
                 RunRealCmdDetached("gitk", "");
             }
@@ -1012,7 +1013,7 @@ namespace GitCommands
 
         public void RunGui()
         {
-            if (Settings.RunningOnUnix())
+            if (EnvUtils.RunningOnUnix())
             {
                 RunRealCmdDetached("git", "gui");
             }
@@ -1024,7 +1025,7 @@ namespace GitCommands
 
         public Process RunBash(string bashCommand = null)
         {
-            if (Settings.RunningOnUnix())
+            if (EnvUtils.RunningOnUnix())
             {
                 string[] termEmuCmds =
                 {
@@ -3217,7 +3218,7 @@ namespace GitCommands
             // Get processes by "ps" command.
             var cmd = Path.Combine(Settings.GitBinDir, "ps");
             var arguments = "x";
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
             {
                 // "x" option is unimplemented by msysgit and cygwin.
                 arguments = "";

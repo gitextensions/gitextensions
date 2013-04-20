@@ -11,6 +11,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using GitCommands.Logging;
 using GitCommands.Repository;
+using GitCommands.Utils;
 using Microsoft.Win32;
 
 namespace GitCommands
@@ -67,7 +68,7 @@ namespace GitCommands
                 GitExtensionsVersionString += '.' + version.Build.ToString();
                 GitExtensionsVersionInt = GitExtensionsVersionInt * 100 + version.Build;
             }
-            if (!RunningOnWindows())
+            if (!EnvUtils.RunningOnWindows())
             {
                 PathSeparator = '/';
                 PathSeparatorWrong = '\\';
@@ -755,53 +756,29 @@ namespace GitCommands
 
         public static string GetInstallDir()
         {
-            return GetString("InstallDir", string.Empty);
+#if DEBUG
+#if INSTALL_DIR_FROM_REG
+            VersionIndependentRegKey.GetValue("InstallDir", string.Empty);
+#else
+            string gitExtDir = GetGitExtensionsDirectory().TrimEnd('\\').TrimEnd('/');
+            string debugPath = @"GitExtensions\bin\Debug";
+            int len = debugPath.Length;
+            var path = gitExtDir.Substring(gitExtDir.Length - len);
+            if (debugPath.Replace('\\', '/').Equals(path.Replace('\\', '/')))
+            {
+                string projectPath = gitExtDir.Substring(0, len + 2);
+                return Path.Combine(projectPath, "Bin");
+            }
+#endif
+#endif
+
+            return GetGitExtensionsDirectory();            
         }
 
+        //for repair only
         public static void SetInstallDir(string dir)
         {
-            SetString("InstallDir", dir);
-        }
-
-        public static bool RunningOnWindows()
-        {
-            switch (Environment.OSVersion.Platform)
-            {
-                case PlatformID.Win32NT:
-                case PlatformID.Win32S:
-                case PlatformID.Win32Windows:
-                case PlatformID.WinCE:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public static bool RunningOnUnix()
-        {
-            switch (Environment.OSVersion.Platform)
-            {
-                case PlatformID.Unix:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public static bool RunningOnMacOSX()
-        {
-            switch (Environment.OSVersion.Platform)
-            {
-                case PlatformID.MacOSX:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public static bool IsMonoRuntime()
-        {
-            return Type.GetType("Mono.Runtime") != null;
+            VersionIndependentRegKey.SetValue("InstallDir", dir);
         }
 
         public static void SaveSettings()
@@ -1008,8 +985,9 @@ namespace GitCommands
                         }
                     }
                 }
-                catch (IOException)
+                catch (IOException e)
                 {
+                    System.Diagnostics.Debug.WriteLine(e.Message);
                     throw;
                 }
 
@@ -1055,9 +1033,11 @@ namespace GitCommands
         {
             try
             {
-                using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(FilePath, Encoding.UTF8))
+                var tmpFile = FilePath + ".tmp";
+                lock (Dic)
                 {
-                    lock (Dic)
+
+                    using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(tmpFile, Encoding.UTF8))
                     {
                         xtw.Formatting = Formatting.Indented;
                         xtw.WriteStartDocument();
@@ -1066,11 +1046,20 @@ namespace GitCommands
                         Dic.WriteXml(xtw);
                         xtw.WriteEndElement();
                     }
+                    if (File.Exists(FilePath))
+                    {
+                        File.Replace(tmpFile, FilePath, FilePath + ".backup", true);
+                    }
+                    else
+                    {
+                        File.Move(tmpFile, FilePath);
+                    }
+                    LastFileRead = GetLastFileModificationUTC(FilePath);
                 }
-                LastFileRead = GetLastFileModificationUTC(FilePath);
             }
-            catch (IOException)
+            catch (IOException e)
             {
+                System.Diagnostics.Debug.WriteLine(e.Message);
                 throw;
             }
 
@@ -1100,6 +1089,19 @@ namespace GitCommands
             return !LastFileRead.HasValue || lastMod > LastFileRead.Value;
         }
 
+        private static void EnsureSettingsAreUpToDate()
+        {
+            if (NeedRefresh())
+            {
+                lock (EncodedNameMap)
+                {
+                    ByNameMap.Clear();
+                    EncodedNameMap.Clear();
+                    ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
+                }
+            }
+        }
+
         private static void SetValue(string name, string value)
         {
             lock (EncodedNameMap)
@@ -1124,11 +1126,7 @@ namespace GitCommands
         {
             lock (EncodedNameMap)
             {
-                if (NeedRefresh())
-                {
-                    ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
-                }
-
+                EnsureSettingsAreUpToDate();
                 string o = null;
                 EncodedNameMap.TryGetValue(name, out o);
                 return o;
@@ -1138,30 +1136,31 @@ namespace GitCommands
         public static T GetByName<T>(string name, T defaultValue, Func<string, T> decode)
         {
             object o;
-
-            if (NeedRefresh())
-                ByNameMap.Clear();
-
-            if (ByNameMap.TryGetValue(name, out o))
+            lock (EncodedNameMap)
             {
-                if (o == null || o is T)
+                EnsureSettingsAreUpToDate();
+
+                if (ByNameMap.TryGetValue(name, out o))
                 {
-                    return (T)o;
+                    if (o == null || o is T)
+                    {
+                        return (T)o;
+                    }
+                    else
+                    {
+                        throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                    }
                 }
                 else
                 {
-                    throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
-                }
-            }
-            else
-            {
-                if (decode == null)
-                    throw new ArgumentNullException("decode", string.Format("The decode parameter for setting {0} is null.", name));
+                    if (decode == null)
+                        throw new ArgumentNullException("decode", string.Format("The decode parameter for setting {0} is null.", name));
 
-                string s = GetValue(name);
-                T result = s == null ? defaultValue : decode(s);
-                ByNameMap[name] = result;
-                return result;
+                    string s = GetValue(name);
+                    T result = s == null ? defaultValue : decode(s);
+                    ByNameMap[name] = result;
+                    return result;
+                }
             }
         }
 
@@ -1173,8 +1172,11 @@ namespace GitCommands
             else
                 s = encode(value);
 
-            SetValue(name, s);
-            ByNameMap[name] = value;
+            lock (EncodedNameMap)
+            {
+                SetValue(name, s);
+                ByNameMap[name] = value;
+            }
         }
 
         public static bool? GetBool(string name)
