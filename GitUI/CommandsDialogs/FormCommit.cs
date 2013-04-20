@@ -18,11 +18,14 @@ using GitUI.Script;
 using PatchApply;
 using ResourceManager.Translation;
 using Timer = System.Windows.Forms.Timer;
+using GitCommands.Config;
 
 namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCommit : GitModuleForm //, IHotkeyable
     {
+        private const string USER_NAME_KEY = "user.name";
+        private const string USER_EMAIL_KEY = "user.email";
         #region Translation
         private readonly TranslationString _amendCommit =
             new TranslationString("You are about to rewrite history." + Environment.NewLine +
@@ -109,6 +112,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _commitValidationCaption = new TranslationString("Commit validation");
 
         private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
+
+        private readonly TranslationString _commitAuthorToolTip = new TranslationString("Commit as ");
         #endregion
 
         private readonly TaskScheduler _taskScheduler;
@@ -125,7 +130,8 @@ namespace GitUI.CommandsDialogs
         private readonly AsyncLoader _unstagedLoader;
         private readonly bool _useFormCommitMessage;
         private CancellationTokenSource _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
-
+        private string _userName = "";
+        private string _userEmail = "";
         /// <summary>
         /// For VS designer
         /// </summary>
@@ -304,7 +310,7 @@ namespace GitUI.CommandsDialogs
                 ResetSelectedLinesToolStripMenuItemClick(this, null);
                 return true;
             }
-            
+
             return false;
         }
 
@@ -373,7 +379,7 @@ namespace GitUI.CommandsDialogs
 
         private void ComputeUnstagedFiles(Action<IList<GitItemStatus>> onComputed, bool DoAsync)
         {
-            Func < IList < GitItemStatus >> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
+            Func<IList<GitItemStatus>> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked);
 
@@ -675,8 +681,8 @@ namespace GitUI.CommandsDialogs
 
             _stageSelectedLinesToolStripMenuItem.Text = staged ? _unstageSelectedLines.Text : _stageSelectedLines.Text;
             _stageSelectedLinesToolStripMenuItem.Image = staged ? toolUnstageItem.Image : toolStageItem.Image;
-            _stageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = 
-                GetShortcutKeys((int) (staged ? Commands.UnStageSelectedFile : Commands.StageSelectedFile)).ToShortcutKeyDisplayString();
+            _stageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString =
+                GetShortcutKeys((int)(staged ? Commands.UnStageSelectedFile : Commands.StageSelectedFile)).ToShortcutKeyDisplayString();
         }
 
         private long GetItemLength(string fileName)
@@ -730,7 +736,7 @@ namespace GitUI.CommandsDialogs
             finally
             {
                 filesSelectionChanging = false;
-            }        
+            }
         }
 
         private void StagedSelectionChanged(object sender, EventArgs e)
@@ -783,7 +789,7 @@ namespace GitUI.CommandsDialogs
 
         private void CheckForStagedAndCommit(bool amend, bool push)
         {
-            if ( amend )
+            if (amend)
             {
                 // This is an amend commit.  Confirm the user understands the implications.  We don't want to prompt for an empty
                 // commit, because amend may be used just to change the commit message or timestamp.
@@ -1051,7 +1057,7 @@ namespace GitUI.CommandsDialogs
                                     unstagedItems.Add(item);
                             }
                             unStagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
-                            unStagedFiles.RemoveAll(item => item.IsSubmodule && item.SubmoduleStatus.IsCompleted && 
+                            unStagedFiles.RemoveAll(item => item.IsSubmodule && item.SubmoduleStatus.IsCompleted &&
                                 !item.SubmoduleStatus.Result.IsDirty && unstagedItems.Contains(item));
                             foreach (var item in unstagedItems.Where(item => item.IsSubmodule &&
                                 item.SubmoduleStatus.IsCompleted && item.SubmoduleStatus.Result.IsDirty))
@@ -1061,7 +1067,7 @@ namespace GitUI.CommandsDialogs
                             Unstaged.GitItemStatuses = unStagedFiles;
                         });
                     Unstaged.SelectStoredNextIndex();
-                }                
+                }
 
                 toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
 
@@ -1435,7 +1441,7 @@ namespace GitUI.CommandsDialogs
                 if (!localLastCommitMessage.Trim().Equals(msg.Trim()))
                     AddCommitMessageToMenu(localLastCommitMessage);
 
-            commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
+                commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
                 toolStripMenuItem1,
                 generateListOfChangesInSubmodulesChangesToolStripMenuItem});
             }
@@ -1670,8 +1676,47 @@ namespace GitUI.CommandsDialogs
         {
             if (Settings.RefreshCommitDialogOnFormFocus)
                 RescanChanges();
+
+            string toolTip = "";
+            if (string.IsNullOrEmpty(toolAuthor.Text) || string.IsNullOrEmpty(toolAuthor.Text.Trim()))
+            {
+                GetUserSettings();
+                toolTip = string.Format("{0} {1} <{2}>", _commitAuthorToolTip.Text, _userName, _userEmail);
+            }
+            else
+
+                toolTip = string.Format("{0} {1}", _commitAuthorToolTip.Text, toolAuthor.Text);
+
+            fileTooltip.SetToolTip((Control)Commit, toolTip);
+            fileTooltip.SetToolTip((Control)CommitAndPush, toolTip);
+
+
         }
 
+        private void GetUserSettings()
+        {
+
+            ConfigFile localConfig = Module.GetLocalConfig();
+            ConfigFile globalConfig = null;
+            if (localConfig.HasValue(USER_NAME_KEY))
+                _userName = localConfig.GetValue(USER_NAME_KEY);
+            else
+                globalConfig = GitCommandHelpers.GetGlobalConfig();
+            if (globalConfig.HasValue(USER_NAME_KEY))
+                _userName = globalConfig.GetValue(USER_NAME_KEY);
+            else
+                _userName = "";
+
+            if (localConfig.HasValue(USER_EMAIL_KEY))
+                _userEmail = localConfig.GetValue(USER_EMAIL_KEY);
+            else
+                if (globalConfig == null)
+                    globalConfig = GitCommandHelpers.GetGlobalConfig();
+            if (globalConfig.HasValue(USER_EMAIL_KEY))
+                _userEmail = globalConfig.GetValue(USER_EMAIL_KEY);
+            else
+                _userEmail = "";
+        }
         private bool SenderToFileStatusList(object sender, out FileStatusList list)
         {
             list = null;
@@ -1837,7 +1882,7 @@ namespace GitUI.CommandsDialogs
             //line not formated yet
             if (formattedLines.Count <= lineNumber)
                 return true;
-            
+
             return !formattedLines[lineNumber].Equals(Message.Line(lineNumber), StringComparison.OrdinalIgnoreCase);
         }
 
@@ -2219,7 +2264,7 @@ namespace GitUI.CommandsDialogs
             {
                 _interactiveAddBashCloseWaitCts.Cancel();
                 _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
-                
+
                 var formsTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
 
                 Task.Factory.StartNew(() =>
