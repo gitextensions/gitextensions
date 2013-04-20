@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Plugins;
@@ -211,7 +212,7 @@ namespace GitUI.CommandsDialogs
                 settingsPage.SaveSettings();
             }
 
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
                 FormFixHome.CheckHomePath();
 
             // TODO: to which settings page does this belong?

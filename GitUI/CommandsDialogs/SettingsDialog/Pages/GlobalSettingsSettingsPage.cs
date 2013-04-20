@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using System.IO;
 using GitCommands.Config;
 using ResourceManager.Translation;
@@ -200,7 +201,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void MergeToolCmdSuggest_Click(object sender, EventArgs e)
         {
-            if (!Settings.RunningOnWindows())
+            if (!EnvUtils.RunningOnWindows())
                 return;
 
             _gitModule.SetGlobalPathSetting(string.Format("mergetool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
@@ -245,7 +246,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void DiffToolCmdSuggest_Click(object sender, EventArgs e)
         {
-            if (!Settings.RunningOnWindows())
+            if (!EnvUtils.RunningOnWindows())
                 return;
 
             _gitModule.SetGlobalPathSetting(string.Format("difftool.{0}.path", GlobalMergeTool.Text.Trim()), MergetoolPath.Text.Trim());
