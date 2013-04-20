@@ -24,8 +24,7 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCommit : GitModuleForm //, IHotkeyable
     {
-        private const string USER_NAME_KEY = "user.name";
-        private const string USER_EMAIL_KEY = "user.email";
+
         #region Translation
         private readonly TranslationString _amendCommit =
             new TranslationString("You are about to rewrite history." + Environment.NewLine +
@@ -1695,6 +1694,9 @@ namespace GitUI.CommandsDialogs
 
         private void GetUserSettings()
         {
+            const string USER_NAME_KEY = "user.name";
+            const string USER_EMAIL_KEY = "user.email";
+
 
             ConfigFile localConfig = Module.GetLocalConfig();
             ConfigFile globalConfig = null;
