@@ -159,7 +159,7 @@ Esta acción se realizará sin preguntar al hacer checkout de una rama.</Value>
         </TranslationItem>
         <TranslationItem Name="truncatePathMethod" Property="Text">
           <Source>Truncate long filenames</Source>
-          <Value>Truncar nombres largos de archivo</Value>
+          <Value>Acortar nombres de archivos</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6643,7 +6643,7 @@ objetos colgados".</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text">
           <Source>Revision grid quick search timeout [ms]</Source>
-          <Value>Tiempo máximo de búsqueda rápida en la tabla de revisiones [ms]</Value>
+          <Value>Tiempo máx. de búsqueda en la tabla de revisiones [ms]</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6794,7 +6794,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="label60" Property="Text">
           <Source>Files content encoding</Source>
-          <Value>Codificación del contenido de archivos</Value>
+          <Value>Codificación de archivos</Value>
         </TranslationItem>
         <TranslationItem Name="label7" Property="Text">
           <Source>Mergetool</Source>
