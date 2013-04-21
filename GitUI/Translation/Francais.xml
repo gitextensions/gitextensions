@@ -2740,9 +2740,13 @@ Voulez-vous continuer ?</Value>
           <Source>Amend commit</Source>
           <Value>Rectifier commit</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorToolTip" Property="Text">
+        <TranslationItem Name="_commitAuthorInfo" Property="Text">
           <Source>Commit as </Source>
           <Value>S'engager comme</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitAuthorToolTip" Property="Text">
+          <Source>Click to change author information.</Source>
+          <Value>Cliquez pour modifier les informations de l'auteur.</Value>
         </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text">
           <Source>Commit Message is requested during commit</Source>
@@ -2945,6 +2949,10 @@ Do you want to continue?</Source>
         <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
           <Source>Close dialog after each commit</Source>
           <Value>Fermer la fenêtre après chaque commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitAuthorStatus" Property="ToolTipText" type="unfinished">
+          <Source>Click to change author information.</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="commitCursorColumnLabel" Property="Text">
           <Source>Col</Source>
@@ -3386,10 +3394,6 @@ Choisissez 'Non' pour garder les nouveaux fichiers.</Value>
         <TranslationItem Name="pushTag" Property="Text">
           <Source>Push tag to '{0}'</Source>
           <Value>Pousser l'étiquette vers '{0}'</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noTagMassage" Property="Text" type="obsolete">
-          <Source>Please enter a tag message</Source>
-          <Value>Entrez un message d'étiquette, s'il vous plait</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6008,12 +6012,6 @@ Par conséquent les boutons Annuler et Rejeter n'auront aucun effet sur cette pa
           <Source>...title...</Source>
           <Value>...titre...</Value>
         </TranslationItem>
-        <TranslationItem Name="_kdiff3NotFoundAuto" Property="Text" type="obsolete">
-          <Source>Path to kdiff3 could not be found automatically.
-Please make sure KDiff3 is installed or set path manually.</Source>
-          <Value>Le chemin vers KDiff3 n'a pas pu être touvé automatiquement.
-Veuillez vérifier que KDiff3 est installé ou entrer un chemin manuellement. </Value>
-        </TranslationItem>
         <TranslationItem Name="addToRevisionGridContextMenuDataGridViewCheckBoxColumn" Property="HeaderText" type="obsolete">
           <Source>Context menu</Source>
           <Value>Menu contextuel</Value>
@@ -7407,6 +7405,10 @@ Si c'est un dépôt central (dépôt nu sans répertoire de travail) :
           <Source>Show revision graph</Source>
           <Value>Afficher le graphe de révision</Value>
         </TranslationItem>
+        <TranslationItem Name="showTagsToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Show tags</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="squashCommitToolStripMenuItem" Property="Text">
           <Source>Squash commit</Source>
           <Value>Ecraser le commit</Value>
@@ -7805,18 +7807,6 @@ Détails : Est {1} attendu {2}</Value>
         <TranslationItem Name="Orphan" Property="Text" type="obsolete">
           <Source>Orphan</Source>
           <Value>Orphelin</Value>
-        </TranslationItem>
-        <TranslationItem Name="_branchNameIsEmpty" Property="Text" type="obsolete">
-          <Source>Enter branch name.</Source>
-          <Value>Entrez le nom de la branche.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_branchNameIsNotValud" Property="Text" type="obsolete">
-          <Source>“{0}” is not valid branch name.</Source>
-          <Value>"{0}" n'est pas un nom de branche valide.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noRevisionSelected" Property="Text" type="obsolete">
-          <Source>Select 1 revision to create the branch on.</Source>
-          <Value>FormBranch	_selectOneRevision	Text	Select 1 revision to create the branch on.	Sélectionner une révision à partir de laquelle créer la branche</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

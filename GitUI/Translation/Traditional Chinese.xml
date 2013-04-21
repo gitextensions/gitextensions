@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Translation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="2.44">
+<Translation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="2.46">
   <translationCategories>
     <TranslationCategory Name="AboutBox">
       <translationItems>
@@ -280,6 +280,11 @@ This action will be performed without warning while checking out branch.</Source
         </TranslationItem>
         <TranslationItem Name="_gitVersionFound" Property="Text" type="unfinished">
           <Source>Git {0} is found on your computer.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_kdiff3NotFoundAuto" Property="Text" type="unfinished">
+          <Source>Path to kdiff3 could not be found automatically.
+Please make sure KDiff3 is installed or set path manually.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_kdiffAsDiffConfigured" Property="Text" type="unfinished">
@@ -600,6 +605,34 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="CommitSummaryUserControl">
+      <translationItems>
+        <TranslationItem Name="labelAuthorCaption" Property="Text" type="unfinished">
+          <Source>Author:</Source>
+          <Value>作者：</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelBranchesCaption" Property="Text" type="unfinished">
+          <Source>Branch(es):</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="labelDate" Property="Text" type="unfinished">
+          <Source>Commit date:</Source>
+          <Value>提交日期：</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelTagsCaption" Property="Text" type="unfinished">
+          <Source>Tag(s):</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="noRevision" Property="Text" type="unfinished">
+          <Source>No revision</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="notAvailable" Property="Text" type="unfinished">
+          <Source>n/a</Source>
+          <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="CommonLogic">
       <translationItems>
         <TranslationItem Name="_AddEntryManually" Property="Text" type="unfinished">
@@ -636,8 +669,12 @@ Value:  {2} = {3}</Source>
           <Source>Amend last commit</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="chkAutoPopStashAfterCheckout" Property="Text" type="unfinished">
+          <Source>Apply stashed changes after successful checkout (stash will be popped automatically)</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
-          <Source>Apply stashed changes (Stash will be popped automatically after successful pull)</Source>
+          <Source>Apply stashed changes after successful pull (stash will be popped automatically)</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="chkPushNewBranch" Property="Text" type="unfinished">
@@ -768,6 +805,10 @@ Value:  {2} = {3}</Source>
           <Source>Recent Repositories</Source>
           <Value>最近的版本庫</Value>
         </TranslationItem>
+        <TranslationItem Name="_showCurrentBranch" Property="Text" type="unfinished">
+          <Source>Show current branch</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="cloneFork" Property="Text">
           <Source>Clone {0} repository</Source>
           <Value>複製{0}版本庫</Value>
@@ -783,10 +824,6 @@ Value:  {2} = {3}</Source>
         <TranslationItem Name="createRepository" Property="Text">
           <Source>Create new repository</Source>
           <Value>建立新的版本庫</Value>
-        </TranslationItem>
-        <TranslationItem Name="_showCurrentBranch" Property="Text" type="unfinished">
-          <Source>Show current branch</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="develop" Property="Text">
           <Source>Develop</Source>
@@ -982,8 +1019,16 @@ Do you want to open it?</Source>
           <Source>No changes</Source>
           <Value>沒有改變</Value>
         </TranslationItem>
+        <TranslationItem Name="_DiffWithParent" Property="Text" type="unfinished">
+          <Source>Diff with parent</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_UnsupportedMultiselectAction" Property="Text" type="unfinished">
           <Source>Operation not supported</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="columnHeader1" Property="Text" type="unfinished">
+          <Source>Files</Source>
           <Value />
         </TranslationItem>
       </translationItems>
@@ -1510,11 +1555,11 @@ You will have push access. {2}</Source>
 revision:</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="radioButtonFormatTar" Property="Text">
+        <TranslationItem Name="radioButtonFormatTar" Property="Text" type="obsolete">
           <Source>tar</Source>
           <Value>tar</Value>
         </TranslationItem>
-        <TranslationItem Name="radioButtonFormatZip" Property="Text">
+        <TranslationItem Name="radioButtonFormatZip" Property="Text" type="obsolete">
           <Source>zip</Source>
           <Value>zip</Value>
         </TranslationItem>
@@ -1557,46 +1602,6 @@ revision:</Source>
         <TranslationItem Name="$this" Property="Text">
           <Source>File History</Source>
           <Value>歷史檔案</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormBranchSmall">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Create branch</Source>
-          <Value>建立分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="CheckoutAfterCreate" Property="Text">
-          <Source>Checkout after create</Source>
-          <Value>建立後簽出</Value>
-        </TranslationItem>
-        <TranslationItem Name="ClearOrphan" Property="Text" type="unfinished">
-          <Source>Clear</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="Ok" Property="Text">
-          <Source>Create branch</Source>
-          <Value>建立分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="Orphan" Property="Text" type="unfinished">
-          <Source>Orphan</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_branchNameIsEmpty" Property="Text" type="unfinished">
-          <Source>Enter branch name.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_branchNameIsNotValud" Property="Text" type="unfinished">
-          <Source>“{0}” is not valid branch name.</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="_noRevisionSelected" Property="Text">
-          <Source>Select 1 revision to create the branch on.</Source>
-          <Value>選擇一版本來建立分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Source>Branch name</Source>
-          <Value>分支名稱</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1698,8 +1703,9 @@ revision:</Source>
           <Source>No submodules</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_repositoryHostsToolStripMenuItem" Property="Text">
-          <Source>Repository hosts</Source>
+        <TranslationItem Name="_repositoryHostsToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>(Repository hosts)</Source>
+          <OldSource>Repository hosts</OldSource>
           <Value>版本庫主機</Value>
         </TranslationItem>
         <TranslationItem Name="_saveFileFilterAllFiles" Property="Text" type="unfinished">
@@ -1726,8 +1732,9 @@ revision:</Source>
           <Source>Update current submodule</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text">
-          <Source>View pull requests</Source>
+        <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>View pull requests...</Source>
+          <OldSource>View pull requests</OldSource>
           <Value>查看拉取要求</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfBisect" Property="Text" type="unfinished">
@@ -1794,6 +1801,10 @@ revision:</Source>
           <Source>Changelog</Source>
           <Value>更新日誌</Value>
         </TranslationItem>
+        <TranslationItem Name="checkForUpdatesToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Check for updates</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
           <Source>Checkout branch...</Source>
           <Value>簽出分支...</Value>
@@ -1806,8 +1817,9 @@ revision:</Source>
           <Source>Cherry pick...</Source>
           <Value>選最好的...</Value>
         </TranslationItem>
-        <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
-          <Source>Cleanup repository...</Source>
+        <TranslationItem Name="cleanupToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Clean working tree...</Source>
+          <OldSource>Cleanup repository...</OldSource>
           <Value>清理...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text" type="unfinished">
@@ -1818,8 +1830,9 @@ revision:</Source>
           <Source>Clone repository...</Source>
           <Value>複製版本庫...</Value>
         </TranslationItem>
-        <TranslationItem Name="closeToolStripMenuItem" Property="Text">
-          <Source>Close</Source>
+        <TranslationItem Name="closeToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Close (go to Dashboard)</Source>
+          <OldSource>Close</OldSource>
           <Value>關閉</Value>
         </TranslationItem>
         <TranslationItem Name="collapseAllToolStripMenuItem" Property="Text" type="unfinished">
@@ -1857,6 +1870,10 @@ revision:</Source>
         <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text">
           <Source>Copy full path</Source>
           <Value>把檔案名複製到剪貼簿</Value>
+        </TranslationItem>
+        <TranslationItem Name="dashboardToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Dashboard</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
           <Source>Delete branch...</Source>
@@ -1938,8 +1955,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>File history</Source>
           <Value>歷史檔案</Value>
         </TranslationItem>
-        <TranslationItem Name="fileToolStripMenuItem" Property="Text">
-          <Source>File</Source>
+        <TranslationItem Name="fileToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Start</Source>
+          <OldSource>File</OldSource>
           <Value>檔案</Value>
         </TranslationItem>
         <TranslationItem Name="fileTreeOpenContainingFolderToolStripMenuItem" Property="Text">
@@ -1974,10 +1992,6 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Git maintenance</Source>
           <Value>維護Git</Value>
         </TranslationItem>
-        <TranslationItem Name="gitToolStripMenuItem" Property="Text">
-          <Source>Git</Source>
-          <Value>Git</Value>
-        </TranslationItem>
         <TranslationItem Name="gitcommandLogToolStripMenuItem" Property="Text">
           <Source>Gitcommand log</Source>
           <Value>Gitcommand日誌</Value>
@@ -2006,12 +2020,14 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Local</Source>
           <Value>本機</Value>
         </TranslationItem>
-        <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
-          <Source>Manage remote repositories</Source>
+        <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text" type="unfinished">
+          <Source>Remote repositories...</Source>
+          <OldSource>Manage remote repositories</OldSource>
           <Value>管理遠端版本庫</Value>
         </TranslationItem>
-        <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text">
-          <Source>Manage submodules</Source>
+        <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Submodules...</Source>
+          <OldSource>Manage submodules</OldSource>
           <Value>管理子模組</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
@@ -2058,6 +2074,10 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>View patch file...</Source>
           <Value>查看補丁檔案...</Value>
         </TranslationItem>
+        <TranslationItem Name="pluginSettingsToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Settings</Source>
+          <Value>設定</Value>
+        </TranslationItem>
         <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
           <Source>Plugins</Source>
           <Value>插件</Value>
@@ -2086,6 +2106,10 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Recent Repositories</Source>
           <Value>最近的版本庫</Value>
         </TranslationItem>
+        <TranslationItem Name="refreshDashboardToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Refresh</Source>
+          <Value>重新整理</Value>
+        </TranslationItem>
         <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
           <Source>Refresh</Source>
           <Value>重新整理</Value>
@@ -2094,12 +2118,16 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Remote</Source>
           <Value>遠端</Value>
         </TranslationItem>
-        <TranslationItem Name="remotesToolStripMenuItem" Property="Text">
-          <Source>Remotes</Source>
-          <Value>遠端</Value>
+        <TranslationItem Name="repoSettingsToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Repository settings</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="reportAnIssueToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Report an issue</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="repositoryToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Repository</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="resetFileToAToolStripMenuItem" Property="Text" type="unfinished">
@@ -2138,15 +2166,11 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Save</Source>
           <Value>儲存</Value>
         </TranslationItem>
-        <TranslationItem Name="settingsToolStripMenuItem" Property="Text">
-          <Source>Settings</Source>
-          <Value>設定</Value>
-        </TranslationItem>
-        <TranslationItem Name="settingsToolStripMenuItem1" Property="Text">
-          <Source>Settings</Source>
-          <Value>設定</Value>
-        </TranslationItem>
         <TranslationItem Name="settingsToolStripMenuItem2" Property="Text">
+          <Source>Settings</Source>
+          <Value>設定</Value>
+        </TranslationItem>
+        <TranslationItem Name="settingsToolStripMenuItem3" Property="Text" type="unfinished">
           <Source>Settings</Source>
           <Value>設定</Value>
         </TranslationItem>
@@ -2165,10 +2189,6 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         <TranslationItem Name="stashToolStripMenuItem" Property="Text">
           <Source>Stash changes...</Source>
           <Value>隱藏改變...</Value>
-        </TranslationItem>
-        <TranslationItem Name="submodulesToolStripMenuItem" Property="Text">
-          <Source>Submodules</Source>
-          <Value>子模組</Value>
         </TranslationItem>
         <TranslationItem Name="synchronizeAllSubmodulesToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Synchronize all submodules</Source>
@@ -2214,6 +2234,10 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>X</Source>
           <Value>X</Value>
         </TranslationItem>
+        <TranslationItem Name="toolsToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Tools</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="translateToolStripMenuItem" Property="Text">
           <Source>Translate</Source>
           <Value>翻譯</Value>
@@ -2230,13 +2254,17 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Recover lost objects...</Source>
           <Value>回復丟失的目標...</Value>
         </TranslationItem>
-        <TranslationItem Name="viewDiffToolStripMenuItem" Property="Text">
-          <Source>View changes</Source>
-          <Value>查看差異</Value>
-        </TranslationItem>
         <TranslationItem Name="viewStashToolStripMenuItem" Property="Text">
           <Source>View stash</Source>
           <Value>查看Git隱藏</Value>
+        </TranslationItem>
+        <TranslationItem Name="remotesToolStripMenuItem" Property="Text" type="obsolete">
+          <Source>Remotes</Source>
+          <Value>遠端</Value>
+        </TranslationItem>
+        <TranslationItem Name="viewDiffToolStripMenuItem" Property="Text" type="obsolete">
+          <Source>View changes</Source>
+          <Value>查看差異</Value>
         </TranslationItem>
         <TranslationItem Name="branchSelect" Property="ToolTipText" type="obsolete">
           <Source>Change current branch</Source>
@@ -2286,6 +2314,14 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Remote branch</Source>
           <Value>遠端分支</Value>
         </TranslationItem>
+        <TranslationItem Name="_applyShashedItemsAgain" Property="Text">
+          <Source>Apply stashed items to working dir again?</Source>
+          <Value>要把隱藏的目標再次應用到工作目錄嗎？ </Value>
+        </TranslationItem>
+        <TranslationItem Name="_applyShashedItemsAgainCaption" Property="Text" type="unfinished">
+          <Source>Auto stash</Source>
+          <Value>自動緩衝</Value>
+        </TranslationItem>
         <TranslationItem Name="_createBranch" Property="Text" type="unfinished">
           <Source>Create local branch with the name:</Source>
           <Value />
@@ -2298,6 +2334,10 @@ Enter valid branch name or select predefined value.</Source>
         <TranslationItem Name="_customBranchNameIsNotValid" Property="Text" type="unfinished">
           <Source>“{0}” is not valid branch name.
 Enter valid branch name or select predefined value.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_dontShowAgain" Property="Text" type="unfinished">
+          <Source>Don't show me this message again.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
@@ -2344,8 +2384,9 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Checkout revision</Source>
           <Value>簽出版本</Value>
         </TranslationItem>
-        <TranslationItem Name="Force" Property="Text">
-          <Source>Force</Source>
+        <TranslationItem Name="Force" Property="Text" type="unfinished">
+          <Source>Force (reset local changes)</Source>
+          <OldSource>Force</OldSource>
           <Value>強制</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
@@ -2359,6 +2400,14 @@ Enter valid branch name or select predefined value.</Source>
         <TranslationItem Name="_noRevisionSelectedMsgBoxCaption" Property="Text">
           <Source>Checkout</Source>
           <Value>簽出</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text" type="unfinished">
+          <Source>Checkout this revision</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text" type="unfinished">
+          <Source>or choose another one.</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2433,9 +2482,21 @@ revision:</Source>
           <Source>Choose Commit</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="_noRevisionFoundError" Property="Text" type="unfinished">
+          <Source>No revision found.</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="btnOK" Property="Text">
           <Source>OK</Source>
           <Value>確定</Value>
+        </TranslationItem>
+        <TranslationItem Name="buttonGotoCommit" Property="Text" type="unfinished">
+          <Source>Go to commit...</Source>
+          <Value>提交...</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text" type="unfinished">
+          <Source>Find specific commit:</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2647,14 +2708,6 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
           <Source>Stage in Superproject</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_ResetSelectedLinesToolStripMenuItem" Property="Text">
-          <Source>Reset selected line(s)</Source>
-          <Value>重設選擇行</Value>
-        </TranslationItem>
-        <TranslationItem Name="_StageSelectedLinesToolStripMenuItem" Property="Text">
-          <Source>Stage selected line(s)</Source>
-          <Value>提交選擇行</Value>
-        </TranslationItem>
         <TranslationItem Name="_amendCommit" Property="Text">
           <Source>You are about to rewrite history.
 Only use amend if the commit is not published yet!
@@ -2669,8 +2722,12 @@ Do you want to continue?</Source>
           <Source>Amend commit</Source>
           <Value>修改(Amend)提交</Value>
         </TranslationItem>
-        <TranslationItem Name="_checkBoxAutoWrap" Property="Text" type="unfinished">
-          <Source>Auto-wrap</Source>
+        <TranslationItem Name="_commitAuthorInfo" Property="Text">
+          <Source>Commit as </Source>
+          <Value>承諾為</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitAuthorToolTip" Property="Text" type="unfinished">
+          <Source>Click to change author information.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text" type="unfinished">
@@ -2814,6 +2871,10 @@ Do you want to continue?</Source>
           <Source>Are you sure you want to reset the changes to the selected lines?</Source>
           <Value>你確定要重設成選擇行那樣？</Value>
         </TranslationItem>
+        <TranslationItem Name="_resetSelectedLinesToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Reset selected line(s)</Source>
+          <Value>重設選擇行</Value>
+        </TranslationItem>
         <TranslationItem Name="_resetStageChunkOfFileCaption" Property="Text">
           <Source>Unstage chunk of file</Source>
           <Value>不提交大量檔案</Value>
@@ -2846,6 +2907,10 @@ Do you want to continue?</Source>
           <Source>Stage selected line(s)</Source>
           <Value>提交的選擇行</Value>
         </TranslationItem>
+        <TranslationItem Name="_stageSelectedLinesToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Stage selected line(s)</Source>
+          <Value>提交的選擇行</Value>
+        </TranslationItem>
         <TranslationItem Name="_unstageSelectedLines" Property="Text">
           <Source>Unstage selected line(s)</Source>
           <Value>沒提交的選擇行</Value>
@@ -2861,6 +2926,10 @@ Do you want to continue?</Source>
         <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
           <Source>Close dialog after each commit</Source>
           <Value>提交後關閉視窗</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitAuthorStatus" Property="ToolTipText" type="unfinished">
+          <Source>Click to change author information.</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="commitCursorColumnLabel" Property="Text" type="unfinished">
           <Source>Col</Source>
@@ -3194,33 +3263,54 @@ Choose 'No' to keep all new files.</Source>
     </TranslationCategory>
     <TranslationCategory Name="FormCreateBranch">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Create Branch</Source>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Create branch</Source>
+          <OldSource>Create Branch</OldSource>
           <Value>建立分支</Value>
-        </TranslationItem>
-        <TranslationItem Name="Checkout" Property="Text">
-          <Source>Checkout branch</Source>
-          <Value>簽出分支</Value>
         </TranslationItem>
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
           <Source>Checkout after create</Source>
           <Value>建立後簽出</Value>
         </TranslationItem>
+        <TranslationItem Name="ClearOrphan" Property="Text" type="unfinished">
+          <Source>Clear working dir and index</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Create branch</Source>
           <Value>建立分支</Value>
         </TranslationItem>
-        <TranslationItem Name="_branchCaption" Property="Text">
-          <Source>Branch</Source>
-          <Value>分支</Value>
+        <TranslationItem Name="Orphan" Property="Text" type="unfinished">
+          <Source>Create orphan</Source>
+          <Value />
         </TranslationItem>
-        <TranslationItem Name="_selectOneRevision" Property="Text">
+        <TranslationItem Name="_branchNameIsEmpty" Property="Text" type="unfinished">
+          <Source>Enter branch name.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_branchNameIsNotValud" Property="Text" type="unfinished">
+          <Source>“{0}” is not valid branch name.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelected" Property="Text" type="unfinished">
           <Source>Select 1 revision to create the branch on.</Source>
           <Value>選擇一版本來建立分支</Value>
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
+          <Source>Orphan</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Branch name</Source>
           <Value>分支名稱</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text" type="unfinished">
+          <Source>Create branch at this revision</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text" type="unfinished">
+          <Source>or choose another one.</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3246,7 +3336,7 @@ Choose 'No' to keep all new files.</Source>
           <Source>Select 1 revision to create the tag on.</Source>
           <Value>選擇一個版本來標記</Value>
         </TranslationItem>
-        <TranslationItem Name="_noTagMassage" Property="Text">
+        <TranslationItem Name="_noTagMessage" Property="Text" type="unfinished">
           <Source>Please enter a tag message</Source>
           <Value>請輸入標籤的訊息</Value>
         </TranslationItem>
@@ -3266,9 +3356,21 @@ Choose 'No' to keep all new files.</Source>
           <Source>Message</Source>
           <Value>訊息</Value>
         </TranslationItem>
+        <TranslationItem Name="label3" Property="Text" type="unfinished">
+          <Source>Create tag at this revision</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text" type="unfinished">
+          <Source>or choose another one.</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="pushTag" Property="Text">
           <Source>Push tag to '{0}'</Source>
           <Value>推送到{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="_noTagMassage" Property="Text" type="obsolete">
+          <Source>Please enter a tag message</Source>
+          <Value>請輸入標籤的訊息</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3362,17 +3464,21 @@ this using `force delete´.
           <Source>Delete</Source>
           <Value>刪除</Value>
         </TranslationItem>
-        <TranslationItem Name="_deleteFromCaption" Property="Text" type="unfinished">
-          <Source>Delete from '{0}'</Source>
-          <Value />
-        </TranslationItem>
         <TranslationItem Name="deleteTag" Property="Text" type="unfinished">
-          <Source>Delete tag from '{0}'</Source>
+          <Source>Delete tag also from the following remote(s):</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select tag</Source>
           <Value>選擇標籤</Value>
+        </TranslationItem>
+        <TranslationItem Name="label2" Property="Text" type="unfinished">
+          <Source>This will delete the selected tag from the (local) repository.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text" type="unfinished">
+          <Source>(includes information about deleting tags which are already pushed)</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3622,10 +3728,6 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Branch</Source>
           <Value>分支</Value>
         </TranslationItem>
-        <TranslationItem Name="SendToMail" Property="Text">
-          <Source>Mail patches to</Source>
-          <Value>寄送補丁到</Value>
-        </TranslationItem>
         <TranslationItem Name="_currentBranchText" Property="Text" type="unfinished">
           <Source>Current branch:</Source>
           <Value />
@@ -3667,7 +3769,7 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Value />
         </TranslationItem>
         <TranslationItem Name="_wrongSmtpSettingsText" Property="Text" type="unfinished">
-          <Source>You need to enter a valid SMTP in the settings dialog.</Source>
+          <Source>You need to enter a valid smtp in the settings dialog.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
@@ -3677,6 +3779,18 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         <TranslationItem Name="label2" Property="Text">
           <Source>Body</Source>
           <Value>本文</Value>
+        </TranslationItem>
+        <TranslationItem Name="label3" Property="Text" type="unfinished">
+          <Source>To</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="radioButton1" Property="Text" type="unfinished">
+          <Source>Mail patches from</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="SendToMail" Property="Text" type="obsolete">
+          <Source>Mail patches to</Source>
+          <Value>寄送補丁到</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4082,7 +4196,7 @@ defaultrebase=0</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="linkGitRevParse" Property="Text" type="unfinished">
-          <Source>More (git-rev-parse, section SPECIFYING REVISIONS)</Source>
+          <Source>More see git-rev-parse</Source>
           <Value />
         </TranslationItem>
       </translationItems>
@@ -4374,6 +4488,10 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
           <Source>Manage</Source>
           <Value>管理遠端</Value>
         </TranslationItem>
+        <TranslationItem Name="AllTags" Property="Text" type="unfinished">
+          <Source>Fetch all tags</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="AutoStash" Property="Text">
           <Source>Auto stash</Source>
           <Value>自動緩衝</Value>
@@ -4391,7 +4509,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
           <Value>解決衝突</Value>
         </TranslationItem>
         <TranslationItem Name="NoTags" Property="Text" type="unfinished">
-          <Source>No tags</Source>
+          <Source>Fetch no tag</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="Pull" Property="Text">
@@ -4405,6 +4523,10 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <TranslationItem Name="PullFromUrl" Property="Text">
           <Source>Url</Source>
           <Value>網址</Value>
+        </TranslationItem>
+        <TranslationItem Name="ReachableTags" Property="Text" type="unfinished">
+          <Source>Follow tagopt, if not specified, fetch tags reachable from remote HEAD</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="Rebase" Property="Text">
           <Source>&amp;Rebase current branch on top of remote branch, creates linear history (use with caution)</Source>
@@ -4440,6 +4562,10 @@ Are you sure you want to rebase this merge?</Source>
           <Source>Rebase merge commit?</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="_dontShowAgain" Property="Text" type="unfinished">
+          <Source>Don't show me this message again.</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text">
           <Source>You can only fetch all remote branches (*) without merge or rebase.
 If you want to fetch all remote branches, choose fetch.
@@ -4462,6 +4588,26 @@ Do you want to continue?</Source>
         </TranslationItem>
         <TranslationItem Name="_notOnBranchMainInstruction" Property="Text" type="unfinished">
           <Source>You are not working on a branch</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pruneBranchesBranch" Property="Text" type="unfinished">
+          <Source>Do you want deletes all stale remote-tracking branches?</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pruneBranchesButtons" Property="Text" type="unfinished">
+          <Source>Deletes stale branches|Cancel</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pruneBranchesCaption" Property="Text" type="unfinished">
+          <Source>Pull was rejected</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pruneBranchesMainInstruction" Property="Text" type="unfinished">
+          <Source>Remote branch no longer exist</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pruneFromCaption" Property="Text" type="unfinished">
+          <Source>Prune remote branches from {0}</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_questionInitSubmodules" Property="Text" type="unfinished">
@@ -4494,6 +4640,10 @@ This will initialize and update all submodules recursive.</Source>
           <Source>Branch</Source>
           <Value>分支</Value>
         </TranslationItem>
+        <TranslationItem Name="groupBox4" Property="Text" type="unfinished">
+          <Source>Tag options</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Local branch</Source>
           <Value>本機分支</Value>
@@ -4513,10 +4663,6 @@ This will initialize and update all submodules recursive.</Source>
         <TranslationItem Name="AddRemote" Property="Text">
           <Source>Manage remotes</Source>
           <Value>管理遠端</Value>
-        </TranslationItem>
-        <TranslationItem Name="AutoPullOnRejected" Property="Text" type="unfinished">
-          <Source>Auto pull on rejected</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="BranchTab" Property="Text">
           <Source>Push branches</Source>
@@ -4612,9 +4758,31 @@ Are you sure you want to push this branch?</Source>
           <Source>Create pull request after push</Source>
           <Value>推送後建立拉取請求</Value>
         </TranslationItem>
+        <TranslationItem Name="_dontShowAgain" Property="Text" type="unfinished">
+          <Source>Remember my decision.</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_no" Property="Text">
           <Source>No</Source>
           <Value>否</Value>
+        </TranslationItem>
+        <TranslationItem Name="_pullRepository" Property="Text" type="unfinished">
+          <Source>The push was rejected because the tip of your current branch is behind its remote counterpart. Merge the remote changes before pushing again.
+
+Do you want to pull the latest changes?</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pullRepositoryButtons" Property="Text" type="unfinished">
+          <Source>Pull with default pull action|Pull with rebase|Pull with merge|Cancel</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pullRepositoryCaption" Property="Text" type="unfinished">
+          <Source>Push was rejected</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pullRepositoryMainInstruction" Property="Text" type="unfinished">
+          <Source>Pull latest changes from remote repository</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_pushCaption" Property="Text">
           <Source>Push</Source>
@@ -5136,8 +5304,10 @@ Value has been reset to empty value.</Source>
           <Source>Cancel</Source>
           <Value>取消</Value>
         </TranslationItem>
-        <TranslationItem Name="Hard" Property="Text">
-          <Source>Hard: reset working dir and index (discard ALL local changes, even uncommitted changes)</Source>
+        <TranslationItem Name="Hard" Property="Text" type="unfinished">
+          <Source>Hard: reset working dir and index
+(discard ALL local changes, even uncommitted changes)</Source>
+          <OldSource>Hard: reset working dir and index (discard ALL local changes, even uncommitted changes)</OldSource>
           <Value>強迫模式：重置工作目錄和索引（放棄所有的本機修改，甚至未提交的修改）</Value>
         </TranslationItem>
         <TranslationItem Name="Mixed" Property="Text">
@@ -5152,25 +5322,10 @@ Value has been reset to empty value.</Source>
           <Source>Soft: leave working dir and index untouched</Source>
           <Value>軟模式：保持工作目錄和索引均不變</Value>
         </TranslationItem>
-        <TranslationItem Name="authorInfo" Property="Text">
-          <Source>Author: {0}</Source>
-          <Value>作者：{0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="branchInfo" Property="Text">
-          <Source>Reset {0} to:</Source>
+        <TranslationItem Name="branchInfo" Property="Text" type="unfinished">
+          <Source>Reset branch '{0}' to revision:</Source>
+          <OldSource>Reset {0} to:</OldSource>
           <Value>重置{0}到：</Value>
-        </TranslationItem>
-        <TranslationItem Name="commitInfo" Property="Text">
-          <Source>Commit: {0}</Source>
-          <Value>提交：{0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="commitMessage" Property="Text">
-          <Source>Message: {0}</Source>
-          <Value>訊息：{0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="dateInfo" Property="Text">
-          <Source>Commit date: {0}</Source>
-          <Value>提交日期：{0}</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Reset type</Source>
@@ -5183,6 +5338,22 @@ Value has been reset to empty value.</Source>
         <TranslationItem Name="resetHardWarning" Property="Text">
           <Source>You are about to discard ALL local changes, are you sure?</Source>
           <Value>您將要放棄所有的本機修改，你確定嗎？ </Value>
+        </TranslationItem>
+        <TranslationItem Name="authorInfo" Property="Text" type="obsolete">
+          <Source>Author: {0}</Source>
+          <Value>作者：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitInfo" Property="Text" type="obsolete">
+          <Source>Commit: {0}</Source>
+          <Value>提交：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitMessage" Property="Text" type="obsolete">
+          <Source>Message: {0}</Source>
+          <Value>訊息：{0}</Value>
+        </TranslationItem>
+        <TranslationItem Name="dateInfo" Property="Text" type="obsolete">
+          <Source>Commit date: {0}</Source>
+          <Value>提交日期：{0}</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6041,54 +6212,6 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormTag">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Tag</Source>
-          <Value>標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="ForceTag" Property="Text">
-          <Source>Force</Source>
-          <Value>強制</Value>
-        </TranslationItem>
-        <TranslationItem Name="_messageCaption" Property="Text">
-          <Source>Tag</Source>
-          <Value>標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noRevisionSelected" Property="Text">
-          <Source>Select 1 revision to create the tag on.</Source>
-          <Value>選擇一個版本來標記</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noTagMessage" Property="Text">
-          <Source>Please enter a tag message</Source>
-          <Value>請輸入標籤的訊息</Value>
-        </TranslationItem>
-        <TranslationItem Name="_pushToCaption" Property="Text">
-          <Source>Push tag to '{0}'</Source>
-          <Value>推送到{0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="annotate" Property="Text">
-          <Source>Create annotated tag</Source>
-          <Value>建立帶註解的標記</Value>
-        </TranslationItem>
-        <TranslationItem Name="btnCreateTag" Property="Text">
-          <Source>Create tag</Source>
-          <Value>建立標籤</Value>
-        </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Source>Tag name</Source>
-          <Value>標籤名稱</Value>
-        </TranslationItem>
-        <TranslationItem Name="label2" Property="Text">
-          <Source>Message</Source>
-          <Value>訊息</Value>
-        </TranslationItem>
-        <TranslationItem Name="pushTag" Property="Text">
-          <Source>Push tag to '{0}'</Source>
-          <Value>推標籤</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
     <TranslationCategory Name="FormTranslate">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
@@ -6480,9 +6603,17 @@ Context menu for additional operations</Source>
           <Source>Use patience diff algorithm</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="chkUseSSL" Property="Text" type="unfinished">
+          <Source>Use SSL/TLS</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="chkWriteCommitMessageInCommitWindow" Property="Text" type="unfinished">
           <Source>Compose commit messages in Commit dialog
 (otherwise the message will be requested during commit)</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
+          <Source>Email settings for sending patches</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="groupBox11" Property="Text" type="unfinished">
@@ -6493,12 +6624,21 @@ Context menu for additional operations</Source>
           <Source>Behaviour</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="label1" Property="Text" type="unfinished">
+          <Source>Limit number of commits that will be loaded at startup</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="label12" Property="Text" type="unfinished">
           <Source>Limit number of commits that will be loaded at startup</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label23" Property="Text">
-          <Source>SMTP server for sending patches by email</Source>
+        <TranslationItem Name="label2" Property="Text" type="unfinished">
+          <Source>Server port</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="label23" Property="Text" type="unfinished">
+          <Source>SMTP server name</Source>
+          <OldSource>SMTP server for sending patches by email</OldSource>
           <Value>發送補丁到電子郵件所用的SMTP伺服機</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text">
@@ -6669,11 +6809,23 @@ global settings.
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
+    <TranslationCategory Name="GotoUserManualControl">
+      <translationItems>
+        <TranslationItem Name="linkLabelHelp" Property="Text" type="unfinished">
+          <Source>Help</Source>
+          <Value>幫助</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
     <TranslationCategory Name="GravatarControl">
       <translationItems>
         <TranslationItem Name="clearImagecacheToolStripMenuItem" Property="Text">
           <Source>Clear image cache</Source>
           <Value>清除圖片快取</Value>
+        </TranslationItem>
+        <TranslationItem Name="extraLargeToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Extra Large (320x320)</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="identiconToolStripMenuItem" Property="Text">
           <Source>Identicon</Source>
@@ -6682,6 +6834,10 @@ global settings.
         <TranslationItem Name="imageSizeToolStripMenuItem" Property="Text">
           <Source>Image size</Source>
           <Value>圖片尺寸</Value>
+        </TranslationItem>
+        <TranslationItem Name="largeToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Large (240x240)</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="monsterIdToolStripMenuItem" Property="Text">
           <Source>Monster Id</Source>
@@ -6695,6 +6851,10 @@ global settings.
           <Source>None</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="normalToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Normal (160x160)</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
           <Source>Refresh image</Source>
           <Value>重新整理圖片</Value>
@@ -6705,6 +6865,10 @@ global settings.
         </TranslationItem>
         <TranslationItem Name="retroToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Retro</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="smallToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Small (80x80)</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="wavatarToolStripMenuItem" Property="Text">
@@ -6928,13 +7092,9 @@ local settings.
           <Source>Show remote branches</Source>
           <Value>顯示遠端分支</Value>
         </TranslationItem>
-        <TranslationItem Name="_areYouSureYouWantCheckout" Property="Text">
-          <Source>Are you sure to checkout the selected revision?</Source>
-          <Value>確定要checkout選擇的修訂版次?</Value>
-        </TranslationItem>
-        <TranslationItem Name="_areYouSureYouWantCheckoutCaption" Property="Text">
-          <Source>Checkout revision</Source>
-          <Value>Checkout此修訂版次</Value>
+        <TranslationItem Name="_cannotHighlightSelectedBranch" Property="Text" type="unfinished">
+          <Source>Cannot highlight selected branch when revision graph is loading.</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_droppingFilesBlocked" Property="Text" type="unfinished">
           <Source>For you own protection dropping more than 10 patch files at once is blocked!</Source>
@@ -7109,6 +7269,10 @@ If this is a central repository (bare repository without a working dir):
           <Source>Show revision graph</Source>
           <Value>顯示版本圖</Value>
         </TranslationItem>
+        <TranslationItem Name="showTagsToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Show tags</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="squashCommitToolStripMenuItem" Property="Text">
           <Source>Squash commit</Source>
           <Value>Squash 提交</Value>
@@ -7124,6 +7288,10 @@ If this is a central repository (bare repository without a working dir):
         <TranslationItem Name="toolStripMenuItemView" Property="Text">
           <Source>View</Source>
           <Value>查看</Value>
+        </TranslationItem>
+        <TranslationItem Name="_areYouSureYouWantCheckout" Property="Text" type="obsolete">
+          <Source>Are you sure to checkout the selected revision?</Source>
+          <Value>確定要checkout選擇的修訂版次?</Value>
         </TranslationItem>
         <TranslationItem Name="_currentWorkingDirChanges" Property="Text" type="obsolete">
           <Source>Current uncommitted changes</Source>
@@ -7209,9 +7377,14 @@ If this is a central repository (bare repository without a working dir):
           <Source>Shell extension</Source>
           <Value />
         </TranslationItem>
+        <TranslationItem Name="label1" Property="Text" type="unfinished">
+          <Source>Context menu preview
+when all items are shown:</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="lblMenuEntries" Property="Text" type="unfinished">
-          <Source>Select items to be shown in
-the cascaded context menu:</Source>
+          <Source>Select items to be shown in the cascaded context menu.
+(Unchecked items will be shown top level for direct access.)</Source>
           <Value />
         </TranslationItem>
       </translationItems>
@@ -7290,6 +7463,10 @@ When OpenSSH is used, command line dialogs are shown!
         <TranslationItem Name="$this" Property="Text">
           <Source>Start Page</Source>
           <Value>起始頁</Value>
+        </TranslationItem>
+        <TranslationItem Name="label1" Property="Text" type="unfinished">
+          <Source>Select one of the subnodes to view or edit the settings of a Git Extensions Plugin.</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7490,11 +7667,11 @@ Details: Is {1} expected {2}</Source>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
-    <TranslationCategory Name="FormBranch">
+    <TranslationCategory Name="FormBranchSmall">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
-          <Source>Create Branch</Source>
-          <Value>建立分支</Value>
+        <TranslationItem Name="_noRevisionSelected" Property="Text" type="obsolete">
+          <Source>Select 1 revision to create the branch on.</Source>
+          <Value>選擇一版本來建立分支</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7507,42 +7684,6 @@ Details: Is {1} expected {2}</Source>
         <TranslationItem Name="Revert" Property="Text" type="obsolete">
           <Source>Revert changes</Source>
           <Value>回復修改</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormRevertCommitSmall">
-      <translationItems>
-        <TranslationItem Name="BranchInfo" Property="Text" type="obsolete">
-          <Source>Revert this commit:</Source>
-          <Value>回復提交：</Value>
-        </TranslationItem>
-        <TranslationItem Name="Revert" Property="Text" type="obsolete">
-          <Source>Revert this commit</Source>
-          <Value>回復提交</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="GitLogForm">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
-          <Source>Log</Source>
-          <Value>日誌</Value>
-        </TranslationItem>
-        <TranslationItem Name="tabPageCommandCache" Property="Text" type="obsolete">
-          <Source>Command cache</Source>
-          <Value>命令快取</Value>
-        </TranslationItem>
-        <TranslationItem Name="tabPageCommandLog" Property="Text" type="obsolete">
-          <Source>Command log</Source>
-          <Value>命令日誌</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="Open">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="obsolete">
-          <Source>Open local repository</Source>
-          <Value>開啟版本庫</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
