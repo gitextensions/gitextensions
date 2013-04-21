@@ -27,8 +27,6 @@ namespace GitUI.BuildServerIntegration
     {
         private IBuildServerWatcher buildServerWatcher;
 
-        private string ProjectName { get; set; }
-
         private HttpClient httpClient;
 
         private string httpClientHostSuffix;
@@ -36,6 +34,8 @@ namespace GitUI.BuildServerIntegration
         private Task<IEnumerable<string>> getBuildTypesTask;
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, IConfig config)
+
+        private string ProjectName { get; set; }
         {
             if (this.buildServerWatcher != null)
                 throw new InvalidOperationException("Already initialized");
@@ -191,7 +191,7 @@ namespace GitUI.BuildServerIntegration
             observer.OnCompleted();
         }
 
-        private bool PropagateTaskAnomalyToObserver(Task task, IObserver<BuildInfo> observer)
+        private static bool PropagateTaskAnomalyToObserver(Task task, IObserver<BuildInfo> observer)
         {
             if (task.IsCanceled)
             {
@@ -390,13 +390,13 @@ namespace GitUI.BuildServerIntegration
         private static DateTime DecodeJsonDateTime(string dateTimeString)
         {
             var dateTime = new DateTime(
-                int.Parse(dateTimeString.Substring(0, 4)),
-                int.Parse(dateTimeString.Substring(4, 2)),
-                int.Parse(dateTimeString.Substring(6, 2)),
-                int.Parse(dateTimeString.Substring(9, 2)),
-                int.Parse(dateTimeString.Substring(11, 2)),
-                int.Parse(dateTimeString.Substring(13, 2)),
-                DateTimeKind.Utc)
+                    int.Parse(dateTimeString.Substring(0, 4)),
+                    int.Parse(dateTimeString.Substring(4, 2)),
+                    int.Parse(dateTimeString.Substring(6, 2)),
+                    int.Parse(dateTimeString.Substring(9, 2)),
+                    int.Parse(dateTimeString.Substring(11, 2)),
+                    int.Parse(dateTimeString.Substring(13, 2)),
+                    DateTimeKind.Utc)
                 .AddHours(int.Parse(dateTimeString.Substring(15, 3)))
                 .AddMinutes(int.Parse(dateTimeString.Substring(15, 1) + dateTimeString.Substring(18, 2)));
 
@@ -406,6 +406,17 @@ namespace GitUI.BuildServerIntegration
         private static string FormatJsonDate(DateTime dateTime)
         {
             return dateTime.ToUniversalTime().ToString("yyyyMMdd'T'HHmmss-0000", CultureInfo.InvariantCulture).Replace(":", string.Empty);
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+
+            if (httpClient != null)
+            {
+                httpClient.Dispose();
+                httpClient = null;
+            }
         }
     }
 }
