@@ -512,6 +512,12 @@ namespace GitCommands
             set { SetBool("showgitnotes", value); }
         }
 
+        public static bool ShowTags
+        {
+            get { return GetBool("showtags", true); }
+            set { SetBool("showtags", value); }
+        }
+
         public static int RevisionGraphLayout
         {
             get { return GetInt("revisiongraphlayout", 2); }
