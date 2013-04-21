@@ -4,7 +4,7 @@ using Nini.Config;
 
 namespace GitUIPluginInterfaces.BuildServerIntegration
 {
-    public interface IBuildServerAdapter
+    public interface IBuildServerAdapter : IDisposable
     {
         void Initialize(IBuildServerWatcher buildServerWatcher, IConfig config);
 

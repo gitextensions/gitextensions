@@ -42,6 +42,8 @@ namespace GitUI.BuildServerIntegration
         {
             CancelBuildStatusFetchOperation();
 
+            DisposeBuildServerAdapter();
+
             // Extract the project name from the last part of the directory path. It is assumed that it matches the project name in the CI build server.
             buildServerAdapter = GetBuildServerAdapter();
 
@@ -292,6 +294,17 @@ namespace GitUI.BuildServerIntegration
             if (disposing)
             {
                 CancelBuildStatusFetchOperation();
+
+                DisposeBuildServerAdapter();
+            }
+        }
+
+        private void DisposeBuildServerAdapter()
+        {
+            if (buildServerAdapter != null)
+            {
+                buildServerAdapter.Dispose();
+                buildServerAdapter = null;
             }
         }
 
