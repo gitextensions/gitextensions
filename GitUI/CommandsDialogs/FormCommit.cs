@@ -1690,7 +1690,7 @@ namespace GitUI.CommandsDialogs
                 author = string.Format("{0} {1}", _commitAuthorInfo.Text, toolAuthor.Text);
 
             commitAuthorStatus.Text = author;
-            
+
 
 
         }
@@ -2308,7 +2308,7 @@ namespace GitUI.CommandsDialogs
         private void commitAuthorStatus_Click(object sender, EventArgs e)
         {
             if (RepoUserSettings)
-            UICommands.StartSettingsDialog(this, SettingsDialog.Pages.LocalSettingsSettingsPage.GetPageReference());
+                UICommands.StartSettingsDialog(this, SettingsDialog.Pages.LocalSettingsSettingsPage.GetPageReference());
             else
                 UICommands.StartSettingsDialog(this, SettingsDialog.Pages.GlobalSettingsSettingsPage.GetPageReference());
         }
