@@ -2761,6 +2761,14 @@ Utilice sólo modificar si el commit no está publicado todavía!
           <Source>Amend commit</Source>
           <Value>Modificar commit</Value>
         </TranslationItem>
+        <TranslationItem Name="_commitAuthorInfo" Property="Text" type="unfinished">
+          <Source>Commit as </Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_commitAuthorToolTip" Property="Text">
+          <Source>Click to change author information.</Source>
+          <Value>Haga clic para cambiar la información del autor.</Value>
+        </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text">
           <Source>Commit Message is requested during commit</Source>
           <Value>Mensaje de commit pedido durante el commit</Value>
@@ -2965,6 +2973,10 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
         <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
           <Source>Close dialog after each commit</Source>
           <Value>Cerrar el diálogo después de cada commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitAuthorStatus" Property="ToolTipText" type="unfinished">
+          <Source>Click to change author information.</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="commitCursorColumnLabel" Property="Text">
           <Source>Col</Source>
@@ -3402,10 +3414,6 @@ Elija "No" para mantener todos los archivos nuevos.</Value>
         <TranslationItem Name="pushTag" Property="Text">
           <Source>Push tag to '{0}'</Source>
           <Value>Push para {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noTagMassage" Property="Text" type="obsolete">
-          <Source>Please enter a tag message</Source>
-          <Value>Por favor, introduzca un mensaje de etiqueta</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7413,6 +7421,10 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
           <Source>Show revision graph</Source>
           <Value>Mostrar el gráfico de revisiones</Value>
         </TranslationItem>
+        <TranslationItem Name="showTagsToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Show tags</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="squashCommitToolStripMenuItem" Property="Text">
           <Source>Squash commit</Source>
           <Value>Aplastar commit</Value>
@@ -7605,7 +7617,7 @@ en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea d
     <TranslationCategory Name="StartPageSettingsPage">
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Plugins Settings</Source>
+          <Source>Start Page</Source>
           <OldSource>Start Page</OldSource>
           <Value>Página de inicio</Value>
         </TranslationItem>
@@ -7815,18 +7827,6 @@ Detalles: Es {1} esperado {2}</Value>
           <Source>Orphan</Source>
           <Value>Huérfano</Value>
         </TranslationItem>
-        <TranslationItem Name="_branchNameIsEmpty" Property="Text" type="obsolete">
-          <Source>Enter branch name.</Source>
-          <Value>Ingrese nombre de rama.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_branchNameIsNotValud" Property="Text" type="obsolete">
-          <Source>“{0}” is not valid branch name.</Source>
-          <Value>“{0}” no es un nombre válido de rama.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noRevisionSelected" Property="Text" type="obsolete">
-          <Source>Select 1 revision to create the branch on.</Source>
-          <Value>Seleccione 1 revisión sobre la cual crear la rama.</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormRevert">
@@ -7854,10 +7854,6 @@ Detalles: Es {1} esperado {2}</Value>
         <TranslationItem Name="Commit" Property="Text" type="obsolete">
           <Source>Commit:</Source>
           <Value>Commit:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Date" Property="Text" type="obsolete">
-          <Source>Commit date:</Source>
-          <Value>Fecha de commit:</Value>
         </TranslationItem>
         <TranslationItem Name="Message" Property="Text" type="obsolete">
           <Source>Message:</Source>

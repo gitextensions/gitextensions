@@ -2713,9 +2713,13 @@ Vuoi continuare?</Value>
           <Source>Amend commit</Source>
           <Value>Ripeti commit (Amend)</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorToolTip" Property="Text">
+        <TranslationItem Name="_commitAuthorInfo" Property="Text">
           <Source>Commit as </Source>
           <Value>Impegnarsi come</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitAuthorToolTip" Property="Text">
+          <Source>Click to change author information.</Source>
+          <Value>Fare clic per modificare le informazioni relative all'autore.</Value>
         </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text" type="unfinished">
           <Source>Commit Message is requested during commit</Source>
@@ -2913,6 +2917,10 @@ Vuoi continuare?</Value>
         <TranslationItem Name="closeDialogAfterEachCommitToolStripMenuItem" Property="Text">
           <Source>Close dialog after each commit</Source>
           <Value>Chiudi finestra dopo ogni commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="commitAuthorStatus" Property="ToolTipText" type="unfinished">
+          <Source>Click to change author information.</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="commitCursorColumnLabel" Property="Text" type="unfinished">
           <Source>Col</Source>
@@ -7272,6 +7280,10 @@ Se è un repository centrale (repository senza cartella di lavoro):
         <TranslationItem Name="showRevisionGraphToolStripMenuItem" Property="Text">
           <Source>Show revision graph</Source>
           <Value>Visualizza grafico delle revisioni</Value>
+        </TranslationItem>
+        <TranslationItem Name="showTagsToolStripMenuItem" Property="Text" type="unfinished">
+          <Source>Show tags</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="squashCommitToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Squash commit</Source>
