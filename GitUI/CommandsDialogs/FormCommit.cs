@@ -1680,15 +1680,19 @@ namespace GitUI.CommandsDialogs
                 RescanChanges();
 
             string author = "";
+            GetUserSettings();
             if (string.IsNullOrEmpty(toolAuthor.Text) || string.IsNullOrEmpty(toolAuthor.Text.Trim()))
             {
-                GetUserSettings();
+                commitAuthorStatus.IsLink = true;
                 author = string.Format("{0} {1} <{2}>", _commitAuthorInfo.Text, _userName, _userEmail);
+                commitAuthorStatus.ToolTipText = _commitAuthorToolTip.Text;
             }
             else
-
+            {
+                commitAuthorStatus.IsLink = false;
                 author = string.Format("{0} {1}", _commitAuthorInfo.Text, toolAuthor.Text);
-
+                commitAuthorStatus.ToolTipText = "";
+            }
             commitAuthorStatus.Text = author;
 
 
@@ -2307,6 +2311,9 @@ namespace GitUI.CommandsDialogs
 
         private void commitAuthorStatus_Click(object sender, EventArgs e)
         {
+            if (!commitAuthorStatus.IsLink)
+                return; 
+
             if (RepoUserSettings)
                 UICommands.StartSettingsDialog(this, SettingsDialog.Pages.LocalSettingsSettingsPage.GetPageReference());
             else
