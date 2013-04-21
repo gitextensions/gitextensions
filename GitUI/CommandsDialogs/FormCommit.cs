@@ -112,7 +112,8 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
 
-        private readonly TranslationString _commitAuthorToolTip = new TranslationString("Commit as ");
+        private readonly TranslationString _commitAuthorInfo = new TranslationString("Commit as ");
+        private readonly TranslationString _commitAuthorToolTip = new TranslationString("Click to change author information.");
         #endregion
 
         private readonly TaskScheduler _taskScheduler;
@@ -131,6 +132,7 @@ namespace GitUI.CommandsDialogs
         private CancellationTokenSource _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
         private string _userName = "";
         private string _userEmail = "";
+        private bool RepoUserSettings = false;
         /// <summary>
         /// For VS designer
         /// </summary>
@@ -202,6 +204,7 @@ namespace GitUI.CommandsDialogs
             _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
             _resetSelectedLinesToolStripMenuItem.Image = Reset.Image;
             resetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
+            commitAuthorStatus.ToolTipText = _commitAuthorToolTip.Text;
         }
 
         private void FormCommit_Load(object sender, EventArgs e)
@@ -1676,18 +1679,18 @@ namespace GitUI.CommandsDialogs
             if (Settings.RefreshCommitDialogOnFormFocus)
                 RescanChanges();
 
-            string toolTip = "";
+            string author = "";
             if (string.IsNullOrEmpty(toolAuthor.Text) || string.IsNullOrEmpty(toolAuthor.Text.Trim()))
             {
                 GetUserSettings();
-                toolTip = string.Format("{0} {1} <{2}>", _commitAuthorToolTip.Text, _userName, _userEmail);
+                author = string.Format("{0} {1} <{2}>", _commitAuthorInfo.Text, _userName, _userEmail);
             }
             else
 
-                toolTip = string.Format("{0} {1}", _commitAuthorToolTip.Text, toolAuthor.Text);
+                author = string.Format("{0} {1}", _commitAuthorInfo.Text, toolAuthor.Text);
 
-            fileTooltip.SetToolTip((Control)Commit, toolTip);
-            fileTooltip.SetToolTip((Control)CommitAndPush, toolTip);
+            commitAuthorStatus.Text = author;
+            
 
 
         }
@@ -1698,26 +1701,32 @@ namespace GitUI.CommandsDialogs
             const string USER_EMAIL_KEY = "user.email";
 
 
-            ConfigFile localConfig = Module.GetLocalConfig();
-            ConfigFile globalConfig = null;
-            if (localConfig.HasValue(USER_NAME_KEY))
-                _userName = localConfig.GetValue(USER_NAME_KEY);
-            else
-                globalConfig = GitCommandHelpers.GetGlobalConfig();
-            if (globalConfig.HasValue(USER_NAME_KEY))
-                _userName = globalConfig.GetValue(USER_NAME_KEY);
-            else
-                _userName = "";
+            ConfigFile config = Module.GetLocalConfig();
 
-            if (localConfig.HasValue(USER_EMAIL_KEY))
-                _userEmail = localConfig.GetValue(USER_EMAIL_KEY);
+            RepoUserSettings = config.HasConfigSection("user");
+            if (!RepoUserSettings)
+                config = GitCommandHelpers.GetGlobalConfig();
+
+            if (config.HasConfigSection("user"))
+            {
+                if (config.HasValue(USER_NAME_KEY))
+                    _userName = config.GetValue(USER_NAME_KEY);
+                else
+                    _userName = "";
+
+                if (config.HasValue(USER_EMAIL_KEY))
+                    _userEmail = config.GetValue(USER_EMAIL_KEY);
+                else
+                {
+                    _userEmail = "";
+                }
+            }
             else
-                if (globalConfig == null)
-                    globalConfig = GitCommandHelpers.GetGlobalConfig();
-            if (globalConfig.HasValue(USER_EMAIL_KEY))
-                _userEmail = globalConfig.GetValue(USER_EMAIL_KEY);
-            else
+            {
+                _userName = "";
                 _userEmail = "";
+            }
+
         }
         private bool SenderToFileStatusList(object sender, out FileStatusList list)
         {
@@ -2294,6 +2303,14 @@ namespace GitUI.CommandsDialogs
         {
             if (StageInSuperproject.Visible)
                 Settings.StageInSuperprojectAfterCommit = StageInSuperproject.Checked;
+        }
+
+        private void commitAuthorStatus_Click(object sender, EventArgs e)
+        {
+            if (RepoUserSettings)
+            UICommands.StartSettingsDialog(this, SettingsDialog.Pages.LocalSettingsSettingsPage.GetPageReference());
+            else
+                UICommands.StartSettingsDialog(this, SettingsDialog.Pages.GlobalSettingsSettingsPage.GetPageReference());
         }
     }
 
