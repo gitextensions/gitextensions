@@ -161,12 +161,15 @@ namespace GitUI.CommandsDialogs
             this.UnstagedFileContext.SuspendLayout();
             this.StagedFileContext.SuspendLayout();
             this.UnstagedSubmoduleContext.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
+#endif
             this.splitMain.Panel1.SuspendLayout();
             this.splitMain.Panel2.SuspendLayout();
             this.splitMain.SuspendLayout();
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitLeft)).BeginInit();
+#endif
             this.splitLeft.Panel1.SuspendLayout();
             this.splitLeft.Panel2.SuspendLayout();
             this.splitLeft.SuspendLayout();
@@ -175,7 +178,9 @@ namespace GitUI.CommandsDialogs
             this.toolStripContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LoadingStaged)).BeginInit();
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitRight)).BeginInit();
+#endif
             this.splitRight.Panel1.SuspendLayout();
             this.splitRight.Panel2.SuspendLayout();
             this.splitRight.SuspendLayout();
@@ -183,6 +188,7 @@ namespace GitUI.CommandsDialogs
             this.commitStatusStrip.SuspendLayout();
             this.panel1.SuspendLayout();
             this.flowCommitButtons.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).BeginInit();
             this.toolbarUnstaged.SuspendLayout();
             this.toolbarSelectionFilter.SuspendLayout();
             this.toolbarStaged.SuspendLayout();
@@ -529,10 +535,6 @@ namespace GitUI.CommandsDialogs
             this.copyFolderNameMenuItem.Text = "Copy folder name";
             this.copyFolderNameMenuItem.Click += new System.EventHandler(this.copyFolderNameMenuItem_Click);
             // 
-            // gitItemStatusBindingSource
-            // 
-            this.gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
-            // 
             // Cancel
             // 
             this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -732,7 +734,7 @@ namespace GitUI.CommandsDialogs
             this.commitAuthorStatus.IsLink = true;
             this.commitAuthorStatus.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
             this.commitAuthorStatus.Name = "commitAuthorStatus";
-            this.commitAuthorStatus.Size = new System.Drawing.Size(348, 15);
+            this.commitAuthorStatus.Size = new System.Drawing.Size(379, 15);
             this.commitAuthorStatus.Spring = true;
             this.commitAuthorStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.commitAuthorStatus.ToolTipText = "Click to change author information.";
@@ -864,6 +866,10 @@ namespace GitUI.CommandsDialogs
             this.fileTooltip.SetToolTip(this.StageInSuperproject, "Stage current submodule in superproject after commit");
             this.StageInSuperproject.UseVisualStyleBackColor = true;
             this.StageInSuperproject.CheckedChanged += new System.EventHandler(this.StageInSuperproject_CheckedChanged);
+            // 
+            // gitItemStatusBindingSource
+            // 
+            this.gitItemStatusBindingSource.DataSource = typeof(GitCommands.GitItemStatus);
             // 
             // Unstaged
             // 
@@ -1287,7 +1293,6 @@ namespace GitUI.CommandsDialogs
             this.UnstagedFileContext.ResumeLayout(false);
             this.StagedFileContext.ResumeLayout(false);
             this.UnstagedSubmoduleContext.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.splitMain.Panel1.ResumeLayout(false);
             this.splitMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
@@ -1315,6 +1320,7 @@ namespace GitUI.CommandsDialogs
             this.panel1.ResumeLayout(false);
             this.flowCommitButtons.ResumeLayout(false);
             this.flowCommitButtons.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.toolbarUnstaged.ResumeLayout(false);
             this.toolbarUnstaged.PerformLayout();
             this.toolbarSelectionFilter.ResumeLayout(false);
