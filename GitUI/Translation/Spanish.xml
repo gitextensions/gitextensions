@@ -2029,11 +2029,11 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
           <Source>Manage remote repositories</Source>
-          <Value>Administrar repositorios remotos</Value>
+          <Value>Gestionar repositorios remotos</Value>
         </TranslationItem>
         <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text">
           <Source>Manage submodules</Source>
-          <Value>Administrar submódulos</Value>
+          <Value>Gestionar submódulos</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Source>Merge branches...</Source>
@@ -4617,7 +4617,7 @@ Esto inicializará y actualizará todos los submódulos recurisvamente.</Value>
         </TranslationItem>
         <TranslationItem Name="AddRemote" Property="Text">
           <Source>Manage remotes</Source>
-          <Value>Administrar remotos</Value>
+          <Value>Gestionar remotos</Value>
         </TranslationItem>
         <TranslationItem Name="AutoPullOnRejected" Property="Text">
           <Source>Auto pull on rejected</Source>
