@@ -52,8 +52,8 @@ namespace GitExtensionsTest.Patches
             testPatch.AppendHeaderLine("+++ b/" + testPatch.Patch.FileNameB);
             testPatch.AppendDiffLine("@@ -1,2 +1,2 @@", fileEncoding);
             testPatch.AppendDiffLine(" iiiiii", fileEncoding);
-            testPatch.AppendDiffLine("-ąśdkjaldskjlaksd", fileEncoding);
-            testPatch.AppendDiffLine("+changed again€", fileEncoding);
+            testPatch.AppendDiffLine("-asdkjaldskjlaksd", fileEncoding);
+            testPatch.AppendDiffLine("+changed again", fileEncoding);
 
             return testPatch.Patch;
         }
@@ -73,6 +73,7 @@ namespace GitExtensionsTest.Patches
             Assert.AreEqual(expectedPatch.PatchIndex, createdPatch.PatchIndex);
             Assert.AreEqual(expectedPatch.Rate, createdPatch.Rate);
             Assert.AreEqual(expectedPatch.Type, createdPatch.Type);
+            Assert.AreEqual(expectedPatch.Text, createdPatch.Text);
         }
 
 
