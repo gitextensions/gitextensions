@@ -192,7 +192,7 @@ namespace GitUI.CommitInfo
         private void updateText()
         {
             RevisionInfo.SuspendLayout();
-            RevisionInfo.SetXHTMLText(_revisionInfo + _branchInfo + _tagInfo);
+            RevisionInfo.SetXHTMLText(_revisionInfo + "\n\n" + _branchInfo + _tagInfo);
             RevisionInfo.SelectionStart = 0; //scroll up
             RevisionInfo.ScrollToCaret();    //scroll up
             RevisionInfo.ResumeLayout(true);
