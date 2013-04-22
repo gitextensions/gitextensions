@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
-using PatchApply;
 
 namespace GitUI.HelperDialogs
 {
     public sealed partial class FormCommitDiff : GitModuleForm
     {
-        private readonly string _revision;
+        private readonly GitRevision _revision;
 
         private FormCommitDiff()
             : this(null, null)
@@ -15,7 +15,7 @@ namespace GitUI.HelperDialogs
         
         }
 
-        public FormCommitDiff(GitUICommands aCommands, string revision)
+        public FormCommitDiff(GitUICommands aCommands, GitRevision revision)
             : base(aCommands)
         {
             InitializeComponent(); 
@@ -28,9 +28,9 @@ namespace GitUI.HelperDialogs
             DiffFiles.GitItemStatuses = null;
             if (_revision != null)
             {
-                DiffFiles.SetGitItemStatuses(_revision + "^", Module.GetDiffFiles(_revision, _revision + "^"));
+                DiffFiles.SetDiff(revision);
 
-                commitInfo.RevisionGuid = _revision;
+                commitInfo.Revision = _revision;
             }
         }
 
@@ -45,8 +45,9 @@ namespace GitUI.HelperDialogs
 
             if (DiffFiles.SelectedItem != null && _revision != null)
             {
-                Patch selectedPatch = Module.GetSingleDiff(_revision, _revision + "^", DiffFiles.SelectedItem.Name, DiffFiles.SelectedItem.OldName, DiffText.GetExtraDiffArguments(), DiffText.Encoding);
-                DiffText.ViewPatch(selectedPatch);
+                List<GitRevision> items = new List<GitRevision>() 
+                    { _revision, new GitRevision(Module, DiffFiles.SelectedItemParent) };
+                DiffText.ViewPatch(items, DiffFiles.SelectedItem, String.Empty);
             }
             Cursor.Current = Cursors.Default;
         }
