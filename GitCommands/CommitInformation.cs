@@ -32,7 +32,7 @@ namespace GitCommands
                 return new CommitInformation(error, "");
 
             string header = data.GetHeader();
-            string body = "\n\n" + WebUtility.HtmlEncode(data.Body.Trim()) + "\n\n";
+            string body = "\n" + WebUtility.HtmlEncode(data.Body.Trim());
 
             return new CommitInformation(header, body);
         }
@@ -47,7 +47,7 @@ namespace GitCommands
                 throw new ArgumentNullException("data");
 
             string header = data.GetHeader();
-            string body = "\n\n" + WebUtility.HtmlEncode(data.Body.Trim()) + "\n\n";
+            string body = "\n" + WebUtility.HtmlEncode(data.Body.Trim());
 
             return new CommitInformation(header, body);
         }

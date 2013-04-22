@@ -1927,11 +1927,6 @@ namespace GitUI.CommandsDialogs
             UICommands.StartCreateBranchDialog(this, RevisionGrid.GetSelectedRevisions().FirstOrDefault());
         }
 
-        private void RevisionGridDoubleClick(object sender, EventArgs e)
-        {
-            UICommands.StartCompareRevisionsDialog(this);
-        }
-
         private void GitBashClick(object sender, EventArgs e)
         {
             GitBashToolStripMenuItemClick1(sender, e);
@@ -2223,17 +2218,17 @@ namespace GitUI.CommandsDialogs
         {
             using (FormGoToCommit formGoToCommit = new FormGoToCommit(UICommands))
             {
-                if (formGoToCommit.ShowDialog(this) == DialogResult.OK)
+                if (formGoToCommit.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                string revisionGuid = formGoToCommit.GetRevision();
+                if (!string.IsNullOrEmpty(revisionGuid))
                 {
-                    string revisionGuid = formGoToCommit.GetRevision();
-                    if (!string.IsNullOrEmpty(revisionGuid))
-                    {
-                        RevisionGrid.SetSelectedRevision(new GitRevision(Module, revisionGuid));
-                    }
-                    else
-                    {
-                        MessageBox.Show(this, _noRevisionFoundError.Text);
-                    }
+                    RevisionGrid.SetSelectedRevision(new GitRevision(Module, revisionGuid));
+                }
+                else
+                {
+                    MessageBox.Show(this, _noRevisionFoundError.Text);
                 }
             }
         }

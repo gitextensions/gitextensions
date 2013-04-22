@@ -141,7 +141,7 @@ namespace GitUI
                 secondRevision = firstRevision + "^";
 
             return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
-                    diffArgs, encoding);
+                    diffArgs, encoding, true);
         }
 
         public static string GetSelectedPatch(this FileViewer diffViewer, RevisionGrid grid, GitItemStatus file)
