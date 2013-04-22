@@ -1,4 +1,4 @@
-namespace GitUI.BuildServerIntegration.Settings
+namespace TeamCityAdapter.Settings
 {
     partial class TeamCitySettingsUserControl
     {
