@@ -1530,7 +1530,7 @@ namespace GitUI.CommandsDialogs
             IList<GitRevision> items = RevisionGrid.GetSelectedRevisions();
             if (items.Count() == 1)
                 items.Add(new GitRevision(Module, DiffFiles.SelectedItemParent));
-            DiffText.ViewPatch(items, DiffFiles.SelectedItem, String.Empty);
+            DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
         }
 
         private void ChangelogToolStripMenuItemClick(object sender, EventArgs e)
