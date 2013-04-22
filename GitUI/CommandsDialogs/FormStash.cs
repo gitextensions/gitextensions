@@ -147,7 +147,7 @@ namespace GitUI.CommandsDialogs
                     Encoding encoding = this.View.Encoding;
                     View.ViewPatch(() =>
                     {
-                        Patch patch = Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding);
+                        Patch patch = Module.GetSingleDiff(gitStash.Name, gitStash.Name + "^", stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding, false);
                         if (patch == null)
                             return String.Empty;
                         if (stashedItem.IsSubmodule)
