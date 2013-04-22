@@ -26,13 +26,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             _gitModule = gitModule;
 
-
             _populateBuildServerTypeTask =
                 Task.Factory.StartNew(() =>
                         {
                             var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+                            var buildServerTypes = exports.Select(export => export.Metadata.BuildServerType).ToArray();
 
-                            return exports.Select(export => export.Metadata.BuildServerType).ToArray();
+                            return buildServerTypes;
                         })
                     .ContinueWith(
                         task => BuildServerType.DataSource = new[] { NoneItem }.Concat(task.Result).ToArray(),
