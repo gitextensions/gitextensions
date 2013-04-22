@@ -18,7 +18,7 @@ using System.Xml.XPath;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Nini.Config;
 
-namespace GitUI.BuildServerIntegration
+namespace TeamCityAdapter
 {
     [Export(typeof(IBuildServerAdapter))]
     [BuildServerAdapterMetadata("TeamCity")]

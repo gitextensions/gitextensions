@@ -78,6 +78,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundFetch", "Plugins\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCompileSubmodules", "Plugins\AutoCompileSubmodules\AutoCompileSubmodules.csproj", "{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamCityAdapter", "TeamCityAdapter\TeamCityAdapter.csproj", "{121965D1-4399-4538-B8BF-403EB5B847C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -376,6 +378,18 @@ Global
 		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release|x64.ActiveCfg = Release|Any CPU
 		{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}.Release|x86.ActiveCfg = Release|Any CPU
+		{121965D1-4399-4538-B8BF-403EB5B847C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{121965D1-4399-4538-B8BF-403EB5B847C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{121965D1-4399-4538-B8BF-403EB5B847C3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{121965D1-4399-4538-B8BF-403EB5B847C3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{121965D1-4399-4538-B8BF-403EB5B847C3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{121965D1-4399-4538-B8BF-403EB5B847C3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{121965D1-4399-4538-B8BF-403EB5B847C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{121965D1-4399-4538-B8BF-403EB5B847C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{121965D1-4399-4538-B8BF-403EB5B847C3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{121965D1-4399-4538-B8BF-403EB5B847C3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{121965D1-4399-4538-B8BF-403EB5B847C3}.Release|x64.ActiveCfg = Release|Any CPU
+		{121965D1-4399-4538-B8BF-403EB5B847C3}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

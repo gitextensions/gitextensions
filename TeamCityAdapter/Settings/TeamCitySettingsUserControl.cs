@@ -1,9 +1,10 @@
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
+using GitUI;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Nini.Config;
 
-namespace GitUI.BuildServerIntegration.Settings
+namespace TeamCityAdapter.Settings
 {
     [Export(typeof(IBuildServerSettingsUserControl))]
     [BuildServerSettingsUserControlMetadata("TeamCity")]
