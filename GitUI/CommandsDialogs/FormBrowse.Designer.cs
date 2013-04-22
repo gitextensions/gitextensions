@@ -668,7 +668,6 @@ namespace GitUI.CommandsDialogs
             this.RevisionGrid.ShowUncommitedChangesIfPossible = true;
             this.RevisionGrid.Size = new System.Drawing.Size(1154, 267);
             this.RevisionGrid.TabIndex = 0;
-            this.RevisionGrid.DoubleClick += new System.EventHandler(this.RevisionGridDoubleClick);
             // 
             // CommitInfoTabControl
             // 

@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Utils;
 using JetBrains.Annotations;
 
 namespace GitCommands
@@ -99,7 +100,7 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(UserHomeDir))
                 return UserHomeDir;
 
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
             {
                 return WindowsDefaultHomeDir;
             }
@@ -1375,7 +1376,7 @@ namespace GitCommands
         public static void TerminateTree(this Process process)
         {
 #if !MONO
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
             {
                 // Send Ctrl+C
                 NativeMethods.AttachConsole(process.Id);

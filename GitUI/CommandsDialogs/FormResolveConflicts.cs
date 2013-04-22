@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using GitUI.CommandsDialogs.ResolveConflictsDialog;
 using GitUI.Hotkey;
 using ResourceManager.Translation;
@@ -222,7 +223,7 @@ namespace GitUI.CommandsDialogs
 
         private bool TryMergeWithScript(string fileName, string baseFileName, string remoteFileName, string localFileName)
         {
-            if (!Settings.RunningOnWindows())
+            if (!EnvUtils.RunningOnWindows())
                 return false;
 
             try

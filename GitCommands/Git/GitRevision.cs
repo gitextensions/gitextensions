@@ -15,7 +15,7 @@ namespace GitCommands
         public const string Sha1HashPattern = @"[a-f\d]{40}";
         public static readonly Regex Sha1HashRegex = new Regex("^" + Sha1HashPattern + "$", RegexOptions.Compiled);
 
-        public String[] ParentGuids;
+        public string[] ParentGuids;
         private IList<IGitItem> _subItems;
         private readonly List<GitRef> _refs = new List<GitRef>();
         private readonly GitModule _module;

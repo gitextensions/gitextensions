@@ -90,6 +90,7 @@ namespace GitUI
             showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
             drawNonrelativesGrayToolStripMenuItem.Checked = Settings.RevisionGraphDrawNonRelativesGray;
             showGitNotesToolStripMenuItem.Checked = Settings.ShowGitNotes;
+            showTagsToolStripMenuItem.Checked = Settings.ShowTags;
 
             BranchFilter = String.Empty;
             SetShowBranches();
@@ -1182,6 +1183,14 @@ namespace GitUI
                             {
                                 Font refsFont;
 
+                                    if (gitRef.IsTag)
+                                    {
+                                        if (!showTagsToolStripMenuItem.Checked)
+                                        {
+                                            continue;
+                                        }
+                                    }
+
                                 if (IsFilledBranchesLayout())
                                 {
                                     //refsFont = head.Selected ? rowFont : new Font(rowFont, FontStyle.Regular);
@@ -1507,7 +1516,6 @@ namespace GitUI
             this.InvokeAsync(Revisions.Refresh);
         }
 
-
         private void RevisionsDoubleClick(object sender, EventArgs e)
         {
             if (DoubleClickRevision != null)
@@ -1527,7 +1535,7 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Count > 0)
             {
-                var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
+                var form = new FormCommitDiff(UICommands, selectedRevisions[0]);
                 form.ShowDialog(this);
             }
             else
@@ -2254,6 +2262,13 @@ namespace GitUI
             Refresh();
         }
 
+        private void showTagsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showTagsToolStripMenuItem.Checked = !showTagsToolStripMenuItem.Checked;
+            Settings.ShowTags = showTagsToolStripMenuItem.Checked;
+            Refresh();
+        }
+        
         public void ToggleRevisionCardLayout()
         {
             var layouts = new List<RevisionGridLayout>((RevisionGridLayout[])Enum.GetValues(typeof(RevisionGridLayout)));

@@ -73,6 +73,7 @@
     <Compile Include="DateTimeUtils.cs" />
     <Compile Include="ExceptionUtils.cs" />
     <Compile Include="FileHelper.cs" />
+    <Compile Include="Utils\EnvUtils.cs" />
     <Compile Include="Git\BranchComparison.cs" />
     <Compile Include="Git\GitBisectOption.cs" />
     <Compile Include="Git\GitCheckoutBranchCmd.cs" />
