@@ -72,7 +72,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(858, 740);
-            this.splitContainer1.SplitterDistance = 180;
+            this.splitContainer1.SplitterDistance = 160;
             this.splitContainer1.TabIndex = 7;
             // 
             // CommitInfo
@@ -82,7 +82,7 @@
             this.CommitInfo.Location = new System.Drawing.Point(0, 0);
             this.CommitInfo.Margin = new System.Windows.Forms.Padding(4);
             this.CommitInfo.Name = "CommitInfo";
-            this.CommitInfo.Size = new System.Drawing.Size(858, 180);
+            this.CommitInfo.Size = new System.Drawing.Size(858, 160);
             this.CommitInfo.TabIndex = 5;
             // 
             // splitContainer2
@@ -100,7 +100,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.BlameFile);
-            this.splitContainer2.Size = new System.Drawing.Size(858, 556);
+            this.splitContainer2.Size = new System.Drawing.Size(858, 576);
             this.splitContainer2.SplitterDistance = 186;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -112,7 +112,7 @@
             this.BlameCommitter.Location = new System.Drawing.Point(0, 0);
             this.BlameCommitter.Margin = new System.Windows.Forms.Padding(4);
             this.BlameCommitter.Name = "BlameCommitter";
-            this.BlameCommitter.Size = new System.Drawing.Size(184, 554);
+            this.BlameCommitter.Size = new System.Drawing.Size(184, 574);
             this.BlameCommitter.TabIndex = 5;
             this.BlameCommitter.TabStop = false;
             // 
@@ -160,7 +160,7 @@
             this.BlameFile.Location = new System.Drawing.Point(0, 0);
             this.BlameFile.Margin = new System.Windows.Forms.Padding(4);
             this.BlameFile.Name = "BlameFile";
-            this.BlameFile.Size = new System.Drawing.Size(666, 554);
+            this.BlameFile.Size = new System.Drawing.Size(666, 574);
             this.BlameFile.TabIndex = 0;
             // 
             // BlameControl
