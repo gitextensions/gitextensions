@@ -161,11 +161,6 @@ namespace GitUI.CommandsDialogs
             Cursor.Current = Cursors.Default;
         }
 
-        private void ShowPatch(Patch patch)
-        {
-            View.ViewPatch(patch);
-        }
-
         private void StashClick(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
