@@ -242,18 +242,23 @@ namespace GitUI.Blame
                 controlToMask.UnMask();
         }
 
+        private GitRevision GetRevision(string hash)
+        {
+            return new GitRevision(Module, hash) { ParentGuids = Module.GetParents(hash) };
+        }
+
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
         {
             if (_lastRevision == null)
                 return;
-            var gitRevision = new GitRevision(Module, _lastRevision) { ParentGuids = new[] { _lastRevision + "^" } };
+            var gitRevision = GetRevision(_lastRevision);
             if (_revGrid != null)
             {
                 _revGrid.SetSelectedRevision(gitRevision);
             }
             else
             {
-                using (var frm = new FormCommitDiff(UICommands, gitRevision.Guid))
+                using (var frm = new FormCommitDiff(UICommands, gitRevision))
                     frm.ShowDialog(this);
             }
         }
@@ -306,15 +311,14 @@ namespace GitUI.Blame
             GitBlame blame = Module.Blame(_fileName, commit + "^", line + ",+1", _encoding);
             if (blame.Headers.Count > 0)
             {
-                commit = blame.Headers[0].CommitGuid;
-                var gitRevision = new GitRevision(Module, commit) { ParentGuids = new[] { commit + "^" } };
+                var gitRevision = GetRevision(blame.Headers[0].CommitGuid);
                 if (_revGrid != null)
                 {
                     _revGrid.SetSelectedRevision(gitRevision);
                 }
                 else
                 {
-                    using (var frm = new FormCommitDiff(UICommands, gitRevision.Guid))
+                    using (var frm = new FormCommitDiff(UICommands, gitRevision))
                         frm.ShowDialog(this);
                 }
             }
@@ -325,8 +329,7 @@ namespace GitUI.Blame
             string commit = GetBlameCommit();
             if (commit == null)
                 return;
-            var gitRevision = new GitRevision(Module, commit) { ParentGuids = new[] { commit + "^" } };
-            using (var frm = new FormCommitDiff(UICommands, gitRevision.Guid))
+            using (var frm = new FormCommitDiff(UICommands, GetRevision(commit)))
                 frm.ShowDialog(this);
         }
     }

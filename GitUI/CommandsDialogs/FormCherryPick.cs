@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs
 
             if (IsMerge)
             {
-                var parents = Module.GetParents(Revision.Guid);
+                var parents = Module.GetParentsRevisions(Revision.Guid);
 
                 for (int i = 0; i < parents.Length; i++)
                 {
