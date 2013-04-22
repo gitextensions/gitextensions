@@ -47,9 +47,9 @@ namespace GitExtensionsTest
                                  "Commit hash:\t" + commitGuid + Environment.NewLine +
                                  "Parent(s):\t<a href='gitex://gotocommit/" + parentGuid1 + "'>" + parentGuid1.Substring(0, 10) + "</a> <a href='gitex://gotocommit/" + parentGuid2 + "'>" + parentGuid2.Substring(0, 10) + "</a>";
 
-            var expectedBody = "\n\nI made a really neato change." + Environment.NewLine + Environment.NewLine +
+            var expectedBody = "\nI made a really neato change." + Environment.NewLine + Environment.NewLine +
                                "Notes (p4notes):" + Environment.NewLine +
-                               "\tP4@547123\n\n";
+                               "\tP4@547123";
 
             var commitData = CommitData.CreateFromFormatedData(rawData, new GitModule(""));
             var commitInformation = CommitInformation.GetCommitInfo(commitData);
