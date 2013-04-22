@@ -33,9 +33,9 @@ namespace GitUI.BuildServerIntegration
 
         private Task<IEnumerable<string>> getBuildTypesTask;
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, IConfig config)
-
         private string ProjectName { get; set; }
+
+        public void Initialize(IBuildServerWatcher buildServerWatcher, IConfig config)
         {
             if (this.buildServerWatcher != null)
                 throw new InvalidOperationException("Already initialized");
