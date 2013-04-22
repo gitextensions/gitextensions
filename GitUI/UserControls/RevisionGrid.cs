@@ -1502,7 +1502,6 @@ namespace GitUI
             this.InvokeAsync(Revisions.Refresh);
         }
 
-
         private void RevisionsDoubleClick(object sender, EventArgs e)
         {
             if (DoubleClickRevision != null)
@@ -1522,7 +1521,7 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Count > 0)
             {
-                var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
+                var form = new FormCommitDiff(UICommands, selectedRevisions[0]);
                 form.ShowDialog(this);
             }
             else

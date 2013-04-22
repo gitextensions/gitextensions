@@ -1059,12 +1059,17 @@ namespace GitCommands
             return false;
         }
 
-        public GitRevision[] GetParents(string commit)
+        public string[] GetParents(string commit)
         {
             string output = RunGitCmd("log -n 1 --format=format:%P \"" + commit + "\"");
-            string[] Parents = output.Split(' ');
-            var ParentsRevisions = new GitRevision[Parents.Length];
-            for (int i = 0; i < Parents.Length; i++)
+            return output.Split(' ');
+        }
+
+        public GitRevision[] GetParentsRevisions(string commit)
+        {
+            string[] parents = GetParents(commit);
+            var parentsRevisions = new GitRevision[parents.Length];
+            for (int i = 0; i < parents.Length; i++)
             {
                 const string formatString =
                     /* Tree           */ "%T%n" +
@@ -1073,24 +1078,24 @@ namespace GitCommands
                     /* Committer Name */ "%cN%n" +
                     /* Committer Date */ "%ci%n" +
                     /* Commit Message */ "%s";
-                string cmd = "log -n 1 --format=format:" + formatString + " " + Parents[i];
-                var RevInfo = RunGitCmd(cmd);
-                string[] Infos = RevInfo.Split('\n');
-                var Revision = new GitRevision(this, Parents[i])
+                string cmd = "log -n 1 --format=format:" + formatString + " " + parents[i];
+                var revInfo = RunGitCmd(cmd);
+                string[] infos = revInfo.Split('\n');
+                var revision = new GitRevision(this, parents[i])
                 {
-                    TreeGuid = Infos[0],
-                    Author = Infos[1],
-                    Committer = Infos[3],
-                    Message = Infos[5]
+                    TreeGuid = infos[0],
+                    Author = infos[1],
+                    Committer = infos[3],
+                    Message = infos[5]
                 };
-                DateTime Date;
-                DateTime.TryParse(Infos[2], out Date);
-                Revision.AuthorDate = Date;
-                DateTime.TryParse(Infos[4], out Date);
-                Revision.CommitDate = Date;
-                ParentsRevisions[i] = Revision;
+                DateTime date;
+                DateTime.TryParse(infos[2], out date);
+                revision.AuthorDate = date;
+                DateTime.TryParse(infos[4], out date);
+                revision.CommitDate = date;
+                parentsRevisions[i] = revision;
             }
-            return ParentsRevisions;
+            return parentsRevisions;
         }
 
         public string CherryPick(string cherry, bool commit, string arguments)
