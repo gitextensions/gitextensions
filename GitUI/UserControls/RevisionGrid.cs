@@ -142,7 +142,7 @@ namespace GitUI
         [Browsable(false)]
         public Font SuperprojectFont { get; private set; }
         [Browsable(false)]
-        public int LastScrollPos { get; private set; }
+        public string FirstVisibleRevisionBeforeUpdate { get; private set; }
         [Browsable(false)]
         public string[] LastSelectedRows { get; private set; }
         [Browsable(false)]
@@ -751,6 +751,8 @@ namespace GitUI
             Translate();
         }
 
+        private string _previousModuleDirectory;
+
         public void ForceRefreshRevisions()
         {
             try
@@ -761,7 +763,17 @@ namespace GitUI
 
                 _initialLoad = true;
 
-                LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
+                if (_previousModuleDirectory == Module.WorkingDir &&
+                    Revisions.FirstDisplayedScrollingRowIndex != -1)
+                {
+                    var rows = Revisions.Rows.Cast<DataGridViewRow>();
+                    var row = rows.ElementAt(Revisions.FirstDisplayedScrollingRowIndex);
+                    FirstVisibleRevisionBeforeUpdate = GetRevision(row.Index).Guid;
+                }
+                else
+                {
+                    FirstVisibleRevisionBeforeUpdate = null;
+                }
 
                 BuildServerWatcher.CancelBuildStatusFetchOperation();
 
@@ -791,6 +803,7 @@ namespace GitUI
                 SuperprojectCurrentCheckout = newSuperprojectCurrentCheckout;
                 Revisions.Clear();
                 Error.Visible = false;
+                _previousModuleDirectory = Module.WorkingDir;
 
                 if (!Module.IsValidGitWorkingDir())
                 {
@@ -981,10 +994,15 @@ namespace GitUI
             }
             LastSelectedRows = null;
 
-            if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
+            if (FirstVisibleRevisionBeforeUpdate != null)
             {
-                Revisions.FirstDisplayedScrollingRowIndex = LastScrollPos;
-                LastScrollPos = -1;
+                var lastRow = Revisions.Rows.Cast<DataGridViewRow>()
+                    .FirstOrDefault(row => GetRevision(row.Index).Guid == FirstVisibleRevisionBeforeUpdate);
+
+                if (lastRow != null)
+                    Revisions.FirstDisplayedScrollingRowIndex = lastRow.Index;
+
+                FirstVisibleRevisionBeforeUpdate = null;
             }
         }
 
