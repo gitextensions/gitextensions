@@ -1,4 +1,4 @@
-namespace TeamCityAdapter.Settings
+namespace TeamCityIntegration.Settings
 {
     partial class TeamCitySettingsUserControl
     {

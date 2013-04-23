@@ -4,7 +4,7 @@ using GitUI;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Nini.Config;
 
-namespace TeamCityAdapter.Settings
+namespace TeamCityIntegration.Settings
 {
     [Export(typeof(IBuildServerSettingsUserControl))]
     [BuildServerSettingsUserControlMetadata("TeamCity")]
