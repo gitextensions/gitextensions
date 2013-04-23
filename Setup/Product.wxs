@@ -158,8 +158,8 @@
       <Component Id="Nini.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\Nini.dll"/>
       </Component>
-      <Component Id="TeamCityAdapter.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\TeamCityAdapter.dll"/>
+      <Component Id="TeamCityIntegration.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\Release\TeamCityIntegration.dll"/>
       </Component>
 
       <!--Remove unused dll, installed in versions <= 2.31-->
@@ -603,10 +603,10 @@
           <ComponentRef Id="ProxySwitcher.dll"/>
         </Feature>
         <Feature Id="ReleaseNotesGenerator" Title="ReleaseNotesGenerator" Level="1">
-        <Feature Id="TeamCityAdapter" Title="TeamCity integration" Level="1">
+        <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
           <ComponentRef Id="System.Net.Http.dll" />
           <ComponentRef Id="System.Net.Http.WebRequest.dll" />
-          <ComponentRef Id="TeamCityAdapter.dll" />
+          <ComponentRef Id="TeamCityIntegration.dll" />
         </Feature>
 		  <ComponentRef Id="ReleaseNotesGenerator.dll"/>
 		</Feature>
