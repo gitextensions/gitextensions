@@ -7,8 +7,8 @@
     <ProjectGuid>{121965D1-4399-4538-B8BF-403EB5B847C3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TeamCityAdapter</RootNamespace>
-    <AssemblyName>TeamCityAdapter</AssemblyName>
+    <RootNamespace>TeamCityIntegration</RootNamespace>
+    <AssemblyName>TeamCityIntegration</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
