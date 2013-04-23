@@ -86,7 +86,7 @@ namespace GitUI.SpellChecker
             if (_richTextBox.Text.Length > 1 &&
                 //check for textBox.Text.Length>1 instead of textBox.Text.Length!=0 because there might be only a \n
                 _richTextBox.Lines.Length > 0 && _richTextBox.Lines[0].Length == 0
-                && ypos >= -lh && Settings.MarkIllFormedLinesInCommitMsg)
+                && ypos >= -lh && AppSettings.MarkIllFormedLinesInCommitMsg)
                 DrawMark(new Point(0, lh + ypos), new Point(_richTextBox.Width - 3, lh + ypos));
 
             //Mark misspelled words

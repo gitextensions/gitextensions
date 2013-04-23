@@ -126,7 +126,7 @@ namespace GitCommands.Statistics
             {
                 git.StreamOutput = true;
                 git.CollectOutput = false;
-                Process p = git.CmdStartProcess(Settings.GitCommand, command);
+                Process p = git.CmdStartProcess(AppSettings.GitCommand, command);
 
                 // Read line
                 string line = p.StandardOutput.ReadLine();

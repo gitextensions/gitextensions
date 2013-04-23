@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             string editor = _commonLogic.GetGlobalEditor();
             if (string.IsNullOrEmpty(editor))
             {
-                _gitModule.SetGlobalPathSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
+                _gitModule.SetGlobalPathSetting("core.editor", "\"" + AppSettings.GetGitExtensionsFullPath() + "\" fileeditor");
             }
 
             return true;
@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (!CheckGitCredentialStore())
             {
-                string gcsFileName = Path.Combine(Settings.GetInstallDir(), @"GitCredentialWinStore\git-credential-winstore.exe");
+                string gcsFileName = Path.Combine(AppSettings.GetInstallDir(), @"GitCredentialWinStore\git-credential-winstore.exe");
                 if (File.Exists(gcsFileName))
                 {
                     ConfigFile config = GitCommandHelpers.GetGlobalConfig();
@@ -93,11 +93,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (!EnvUtils.RunningOnWindows())
             {
-                Settings.GitBinDir = "";
+                AppSettings.GitBinDir = "";
                 return true;
             }
 
-            string gitpath = Settings.GitCommand
+            string gitpath = AppSettings.GitCommand
                 .Replace(@"\cmd\git.exe", @"\bin\")
                 .Replace(@"\cmd\git.cmd", @"\bin\")
                 .Replace(@"\bin\git.exe", @"\bin\");
@@ -105,14 +105,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 if (File.Exists(gitpath + "sh.exe") || File.Exists(gitpath + "sh"))
                 {
-                    Settings.GitBinDir = gitpath;
+                    AppSettings.GitBinDir = gitpath;
                     return true;
                 }
             }
 
             if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
             {
-                Settings.GitBinDir = "";
+                AppSettings.GitBinDir = "";
                 return true;
             }
 
@@ -122,7 +122,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 {
                     if (File.Exists(path + @"bin\sh.exe") || File.Exists(path + @"bin\sh"))
                     {
-                        Settings.GitBinDir = path + @"bin\";
+                        AppSettings.GitBinDir = path + @"bin\";
                         return true;
                     }
                 }
@@ -152,8 +152,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private IEnumerable<string> GetWindowsCommandLocations()
         {
-            if (!string.IsNullOrEmpty(Settings.GitCommand) && File.Exists(Settings.GitCommand))
-                yield return Settings.GitCommand;
+            if (!string.IsNullOrEmpty(AppSettings.GitCommand) && File.Exists(AppSettings.GitCommand))
+                yield return AppSettings.GitCommand;
             foreach (var path in GetGitLocations())
             {
                 if (Directory.Exists(path + @"bin\"))
@@ -173,11 +173,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool SolveGitExtensionsDir()
         {
-            string fileName = Settings.GetGitExtensionsDirectory();
+            string fileName = AppSettings.GetGitExtensionsDirectory();
 
             if (Directory.Exists(fileName))
             {
-                Settings.SetInstallDir(fileName);
+                AppSettings.SetInstallDir(fileName);
                 return true;
             }
 
@@ -195,12 +195,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
                 if (command != null)
                 {
-                    Settings.GitCommand = command;
+                    AppSettings.GitCommand = command;
                     return true;
                 }
                 return false;
             }
-            Settings.GitCommand = "git";
+            AppSettings.GitCommand = "git";
             return !string.IsNullOrEmpty(_gitModule.RunGitCmd(""));
         }
 

@@ -31,10 +31,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void OnLoadSettings()
         {
-            PlinkPath.Text = Settings.Plink;
-            PuttygenPath.Text = Settings.Puttygen;
-            PageantPath.Text = Settings.Pageant;
-            AutostartPageant.Checked = Settings.AutoStartPageant;
+            PlinkPath.Text = AppSettings.Plink;
+            PuttygenPath.Text = AppSettings.Puttygen;
+            PageantPath.Text = AppSettings.Pageant;
+            AutostartPageant.Checked = AppSettings.AutoStartPageant;
 
             if (string.IsNullOrEmpty(GitCommandHelpers.GetSsh()))
                 OpenSSH.Checked = true;
@@ -51,10 +51,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public override void SaveSettings()
         {
-            Settings.Plink = PlinkPath.Text;
-            Settings.Puttygen = PuttygenPath.Text;
-            Settings.Pageant = PageantPath.Text;
-            Settings.AutoStartPageant = AutostartPageant.Checked;
+            AppSettings.Plink = PlinkPath.Text;
+            AppSettings.Puttygen = PuttygenPath.Text;
+            AppSettings.Pageant = PageantPath.Text;
+            AppSettings.AutoStartPageant = AutostartPageant.Checked;
 
             if (OpenSSH.Checked)
                 GitCommandHelpers.UnsetSsh();
@@ -99,7 +99,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             yield return _commonLogic.GetRegistryValue(Registry.LocalMachine,
                                                         "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1",
                                                         "InstallLocation");
-            yield return Path.Combine(Settings.GetInstallDir(), @"PuTTY\");
+            yield return Path.Combine(AppSettings.GetInstallDir(), @"PuTTY\");
         }
 
         public bool AutoFindPuttyPaths()

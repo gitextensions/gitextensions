@@ -279,7 +279,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            MessageBox.Show(this, String.Format(_shCanBeRun.Text, Settings.GitBinDir), _shCanBeRunCaption.Text);
+            MessageBox.Show(this, String.Format(_shCanBeRun.Text, AppSettings.GitBinDir), _shCanBeRunCaption.Text);
             ////GitBinPath.Text = Settings.GitBinDir;
             _settingsPageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
             SaveAndRescan_Click(null, null);
@@ -287,7 +287,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
-            string path = Path.Combine(Settings.GetInstallDir(), CommonLogic.GitExtensionsShellEx32Name);
+            string path = Path.Combine(AppSettings.GetInstallDir(), CommonLogic.GitExtensionsShellEx32Name);
             if (!File.Exists(path))
             {
                 path = Assembly.GetAssembly(GetType()).Location;
@@ -430,7 +430,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            MessageBox.Show(this, String.Format(_gitCanBeRun.Text, Settings.GitCommand), _gitCanBeRunCaption.Text);
+            MessageBox.Show(this, String.Format(_gitCanBeRun.Text, AppSettings.GitCommand), _gitCanBeRunCaption.Text);
 
             _settingsPageHost.GotoPage(GitSettingsPage.GetPageReference());
             SaveAndRescan_Click(null, null);
@@ -447,7 +447,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void CheckAtStartup_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.SetBool("checksettings", CheckAtStartup.Checked);
+            AppSettings.SetBool("checksettings", CheckAtStartup.Checked);
         }
 
         public bool CheckSettings()
@@ -483,11 +483,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private static bool getCheckAtStartupChecked(bool bValid)
         {
-            var retValue = Settings.GetBool("checksettings", true);
+            var retValue = AppSettings.GetBool("checksettings", true);
 
             if (bValid && retValue)
             {
-                Settings.SetBool("checksettings", false);
+                AppSettings.SetBool("checksettings", false);
                 retValue = false;
             }
             return retValue;
@@ -496,7 +496,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckTranslationConfigSettings()
         {
             translationConfig.Visible = true;
-            if (string.IsNullOrEmpty(Settings.Translation))
+            if (string.IsNullOrEmpty(AppSettings.Translation))
             {
                 translationConfig.BackColor = Color.LightSalmon;
                 translationConfig.Text = _noLanguageConfigured.Text;
@@ -505,7 +505,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             translationConfig.BackColor = Color.LightGreen;
             translationConfig_Fix.Visible = false;
-            translationConfig.Text = String.Format(_languageConfigured.Text, Settings.Translation);
+            translationConfig.Text = String.Format(_languageConfigured.Text, AppSettings.Translation);
             return true;
         }
 
@@ -514,7 +514,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SshConfig.Visible = true;
             if (GitCommandHelpers.Plink())
             {
-                if (!File.Exists(Settings.Plink) || !File.Exists(Settings.Puttygen) || !File.Exists(Settings.Pageant))
+                if (!File.Exists(AppSettings.Plink) || !File.Exists(AppSettings.Puttygen) || !File.Exists(AppSettings.Pageant))
                 {
                     SshConfig.BackColor = Color.LightSalmon;
                     SshConfig.Text = _plinkputtyGenpageantNotFound.Text;
@@ -538,7 +538,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckGitExe()
         {
             GitBinFound.Visible = true;
-            if (!File.Exists(Settings.GitBinDir + "sh.exe") && !File.Exists(Settings.GitBinDir + "sh") &&
+            if (!File.Exists(AppSettings.GitBinDir + "sh.exe") && !File.Exists(AppSettings.GitBinDir + "sh") &&
                 !CheckSettingsLogic.CheckIfFileIsInPath("sh.exe") && !CheckSettingsLogic.CheckIfFileIsInPath("sh"))
             {
                 GitBinFound.BackColor = Color.LightSalmon;
@@ -721,8 +721,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                                                       null)))
             {
                 //Check if shell extensions are installed
-                string path32 = Path.Combine(Settings.GetInstallDir(), CommonLogic.GitExtensionsShellEx32Name);
-                string path64 = Path.Combine(Settings.GetInstallDir(), CommonLogic.GitExtensionsShellEx64Name);
+                string path32 = Path.Combine(AppSettings.GetInstallDir(), CommonLogic.GitExtensionsShellEx32Name);
+                string path64 = Path.Combine(AppSettings.GetInstallDir(), CommonLogic.GitExtensionsShellEx64Name);
                 if (!File.Exists(path32) || (IntPtr.Size == 8 && !File.Exists(path64)))
                 {
                     ShellExtensionsRegistered.BackColor = Color.LightGreen;
@@ -748,14 +748,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return true;
 
             GitExtensionsInstall.Visible = true;
-            if (string.IsNullOrEmpty(Settings.GetInstallDir()))
+            if (string.IsNullOrEmpty(AppSettings.GetInstallDir()))
             {
                 GitExtensionsInstall.BackColor = Color.LightSalmon;
                 GitExtensionsInstall.Text = _registryKeyGitExtensionsMissing.Text;
                 GitExtensionsInstall_Fix.Visible = true;
                 return false;
             }
-            if (Settings.GetInstallDir() != null && Settings.GetInstallDir().EndsWith(".exe"))
+            if (AppSettings.GetInstallDir() != null && AppSettings.GetInstallDir().EndsWith(".exe"))
             {
                 GitExtensionsInstall.BackColor = Color.LightSalmon;
                 GitExtensionsInstall.Text = _registryKeyGitExtensionsFaulty.Text;
