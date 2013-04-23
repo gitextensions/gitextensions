@@ -35,7 +35,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                             return buildServerTypes;
                         })
                     .ContinueWith(
-                        task => BuildServerType.DataSource = new[] { NoneItem }.Concat(task.Result).ToArray(),
+                        task =>
+                            {
+                                checkBoxEnableBuildServerIntegration.Enabled = true;
+                                BuildServerType.Enabled = true;
+
+                                BuildServerType.DataSource = new[] { NoneItem }.Concat(task.Result).ToArray();
+                                return BuildServerType.DataSource;
+                            },
                         TaskScheduler.FromCurrentSynchronizationContext());
         }
 
