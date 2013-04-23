@@ -74,7 +74,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void SaveScripts()
         {
-            Settings.ownScripts = ScriptManager.SerializeIntoXml();
+            AppSettings.ownScripts = ScriptManager.SerializeIntoXml();
         }
 
         private void LoadScripts()

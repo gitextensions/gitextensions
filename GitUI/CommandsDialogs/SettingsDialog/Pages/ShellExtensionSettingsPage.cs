@@ -14,9 +14,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void OnLoadSettings()
         {
-            for (int i = 0; i < Settings.CascadeShellMenuItems.Length; i++)
+            for (int i = 0; i < AppSettings.CascadeShellMenuItems.Length; i++)
             {
-                chlMenuEntries.SetItemChecked(i, Settings.CascadeShellMenuItems[i] == '1');
+                chlMenuEntries.SetItemChecked(i, AppSettings.CascadeShellMenuItems[i] == '1');
             }
 
             UpdatePreview();
@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
             }
 
-            Settings.CascadeShellMenuItems = l_CascadeShellMenuItems;            
+            AppSettings.CascadeShellMenuItems = l_CascadeShellMenuItems;            
         }
 
         private void chlMenuEntries_SelectedValueChanged(object sender, EventArgs e)

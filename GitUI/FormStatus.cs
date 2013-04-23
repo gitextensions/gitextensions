@@ -30,7 +30,7 @@ namespace GitUI
             InitializeComponent();
             Translate();
             if (UseDialogSettings)
-                KeepDialogOpen.Checked = !GitCommands.Settings.CloseProcessDialog;
+                KeepDialogOpen.Checked = !GitCommands.AppSettings.CloseProcessDialog;
             else
                 KeepDialogOpen.Hide();
         }
@@ -179,7 +179,7 @@ namespace GitUI
                 Visible = true;
             }
 
-            if (isSuccess && (showOnError || (UseDialogSettings && GitCommands.Settings.CloseProcessDialog)))
+            if (isSuccess && (showOnError || (UseDialogSettings && GitCommands.AppSettings.CloseProcessDialog)))
             {
                 Close();
             }
@@ -307,7 +307,7 @@ namespace GitUI
 
         private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
         {
-            GitCommands.Settings.CloseProcessDialog = !KeepDialogOpen.Checked;
+            GitCommands.AppSettings.CloseProcessDialog = !KeepDialogOpen.Checked;
         }
     }
 }

@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             else
                 npp = "\"" + npp + "\"";
 
-            GlobalEditor.Items.AddRange(new Object[] { "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
+            GlobalEditor.Items.AddRange(new Object[] { "\"" + AppSettings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
         }
 
         protected override string GetCommaSeparatedKeywordList()
@@ -109,7 +109,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 globalAutocrlf = globalConfig.GetValue("core.autocrlf").ToLower();
             }
-            else if (!string.IsNullOrEmpty(Settings.GitBinDir))
+            else if (!string.IsNullOrEmpty(AppSettings.GitBinDir))
             {
                 try
                 {
@@ -118,7 +118,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     //practice this is only used to core.autocrlf. If there are more cases, we might
                     //need to consider a better solution.
                     var configFile =
-                        new ConfigFile(Path.GetDirectoryName(Settings.GitBinDir).Replace("bin", "etc\\gitconfig"), false);
+                        new ConfigFile(Path.GetDirectoryName(AppSettings.GitBinDir).Replace("bin", "etc\\gitconfig"), false);
                     globalAutocrlf = configFile.GetValue("core.autocrlf").ToLower();
                 }
                 catch

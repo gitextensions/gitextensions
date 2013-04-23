@@ -123,10 +123,10 @@ namespace GitUI.CommitInfo
 
         private void ReloadCommitInfo()
         {
-            showContainedInBranchesToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInBranchesLocal;
-            showContainedInBranchesRemoteToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInBranchesRemote;
-            showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-            showContainedInTagsToolStripMenuItem.Checked = Settings.CommitInfoShowContainedInTags;
+            showContainedInBranchesToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesLocal;
+            showContainedInBranchesRemoteToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemote;
+            showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+            showContainedInTagsToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInTags;
 
             ResetTextAndImage();
 
@@ -155,10 +155,10 @@ namespace GitUI.CommitInfo
             updateText();
             LoadAuthorImage(data.Author ?? data.Committer);
 
-            if (Settings.CommitInfoShowContainedInBranches)
+            if (AppSettings.CommitInfoShowContainedInBranches)
                 ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revisionGuid));
 
-            if (Settings.CommitInfoShowContainedInTags)
+            if (AppSettings.CommitInfoShowContainedInTags)
                 ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revisionGuid));
         }
 
@@ -221,14 +221,14 @@ namespace GitUI.CommitInfo
         {
             const string remotesPrefix= "remotes/";
             // Include local branches if explicitly requested or when needed to decide whether to show remotes
-            bool getLocal = Settings.CommitInfoShowContainedInBranchesLocal ||
-                            Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+            bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal ||
+                            AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
             // Include remote branches if requested
-            bool getRemote = Settings.CommitInfoShowContainedInBranchesRemote ||
-                             Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+            bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
+                             AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
             var branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote);
             var links = new List<string>();
-            bool allowLocal = Settings.CommitInfoShowContainedInBranchesLocal;
+            bool allowLocal = AppSettings.CommitInfoShowContainedInBranchesLocal;
             bool allowRemote = getRemote;
             
             foreach (var branch in branches)
@@ -260,7 +260,7 @@ namespace GitUI.CommitInfo
                     links.Add(branchText);
                 }
 
-                if (branchIsLocal && Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal)
+                if (branchIsLocal && AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal)
                     allowRemote = false;
             }
             if (links.Any())
@@ -280,13 +280,13 @@ namespace GitUI.CommitInfo
 
         private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.CommitInfoShowContainedInBranchesLocal = !Settings.CommitInfoShowContainedInBranchesLocal;
+            AppSettings.CommitInfoShowContainedInBranchesLocal = !AppSettings.CommitInfoShowContainedInBranchesLocal;
             ReloadCommitInfo();
         }
 
         private void showContainedInTagsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.CommitInfoShowContainedInTags = !Settings.CommitInfoShowContainedInTags;
+            AppSettings.CommitInfoShowContainedInTags = !AppSettings.CommitInfoShowContainedInTags;
             ReloadCommitInfo();
         }
 
@@ -297,13 +297,13 @@ namespace GitUI.CommitInfo
 
         private void showContainedInBranchesRemoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.CommitInfoShowContainedInBranchesRemote = !Settings.CommitInfoShowContainedInBranchesRemote;
+            AppSettings.CommitInfoShowContainedInBranchesRemote = !AppSettings.CommitInfoShowContainedInBranchesRemote;
             ReloadCommitInfo();
         }
 
         private void showContainedInBranchesRemoteIfNoLocalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal = !Settings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+            AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal = !AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
             ReloadCommitInfo();
         }
 
