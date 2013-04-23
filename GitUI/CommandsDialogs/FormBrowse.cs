@@ -272,8 +272,8 @@ namespace GitUI.CommandsDialogs
             {
                 if (Settings.PlaySpecialStartupSound)
                 {
-                    using (var cow_moo = Properties.Resources.cow_moo)
-                        new System.Media.SoundPlayer(cow_moo).Play();
+                    using (var cowMoo = Resources.cow_moo)
+                        new System.Media.SoundPlayer(cowMoo).Play();
                 }
             }
             catch // This code is just for fun, we do not want the program to crash because of it.
@@ -286,15 +286,15 @@ namespace GitUI.CommandsDialogs
             this.InvokeAsync(() =>
             {
                 RefreshButton.Image = indexChanged && Settings.UseFastChecks && Module.IsValidGitWorkingDir()
-                                          ? GitUI.Properties.Resources.arrow_refresh_dirty
-                                          : GitUI.Properties.Resources.arrow_refresh;
+                                          ? Resources.arrow_refresh_dirty
+                                          : Resources.arrow_refresh;
             });
         }
 
-        private bool pluginsLoaded;
+        private bool _pluginsLoaded;
         private void LoadPluginsInPluginMenu()
         {
-            if (pluginsLoaded)
+            if (_pluginsLoaded)
                 return;
             foreach (var plugin in LoadedPlugins.Plugins)
             {
@@ -302,7 +302,7 @@ namespace GitUI.CommandsDialogs
                 item.Click += ItemClick;
                 pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
             }
-            pluginsLoaded = true;
+            _pluginsLoaded = true;
             UpdatePluginMenu(Module.IsValidGitWorkingDir());
         }
 
@@ -1550,7 +1550,7 @@ namespace GitUI.CommandsDialogs
             IList<GitRevision> items = RevisionGrid.GetSelectedRevisions();
             if (items.Count() == 1)
                 items.Add(new GitRevision(Module, DiffFiles.SelectedItemParent));
-            DiffText.ViewPatch(items, DiffFiles.SelectedItem, String.Empty);
+            DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
         }
 
         private void ChangelogToolStripMenuItemClick(object sender, EventArgs e)
