@@ -63,6 +63,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.BuildServerType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BuildServerType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BuildServerType.Enabled = false;
             this.BuildServerType.FormattingEnabled = true;
             this.BuildServerType.Location = new System.Drawing.Point(128, 90);
             this.BuildServerType.Name = "BuildServerType";
@@ -82,6 +83,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // checkBoxEnableBuildServerIntegration
             // 
             this.checkBoxEnableBuildServerIntegration.AutoSize = true;
+            this.checkBoxEnableBuildServerIntegration.Enabled = false;
             this.checkBoxEnableBuildServerIntegration.Location = new System.Drawing.Point(13, 65);
             this.checkBoxEnableBuildServerIntegration.Name = "checkBoxEnableBuildServerIntegration";
             this.checkBoxEnableBuildServerIntegration.Size = new System.Drawing.Size(186, 19);
