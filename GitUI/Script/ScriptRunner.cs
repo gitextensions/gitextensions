@@ -342,13 +342,13 @@ namespace GitUI.Script
             //Make sure we are able to run git, even if git is not in the path
             if (originalCommand.Equals("git", System.StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("{git}", System.StringComparison.CurrentCultureIgnoreCase))
-                return Settings.GitCommand;
+                return AppSettings.GitCommand;
 
             if (originalCommand.Equals("gitextensions", System.StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("{gitextensions}", System.StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("gitex", System.StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("{gitex}", System.StringComparison.CurrentCultureIgnoreCase))
-                return Settings.GetGitExtensionsFullPath();
+                return AppSettings.GetGitExtensionsFullPath();
             return originalCommand;
         }
 

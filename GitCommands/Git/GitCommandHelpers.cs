@@ -54,18 +54,18 @@ namespace GitCommands
         public static void SetEnvironmentVariable(bool reload)
         {
             string path = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
-            if (!string.IsNullOrEmpty(Settings.GitBinDir) && !path.Contains(Settings.GitBinDir))
-                Environment.SetEnvironmentVariable("PATH", string.Concat(path, ";", Settings.GitBinDir), EnvironmentVariableTarget.Process);
+            if (!string.IsNullOrEmpty(AppSettings.GitBinDir) && !path.Contains(AppSettings.GitBinDir))
+                Environment.SetEnvironmentVariable("PATH", string.Concat(path, ";", AppSettings.GitBinDir), EnvironmentVariableTarget.Process);
 
-            if (!string.IsNullOrEmpty(Settings.CustomHomeDir))
+            if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
             {
                 Environment.SetEnvironmentVariable(
                     "HOME",
-                    Settings.CustomHomeDir);
+                    AppSettings.CustomHomeDir);
                 return;
             }
 
-            if (Settings.UserProfileHomeDir)
+            if (AppSettings.UserProfileHomeDir)
             {
                 Environment.SetEnvironmentVariable(
                     "HOME",
@@ -170,7 +170,7 @@ namespace GitCommands
             string quotedCmd = cmd;
             if (quotedCmd.IndexOf(' ') != -1)
                 quotedCmd = quotedCmd.Quote();
-            Settings.GitLog.Log(quotedCmd + " " + arguments);
+            AppSettings.GitLog.Log(quotedCmd + " " + arguments);
             //process used to execute external commands
 
             //data is read from base stream, so encoding doesn't matter
@@ -209,7 +209,7 @@ namespace GitCommands
             string quotedCmd = cmd;
             if (quotedCmd.IndexOf(' ') != -1)
                 quotedCmd = quotedCmd.Quote();
-            Settings.GitLog.Log(quotedCmd + " " + arguments);
+            AppSettings.GitLog.Log(quotedCmd + " " + arguments);
             //process used to execute external commands
 
             var startInfo = CreateProcessStartInfo(null);
@@ -242,7 +242,7 @@ namespace GitCommands
             string quotedCmd = cmd;
             if (quotedCmd.IndexOf(' ') != -1)
                 quotedCmd = quotedCmd.Quote();
-            Settings.GitLog.Log(quotedCmd + " " + arguments);
+            AppSettings.GitLog.Log(quotedCmd + " " + arguments);
 
             //process used to execute external commands
             using (var process = new Process { StartInfo = CreateProcessStartInfo(null) })
@@ -309,7 +309,7 @@ namespace GitCommands
             {
                 if (_versionInUse == null || _versionInUse.IsUnknown)
                 {
-                    var result = RunCmd(Settings.GitCommand, "--version");
+                    var result = RunCmd(AppSettings.GitCommand, "--version");
                     _versionInUse = new GitVersion(result);
                 }
 
@@ -640,7 +640,7 @@ namespace GitCommands
 
         public static bool PathIsUrl(string path)
         {
-            return path.Contains(Settings.PathSeparator.ToString()) || path.Contains(Settings.PathSeparatorWrong.ToString());
+            return path.Contains(AppSettings.PathSeparator.ToString()) || path.Contains(AppSettings.PathSeparatorWrong.ToString());
         }
 
         public static string ContinueRebaseCmd()

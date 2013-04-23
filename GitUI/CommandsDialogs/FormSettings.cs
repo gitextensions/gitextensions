@@ -216,7 +216,7 @@ namespace GitUI.CommandsDialogs
             GitCommandHelpers.SetEnvironmentVariable(true);
 
             // TODO: this method has a generic sounding name but only saves some specific settings
-            Settings.SaveSettings();
+            AppSettings.SaveSettings();
 
             return true;
         }

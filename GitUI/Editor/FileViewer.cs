@@ -166,7 +166,7 @@ namespace GitUI.Editor
         protected override void OnRuntimeLoad(EventArgs e)
         {
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            Font = Settings.DiffFont;
+            Font = AppSettings.DiffFont;
         }
 
         void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)

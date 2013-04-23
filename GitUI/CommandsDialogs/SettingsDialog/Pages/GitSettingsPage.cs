@@ -36,8 +36,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public override void OnPageShown()
         {
-            GitPath.Text = Settings.GitCommand;
-            GitBinPath.Text = Settings.GitBinDir;
+            GitPath.Text = AppSettings.GitCommand;
+            GitBinPath.Text = AppSettings.GitBinDir;
         }
 
         protected override void OnLoadSettings()
@@ -45,14 +45,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             GitCommandHelpers.SetEnvironmentVariable();
             homeIsSetToLabel.Text = string.Concat(_homeIsSetToString.Text, " ", GitCommandHelpers.GetHomeDir());
 
-            GitPath.Text = Settings.GitCommand;
-            GitBinPath.Text = Settings.GitBinDir;
+            GitPath.Text = AppSettings.GitCommand;
+            GitBinPath.Text = AppSettings.GitBinDir;
         }
 
         public override void SaveSettings()
         {
-            Settings.GitCommand = GitPath.Text;
-            Settings.GitBinDir = GitBinPath.Text;
+            AppSettings.GitCommand = GitPath.Text;
+            AppSettings.GitBinDir = GitBinPath.Text;
         }
 
         private void BrowseGitPath_Click(object sender, EventArgs e)
@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             using (var browseDialog = new OpenFileDialog
             {
-                FileName = Settings.GitCommand,
+                FileName = AppSettings.GitCommand,
                 Filter = "Git.cmd (git.cmd)|git.cmd|Git.exe (git.exe)|git.exe|Git (git)|git"
             })
             {
@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             _checkSettingsLogic.SolveLinuxToolsDir();
 
-            using (var browseDialog = new FolderBrowserDialog { SelectedPath = Settings.GitBinDir })
+            using (var browseDialog = new FolderBrowserDialog { SelectedPath = AppSettings.GitBinDir })
             {
 
                 if (browseDialog.ShowDialog(this) == DialogResult.OK)

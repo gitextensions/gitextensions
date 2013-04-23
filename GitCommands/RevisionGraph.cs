@@ -155,7 +155,7 @@ namespace GitCommands
             // the filename is the next line after the commit-format defined above.
 
             string logParam;
-            if (Settings.OrderRevisionByDate)
+            if (AppSettings.OrderRevisionByDate)
             {
                 logParam = " --date-order";
             }
@@ -203,7 +203,7 @@ namespace GitCommands
                     startInfo.StandardErrorEncoding = GitModule.LosslessEncoding;
                 };
 
-                Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
+                Process p = gitGetGraphCommand.CmdStartProcess(AppSettings.GitCommand, arguments);
                 
                 if (taskState.IsCancellationRequested)
                     return;

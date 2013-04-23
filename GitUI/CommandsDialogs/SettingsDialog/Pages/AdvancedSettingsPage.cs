@@ -13,16 +13,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void OnLoadSettings()
         {
-            chkAlwaysShowCheckoutDlg.Checked = Settings.AlwaysShowCheckoutBranchDlg;
-            chkUseLocalChangesAction.Checked = Settings.UseDefaultCheckoutBranchAction;
-            chkDontSHowHelpImages.Checked = Settings.DontShowHelpImages;
+            chkAlwaysShowCheckoutDlg.Checked = AppSettings.AlwaysShowCheckoutBranchDlg;
+            chkUseLocalChangesAction.Checked = AppSettings.UseDefaultCheckoutBranchAction;
+            chkDontSHowHelpImages.Checked = AppSettings.DontShowHelpImages;
         }
 
         public override void SaveSettings()
         {
-            Settings.AlwaysShowCheckoutBranchDlg = chkAlwaysShowCheckoutDlg.Checked;
-            Settings.UseDefaultCheckoutBranchAction = chkUseLocalChangesAction.Checked;
-            Settings.DontShowHelpImages = chkDontSHowHelpImages.Checked;
+            AppSettings.AlwaysShowCheckoutBranchDlg = chkAlwaysShowCheckoutDlg.Checked;
+            AppSettings.UseDefaultCheckoutBranchAction = chkUseLocalChangesAction.Checked;
+            AppSettings.DontShowHelpImages = chkDontSHowHelpImages.Checked;
         }
 
         public static SettingsPageReference GetPageReference()
