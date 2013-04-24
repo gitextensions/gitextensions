@@ -1,5 +1,5 @@
-﻿using GitCommands;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {

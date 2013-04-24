@@ -3,14 +3,9 @@
 // Mike Stall. http://blogs.msdn.com/jmstall
 // 
 using System;
-using System.Diagnostics;
-
-using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
 
 namespace ReleaseNotesGenerator
 {
