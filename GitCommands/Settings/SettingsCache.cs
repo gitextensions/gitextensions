@@ -21,7 +21,7 @@ namespace GitCommands
         private System.Timers.Timer SaveTimer = new System.Timers.Timer(SAVETIME);
         private bool UseTimer = true;
 
-        public static string SettingsFilePath { get; private set; }
+        public string SettingsFilePath { get; private set; }
 
         public SettingsCache(string aSettingsFilePath)
         {
