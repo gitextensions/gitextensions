@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using GitCommands;
 using GitCommands.Utils;
 using Microsoft.Win32;
-using System.IO;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {

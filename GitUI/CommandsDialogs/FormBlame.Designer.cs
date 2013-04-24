@@ -1,5 +1,4 @@
-﻿using GitUI.Editor;
-
+﻿
 namespace GitUI.CommandsDialogs
 {
     partial class FormBlame
