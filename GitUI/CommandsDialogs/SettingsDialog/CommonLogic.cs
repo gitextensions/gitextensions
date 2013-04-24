@@ -1,12 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
-using GitCommands;
-using Microsoft.Win32;
 using System.Windows.Forms;
-using ResourceManager.Translation;
-using System.IO;
+using GitCommands;
 using GitCommands.Config;
+using Microsoft.Win32;
+using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {

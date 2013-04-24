@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using GitUI.Editor;
 using GitCommands;
+using GitUI.Editor;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
