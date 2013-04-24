@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using Microsoft.Win32;
-using System.IO;
 using ResourceManager.Translation;
-using System.Reflection;
-using System.Diagnostics;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
