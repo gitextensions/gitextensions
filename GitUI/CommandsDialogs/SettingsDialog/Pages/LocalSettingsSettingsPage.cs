@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
-using GitCommands.Config;
 using GitCommands;
+using GitCommands.Config;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {

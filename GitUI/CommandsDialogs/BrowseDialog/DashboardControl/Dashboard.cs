@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
@@ -11,7 +12,6 @@ using GitCommands.Repository;
 using GitUI.Properties;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager.Translation;
-using System.Collections;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
