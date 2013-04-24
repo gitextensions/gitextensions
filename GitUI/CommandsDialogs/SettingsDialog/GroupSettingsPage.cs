@@ -1,6 +1,6 @@
-﻿using ResourceManager.Translation;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
+using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
