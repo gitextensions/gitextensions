@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-namespace GitUI.SpellChecker
+﻿namespace GitUI.SpellChecker
 {
     partial class EditNetSpell
     {

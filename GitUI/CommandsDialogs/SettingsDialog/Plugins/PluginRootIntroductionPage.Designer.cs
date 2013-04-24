@@ -1,5 +1,4 @@
-﻿using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
-
+﻿
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     partial class PluginRootIntroductionPage
