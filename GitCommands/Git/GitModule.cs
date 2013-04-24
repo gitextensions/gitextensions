@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Config;
+using GitCommands.Settings;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -39,6 +40,7 @@ namespace GitCommands
     public sealed class GitModule : IGitModule
     {
         private static readonly Regex DefaultHeadPattern = new Regex("refs/remotes/[^/]+/HEAD", RegexOptions.Compiled);
+        private readonly object _lock = new object();
 
         public GitModule(string workingdir)
         {
@@ -114,6 +116,21 @@ namespace GitCommands
                 module = module.SuperprojectModule;
             } while (module != null);
             return module;
+        }
+
+        private RepoDistSettings _Settings;
+        public RepoDistSettings Settings
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    if (_Settings == null)
+                        _Settings = new RepoDistSettings(this);
+                }
+
+                return _Settings;
+            }
         }
 
         //encoding for files paths
