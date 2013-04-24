@@ -29,7 +29,7 @@ namespace GitCommands
         public static readonly int GitExtensionsVersionInt;
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
-        private static readonly string SettingsFileName = "GitExtensions.settings";
+        public const string SettingsFileName = "GitExtensions.settings";
 
         public static Lazy<string> ApplicationDataPath;
         private static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
@@ -861,12 +861,6 @@ namespace GitCommands
         {
             get { return GetBool("SortLessRecentRepos", false); }
             set { SetBool("SortLessRecentRepos", value); }
-        }
-
-        public static bool NoFastForwardMerge
-        {
-            get { return GetBool("NoFastForwardMerge", false); }
-            set { SetBool("NoFastForwardMerge", value); }
         }
 
         public static int CommitValidationMaxCntCharsFirstLine
