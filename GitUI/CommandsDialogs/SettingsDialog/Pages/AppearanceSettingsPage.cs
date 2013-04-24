@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager.Translation;
 using Gravatar;
-using System.IO;
-using System.Diagnostics;
+using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
