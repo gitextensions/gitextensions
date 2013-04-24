@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Net;
 using System.Windows.Forms;
 using System.Xml;
-using GitCommands;
 using GitCommands.Utils;
 
 namespace GitUI.Editor.RichTextBoxExtension
