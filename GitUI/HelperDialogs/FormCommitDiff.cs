@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -45,9 +44,7 @@ namespace GitUI.HelperDialogs
 
             if (DiffFiles.SelectedItem != null && _revision != null)
             {
-                List<GitRevision> items = new List<GitRevision>() 
-                    { _revision, new GitRevision(Module, DiffFiles.SelectedItemParent) };
-                DiffText.ViewPatch(items, DiffFiles.SelectedItem, String.Empty);
+                DiffText.ViewChanges(_revision.Guid, DiffFiles.SelectedItemParent, DiffFiles.SelectedItem, String.Empty);
             }
             Cursor.Current = Cursors.Default;
         }

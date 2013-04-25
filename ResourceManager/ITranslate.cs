@@ -1,4 +1,5 @@
-﻿namespace ResourceManager.Translation
+﻿
+namespace ResourceManager.Translation
 {
     /// <summary>Provides translation capabilities.</summary>
     public interface ITranslate

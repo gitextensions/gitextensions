@@ -15,7 +15,6 @@ using GitUIPluginInterfaces.Notifications;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
 using Settings = GitCommands.Settings;
-using GitUI.HelperDialogs;
 using System.Diagnostics;
 
 namespace GitUI

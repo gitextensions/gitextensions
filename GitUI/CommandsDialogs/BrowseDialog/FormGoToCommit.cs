@@ -1,7 +1,7 @@
 ﻿using System;
-using GitCommands;
 using System.Diagnostics;
 using System.Linq;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
