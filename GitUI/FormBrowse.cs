@@ -350,14 +350,7 @@ namespace GitUI
 
         protected void Initialize()
         {
-            try
-            {
-                InternalInitialize(true);
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(this, exception.Message, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            InternalInitialize(true);
         }
 
         private void InternalInitialize(bool hard)
