@@ -22,12 +22,19 @@ namespace GitCommands.Settings
             Module = aModule;
         }
 
-        public bool NoFastForwardMerge
+        public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
-            get { return GetBool("NoFastForwardMerge", false); }
-            set { SetBool("NoFastForwardMerge", value); }
+            //Settings stored in RepoSettings always have to be set directly
+            if (LowerPriority == null 
+                || LowerPriority.LowerPriority == null
+                || SettingsCache.HasValue(name) 
+                || LowerPriority.SettingsCache.HasValue(name))
+                SettingsCache.SetValue(name, value, encode);
+            else
+                LowerPriority.LowerPriority.SetValue(name, value, encode);
         }
 
+#region RepoSettingsContainer
 
         private class RepoSettingsContainer : SettingsContainer
         {
@@ -35,6 +42,14 @@ namespace GitCommands.Settings
                 : base(AppSettings.SettingsContainer,
                 SettingsCache.FromCache(Path.Combine(aModule.WorkingDir, AppSettings.SettingsFileName)))
             { }
+        }
+
+#endregion
+
+        public bool NoFastForwardMerge
+        {
+            get { return GetBool("NoFastForwardMerge", false); }
+            set { SetBool("NoFastForwardMerge", value); }
         }
     }
 
