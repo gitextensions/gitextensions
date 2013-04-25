@@ -831,7 +831,7 @@ namespace GitUI
             {
                 Error.Visible = true;
                 Error.BringToFront();
-                MessageBox.Show(this, exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ExceptionUtils.ShowException(this, exception, string.Empty, false);                
             }
         }
 
