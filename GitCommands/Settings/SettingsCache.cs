@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 
 namespace GitCommands
 {
-    public class SettingsCache
+    public class SettingsCache : IDisposable
     {
 
         private const double SAVETIME = 2000;
@@ -32,6 +32,28 @@ namespace GitCommands
             SaveTimer.AutoReset = false;
             SaveTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnSaveTimer);
         }
+
+        public void Dispose()
+        {
+            DisposeImpl();
+            GC.SuppressFinalize(this);
+        }
+
+        private void DisposeImpl()
+        {
+            IDisposable timer = SaveTimer;
+            if (timer != null)
+            {
+                timer.Dispose();
+                SaveTimer = null;
+            }
+        }
+
+        ~SettingsCache()
+        {
+            DisposeImpl();
+        }
+
 
         public static SettingsCache FromCache(string aSettingsFilePath)
         { 
