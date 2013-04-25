@@ -827,11 +827,11 @@ namespace GitUI
                 LoadRevisions();
                 SetRevisionsLayout();
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 Error.Visible = true;
                 Error.BringToFront();
-                ExceptionUtils.ShowException(this, exception, string.Empty, false);                
+                throw;
             }
         }
 
