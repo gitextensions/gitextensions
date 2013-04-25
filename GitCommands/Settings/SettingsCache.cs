@@ -15,6 +15,7 @@ namespace GitCommands
         private const double SAVETIME = 2000;
 
         private DateTime? LastFileRead = null;
+        private DateTime? LastModificationDate = null;
 
         private readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
         private readonly XmlSerializableDictionary<string, string> EncodedNameMap = new XmlSerializableDictionary<string, string>();
@@ -69,6 +70,12 @@ namespace GitCommands
                 var tmpFile = SettingsFilePath + ".tmp";
                 lock (EncodedNameMap)
                 {
+                    if (LastModificationDate.HasValue && LastFileRead.HasValue
+                        && LastModificationDate.Value < LastFileRead.Value)
+                    {
+                        return;
+                    }
+
                     using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(tmpFile, Encoding.UTF8))
                     {
                         xtw.Formatting = Formatting.Indented;
@@ -152,6 +159,7 @@ namespace GitCommands
 
         private void StartSaveTimer()
         {
+            LastModificationDate = DateTime.UtcNow;
             //Resets timer so that the last call will let the timer event run and will cause the settings to be saved.
             SaveTimer.Stop();
             SaveTimer.AutoReset = true;
@@ -194,10 +202,10 @@ namespace GitCommands
                     EncodedNameMap.Remove(name);
                 else
                     EncodedNameMap[name] = value;
-            }
 
-            if (UseTimer)
-                StartSaveTimer();
+                if (UseTimer)
+                    StartSaveTimer();
+            }
         }
 
         private string GetValue(string name)
