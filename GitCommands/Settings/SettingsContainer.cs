@@ -59,7 +59,7 @@ namespace GitCommands
         /// <param name="name"></param>
         /// <param name="value"></param>
         /// <param name="encode"></param>
-        public void SetValue<T>(string name, T value, Func<T, string> encode)
+        public virtual void SetValue<T>(string name, T value, Func<T, string> encode)
         {
             if (LowerPriority == null || SettingsCache.HasValue(name))
                 SettingsCache.SetValue(name, value, encode);
@@ -67,7 +67,7 @@ namespace GitCommands
                 LowerPriority.SetValue(name, value, encode);
         }
 
-        public bool TryGetValue<T>(string name, T defaultValue, Func<string, T> decode, out T value)
+        public virtual bool TryGetValue<T>(string name, T defaultValue, Func<string, T> decode, out T value)
         {
             if (SettingsCache.TryGetValue<T>(name, defaultValue, decode, out value))
                 return true;
