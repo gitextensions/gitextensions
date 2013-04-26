@@ -283,8 +283,8 @@ namespace GitUI.CommandsDialogs
             {
                 if (Settings.PlaySpecialStartupSound)
                 {
-                    using (var cowMoo = Resources.cow_moo)
-                        new System.Media.SoundPlayer(cowMoo).Play();
+                    using (var cow_moo = Properties.Resources.cow_moo)
+                        new System.Media.SoundPlayer(cow_moo).Play();
                 }
             }
             catch // This code is just for fun, we do not want the program to crash because of it.
@@ -297,15 +297,15 @@ namespace GitUI.CommandsDialogs
             this.InvokeAsync(() =>
             {
                 RefreshButton.Image = indexChanged && Settings.UseFastChecks && Module.IsValidGitWorkingDir()
-                                          ? Resources.arrow_refresh_dirty
-                                          : Resources.arrow_refresh;
+                                          ? GitUI.Properties.Resources.arrow_refresh_dirty
+                                          : GitUI.Properties.Resources.arrow_refresh;
             });
         }
 
-        private bool _pluginsLoaded;
+        private bool pluginsLoaded;
         private void LoadPluginsInPluginMenu()
         {
-            if (_pluginsLoaded)
+            if (pluginsLoaded)
                 return;
                 foreach (var plugin in LoadedPlugins.Plugins)
                 {
@@ -313,7 +313,7 @@ namespace GitUI.CommandsDialogs
                     item.Click += ItemClick;
                 pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
                 }
-            _pluginsLoaded = true;
+            pluginsLoaded = true;
             UpdatePluginMenu(Module.IsValidGitWorkingDir());
             }
 
