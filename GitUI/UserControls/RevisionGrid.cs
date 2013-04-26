@@ -970,13 +970,6 @@ namespace GitUI
                     SetSelectedRevision(FiltredCurrentCheckout);
                 }
             }
-            LastSelectedRows = null;
-
-            if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
-            {
-                Revisions.FirstDisplayedScrollingRowIndex = LastScrollPos;
-                LastScrollPos = -1;
-            }
         }
 
         private int SearchRevision(string initRevision, out string graphRevision)
@@ -1038,7 +1031,16 @@ namespace GitUI
             Revisions.SelectionChanged -= RevisionsSelectionChanged;
 
             if (LastSelectedRows != null)
+            {
                 Revisions.SelectedIds = LastSelectedRows;
+                LastSelectedRows = null;
+            }
+
+            if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
+            {
+                Revisions.FirstDisplayedScrollingRowIndex = LastScrollPos;
+                LastScrollPos = -1;
+            }
 
             Revisions.Enabled = true;
             Revisions.Focus();
