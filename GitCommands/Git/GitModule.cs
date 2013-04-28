@@ -542,6 +542,15 @@ namespace GitCommands
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
+        public string RunCmd(string cmd, string arguments, Encoding encoding, bool allowCache)
+        {
+            if (allowCache)
+                return RunCachableCmd(cmd, arguments, encoding);
+            else
+                return RunCmd(cmd, arguments, null, encoding);
+        }
+
+        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments, byte[] stdInput, Encoding encoding)
         {
             int exitCode;
@@ -1059,12 +1068,17 @@ namespace GitCommands
             return false;
         }
 
-        public GitRevision[] GetParents(string commit)
+        public string[] GetParents(string commit)
         {
             string output = RunGitCmd("log -n 1 --format=format:%P \"" + commit + "\"");
-            string[] Parents = output.Split(' ');
-            var ParentsRevisions = new GitRevision[Parents.Length];
-            for (int i = 0; i < Parents.Length; i++)
+            return output.Split(' ');
+        }
+
+        public GitRevision[] GetParentsRevisions(string commit)
+        {
+            string[] parents = GetParents(commit);
+            var parentsRevisions = new GitRevision[parents.Length];
+            for (int i = 0; i < parents.Length; i++)
             {
                 const string formatString =
                     /* Tree           */ "%T%n" +
@@ -1073,24 +1087,24 @@ namespace GitCommands
                     /* Committer Name */ "%cN%n" +
                     /* Committer Date */ "%ci%n" +
                     /* Commit Message */ "%s";
-                string cmd = "log -n 1 --format=format:" + formatString + " " + Parents[i];
-                var RevInfo = RunGitCmd(cmd);
-                string[] Infos = RevInfo.Split('\n');
-                var Revision = new GitRevision(this, Parents[i])
+                string cmd = "log -n 1 --format=format:" + formatString + " " + parents[i];
+                var revInfo = RunGitCmd(cmd);
+                string[] infos = revInfo.Split('\n');
+                var revision = new GitRevision(this, parents[i])
                 {
-                    TreeGuid = Infos[0],
-                    Author = Infos[1],
-                    Committer = Infos[3],
-                    Message = Infos[5]
+                    TreeGuid = infos[0],
+                    Author = infos[1],
+                    Committer = infos[3],
+                    Message = infos[5]
                 };
-                DateTime Date;
-                DateTime.TryParse(Infos[2], out Date);
-                Revision.AuthorDate = Date;
-                DateTime.TryParse(Infos[4], out Date);
-                Revision.CommitDate = Date;
-                ParentsRevisions[i] = Revision;
+                DateTime date;
+                DateTime.TryParse(infos[2], out date);
+                revision.AuthorDate = date;
+                DateTime.TryParse(infos[4], out date);
+                revision.CommitDate = date;
+                parentsRevisions[i] = revision;
             }
-            return ParentsRevisions;
+            return parentsRevisions;
         }
 
         public string CherryPick(string cherry, bool commit, string arguments)
@@ -2144,7 +2158,7 @@ namespace GitCommands
             return stashes;
         }
 
-        public Patch GetSingleDiff(string @from, string to, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding)
+        public Patch GetSingleDiff(string @from, string to, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool allowCache)
         {
             string fileA = null;
             string fileB = null;
@@ -2179,7 +2193,7 @@ namespace GitCommands
 
             var patchManager = new PatchManager();
             var arguments = String.Format("diff {0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange, fileName, oldFileName);
-            patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments, LosslessEncoding), false, encoding);
+            patchManager.LoadPatch(this.RunCmd(Settings.GitCommand, arguments, LosslessEncoding, allowCache), false, encoding);
 
             foreach (Patch p in patchManager.Patches)
                 if (p.FileNameA.Equals(fileA) && p.FileNameB.Equals(fileB) ||
@@ -2189,9 +2203,9 @@ namespace GitCommands
             return patchManager.Patches.Count > 0 ? patchManager.Patches[patchManager.Patches.Count - 1] : null;
         }
 
-        public Patch GetSingleDiff(string @from, string to, string fileName, string extraDiffArguments, Encoding encoding)
+        public Patch GetSingleDiff(string @from, string to, string fileName, string extraDiffArguments, Encoding encoding, bool allowCache)
         {
-            return this.GetSingleDiff(from, to, fileName, null, extraDiffArguments, encoding);
+            return this.GetSingleDiff(from, to, fileName, null, extraDiffArguments, encoding, allowCache);
         }
 
         public string GetStatusText(bool untracked)
@@ -2346,7 +2360,7 @@ namespace GitCommands
                 {
                     item.SubmoduleStatus = Task.Factory.StartNew(() =>
                     {
-                        Patch patch = GetSingleDiff(from, to, item.Name, item.OldName, "", SystemEncoding);
+                        Patch patch = GetSingleDiff(from, to, item.Name, item.OldName, "", SystemEncoding, true);
                         string text = patch != null ? patch.Text : "";
                         var submoduleStatus = GitCommandHelpers.GetSubmoduleStatus(text);
                         if (submoduleStatus.Commit != submoduleStatus.OldCommit)

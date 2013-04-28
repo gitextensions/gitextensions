@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using GitUI.Script;
-using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs
 {

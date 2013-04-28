@@ -970,13 +970,6 @@ namespace GitUI
                     SetSelectedRevision(FiltredCurrentCheckout);
                 }
             }
-            LastSelectedRows = null;
-
-            if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
-            {
-                Revisions.FirstDisplayedScrollingRowIndex = LastScrollPos;
-                LastScrollPos = -1;
-            }
         }
 
         private int SearchRevision(string initRevision, out string graphRevision)
@@ -1038,7 +1031,16 @@ namespace GitUI
             Revisions.SelectionChanged -= RevisionsSelectionChanged;
 
             if (LastSelectedRows != null)
+            {
                 Revisions.SelectedIds = LastSelectedRows;
+                LastSelectedRows = null;
+            }
+
+            if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
+            {
+                Revisions.FirstDisplayedScrollingRowIndex = LastScrollPos;
+                LastScrollPos = -1;
+            }
 
             Revisions.Enabled = true;
             Revisions.Focus();
@@ -1502,7 +1504,6 @@ namespace GitUI
             this.InvokeAsync(Revisions.Refresh);
         }
 
-
         private void RevisionsDoubleClick(object sender, EventArgs e)
         {
             if (DoubleClickRevision != null)
@@ -1522,7 +1523,7 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Count > 0)
             {
-                var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
+                var form = new FormCommitDiff(UICommands, selectedRevisions[0]);
                 form.ShowDialog(this);
             }
             else

@@ -1,9 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
+using GitCommands;
 using GitUI.HelperDialogs;
 using ResourceManager.Translation;
-using GitCommands;
-using System.IO;
 
 namespace GitUI.CommandsDialogs
 {
