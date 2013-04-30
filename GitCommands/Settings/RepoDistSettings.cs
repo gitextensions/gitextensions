@@ -51,6 +51,12 @@ namespace GitCommands.Settings
             get { return GetBool("NoFastForwardMerge", false); }
             set { SetBool("NoFastForwardMerge", value); }
         }
+
+        public GitCommands.PullAction LastPullAction
+        {
+            get { return GetEnum("LastPullAction", GitCommands.PullAction.None); }
+            set { SetEnum("LastPullAction", value); }
+        }
     }
 
 }

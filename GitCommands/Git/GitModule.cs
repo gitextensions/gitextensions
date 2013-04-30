@@ -286,8 +286,8 @@ namespace GitCommands
 
         public GitCommands.PullAction LastPullAction
         {
-            get { return Settings.GetEnum("LastPullAction" , GitCommands.PullAction.None); }
-            set { Settings.SetEnum("LastPullAction", value); }
+            get { return Settings.LastPullAction; }
+            set { Settings.LastPullAction=value; }
         }
 
         public void LastPullActionToFormPullAction()
