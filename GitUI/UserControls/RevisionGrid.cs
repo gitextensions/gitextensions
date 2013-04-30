@@ -140,7 +140,7 @@ namespace GitUI
         [Browsable(false)]
         public Font SuperprojectFont { get; private set; }
         [Browsable(false)]
-        public int LastScrollPos { get; private set; }
+        public string FirstVisibleRevisionBeforeUpdate { get; private set; }
         [Browsable(false)]
         public string[] LastSelectedRows { get; private set; }
         [Browsable(false)]
@@ -770,8 +770,6 @@ namespace GitUI
 
                 _initialLoad = true;
 
-                LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
-
                 DisposeRevisionGraphCommand();
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
@@ -782,9 +780,17 @@ namespace GitUI
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
+                FirstVisibleRevisionBeforeUpdate = null;
                 if (newCurrentCheckout == CurrentCheckout)
                 {
                     LastSelectedRows = Revisions.SelectedIds;
+
+                    if (Revisions.FirstDisplayedScrollingRowIndex != -1)
+                    {
+                        var rows = Revisions.Rows.Cast<DataGridViewRow>();
+                        var row = rows.ElementAt(Revisions.FirstDisplayedScrollingRowIndex);
+                        FirstVisibleRevisionBeforeUpdate = GetRevision(row.Index).Guid;
+                    }
                 }
                 else
                 {
@@ -984,6 +990,18 @@ namespace GitUI
                     SetSelectedRevision(FiltredCurrentCheckout);
         }
             }
+            LastSelectedRows = null;
+
+            if (FirstVisibleRevisionBeforeUpdate != null)
+            {
+                var lastRow = Revisions.Rows.Cast<DataGridViewRow>()
+                    .FirstOrDefault(row => GetRevision(row.Index).Guid == FirstVisibleRevisionBeforeUpdate);
+
+                if (lastRow != null)
+                    Revisions.FirstDisplayedScrollingRowIndex = lastRow.Index;
+
+                FirstVisibleRevisionBeforeUpdate = null;
+            }
         }
 
         private int SearchRevision(string initRevision, out string graphRevision)
@@ -1045,16 +1063,7 @@ namespace GitUI
             Revisions.SelectionChanged -= RevisionsSelectionChanged;
 
             if (LastSelectedRows != null)
-            {
                 Revisions.SelectedIds = LastSelectedRows;
-                LastSelectedRows = null;
-            }
-
-            if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
-            {
-                Revisions.FirstDisplayedScrollingRowIndex = LastScrollPos;
-                LastScrollPos = -1;
-            }
 
             Revisions.Enabled = true;
             Revisions.Focus();
