@@ -367,7 +367,7 @@ namespace GitUI.CommandsDialogs
                             {
                                 AppSettings.AutoPullOnPushRejectedAction = PullAction.Default;
                             }
-                            if (Module.LastPullAction == PullAction.None)
+                            if (Module.Settings.LastPullAction == PullAction.None)
                             {
                                 return false;
                             }
