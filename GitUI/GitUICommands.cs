@@ -2016,11 +2016,11 @@ namespace GitUI
         private static void UpdateSettingsBasedOnArguments(Dictionary<string, string> arguments)
         {
             if (arguments.ContainsKey("merge"))
-                Settings.FormPullAction = Settings.PullAction.Merge;
+                Settings.FormPullAction = PullAction.Merge;
             if (arguments.ContainsKey("rebase"))
-                Settings.FormPullAction = Settings.PullAction.Rebase;
+                Settings.FormPullAction = PullAction.Rebase;
             if (arguments.ContainsKey("fetch"))
-                Settings.FormPullAction = Settings.PullAction.Fetch;
+                Settings.FormPullAction = PullAction.Fetch;
             if (arguments.ContainsKey("autostash"))
                 Settings.AutoStash = true;
         }

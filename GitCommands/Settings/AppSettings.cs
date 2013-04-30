@@ -14,13 +14,7 @@ using Microsoft.Win32;
 
 namespace GitCommands
 {
-    public enum LocalChangesAction
-    {
-        DontChange,
-        Merge,
-        Reset,
-        Stash
-    }
+   
 
     public static class AppSettings
     {
@@ -340,17 +334,7 @@ namespace GitCommands
                 EncodingSettings[settingName] = encoding;
             }
         }
-
-        public enum PullAction
-        {
-            None,
-            Merge,
-            Rebase,
-            Fetch,
-            FetchAll,
-            Default
-        }
-
+               
         public static PullAction FormPullAction
         {
             get { return GetEnum("FormPullAction", PullAction.Merge); }

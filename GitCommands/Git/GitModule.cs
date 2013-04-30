@@ -284,17 +284,17 @@ namespace GitCommands
 
         public static readonly string DetachedBranch = "(no branch)";
 
-        public AppSettings.PullAction LastPullAction
+        public GitCommands.PullAction LastPullAction
         {
-            get { return AppSettings.GetEnum("LastPullAction_" + WorkingDir, AppSettings.PullAction.None); }
-            set { AppSettings.SetEnum("LastPullAction_" + WorkingDir, value); }
+            get { return Settings.GetEnum("LastPullAction" , GitCommands.PullAction.None); }
+            set { Settings.SetEnum("LastPullAction", value); }
         }
 
         public void LastPullActionToFormPullAction()
         {
-            if (LastPullAction == AppSettings.PullAction.FetchAll)
-                AppSettings.FormPullAction = AppSettings.PullAction.Fetch;
-            else if (LastPullAction != AppSettings.PullAction.None)
+            if (LastPullAction == GitCommands.PullAction.FetchAll)
+                AppSettings.FormPullAction = GitCommands.PullAction.Fetch;
+            else if (LastPullAction != GitCommands.PullAction.None)
                 AppSettings.FormPullAction = LastPullAction;
         }
 
