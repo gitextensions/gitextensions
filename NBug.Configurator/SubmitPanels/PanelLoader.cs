@@ -4,6 +4,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using NBug.Core.Util;
+
 namespace NBug.Configurator.SubmitPanels
 {
 	using System;
@@ -25,21 +27,21 @@ namespace NBug.Configurator.SubmitPanels
 		public void LoadPanel(string connectionString)
 		{
 			this.connString = connectionString;
-			var protocol = (Protocols)Enum.Parse(typeof(Protocols), Protocol.Parse(connectionString)["Type"], true);
+			var protocol = ConnectionStringParser.Parse(connectionString)["Type"];
 
-			if (protocol == Protocols.Mail || protocol.ToString().ToLower() == "email" || protocol.ToString().ToLower() == "e-mail")
+			if (protocol == typeof(Core.Submission.Web.Mail).Name || protocol.ToString().ToLower() == "email" || protocol.ToString().ToLower() == "e-mail")
 			{
 				this.submitComboBox.SelectedItem = "E-Mail";
 			}
-			else if (protocol == Protocols.Redmine)
+			else if (protocol == typeof(Core.Submission.Tracker.Redmine).Name)
 			{
 				this.submitComboBox.SelectedItem = "Redmine Issue Tracker";
 			}
-			else if (protocol == Protocols.FTP)
+			else if (protocol == typeof(Core.Submission.Web.Ftp).Name)
 			{
 				this.submitComboBox.SelectedItem = "FTP";
 			}
-			else if (protocol == Protocols.HTTP)
+			else if (protocol == typeof(Core.Submission.Web.Http).Name)
 			{
 				this.submitComboBox.SelectedItem = "HTTP";
 			}

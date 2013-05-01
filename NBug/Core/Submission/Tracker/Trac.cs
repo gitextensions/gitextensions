@@ -4,14 +4,17 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using NBug.Core.Reporting.Info;
+using NBug.Core.Util.Serialization;
+
 namespace NBug.Core.Submission.Tracker
 {
 	using System.IO;
 
-	internal class Trac : Protocol
+	internal class Trac : ProtocolBase
 	{
-		protected Trac(string connectionString, Stream reportFile)
-			: base(connectionString, reportFile, Protocols.Mail)
+		protected Trac(string connectionString)
+			: base(connectionString)
 		{
 		}
 
@@ -26,7 +29,7 @@ namespace NBug.Core.Submission.Tracker
 		 * Url=http://tracker.mydomain.com/xmlrpc;
 		 */
 
-		internal bool Send()
+		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
 		{
 			// ToDo: Check to see if XML-RPC.NET is referenced and if not, show a developer UI as a waning -or- even better, dynamically load the assembly and use that and not the referenced one!
 			return true;

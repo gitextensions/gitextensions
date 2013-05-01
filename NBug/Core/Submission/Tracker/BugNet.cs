@@ -4,29 +4,27 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using NBug.Core.Reporting.Info;
+using NBug.Core.Util.Serialization;
+
 namespace NBug.Core.Submission.Tracker
 {
 	using System.IO;
 	using System.Net;
 
-	public class BugNet : Protocol
+	internal class BugNet : ProtocolBase
 	{
-		internal BugNet(string connectionString, Stream reportFile)
-			: base(connectionString, reportFile, Protocols.BugNET)
-		{
-		}
 
 		internal BugNet(string connectionString)
-			: base(connectionString, Protocols.BugNET)
+			: base(connectionString)
 		{
 		}
 
 		internal BugNet()
-			: base(Protocols.BugNET)
 		{
 		}
 
-		internal bool Send()
+		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
 		{
 			HttpWebRequest request;
 

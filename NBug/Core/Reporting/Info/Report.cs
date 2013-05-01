@@ -4,9 +4,14 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.IO;
+using System.Xml;
+using System.Xml.Linq;
+
 namespace NBug.Core.Reporting.Info
 {
 	using System;
+	using System.Xml.Serialization;
 
 	using NBug.Core.Util.Serialization;
 
@@ -41,5 +46,16 @@ namespace NBug.Core.Reporting.Info
 		/// <see cref="NBug.Settings.ProcessingException"/> event to fill this property with required information. 
 		/// </summary>
 		public object StaticInfo { get; set; }*/
+
+		public override string ToString()
+		{
+			var serializer = new XmlSerializer(typeof (Report));
+			using (var stream = new MemoryStream())
+			{
+				serializer.Serialize(stream, this);
+				var doc = XDocument.Load(stream);
+				return doc.Root.ToString();
+			}
+		}
 	}
 }

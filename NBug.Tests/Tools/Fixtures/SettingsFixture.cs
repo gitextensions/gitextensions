@@ -4,6 +4,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using NBug.Core.Util;
+
 namespace NBug.Tests.Tools.Fixtures
 {
 	using System;
@@ -53,7 +55,7 @@ namespace NBug.Tests.Tools.Fixtures
 		/// <summary>
 		/// Returns null if the custom settings file is not found so check for null object reference.
 		/// </summary>
-		internal List<string> ReadCustomDispatcherDestinationSettings(Protocols protocol)
+		internal List<string> ReadCustomDispatcherDestinationSettings(string protocol)
 		{
 			// This generates a sample settings file for future reference
 			/*this.dispatcherDestinations.Add("Just testing this stuff.");
@@ -87,7 +89,7 @@ namespace NBug.Tests.Tools.Fixtures
 			}
 
 			return (from destination in this.dispatcherDestinations
-							where Enum.Parse(typeof(Protocols), Protocol.Parse(destination)["Type"], true).Equals(protocol)
+							where ConnectionStringParser.Parse(destination)["Type"].Equals(protocol)
 							select destination).ToList();
 		}
 

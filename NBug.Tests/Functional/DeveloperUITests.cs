@@ -25,7 +25,7 @@ namespace NBug.Tests.Functional
 		[Fact]
 		public void ConfigErrorWithInternalConfigurationExceptionViewer()
 		{
-			Settings.Destination1 = "Type=Mail;From=postmaster@localhost;FromName=NBug Internal Error Reporter;To=postmaster@localhost;SmtpServer=localhost;";
+			Settings.AddDestinationFromConnectionString("Type=Mail;From=postmaster@localhost;FromName=NBug Internal Error Reporter;To=postmaster@localhost;SmtpServer=localhost;");
 			new BugReport().Report(new DummyArgumentException(), ExceptionThread.Main);
 			new Dispatcher(false);
 

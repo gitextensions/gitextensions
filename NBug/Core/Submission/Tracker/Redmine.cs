@@ -4,6 +4,9 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using NBug.Core.Reporting.Info;
+using NBug.Core.Util.Serialization;
+
 namespace NBug.Core.Submission.Tracker
 {
 	using System;
@@ -15,20 +18,27 @@ namespace NBug.Core.Submission.Tracker
 	using NBug.Core.Util.Logging;
 	using NBug.Core.Util.Storage;
 
-	internal class Redmine : Protocol
+	public class RedmineFactory : IProtocolFactory
 	{
-		internal Redmine(string connectionString, Stream reportFile)
-			: base(connectionString, reportFile, Protocols.Redmine)
+		public IProtocol FromConnectionString(string connectionString)
+		{
+			return new Redmine(connectionString);
+		}
+
+		public string SupportedType
+		{
+			get { return "Redmine"; }
+		}
+	}
+
+	public class Redmine : ProtocolBase
+	{
+		public Redmine(string connectionString)
+			: base(connectionString)
 		{
 		}
 
-		internal Redmine(string connectionString)
-			: base(connectionString, Protocols.Redmine)
-		{
-		}
-
-		internal Redmine()
-			: base(Protocols.Redmine)
+		public Redmine()
 		{
 		}
 
@@ -75,7 +85,7 @@ namespace NBug.Core.Submission.Tracker
 
 		public string ApiKey { get; set; }
 
-		internal bool Send()
+		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
 		{
 			HttpWebRequest request;
 
@@ -119,13 +129,13 @@ namespace NBug.Core.Submission.Tracker
 			 * </issue>
 			 */
 
-			var subject = "NBug: " + this.Report.GeneralInfo.HostApplication + " (" +
-										this.Report.GeneralInfo.HostApplicationVersion + "): " +
-										this.Report.GeneralInfo.ExceptionType + " @ " +
-										this.Report.GeneralInfo.TargetSite;
+			var subject = "NBug: " + report.GeneralInfo.HostApplication + " (" +
+										report.GeneralInfo.HostApplicationVersion + "): " +
+										report.GeneralInfo.ExceptionType + " @ " +
+										report.GeneralInfo.TargetSite;
 
-			var description = "<pre>" + this.GetReport(StoredItemType.Report) + Environment.NewLine + Environment.NewLine +
-			                  this.GetReport(StoredItemType.Exception) + "</pre>";
+			var description = "<pre>" + report + Environment.NewLine + Environment.NewLine +
+			                  exception + "</pre>";
 
 			var redmineRequestXml = new XElement("issue", new XElement("project_id", this.ProjectId));
 
