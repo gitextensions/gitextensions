@@ -4,6 +4,11 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Xml.Linq;
+using System.Xml.Serialization;
+using NBug.Core.Reporting.Info;
+using NBug.Core.Util.Serialization;
+
 namespace NBug.Core.Submission.Web
 {
 	using System;
@@ -14,20 +19,27 @@ namespace NBug.Core.Submission.Web
 	using NBug.Core.Util.Logging;
 	using NBug.Core.Util.Storage;
 
-	internal class Mail : Protocol
+	public class MailFactory : IProtocolFactory
 	{
-		internal Mail(string connectionString, Stream reportFile)
-			: base(connectionString, reportFile, Protocols.Mail)
+		public IProtocol FromConnectionString(string connectionString)
+		{
+			return new Mail(connectionString);
+		}
+
+		public string SupportedType
+		{
+			get { return "Mail"; }
+		}
+	}
+
+	public class Mail : ProtocolBase
+	{
+		public Mail(string connectionString)
+			: base(connectionString)
 		{
 		}
 
-		internal Mail(string connectionString)
-			: base(connectionString, Protocols.Mail)
-		{
-		}
-
-		internal Mail()
-			: base(Protocols.Mail)
+		public Mail()
 		{
 		}
 
@@ -88,13 +100,9 @@ namespace NBug.Core.Submission.Web
 		public string Username { get; set; }
 
 		public string Password { get; set; }
-		
-		internal bool Send()
+
+		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
 		{
-			if (ReportFile == null)
-			{
-				return false;
-			}
 
 			if (string.IsNullOrEmpty(this.From) || string.IsNullOrEmpty(this.To))
 			{
@@ -187,8 +195,8 @@ namespace NBug.Core.Submission.Web
 				if (this.UseAttachment.ToLower() == "true")
 				{
 					// ToDo: Report file name should be attached to the report file object itself, file shouldn't be accessed directly!
-					this.ReportFile.Position = 0;
-					message.Attachments.Add(new Attachment(this.ReportFile, Path.GetFileName(((FileStream)this.ReportFile).Name)));
+					file.Position = 0;
+					message.Attachments.Add(new Attachment(file, fileName));
 				}
 
 				if (!string.IsNullOrEmpty(this.CustomSubject))
@@ -197,21 +205,20 @@ namespace NBug.Core.Submission.Web
 				}
 				else
 				{
-					message.Subject = "NBug: " + this.Report.GeneralInfo.HostApplication + " (" +
-														this.Report.GeneralInfo.HostApplicationVersion + "): " +
-														this.Report.GeneralInfo.ExceptionType + " @ " +
-														this.Report.GeneralInfo.TargetSite;
+					message.Subject = "NBug: " + report.GeneralInfo.HostApplication + " (" +
+														report.GeneralInfo.HostApplicationVersion + "): " +
+														report.GeneralInfo.ExceptionType + " @ " +
+														report.GeneralInfo.TargetSite;
 				}
 
 				if (!string.IsNullOrEmpty(this.CustomBody))
 				{
-					message.Body = this.CustomBody + Environment.NewLine + Environment.NewLine + this.GetReport(StoredItemType.Report) +
-					               Environment.NewLine + Environment.NewLine + this.GetReport(StoredItemType.Exception);
+					message.Body = this.CustomBody + Environment.NewLine + Environment.NewLine + report +
+					               Environment.NewLine + Environment.NewLine + exception;
 				}
 				else
 				{
-					message.Body = this.GetReport(StoredItemType.Report) + Environment.NewLine + Environment.NewLine +
-												 this.GetReport(StoredItemType.Exception);
+					message.Body =  report + Environment.NewLine + Environment.NewLine + exception;
 				}
 
 				smtpClient.Send(message);

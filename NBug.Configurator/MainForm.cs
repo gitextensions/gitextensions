@@ -15,15 +15,21 @@ namespace NBug.Configurator
 	 */
 
 	using System;
+	using System.Collections.Generic;
+	using System.Collections.ObjectModel;
 	using System.Diagnostics;
 	using System.IO;
+	using System.Linq;
 	using System.Windows.Forms;
+
 
 	using NBug.Configurator.SubmitPanels;
 	using NBug.Enums;
 
 	public partial class MainForm : Form
 	{
+		private ICollection<PanelLoader> panelLoaders = new Collection<PanelLoader>();
+
 		private FileStream settingsFile;
 
 		public MainForm()
@@ -32,6 +38,7 @@ namespace NBug.Configurator
 
 			this.openFileDialog.InitialDirectory = Environment.CurrentDirectory;
 			this.createFileDialog.InitialDirectory = Environment.CurrentDirectory;
+			panelLoaders.Add(this.panelLoader1);
 		}
 
 		/// <summary>
@@ -63,11 +70,10 @@ namespace NBug.Configurator
 				this.storagePathComboBox.Items.Add(value);
 			}
 
-			this.panelLoader1.UnloadPanel();
-			this.panelLoader2.UnloadPanel();
-			this.panelLoader3.UnloadPanel();
-			this.panelLoader4.UnloadPanel();
-			this.panelLoader5.UnloadPanel();
+			foreach (var loader in panelLoaders)
+			{
+				loader.UnloadPanel();
+			}
 			
 			this.sleepBeforeSendNumericUpDown.Maximum = decimal.MaxValue;
 			this.maxQueuedReportsNumericUpDown.Maximum = decimal.MaxValue;
@@ -130,30 +136,20 @@ namespace NBug.Configurator
 				}
 			}
 
-			// Read connection strings)
-			if (!string.IsNullOrEmpty(Settings.Destination1))
+			while (mainTabs.TabPages.Count > 2)
 			{
-				this.panelLoader1.LoadPanel(Settings.Destination1);
+				mainTabs.TabPages.RemoveAt(2);
 			}
-
-			if (!string.IsNullOrEmpty(Settings.Destination2))
+			panelLoaders.Clear();
+			// Read connection strings
+			foreach (var destination in Settings.Destinations.Take(5))
 			{
-				this.panelLoader2.LoadPanel(Settings.Destination2);
-			}
-
-			if (!string.IsNullOrEmpty(Settings.Destination3))
-			{
-				this.panelLoader3.LoadPanel(Settings.Destination3);
-			}
-
-			if (!string.IsNullOrEmpty(Settings.Destination4))
-			{
-				this.panelLoader4.LoadPanel(Settings.Destination4);
-			}
-
-			if (!string.IsNullOrEmpty(Settings.Destination5))
-			{
-				this.panelLoader5.LoadPanel(Settings.Destination5);
+				var loader = new PanelLoader();
+				loader.LoadPanel(destination.ConnectionString);
+				panelLoaders.Add(loader);
+				var tabPage = new TabPage(string.Format("Submit #{0}", panelLoaders.Count));
+				tabPage.Controls.Add(loader);
+				mainTabs.TabPages.Add(tabPage);
 			}
 		}
 
@@ -191,70 +187,15 @@ namespace NBug.Configurator
 
 			Settings.StoragePath = this.storagePathComboBox.Text == "Custom" ? this.customStoragePathTextBox.Text : this.storagePathComboBox.Text;
 
-			// Save connection strings)
-			if (this.panelLoader1.Controls.Count == 2)
-			{
-				var str = ((ISubmitPanel)this.panelLoader1.Controls[0]).ConnectionString;
-				if (string.IsNullOrEmpty(str))
-				{
-					return;
-				}
-				else
-				{
-					Settings.Destination1 = str;
-				}
-			}
+			Settings.Destinations.Clear();
+			// Save connection strings
+			foreach (var connectionString in panelLoaders
+				.Where(p => p.Controls.Count == 2)
+				.Select(p => ((ISubmitPanel)p.Controls[0]).ConnectionString)
+				.Where(s => !string.IsNullOrEmpty(s)))
 
-			if (this.panelLoader2.Controls.Count == 2)
 			{
-				var str = ((ISubmitPanel)this.panelLoader2.Controls[0]).ConnectionString;
-				if (string.IsNullOrEmpty(str))
-				{
-					return;
-				}
-				else
-				{
-					Settings.Destination2 = str;
-				}
-			}
-
-			if (this.panelLoader3.Controls.Count == 2)
-			{
-				var str = ((ISubmitPanel)this.panelLoader3.Controls[0]).ConnectionString;
-				if (string.IsNullOrEmpty(str))
-				{
-					return;
-				}
-				else
-				{
-					Settings.Destination3 = str;
-				}
-			}
-
-			if (this.panelLoader4.Controls.Count == 2)
-			{
-				var str = ((ISubmitPanel)this.panelLoader4.Controls[0]).ConnectionString;
-				if (string.IsNullOrEmpty(str))
-				{
-					return;
-				}
-				else
-				{
-					Settings.Destination4 = str;
-				}
-			}
-
-			if (this.panelLoader5.Controls.Count == 2)
-			{
-				var str = ((ISubmitPanel)this.panelLoader5.Controls[0]).ConnectionString;
-				if (string.IsNullOrEmpty(str))
-				{
-					return;
-				}
-				else
-				{
-					Settings.Destination5 = str;
-				}
+				Settings.AddDestinationFromConnectionString(connectionString);
 			}
 
 			this.settingsFile.Position = 0;
@@ -456,6 +397,15 @@ namespace NBug.Configurator
 			{
 				this.previewButton.Enabled = true;
 			}
+		}
+
+		private void AddDestinationButton_Click(object sender, EventArgs e)
+		{
+			var loader = new PanelLoader();
+			panelLoaders.Add(loader);
+			var tabPage = new TabPage(string.Format("Submit #{0}", panelLoaders.Count));
+			tabPage.Controls.Add(loader);
+			mainTabs.TabPages.Add(tabPage);
 		}
 	}
 }

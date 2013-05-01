@@ -4,6 +4,9 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using NBug.Core.Reporting.Info;
+using NBug.Core.Util.Serialization;
+
 namespace NBug.Core.Submission.Web
 {
 	using System;
@@ -13,20 +16,27 @@ namespace NBug.Core.Submission.Web
 
 	using NBug.Core.Util.Logging;
 
-	internal class Ftp : Protocol
+	internal class FtpFactory : IProtocolFactory
 	{
-		internal Ftp(string connectionString, Stream reportFile)
-			: base(connectionString, reportFile, Protocols.FTP)
+		public IProtocol FromConnectionString(string connectionString)
+		{
+			return new Ftp(connectionString);
+		}
+
+		public string SupportedType
+		{
+			get { return "Ftp"; }
+		}
+	}
+
+	public class Ftp : ProtocolBase
+	{
+		public Ftp(string connectionString)
+			: base(connectionString)
 		{
 		}
 
-		internal Ftp(string connectionString)
-			: base(connectionString, Protocols.FTP)
-		{
-		}
-
-		internal Ftp()
-			: base(Protocols.FTP)
+		public Ftp()
 		{
 		}
 
@@ -50,9 +60,9 @@ namespace NBug.Core.Submission.Web
 
 		public string Password { get; set; }
 
-		internal bool Send()
+		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
 		{
-			var request = (FtpWebRequest)WebRequest.Create(new Uri(this.Url + Path.GetFileName(((FileStream)this.ReportFile).Name)));
+			var request = (FtpWebRequest) WebRequest.Create(new Uri(this.Url + fileName));
 
 			if (!string.IsNullOrEmpty(this.Usessl))
 			{
@@ -69,11 +79,11 @@ namespace NBug.Core.Submission.Web
 
 			using (var requestStream = request.GetRequestStream())
 			{
-				this.ReportFile.Position = 0;
-				this.ReportFile.CopyTo(requestStream);
-				this.ReportFile.Position = 0;
+				file.Position = 0;
+				file.CopyTo(requestStream);
+				file.Position = 0;
 			}
-			
+
 			using (var response = (FtpWebResponse)request.GetResponse())
 			using (var reader = new StreamReader(response.GetResponseStream()))
 			{

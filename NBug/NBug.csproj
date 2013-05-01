@@ -87,6 +87,8 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Core\Submission\IProtocol.cs" />
+    <Compile Include="Core\Submission\IProtocolFactory.cs" />
     <Compile Include="Core\Submission\Tracker\BugNet.cs" />
     <Compile Include="Core\Submission\Web\AzureBlobStorage.cs" />
     <Compile Include="Core\UI\Developer\InternalExceptionViewer.cs">
@@ -107,6 +109,7 @@
     <Compile Include="Core\UI\WinForms\Panels\ExceptionDetails.Designer.cs">
       <DependentUpon>ExceptionDetails.cs</DependentUpon>
     </Compile>
+    <Compile Include="Core\Util\ConnectionStringParser.cs" />
     <Compile Include="Core\Util\PublicResources.cs" />
     <Compile Include="Enums\MiniDumpType.cs" />
     <Compile Include="Enums\StoragePath.cs" />
@@ -153,8 +156,7 @@
     <Compile Include="Core\Submission\Database\MsSql.cs" />
     <Compile Include="Core\Submission\Database\MySql.cs" />
     <Compile Include="Core\Submission\Dispatcher.cs" />
-    <Compile Include="Core\Submission\Protocol.cs" />
-    <Compile Include="Core\Submission\Protocols.cs" />
+    <Compile Include="Core\Submission\ProtocolBase.cs" />
     <Compile Include="Core\Submission\Tracker\Bugzilla.cs" />
     <Compile Include="Core\Submission\Tracker\GitHub.cs" />
     <Compile Include="Core\Submission\Tracker\GoogleCode.cs" />

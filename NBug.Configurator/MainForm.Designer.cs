@@ -72,15 +72,6 @@
 			this.exitApplicationImmediatelyCheckBox = new System.Windows.Forms.CheckBox();
 			this.warningLabel = new System.Windows.Forms.Label();
 			this.submit1TabPage = new System.Windows.Forms.TabPage();
-			this.panelLoader1 = new NBug.Configurator.SubmitPanels.PanelLoader();
-			this.submit2TabPage = new System.Windows.Forms.TabPage();
-			this.panelLoader2 = new NBug.Configurator.SubmitPanels.PanelLoader();
-			this.submit3TabPage = new System.Windows.Forms.TabPage();
-			this.panelLoader3 = new NBug.Configurator.SubmitPanels.PanelLoader();
-			this.submit4TabPage = new System.Windows.Forms.TabPage();
-			this.panelLoader4 = new NBug.Configurator.SubmitPanels.PanelLoader();
-			this.submit5TabPage = new System.Windows.Forms.TabPage();
-			this.panelLoader5 = new NBug.Configurator.SubmitPanels.PanelLoader();
 			this.fileToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.externalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -103,6 +94,8 @@
 			this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
+			this.destinationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveButton = new System.Windows.Forms.Button();
 			this.closeButton = new System.Windows.Forms.Button();
 			this.mainToolTips = new System.Windows.Forms.ToolTip(this.components);
@@ -115,6 +108,8 @@
 			this.openButton = new System.Windows.Forms.Button();
 			this.createFileDialog = new System.Windows.Forms.SaveFileDialog();
 			this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+			this.addDestinationButton = new System.Windows.Forms.Button();
+			this.panelLoader1 = new NBug.Configurator.SubmitPanels.PanelLoader();
 			this.mainStatusStrip.SuspendLayout();
 			this.mainTabs.SuspendLayout();
 			this.generalTabPage.SuspendLayout();
@@ -130,10 +125,6 @@
 			this.advancedTabPage.SuspendLayout();
 			this.exceptionHandlingGroupBox.SuspendLayout();
 			this.submit1TabPage.SuspendLayout();
-			this.submit2TabPage.SuspendLayout();
-			this.submit3TabPage.SuspendLayout();
-			this.submit4TabPage.SuspendLayout();
-			this.submit5TabPage.SuspendLayout();
 			this.mainMenuStrip.SuspendLayout();
 			this.settingsFileGroupBox.SuspendLayout();
 			this.SuspendLayout();
@@ -158,10 +149,6 @@
 			this.mainTabs.Controls.Add(this.generalTabPage);
 			this.mainTabs.Controls.Add(this.advancedTabPage);
 			this.mainTabs.Controls.Add(this.submit1TabPage);
-			this.mainTabs.Controls.Add(this.submit2TabPage);
-			this.mainTabs.Controls.Add(this.submit3TabPage);
-			this.mainTabs.Controls.Add(this.submit4TabPage);
-			this.mainTabs.Controls.Add(this.submit5TabPage);
 			this.mainTabs.Enabled = false;
 			this.mainTabs.Location = new System.Drawing.Point(12, 105);
 			this.mainTabs.Name = "mainTabs";
@@ -595,105 +582,6 @@
 			this.submit1TabPage.Text = "Submit #1";
 			this.submit1TabPage.UseVisualStyleBackColor = true;
 			// 
-			// panelLoader1
-			// 
-			this.panelLoader1.AutoScroll = true;
-			this.panelLoader1.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
-			this.panelLoader1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panelLoader1.Location = new System.Drawing.Point(3, 3);
-			this.panelLoader1.Name = "panelLoader1";
-			this.panelLoader1.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-			this.panelLoader1.Size = new System.Drawing.Size(665, 294);
-			this.panelLoader1.TabIndex = 0;
-			// 
-			// submit2TabPage
-			// 
-			this.submit2TabPage.Controls.Add(this.panelLoader2);
-			this.submit2TabPage.Location = new System.Drawing.Point(4, 22);
-			this.submit2TabPage.Name = "submit2TabPage";
-			this.submit2TabPage.Padding = new System.Windows.Forms.Padding(3);
-			this.submit2TabPage.Size = new System.Drawing.Size(671, 300);
-			this.submit2TabPage.TabIndex = 2;
-			this.submit2TabPage.Text = "Submit #2";
-			this.submit2TabPage.UseVisualStyleBackColor = true;
-			// 
-			// panelLoader2
-			// 
-			this.panelLoader2.AutoScroll = true;
-			this.panelLoader2.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
-			this.panelLoader2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panelLoader2.Location = new System.Drawing.Point(3, 3);
-			this.panelLoader2.Name = "panelLoader2";
-			this.panelLoader2.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-			this.panelLoader2.Size = new System.Drawing.Size(665, 294);
-			this.panelLoader2.TabIndex = 1;
-			// 
-			// submit3TabPage
-			// 
-			this.submit3TabPage.Controls.Add(this.panelLoader3);
-			this.submit3TabPage.Location = new System.Drawing.Point(4, 22);
-			this.submit3TabPage.Name = "submit3TabPage";
-			this.submit3TabPage.Padding = new System.Windows.Forms.Padding(3);
-			this.submit3TabPage.Size = new System.Drawing.Size(671, 300);
-			this.submit3TabPage.TabIndex = 3;
-			this.submit3TabPage.Text = "Submit #3";
-			this.submit3TabPage.UseVisualStyleBackColor = true;
-			// 
-			// panelLoader3
-			// 
-			this.panelLoader3.AutoScroll = true;
-			this.panelLoader3.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
-			this.panelLoader3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panelLoader3.Location = new System.Drawing.Point(3, 3);
-			this.panelLoader3.Name = "panelLoader3";
-			this.panelLoader3.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-			this.panelLoader3.Size = new System.Drawing.Size(665, 294);
-			this.panelLoader3.TabIndex = 1;
-			// 
-			// submit4TabPage
-			// 
-			this.submit4TabPage.Controls.Add(this.panelLoader4);
-			this.submit4TabPage.Location = new System.Drawing.Point(4, 22);
-			this.submit4TabPage.Name = "submit4TabPage";
-			this.submit4TabPage.Padding = new System.Windows.Forms.Padding(3);
-			this.submit4TabPage.Size = new System.Drawing.Size(671, 300);
-			this.submit4TabPage.TabIndex = 4;
-			this.submit4TabPage.Text = "Submit #4";
-			this.submit4TabPage.UseVisualStyleBackColor = true;
-			// 
-			// panelLoader4
-			// 
-			this.panelLoader4.AutoScroll = true;
-			this.panelLoader4.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
-			this.panelLoader4.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panelLoader4.Location = new System.Drawing.Point(3, 3);
-			this.panelLoader4.Name = "panelLoader4";
-			this.panelLoader4.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-			this.panelLoader4.Size = new System.Drawing.Size(665, 294);
-			this.panelLoader4.TabIndex = 1;
-			// 
-			// submit5TabPage
-			// 
-			this.submit5TabPage.Controls.Add(this.panelLoader5);
-			this.submit5TabPage.Location = new System.Drawing.Point(4, 22);
-			this.submit5TabPage.Name = "submit5TabPage";
-			this.submit5TabPage.Padding = new System.Windows.Forms.Padding(3);
-			this.submit5TabPage.Size = new System.Drawing.Size(671, 300);
-			this.submit5TabPage.TabIndex = 5;
-			this.submit5TabPage.Text = "Submit #5";
-			this.submit5TabPage.UseVisualStyleBackColor = true;
-			// 
-			// panelLoader5
-			// 
-			this.panelLoader5.AutoScroll = true;
-			this.panelLoader5.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
-			this.panelLoader5.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panelLoader5.Location = new System.Drawing.Point(3, 3);
-			this.panelLoader5.Name = "panelLoader5";
-			this.panelLoader5.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-			this.panelLoader5.Size = new System.Drawing.Size(665, 294);
-			this.panelLoader5.TabIndex = 1;
-			// 
 			// fileToolStripMenuItem1
 			// 
 			this.fileToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -707,7 +595,7 @@
             this.toolStripSeparator2,
             this.exitToolStripMenuItem});
 			this.fileToolStripMenuItem1.Name = "fileToolStripMenuItem1";
-			this.fileToolStripMenuItem1.Size = new System.Drawing.Size(35, 20);
+			this.fileToolStripMenuItem1.Size = new System.Drawing.Size(37, 20);
 			this.fileToolStripMenuItem1.Text = "&File";
 			// 
 			// newToolStripMenuItem
@@ -719,20 +607,20 @@
 			this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.newToolStripMenuItem.Name = "newToolStripMenuItem";
 			this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-			this.newToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.newToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.newToolStripMenuItem.Text = "&New";
 			// 
 			// externalToolStripMenuItem
 			// 
 			this.externalToolStripMenuItem.Name = "externalToolStripMenuItem";
-			this.externalToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+			this.externalToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
 			this.externalToolStripMenuItem.Text = "External (NBug.config)";
 			this.externalToolStripMenuItem.Click += new System.EventHandler(this.ExternalToolStripMenuItem_Click);
 			// 
 			// embeddedToolStripMenuItem
 			// 
 			this.embeddedToolStripMenuItem.Name = "embeddedToolStripMenuItem";
-			this.embeddedToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+			this.embeddedToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
 			this.embeddedToolStripMenuItem.Text = "Embedded (app.config)";
 			this.embeddedToolStripMenuItem.Click += new System.EventHandler(this.EmbeddedToolStripMenuItem_Click);
 			// 
@@ -742,14 +630,14 @@
 			this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
 			this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.openToolStripMenuItem.Text = "&Open";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenButton_Click);
 			// 
 			// toolStripSeparator
 			// 
 			this.toolStripSeparator.Name = "toolStripSeparator";
-			this.toolStripSeparator.Size = new System.Drawing.Size(148, 6);
+			this.toolStripSeparator.Size = new System.Drawing.Size(143, 6);
 			// 
 			// saveToolStripMenuItem
 			// 
@@ -757,39 +645,39 @@
 			this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.saveToolStripMenuItem.Text = "&Save";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveButton_Click);
 			// 
 			// saveAsToolStripMenuItem
 			// 
 			this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.saveAsToolStripMenuItem.Text = "Save &As";
 			this.saveAsToolStripMenuItem.Visible = false;
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(148, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
 			this.toolStripSeparator1.Visible = false;
 			// 
 			// importToolStripMenuItem
 			// 
 			this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-			this.importToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.importToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.importToolStripMenuItem.Text = "&Import";
 			this.importToolStripMenuItem.Visible = false;
 			// 
 			// toolStripSeparator2
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(148, 6);
+			this.toolStripSeparator2.Size = new System.Drawing.Size(143, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.exitToolStripMenuItem.Text = "E&xit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.CloseButton_Click);
 			// 
@@ -798,14 +686,14 @@
 			this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.testAppToolStripMenuItem});
 			this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+			this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
 			this.toolsToolStripMenuItem.Text = "&Tools";
 			// 
 			// testAppToolStripMenuItem
 			// 
 			this.testAppToolStripMenuItem.Image = global::NBug.Configurator.Properties.Resources.run;
 			this.testAppToolStripMenuItem.Name = "testAppToolStripMenuItem";
-			this.testAppToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+			this.testAppToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
 			this.testAppToolStripMenuItem.Text = "Save && Run &Test App";
 			this.testAppToolStripMenuItem.Click += new System.EventHandler(this.RunTestAppButton_Click);
 			// 
@@ -819,13 +707,13 @@
             this.toolStripSeparator5,
             this.aboutToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
 			this.helpToolStripMenuItem.Text = "&Help";
 			// 
 			// projectHomeToolStripMenuItem
 			// 
 			this.projectHomeToolStripMenuItem.Name = "projectHomeToolStripMenuItem";
-			this.projectHomeToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.projectHomeToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
 			this.projectHomeToolStripMenuItem.Tag = "http://www.nbusy.com/projects/nbug";
 			this.projectHomeToolStripMenuItem.Text = "Project &Home";
 			this.projectHomeToolStripMenuItem.Click += new System.EventHandler(this.ProjectHomeToolStripMenuItem_Click);
@@ -834,7 +722,7 @@
 			// 
 			this.onlineDocumentationToolStripMenuItem.Image = global::NBug.Configurator.Properties.Resources.help;
 			this.onlineDocumentationToolStripMenuItem.Name = "onlineDocumentationToolStripMenuItem";
-			this.onlineDocumentationToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.onlineDocumentationToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
 			this.onlineDocumentationToolStripMenuItem.Tag = "http://www.nbusy.com/projects/nbug/documentation";
 			this.onlineDocumentationToolStripMenuItem.Text = "Online &Documentation";
 			this.onlineDocumentationToolStripMenuItem.Click += new System.EventHandler(this.OnlineDocumentationToolStripMenuItem_Click);
@@ -842,7 +730,7 @@
 			// discussionForumToolStripMenuItem
 			// 
 			this.discussionForumToolStripMenuItem.Name = "discussionForumToolStripMenuItem";
-			this.discussionForumToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.discussionForumToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
 			this.discussionForumToolStripMenuItem.Tag = "http://www.nbusy.com/forum/f11/";
 			this.discussionForumToolStripMenuItem.Text = "Discussion &Forum";
 			this.discussionForumToolStripMenuItem.Click += new System.EventHandler(this.DiscussionForumToolStripMenuItem_Click);
@@ -850,7 +738,7 @@
 			// bugTrackerToolStripMenuItem
 			// 
 			this.bugTrackerToolStripMenuItem.Name = "bugTrackerToolStripMenuItem";
-			this.bugTrackerToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.bugTrackerToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
 			this.bugTrackerToolStripMenuItem.Tag = "http://www.nbusy.com/tracker/projects/nbug";
 			this.bugTrackerToolStripMenuItem.Text = "&Bug Tracker";
 			this.bugTrackerToolStripMenuItem.Click += new System.EventHandler(this.BugTrackerToolStripMenuItem_Click);
@@ -858,13 +746,13 @@
 			// toolStripSeparator5
 			// 
 			this.toolStripSeparator5.Name = "toolStripSeparator5";
-			this.toolStripSeparator5.Size = new System.Drawing.Size(187, 6);
+			this.toolStripSeparator5.Size = new System.Drawing.Size(192, 6);
 			// 
 			// aboutToolStripMenuItem
 			// 
 			this.aboutToolStripMenuItem.Image = global::NBug.Configurator.Properties.Resources.Icon_16;
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
 			this.aboutToolStripMenuItem.Text = "&About NBug";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItem_Click);
 			// 
@@ -873,11 +761,27 @@
 			this.mainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem1,
             this.toolsToolStripMenuItem,
+            this.destinationsToolStripMenuItem,
             this.helpToolStripMenuItem});
 			this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
 			this.mainMenuStrip.Name = "mainMenuStrip";
 			this.mainMenuStrip.Size = new System.Drawing.Size(703, 24);
 			this.mainMenuStrip.TabIndex = 0;
+			// 
+			// destinationsToolStripMenuItem
+			// 
+			this.destinationsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addToolStripMenuItem});
+			this.destinationsToolStripMenuItem.Name = "destinationsToolStripMenuItem";
+			this.destinationsToolStripMenuItem.Size = new System.Drawing.Size(84, 20);
+			this.destinationsToolStripMenuItem.Text = "&Destinations";
+			// 
+			// addToolStripMenuItem
+			// 
+			this.addToolStripMenuItem.Name = "addToolStripMenuItem";
+			this.addToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.addToolStripMenuItem.Text = "&Add";
+			this.addToolStripMenuItem.Click += new System.EventHandler(this.AddDestinationButton_Click);
 			// 
 			// saveButton
 			// 
@@ -984,11 +888,33 @@
 			this.openFileDialog.FileName = "NBug";
 			this.openFileDialog.Filter = "Configuration File (.config)|*.config";
 			// 
+			// addDestinationButton
+			// 
+			this.addDestinationButton.Location = new System.Drawing.Point(12, 439);
+			this.addDestinationButton.Name = "addDestinationButton";
+			this.addDestinationButton.Size = new System.Drawing.Size(98, 23);
+			this.addDestinationButton.TabIndex = 23;
+			this.addDestinationButton.Text = "Add destination";
+			this.addDestinationButton.UseVisualStyleBackColor = true;
+			this.addDestinationButton.Click += new System.EventHandler(this.AddDestinationButton_Click);
+			// 
+			// panelLoader1
+			// 
+			this.panelLoader1.AutoScroll = true;
+			this.panelLoader1.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
+			this.panelLoader1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panelLoader1.Location = new System.Drawing.Point(3, 3);
+			this.panelLoader1.Name = "panelLoader1";
+			this.panelLoader1.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+			this.panelLoader1.Size = new System.Drawing.Size(665, 294);
+			this.panelLoader1.TabIndex = 0;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(703, 494);
+			this.Controls.Add(this.addDestinationButton);
 			this.Controls.Add(this.settingsFileGroupBox);
 			this.Controls.Add(this.runTestAppButton);
 			this.Controls.Add(this.closeButton);
@@ -1026,10 +952,6 @@
 			this.exceptionHandlingGroupBox.ResumeLayout(false);
 			this.exceptionHandlingGroupBox.PerformLayout();
 			this.submit1TabPage.ResumeLayout(false);
-			this.submit2TabPage.ResumeLayout(false);
-			this.submit3TabPage.ResumeLayout(false);
-			this.submit4TabPage.ResumeLayout(false);
-			this.submit5TabPage.ResumeLayout(false);
 			this.mainMenuStrip.ResumeLayout(false);
 			this.mainMenuStrip.PerformLayout();
 			this.settingsFileGroupBox.ResumeLayout(false);
@@ -1097,14 +1019,6 @@
 		private System.Windows.Forms.SaveFileDialog createFileDialog;
 		private System.Windows.Forms.OpenFileDialog openFileDialog;
 		private SubmitPanels.PanelLoader panelLoader1;
-		private System.Windows.Forms.TabPage submit2TabPage;
-		private System.Windows.Forms.TabPage submit3TabPage;
-		private System.Windows.Forms.TabPage submit4TabPage;
-		private System.Windows.Forms.TabPage submit5TabPage;
-		private SubmitPanels.PanelLoader panelLoader2;
-		private SubmitPanels.PanelLoader panelLoader3;
-		private SubmitPanels.PanelLoader panelLoader4;
-		private SubmitPanels.PanelLoader panelLoader5;
 		private System.Windows.Forms.ToolStripStatusLabel status;
 		private System.Windows.Forms.CheckBox encryptConnectionStringsCheckBox;
 		private System.Windows.Forms.GroupBox reportingGroupBox;
@@ -1126,6 +1040,9 @@
 		private System.Windows.Forms.CheckBox exitApplicationImmediatelyCheckBox;
 		private System.Windows.Forms.GroupBox nbugConfigurationGroupBox;
 		private System.Windows.Forms.CheckBox releaseModeCheckBox;
+		private System.Windows.Forms.ToolStripMenuItem destinationsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
+		private System.Windows.Forms.Button addDestinationButton;
 
 	}
 }

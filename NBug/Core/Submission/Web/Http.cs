@@ -4,6 +4,9 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using NBug.Core.Reporting.Info;
+using NBug.Core.Util.Serialization;
+
 namespace NBug.Core.Submission.Web
 {
 	using System.IO;
@@ -11,20 +14,27 @@ namespace NBug.Core.Submission.Web
 
 	using NBug.Core.Util.Logging;
 
-	internal class Http : Protocol
+	public class HttpFactory : IProtocolFactory
 	{
-		internal Http(string connectionString, Stream reportFile)
-			: base(connectionString, reportFile, Protocols.HTTP)
+		public IProtocol FromConnectionString(string connectionString)
+		{
+			return new Http(connectionString);
+		}
+
+		public string SupportedType
+		{
+			get { return "Http"; }
+		}
+	}
+
+	public class Http : ProtocolBase
+	{
+		public Http(string connectionString)
+			: base(connectionString)
 		{
 		}
 
-		internal Http(string connectionString)
-			: base(connectionString, Protocols.HTTP)
-		{
-		}
-
-		internal Http()
-			: base(Protocols.HTTP)
+		public Http()
 		{
 		}
 
@@ -37,8 +47,8 @@ namespace NBug.Core.Submission.Web
 		 */
 
 		public string Url { get; set; }
-		
-		internal bool Send()
+
+		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
 		{
 			// Advanced method with ability to post variables along with file (do not forget to urlencode the query parameters)
 			// http://www.codeproject.com/KB/cs/uploadfileex.aspx
@@ -71,14 +81,14 @@ namespace NBug.Core.Submission.Web
 			using (var webClient = new WebClient())
 			using (var data = new MemoryStream())
 			{
-				this.ReportFile.Position = 0;
-				this.ReportFile.CopyTo(data);
+				file.Position = 0;
+				file.CopyTo(data);
 				data.Position = 0;
 				var response = webClient.UploadData(this.Url, data.GetBuffer());
 				Logger.Info("Response from HTTP server: " + System.Text.Encoding.ASCII.GetString(response));
 			}
 
-			this.ReportFile.Position = 0;
+			file.Position = 0;
 
 			return true;
 		}

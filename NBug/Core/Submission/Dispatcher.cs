@@ -4,6 +4,13 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
+using System.Xml.Serialization;
+using NBug.Core.Reporting.Info;
+using NBug.Core.Util.Serialization;
+
 namespace NBug.Core.Submission
 {
 	using System;
@@ -69,9 +76,10 @@ namespace NBug.Core.Submission
 				using (Storer storer = new Storer())
 				using (Stream stream = storer.GetFirstReportFile())
 				{
+					var exceptionData = GetDataFromZip(stream);
 					if (stream != null)
 					{
-						if (this.EnumerateDestinations(stream) == false)
+						if (this.EnumerateDestinations(stream, exceptionData) == false)
 						{
 							break;
 						}
@@ -87,6 +95,45 @@ namespace NBug.Core.Submission
 			}
 		}
 
+		private class ExceptionData
+		{
+			public Report Report { get; set; }
+			public SerializableException Exception { get; set; }
+		}
+
+		private ExceptionData GetDataFromZip(Stream stream)
+		{
+			var results = new ExceptionData();
+			var zipStorer = ZipStorer.Open(stream, FileAccess.Read);
+			using (Stream zipItemStream = new MemoryStream())
+			{
+				var zipDirectory = zipStorer.ReadCentralDir();
+				foreach (var entry in zipDirectory)
+				{
+					if (Path.GetFileName(entry.FilenameInZip) == StoredItemFile.Exception)
+					{
+						zipItemStream.SetLength(0);
+						zipStorer.ExtractFile(entry, zipItemStream);
+						zipItemStream.Position = 0;
+						var deserializer = new XmlSerializer(typeof(SerializableException));
+						results.Exception = (SerializableException)deserializer.Deserialize(zipItemStream);
+						zipItemStream.Position = 0;
+					}
+					else if (Path.GetFileName(entry.FilenameInZip) == StoredItemFile.Report)
+					{
+						zipItemStream.SetLength(0);
+						zipStorer.ExtractFile(entry, zipItemStream);
+						zipItemStream.Position = 0;
+						var deserializer = new XmlSerializer(typeof(Report));
+						results.Report = (Report)deserializer.Deserialize(zipItemStream);
+						zipItemStream.Position = 0;
+					}
+				}
+			}
+
+			return results;
+		}
+
 		/// <summary>
 		/// Enumerate all protocols to see if they are properly configured and send using the ones that are configured 
 		/// as many times as necessary.
@@ -94,130 +141,26 @@ namespace NBug.Core.Submission
 		/// <param name="reportFile">The file to read the report from.</param>
 		/// <returns>Returns <see langword="true"/> if the sending was successful. 
 		/// Returns <see langword="true"/> if the report was submitted to at least one destination.</returns>
-		private bool EnumerateDestinations(Stream reportFile)
+		private bool EnumerateDestinations(Stream reportFile, ExceptionData exceptionData)
 		{
 			bool sentSuccessfullyAtLeastOnce = false;
-
-			if (!string.IsNullOrEmpty(Settings.Destination1))
+			string fileName = Path.GetFileName(((FileStream) reportFile).Name);
+			foreach (var destination in Settings.Destinations)
 			{
-				if (this.EnumerateSubmitters(reportFile, this.GetDestinationType(Settings.Destination1), Settings.Destination1))
+				try
 				{
-					sentSuccessfullyAtLeastOnce = true;
+					Logger.Trace(string.Format("Submitting bug report via {0}.", destination.GetType().Name));
+					if (destination.Send(fileName, reportFile, exceptionData.Report, exceptionData.Exception))
+					{
+						sentSuccessfullyAtLeastOnce = true;
+					}
+				}
+				catch (Exception exception)
+				{
+					Logger.Error(string.Format("An exception occurred while submitting bug report with {0}. Check the inner exception for details.", destination.GetType().Name), exception);
 				}
 			}
-
-			if (!string.IsNullOrEmpty(Settings.Destination2))
-			{
-				if (this.EnumerateSubmitters(reportFile, this.GetDestinationType(Settings.Destination2), Settings.Destination2))
-				{
-					sentSuccessfullyAtLeastOnce = true;
-				}
-			}
-
-			if (!string.IsNullOrEmpty(Settings.Destination3))
-			{
-				if (this.EnumerateSubmitters(reportFile, this.GetDestinationType(Settings.Destination3), Settings.Destination3))
-				{
-					sentSuccessfullyAtLeastOnce = true;
-				}
-			}
-
-			if (!string.IsNullOrEmpty(Settings.Destination4))
-			{
-				if (this.EnumerateSubmitters(reportFile, this.GetDestinationType(Settings.Destination4), Settings.Destination4))
-				{
-					sentSuccessfullyAtLeastOnce = true;
-				}
-			}
-
-			if (!string.IsNullOrEmpty(Settings.Destination5))
-			{
-				if (this.EnumerateSubmitters(reportFile, this.GetDestinationType(Settings.Destination5), Settings.Destination5))
-				{
-					sentSuccessfullyAtLeastOnce = true;
-				}
-			}
-
 			return sentSuccessfullyAtLeastOnce;
-		}
-
-		private string GetDestinationType(string destination)
-		{
-			return Protocol.Parse(destination)["Type"];
-		}
-		
-		// Individual submitter components should fail silently (mainly due to misconfiguration or outdated configuration)
-		private bool EnumerateSubmitters(Stream reportFile, string destination, string connectionString)
-		{
-			if (destination.ToLower() == Protocols.Mail.ToString().ToLower() || destination.ToLower() == "email" || destination.ToLower() == "e-mail")
-			{
-				try
-				{
-					Logger.Trace("Submitting bug report via email.");
-					return new Web.Mail(connectionString, reportFile).Send();
-				}
-				catch (Exception exception)
-				{
-					Logger.Error("An exception occurred while submitting bug report with E-mail. Check the inner exception for details.", exception);
-					return false;
-				}
-			}
-			else if (destination.ToLower() == Protocols.Redmine.ToString().ToLower())
-			{
-				try
-				{
-					Logger.Trace("Submitting bug report to Redmine bug tracker.");
-					return new Tracker.Redmine(connectionString, reportFile).Send();
-				}
-				catch (Exception exception)
-				{
-					Logger.Error("An exception occurred while submitting bug report to Redmine Issue Tracker. Check the inner exception for details.", exception);
-					return false;
-				}
-			}
-			else if (destination.ToLower() == Protocols.FTP.ToString().ToLower())
-			{
-				try
-				{
-					Logger.Trace("Submitting bug report to via FTP connection.");
-					return new Web.Ftp(connectionString, reportFile).Send();
-				}
-				catch (Exception exception)
-				{
-					Logger.Error("An exception occurred while submitting bug report to the FTP server. Check the inner exception for details.", exception);
-					return false;
-				}
-			}
-			else if (destination.ToLower() == Protocols.HTTP.ToString().ToLower())
-			{
-				try
-				{
-					Logger.Trace("Submitting bug report to via HTTP connection.");
-					return new Web.Http(connectionString, reportFile).Send();
-				}
-				catch (Exception exception)
-				{
-					Logger.Error("An exception occurred while submitting bug report to the web (HTTP) server. Check the inner exception for details.", exception);
-					return false;
-				}
-			}
-            else if (destination.ToLower() == Protocols.AzureBlobStorage.ToString().ToLower())
-            {
-                try
-                {
-                    Logger.Trace("Submitting bug report to Azure Blob Storage connection.");
-                    return new Web.AzureBlobStorage(connectionString, reportFile).Send();
-                }
-                catch (Exception exception)
-                {
-                    Logger.Error("An exception occurred while submitting bug report to Azure Blob Storage. Check the inner exception for details.", exception);
-                    return false;
-                }
-            }
-			else
-			{
-				return false;
-			}
 		}
 	}
 }

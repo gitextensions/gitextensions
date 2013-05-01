@@ -8,6 +8,7 @@ namespace NBug
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Collections.ObjectModel;
 	using System.Configuration;
 	using System.Diagnostics;
 	using System.IO;
@@ -31,6 +32,26 @@ namespace NBug
 	
 	public static class Settings
 	{
+		/// <summary>
+		/// Lookup for quickly finding the type to instantiate for a given connection string type.
+		/// 
+		/// By making this lazy we don't do the lookup until we know we have to, as
+		/// reflection against all assemblies can be slow.
+		/// </summary>
+		private static readonly Lazy<IDictionary<string, IProtocolFactory>> _availableProtocols 
+			= new Lazy<IDictionary<string, IProtocolFactory>>(() =>
+			{
+				// find all concrete implementations of IProtocolFactory
+				var type = typeof(IProtocolFactory);
+				return AppDomain.CurrentDomain.GetAssemblies()
+					.SelectMany(s => s.GetTypes())
+					.Where(type.IsAssignableFrom)
+					.Where(t => t.IsClass)
+					.Where(t => !t.IsAbstract)
+					.Select(t => (IProtocolFactory) Activator.CreateInstance(t))
+					.ToDictionary(f => f.SupportedType);
+			});
+
 		static Settings()
 		{
 			// Crucial startup settings
@@ -90,9 +111,32 @@ namespace NBug
 				}
 			}
 		}
-		
+
+		#region Public methods
+		/// <summary>
+		/// Adds a destination based on a connection string.
+		/// </summary>
+		/// <param name="connectionString">Connection string.</param>
+		/// <returns>The protocol that was created and added. Null if empty connection string.</returns>
+		/// <exception cref="System.ArgumentException">The protocol corresponding to the Type parameter in the connection string was not found.</exception>
+		public static IProtocol AddDestinationFromConnectionString(string connectionString)
+		{
+			if (string.IsNullOrEmpty(connectionString)) return null;
+			var connectionStringParts = ConnectionStringParser.Parse(connectionString);
+			var type = connectionStringParts[@"Type"];
+			if (!_availableProtocols.Value.ContainsKey(type))
+			{
+				throw new ArgumentException(String.Format("No protocol factory found for type '{0}'.", type), "connectionString");
+			}
+			var factory = _availableProtocols.Value[type];
+			var protocol = factory.FromConnectionString(connectionString);
+			Destinations.Add(protocol);
+			return protocol;
+		}
+		#endregion
+
 		#region Public Settings
-		
+
 		/// <summary>
 		/// The internal logger write event for getting notifications for all internal NBug loggers. Using this event, you can attach internal NBug
 		/// logs to your applications own logging facility (i.e. log4net, NLog, etc.). First parameters is the message string, second one is the log
@@ -143,21 +187,12 @@ namespace NBug
 				BugReport.ProcessingException -= value;
 			}
 		}
-		
-		/// <summary>Gets or sets the first report submission target. This should be properly configured according to the documentation.</summary>
-		public static string Destination1 { get; set; }
 
-		/// <summary>Gets or sets the second report submission target. This should be properly configured according to the documentation.</summary>
-		public static string Destination2 { get; set; }
-
-		/// <summary>Gets or sets the third report submission target. This should be properly configured according to the documentation.</summary>
-		public static string Destination3 { get; set; }
-
-		/// <summary>Gets or sets the fourth report submission target. This should be properly configured according to the documentation.</summary>
-		public static string Destination4 { get; set; }
-
-		/// <summary>Gets or sets the fifth report submission target. This should be properly configured according to the documentation.</summary>
-		public static string Destination5 { get; set; }
+		private static readonly ICollection<IProtocol> destinations = new Collection<IProtocol>();
+		public static ICollection<IProtocol> Destinations
+		{
+			get { return destinations; }
+		}
 		
 		/// <summary>
 		/// Gets or sets the UI mode. You should only change this if you red the documentation and understood it. Otherwise leave it to auto.
@@ -484,31 +519,25 @@ namespace NBug
 				{
 					Cipher = Convert.FromBase64String(value);
 				}
-				else if (property == prefix + GetPropertyName(() => Destination1))
+				else if (property.StartsWith(prefix))
 				{
-					Destination1 = Decrypt(value);
-				}
-				else if (property == prefix + GetPropertyName(() => Destination2))
-				{
-					Destination2 = Decrypt(value);
-				}
-				else if (property == prefix + GetPropertyName(() => Destination3))
-				{
-					Destination3 = Decrypt(value);
-				}
-				else if (property == prefix + GetPropertyName(() => Destination4))
-				{
-					Destination4 = Decrypt(value);
-				}
-				else if (property == prefix + GetPropertyName(() => Destination5))
-				{
-					Destination5 = Decrypt(value);
+					var decodedConnectionString = Decrypt(value);
+					try
+					{
+						AddDestinationFromConnectionString(decodedConnectionString);
+					}
+					catch (ArgumentException e)
+					{
+						Logger.Error(e.Message);
+					}
 				}
 				else
 				{
 					Logger.Error("There is a problem with the 'connectionStrings' section of the configuration file. The property red from the file '" + property + "' is undefined. This is probably a refactoring problem, or malformed config file.");
 				}
 			}
+
+			var x = _availableProtocols.Value;
 		}
 
 		/// <summary>
@@ -601,12 +630,7 @@ namespace NBug
 			var prefix = "NBug.Properties.Settings.";
 			var connectionStrings = from connString in config.Root.Element("connectionStrings").Elements()
 															where connString.Attribute("name") != null &&
-																(connString.Attribute("name").Value == prefix + GetPropertyName(() => Cipher) ||
-																connString.Attribute("name").Value == prefix + GetPropertyName(() => Destination1) ||
-																connString.Attribute("name").Value == prefix + GetPropertyName(() => Destination2) ||
-																connString.Attribute("name").Value == prefix + GetPropertyName(() => Destination3) ||
-																connString.Attribute("name").Value == prefix + GetPropertyName(() => Destination4) ||
-																connString.Attribute("name").Value == prefix + GetPropertyName(() => Destination5))
+																connString.Attribute("name").Value.StartsWith(prefix)
 															select connString;
 			connectionStrings.Remove();
 
@@ -624,11 +648,12 @@ namespace NBug
 				Cipher = null;
 			}
 
-			AddConnectionString(config, Destination1, () => Destination1);
-			AddConnectionString(config, Destination2, () => Destination2);
-			AddConnectionString(config, Destination3, () => Destination3);
-			AddConnectionString(config, Destination4, () => Destination4);
-			AddConnectionString(config, Destination5, () => Destination5);
+			var i = 1;
+			foreach (var destination in Destinations)
+			{
+				AddConnectionString(config, destination.ConnectionString, i);
+				i++;
+			}
 
 			// Replace application setting
 			// ToDo: This can be simplified using a loop and reflection to get all the Settings.PublicProperties to do remove-add cycle
@@ -679,12 +704,11 @@ namespace NBug
 		#endregion
 
 		#region Private Methods
-
-		private static void AddConnectionString<T>(XDocument document, string content, Expression<Func<T>> propertyExpression)
+		private static void AddConnectionString(XDocument document, string content, int number)
 		{
 			if (!string.IsNullOrEmpty(content))
 			{
-				document.Root.Element("connectionStrings").Add(new XElement("add", new XAttribute("name", "NBug.Properties.Settings." + GetPropertyName(propertyExpression)), new XAttribute("connectionString", Encrypt(content))));
+				document.Root.Element("connectionStrings").Add(new XElement("add", new XAttribute("name", "NBug.Properties.Settings.Connection" + number), new XAttribute("connectionString", Encrypt(content))));
 			}
 		}
 
@@ -713,12 +737,12 @@ namespace NBug
 
 			// Connection strings
 			Cipher = Convert.FromBase64String(Properties.Settings.Default.Cipher);
-			Destination1 = Decrypt(Properties.Settings.Default.Destination1);
-			Destination2 = Decrypt(Properties.Settings.Default.Destination2);
-			Destination3 = Decrypt(Properties.Settings.Default.Destination3);
-			Destination4 = Decrypt(Properties.Settings.Default.Destination4);
-			Destination5 = Decrypt(Properties.Settings.Default.Destination5);
-		}
+			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination1));
+			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination2));
+			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination3));
+			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination4));
+			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination5));
+  		}
 
 		private static string Decrypt(string connectionString)
 		{

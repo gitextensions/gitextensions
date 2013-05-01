@@ -4,6 +4,11 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.IO;
+using System.Xml.Linq;
+using System.Xml.Serialization;
+using NBug.Core.Reporting.Info;
+
 namespace NBug.Core.Util.Serialization
 {
 	using System;
@@ -135,6 +140,17 @@ namespace NBug.Core.Util.Serialization
 			else
 			{
 				return null;
+			}
+		}
+
+		public override string ToString()
+		{
+			var serializer = new XmlSerializer(typeof(SerializableException));
+			using (var stream = new MemoryStream())
+			{
+				serializer.Serialize(stream, this);
+				var doc = XDocument.Load(stream);
+				return doc.Root.ToString();
 			}
 		}
 	}

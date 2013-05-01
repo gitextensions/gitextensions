@@ -4,6 +4,9 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using NBug.Core.Submission.Tracker;
+using NBug.Core.Submission.Web;
+
 namespace NBug.Tests.Integration
 {
 	using System;
@@ -26,10 +29,11 @@ namespace NBug.Tests.Integration
 		[Fact]
 		public void EmailDispatcher()
 		{
-			var destinations = this.settings.ReadCustomDispatcherDestinationSettings(Protocols.Mail);
+			var destinations = this.settings.ReadCustomDispatcherDestinationSettings(typeof(Mail).Name);
 			foreach (var destination in destinations)
 			{
-				Settings.Destination1 = destination;
+				Settings.Destinations.Clear();
+				Settings.AddDestinationFromConnectionString(destination);
 				try
 				{
 					throw new DummyArgumentException();
@@ -50,10 +54,11 @@ namespace NBug.Tests.Integration
 		[Fact]
 		public void FtpDispatcher()
 		{
-			var destinations = this.settings.ReadCustomDispatcherDestinationSettings(Protocols.FTP);
+			var destinations = this.settings.ReadCustomDispatcherDestinationSettings(typeof(Ftp).Name);
 			foreach (var destination in destinations)
 			{
-				Settings.Destination1 = destination;
+				Settings.Destinations.Clear();
+				Settings.AddDestinationFromConnectionString(destination);
 				try
 				{
 					throw new DummyArgumentException();
@@ -74,10 +79,11 @@ namespace NBug.Tests.Integration
 		[Fact]
 		public void HttpDispatcher()
 		{
-			var destinations = this.settings.ReadCustomDispatcherDestinationSettings(Protocols.HTTP);
+			var destinations = this.settings.ReadCustomDispatcherDestinationSettings(typeof(Http).Name);
 			foreach (var destination in destinations)
 			{
-				Settings.Destination1 = destination;
+				Settings.Destinations.Clear();
+				Settings.AddDestinationFromConnectionString(destination);
 				try
 				{
 					throw new DummyArgumentException();
@@ -98,10 +104,11 @@ namespace NBug.Tests.Integration
 		[Fact]
 		public void MixedDestinations()
 		{
-			Settings.Destination1 = this.settings.ReadCustomDispatcherDestinationSettings(Protocols.Mail)[0];
-			Settings.Destination2 = this.settings.ReadCustomDispatcherDestinationSettings(Protocols.HTTP)[0];
-			Settings.Destination3 = this.settings.ReadCustomDispatcherDestinationSettings(Protocols.FTP)[0];
-			Settings.Destination4 = this.settings.ReadCustomDispatcherDestinationSettings(Protocols.Redmine)[0];
+			
+			Settings.AddDestinationFromConnectionString(this.settings.ReadCustomDispatcherDestinationSettings(typeof(Mail).Name)[0]);
+			Settings.AddDestinationFromConnectionString(this.settings.ReadCustomDispatcherDestinationSettings(typeof(Http).Name)[0]);
+			Settings.AddDestinationFromConnectionString(this.settings.ReadCustomDispatcherDestinationSettings(typeof(Ftp).Name)[0]);
+			Settings.AddDestinationFromConnectionString(this.settings.ReadCustomDispatcherDestinationSettings(typeof(Redmine).Name)[0]);
 
 			// ToDo: Settings.Destination5 = this.settings.ReadCustomDispatcherDestinationSettings(Protocols.Trac)[0];
 			try
@@ -121,10 +128,11 @@ namespace NBug.Tests.Integration
 		[Fact]
 		public void RedmineDispatcher()
 		{
-			var destinations = this.settings.ReadCustomDispatcherDestinationSettings(Protocols.Redmine);
+			var destinations = this.settings.ReadCustomDispatcherDestinationSettings(typeof(Redmine).Name);
 			foreach (var destination in destinations)
 			{
-				Settings.Destination1 = destination;
+				Settings.Destinations.Clear();
+				Settings.AddDestinationFromConnectionString(destination);
 				try
 				{
 					throw new DummyArgumentException();
