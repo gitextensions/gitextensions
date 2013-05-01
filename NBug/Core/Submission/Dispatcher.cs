@@ -201,6 +201,19 @@ namespace NBug.Core.Submission
 					return false;
 				}
 			}
+            else if (destination.ToLower() == Protocols.AzureBlobStorage.ToString().ToLower())
+            {
+                try
+                {
+                    Logger.Trace("Submitting bug report to Azure Blob Storage connection.");
+                    return new Web.AzureBlobStorage(connectionString, reportFile).Send();
+                }
+                catch (Exception exception)
+                {
+                    Logger.Error("An exception occurred while submitting bug report to Azure Blob Storage. Check the inner exception for details.", exception);
+                    return false;
+                }
+            }
 			else
 			{
 				return false;

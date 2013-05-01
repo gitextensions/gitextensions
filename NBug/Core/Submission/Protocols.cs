@@ -13,6 +13,7 @@ namespace NBug.Core.Submission
 		Redmine,
 		BugNET,
 		FTP,
-		HTTP
+		HTTP,
+		AzureBlobStorage
 	}
 }
