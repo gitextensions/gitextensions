@@ -336,7 +336,11 @@ namespace GitUI
             {
                 ClearSelected();
                 if (value >= 0)
+                {
                     FileStatusListView.Items[value].Selected = true;
+                    FileStatusListView.Items[value].Focused = true;
+                    FileStatusListView.Items[value].EnsureVisible();
+                }
             }
         }
 
@@ -629,41 +633,19 @@ namespace GitUI
 
         public void SetDiffs(List<GitRevision> revisions)
         {
-            NoFiles.Text = _noDiffFilesChangesDefaultText;
             switch (revisions.Count)
             {
                 case 0:
+                    NoFiles.Text = _noDiffFilesChangesDefaultText;
                     GitItemStatuses = null;
                     break;
 
                 case 1: // diff "parent" --> "selected revision"
-                    var revision = revisions[0];
-
-                    Revision = revision;
-
-                    if (revision == null)
-                        GitItemStatuses = null;
-                    else if (revision.ParentGuids == null || revision.ParentGuids.Length == 0)
-                        GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
-                    else
-                    {
-                        if (revision.Guid == GitRevision.UnstagedGuid) //working dir changes
-                            GitItemStatuses = Module.GetUnstagedFilesWithSubmodulesStatus();
-                        else if (revision.Guid == GitRevision.IndexGuid) //index
-                            GitItemStatuses = Module.GetStagedFilesWithSubmodulesStatus();
-                        else
-                        {
-                            GitItemsWithParents dictionary = new Dictionary<string, IList<GitItemStatus>>();
-                            foreach (var parentRev in revision.ParentGuids)
-                            {
-                                dictionary.Add(parentRev, Module.GetDiffFilesWithSubmodulesStatus(revision.Guid, parentRev));
-                            }
-                            GitItemStatusesWithParents = dictionary;
-                        }
-                    }
+                    SetDiff(revisions[0]);
                     break;
 
                 case 2: // diff "first clicked revision" --> "second clicked revision"
+                    NoFiles.Text = _noDiffFilesChangesDefaultText;
                     bool artificialRevSelected = revisions[0].IsArtificial() || revisions[1].IsArtificial();
                     if (artificialRevSelected)
                     {
@@ -678,6 +660,34 @@ namespace GitUI
                     NoFiles.Text = _UnsupportedMultiselectAction.Text;
                     GitItemStatuses = null;
                     break;
+            }
+        }
+
+        public void SetDiff(GitRevision revision)
+        {
+            NoFiles.Text = _noDiffFilesChangesDefaultText;
+
+            Revision = revision;
+
+            if (revision == null)
+                GitItemStatuses = null;
+            else if (revision.ParentGuids == null || revision.ParentGuids.Length == 0)
+                GitItemStatuses = Module.GetTreeFiles(revision.TreeGuid, true);
+            else
+            {
+                if (revision.Guid == GitRevision.UnstagedGuid) //working dir changes
+                    GitItemStatuses = Module.GetUnstagedFilesWithSubmodulesStatus();
+                else if (revision.Guid == GitRevision.IndexGuid) //index
+                    GitItemStatuses = Module.GetStagedFilesWithSubmodulesStatus();
+                else
+                {
+                    GitItemsWithParents dictionary = new Dictionary<string, IList<GitItemStatus>>();
+                    foreach (var parentRev in revision.ParentGuids)
+                    {
+                        dictionary.Add(parentRev, Module.GetDiffFilesWithSubmodulesStatus(revision.Guid, parentRev));
+                    }
+                    GitItemStatusesWithParents = dictionary;
+                }
             }
         }
     }

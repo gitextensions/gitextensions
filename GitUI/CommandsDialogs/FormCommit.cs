@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
@@ -370,13 +371,13 @@ namespace GitUI.CommandsDialogs
             ShowDialogWhenChanges(null);
         }
 
-        private void ComputeUnstagedFiles(Action<IList<GitItemStatus>> onComputed, bool async)
+        private void ComputeUnstagedFiles(Action<IList<GitItemStatus>> onComputed, bool DoAsync)
         {
             Func < IList < GitItemStatus >> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
                     showUntrackedFilesToolStripMenuItem.Checked);
 
-            if (async)
+            if (DoAsync)
                 _unstagedLoader.Load(getAllChangedFilesWithSubmodulesStatus, onComputed);
             else
             {
@@ -504,7 +505,7 @@ namespace GitUI.CommandsDialogs
             if (patch != null && patch.Length > 0)
             {
                 string output = Module.RunGitCmd(args, patch);
-                if (Settings.RunningOnWindows())
+                if (EnvUtils.RunningOnWindows())
                 {
                     //remove file mode warnings on windows
                     Regex regEx = new Regex("warning: .*has type .* expected .*", RegexOptions.Compiled);
@@ -624,7 +625,14 @@ namespace GitUI.CommandsDialogs
             var inTheMiddleOfConflictedMerge = Module.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
             Unstaged.SelectStoredNextIndex(0);
-            Staged.SelectStoredNextIndex();
+            if (Unstaged.GitItemStatuses.Any())
+            {
+                Staged.SelectStoredNextIndex();
+            }
+            else
+            {
+                Staged.SelectStoredNextIndex(0);
+            }
 
             if (OnStageAreaLoaded != null)
                 OnStageAreaLoaded();
@@ -1469,7 +1477,7 @@ namespace GitUI.CommandsDialogs
                 return;
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("Submodule" + (modules.Count == 1 ? " " : "s ") +
-                String.Join(", ", modules.Keys) + " updated.");
+                String.Join(", ", modules.Keys) + " updated");
             sb.AppendLine();
             foreach (var item in modules)
             {

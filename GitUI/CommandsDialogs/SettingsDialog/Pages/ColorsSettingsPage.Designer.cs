@@ -179,6 +179,7 @@
             this.YellowIcon.TabStop = true;
             this.YellowIcon.Text = "Yellow";
             this.YellowIcon.UseVisualStyleBackColor = true;
+            this.YellowIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // RedIcon
             // 
@@ -190,6 +191,7 @@
             this.RedIcon.TabStop = true;
             this.RedIcon.Text = "Red";
             this.RedIcon.UseVisualStyleBackColor = true;
+            this.RedIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // GreenIcon
             // 
@@ -201,6 +203,7 @@
             this.GreenIcon.TabStop = true;
             this.GreenIcon.Text = "Green";
             this.GreenIcon.UseVisualStyleBackColor = true;
+            this.GreenIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // PurpleIcon
             // 
@@ -212,6 +215,7 @@
             this.PurpleIcon.TabStop = true;
             this.PurpleIcon.Text = "Purple";
             this.PurpleIcon.UseVisualStyleBackColor = true;
+            this.PurpleIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // BlueIcon
             // 
@@ -223,6 +227,7 @@
             this.BlueIcon.TabStop = true;
             this.BlueIcon.Text = "Blue";
             this.BlueIcon.UseVisualStyleBackColor = true;
+            this.BlueIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // DefaultIcon
             // 
@@ -234,6 +239,7 @@
             this.DefaultIcon.TabStop = true;
             this.DefaultIcon.Text = "Default";
             this.DefaultIcon.UseVisualStyleBackColor = true;
+            this.DefaultIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // groupBox4
             // 

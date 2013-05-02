@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Utils;
 using JetBrains.Annotations;
 
 namespace GitCommands
@@ -95,7 +96,7 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(UserHomeDir))
                 return UserHomeDir;
 
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
             {
                 return WindowsDefaultHomeDir;
             }
@@ -1125,7 +1126,7 @@ namespace GitCommands
                     oldCommitData = CommitData.GetCommitData(gitmodule, status.OldCommit, ref error);
                 if (oldCommitData != null)
                 {
-                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + oldCommitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(oldCommitData.CommitDate) + ")");
                     var delim = new char[] { '\n', '\r' };
                     var lines = oldCommitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
                     foreach (var curline in lines)
@@ -1146,7 +1147,7 @@ namespace GitCommands
                     commitData = CommitData.GetCommitData(gitmodule, status.Commit, ref error);
                 if (commitData != null)
                 {
-                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + commitData.CommitDate.LocalDateTime.ToString(" (ddd MMM dd HH':'mm':'ss yyyy)"));
+                    sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(commitData.CommitDate) + ")");
                     var delim = new char[] { '\n', '\r' };
                     var lines = commitData.Body.Trim(delim).Split(new string[] { "\r\n" }, 0);
                     foreach (var curline in lines)
@@ -1305,6 +1306,12 @@ namespace GitCommands
             return GetRelativeDateString(originDate, previousDate, true);
         }
 
+        public static string GetFullDateString(DateTimeOffset datetime)
+        {
+            // previous format "ddd MMM dd HH':'mm':'ss yyyy"
+            return datetime.LocalDateTime.ToString("G");
+        }
+
         // look into patch file and try to figure out if it's a raw diff (i.e from git diff -p)
         // only looks at start, as all we want is to tell from automail format
         // returns false on any problem, never throws
@@ -1343,7 +1350,7 @@ namespace GitCommands
         public static void TerminateTree(this Process process)
         {
 #if !MONO
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
             {
                 // Send Ctrl+C
                 NativeMethods.AttachConsole(process.Id);

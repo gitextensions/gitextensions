@@ -90,6 +90,7 @@ namespace GitUI
             showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
             drawNonrelativesGrayToolStripMenuItem.Checked = Settings.RevisionGraphDrawNonRelativesGray;
             showGitNotesToolStripMenuItem.Checked = Settings.ShowGitNotes;
+            showTagsToolStripMenuItem.Checked = Settings.ShowTags;
 
             BranchFilter = String.Empty;
             SetShowBranches();
@@ -139,7 +140,7 @@ namespace GitUI
         [Browsable(false)]
         public Font SuperprojectFont { get; private set; }
         [Browsable(false)]
-        public int LastScrollPos { get; private set; }
+        public string FirstVisibleRevisionBeforeUpdate { get; private set; }
         [Browsable(false)]
         public string[] LastSelectedRows { get; private set; }
         [Browsable(false)]
@@ -756,8 +757,6 @@ namespace GitUI
 
                 _initialLoad = true;
 
-                LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
-
                 DisposeRevisionGraphCommand();
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
@@ -768,9 +767,17 @@ namespace GitUI
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
+                FirstVisibleRevisionBeforeUpdate = null;
                 if (newCurrentCheckout == CurrentCheckout)
                 {
                     LastSelectedRows = Revisions.SelectedIds;
+
+                    if (Revisions.FirstDisplayedScrollingRowIndex != -1)
+                    {
+                        var rows = Revisions.Rows.Cast<DataGridViewRow>();
+                        var row = rows.ElementAt(Revisions.FirstDisplayedScrollingRowIndex);
+                        FirstVisibleRevisionBeforeUpdate = GetRevision(row.Index).Guid;
+                    }
                 }
                 else
                 {
@@ -972,10 +979,15 @@ namespace GitUI
             }
             LastSelectedRows = null;
 
-            if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
+            if (FirstVisibleRevisionBeforeUpdate != null)
             {
-                Revisions.FirstDisplayedScrollingRowIndex = LastScrollPos;
-                LastScrollPos = -1;
+                var lastRow = Revisions.Rows.Cast<DataGridViewRow>()
+                    .FirstOrDefault(row => GetRevision(row.Index).Guid == FirstVisibleRevisionBeforeUpdate);
+
+                if (lastRow != null)
+                    Revisions.FirstDisplayedScrollingRowIndex = lastRow.Index;
+
+                FirstVisibleRevisionBeforeUpdate = null;
             }
         }
 
@@ -1168,6 +1180,14 @@ namespace GitUI
                                 foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || ShowRemoteBranches.Checked)))
                                 {
                                     Font refsFont;
+
+                                    if (gitRef.IsTag)
+                                    {
+                                        if (!showTagsToolStripMenuItem.Checked)
+                                        {
+                                            continue;
+                                        }
+                                    }
 
                                     if (IsFilledBranchesLayout())
                                     {
@@ -1494,7 +1514,6 @@ namespace GitUI
             this.InvokeAsync(Revisions.Refresh);
         }
 
-
         private void RevisionsDoubleClick(object sender, EventArgs e)
         {
             if (DoubleClickRevision != null)
@@ -1514,7 +1533,7 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Count > 0)
             {
-                var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
+                var form = new FormCommitDiff(UICommands, selectedRevisions[0]);
                 form.ShowDialog(this);
             }
             else
@@ -2300,6 +2319,13 @@ namespace GitUI
             Refresh();
         }
 
+        private void showTagsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showTagsToolStripMenuItem.Checked = !showTagsToolStripMenuItem.Checked;
+            Settings.ShowTags = showTagsToolStripMenuItem.Checked;
+            Refresh();
+        }
+        
         public void ToggleRevisionCardLayout()
         {
             var layouts = new List<RevisionGridLayout>((RevisionGridLayout[])Enum.GetValues(typeof(RevisionGridLayout)));

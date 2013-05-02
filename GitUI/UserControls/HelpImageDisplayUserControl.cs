@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -158,7 +153,7 @@ namespace GitUI.Help
 
         private bool LoadIsExpandedValueFromSettings(bool defaultValue)
         {
-            return Settings.GetBool("HelpIsExpanded" + GetId(), defaultValue).Value;
+            return Settings.GetBool("HelpIsExpanded" + GetId(), defaultValue);
         }
 
         private void UpdateControlSize()

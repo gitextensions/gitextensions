@@ -49,7 +49,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GitExtensionsShellEx", "Git
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProxySwitcher", "Plugins\ProxySwitcher\ProxySwitcher.csproj", "{274F449F-7472-4248-9A57-8CA665A75B5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitCommandsTest", "GitExtensionsTest\GitCommands\GitCommandsTest.csproj", "{AC8FDEDF-6390-4F87-BBC3-1A974810B589}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensionsTest", "GitExtensionsTest\GitExtensionsTest.csproj", "{AC8FDEDF-6390-4F87-BBC3-1A974810B589}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseNotesGenerator", "Plugins\ReleaseNotesGenerator\ReleaseNotesGenerator.csproj", "{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8}"
 EndProject

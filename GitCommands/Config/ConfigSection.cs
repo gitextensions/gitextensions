@@ -52,26 +52,12 @@ namespace GitCommands.Config
         public string SubSection { get; set; }
         public bool SubSectionCaseSensitive { get; set; }
 
-        internal static string UnescapeString(string value)
+        internal static string FixPath(string path)
         {
-            // The .gitconfig escapes some character sequences -> 
-            // \" = "
-            // \\ = \
-            return value.Replace("\\\"", "\"").Replace("\\\\", "\\");
-        }
+            if (path.StartsWith("\\\\")) //for using unc paths -> these need to be backward slashes
+                return path;
 
-        internal static string EscapeString(string path)
-        {
-            // The .gitconfig escapes some character sequences
-            path = path.Replace("\"", "$QUOTE$");
-
-            path = path.Trim();
-
-            path = path.StartsWith("\\\\")
-                ? path.Replace("\\", "\\\\")//for using unc paths -> these need to be backward slashes
-                : path.Replace('\\', '/');  //for directories -> git only supports forward slashes
-
-            return path.Replace("$QUOTE$", "\\\"");
+            return path.Replace('\\', '/');
         }
 
         public void SetValue(string key, string value)
@@ -84,7 +70,7 @@ namespace GitCommands.Config
 
         public void SetPathValue(string setting, string value)
         {
-            SetValue(setting, EscapeString(value));
+            SetValue(setting, FixPath(value));
         }
 
         public void AddValue(string key, string value)
@@ -102,7 +88,7 @@ namespace GitCommands.Config
 
         public string GetPathValue(string setting)
         {
-            return UnescapeString(GetValue(setting));
+            return GetValue(setting);
         }
 
         public IList<string> GetValues(string key)
@@ -114,22 +100,27 @@ namespace GitCommands.Config
         {
             string result = "[" + SectionName;
             if (!SubSection.IsNullOrEmpty())
-                if (SubSectionCaseSensitive)
-                    result = result + " \"" + SubSection + "\"";
-                else
-                    result = result + "." + SubSection;
+            {
+                var escSubSection = SubSection.Replace("\"", "\\\"");
+                escSubSection = escSubSection.Replace("\\", "\\\\");
+
+                if (!SubSectionCaseSensitive)
+                    escSubSection = escSubSection.ToLower();
+                result = result + " \"" + escSubSection + "\"";
+            }
             result = result + "]";
             return result;
         }
 
         public bool Equals(ConfigSection other)
         {
-            StringComparison sc = SubSectionCaseSensitive
-                ? StringComparison.Ordinal
-                : StringComparison.OrdinalIgnoreCase;
+            StringComparison sc;
+            if (SubSectionCaseSensitive)
+                sc = StringComparison.Ordinal;
+            else
+                sc = StringComparison.OrdinalIgnoreCase;
 
-            return
-                string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) &&
+            return string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) && 
                 string.Equals(SubSection, other.SubSection, sc);
         }
     }

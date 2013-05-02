@@ -13,7 +13,6 @@ using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
 using Settings = GitCommands.Settings;
-using GitUI.HelperDialogs;
 
 namespace GitUI
 {
