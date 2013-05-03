@@ -142,6 +142,8 @@ namespace GitUI
         [Browsable(false)]
         public Font SuperprojectFont { get; private set; }
         [Browsable(false)]
+        public string FirstVisibleRevisionBeforeUpdate { get; private set; }
+        [Browsable(false)]
         public int LastScrollPos { get; private set; }
         [Browsable(false)]
         public string[] LastSelectedRows { get; private set; }
@@ -761,8 +763,6 @@ namespace GitUI
 
                 _initialLoad = true;
 
-                LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
-
                 BuildServerWatcher.CancelBuildStatusFetchOperation();
 
                 DisposeRevisionGraphCommand();
@@ -775,9 +775,17 @@ namespace GitUI
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
+                FirstVisibleRevisionBeforeUpdate = null;
                 if (newCurrentCheckout == CurrentCheckout)
                 {
                     LastSelectedRows = Revisions.SelectedIds;
+
+                    if (Revisions.FirstDisplayedScrollingRowIndex != -1)
+                    {
+                        var rows = Revisions.Rows.Cast<DataGridViewRow>();
+                        var row = rows.ElementAt(Revisions.FirstDisplayedScrollingRowIndex);
+                        FirstVisibleRevisionBeforeUpdate = GetRevision(row.Index).Guid;
+                    }
                 }
                 else
                 {
@@ -979,6 +987,18 @@ namespace GitUI
                     SetSelectedRevision(FiltredCurrentCheckout);
                 }
             }
+            LastSelectedRows = null;
+
+            if (FirstVisibleRevisionBeforeUpdate != null)
+            {
+                var lastRow = Revisions.Rows.Cast<DataGridViewRow>()
+                    .FirstOrDefault(row => GetRevision(row.Index).Guid == FirstVisibleRevisionBeforeUpdate);
+
+                if (lastRow != null)
+                    Revisions.FirstDisplayedScrollingRowIndex = lastRow.Index;
+
+                FirstVisibleRevisionBeforeUpdate = null;
+            }
         }
 
         internal int TrySearchRevision(string initRevision, out string graphRevision)
@@ -1047,16 +1067,7 @@ namespace GitUI
             Revisions.SelectionChanged -= RevisionsSelectionChanged;
 
             if (LastSelectedRows != null)
-            {
                 Revisions.SelectedIds = LastSelectedRows;
-                LastSelectedRows = null;
-            }
-
-            if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
-            {
-                Revisions.FirstDisplayedScrollingRowIndex = LastScrollPos;
-                LastScrollPos = -1;
-            }
 
             Revisions.Enabled = true;
             Revisions.Focus();
@@ -1263,13 +1274,13 @@ namespace GitUI
                             if (IsCardLayout())
                                 offset = baseOffset;
 
-                            var text = (string) e.FormattedValue;
+                            var text = (string)e.FormattedValue;
                             var bounds = AdjustCellBounds(e.CellBounds, offset);
                             DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
 
                             if (IsCardLayout())
                             {
-                                int textHeight = (int) e.Graphics.MeasureString(text, rowFont).Height;
+                                int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
                                 int gravatarSize = _rowHeigth - textHeight - 12;
                                 int gravatarTop = e.CellBounds.Top + textHeight + 6;
                                 int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
@@ -1313,7 +1324,7 @@ namespace GitUI
                         break;
                     case 2:
                         {
-                            var text = (string) e.FormattedValue;
+                            var text = (string)e.FormattedValue;
                             e.Graphics.DrawString(text, rowFont, foreBrush,
                                                   new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                         }
