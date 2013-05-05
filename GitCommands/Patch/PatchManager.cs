@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Settings;
 
 namespace PatchApply
 {
@@ -35,7 +36,7 @@ namespace PatchApply
 
             //git apply has problem with dealing with autocrlf
             //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-            if (body != null && "true".Equals(module.GetEffectiveSetting("core.autocrlf"), StringComparison.InvariantCultureIgnoreCase))
+            if (body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
                 body = body.Replace("\r", "");            
 
             if (header == null || body == null)
@@ -118,7 +119,7 @@ namespace PatchApply
             string body = selectedChunks.ToStagePatch(false);
             //git apply has problem with dealing with autocrlf
             //I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-            if (reset && body != null && "true".Equals(module.GetEffectiveSetting("core.autocrlf"), StringComparison.InvariantCultureIgnoreCase))
+            if (reset && body != null && module.EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
                 body = body.Replace("\r", "");            
 
             if (header == null || body == null)
