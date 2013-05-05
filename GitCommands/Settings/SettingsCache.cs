@@ -2,35 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
 
 
 namespace GitCommands
 {
-    public class SettingsCache : IDisposable
+    public abstract class SettingsCache : IDisposable
     {
-
-        private const double SAVETIME = 2000;
-
-        private DateTime? LastFileRead = null;
-        private DateTime? LastModificationDate = null;
-
         private readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
-        private readonly XmlSerializableDictionary<string, string> EncodedNameMap = new XmlSerializableDictionary<string, string>();
-        private System.Timers.Timer SaveTimer = new System.Timers.Timer(SAVETIME);
-        private bool UseTimer = true;
 
-        public string SettingsFilePath { get; private set; }
-
-        public SettingsCache(string aSettingsFilePath)
+        public SettingsCache()
         {
-            SettingsFilePath = aSettingsFilePath;
-
-            SaveTimer.Enabled = false;
-            SaveTimer.AutoReset = false;
-            SaveTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnSaveTimer);
         }
 
         public void Dispose()
@@ -39,14 +20,8 @@ namespace GitCommands
             GC.SuppressFinalize(this);
         }
 
-        private void DisposeImpl()
+        protected virtual void DisposeImpl()
         {
-            IDisposable timer = SaveTimer;
-            if (timer != null)
-            {
-                timer.Dispose();
-                SaveTimer = null;
-            }
         }
 
         ~SettingsCache()
@@ -54,106 +29,46 @@ namespace GitCommands
             DisposeImpl();
         }
 
-
-        public static SettingsCache FromCache(string aSettingsFilePath)
-        { 
-        //TODO return from global cache
-            return new SettingsCache(aSettingsFilePath);
-        }
-
         public void LockedAction(Action action)
         {
-            lock (EncodedNameMap)
+            LockedAction<object>(() =>
             {
                 action();
+                return null;
+            });
+        }
+
+        public T LockedAction<T>(Func<T> action)
+        {
+            lock (ByNameMap)
+            {
+                return action();
             }
         }
 
-        private DateTime GetLastFileModificationUTC()
-        {
-            try
-            {
-                if (File.Exists(SettingsFilePath))
-                    return File.GetLastWriteTimeUtc(SettingsFilePath);
-                else
-                    return DateTime.MaxValue;
-            }
-            catch (Exception)
-            {
-                return DateTime.MaxValue;
-            }
+        protected abstract void SaveImpl();
+        protected abstract void LoadImpl();
+        protected abstract void SetValueImpl(string key, string value);        
+        protected abstract string GetValueImpl(string key);
+        protected abstract bool NeedRefresh();
 
+        public virtual void Clear()
+        {
+            ByNameMap.Clear();
         }
 
         public void Save()
         {
-            try
-            {
-                var tmpFile = SettingsFilePath + ".tmp";
-                lock (EncodedNameMap)
-                {
-                    if (LastModificationDate.HasValue && LastFileRead.HasValue
-                        && LastModificationDate.Value < LastFileRead.Value)
-                    {
-                        return;
-                    }
-
-                    using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(tmpFile, Encoding.UTF8))
-                    {
-                        xtw.Formatting = Formatting.Indented;
-                        xtw.WriteStartDocument();
-                        xtw.WriteStartElement("dictionary");
-
-                        EncodedNameMap.WriteXml(xtw);
-                        xtw.WriteEndElement();
-                    }
-                    
-                    if (File.Exists(SettingsFilePath))
-                    {
-                        File.Replace(tmpFile, SettingsFilePath, SettingsFilePath + ".backup", true);
-                    }
-                    else
-                    {
-                        File.Move(tmpFile, SettingsFilePath);
-                    }
-
-                    LastFileRead = GetLastFileModificationUTC();
-                }
-            }
-            catch (IOException e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                throw;
-            }
+            LockedAction(SaveImpl);
         }
 
         public void Load()
         {
-            if (File.Exists(SettingsFilePath))
-            {
-                try
+            LockedAction(() =>
                 {
-                    lock (EncodedNameMap)
-                    {
-                        XmlReaderSettings rSettings = new XmlReaderSettings
-                        {
-                            IgnoreWhitespace = true
-                        };
-
-                        using (System.Xml.XmlReader xr = XmlReader.Create(SettingsFilePath, rSettings))
-                        {
-                            EncodedNameMap.ReadXml(xr);
-                         
-                            LastFileRead = DateTime.UtcNow;
-                        }
-                    }
-                }
-                catch (IOException e)
-                {
-                    System.Diagnostics.Debug.WriteLine(e.Message);
-                    throw;
-                }
-            }
+                    Clear();
+                    LoadImpl();
+                });
         }
 
         public void Import(IEnumerable<Tuple<string, string>> keyValuePairs)
@@ -163,7 +78,7 @@ namespace GitCommands
                     foreach(var pair in keyValuePairs)
                     {
                         if (pair.Item2 != null)
-                            EncodedNameMap[pair.Item1] = pair.Item2;
+                            SetValueImpl(pair.Item1, pair.Item2);
                     }
 
                     Save();
@@ -171,48 +86,21 @@ namespace GitCommands
 
         }
 
-        //Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME milliseconds after the last setvalue is called
-        private void OnSaveTimer(object source, System.Timers.ElapsedEventArgs e)
-        {
-            System.Timers.Timer t = (System.Timers.Timer)source;
-            t.Stop();
-            Save();
-        }
-
-        private void StartSaveTimer()
-        {
-            LastModificationDate = DateTime.UtcNow;
-            //Resets timer so that the last call will let the timer event run and will cause the settings to be saved.
-            SaveTimer.Stop();
-            SaveTimer.AutoReset = true;
-            SaveTimer.Interval = SAVETIME;
-            SaveTimer.AutoReset = false;
-
-            SaveTimer.Start();
-        }
-
-        private bool NeedRefresh()
-        {
-            DateTime lastMod = GetLastFileModificationUTC();
-            return !LastFileRead.HasValue || lastMod > LastFileRead.Value;
-        }
-
         private void EnsureSettingsAreUpToDate()
         {
             if (NeedRefresh())
             {
-                lock (EncodedNameMap)
-                {
-                    ByNameMap.Clear();
-                    EncodedNameMap.Clear();
-                    Load();
-                }
+                LockedAction(Load);
             }
+        }
+
+        protected virtual void SettingsChanged()
+        { 
         }
 
         private void SetValue(string name, string value)
         {
-            lock (EncodedNameMap)
+            LockedAction(() =>
             {
                 //will refresh EncodedNameMap if needed
                 string inMemValue = GetValue(name);
@@ -220,34 +108,28 @@ namespace GitCommands
                 if (string.Equals(inMemValue, value))
                     return;
 
-                if (value == null)
-                    EncodedNameMap.Remove(name);
-                else
-                    EncodedNameMap[name] = value;
+                SetValueImpl(name, value);
 
-                if (UseTimer)
-                    StartSaveTimer();
-            }
+                SettingsChanged();
+            });
         }
 
         private string GetValue(string name)
         {
-            lock (EncodedNameMap)
+            return LockedAction<string>(() =>
             {
                 EnsureSettingsAreUpToDate();
-                string o = null;
-                EncodedNameMap.TryGetValue(name, out o);
-                return o;
-            }
+                return GetValueImpl(name);
+            });
         }
 
         public bool HasValue(string name)
         {
-            lock (EncodedNameMap)
+            return LockedAction<bool>(() =>
             {
                 EnsureSettingsAreUpToDate();
-                return EncodedNameMap.ContainsKey(name);
-            }
+                return GetValueImpl(name) != null;
+            });
         }
 
         public void SetValue<T>(string name, T value, Func<T, string> encode)
@@ -259,17 +141,19 @@ namespace GitCommands
             else
                 s = encode(value);
 
-            lock (EncodedNameMap)
+            LockedAction(() =>
             {
                 SetValue(name, s);
                 ByNameMap[name] = value;
-            }
+            });
         }
 
         public bool TryGetValue<T>(string name, T defaultValue, Func<string, T> decode, out T value)
         {
             object o;
-            lock (EncodedNameMap)
+            T val = defaultValue;
+
+            bool result = LockedAction<bool>(() =>
             {
                 EnsureSettingsAreUpToDate();
 
@@ -277,7 +161,7 @@ namespace GitCommands
                 {
                     if (o == null || o is T)
                     {
-                        value = (T)o;
+                        val = (T)o;
                         return true;
                     }
                     else
@@ -294,15 +178,17 @@ namespace GitCommands
 
                     if (s == null)
                     {
-                        value = defaultValue;
+                        val = defaultValue;
                         return false;
                     }
 
-                    value = decode(s);
-                    ByNameMap[name] = value;
+                    val = decode(s);
+                    ByNameMap[name] = val;
                     return true;
                 }
-            }
+            });
+            value = val;
+            return result;
         }
     }
 }

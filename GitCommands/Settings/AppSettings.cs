@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands.Logging;
 using GitCommands.Repository;
+using GitCommands.Settings;
 using GitCommands.Utils;
 using Microsoft.Win32;
 
@@ -51,7 +52,7 @@ namespace GitCommands
             }
             );
 
-            SettingsContainer = new SettingsContainer(null, SettingsCache.FromCache(SettingsFilePath));
+            SettingsContainer = new SettingsContainer(null, GitExtSettingsCache.FromCache(SettingsFilePath));
 
             Version version = Assembly.GetCallingAssembly().GetName().Version;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
@@ -425,7 +426,7 @@ namespace GitCommands
 
         public static PullAction? AutoPullOnPushRejectedAction
         {
-            get { return GetNullableEnum<PullAction>("AutoPullOnPushRejectedAction", null); }
+            get { return GetNullableEnum<PullAction>("AutoPullOnPushRejectedAction"); }
             set { SetNullableEnum<PullAction>("AutoPullOnPushRejectedAction", value); }
         }
 
@@ -1062,9 +1063,9 @@ namespace GitCommands
             SettingsContainer.SetNullableEnum(name, value);
         }
 
-        public static T? GetNullableEnum<T>(string name, T? defaultValue) where T : struct
+        public static T? GetNullableEnum<T>(string name) where T : struct
         {
-            return SettingsContainer.GetNullableEnum(name, defaultValue);
+            return SettingsContainer.GetNullableEnum<T>(name);
         }
 
         public static void SetString(string name, string value)

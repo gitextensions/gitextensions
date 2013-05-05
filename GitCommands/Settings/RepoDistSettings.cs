@@ -15,12 +15,47 @@ namespace GitCommands.Settings
 
         public GitModule Module { get; private set; }
 
-        public RepoDistSettings(GitModule aModule)
-            : base(new RepoSettingsContainer(aModule),
-            SettingsCache.FromCache(Path.Combine(aModule.WorkingDirGitDir(), AppSettings.SettingsFileName)))
+        protected RepoDistSettings(SettingsContainer aLowerPriority, SettingsCache aSettingsCache)
+            : base(aLowerPriority, aSettingsCache)
         {
-            Module = aModule;
         }
+
+        #region CreateXXX
+
+        public static RepoDistSettings CreateEffective(GitModule aModule)
+        {
+            return CreateLocal(aModule, CreateDistributed(aModule, CreateGlobal()));
+        }
+
+        private static RepoDistSettings CreateLocal(GitModule aModule, RepoDistSettings aLowerPriority)
+        {
+            //if (aModule.IsBareRepository()
+            return new RepoDistSettings(aLowerPriority, 
+                GitExtSettingsCache.FromCache(Path.Combine(aModule.WorkingDirGitDir(), AppSettings.SettingsFileName)));
+        }
+
+        public static RepoDistSettings CreateLocal(GitModule aModule)
+        {
+            return CreateLocal(aModule, null);
+        }
+
+        private static RepoDistSettings CreateDistributed(GitModule aModule, RepoDistSettings aLowerPriority)
+        {
+            return new RepoDistSettings(aLowerPriority,
+                GitExtSettingsCache.FromCache(Path.Combine(aModule.WorkingDir, AppSettings.SettingsFileName)));
+        }
+
+        public static RepoDistSettings CreateDistributed(GitModule aModule)
+        {
+            return CreateDistributed(aModule, null);
+        }
+
+        public static RepoDistSettings CreateGlobal()
+        {
+            return new RepoDistSettings(null, AppSettings.SettingsContainer.SettingsCache);
+        }
+
+        #endregion
 
         public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
@@ -34,22 +69,13 @@ namespace GitCommands.Settings
                 LowerPriority.LowerPriority.SetValue(name, value, encode);
         }
 
-#region RepoSettingsContainer
 
-        private class RepoSettingsContainer : SettingsContainer
-        {
-            internal RepoSettingsContainer(GitModule aModule)
-                : base(AppSettings.SettingsContainer,
-                SettingsCache.FromCache(Path.Combine(aModule.WorkingDir, AppSettings.SettingsFileName)))
-            { }
-        }
-
-#endregion
-
+        
+        
         public bool NoFastForwardMerge
         {
-            get { return GetBool("NoFastForwardMerge", false); }
-            set { SetBool("NoFastForwardMerge", value); }
+            get { return this.GetBool("NoFastForwardMerge", false); }
+            set { this.SetBool("NoFastForwardMerge", value); }
         }
     }
 
