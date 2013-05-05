@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBug", "NBug\NBug.csproj", "{62CED1D5-F603-40DE-8BF5-3E49D3A392F4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBug.Configurator", "NBug.Configurator\NBug.Configurator.csproj", "{84D5B54B-7546-44C5-95F7-CDDBFB3F31B3}"
@@ -24,6 +24,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documentation", "Documentation\Documentation.csproj", "{975E1EA6-EDA8-4E5D-AC56-7A741022C89A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{27B24A78-ADE1-4109-A077-F712912B1A78}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Destinations", "Destinations", "{643C26DA-0C14-4F95-9F95-4A3A946D03D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBug.Destinations.AzureBlobStorage", "Destinations\NBug.Destinations.AzureBlobStorage\NBug.Destinations.AzureBlobStorage.csproj", "{B5F98A29-817D-4186-A812-1B6A7B08108D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +68,10 @@ Global
 		{3CE73395-EECA-465B-B77F-227F164E92EB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{975E1EA6-EDA8-4E5D-AC56-7A741022C89A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{975E1EA6-EDA8-4E5D-AC56-7A741022C89A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5F98A29-817D-4186-A812-1B6A7B08108D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5F98A29-817D-4186-A812-1B6A7B08108D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5F98A29-817D-4186-A812-1B6A7B08108D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5F98A29-817D-4186-A812-1B6A7B08108D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,5 +80,6 @@ Global
 		{33B22A3A-8188-42BE-BAD6-40046019EA73} = {06E05029-1FB3-4122-9524-E81DC884A94E}
 		{37281C42-C5CC-456D-B817-D81E6D866121} = {06E05029-1FB3-4122-9524-E81DC884A94E}
 		{1A387F18-8DEA-4EF8-8399-B808F1B1F3AD} = {06E05029-1FB3-4122-9524-E81DC884A94E}
+		{B5F98A29-817D-4186-A812-1B6A7B08108D} = {643C26DA-0C14-4F95-9F95-4A3A946D03D4}
 	EndGlobalSection
 EndGlobal
