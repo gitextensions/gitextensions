@@ -22,6 +22,7 @@
     </SccProvider>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -271,7 +272,7 @@ if $(ConfigurationName)==Release copy "$(TargetDir)$(TargetName).xml" "$(Solutio
 if $(ConfigurationName)==Release copy "$(TargetPath)" "$(SolutionDir)packages\NBug\tools" /Y
 if $(ConfigurationName)==Release copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)packages\NBug\tools" /Y</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
