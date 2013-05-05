@@ -82,6 +82,11 @@ namespace GitCommands.Config
 
         public void Save()
         {
+            Save(_fileName);
+        }
+
+        public void Save(string fileName)
+        {
             var configFileContent = new StringBuilder();
 
             foreach (var section in ConfigSections)
@@ -106,9 +111,9 @@ namespace GitCommands.Config
             try
             {
                 FileInfoExtensions
-                    .MakeFileTemporaryWritable(_fileName,
+                    .MakeFileTemporaryWritable(fileName,
                                        x =>
-                                       File.WriteAllText(_fileName, configFileContent.ToString(), GetEncoding()));
+                                       File.WriteAllText(fileName, configFileContent.ToString(), GetEncoding()));
             }
             catch (Exception ex)
             {
