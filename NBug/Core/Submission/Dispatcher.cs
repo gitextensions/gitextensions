@@ -76,9 +76,9 @@ namespace NBug.Core.Submission
 				using (Storer storer = new Storer())
 				using (Stream stream = storer.GetFirstReportFile())
 				{
-					var exceptionData = GetDataFromZip(stream);
 					if (stream != null)
 					{
+						var exceptionData = GetDataFromZip(stream);
 						if (this.EnumerateDestinations(stream, exceptionData) == false)
 						{
 							break;
