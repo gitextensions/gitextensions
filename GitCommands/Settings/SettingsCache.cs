@@ -52,9 +52,14 @@ namespace GitCommands
         protected abstract string GetValueImpl(string key);
         protected abstract bool NeedRefresh();
 
-        public virtual void Clear()
+        protected virtual void ClearImpl()
         {
             ByNameMap.Clear();
+        }
+
+        public void Clear()
+        {
+            LockedAction(ClearImpl);
         }
 
         public void Save()
