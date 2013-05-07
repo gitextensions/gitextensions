@@ -10,7 +10,9 @@ namespace GitCommands.Settings
     {
         private const double SAVETIME = 2000;
         private DateTime? LastFileRead = null;
+        private DateTime LastFileModificationDate = DateTime.MaxValue;
         private DateTime? LastModificationDate = null;
+        private readonly FileSystemWatcher _fileWatcher = new FileSystemWatcher();
 
         private System.Timers.Timer SaveTimer = new System.Timers.Timer(SAVETIME);
         private bool _autoSave = true;
@@ -25,6 +27,13 @@ namespace GitCommands.Settings
             SaveTimer.Enabled = false;
             SaveTimer.AutoReset = false;
             SaveTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnSaveTimer);
+
+            _fileWatcher.Path = Path.GetDirectoryName(SettingsFilePath);
+            _fileWatcher.Filter = Path.GetFileName(SettingsFilePath);
+            _fileWatcher.IncludeSubdirectories = false;
+            _fileWatcher.EnableRaisingEvents = false;
+            _fileWatcher.Changed += _fileWatcher_Changed;
+            FileChanged();
         }
 
         protected override void DisposeImpl()
@@ -40,6 +49,9 @@ namespace GitCommands.Settings
                 }
             }
 
+            _fileWatcher.Changed -= _fileWatcher_Changed;
+            _fileWatcher.Dispose();
+
             base.DisposeImpl();
         }
 
@@ -48,6 +60,17 @@ namespace GitCommands.Settings
         {
             //TODO return from global cache
             return createSettingsCache.Value;
+        }
+
+        private void _fileWatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            FileChanged();
+        }
+
+        private void FileChanged()
+        {
+            _fileWatcher.EnableRaisingEvents = File.Exists(SettingsFilePath);
+            LastFileModificationDate = GetLastFileModificationUTC();
         }
 
         private DateTime GetLastFileModificationUTC()
@@ -91,7 +114,8 @@ namespace GitCommands.Settings
                     File.Move(tmpFile, SettingsFilePath);
                 }
 
-                LastFileRead = GetLastFileModificationUTC();
+                LastFileModificationDate = GetLastFileModificationUTC();
+                LastFileRead = DateTime.UtcNow;
             }
 
             catch (IOException e)
@@ -120,8 +144,7 @@ namespace GitCommands.Settings
 
         protected override bool NeedRefresh()
         {
-            DateTime lastMod = GetLastFileModificationUTC();
-            return !LastFileRead.HasValue || lastMod > LastFileRead.Value;
+            return !LastFileRead.HasValue || LastFileModificationDate > LastFileRead.Value;
         }
 
         protected override void SettingsChanged()
@@ -151,8 +174,5 @@ namespace GitCommands.Settings
 
             SaveTimer.Start();
         }
-
-
-
     }
 }

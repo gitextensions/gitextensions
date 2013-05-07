@@ -29,11 +29,6 @@ namespace GitCommands.Settings
             return FileSettingsCache.FromCache(aSettingsFilePath, createSettingsCache);
         }
 
-        public override void Clear()
-        {
-            base.Clear();
-        }
-
         protected override void WriteSettings(string fileName)
         {
             _configFile.Value.Save(fileName);
