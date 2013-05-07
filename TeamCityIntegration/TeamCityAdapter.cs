@@ -110,6 +110,7 @@ namespace TeamCityIntegration
                     return;
                 }
 
+                var localObserver = observer;
                 var buildTypes = getBuildTypesTask.Result;
                 var buildIdTasks = buildTypes.Select(buildTypeId => GetFilteredBuildsXmlResponseAsync(buildTypeId, cancellationToken, sinceDate, running)).ToArray();
 
@@ -130,7 +131,10 @@ namespace TeamCityIntegration
                             },
                         cancellationToken,
                         TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent,
-                        TaskScheduler.Current);
+                        TaskScheduler.Current)
+                    .ContinueWith(
+                        task => localObserver.OnError(task.Exception),
+                        TaskContinuationOptions.AttachedToParent | TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted);
             }
             catch (OperationCanceledException)
             {
