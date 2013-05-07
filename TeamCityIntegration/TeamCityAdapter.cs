@@ -66,7 +66,7 @@ namespace TeamCityIntegration
                             .ContinueWith(
                                 task => from element in task.Result.XPathSelectElements("/project/buildTypes/buildType")
                                         select element.Attribute("id").Value,
-                                TaskContinuationOptions.ExecuteSynchronously);
+                                TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent);
                 }
             }
         }
@@ -129,7 +129,7 @@ namespace TeamCityIntegration
                                 NotifyObserverOfBuilds(buildIds, observer, cancellationToken);
                             },
                         cancellationToken,
-                        TaskContinuationOptions.ExecuteSynchronously,
+                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent,
                         TaskScheduler.Current);
             }
             catch (OperationCanceledException)
@@ -165,7 +165,7 @@ namespace TeamCityIntegration
                                     }
                                 },
                             cancellationToken,
-                            TaskContinuationOptions.ExecuteSynchronously,
+                            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent,
                             TaskScheduler.Current);
                 
                 tasks.Add(notifyObserverTask);
@@ -266,7 +266,9 @@ namespace TeamCityIntegration
             return httpClient.GetAsync(FormatRelativePath(restServicePath), HttpCompletionOption.ResponseHeadersRead)
                              .ContinueWith(
                                  task => GetStreamFromHttpResponseAsync(task, restServicePath, cancellationToken),
-                                 cancellationToken)
+                                 cancellationToken,
+                                 TaskContinuationOptions.AttachedToParent,
+                                 TaskScheduler.Current)
                              .Unwrap();
         }
 
@@ -348,7 +350,9 @@ namespace TeamCityIntegration
                             return XDocument.Load(responseStream);
                         }
                     },
-                cancellationToken);
+                cancellationToken, 
+                TaskContinuationOptions.AttachedToParent, 
+                TaskScheduler.Current);
         }
 
         private Uri FormatRelativePath(string restServicePath)
