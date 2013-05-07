@@ -27,9 +27,9 @@ namespace GitCommands.Settings
             return FileSettingsCache.FromCache(aSettingsFilePath, createSettingsCache);
         }
 
-        public override void Clear()
+        protected override void ClearImpl()
         {
-            base.Clear();
+            base.ClearImpl();
             EncodedNameMap.Clear();
         }
 
