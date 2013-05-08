@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using GitCommands.Utils;
 
 namespace GitCommands.Settings
 {
@@ -58,8 +59,7 @@ namespace GitCommands.Settings
         public static T FromCache<T>(string aSettingsFilePath, Lazy<T> createSettingsCache)
              where T : FileSettingsCache
         {
-            //TODO return from global cache
-            return createSettingsCache.Value;
+            return WeakRefCache.Default.Get(aSettingsFilePath + ":" + typeof(T).FullName, createSettingsCache);
         }
 
         private void _fileWatcher_Changed(object sender, FileSystemEventArgs e)
