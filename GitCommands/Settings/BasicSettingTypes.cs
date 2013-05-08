@@ -69,7 +69,7 @@ namespace GitCommands.Settings
         }
     }
 
-    public class EnumSetting<T> : Setting<T>
+    public class EnumSetting<T> : Setting<T> where T : struct
     {
         public EnumSetting(string aName, ISettingsSource settingsSource, T aDefaultValue)
             : base(aName, settingsSource, aDefaultValue)
@@ -209,12 +209,17 @@ namespace GitCommands.Settings
             iss.SetValue<T>(name, value, x => x.ToString());
         }
 
-        public static T GetEnum<T>(this ISettingsSource iss, string name, T defaultValue)
+        public static T GetEnum<T>(this ISettingsSource iss, string name, T defaultValue) where T : struct
         {
             return iss.GetValue<T>(name, defaultValue, x =>
             {
                 var val = x.ToString();
-                return (T)Enum.Parse(typeof(T), val, true);
+
+                T result;
+                if (Enum.TryParse(val, true, out result))
+                    return result;
+
+                return defaultValue;
             });
         }
 
@@ -232,7 +237,11 @@ namespace GitCommands.Settings
                 if (val.IsNullOrEmpty())
                     return null;
 
-                return (T?)Enum.Parse(typeof(T), val, true);
+                T result;
+                if (Enum.TryParse(val, true, out result))
+                    return result;
+
+                return null;
             });
         }
 

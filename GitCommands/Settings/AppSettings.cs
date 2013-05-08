@@ -1053,7 +1053,7 @@ namespace GitCommands
             SettingsContainer.SetEnum(name, value);
         }
 
-        public static T GetEnum<T>(string name, T defaultValue)
+        public static T GetEnum<T>(string name, T defaultValue) where T : struct
         {
             return SettingsContainer.GetEnum(name, defaultValue);
         }
