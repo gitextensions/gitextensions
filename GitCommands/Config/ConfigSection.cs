@@ -83,7 +83,20 @@ namespace GitCommands.Config
 
         public string GetValue(string key)
         {
-            return Keys.ContainsKey(key) && Keys[key].Count > 0 ? Keys[key][0] : string.Empty;
+            return GetValue(key, string.Empty);
+        }
+
+        public string GetValue(string key, string defaultValue)
+        {
+            IList<string> list;
+
+            if (Keys.TryGetValue(key, out list))
+            {
+                if (list.Count > 0)
+                    return list[0];
+            }
+
+            return defaultValue;
         }
 
         public string GetPathValue(string setting)

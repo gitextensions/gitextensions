@@ -34,6 +34,12 @@ namespace GitCommands.Settings
             _configFile.Value.Save(fileName);
         }
 
+        protected override void ClearImpl()
+        {
+            base.ClearImpl();
+            ReadSettings(SettingsFilePath);
+        }
+
         protected override void ReadSettings(string fileName)
         {
             if (!_configFile.IsValueCreated)
@@ -56,7 +62,7 @@ namespace GitCommands.Settings
 
         protected override string GetValueImpl(string key)
         {
-            return _configFile.Value.GetValue(key);
+            return _configFile.Value.GetValue(key, null);
         }
 
 

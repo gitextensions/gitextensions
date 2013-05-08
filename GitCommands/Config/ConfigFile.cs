@@ -175,6 +175,16 @@ namespace GitCommands.Config
 
         private string GetStringValue(string setting)
         {
+            return GetValue(setting, string.Empty);
+        }
+
+        public string GetValue(string setting)
+        {
+            return GetValue(setting, string.Empty);
+        }
+
+        public string GetValue(string setting, string defaultValue)
+        {
             if (String.IsNullOrEmpty(setting))
                 throw new ArgumentNullException();
 
@@ -186,14 +196,9 @@ namespace GitCommands.Config
             var configSection = FindConfigSection(configSectionName);
 
             if (configSection == null)
-                return string.Empty;
+                return defaultValue;
 
-            return configSection.GetValue(keyName);
-        }
-
-        public string GetValue(string setting)
-        {
-            return GetStringValue(setting);
+            return configSection.GetValue(keyName, defaultValue);
         }
 
         public string GetPathValue(string setting)
