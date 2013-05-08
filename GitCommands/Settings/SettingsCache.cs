@@ -57,7 +57,7 @@ namespace GitCommands
             ByNameMap.Clear();
         }
 
-        public void Clear()
+        private void Clear()
         {
             LockedAction(ClearImpl);
         }

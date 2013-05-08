@@ -36,6 +36,11 @@ namespace GitCommands.Settings
 
         protected override void ReadSettings(string fileName)
         {
+            if (!_configFile.IsValueCreated)
+            {
+                return;
+            }
+
             bool local = _configFile.Value.Local;
 
             _configFile = new Lazy<ConfigFile>(() =>
