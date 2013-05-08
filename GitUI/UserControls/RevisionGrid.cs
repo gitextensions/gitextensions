@@ -746,8 +746,6 @@ namespace GitUI
             Translate();
         }
 
-        private string _previousModuleDirectory;
-
         public void ForceRefreshRevisions()
         {
             try
@@ -757,18 +755,6 @@ namespace GitUI
                 ApplyFilterFromRevisionFilterDialog();
 
                 _initialLoad = true;
-
-                if (_previousModuleDirectory == Module.WorkingDir &&
-                    Revisions.FirstDisplayedScrollingRowIndex != -1)
-                {
-                    var rows = Revisions.Rows.Cast<DataGridViewRow>();
-                    var row = rows.ElementAt(Revisions.FirstDisplayedScrollingRowIndex);
-                    FirstVisibleRevisionBeforeUpdate = GetRevision(row.Index).Guid;
-                }
-                else
-                {
-                    FirstVisibleRevisionBeforeUpdate = null;
-                }
 
                 DisposeRevisionGraphCommand();
 
@@ -780,9 +766,17 @@ namespace GitUI
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
+                FirstVisibleRevisionBeforeUpdate = null;
                 if (newCurrentCheckout == CurrentCheckout)
                 {
                     LastSelectedRows = Revisions.SelectedIds;
+
+                    if (Revisions.FirstDisplayedScrollingRowIndex != -1)
+                    {
+                        var rows = Revisions.Rows.Cast<DataGridViewRow>();
+                        var row = rows.ElementAt(Revisions.FirstDisplayedScrollingRowIndex);
+                        FirstVisibleRevisionBeforeUpdate = GetRevision(row.Index).Guid;
+                    }
                 }
                 else
                 {
@@ -796,7 +790,6 @@ namespace GitUI
                 SuperprojectCurrentCheckout = newSuperprojectCurrentCheckout;
                 Revisions.Clear();
                 Error.Visible = false;
-                _previousModuleDirectory = Module.WorkingDir;
 
                 if (!Module.IsValidGitWorkingDir())
                 {
