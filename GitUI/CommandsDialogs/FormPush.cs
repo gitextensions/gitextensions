@@ -758,5 +758,27 @@ namespace GitUI.CommandsDialogs
         {
             this.Size = new System.Drawing.Size(this.MinimumSize.Width, this.MinimumSize.Height + 70);
         }
+
+        internal void SetSelectedRemote(string pushTo)
+        {
+            _NO_TRANSLATE_Remotes.SelectedItem = pushTo;
+        }
+
+        internal void SetSelectedRefToPush(GitRef refToPush)
+        {
+            if (refToPush.IsTag)
+            {
+                TabControlTagBranch.SelectedIndex = 1;
+                FillTagDropDown();
+                var head = ((IEnumerable<GitRef>)TagComboBox.Items.Cast<GitRef>()).First(a => a.CompleteName == refToPush.CompleteName);
+                TagComboBox.SelectedItem = head;
+            }
+            else
+            {
+                var branch = _NO_TRANSLATE_Branch.Items.Cast<object>().First(a =>
+                { var gitRef = a as GitRef; return gitRef != null ? (refToPush.CompleteName == gitRef.CompleteName) : false; });
+                _NO_TRANSLATE_Branch.SelectedItem = branch;
+            }
+        }
     }
 }

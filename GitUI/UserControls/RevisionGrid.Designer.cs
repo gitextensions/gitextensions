@@ -81,6 +81,7 @@ namespace GitUI
             this.mergeBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetCurrentBranchToHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rebaseOnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            pushToRemoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.createNewBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -254,6 +255,7 @@ namespace GitUI
             this.createTagToolStripMenuItem,
             this.deleteTagToolStripMenuItem,
             this.toolStripSeparator2,
+            this.pushToRemoteToolStripMenuItem,
             this.checkoutRevisionToolStripMenuItem,
             this.revertCommitToolStripMenuItem,
             this.cherryPickCommitToolStripMenuItem,
@@ -399,6 +401,13 @@ namespace GitUI
             this.rebaseOnToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.rebaseOnToolStripMenuItem.Text = "Rebase current branch on";
             this.rebaseOnToolStripMenuItem.Click += new System.EventHandler(this.deleteBranchTagToolStripMenuItem_Click);
+            // 
+            // pushToRemoteToolStripMenuItem
+            // 
+            this.pushToRemoteToolStripMenuItem.Image = global::GitUI.Properties.Resources.ArrowUp;
+            this.pushToRemoteToolStripMenuItem.Name = "pushToRemoteToolStripMenuItem";
+            this.pushToRemoteToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.pushToRemoteToolStripMenuItem.Text = "Push";
             // 
             // toolStripSeparator3
             // 
@@ -842,6 +851,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem cherryPickCommitToolStripMenuItem;
         private System.Windows.Forms.Timer quickSearchTimer;
         private System.Windows.Forms.ToolStripMenuItem rebaseOnToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pushToRemoteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showAllBranchesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showCurrentBranchOnlyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showFilteredBranchesToolStripMenuItem;
