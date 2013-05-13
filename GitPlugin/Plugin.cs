@@ -199,7 +199,7 @@ namespace GitPlugin.Commands
                 {
                     // Create the new CommandBar
                     bar = cmdBars.Add(name, position, Type.Missing, false);
-                    bar.Visible = true;
+                    bar.Visible = false; // make it false so it will hide if user disable toolbar. True is forcing it!
                     bar.Position = MsoBarPosition.msoBarTop;
                 }
             }
