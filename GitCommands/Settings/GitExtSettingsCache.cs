@@ -27,6 +27,14 @@ namespace GitCommands.Settings
             return FileSettingsCache.FromCache(aSettingsFilePath, createSettingsCache);
         }
 
+        public static GitExtSettingsCache Create(string aSettingsFilePath, bool allowCache = true)
+        {
+            if (allowCache)
+                return FromCache(aSettingsFilePath);
+            else
+                return new GitExtSettingsCache(aSettingsFilePath, false);
+        }
+
         protected override void ClearImpl()
         {
             base.ClearImpl();

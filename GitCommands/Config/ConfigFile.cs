@@ -9,24 +9,6 @@ namespace GitCommands.Config
 {
     public class ConfigFile
     {
-        private static readonly Regex RegParseIsSection =
-            new Regex(
-                @"(?<IsSection>
-                        ^\s*\[(?<SectionName>[^\]]+)?\]\s*$
-                  )",
-                RegexOptions.Compiled |
-                RegexOptions.IgnorePatternWhitespace
-                );
-
-        private static readonly Regex RegParseIsKey =
-            new Regex(
-                @"(?<IsKeyValue>
-                        ^\s*(?<Key>[^(\s*\=\s*)]+)?\s*\=\s*(?<Value>[\d\D]*)$
-                   )",
-                RegexOptions.Compiled |
-                RegexOptions.IgnorePatternWhitespace
-                );
-
         private readonly string _fileName;
         public string FileName { get { return _fileName; } }
 

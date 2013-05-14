@@ -19,7 +19,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private Font _applicationFont;
         private Font commitFont;
 
-        public AppearanceSettingsPage()
+        public AppearanceSettingsPage(CommonLogic aCommonLogic)
+            : base(aCommonLogic)
         {
             InitializeComponent();
             Text = "Appearance";
@@ -43,7 +44,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         ////    }
         ////}
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
             chkEnableAutoScale.Checked = AppSettings.EnableAutoScale;
 
@@ -77,7 +78,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             AppSettings.EnableAutoScale = chkEnableAutoScale.Checked;
             AppSettings.TruncatePathMethod = _NO_TRANSLATE_truncatePathMethod.Text;

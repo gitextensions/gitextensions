@@ -77,8 +77,8 @@ namespace GitExtensions
 
                     GitUICommands uiCommands = new GitUICommands(string.Empty);
                     var commonLogic = new CommonLogic(uiCommands.Module);
-                    var checkSettingsLogic = new CheckSettingsLogic(commonLogic, uiCommands.Module);
-                    using (var checklistSettingsPage = new ChecklistSettingsPage(commonLogic, checkSettingsLogic, uiCommands.Module, null))
+                    var checkSettingsLogic = new CheckSettingsLogic(commonLogic);
+                    using (var checklistSettingsPage = new ChecklistSettingsPage(checkSettingsLogic, null))
                     {
                         if (!checklistSettingsPage.CheckSettings())
                         {

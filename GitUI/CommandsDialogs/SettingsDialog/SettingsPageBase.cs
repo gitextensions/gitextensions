@@ -1,19 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
     /// <summary>
     /// set Text property in derived classes to set the title
     /// </summary>
-    public class SettingsPageBase : GitExtensionsControl, ISettingsPage
+    public abstract class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
+        protected readonly CommonLogic CommonLogic;
+
+        protected GitModule Module { get { return this.CommonLogic.Module; } }
+
+        public SettingsPageBase(CommonLogic aCommonLogic)
+        {
+            CommonLogic = aCommonLogic;
+        }
+
         public virtual string GetTitle()
         {
             return Text;
         }
 
-        public Control GuiControl { get { return this; } }
+        public virtual Control GuiControl { get { return this; } }
 
         /// <summary>
         /// Called when SettingsPage is shown (again);
@@ -39,30 +49,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public void LoadSettings()
         {
             _loadingSettings = true;
-            OnLoadSettings();
+            SettingsToPage();
             _loadingSettings = false;
         }
 
-        ////public void SaveSettings()
-        ////{
-        ////    OnSaveSettings();
-        ////}
-
-        /// <summary>
-        /// use GitCommands.Settings to load settings in derived classes
-        /// </summary>
-        protected virtual void OnLoadSettings()
+        public void SaveSettings()
         {
-            // to be overridden
+            PageToSettings();
         }
 
-        /// <summary>
-        /// use GitCommands.Settings to save settings in derived classes
-        /// </summary>
-        public virtual void SaveSettings()
-        {
-            // to be overridden
-        }
+        protected abstract void SettingsToPage();
+
+        protected abstract void PageToSettings();
 
         IList<string> childrenText;
 
