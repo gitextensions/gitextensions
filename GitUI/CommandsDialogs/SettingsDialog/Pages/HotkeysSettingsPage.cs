@@ -2,19 +2,20 @@
 {
     public partial class HotkeysSettingsPage : SettingsPageBase
     {
-        public HotkeysSettingsPage()
+        public HotkeysSettingsPage(CommonLogic aCommonLogic)
+            : base(aCommonLogic)
         {
             InitializeComponent();
             Text = "Hotkeys";
             Translate();
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
             controlHotkeys.ReloadSettings();
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             controlHotkeys.SaveSettings();
         }

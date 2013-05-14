@@ -242,10 +242,12 @@ namespace GitCommands
         {
             return GetEncoding(local, "i18n.filesEncoding");
         }
+
         public void SetFilesEncoding(bool local, Encoding encoding)
         {
             SetEncoding(local, "i18n.filesEncoding", encoding);
         }
+
         public Encoding FilesEncoding
         {
             get

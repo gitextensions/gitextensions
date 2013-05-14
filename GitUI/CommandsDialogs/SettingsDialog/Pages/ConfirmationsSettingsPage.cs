@@ -5,14 +5,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class ConfirmationsSettingsPage : SettingsPageBase
     {
-        public ConfirmationsSettingsPage()
+        public ConfirmationsSettingsPage(CommonLogic aCommonLogic)
+            : base(aCommonLogic)
         {
             InitializeComponent();
             Text = "Confirmations";
             Translate();
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
             chkAmend.Checked = AppSettings.DontConfirmAmend;
             chkAutoPopStashAfterPull.CheckState = AppSettings.AutoPopStashAfterPull.ToCheckboxState();
@@ -21,7 +22,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkAddTrackingRef.Checked = AppSettings.DontConfirmAddTrackingRef;
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             AppSettings.DontConfirmAmend = chkAmend.Checked;
             AppSettings.AutoPopStashAfterPull = chkAutoPopStashAfterPull.CheckState.ToBoolean();

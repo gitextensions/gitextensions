@@ -52,7 +52,7 @@ namespace GitCommands.Config
         public string SubSection { get; set; }
         public bool SubSectionCaseSensitive { get; set; }
 
-        internal static string FixPath(string path)
+        public static string FixPath(string path)
         {
             if (path.StartsWith("\\\\")) //for using unc paths -> these need to be backward slashes
                 return path;

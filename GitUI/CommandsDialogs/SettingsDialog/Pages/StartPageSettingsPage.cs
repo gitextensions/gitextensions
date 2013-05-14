@@ -2,7 +2,8 @@
 {
     public partial class StartPageSettingsPage : SettingsPageBase
     {
-        public StartPageSettingsPage()
+        public StartPageSettingsPage(CommonLogic aCommonLogic)
+            : base(aCommonLogic)
         {
             InitializeComponent();
             Text = "Start Page";
@@ -16,5 +17,15 @@
                 return true;
             }
         }
+
+        protected override void SettingsToPage()
+        {
+        }
+
+        protected override void PageToSettings()
+        {
+        }
+
+
     }
 }
