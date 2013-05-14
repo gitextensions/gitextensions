@@ -12,7 +12,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private string IconName = "bug";
 
-        public ScriptsSettingsPage()
+        public ScriptsSettingsPage(CommonLogic aCommonLogic)
+            : base(aCommonLogic)
         {
             InitializeComponent();
             Text = "Scripts";
@@ -61,13 +62,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 			}
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
             scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
             LoadScripts();
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             SaveScripts();
         }

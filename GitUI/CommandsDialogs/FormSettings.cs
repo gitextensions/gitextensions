@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Settings;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -28,9 +29,10 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        readonly CommonLogic _commonLogic;
-        readonly CheckSettingsLogic _checkSettingsLogic;
+        private readonly CommonLogic _commonLogic;
+        private readonly CheckSettingsLogic _checkSettingsLogic;
         private IEnumerable<ISettingsPage> SettingsPages { get { return settingsTreeView.SettingsPages; } }
+        private readonly string _translatedTitle;
 
         private FormSettings()
             : this(null)
@@ -41,6 +43,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
+            _translatedTitle = this.Text;
 
             settingsTreeView.SuspendLayout();
 
@@ -50,51 +53,47 @@ namespace GitUI.CommandsDialogs
 
             settingsTreeView.AddSettingsPage(new GitExtensionsSettingsGroup(), null);
             SettingsPageReference gitExtPageRef = GitExtensionsSettingsGroup.GetPageReference();
-            
+
             _commonLogic = new CommonLogic(Module);
+            _checkSettingsLogic = new CheckSettingsLogic(_commonLogic);
 
-            _checkSettingsLogic = new CheckSettingsLogic(_commonLogic, Module);
-
-            var checklistSettingsPage = new ChecklistSettingsPage(_commonLogic, _checkSettingsLogic, Module, this);
+            var checklistSettingsPage = new ChecklistSettingsPage(_checkSettingsLogic, this);
             settingsTreeView.AddSettingsPage(checklistSettingsPage, gitExtPageRef, true); // as root
 
             settingsTreeView.AddSettingsPage(new GitSettingsPage(_checkSettingsLogic, this), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new GitExtensionsSettingsPage(), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(new GitExtensionsSettingsPage(_commonLogic), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new AppearanceSettingsPage(), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(new AppearanceSettingsPage(_commonLogic), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new ColorsSettingsPage(), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(new ColorsSettingsPage(_commonLogic), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new StartPageSettingsPage(), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(new StartPageSettingsPage(_commonLogic), gitExtPageRef);
 
-            var globalSettingsSettingsPage = new GlobalSettingsSettingsPage(_commonLogic, _checkSettingsLogic, Module);
+            var globalSettingsSettingsPage = new GlobalSettingsSettingsPage(_checkSettingsLogic);
             settingsTreeView.AddSettingsPage(globalSettingsSettingsPage, gitExtPageRef);
-
-            var localSettingsSettingsPage = new LocalSettingsSettingsPage(_commonLogic, _checkSettingsLogic, Module);
-            settingsTreeView.AddSettingsPage(localSettingsSettingsPage, gitExtPageRef);
 
             var _sshSettingsPage = new SshSettingsPage(_commonLogic);
             settingsTreeView.AddSettingsPage(_sshSettingsPage, gitExtPageRef);
             checklistSettingsPage.SshSettingsPage = _sshSettingsPage;
 
-            settingsTreeView.AddSettingsPage(new ScriptsSettingsPage(), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(new ScriptsSettingsPage(_commonLogic), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new HotkeysSettingsPage(), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(new HotkeysSettingsPage(_commonLogic), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new ShellExtensionSettingsPage(), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(new ShellExtensionSettingsPage(_commonLogic), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new AdvancedSettingsPage(), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(new AdvancedSettingsPage(_commonLogic), gitExtPageRef);
             SettingsPageReference advancedPageRef = AdvancedSettingsPage.GetPageReference();
 
-            settingsTreeView.AddSettingsPage(new ConfirmationsSettingsPage(), advancedPageRef);
+            settingsTreeView.AddSettingsPage(new ConfirmationsSettingsPage(_commonLogic), advancedPageRef);
 
             settingsTreeView.AddSettingsPage(new PluginsSettingsGroup(), null);
             SettingsPageReference pluginsPageRef = PluginsSettingsGroup.GetPageReference();
-            settingsTreeView.AddSettingsPage(new PluginRootIntroductionPage(), pluginsPageRef, true); // as root
+            settingsTreeView.AddSettingsPage(new PluginRootIntroductionPage(_commonLogic), pluginsPageRef, true); // as root
             foreach (var gitPlugin in LoadedPlugins.Plugins)
             {
-                var settingsPage = PluginSettingsPage.CreateSettingsPageFromPlugin(gitPlugin);
+                var settingsPage = PluginSettingsPage.CreateSettingsPageFromPlugin(_commonLogic, gitPlugin);
                 settingsTreeView.AddSettingsPage(settingsPage, pluginsPageRef);
             }
 
@@ -134,7 +133,7 @@ namespace GitUI.CommandsDialogs
                     title = "Plugin: " + title;
                 }
 
-                labelSettingsPageTitle.Text = title;
+                this.Text = _translatedTitle + " - " + title;
                 Application.DoEvents();
 
                 Cursor.Current = Cursors.WaitCursor;
@@ -153,17 +152,12 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                labelSettingsPageTitle.Text = "[Please select another node]";
+                this.Text = _translatedTitle;
             }
         }
 
-        // TODO: see SettingsPageBase.loadingSettings
-        ////private bool loadingSettings;
-
         public void LoadSettings()
         {
-            ////loadingSettings = true;
-
             try
             {
                 foreach (var settingsPage in SettingsPages)
@@ -179,8 +173,6 @@ namespace GitUI.CommandsDialogs
                 // and has their day ruined.
                 DialogResult = DialogResult.Abort;
             }
-
-            ////loadingSettings = false;
         }
 
         private void Ok_Click(object sender, EventArgs e)

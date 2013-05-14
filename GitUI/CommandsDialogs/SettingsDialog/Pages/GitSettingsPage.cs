@@ -15,6 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public GitSettingsPage(CheckSettingsLogic checkSettingsLogic,
             ISettingsPageHost settingsPageHost)
+            : base(checkSettingsLogic.CommonLogic)
         {
             InitializeComponent();
             Text = "Git";
@@ -40,7 +41,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             GitBinPath.Text = AppSettings.GitBinDir;
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
             GitCommandHelpers.SetEnvironmentVariable();
             homeIsSetToLabel.Text = string.Concat(_homeIsSetToString.Text, " ", GitCommandHelpers.GetHomeDir());
@@ -49,7 +50,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             GitBinPath.Text = AppSettings.GitBinDir;
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             AppSettings.GitCommand = GitPath.Text;
             AppSettings.GitBinDir = GitBinPath.Text;

@@ -33,7 +33,7 @@ namespace GitCommands
         public const string SettingsFileName = "GitExtensions.settings";
 
         public static Lazy<string> ApplicationDataPath;
-        private static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
+        public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
         public static readonly SettingsContainer SettingsContainer;
 
         static AppSettings()

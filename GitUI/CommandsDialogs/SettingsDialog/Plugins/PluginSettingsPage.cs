@@ -13,16 +13,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
         private readonly IList<string> _autoGenKeywords = new List<string>();
         private bool pageInited = false;
 
-        public PluginSettingsPage(IGitPlugin gitPlugin)
+        public PluginSettingsPage(CommonLogic aCommonLogic, IGitPlugin gitPlugin)
+            : base(aCommonLogic)
         {
             InitializeComponent();
             Translate();
             _gitPlugin = gitPlugin;
         }
 
-        public static PluginSettingsPage CreateSettingsPageFromPlugin(IGitPlugin gitPlugin)
+        public static PluginSettingsPage CreateSettingsPageFromPlugin(CommonLogic aCommonLogic, IGitPlugin gitPlugin)
         {
-            return new PluginSettingsPage(gitPlugin);
+            return new PluginSettingsPage(aCommonLogic, gitPlugin);
         }
 
         public override string GetTitle()
@@ -44,7 +45,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             CreateAndInitPluginSettingsControls();
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
             if (_gitPlugin == null)
                 throw new ApplicationException();
@@ -59,7 +60,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             }
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             SavePluginSettingsFromGeneratedControls();
         }

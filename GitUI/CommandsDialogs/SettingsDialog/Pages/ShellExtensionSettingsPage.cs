@@ -5,14 +5,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class ShellExtensionSettingsPage : SettingsPageBase
     {
-        public ShellExtensionSettingsPage()
+        public ShellExtensionSettingsPage(CommonLogic aCommonLogic)
+            : base(aCommonLogic)
         {
             InitializeComponent();
             Text = "Shell extension";
             Translate();
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
             for (int i = 0; i < AppSettings.CascadeShellMenuItems.Length; i++)
             {
@@ -22,7 +23,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             UpdatePreview();
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             String l_CascadeShellMenuItems = "";
 
