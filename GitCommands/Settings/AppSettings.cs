@@ -321,26 +321,6 @@ namespace GitCommands
         }
 
         public static readonly Dictionary<string, Encoding> AvailableEncodings = new Dictionary<string, Encoding>();
-        private static readonly Dictionary<string, Encoding> EncodingSettings = new Dictionary<string, Encoding>();
-
-        internal static bool GetEncoding(string settingName, out Encoding encoding)
-        {
-            lock (EncodingSettings)
-            {
-                return EncodingSettings.TryGetValue(settingName, out encoding);
-            }
-        }
-
-        internal static void SetEncoding(string settingName, Encoding encoding)
-        {
-            lock (EncodingSettings)
-            {
-                var items = EncodingSettings.Keys.Where(item => item.StartsWith(settingName)).ToList();
-                foreach (var item in items)
-                    EncodingSettings.Remove(item);
-                EncodingSettings[settingName] = encoding;
-            }
-        }
 
         public enum PullAction
         {

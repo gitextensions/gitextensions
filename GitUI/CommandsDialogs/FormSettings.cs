@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs
 
             settingsTreeView.AddSettingsPage(new StartPageSettingsPage(_commonLogic), gitExtPageRef);
 
-            var globalSettingsSettingsPage = new GlobalSettingsSettingsPage(_checkSettingsLogic);
+            var globalSettingsSettingsPage = new GitConfigSettingsPage(_checkSettingsLogic);
             settingsTreeView.AddSettingsPage(globalSettingsSettingsPage, gitExtPageRef);
 
             var _sshSettingsPage = new SshSettingsPage(_commonLogic);

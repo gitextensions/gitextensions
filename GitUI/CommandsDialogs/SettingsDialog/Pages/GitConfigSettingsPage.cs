@@ -9,21 +9,21 @@ using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class GlobalSettingsSettingsPage : ConfigFileSettingsPage
+    public partial class GitConfigSettingsPage : ConfigFileSettingsPage
     {
         private readonly TranslationString __diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
         private readonly CheckSettingsLogic CheckSettingsLogic;
 
-        private GlobalSettingsSettingsPage()
+        private GitConfigSettingsPage()
             : this(null)
         {
         }
 
-        public GlobalSettingsSettingsPage(CheckSettingsLogic aCheckSettingsLogic)
+        public GitConfigSettingsPage(CheckSettingsLogic aCheckSettingsLogic)
             : base(aCheckSettingsLogic.CommonLogic)
         {
             InitializeComponent();
-            Text = "Git config";
+            Text = "Git Config";
             Translate();
 
             CheckSettingsLogic = aCheckSettingsLogic;
@@ -48,7 +48,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public static SettingsPageReference GetPageReference()
         {
-            return new SettingsPageReferenceByType(typeof(GlobalSettingsSettingsPage));
+            return new SettingsPageReferenceByType(typeof(GitConfigSettingsPage));
         }
 
         public override void OnPageShown()
@@ -80,7 +80,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
-//TODO jb            CommonLogic.EncodingToCombo(Module.GetFilesEncoding(false), Global_FilesEncoding);
+            CommonLogic.EncodingToCombo(CurrentSettings.FilesEncoding, Global_FilesEncoding);
 
             GlobalUserName.Text = CurrentSettings.GetValue("user.name");
             GlobalUserEmail.Text = CurrentSettings.GetValue("user.email");
@@ -109,7 +109,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// </summary>
         protected override void PageToSettings()
         {
-            //TODO jb move to repodist CurrentSettings.SetFilesEncoding(CommonLogic.ComboToEncoding(Global_FilesEncoding));
+            CurrentSettings.FilesEncoding = CommonLogic.ComboToEncoding(Global_FilesEncoding);
 
             if (CheckSettingsLogic.CanFindGitCmd())
             {
