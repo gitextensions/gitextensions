@@ -181,52 +181,6 @@ namespace GitCommands
             }
         }
 
-        private Encoding GetEncoding(bool local, string settingName)
-        {
-            string lname = local ? "_local" + '_' + WorkingDir : "_global";
-            lname = settingName + lname;
-            Encoding result;
-            if (AppSettings.GetEncoding(lname, out result))
-                return result;
-
-            string encodingName;
-            ConfigFile cfg;
-            if (local)
-                cfg = GetLocalConfig();
-            else
-                cfg = GitCommandHelpers.GetGlobalConfig();
-
-            encodingName = cfg.GetValue(settingName);
-
-            if (string.IsNullOrEmpty(encodingName))
-                result = null;
-            else if (!AppSettings.AvailableEncodings.TryGetValue(encodingName, out result))
-            {
-                try
-                {
-                    result = Encoding.GetEncoding(encodingName);
-                }
-                catch (ArgumentException)
-                {
-                    Debug.WriteLine(string.Format("Unsupported encoding set in git config file: {0}\nPlease check the setting {1} in your {2} config file.", encodingName, settingName, (local ? "local" : "global")));
-                    result = null;
-                }
-            }
-
-            AppSettings.SetEncoding(lname, result);
-
-            return result;
-        }
-
-        private void SetEncoding(bool local, string settingName, Encoding encoding)
-        {
-            string lname = local ? "_local" + '_' + WorkingDir : "_global";
-            lname = settingName + lname;
-            AppSettings.SetEncoding(lname, encoding);
-            //storing to config file is handled by FormSettings
-        }
-
-
         //Encoding that let us read all bytes without replacing any char
         //It is using to read output of commands, which may consist of:
         //1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of 
@@ -238,51 +192,27 @@ namespace GitCommands
         //4) branch, tag name, errors, warnings, hints encoded in system default encoding
         public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1");//is any better?
 
-        public Encoding GetFilesEncoding(bool local)
-        {
-            return GetEncoding(local, "i18n.filesEncoding");
-        }
-
-        public void SetFilesEncoding(bool local, Encoding encoding)
-        {
-            SetEncoding(local, "i18n.filesEncoding", encoding);
-        }
-
         public Encoding FilesEncoding
         {
             get
             {
-                Encoding result = GetFilesEncoding(true);
-                if (result == null)
-                    result = GetFilesEncoding(false);
+                Encoding result = EffectiveConfigFile.FilesEncoding;
                 if (result == null)
                     result = new UTF8Encoding(false);
                 return result;
             }
         }
 
-        public Encoding GetCommitEncoding(bool local)
-        {
-            return GetEncoding(local, "i18n.commitEncoding");
-        }
         public Encoding CommitEncoding
         {
             get
             {
-                Encoding result = GetCommitEncoding(true);
-                if (result == null)
-                    result = GetCommitEncoding(false);
-                if (result == null)
+                Encoding result = EffectiveConfigFile.CommitEncoding;
                     result = new UTF8Encoding(false);
                 return result;
             }
         }
 
-
-        public Encoding GetLogOutputEncoding(bool local)
-        {
-            return GetEncoding(local, "i18n.logoutputencoding");
-        }
         /// <summary>
         /// Encoding for commit header (message, notes, author, commiter, emails)
         /// </summary>
@@ -290,9 +220,7 @@ namespace GitCommands
         {
             get
             {
-                Encoding result = GetLogOutputEncoding(true);
-                if (result == null)
-                    result = GetLogOutputEncoding(false);
+                Encoding result = EffectiveConfigFile.LogOutputEncoding;
                 if (result == null)
                     result = CommitEncoding;
                 return result;

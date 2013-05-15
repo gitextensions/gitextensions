@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -64,6 +65,64 @@ namespace GitCommands.Settings
         public void SetPathValue(string setting, string value)
         {
             SetValue(setting, ConfigSection.FixPath(value));
+        }
+
+        public Encoding FilesEncoding
+        {
+            get
+            {
+                return GetEncoding("i18n.filesEncoding");
+            }
+
+            set
+            {
+                SetEncoding("i18n.filesEncoding", value);
+            }
+        }
+
+        public Encoding CommitEncoding
+        {
+            get
+            {
+                return GetEncoding("i18n.commitEncoding");
+            }
+        }
+
+        public Encoding LogOutputEncoding
+        {
+            get
+            {
+                return GetEncoding("i18n.logoutputencoding");
+            }
+        }
+
+        private Encoding GetEncoding(string settingName)
+        {
+            Encoding result;
+
+            string encodingName = GetValue(settingName);
+
+            if (string.IsNullOrEmpty(encodingName))
+                result = null;
+            else if (!AppSettings.AvailableEncodings.TryGetValue(encodingName, out result))
+            {
+                try
+                {
+                    result = Encoding.GetEncoding(encodingName);
+                }
+                catch (ArgumentException)
+                {
+                    Debug.WriteLine(string.Format("Unsupported encoding set in git config file: {0}\nPlease check the setting {1} in config file.", encodingName, settingName));
+                    result = null;
+                }
+            }
+
+            return result;
+        }
+
+        private void SetEncoding(string settingName, Encoding encoding)
+        {
+            SetValue(settingName, encoding.HeaderName);
         }
 
     }

@@ -514,11 +514,11 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitSettingsPage.Designer.cs">
       <DependentUpon>GitSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GlobalSettingsSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitConfigSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GlobalSettingsSettingsPage.Designer.cs">
-      <DependentUpon>GlobalSettingsSettingsPage.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitConfigSettingsPage.Designer.cs">
+      <DependentUpon>GitConfigSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\GroupSettingsPage.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\HotkeysSettingsPage.cs">
@@ -1103,8 +1103,8 @@
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GitSettingsPage.resx">
       <DependentUpon>GitSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GlobalSettingsSettingsPage.resx">
-      <DependentUpon>GlobalSettingsSettingsPage.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GitConfigSettingsPage.resx">
+      <DependentUpon>GitConfigSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\HotkeysSettingsPage.resx">
       <DependentUpon>HotkeysSettingsPage.cs</DependentUpon>

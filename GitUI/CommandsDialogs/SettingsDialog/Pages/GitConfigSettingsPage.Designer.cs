@@ -1,6 +1,6 @@
 ﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    partial class GlobalSettingsSettingsPage
+    partial class GitConfigSettingsPage
     {
         /// <summary> 
         /// Required designer variable.
