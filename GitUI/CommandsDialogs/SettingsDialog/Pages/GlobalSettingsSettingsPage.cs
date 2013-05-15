@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             : base(aCheckSettingsLogic.CommonLogic)
         {
             InitializeComponent();
-            Text = "Global settings";
+            Text = "Git config";
             Translate();
 
             CheckSettingsLogic = aCheckSettingsLogic;
@@ -88,17 +88,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             GlobalMergeTool.Text = CurrentSettings.GetValue("merge.tool");
             CommitTemplatePath.Text = CurrentSettings.GetValue("commit.template");
 
-            if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                MergetoolPath.Text = CurrentSettings.GetValue(string.Format("mergetool.{0}.path", GlobalMergeTool.Text));
-            if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                MergeToolCmd.Text = CurrentSettings.GetValue(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text));
+            MergetoolPath.Text = CurrentSettings.GetValue(string.Format("mergetool.{0}.path", GlobalMergeTool.Text));
+            MergeToolCmd.Text = CurrentSettings.GetValue(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text));
 
             GlobalDiffTool.Text = CheckSettingsLogic.GetDiffToolFromConfig(CurrentSettings);
 
-            if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                DifftoolPath.Text = CurrentSettings.GetValue(string.Format("difftool.{0}.path", GlobalDiffTool.Text));
-            if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                DifftoolCmd.Text = CurrentSettings.GetValue(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text));
+            DifftoolPath.Text = CurrentSettings.GetValue(string.Format("difftool.{0}.path", GlobalDiffTool.Text));
+            DifftoolCmd.Text = CurrentSettings.GetValue(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text));
 
             CommonLogic.SetCheckboxFromString(GlobalKeepMergeBackup, CurrentSettings.GetValue("mergetool.keepBackup"));
 
@@ -117,30 +113,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (CheckSettingsLogic.CanFindGitCmd())
             {
-                if (string.IsNullOrEmpty(GlobalUserName.Text) ||
-                    !GlobalUserName.Text.Equals(CurrentSettings.GetValue("user.name")))
-                    CurrentSettings.SetValue("user.name", GlobalUserName.Text);
-                if (string.IsNullOrEmpty(GlobalUserEmail.Text) ||
-                    !GlobalUserEmail.Text.Equals(CurrentSettings.GetValue("user.email")))
-                    CurrentSettings.SetValue("user.email", GlobalUserEmail.Text);
-                if (string.IsNullOrEmpty(CommitTemplatePath.Text) ||
-                    !CommitTemplatePath.Text.Equals(CurrentSettings.GetValue("commit.template")))
-                    CurrentSettings.SetValue("commit.template", CommitTemplatePath.Text);
+                CurrentSettings.SetValue("user.name", GlobalUserName.Text);
+                CurrentSettings.SetValue("user.email", GlobalUserEmail.Text);
+                CurrentSettings.SetValue("commit.template", CommitTemplatePath.Text);
                 CurrentSettings.SetPathValue("core.editor", GlobalEditor.Text);
 
                 CheckSettingsLogic.SetDiffToolToConfig(CurrentSettings, GlobalDiffTool.Text);
 
-                if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                    CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", GlobalDiffTool.Text), DifftoolPath.Text);
-                if (!string.IsNullOrEmpty(GlobalDiffTool.Text))
-                    CurrentSettings.SetPathValue(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text), DifftoolCmd.Text);
+                CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", GlobalDiffTool.Text), DifftoolPath.Text);
+                CurrentSettings.SetPathValue(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text), DifftoolCmd.Text);
 
                 CurrentSettings.SetValue("merge.tool", GlobalMergeTool.Text);
 
-                if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                    CurrentSettings.SetPathValue(string.Format("mergetool.{0}.path", GlobalMergeTool.Text), MergetoolPath.Text);
-                if (!string.IsNullOrEmpty(GlobalMergeTool.Text))
-                    CurrentSettings.SetPathValue(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text), MergeToolCmd.Text);
+                CurrentSettings.SetPathValue(string.Format("mergetool.{0}.path", GlobalMergeTool.Text), MergetoolPath.Text);
+                CurrentSettings.SetPathValue(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text), MergeToolCmd.Text);
 
                 if (GlobalKeepMergeBackup.CheckState == CheckState.Checked)
                     CurrentSettings.SetValue("mergetool.keepBackup", "true");

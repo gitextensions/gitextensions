@@ -164,7 +164,12 @@ namespace GitCommands
 
                 if (ByNameMap.TryGetValue(name, out o))
                 {
-                    if (o == null || o is T)
+                    if (o == null)
+                    {
+                        val = defaultValue;
+                        return false;
+                    }
+                    else if (o is T)
                     {
                         val = (T)o;
                         return true;
