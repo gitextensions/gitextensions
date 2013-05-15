@@ -52,12 +52,18 @@ namespace GitCommands.Settings
 
         public void SetValue(string setting, string value)
         {
+            if (value.IsNullOrEmpty())
+            {
+                //to remove setting
+                value = null;
+            }
+
             this.SetString(setting, value);
         }
 
         public void SetPathValue(string setting, string value)
         {
-            this.SetString(setting, ConfigSection.FixPath(value));
+            SetValue(setting, ConfigSection.FixPath(value));
         }
 
     }

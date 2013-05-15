@@ -151,6 +151,8 @@ namespace GitCommands.Settings
         {
             base.SettingsChanged();
 
+            LastModificationDate = DateTime.UtcNow;
+
             if (_autoSave)
                 StartSaveTimer();
         }
@@ -165,7 +167,6 @@ namespace GitCommands.Settings
 
         private void StartSaveTimer()
         {
-            LastModificationDate = DateTime.UtcNow;
             //Resets timer so that the last call will let the timer event run and will cause the settings to be saved.
             SaveTimer.Stop();
             SaveTimer.AutoReset = true;

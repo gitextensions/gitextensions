@@ -201,6 +201,9 @@ namespace GitUI.CommandsDialogs
                 settingsPage.SaveSettings();
             }
 
+            _commonLogic.ConfigFileSettingsSet.EffectiveSettings.Save();
+            _commonLogic.RepoDistSettingsSet.EffectiveSettings.Save();
+
             if (EnvUtils.RunningOnWindows())
                 FormFixHome.CheckHomePath();
 
