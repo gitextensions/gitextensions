@@ -415,7 +415,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void GotoPageGlobalSettings()
         {
-            _settingsPageHost.GotoPage(GlobalSettingsSettingsPage.GetPageReference());
+            _settingsPageHost.GotoPage(GitConfigSettingsPage.GetPageReference());
         }
 
         private void UserNameSet_Click(object sender, EventArgs e)
