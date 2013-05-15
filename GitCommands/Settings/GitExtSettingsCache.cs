@@ -69,7 +69,14 @@ namespace GitCommands.Settings
 
         protected override void SetValueImpl(string key, string value)
         {
-            EncodedNameMap[key] = value;
+            if (value == null)
+            {
+                EncodedNameMap.Remove(key);
+            }
+            else
+            {
+                EncodedNameMap[key] = value;
+            }
         }
 
         protected override string GetValueImpl(string key)
