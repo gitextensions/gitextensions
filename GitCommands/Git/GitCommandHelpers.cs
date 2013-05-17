@@ -871,6 +871,7 @@ namespace GitCommands
             return stringBuilder.ToString();
         }
 
+        [CanBeNull]
         public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged)
         {
             PatchApply.Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
@@ -878,6 +879,7 @@ namespace GitCommands
             return GetSubmoduleStatus(text);
         }
 
+        [CanBeNull]
         public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string submodule)
         {
             return GetCurrentSubmoduleChanges(module, submodule, submodule, false);
@@ -895,10 +897,19 @@ namespace GitCommands
                 if (line != null)
                 {
                     var match = Regex.Match(line, @"diff --git a/(\S+) b/(\S+)");
-                    if (match != null && match.Groups.Count > 0)
+                    if (match.Groups.Count > 1)
                     {
                         status.Name = match.Groups[1].Value;
                         status.OldName = match.Groups[2].Value;
+                    }
+                    else
+                    {
+                        match = Regex.Match(line, @"diff --cc (\S+)");
+                        if (match.Groups.Count > 1)
+                        {
+                            status.Name = match.Groups[1].Value;
+                            status.OldName = match.Groups[1].Value;
+                        } 
                     }
                 }
 
@@ -924,6 +935,7 @@ namespace GitCommands
                         status.Commit = hash;
                         status.IsDirty = bdirty;
                     }
+                    // TODO: Support combined merge
                 }
             }
             return status;
@@ -1103,6 +1115,8 @@ namespace GitCommands
         {
             string text = patch != null ? patch.Text : null;
             var status = GetSubmoduleStatus(text);
+            if (status == null)
+                return "";
             return ProcessSubmoduleStatus(module, status);
         }
 
