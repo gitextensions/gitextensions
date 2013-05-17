@@ -195,7 +195,7 @@ namespace GitUI
         [Browsable(false)]
         private string FiltredCurrentCheckout { get; set; }
         [Browsable(false)]
-        public Task<string> SuperprojectCurrentCheckout { get; private set; }
+        public Task<string[]> SuperprojectCurrentCheckout { get; private set; }
         [Browsable(false)]
         public int LastRow { get; private set; }
 
@@ -759,8 +759,8 @@ namespace GitUI
                 DisposeRevisionGraphCommand();
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
-                Task<string> newSuperprojectCurrentCheckout =
-                    Task.Factory.StartNew(() => Module.GetSuperprojectCurrentCheckout());
+                Task<string[]> newSuperprojectCurrentCheckout =
+                    Task.Factory.StartNew(() => GetSuperprojectCheckout());
                 newSuperprojectCurrentCheckout.ContinueWith((task) => Refresh(),
                     TaskScheduler.FromCurrentSynchronizationContext());
 
@@ -857,6 +857,19 @@ namespace GitUI
                 Error.BringToFront();
                 MessageBox.Show(this, exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private string[] GetSuperprojectCheckout()
+        {
+            if (Module.SuperprojectModule == null)
+                return new string[] {};
+            var currentCheckout = Module.GetSuperprojectCurrentCheckout();
+            if (currentCheckout.Key == 'U')
+            {
+                // return local and remote hashes
+                return Module.SuperprojectModule.GetConflictedSubmoduleHashes(Module.SubmodulePath).Skip(1).ToArray();
+            }
+            return new[] { currentCheckout.Value };
         }
 
         private static readonly Regex PotentialShaPattern = new Regex(@"^[a-f0-9]{5,}", RegexOptions.Compiled);
@@ -1122,7 +1135,7 @@ namespace GitUI
                 var rowFont = NormalFont;
                 if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
                     rowFont = HeadFont;
-                else if (SuperprojectCurrentCheckout.IsCompleted && revision.Guid == SuperprojectCurrentCheckout.Result)
+                else if (SuperprojectCurrentCheckout.IsCompleted && SuperprojectCurrentCheckout.Result.Contains(revision.Guid))
                     rowFont = SuperprojectFont;
 
                 switch (column)

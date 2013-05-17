@@ -1165,22 +1165,22 @@ namespace GitCommands
             return RunGitCmd("log -g -1 HEAD --pretty=format:%H");
         }
 
-        public string GetSuperprojectCurrentCheckout()
+        public KeyValuePair<char, string> GetSuperprojectCurrentCheckout()
         {
             if (SuperprojectModule == null)
-                return "";
+                return new KeyValuePair<char, string>(' ', "");
 
             var lines = SuperprojectModule.RunGitCmd("submodule status --cached " + _submodulePath).Split('\n');
 
             if (lines.Length == 0)
-                return "";
+                return new KeyValuePair<char, string>(' ', "");
 
             string submodule = lines[0];
             if (submodule.Length < 43)
-                return "";
+                return new KeyValuePair<char, string>(' ', "");
 
             var currentCommitGuid = submodule.Substring(1, 40).Trim();
-            return currentCommitGuid;
+            return new KeyValuePair<char, string>(submodule[0], currentCommitGuid);
         }
 
         public int CommitCount()
@@ -1666,32 +1666,32 @@ namespace GitCommands
 
         public string ApplyPatch(string dir, string amCommand)
         {
-            var output = string.Empty;
-
             using (var gitCommand = new GitCommandsInstance(this))
             {
 
                 var files = Directory.GetFiles(dir);
 
-                if (files.Length > 0)
-                    using (Process process1 = gitCommand.CmdStartProcess(Settings.GitCommand, amCommand))
+                if (files.Length == 0)
+                    return "";
+
+                var output = "";
+                using (Process process1 = gitCommand.CmdStartProcess(Settings.GitCommand, amCommand))
+                {
+                    foreach (var file in files)
                     {
-                        foreach (var file in files)
+                        using (FileStream fs = new FileStream(file, FileMode.Open))
                         {
-                            using (FileStream fs = new FileStream(file, FileMode.Open))
-                            {
-                                fs.CopyTo(process1.StandardInput.BaseStream);
-                            }
+                            fs.CopyTo(process1.StandardInput.BaseStream);
                         }
-                        process1.StandardInput.Close();
-                        process1.WaitForExit();
-
-                        if (gitCommand.Output != null)
-                            output = gitCommand.Output.ToString().Trim();
                     }
-            }
+                    process1.StandardInput.Close();
+                    process1.WaitForExit();
 
-            return output;
+                    if (gitCommand.Output != null)
+                        output = gitCommand.Output.ToString().Trim();
+                }
+                return output;
+            }
         }
 
         public string StageFiles(IList<GitItemStatus> files, out bool wereErrors)
