@@ -2370,7 +2370,7 @@ namespace GitCommands
                     localItem.SubmoduleStatus = Task.Factory.StartNew(() =>
                         {
                             var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, localItem.Name, localItem.OldName, localItem.IsStaged);
-                            if (submoduleStatus.Commit != submoduleStatus.OldCommit)
+                            if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                             {
                                 var submodule = submoduleStatus.GetSubmodule(this);
                                 submoduleStatus.CheckSubmoduleStatus(submodule);
