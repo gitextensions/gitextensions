@@ -934,23 +934,51 @@ namespace GitCommands
 
             var unmerged = RunGitCmd("ls-files -z --unmerged \"" + filename + "\"").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (var file in unmerged)
+            foreach (var line in unmerged)
             {
-                int findSecondWhitespace = file.IndexOfAny(new[] { ' ', '\t' });
-                string fileStage = findSecondWhitespace >= 0 ? file.Substring(findSecondWhitespace).Trim() : "";
+                int findSecondWhitespace = line.IndexOfAny(new[] { ' ', '\t' });
+                string fileStage = findSecondWhitespace >= 0 ? line.Substring(findSecondWhitespace).Trim() : "";
 
                 findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
 
                 fileStage = findSecondWhitespace >= 0 ? fileStage.Substring(findSecondWhitespace).Trim() : "";
 
                 int stage;
-                if (Int32.TryParse(fileStage.Trim()[0].ToString(), out stage) && stage >= 1 && stage <= 3 && fileStage.Length > 2)
+                if (fileStage.Length > 2 && Int32.TryParse(fileStage[0].ToString(), out stage) && stage >= 1 && stage <= 3)
                 {
                     fileNames[stage - 1] = fileStage.Substring(2);
                 }
             }
 
             return fileNames;
+        }
+
+        public string[] GetConflictedSubmoduleHashes(string filename)
+        {
+            filename = FixPath(filename);
+
+            var hashes = new string[3];
+
+            var unmerged = RunGitCmd("ls-files -z --unmerged \"" + filename + "\"").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var line in unmerged)
+            {
+                int findSecondWhitespace = line.IndexOfAny(new[] { ' ', '\t' });
+                string fileStage = findSecondWhitespace >= 0 ? line.Substring(findSecondWhitespace).Trim() : "";
+
+                findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
+
+                string hash = findSecondWhitespace >= 0 ? fileStage.Substring(0, findSecondWhitespace).Trim() : "";
+                fileStage = findSecondWhitespace >= 0 ? fileStage.Substring(findSecondWhitespace).Trim() : "";
+
+                int stage;
+                if (fileStage.Length > 2 && Int32.TryParse(fileStage[0].ToString(), out stage) && stage >= 1 && stage <= 3)
+                {
+                    hashes[stage - 1] = hash;
+                }
+            }
+
+            return hashes;
         }
 
         public static string GetGitDirectory(string repositoryPath)
