@@ -328,7 +328,10 @@ namespace GitUI.CommandsDialogs
                     var submodulesList = Module.GetSubmodulesLocalPathes();
                     if (submodulesList.Any(configSection => configSection.Equals(filename.Trim())))
                     {
-                        if (MessageBox.Show(this, mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                        string[] hashes = Module.GetConflictedSubmoduleHashes(filename);
+                        string text = string.Format("\n\nBASE:\t{0}\nLOCAL:\t{1}\nREMOTE:\t{2}\n", hashes);
+                        if (MessageBox.Show(this, mergeConflictIsSubmodule.Text + text, mergeConflictIsSubmoduleCaption.Text,
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                         {
                             stageFile(filename);
                         }
