@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using GitFlow.Properties;
 using GitUIPluginInterfaces;
 
 namespace GitFlow
@@ -48,7 +49,6 @@ namespace GitFlow
             Branches = new Dictionary<string, List<string>>();
 
             lblPrefixManage.Text = string.Empty;
-            lblCommandResult.Text = string.Empty;
 
             Init();
         }
@@ -216,7 +216,6 @@ namespace GitFlow
 
         private bool RunCommand(string commandText)
         {
-            lblCommandResult.Text = string.Empty;
             int exitCode;
             var result = m_gitUiCommands.GitModule.RunGit(commandText, out exitCode);
 
@@ -227,15 +226,13 @@ namespace GitFlow
 
             if (exitCode == 0)
             {
-                lblCommandResult.Text = "Command Succeed! (see tooltip for details...)";
-                lblCommandResult.ForeColor = Color.Green;
-                ShowToolTip(lblCommandResult, result);
+                pbResultCommand.Image = Resource.success;
+                ShowToolTip(pbResultCommand, result);
             }
             else
             {
-                lblCommandResult.Text = "Command failed! (see tooltip for error...)";
-                lblCommandResult.ForeColor = Color.Red;
-                ShowToolTip(lblCommandResult, "error: " + result);
+                pbResultCommand.Image = Resource.error;
+                ShowToolTip(pbResultCommand, "error: " + result);
             }
             return exitCode == 0;
         }
