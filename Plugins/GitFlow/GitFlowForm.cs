@@ -67,12 +67,12 @@ namespace GitFlow
                 _bw.DoWork += bw_DoWork;
                 _bw.RunWorkerCompleted += bw_RunWorkerCompleted;
 
-                _toolTipCommandResult.AutoPopDelay = 0;
+                _toolTipCommandResult.AutoPopDelay = 32000;
                 _toolTipCommandResult.InitialDelay = 0;
                 _toolTipCommandResult.ReshowDelay = 0;
                 _toolTipCommandResult.ShowAlways = true;
 
-                _toolTipDebug.AutoPopDelay = 0;
+                _toolTipDebug.AutoPopDelay = 32000;
                 _toolTipDebug.InitialDelay = 0;
                 _toolTipDebug.ReshowDelay = 0;
                 _toolTipDebug.ShowAlways = true;
@@ -196,7 +196,7 @@ namespace GitFlow
                 return " HEAD"; //Hoping that's a revision on master (How to get the sha of the selected line in GitExtension?)
             if(!cbBasedOn.Checked)
                 return string.Empty;
-            return " " + cbBaseBranch.SelectedValue.ToString();
+            return " " + cbBaseBranch.SelectedValue;
         }
 
         private void btnPublish_Click(object sender, EventArgs e)
@@ -214,7 +214,7 @@ namespace GitFlow
             RunCommand("flow " + cbManageType.SelectedValue + " finish " + cbBranches.SelectedValue);
         }
 
-        private bool RunCommand(string commandText, bool displayResult = true)
+        private bool RunCommand(string commandText)
         {
             lblCommandResult.Text = string.Empty;
             int exitCode;
@@ -225,21 +225,17 @@ namespace GitFlow
             _toolTipDebug.RemoveAll();
             _toolTipDebug.SetToolTip(lblDebug, "cmd: git " + commandText+"\n" + "exit code:"+exitCode);
 
-            if (result.Length != 0 && displayResult)
+            if (exitCode == 0)
             {
-                if (exitCode == 0)
-                {
-                    lblCommandResult.Text = "Command Succeed! (see tooltip for details...)";
-                    lblCommandResult.ForeColor = Color.Green;
-                    ShowToolTip(lblCommandResult, result);
-
-                }
-                else
-                {
-                    lblCommandResult.Text = "Command failed! (see tooltip for error...)";
-                    lblCommandResult.ForeColor = Color.Red;
-                    ShowToolTip(lblCommandResult, "error: " + result);
-                }
+                lblCommandResult.Text = "Command Succeed! (see tooltip for details...)";
+                lblCommandResult.ForeColor = Color.Green;
+                ShowToolTip(lblCommandResult, result);
+            }
+            else
+            {
+                lblCommandResult.Text = "Command failed! (see tooltip for error...)";
+                lblCommandResult.ForeColor = Color.Red;
+                ShowToolTip(lblCommandResult, "error: " + result);
             }
             return exitCode == 0;
         }
