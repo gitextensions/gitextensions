@@ -1,2 +1,3 @@
 *.xml diff -text
 *.patch diff -text
+*.cs text diff=csharp
