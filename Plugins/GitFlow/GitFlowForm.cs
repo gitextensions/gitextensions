@@ -16,8 +16,6 @@ namespace GitFlow
         GitUIBaseEventArgs m_gitUiCommands;
 
         Dictionary<string,List<string>> Branches { get; set; }
-        readonly ToolTip _toolTipCommandResult = new ToolTip();
-        readonly ToolTip _toolTipDebug = new ToolTip();
 
         readonly BackgroundWorker _bw = new BackgroundWorker();
         public bool IsRefreshNeeded { get; set; }
@@ -49,6 +47,7 @@ namespace GitFlow
             Branches = new Dictionary<string, List<string>>();
 
             lblPrefixManage.Text = string.Empty;
+            ttGitFlow.SetToolTip(lnkGitFlow, "A good branch model for your project with Git...");
 
             Init();
         }
@@ -66,16 +65,6 @@ namespace GitFlow
                 _bw.WorkerSupportsCancellation = true;
                 _bw.DoWork += bw_DoWork;
                 _bw.RunWorkerCompleted += bw_RunWorkerCompleted;
-
-                _toolTipCommandResult.AutoPopDelay = 32000;
-                _toolTipCommandResult.InitialDelay = 0;
-                _toolTipCommandResult.ReshowDelay = 0;
-                _toolTipCommandResult.ShowAlways = true;
-
-                _toolTipDebug.AutoPopDelay = 32000;
-                _toolTipDebug.InitialDelay = 0;
-                _toolTipDebug.ReshowDelay = 0;
-                _toolTipDebug.ShowAlways = true;
 
                 cbType.DataSource = BranchTypes;
                 var types = new List<string> { string.Empty };
@@ -221,8 +210,8 @@ namespace GitFlow
 
             IsRefreshNeeded = true;
 
-            _toolTipDebug.RemoveAll();
-            _toolTipDebug.SetToolTip(lblDebug, "cmd: git " + commandText+"\n" + "exit code:"+exitCode);
+            ttDebug.RemoveAll();
+            ttDebug.SetToolTip(lblDebug, "cmd: git " + commandText + "\n" + "exit code:" + exitCode);
 
             if (exitCode == 0)
             {
@@ -241,8 +230,8 @@ namespace GitFlow
         #region GUI interactions
         private void ShowToolTip(Control c, string msg)
         {
-            _toolTipCommandResult.RemoveAll();
-            _toolTipCommandResult.SetToolTip(c, msg);
+            ttCommandResult.RemoveAll();
+            ttCommandResult.SetToolTip(c, msg);
         }
 
         private void cbType_SelectedValueChanged(object sender, EventArgs e)
