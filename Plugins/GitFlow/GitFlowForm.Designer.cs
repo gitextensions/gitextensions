@@ -56,6 +56,7 @@
             this.cbBaseBranch = new System.Windows.Forms.ComboBox();
             this.cbBasedOn = new System.Windows.Forms.CheckBox();
             this.lblDebug = new System.Windows.Forms.Label();
+            this.lnkGitFlow = new System.Windows.Forms.LinkLabel();
             this.gbManage.SuspendLayout();
             this.pnlManageBranch.SuspendLayout();
             this.pnlPull.SuspendLayout();
@@ -330,11 +331,23 @@
             this.lblDebug.TabIndex = 7;
             this.lblDebug.Text = "                                                                             ";
             // 
+            // lnkGitFlow
+            // 
+            this.lnkGitFlow.AutoSize = true;
+            this.lnkGitFlow.Location = new System.Drawing.Point(559, 17);
+            this.lnkGitFlow.Name = "lnkGitFlow";
+            this.lnkGitFlow.Size = new System.Drawing.Size(73, 13);
+            this.lnkGitFlow.TabIndex = 9;
+            this.lnkGitFlow.TabStop = true;
+            this.lnkGitFlow.Text = "About GitFlow";
+            this.lnkGitFlow.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkGitFlow_LinkClicked);
+            // 
             // GitFlowForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(653, 365);
+            this.Controls.Add(this.lnkGitFlow);
             this.Controls.Add(this.gbStart);
             this.Controls.Add(this.lblDebug);
             this.Controls.Add(this.lblCommandResult);
@@ -389,5 +402,6 @@
         private System.Windows.Forms.ComboBox cbBaseBranch;
         private System.Windows.Forms.CheckBox cbBasedOn;
         private System.Windows.Forms.Label lblDebug;
+        private System.Windows.Forms.LinkLabel lnkGitFlow;
     }
 }
