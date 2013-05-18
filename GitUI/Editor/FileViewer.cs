@@ -366,7 +366,12 @@ namespace GitUI.Editor
                 _async.Load(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
                     ViewStagingPatch);
             else if (status != null)
-                _async.Load(() => GitCommandHelpers.ProcessSubmoduleStatus(Module, status.Result), ViewPatch);
+                _async.Load(() =>
+                    {
+                        if (status.Result == null)
+                            return string.Format("Submodule \"{0}\" has unresolved conflicts", fileName);
+                        return GitCommandHelpers.ProcessSubmoduleStatus(Module, status.Result);
+                    }, ViewPatch);
             else
                 _async.Load(() => GitCommandHelpers.ProcessSubmodulePatch(Module, 
                     Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding)), ViewPatch);
