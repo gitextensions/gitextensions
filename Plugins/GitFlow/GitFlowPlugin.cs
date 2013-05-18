@@ -12,8 +12,11 @@ namespace GitFlow
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
         {
-            using (var frm = new GitFlowForm(gitUiCommands)) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
-            return true;
+            using (var frm = new GitFlowForm(gitUiCommands))
+            {
+                frm.ShowDialog(gitUiCommands.OwnerForm);
+                return frm.IsRefreshNeeded;
+            }
         }
     }
 }
