@@ -15,6 +15,7 @@ namespace GitFlow
 
         Dictionary<string,List<string>> Branches { get; set; }
         readonly ToolTip _toolTipCommandResult = new ToolTip();
+        readonly ToolTip _toolTipDebug = new ToolTip();
 
         readonly BackgroundWorker _bw = new BackgroundWorker();
         enum Branch
@@ -67,6 +68,11 @@ namespace GitFlow
                 _toolTipCommandResult.InitialDelay = 0;
                 _toolTipCommandResult.ReshowDelay = 0;
                 _toolTipCommandResult.ShowAlways = true;
+
+                _toolTipDebug.AutoPopDelay = 0;
+                _toolTipDebug.InitialDelay = 0;
+                _toolTipDebug.ReshowDelay = 0;
+                _toolTipDebug.ShowAlways = true;
 
                 cbType.DataSource = BranchTypes;
                 var types = new List<string> { string.Empty };
@@ -210,6 +216,9 @@ namespace GitFlow
             lblCommandResult.Text = string.Empty;
             int exitCode;
             var result = m_gitUiCommands.GitModule.RunGit(commandText, out exitCode);
+
+            _toolTipDebug.RemoveAll();
+            _toolTipDebug.SetToolTip(lblDebug, "cmd: git " + commandText+"\n" + "exit code:"+exitCode);
 
             if (result.Length != 0 && displayResult)
             {
