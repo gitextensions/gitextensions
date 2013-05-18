@@ -52,10 +52,15 @@
             this.label10 = new System.Windows.Forms.Label();
             this.lblPrefixName = new System.Windows.Forms.Label();
             this.gbStart = new System.Windows.Forms.GroupBox();
+            this.pnlBasedOn = new System.Windows.Forms.Panel();
+            this.cbBasedOn = new System.Windows.Forms.CheckBox();
+            this.cbBaseBranch = new System.Windows.Forms.ComboBox();
+            this.lblDebug = new System.Windows.Forms.Label();
             this.gbManage.SuspendLayout();
             this.pnlManageBranch.SuspendLayout();
             this.pnlPull.SuspendLayout();
             this.gbStart.SuspendLayout();
+            this.pnlBasedOn.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnInit
@@ -108,7 +113,7 @@
             // 
             this.gbManage.Controls.Add(this.pnlManageBranch);
             this.gbManage.Controls.Add(this.cbManageType);
-            this.gbManage.Location = new System.Drawing.Point(14, 108);
+            this.gbManage.Location = new System.Drawing.Point(13, 165);
             this.gbManage.Name = "gbManage";
             this.gbManage.Size = new System.Drawing.Size(628, 162);
             this.gbManage.TabIndex = 6;
@@ -188,7 +193,7 @@
             // lblPrefixManage
             // 
             this.lblPrefixManage.AutoSize = true;
-            this.lblPrefixManage.Location = new System.Drawing.Point(105, 11);
+            this.lblPrefixManage.Location = new System.Drawing.Point(104, 11);
             this.lblPrefixManage.Name = "lblPrefixManage";
             this.lblPrefixManage.Size = new System.Drawing.Size(43, 13);
             this.lblPrefixManage.TabIndex = 1;
@@ -227,7 +232,7 @@
             // btnClose
             // 
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(284, 276);
+            this.btnClose.Location = new System.Drawing.Point(284, 333);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(83, 23);
             this.btnClose.TabIndex = 0;
@@ -275,6 +280,7 @@
             // 
             // gbStart
             // 
+            this.gbStart.Controls.Add(this.pnlBasedOn);
             this.gbStart.Controls.Add(this.cbType);
             this.gbStart.Controls.Add(this.txtBranchName);
             this.gbStart.Controls.Add(this.lblPrefixName);
@@ -282,17 +288,56 @@
             this.gbStart.Controls.Add(this.btnCreateBranch);
             this.gbStart.Location = new System.Drawing.Point(12, 41);
             this.gbStart.Name = "gbStart";
-            this.gbStart.Size = new System.Drawing.Size(629, 61);
+            this.gbStart.Size = new System.Drawing.Size(629, 100);
             this.gbStart.TabIndex = 8;
             this.gbStart.TabStop = false;
             this.gbStart.Text = "Start branch:";
+            // 
+            // pnlBasedOn
+            // 
+            this.pnlBasedOn.Controls.Add(this.cbBaseBranch);
+            this.pnlBasedOn.Controls.Add(this.cbBasedOn);
+            this.pnlBasedOn.Location = new System.Drawing.Point(119, 51);
+            this.pnlBasedOn.Name = "pnlBasedOn";
+            this.pnlBasedOn.Size = new System.Drawing.Size(501, 37);
+            this.pnlBasedOn.TabIndex = 4;
+            // 
+            // cbBasedOn
+            // 
+            this.cbBasedOn.AutoSize = true;
+            this.cbBasedOn.Location = new System.Drawing.Point(3, 11);
+            this.cbBasedOn.Name = "cbBasedOn";
+            this.cbBasedOn.Size = new System.Drawing.Size(73, 17);
+            this.cbBasedOn.TabIndex = 0;
+            this.cbBasedOn.Text = "based on:";
+            this.cbBasedOn.UseVisualStyleBackColor = true;
+            this.cbBasedOn.CheckedChanged += new System.EventHandler(this.cbBasedOn_CheckedChanged);
+            // 
+            // cbBaseBranch
+            // 
+            this.cbBaseBranch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbBaseBranch.FormattingEnabled = true;
+            this.cbBaseBranch.Location = new System.Drawing.Point(78, 8);
+            this.cbBaseBranch.Name = "cbBaseBranch";
+            this.cbBaseBranch.Size = new System.Drawing.Size(340, 21);
+            this.cbBaseBranch.TabIndex = 3;
+            // 
+            // lblDebug
+            // 
+            this.lblDebug.AutoSize = true;
+            this.lblDebug.Location = new System.Drawing.Point(21, 338);
+            this.lblDebug.Name = "lblDebug";
+            this.lblDebug.Size = new System.Drawing.Size(238, 13);
+            this.lblDebug.TabIndex = 7;
+            this.lblDebug.Text = "                                                                             ";
             // 
             // GitFlowForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(653, 318);
+            this.ClientSize = new System.Drawing.Size(653, 365);
             this.Controls.Add(this.gbStart);
+            this.Controls.Add(this.lblDebug);
             this.Controls.Add(this.lblCommandResult);
             this.Controls.Add(this.gbManage);
             this.Controls.Add(this.btnClose);
@@ -309,6 +354,8 @@
             this.pnlPull.PerformLayout();
             this.gbStart.ResumeLayout(false);
             this.gbStart.PerformLayout();
+            this.pnlBasedOn.ResumeLayout(false);
+            this.pnlBasedOn.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -339,5 +386,9 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel pnlPull;
         private System.Windows.Forms.Panel pnlManageBranch;
+        private System.Windows.Forms.Panel pnlBasedOn;
+        private System.Windows.Forms.ComboBox cbBaseBranch;
+        private System.Windows.Forms.CheckBox cbBasedOn;
+        private System.Windows.Forms.Label lblDebug;
     }
 }
