@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GitFlowForm));
             this.btnInit = new System.Windows.Forms.Button();
             this.txtBranchName = new System.Windows.Forms.TextBox();
@@ -57,6 +58,9 @@
             this.lblDebug = new System.Windows.Forms.Label();
             this.lnkGitFlow = new System.Windows.Forms.LinkLabel();
             this.pbResultCommand = new System.Windows.Forms.PictureBox();
+            this.ttGitFlow = new System.Windows.Forms.ToolTip(this.components);
+            this.ttCommandResult = new System.Windows.Forms.ToolTip(this.components);
+            this.ttDebug = new System.Windows.Forms.ToolTip(this.components);
             this.gbManage.SuspendLayout();
             this.pnlManageBranch.SuspendLayout();
             this.pnlPull.SuspendLayout();
@@ -317,7 +321,7 @@
             // lblDebug
             // 
             this.lblDebug.AutoSize = true;
-            this.lblDebug.Location = new System.Drawing.Point(21, 338);
+            this.lblDebug.Location = new System.Drawing.Point(21, 323);
             this.lblDebug.Name = "lblDebug";
             this.lblDebug.Size = new System.Drawing.Size(238, 13);
             this.lblDebug.TabIndex = 7;
@@ -342,6 +346,26 @@
             this.pbResultCommand.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbResultCommand.TabIndex = 10;
             this.pbResultCommand.TabStop = false;
+            // 
+            // ttGitFlow
+            // 
+            this.ttGitFlow.AutoPopDelay = 10000;
+            this.ttGitFlow.InitialDelay = 0;
+            this.ttGitFlow.ReshowDelay = 0;
+            // 
+            // ttCommandResult
+            // 
+            this.ttCommandResult.AutoPopDelay = 32000;
+            this.ttCommandResult.InitialDelay = 0;
+            this.ttCommandResult.ReshowDelay = 0;
+            this.ttCommandResult.ShowAlways = true;
+            // 
+            // ttDebug
+            // 
+            this.ttDebug.AutoPopDelay = 32000;
+            this.ttDebug.InitialDelay = 0;
+            this.ttDebug.ReshowDelay = 0;
+            this.ttDebug.ShowAlways = true;
             // 
             // GitFlowForm
             // 
@@ -405,5 +429,8 @@
         private System.Windows.Forms.Label lblDebug;
         private System.Windows.Forms.LinkLabel lnkGitFlow;
         private System.Windows.Forms.PictureBox pbResultCommand;
+        private System.Windows.Forms.ToolTip ttGitFlow;
+        private System.Windows.Forms.ToolTip ttCommandResult;
+        private System.Windows.Forms.ToolTip ttDebug;
     }
 }
