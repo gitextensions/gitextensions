@@ -114,7 +114,7 @@
             // 
             this.gbManage.Controls.Add(this.pnlManageBranch);
             this.gbManage.Controls.Add(this.cbManageType);
-            this.gbManage.Location = new System.Drawing.Point(13, 165);
+            this.gbManage.Location = new System.Drawing.Point(13, 149);
             this.gbManage.Name = "gbManage";
             this.gbManage.Size = new System.Drawing.Size(628, 162);
             this.gbManage.TabIndex = 6;
@@ -138,7 +138,7 @@
             // 
             // panel2
             // 
-            this.panel2.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.panel2.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.panel2.Location = new System.Drawing.Point(448, 54);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1, 70);
@@ -184,7 +184,7 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Location = new System.Drawing.Point(151, 54);
             this.panel1.Name = "panel1";
@@ -232,7 +232,7 @@
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(284, 333);
+            this.btnClose.Location = new System.Drawing.Point(284, 318);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(83, 23);
             this.btnClose.TabIndex = 0;
@@ -346,7 +346,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(653, 365);
+            this.ClientSize = new System.Drawing.Size(653, 348);
             this.Controls.Add(this.lnkGitFlow);
             this.Controls.Add(this.gbStart);
             this.Controls.Add(this.lblDebug);
