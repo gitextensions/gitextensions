@@ -47,7 +47,6 @@
             this.btnPublish = new System.Windows.Forms.Button();
             this.cbManageType = new System.Windows.Forms.ComboBox();
             this.btnClose = new System.Windows.Forms.Button();
-            this.lblCommandResult = new System.Windows.Forms.Label();
             this.cbType = new System.Windows.Forms.ComboBox();
             this.label10 = new System.Windows.Forms.Label();
             this.lblPrefixName = new System.Windows.Forms.Label();
@@ -57,11 +56,13 @@
             this.cbBasedOn = new System.Windows.Forms.CheckBox();
             this.lblDebug = new System.Windows.Forms.Label();
             this.lnkGitFlow = new System.Windows.Forms.LinkLabel();
+            this.pbResultCommand = new System.Windows.Forms.PictureBox();
             this.gbManage.SuspendLayout();
             this.pnlManageBranch.SuspendLayout();
             this.pnlPull.SuspendLayout();
             this.gbStart.SuspendLayout();
             this.pnlBasedOn.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbResultCommand)).BeginInit();
             this.SuspendLayout();
             // 
             // btnInit
@@ -240,15 +241,6 @@
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // lblCommandResult
-            // 
-            this.lblCommandResult.AutoSize = true;
-            this.lblCommandResult.Location = new System.Drawing.Point(15, 17);
-            this.lblCommandResult.Name = "lblCommandResult";
-            this.lblCommandResult.Size = new System.Drawing.Size(13, 13);
-            this.lblCommandResult.TabIndex = 7;
-            this.lblCommandResult.Text = ":)";
-            // 
             // cbType
             // 
             this.cbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -342,15 +334,24 @@
             this.lnkGitFlow.Text = "About GitFlow";
             this.lnkGitFlow.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkGitFlow_LinkClicked);
             // 
+            // pbResultCommand
+            // 
+            this.pbResultCommand.Location = new System.Drawing.Point(12, 10);
+            this.pbResultCommand.Name = "pbResultCommand";
+            this.pbResultCommand.Size = new System.Drawing.Size(25, 25);
+            this.pbResultCommand.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbResultCommand.TabIndex = 10;
+            this.pbResultCommand.TabStop = false;
+            // 
             // GitFlowForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(653, 348);
+            this.Controls.Add(this.pbResultCommand);
             this.Controls.Add(this.lnkGitFlow);
             this.Controls.Add(this.gbStart);
             this.Controls.Add(this.lblDebug);
-            this.Controls.Add(this.lblCommandResult);
             this.Controls.Add(this.gbManage);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnInit);
@@ -368,6 +369,7 @@
             this.gbStart.PerformLayout();
             this.pnlBasedOn.ResumeLayout(false);
             this.pnlBasedOn.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbResultCommand)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -382,7 +384,6 @@
         private System.Windows.Forms.Button btnFinish;
         private System.Windows.Forms.GroupBox gbManage;
         private System.Windows.Forms.Button btnClose;
-        private System.Windows.Forms.Label lblCommandResult;
         private System.Windows.Forms.ComboBox cbRemote;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button btnPull;
@@ -403,5 +404,6 @@
         private System.Windows.Forms.CheckBox cbBasedOn;
         private System.Windows.Forms.Label lblDebug;
         private System.Windows.Forms.LinkLabel lnkGitFlow;
+        private System.Windows.Forms.PictureBox pbResultCommand;
     }
 }
