@@ -72,6 +72,10 @@ namespace GitFlow
                 var types = new List<string> { string.Empty };
                 types.AddRange(BranchTypes);
                 cbManageType.DataSource = types;
+
+                cbBasedOn.Checked = false;
+                cbBaseBranch.Enabled  = false;
+                LoadBaseBranches();
             }
             else
             {
@@ -112,6 +116,14 @@ namespace GitFlow
             return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
         }
 
+        private List<string> GetLocalBranches()
+        {
+            string[] references = m_gitUiCommands.GitModule.RunGit("branch")
+                                                 .Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
+
+            return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
+        }
+
         private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             DisplayBranchDatas();
@@ -131,6 +143,16 @@ namespace GitFlow
             btnPull.Enabled = isThereABranch;
             pnlPull.Enabled = (branchType == Branch.feature.ToString("G"));
         }
+
+        private void LoadBaseBranches()
+        {
+            var branchType = cbType.SelectedValue.ToString();
+            var manageBaseBranch = (branchType == Branch.feature.ToString("G") || branchType == Branch.hotfix.ToString("G"));
+            pnlBasedOn.Visible = manageBaseBranch;
+
+            if (manageBaseBranch)
+                cbBaseBranch.DataSource = GetLocalBranches();
+        }
         #endregion
 
         #region Run GitFlow commands
@@ -143,7 +165,7 @@ namespace GitFlow
         private void btnStartBranch_Click(object sender, EventArgs e)
         {
             var branchType = cbType.SelectedValue.ToString();
-            if (RunCommand("flow " + branchType + " start " + txtBranchName.Text))
+            if (RunCommand("flow " + branchType + " start " + txtBranchName.Text + GetBaseBranch()))
             {
                 txtBranchName.Text = string.Empty;
                 if (cbManageType.SelectedValue.ToString() == branchType)
@@ -154,6 +176,18 @@ namespace GitFlow
                 else
                     Branches.Remove(branchType);
             }
+        }
+
+        private string GetBaseBranch()
+        {
+            var branchType = cbType.SelectedValue.ToString();
+            if (branchType == Branch.release.ToString("G"))
+                return string.Empty;
+            if (branchType == Branch.support.ToString("G"))
+                return " HEAD"; //Hoping that's a revision on master (How to get the sha of the selected line in GitExtension?)
+            if(!cbBasedOn.Checked)
+                return string.Empty;
+            return " " + cbBaseBranch.SelectedValue.ToString();
         }
 
         private void btnPublish_Click(object sender, EventArgs e)
@@ -207,6 +241,7 @@ namespace GitFlow
         private void cbType_SelectedValueChanged(object sender, EventArgs e)
         {
             lblPrefixName.Text = cbType.SelectedValue + "/";
+            LoadBaseBranches();
         }
 
         private void cbManageType_SelectedValueChanged(object sender, EventArgs e)
@@ -228,6 +263,11 @@ namespace GitFlow
         private void btnClose_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void cbBasedOn_CheckedChanged(object sender, EventArgs e)
+        {
+            cbBaseBranch.Enabled = cbBasedOn.Checked;
         }
     }
 }
