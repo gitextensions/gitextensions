@@ -53,8 +53,8 @@
             this.lblPrefixName = new System.Windows.Forms.Label();
             this.gbStart = new System.Windows.Forms.GroupBox();
             this.pnlBasedOn = new System.Windows.Forms.Panel();
-            this.cbBasedOn = new System.Windows.Forms.CheckBox();
             this.cbBaseBranch = new System.Windows.Forms.ComboBox();
+            this.cbBasedOn = new System.Windows.Forms.CheckBox();
             this.lblDebug = new System.Windows.Forms.Label();
             this.gbManage.SuspendLayout();
             this.pnlManageBranch.SuspendLayout();
@@ -231,7 +231,6 @@
             // 
             // btnClose
             // 
-            this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnClose.Location = new System.Drawing.Point(284, 333);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(83, 23);
@@ -302,6 +301,15 @@
             this.pnlBasedOn.Size = new System.Drawing.Size(501, 37);
             this.pnlBasedOn.TabIndex = 4;
             // 
+            // cbBaseBranch
+            // 
+            this.cbBaseBranch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbBaseBranch.FormattingEnabled = true;
+            this.cbBaseBranch.Location = new System.Drawing.Point(78, 8);
+            this.cbBaseBranch.Name = "cbBaseBranch";
+            this.cbBaseBranch.Size = new System.Drawing.Size(340, 21);
+            this.cbBaseBranch.TabIndex = 3;
+            // 
             // cbBasedOn
             // 
             this.cbBasedOn.AutoSize = true;
@@ -312,15 +320,6 @@
             this.cbBasedOn.Text = "based on:";
             this.cbBasedOn.UseVisualStyleBackColor = true;
             this.cbBasedOn.CheckedChanged += new System.EventHandler(this.cbBasedOn_CheckedChanged);
-            // 
-            // cbBaseBranch
-            // 
-            this.cbBaseBranch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbBaseBranch.FormattingEnabled = true;
-            this.cbBaseBranch.Location = new System.Drawing.Point(78, 8);
-            this.cbBaseBranch.Name = "cbBaseBranch";
-            this.cbBaseBranch.Size = new System.Drawing.Size(340, 21);
-            this.cbBaseBranch.TabIndex = 3;
             // 
             // lblDebug
             // 

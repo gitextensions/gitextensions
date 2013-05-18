@@ -18,6 +18,8 @@ namespace GitFlow
         readonly ToolTip _toolTipDebug = new ToolTip();
 
         readonly BackgroundWorker _bw = new BackgroundWorker();
+        public bool IsRefreshNeeded { get; set; }
+
         enum Branch
         {
             feature,
@@ -216,6 +218,8 @@ namespace GitFlow
             lblCommandResult.Text = string.Empty;
             int exitCode;
             var result = m_gitUiCommands.GitModule.RunGit(commandText, out exitCode);
+
+            IsRefreshNeeded = true;
 
             _toolTipDebug.RemoveAll();
             _toolTipDebug.SetToolTip(lblDebug, "cmd: git " + commandText+"\n" + "exit code:"+exitCode);
