@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString fileUnchangedAfterMerge = new TranslationString("The file has not been modified by the merge. Usually this means that the file has been saved to the wrong location." + Environment.NewLine + Environment.NewLine + "The merge conflict will not be marked as solved. Please try again.");
         private readonly TranslationString allConflictsResolved = new TranslationString("All mergeconflicts are resolved, you can commit." + Environment.NewLine + "Do you want to commit now?");
         private readonly TranslationString allConflictsResolvedCaption = new TranslationString("Commit");
-        private readonly TranslationString mergeConflictIsSubmodule = new TranslationString("The selected mergeconflict is a submodule. Mark conflict as resolved?");
+        private readonly TranslationString mergeConflictIsSubmodule = new TranslationString("The selected mergeconflict is a submodule." + Environment.NewLine + "Stage current submodule commit?");
         private readonly TranslationString mergeConflictIsSubmoduleCaption = new TranslationString("Submodule");
         private readonly TranslationString fileIsBinary = new TranslationString("The selected file appears to be a binary file." + Environment.NewLine + "Are you sure you want to open this file in {0}?");
         private readonly TranslationString askMergeConflictSolvedAfterCustomMergeScript = new TranslationString("The merge conflict need to be solved and the result must be saved as:" + Environment.NewLine + "{0}" + Environment.NewLine + Environment.NewLine + "Is the mergeconflict solved?");
@@ -328,13 +328,18 @@ namespace GitUI.CommandsDialogs
                     var submodulesList = Module.GetSubmodulesLocalPathes();
                     if (submodulesList.Any(configSection => configSection.Equals(filename.Trim())))
                     {
-                        if (MessageBox.Show(this, mergeConflictIsSubmodule.Text, mergeConflictIsSubmoduleCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                        string[] hashes = Module.GetConflictedSubmoduleHashes(filename);
+                        var submodule = Module.GetSubmodule(filename);
+                        string submoduleHash = submodule != null ? submodule.GetCurrentCheckout() : "";
+                        string text = string.Format("\n\nBASE:\t{0}\nLOCAL:\t{1}\nREMOTE:\t{2}\n\nCURRENT:{3}\n",
+                            hashes[0], hashes[1], hashes[2], submoduleHash);
+                        if (MessageBox.Show(this, mergeConflictIsSubmodule.Text + text, mergeConflictIsSubmoduleCaption.Text,
+                            MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                         {
                             stageFile(filename);
                         }
                         return;
                     }
-                    //END: REPLACED WITH FASTER, BUT DIRTIER SUBMODULE CHECK
                 }
 
                 ResolveFilesConflict(filename);

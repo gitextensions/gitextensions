@@ -156,13 +156,12 @@ namespace PatchApply
             return bs;
         }
 
-        //TODO encoding for each file in patch should be obtained separatly from .gitattributes
+        //TODO encoding for each file in patch should be obtained separately from .gitattributes
         public void LoadPatch(string text, bool applyPatch, Encoding filesContentEncoding)
         {
+            PatchProcessor patchProcessor = new PatchProcessor(filesContentEncoding);
 
-            PatchProcessor _patchProcessor = new PatchProcessor(filesContentEncoding);
-
-            _patches = _patchProcessor.CreatePatchesFromString(text);
+            _patches = patchProcessor.CreatePatchesFromString(text);
 
             if (!applyPatch)
                 return;
