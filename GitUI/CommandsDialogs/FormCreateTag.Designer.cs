@@ -45,10 +45,14 @@ namespace GitUI.CommandsDialogs
             this.label4 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -114,7 +118,7 @@ namespace GitUI.CommandsDialogs
             this.tagMessage.Location = new System.Drawing.Point(103, 28);
             this.tagMessage.Margin = new System.Windows.Forms.Padding(2);
             this.tagMessage.Name = "tagMessage";
-            this.tagMessage.Size = new System.Drawing.Size(322, 75);
+            this.tagMessage.Size = new System.Drawing.Size(322, 35);
             this.tagMessage.TabIndex = 5;
             this.tagMessage.TextBoxFont = new System.Drawing.Font("Segoe UI", 9F);
             // 
@@ -141,16 +145,19 @@ namespace GitUI.CommandsDialogs
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.panel3, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowCount = 4;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(434, 222);
             this.tableLayoutPanel1.TabIndex = 7;
             // 
@@ -160,7 +167,7 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel1.Controls.Add(this.commitPickerSmallControl1);
             this.flowLayoutPanel1.Controls.Add(this.label4);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 43);
             this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(50, 30);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(428, 30);
@@ -203,7 +210,7 @@ namespace GitUI.CommandsDialogs
             this.panel1.Controls.Add(this.Ok);
             this.panel1.Controls.Add(this.pushTag);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 39);
+            this.panel1.Location = new System.Drawing.Point(3, 79);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(428, 69);
             this.panel1.TabIndex = 3;
@@ -215,12 +222,32 @@ namespace GitUI.CommandsDialogs
             this.panel2.Controls.Add(this.tagMessage);
             this.panel2.Controls.Add(this.annotate);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(3, 114);
+            this.panel2.Location = new System.Drawing.Point(3, 154);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(428, 105);
+            this.panel2.Size = new System.Drawing.Size(428, 65);
             this.panel2.TabIndex = 4;
             // 
-            // FormCreateTagAtRevision
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.pictureBox2);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(3, 3);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(428, 34);
+            this.panel3.TabIndex = 5;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pictureBox2.Image = global::GitUI.Properties.Resources.IconTagCreate;
+            this.pictureBox2.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(32, 34);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 10;
+            this.pictureBox2.TabStop = false;
+            // 
+            // FormCreateTag
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -230,7 +257,7 @@ namespace GitUI.CommandsDialogs
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(450, 260);
-            this.Name = "FormCreateTagAtRevision";
+            this.Name = "FormCreateTag";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create tag";
             this.Load += new System.EventHandler(this.FormCreateTag_Load);
@@ -241,6 +268,8 @@ namespace GitUI.CommandsDialogs
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -262,5 +291,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.PictureBox pictureBox2;
     }
 }
