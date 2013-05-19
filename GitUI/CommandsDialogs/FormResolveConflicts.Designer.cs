@@ -81,6 +81,7 @@
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.gotoUserManualControl1 = new GitUI.UserControls.GotoUserManualControl();
             ((System.ComponentModel.ISupportInitialize)(this.ConflictedFiles)).BeginInit();
             this.ConflictedFilesContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gitItemBindingSource)).BeginInit();
@@ -123,7 +124,7 @@
             this.ConflictedFiles.ReadOnly = true;
             this.ConflictedFiles.RowHeadersVisible = false;
             this.ConflictedFiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.ConflictedFiles.Size = new System.Drawing.Size(448, 255);
+            this.ConflictedFiles.Size = new System.Drawing.Size(448, 225);
             this.ConflictedFiles.TabIndex = 5;
             this.ConflictedFiles.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ConflictedFiles_CellMouseDown);
             this.ConflictedFiles.SelectionChanged += new System.EventHandler(this.ConflictedFiles_SelectionChanged);
@@ -315,7 +316,7 @@
             this.tableLayoutPanel1.Controls.Add(this.label5, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.remoteFileName, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 329);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 299);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
@@ -399,7 +400,7 @@
             this.tableLayoutPanel3.Controls.Add(this.conflictDescription, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.pictureBox1, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 276);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 246);
             this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
@@ -555,12 +556,14 @@
             this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel1, 0, 1);
             this.tableLayoutPanel4.Controls.Add(this.flowLayoutPanel1, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel5, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.gotoUserManualControl1, 0, 2);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 2;
+            this.tableLayoutPanel4.RowCount = 3;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel4.Size = new System.Drawing.Size(604, 392);
             this.tableLayoutPanel4.TabIndex = 2;
             // 
@@ -575,7 +578,7 @@
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(463, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(138, 323);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(138, 293);
             this.flowLayoutPanel1.TabIndex = 0;
             this.flowLayoutPanel1.WrapContents = false;
             // 
@@ -594,8 +597,20 @@
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(454, 323);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(454, 293);
             this.tableLayoutPanel5.TabIndex = 1;
+            // 
+            // gotoUserManualControl1
+            // 
+            this.gotoUserManualControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.gotoUserManualControl1.AutoSize = true;
+            this.gotoUserManualControl1.Location = new System.Drawing.Point(3, 369);
+            this.gotoUserManualControl1.ManualSectionAnchorName = null;
+            this.gotoUserManualControl1.ManualSectionSubfolder = "merge_conflicts";
+            this.gotoUserManualControl1.MinimumSize = new System.Drawing.Size(70, 20);
+            this.gotoUserManualControl1.Name = "gotoUserManualControl1";
+            this.gotoUserManualControl1.Size = new System.Drawing.Size(70, 20);
+            this.gotoUserManualControl1.TabIndex = 2;
             // 
             // FormResolveConflicts
             // 
@@ -682,5 +697,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+        private UserControls.GotoUserManualControl gotoUserManualControl1;
     }
 }
