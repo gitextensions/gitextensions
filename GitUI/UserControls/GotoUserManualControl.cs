@@ -9,13 +9,15 @@ namespace GitUI.UserControls
     {
         /// <summary>
         /// TODO: make customizable
+        /// internal for unit tests
         /// </summary>
-        private string ManualLocation;
+        internal string ManualLocation;
 
         /// <summary>
         /// TODO: make customizable
+        /// internal for unit tests
         /// </summary>
-        private ManualType ManualType;
+        internal ManualType ManualType;
 
         public GotoUserManualControl()
         {
@@ -82,7 +84,7 @@ namespace GitUI.UserControls
                         ManualLocation, ManualSectionAnchorName.IsNullOrEmpty() ? "" : "#", ManualSectionAnchorName);
 
                 case UserControls.ManualType.StandardHtml:
-                    return string.Format("{0}/{1}{2}{3}",
+                    return string.Format("{0}/{1}/{2}{3}",
                         ManualLocation, ManualSectionSubfolder, ManualSectionAnchorName.IsNullOrEmpty() ? "" : "#", ManualSectionAnchorName);
 
                 default:
