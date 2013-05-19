@@ -391,22 +391,24 @@ namespace GitUI
                 return 0;
             if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
                 return 1;
-            if (gitItemStatus.IsChanged)
+            if (gitItemStatus.IsChanged || gitItemStatus.IsConflict)
             {
                 if (!gitItemStatus.IsSubmodule || gitItemStatus.SubmoduleStatus == null ||
                     !gitItemStatus.SubmoduleStatus.IsCompleted)
                     return 2;
 
                 var status = gitItemStatus.SubmoduleStatus.Result;
+                if (status == null)
+                    return 2;
                 if (status.Status == SubmoduleStatus.FastForward || status.Status == SubmoduleStatus.NewerTime)
                     return 6 + (status.IsDirty ? 1 : 0);
                 if (status.Status == SubmoduleStatus.Rewind || status.Status == SubmoduleStatus.OlderTime)
                     return 8 + (status.IsDirty ? 1 : 0);
                 return !status.IsDirty ? 2 : 5;
             }
-            else if (gitItemStatus.IsRenamed)
+            if (gitItemStatus.IsRenamed)
                 return 3;
-            else if (gitItemStatus.IsCopied)
+            if (gitItemStatus.IsCopied)
                 return 4;
             return -1;
         }
