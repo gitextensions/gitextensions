@@ -2384,28 +2384,31 @@ namespace GitUI.CommandsDialogs
         {
             bool artificialRevSelected;
 
-            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+            IList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
 
-            if (revisions.Count == 0)
+            if (selectedRevisions.Count == 0)
                 artificialRevSelected = false;
             else
-                artificialRevSelected = revisions[0].IsArtificial();
-            if (revisions.Count > 1)
-                artificialRevSelected = artificialRevSelected || revisions[revisions.Count - 1].IsArtificial();
+                artificialRevSelected = selectedRevisions[0].IsArtificial();
+            if (selectedRevisions.Count > 1)
+                artificialRevSelected = artificialRevSelected || selectedRevisions[selectedRevisions.Count - 1].IsArtificial();
 
-            foreach (var item in DiffFiles.SelectedItems)
+            // openContainingFolderToolStripMenuItem.Enabled or not
             {
-                var fileNames = new StringBuilder();
-                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+                openContainingFolderToolStripMenuItem.Enabled = false;
 
-                if (File.Exists(fileNames.ToString()))
+                foreach (var item in DiffFiles.SelectedItems)
                 {
-                    openContainingFolderToolStripMenuItem.Enabled = true;
-                    return;
+                    var fileNames = new StringBuilder();
+                    fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+
+                    if (File.Exists(fileNames.ToString()))
+                    {
+                        openContainingFolderToolStripMenuItem.Enabled = true;
+                        break;
+                    }
                 }
             }
-
-            openContainingFolderToolStripMenuItem.Enabled = false;
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
