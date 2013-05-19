@@ -18,6 +18,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Translate();
             _tagsLoader = new AsyncLoader();
             _branchesLoader = new AsyncLoader();
+            LoadTagsAsync();
+            LoadBranchesAsync();
         }
 
         public string GetRevision()
@@ -27,7 +29,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void commitExpression_TextChanged(object sender, EventArgs e)
         {
-            _selectedRevision = Module.RevParse(commitExpression.Text.Trim());
+            SetSelectedRevisionByFocusedControl();
         }
 
         private void Go()
@@ -46,7 +48,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Process.Start(@"https://www.kernel.org/pub/software/scm/git/docs/git-rev-parse.html#_specifying_revisions");
         }
 
-        private void comboBoxTags_Enter(object sender, EventArgs e)
+        private void LoadTagsAsync()
         {
             comboBoxTags.Text = Strings.GetLoadingData();
             _tagsLoader.Load(
@@ -54,20 +56,71 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 list =>
                 {
                     comboBoxTags.Text = string.Empty;
-                    comboBoxTags.DataSource = list;
-                    comboBoxBranches.DisplayMember = "LocalName";
+                    comboBoxTags.DataSource = list; //.Select(a => a.LocalName).ToArray(); // TODO: why is the "LocalName" way like in LoadBranchesAsync not working here?
+                    comboBoxTags.DisplayMember = "LocalName";
                     if (!comboBoxTags.Text.IsNullOrEmpty())
                     {
                         comboBoxTags.Select(0, comboBoxTags.Text.Length);
                     }
+                    SetSelectedRevisionByFocusedControl();
                 }
             );
         }
 
+        private void LoadBranchesAsync()
+        {
+            comboBoxBranches.Text = Strings.GetLoadingData();
+            _branchesLoader.Load(
+                () => Module.GetRefs(false).ToList(),
+                list =>
+                {
+                    comboBoxBranches.Text = string.Empty;
+                    comboBoxBranches.DataSource = list;
+                    comboBoxBranches.DisplayMember = "LocalName";
+                    if (!comboBoxBranches.Text.IsNullOrEmpty())
+                    {
+                        comboBoxBranches.Select(0, comboBoxBranches.Text.Length);
+                    }
+                    SetSelectedRevisionByFocusedControl();
+                }
+            );
+        }
+
+        private void comboBoxTags_Enter(object sender, EventArgs e)
+        {
+            SetSelectedRevisionByFocusedControl();
+        }
+
+        private void comboBoxBranches_Enter(object sender, EventArgs e)
+        {
+            SetSelectedRevisionByFocusedControl();
+        }
+
+        private void SetSelectedRevisionByFocusedControl()
+        {
+            if (commitExpression.Focused)
+            {
+                _selectedRevision = Module.RevParse(commitExpression.Text.Trim());
+            }
+            else if (comboBoxTags.Focused)
+            {
+                // TODO: try to get GitRef and then CompleteName
+                _selectedRevision = Module.RevParse(comboBoxTags.Text);
+            }
+            else if (comboBoxBranches.Focused)
+            {
+                _selectedRevision = Module.RevParse(comboBoxBranches.Text);
+            }
+        }
+
         private void comboBoxTags_TextChanged(object sender, EventArgs e)
         {
-            // TODO: try to get GitRef and then CompleteName
-            _selectedRevision = Module.RevParse(comboBoxTags.Text);
+            SetSelectedRevisionByFocusedControl();
+        }
+
+        private void comboBoxBranches_TextChanged(object sender, EventArgs e)
+        {
+            SetSelectedRevisionByFocusedControl();
         }
 
         private void comboBoxTags_SelectionChangeCommitted(object sender, EventArgs e)
@@ -82,34 +135,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Go();
         }
 
-        private void comboBoxBranches_Enter(object sender, EventArgs e)
-        {
-            comboBoxBranches.Text = Strings.GetLoadingData();
-            _branchesLoader.Load(
-                () => Module.GetRefs(false).ToList(),
-                list =>
-                {
-                    comboBoxBranches.Text = string.Empty;
-                    comboBoxBranches.DataSource = list;
-                    comboBoxBranches.DisplayMember = "LocalName";
-                    if (!comboBoxBranches.Text.IsNullOrEmpty())
-                    {
-                        comboBoxBranches.Select(0, comboBoxBranches.Text.Length);
-                    }
-                }
-            );
-        }
-
-        private void comboBoxBranches_TextChanged(object sender, EventArgs e)
-        {
-            // TODO: try to get GitRef and then CompleteName
-            _selectedRevision = Module.RevParse(comboBoxBranches.Text);
-        }
-
         private void comboBoxBranches_SelectionChangeCommitted(object sender, EventArgs e)
         {
             if (comboBoxBranches.SelectedValue == null)
+            {
                 return;
+            }
 
             _selectedRevision = Module.RevParse(((GitRef)comboBoxBranches.SelectedValue).CompleteName);
             Go();
