@@ -2353,6 +2353,11 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // TODO
+        }
+
         private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var gitItem = GitTree.SelectedNode.Tag as GitItem;
