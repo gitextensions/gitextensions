@@ -2352,21 +2352,33 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        /// <summary>
+        /// TODO: move logic to other source file?
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var diffGitItemStatus = DiffFiles.SelectedItems.First();
             
             ExecuteCommand((int)Commands.FocusFileTree); // switch to view (and fills the first level of file tree data model if not already done)
-            GitTree.ExpandAll(); // fills rest of the data model
-            // TODO: optimize this by for example directly expanding the path instead of expanding all
-            
-            var foundNode = GitTree.AllNodes().FirstOrDefault(a => 
+
+            var currentNodes = GitTree.Nodes;
+            TreeNode foundNode = null;
+            bool isIncompleteMatch = false;
+            var pathParts = UtilGetPathParts(diffGitItemStatus.Name);
+            for (int i = 0; i < pathParts.Length; i++)
+            {
+                string pathPart = pathParts[i];
+                string diffPathPart = pathPart.Replace("/", "\\");
+
+                var currentFoundNode = currentNodes.Cast<TreeNode>().FirstOrDefault(a =>
                 {
                     var treeGitItem = a.Tag as GitItem;
                     if (treeGitItem != null)
                     {
                         // TODO: what about case(in)sensitive handling?
-                        return treeGitItem.FileName == diffGitItemStatus.Name.Replace("/", "\\");
+                        return treeGitItem.Name == diffPathPart;
                     }
                     else
                     {
@@ -2374,15 +2386,47 @@ namespace GitUI.CommandsDialogs
                     }
                 });
 
+                if (currentFoundNode == null)
+                {
+                    isIncompleteMatch = true;
+                    break;
+                }
+
+                foundNode = currentFoundNode;
+
+                if (i < pathParts.Length - 1) // if not the last path part...
+                {
+                    foundNode.Expand(); // load more data
+                    
+                    if (currentFoundNode.Nodes == null)
+                    {
+                        isIncompleteMatch = true;
+                        break;
+                    }
+
+                    currentNodes = currentFoundNode.Nodes;
+                }
+            }
+
             if (foundNode != null)
             {
+                if (isIncompleteMatch)
+                {
+                    MessageBox.Show("Node not found. The next available parent node will be selected.");
+                }
+
                 GitTree.SelectedNode = foundNode;
                 GitTree.SelectedNode.EnsureVisible();
             }
             else
             {
-                MessageBox.Show("Node not found");
+                MessageBox.Show("Node not found. File tree selection was not changed.");
             }
+        }
+
+        private string[] UtilGetPathParts(string path)
+        {
+            return path.Split('/');
         }
 
         private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
