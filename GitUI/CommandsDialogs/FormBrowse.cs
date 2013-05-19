@@ -1455,7 +1455,7 @@ namespace GitUI.CommandsDialogs
         private void EditLocalGitConfigToolStripMenuItemClick(object sender, EventArgs e)
         {
             var fileName = Path.Combine(Module.WorkingDir, ".git/config");
-            UICommands.StartFileEditorDialog(fileName);
+            UICommands.StartFileEditorDialog(fileName, true);
         }
 
         private void CompressGitDatabaseToolStripMenuItemClick(object sender, EventArgs e)
