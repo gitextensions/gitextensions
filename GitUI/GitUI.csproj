@@ -1572,6 +1572,7 @@
     <None Include="Resources\Icons\HelpPullMergeFastForward.png" />
     <None Include="Resources\Icons\HelpCommandMergeFastForward.png" />
     <None Include="Resources\Icons\IconGotoManual.png" />
+    <None Include="Resources\Icons\IconWarning.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
