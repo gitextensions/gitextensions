@@ -86,7 +86,7 @@
             // label1
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label1.Image = global::GitUI.Properties.Resources.Icon_50;
+            this.label1.Image = global::GitUI.Properties.Resources.IconWarning;
             this.label1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label1.Location = new System.Drawing.Point(3, 19);
             this.label1.Name = "label1";
