@@ -32,7 +32,7 @@
         private void InitializeComponent()
         {
             this.goButton = new System.Windows.Forms.Button();
-            this.commitExpression = new System.Windows.Forms.TextBox();
+            this.textboxCommitExpression = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.linkGitRevParse = new System.Windows.Forms.LinkLabel();
@@ -58,13 +58,13 @@
             // 
             // commitExpression
             // 
-            this.commitExpression.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textboxCommitExpression.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.commitExpression.Location = new System.Drawing.Point(155, 13);
-            this.commitExpression.Name = "commitExpression";
-            this.commitExpression.Size = new System.Drawing.Size(360, 23);
-            this.commitExpression.TabIndex = 0;
-            this.commitExpression.TextChanged += new System.EventHandler(this.commitExpression_TextChanged);
+            this.textboxCommitExpression.Location = new System.Drawing.Point(155, 13);
+            this.textboxCommitExpression.Name = "commitExpression";
+            this.textboxCommitExpression.Size = new System.Drawing.Size(360, 23);
+            this.textboxCommitExpression.TabIndex = 0;
+            this.textboxCommitExpression.TextChanged += new System.EventHandler(this.commitExpression_TextChanged);
             // 
             // label1
             // 
@@ -172,7 +172,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.commitExpression);
+            this.Controls.Add(this.textboxCommitExpression);
             this.Controls.Add(this.goButton);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -191,7 +191,7 @@
         #endregion
 
         private System.Windows.Forms.Button goButton;
-        private System.Windows.Forms.TextBox commitExpression;
+        private System.Windows.Forms.TextBox textboxCommitExpression;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label2;
