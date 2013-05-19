@@ -2393,6 +2393,14 @@ namespace GitUI.CommandsDialogs
             if (selectedRevisions.Count > 1)
                 artificialRevSelected = artificialRevSelected || selectedRevisions[selectedRevisions.Count - 1].IsArtificial();
 
+            // disable items that need exactly one selected item
+            bool isExcactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
+            openWithDifftoolToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
+            saveAsToolStripMenuItem1.Enabled = isExcactlyOneItemSelected;
+            diffShowInFileTreeToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
+            fileHistoryDiffToolstripMenuItem.Enabled = isExcactlyOneItemSelected;
+            blameToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
+
             // openContainingFolderToolStripMenuItem.Enabled or not
             {
                 openContainingFolderToolStripMenuItem.Enabled = false;
