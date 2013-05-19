@@ -783,7 +783,7 @@ namespace GitUI.CommandsDialogs
             // 
             // fileTreeOpenContainingFolderToolStripMenuItem
             // 
-            this.fileTreeOpenContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFileTree;
+            this.fileTreeOpenContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconBrowseFileExplorer;
             this.fileTreeOpenContainingFolderToolStripMenuItem.Name = "fileTreeOpenContainingFolderToolStripMenuItem";
             this.fileTreeOpenContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(341, 24);
             this.fileTreeOpenContainingFolderToolStripMenuItem.Text = "Open containing folder";
@@ -1043,7 +1043,7 @@ namespace GitUI.CommandsDialogs
             // 
             // openContainingFolderToolStripMenuItem
             // 
-            this.openContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFileTree;
+            this.openContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconBrowseFileExplorer;
             this.openContainingFolderToolStripMenuItem.Name = "openContainingFolderToolStripMenuItem";
             this.openContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(232, 24);
             this.openContainingFolderToolStripMenuItem.Text = "Open containing folder";
