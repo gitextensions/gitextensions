@@ -133,6 +133,7 @@
             this.comboBoxTags.SelectionChangeCommitted += new System.EventHandler(this.comboBoxTags_SelectionChangeCommitted);
             this.comboBoxTags.TextChanged += new System.EventHandler(this.comboBoxTags_TextChanged);
             this.comboBoxTags.Enter += new System.EventHandler(this.comboBoxTags_Enter);
+            this.comboBoxTags.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxTags_KeyUp);
             // 
             // label4
             // 
@@ -157,6 +158,7 @@
             this.comboBoxBranches.SelectionChangeCommitted += new System.EventHandler(this.comboBoxBranches_SelectionChangeCommitted);
             this.comboBoxBranches.TextChanged += new System.EventHandler(this.comboBoxBranches_TextChanged);
             this.comboBoxBranches.Enter += new System.EventHandler(this.comboBoxBranches_Enter);
+            this.comboBoxBranches.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxBranches_KeyUp);
             // 
             // FormGoToCommit
             // 
