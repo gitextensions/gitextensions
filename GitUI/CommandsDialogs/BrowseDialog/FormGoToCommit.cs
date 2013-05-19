@@ -145,5 +145,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _selectedRevision = Module.RevParse(((GitRef)comboBoxBranches.SelectedValue).CompleteName);
             Go();
         }
+
+        private void comboBoxTags_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            GoIfEnterKey(sender, e);
+        }
+
+        private void comboBoxBranches_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            GoIfEnterKey(sender, e);
+        }
+
+        private void GoIfEnterKey(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.KeyCode == System.Windows.Forms.Keys.Enter)
+            {
+                Go();
+            }
+        }
     }
 }
