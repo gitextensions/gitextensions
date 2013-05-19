@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using GitCommands;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -29,6 +30,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _branchesLoader = new AsyncLoader();
             LoadTagsAsync();
             LoadBranchesAsync();
+            SetCommitExpressionFromClipboard();
         }
 
         public string GetRevision()
@@ -107,9 +109,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void SetSelectedRevisionByFocusedControl()
         {
-            if (commitExpression.Focused)
+            if (textboxCommitExpression.Focused)
             {
-                _selectedRevision = Module.RevParse(commitExpression.Text.Trim());
+                _selectedRevision = Module.RevParse(textboxCommitExpression.Text.Trim());
             }
             else if (comboBoxTags.Focused)
             {
@@ -196,6 +198,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (e.KeyCode == System.Windows.Forms.Keys.Enter)
             {
                 Go();
+            }
+        }
+
+        private void SetCommitExpressionFromClipboard()
+        {
+            string text = Clipboard.GetText().Trim();
+            string guid = Module.RevParse(text);
+            if (!string.IsNullOrEmpty(guid))
+            {
+                textboxCommitExpression.Text = text;
             }
         }
     }
