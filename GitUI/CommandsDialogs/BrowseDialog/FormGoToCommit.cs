@@ -2,12 +2,21 @@
 using System.Diagnostics;
 using System.Linq;
 using GitCommands;
+using System.Collections.Generic;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public sealed partial class FormGoToCommit : GitModuleForm
     {
+        /// <summary>
+        /// this will be used when Go() is called
+        /// </summary>
         string _selectedRevision;
+
+        // these two are used to prepare for _selectedRevision
+        GitRef _selectedTag;
+        GitRef _selectedBranch;
+
         private readonly AsyncLoader _tagsLoader;
         private readonly AsyncLoader _branchesLoader;
 
@@ -56,7 +65,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 list =>
                 {
                     comboBoxTags.Text = string.Empty;
-                    comboBoxTags.DataSource = list; //.Select(a => a.LocalName).ToArray(); // TODO: why is the "LocalName" way like in LoadBranchesAsync not working here?
+                    comboBoxTags.DataSource = list;
                     comboBoxTags.DisplayMember = "LocalName";
                     if (!comboBoxTags.Text.IsNullOrEmpty())
                     {
@@ -104,22 +113,47 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             else if (comboBoxTags.Focused)
             {
-                // TODO: try to get GitRef and then CompleteName
-                _selectedRevision = Module.RevParse(comboBoxTags.Text);
+                if (_selectedTag != null)
+                {
+                    _selectedRevision = _selectedTag.Guid;
+                }
+                else
+                {
+                    _selectedRevision = "";
+                }
             }
             else if (comboBoxBranches.Focused)
             {
-                _selectedRevision = Module.RevParse(comboBoxBranches.Text);
+                if (_selectedBranch != null)
+                {
+                    _selectedRevision = _selectedBranch.Guid;
+                }
+                else
+                {
+                    _selectedRevision = "";
+                }
             }
         }
 
         private void comboBoxTags_TextChanged(object sender, EventArgs e)
         {
+            if (comboBoxTags.DataSource == null)
+            {
+                return;
+            }
+
+            _selectedTag = ((List<GitRef>)comboBoxTags.DataSource).FirstOrDefault(a => a.LocalName == comboBoxTags.Text);
             SetSelectedRevisionByFocusedControl();
         }
 
         private void comboBoxBranches_TextChanged(object sender, EventArgs e)
         {
+            if (comboBoxBranches.DataSource == null)
+            {
+                return;
+            }
+
+            _selectedBranch = ((List<GitRef>)comboBoxBranches.DataSource).FirstOrDefault(a => a.LocalName == comboBoxBranches.Text);
             SetSelectedRevisionByFocusedControl();
         }
 
@@ -130,8 +164,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            // does not work when using autocomplete, for that we have the _TextChanged method
-            _selectedRevision = Module.RevParse(((GitRef)comboBoxTags.SelectedValue).CompleteName);
+            _selectedTag = (GitRef)comboBoxTags.SelectedValue;
+            SetSelectedRevisionByFocusedControl();
             Go();
         }
 
@@ -142,7 +176,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            _selectedRevision = Module.RevParse(((GitRef)comboBoxBranches.SelectedValue).CompleteName);
+            _selectedBranch = (GitRef)comboBoxBranches.SelectedValue;
+            SetSelectedRevisionByFocusedControl();
             Go();
         }
 
