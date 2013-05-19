@@ -61,6 +61,8 @@
             this.ttGitFlow = new System.Windows.Forms.ToolTip(this.components);
             this.ttCommandResult = new System.Windows.Forms.ToolTip(this.components);
             this.ttDebug = new System.Windows.Forms.ToolTip(this.components);
+            this.lblCaptionHead = new System.Windows.Forms.Label();
+            this.lblHead = new System.Windows.Forms.Label();
             this.gbManage.SuspendLayout();
             this.pnlManageBranch.SuspendLayout();
             this.pnlPull.SuspendLayout();
@@ -330,7 +332,7 @@
             // lnkGitFlow
             // 
             this.lnkGitFlow.AutoSize = true;
-            this.lnkGitFlow.Location = new System.Drawing.Point(559, 17);
+            this.lnkGitFlow.Location = new System.Drawing.Point(570, 17);
             this.lnkGitFlow.Name = "lnkGitFlow";
             this.lnkGitFlow.Size = new System.Drawing.Size(73, 13);
             this.lnkGitFlow.TabIndex = 9;
@@ -367,6 +369,25 @@
             this.ttDebug.ReshowDelay = 0;
             this.ttDebug.ShowAlways = true;
             // 
+            // lblCaptionHead
+            // 
+            this.lblCaptionHead.AutoSize = true;
+            this.lblCaptionHead.Location = new System.Drawing.Point(176, 17);
+            this.lblCaptionHead.Name = "lblCaptionHead";
+            this.lblCaptionHead.Size = new System.Drawing.Size(40, 13);
+            this.lblCaptionHead.TabIndex = 1;
+            this.lblCaptionHead.Text = "HEAD:";
+            // 
+            // lblHead
+            // 
+            this.lblHead.AutoSize = true;
+            this.lblHead.Location = new System.Drawing.Point(217, 17);
+            this.lblHead.Name = "lblHead";
+            this.lblHead.Size = new System.Drawing.Size(33, 13);
+            this.lblHead.TabIndex = 1;
+            this.lblHead.Text = "ref/...";
+            this.lblHead.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // GitFlowForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -375,7 +396,9 @@
             this.Controls.Add(this.pbResultCommand);
             this.Controls.Add(this.lnkGitFlow);
             this.Controls.Add(this.gbStart);
+            this.Controls.Add(this.lblHead);
             this.Controls.Add(this.lblDebug);
+            this.Controls.Add(this.lblCaptionHead);
             this.Controls.Add(this.gbManage);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnInit);
@@ -432,5 +455,7 @@
         private System.Windows.Forms.ToolTip ttGitFlow;
         private System.Windows.Forms.ToolTip ttCommandResult;
         private System.Windows.Forms.ToolTip ttDebug;
+        private System.Windows.Forms.Label lblCaptionHead;
+        private System.Windows.Forms.Label lblHead;
     }
 }
