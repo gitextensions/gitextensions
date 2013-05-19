@@ -2161,7 +2161,6 @@ namespace GitUI.CommandsDialogs
             UICommands.RepoChangedNotifier.Notify();
         }
 
-
         protected override bool ExecuteCommand(int cmd)
         {
             switch ((Commands)cmd)
@@ -2355,7 +2354,35 @@ namespace GitUI.CommandsDialogs
 
         private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO
+            var diffGitItemStatus = DiffFiles.SelectedItems.First();
+            
+            ExecuteCommand((int)Commands.FocusFileTree); // switch to view (and fills the first level of file tree data model if not already done)
+            GitTree.ExpandAll(); // fills rest of the data model
+            // TODO: optimize this by for example directly expanding the path instead of expanding all
+            
+            var foundNode = GitTree.AllNodes().FirstOrDefault(a => 
+                {
+                    var treeGitItem = a.Tag as GitItem;
+                    if (treeGitItem != null)
+                    {
+                        // TODO: what about case(in)sensitive handling?
+                        return treeGitItem.FileName == diffGitItemStatus.Name.Replace("/", "\\");
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                });
+
+            if (foundNode != null)
+            {
+                GitTree.SelectedNode = foundNode;
+                GitTree.SelectedNode.EnsureVisible();
+            }
+            else
+            {
+                MessageBox.Show("Node not found");
+            }
         }
 
         private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
