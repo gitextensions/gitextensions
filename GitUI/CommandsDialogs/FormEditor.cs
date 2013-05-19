@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs
         private string _fileName;
         private bool _formClosing = false;
 
-        public FormEditor(GitUICommands aCommands, string fileName)
+        public FormEditor(GitUICommands aCommands, string fileName, bool showWarning)
             : base(aCommands)
         {
             InitializeComponent();
@@ -27,6 +27,7 @@ namespace GitUI.CommandsDialogs
                 OpenFile(fileName);
             fileViewer.TextChanged += (s, e) => HasChanges = true;
             fileViewer.TextLoaded += (s, e) => HasChanges = false;
+            panelMessage.Visible = showWarning;
         }
 
         private bool HasChanges
