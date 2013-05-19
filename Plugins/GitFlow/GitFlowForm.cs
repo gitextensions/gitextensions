@@ -19,6 +19,9 @@ namespace GitFlow
 
         readonly BackgroundWorker _bw = new BackgroundWorker();
         public bool IsRefreshNeeded { get; set; }
+        private const string refHeads = "refs/heads/";
+
+        private string CurrentBranch { get; set; }
 
         enum Branch
         {
@@ -54,11 +57,16 @@ namespace GitFlow
 
         private void Init()
         {
-            if (IsGitFlowInited)
+            var isGitFlowInited = IsGitFlowInited;
+
+            btnInit.Visible = !isGitFlowInited;
+            gbStart.Enabled = isGitFlowInited;
+            gbManage.Enabled = isGitFlowInited;
+            lblCaptionHead.Visible = isGitFlowInited;
+            lblHead.Visible = isGitFlowInited;
+
+            if (isGitFlowInited)
             {
-                btnInit.Visible = false;
-                gbStart.Enabled = true;
-                gbManage.Enabled = true;
                 var remotes = m_gitUiCommands.GitModule.GetRemotes(true).Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
                 cbRemote.DataSource = remotes;
                 btnPull.Enabled = btnPublish.Enabled = remotes.Any();
@@ -74,12 +82,26 @@ namespace GitFlow
                 cbBasedOn.Checked = false;
                 cbBaseBranch.Enabled  = false;
                 LoadBaseBranches();
+
+                DisplayHead();
             }
-            else
+        }
+
+        private bool TryExtractBranchFromHead(string currentRef, out string branchType, out string branchName)
+        {
+            foreach (Branch branch in Enum.GetValues(typeof(Branch)))
             {
-                gbStart.Enabled = false;
-                gbManage.Enabled = false;
+                var startRef = branch.ToString("G") + "/";
+                if (currentRef.StartsWith(startRef))
+                {
+                    branchType = branch.ToString("G");
+                    branchName = currentRef.Substring(startRef.Length);
+                    return true;
+                }
             }
+            branchType = null;
+            branchName = null;
+            return false;
         }
 
         #region Loading Branches
@@ -136,6 +158,12 @@ namespace GitFlow
             cbManageType.Enabled = true;
             cbBranches.DataSource = isThereABranch ? branches : new List<string> { "No " + branchType + " branches exist." };
             cbBranches.Enabled = isThereABranch;
+            if (isThereABranch && CurrentBranch != null)
+            {
+                cbBranches.SelectedItem = CurrentBranch;
+                CurrentBranch = null;
+            }
+
             btnFinish.Enabled = isThereABranch &&(branchType != Branch.support.ToString("G"));
             btnPublish.Enabled = isThereABranch;
             btnPull.Enabled = isThereABranch;
@@ -217,6 +245,7 @@ namespace GitFlow
             {
                 pbResultCommand.Image = Resource.success;
                 ShowToolTip(pbResultCommand, result);
+                DisplayHead();
             }
             else
             {
@@ -269,6 +298,21 @@ namespace GitFlow
         private void lnkGitFlow_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://github.com/nvie/gitflow");
+        }
+
+        private void DisplayHead()
+        {
+            var head = m_gitUiCommands.GitModule.RunGit("symbolic-ref HEAD").Trim('*', ' ', '\n', '\r');
+            lblHead.Text = head;
+            var currentRef = head.StartsWith(refHeads) ? head.Substring(refHeads.Length) : head;
+
+            string branchTypes;
+            string branchName;
+            if (TryExtractBranchFromHead(currentRef, out branchTypes, out branchName))
+            {
+                cbManageType.SelectedItem = branchTypes;
+                CurrentBranch = branchName;
+            }
         }
     }
 }
