@@ -30,6 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.Orphan = new System.Windows.Forms.CheckBox();
+            this.ClearOrphan = new System.Windows.Forms.CheckBox();
             this.Ok = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -42,8 +44,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.Orphan = new System.Windows.Forms.CheckBox();
-            this.ClearOrphan = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.CheckoutAfterCreate = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -57,6 +57,32 @@
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
+            // 
+            // Orphan
+            // 
+            this.Orphan.AutoSize = true;
+            this.Orphan.Location = new System.Drawing.Point(3, 3);
+            this.Orphan.Name = "Orphan";
+            this.Orphan.Size = new System.Drawing.Size(101, 19);
+            this.Orphan.TabIndex = 7;
+            this.Orphan.Text = "Create orphan";
+            this.toolTip.SetToolTip(this.Orphan, "New branch will have NO parents");
+            this.Orphan.UseVisualStyleBackColor = true;
+            this.Orphan.CheckedChanged += new System.EventHandler(this.Orphan_CheckedChanged);
+            // 
+            // ClearOrphan
+            // 
+            this.ClearOrphan.AutoSize = true;
+            this.ClearOrphan.Checked = true;
+            this.ClearOrphan.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ClearOrphan.Enabled = false;
+            this.ClearOrphan.Location = new System.Drawing.Point(110, 3);
+            this.ClearOrphan.Name = "ClearOrphan";
+            this.ClearOrphan.Size = new System.Drawing.Size(170, 19);
+            this.ClearOrphan.TabIndex = 8;
+            this.ClearOrphan.Text = "Clear working dir and index";
+            this.toolTip.SetToolTip(this.ClearOrphan, "Remove files from the working tree and from the index");
+            this.ClearOrphan.UseVisualStyleBackColor = true;
             // 
             // Ok
             // 
@@ -92,7 +118,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(448, 236);
             this.tableLayoutPanel1.TabIndex = 12;
             // 
@@ -139,7 +165,7 @@
             // 
             // gotoUserManualControl1
             // 
-            this.gotoUserManualControl1.Location = new System.Drawing.Point(3, 219);
+            this.gotoUserManualControl1.Location = new System.Drawing.Point(3, 209);
             this.gotoUserManualControl1.ManualSectionAnchorName = "create-branch";
             this.gotoUserManualControl1.ManualSectionSubfolder = "branches";
             this.gotoUserManualControl1.Name = "gotoUserManualControl1";
@@ -163,7 +189,7 @@
             this.table.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
             this.table.RowCount = 1;
             this.table.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 56F));
+            this.table.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
             this.table.Size = new System.Drawing.Size(442, 34);
             this.table.TabIndex = 1;
             // 
@@ -192,7 +218,7 @@
             this.groupBox1.Controls.Add(this.flowLayoutPanel2);
             this.groupBox1.Location = new System.Drawing.Point(3, 153);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(438, 54);
+            this.groupBox1.Size = new System.Drawing.Size(438, 50);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Orphan";
@@ -204,34 +230,8 @@
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 19);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(432, 32);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(432, 28);
             this.flowLayoutPanel2.TabIndex = 0;
-            // 
-            // Orphan
-            // 
-            this.Orphan.AutoSize = true;
-            this.Orphan.Location = new System.Drawing.Point(3, 3);
-            this.Orphan.Name = "Orphan";
-            this.Orphan.Size = new System.Drawing.Size(101, 19);
-            this.Orphan.TabIndex = 7;
-            this.Orphan.Text = "Create orphan";
-            this.toolTip.SetToolTip(this.Orphan, "New branch will have NO parents");
-            this.Orphan.UseVisualStyleBackColor = true;
-            this.Orphan.CheckedChanged += new System.EventHandler(this.Orphan_CheckedChanged);
-            // 
-            // ClearOrphan
-            // 
-            this.ClearOrphan.AutoSize = true;
-            this.ClearOrphan.Checked = true;
-            this.ClearOrphan.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ClearOrphan.Enabled = false;
-            this.ClearOrphan.Location = new System.Drawing.Point(110, 3);
-            this.ClearOrphan.Name = "ClearOrphan";
-            this.ClearOrphan.Size = new System.Drawing.Size(170, 19);
-            this.ClearOrphan.TabIndex = 8;
-            this.ClearOrphan.Text = "Clear working dir and index";
-            this.toolTip.SetToolTip(this.ClearOrphan, "Remove files from the working tree and from the index");
-            this.ClearOrphan.UseVisualStyleBackColor = true;
             // 
             // flowLayoutPanel3
             // 
