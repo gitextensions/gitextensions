@@ -28,22 +28,38 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.fileViewer = new GitUI.Editor.FileViewer();
+            this.components = new System.ComponentModel.Container();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStrip1 = new GitUI.ToolStripEx();
             this.toolStripSaveButton = new System.Windows.Forms.ToolStripButton();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.toolStrip1.SuspendLayout();
+            this.fileViewer = new GitUI.Editor.FileViewer();
+            this.panelMessage = new System.Windows.Forms.Panel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.labelWarning = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
+            this.panelMessage.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // fileViewer
+            // tableLayoutPanel1
             // 
-            this.fileViewer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.fileViewer.Location = new System.Drawing.Point(0, 25);
-            this.fileViewer.Margin = new System.Windows.Forms.Padding(0);
-            this.fileViewer.Name = "fileViewer";
-            this.fileViewer.Size = new System.Drawing.Size(659, 518);
-            this.fileViewer.TabIndex = 0;
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.toolStrip1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.fileViewer, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.panelMessage, 0, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(659, 543);
+            this.tableLayoutPanel1.TabIndex = 2;
             // 
             // toolStrip1
             // 
@@ -65,21 +81,56 @@
             this.toolStripSaveButton.ToolTipText = "Save";
             this.toolStripSaveButton.Click += new System.EventHandler(this.toolStripSaveButton_Click);
             // 
-            // tableLayoutPanel1
+            // fileViewer
             // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.toolStrip1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.fileViewer, 0, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(659, 543);
-            this.tableLayoutPanel1.TabIndex = 2;
+            this.fileViewer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fileViewer.Location = new System.Drawing.Point(0, 86);
+            this.fileViewer.Margin = new System.Windows.Forms.Padding(0);
+            this.fileViewer.Name = "fileViewer";
+            this.fileViewer.Size = new System.Drawing.Size(659, 518);
+            this.fileViewer.TabIndex = 0;
+            // 
+            // panelMessage
+            // 
+            this.panelMessage.Controls.Add(this.flowLayoutPanel1);
+            this.panelMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelMessage.Location = new System.Drawing.Point(3, 28);
+            this.panelMessage.Name = "panelMessage";
+            this.panelMessage.Size = new System.Drawing.Size(653, 55);
+            this.panelMessage.TabIndex = 2;
+            this.panelMessage.Visible = false;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.label1);
+            this.flowLayoutPanel1.Controls.Add(this.labelWarning);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(653, 55);
+            this.flowLayoutPanel1.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label1.Image = global::GitUI.Properties.Resources.Icon_50;
+            this.label1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label1.Location = new System.Drawing.Point(3, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(22, 22);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "   ";
+            // 
+            // labelWarning
+            // 
+            this.labelWarning.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.labelWarning.AutoSize = true;
+            this.labelWarning.Location = new System.Drawing.Point(31, 0);
+            this.labelWarning.Name = "labelWarning";
+            this.labelWarning.Size = new System.Drawing.Size(382, 45);
+            this.labelWarning.TabIndex = 1;
+            this.labelWarning.Text = "Here be dragons!\r\nChanging this file by hand can be harmful and might break somet" +
+    "hing.\r\nIf you are not sure just close this window.";
             // 
             // FormEditor
             // 
@@ -90,10 +141,13 @@
             this.Name = "FormEditor";
             this.Text = "Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormEditor_FormClosing);
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
+            this.panelMessage.ResumeLayout(false);
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -104,5 +158,9 @@
         private ToolStripEx toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripSaveButton;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Panel panelMessage;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelWarning;
     }
 }
