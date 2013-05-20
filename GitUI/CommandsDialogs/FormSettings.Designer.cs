@@ -47,9 +47,9 @@ namespace GitUI.CommandsDialogs
             this.labelSettingsPageTitle = new System.Windows.Forms.Label();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonApply = new System.Windows.Forms.Button();
+            this.buttonDiscard = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelInstantSaveNotice = new System.Windows.Forms.Label();
-            this.buttonDiscard = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).BeginInit();
@@ -99,7 +99,8 @@ namespace GitUI.CommandsDialogs
             // 
             // buttonOk
             // 
-            this.buttonOk.Location = new System.Drawing.Point(351, 3);
+            this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonOk.Location = new System.Drawing.Point(351, 4);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(88, 25);
             this.buttonOk.TabIndex = 0;
@@ -191,7 +192,8 @@ namespace GitUI.CommandsDialogs
             // 
             // buttonApply
             // 
-            this.buttonApply.Location = new System.Drawing.Point(633, 3);
+            this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonApply.Location = new System.Drawing.Point(633, 4);
             this.buttonApply.Name = "buttonApply";
             this.buttonApply.Size = new System.Drawing.Size(88, 25);
             this.buttonApply.TabIndex = 3;
@@ -199,9 +201,22 @@ namespace GitUI.CommandsDialogs
             this.buttonApply.UseVisualStyleBackColor = true;
             this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
             // 
+            // buttonDiscard
+            // 
+            this.buttonDiscard.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonDiscard.Location = new System.Drawing.Point(539, 4);
+            this.buttonDiscard.Name = "buttonDiscard";
+            this.buttonDiscard.Size = new System.Drawing.Size(88, 25);
+            this.buttonDiscard.TabIndex = 2;
+            this.buttonDiscard.Text = "Discard";
+            this.buttonDiscard.UseVisualStyleBackColor = true;
+            this.buttonDiscard.Visible = false;
+            this.buttonDiscard.Click += new System.EventHandler(this.buttonDiscard_Click);
+            // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(445, 3);
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonCancel.Location = new System.Drawing.Point(445, 4);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(88, 25);
             this.buttonCancel.TabIndex = 1;
@@ -211,26 +226,16 @@ namespace GitUI.CommandsDialogs
             // 
             // labelInstantSaveNotice
             // 
+            this.labelInstantSaveNotice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelInstantSaveNotice.AutoSize = true;
-            this.labelInstantSaveNotice.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelInstantSaveNotice.Location = new System.Drawing.Point(-22, 2);
+            this.labelInstantSaveNotice.Location = new System.Drawing.Point(-5, 2);
             this.labelInstantSaveNotice.Margin = new System.Windows.Forms.Padding(3, 2, 3, 0);
             this.labelInstantSaveNotice.Name = "labelInstantSaveNotice";
-            this.labelInstantSaveNotice.Size = new System.Drawing.Size(367, 30);
+            this.labelInstantSaveNotice.Size = new System.Drawing.Size(350, 30);
             this.labelInstantSaveNotice.TabIndex = 4;
-            this.labelInstantSaveNotice.Text = "Changes on the selected page will be saved instantly. \r\nTherefore the Cancel " +
-    "button does NOT revert any changes made.";
-            // 
-            // buttonDiscard
-            // 
-            this.buttonDiscard.Location = new System.Drawing.Point(539, 3);
-            this.buttonDiscard.Name = "buttonDiscard";
-            this.buttonDiscard.Size = new System.Drawing.Size(88, 25);
-            this.buttonDiscard.TabIndex = 2;
-            this.buttonDiscard.Text = "Discard";
-            this.buttonDiscard.UseVisualStyleBackColor = true;
-            this.buttonDiscard.Visible = false;
-            this.buttonDiscard.Click += new System.EventHandler(this.buttonDiscard_Click);
+            this.labelInstantSaveNotice.Text = "Changes on the selected page will be saved instantly. \r\nTherefore the Cancel butt" +
+    "on does NOT revert any changes made.";
+            this.labelInstantSaveNotice.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // FormSettings
             // 
