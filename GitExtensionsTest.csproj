@@ -83,10 +83,14 @@
       <Name>ResourceManager</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="GitCommands\Patch\testdata\" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="GitCommands\Patch\testdata\big.patch">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="GitCommands\Patch\testdata\bigBin.patch">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
