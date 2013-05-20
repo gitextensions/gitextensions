@@ -39,6 +39,7 @@ namespace PatchApply
         public string DirToPatch { get; set; }
         public int Rate { get; set; }
         public bool Apply { get; set; }
+        public bool CombinedDiff { get; set; }
 
         public List<int> Bookmarks { get; set; }
 
