@@ -2944,6 +2944,11 @@ namespace GitUI.CommandsDialogs
         {
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
         }
+
+        private void selectCurrentRevisionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExecuteCommand((int)Commands.SelectCurrentRevision);
+        }
     }
 
 }

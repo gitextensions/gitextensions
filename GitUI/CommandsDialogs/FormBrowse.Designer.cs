@@ -223,6 +223,7 @@ namespace GitUI.CommandsDialogs
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectCurrentRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).BeginInit();
 #endif
@@ -1435,6 +1436,7 @@ namespace GitUI.CommandsDialogs
             this.tagToolStripMenuItem,
             this.deleteTagToolStripMenuItem,
             this.toolStripSeparator23,
+            this.selectCurrentRevisionToolStripMenuItem,
             this.goToToolStripMenuItem,
             this.toolStripSeparator46,
             this.cherryPickToolStripMenuItem,
@@ -1930,6 +1932,12 @@ namespace GitUI.CommandsDialogs
             this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(197, 24);
             this.checkForUpdatesToolStripMenuItem.Text = "Check for updates";
             this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+
+            // selectCurrentRevisionToolStripMenuItem
+            this.selectCurrentRevisionToolStripMenuItem.Name = "selectCurrentRevisionToolStripMenuItem";
+            this.selectCurrentRevisionToolStripMenuItem.Size = new System.Drawing.Size(231, 22);
+            this.selectCurrentRevisionToolStripMenuItem.Text = "Go to current revision";
+            this.selectCurrentRevisionToolStripMenuItem.Click += new System.EventHandler(this.selectCurrentRevisionToolStripMenuItem_Click);
             // 
             // FormBrowse
             // 
@@ -2183,5 +2191,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator45;
         private ToolStripSeparator toolStripSeparator46;
         private ToolStripMenuItem checkForUpdatesToolStripMenuItem;
+        private ToolStripMenuItem selectCurrentRevisionToolStripMenuItem;
     }
 }
