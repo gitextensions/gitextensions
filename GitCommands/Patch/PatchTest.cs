@@ -3,7 +3,7 @@ using TestClass = NUnit.Framework.TestFixtureAttribute;
 using TestMethod = NUnit.Framework.TestAttribute;
 
 
-namespace GitExtensionsTest.Patch
+namespace GitExtensionsTest.PatchTest
 {
     [TestClass]
     class PatchTest
