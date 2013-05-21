@@ -7,16 +7,21 @@ using GitCommands.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    public abstract class ConfigFileSettingsPage : SettingsPageBase
+    public class ConfigFileSettingsPage : SettingsPageBase
     {
         protected ConfigFileSettingsSet ConfigFileSettingsSet { get { return CommonLogic.ConfigFileSettingsSet; } }
         protected ConfigFileSettings CurrentSettings { get; private set; }
 
-        public ConfigFileSettingsPage(CommonLogic aCommonLogic)
-            : base(aCommonLogic)
+        public ConfigFileSettingsPage()
         {
-            CurrentSettings = CommonLogic.ConfigFileSettingsSet.EffectiveSettings;
             header = new ConfigFileSettingsPageHeader(this);
+        }
+
+        protected override void Init(ISettingsPageHost aPageHost)
+        {
+            base.Init(aPageHost);
+
+            CurrentSettings = CommonLogic.ConfigFileSettingsSet.EffectiveSettings;
         }
 
         private ConfigFileSettingsPageHeader header;

@@ -9,21 +9,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 {
     public partial class PluginSettingsPage : SettingsPageBase
     {
-        private readonly IGitPlugin _gitPlugin;
+        private IGitPlugin _gitPlugin;
         private readonly IList<string> _autoGenKeywords = new List<string>();
         private bool pageInited = false;
 
-        public PluginSettingsPage(CommonLogic aCommonLogic, IGitPlugin gitPlugin)
-            : base(aCommonLogic)
+        public PluginSettingsPage()
         {
             InitializeComponent();
             Translate();
-            _gitPlugin = gitPlugin;
         }
 
-        public static PluginSettingsPage CreateSettingsPageFromPlugin(CommonLogic aCommonLogic, IGitPlugin gitPlugin)
+
+
+        public static PluginSettingsPage CreateSettingsPageFromPlugin(ISettingsPageHost aPageHost, IGitPlugin gitPlugin)
         {
-            return new PluginSettingsPage(aCommonLogic, gitPlugin);
+            var result = SettingsPageBase.Create<PluginSettingsPage>(aPageHost);
+            result._gitPlugin = gitPlugin;
+            return result;
         }
 
         public override string GetTitle()

@@ -4,8 +4,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class GitExtensionsSettingsPage : SettingsPageBase
     {
-        public GitExtensionsSettingsPage(CommonLogic aCommonLogic)
-            : base(aCommonLogic)
+        public GitExtensionsSettingsPage()
         {
             InitializeComponent();
             Text = "Git Extensions";

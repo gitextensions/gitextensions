@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -7,15 +8,38 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     /// <summary>
     /// set Text property in derived classes to set the title
     /// </summary>
-    public abstract class SettingsPageBase : GitExtensionsControl, ISettingsPage
+    public class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
-        protected readonly CommonLogic CommonLogic;
+        private ISettingsPageHost _PageHost;
+        protected ISettingsPageHost PageHost
+        {
+            get
+            {
+                if (_PageHost == null)
+                    throw new NullReferenceException("PageHost instance was not passed to page: " + GetType().FullName);
+
+                return _PageHost;
+            }
+        }
+
+        protected CheckSettingsLogic CheckSettingsLogic { get { return PageHost.CheckSettingsLogic; } }
+        protected CommonLogic CommonLogic { get { return CheckSettingsLogic.CommonLogic; } }
+
 
         protected GitModule Module { get { return this.CommonLogic.Module; } }
 
-        public SettingsPageBase(CommonLogic aCommonLogic)
+        protected virtual void Init(ISettingsPageHost aPageHost)
         {
-            CommonLogic = aCommonLogic;
+            _PageHost = aPageHost;        
+        }
+
+        public static T Create<T>(ISettingsPageHost aPageHost) where T : SettingsPageBase, new()
+        {
+            T result = new T();
+
+            result.Init(aPageHost);
+
+            return result;
         }
 
         public virtual string GetTitle()
@@ -58,9 +82,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             PageToSettings();
         }
 
-        protected abstract void SettingsToPage();
+        protected virtual void SettingsToPage()
+        { 
+        }
 
-        protected abstract void PageToSettings();
+        protected virtual void PageToSettings()
+        { 
+        }
 
         IList<string> childrenText;
 

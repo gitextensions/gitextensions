@@ -2,8 +2,7 @@
 {
     public partial class PluginRootIntroductionPage : SettingsPageBase
     {
-        public PluginRootIntroductionPage(CommonLogic aCommonLogic)
-            : base(aCommonLogic)
+        public PluginRootIntroductionPage()
         {
             InitializeComponent();
             Text = "Plugins Settings";

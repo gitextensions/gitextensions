@@ -4,8 +4,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class AdvancedSettingsPage : SettingsPageBase
     {
-        public AdvancedSettingsPage(CommonLogic aCommonLogic)
-            : base(aCommonLogic)
+        public AdvancedSettingsPage()
         {
             InitializeComponent();
             Text = "Advanced";
