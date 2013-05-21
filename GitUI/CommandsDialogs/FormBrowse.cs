@@ -448,9 +448,8 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void SetShortcutKeyDisplayStringsFromHotkeySettings()
         {
-            var shortcutKey = GetShortcutKeys((int)Commands.SelectCurrentRevision);
-            selectCurrentRevisionToolStripMenuItem.ShortcutKeyDisplayString = shortcutKey.ToShortcutKeyDisplayString();
-
+            selectCurrentRevisionToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.SelectCurrentRevision).ToShortcutKeyDisplayString();
+            gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.GitBash).ToShortcutKeyDisplayString();
             // TODO: add more
         }
 
