@@ -81,10 +81,10 @@ namespace GitUI.CommandsDialogs
         private const string AllRemotes = "[ All ]";
 
         private FormPull()
-            : this(null, null)
+            : this(null, null, null)
         { }
 
-        public FormPull(GitUICommands aCommands, string defaultRemoteBranch)
+        public FormPull(GitUICommands aCommands, string defaultRemoteBranch, string defaultRemote)
             : base(aCommands)
         {
             InitializeComponent();
@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
 
             if (aCommands != null)
-                Init();
+                Init(defaultRemote);
 
             Merge.Checked = Settings.FormPullAction == Settings.PullAction.Merge;
             Rebase.Checked = Settings.FormPullAction == Settings.PullAction.Rebase;
@@ -108,12 +108,22 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Init()
+        private void Init(string defaultRemote)
         {            
             UpdateRemotesList();
 
             _branch = Module.GetSelectedBranch();
-            string currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", _branch));
+
+            string currentBranchRemote;
+            if (defaultRemote.IsNullOrEmpty())
+            {
+                currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", _branch));
+            }
+            else
+            {
+                currentBranchRemote = defaultRemote;
+            }
+
             if (currentBranchRemote.IsNullOrEmpty() && _NO_TRANSLATE_Remotes.Items.Count >= 3)
             {
                 IList<string> remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
@@ -430,15 +440,14 @@ namespace GitUI.CommandsDialogs
 
         private FormProcess CreateFormProcess(string source)
         {
-            var curLocalBranch = _branch == localBranch.Text ? null : localBranch.Text;
+            string curLocalBranch = CalculateLocalBranch(source); 
+
             if (Fetch.Checked)
             {
                 return new FormRemoteProcess(Module, Module.FetchCmd(source, Branches.Text, curLocalBranch, GetTagsArg()));
             }
             
             Debug.Assert(Merge.Checked || Rebase.Checked);
-
-            curLocalBranch = CalculateLocalBranch();
 
             return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, Rebase.Checked, GetTagsArg()))
                        {
@@ -490,11 +499,29 @@ namespace GitUI.CommandsDialogs
             return AllTags.Checked ? true : NoTags.Checked ? false : (bool?)null;
         }
 
-        private string CalculateLocalBranch()
+        private string CalculateLocalBranch(string remote)
         {
-            if (_branch.Equals(GitModule.DetachedBranch, StringComparison.Ordinal) || string.IsNullOrEmpty(Branches.Text))
-                _branch = null;
-            return _branch;
+            if (Module.IsDetachedHead(_branch))
+            {
+                return null;
+            }
+
+            if (_branch == localBranch.Text)
+            {
+                var currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", localBranch.Text));
+                if (remote.Equals(currentBranchRemote))
+                {
+                    return string.IsNullOrEmpty(Branches.Text) ? null : _branch;
+                }
+                else
+                {
+                    return localBranch.Text;
+                }
+            }
+            else
+            {
+                return localBranch.Text;
+            }
         }
 
         private string CalculateSource()
