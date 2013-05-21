@@ -112,8 +112,9 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _commitTemplateSettings = new TranslationString("Settings");
 
-        private readonly TranslationString _commitAuthorInfo = new TranslationString("Commit as ");
-        private readonly TranslationString _commitAuthorToolTip = new TranslationString("Click to change author information.");
+        private readonly TranslationString _commitAuthorInfo = new TranslationString("Author ");
+        private readonly TranslationString _commitCommitterInfo = new TranslationString("Committer ");
+        private readonly TranslationString _commitCommitterToolTip = new TranslationString("Click to change committer information.");
         #endregion
 
         private readonly TaskScheduler _taskScheduler;
@@ -204,7 +205,7 @@ namespace GitUI.CommandsDialogs
             _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
             _resetSelectedLinesToolStripMenuItem.Image = Reset.Image;
             resetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
-            commitAuthorStatus.ToolTipText = _commitAuthorToolTip.Text;
+            commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
         }
 
         private void FormCommit_Load(object sender, EventArgs e)
@@ -1679,23 +1680,27 @@ namespace GitUI.CommandsDialogs
             if (Settings.RefreshCommitDialogOnFormFocus)
                 RescanChanges();
 
-            string author = "";
+            updateAuthorInfo();
+
+
+        }
+
+        private void updateAuthorInfo()
+        {
             GetUserSettings();
+            string author = "";
+            string committer = string.Format("{0} {1} <{2}>", _commitCommitterInfo.Text, _userName, _userEmail);
+            
             if (string.IsNullOrEmpty(toolAuthor.Text) || string.IsNullOrEmpty(toolAuthor.Text.Trim()))
             {
-                commitAuthorStatus.IsLink = true;
                 author = string.Format("{0} {1} <{2}>", _commitAuthorInfo.Text, _userName, _userEmail);
-                commitAuthorStatus.ToolTipText = _commitAuthorToolTip.Text;
             }
             else
             {
-                commitAuthorStatus.IsLink = false;
                 author = string.Format("{0} {1}", _commitAuthorInfo.Text, toolAuthor.Text);
-                commitAuthorStatus.ToolTipText = "";
             }
-            commitAuthorStatus.Text = author;
-
-
+            
+            commitAuthorStatus.Text = string.Format("{0} {1}",committer,author);
 
         }
 
@@ -2309,15 +2314,19 @@ namespace GitUI.CommandsDialogs
                 Settings.StageInSuperprojectAfterCommit = StageInSuperproject.Checked;
         }
 
-        private void commitAuthorStatus_Click(object sender, EventArgs e)
+        private void commitCommitter_Click(object sender, EventArgs e)
         {
-            if (!commitAuthorStatus.IsLink)
-                return; 
+           
 
             if (RepoUserSettings)
                 UICommands.StartSettingsDialog(this, SettingsDialog.Pages.LocalSettingsSettingsPage.GetPageReference());
             else
                 UICommands.StartSettingsDialog(this, SettingsDialog.Pages.GlobalSettingsSettingsPage.GetPageReference());
+        }
+
+        private void toolAuthor_Leave(object sender, EventArgs e)
+        {
+            updateAuthorInfo();
         }
     }
 
