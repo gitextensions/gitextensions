@@ -5,8 +5,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class ConfirmationsSettingsPage : SettingsPageBase
     {
-        public ConfirmationsSettingsPage(CommonLogic aCommonLogic)
-            : base(aCommonLogic)
+        public ConfirmationsSettingsPage()
         {
             InitializeComponent();
             Text = "Confirmations";

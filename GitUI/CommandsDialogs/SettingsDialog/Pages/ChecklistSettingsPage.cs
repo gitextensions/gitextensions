@@ -166,29 +166,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private const string _putty = "PuTTY";
 
-        readonly ISettingsPageHost _settingsPageHost;
-
         /// <summary>
         /// TODO: remove this direct dependency to another SettingsPage later when possible
         /// </summary>
         public SshSettingsPage SshSettingsPage { get; set; }
-        public readonly CheckSettingsLogic CheckSettingsLogic;
 
-        private ChecklistSettingsPage()
-            : this(null, null)
-        {
-        }
-
-        public ChecklistSettingsPage(CheckSettingsLogic aCheckSettingsLogic,
-            ISettingsPageHost settingsPageHost)
-            : base(aCheckSettingsLogic.CommonLogic)
+        public ChecklistSettingsPage()
         {
             InitializeComponent();
             Text = "Checklist";
             Translate();
-
-            CheckSettingsLogic = aCheckSettingsLogic;
-            _settingsPageHost = settingsPageHost;
         }
 
         public static SettingsPageReference GetPageReference()
@@ -239,7 +226,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 frm.ShowDialog(this); // will set Settings.Translation
             }
 
-            _settingsPageHost.LoadAll();
+            PageHost.LoadAll();
             Translate();
             SaveAndRescan_Click(null, null);
         }
@@ -254,7 +241,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
                 else
                 {
-                    _settingsPageHost.GotoPage(SshSettingsPage.GetPageReference());   
+                    PageHost.GotoPage(SshSettingsPage.GetPageReference());   
                 }
             }
 
@@ -279,13 +266,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (!CheckSettingsLogic.SolveLinuxToolsDir())
             {
                 MessageBox.Show(this, _linuxToolsShNotFound.Text, _linuxToolsShNotFoundCaption.Text);
-                _settingsPageHost.GotoPage(GitSettingsPage.GetPageReference());
+                PageHost.GotoPage(GitSettingsPage.GetPageReference());
                 return;
             }
 
             MessageBox.Show(this, String.Format(_shCanBeRun.Text, AppSettings.GitBinDir), _shCanBeRunCaption.Text);
             ////GitBinPath.Text = Settings.GitBinDir;
-            _settingsPageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
+            PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
             SaveAndRescan_Click(null, null);
         }
 
@@ -341,7 +328,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     CheckSettingsLogic.SolveDiffToolForKDiff();
-                    _settingsPageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
+                    PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
                 }
                 else
                 {
@@ -375,7 +362,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                         _noMergeToolConfiguredCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     CommonLogic.SetGlobalMergeTool("kdiff3");
-                    _settingsPageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
+                    PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
                 }
                 else
                 {
@@ -415,7 +402,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void GotoPageGlobalSettings()
         {
-            _settingsPageHost.GotoPage(GitConfigSettingsPage.GetPageReference());
+            PageHost.GotoPage(GitConfigSettingsPage.GetPageReference());
         }
 
         private void UserNameSet_Click(object sender, EventArgs e)
@@ -430,21 +417,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 MessageBox.Show(this, _solveGitCommandFailed.Text, _solveGitCommandFailedCaption.Text);
 
-                _settingsPageHost.GotoPage(GitSettingsPage.GetPageReference());
+                PageHost.GotoPage(GitSettingsPage.GetPageReference());
                 return;
             }
 
             MessageBox.Show(this, String.Format(_gitCanBeRun.Text, AppSettings.GitCommand), _gitCanBeRunCaption.Text);
 
-            _settingsPageHost.GotoPage(GitSettingsPage.GetPageReference());
+            PageHost.GotoPage(GitSettingsPage.GetPageReference());
             SaveAndRescan_Click(null, null);
         }
 
         private void SaveAndRescan_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            _settingsPageHost.SaveAll();
-            _settingsPageHost.LoadAll();
+            PageHost.SaveAll();
+            PageHost.LoadAll();
             CheckSettings();
             Cursor.Current = Cursors.Default;
         }

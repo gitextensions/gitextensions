@@ -2,8 +2,7 @@
 {
     public partial class StartPageSettingsPage : SettingsPageBase
     {
-        public StartPageSettingsPage(CommonLogic aCommonLogic)
-            : base(aCommonLogic)
+        public StartPageSettingsPage()
         {
             InitializeComponent();
             Text = "Start Page";

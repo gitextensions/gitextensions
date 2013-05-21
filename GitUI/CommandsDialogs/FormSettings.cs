@@ -57,43 +57,43 @@ namespace GitUI.CommandsDialogs
             _commonLogic = new CommonLogic(Module);
             _checkSettingsLogic = new CheckSettingsLogic(_commonLogic);
 
-            var checklistSettingsPage = new ChecklistSettingsPage(_checkSettingsLogic, this);
+            var checklistSettingsPage = SettingsPageBase.Create <ChecklistSettingsPage>(this);
             settingsTreeView.AddSettingsPage(checklistSettingsPage, gitExtPageRef, true); // as root
 
-            settingsTreeView.AddSettingsPage(new GitSettingsPage(_checkSettingsLogic, this), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitSettingsPage>(this), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new GitExtensionsSettingsPage(_commonLogic), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitExtensionsSettingsPage>(this), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new AppearanceSettingsPage(_commonLogic), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceSettingsPage>(this), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new ColorsSettingsPage(_commonLogic), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ColorsSettingsPage>(this), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new StartPageSettingsPage(_commonLogic), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<StartPageSettingsPage>(this), gitExtPageRef);
 
-            var globalSettingsSettingsPage = new GitConfigSettingsPage(_checkSettingsLogic);
+            var globalSettingsSettingsPage = SettingsPageBase.Create<GitConfigSettingsPage>(this);
             settingsTreeView.AddSettingsPage(globalSettingsSettingsPage, gitExtPageRef);
 
-            var _sshSettingsPage = new SshSettingsPage(_commonLogic);
+            var _sshSettingsPage = SettingsPageBase.Create<SshSettingsPage>(this);
             settingsTreeView.AddSettingsPage(_sshSettingsPage, gitExtPageRef);
             checklistSettingsPage.SshSettingsPage = _sshSettingsPage;
 
-            settingsTreeView.AddSettingsPage(new ScriptsSettingsPage(_commonLogic), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ScriptsSettingsPage>(this), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new HotkeysSettingsPage(_commonLogic), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<HotkeysSettingsPage>(this), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new ShellExtensionSettingsPage(_commonLogic), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ShellExtensionSettingsPage>(this), gitExtPageRef);
 
-            settingsTreeView.AddSettingsPage(new AdvancedSettingsPage(_commonLogic), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AdvancedSettingsPage>(this), gitExtPageRef);
             SettingsPageReference advancedPageRef = AdvancedSettingsPage.GetPageReference();
 
-            settingsTreeView.AddSettingsPage(new ConfirmationsSettingsPage(_commonLogic), advancedPageRef);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ConfirmationsSettingsPage>(this), advancedPageRef);
 
             settingsTreeView.AddSettingsPage(new PluginsSettingsGroup(), null);
             SettingsPageReference pluginsPageRef = PluginsSettingsGroup.GetPageReference();
-            settingsTreeView.AddSettingsPage(new PluginRootIntroductionPage(_commonLogic), pluginsPageRef, true); // as root
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<PluginRootIntroductionPage>(this), pluginsPageRef, true); // as root
             foreach (var gitPlugin in LoadedPlugins.Plugins)
             {
-                var settingsPage = PluginSettingsPage.CreateSettingsPageFromPlugin(_commonLogic, gitPlugin);
+                var settingsPage = PluginSettingsPage.CreateSettingsPageFromPlugin(this, gitPlugin);
                 settingsTreeView.AddSettingsPage(settingsPage, pluginsPageRef);
             }
 
@@ -271,5 +271,7 @@ namespace GitUI.CommandsDialogs
         {
             LoadSettings();
         }
+
+        public CheckSettingsLogic CheckSettingsLogic { get { return _checkSettingsLogic; } } 
     }
 }

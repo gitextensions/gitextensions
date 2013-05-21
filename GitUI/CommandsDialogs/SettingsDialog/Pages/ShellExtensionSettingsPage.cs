@@ -5,8 +5,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class ShellExtensionSettingsPage : SettingsPageBase
     {
-        public ShellExtensionSettingsPage(CommonLogic aCommonLogic)
-            : base(aCommonLogic)
+        public ShellExtensionSettingsPage()
         {
             InitializeComponent();
             Text = "Shell extension";

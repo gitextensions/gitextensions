@@ -12,8 +12,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private string IconName = "bug";
 
-        public ScriptsSettingsPage(CommonLogic aCommonLogic)
-            : base(aCommonLogic)
+        public ScriptsSettingsPage()
         {
             InitializeComponent();
             Text = "Scripts";
