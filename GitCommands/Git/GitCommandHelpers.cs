@@ -117,7 +117,7 @@ namespace GitCommands
             }
         }
 
-        public static string FixPath(string path)
+        public static string FixPath([NotNull] string path)
         {
             path = path.Trim();
             return path.Replace('\\', '/');
@@ -572,7 +572,7 @@ namespace GitCommands
                 srecursiveSubmodules = "--recurse-submodules=on-demand ";
 
             var sprogressOption = "";
-            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+            if (VersionInUse.PushCanAskForProgress)
                 sprogressOption = "--progress ";
 
             var options = String.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
@@ -590,13 +590,12 @@ namespace GitCommands
             path = FixPath(path);
 
             var sprogressOption = "";
-            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+            if (VersionInUse.PushCanAskForProgress)
                 sprogressOption = "--progress ";
 
-            string cmd = string.Format("push {0} \"{1}\"", sprogressOption, path.Trim());
+            string cmd = string.Format("push {0} \"{1}\" ", sprogressOption, path.Trim());
 
-            foreach (GitPushAction action in pushActions)
-                cmd += " " + action.Format();
+            cmd += string.Join(" ", pushActions.Select(action => action.Format()));
 
             return cmd;
         }
@@ -617,7 +616,7 @@ namespace GitCommands
                 sforce = "-f ";
 
             var sprogressOption = "";
-            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+            if (VersionInUse.PushCanAskForProgress)
                 sprogressOption = "--progress ";
 
             var options = String.Concat(sforce, sprogressOption);
@@ -871,6 +870,7 @@ namespace GitCommands
             return stringBuilder.ToString();
         }
 
+        [CanBeNull]
         public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged)
         {
             PatchApply.Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
@@ -878,6 +878,7 @@ namespace GitCommands
             return GetSubmoduleStatus(text);
         }
 
+        [CanBeNull]
         public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string submodule)
         {
             return GetCurrentSubmoduleChanges(module, submodule, submodule, false);
@@ -895,10 +896,19 @@ namespace GitCommands
                 if (line != null)
                 {
                     var match = Regex.Match(line, @"diff --git a/(\S+) b/(\S+)");
-                    if (match != null && match.Groups.Count > 0)
+                    if (match.Groups.Count > 1)
                     {
                         status.Name = match.Groups[1].Value;
                         status.OldName = match.Groups[2].Value;
+                    }
+                    else
+                    {
+                        match = Regex.Match(line, @"diff --cc (\S+)");
+                        if (match.Groups.Count > 1)
+                        {
+                            status.Name = match.Groups[1].Value;
+                            status.OldName = match.Groups[1].Value;
+                        } 
                     }
                 }
 
@@ -924,6 +934,7 @@ namespace GitCommands
                         status.Commit = hash;
                         status.IsDirty = bdirty;
                     }
+                    // TODO: Support combined merge
                 }
             }
             return status;
@@ -1103,6 +1114,8 @@ namespace GitCommands
         {
             string text = patch != null ? patch.Text : null;
             var status = GetSubmoduleStatus(text);
+            if (status == null)
+                return "";
             return ProcessSubmoduleStatus(module, status);
         }
 
@@ -1330,7 +1343,7 @@ namespace GitCommands
             }
         }
 
-#if !MONO
+#if !__MonoCS__
         static class NativeMethods
         {
             [DllImport("kernel32.dll")]
@@ -1349,7 +1362,7 @@ namespace GitCommands
 
         public static void TerminateTree(this Process process)
         {
-#if !MONO
+#if !__MonoCS__
             if (EnvUtils.RunningOnWindows())
             {
                 // Send Ctrl+C
