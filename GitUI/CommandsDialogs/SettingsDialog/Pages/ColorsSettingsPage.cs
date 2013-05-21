@@ -8,8 +8,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class ColorsSettingsPage : SettingsPageBase
     {
-        public ColorsSettingsPage(CommonLogic aCommonLogic)
-            : base(aCommonLogic)
+        public ColorsSettingsPage()
         {
             InitializeComponent();
             Text = "Colors";

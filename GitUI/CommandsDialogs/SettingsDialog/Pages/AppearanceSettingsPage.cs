@@ -19,8 +19,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private Font _applicationFont;
         private Font commitFont;
 
-        public AppearanceSettingsPage(CommonLogic aCommonLogic)
-            : base(aCommonLogic)
+        public AppearanceSettingsPage()
         {
             InitializeComponent();
             Text = "Appearance";

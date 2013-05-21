@@ -12,33 +12,27 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     public partial class GitConfigSettingsPage : ConfigFileSettingsPage
     {
         private readonly TranslationString __diffToolSuggestCaption = new TranslationString("Suggest difftool cmd");
-        private readonly CheckSettingsLogic CheckSettingsLogic;
-
-        private GitConfigSettingsPage()
-            : this(null)
-        {
-        }
-
-        public GitConfigSettingsPage(CheckSettingsLogic aCheckSettingsLogic)
-            : base(aCheckSettingsLogic.CommonLogic)
+        
+        public GitConfigSettingsPage()
         {
             InitializeComponent();
             Text = "Git Config";
             Translate();
+        }
 
-            CheckSettingsLogic = aCheckSettingsLogic;
-            if (aCheckSettingsLogic != null)
-            {
-                CommonLogic.FillEncodings(Global_FilesEncoding);
+        protected override void Init(ISettingsPageHost aPageHost)
+        {
+            base.Init(aPageHost);
 
-                string npp = MergeToolsHelper.FindFileInFolders("notepad++.exe", "Notepad++");
-                if (string.IsNullOrEmpty(npp))
-                    npp = "notepad++";
-                else
-                    npp = "\"" + npp + "\"";
+            CommonLogic.FillEncodings(Global_FilesEncoding);
 
-                GlobalEditor.Items.AddRange(new Object[] { "\"" + AppSettings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
-            }
+            string npp = MergeToolsHelper.FindFileInFolders("notepad++.exe", "Notepad++");
+            if (string.IsNullOrEmpty(npp))
+                npp = "notepad++";
+            else
+                npp = "\"" + npp + "\"";
+
+            GlobalEditor.Items.AddRange(new Object[] { "\"" + AppSettings.GetGitExtensionsFullPath() + "\" fileeditor", "vi", "notepad", npp + " -multiInst -nosession" });
         }
 
         protected override string GetCommaSeparatedKeywordList()

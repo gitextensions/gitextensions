@@ -10,19 +10,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
 
-        readonly CheckSettingsLogic _checkSettingsLogic;
-        private readonly ISettingsPageHost _settingsPageHost;
-
-        public GitSettingsPage(CheckSettingsLogic checkSettingsLogic,
-            ISettingsPageHost settingsPageHost)
-            : base(checkSettingsLogic.CommonLogic)
+        public GitSettingsPage()
         {
             InitializeComponent();
             Text = "Git";
             Translate();
-
-            _checkSettingsLogic = checkSettingsLogic;
-            _settingsPageHost = settingsPageHost;
         }
 
         protected override string GetCommaSeparatedKeywordList()
@@ -58,7 +50,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void BrowseGitPath_Click(object sender, EventArgs e)
         {
-            _checkSettingsLogic.SolveGitCommand();
+            CheckSettingsLogic.SolveGitCommand();
 
             using (var browseDialog = new OpenFileDialog
             {
@@ -76,7 +68,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void BrowseGitBinPath_Click(object sender, EventArgs e)
         {
-            _checkSettingsLogic.SolveLinuxToolsDir();
+            CheckSettingsLogic.SolveLinuxToolsDir();
 
             using (var browseDialog = new FolderBrowserDialog { SelectedPath = AppSettings.GitBinDir })
             {
@@ -105,9 +97,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ChangeHomeButton_Click(object sender, EventArgs e)
         {
-            _settingsPageHost.SaveAll();
+            PageHost.SaveAll();
             using (var frm = new FormFixHome()) frm.ShowDialog(this);
-            _settingsPageHost.LoadAll();
+            PageHost.LoadAll();
             // TODO?: rescan
 
             // orginal:

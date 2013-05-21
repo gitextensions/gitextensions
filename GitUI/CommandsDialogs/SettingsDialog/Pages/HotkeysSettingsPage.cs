@@ -2,8 +2,7 @@
 {
     public partial class HotkeysSettingsPage : SettingsPageBase
     {
-        public HotkeysSettingsPage(CommonLogic aCommonLogic)
-            : base(aCommonLogic)
+        public HotkeysSettingsPage()
         {
             InitializeComponent();
             Text = "Hotkeys";

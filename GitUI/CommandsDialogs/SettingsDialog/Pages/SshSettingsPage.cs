@@ -10,8 +10,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     public partial class SshSettingsPage : SettingsPageBase
     {
 
-        public SshSettingsPage(CommonLogic aCommonLogic)
-            : base(aCommonLogic)
+        public SshSettingsPage()
         {
             InitializeComponent();
             Text = "SSH";
