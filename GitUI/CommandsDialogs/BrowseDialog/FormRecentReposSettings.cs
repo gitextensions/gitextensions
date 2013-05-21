@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (comboMinWidthEdit.Value == 0)
                 comboPanel.Width = ComboWidth;
             else
-                comboPanel.Width = (int)comboMinWidthEdit.Value;
+                comboPanel.Width = (int)comboMinWidthEdit.Value + 30;
             this.Width = FormWidth + comboPanel.Width - ComboWidth;
         }
 

@@ -220,9 +220,7 @@ namespace GitUI.CommandsDialogs
 
             IWin32Window owner = Visible ? this : Owner;
 
-            //Stash local changes, but only if the setting CheckForUncommittedChangesInCheckoutBranch is true
-            bool stash = Settings.CheckForUncommittedChangesInCheckoutBranch &&
-                         changes == LocalChangesAction.Stash && Module.IsDirtyDir();
+            bool stash = changes == LocalChangesAction.Stash && (_isDirtyDir ?? Module.IsDirtyDir());
             if (stash)
             {
                 UICommands.Stash(owner);
@@ -340,7 +338,7 @@ namespace GitUI.CommandsDialogs
         private IList<string> GetContainsRevisionBranches()
         {
             return Module.GetAllBranchesWhichContainGivenCommit(_containRevison, LocalBranch.Checked, !LocalBranch.Checked)
-                        .Where(a => !a.Equals(GitModule.DetachedBranch, StringComparison.Ordinal) && 
+                        .Where(a => !Module.IsDetachedHead(a) && 
                             !a.EndsWith("/HEAD")).ToList();
         }
 
