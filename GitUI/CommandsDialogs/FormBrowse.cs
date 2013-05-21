@@ -422,6 +422,9 @@ namespace GitUI.CommandsDialogs
             if (RepoHosts.GitHosters.Count == 1)
                 _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
             _filterBranchHelper.InitToolStripBranchFilter();
+
+            SetShortcutKeyDisplayStringsFromHotkeySettings();
+
             if (hard && hasWorkingDir)
                 ShowRevisions();
             RefreshWorkingDirCombo();
@@ -438,6 +441,17 @@ namespace GitUI.CommandsDialogs
             UICommands.RaisePostBrowseInitialize(this);
 
             Cursor.Current = Cursors.Default;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void SetShortcutKeyDisplayStringsFromHotkeySettings()
+        {
+            var shortcutKey = GetShortcutKeys((int)Commands.SelectCurrentRevision);
+            selectCurrentRevisionToolStripMenuItem.ShortcutKeyDisplayString = shortcutKey.ToShortcutKeyDisplayString();
+
+            // TODO: add more
         }
 
         private void RefreshWorkingDirCombo()
