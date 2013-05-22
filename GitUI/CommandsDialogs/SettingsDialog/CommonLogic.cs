@@ -31,27 +31,30 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             Module = aModule;
 
-            var repoDistGlobalSettings = RepoDistSettings.CreateGlobal(false);
-            var repoDistPulledSettings = RepoDistSettings.CreateDistributed(Module, false);
-            var repoDistLocalSettings = RepoDistSettings.CreateLocal(Module, false);
-            var repoDistEffectiveSettings = new RepoDistSettings(
-                new RepoDistSettings(repoDistGlobalSettings, repoDistPulledSettings.SettingsCache),
-                repoDistLocalSettings.SettingsCache);
+            if (aModule != null)
+            {
+                var repoDistGlobalSettings = RepoDistSettings.CreateGlobal(false);
+                var repoDistPulledSettings = RepoDistSettings.CreateDistributed(Module, false);
+                var repoDistLocalSettings = RepoDistSettings.CreateLocal(Module, false);
+                var repoDistEffectiveSettings = new RepoDistSettings(
+                    new RepoDistSettings(repoDistGlobalSettings, repoDistPulledSettings.SettingsCache),
+                    repoDistLocalSettings.SettingsCache);
 
-            var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
-            var configFileLocalSettings = ConfigFileSettings.CreateLocal(Module, false);
-            var configFileEffectiveSettings = new ConfigFileSettings(configFileGlobalSettings, configFileLocalSettings.SettingsCache);
+                var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
+                var configFileLocalSettings = ConfigFileSettings.CreateLocal(Module, false);
+                var configFileEffectiveSettings = new ConfigFileSettings(configFileGlobalSettings, configFileLocalSettings.SettingsCache);
 
-            RepoDistSettingsSet = new RepoDistSettingsSet(
-                repoDistEffectiveSettings,
-                repoDistLocalSettings,
-                repoDistPulledSettings,
-                repoDistGlobalSettings);
+                RepoDistSettingsSet = new RepoDistSettingsSet(
+                    repoDistEffectiveSettings,
+                    repoDistLocalSettings,
+                    repoDistPulledSettings,
+                    repoDistGlobalSettings);
 
-            ConfigFileSettingsSet = new ConfigFileSettingsSet(
-                configFileEffectiveSettings,
-                configFileLocalSettings,
-                configFileGlobalSettings);
+                ConfigFileSettingsSet = new ConfigFileSettingsSet(
+                    configFileEffectiveSettings,
+                    configFileLocalSettings,
+                    configFileGlobalSettings);
+            }
         }
 
         public const string GitExtensionsShellEx32Name = "GitExtensionsShellEx32.dll";
