@@ -1416,7 +1416,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <Compile Include="FormRemoteProcess.cs">
       <SubType>Form</SubType>
     </Compile>
