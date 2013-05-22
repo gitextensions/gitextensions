@@ -18,10 +18,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             InitializeComponent();
             Translate();
 
-            settingsPagePanel.Controls.Add(aPage);
-            aPage.Dock = DockStyle.Fill;
-            _Page = aPage;
-            
+            if (aPage != null)
+            {
+                settingsPagePanel.Controls.Add(aPage);
+                aPage.Dock = DockStyle.Fill;
+                _Page = aPage;
+            }
+
             EffectiveRB.Checked = true;
         }
 
