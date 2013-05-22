@@ -1700,7 +1700,7 @@ namespace GitUI.CommandsDialogs
                 author = string.Format("{0} {1}", _commitAuthorInfo.Text, toolAuthor.Text);
             }
 
-            if (author != committer)
+            if (author != string.Format("{0} {1} <{2}>", _commitAuthorInfo.Text, _userName, _userEmail))
                 commitAuthorStatus.Text = string.Format("{0} {1}", committer, author);
             else
                 commitAuthorStatus.Text = committer;
