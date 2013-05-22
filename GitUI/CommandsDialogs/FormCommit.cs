@@ -1699,9 +1699,11 @@ namespace GitUI.CommandsDialogs
             {
                 author = string.Format("{0} {1}", _commitAuthorInfo.Text, toolAuthor.Text);
             }
-            
-            commitAuthorStatus.Text = string.Format("{0} {1}",committer,author);
 
+            if (author != committer)
+                commitAuthorStatus.Text = string.Format("{0} {1}", committer, author);
+            else
+                commitAuthorStatus.Text = committer;
         }
 
         private void GetUserSettings()
