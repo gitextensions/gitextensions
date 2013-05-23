@@ -7,31 +7,16 @@ using GitCommands.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    public class ConfigFileSettingsPage : SettingsPageBase
+    public class ConfigFileSettingsPage : SettingsPageWithHeader, ILocalSettingsPage
     {
         protected ConfigFileSettingsSet ConfigFileSettingsSet { get { return CommonLogic.ConfigFileSettingsSet; } }
         protected ConfigFileSettings CurrentSettings { get; private set; }
-
-        public ConfigFileSettingsPage()
-        {
-            header = new ConfigFileSettingsPageHeader(this);
-        }
 
         protected override void Init(ISettingsPageHost aPageHost)
         {
             base.Init(aPageHost);
 
             CurrentSettings = CommonLogic.ConfigFileSettingsSet.EffectiveSettings;
-        }
-
-        private ConfigFileSettingsPageHeader header;
-
-        public override Control GuiControl
-        {
-            get
-            {
-                return header;
-            }
         }
 
         public void SetEffectiveSettings()
@@ -46,7 +31,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 SetCurrentSettings(ConfigFileSettingsSet.LocalSettings);
         }
 
-        public void SetGlobalSettings()
+        public override void SetGlobalSettings()
         {
             if (ConfigFileSettingsSet != null)
                 SetCurrentSettings(ConfigFileSettingsSet.GlobalSettings);

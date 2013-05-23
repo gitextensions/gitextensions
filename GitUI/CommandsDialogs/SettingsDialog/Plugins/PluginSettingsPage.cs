@@ -7,7 +7,7 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 {
-    public partial class PluginSettingsPage : SettingsPageBase
+    public partial class PluginSettingsPage : SettingsPageWithHeader
     {
         private IGitPlugin _gitPlugin;
         private readonly IList<string> _autoGenKeywords = new List<string>();

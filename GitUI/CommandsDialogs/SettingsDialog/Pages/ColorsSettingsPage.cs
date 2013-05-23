@@ -6,7 +6,7 @@ using GitUI.Editor;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class ColorsSettingsPage : SettingsPageBase
+    public partial class ColorsSettingsPage : SettingsPageWithHeader
     {
         public ColorsSettingsPage()
         {

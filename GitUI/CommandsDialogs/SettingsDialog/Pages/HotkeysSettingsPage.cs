@@ -1,6 +1,6 @@
 ﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class HotkeysSettingsPage : SettingsPageBase
+    public partial class HotkeysSettingsPage : SettingsPageWithHeader
     {
         public HotkeysSettingsPage()
         {

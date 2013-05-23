@@ -127,11 +127,11 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\ConfigFileSettingsSet.cs" />
-    <Compile Include="CommandsDialogs\SettingsDialog\ConfigFileSettingsPageHeader.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\SettingsPageHeader.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\ConfigFileSettingsPageHeader.Designer.cs">
-      <DependentUpon>ConfigFileSettingsPageHeader.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\SettingsDialog\SettingsPageHeader.Designer.cs">
+      <DependentUpon>SettingsPageHeader.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.cs">
       <SubType>UserControl</SubType>
@@ -140,6 +140,9 @@
       <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\RepoDistSettingsSet.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\SettingsPageWithHeader.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
     <Compile Include="RepoHosts.cs" />
     <Compile Include="UserControls\BranchComboBox.cs">
@@ -930,8 +933,8 @@
     <EmbeddedResource Include="CommandsDialogs\FormatPatchDialog\SmtpCredentials.resx">
       <DependentUpon>SmtpCredentials.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\ConfigFileSettingsPageHeader.resx">
-      <DependentUpon>ConfigFileSettingsPageHeader.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\SettingsPageHeader.resx">
+      <DependentUpon>SettingsPageHeader.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.resx">
       <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>

@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     /// <summary>
     /// </summary>
-    public partial class ChecklistSettingsPage : SettingsPageBase
+    public partial class ChecklistSettingsPage : SettingsPageWithHeader
     {
         private readonly TranslationString _wrongGitVersion =
             new TranslationString("Git found but version {0} is not supported. Upgrade to version {1} or later");

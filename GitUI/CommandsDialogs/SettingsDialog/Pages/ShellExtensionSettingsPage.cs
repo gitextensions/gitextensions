@@ -3,7 +3,7 @@ using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class ShellExtensionSettingsPage : SettingsPageBase
+    public partial class ShellExtensionSettingsPage : SettingsPageWithHeader
     {
         public ShellExtensionSettingsPage()
         {

@@ -2,7 +2,7 @@
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class AdvancedSettingsPage : SettingsPageBase
+    public partial class AdvancedSettingsPage : SettingsPageWithHeader
     {
         public AdvancedSettingsPage()
         {
