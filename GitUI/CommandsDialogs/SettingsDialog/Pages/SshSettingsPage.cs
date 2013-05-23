@@ -7,7 +7,7 @@ using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class SshSettingsPage : SettingsPageBase
+    public partial class SshSettingsPage : SettingsPageWithHeader
     {
 
         public SshSettingsPage()

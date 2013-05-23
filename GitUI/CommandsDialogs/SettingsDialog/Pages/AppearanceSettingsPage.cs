@@ -10,7 +10,7 @@ using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class AppearanceSettingsPage : SettingsPageBase
+    public partial class AppearanceSettingsPage : SettingsPageWithHeader
     {
         private readonly TranslationString _noDictFilesFound =
             new TranslationString("No dictionary files found in: {0}");
