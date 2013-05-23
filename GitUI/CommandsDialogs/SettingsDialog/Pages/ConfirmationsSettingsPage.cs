@@ -3,7 +3,7 @@ using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class ConfirmationsSettingsPage : SettingsPageBase
+    public partial class ConfirmationsSettingsPage : SettingsPageWithHeader
     {
         public ConfirmationsSettingsPage()
         {

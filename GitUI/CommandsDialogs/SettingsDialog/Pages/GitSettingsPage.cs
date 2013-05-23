@@ -6,7 +6,7 @@ using ResourceManager.Translation;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class GitSettingsPage : SettingsPageBase
+    public partial class GitSettingsPage : SettingsPageWithHeader
     {
         private readonly TranslationString _homeIsSetToString = new TranslationString("HOME is set to:");
 

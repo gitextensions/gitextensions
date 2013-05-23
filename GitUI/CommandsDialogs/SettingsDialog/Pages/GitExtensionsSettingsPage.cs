@@ -2,7 +2,7 @@
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class GitExtensionsSettingsPage : SettingsPageBase
+    public partial class GitExtensionsSettingsPage : SettingsPageWithHeader
     {
         public GitExtensionsSettingsPage()
         {
