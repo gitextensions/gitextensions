@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Utils;
 
 namespace GitUI.UserControls

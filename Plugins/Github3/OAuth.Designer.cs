@@ -1,4 +1,3 @@
-﻿﻿using System;
 ﻿﻿
 namespace Github3
 {

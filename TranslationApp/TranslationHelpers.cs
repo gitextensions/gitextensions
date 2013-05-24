@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using ResourceManager.Translation;
-using System.Diagnostics;
 
 namespace TranslationApp
 {
