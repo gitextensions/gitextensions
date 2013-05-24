@@ -1458,7 +1458,6 @@ namespace GitUI.CommandsDialogs
             // 
             this.commitToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconClean;
             this.commitToolStripMenuItem.Name = "commitToolStripMenuItem";
-            this.commitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Space)));
             this.commitToolStripMenuItem.Size = new System.Drawing.Size(271, 24);
             this.commitToolStripMenuItem.Text = "Commit...";
             this.commitToolStripMenuItem.Click += new System.EventHandler(this.CommitToolStripMenuItemClick);
