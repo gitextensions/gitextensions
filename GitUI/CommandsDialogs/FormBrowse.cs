@@ -450,6 +450,7 @@ namespace GitUI.CommandsDialogs
         {
             selectCurrentRevisionToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.SelectCurrentRevision).ToShortcutKeyDisplayString();
             gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.GitBash).ToShortcutKeyDisplayString();
+            commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.Commit).ToShortcutKeyDisplayString();
             // TODO: add more
         }
 
