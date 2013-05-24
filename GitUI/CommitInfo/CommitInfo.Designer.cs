@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-namespace GitUI.CommitInfo
+﻿namespace GitUI.CommitInfo
 {
     partial class CommitInfo
     {

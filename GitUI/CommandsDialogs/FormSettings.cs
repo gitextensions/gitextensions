@@ -48,6 +48,10 @@ namespace GitUI.CommandsDialogs
             if (aCommands == null)
                 return;
 
+#if DEBUG
+            buttonDiscard.Visible = true;
+#endif
+
             settingsTreeView.AddSettingsPage(new GitExtensionsSettingsGroup(), null);
             SettingsPageReference gitExtPageRef = GitExtensionsSettingsGroup.GetPageReference();
             

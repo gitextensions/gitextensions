@@ -34,15 +34,14 @@ namespace PatchApply
         {
             var patches = new List<Patch>();
             Patch patch = null;
-            bool validate;
-            string input;
             PatchProcessorState state = PatchProcessorState.OutsidePatch;
             string[] lines = patchText.Split('\n');
             for(int i = 0; i < lines.Length; i++)
             {
-                input = lines[i];
-                validate = true;
-                if (IsStartOfANewPatch(input))
+                string input = lines[i];
+                bool validate = true;
+                bool combinedDiff;
+                if (IsStartOfANewPatch(input, out combinedDiff))
                 {
                     state = PatchProcessorState.InHeader;
                     validate = false;
@@ -51,7 +50,9 @@ namespace PatchApply
                     input = GitModule.ReEncodeFileNameFromLossless(input);
                     patch.PatchHeader = input;
                     patch.Type = Patch.PatchType.ChangeFile;
-                    ExtractPatchFilenames(patch);
+                    patch.CombinedDiff = combinedDiff;
+                    if (!combinedDiff)
+                        ExtractPatchFilenames(patch);
                 }
                 else if (state == PatchProcessorState.InHeader)
                 {
@@ -139,7 +140,11 @@ namespace PatchApply
                     Match regexMatch = Regex.Match(input, "[-]{3}[ ][\\\"]{0,1}[aiwco12]/(.*)[\\\"]{0,1}");
 
                     if (!regexMatch.Success || patch.FileNameA != (regexMatch.Groups[1].Value.Trim()))
-                        throw new FormatException("Old filename not parsed correct: " + input);
+                    {
+                        if (!patch.CombinedDiff)
+                            throw new FormatException("Old filename not parsed correct: " + input);
+                        patch.FileNameA = regexMatch.Groups[1].Value.Trim();
+                    }
                 }
                 else if (IsNewFileMissing(input))
                 {
@@ -151,11 +156,17 @@ namespace PatchApply
                 //we expect a new file now!
                 else if (input.StartsWith("+++ "))
                 {
+                    if (patch.CombinedDiff)
+                        return;
                     input = GitModule.UnquoteFileName(input);
                     Match regexMatch = Regex.Match(input, "[+]{3}[ ][\\\"]{0,1}[biwco12]/(.*)[\\\"]{0,1}");
 
                     if (!regexMatch.Success || patch.FileNameB != (regexMatch.Groups[1].Value.Trim()))
-                        throw new FormatException("New filename not parsed correct: " + input);
+                    {
+                        if (!patch.CombinedDiff)
+                            throw new FormatException("New filename not parsed correct: " + input);
+                        patch.FileNameB = regexMatch.Groups[1].Value.Trim();
+                    }
                 }
             }
             else
@@ -208,9 +219,10 @@ namespace PatchApply
             patch.FileNameB = match.Groups[2].Value.Trim();
         }
 
-        private static bool IsStartOfANewPatch(string input)
+        private static bool IsStartOfANewPatch(string input, out bool combinedDiff)
         {
-            return input.StartsWith("diff --git ");
+            combinedDiff = input.StartsWith("diff --cc ");
+            return input.StartsWith("diff --git ") || combinedDiff;
         }
 
         private static bool SetPatchType(string input, Patch patch)

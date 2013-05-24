@@ -110,6 +110,7 @@ namespace GitUI
             this.showAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showRelativeDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGitNotesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -570,7 +571,8 @@ namespace GitUI
             this.orderRevisionsByDateToolStripMenuItem,
             this.showAuthorDateToolStripMenuItem,
             this.showRelativeDateToolStripMenuItem,
-            this.showGitNotesToolStripMenuItem});
+            this.showGitNotesToolStripMenuItem,
+            this.showTagsToolStripMenuItem});
             this.toolStripMenuItemView.Name = "toolStripMenuItemView";
             this.toolStripMenuItemView.Size = new System.Drawing.Size(264, 24);
             this.toolStripMenuItemView.Text = "View";
@@ -616,6 +618,13 @@ namespace GitUI
             this.showGitNotesToolStripMenuItem.Size = new System.Drawing.Size(234, 24);
             this.showGitNotesToolStripMenuItem.Text = "Show git notes";
             this.showGitNotesToolStripMenuItem.Click += new System.EventHandler(this.ShowGitNotesToolStripMenuItem_Click);
+            // 
+            // showTagsToolStripMenuItem
+            // 
+            this.showTagsToolStripMenuItem.Name = "showTagsToolStripMenuItem";
+            this.showTagsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.showTagsToolStripMenuItem.Text = "Show tags";
+            this.showTagsToolStripMenuItem.Click += new System.EventHandler(this.showTagsToolStripMenuItem_Click);
             // 
             // filterToolStripMenuItem
             // 
@@ -876,5 +885,6 @@ namespace GitUI
         private System.Windows.Forms.DataGridViewTextBoxColumn Author;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn Graph;
+        private System.Windows.Forms.ToolStripMenuItem showTagsToolStripMenuItem;
     }
 }

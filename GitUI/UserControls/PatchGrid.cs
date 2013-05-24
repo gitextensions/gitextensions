@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using GitCommands;
 using PatchApply;
 using ResourceManager.Translation;
 

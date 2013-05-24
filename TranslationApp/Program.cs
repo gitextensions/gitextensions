@@ -1,11 +1,10 @@
-﻿using GitCommands;
-using GitCommands.Utils;
-using ResourceManager.Translation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands.Utils;
+using ResourceManager.Translation;
 
 namespace TranslationApp
 {

@@ -255,7 +255,7 @@ namespace GitUI.CommandsDialogs
                 file.IsTracked = true;
                 file.Name = fileName;
                 file.IsSubmodule = GitModule.IsValidGitWorkingDir(Path.Combine(Module.WorkingDir, fileName));
-                Diff.ViewPatch(FileChanges, file, "You need to select at least one revision to view diff.");
+                Diff.ViewChanges(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
             }
 
         }
