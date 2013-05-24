@@ -54,9 +54,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 GlobalRB.Checked = true;
 
                 EffectiveRB.Visible = false;
+                DistributedRB.Visible = false;
                 LocalRB.Visible = false;
                 arrows1.Visible = false;
                 arrows2.Visible = false;
+                arrow3.Visible = false;
+                tableLayoutPanel2.RowStyles[2].Height = 0;
             }
             else
             {
@@ -81,10 +84,28 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     }
 
                     arrows2.ForeColor = arrows1.ForeColor;
-
+                    arrow3.ForeColor = arrows1.ForeColor;
                 };
 
                 EffectiveRB.Checked = true;
+
+                IRepoDistSettingsPage repoDistPage = localSettings as IRepoDistSettingsPage;
+
+                if (repoDistPage == null)
+                {
+                    DistributedRB.Visible = false;
+                    arrow3.Visible = false;
+                }
+                else
+                {
+                    DistributedRB.CheckedChanged += (a, b) =>
+                    {
+                        if (DistributedRB.Checked)
+                        {
+                            repoDistPage.SetRepoDistSettings();
+                        }
+                    };                
+                }
 
             }
 

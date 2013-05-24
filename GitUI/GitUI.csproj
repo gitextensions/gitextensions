@@ -127,6 +127,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\ConfigFileSettingsSet.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\RepoDistSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\SettingsPageHeader.cs">
       <SubType>UserControl</SubType>
     </Compile>
