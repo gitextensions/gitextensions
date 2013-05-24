@@ -112,6 +112,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator32 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFilenameToClipboardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diffShowInFileTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator33 = new System.Windows.Forms.ToolStripSeparator();
             this.fileHistoryDiffToolstripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -784,7 +785,7 @@ namespace GitUI.CommandsDialogs
             // 
             // fileTreeOpenContainingFolderToolStripMenuItem
             // 
-            this.fileTreeOpenContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFileTree;
+            this.fileTreeOpenContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconBrowseFileExplorer;
             this.fileTreeOpenContainingFolderToolStripMenuItem.Name = "fileTreeOpenContainingFolderToolStripMenuItem";
             this.fileTreeOpenContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(341, 24);
             this.fileTreeOpenContainingFolderToolStripMenuItem.Text = "Open containing folder";
@@ -937,6 +938,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator32,
             this.copyFilenameToClipboardToolStripMenuItem1,
             this.openContainingFolderToolStripMenuItem,
+            this.diffShowInFileTreeToolStripMenuItem,
             this.toolStripSeparator33,
             this.fileHistoryDiffToolstripMenuItem,
             this.blameToolStripMenuItem,
@@ -1039,16 +1041,24 @@ namespace GitUI.CommandsDialogs
             this.copyFilenameToClipboardToolStripMenuItem1.Name = "copyFilenameToClipboardToolStripMenuItem1";
             this.copyFilenameToClipboardToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.copyFilenameToClipboardToolStripMenuItem1.Size = new System.Drawing.Size(232, 24);
-            this.copyFilenameToClipboardToolStripMenuItem1.Text = "Copy full path";
+            this.copyFilenameToClipboardToolStripMenuItem1.Text = "Copy full path(s)";
             this.copyFilenameToClipboardToolStripMenuItem1.Click += new System.EventHandler(this.copyFilenameToClipboardToolStripMenuItem1_Click);
             // 
             // openContainingFolderToolStripMenuItem
             // 
-            this.openContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFileTree;
+            this.openContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconBrowseFileExplorer;
             this.openContainingFolderToolStripMenuItem.Name = "openContainingFolderToolStripMenuItem";
             this.openContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(232, 24);
-            this.openContainingFolderToolStripMenuItem.Text = "Open containing folder";
+            this.openContainingFolderToolStripMenuItem.Text = "Open containing folder(s)";
             this.openContainingFolderToolStripMenuItem.Click += new System.EventHandler(this.openContainingFolderToolStripMenuItem_Click);
+            //
+            // diffShowInFileTreeToolStripMenuItem
+            //
+            this.diffShowInFileTreeToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFileTree;
+            this.diffShowInFileTreeToolStripMenuItem.Name = "diffShowInFileTreeToolStripMenuItem";
+            this.diffShowInFileTreeToolStripMenuItem.Size = new System.Drawing.Size(232, 24);
+            this.diffShowInFileTreeToolStripMenuItem.Text = "Show in File tree";
+            this.diffShowInFileTreeToolStripMenuItem.Click += new System.EventHandler(this.diffShowInFileTreeToolStripMenuItem_Click);
             // 
             // toolStripSeparator33
             // 
@@ -2147,6 +2157,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem aboutToolStripMenuItem;
         private MenuStripEx menuStrip1;
         private ToolStripMenuItem openContainingFolderToolStripMenuItem;
+        private ToolStripMenuItem diffShowInFileTreeToolStripMenuItem;
         private ToolStripMenuItem fileTreeOpenContainingFolderToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator21;
         private ToolStripSeparator toolStripSeparator25;
