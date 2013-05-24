@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace GitUI.CommandsDialogs
 {
     partial class FormCheckoutBranch

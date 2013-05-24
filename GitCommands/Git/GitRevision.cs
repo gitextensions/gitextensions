@@ -10,10 +10,10 @@ namespace GitCommands
         public const string UnstagedGuid = "0000000000000000000000000000000000000000";
         public const string IndexGuid = "1111111111111111111111111111111111111111";
         public const string Sha1HashPattern = @"[a-f\d]{40}";
-        public static readonly Regex Sha1HashRegex = new Regex("^" + GitRevision.Sha1HashPattern + "$", RegexOptions.Compiled);
+        public static readonly Regex Sha1HashRegex = new Regex("^" + Sha1HashPattern + "$", RegexOptions.Compiled);
 
 
-        public String[] ParentGuids;
+        public string[] ParentGuids;
         private IList<IGitItem> _subItems;
         private readonly List<GitRef> _refs = new List<GitRef>();
         private readonly GitModule _module;

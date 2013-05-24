@@ -271,8 +271,8 @@ namespace GitUI.CommandsDialogs
             {
                 if (Settings.PlaySpecialStartupSound)
                 {
-                    using (var cow_moo = Properties.Resources.cow_moo)
-                        new System.Media.SoundPlayer(cow_moo).Play();
+                    using (var cowMoo = Resources.cow_moo)
+                        new System.Media.SoundPlayer(cowMoo).Play();
                 }
             }
             catch // This code is just for fun, we do not want the program to crash because of it.
@@ -285,15 +285,15 @@ namespace GitUI.CommandsDialogs
             this.InvokeAsync(() =>
             {
                 RefreshButton.Image = indexChanged && Settings.UseFastChecks && Module.IsValidGitWorkingDir()
-                                          ? GitUI.Properties.Resources.arrow_refresh_dirty
-                                          : GitUI.Properties.Resources.arrow_refresh;
+                                          ? Resources.arrow_refresh_dirty
+                                          : Resources.arrow_refresh;
             });
         }
 
-        private bool pluginsLoaded;
+        private bool _pluginsLoaded;
         private void LoadPluginsInPluginMenu()
         {
-            if (pluginsLoaded)
+            if (_pluginsLoaded)
                 return;
             foreach (var plugin in LoadedPlugins.Plugins)
             {
@@ -301,7 +301,7 @@ namespace GitUI.CommandsDialogs
                 item.Click += ItemClick;
                 pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
             }
-            pluginsLoaded = true;
+            _pluginsLoaded = true;
             UpdatePluginMenu(Module.IsValidGitWorkingDir());
         }
 
@@ -422,6 +422,9 @@ namespace GitUI.CommandsDialogs
             if (RepoHosts.GitHosters.Count == 1)
                 _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
             _filterBranchHelper.InitToolStripBranchFilter();
+
+            SetShortcutKeyDisplayStringsFromHotkeySettings();
+
             if (hard && hasWorkingDir)
                 ShowRevisions();
             RefreshWorkingDirCombo();
@@ -438,6 +441,17 @@ namespace GitUI.CommandsDialogs
             UICommands.RaisePostBrowseInitialize(this);
 
             Cursor.Current = Cursors.Default;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void SetShortcutKeyDisplayStringsFromHotkeySettings()
+        {
+            selectCurrentRevisionToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.SelectCurrentRevision).ToShortcutKeyDisplayString();
+            gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.GitBash).ToShortcutKeyDisplayString();
+            commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.Commit).ToShortcutKeyDisplayString();
+            // TODO: add more
         }
 
         private void RefreshWorkingDirCombo()
@@ -1530,7 +1544,7 @@ namespace GitUI.CommandsDialogs
             IList<GitRevision> items = RevisionGrid.GetSelectedRevisions();
             if (items.Count() == 1)
                 items.Add(new GitRevision(Module, DiffFiles.SelectedItemParent));
-            DiffText.ViewPatch(items, DiffFiles.SelectedItem, String.Empty);
+            DiffText.ViewChanges(items, DiffFiles.SelectedItem, String.Empty);
         }
 
         private void ChangelogToolStripMenuItemClick(object sender, EventArgs e)
@@ -1907,11 +1921,6 @@ namespace GitUI.CommandsDialogs
             UICommands.StartCreateBranchDialog(this, RevisionGrid.GetSelectedRevisions().FirstOrDefault());
         }
 
-        private void RevisionGridDoubleClick(object sender, EventArgs e)
-        {
-            UICommands.StartCompareRevisionsDialog(this);
-        }
-
         private void GitBashClick(object sender, EventArgs e)
         {
             GitBashToolStripMenuItemClick1(sender, e);
@@ -2166,7 +2175,6 @@ namespace GitUI.CommandsDialogs
             UICommands.RepoChangedNotifier.Notify();
         }
 
-
         protected override bool ExecuteCommand(int cmd)
         {
             switch ((Commands)cmd)
@@ -2203,17 +2211,17 @@ namespace GitUI.CommandsDialogs
         {
             using (FormGoToCommit formGoToCommit = new FormGoToCommit(UICommands))
             {
-                if (formGoToCommit.ShowDialog(this) == DialogResult.OK)
+                if (formGoToCommit.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                string revisionGuid = formGoToCommit.GetRevision();
+                if (!string.IsNullOrEmpty(revisionGuid))
                 {
-                    string revisionGuid = formGoToCommit.GetRevision();
-                    if (!string.IsNullOrEmpty(revisionGuid))
-                    {
-                        RevisionGrid.SetSelectedRevision(new GitRevision(Module, revisionGuid));
-                    }
-                    else
-                    {
-                        MessageBox.Show(this, _noRevisionFoundError.Text);
-                    }
+                    RevisionGrid.SetSelectedRevision(new GitRevision(Module, revisionGuid));
+                }
+                else
+                {
+                    MessageBox.Show(this, _noRevisionFoundError.Text);
                 }
             }
         }
@@ -2358,6 +2366,83 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        /// <summary>
+        /// TODO: move logic to other source file?
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var diffGitItemStatus = DiffFiles.SelectedItems.First();
+            
+            ExecuteCommand((int)Commands.FocusFileTree); // switch to view (and fills the first level of file tree data model if not already done)
+
+            var currentNodes = GitTree.Nodes;
+            TreeNode foundNode = null;
+            bool isIncompleteMatch = false;
+            var pathParts = UtilGetPathParts(diffGitItemStatus.Name);
+            for (int i = 0; i < pathParts.Length; i++)
+            {
+                string pathPart = pathParts[i];
+                string diffPathPart = pathPart.Replace("/", "\\");
+
+                var currentFoundNode = currentNodes.Cast<TreeNode>().FirstOrDefault(a =>
+                {
+                    var treeGitItem = a.Tag as GitItem;
+                    if (treeGitItem != null)
+                    {
+                        // TODO: what about case(in)sensitive handling?
+                        return treeGitItem.Name == diffPathPart;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                });
+
+                if (currentFoundNode == null)
+                {
+                    isIncompleteMatch = true;
+                    break;
+                }
+
+                foundNode = currentFoundNode;
+
+                if (i < pathParts.Length - 1) // if not the last path part...
+                {
+                    foundNode.Expand(); // load more data
+                    
+                    if (currentFoundNode.Nodes == null)
+                    {
+                        isIncompleteMatch = true;
+                        break;
+                    }
+
+                    currentNodes = currentFoundNode.Nodes;
+                }
+            }
+
+            if (foundNode != null)
+            {
+                if (isIncompleteMatch)
+                {
+                    MessageBox.Show("Node not found. The next available parent node will be selected.");
+                }
+
+                GitTree.SelectedNode = foundNode;
+                GitTree.SelectedNode.EnsureVisible();
+            }
+            else
+            {
+                MessageBox.Show("Node not found. File tree selection was not changed.");
+            }
+        }
+
+        private string[] UtilGetPathParts(string path)
+        {
+            return path.Split('/');
+        }
+
         private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var gitItem = GitTree.SelectedNode.Tag as GitItem;
@@ -2384,28 +2469,39 @@ namespace GitUI.CommandsDialogs
         {
             bool artificialRevSelected;
 
-            IList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions();
+            IList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
 
-            if (revisions.Count == 0)
+            if (selectedRevisions.Count == 0)
                 artificialRevSelected = false;
             else
-                artificialRevSelected = revisions[0].IsArtificial();
-            if (revisions.Count > 1)
-                artificialRevSelected = artificialRevSelected || revisions[revisions.Count - 1].IsArtificial();
+                artificialRevSelected = selectedRevisions[0].IsArtificial();
+            if (selectedRevisions.Count > 1)
+                artificialRevSelected = artificialRevSelected || selectedRevisions[selectedRevisions.Count - 1].IsArtificial();
 
-            foreach (var item in DiffFiles.SelectedItems)
+            // disable items that need exactly one selected item
+            bool isExcactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
+            openWithDifftoolToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
+            saveAsToolStripMenuItem1.Enabled = isExcactlyOneItemSelected;
+            diffShowInFileTreeToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
+            fileHistoryDiffToolstripMenuItem.Enabled = isExcactlyOneItemSelected;
+            blameToolStripMenuItem.Enabled = isExcactlyOneItemSelected;
+
+            // openContainingFolderToolStripMenuItem.Enabled or not
             {
-                var fileNames = new StringBuilder();
-                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+                openContainingFolderToolStripMenuItem.Enabled = false;
 
-                if (File.Exists(fileNames.ToString()))
+                foreach (var item in DiffFiles.SelectedItems)
                 {
-                    openContainingFolderToolStripMenuItem.Enabled = true;
-                    return;
+                    var fileNames = new StringBuilder();
+                    fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+
+                    if (File.Exists(fileNames.ToString()))
+                    {
+                        openContainingFolderToolStripMenuItem.Enabled = true;
+                        break;
+                    }
                 }
             }
-
-            openContainingFolderToolStripMenuItem.Enabled = false;
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -2948,6 +3044,11 @@ namespace GitUI.CommandsDialogs
         private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
         {
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+        }
+
+        private void selectCurrentRevisionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExecuteCommand((int)Commands.SelectCurrentRevision);
         }
     }
 
