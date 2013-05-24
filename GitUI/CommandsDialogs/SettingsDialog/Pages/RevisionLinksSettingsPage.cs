@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             LinksGrid.AutoGenerateColumns = false;
         }
 
-        protected override void OnLoadSettings()
+        protected override void  SettingsToPage() 	
         {
             parser = new GitExtLinksParser(Module);
             ReloadCategories();
@@ -36,7 +36,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CategoryChanged();
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             if (parser != null)
             {

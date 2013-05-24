@@ -39,8 +39,8 @@ namespace GitUI.CommandsDialogs
             try
             {
                 var dirTo = this._NO_TRANSLATE_destinationComboBox.Text;
-                if (!dirTo.EndsWith(Settings.PathSeparator.ToString()) && !dirTo.EndsWith(Settings.PathSeparatorWrong.ToString()))
-                    dirTo += Settings.PathSeparator.ToString();
+                if (!dirTo.EndsWith(AppSettings.PathSeparator.ToString()) && !dirTo.EndsWith(AppSettings.PathSeparatorWrong.ToString()))
+                    dirTo += AppSettings.PathSeparator.ToString();
 
                 dirTo += this._NO_TRANSLATE_subdirectoryTextBox.Text;
 
@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs
                 if (!int.TryParse(tbFrom.Text, out from))
                     from = 0;
                 
-                var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, 
+                var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand, 
                     GitSvnCommandHelpers.CloneCmd(_NO_TRANSLATE_SvnFrom.Text, dirTo,
                     tbUsername.Text, authorsfile, from,
                     cbTrunk.Checked ? _NO_TRANSLATE_tbTrunk.Text : null,

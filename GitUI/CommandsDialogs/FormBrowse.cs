@@ -22,7 +22,7 @@ using GitUI.Properties;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using ResourceManager.Translation;
-using Settings = GitCommands.Settings;
+using Settings = GitCommands.AppSettings;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
@@ -1428,8 +1428,8 @@ namespace GitUI.CommandsDialogs
 
         private void SaveUserMenuPosition()
         {
-            GitCommands.Settings.UserMenuLocationX = UserMenuToolStrip.Location.X;
-            GitCommands.Settings.UserMenuLocationY = UserMenuToolStrip.Location.Y;
+            GitCommands.AppSettings.UserMenuLocationX = UserMenuToolStrip.Location.X;
+            GitCommands.AppSettings.UserMenuLocationY = UserMenuToolStrip.Location.Y;
         }
 
         private void EditGitignoreToolStripMenuItem1Click(object sender, EventArgs e)
