@@ -9,13 +9,15 @@ namespace GitUI.UserControls
     {
         /// <summary>
         /// TODO: make customizable
+        /// internal for unit tests
         /// </summary>
-        private string ManualLocation;
+        internal string ManualLocation;
 
         /// <summary>
         /// TODO: make customizable
+        /// internal for unit tests
         /// </summary>
-        private ManualType ManualType;
+        internal ManualType ManualType;
 
         public GotoUserManualControl()
         {
@@ -69,15 +71,21 @@ namespace GitUI.UserControls
             OpenUrlInDefaultBrowser(url);
         }
 
-        private string GetUrl()
+        /// <summary>
+        /// internal for test
+        /// </summary>
+        /// <returns></returns>
+        internal string GetUrl()
         {
             switch (ManualType)
             {
                 case UserControls.ManualType.SingleHtml:
-                    return string.Format("{0}/index.html#{1}", ManualLocation, ManualSectionAnchorName);
+                    return string.Format("{0}/index.html{1}{2}",
+                        ManualLocation, ManualSectionAnchorName.IsNullOrEmpty() ? "" : "#", ManualSectionAnchorName);
 
                 case UserControls.ManualType.StandardHtml:
-                    return string.Format("{0}/{1}/#{2}", ManualLocation, ManualSectionSubfolder, ManualSectionAnchorName);
+                    return string.Format("{0}/{1}/{2}{3}",
+                        ManualLocation, ManualSectionSubfolder, ManualSectionAnchorName.IsNullOrEmpty() ? "" : "#", ManualSectionAnchorName);
 
                 default:
                     throw new NotImplementedException();
