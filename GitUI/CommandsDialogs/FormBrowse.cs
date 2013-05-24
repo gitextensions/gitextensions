@@ -93,6 +93,12 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _updateCurrentSubmodule =
             new TranslationString("Update current submodule");
 
+        private readonly TranslationString _nodeNotFoundNextAvailableParentSelected =
+            new TranslationString("Node not found. The next available parent node will be selected.");
+
+        private readonly TranslationString _nodeNotFoundSelectionNotChanged =
+            new TranslationString("Node not found. File tree selection was not changed.");
+
         #endregion
 
         private Dashboard _dashboard;
@@ -2426,7 +2432,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (isIncompleteMatch)
                 {
-                    MessageBox.Show("Node not found. The next available parent node will be selected.");
+                    MessageBox.Show(_nodeNotFoundNextAvailableParentSelected.Text);
                 }
 
                 GitTree.SelectedNode = foundNode;
@@ -2434,7 +2440,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                MessageBox.Show("Node not found. File tree selection was not changed.");
+                MessageBox.Show(_nodeNotFoundSelectionNotChanged.Text);
             }
         }
 
