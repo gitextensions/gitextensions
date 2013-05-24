@@ -422,6 +422,9 @@ namespace GitUI.CommandsDialogs
             if (RepoHosts.GitHosters.Count == 1)
                 _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
             _filterBranchHelper.InitToolStripBranchFilter();
+
+            SetShortcutKeyDisplayStringsFromHotkeySettings();
+
             if (hard && hasWorkingDir)
                 ShowRevisions();
             RefreshWorkingDirCombo();
@@ -438,6 +441,17 @@ namespace GitUI.CommandsDialogs
             UICommands.RaisePostBrowseInitialize(this);
 
             Cursor.Current = Cursors.Default;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void SetShortcutKeyDisplayStringsFromHotkeySettings()
+        {
+            selectCurrentRevisionToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.SelectCurrentRevision).ToShortcutKeyDisplayString();
+            gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.GitBash).ToShortcutKeyDisplayString();
+            commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.Commit).ToShortcutKeyDisplayString();
+            // TODO: add more
         }
 
         private void RefreshWorkingDirCombo()
@@ -2943,6 +2957,11 @@ namespace GitUI.CommandsDialogs
         private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
         {
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
+        }
+
+        private void selectCurrentRevisionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExecuteCommand((int)Commands.SelectCurrentRevision);
         }
     }
 
