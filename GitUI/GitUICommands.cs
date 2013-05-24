@@ -12,7 +12,7 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
-using Settings = GitCommands.Settings;
+using Settings = GitCommands.AppSettings;
 
 namespace GitUI
 {
@@ -1370,7 +1370,8 @@ namespace GitUI
 
         public bool StartRepoSettingsDialog(IWin32Window owner)
         {
-            return StartSettingsDialog(owner, GitUI.CommandsDialogs.SettingsDialog.Pages.LocalSettingsSettingsPage.GetPageReference());
+            return false;
+            //TODO jb preselect local settings return StartSettingsDialog(owner, GitUI.CommandsDialogs.SettingsDialog.Pages.LocalSettingsSettingsPage.GetPageReference());
         }
 
         public bool StartBrowseDialog(IWin32Window owner, string filter)
