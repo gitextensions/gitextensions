@@ -223,8 +223,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void SetCommitExpressionFromClipboard()
         {
             string text = Clipboard.GetText().Trim();
-            string guid = Module.RevParse(text);
-            if (!string.IsNullOrEmpty(guid))
+            //// string guid = Module.RevParse(text); // takes a while and we don't want that when dialog opens
+            if (!string.IsNullOrEmpty(text))
             {
                 textboxCommitExpression.Text = text;
             }
