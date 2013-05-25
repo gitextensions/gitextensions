@@ -33,9 +33,28 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             SetCommitExpressionFromClipboard();
         }
 
-        public string GetRevision()
+        /// <summary>
+        /// might return an empty or invalid revision
+        /// </summary>
+        /// <returns></returns>
+        public string GetSelectedRevision()
         {
             return _selectedRevision;
+        }
+
+        /// <summary>
+        /// returns null if revision does not exist (could not be revparsed)
+        /// </summary>
+        /// <returns></returns>
+        public string ValidateAndGetSelectedRevision()
+        {
+            string guid = Module.RevParse(_selectedRevision);
+            if (!string.IsNullOrEmpty(guid))
+            {
+                return guid;
+            }
+
+            return null;
         }
 
         private void commitExpression_TextChanged(object sender, EventArgs e)
@@ -111,7 +130,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (textboxCommitExpression.Focused)
             {
-                _selectedRevision = Module.RevParse(textboxCommitExpression.Text.Trim());
+                _selectedRevision = textboxCommitExpression.Text.Trim();
             }
             else if (comboBoxTags.Focused)
             {
