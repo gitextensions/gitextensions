@@ -3,7 +3,7 @@
 if [ ! -d 'packages' ]; then
 	mkdir packages
 fi
-if [ $1 = NoMono ] ; then 
+if [ "$1" = "NoMono" ] ; then
 
 	find ./ -name packages.config -exec .nuget/NuGet.exe install {} -o packages \;
 	
