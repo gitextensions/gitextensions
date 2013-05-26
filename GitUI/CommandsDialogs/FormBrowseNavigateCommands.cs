@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using GitUI.Hotkey;
 
 namespace GitUI.CommandsDialogs
 {
@@ -17,9 +18,11 @@ namespace GitUI.CommandsDialogs
         GitUICommands UICommands;
         GitModule Module;
         RevisionGrid RevisionGrid;
+        FormBrowse _formBrowse;
 
-        public FormBrowseNavigateCommands(GitUICommands uiCommands, GitModule module, RevisionGrid revisionGrid)
+        public FormBrowseNavigateCommands(FormBrowse formBrowse, GitUICommands uiCommands, GitModule module, RevisionGrid revisionGrid)
         {
+            _formBrowse = formBrowse;
             UICommands = uiCommands;
             Module = module;
             RevisionGrid = revisionGrid;
@@ -40,16 +43,16 @@ namespace GitUI.CommandsDialogs
             TranslationUtl.TranslateItemsFromFields("FormBrowse", this, translation);
         }
 
-        public void SelectCurrentRevisionExecute(FormBrowse formBrowse)
+        public void SelectCurrentRevisionExecute()
         {
-            formBrowse.ExecuteCommand(GitUI.CommandsDialogs.FormBrowse.Commands.SelectCurrentRevision);
+            _formBrowse.ExecuteCommand(GitUI.CommandsDialogs.FormBrowse.Commands.SelectCurrentRevision);
         }
 
-        public void GotoCommitExcecute(Form parentWindow)
+        public void GotoCommitExcecute()
         {
             using (FormGoToCommit formGoToCommit = new FormGoToCommit(UICommands))
             {
-                if (formGoToCommit.ShowDialog(parentWindow) != DialogResult.OK)
+                if (formGoToCommit.ShowDialog(_formBrowse) != DialogResult.OK)
                     return;
 
                 string revisionGuid = formGoToCommit.GetRevision();
@@ -59,9 +62,39 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    MessageBox.Show(parentWindow, _noRevisionFoundError.Text);
+                    MessageBox.Show(_formBrowse, _noRevisionFoundError.Text);
                 }
             }
+        }
+
+        public IEnumerable<MenuCommand> GetMenuCommands()
+        {
+            var resultList = new List<MenuCommand>();
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "GotoCurrentRevision";
+                menuCommand.Text = "Go to current revision";
+                //// menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCommit;
+                menuCommand.ShortcutKeyDisplayString = _formBrowse.GetShortcutKeys(GitUI.CommandsDialogs.FormBrowse.Commands.SelectCurrentRevision).ToShortcutKeyDisplayString();
+                menuCommand.ExecuteAction = SelectCurrentRevisionExecute;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "GotoCommit";
+                menuCommand.Text = "Go to commit...";
+                menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCommit;
+                menuCommand.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+                        | System.Windows.Forms.Keys.G)));
+                menuCommand.ExecuteAction = GotoCommitExcecute;
+
+                resultList.Add(menuCommand);
+            }
+
+            return resultList;
         }
     }
 }

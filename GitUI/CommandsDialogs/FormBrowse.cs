@@ -126,6 +126,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
+            _formBrowseMenus.Translate();
             _formBrowseNavigateCommands.Translate();
         }
 
@@ -198,8 +199,8 @@ namespace GitUI.CommandsDialogs
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             }
 
-            _formBrowseMenus = new FormBrowseMenus(menuStrip1);
-            _formBrowseNavigateCommands = new FormBrowseNavigateCommands(aCommands, Module, RevisionGrid);
+            _formBrowseNavigateCommands = new FormBrowseNavigateCommands(this, aCommands, Module, RevisionGrid);
+            _formBrowseMenus = new FormBrowseMenus(menuStrip1, _formBrowseNavigateCommands.GetMenuCommands());
         }
 
         void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
@@ -459,14 +460,18 @@ namespace GitUI.CommandsDialogs
             Cursor.Current = Cursors.Default;
         }
 
+        internal Keys GetShortcutKeys(Commands cmd)
+        {
+            return GetShortcutKeys((int)cmd);
+        }
+
         /// <summary>
         /// 
         /// </summary>
         private void SetShortcutKeyDisplayStringsFromHotkeySettings()
         {
-            selectCurrentRevisionToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.SelectCurrentRevision).ToShortcutKeyDisplayString();
-            gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.GitBash).ToShortcutKeyDisplayString();
-            commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.Commit).ToShortcutKeyDisplayString();
+            gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitBash).ToShortcutKeyDisplayString();
+            commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.Commit).ToShortcutKeyDisplayString();
             // TODO: add more
         }
 
@@ -2228,11 +2233,6 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private void goToToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _formBrowseNavigateCommands.GotoCommitExcecute(this);
-        }
-
         private void toggleSplitViewLayout_Click(object sender, EventArgs e)
         {
             EnabledSplitViewLayout(MainSplitContainer.Panel2.Height == 0 && MainSplitContainer.Height > 0);
@@ -3052,11 +3052,5 @@ namespace GitUI.CommandsDialogs
         {
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
         }
-
-        private void selectCurrentRevisionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _formBrowseNavigateCommands.SelectCurrentRevisionExecute(this);
-        }
     }
-
 }
