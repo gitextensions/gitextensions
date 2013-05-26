@@ -96,18 +96,6 @@ namespace GitUI.CommandsDialogs
                 resultList.Add(menuCommand);
             }
 
-            ////resultList.Add(null); // == separator
-
-            ////{
-            ////    var menuCommand = new MenuCommand();
-            ////    menuCommand.Name = "GotoParent";
-            ////    menuCommand.Text = "Go to parent commit";
-            ////    menuCommand.ShortcutKeyDisplayString = _formBrowse.GetShortcutKeys(GitUI.CommandsDialogs.FormBrowse.Commands.).ToShortcutKeyDisplayString();
-            ////    menuCommand.ExecuteAction = GotoCommitExcecute;
-
-            ////    resultList.Add(menuCommand);
-            ////}
-
             return resultList;
         }
     }
