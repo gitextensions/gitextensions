@@ -20,6 +20,7 @@ using GitUI.Script;
 using Gravatar;
 using ResourceManager.Translation;
 using GitUI.UserControls;
+using GitUI.UserControls.RevisionGridClasses;
 
 namespace GitUI
 {

@@ -879,7 +879,7 @@
     </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
-    <Compile Include="UserControls\RevisionGridMenuCommands.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\RevisionGridMenuCommands.cs" />
     <Compile Include="UserControls\ToolStripEx.cs">
       <SubType>Component</SubType>
     </Compile>

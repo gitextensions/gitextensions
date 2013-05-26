@@ -6,7 +6,7 @@ using System.Text;
 using GitUI.Hotkey;
 using System.Windows.Forms;
 
-namespace GitUI.UserControls
+namespace GitUI.UserControls.RevisionGridClasses
 {
     internal class RevisionGridMenuCommands
     {
