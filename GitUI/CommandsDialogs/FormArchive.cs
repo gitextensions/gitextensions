@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
@@ -79,10 +80,25 @@ namespace GitUI.CommandsDialogs
                     string format = GetSelectedOutputFormat() == OutputFormat.Zip ? "zip" : "tar";
 
                     FormProcess.ShowDialog(this,
-                        string.Format("archive --format={0} {1} --output \"{2}\"",
-                        format, revision, saveFileDialog.FileName));
+                        string.Format("archive --format={0} {1} --output \"{2}\" {3}",
+                        format, revision, saveFileDialog.FileName, GetPathArgumentFromGui()));
                     Close();
                 }
+            }
+        }
+
+        private string GetPathArgumentFromGui()
+        {
+            if (!checkBoxPathFilter.Checked)
+            {
+                return "";
+            }
+            else
+            {
+                // 1. get all lines from text box
+                // 2. wrap lines with ""
+                // 3. join together with space as separator
+                return string.Join(" ", textBoxPaths.Lines.Select(a => string.Format("\"{0}\"", a)));
             }
         }
 
