@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace GitUI.CommandsDialogs
+namespace GitUI.CommandsDialogs.BrowseDialog
 {
     internal class FormBrowseUtil
     {
@@ -26,10 +26,7 @@ namespace GitUI.CommandsDialogs
 
         public static string GetFullPathFromFilename(GitModule gitModule, string filename)
         {
-            var filePath = Path.Combine(gitModule.WorkingDir, filename);
-            // needed?
-            ////    var fileNames = new StringBuilder();
-            ////    fileNames.Append((Module.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+            var filePath = Path.Combine(gitModule.WorkingDir, filename.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
 
             return filePath;
         }
