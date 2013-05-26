@@ -40,8 +40,8 @@
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBoxPathFilter = new System.Windows.Forms.CheckBox();
             this.textBoxPaths = new System.Windows.Forms.TextBox();
+            this.checkBoxPathFilter = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -65,7 +65,7 @@
             this.buttonArchiveRevision.AutoSize = true;
             this.buttonArchiveRevision.Image = global::GitUI.Properties.Resources.IconSaveAs;
             this.buttonArchiveRevision.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonArchiveRevision.Location = new System.Drawing.Point(481, 365);
+            this.buttonArchiveRevision.Location = new System.Drawing.Point(480, 334);
             this.buttonArchiveRevision.Name = "buttonArchiveRevision";
             this.buttonArchiveRevision.Size = new System.Drawing.Size(111, 25);
             this.buttonArchiveRevision.TabIndex = 3;
@@ -77,7 +77,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.tableLayoutPanel2);
-            this.groupBox1.Location = new System.Drawing.Point(366, 335);
+            this.groupBox1.Location = new System.Drawing.Point(365, 304);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(109, 55);
             this.groupBox1.TabIndex = 4;
@@ -132,7 +132,7 @@
             this.commitSummaryUserControl1.MinimumSize = new System.Drawing.Size(440, 160);
             this.commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             this.commitSummaryUserControl1.Revision = null;
-            this.commitSummaryUserControl1.Size = new System.Drawing.Size(459, 160);
+            this.commitSummaryUserControl1.Size = new System.Drawing.Size(458, 160);
             this.commitSummaryUserControl1.TabIndex = 5;
             // 
             // btnChooseRevision
@@ -168,14 +168,14 @@
             this.tableLayoutPanel4.Controls.Add(this.groupBox2, 0, 2);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 4;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(595, 393);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(594, 362);
             this.tableLayoutPanel4.TabIndex = 6;
             // 
             // flowLayoutPanel1
@@ -185,8 +185,8 @@
             this.flowLayoutPanel1.Controls.Add(this.btnChooseRevision);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(480, 17);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(479, 17);
+            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(113, 162);
             this.flowLayoutPanel1.TabIndex = 5;
@@ -198,10 +198,22 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(3, 184);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(472, 145);
+            this.groupBox2.Size = new System.Drawing.Size(471, 114);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filter files by path";
+            // 
+            // textBoxPaths
+            // 
+            this.textBoxPaths.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPaths.Location = new System.Drawing.Point(21, 47);
+            this.textBoxPaths.Multiline = true;
+            this.textBoxPaths.Name = "textBoxPaths";
+            this.textBoxPaths.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxPaths.Size = new System.Drawing.Size(436, 50);
+            this.textBoxPaths.TabIndex = 1;
             // 
             // checkBoxPathFilter
             // 
@@ -214,24 +226,13 @@
             this.checkBoxPathFilter.UseVisualStyleBackColor = true;
             this.checkBoxPathFilter.CheckedChanged += new System.EventHandler(this.checkBoxPathFilter_CheckedChanged);
             // 
-            // textBoxPaths
-            // 
-            this.textBoxPaths.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxPaths.Location = new System.Drawing.Point(21, 47);
-            this.textBoxPaths.Multiline = true;
-            this.textBoxPaths.Name = "textBoxPaths";
-            this.textBoxPaths.Size = new System.Drawing.Size(437, 81);
-            this.textBoxPaths.TabIndex = 1;
-            // 
             // FormArchive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(595, 393);
+            this.ClientSize = new System.Drawing.Size(594, 362);
             this.Controls.Add(this.tableLayoutPanel4);
-            this.MinimumSize = new System.Drawing.Size(611, 296);
+            this.MinimumSize = new System.Drawing.Size(610, 400);
             this.Name = "FormArchive";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Archive";
