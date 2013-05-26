@@ -19,6 +19,7 @@ using GitUI.RevisionGridClasses;
 using GitUI.Script;
 using Gravatar;
 using ResourceManager.Translation;
+using GitUI.UserControls;
 
 namespace GitUI
 {
@@ -69,6 +70,8 @@ namespace GitUI
         public event GitModuleChangedEventHandler GitModuleChanged;
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
 
+        private RevisionGridMenuCommands _revisionGridMenuCommands;
+
         public RevisionGrid()
         {
             InitLayout();
@@ -76,6 +79,8 @@ namespace GitUI
             this.Loading.Image = global::GitUI.Properties.Resources.loadingpanel;
 
             Translate();
+
+            _revisionGridMenuCommands = new RevisionGridMenuCommands(this);
 
             NormalFont = Settings.Font;
             Loading.Paint += Loading_Paint;
@@ -2447,6 +2452,11 @@ namespace GitUI
 
         #endregion
 
+        internal bool ExecuteCommand(Commands cmd)
+        {
+            return ExecuteCommand((int)cmd);
+        }
+
         private void NextQuickSearch(bool down)
         {
             var curIndex = -1;
@@ -2561,6 +2571,40 @@ namespace GitUI
                 return str;
             else
                 return str.Substring(0, characterCount).TrimEnd(' ');
+        }
+
+        /// <summary>
+        /// duplicated from GitExtensionsForm
+        /// </summary>
+        /// <param name="commandCode"></param>
+        /// <returns></returns>
+        protected Keys GetShortcutKeys(int commandCode)
+        {
+            var hotkey = GetHotkeyCommand(commandCode);
+            return hotkey == null ? Keys.None : hotkey.KeyData;
+        }
+
+        internal Keys GetShortcutKeys(Commands cmd)
+        {
+            return GetShortcutKeys((int)cmd);
+        }
+
+        /// <summary>
+        /// duplicated from GitExtensionsForm
+        /// </summary>
+        /// <param name="commandCode"></param>
+        /// <returns></returns>
+        protected Hotkey.HotkeyCommand GetHotkeyCommand(int commandCode)
+        {
+            if (Hotkeys == null)
+                return null;
+
+            return Hotkeys.FirstOrDefault(h => h.CommandCode == commandCode);
+        }
+
+        internal IEnumerable<MenuCommand> GetNavigateMenuCommands()
+        {
+            return _revisionGridMenuCommands.GetNavigateMenuCommands();
         }
     }
 }
