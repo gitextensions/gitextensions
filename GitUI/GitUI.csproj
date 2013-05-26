@@ -99,6 +99,7 @@
       <DependentUpon>FormUpdates.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\FormBrowseMenus.cs" />
+    <Compile Include="CommandsDialogs\FormBrowseNavigateCommands.cs" />
     <Compile Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
     </Compile>
