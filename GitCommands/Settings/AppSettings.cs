@@ -9,12 +9,19 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands.Logging;
 using GitCommands.Repository;
+using GitCommands.Settings;
 using GitCommands.Utils;
 using Microsoft.Win32;
 
 namespace GitCommands
 {
-   
+    public enum LocalChangesAction
+    {
+        DontChange,
+        Merge,
+        Reset,
+        Stash
+    }
 
     public static class AppSettings
     {
@@ -26,7 +33,7 @@ namespace GitCommands
         public const string SettingsFileName = "GitExtensions.settings";
 
         public static Lazy<string> ApplicationDataPath;
-        private static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
+        public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
         public static readonly SettingsContainer SettingsContainer;
 
         static AppSettings()
@@ -45,7 +52,7 @@ namespace GitCommands
             }
             );
 
-            SettingsContainer = new SettingsContainer(null, SettingsCache.FromCache(SettingsFilePath));
+            SettingsContainer = new SettingsContainer(null, GitExtSettingsCache.FromCache(SettingsFilePath));
 
             Version version = Assembly.GetCallingAssembly().GetName().Version;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
@@ -314,27 +321,17 @@ namespace GitCommands
         }
 
         public static readonly Dictionary<string, Encoding> AvailableEncodings = new Dictionary<string, Encoding>();
-        private static readonly Dictionary<string, Encoding> EncodingSettings = new Dictionary<string, Encoding>();
 
-        internal static bool GetEncoding(string settingName, out Encoding encoding)
+        public enum PullAction
         {
-            lock (EncodingSettings)
-            {
-                return EncodingSettings.TryGetValue(settingName, out encoding);
-            }
+            None,
+            Merge,
+            Rebase,
+            Fetch,
+            FetchAll,
+            Default
         }
 
-        internal static void SetEncoding(string settingName, Encoding encoding)
-        {
-            lock (EncodingSettings)
-            {
-                var items = EncodingSettings.Keys.Where(item => item.StartsWith(settingName)).ToList();
-                foreach (var item in items)
-                    EncodingSettings.Remove(item);
-                EncodingSettings[settingName] = encoding;
-            }
-        }
-               
         public static PullAction FormPullAction
         {
             get { return GetEnum("FormPullAction", PullAction.Merge); }
@@ -409,7 +406,7 @@ namespace GitCommands
 
         public static PullAction? AutoPullOnPushRejectedAction
         {
-            get { return GetNullableEnum<PullAction>("AutoPullOnPushRejectedAction", null); }
+            get { return GetNullableEnum<PullAction>("AutoPullOnPushRejectedAction"); }
             set { SetNullableEnum<PullAction>("AutoPullOnPushRejectedAction", value); }
         }
 
@@ -1036,7 +1033,7 @@ namespace GitCommands
             SettingsContainer.SetEnum(name, value);
         }
 
-        public static T GetEnum<T>(string name, T defaultValue)
+        public static T GetEnum<T>(string name, T defaultValue) where T : struct
         {
             return SettingsContainer.GetEnum(name, defaultValue);
         }
@@ -1046,9 +1043,9 @@ namespace GitCommands
             SettingsContainer.SetNullableEnum(name, value);
         }
 
-        public static T? GetNullableEnum<T>(string name, T? defaultValue) where T : struct
+        public static T? GetNullableEnum<T>(string name) where T : struct
         {
-            return SettingsContainer.GetNullableEnum(name, defaultValue);
+            return SettingsContainer.GetNullableEnum<T>(name);
         }
 
         public static void SetString(string name, string value)

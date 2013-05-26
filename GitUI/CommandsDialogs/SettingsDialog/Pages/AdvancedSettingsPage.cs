@@ -2,7 +2,7 @@
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class AdvancedSettingsPage : SettingsPageBase
+    public partial class AdvancedSettingsPage : SettingsPageWithHeader
     {
         public AdvancedSettingsPage()
         {
@@ -11,14 +11,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
             chkAlwaysShowCheckoutDlg.Checked = AppSettings.AlwaysShowCheckoutBranchDlg;
             chkUseLocalChangesAction.Checked = AppSettings.UseDefaultCheckoutBranchAction;
             chkDontSHowHelpImages.Checked = AppSettings.DontShowHelpImages;
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             AppSettings.AlwaysShowCheckoutBranchDlg = chkAlwaysShowCheckoutDlg.Checked;
             AppSettings.UseDefaultCheckoutBranchAction = chkUseLocalChangesAction.Checked;

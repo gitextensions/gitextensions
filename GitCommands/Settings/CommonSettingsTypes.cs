@@ -1,20 +1,34 @@
-﻿namespace GitCommands
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace GitCommands.Settings
 {
-    //Unsure if these should be in a sealed or static class.  I'll leave that up to you to decide.
-    public enum PullAction
+    public enum AutoCRLFType
     {
-        None,
-        Merge,
-        Rebase,
-        Fetch,
-        FetchAll,
-        Default
+        True,
+        Input,
+        False
     }
-    public enum LocalChangesAction
-    {
-        DontChange,
-        Merge,
-        Reset,
-        Stash
+
+    public enum SettingsKind
+    { 
+        /// <summary>
+        /// Global for all repositories
+        /// </summary>
+        Global,
+        /// <summary>
+        /// Version-controlled, distributed with current repository
+        /// </summary>
+        Distributed,
+        /// <summary>
+        /// Local for current repository
+        /// </summary>
+        Local,
+        /// <summary>
+        /// Effective - first assigned value in the following order: Local, Distributable, Global
+        /// </summary>
+        Effective
     }
 }

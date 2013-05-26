@@ -73,10 +73,18 @@
     <Compile Include="DateTimeUtils.cs" />
     <Compile Include="ExceptionUtils.cs" />
     <Compile Include="FileHelper.cs" />
+    <Compile Include="Settings\BasicSettingTypes.cs" />
     <Compile Include="Settings\CommonSettingsTypes.cs" />
+    <Compile Include="Settings\ConfigFileSettings.cs" />
+    <Compile Include="Settings\ConfigFileSettingsCache.cs" />
+    <Compile Include="Settings\FileSettingsCache.cs" />
+    <Compile Include="Settings\GitExtSettingsCache.cs" />
+    <Compile Include="Settings\ISettingsSource.cs" />
     <Compile Include="Settings\RepoDistSettings.cs" />
+    <Compile Include="Settings\Setting.cs" />
     <Compile Include="Settings\SettingsCache.cs" />
     <Compile Include="Settings\SettingsContainer.cs" />
+    <Compile Include="Settings\SettingsPath.cs" />
     <Compile Include="Utils\EnvUtils.cs" />
     <Compile Include="Git\GitBisectOption.cs" />
     <Compile Include="Git\GitCheckoutBranchCmd.cs" />
@@ -135,6 +143,7 @@
     <Compile Include="FileInfoExtensions.cs" />
     <Compile Include="SynchronizedProcessReader.cs" />
     <Compile Include="System.cs" />
+    <Compile Include="Utils\WeakRefCache.cs" />
     <Compile Include="XmlSerializableDictionary.cs" />
   </ItemGroup>
   <ItemGroup>

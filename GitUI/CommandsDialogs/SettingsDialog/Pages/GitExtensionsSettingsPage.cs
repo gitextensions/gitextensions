@@ -2,7 +2,7 @@
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class GitExtensionsSettingsPage : SettingsPageBase
+    public partial class GitExtensionsSettingsPage : SettingsPageWithHeader
     {
         public GitExtensionsSettingsPage()
         {
@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
             chkCheckForUncommittedChangesInCheckoutBranch.Checked = AppSettings.CheckForUncommittedChangesInCheckoutBranch;
             chkStartWithRecentWorkingDir.Checked = AppSettings.StartWithRecentWorkingDir;
@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkUseFastChecks.Checked = AppSettings.UseFastChecks;
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             AppSettings.CheckForUncommittedChangesInCheckoutBranch = chkCheckForUncommittedChangesInCheckoutBranch.Checked;
             AppSettings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;

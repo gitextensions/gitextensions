@@ -126,11 +126,26 @@ namespace GitCommands
                 lock (_lock)
                 {
                     if (_Settings == null)
-                        _Settings = new RepoDistSettings(this);
+                        _Settings = RepoDistSettings.CreateEffective(this);
                 }
 
                 return _Settings;
             }
+        }
+
+        private ConfigFileSettings _EffectiveConfigFile;
+        public ConfigFileSettings EffectiveConfigFile
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    if (_EffectiveConfigFile == null)
+                        _EffectiveConfigFile = ConfigFileSettings.CreateEffective(this);
+                }
+
+                return _EffectiveConfigFile;
+            }            
         }
 
         //encoding for files paths
@@ -166,52 +181,6 @@ namespace GitCommands
             }
         }
 
-        private Encoding GetEncoding(bool local, string settingName)
-        {
-            string lname = local ? "_local" + '_' + WorkingDir : "_global";
-            lname = settingName + lname;
-            Encoding result;
-            if (AppSettings.GetEncoding(lname, out result))
-                return result;
-
-            string encodingName;
-            ConfigFile cfg;
-            if (local)
-                cfg = GetLocalConfig();
-            else
-                cfg = GitCommandHelpers.GetGlobalConfig();
-
-            encodingName = cfg.GetValue(settingName);
-
-            if (string.IsNullOrEmpty(encodingName))
-                result = null;
-            else if (!AppSettings.AvailableEncodings.TryGetValue(encodingName, out result))
-            {
-                try
-                {
-                    result = Encoding.GetEncoding(encodingName);
-                }
-                catch (ArgumentException)
-                {
-                    Debug.WriteLine(string.Format("Unsupported encoding set in git config file: {0}\nPlease check the setting {1} in your {2} config file.", encodingName, settingName, (local ? "local" : "global")));
-                    result = null;
-                }
-            }
-
-            AppSettings.SetEncoding(lname, result);
-
-            return result;
-        }
-
-        private void SetEncoding(bool local, string settingName, Encoding encoding)
-        {
-            string lname = local ? "_local" + '_' + WorkingDir : "_global";
-            lname = settingName + lname;
-            AppSettings.SetEncoding(lname, encoding);
-            //storing to config file is handled by FormSettings
-        }
-
-
         //Encoding that let us read all bytes without replacing any char
         //It is using to read output of commands, which may consist of:
         //1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of 
@@ -223,49 +192,27 @@ namespace GitCommands
         //4) branch, tag name, errors, warnings, hints encoded in system default encoding
         public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1");//is any better?
 
-        public Encoding GetFilesEncoding(bool local)
-        {
-            return GetEncoding(local, "i18n.filesEncoding");
-        }
-        public void SetFilesEncoding(bool local, Encoding encoding)
-        {
-            SetEncoding(local, "i18n.filesEncoding", encoding);
-        }
         public Encoding FilesEncoding
         {
             get
             {
-                Encoding result = GetFilesEncoding(true);
-                if (result == null)
-                    result = GetFilesEncoding(false);
+                Encoding result = EffectiveConfigFile.FilesEncoding;
                 if (result == null)
                     result = new UTF8Encoding(false);
                 return result;
             }
         }
 
-        public Encoding GetCommitEncoding(bool local)
-        {
-            return GetEncoding(local, "i18n.commitEncoding");
-        }
         public Encoding CommitEncoding
         {
             get
             {
-                Encoding result = GetCommitEncoding(true);
-                if (result == null)
-                    result = GetCommitEncoding(false);
-                if (result == null)
+                Encoding result = EffectiveConfigFile.CommitEncoding;
                     result = new UTF8Encoding(false);
                 return result;
             }
         }
 
-
-        public Encoding GetLogOutputEncoding(bool local)
-        {
-            return GetEncoding(local, "i18n.logoutputencoding");
-        }
         /// <summary>
         /// Encoding for commit header (message, notes, author, commiter, emails)
         /// </summary>
@@ -273,9 +220,7 @@ namespace GitCommands
         {
             get
             {
-                Encoding result = GetLogOutputEncoding(true);
-                if (result == null)
-                    result = GetLogOutputEncoding(false);
+                Encoding result = EffectiveConfigFile.LogOutputEncoding;
                 if (result == null)
                     result = CommitEncoding;
                 return result;
@@ -850,11 +795,8 @@ namespace GitCommands
         {
             using (var ms = (MemoryStream)GetFileStream(blob)) //Ugly, has implementation info.
             {
-                string autocrlf = GetEffectiveSetting("core.autocrlf").ToLower();
-                bool convertcrlf = autocrlf == "true";
-
                 byte[] buf = ms.ToArray();
-                if (convertcrlf)
+                if (EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.True)
                 {
                     if (!FileHelper.IsBinaryFile(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(buf))
                     {
@@ -946,23 +888,51 @@ namespace GitCommands
 
             var unmerged = RunGitCmd("ls-files -z --unmerged \"" + filename + "\"").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (var file in unmerged)
+            foreach (var line in unmerged)
             {
-                int findSecondWhitespace = file.IndexOfAny(new[] { ' ', '\t' });
-                string fileStage = findSecondWhitespace >= 0 ? file.Substring(findSecondWhitespace).Trim() : "";
+                int findSecondWhitespace = line.IndexOfAny(new[] { ' ', '\t' });
+                string fileStage = findSecondWhitespace >= 0 ? line.Substring(findSecondWhitespace).Trim() : "";
 
                 findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
 
                 fileStage = findSecondWhitespace >= 0 ? fileStage.Substring(findSecondWhitespace).Trim() : "";
 
                 int stage;
-                if (Int32.TryParse(fileStage.Trim()[0].ToString(), out stage) && stage >= 1 && stage <= 3 && fileStage.Length > 2)
+                if (fileStage.Length > 2 && Int32.TryParse(fileStage[0].ToString(), out stage) && stage >= 1 && stage <= 3)
                 {
                     fileNames[stage - 1] = fileStage.Substring(2);
                 }
             }
 
             return fileNames;
+        }
+
+        public string[] GetConflictedSubmoduleHashes(string filename)
+        {
+            filename = FixPath(filename);
+
+            var hashes = new string[3];
+
+            var unmerged = RunGitCmd("ls-files -z --unmerged \"" + filename + "\"").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var line in unmerged)
+            {
+                int findSecondWhitespace = line.IndexOfAny(new[] { ' ', '\t' });
+                string fileStage = findSecondWhitespace >= 0 ? line.Substring(findSecondWhitespace).Trim() : "";
+
+                findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
+
+                string hash = findSecondWhitespace >= 0 ? fileStage.Substring(0, findSecondWhitespace).Trim() : "";
+                fileStage = findSecondWhitespace >= 0 ? fileStage.Substring(findSecondWhitespace).Trim() : "";
+
+                int stage;
+                if (fileStage.Length > 2 && Int32.TryParse(fileStage[0].ToString(), out stage) && stage >= 1 && stage <= 3)
+                {
+                    hashes[stage - 1] = hash;
+                }
+            }
+
+            return hashes;
         }
 
         public static string GetGitDirectory(string repositoryPath)
@@ -1149,22 +1119,22 @@ namespace GitCommands
             return RunGitCmd("log -g -1 HEAD --pretty=format:%H");
         }
 
-        public string GetSuperprojectCurrentCheckout()
+        public KeyValuePair<char, string> GetSuperprojectCurrentCheckout()
         {
             if (SuperprojectModule == null)
-                return "";
+                return new KeyValuePair<char, string>(' ', "");
 
             var lines = SuperprojectModule.RunGitCmd("submodule status --cached " + _submodulePath).Split('\n');
 
             if (lines.Length == 0)
-                return "";
+                return new KeyValuePair<char, string>(' ', "");
 
             string submodule = lines[0];
             if (submodule.Length < 43)
-                return "";
+                return new KeyValuePair<char, string>(' ', "");
 
             var currentCommitGuid = submodule.Substring(1, 40).Trim();
-            return currentCommitGuid;
+            return new KeyValuePair<char, string>(submodule[0], currentCommitGuid);
         }
 
         public int CommitCount()
@@ -1650,32 +1620,32 @@ namespace GitCommands
 
         public string ApplyPatch(string dir, string amCommand)
         {
-            var output = string.Empty;
-
             using (var gitCommand = new GitCommandsInstance(this))
             {
 
                 var files = Directory.GetFiles(dir);
 
-                if (files.Length > 0)
-                    using (Process process1 = gitCommand.CmdStartProcess(AppSettings.GitCommand, amCommand))
+                if (files.Length == 0)
+                    return "";
+
+                var output = "";
+                using (Process process1 = gitCommand.CmdStartProcess(AppSettings.GitCommand, amCommand))
+                {
+                    foreach (var file in files)
                     {
-                        foreach (var file in files)
+                        using (FileStream fs = new FileStream(file, FileMode.Open))
                         {
-                            using (FileStream fs = new FileStream(file, FileMode.Open))
-                            {
-                                fs.CopyTo(process1.StandardInput.BaseStream);
-                            }
+                            fs.CopyTo(process1.StandardInput.BaseStream);
                         }
-                        process1.StandardInput.Close();
-                        process1.WaitForExit();
-
-                        if (gitCommand.Output != null)
-                            output = gitCommand.Output.ToString().Trim();
                     }
-            }
+                    process1.StandardInput.Close();
+                    process1.WaitForExit();
 
-            return output;
+                    if (gitCommand.Output != null)
+                        output = gitCommand.Output.ToString().Trim();
+                }
+                return output;
+            }
         }
 
         public string StageFiles(IList<GitItemStatus> files, out bool wereErrors)
@@ -2354,7 +2324,7 @@ namespace GitCommands
                     localItem.SubmoduleStatus = Task.Factory.StartNew(() =>
                         {
                             var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, localItem.Name, localItem.OldName, localItem.IsStaged);
-                            if (submoduleStatus.Commit != submoduleStatus.OldCommit)
+                            if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                             {
                                 var submodule = submoduleStatus.GetSubmodule(this);
                                 submoduleStatus.CheckSubmoduleStatus(submodule);

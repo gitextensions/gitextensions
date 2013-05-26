@@ -6,7 +6,7 @@ using GitUI.Editor;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class ColorsSettingsPage : SettingsPageBase
+    public partial class ColorsSettingsPage : SettingsPageWithHeader
     {
         public ColorsSettingsPage()
         {
@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return "color,graph,diff,icon";
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
             MulticolorBranches.Checked = AppSettings.MulticolorBranches;
             MulticolorBranches_CheckedChanged(null, null);
@@ -87,7 +87,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             ShowIconPreview();            
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             AppSettings.MulticolorBranches = MulticolorBranches.Checked;
             AppSettings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;

@@ -9,24 +9,6 @@ namespace GitCommands.Config
 {
     public class ConfigFile
     {
-        private static readonly Regex RegParseIsSection =
-            new Regex(
-                @"(?<IsSection>
-                        ^\s*\[(?<SectionName>[^\]]+)?\]\s*$
-                  )",
-                RegexOptions.Compiled |
-                RegexOptions.IgnorePatternWhitespace
-                );
-
-        private static readonly Regex RegParseIsKey =
-            new Regex(
-                @"(?<IsKeyValue>
-                        ^\s*(?<Key>[^(\s*\=\s*)]+)?\s*\=\s*(?<Value>[\d\D]*)$
-                   )",
-                RegexOptions.Compiled |
-                RegexOptions.IgnorePatternWhitespace
-                );
-
         private readonly string _fileName;
         public string FileName { get { return _fileName; } }
 
@@ -82,6 +64,11 @@ namespace GitCommands.Config
 
         public void Save()
         {
+            Save(_fileName);
+        }
+
+        public void Save(string fileName)
+        {
             var configFileContent = new StringBuilder();
 
             foreach (var section in ConfigSections)
@@ -106,9 +93,9 @@ namespace GitCommands.Config
             try
             {
                 FileInfoExtensions
-                    .MakeFileTemporaryWritable(_fileName,
+                    .MakeFileTemporaryWritable(fileName,
                                        x =>
-                                       File.WriteAllText(_fileName, configFileContent.ToString(), GetEncoding()));
+                                       File.WriteAllText(fileName, configFileContent.ToString(), GetEncoding()));
             }
             catch (Exception ex)
             {
@@ -170,6 +157,16 @@ namespace GitCommands.Config
 
         private string GetStringValue(string setting)
         {
+            return GetValue(setting, string.Empty);
+        }
+
+        public string GetValue(string setting)
+        {
+            return GetValue(setting, string.Empty);
+        }
+
+        public string GetValue(string setting, string defaultValue)
+        {
             if (String.IsNullOrEmpty(setting))
                 throw new ArgumentNullException();
 
@@ -181,14 +178,9 @@ namespace GitCommands.Config
             var configSection = FindConfigSection(configSectionName);
 
             if (configSection == null)
-                return string.Empty;
+                return defaultValue;
 
-            return configSection.GetValue(keyName);
-        }
-
-        public string GetValue(string setting)
-        {
-            return GetStringValue(setting);
+            return configSection.GetValue(keyName, defaultValue);
         }
 
         public string GetPathValue(string setting)
