@@ -14,6 +14,7 @@ namespace GitUI.CommandsDialogs
         MenuStrip _menuStrip;
 
         IList<MenuCommand> _navigateMenuCommands;
+        IList<MenuCommand> _viewMenuCommands;
 
         ToolStripMenuItem _navigateToolStripMenuItem;
         ToolStripMenuItem _viewToolStripMenuItem;
@@ -40,46 +41,65 @@ namespace GitUI.CommandsDialogs
             TranslationUtl.TranslateItemsFromFields("FormBrowse", this, translation);
         }
 
-        public void ResetNavigateMenuCommandSets()
+        public void ResetMenuCommandSets()
         {
             _navigateMenuCommands = null;
+            _viewMenuCommands = null;
         }
 
-        public void AddNavigateMenuCommandSet(IEnumerable<MenuCommand> navigateMenuCommands)
+        public void AddMenuCommandSet(MainMenuItem mainMenuItem, IEnumerable<MenuCommand> menuCommands)
         {
-            if (_navigateMenuCommands == null)
+            IList<MenuCommand> selectedMenuCommands = null;
+
+            switch (mainMenuItem)
             {
-                _navigateMenuCommands = new List<MenuCommand>();
-            }
-            else
-            {
-                _navigateMenuCommands.Add(null); // add separator
+                case MainMenuItem.NavigateMenu:
+                    if (_navigateMenuCommands == null)
+                    {
+                        _navigateMenuCommands = new List<MenuCommand>();
+                    }
+                    else
+                    {
+                        _navigateMenuCommands.Add(null); // add separator
+                    }
+                    selectedMenuCommands = _navigateMenuCommands;
+                    break;
+
+                case MainMenuItem.ViewMenu:
+                    if (_viewMenuCommands == null)
+                    {
+                        _viewMenuCommands = new List<MenuCommand>();
+                    }
+                    else
+                    {
+                        _viewMenuCommands.Add(null); // add separator
+                    }
+                    selectedMenuCommands = _viewMenuCommands;
+                    break;
             }
 
-            _navigateMenuCommands.AddAll(navigateMenuCommands);
+            selectedMenuCommands.AddAll(menuCommands);
         }
 
         /// <summary>
         /// inserts 
         /// - Navigate (after Repository)
-        /// - View
+        /// - View (after Navigate)
         /// </summary>
         public void InsertAdditionalMainMenuItems(ToolStripMenuItem insertAfterMenuItem)
         {
             RemoveAdditionalMainMenuItems();
 
             _navigateToolStripMenuItem = new ToolStripMenuItem();
-            // navigateToolStripMenuItem.DropDownItems
             _navigateToolStripMenuItem.Name = "navigateToolStripMenuItem";
-            // navigateToolStripMenuItem.Size
             _navigateToolStripMenuItem.Text = "Navigate";
             SetDropDownItems(_navigateToolStripMenuItem, _navigateMenuCommands);
             _menuStrip.Items.Insert(_menuStrip.Items.IndexOf(insertAfterMenuItem) + 1, _navigateToolStripMenuItem);
 
             _viewToolStripMenuItem = new ToolStripMenuItem();
-            // navigateToolStripMenuItem.DropDownItems
             _viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             _viewToolStripMenuItem.Text = "View";
+            SetDropDownItems(_viewToolStripMenuItem, _viewMenuCommands);
             _menuStrip.Items.Insert(_menuStrip.Items.IndexOf(_navigateToolStripMenuItem) + 1, _viewToolStripMenuItem);
         }
 
@@ -113,6 +133,12 @@ namespace GitUI.CommandsDialogs
             _menuStrip.Items.Remove(_navigateToolStripMenuItem);
             _menuStrip.Items.Remove(_viewToolStripMenuItem);
         }
+    }
+
+    enum MainMenuItem
+    {
+        NavigateMenu,
+        ViewMenu
     }
 
     class MenuCommand

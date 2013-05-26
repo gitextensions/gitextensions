@@ -2607,5 +2607,10 @@ namespace GitUI
         {
             return _revisionGridMenuCommands.GetNavigateMenuCommands();
         }
+
+        internal IEnumerable<MenuCommand> GetViewMenuCommands()
+        {
+            return _revisionGridMenuCommands.GetViewMenuCommands();
+        }
     }
 }
