@@ -40,6 +40,11 @@ namespace GitUI.CommandsDialogs
             TranslationUtl.TranslateItemsFromFields("FormBrowse", this, translation);
         }
 
+        public void ResetNavigateMenuCommandSets()
+        {
+            _navigateMenuCommands = null;
+        }
+
         public void AddNavigateMenuCommandSet(IEnumerable<MenuCommand> navigateMenuCommands)
         {
             if (_navigateMenuCommands == null)
