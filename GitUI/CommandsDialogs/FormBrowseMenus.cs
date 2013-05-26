@@ -67,9 +67,15 @@ namespace GitUI.CommandsDialogs
 
         private void SetDropDownItems(ToolStripMenuItem toolStripMenuItemTarget, IEnumerable<MenuCommand> menuCommands)
         {
-            var toolStripMenuItems = new List<ToolStripMenuItem>();
+            var toolStripItems = new List<ToolStripItem>();
             foreach (var menuCommand in menuCommands)
             {
+                if (menuCommand == null)
+                {
+                    toolStripItems.Add(new ToolStripSeparator());
+                    continue;
+                }
+
                 var toolStripMenuItem = new ToolStripMenuItem();
                 toolStripMenuItem.Name = menuCommand.Name;
                 toolStripMenuItem.Text = menuCommand.Text;
@@ -78,10 +84,10 @@ namespace GitUI.CommandsDialogs
                 toolStripMenuItem.ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString;
                 toolStripMenuItem.Click += (obj, sender) => menuCommand.ExecuteAction();
 
-                toolStripMenuItems.Add(toolStripMenuItem);
+                toolStripItems.Add(toolStripMenuItem);
             }
 
-            toolStripMenuItemTarget.DropDownItems.AddRange(toolStripMenuItems.ToArray());
+            toolStripMenuItemTarget.DropDownItems.AddRange(toolStripItems.ToArray());
         }
 
         public void RemoveAdditionalMainMenuItems()

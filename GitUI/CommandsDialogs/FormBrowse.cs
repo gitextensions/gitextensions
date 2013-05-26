@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs
         private const string DiffTabPageTitleBase = "Diff";
 
         private readonly FormBrowseMenus _formBrowseMenus;
-        private readonly FormBrowseNavigateCommands _formBrowseNavigateCommands;
+        private readonly FormBrowseMenuCommands _formBrowseMenuCommands;
 
         /// <summary>
         /// For VS designer
@@ -197,8 +197,8 @@ namespace GitUI.CommandsDialogs
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             }
 
-            _formBrowseNavigateCommands = new FormBrowseNavigateCommands(this, aCommands, Module, RevisionGrid);
-            _formBrowseMenus = new FormBrowseMenus(menuStrip1, _formBrowseNavigateCommands.GetMenuCommands());
+            _formBrowseMenuCommands = new FormBrowseMenuCommands(this, aCommands, Module, RevisionGrid);
+            _formBrowseMenus = new FormBrowseMenus(menuStrip1, _formBrowseMenuCommands.GetNavigateMenuCommands());
         }
 
         void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)

@@ -10,7 +10,7 @@ using GitUI.Hotkey;
 
 namespace GitUI.CommandsDialogs
 {
-    class FormBrowseNavigateCommands : ITranslate
+    class FormBrowseMenuCommands : ITranslate
     {
         private readonly TranslationString _noRevisionFoundError =
             new TranslationString("No revision found.");
@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs
         RevisionGrid RevisionGrid;
         FormBrowse _formBrowse;
 
-        public FormBrowseNavigateCommands(FormBrowse formBrowse, GitUICommands uiCommands, GitModule module, RevisionGrid revisionGrid)
+        public FormBrowseMenuCommands(FormBrowse formBrowse, GitUICommands uiCommands, GitModule module, RevisionGrid revisionGrid)
         {
             Translate();
 
@@ -69,7 +69,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public IEnumerable<MenuCommand> GetMenuCommands()
+        public IEnumerable<MenuCommand> GetNavigateMenuCommands()
         {
             var resultList = new List<MenuCommand>();
 
@@ -95,6 +95,18 @@ namespace GitUI.CommandsDialogs
 
                 resultList.Add(menuCommand);
             }
+
+            ////resultList.Add(null); // == separator
+
+            ////{
+            ////    var menuCommand = new MenuCommand();
+            ////    menuCommand.Name = "GotoParent";
+            ////    menuCommand.Text = "Go to parent commit";
+            ////    menuCommand.ShortcutKeyDisplayString = _formBrowse.GetShortcutKeys(GitUI.CommandsDialogs.FormBrowse.Commands.).ToShortcutKeyDisplayString();
+            ////    menuCommand.ExecuteAction = GotoCommitExcecute;
+
+            ////    resultList.Add(menuCommand);
+            ////}
 
             return resultList;
         }
