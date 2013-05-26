@@ -75,9 +75,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noReposHostFound =
             new TranslationString("Could not find any relevant repository hosts for the currently open repository.");
 
-        private readonly TranslationString _noRevisionFoundError =
-            new TranslationString("No revision found.");
-
         private readonly TranslationString _configureWorkingDirMenu =
             new TranslationString("Configure this menu");
 
@@ -120,6 +117,7 @@ namespace GitUI.CommandsDialogs
         private const string DiffTabPageTitleBase = "Diff";
 
         private readonly FormBrowseMenus _formBrowseMenus;
+        private readonly FormBrowseNavigateCommands _formBrowseNavigateCommands;
 
         /// <summary>
         /// For VS designer
@@ -128,6 +126,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
+            _formBrowseNavigateCommands.Translate();
         }
 
         public FormBrowse(GitUICommands aCommands, string filter)
@@ -200,6 +199,7 @@ namespace GitUI.CommandsDialogs
             }
 
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
+            _formBrowseNavigateCommands = new FormBrowseNavigateCommands(aCommands, Module, RevisionGrid);
         }
 
         void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
@@ -2225,21 +2225,7 @@ namespace GitUI.CommandsDialogs
 
         private void goToToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (FormGoToCommit formGoToCommit = new FormGoToCommit(UICommands))
-            {
-                if (formGoToCommit.ShowDialog(this) != DialogResult.OK)
-                    return;
-
-                string revisionGuid = formGoToCommit.GetRevision();
-                if (!string.IsNullOrEmpty(revisionGuid))
-                {
-                    RevisionGrid.SetSelectedRevision(new GitRevision(Module, revisionGuid));
-                }
-                else
-                {
-                    MessageBox.Show(this, _noRevisionFoundError.Text);
-                }
-            }
+            _formBrowseNavigateCommands.GotoCommitExcecute(this);
         }
 
         private void toggleSplitViewLayout_Click(object sender, EventArgs e)
