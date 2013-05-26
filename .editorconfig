@@ -1,0 +1,9 @@
+; Visual Studio Extension : http://visualstudiogallery.msdn.microsoft.com/c8bccfe2-650c-4b42-bc5c-845e21f96328
+; See http://editorconfig.org/ for more informations
+; Top-most EditorConfig file
+root = true
+
+; 4-column space indentation
+[*.cs]
+indent_style = space
+indent_size = 4
