@@ -75,9 +75,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noReposHostFound =
             new TranslationString("Could not find any relevant repository hosts for the currently open repository.");
 
-        private readonly TranslationString _noRevisionFoundError =
-            new TranslationString("No revision found.");
-
         private readonly TranslationString _configureWorkingDirMenu =
             new TranslationString("Configure this menu");
 
@@ -118,6 +115,9 @@ namespace GitUI.CommandsDialogs
         private readonly FilterBranchHelper _filterBranchHelper;
 
         private const string DiffTabPageTitleBase = "Diff";
+
+        private readonly FormBrowseMenus _formBrowseMenus;
+        private readonly FormBrowseMenuCommands _formBrowseMenuCommands;
 
         /// <summary>
         /// For VS designer
@@ -196,7 +196,9 @@ namespace GitUI.CommandsDialogs
                 RefreshPullIcon();
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             }
-            
+
+            _formBrowseMenuCommands = new FormBrowseMenuCommands(this, aCommands, Module, RevisionGrid);
+            _formBrowseMenus = new FormBrowseMenus(menuStrip1);
         }
 
         void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
@@ -369,6 +371,7 @@ namespace GitUI.CommandsDialogs
             refreshToolStripMenuItem.ShortcutKeys = Keys.None;
             refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.None;
             _repositoryHostsToolStripMenuItem.Visible = false;
+            _formBrowseMenus.RemoveAdditionalMainMenuItems();
             menuStrip1.Refresh();
         }
 
@@ -444,9 +447,24 @@ namespace GitUI.CommandsDialogs
             // load custom user menu
             LoadUserMenu();
 
+            if (validWorkingDir)
+            {
+                // add Navigate and View menu
+                _formBrowseMenus.ResetNavigateMenuCommandSets();
+                _formBrowseMenus.AddNavigateMenuCommandSet(_formBrowseMenuCommands.GetNavigateMenuCommands());
+                _formBrowseMenus.AddNavigateMenuCommandSet(RevisionGrid.GetNavigateMenuCommands());
+
+                _formBrowseMenus.InsertAdditionalMainMenuItems(repositoryToolStripMenuItem);
+            }
+
             UICommands.RaisePostBrowseInitialize(this);
 
             Cursor.Current = Cursors.Default;
+        }
+
+        internal Keys GetShortcutKeys(Commands cmd)
+        {
+            return GetShortcutKeys((int)cmd);
         }
 
         /// <summary>
@@ -454,9 +472,8 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void SetShortcutKeyDisplayStringsFromHotkeySettings()
         {
-            selectCurrentRevisionToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.SelectCurrentRevision).ToShortcutKeyDisplayString();
-            gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.GitBash).ToShortcutKeyDisplayString();
-            commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.Commit).ToShortcutKeyDisplayString();
+            gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitBash).ToShortcutKeyDisplayString();
+            commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.Commit).ToShortcutKeyDisplayString();
             // TODO: add more
         }
 
@@ -2211,26 +2228,12 @@ namespace GitUI.CommandsDialogs
             return true;
         }
 
-        #endregion
-
-        private void goToToolStripMenuItem_Click(object sender, EventArgs e)
+        internal bool ExecuteCommand(Commands cmd)
         {
-            using (FormGoToCommit formGoToCommit = new FormGoToCommit(UICommands))
-            {
-                if (formGoToCommit.ShowDialog(this) != DialogResult.OK)
-                    return;
-
-                string revisionGuid = formGoToCommit.GetRevision();
-                if (!string.IsNullOrEmpty(revisionGuid))
-                {
-                    RevisionGrid.SetSelectedRevision(new GitRevision(Module, revisionGuid));
-                }
-                else
-                {
-                    MessageBox.Show(this, _noRevisionFoundError.Text);
-                }
-            }
+            return ExecuteCommand((int)cmd);
         }
+
+        #endregion
 
         private void toggleSplitViewLayout_Click(object sender, EventArgs e)
         {
@@ -3047,11 +3050,5 @@ namespace GitUI.CommandsDialogs
         {
             dontSetAsDefaultToolStripMenuItem.Checked = Settings.DonSetAsLastPullAction;
         }
-
-        private void selectCurrentRevisionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ExecuteCommand((int)Commands.SelectCurrentRevision);
-        }
     }
-
 }
