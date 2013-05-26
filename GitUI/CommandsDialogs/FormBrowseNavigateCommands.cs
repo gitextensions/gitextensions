@@ -22,6 +22,8 @@ namespace GitUI.CommandsDialogs
 
         public FormBrowseNavigateCommands(FormBrowse formBrowse, GitUICommands uiCommands, GitModule module, RevisionGrid revisionGrid)
         {
+            Translate();
+
             _formBrowse = formBrowse;
             UICommands = uiCommands;
             Module = module;
@@ -74,7 +76,7 @@ namespace GitUI.CommandsDialogs
             {
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "GotoCurrentRevision";
-                menuCommand.Text = "Go to current revision";
+                menuCommand.Text = "Go to current revision"; // TODO: what is the best way to translate this item?
                 //// menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCommit;
                 menuCommand.ShortcutKeyDisplayString = _formBrowse.GetShortcutKeys(GitUI.CommandsDialogs.FormBrowse.Commands.SelectCurrentRevision).ToShortcutKeyDisplayString();
                 menuCommand.ExecuteAction = SelectCurrentRevisionExecute;
@@ -85,7 +87,7 @@ namespace GitUI.CommandsDialogs
             {
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "GotoCommit";
-                menuCommand.Text = "Go to commit...";
+                menuCommand.Text = "Go to commit..."; // TODO: what is the best way to translate this item?
                 menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCommit;
                 menuCommand.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.G)));

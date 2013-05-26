@@ -126,8 +126,6 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-            _formBrowseMenus.Translate();
-            _formBrowseNavigateCommands.Translate();
         }
 
         public FormBrowse(GitUICommands aCommands, string filter)
