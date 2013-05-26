@@ -1172,24 +1172,20 @@ namespace GitUI
             return StartSettingsDialog(null);
         }
 
-        public bool StartArchiveDialog(IWin32Window owner, GitRevision revision)
+        public bool StartArchiveDialog(IWin32Window owner = null, GitRevision revision = null, string path = null)
         {
             return DoActionOnRepo(owner, true, false, PreArchive, PostArchive, () =>
                 {
                     using (var form = new FormArchive(this))
                     {
                         form.SelectedRevision = revision;
+                        form.SetPathArgument(path);
                         form.ShowDialog(owner);
                     }
 
                     return true;
                 }
             );
-        }
-
-        public bool StartArchiveDialog(IWin32Window owner)
-        {
-            return StartArchiveDialog(owner, null);
         }
 
         public bool StartArchiveDialog()

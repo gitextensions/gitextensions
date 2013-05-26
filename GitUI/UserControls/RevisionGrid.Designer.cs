@@ -345,6 +345,7 @@ namespace GitUI
             this.hashToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
             this.hashToolStripMenuItem.Text = "Commit hash";
             this.hashToolStripMenuItem.Click += new System.EventHandler(this.hashToolStripMenuItem_Click);
+            this.hashToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             // 
             // toolStripSeparator6
             // 
