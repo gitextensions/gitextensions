@@ -20,6 +20,8 @@ namespace GitUI.CommandsDialogs
 
         public FormBrowseMenus(MenuStrip menuStrip, IEnumerable<MenuCommand> navigateMenuCommands)
         {
+            Translate();
+
             _menuStrip = menuStrip;
             _navigateMenuCommands = navigateMenuCommands;
         }
