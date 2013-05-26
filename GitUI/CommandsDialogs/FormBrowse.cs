@@ -2471,6 +2471,19 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void fileTreeArchiveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
+            if (selectedRevisions.Count != 1)
+            {
+                MessageBox.Show("Select exactly one revision.");
+                return;
+            }
+
+            var gitItem = (GitItem)GitTree.SelectedNode.Tag; // this should not fail, if it still does, user should know
+            UICommands.StartArchiveDialog(this, selectedRevisions.First(), gitItem.FileName);
+        }
+
         private void DiffContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             bool artificialRevSelected;
