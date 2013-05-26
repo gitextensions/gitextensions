@@ -40,6 +40,11 @@ namespace GitUI.CommandsDialogs
             TranslationUtl.TranslateItemsFromFields("FormBrowse", this, translation);
         }
 
+        public void SelectCurrentRevisionExecute(FormBrowse formBrowse)
+        {
+            formBrowse.ExecuteCommand(GitUI.CommandsDialogs.FormBrowse.Commands.SelectCurrentRevision);
+        }
+
         public void GotoCommitExcecute(Form parentWindow)
         {
             using (FormGoToCommit formGoToCommit = new FormGoToCommit(UICommands))
