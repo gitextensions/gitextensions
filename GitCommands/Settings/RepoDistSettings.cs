@@ -8,7 +8,7 @@ namespace GitCommands.Settings
 {
     /// <summary>
     /// Settings that can be distributed with repository
-    /// they can be overriden for a particular repository
+    /// they can be overridden for a particular repository
     /// </summary>
     public class RepoDistSettings : SettingsContainer
     {
@@ -76,6 +76,12 @@ namespace GitCommands.Settings
         {
             get { return this.GetBool("NoFastForwardMerge", false); }
             set { this.SetBool("NoFastForwardMerge", value); }
+        }
+
+        public GitCommands.PullAction LastPullAction
+        {
+            get { return GetEnum("LastPullAction", GitCommands.PullAction.None); }
+            set { SetEnum("LastPullAction", value); }
         }
     }
 

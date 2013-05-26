@@ -1254,11 +1254,11 @@ namespace GitUI.CommandsDialogs
             bool bSilent;
             if (sender == toolStripButtonPull || sender == pullToolStripMenuItem)
             {
-                if (Module.LastPullAction == Settings.PullAction.None)
+                if (Module.Settings.LastPullAction == PullAction.None)
                 {
                     bSilent = (ModifierKeys & Keys.Shift) != 0;
                 }
-                else if (Module.LastPullAction == Settings.PullAction.FetchAll)
+                else if (Module.Settings.LastPullAction == PullAction.FetchAll)
                 {
                     fetchAllToolStripMenuItem_Click(sender, e);
                     return;
@@ -2609,26 +2609,26 @@ namespace GitUI.CommandsDialogs
 
         private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Module.LastPullAction = Settings.PullAction.Merge;
+            Module.Settings.LastPullAction = PullAction.Merge;
             PullToolStripMenuItemClick(sender, e);
         }
 
         private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            Module.LastPullAction = Settings.PullAction.Rebase;
+            Module.Settings.LastPullAction = PullAction.Rebase;
             PullToolStripMenuItemClick(sender, e);
         }
 
         private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Module.LastPullAction = Settings.PullAction.Fetch;
+            Module.Settings.LastPullAction = PullAction.Fetch;
             PullToolStripMenuItemClick(sender, e);
         }
 
         private void pullToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             if (!Settings.DonSetAsLastPullAction)
-                Module.LastPullAction = Settings.PullAction.None;
+                Module.Settings.LastPullAction = PullAction.None;
             PullToolStripMenuItemClick(sender, e);
 
             //restore Settings.FormPullAction value
@@ -2638,24 +2638,24 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshPullIcon()
         {
-            switch (Module.LastPullAction)
+            switch (Module.Settings.LastPullAction)
             {
-                case Settings.PullAction.Fetch:
+                case PullAction.Fetch:
                     toolStripButtonPull.Image = Properties.Resources.PullFetch;
                     toolStripButtonPull.ToolTipText = "Pull - fetch";
                     break;
 
-                case Settings.PullAction.FetchAll:
+                case PullAction.FetchAll:
                     toolStripButtonPull.Image = Properties.Resources.PullFetchAll;
                     toolStripButtonPull.ToolTipText = "Pull - fetch all";
                     break;
 
-                case Settings.PullAction.Merge:
+                case PullAction.Merge:
                     toolStripButtonPull.Image = Properties.Resources.PullMerge;
                     toolStripButtonPull.ToolTipText = "Pull - merge";
                     break;
 
-                case Settings.PullAction.Rebase:
+                case PullAction.Rebase:
                     toolStripButtonPull.Image = Properties.Resources.PullRebase;
                     toolStripButtonPull.ToolTipText = "Pull - rebase";
                     break;
@@ -2670,7 +2670,7 @@ namespace GitUI.CommandsDialogs
         private void fetchAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!Settings.DonSetAsLastPullAction)
-                Module.LastPullAction = Settings.PullAction.FetchAll;
+                Module.Settings.LastPullAction = PullAction.FetchAll;
 
             RefreshPullIcon();
             bool pullCompelted;

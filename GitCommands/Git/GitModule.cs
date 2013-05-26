@@ -229,18 +229,13 @@ namespace GitCommands
 
         public static readonly string DetachedBranch = "(no branch)";
 
-        public AppSettings.PullAction LastPullAction
-        {
-            get { return AppSettings.GetEnum("LastPullAction_" + WorkingDir, AppSettings.PullAction.None); }
-            set { AppSettings.SetEnum("LastPullAction_" + WorkingDir, value); }
-        }
-
+        
         public void LastPullActionToFormPullAction()
         {
-            if (LastPullAction == AppSettings.PullAction.FetchAll)
-                AppSettings.FormPullAction = AppSettings.PullAction.Fetch;
-            else if (LastPullAction != AppSettings.PullAction.None)
-                AppSettings.FormPullAction = LastPullAction;
+            if (Settings.LastPullAction == GitCommands.PullAction.FetchAll)
+                AppSettings.FormPullAction = GitCommands.PullAction.Fetch;
+            else if (Settings.LastPullAction != GitCommands.PullAction.None)
+                AppSettings.FormPullAction = Settings.LastPullAction;
         }
 
         private static string FixPath(string path)
