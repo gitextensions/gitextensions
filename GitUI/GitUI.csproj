@@ -99,6 +99,8 @@
       <DependentUpon>FormUpdates.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseUtil.cs" />
+    <Compile Include="CommandsDialogs\FormBrowseMenus.cs" />
+    <Compile Include="CommandsDialogs\FormBrowseMenuCommands.cs" />
     <Compile Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -877,6 +879,7 @@
     </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
+    <Compile Include="UserControls\RevisionGridMenuCommands.cs" />
     <Compile Include="UserControls\ToolStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
