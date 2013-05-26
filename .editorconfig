@@ -3,10 +3,6 @@
 ; Top-most EditorConfig file
 root = true
 
-; Windows-style newlines
-[*]
-end_of_line = CRLF
-
 ; 4-column space indentation
 [*.cs]
 indent_style = space
