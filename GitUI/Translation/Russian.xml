@@ -2734,13 +2734,17 @@ Do you want to continue?</Source>
           <Source>Amend commit</Source>
           <Value>Дописать коммит</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorInfo" Property="Text" type="unfinished">
-          <Source>Commit as </Source>
-          <Value />
+        <TranslationItem Name="_commitAuthorInfo" Property="Text">
+          <Source>Author </Source>
+          <Value>автор</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorToolTip" Property="Text">
-          <Source>Click to change author information.</Source>
-          <Value>Нажмите, чтобы изменить информацию об авторе.</Value>
+        <TranslationItem Name="_commitCommitterInfo" Property="Text">
+          <Source>Committer </Source>
+          <Value>коммиттера</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitCommitterToolTip" Property="Text" type="unfinished">
+          <Source>Click to change committer information.</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text" type="unfinished">
           <Source>Commit Message is requested during commit</Source>
@@ -2942,7 +2946,7 @@ Do you want to continue?</Source>
           <Value>Закрывать диалог после каждого коммита</Value>
         </TranslationItem>
         <TranslationItem Name="commitAuthorStatus" Property="ToolTipText" type="unfinished">
-          <Source>Click to change author information.</Source>
+          <Source>Click to change committer information.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="commitCursorColumnLabel" Property="Text">
@@ -3157,6 +3161,10 @@ Do you want to continue?</Source>
           <Source>Working dir changes</Source>
           <Value>Изменения в рабочей директории</Value>
         </TranslationItem>
+        <TranslationItem Name="_commitAuthorToolTip" Property="Text" type="obsolete">
+          <Source>Click to change author information.</Source>
+          <Value>Нажмите, чтобы изменить информацию об авторе.</Value>
+        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text" type="obsolete">
           <Source>Do you also want to delete the new files that are in the selection?
 
@@ -3178,6 +3186,14 @@ Choose 'No' to keep all new files.</Source>
         <TranslationItem Name="cbIncludeSubmodules" Property="Text">
           <Source>Include submodules</Source>
           <Value>Включая субмодули</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommitDiff">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Diff</Source>
+          <Value>Изменения</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3380,10 +3396,6 @@ Choose 'No' to keep all new files.</Source>
           <Source>Push tag to '{0}'</Source>
           <Value>Push меток в {0}</Value>
         </TranslationItem>
-        <TranslationItem Name="_noTagMassage" Property="Text" type="obsolete">
-          <Source>Please enter a tag message</Source>
-          <Value>Введите сообщение метки</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDashboardCategoryTitle">
@@ -3500,14 +3512,6 @@ this using `force delete´.
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDiff">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Diff</Source>
-          <Value>Изменения</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDiffSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Diff</Source>
@@ -7689,22 +7693,6 @@ Details: Is {1} expected {2}</Source>
         <TranslationItem Name="columnHeader4" Property="Text">
           <Source>Created</Source>
           <Value>Создано</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormBranchSmall">
-      <translationItems>
-        <TranslationItem Name="_branchNameIsEmpty" Property="Text" type="obsolete">
-          <Source>Enter branch name.</Source>
-          <Value>Введите имя ветви.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_branchNameIsNotValud" Property="Text" type="obsolete">
-          <Source>“{0}” is not valid branch name.</Source>
-          <Value>«{0}» — недопустимое имя для ветви.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noRevisionSelected" Property="Text" type="obsolete">
-          <Source>Select 1 revision to create the branch on.</Source>
-          <Value>Выберите 1 ревизию для создания от неё ветви.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
