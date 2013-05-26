@@ -1122,7 +1122,7 @@ namespace GitUI.CommandsDialogs
             openFileToolStripMenuItem.Enabled = enableItems;
             openFileWithToolStripMenuItem.Enabled = enableItems;
             openWithToolStripMenuItem.Enabled = enableItems;
-            copyFilenameToClipboardToolStripMenuItem.Enabled = enableItems;
+            copyFilenameToClipboardToolStripMenuItem.Enabled = FormBrowseUtil.IsFileOrDirectory(FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem));
             editCheckedOutFileToolStripMenuItem.Enabled = enableItems;
         }
 
@@ -2354,6 +2354,9 @@ namespace GitUI.CommandsDialogs
             return new Tuple<int, string>(idx, DiffText.GetSelectedPatch(RevisionGrid, DiffFiles.SelectedItem));
         }
 
+        //
+        // diff context menu
+        //
         private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (!DiffFiles.SelectedItems.Any())
@@ -2361,14 +2364,8 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in DiffFiles.SelectedItems)
             {
-                var fileNames = new StringBuilder();
-                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
-
-                string filePath = fileNames.ToString();
-                if (File.Exists(filePath))
-                {
-                    OsShellUtil.SelectPathInFileExplorer(filePath);
-                }
+                string filePath = FormBrowseUtil.GetFullPathFromGitItemStatus(Module, item);
+                FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);
             }
         }
 
@@ -2457,18 +2454,8 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var filePath = Path.Combine(Module.WorkingDir, gitItem.FileName);
-            // needed?
-            ////    var fileNames = new StringBuilder();
-            ////    fileNames.Append((Module.WorkingDir + item.Name).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
-            if (File.Exists(filePath))
-            {
-                OsShellUtil.SelectPathInFileExplorer(filePath);
-            }
-            else if (Directory.Exists(filePath))
-            {
-                OsShellUtil.OpenWithFileExplorer(filePath);
-            }
+            var filePath = FormBrowseUtil.GetFullPathFromGitItem(Module, gitItem);
+            FormBrowseUtil.ShowFileOrFolderInFileExplorer(filePath);
         }
 
         private void DiffContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -2498,10 +2485,8 @@ namespace GitUI.CommandsDialogs
 
                 foreach (var item in DiffFiles.SelectedItems)
                 {
-                    var fileNames = new StringBuilder();
-                    fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
-
-                    if (File.Exists(fileNames.ToString()))
+                    string filePath = FormBrowseUtil.GetFullPathFromGitItemStatus(Module, item);
+                    if (FormBrowseUtil.FileOrParentDirectoryExists(filePath))
                     {
                         openContainingFolderToolStripMenuItem.Enabled = true;
                         break;
@@ -2998,10 +2983,8 @@ namespace GitUI.CommandsDialogs
             //enable *<->Local items only when local file exists
             foreach (var item in DiffFiles.SelectedItems)
             {
-                var fileNames = new StringBuilder();
-                fileNames.Append((Path.Combine(Module.WorkingDir, item.Name)).Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
-
-                if (File.Exists(fileNames.ToString()))
+                string filePath = FormBrowseUtil.GetFullPathFromGitItemStatus(Module, item);
+                if (File.Exists(filePath))
                 {
                     bLocalToolStripMenuItem.Enabled = !artificialRevSelected;
                     aLocalToolStripMenuItem.Enabled = !artificialRevSelected;
