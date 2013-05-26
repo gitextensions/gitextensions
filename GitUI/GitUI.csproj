@@ -98,7 +98,7 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormUpdates.Designer.cs">
       <DependentUpon>FormUpdates.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\FormBrowseUtil.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseUtil.cs" />
     <Compile Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
     </Compile>
