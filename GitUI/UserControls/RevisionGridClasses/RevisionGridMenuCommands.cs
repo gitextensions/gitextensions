@@ -41,7 +41,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 resultList.Add(menuCommand);
             }
 
-            resultList.Add(null);
+            resultList.Add(null); // separator
 
             {
                 var menuCommand = new MenuCommand();
@@ -71,6 +71,15 @@ namespace GitUI.UserControls.RevisionGridClasses
 
                 resultList.Add(menuCommand);
             }
+
+            return resultList;
+        }
+
+        public IEnumerable<MenuCommand> GetViewMenuCommands()
+        {
+            var resultList = new List<MenuCommand>();
+
+            resultList.Add(null); // separator
 
             return resultList;
         }
