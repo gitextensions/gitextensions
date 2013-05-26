@@ -119,6 +119,8 @@ namespace GitUI.CommandsDialogs
 
         private const string DiffTabPageTitleBase = "Diff";
 
+        private readonly FormBrowseMenus _formBrowseMenus;
+
         /// <summary>
         /// For VS designer
         /// </summary>
@@ -196,7 +198,8 @@ namespace GitUI.CommandsDialogs
                 RefreshPullIcon();
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             }
-            
+
+            _formBrowseMenus = new FormBrowseMenus(menuStrip1);
         }
 
         void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
@@ -369,6 +372,7 @@ namespace GitUI.CommandsDialogs
             refreshToolStripMenuItem.ShortcutKeys = Keys.None;
             refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.None;
             _repositoryHostsToolStripMenuItem.Visible = false;
+            _formBrowseMenus.RemoveAdditionalMainMenuItems();
             menuStrip1.Refresh();
         }
 
@@ -443,6 +447,12 @@ namespace GitUI.CommandsDialogs
             UpdateSubmodulesList();
             // load custom user menu
             LoadUserMenu();
+
+            if (validWorkingDir)
+            {
+                // add Navigate and View menu
+                _formBrowseMenus.InsertAdditionalMainMenuItems(repositoryToolStripMenuItem);
+            }
 
             UICommands.RaisePostBrowseInitialize(this);
 
