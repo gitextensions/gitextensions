@@ -1988,6 +1988,7 @@ namespace GitUI.CommandsDialogs
         {
             toolAuthor.Text = "";
             toolAuthorLabelItem.Enabled = toolAuthorLabelItem.Checked = false;
+            updateAuthorInfo();
         }
 
         private long lastUserInputTime;
