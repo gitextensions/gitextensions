@@ -88,10 +88,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     comboBoxTags.Text = string.Empty;
                     comboBoxTags.DataSource = list;
                     comboBoxTags.DisplayMember = "LocalName";
-                    if (!comboBoxTags.Text.IsNullOrEmpty())
-                    {
-                        comboBoxTags.Select(0, comboBoxTags.Text.Length);
-                    }
                     SetSelectedRevisionByFocusedControl();
                 }
             );
@@ -107,10 +103,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     comboBoxBranches.Text = string.Empty;
                     comboBoxBranches.DataSource = list;
                     comboBoxBranches.DisplayMember = "LocalName";
-                    if (!comboBoxBranches.Text.IsNullOrEmpty())
-                    {
-                        comboBoxBranches.Select(0, comboBoxBranches.Text.Length);
-                    }
                     SetSelectedRevisionByFocusedControl();
                 }
             );
