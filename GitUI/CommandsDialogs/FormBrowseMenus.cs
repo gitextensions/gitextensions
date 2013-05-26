@@ -13,17 +13,16 @@ namespace GitUI.CommandsDialogs
     {
         MenuStrip _menuStrip;
 
-        IEnumerable<MenuCommand> _navigateMenuCommands;
+        IList<MenuCommand> _navigateMenuCommands;
 
         ToolStripMenuItem _navigateToolStripMenuItem;
         ToolStripMenuItem _viewToolStripMenuItem;
 
-        public FormBrowseMenus(MenuStrip menuStrip, IEnumerable<MenuCommand> navigateMenuCommands)
+        public FormBrowseMenus(MenuStrip menuStrip)
         {
             Translate();
 
             _menuStrip = menuStrip;
-            _navigateMenuCommands = navigateMenuCommands;
         }
 
         public void Translate()
@@ -39,6 +38,20 @@ namespace GitUI.CommandsDialogs
         public virtual void TranslateItems(Translation translation)
         {
             TranslationUtl.TranslateItemsFromFields("FormBrowse", this, translation);
+        }
+
+        public void AddNavigateMenuCommandSet(IEnumerable<MenuCommand> navigateMenuCommands)
+        {
+            if (_navigateMenuCommands == null)
+            {
+                _navigateMenuCommands = new List<MenuCommand>();
+            }
+            else
+            {
+                _navigateMenuCommands.Add(null); // add separator
+            }
+
+            _navigateMenuCommands.AddAll(navigateMenuCommands);
         }
 
         /// <summary>
