@@ -30,6 +30,20 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        public void SetPathArgument(string path)
+        {
+            if (path.IsNullOrEmpty())
+            {
+                checkBoxPathFilter.Checked = false;
+                textBoxPaths.Text = "";
+            }
+            else
+            {
+                checkBoxPathFilter.Checked = true;
+                textBoxPaths.Text = path;
+            }
+        }
+
         private enum OutputFormat
         {
             Zip,
