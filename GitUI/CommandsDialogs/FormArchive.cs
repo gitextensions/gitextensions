@@ -53,6 +53,7 @@ namespace GitUI.CommandsDialogs
         private void FormArchive_Load(object sender, EventArgs e)
         {
             buttonArchiveRevision.Focus();
+            checkBoxPathFilter_CheckedChanged(null, null);
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -99,6 +100,11 @@ namespace GitUI.CommandsDialogs
                     SelectedRevision = chooseForm.SelectedRevision;
                 }
             }
+        }
+
+        private void checkBoxPathFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxPaths.Enabled = checkBoxPathFilter.Checked;
         }
     }
 }
