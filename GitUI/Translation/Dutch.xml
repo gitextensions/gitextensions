@@ -2730,13 +2730,18 @@ Weet u zeker dat u door wilt gaan?</Value>
           <Source>Amend commit</Source>
           <Value>Commit uitbreiden</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorInfo" Property="Text">
-          <Source>Commit as </Source>
+        <TranslationItem Name="_commitAuthorInfo" Property="Text" type="unfinished">
+          <Source>Author </Source>
+          <OldSource>Commit as </OldSource>
           <Value>Plegen als</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorToolTip" Property="Text">
-          <Source>Click to change author information.</Source>
-          <Value>Klik om informatie over de auteur te wijzigen.</Value>
+        <TranslationItem Name="_commitCommitterInfo" Property="Text">
+          <Source>Committer </Source>
+          <Value>Committer</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitCommitterToolTip" Property="Text">
+          <Source>Click to change committer information.</Source>
+          <Value>Klik om committer informatie te wijzigen.</Value>
         </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text" type="unfinished">
           <Source>Commit Message is requested during commit</Source>
@@ -2936,7 +2941,7 @@ Weet u zeker dat u wilt doorgaan?</Value>
           <Value>Sluit dialoog na iedere commit</Value>
         </TranslationItem>
         <TranslationItem Name="commitAuthorStatus" Property="ToolTipText" type="unfinished">
-          <Source>Click to change author information.</Source>
+          <Source>Click to change committer information.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="commitCursorColumnLabel" Property="Text">
@@ -3151,6 +3156,10 @@ Weet u zeker dat u wilt doorgaan?</Value>
           <Source>Working dir changes</Source>
           <Value>Wijzigingen in werk directory</Value>
         </TranslationItem>
+        <TranslationItem Name="_commitAuthorToolTip" Property="Text" type="obsolete">
+          <Source>Click to change author information.</Source>
+          <Value>Klik om informatie over de auteur te wijzigen.</Value>
+        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text" type="obsolete">
           <Source>Do you also want to delete the new files that are in the selection?
 
@@ -3174,6 +3183,14 @@ Kies 'Nee' om nieuwe bestanden te behouden.</Value>
         <TranslationItem Name="cbIncludeSubmodules" Property="Text" type="unfinished">
           <Source>Include submodules</Source>
           <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommitDiff">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Diff</Source>
+          <Value>Verschillen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3497,14 +3514,6 @@ verwijderen die niet is samengevoegd, selecteer de optie 'Geforceerd verwijderen
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDiff">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Diff</Source>
-          <Value>Verschillen</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDiffSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Diff</Source>

@@ -2761,13 +2761,17 @@ Utilice sólo modificar si el commit no está publicado todavía!
           <Source>Amend commit</Source>
           <Value>Modificar commit</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorInfo" Property="Text" type="unfinished">
-          <Source>Commit as </Source>
+        <TranslationItem Name="_commitAuthorInfo" Property="Text">
+          <Source>Author </Source>
+          <Value>Autor</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitCommitterInfo" Property="Text" type="unfinished">
+          <Source>Committer </Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorToolTip" Property="Text">
-          <Source>Click to change author information.</Source>
-          <Value>Haga clic para cambiar la información del autor.</Value>
+        <TranslationItem Name="_commitCommitterToolTip" Property="Text">
+          <Source>Click to change committer information.</Source>
+          <Value>Haga clic para cambiar la información committer.</Value>
         </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text">
           <Source>Commit Message is requested during commit</Source>
@@ -2975,7 +2979,7 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
           <Value>Cerrar el diálogo después de cada commit</Value>
         </TranslationItem>
         <TranslationItem Name="commitAuthorStatus" Property="ToolTipText" type="unfinished">
-          <Source>Click to change author information.</Source>
+          <Source>Click to change committer information.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="commitCursorColumnLabel" Property="Text">
@@ -3190,6 +3194,10 @@ Este commit no tendrá referencia al cambiar a otro rama y se puede perder.
           <Source>Working dir changes</Source>
           <Value>Cambios en directorio de trabajo</Value>
         </TranslationItem>
+        <TranslationItem Name="_commitAuthorToolTip" Property="Text" type="obsolete">
+          <Source>Click to change author information.</Source>
+          <Value>Haga clic para cambiar la información del autor.</Value>
+        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text" type="obsolete">
           <Source>Do you also want to delete the new files that are in the selection?
 
@@ -3213,6 +3221,14 @@ Elija "No" para mantener todos los archivos nuevos.</Value>
         <TranslationItem Name="cbIncludeSubmodules" Property="Text">
           <Source>Include submodules</Source>
           <Value>Incluir submódulos</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommitDiff">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Diff</Source>
+          <Value>Diff</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3540,14 +3556,6 @@ realizarlo de todas formas.</Value>
         <TranslationItem Name="$this" Property="Text">
           <Source>Diff</Source>
           <Value>Diff</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDiffSmall">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Diff</Source>
-          <Value>Dif.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
