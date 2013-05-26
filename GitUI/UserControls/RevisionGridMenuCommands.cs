@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GitUI.Hotkey;
 
 namespace GitUI.UserControls
 {
@@ -23,8 +24,7 @@ namespace GitUI.UserControls
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "GotoChildCommit";
                 menuCommand.Text = "Go to child commit";
-                //// menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCommit;
-                //// TODO menuCommand.ShortcutKeyDisplayString = _formBrowse.GetShortcutKeys(GitUI.CommandsDialogs.FormBrowse.Commands.SelectCurrentRevision).ToShortcutKeyDisplayString();
+                menuCommand.ShortcutKeyDisplayString = _revisionGrid.GetShortcutKeys(GitUI.RevisionGrid.Commands.GoToChild).ToShortcutKeyDisplayString();
                 menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.GoToChild);
 
                 resultList.Add(menuCommand);
@@ -34,8 +34,7 @@ namespace GitUI.UserControls
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "GotoParentCommit";
                 menuCommand.Text = "Go to parent commit";
-                //// menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCommit;
-                //// TODO menuCommand.ShortcutKeyDisplayString = _formBrowse.GetShortcutKeys(GitUI.CommandsDialogs.FormBrowse.Commands.SelectCurrentRevision).ToShortcutKeyDisplayString();
+                menuCommand.ShortcutKeyDisplayString = _revisionGrid.GetShortcutKeys(GitUI.RevisionGrid.Commands.GoToParent).ToShortcutKeyDisplayString();
                 menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.GoToParent);
 
                 resultList.Add(menuCommand);
