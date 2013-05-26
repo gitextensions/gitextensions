@@ -2221,6 +2221,11 @@ namespace GitUI.CommandsDialogs
             return true;
         }
 
+        internal bool ExecuteCommand(Commands cmd)
+        {
+            return ExecuteCommand((int)cmd);
+        }
+
         #endregion
 
         private void goToToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3050,7 +3055,7 @@ namespace GitUI.CommandsDialogs
 
         private void selectCurrentRevisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ExecuteCommand((int)Commands.SelectCurrentRevision);
+            _formBrowseNavigateCommands.SelectCurrentRevisionExecute(this);
         }
     }
 
