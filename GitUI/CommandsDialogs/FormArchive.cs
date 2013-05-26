@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
@@ -29,6 +30,20 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        public void SetPathArgument(string path)
+        {
+            if (path.IsNullOrEmpty())
+            {
+                checkBoxPathFilter.Checked = false;
+                textBoxPaths.Text = "";
+            }
+            else
+            {
+                checkBoxPathFilter.Checked = true;
+                textBoxPaths.Text = path;
+            }
+        }
+
         private enum OutputFormat
         {
             Zip,
@@ -53,6 +68,7 @@ namespace GitUI.CommandsDialogs
         private void FormArchive_Load(object sender, EventArgs e)
         {
             buttonArchiveRevision.Focus();
+            checkBoxPathFilter_CheckedChanged(null, null);
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -78,10 +94,25 @@ namespace GitUI.CommandsDialogs
                     string format = GetSelectedOutputFormat() == OutputFormat.Zip ? "zip" : "tar";
 
                     FormProcess.ShowDialog(this,
-                        string.Format("archive --format={0} {1} --output \"{2}\"",
-                        format, revision, saveFileDialog.FileName));
+                        string.Format("archive --format={0} {1} --output \"{2}\" {3}",
+                        format, revision, saveFileDialog.FileName, GetPathArgumentFromGui()));
                     Close();
                 }
+            }
+        }
+
+        private string GetPathArgumentFromGui()
+        {
+            if (!checkBoxPathFilter.Checked)
+            {
+                return "";
+            }
+            else
+            {
+                // 1. get all lines from text box which are not empty
+                // 2. wrap lines with ""
+                // 3. join together with space as separator
+                return string.Join(" ", textBoxPaths.Lines.Where(a => !a.IsNullOrEmpty()).Select(a => string.Format("\"{0}\"", a)));
             }
         }
 
@@ -99,6 +130,11 @@ namespace GitUI.CommandsDialogs
                     SelectedRevision = chooseForm.SelectedRevision;
                 }
             }
+        }
+
+        private void checkBoxPathFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxPaths.Enabled = checkBoxPathFilter.Checked;
         }
     }
 }
