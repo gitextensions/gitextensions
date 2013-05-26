@@ -2772,13 +2772,18 @@ Möchten Sie den Vorgang fortsetzen?</Value>
           <Source>Amend commit</Source>
           <Value>Commit anpassen</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorInfo" Property="Text">
-          <Source>Commit as </Source>
+        <TranslationItem Name="_commitAuthorInfo" Property="Text" type="unfinished">
+          <Source>Author </Source>
+          <OldSource>Commit as </OldSource>
           <Value>Commit als</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorToolTip" Property="Text">
-          <Source>Click to change author information.</Source>
-          <Value>Klicken, um Informationen über den Autor ändern.</Value>
+        <TranslationItem Name="_commitCommitterInfo" Property="Text">
+          <Source>Committer </Source>
+          <Value>Committer</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitCommitterToolTip" Property="Text">
+          <Source>Click to change committer information.</Source>
+          <Value>Klicken, um committer Informationen zu ändern.</Value>
         </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text">
           <Source>Commit Message is requested during commit</Source>
@@ -2996,7 +3001,7 @@ Möchten Sie trotzdem fortfahren?</Value>
           <Value>Dialog nach jedem Commit schließen</Value>
         </TranslationItem>
         <TranslationItem Name="commitAuthorStatus" Property="ToolTipText" type="unfinished">
-          <Source>Click to change author information.</Source>
+          <Source>Click to change committer information.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="commitCursorColumnLabel" Property="Text">
@@ -3211,6 +3216,10 @@ Möchten Sie trotzdem fortfahren?</Value>
           <Source>Working dir changes</Source>
           <Value>Änderungen im Arbeitsverzeichnis</Value>
         </TranslationItem>
+        <TranslationItem Name="_commitAuthorToolTip" Property="Text" type="obsolete">
+          <Source>Click to change author information.</Source>
+          <Value>Klicken, um Informationen über den Autor ändern.</Value>
+        </TranslationItem>
         <TranslationItem Name="commitTemplatesToolStripMenuItem" Property="ToolTipText" type="obsolete">
           <Source>Commit templates</Source>
           <Value>Commit-Vorlagen</Value>
@@ -3238,6 +3247,14 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
         <TranslationItem Name="cbIncludeSubmodules" Property="Text">
           <Source>Include submodules</Source>
           <Value>Untermodule mit einbeziehen</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommitDiff">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Diff</Source>
+          <Value>Vergleichen</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3562,14 +3579,6 @@ löschen wollen, können Sie dies mit der Option 'Löschen erzwingen' erreichen.
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDiff">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Diff</Source>
-          <Value>Vergleichen</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDiffSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Diff</Source>

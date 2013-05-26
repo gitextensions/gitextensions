@@ -2713,13 +2713,18 @@ Vuoi continuare?</Value>
           <Source>Amend commit</Source>
           <Value>Ripeti commit (Amend)</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorInfo" Property="Text">
-          <Source>Commit as </Source>
+        <TranslationItem Name="_commitAuthorInfo" Property="Text" type="unfinished">
+          <Source>Author </Source>
+          <OldSource>Commit as </OldSource>
           <Value>Impegnarsi come</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorToolTip" Property="Text">
-          <Source>Click to change author information.</Source>
-          <Value>Fare clic per modificare le informazioni relative all'autore.</Value>
+        <TranslationItem Name="_commitCommitterInfo" Property="Text" type="unfinished">
+          <Source>Committer </Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_commitCommitterToolTip" Property="Text">
+          <Source>Click to change committer information.</Source>
+          <Value>Fare clic per modificare le informazioni committer.</Value>
         </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text" type="unfinished">
           <Source>Commit Message is requested during commit</Source>
@@ -2919,7 +2924,7 @@ Vuoi continuare?</Value>
           <Value>Chiudi finestra dopo ogni commit</Value>
         </TranslationItem>
         <TranslationItem Name="commitAuthorStatus" Property="ToolTipText" type="unfinished">
-          <Source>Click to change author information.</Source>
+          <Source>Click to change committer information.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="commitCursorColumnLabel" Property="Text" type="unfinished">
@@ -3134,6 +3139,10 @@ Vuoi continuare?</Value>
           <Source>Working dir changes</Source>
           <Value>Modifiche nella cartella di lavoro</Value>
         </TranslationItem>
+        <TranslationItem Name="_commitAuthorToolTip" Property="Text" type="obsolete">
+          <Source>Click to change author information.</Source>
+          <Value>Fare clic per modificare le informazioni relative all'autore.</Value>
+        </TranslationItem>
         <TranslationItem Name="_alsoDeleteUntrackedFiles" Property="Text" type="obsolete">
           <Source>Do you also want to delete the new files that are in the selection?
 
@@ -3157,6 +3166,14 @@ Scegli 'No' per tenere tutti i nuovi file.</Value>
         <TranslationItem Name="cbIncludeSubmodules" Property="Text" type="unfinished">
           <Source>Include submodules</Source>
           <Value />
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommitDiff">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Diff</Source>
+          <Value>Differenze</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3472,14 +3489,6 @@ un merge completo, si può forzare la cosa con "forza cancellazione".</Value>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDiff">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text">
-          <Source>Diff</Source>
-          <Value>Differenze</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDiffSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Diff</Source>

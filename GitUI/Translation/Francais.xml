@@ -2740,13 +2740,18 @@ Voulez-vous continuer ?</Value>
           <Source>Amend commit</Source>
           <Value>Rectifier commit</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorInfo" Property="Text">
-          <Source>Commit as </Source>
+        <TranslationItem Name="_commitAuthorInfo" Property="Text" type="unfinished">
+          <Source>Author </Source>
+          <OldSource>Commit as </OldSource>
           <Value>S'engager comme</Value>
         </TranslationItem>
-        <TranslationItem Name="_commitAuthorToolTip" Property="Text">
-          <Source>Click to change author information.</Source>
-          <Value>Cliquez pour modifier les informations de l'auteur.</Value>
+        <TranslationItem Name="_commitCommitterInfo" Property="Text">
+          <Source>Committer </Source>
+          <Value>Committer</Value>
+        </TranslationItem>
+        <TranslationItem Name="_commitCommitterToolTip" Property="Text">
+          <Source>Click to change committer information.</Source>
+          <Value>Cliquez pour modifier les informations de committer.</Value>
         </TranslationItem>
         <TranslationItem Name="_commitMessageDisabled" Property="Text">
           <Source>Commit Message is requested during commit</Source>
@@ -2951,7 +2956,7 @@ Do you want to continue?</Source>
           <Value>Fermer la fenêtre après chaque commit</Value>
         </TranslationItem>
         <TranslationItem Name="commitAuthorStatus" Property="ToolTipText" type="unfinished">
-          <Source>Click to change author information.</Source>
+          <Source>Click to change committer information.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="commitCursorColumnLabel" Property="Text">
@@ -3166,6 +3171,10 @@ Do you want to continue?</Source>
           <Source>Working dir changes</Source>
           <Value>Changements dans le répertoire de travail</Value>
         </TranslationItem>
+        <TranslationItem Name="_commitAuthorToolTip" Property="Text" type="obsolete">
+          <Source>Click to change author information.</Source>
+          <Value>Cliquez pour modifier les informations de l'auteur.</Value>
+        </TranslationItem>
         <TranslationItem Name="_checkBoxAutoWrap" Property="Text" type="obsolete">
           <Source>Auto-wrap</Source>
           <Value>Retour automatique à la ligne</Value>
@@ -3193,6 +3202,14 @@ Choisissez 'Non' pour garder les nouveaux fichiers.</Value>
         <TranslationItem Name="cbIncludeSubmodules" Property="Text">
           <Source>Include submodules</Source>
           <Value>Inclure les sous modules</Value>
+        </TranslationItem>
+      </translationItems>
+    </TranslationCategory>
+    <TranslationCategory Name="FormCommitDiff">
+      <translationItems>
+        <TranslationItem Name="$this" Property="Text" type="unfinished">
+          <Source>Diff</Source>
+          <Value>Diff</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3512,14 +3529,6 @@ en utilisant `forcer la suppression´.</Value>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormDiff">
-      <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
-          <Source>Diff</Source>
-          <Value>Diff</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormDiffSmall">
       <translationItems>
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Diff</Source>
