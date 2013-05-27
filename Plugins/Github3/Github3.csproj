@@ -97,7 +97,7 @@ cp "$(SolutionDir)Bin/Git.hub.dll" "../../../../GitExtensions/bin/$(Configuratio
 cp "$(SolutionDir)Bin/RestSharp.dll" "../../../../GitExtensions/bin/$(ConfigurationName)/"
 </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <PropertyGroup>
     <PostBuildEvent Condition=" '$(OS)' == 'Windows_NT' ">copy "$(TargetPath)" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
 copy "$(SolutionDir)\bin\Git.hub.dll" "..\..\..\..\GitExtensions\bin\$(ConfigurationName)\"
