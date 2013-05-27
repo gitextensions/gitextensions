@@ -199,7 +199,7 @@ namespace GitUI.CommandsDialogs
 
             _formBrowseMenuCommands = new FormBrowseMenuCommands(this, aCommands, Module, RevisionGrid);
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
-            RevisionGrid.MenuCommandsPropertyChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
+            RevisionGrid.MenuCommands.PropertyChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
         }
 
         void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
@@ -453,8 +453,8 @@ namespace GitUI.CommandsDialogs
                 // add Navigate and View menu
                 _formBrowseMenus.ResetMenuCommandSets();
                 _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, _formBrowseMenuCommands.GetNavigateMenuCommands());
-                _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, RevisionGrid.GetNavigateMenuCommands());
-                _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, RevisionGrid.GetViewMenuCommands());
+                _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, RevisionGrid.MenuCommands.GetNavigateMenuCommands());
+                _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, RevisionGrid.MenuCommands.GetViewMenuCommands());
 
                 _formBrowseMenus.InsertAdditionalMainMenuItems(repositoryToolStripMenuItem);
             }
