@@ -5,19 +5,40 @@ using System.Linq;
 using System.Text;
 using GitUI.Hotkey;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    internal class RevisionGridMenuCommands
+    internal class RevisionGridMenuCommands : INotifyPropertyChanged
     {
         RevisionGrid _revisionGrid;
+
+        bool _showRemoteBranches;
+
+        /// <summary>
+        /// must both be created only once
+        /// </summary>
+        IEnumerable<MenuCommand> _navigateMenuCommands;
+        IEnumerable<MenuCommand> _viewMenuCommands;
 
         public RevisionGridMenuCommands(RevisionGrid revisionGrid)
         {
             _revisionGrid = revisionGrid;
+            _navigateMenuCommands = CreateNavigateMenuCommands();
+            _viewMenuCommands = CreateViewMenuCommands();
+        }
+
+        public bool ShowRemoteBranches { 
+            get { return _showRemoteBranches; }
+            set { _showRemoteBranches = value; _revisionGrid.InvalidateRevisions(); OnPropertyChanged(); } 
         }
 
         public IEnumerable<MenuCommand> GetNavigateMenuCommands()
+        {
+            return _navigateMenuCommands;
+        }
+
+        private IEnumerable<MenuCommand> CreateNavigateMenuCommands()
         {
             var resultList = new List<MenuCommand>();
 
@@ -75,13 +96,44 @@ namespace GitUI.UserControls.RevisionGridClasses
             return resultList;
         }
 
-        public IEnumerable<MenuCommand> GetViewMenuCommands()
+        private IEnumerable<MenuCommand> CreateViewMenuCommands()
         {
             var resultList = new List<MenuCommand>();
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ShowRemoteBranches";
+                menuCommand.Text = "Show remote branches";
+                menuCommand.ExecuteAction = () => ShowRemoteBranches = !ShowRemoteBranches;
+                menuCommand.IsCheckedFunc = () => ShowRemoteBranches;
+
+                // QUESTION: how to handle the checked menu items???
+                //           how to remember which menu items are checked or how to set the checkmark on all items?
+                //           how to register?
+                //           make MenuCommand singleton? how about clear registered items?
+
+                resultList.Add(menuCommand);
+            }
 
             resultList.Add(null); // separator
 
             return resultList;
+        }
+
+        public IEnumerable<MenuCommand> GetViewMenuCommands()
+        {
+            return _viewMenuCommands;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string name = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
         }
     }
 }

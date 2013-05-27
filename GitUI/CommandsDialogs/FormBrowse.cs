@@ -199,6 +199,7 @@ namespace GitUI.CommandsDialogs
 
             _formBrowseMenuCommands = new FormBrowseMenuCommands(this, aCommands, Module, RevisionGrid);
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
+            RevisionGrid.MenuCommandsPropertyChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
         }
 
         void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
