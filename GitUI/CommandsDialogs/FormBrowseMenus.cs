@@ -47,6 +47,11 @@ namespace GitUI.CommandsDialogs
             _viewMenuCommands = null;
         }
 
+        /// <summary>
+        /// each new command set will be automatically separated by a separator
+        /// </summary>
+        /// <param name="mainMenuItem"></param>
+        /// <param name="menuCommands"></param>
         public void AddMenuCommandSet(MainMenuItem mainMenuItem, IEnumerable<MenuCommand> menuCommands)
         {
             IList<MenuCommand> selectedMenuCommands = null;
@@ -60,7 +65,7 @@ namespace GitUI.CommandsDialogs
                     }
                     else
                     {
-                        _navigateMenuCommands.Add(null); // add separator
+                        _navigateMenuCommands.Add(MenuCommand.CreateSeparator());
                     }
                     selectedMenuCommands = _navigateMenuCommands;
                     break;
@@ -72,7 +77,7 @@ namespace GitUI.CommandsDialogs
                     }
                     else
                     {
-                        _viewMenuCommands.Add(null); // add separator
+                        _viewMenuCommands.Add(MenuCommand.CreateSeparator());
                     }
                     selectedMenuCommands = _viewMenuCommands;
                     break;
@@ -108,35 +113,56 @@ namespace GitUI.CommandsDialogs
             var toolStripItems = new List<ToolStripItem>();
             foreach (var menuCommand in menuCommands)
             {
-                if (menuCommand == null)
+                if (menuCommand.IsSeparator)
                 {
                     toolStripItems.Add(new ToolStripSeparator());
-                    continue;
                 }
+                else
+                {
+                    var toolStripMenuItem = new ToolStripMenuItem();
+                    toolStripMenuItem.Name = menuCommand.Name;
+                    toolStripMenuItem.Text = menuCommand.Text;
+                    toolStripMenuItem.Image = menuCommand.Image;
+                    toolStripMenuItem.ShortcutKeys = menuCommand.ShortcutKeys;
+                    toolStripMenuItem.ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString;
+                    toolStripMenuItem.Click += (obj, sender) => menuCommand.ExecuteAction();
+                    menuCommand.RegisterMenuItem(toolStripMenuItem);
 
-                var toolStripMenuItem = new ToolStripMenuItem();
-                toolStripMenuItem.Name = menuCommand.Name;
-                toolStripMenuItem.Text = menuCommand.Text;
-                toolStripMenuItem.Image = menuCommand.Image;
-                toolStripMenuItem.ShortcutKeys = menuCommand.ShortcutKeys;
-                toolStripMenuItem.ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString;
-                toolStripMenuItem.Click += (obj, sender) => menuCommand.ExecuteAction();
-
-                toolStripItems.Add(toolStripMenuItem);
+                    toolStripItems.Add(toolStripMenuItem);
+                }
             }
 
             toolStripMenuItemTarget.DropDownItems.AddRange(toolStripItems.ToArray());
         }
 
+        // clear is important to avoid mem leaks of event handlers
+        // TODO: is everything cleared correct or are there leftover references?
+        //         see also ResetMenuCommandSets()
         public void RemoveAdditionalMainMenuItems()
         {
             _menuStrip.Items.Remove(_navigateToolStripMenuItem);
             _menuStrip.Items.Remove(_viewToolStripMenuItem);
+
+            // don't forget to clear old associated menu items
+            if (_navigateMenuCommands != null)
+            {
+                _navigateMenuCommands.ForEach(mc => mc.ClearAllRegisterMenuItems() );
+            }
+
+            if (_viewMenuCommands != null)
+            {
+                _viewMenuCommands.ForEach(mc => mc.ClearAllRegisterMenuItems() );
+            }
         }
 
         public void OnMenuCommandsPropertyChanged()
         {
-            // TODO
+            var menuCommands = _navigateMenuCommands.Concat(_viewMenuCommands);
+
+            foreach (var menuCommand in menuCommands)
+            {
+                menuCommand.SetCheckForRegisteredMenuItems();
+            }
         }
     }
 
@@ -148,7 +174,17 @@ namespace GitUI.CommandsDialogs
 
     class MenuCommand
     {
+        public static MenuCommand CreateSeparator()
+        {
+            return new MenuCommand { IsSeparator = true };
+        }
+
         IList<ToolStripMenuItem> _registeredMenuItems = new List<ToolStripMenuItem>();
+
+        /// <summary>
+        /// if true all other properties have no meaning
+        /// </summary>
+        public bool IsSeparator { get; set; }
 
         /// <summary>
         /// used only for toolstripitem
@@ -174,32 +210,33 @@ namespace GitUI.CommandsDialogs
         public Action ExecuteAction;
 
         /// <summary>
-        /// called if the menu item wants to know if the Checked property
+        /// called if the menu item want to know if the Checked property
         /// should be true or false. If null then false.
         /// </summary>
         public Func<bool> IsCheckedFunc;
 
-        /////// <summary>
-        /////// To make the MenuCommand interact with all its associated menu items
-        /////// this method is used to register the all menu items that where generated by this MenuCommand
-        /////// </summary>
-        /////// <param name="menuItem"></param>
-        ////public void RegisterMenuItem(ToolStripMenuItem menuItem)
-        ////{
-        ////    _registeredMenuItems.Add(menuItem);
-        ////}
+        /// <summary>
+        /// To make the MenuCommand interact with all its associated menu items
+        /// this method is used to register the all menu items that where generated by this MenuCommand
+        /// </summary>
+        /// <param name="menuItem"></param>
+        public void RegisterMenuItem(ToolStripMenuItem menuItem)
+        {
+            _registeredMenuItems.Add(menuItem);
+        }
 
-        /////// <summary>
-        /////// for all registered menu items: set the check or not
-        /////// </summary>
-        /////// <param name="isChecked"></param>
-        /////// <returns></returns>
-        ////public void SetChecked(bool isChecked)
-        ////{
-        ////    foreach (var item in _registeredMenuItems)
-        ////    {
-        ////        item.Checked = isChecked;
-        ////    }
-        ////}
+        public void ClearAllRegisterMenuItems()
+        {
+            _registeredMenuItems.Clear();
+        }
+
+        public void SetCheckForRegisteredMenuItems()
+        {
+            if (IsCheckedFunc != null)
+            {
+                bool isChecked = IsCheckedFunc();
+                _registeredMenuItems.ForEach(mi => mi.Checked = isChecked);
+            }
+        }
     }
 }

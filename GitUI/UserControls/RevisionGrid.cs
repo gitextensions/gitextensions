@@ -82,7 +82,6 @@ namespace GitUI
             Translate();
 
             _revisionGridMenuCommands = new RevisionGridMenuCommands(this);
-            _revisionGridMenuCommands.PropertyChanged += MenuCommandsPropertyChanged;
 
             NormalFont = Settings.Font;
             Loading.Paint += Loading_Paint;
@@ -2609,16 +2608,6 @@ namespace GitUI
             return Hotkeys.FirstOrDefault(h => h.CommandCode == commandCode);
         }
 
-        internal IEnumerable<MenuCommand> GetNavigateMenuCommands()
-        {
-            return _revisionGridMenuCommands.GetNavigateMenuCommands();
-        }
-
-        internal IEnumerable<MenuCommand> GetViewMenuCommands()
-        {
-            return _revisionGridMenuCommands.GetViewMenuCommands();
-        }
-
-        internal event PropertyChangedEventHandler MenuCommandsPropertyChanged;
+        internal RevisionGridMenuCommands MenuCommands { get { return _revisionGridMenuCommands; } }
     }
 }
