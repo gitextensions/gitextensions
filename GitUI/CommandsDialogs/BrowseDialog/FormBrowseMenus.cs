@@ -113,23 +113,7 @@ namespace GitUI.CommandsDialogs
             var toolStripItems = new List<ToolStripItem>();
             foreach (var menuCommand in menuCommands)
             {
-                if (menuCommand.IsSeparator)
-                {
-                    toolStripItems.Add(new ToolStripSeparator());
-                }
-                else
-                {
-                    var toolStripMenuItem = new ToolStripMenuItem();
-                    toolStripMenuItem.Name = menuCommand.Name;
-                    toolStripMenuItem.Text = menuCommand.Text;
-                    toolStripMenuItem.Image = menuCommand.Image;
-                    toolStripMenuItem.ShortcutKeys = menuCommand.ShortcutKeys;
-                    toolStripMenuItem.ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString;
-                    toolStripMenuItem.Click += (obj, sender) => menuCommand.ExecuteAction();
-                    menuCommand.RegisterMenuItem(toolStripMenuItem);
-
-                    toolStripItems.Add(toolStripMenuItem);
-                }
+                toolStripItems.Add(MenuCommand.CreateToolStripItem(menuCommand));
             }
 
             toolStripMenuItemTarget.DropDownItems.AddRange(toolStripItems.ToArray());
@@ -177,6 +161,27 @@ namespace GitUI.CommandsDialogs
         public static MenuCommand CreateSeparator()
         {
             return new MenuCommand { IsSeparator = true };
+        }
+
+        public static ToolStripItem CreateToolStripItem(MenuCommand menuCommand)
+        {
+            if (menuCommand.IsSeparator)
+            {
+                return new ToolStripSeparator();
+            }
+            else
+            {
+                var toolStripMenuItem = new ToolStripMenuItem();
+                toolStripMenuItem.Name = menuCommand.Name;
+                toolStripMenuItem.Text = menuCommand.Text;
+                toolStripMenuItem.Image = menuCommand.Image;
+                toolStripMenuItem.ShortcutKeys = menuCommand.ShortcutKeys;
+                toolStripMenuItem.ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString;
+                toolStripMenuItem.Click += (obj, sender) => menuCommand.ExecuteAction();
+                menuCommand.RegisterMenuItem(toolStripMenuItem);
+
+                return toolStripMenuItem;
+            }
         }
 
         IList<ToolStripMenuItem> _registeredMenuItems = new List<ToolStripMenuItem>();
