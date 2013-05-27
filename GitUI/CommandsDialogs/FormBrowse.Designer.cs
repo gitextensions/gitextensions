@@ -82,6 +82,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator30 = new System.Windows.Forms.ToolStripSeparator();
             this.copyFilenameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileTreeOpenContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileTreeArchiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator31 = new System.Windows.Forms.ToolStripSeparator();
             this.fileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -737,6 +738,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator30,
             this.copyFilenameToClipboardToolStripMenuItem,
             this.fileTreeOpenContainingFolderToolStripMenuItem,
+            this.fileTreeArchiveToolStripMenuItem,
             this.toolStripSeparator31,
             this.fileHistoryToolStripMenuItem,
             this.blameToolStripMenuItem1,
@@ -790,6 +792,14 @@ namespace GitUI.CommandsDialogs
             this.fileTreeOpenContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(341, 24);
             this.fileTreeOpenContainingFolderToolStripMenuItem.Text = "Open containing folder";
             this.fileTreeOpenContainingFolderToolStripMenuItem.Click += new System.EventHandler(this.fileTreeOpenContainingFolderToolStripMenuItem_Click);
+            // 
+            // fileTreeOpenContainingFolderToolStripMenuItem
+            // 
+            this.fileTreeArchiveToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconArchiveRevision;
+            this.fileTreeArchiveToolStripMenuItem.Name = "fileTreeArchiveToolStripMenuItem";
+            this.fileTreeArchiveToolStripMenuItem.Size = new System.Drawing.Size(341, 24);
+            this.fileTreeArchiveToolStripMenuItem.Text = "Archive...";
+            this.fileTreeArchiveToolStripMenuItem.Click += new System.EventHandler(this.fileTreeArchiveToolStripMenuItem_Click);
             // 
             // toolStripSeparator31
             // 
@@ -2159,6 +2169,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem openContainingFolderToolStripMenuItem;
         private ToolStripMenuItem diffShowInFileTreeToolStripMenuItem;
         private ToolStripMenuItem fileTreeOpenContainingFolderToolStripMenuItem;
+        private ToolStripMenuItem fileTreeArchiveToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator21;
         private ToolStripSeparator toolStripSeparator25;
         private ToolStripSeparator toolStripSeparator22;
