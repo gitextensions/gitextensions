@@ -13,11 +13,7 @@ namespace GitUI.UserControls.RevisionGridClasses
     {
         RevisionGrid _revisionGrid;
 
-        bool _showRemoteBranches;
-
-        /// <summary>
-        /// must both be created only once
-        /// </summary>
+        // must both be created only once
         IEnumerable<MenuCommand> _navigateMenuCommands;
         IEnumerable<MenuCommand> _viewMenuCommands;
 
@@ -28,10 +24,16 @@ namespace GitUI.UserControls.RevisionGridClasses
             _viewMenuCommands = CreateViewMenuCommands();
         }
 
+        #region UserProperties
+
+        bool _showRemoteBranches = true;
+
         public bool ShowRemoteBranches { 
             get { return _showRemoteBranches; }
             set { _showRemoteBranches = value; _revisionGrid.InvalidateRevisions(); OnPropertyChanged(); } 
         }
+
+        #endregion
 
         public IEnumerable<MenuCommand> GetNavigateMenuCommands()
         {
@@ -62,7 +64,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 resultList.Add(menuCommand);
             }
 
-            resultList.Add(null); // separator
+            resultList.Add(MenuCommand.CreateSeparator());
 
             {
                 var menuCommand = new MenuCommand();
@@ -107,15 +109,10 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.ExecuteAction = () => ShowRemoteBranches = !ShowRemoteBranches;
                 menuCommand.IsCheckedFunc = () => ShowRemoteBranches;
 
-                // QUESTION: how to handle the checked menu items???
-                //           how to remember which menu items are checked or how to set the checkmark on all items?
-                //           how to register?
-                //           make MenuCommand singleton? how about clear registered items?
-
                 resultList.Add(menuCommand);
             }
 
-            resultList.Add(null); // separator
+            resultList.Add(MenuCommand.CreateSeparator());
 
             return resultList;
         }
@@ -127,6 +124,8 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        // taken from http://stackoverflow.com/questions/5058254/inotifypropertychanged-propertychangedeventhandler-event-is-always-null
+        // paramenter name not used
         protected void OnPropertyChanged(string name = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
