@@ -20,8 +20,6 @@ namespace GitUI.UserControls.RevisionGridClasses
         public RevisionGridMenuCommands(RevisionGrid revisionGrid)
         {
             _revisionGrid = revisionGrid;
-            _navigateMenuCommands = CreateNavigateMenuCommands();
-            _viewMenuCommands = CreateViewMenuCommands();
         }
 
         #region UserProperties
@@ -34,6 +32,41 @@ namespace GitUI.UserControls.RevisionGridClasses
         }
 
         #endregion
+
+        /// <summary>
+        /// ... "update" because the hotkey settings might change
+        /// </summary>
+        public void CreateOrUpdateMenuCommands()
+        {
+            if (_navigateMenuCommands == null && _viewMenuCommands == null)
+            {
+                _navigateMenuCommands = CreateNavigateMenuCommands();
+                _viewMenuCommands = CreateViewMenuCommands();
+            }
+
+            if (_navigateMenuCommands != null && _viewMenuCommands != null)
+            {
+                var navigateMenuCommands2 = CreateNavigateMenuCommands();
+                var viewMenuCommands2 = CreateViewMenuCommands();
+
+                UpdateMenuCommandShortcutKeyDisplayString(_navigateMenuCommands, navigateMenuCommands2);
+                UpdateMenuCommandShortcutKeyDisplayString(_viewMenuCommands, viewMenuCommands2);
+
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(null, null); // trigger refresh
+                }
+            }
+        }
+
+        private void UpdateMenuCommandShortcutKeyDisplayString(IEnumerable<MenuCommand> targetList, IEnumerable<MenuCommand> sourceList)
+        {
+            foreach (var sourceMc in sourceList)
+            {
+                var targetMc = targetList.Single(mc => mc.Name == sourceMc.Name);
+                targetMc.ShortcutKeyDisplayString = sourceMc.ShortcutKeyDisplayString;
+            }
+        }
 
         public IEnumerable<MenuCommand> GetNavigateMenuCommands()
         {

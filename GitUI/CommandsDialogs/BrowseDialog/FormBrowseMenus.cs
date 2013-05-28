@@ -120,9 +120,9 @@ namespace GitUI.CommandsDialogs
             var toolStripItems = new List<ToolStripItem>();
             foreach (var menuCommand in menuCommands)
             {
-                var toolStripItem = MenuCommand.CreateToolStripItem(menuCommand); 
+                var toolStripItem = MenuCommand.CreateToolStripItem(menuCommand);
                 toolStripItems.Add(toolStripItem);
-                
+
                 var toolStripMenuItem = toolStripItem as ToolStripMenuItem;
                 if (toolStripMenuItem != null)
                 {
@@ -161,11 +161,28 @@ namespace GitUI.CommandsDialogs
 
         public void OnMenuCommandsPropertyChanged()
         {
-            var menuCommands = _navigateMenuCommands.Concat(_viewMenuCommands);
+            var menuCommands = GetNavigateAndViewMenuCommands();
 
             foreach (var menuCommand in menuCommands)
             {
                 menuCommand.SetCheckForRegisteredMenuItems();
+                menuCommand.UpdateMenuItemsShortcutKeyDisplayString();
+            }
+        }
+
+        private IEnumerable<MenuCommand> GetNavigateAndViewMenuCommands()
+        {
+            if (_navigateMenuCommands == null && _viewMenuCommands == null)
+            {
+                return new List<MenuCommand>();
+            }
+            else if (_navigateMenuCommands != null && _viewMenuCommands != null)
+            {
+                return _navigateMenuCommands.Concat(_viewMenuCommands);
+            }
+            else
+            {
+                throw new ApplicationException("this case is not allowed");
             }
         }
     }
@@ -267,6 +284,11 @@ namespace GitUI.CommandsDialogs
                 bool isChecked = IsCheckedFunc();
                 _registeredMenuItems.ForEach(mi => mi.Checked = isChecked);
             }
+        }
+
+        public void UpdateMenuItemsShortcutKeyDisplayString()
+        {
+            _registeredMenuItems.ForEach(mi => mi.ShortcutKeyDisplayString = ShortcutKeyDisplayString);
         }
     }
 }
