@@ -19,6 +19,10 @@ namespace GitUI.CommandsDialogs
         ToolStripMenuItem _navigateToolStripMenuItem;
         ToolStripMenuItem _viewToolStripMenuItem;
 
+        // we have to remember which items we registered with the menucommands because other
+        // location (RevisionGrid) can register items too!
+        IList<ToolStripMenuItem> _itemsRegisteredWithMenuCommand = new List<ToolStripMenuItem>();
+
         public FormBrowseMenus(MenuStrip menuStrip)
         {
             Translate();
@@ -54,7 +58,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="menuCommands"></param>
         public void AddMenuCommandSet(MainMenuItem mainMenuItem, IEnumerable<MenuCommand> menuCommands)
         {
-            IList<MenuCommand> selectedMenuCommands = null;
+            IList<MenuCommand> selectedMenuCommands = null; // make that more clear
 
             switch (mainMenuItem)
             {
@@ -106,6 +110,9 @@ namespace GitUI.CommandsDialogs
             _viewToolStripMenuItem.Text = "View";
             SetDropDownItems(_viewToolStripMenuItem, _viewMenuCommands);
             _menuStrip.Items.Insert(_menuStrip.Items.IndexOf(_navigateToolStripMenuItem) + 1, _viewToolStripMenuItem);
+
+            // maybe set check marks on menu items
+            OnMenuCommandsPropertyChanged();
         }
 
         private void SetDropDownItems(ToolStripMenuItem toolStripMenuItemTarget, IEnumerable<MenuCommand> menuCommands)
@@ -113,7 +120,15 @@ namespace GitUI.CommandsDialogs
             var toolStripItems = new List<ToolStripItem>();
             foreach (var menuCommand in menuCommands)
             {
-                toolStripItems.Add(MenuCommand.CreateToolStripItem(menuCommand));
+                var toolStripItem = MenuCommand.CreateToolStripItem(menuCommand); 
+                toolStripItems.Add(toolStripItem);
+                
+                var toolStripMenuItem = toolStripItem as ToolStripMenuItem;
+                if (toolStripMenuItem != null)
+                {
+                    menuCommand.RegisterMenuItem(toolStripMenuItem);
+                    _itemsRegisteredWithMenuCommand.Add(toolStripMenuItem);
+                }
             }
 
             toolStripMenuItemTarget.DropDownItems.AddRange(toolStripItems.ToArray());
@@ -121,21 +136,26 @@ namespace GitUI.CommandsDialogs
 
         // clear is important to avoid mem leaks of event handlers
         // TODO: is everything cleared correct or are there leftover references?
-        //         see also ResetMenuCommandSets()
+        //         see also ResetMenuCommandSets()?
         public void RemoveAdditionalMainMenuItems()
         {
             _menuStrip.Items.Remove(_navigateToolStripMenuItem);
             _menuStrip.Items.Remove(_viewToolStripMenuItem);
 
             // don't forget to clear old associated menu items
-            if (_navigateMenuCommands != null)
+            if (_itemsRegisteredWithMenuCommand != null)
             {
-                _navigateMenuCommands.ForEach(mc => mc.ClearAllRegisterMenuItems() );
-            }
+                if (_navigateMenuCommands != null)
+                {
+                    _navigateMenuCommands.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
+                }
 
-            if (_viewMenuCommands != null)
-            {
-                _viewMenuCommands.ForEach(mc => mc.ClearAllRegisterMenuItems() );
+                if (_viewMenuCommands != null)
+                {
+                    _viewMenuCommands.ForEach(mc => mc.UnregisterMenuItems(_itemsRegisteredWithMenuCommand));
+                }
+
+                _itemsRegisteredWithMenuCommand.Clear();
             }
         }
 
@@ -156,6 +176,9 @@ namespace GitUI.CommandsDialogs
         ViewMenu
     }
 
+    /// <summary>
+    /// TODO: move to separate file
+    /// </summary>
     class MenuCommand
     {
         public static MenuCommand CreateSeparator()
@@ -178,7 +201,6 @@ namespace GitUI.CommandsDialogs
                 toolStripMenuItem.ShortcutKeys = menuCommand.ShortcutKeys;
                 toolStripMenuItem.ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString;
                 toolStripMenuItem.Click += (obj, sender) => menuCommand.ExecuteAction();
-                menuCommand.RegisterMenuItem(toolStripMenuItem);
 
                 return toolStripMenuItem;
             }
@@ -230,9 +252,12 @@ namespace GitUI.CommandsDialogs
             _registeredMenuItems.Add(menuItem);
         }
 
-        public void ClearAllRegisterMenuItems()
+        public void UnregisterMenuItems(IEnumerable<ToolStripMenuItem> items)
         {
-            _registeredMenuItems.Clear();
+            foreach (var item in items)
+            {
+                _registeredMenuItems.Remove(item);
+            }
         }
 
         public void SetCheckForRegisteredMenuItems()
