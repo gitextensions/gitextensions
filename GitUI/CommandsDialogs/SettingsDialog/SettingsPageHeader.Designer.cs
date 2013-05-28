@@ -29,19 +29,19 @@
         private void InitializeComponent()
         {
             this.HeaderPanel = new System.Windows.Forms.Panel();
-            this.settingsPagePanel = new System.Windows.Forms.Panel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.linePanel = new System.Windows.Forms.Panel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
-            this.arrows1 = new System.Windows.Forms.Label();
-            this.EffectiveRB = new System.Windows.Forms.RadioButton();
-            this.GlobalRB = new System.Windows.Forms.RadioButton();
-            this.LocalRB = new System.Windows.Forms.RadioButton();
-            this.arrows2 = new System.Windows.Forms.Label();
-            this.arrow3 = new System.Windows.Forms.Label();
-            this.DistributedRB = new System.Windows.Forms.RadioButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.DistributedRB = new System.Windows.Forms.RadioButton();
+            this.arrow3 = new System.Windows.Forms.Label();
+            this.arrows2 = new System.Windows.Forms.Label();
+            this.LocalRB = new System.Windows.Forms.RadioButton();
+            this.GlobalRB = new System.Windows.Forms.RadioButton();
+            this.EffectiveRB = new System.Windows.Forms.RadioButton();
+            this.arrows1 = new System.Windows.Forms.Label();
+            this.settingsPagePanel = new System.Windows.Forms.Panel();
             this.HeaderPanel.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -59,14 +59,6 @@
             this.HeaderPanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 5);
             this.HeaderPanel.Size = new System.Drawing.Size(797, 56);
             this.HeaderPanel.TabIndex = 0;
-            // 
-            // settingsPagePanel
-            // 
-            this.settingsPagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settingsPagePanel.Location = new System.Drawing.Point(0, 59);
-            this.settingsPagePanel.Name = "settingsPagePanel";
-            this.settingsPagePanel.Size = new System.Drawing.Size(797, 373);
-            this.settingsPagePanel.TabIndex = 3;
             // 
             // tableLayoutPanel2
             // 
@@ -119,82 +111,6 @@
             this.label1.TabIndex = 7;
             this.label1.Text = "Settings source:";
             // 
-            // arrows1
-            // 
-            this.arrows1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.arrows1.AutoSize = true;
-            this.arrows1.Location = new System.Drawing.Point(77, 5);
-            this.arrows1.Name = "arrows1";
-            this.arrows1.Size = new System.Drawing.Size(23, 13);
-            this.arrows1.TabIndex = 3;
-            this.arrows1.Text = "<<";
-            // 
-            // EffectiveRB
-            // 
-            this.EffectiveRB.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.EffectiveRB.AutoSize = true;
-            this.EffectiveRB.Checked = true;
-            this.EffectiveRB.Location = new System.Drawing.Point(3, 3);
-            this.EffectiveRB.Name = "EffectiveRB";
-            this.EffectiveRB.Size = new System.Drawing.Size(68, 17);
-            this.EffectiveRB.TabIndex = 1;
-            this.EffectiveRB.TabStop = true;
-            this.EffectiveRB.Text = "Effective";
-            this.EffectiveRB.UseVisualStyleBackColor = true;
-            // 
-            // GlobalRB
-            // 
-            this.GlobalRB.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.GlobalRB.AutoSize = true;
-            this.GlobalRB.Location = new System.Drawing.Point(522, 3);
-            this.GlobalRB.Name = "GlobalRB";
-            this.GlobalRB.Size = new System.Drawing.Size(143, 17);
-            this.GlobalRB.TabIndex = 8;
-            this.GlobalRB.Text = "Global for all repositories";
-            this.GlobalRB.UseVisualStyleBackColor = true;
-            // 
-            // LocalRB
-            // 
-            this.LocalRB.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.LocalRB.AutoSize = true;
-            this.LocalRB.Location = new System.Drawing.Point(106, 3);
-            this.LocalRB.Name = "LocalRB";
-            this.LocalRB.Size = new System.Drawing.Size(156, 17);
-            this.LocalRB.TabIndex = 9;
-            this.LocalRB.Text = "Local for current repository";
-            this.LocalRB.UseVisualStyleBackColor = true;
-            // 
-            // arrows2
-            // 
-            this.arrows2.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.arrows2.AutoSize = true;
-            this.arrows2.Location = new System.Drawing.Point(268, 5);
-            this.arrows2.Name = "arrows2";
-            this.arrows2.Size = new System.Drawing.Size(23, 13);
-            this.arrows2.TabIndex = 10;
-            this.arrows2.Text = "<<";
-            // 
-            // arrow3
-            // 
-            this.arrow3.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.arrow3.AutoSize = true;
-            this.arrow3.Location = new System.Drawing.Point(493, 5);
-            this.arrow3.Name = "arrow3";
-            this.arrow3.Size = new System.Drawing.Size(23, 13);
-            this.arrow3.TabIndex = 11;
-            this.arrow3.Text = "<<";
-            // 
-            // DistributedRB
-            // 
-            this.DistributedRB.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.DistributedRB.AutoSize = true;
-            this.DistributedRB.Location = new System.Drawing.Point(297, 3);
-            this.DistributedRB.Name = "DistributedRB";
-            this.DistributedRB.Size = new System.Drawing.Size(190, 17);
-            this.DistributedRB.TabIndex = 12;
-            this.DistributedRB.Text = "Distributed with current repository";
-            this.DistributedRB.UseVisualStyleBackColor = true;
-            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -222,6 +138,91 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(668, 23);
             this.tableLayoutPanel1.TabIndex = 8;
+            // 
+            // DistributedRB
+            // 
+            this.DistributedRB.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.DistributedRB.AutoSize = true;
+            this.DistributedRB.Location = new System.Drawing.Point(297, 3);
+            this.DistributedRB.Name = "DistributedRB";
+            this.DistributedRB.Size = new System.Drawing.Size(190, 17);
+            this.DistributedRB.TabIndex = 12;
+            this.DistributedRB.Text = "Distributed with current repository";
+            this.DistributedRB.UseVisualStyleBackColor = true;
+            // 
+            // arrow3
+            // 
+            this.arrow3.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.arrow3.AutoSize = true;
+            this.arrow3.Location = new System.Drawing.Point(493, 5);
+            this.arrow3.Name = "arrow3";
+            this.arrow3.Size = new System.Drawing.Size(23, 13);
+            this.arrow3.TabIndex = 11;
+            this.arrow3.Text = "<<";
+            // 
+            // arrows2
+            // 
+            this.arrows2.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.arrows2.AutoSize = true;
+            this.arrows2.Location = new System.Drawing.Point(268, 5);
+            this.arrows2.Name = "arrows2";
+            this.arrows2.Size = new System.Drawing.Size(23, 13);
+            this.arrows2.TabIndex = 10;
+            this.arrows2.Text = "<<";
+            // 
+            // LocalRB
+            // 
+            this.LocalRB.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.LocalRB.AutoSize = true;
+            this.LocalRB.Location = new System.Drawing.Point(106, 3);
+            this.LocalRB.Name = "LocalRB";
+            this.LocalRB.Size = new System.Drawing.Size(156, 17);
+            this.LocalRB.TabIndex = 9;
+            this.LocalRB.Text = "Local for current repository";
+            this.LocalRB.UseVisualStyleBackColor = true;
+            // 
+            // GlobalRB
+            // 
+            this.GlobalRB.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.GlobalRB.AutoSize = true;
+            this.GlobalRB.Location = new System.Drawing.Point(522, 3);
+            this.GlobalRB.Name = "GlobalRB";
+            this.GlobalRB.Size = new System.Drawing.Size(143, 17);
+            this.GlobalRB.TabIndex = 8;
+            this.GlobalRB.Text = "Global for all repositories";
+            this.GlobalRB.UseVisualStyleBackColor = true;
+            this.GlobalRB.CheckedChanged += new System.EventHandler(this.GlobalRB_CheckedChanged);
+            // 
+            // EffectiveRB
+            // 
+            this.EffectiveRB.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.EffectiveRB.AutoSize = true;
+            this.EffectiveRB.Checked = true;
+            this.EffectiveRB.Location = new System.Drawing.Point(3, 3);
+            this.EffectiveRB.Name = "EffectiveRB";
+            this.EffectiveRB.Size = new System.Drawing.Size(68, 17);
+            this.EffectiveRB.TabIndex = 1;
+            this.EffectiveRB.TabStop = true;
+            this.EffectiveRB.Text = "Effective";
+            this.EffectiveRB.UseVisualStyleBackColor = true;
+            // 
+            // arrows1
+            // 
+            this.arrows1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.arrows1.AutoSize = true;
+            this.arrows1.Location = new System.Drawing.Point(77, 5);
+            this.arrows1.Name = "arrows1";
+            this.arrows1.Size = new System.Drawing.Size(23, 13);
+            this.arrows1.TabIndex = 3;
+            this.arrows1.Text = "<<";
+            // 
+            // settingsPagePanel
+            // 
+            this.settingsPagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.settingsPagePanel.Location = new System.Drawing.Point(0, 59);
+            this.settingsPagePanel.Name = "settingsPagePanel";
+            this.settingsPagePanel.Size = new System.Drawing.Size(797, 373);
+            this.settingsPagePanel.TabIndex = 3;
             // 
             // SettingsPageHeader
             // 

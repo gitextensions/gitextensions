@@ -10,12 +10,12 @@ namespace GitCommands.Settings
     /// Settings that can be distributed with repository
     /// they can be overriden for a particular repository
     /// </summary>
-    public class RepoDistSettings : SettingsContainer
+    public class RepoDistSettings : SettingsContainer<RepoDistSettings>
     {
 
         public GitModule Module { get; private set; }
 
-        public RepoDistSettings(SettingsContainer aLowerPriority, SettingsCache aSettingsCache)
+        public RepoDistSettings(RepoDistSettings aLowerPriority, SettingsCache aSettingsCache)
             : base(aLowerPriority, aSettingsCache)
         {
         }
@@ -59,7 +59,7 @@ namespace GitCommands.Settings
 
         public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
-            //Settings stored in RepoSettings always have to be set directly
+            //Settings stored in Distributed always have to be set directly
             if (LowerPriority == null 
                 || LowerPriority.LowerPriority == null
                 || SettingsCache.HasValue(name) 
