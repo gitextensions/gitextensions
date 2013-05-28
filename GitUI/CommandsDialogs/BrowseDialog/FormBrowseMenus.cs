@@ -10,6 +10,11 @@ using System.Windows.Forms;
 
 namespace GitUI.CommandsDialogs
 {
+    /// <summary>
+    /// Add MenuCommands as menus to the FormBrowse main menu.
+    /// This class is intended to have NO dependency to FormBrowse
+    ///   (if needed this kind of code should be done in FormBrowseMenuCommands).
+    /// </summary>
     class FormBrowseMenus : ITranslate
     {
         MenuStrip _menuStrip;
