@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 using GitCommands.Config;
 using GitCommands.Core;
 
@@ -18,20 +19,11 @@ namespace GitCommands.GitExtLinks
             LocalBranches,
             RemoteBranches
         }
-
-        public const string SearchPatternKey = "SearchPattern";
-        public const string NestedSearchPatternKey = "NestedSearchPattern";
-        public const string LinkCaptionKey = "LinkCaption";
-        public const string LinkFormatKey = "LinkFormat";
-        public const string LinkFormatCountKey = "LinkFormatCount";
-        public const string GitExtLinkDefKey = "GitExtLinkDef";
-        public const string EnabledKey = "Enabled";
-        public const string RevisionPartsKey = "RevisionParts";
         
         /// <summary>Short name for this link def</summary>
         public string Name { get; set; }
         /// <summary></summary>
-        public ISet<RevisionPart> SearchInParts = new HashSet<RevisionPart>();
+        public HashSet<RevisionPart> SearchInParts = new HashSet<RevisionPart>();
 
         private string _SearchPattern;
         /// <summary>
@@ -51,6 +43,7 @@ namespace GitCommands.GitExtLinks
             }
         }
         /// <summary>Compiled SearchPattern</summary>
+        [XmlIgnore]
         public Lazy<Regex> SearchPatternRegex { get; private set; }
         private string _NestedSearchPattern;
         /// <summary>
@@ -70,101 +63,19 @@ namespace GitCommands.GitExtLinks
             }
         }
         /// <summary>Compiled SearchPattern</summary>
+        [XmlIgnore]
         public Lazy<Regex> NestedSearchPatternRegex { get; private set; }
         /// <summary>
         /// Non-local link def can be locally disabled
         /// </summary>
         public bool Enabled { get; set; }
         /// <summary>
-        /// Scope of this link def
-        /// true - def is stored in repository local config file
-        /// false - def is stored in <repo root>/.gitextensions config file
-        /// </summary>
-        public bool Local { get; set; }
-        /// <summary>
         /// List of formats to be applied for each revision part matched by SearchPattern
         /// </summary>
-        public IList<GitExtLinkFormat> LinkFormats = new BindingList<GitExtLinkFormat>();
+        public BindingList<GitExtLinkFormat> LinkFormats = new BindingList<GitExtLinkFormat>();
 
         public GitExtLinkDef()
         {
-        }
-
-        private static string FormatKeyFor(int i)
-        {
-            return LinkFormatKey + i;
-        }
-
-        private static string CaptionKeyFor(int i)
-        {
-            return LinkCaptionKey + i;
-        }
-
-        public static GitExtLinkDef FromConfigSection(ConfigSection section, bool local)
-        {
-            GitExtLinkDef linkDef = new GitExtLinkDef();
-            linkDef.Name = section.SubSection;
-            linkDef.SearchPattern = section.GetValue(SearchPatternKey);
-            linkDef.NestedSearchPattern = section.GetValue(NestedSearchPatternKey);
-            linkDef.Enabled = section.GetValueAsBool(EnabledKey, true);
-            linkDef.Local = local;
-            linkDef.SearchInParts.Clear();
-            var partsStr = section.GetValue(RevisionPartsKey);
-            foreach (var s in partsStr.Split(' '))
-            { 
-                RevisionPart part;
-                if (Enum.TryParse(s, true, out part))
-                    linkDef.SearchInParts.Add(part);
-            }
-
-            int linkCount;
-            string linkCountStr = section.GetValue(LinkFormatCountKey);
-            if (Int32.TryParse(linkCountStr, out linkCount))
-            {
-                for (int i = 0; i < linkCount; i++)
-                {
-                    GitExtLinkFormat linkFormat = new GitExtLinkFormat();
-                    string formatKey = FormatKeyFor(i);
-                    string captionKey = CaptionKeyFor(i);
-                    linkFormat.Format = section.GetValue(formatKey);
-                    linkFormat.Caption = section.GetValue(captionKey);
-                    linkDef.LinkFormats.Add(linkFormat);
-                }                
-            }
-
-            return linkDef;
-        }
-
-        public ConfigSection ToConfigSection(bool locallyDisabled)
-        {
-            ConfigSection section = new ConfigSection(GitExtLinkDefKey, true);
-            section.SubSection = Name;
-            //repo-scoped def can be disabled locally only
-            if (Local || locallyDisabled)
-            {
-                section.SetValueAsBool(EnabledKey, Enabled);
-            }
-
-            //repo-scoped def can be disabled locally
-            //don't store additional data
-            if (!locallyDisabled)
-            {
-                section.SetValue(SearchPatternKey, SearchPattern);
-                section.SetValue(NestedSearchPatternKey, NestedSearchPattern);
-                var partsStr = SearchInParts.Select(part => part.ToString()).Join(" ");
-                section.SetValue(RevisionPartsKey, partsStr);
-
-                int i = 0;
-                foreach (var linkFormat in LinkFormats)
-                {
-                    section.AddValue(FormatKeyFor(i), linkFormat.Format);
-                    section.AddValue(CaptionKeyFor(i), linkFormat.Caption);
-                    i++;
-                }
-                section.AddValue(LinkFormatCountKey, i.ToString());
-            }
-
-            return section;
         }
 
         public IEnumerable<GitExtLink> Parse(GitRevision revision)
@@ -227,15 +138,21 @@ namespace GitCommands.GitExtLinks
             yield return SearchInParts;
             yield return NestedSearchPattern;
             yield return Enabled;
-            yield return Local;
             yield return LinkFormats;
         }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
+
     }
 
     public class GitExtLinkFormat : SimpleStructured
     {
         public string Caption { get; set; }
         public string Format { get; set; }
+        [XmlIgnore]
         public bool IsValid { get; private set; }
 
         public GitExtLink ToGitExtLink(Match match, GitRevision revision)

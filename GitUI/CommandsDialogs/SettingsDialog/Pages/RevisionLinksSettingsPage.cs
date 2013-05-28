@@ -11,23 +11,21 @@ using GitCommands.GitExtLinks;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class RevisionLinksSettingsPage : SettingsPageBase
+    public partial class RevisionLinksSettingsPage : RepoDistSettingsPage
     {
-        private readonly GitModule Module;
         private GitExtLinksParser parser;
 
-        public RevisionLinksSettingsPage(GitModule aModule)
+        public RevisionLinksSettingsPage()
         {
             InitializeComponent();
-            Module = aModule;
-            Text = "Revision's links";
+            Text = "Revision links";
             Translate();
             LinksGrid.AutoGenerateColumns = false;
         }
 
         protected override void  SettingsToPage() 	
         {
-            parser = new GitExtLinksParser(Module);
+            parser = new GitExtLinksParser(CurrentSettings);
             ReloadCategories();
             if (_NO_TRANSLATE_Categories.Items.Count > 0)
             {
@@ -40,7 +38,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             if (parser != null)
             {
-                parser.SaveToConfig();
+                parser.SaveToSettings();
             }
         }
 
@@ -60,7 +58,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (parser != null)
             {
                 _NO_TRANSLATE_Categories.DisplayMember = "Name";
-                _NO_TRANSLATE_Categories.DataSource = parser.LinkDefs;
+                _NO_TRANSLATE_Categories.DataSource = parser.EffectiveLinkDefs;
             }
         }
 
@@ -78,8 +76,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 splitContainer1.Panel2.Enabled = false;
                 _NO_TRANSLATE_Name.Text = string.Empty;
-                localScopeRB.Checked = false;
-                repositoryScopeRB.Checked = false;
                 EnabledChx.Checked = false;
                 MessageChx.Checked = false;
                 LocalBranchChx.Checked = false;
@@ -92,8 +88,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 splitContainer1.Panel2.Enabled = true;
                 _NO_TRANSLATE_Name.Text = SelectedCategory.Name;
-                localScopeRB.Checked = SelectedCategory.Local;
-                repositoryScopeRB.Checked = !SelectedCategory.Local;
                 EnabledChx.Checked = SelectedCategory.Enabled;
                 MessageChx.Checked = SelectedCategory.SearchInParts.Contains(GitExtLinkDef.RevisionPart.Message);
                 LocalBranchChx.Checked = SelectedCategory.SearchInParts.Contains(GitExtLinkDef.RevisionPart.LocalBranches);
@@ -109,9 +103,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             GitExtLinkDef newCategory = new GitExtLinkDef();
             newCategory.Name = "<new>";
             newCategory.SearchInParts.Add(GitExtLinkDef.RevisionPart.Message);
-            newCategory.Local = true;
-            newCategory.Enabled = false;
-            parser.LinkDefs.Add(newCategory);
+            newCategory.Enabled = true;
+            parser.AddLinkDef(newCategory);
             ReloadCategories();
             _NO_TRANSLATE_Categories.SelectedItem = newCategory;
             CategoryChanged();           
@@ -122,13 +115,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (SelectedCategory == null)
                 return;
 
-            int idx = parser.LinkDefs.IndexOf(SelectedCategory);
+            int idx = _NO_TRANSLATE_Categories.SelectedIndex;
 
+            parser.RemoveLinkDef(SelectedCategory);
             ReloadCategories();
 
             if (idx >= 0)
             {
-                parser.LinkDefs.RemoveAt(idx);
                 _NO_TRANSLATE_Categories.SelectedIndex = Math.Min(idx, _NO_TRANSLATE_Categories.Items.Count - 1);
             }
 
@@ -143,14 +136,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 selected.Name = _NO_TRANSLATE_Name.Text;
                 ReloadCategories();
                 _NO_TRANSLATE_Categories.SelectedItem = selected;
-            }
-        }
-
-        private void repositoryScopeRB_CheckedChanged(object sender, EventArgs e)
-        {
-            if (SelectedCategory != null)
-            {
-                SelectedCategory.Local = localScopeRB.Checked;
             }
         }
 

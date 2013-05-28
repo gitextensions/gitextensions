@@ -299,7 +299,7 @@ namespace GitUI.CommitInfo
 
         private string GetLinksForRevision(GitRevision revision)
         {
-            GitExtLinksParser parser = new GitExtLinksParser(Module);
+            GitExtLinksParser parser = new GitExtLinksParser(Module.Settings);
             var links = parser.Parse(revision).Distinct();
             var linksString = string.Empty;
 

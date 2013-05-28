@@ -8,9 +8,9 @@ using GitCommands.Config;
 
 namespace GitCommands.Settings
 {
-    public class ConfigFileSettings : SettingsContainer
+    public class ConfigFileSettings : SettingsContainer<ConfigFileSettings>
     {
-        public ConfigFileSettings(SettingsContainer aLowerPriority, SettingsCache aSettingsCache)
+        public ConfigFileSettings(ConfigFileSettings aLowerPriority, SettingsCache aSettingsCache)
             : base(aLowerPriority, aSettingsCache)
         {
             core = new CorePath(this);
