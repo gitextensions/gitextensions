@@ -81,14 +81,6 @@ namespace GitUI
 
             Translate();
 
-            _revisionGridMenuCommands = new RevisionGridMenuCommands(this);
-            {
-                var menuCommand = _revisionGridMenuCommands.GetViewMenuCommands().Single(a => a.Name == "ShowRemoteBranches");
-                var toolStripMenuItem = (ToolStripMenuItem)MenuCommand.CreateToolStripItem(menuCommand);
-                menuCommand.RegisterMenuItem(toolStripMenuItem);
-                showBranchesToolStripMenuItem.DropDownItems.Add(toolStripMenuItem);
-            }
-
             NormalFont = Settings.Font;
             Loading.Paint += Loading_Paint;
 
@@ -131,6 +123,17 @@ namespace GitUI
             catch
             {
                 SetRevisionsLayout(RevisionGridLayout.SmallWithGraph);
+            }
+
+            _revisionGridMenuCommands = new RevisionGridMenuCommands(this);
+            _revisionGridMenuCommands.CreateOrUpdateMenuCommands();
+
+            // add "ShowRemoteBranches" to context menu
+            {
+                var menuCommand = _revisionGridMenuCommands.GetViewMenuCommands().Single(a => a.Name == "ShowRemoteBranches");
+                var toolStripMenuItem = (ToolStripMenuItem)MenuCommand.CreateToolStripItem(menuCommand);
+                menuCommand.RegisterMenuItem(toolStripMenuItem);
+                showBranchesToolStripMenuItem.DropDownItems.Add(toolStripMenuItem);
             }
         }
 
@@ -751,6 +754,7 @@ namespace GitUI
         public void ReloadHotkeys()
         {
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            _revisionGridMenuCommands.CreateOrUpdateMenuCommands();
         }
 
         public void ReloadTranslation()
