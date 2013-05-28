@@ -53,10 +53,15 @@ namespace GitUI.UserControls.RevisionGridClasses
                 UpdateMenuCommandShortcutKeyDisplayString(_navigateMenuCommands, navigateMenuCommands2);
                 UpdateMenuCommandShortcutKeyDisplayString(_viewMenuCommands, viewMenuCommands2);
 
-                if (PropertyChanged != null)
-                {
-                    PropertyChanged(null, null); // trigger refresh
-                }
+                TriggerPropertyChanged(); // trigger refresh
+            }
+        }
+
+        public void TriggerPropertyChanged()
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(null, null);
             }
         }
 
@@ -136,12 +141,14 @@ namespace GitUI.UserControls.RevisionGridClasses
         {
             var resultList = new List<MenuCommand>();
 
+            // the next three MenuCommands just reuse (the currently rather
+            //  convoluted) logic from RevisionGrid
             {
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "ShowAllBranches";
                 menuCommand.Text = "Show all branches";
-                menuCommand.ExecuteAction = () => new Double();
-                menuCommand.IsCheckedFunc = () => false;
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowAllBranchesToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => _revisionGrid.ShowAllBranchesToolStripMenuItemChecked;
 
                 resultList.Add(menuCommand);
             }
@@ -150,8 +157,8 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "ShowCurrentBranchOnly";
                 menuCommand.Text = "Show current branch only";
-                menuCommand.ExecuteAction = () => new Double();
-                menuCommand.IsCheckedFunc = () => false;
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowCurrentBranchOnlyToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => _revisionGrid.ShowCurrentBranchOnlyToolStripMenuItemChecked;
 
                 resultList.Add(menuCommand);
             }
@@ -160,8 +167,8 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "ShowFilteredBranches";
                 menuCommand.Text = "Show filtered branches";
-                menuCommand.ExecuteAction = () => new Double();
-                menuCommand.IsCheckedFunc = () => false;
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowFilteredBranchesToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => _revisionGrid.ShowFilteredBranchesToolStripMenuItemChecked;
 
                 resultList.Add(menuCommand);
             }
