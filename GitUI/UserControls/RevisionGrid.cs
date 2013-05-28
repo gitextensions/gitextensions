@@ -21,6 +21,7 @@ using Gravatar;
 using ResourceManager.Translation;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGridClasses;
+using GitUI.CommandsDialogs.BrowseDialog;
 
 namespace GitUI
 {
