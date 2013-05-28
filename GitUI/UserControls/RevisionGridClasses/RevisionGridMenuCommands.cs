@@ -67,9 +67,9 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private void UpdateMenuCommandShortcutKeyDisplayString(IEnumerable<MenuCommand> targetList, IEnumerable<MenuCommand> sourceList)
         {
-            foreach (var sourceMc in sourceList)
+            foreach (var sourceMc in sourceList.Where(mc => !mc.IsSeparator))
             {
-                var targetMc = targetList.Single(mc => mc.Name == sourceMc.Name);
+                var targetMc = targetList.Single(mc => !mc.IsSeparator && mc.Name == sourceMc.Name);
                 targetMc.ShortcutKeyDisplayString = sourceMc.ShortcutKeyDisplayString;
             }
         }
@@ -142,7 +142,9 @@ namespace GitUI.UserControls.RevisionGridClasses
             var resultList = new List<MenuCommand>();
 
             // the next three MenuCommands just reuse (the currently rather
-            //  convoluted) logic from RevisionGrid
+            //  convoluted) logic from RevisionGrid.
+            //  After refactoring the three items should be added to RevisionGrid
+            //  as done with "ShowRemoteBranches" and not via RevisionGrid.Designer.cs
             {
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "ShowAllBranches";
@@ -181,6 +183,18 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.Text = "Show remote branches";
                 menuCommand.ExecuteAction = () => ShowRemoteBranches = !ShowRemoteBranches;
                 menuCommand.IsCheckedFunc = () => ShowRemoteBranches;
+
+                resultList.Add(menuCommand);
+            }
+
+            resultList.Add(MenuCommand.CreateSeparator());
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ToggleHighlightSelectedBranch";
+                menuCommand.Text = "Highlight selected branch (until refresh)";
+                menuCommand.ShortcutKeyDisplayString = _revisionGrid.GetShortcutKeys(GitUI.RevisionGrid.Commands.ToggleHighlightSelectedBranch).ToShortcutKeyDisplayString();
+                menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.ToggleHighlightSelectedBranch);
 
                 resultList.Add(menuCommand);
             }
