@@ -57,7 +57,7 @@ namespace GitUI.CommandsDialogs
                 if (formGoToCommit.ShowDialog(_formBrowse) != DialogResult.OK)
                     return;
 
-                string revisionGuid = formGoToCommit.GetRevision();
+                string revisionGuid = formGoToCommit.GetSelectedRevision();
                 if (!string.IsNullOrEmpty(revisionGuid))
                 {
                     RevisionGrid.SetSelectedRevision(new GitRevision(Module, revisionGuid));
