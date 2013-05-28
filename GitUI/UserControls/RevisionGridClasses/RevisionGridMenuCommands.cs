@@ -6,6 +6,7 @@ using System.Text;
 using GitUI.Hotkey;
 using System.Windows.Forms;
 using System.ComponentModel;
+using GitUI.CommandsDialogs.BrowseDialog;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
