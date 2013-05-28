@@ -23,7 +23,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             _revisionGrid = revisionGrid;
         }
 
-        #region UserProperties
+        #region BusinessLogic
 
         bool _showRemoteBranches = true;
 
@@ -138,6 +138,38 @@ namespace GitUI.UserControls.RevisionGridClasses
 
             {
                 var menuCommand = new MenuCommand();
+                menuCommand.Name = "ShowAllBranches";
+                menuCommand.Text = "Show all branches";
+                menuCommand.ExecuteAction = () => new Double();
+                menuCommand.IsCheckedFunc = () => false;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ShowCurrentBranchOnly";
+                menuCommand.Text = "Show current branch only";
+                menuCommand.ExecuteAction = () => new Double();
+                menuCommand.IsCheckedFunc = () => false;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "ShowFilteredBranches";
+                menuCommand.Text = "Show filtered branches";
+                menuCommand.ExecuteAction = () => new Double();
+                menuCommand.IsCheckedFunc = () => false;
+
+                resultList.Add(menuCommand);
+            }
+
+            resultList.Add(MenuCommand.CreateSeparator());
+
+            {
+                var menuCommand = new MenuCommand();
                 menuCommand.Name = "ShowRemoteBranches";
                 menuCommand.Text = "Show remote branches";
                 menuCommand.ExecuteAction = () => ShowRemoteBranches = !ShowRemoteBranches;
@@ -145,8 +177,6 @@ namespace GitUI.UserControls.RevisionGridClasses
 
                 resultList.Add(menuCommand);
             }
-
-            resultList.Add(MenuCommand.CreateSeparator());
 
             return resultList;
         }
