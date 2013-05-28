@@ -82,6 +82,12 @@ namespace GitUI
             Translate();
 
             _revisionGridMenuCommands = new RevisionGridMenuCommands(this);
+            {
+                var menuCommand = _revisionGridMenuCommands.GetViewMenuCommands().Single(a => a.Name == "ShowRemoteBranches");
+                var toolStripMenuItem = (ToolStripMenuItem)MenuCommand.CreateToolStripItem(menuCommand);
+                menuCommand.RegisterMenuItem(toolStripMenuItem);
+                showBranchesToolStripMenuItem.DropDownItems.Add(toolStripMenuItem);
+            }
 
             NormalFont = Settings.Font;
             Loading.Paint += Loading_Paint;
