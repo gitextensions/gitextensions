@@ -5,12 +5,12 @@ using System.Text;
 
 namespace GitCommands.Settings
 {
-    public class SettingsContainer : ISettingsSource
+    public class SettingsContainer<L> : ISettingsSource where L : SettingsContainer<L>
     {
-        public SettingsContainer LowerPriority { get; private set; }
+        public L LowerPriority { get; private set; }
         public SettingsCache SettingsCache { get; private set; }
 
-        public SettingsContainer(SettingsContainer aLowerPriority, SettingsCache aSettingsCache)
+        public SettingsContainer(L aLowerPriority, SettingsCache aSettingsCache)
         {
             LowerPriority = aLowerPriority;
             SettingsCache = aSettingsCache;

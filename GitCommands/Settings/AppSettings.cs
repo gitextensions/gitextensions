@@ -34,7 +34,7 @@ namespace GitCommands
 
         public static Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
-        public static readonly SettingsContainer SettingsContainer;
+        public static readonly SettingsContainer<RepoDistSettings> SettingsContainer;
 
         static AppSettings()
         {
@@ -52,7 +52,7 @@ namespace GitCommands
             }
             );
 
-            SettingsContainer = new SettingsContainer(null, GitExtSettingsCache.FromCache(SettingsFilePath));
+            SettingsContainer = new SettingsContainer<RepoDistSettings>(null, GitExtSettingsCache.FromCache(SettingsFilePath));
 
             Version version = Assembly.GetCallingAssembly().GetName().Version;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
