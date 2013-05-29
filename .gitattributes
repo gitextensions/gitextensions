@@ -1,2 +1,6 @@
+* text=auto
 *.xml diff -text
 *.patch diff -text
+*.cs text diff=csharp
+*.sln text eol=crlf
+
