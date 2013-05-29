@@ -346,8 +346,8 @@ namespace GitUI.Script
 
             if (originalCommand.Equals("gitextensions", System.StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("{gitextensions}", System.StringComparison.CurrentCultureIgnoreCase) ||
-                originalCommand.Equals("gitex", System.StringComparison.CurrentCultureIgnoreCase) ||
-                originalCommand.Equals("{gitex}", System.StringComparison.CurrentCultureIgnoreCase))
+                originalCommand.Equals("gitext", System.StringComparison.CurrentCultureIgnoreCase) ||
+                originalCommand.Equals("{gitext}", System.StringComparison.CurrentCultureIgnoreCase))
                 return Settings.GetGitExtensionsFullPath();
             return originalCommand;
         }

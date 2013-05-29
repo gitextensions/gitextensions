@@ -2703,7 +2703,7 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Supported commandline arguments for
-gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
+gitext.cmd / gitext (located in the same folder as GitExtensions.exe):</Source>
           <Value>Argumentos de línea de comandos soportados:</Value>
         </TranslationItem>
       </translationItems>

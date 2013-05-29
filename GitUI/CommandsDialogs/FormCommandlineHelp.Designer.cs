@@ -53,7 +53,7 @@
             this.label1.Padding = new System.Windows.Forms.Padding(10);
             this.label1.Size = new System.Drawing.Size(373, 50);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Supported commandline arguments for\r\ngitex.cmd / gitex (located in the same folde" +
+            this.label1.Text = "Supported commandline arguments for\r\ngitex.cmd / gitext (located in the same folde" +
     "r as GitExtensions.exe):";
             // 
             // flowLayoutPanel1
