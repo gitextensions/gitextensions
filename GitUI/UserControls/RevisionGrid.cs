@@ -513,7 +513,7 @@ namespace GitUI
             Revisions.Select();
         }
 
-        private void SetSelectedRevision(string revision)
+        public void SetSelectedRevision(string revision)
         {
             if (revision != null)
             {
