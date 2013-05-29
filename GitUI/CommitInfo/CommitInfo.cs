@@ -43,7 +43,7 @@ namespace GitUI.CommitInfo
                     if (data.Length > 1)
                         url = data[1];
                     var result = new Uri(url);
-                    if (result.Scheme == "gitex")
+                    if (result.Scheme == "gitext")
                     {
                         if (CommandClick != null)
                         {
