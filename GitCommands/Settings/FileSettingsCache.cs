@@ -70,7 +70,10 @@ namespace GitCommands.Settings
         private void FileChanged()
         {
             _fileWatcher.EnableRaisingEvents = File.Exists(SettingsFilePath);
-            LastFileModificationDate = GetLastFileModificationUTC();
+            if (_fileWatcher.EnableRaisingEvents)
+                LastFileModificationDate = GetLastFileModificationUTC();
+            else
+                LastModificationDate = DateTime.MaxValue;
         }
 
         private DateTime GetLastFileModificationUTC()
@@ -103,19 +106,14 @@ namespace GitCommands.Settings
                     return;
                 }
 
-                WriteSettings(tmpFile);
+                File.Delete(SettingsFilePath + ".backup");
+                File.Copy(SettingsFilePath, SettingsFilePath + ".backup");
 
-                if (File.Exists(SettingsFilePath))
-                {
-                    File.Replace(tmpFile, SettingsFilePath, SettingsFilePath + ".backup", true);
-                }
-                else
-                {
-                    File.Move(tmpFile, SettingsFilePath);
-                }
+                WriteSettings(SettingsFilePath);
 
                 LastFileModificationDate = GetLastFileModificationUTC();
                 LastFileRead = DateTime.UtcNow;
+                _fileWatcher.EnableRaisingEvents = true;
             }
 
             catch (IOException e)
@@ -133,6 +131,7 @@ namespace GitCommands.Settings
                 {
                     ReadSettings(SettingsFilePath);
                     LastFileRead = DateTime.UtcNow;
+                    _fileWatcher.EnableRaisingEvents = true;
                 }
                 catch (IOException e)
                 {
