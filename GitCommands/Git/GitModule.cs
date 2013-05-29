@@ -2911,7 +2911,13 @@ namespace GitCommands
                     else if (line.IndexOf(' ') == 40) //SHA1, create new line!
                     {
                         blameLine = new GitBlameLine();
-                        blameLine.CommitGuid = line.Substring(0, 40);
+                        var headerParams = line.Split(' ');
+                        blameLine.CommitGuid = headerParams[0];
+                        if (headerParams.Length >= 3)
+                        {
+                            blameLine.OriginLineNumber = int.Parse(headerParams[1]);
+                            blameLine.FinalLineNumber = int.Parse(headerParams[2]);
+                        }
                         blame.Lines.Add(blameLine);
                     }
                 }
