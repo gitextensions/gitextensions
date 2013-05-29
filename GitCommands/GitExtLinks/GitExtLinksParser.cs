@@ -129,10 +129,17 @@ namespace GitCommands.GitExtLinks
             string xml;
             try
             {
-                var sw = new StringWriter();
-                var serializer = new XmlSerializer(typeof(List<GitExtLinkDef>));
-                serializer.Serialize(sw, LinkDefs);
-                xml = sw.ToString();
+                if (LinkDefs.Count == 0)
+                {
+                    xml = null;
+                }
+                else
+                {
+                    var sw = new StringWriter();
+                    var serializer = new XmlSerializer(typeof(List<GitExtLinkDef>));
+                    serializer.Serialize(sw, LinkDefs);
+                    xml = sw.ToString();
+                }
             }
             catch
             {
