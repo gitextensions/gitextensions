@@ -1,0 +1,108 @@
+diff --cc astudio/source/Panels/Capture/wiActionWindow.cpp
+index 90e1165,1d5158a..0000000
+--- a/astudio/source/Panels/Capture/wiActionWindow.cpp
++++ b/astudio/source/Panels/Capture/wiActionWindow.cpp
+@@@ -2608,9 -2528,11 +2568,17 @@@ void wiActionWindow::fillDevices(
+  	wxCommandEvent dummy;
+  	OnRecordTexture(dummy);
+  
+++<<<<<<< HEAD
+ +	if ( devices.size() > 0)
+ +		Core::get()->getUartManager()->updateUARTS();
+ +
+++=======
++ 	if ( devices.size() > 0 && gui_ )
++ 	{
++ 		wxCommandEvent evt(wxEVT_UART_FORCE_UPDATE_EVENT);
++ 		gui_->ProcessWindowEvent(evt);
++ 	}
+++>>>>>>> da23825... Removed inputKind
+  }
+  
+  wxPanel* wiActionWindow::createDevicePanel(wxWindow* parent)
+diff --cc capture-wrapper
+index bec9a8d,2df7b6d..0000000
+--- a/capture-wrapper
++++ b/capture-wrapper
+@@@ -1,1 -1,1 +1,1 @@@
+- Subproject commit bec9a8d40cd60705220070178bdb3b19a7ab88ff
+ -Subproject commit 2df7b6dc722021423bda627fb24764c530ef8551
+++Subproject commit 5129529ee652b0f02b92dc5e33083f351169460e
+diff --cc config-enumerator
+index 5979bc6,5e2f0e0..0000000
+--- a/config-enumerator
++++ b/config-enumerator
+@@@ -1,1 -1,1 +1,1 @@@
+- Subproject commit 5979bc6367f5c0439b2c69f6bd4e08675962b3e9
+ -Subproject commit 5e2f0e0c396cf50b98d3029b2c55bffc8b6817a8
+++Subproject commit 27165e5109c60bf1ebc2637b5163a60b91282e76
+diff --git a/3dproc b/3dproc
+index e3f8315..0ad72f7 160000
+--- a/3dproc
++++ b/3dproc
+@@ -1 +1 @@
+-Subproject commit e3f8315b063e8a3e4a55a7fe04b929a3c25d1520
++Subproject commit 0ad72f7ea561716c22d83c1a0f7ccc22e9f2804c
+diff --git a/asm b/asm
+index 2a4e526..355b6d2 160000
+--- a/asm
++++ b/asm
+@@ -1 +1 @@
+-Subproject commit 2a4e52609c56e14fa00255b565e35705d65e7fd5
++Subproject commit 355b6d2fe904831f9e1562f42bc1ff5afccec6aa-dirty
+diff --git a/capture-drivers b/capture-drivers
+index 5dae3ab..b41a2d8 160000
+--- a/capture-drivers
++++ b/capture-drivers
+@@ -1 +1 @@
+-Subproject commit 5dae3ab8a5a2bed336bf95564c2bbf070aa538da
++Subproject commit b41a2d8df27c1e68d2848058c8659ddd5cc494da
+diff --git a/diagnostic-tool b/diagnostic-tool
+index 8325b8d..5ac108f 160000
+--- a/diagnostic-tool
++++ b/diagnostic-tool
+@@ -1 +1 @@
+-Subproject commit 8325b8dfc91d1877986cb76ba6b91dba207843a2
++Subproject commit 5ac108f9117abd4e4b0e1bfe0f37e1e3f3d8bb0d
+diff --git a/engine b/engine
+index e94a374..40a1683 160000
+--- a/engine
++++ b/engine
+@@ -1 +1 @@
+-Subproject commit e94a374745d578bff236e02033b86028fea65819
++Subproject commit 40a16837f25bb71c55a1a384b3a187962ba57ef0
+diff --git a/flyuart b/flyuart
+index 5e650f7..cce8ecc 160000
+--- a/flyuart
++++ b/flyuart
+@@ -1 +1 @@
+-Subproject commit 5e650f74ff64f4e55867c6f895ad05b81e6825b9
++Subproject commit cce8eccdc97e2f8f5e1c883c9313573ddfa191a8
+diff --git a/lib-kinect b/lib-kinect
+index c7835ec..54afd91 160000
+--- a/lib-kinect
++++ b/lib-kinect
+@@ -1 +1 @@
+-Subproject commit c7835ec6cc49e67ed78dddf3626137f907ba3814
++Subproject commit 54afd916c9cfbfa08dc5565a3eb4b268a7677334
+diff --git a/scanner-test b/scanner-test
+index 4312b65..2727737 160000
+--- a/scanner-test
++++ b/scanner-test
+@@ -1 +1 @@
+-Subproject commit 4312b65421f81bbae4bc547b6e4a09d14ab20801
++Subproject commit 27277377db108d3589a3723efcadd99d72fab64a
+diff --git a/simplegl b/simplegl
+index 951d916..bda8b35 160000
+--- a/simplegl
++++ b/simplegl
+@@ -1 +1 @@
+-Subproject commit 951d916257f419310c553d9c58e28561a79dddc1
++Subproject commit bda8b35d102f3828c92b0b33d4730ff89a2193f8
+diff --git a/visual-controls2 b/visual-controls2
+index d87dfe0..b34b00b 160000
+--- a/visual-controls2
++++ b/visual-controls2
+@@ -1 +1 @@
+-Subproject commit d87dfe09029ffe0f8d59471f8c76801aa4563d63
++Subproject commit b34b00b7aad9a5fdad1b9593496005dde1f2bdb6

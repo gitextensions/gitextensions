@@ -97,6 +97,9 @@
     <None Include="GitCommands\Patch\testdata\bigBin.patch">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="GitCommands\Patch\testdata\rebase.diff">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
