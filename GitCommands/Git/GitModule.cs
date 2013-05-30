@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Config;
+using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using LibGit2Sharp;
@@ -590,6 +591,15 @@ namespace GitCommands
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
+        public string RunCmd(string cmd, string arguments, Encoding encoding, bool allowCache)
+        {
+            if (allowCache)
+                return RunCachableCmd(cmd, arguments, encoding);
+            else
+                return RunCmd(cmd, arguments, null, encoding);
+        }
+
+        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments, byte[] stdInput, Encoding encoding)
         {
             int exitCode;
@@ -976,23 +986,51 @@ namespace GitCommands
 
             var unmerged = RunGitCmd("ls-files -z --unmerged \"" + filename + "\"").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach (var file in unmerged)
+            foreach (var line in unmerged)
             {
-                int findSecondWhitespace = file.IndexOfAny(new[] { ' ', '\t' });
-                string fileStage = findSecondWhitespace >= 0 ? file.Substring(findSecondWhitespace).Trim() : "";
+                int findSecondWhitespace = line.IndexOfAny(new[] { ' ', '\t' });
+                string fileStage = findSecondWhitespace >= 0 ? line.Substring(findSecondWhitespace).Trim() : "";
 
                 findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
 
                 fileStage = findSecondWhitespace >= 0 ? fileStage.Substring(findSecondWhitespace).Trim() : "";
 
                 int stage;
-                if (Int32.TryParse(fileStage.Trim()[0].ToString(), out stage) && stage >= 1 && stage <= 3 && fileStage.Length > 2)
+                if (fileStage.Length > 2 && Int32.TryParse(fileStage[0].ToString(), out stage) && stage >= 1 && stage <= 3)
                 {
                     fileNames[stage - 1] = fileStage.Substring(2);
                 }
             }
 
             return fileNames;
+        }
+
+        public string[] GetConflictedSubmoduleHashes(string filename)
+        {
+            filename = FixPath(filename);
+
+            var hashes = new string[3];
+
+            var unmerged = RunGitCmd("ls-files -z --unmerged \"" + filename + "\"").Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var line in unmerged)
+            {
+                int findSecondWhitespace = line.IndexOfAny(new[] { ' ', '\t' });
+                string fileStage = findSecondWhitespace >= 0 ? line.Substring(findSecondWhitespace).Trim() : "";
+
+                findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
+
+                string hash = findSecondWhitespace >= 0 ? fileStage.Substring(0, findSecondWhitespace).Trim() : "";
+                fileStage = findSecondWhitespace >= 0 ? fileStage.Substring(findSecondWhitespace).Trim() : "";
+
+                int stage;
+                if (fileStage.Length > 2 && Int32.TryParse(fileStage[0].ToString(), out stage) && stage >= 1 && stage <= 3)
+                {
+                    hashes[stage - 1] = hash;
+                }
+            }
+
+            return hashes;
         }
 
         public static string GetGitDirectory(string repositoryPath)
@@ -1027,7 +1065,7 @@ namespace GitCommands
 
         public void RunGitK()
         {
-            if (Settings.RunningOnUnix())
+            if (EnvUtils.RunningOnUnix())
             {
                 RunRealCmdDetached("gitk", "");
             }
@@ -1041,7 +1079,7 @@ namespace GitCommands
 
         public void RunGui()
         {
-            if (Settings.RunningOnUnix())
+            if (EnvUtils.RunningOnUnix())
             {
                 RunRealCmdDetached("git", "gui");
             }
@@ -1053,7 +1091,7 @@ namespace GitCommands
 
         public Process RunBash(string bashCommand = null)
         {
-            if (Settings.RunningOnUnix())
+            if (EnvUtils.RunningOnUnix())
             {
                 string[] termEmuCmds =
                 {
@@ -1110,12 +1148,17 @@ namespace GitCommands
             return false;
         }
 
-        public GitRevision[] GetParents(string commit)
+        public string[] GetParents(string commit)
         {
             string output = RunGitCmd("log -n 1 --format=format:%P \"" + commit + "\"");
-            string[] Parents = output.Split(' ');
-            var ParentsRevisions = new GitRevision[Parents.Length];
-            for (int i = 0; i < Parents.Length; i++)
+            return output.Split(' ');
+        }
+
+        public GitRevision[] GetParentsRevisions(string commit)
+        {
+            string[] parents = GetParents(commit);
+            var parentsRevisions = new GitRevision[parents.Length];
+            for (int i = 0; i < parents.Length; i++)
             {
                 const string formatString =
                     /* Tree           */ "%T%n" +
@@ -1124,24 +1167,24 @@ namespace GitCommands
                     /* Committer Name */ "%cN%n" +
                     /* Committer Date */ "%ci%n" +
                     /* Commit Message */ "%s";
-                string cmd = "log -n 1 --format=format:" + formatString + " " + Parents[i];
-                var RevInfo = RunGitCmd(cmd);
-                string[] Infos = RevInfo.Split('\n');
-                var Revision = new GitRevision(this, Parents[i])
+                string cmd = "log -n 1 --format=format:" + formatString + " " + parents[i];
+                var revInfo = RunGitCmd(cmd);
+                string[] infos = revInfo.Split('\n');
+                var revision = new GitRevision(this, parents[i])
                 {
-                    TreeGuid = Infos[0],
-                    Author = Infos[1],
-                    Committer = Infos[3],
-                    Message = Infos[5]
+                    TreeGuid = infos[0],
+                    Author = infos[1],
+                    Committer = infos[3],
+                    Message = infos[5]
                 };
-                DateTime Date;
-                DateTime.TryParse(Infos[2], out Date);
-                Revision.AuthorDate = Date;
-                DateTime.TryParse(Infos[4], out Date);
-                Revision.CommitDate = Date;
-                ParentsRevisions[i] = Revision;
+                DateTime date;
+                DateTime.TryParse(infos[2], out date);
+                revision.AuthorDate = date;
+                DateTime.TryParse(infos[4], out date);
+                revision.CommitDate = date;
+                parentsRevisions[i] = revision;
             }
-            return ParentsRevisions;
+            return parentsRevisions;
         }
 
         public string CherryPick(string cherry, bool commit, string arguments)
@@ -1177,22 +1220,22 @@ namespace GitCommands
             }
         }
 
-        public string GetSuperprojectCurrentCheckout()
+        public KeyValuePair<char, string> GetSuperprojectCurrentCheckout()
         {
             if (SuperprojectModule == null)
-                return "";
+                return new KeyValuePair<char, string>(' ', "");
 
             var lines = SuperprojectModule.RunGitCmd("submodule status --cached " + _submodulePath).Split('\n');
 
             if (lines.Length == 0)
-                return "";
+                return new KeyValuePair<char, string>(' ', "");
 
             string submodule = lines[0];
             if (submodule.Length < 43)
-                return "";
+                return new KeyValuePair<char, string>(' ', "");
 
             var currentCommitGuid = submodule.Substring(1, 40).Trim();
-            return currentCommitGuid;
+            return new KeyValuePair<char, string>(submodule[0], currentCommitGuid);
         }
 
         public int CommitCount()
@@ -1678,32 +1721,32 @@ namespace GitCommands
 
         public string ApplyPatch(string dir, string amCommand)
         {
-            var output = string.Empty;
-
             using (var gitCommand = new GitCommandsInstance(this))
             {
 
                 var files = Directory.GetFiles(dir);
 
-                if (files.Length > 0)
-                    using (Process process1 = gitCommand.CmdStartProcess(Settings.GitCommand, amCommand))
+                if (files.Length == 0)
+                    return "";
+
+                var output = "";
+                using (Process process1 = gitCommand.CmdStartProcess(Settings.GitCommand, amCommand))
+                {
+                    foreach (var file in files)
                     {
-                        foreach (var file in files)
+                        using (FileStream fs = new FileStream(file, FileMode.Open))
                         {
-                            using (FileStream fs = new FileStream(file, FileMode.Open))
-                            {
-                                fs.CopyTo(process1.StandardInput.BaseStream);
-                            }
+                            fs.CopyTo(process1.StandardInput.BaseStream);
                         }
-                        process1.StandardInput.Close();
-                        process1.WaitForExit();
-
-                        if (gitCommand.Output != null)
-                            output = gitCommand.Output.ToString().Trim();
                     }
-            }
+                    process1.StandardInput.Close();
+                    process1.WaitForExit();
 
-            return output;
+                    if (gitCommand.Output != null)
+                        output = gitCommand.Output.ToString().Trim();
+                }
+                return output;
+            }
         }
 
         public string StageFiles(IList<GitItemStatus> files, out bool wereErrors)
@@ -2199,7 +2242,7 @@ namespace GitCommands
             return stashes;
         }
 
-        public Patch GetSingleDiff(string @from, string to, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding)
+        public Patch GetSingleDiff(string @from, string to, string fileName, string oldFileName, string extraDiffArguments, Encoding encoding, bool allowCache)
         {
             string fileA = null;
             string fileB = null;
@@ -2234,7 +2277,7 @@ namespace GitCommands
 
             var patchManager = new PatchManager();
             var arguments = String.Format("diff {0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange, fileName, oldFileName);
-            patchManager.LoadPatch(this.RunCachableCmd(Settings.GitCommand, arguments, LosslessEncoding), false, encoding);
+            patchManager.LoadPatch(this.RunCmd(Settings.GitCommand, arguments, LosslessEncoding, allowCache), false, encoding);
 
             foreach (Patch p in patchManager.Patches)
                 if (p.FileNameA.Equals(fileA) && p.FileNameB.Equals(fileB) ||
@@ -2244,9 +2287,9 @@ namespace GitCommands
             return patchManager.Patches.LastOrDefault();
         }
 
-        public Patch GetSingleDiff(string @from, string to, string fileName, string extraDiffArguments, Encoding encoding)
+        public Patch GetSingleDiff(string @from, string to, string fileName, string extraDiffArguments, Encoding encoding, bool allowCache)
         {
-            return this.GetSingleDiff(from, to, fileName, null, extraDiffArguments, encoding);
+            return this.GetSingleDiff(from, to, fileName, null, extraDiffArguments, encoding, allowCache);
         }
 
         public string GetStatusText(bool untracked)
@@ -2383,7 +2426,7 @@ namespace GitCommands
                     localItem.SubmoduleStatus = Task.Factory.StartNew(() =>
                         {
                             var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, localItem.Name, localItem.OldName, localItem.IsStaged);
-                            if (submoduleStatus.Commit != submoduleStatus.OldCommit)
+                            if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                             {
                                 var submodule = submoduleStatus.GetSubmodule(this);
                                 submoduleStatus.CheckSubmoduleStatus(submodule);
@@ -2401,7 +2444,7 @@ namespace GitCommands
                 {
                     item.SubmoduleStatus = Task.Factory.StartNew(() =>
                     {
-                        Patch patch = GetSingleDiff(from, to, item.Name, item.OldName, "", SystemEncoding);
+                        Patch patch = GetSingleDiff(from, to, item.Name, item.OldName, "", SystemEncoding, true);
                         string text = patch != null ? patch.Text : "";
                         var submoduleStatus = GitCommandHelpers.GetSubmoduleStatus(text);
                         if (submoduleStatus.Commit != submoduleStatus.OldCommit)
@@ -3017,7 +3060,13 @@ namespace GitCommands
                     else if (line.IndexOf(' ') == 40) //SHA1, create new line!
                     {
                         blameLine = new GitBlameLine();
-                        blameLine.CommitGuid = line.Substring(0, 40);
+                        var headerParams = line.Split(' ');
+                        blameLine.CommitGuid = headerParams[0];
+                        if (headerParams.Length >= 3)
+                        {
+                            blameLine.OriginLineNumber = int.Parse(headerParams[1]);
+                            blameLine.FinalLineNumber = int.Parse(headerParams[2]);
+                        }
                         blame.Lines.Add(blameLine);
                     }
                 }
@@ -3271,7 +3320,7 @@ namespace GitCommands
             // Get processes by "ps" command.
             var cmd = Path.Combine(Settings.GitBinDir, "ps");
             var arguments = "x";
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
             {
                 // "x" option is unimplemented by msysgit and cygwin.
                 arguments = "";

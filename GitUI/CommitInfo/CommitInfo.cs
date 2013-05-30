@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Net;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor.RichTextBoxExtension;
@@ -138,7 +138,7 @@ namespace GitUI.CommitInfo
             _RevisionHeader.Refresh();
 
             string error = "";
-            CommitData data = null;
+            CommitData data;
             if (_revision != null)
             {
                 data = CommitData.CreateFromRevision(_revision);
@@ -147,7 +147,7 @@ namespace GitUI.CommitInfo
             else
                 data = CommitData.GetCommitData(Module, _revisionGuid, ref error);
             data.ChildrenGuids = _children;
-            CommitInformation commitInformation = CommitInformation.GetCommitInfo(data);
+            CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, CommandClick != null);
 
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
             _RevisionHeader.Height = _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;
@@ -192,7 +192,7 @@ namespace GitUI.CommitInfo
         private void updateText()
         {
             RevisionInfo.SuspendLayout();
-            RevisionInfo.SetXHTMLText(_revisionInfo + _branchInfo + _tagInfo);
+            RevisionInfo.SetXHTMLText(_revisionInfo + "\n\n" + _branchInfo + _tagInfo);
             RevisionInfo.SelectionStart = 0; //scroll up
             RevisionInfo.ScrollToCaret();    //scroll up
             RevisionInfo.ResumeLayout(true);

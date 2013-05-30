@@ -37,7 +37,8 @@ namespace PatchApply
                 return null;
 
             string input = lines[lineIndex];
-            if (!IsStartOfANewPatch(input))
+            bool combinedDiff;
+            if (!IsStartOfANewPatch(input, out combinedDiff))
                 return null;
 
             PatchProcessorState state = PatchProcessorState.InHeader;
@@ -45,36 +46,28 @@ namespace PatchApply
             input = GitModule.ReEncodeFileNameFromLossless(input);
             patch.PatchHeader = input;
             patch.Type = Patch.PatchType.ChangeFile;
-            ExtractPatchFilenames(patch);
+            patch.CombinedDiff = combinedDiff;
+            if (!combinedDiff)
+                ExtractPatchFilenames(patch);
             patch.AppendText(input);
             if (lineIndex < lines.Length - 1)
                 patch.AppendText("\n");
 
-            for (int i = lineIndex + 1; i < lines.Length; i++)
+            int i = lineIndex + 1;
+            for (; i < lines.Length; i++)
             {
                 input = lines[i];
 
                 if (IsStartOfANewPatch(input))
                 {
-                    lineIndex = i;
+                    lineIndex = i - 1;
                     return patch;
-                }
-
-                if (i < lines.Length - 1)
-                    input += "\n";
-
-                if (state == PatchProcessorState.InBody)
-                {
-                    patch.AppendText(input);
-                    continue;
                 }
 
                 if (IsChunkHeader(input))
                 {
                     state = PatchProcessorState.InBody;
-                    ValidateInput(ref input, patch, state);
-                    patch.AppendText(input);
-                    continue;
+                    break;
                 }
 
                 //header lines are encoded in GitModule.SystemEncoding
@@ -82,6 +75,8 @@ namespace PatchApply
                 if (IsIndexLine(input))
                 {
                     patch.PatchIndex = input;
+                    if (i < lines.Length - 1)
+                        input += "\n";
                     patch.AppendText(input);
                     continue;
                 }
@@ -96,8 +91,8 @@ namespace PatchApply
                         throw new FormatException("Change not parsed correct: " + input);
 
                     patch.File = Patch.FileType.Binary;
-                    patch = null;
                     state = PatchProcessorState.OutsidePatch;
+                    break;
                 }
                 else if (IsUnlistedBinaryNewFile(input))
                 {
@@ -107,8 +102,8 @@ namespace PatchApply
                     patch.File = Patch.FileType.Binary;
                     //TODO: NOT SUPPORTED!
                     patch.Apply = false;
-                    patch = null;
                     state = PatchProcessorState.OutsidePatch;
+                    break;
                 }
                 else if (IsBinaryPatch(input))
                 {
@@ -116,14 +111,42 @@ namespace PatchApply
 
                     //TODO: NOT SUPPORTED!
                     patch.Apply = false;
-                    patch = null;
                     state = PatchProcessorState.OutsidePatch;
+                    break;
                 }
-                ValidateInput(ref input, patch, state);
+                ValidateHeader(ref input, patch);
+                if (i < lines.Length - 1)
+                    input += "\n";
                 patch.AppendText(input);
             }
 
-            lineIndex = lines.Length;
+            // process patch body
+            for (; i < lines.Length; i++)
+            {
+                input = lines[i];
+
+                if (IsStartOfANewPatch(input, out combinedDiff))
+                {
+                    lineIndex = i - 1;
+                    return patch;
+                }
+
+                if (state == PatchProcessorState.InBody && input.StartsWithAny(new[] { " ", "-", "+", "@" }))
+                {
+                    //diff content
+                    input = GitModule.ReEncodeStringFromLossless(input, FilesContentEncoding);
+                }
+                else
+                {
+                    //warnings, messages ...
+                    input = GitModule.ReEncodeStringFromLossless(input, GitModule.SystemEncoding);
+                }
+                if (i < lines.Length - 1)
+                    input += "\n";
+                patch.AppendText(input);
+            }
+
+            lineIndex = i - 1;
             return patch;
         }
 
@@ -144,12 +167,17 @@ namespace PatchApply
         /// </summary>
         /// <param name="patchText"></param>
         /// <returns></returns>
-        public IEnumerable<Patch> CreatePatchesFromString(String patchText)
+        public IEnumerable<Patch> CreatePatchesFromString(string patchText)
         {
-            var patches = new List<Patch>();
-            PatchProcessorState state = PatchProcessorState.OutsidePatch;
             string[] lines = patchText.Split('\n');
-            for(int i = 0; i < lines.Length; i++)
+            int i = 0;
+            // skip email header
+            for (; i < lines.Length; i++)
+            {
+                if (IsStartOfANewPatch(lines[i]))
+                    break;
+            }
+            for (; i < lines.Length; i++)
             {
                 Patch patch = CreatePatchFromString(lines, ref i);
                 if (patch != null)
@@ -162,52 +190,49 @@ namespace PatchApply
             return input.StartsWith("index ");
         }
 
-        private void ValidateInput(ref string input, Patch patch, PatchProcessorState state)
+        private void ValidateHeader(ref string input, Patch patch)
         {
-            if (state == PatchProcessorState.InHeader)
+            //--- /dev/null
+            //means there is no old file, so this should be a new file
+            if (IsOldFileMissing(input))
             {
-                //--- /dev/null
-                //means there is no old file, so this should be a new file
-                if (IsOldFileMissing(input))
-                {
-                    if (patch.Type != Patch.PatchType.NewFile)
-                        throw new FormatException("Change not parsed correct: " + input);
-                }
-                //line starts with --- means, old file name
-                else if (input.StartsWith("--- "))
-                {
-                    input = GitModule.UnquoteFileName(input);
-                    Match regexMatch = Regex.Match(input, "[-]{3}[ ][\\\"]{0,1}[aiwco12]/(.*)[\\\"]{0,1}");
+                if (patch.Type != Patch.PatchType.NewFile)
+                    throw new FormatException("Change not parsed correct: " + input);
+            }
+            //line starts with --- means, old file name
+            else if (input.StartsWith("--- "))
+            {
+                input = GitModule.UnquoteFileName(input);
+                Match regexMatch = Regex.Match(input, "[-]{3}[ ][\\\"]{0,1}[aiwco12]/(.*)[\\\"]{0,1}");
 
-                    if (!regexMatch.Success || patch.FileNameA != (regexMatch.Groups[1].Value.Trim()))
+                if (!regexMatch.Success || patch.FileNameA != (regexMatch.Groups[1].Value.Trim()))
+                {
+                    if (!patch.CombinedDiff)
                         throw new FormatException("Old filename not parsed correct: " + input);
-                }
-                else if (IsNewFileMissing(input))
-                {
-                    if (patch.Type != Patch.PatchType.DeleteFile)
-                        throw new FormatException("Change not parsed correct: " + input);
-                }
-
-                //line starts with +++ means, new file name
-                //we expect a new file now!
-                else if (input.StartsWith("+++ "))
-                {
-                    input = GitModule.UnquoteFileName(input);
-                    Match regexMatch = Regex.Match(input, "[+]{3}[ ][\\\"]{0,1}[biwco12]/(.*)[\\\"]{0,1}");
-
-                    if (!regexMatch.Success || patch.FileNameB != (regexMatch.Groups[1].Value.Trim()))
-                        throw new FormatException("New filename not parsed correct: " + input);
+                    patch.FileNameA = regexMatch.Groups[1].Value.Trim();
                 }
             }
-            else
+            else if (IsNewFileMissing(input))
             {
-                if (input.StartsWithAny(new string[] { " ", "-", "+", "@" }))
-                    //diff content
-                    input = GitModule.ReEncodeStringFromLossless(input, FilesContentEncoding);
-                else
-                    //warnings, messages ...
-                    input = GitModule.ReEncodeStringFromLossless(input, GitModule.SystemEncoding);                    
-            }               
+                if (patch.Type != Patch.PatchType.DeleteFile)
+                    throw new FormatException("Change not parsed correct: " + input);
+            }
+            //line starts with +++ means, new file name
+            //we expect a new file now!
+            else if (input.StartsWith("+++ "))
+            {
+                if (patch.CombinedDiff)
+                    return;
+                input = GitModule.UnquoteFileName(input);
+                Match regexMatch = Regex.Match(input, "[+]{3}[ ][\\\"]{0,1}[biwco12]/(.*)[\\\"]{0,1}");
+
+                if (!regexMatch.Success || patch.FileNameB != (regexMatch.Groups[1].Value.Trim()))
+                {
+                    if (!patch.CombinedDiff)
+                        throw new FormatException("New filename not parsed correct: " + input);
+                    patch.FileNameB = regexMatch.Groups[1].Value.Trim();
+                }
+            }             
         }
 
         private static bool IsChunkHeader(string input)
@@ -249,9 +274,16 @@ namespace PatchApply
             patch.FileNameB = match.Groups[2].Value.Trim();
         }
 
+        private static bool IsStartOfANewPatch(string input, out bool combinedDiff)
+        {
+            combinedDiff = input.StartsWith("diff --cc ");
+            return input.StartsWith("diff --git ") || combinedDiff;
+        }
+
         private static bool IsStartOfANewPatch(string input)
         {
-            return input.StartsWith("diff --git ");
+            bool combinedDiff;
+            return IsStartOfANewPatch(input, out combinedDiff);
         }
 
         private static bool SetPatchType(string input, Patch patch)

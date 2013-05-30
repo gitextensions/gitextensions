@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Plugins;
@@ -46,6 +47,10 @@ namespace GitUI.CommandsDialogs
             //if form is created for translation purpose
             if (aCommands == null)
                 return;
+
+#if DEBUG
+            buttonDiscard.Visible = true;
+#endif
 
             settingsTreeView.AddSettingsPage(new GitExtensionsSettingsGroup(), null);
             SettingsPageReference gitExtPageRef = GitExtensionsSettingsGroup.GetPageReference();
@@ -208,7 +213,7 @@ namespace GitUI.CommandsDialogs
                 settingsPage.SaveSettings();
             }
 
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
                 FormFixHome.CheckHomePath();
 
             // TODO: to which settings page does this belong?
