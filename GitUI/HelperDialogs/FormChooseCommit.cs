@@ -74,7 +74,7 @@ namespace GitUI.HelperDialogs
             {
                 if (formGoToCommit.ShowDialog(this) == DialogResult.OK)
                 {
-                    string revisionGuid = formGoToCommit.GetRevision();
+                    string revisionGuid = formGoToCommit.ValidateAndGetSelectedRevision();
                     if (!string.IsNullOrEmpty(revisionGuid))
                     {
                         revisionGrid.SetSelectedRevision(new GitRevision(Module, revisionGuid));

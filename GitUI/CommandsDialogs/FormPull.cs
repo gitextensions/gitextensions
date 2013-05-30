@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
@@ -19,8 +20,7 @@ namespace GitUI.CommandsDialogs
         #region Translation
         private readonly TranslationString _areYouSureYouWantToRebaseMerge =
             new TranslationString("The current commit is a merge." + Environment.NewLine +
-            //"." + Environment.NewLine +
-                                "Are you sure you want to rebase this merge?");
+                                  "Are you sure you want to rebase this merge?");
 
         private readonly TranslationString _areYouSureYouWantToRebaseMergeCaption =
             new TranslationString("Rebase merge commit?");
@@ -64,11 +64,21 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch");
 
         private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
+
+        private readonly TranslationString _pruneBranchesCaption = new TranslationString("Pull was rejected");
+        private readonly TranslationString _pruneBranchesMainInstruction = new TranslationString("Remote branch no longer exist");
+        private readonly TranslationString _pruneBranchesBranch =
+            new TranslationString("Do you want deletes all stale remote-tracking branches?");
+        private readonly TranslationString _pruneBranchesButtons = new TranslationString("Deletes stale branches|Cancel");
+
+        private readonly TranslationString _pruneFromCaption = new TranslationString("Prune remote branches from {0}");
+
         #endregion
 
         public bool ErrorOccurred { get; private set; }
         private IList<GitRef> _heads;
         private string _branch;
+        private const string AllRemotes = "[ All ]";
 
         private FormPull()
             : this(null, null)
@@ -118,7 +128,7 @@ namespace GitUI.CommandsDialogs
         private void UpdateRemotesList()
         {
             IList<string> remotes = new List<string>(Module.GetRemotes());
-            remotes.Insert(0, "[ All ]");
+            remotes.Insert(0, AllRemotes);
             _NO_TRANSLATE_Remotes.DataSource = remotes;
         }
 
@@ -193,7 +203,6 @@ namespace GitUI.CommandsDialogs
             //_heads.Insert(0, GitHead.AllHeads); --> disable this because it is only for expert users
             _heads.Insert(0, GitRef.NoHead(Module));
             Branches.DataSource = _heads;
-
 
             Cursor.Current = Cursors.Default;
         }
@@ -431,7 +440,49 @@ namespace GitUI.CommandsDialogs
 
             curLocalBranch = CalculateLocalBranch();
 
-            return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, Rebase.Checked, GetTagsArg()));            
+            return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, Rebase.Checked, GetTagsArg()))
+                       {
+                           HandleOnExitCallback = HandlePullOnExit
+                       };
+        }
+
+        private bool HandlePullOnExit(ref bool isError, FormProcess form)
+        {
+            if (!isError)
+                return false;
+            
+            if (!PullFromRemote.Checked || string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text))
+                return false;
+
+            //auto pull only if current branch was rejected
+            Regex isRefRemoved = new Regex(@"Your configuration specifies to .* the ref '.*'[\r]?\nfrom the remote, but no such ref was fetched.");
+
+            if (isRefRemoved.IsMatch(form.GetOutputString()))
+            {
+                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(form,
+                                _pruneBranchesCaption.Text,
+                                _pruneBranchesMainInstruction.Text,
+                                _pruneBranchesBranch.Text,
+                                _pruneBranchesButtons.Text,
+                                true);
+                if (idx == 0)
+                {
+                    string remote = _NO_TRANSLATE_Remotes.Text;
+                    string pruneCmd = "remote prune " + remote;
+                    using (var formPrune = new FormRemoteProcess(Module, pruneCmd)
+                    {
+                        Remote = remote,
+                        Text = string.Format(_pruneFromCaption.Text, remote)
+                    })
+                    {
+
+                        formPrune.ShowDialog(form);
+                    }
+                }
+
+            }
+
+            return false;
         }
 
         private bool? GetTagsArg()
@@ -554,12 +605,12 @@ namespace GitUI.CommandsDialogs
 
         private bool IsPullAll()
         {
-            return _NO_TRANSLATE_Remotes.Text.Equals("[ All ]", StringComparison.InvariantCultureIgnoreCase);
+            return _NO_TRANSLATE_Remotes.Text.Equals(AllRemotes, StringComparison.InvariantCultureIgnoreCase);
         }
 
         public void SetForFetchAll()
         {
-            _NO_TRANSLATE_Remotes.Text = "[ ALL ]";
+            _NO_TRANSLATE_Remotes.Text = AllRemotes;
         }
 
         private void PullFromUrlCheckedChanged(object sender, EventArgs e)

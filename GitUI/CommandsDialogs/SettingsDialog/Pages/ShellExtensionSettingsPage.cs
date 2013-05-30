@@ -17,7 +17,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             for (int i = 0; i < Settings.CascadeShellMenuItems.Length; i++)
             {
                 chlMenuEntries.SetItemChecked(i, Settings.CascadeShellMenuItems[i] == '1');
-            }            
+            }
+
+            UpdatePreview();
         }
 
         public override void SaveSettings()
@@ -37,6 +39,31 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             Settings.CascadeShellMenuItems = l_CascadeShellMenuItems;            
+        }
+
+        private void chlMenuEntries_SelectedValueChanged(object sender, EventArgs e)
+        {
+            UpdatePreview();
+        }
+
+        private void UpdatePreview()
+        {
+            string topLevel = "";
+            string cascaded = "";
+
+            for (int i = 0; i < chlMenuEntries.Items.Count; i++)
+            {
+                if (chlMenuEntries.GetItemChecked(i))
+                {
+                    cascaded += "       " + chlMenuEntries.Items[i].ToString() + "\r\n";
+                }
+                else
+                {
+                    topLevel += "GitEx " + chlMenuEntries.Items[i].ToString() + "\r\n";
+                }
+            }
+
+            labelPreview.Text = topLevel + "Git Extensions > \r\n" + cascaded;
         }
     }
 }

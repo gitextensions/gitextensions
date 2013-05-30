@@ -1,10 +1,10 @@
-﻿using GitCommands;
-using ResourceManager.Translation;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands.Utils;
+using ResourceManager.Translation;
 
 namespace TranslationApp
 {
@@ -18,7 +18,7 @@ namespace TranslationApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (Settings.RunningOnWindows())
+            if (EnvUtils.RunningOnWindows())
             {
                 NBug.Settings.UIMode = NBug.Enums.UIMode.Full;
 

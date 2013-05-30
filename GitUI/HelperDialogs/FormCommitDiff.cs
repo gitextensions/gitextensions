@@ -7,30 +7,49 @@ namespace GitUI.HelperDialogs
 {
     public sealed partial class FormCommitDiff : GitModuleForm
     {
-        private readonly string _revision;
+        private readonly string _revisionGuid;
+        private readonly GitRevision _revision;
 
         private FormCommitDiff()
-            : this(null, null)
+            : this(null)
         { 
         
         }
 
-        public FormCommitDiff(GitUICommands aCommands, string revision)
+        private FormCommitDiff(GitUICommands aCommands)
             : base(aCommands)
         {
-            InitializeComponent(); 
+            InitializeComponent();
             Translate();
             DiffText.ExtraDiffArgumentsChanged += DiffText_ExtraDiffArgumentsChanged;
             DiffFiles.Focus();
-
-            _revision = revision;
-
             DiffFiles.GitItemStatuses = null;
+        }
+
+        public FormCommitDiff(GitUICommands aCommands, GitRevision revision)
+            : this(aCommands)
+        {
+            _revision = revision;
+            _revisionGuid = revision.Guid;
+
             if (_revision != null)
             {
-                DiffFiles.SetGitItemStatuses(_revision + "^", Module.GetDiffFiles(_revision, _revision + "^"));
+                DiffFiles.SetDiff(revision);
 
-                commitInfo.RevisionGuid = _revision;
+                commitInfo.Revision = _revision;
+            }
+        }
+
+        public FormCommitDiff(GitUICommands aCommands, string revision)
+            : this(aCommands)
+        {
+            _revisionGuid = revision;
+
+            if (_revisionGuid != null)
+            {
+                DiffFiles.SetGitItemStatuses(_revision + "^", Module.GetDiffFiles(_revisionGuid, _revisionGuid + "^"));
+
+                commitInfo.RevisionGuid = _revisionGuid;
             }
         }
 
@@ -43,10 +62,19 @@ namespace GitUI.HelperDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            if (DiffFiles.SelectedItem != null && _revision != null)
+            if (DiffFiles.SelectedItem != null)
             {
-                Patch selectedPatch = Module.GetSingleDiff(_revision, _revision + "^", DiffFiles.SelectedItem.Name, DiffFiles.SelectedItem.OldName, DiffText.GetExtraDiffArguments(), DiffText.Encoding);
-                DiffText.ViewPatch(selectedPatch);
+                if (_revision != null)
+                {
+                    DiffText.ViewChanges(_revision.Guid, DiffFiles.SelectedItemParent, DiffFiles.SelectedItem, String.Empty);
+                }
+                else if (_revisionGuid != null)
+                {
+                    Patch selectedPatch = Module.GetSingleDiff(_revisionGuid, _revisionGuid + "^",
+                        DiffFiles.SelectedItem.Name, DiffFiles.SelectedItem.OldName,
+                        DiffText.GetExtraDiffArguments(), DiffText.Encoding, true);
+                    DiffText.ViewPatch(selectedPatch);
+                }
             }
             Cursor.Current = Cursors.Default;
         }

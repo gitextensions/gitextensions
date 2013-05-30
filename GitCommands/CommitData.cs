@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Net;
-using System.Diagnostics;
+using System.Text;
 using LibGit2Sharp;
 
 namespace GitCommands
@@ -49,7 +49,7 @@ namespace GitCommands
         /// Generate header.
         /// </summary>
         /// <returns></returns>
-        public string GetHeader()
+        public string GetHeader(bool showRevisionsAsLinks)
         {
             StringBuilder header = new StringBuilder();
             string authorEmail = GetEmail(Author);
@@ -68,7 +68,11 @@ namespace GitCommands
             if (ChildrenGuids != null && ChildrenGuids.Count != 0)
             {
                 header.AppendLine();
-                var commitsString = ChildrenGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                string commitsString;
+                if (showRevisionsAsLinks)
+                    commitsString  = ChildrenGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                else
+                    commitsString = ChildrenGuids.Select(guid => guid.Substring(0, 10)).Join(" ");
                 header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetChildrenText()) + ":",
                                            COMMITHEADER_STRING_LENGTH) + commitsString);
             }
@@ -77,7 +81,11 @@ namespace GitCommands
             if (parentGuids.Any())
             {
                 header.AppendLine();
-                var commitsString = parentGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                string commitsString;
+                if (showRevisionsAsLinks)
+                    commitsString = parentGuids.Select(LinkFactory.CreateCommitLink).Join(" ");
+                else
+                    commitsString = parentGuids.Select(guid => guid.Substring(0, 10)).Join(" ");
                 header.Append(FillToLength(WebUtility.HtmlEncode(Strings.GetParentsText()) + ":",
                                            COMMITHEADER_STRING_LENGTH) + commitsString);
             }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
 using ICSharpCode.TextEditor.Util;
-using System.Threading;
 
 namespace GitUI
 {
@@ -141,7 +141,7 @@ namespace GitUI
                 secondRevision = firstRevision + "^";
 
             return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName,
-                    diffArgs, encoding);
+                    diffArgs, encoding, true);
         }
 
         public static string GetSelectedPatch(this FileViewer diffViewer, RevisionGrid grid, GitItemStatus file)
@@ -156,13 +156,19 @@ namespace GitUI
                 return null;
 
             string firstRevision = revisions[0].Guid;
-            var secondRevision = revisions.Count == 2 ? revisions[1].Guid : null;
+            string secondRevision = revisions.Count == 2 ? revisions[1].Guid : null;
 
+            return GetSelectedPatch(diffViewer, firstRevision, secondRevision, file);
+        }
+
+        public static string GetSelectedPatch(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file)
+        {
             //to simplify if-ology
             if (GitRevision.IsArtificial(secondRevision) && firstRevision != GitRevision.UnstagedGuid)
             {
+                string temp = firstRevision;
                 firstRevision = secondRevision;
-                secondRevision = revisions[0].Guid;
+                secondRevision = temp;
             }
 
             if (IsItemUntracked(file, firstRevision, secondRevision))
@@ -187,13 +193,7 @@ namespace GitUI
             return patch.Text;
         }
 
-        public static void ViewPatch(this FileViewer diffViewer, RevisionGrid grid, GitItemStatus file, string defaultText)
-        {
-            IList<GitRevision> revisions = grid.GetSelectedRevisions();
-            ViewPatch(diffViewer, revisions, file, defaultText);
-        }
-
-        public static void ViewPatch(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file, string defaultText)
+        public static void ViewChanges(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file, string defaultText)
         {
             if (revisions.Count == 1 && (revisions[0].ParentGuids == null || revisions[0].ParentGuids.Length == 0))
             {
@@ -202,7 +202,7 @@ namespace GitUI
                 else if (!file.IsSubmodule)
                     diffViewer.ViewGitItem(file.Name, file.TreeGuid);
                 else
-                    diffViewer.ViewText(file.Name, 
+                    diffViewer.ViewText(file.Name,
                         GitCommandHelpers.GetSubmoduleText(diffViewer.Module, file.Name, file.TreeGuid));
             }
             else
@@ -213,6 +213,15 @@ namespace GitUI
                         return selectedPatch ?? defaultText;
                     });
             }
+        }
+
+        public static void ViewChanges(this FileViewer diffViewer, string revision, string parentRevision, GitItemStatus file, string defaultText)
+        {
+            diffViewer.ViewPatch(() =>
+                {
+                    string selectedPatch = diffViewer.GetSelectedPatch(revision, parentRevision, file);
+                    return selectedPatch ?? defaultText;
+                });
         }
 
         public static void RemoveIfExists(this TabControl tabControl, TabPage page)

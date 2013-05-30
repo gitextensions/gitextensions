@@ -89,6 +89,7 @@ namespace GitUI
             showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
             drawNonrelativesGrayToolStripMenuItem.Checked = Settings.RevisionGraphDrawNonRelativesGray;
             showGitNotesToolStripMenuItem.Checked = Settings.ShowGitNotes;
+            showTagsToolStripMenuItem.Checked = Settings.ShowTags;
 
             BranchFilter = String.Empty;
             SetShowBranches();
@@ -138,7 +139,7 @@ namespace GitUI
         [Browsable(false)]
         public Font SuperprojectFont { get; private set; }
         [Browsable(false)]
-        public int LastScrollPos { get; private set; }
+        public string FirstVisibleRevisionBeforeUpdate { get; private set; }
         [Browsable(false)]
         public string[] LastSelectedRows { get; private set; }
         [Browsable(false)]
@@ -194,7 +195,7 @@ namespace GitUI
         [Browsable(false)]
         private string FiltredCurrentCheckout { get; set; }
         [Browsable(false)]
-        public Task<string> SuperprojectCurrentCheckout { get; private set; }
+        public Task<string[]> SuperprojectCurrentCheckout { get; private set; }
         [Browsable(false)]
         public int LastRow { get; private set; }
 
@@ -512,7 +513,7 @@ namespace GitUI
             Revisions.Select();
         }
 
-        private void SetSelectedRevision(string revision)
+        public void SetSelectedRevision(string revision)
         {
             if (revision != null)
             {
@@ -755,21 +756,27 @@ namespace GitUI
 
                 _initialLoad = true;
 
-                LastScrollPos = Revisions.FirstDisplayedScrollingRowIndex;
-
                 DisposeRevisionGraphCommand();
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
-                Task<string> newSuperprojectCurrentCheckout =
-                    Task.Factory.StartNew(() => Module.GetSuperprojectCurrentCheckout());
+                Task<string[]> newSuperprojectCurrentCheckout =
+                    Task.Factory.StartNew(() => GetSuperprojectCheckout());
                 newSuperprojectCurrentCheckout.ContinueWith((task) => Refresh(),
                     TaskScheduler.FromCurrentSynchronizationContext());
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
+                FirstVisibleRevisionBeforeUpdate = null;
                 if (newCurrentCheckout == CurrentCheckout)
                 {
                     LastSelectedRows = Revisions.SelectedIds;
+
+                    if (Revisions.FirstDisplayedScrollingRowIndex != -1)
+                    {
+                        var rows = Revisions.Rows.Cast<DataGridViewRow>();
+                        var row = rows.ElementAt(Revisions.FirstDisplayedScrollingRowIndex);
+                        FirstVisibleRevisionBeforeUpdate = GetRevision(row.Index).Guid;
+                    }
                 }
                 else
                 {
@@ -850,6 +857,19 @@ namespace GitUI
                 Error.BringToFront();
                 MessageBox.Show(this, exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private string[] GetSuperprojectCheckout()
+        {
+            if (Module.SuperprojectModule == null)
+                return new string[] {};
+            var currentCheckout = Module.GetSuperprojectCurrentCheckout();
+            if (currentCheckout.Key == 'U')
+            {
+                // return local and remote hashes
+                return Module.SuperprojectModule.GetConflictedSubmoduleHashes(Module.SubmodulePath).Skip(1).ToArray();
+            }
+            return new[] { currentCheckout.Value };
         }
 
         private static readonly Regex PotentialShaPattern = new Regex(@"^[a-f0-9]{5,}", RegexOptions.Compiled);
@@ -971,10 +991,15 @@ namespace GitUI
             }
             LastSelectedRows = null;
 
-            if (LastScrollPos > 0 && Revisions.RowCount > LastScrollPos)
+            if (FirstVisibleRevisionBeforeUpdate != null)
             {
-                Revisions.FirstDisplayedScrollingRowIndex = LastScrollPos;
-                LastScrollPos = -1;
+                var lastRow = Revisions.Rows.Cast<DataGridViewRow>()
+                    .FirstOrDefault(row => GetRevision(row.Index).Guid == FirstVisibleRevisionBeforeUpdate);
+
+                if (lastRow != null)
+                    Revisions.FirstDisplayedScrollingRowIndex = lastRow.Index;
+
+                FirstVisibleRevisionBeforeUpdate = null;
             }
         }
 
@@ -1110,7 +1135,7 @@ namespace GitUI
                 var rowFont = NormalFont;
                 if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
                     rowFont = HeadFont;
-                else if (SuperprojectCurrentCheckout.IsCompleted && revision.Guid == SuperprojectCurrentCheckout.Result)
+                else if (SuperprojectCurrentCheckout.IsCompleted && SuperprojectCurrentCheckout.Result.Contains(revision.Guid))
                     rowFont = SuperprojectFont;
 
                 switch (column)
@@ -1167,6 +1192,14 @@ namespace GitUI
                                 foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || ShowRemoteBranches.Checked)))
                                 {
                                     Font refsFont;
+
+                                    if (gitRef.IsTag)
+                                    {
+                                        if (!showTagsToolStripMenuItem.Checked)
+                                        {
+                                            continue;
+                                        }
+                                    }
 
                                     if (IsFilledBranchesLayout())
                                     {
@@ -1493,7 +1526,6 @@ namespace GitUI
             this.InvokeAsync(Revisions.Refresh);
         }
 
-
         private void RevisionsDoubleClick(object sender, EventArgs e)
         {
             if (DoubleClickRevision != null)
@@ -1513,7 +1545,7 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Count > 0)
             {
-                var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
+                var form = new FormCommitDiff(UICommands, selectedRevisions[0]);
                 form.ShowDialog(this);
             }
             else
@@ -2240,6 +2272,13 @@ namespace GitUI
             Refresh();
         }
 
+        private void showTagsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            showTagsToolStripMenuItem.Checked = !showTagsToolStripMenuItem.Checked;
+            Settings.ShowTags = showTagsToolStripMenuItem.Checked;
+            Refresh();
+        }
+        
         public void ToggleRevisionCardLayout()
         {
             var layouts = new List<RevisionGridLayout>((RevisionGridLayout[])Enum.GetValues(typeof(RevisionGridLayout)));

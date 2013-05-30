@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using GitCommands;
-using Microsoft.Win32;
 using System.IO;
+using GitCommands;
+using GitCommands.Utils;
+using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -103,7 +104,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public bool AutoFindPuttyPaths()
         {
-            if (!Settings.RunningOnWindows())
+            if (!EnvUtils.RunningOnWindows())
                 return false;
 
             foreach (var path in GetPuttyLocations())

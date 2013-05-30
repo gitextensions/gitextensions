@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Serialization;
 using GitCommands.Logging;
 using GitCommands.Repository;
+using GitCommands.Utils;
 using Microsoft.Win32;
 
 namespace GitCommands
@@ -67,7 +67,7 @@ namespace GitCommands
                 GitExtensionsVersionString += '.' + version.Build.ToString();
                 GitExtensionsVersionInt = GitExtensionsVersionInt * 100 + version.Build;
             }
-            if (!RunningOnWindows())
+            if (!EnvUtils.RunningOnWindows())
             {
                 PathSeparator = '/';
                 PathSeparatorWrong = '\\';
@@ -505,6 +505,12 @@ namespace GitCommands
             set { SetBool("showgitnotes", value); }
         }
 
+        public static bool ShowTags
+        {
+            get { return GetBool("showtags", true); }
+            set { SetBool("showtags", value); }
+        }
+
         public static int RevisionGraphLayout
         {
             get { return GetInt("revisiongraphlayout", 2); }
@@ -778,47 +784,6 @@ namespace GitCommands
         public static void SetInstallDir(string dir)
         {
             VersionIndependentRegKey.SetValue("InstallDir", dir);
-        }
-
-        public static bool RunningOnWindows()
-        {
-            switch (Environment.OSVersion.Platform)
-            {
-                case PlatformID.Win32NT:
-                case PlatformID.Win32S:
-                case PlatformID.Win32Windows:
-                case PlatformID.WinCE:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public static bool RunningOnUnix()
-        {
-            switch (Environment.OSVersion.Platform)
-            {
-                case PlatformID.Unix:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public static bool RunningOnMacOSX()
-        {
-            switch (Environment.OSVersion.Platform)
-            {
-                case PlatformID.MacOSX:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        public static bool IsMonoRuntime()
-        {
-            return Type.GetType("Mono.Runtime") != null;
         }
 
         public static void SaveSettings()
