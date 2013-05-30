@@ -34,6 +34,12 @@ namespace GitCommands.Settings
             _fileWatcher.IncludeSubdirectories = false;
             _fileWatcher.EnableRaisingEvents = false;
             _fileWatcher.Changed += _fileWatcher_Changed;
+            _fileWatcher.Renamed += _fileWatcher_Renamed;
+            FileChanged();
+        }
+
+        void _fileWatcher_Renamed(object sender, RenamedEventArgs e)
+        {
             FileChanged();
         }
 
@@ -51,6 +57,7 @@ namespace GitCommands.Settings
             }
 
             _fileWatcher.Changed -= _fileWatcher_Changed;
+            _fileWatcher.Renamed -= _fileWatcher_Renamed;
             _fileWatcher.Dispose();
 
             base.DisposeImpl();
@@ -106,10 +113,16 @@ namespace GitCommands.Settings
                     return;
                 }
 
-                File.Delete(SettingsFilePath + ".backup");
-                File.Copy(SettingsFilePath, SettingsFilePath + ".backup");
+                WriteSettings(tmpFile);
 
-                WriteSettings(SettingsFilePath);
+                if (File.Exists(SettingsFilePath))
+                {
+                    File.Replace(tmpFile, SettingsFilePath, SettingsFilePath + ".backup", true);
+                }
+                else
+                {
+                    File.Move(tmpFile, SettingsFilePath);
+                }
 
                 LastFileModificationDate = GetLastFileModificationUTC();
                 LastFileRead = DateTime.UtcNow;

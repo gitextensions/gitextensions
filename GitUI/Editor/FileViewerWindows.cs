@@ -340,7 +340,7 @@ namespace GitUI.Editor
                 ProcessLineSegment(ref line, lineSegment, '+', AppSettings.DiffAddedColor);
                 ProcessLineSegment(ref line, lineSegment, '-', AppSettings.DiffRemovedColor);
                 ProcessLineSegment(ref line, lineSegment, '@', AppSettings.DiffSectionColor);
-                ProcessLineSegment(ref line, lineSegment, '\\', Settings.DiffSectionColor);
+                ProcessLineSegment(ref line, lineSegment, '\\', AppSettings.DiffSectionColor);
             }
         }
 
