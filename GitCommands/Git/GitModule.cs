@@ -2971,14 +2971,14 @@ namespace GitCommands
         //TODO: submodules should be implemented in libgit2sharp
         public List<IGitItem> GetTreeNew(string id, bool full)
         {
-            using (GitModule.LibGit2SharpThreadLock(this))
+            using (LibGit2SharpThreadLock(this))
             {
                 var tree = Repository.Lookup<Tree>(id);
-                return tree.Where(t => t.Type == GitObjectType.Tree || t.Type == GitObjectType.Blob)
+                return tree.Where(t => t.TargetType == TreeEntryTargetType.Tree || t.TargetType == TreeEntryTargetType.Blob)
                     .Select(t => (IGitItem) new GitItem(this)
                         {
                             Mode = ((int) t.Mode).ToString(),
-                            ItemType = t.Type.ToString().ToLower(),
+                            ItemType = t.TargetType.ToString().ToLower(),
                             Guid = t.Target.Sha,
                             Name = t.Name,
                             FileName = t.Name
