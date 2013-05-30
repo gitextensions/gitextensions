@@ -1366,8 +1366,7 @@ namespace GitUI
 
         public bool StartRepoSettingsDialog(IWin32Window owner)
         {
-            return false;
-            //TODO jb preselect local settings return StartSettingsDialog(owner, GitUI.CommandsDialogs.SettingsDialog.Pages.LocalSettingsSettingsPage.GetPageReference());
+            return StartSettingsDialog(owner, GitUI.CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
         }
 
         public bool StartBrowseDialog(IWin32Window owner, string filter)
