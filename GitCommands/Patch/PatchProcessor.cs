@@ -47,8 +47,7 @@ namespace PatchApply
             patch.PatchHeader = input;
             patch.Type = Patch.PatchType.ChangeFile;
             patch.CombinedDiff = combinedDiff;
-            if (!combinedDiff)
-                ExtractPatchFilenames(patch);
+            ExtractPatchFilenames(patch);
             patch.AppendText(input);
             if (lineIndex < lines.Length - 1)
                 patch.AppendText("\n");
@@ -203,13 +202,14 @@ namespace PatchApply
             else if (input.StartsWith("--- "))
             {
                 input = GitModule.UnquoteFileName(input);
-                Match regexMatch = Regex.Match(input, "[-]{3}[ ][\\\"]{0,1}[aiwco12]/(.*)[\\\"]{0,1}");
+                Match regexMatch = Regex.Match(input, "[-]{3} [\\\"]?[aiwco12]/(.*)[\\\"]?");
 
                 if (!regexMatch.Success || patch.FileNameA != (regexMatch.Groups[1].Value.Trim()))
                 {
                     if (!patch.CombinedDiff)
                         throw new FormatException("Old filename not parsed correct: " + input);
-                    patch.FileNameA = regexMatch.Groups[1].Value.Trim();
+                    if (regexMatch.Success)
+                        patch.FileNameA = regexMatch.Groups[1].Value.Trim();
                 }
             }
             else if (IsNewFileMissing(input))
@@ -221,16 +221,15 @@ namespace PatchApply
             //we expect a new file now!
             else if (input.StartsWith("+++ "))
             {
-                if (patch.CombinedDiff)
-                    return;
                 input = GitModule.UnquoteFileName(input);
-                Match regexMatch = Regex.Match(input, "[+]{3}[ ][\\\"]{0,1}[biwco12]/(.*)[\\\"]{0,1}");
+                Match regexMatch = Regex.Match(input, "[+]{3} [\\\"]?[biwco12]/(.*)[\\\"]?");
 
                 if (!regexMatch.Success || patch.FileNameB != (regexMatch.Groups[1].Value.Trim()))
                 {
                     if (!patch.CombinedDiff)
                         throw new FormatException("New filename not parsed correct: " + input);
-                    patch.FileNameB = regexMatch.Groups[1].Value.Trim();
+                    if (regexMatch.Success)
+                        patch.FileNameB = regexMatch.Groups[1].Value.Trim();
                 }
             }             
         }
@@ -267,11 +266,21 @@ namespace PatchApply
 
         private static void ExtractPatchFilenames(Patch patch)
         {
-            Match match = Regex.Match(patch.PatchHeader,
-                                      "[ ][\\\"]{0,1}[aiwco12]/(.*)[\\\"]{0,1}[ ][\\\"]{0,1}[biwco12]/(.*)[\\\"]{0,1}");
+            if (!patch.CombinedDiff)
+            {
+                Match match = Regex.Match(patch.PatchHeader,
+                                          " [\\\"]?[aiwco12]/(.*)[\\\"]? [\\\"]?[biwco12]/(.*)[\\\"]?");
 
-            patch.FileNameA = match.Groups[1].Value.Trim();
-            patch.FileNameB = match.Groups[2].Value.Trim();
+                patch.FileNameA = match.Groups[1].Value.Trim();
+                patch.FileNameB = match.Groups[2].Value.Trim();
+            }
+            else
+            {
+                Match match = Regex.Match(patch.PatchHeader,
+                                          "--cc [\\\"]?(.*)[\\\"]?");
+
+                patch.FileNameA = match.Groups[1].Value.Trim();
+            }
         }
 
         private static bool IsStartOfANewPatch(string input, out bool combinedDiff)
