@@ -30,7 +30,7 @@ namespace GitCommands
             if (data == null)
                 return new CommitInformation(error, "");
 
-            string header = data.GetHeader();
+            string header = data.GetHeader(false);
             string body = "\n" + WebUtility.HtmlEncode(data.Body.Trim());
 
             return new CommitInformation(header, body);
@@ -40,12 +40,12 @@ namespace GitCommands
         /// Gets the commit info from CommitData.
         /// </summary>
         /// <returns></returns>
-        public static CommitInformation GetCommitInfo(CommitData data)
+        public static CommitInformation GetCommitInfo(CommitData data, bool showRevisionsAsLinks)
         {
             if (data == null)
                 throw new ArgumentNullException("data");
 
-            string header = data.GetHeader();
+            string header = data.GetHeader(showRevisionsAsLinks);
             string body = "\n" + WebUtility.HtmlEncode(data.Body.Trim());
 
             return new CommitInformation(header, body);
