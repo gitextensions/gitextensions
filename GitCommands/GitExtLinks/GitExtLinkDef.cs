@@ -39,7 +39,19 @@ namespace GitCommands.GitExtLinks
             set
             {
                 _SearchPattern = value;
-                SearchPatternRegex = new Lazy<Regex>(() => new Regex(SearchPattern, RegexOptions.Compiled));
+                SearchPatternRegex = new Lazy<Regex>(() =>
+                    {
+                        try
+                        {
+                            return new Regex(SearchPattern, RegexOptions.Compiled);
+                        }
+                        catch(Exception e)
+                        {
+                            System.Diagnostics.Debug.Print(e.ToStringWithData());
+                            return null;
+                        }
+                    }
+                        );
             }
         }
         /// <summary>Compiled SearchPattern</summary>
@@ -59,7 +71,21 @@ namespace GitCommands.GitExtLinks
             set
             {
                 _NestedSearchPattern = value;
-                NestedSearchPatternRegex = new Lazy<Regex>(() => new Regex(NestedSearchPattern, RegexOptions.Compiled));
+                NestedSearchPatternRegex = new Lazy<Regex>(() =>
+                {
+                    try
+                    {
+                        return new Regex(NestedSearchPattern, RegexOptions.Compiled);
+                    }
+                    catch (Exception e)
+                    {
+                        System.Diagnostics.Debug.Print(e.ToStringWithData());
+                        return null;
+                    }
+                }
+                );
+                   
+
             }
         }
         /// <summary>Compiled SearchPattern</summary>
@@ -98,7 +124,7 @@ namespace GitCommands.GitExtLinks
 
         public IEnumerable<GitExtLink> ParsePart(string part, GitRevision revision)
         {
-            if (SearchPattern.IsNullOrEmpty())
+            if (SearchPattern.IsNullOrEmpty() || SearchPatternRegex.Value == null)
                 yield break;
 
             IList<Match> allMatches = new List<Match>();
@@ -111,7 +137,7 @@ namespace GitCommands.GitExtLinks
                 {
                     allMatches.Add(match);
                 }
-                else
+                else if (NestedSearchPatternRegex.Value != null)
                 {
                     MatchCollection nestedMatches = NestedSearchPatternRegex.Value.Matches(match.Value);
 
@@ -144,6 +170,12 @@ namespace GitCommands.GitExtLinks
         public override int GetHashCode()
         {
             return Name.GetHashCode();
+        }
+
+        public void RemoveEmptyFormats()
+        {
+            var toRemove = LinkFormats.Where(f => f.Caption.IsNullOrWhiteSpace() && f.Format.IsNullOrWhiteSpace()).ToArray();
+            toRemove.ForEach(f => LinkFormats.Remove(f));
         }
 
     }
