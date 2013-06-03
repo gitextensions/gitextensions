@@ -54,11 +54,11 @@ namespace GitCommands.Settings
                 {
                     Save();
                 }
-            }
 
-            _fileWatcher.Changed -= _fileWatcher_Changed;
-            _fileWatcher.Renamed -= _fileWatcher_Renamed;
-            _fileWatcher.Dispose();
+                _fileWatcher.Changed -= _fileWatcher_Changed;
+                _fileWatcher.Renamed -= _fileWatcher_Renamed;
+                _fileWatcher.Dispose();
+            }
 
             base.DisposeImpl();
         }

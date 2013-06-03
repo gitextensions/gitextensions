@@ -135,19 +135,20 @@ namespace GitCommands.GitExtLinks
                 }
                 else
                 {
+                    LinkDefs.ForEach(linkDef => linkDef.RemoveEmptyFormats());
+
                     var sw = new StringWriter();
                     var serializer = new XmlSerializer(typeof(List<GitExtLinkDef>));
                     serializer.Serialize(sw, LinkDefs);
-                    xml = sw.ToString();
+                    xml = sw.ToString();                    
                 }
+
+                Settings.SetString("RevisionLinkDefs", xml);
             }
-            catch
+            catch(Exception e)
             {
-                xml = null;
-            }
-
-            Settings.SetString("RevisionLinkDefs", xml);
+                System.Diagnostics.Debug.WriteLine(e);
+            }            
         }
-
     }
 }
