@@ -110,6 +110,7 @@ namespace GitUI
             this.showAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showRelativeDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGitNotesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showMergeCommitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
@@ -573,6 +574,7 @@ namespace GitUI
             this.showAuthorDateToolStripMenuItem,
             this.showRelativeDateToolStripMenuItem,
             this.showGitNotesToolStripMenuItem,
+            this.showMergeCommitsToolStripMenuItem,
             this.showTagsToolStripMenuItem});
             this.toolStripMenuItemView.Name = "toolStripMenuItemView";
             this.toolStripMenuItemView.Size = new System.Drawing.Size(264, 24);
@@ -619,6 +621,13 @@ namespace GitUI
             this.showGitNotesToolStripMenuItem.Size = new System.Drawing.Size(234, 24);
             this.showGitNotesToolStripMenuItem.Text = "Show git notes";
             this.showGitNotesToolStripMenuItem.Click += new System.EventHandler(this.ShowGitNotesToolStripMenuItem_Click);
+            // 
+            // showMergeCommitsToolStripMenuItem
+            // 
+            this.showMergeCommitsToolStripMenuItem.Name = "showMergeCommitsToolStripMenuItem";
+            this.showMergeCommitsToolStripMenuItem.Size = new System.Drawing.Size(234, 24);
+            this.showMergeCommitsToolStripMenuItem.Text = "Show Merge Commits";
+            this.showMergeCommitsToolStripMenuItem.Click += new System.EventHandler(this.ShowMergeCommitsToolStripMenuItem_Click);
             // 
             // showTagsToolStripMenuItem
             // 
@@ -872,6 +881,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem showAuthorDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showRelativeDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showGitNotesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showMergeCommitsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manipulateCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fixupCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem squashCommitToolStripMenuItem;
