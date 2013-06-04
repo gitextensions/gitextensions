@@ -626,7 +626,7 @@ namespace GitUI
             // 
             this.showMergeCommitsToolStripMenuItem.Name = "showMergeCommitsToolStripMenuItem";
             this.showMergeCommitsToolStripMenuItem.Size = new System.Drawing.Size(234, 24);
-            this.showMergeCommitsToolStripMenuItem.Text = "Show Merge Commits";
+            this.showMergeCommitsToolStripMenuItem.Text = "Show merge commits";
             this.showMergeCommitsToolStripMenuItem.Click += new System.EventHandler(this.ShowMergeCommitsToolStripMenuItem_Click);
             // 
             // showTagsToolStripMenuItem
