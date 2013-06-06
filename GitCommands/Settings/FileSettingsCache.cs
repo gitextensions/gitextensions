@@ -45,21 +45,26 @@ namespace GitCommands.Settings
 
         protected override void DisposeImpl()
         {
-            IDisposable timer = SaveTimer;
-            if (timer != null)
+            LockedAction(() =>
             {
-                timer.Dispose();
-                SaveTimer = null;
-                if (_autoSave)
+                if (SaveTimer != null)
                 {
-                    Save();
+
+                    SaveTimer.Dispose();
+                    SaveTimer = null;
+                    _fileWatcher.Changed -= _fileWatcher_Changed;
+                    _fileWatcher.Renamed -= _fileWatcher_Renamed;
+
+                    if (_autoSave)
+                    {
+                        Save();
+                    }
+
+                    _fileWatcher.Dispose();
                 }
+            });
 
-                _fileWatcher.Changed -= _fileWatcher_Changed;
-                _fileWatcher.Renamed -= _fileWatcher_Renamed;
-                _fileWatcher.Dispose();
-            }
-
+       
             base.DisposeImpl();
         }
 
@@ -126,7 +131,8 @@ namespace GitCommands.Settings
 
                 LastFileModificationDate = GetLastFileModificationUTC();
                 LastFileRead = DateTime.UtcNow;
-                _fileWatcher.EnableRaisingEvents = true;
+                if (SaveTimer != null)
+                    _fileWatcher.EnableRaisingEvents = true;
             }
 
             catch (IOException e)
