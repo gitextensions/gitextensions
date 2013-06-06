@@ -117,7 +117,7 @@ namespace GitCommands.GitExtLinks
                     links.Add(ParsePart(head.LocalName, revision));
 
             if (SearchInParts.Contains(RevisionPart.Message))
-                links.Add(ParsePart(revision.Message, revision));
+                links.Add(ParsePart(revision.Body, revision));
 
             return links.Unwrap();
         }
