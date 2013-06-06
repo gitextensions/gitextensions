@@ -151,6 +151,7 @@ namespace GitUI.CommitInfo
             {
                 data = CommitData.CreateFromRevision(_revision);
                 CommitData.UpdateCommitMessage(data, Module, _revisionGuid, ref error);
+                _revision.Body = data.Body;
                 ThreadPool.QueueUserWorkItem(_ => loadLinksForRevision(_revision));
             }
             else
