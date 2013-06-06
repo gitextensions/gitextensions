@@ -492,7 +492,7 @@ namespace GitUI.CommandsDialogs
 
         private string CalculateLocalBranch()
         {
-            if (_branch.Equals(GitModule.DetachedBranch, StringComparison.Ordinal) || string.IsNullOrEmpty(Branches.Text))
+            if (Module.IsDetachedHead(_branch) || string.IsNullOrEmpty(Branches.Text))
                 _branch = null;
             return _branch;
         }
