@@ -2600,7 +2600,7 @@ namespace GitCommands
 
         public bool IsDetachedHead(string branch)
         {
-            return DetachedPrefixes.Any(a => branch.StartsWith(branch, StringComparison.Ordinal));
+            return DetachedPrefixes.Any(a => branch.StartsWith(a, StringComparison.Ordinal));
         }
 
         public string GetCurrentRemote()
