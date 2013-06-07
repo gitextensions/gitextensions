@@ -16,6 +16,7 @@ namespace GitExtensionsTest.Patches
     {
         private const string BigPatchFile = @"GitCommands/Patch/testdata/big.patch";
         private const string BigBinPatchFile = @"GitCommands/Patch/testdata/bigBin.patch";
+        private const string RebaseDiffFile = @"GitCommands/Patch/testdata/rebase.diff";
 
         [TestMethod]
         public void TestPatchManagerInstanceNotNull()
@@ -140,6 +141,17 @@ namespace GitExtensionsTest.Patches
 
             manager.LoadPatch(testSmallPatch.PatchOutput.ToString(), false, Encoding.UTF8);
             Assert.AreEqual(1, manager.Patches.Count(p => p.Type == Patch.PatchType.ChangeFile));
+        }
+
+        [TestMethod]
+        public void TestCorrectlyLoadsRebaseDiff()
+        {
+            PatchManager manager = NewManager();
+            var testPatch = GitModule.LosslessEncoding.GetString(LoadTestPatchDataBytes(RebaseDiffFile));
+            manager.LoadPatch(testPatch, false, Encoding.UTF8);
+
+            Assert.AreEqual(13, manager.Patches.Count);
+            Assert.AreEqual(3, manager.Patches.Count(p => p.CombinedDiff));
         }
 
         private static PatchManager NewManager()
