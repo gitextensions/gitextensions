@@ -234,6 +234,8 @@ namespace GitCommands
 
         public static readonly string DetachedBranch = "(no branch)";
 
+        private static readonly string[] DetachedPrefixes = { "(no branch", "(detached from " };
+        
         public AppSettings.PullAction LastPullAction
         {
             get { return AppSettings.GetEnum("LastPullAction_" + WorkingDir, AppSettings.PullAction.None); }
@@ -2562,7 +2564,12 @@ namespace GitCommands
 
         public bool IsDetachedHead()
         {
-            return GetSelectedBranch().Equals(DetachedBranch, StringComparison.Ordinal);
+            return IsDetachedHead(GetSelectedBranch());
+        }
+
+        public bool IsDetachedHead(string branch)
+        {
+            return DetachedPrefixes.Any(a => branch.StartsWith(a, StringComparison.Ordinal));
         }
 
         public string GetCurrentRemote()
