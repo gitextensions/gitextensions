@@ -142,27 +142,5 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             combo.Items.AddRange(AppSettings.AvailableEncodings.Values.ToArray());
             combo.DisplayMember = "EncodingName";
         }
-
-        public static void SetCheckboxFromString(CheckBox checkBox, string str)
-        {
-            str = str.Trim().ToLower();
-
-            switch (str)
-            {
-                case "true":
-                    {
-                        checkBox.CheckState = CheckState.Checked;
-                        return;
-                    }
-                case "false":
-                    {
-                        checkBox.CheckState = CheckState.Unchecked;
-                        return;
-                    }
-                default:
-                    checkBox.CheckState = CheckState.Indeterminate;
-                    return;
-            }
-        }
     }
 }
