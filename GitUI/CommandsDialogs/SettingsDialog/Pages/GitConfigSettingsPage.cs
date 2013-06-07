@@ -90,7 +90,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             DifftoolPath.Text = CurrentSettings.GetValue(string.Format("difftool.{0}.path", GlobalDiffTool.Text));
             DifftoolCmd.Text = CurrentSettings.GetValue(string.Format("difftool.{0}.cmd", GlobalDiffTool.Text));
 
-            CommonLogic.SetCheckboxFromString(GlobalKeepMergeBackup, CurrentSettings.GetValue("mergetool.keepBackup"));
+            GlobalKeepMergeBackup.SetNullableChecked(CurrentSettings.mergetool.keepBackup.Value);
 
             globalAutoCrlfFalse.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.False;
             globalAutoCrlfInput.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.Input;
@@ -122,10 +122,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 CurrentSettings.SetPathValue(string.Format("mergetool.{0}.path", GlobalMergeTool.Text), MergetoolPath.Text);
                 CurrentSettings.SetPathValue(string.Format("mergetool.{0}.cmd", GlobalMergeTool.Text), MergeToolCmd.Text);
 
-                if (GlobalKeepMergeBackup.CheckState == CheckState.Checked)
-                    CurrentSettings.SetValue("mergetool.keepBackup", "true");
-                else if (GlobalKeepMergeBackup.CheckState == CheckState.Unchecked)
-                    CurrentSettings.SetValue("mergetool.keepBackup", "false");
+                CurrentSettings.mergetool.keepBackup.Value = GlobalKeepMergeBackup.GetNullableChecked();
 
                 if (globalAutoCrlfFalse.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.False;
                 if (globalAutoCrlfInput.Checked) CurrentSettings.core.autocrlf.Value = AutoCRLFType.Input;
