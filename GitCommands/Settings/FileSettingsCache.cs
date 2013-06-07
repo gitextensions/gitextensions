@@ -85,7 +85,7 @@ namespace GitCommands.Settings
             if (_fileWatcher.EnableRaisingEvents)
                 LastFileModificationDate = GetLastFileModificationUTC();
             else
-                LastModificationDate = DateTime.MaxValue;
+                LastFileModificationDate = DateTime.MaxValue;
         }
 
         private DateTime GetLastFileModificationUTC()
