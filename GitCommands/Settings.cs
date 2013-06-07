@@ -874,6 +874,12 @@ namespace GitCommands
             set { SetBool("NoFastForwardMerge", value); }
         }
 
+        public static bool DontCommitMerge
+        {
+            get { return GetBool("DontCommitMerge", false); }
+            set { SetBool("DontCommitMerge", value); }
+        }
+
         public static int CommitValidationMaxCntCharsFirstLine
         {
             get { return GetInt("CommitValidationMaxCntCharsFirstLine", 0); }
