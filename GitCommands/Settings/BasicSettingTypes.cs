@@ -31,8 +31,8 @@ namespace GitCommands.Settings
 
     public class BoolNullableSetting : Setting<bool?>
     {
-        public BoolNullableSetting(string aName, ISettingsSource settingsSource)
-            : base(aName, settingsSource, null)
+        public BoolNullableSetting(string aName, ISettingsSource settingsSource, bool aDefaultValue)
+            : base(aName, settingsSource, aDefaultValue)
         { }
 
         public override bool? Value
@@ -47,6 +47,18 @@ namespace GitCommands.Settings
                 SettingsSource.SetBool(Name, value);
             }
         }
+
+        public bool ValueOrDefault
+        {
+            get
+            {
+                if (Value.HasValue)
+                    return Value.Value;
+
+                return DefaultValue.Value;                
+            }
+        }
+
     }
 
     public class BoolSetting : Setting<bool>
