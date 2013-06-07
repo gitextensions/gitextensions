@@ -572,7 +572,7 @@ namespace GitCommands
                 srecursiveSubmodules = "--recurse-submodules=on-demand ";
 
             var sprogressOption = "";
-            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+            if (VersionInUse.PushCanAskForProgress)
                 sprogressOption = "--progress ";
 
             var options = String.Concat(sforce, strack, srecursiveSubmodules, sprogressOption);
@@ -590,13 +590,12 @@ namespace GitCommands
             path = FixPath(path);
 
             var sprogressOption = "";
-            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+            if (VersionInUse.PushCanAskForProgress)
                 sprogressOption = "--progress ";
 
-            string cmd = string.Format("push {0} \"{1}\"", sprogressOption, path.Trim());
+            string cmd = string.Format("push {0} \"{1}\" ", sprogressOption, path.Trim());
 
-            foreach (GitPushAction action in pushActions)
-                cmd += " " + action.Format();
+            cmd += string.Join(" ", pushActions.Select(action => action.Format()));
 
             return cmd;
         }
@@ -617,7 +616,7 @@ namespace GitCommands
                 sforce = "-f ";
 
             var sprogressOption = "";
-            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+            if (VersionInUse.PushCanAskForProgress)
                 sprogressOption = "--progress ";
 
             var options = String.Concat(sforce, sprogressOption);
