@@ -432,8 +432,7 @@
             // 
             // RevisionLinksSettingsPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.splitContainer1);
             this.Name = "RevisionLinksSettingsPage";
             this.Size = new System.Drawing.Size(1125, 540);
