@@ -8,17 +8,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public class SettingsPageWithHeader : SettingsPageBase, IGlobalSettingsPage
     {
-        public SettingsPageWithHeader()
-        {
-            header = new SettingsPageHeader(this);
-        }
-
         private SettingsPageHeader header;
 
         public override Control GuiControl
         {
             get
             {
+                if (header == null)
+                {
+                    header = new SettingsPageHeader(this);
+                }
+
                 return header;
             }
         }
