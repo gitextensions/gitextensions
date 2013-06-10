@@ -711,7 +711,7 @@
     <Binary Id="KDiff" SourceFile="..\Bin\KDiff3-32bit-Setup_0.9.97.exe"/>
     <CustomAction Id="KDiff" Impersonate="no" BinaryKey="KDiff" Execute="deferred" ExeCommand="" Return="ignore"/>
 
-    <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.8.1.2-preview20130201.exe"/>
+    <Binary Id="MsysGit" SourceFile="..\Bin\Git-1.8.3-preview20130601.exe"/>
     <CustomAction Id="MsysGit" Impersonate="no" BinaryKey="MsysGit" Execute="deferred" ExeCommand="" Return="ignore"/>
 
     <InstallExecuteSequence>

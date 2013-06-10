@@ -30,7 +30,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _branchesLoader = new AsyncLoader();
             LoadTagsAsync();
             LoadBranchesAsync();
-            SetCommitExpressionFromClipboard();
+            if (aCommands != null)
+                SetCommitExpressionFromClipboard();
         }
 
         /// <summary>
