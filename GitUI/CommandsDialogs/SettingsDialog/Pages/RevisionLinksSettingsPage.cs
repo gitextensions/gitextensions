@@ -81,7 +81,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 LocalBranchChx.Checked = false;
                 RemoteBranchChx.Checked = false;
                 _NO_TRANSLATE_SearchPatternEdit.Text = string.Empty;
-                nestedPatternLab.Text = string.Empty;
+                _NO_TRANSLATE_NestedPatternEdit.Text = string.Empty;
                 LinksGrid.DataSource = null;
             }
             else
