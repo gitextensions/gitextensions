@@ -484,8 +484,15 @@ namespace GitUI
                 FileStatusListView.Groups.Clear();
                 FileStatusListView.Items.Clear();
                 _itemsDictionary = new Dictionary<string, IList<GitItemStatus>>();
-                if (value == null)
+                if (value == null || value.Count == 0)
+                {
+                    if (!empty)
+                    {
+                        //bug in the ListView control where supplying an empty list will not trigger a SelectedIndexChanged event, so we force it to trigger
+                        FileStatusListView_SelectedIndexChanged(this, EventArgs.Empty);
+                    }
                     return;
+                }
                 FileStatusListView.BeginUpdate();
                 var list = new List<ListViewItem>();
                 foreach (var pair in value)
@@ -529,11 +536,6 @@ namespace GitUI
                 if (FileStatusListView.Items.Count > 0)
                 {
                     SelectFirstVisibleItem();
-                }
-                else if (FileStatusListView.Items.Count == 0 && !empty)
-                {
-                    //bug in the ListView control where supplying an empty list will not trigger a SelectedIndexChanged event, so we force it to trigger
-                    FileStatusListView_SelectedIndexChanged(this, EventArgs.Empty);
                 }
             }
         }
