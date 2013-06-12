@@ -1,0 +1,3 @@
+[Version "2.44"]
+    DownloadPage = http://sourceforge.net/projects/gitextensions/files/Git%20Extensions/Version%202.44/GitExtensions244SetupComplete.msi/download
+    ReleaseType = major
