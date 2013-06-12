@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -64,6 +65,11 @@ namespace GitCommands.Config
                 return;
 
             FindSections(File.ReadLines(_fileName, GetEncoding()));
+        }
+
+        public void LoadFromString(string str)
+        {
+            FindSections(str.Split('\n'));
         }
 
         private void FindSections(IEnumerable<string> fileLines)
@@ -132,6 +138,11 @@ namespace GitCommands.Config
             {
                 ExceptionUtils.ShowException(ex, false);
             }
+        }
+
+        public IEnumerable<ConfigSection> GetConfigSections(string sectionName)
+        {
+            return _sections.Where(section => section.SectionName.Equals(sectionName, StringComparison.OrdinalIgnoreCase));
         }
 
         private void SetStringValue(string setting, string value)
