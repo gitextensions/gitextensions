@@ -29,11 +29,12 @@ namespace GitCommands
         public static readonly int GitExtensionsVersionInt;
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
+        public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
 
         private static readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
         static Settings()
         {
-            Version version = Assembly.GetCallingAssembly().GetName().Version;
+            Version version = AppVersion;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
             GitExtensionsVersionInt = version.Major * 100 + version.Minor;
             if (version.Build > 0)

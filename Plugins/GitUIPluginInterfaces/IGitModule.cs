@@ -21,7 +21,7 @@ namespace GitUIPluginInterfaces
 
         string GitCommand { get; }
 
-        string GitVersion { get; }
+        Version AppVersion { get; }
 
         string GravatarCacheDir { get; }
 

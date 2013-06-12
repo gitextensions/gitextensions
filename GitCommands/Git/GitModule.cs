@@ -3411,11 +3411,11 @@ namespace GitCommands
             }
         }
 
-        public string GitVersion
+        public Version AppVersion
         {
             get
             {
-                return Settings.GitExtensionsVersionInt.ToString();
+                return Settings.AppVersion;
             }
         }
 

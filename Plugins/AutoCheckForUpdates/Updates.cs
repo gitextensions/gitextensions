@@ -1,23 +1,26 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using GitCommands.Config;
 
 namespace AutoCheckForUpdates
 {
     public partial class Updates : Form
     {
         public bool AutoClose;
-        public string CurrentVersion;
+        public Version CurrentVersion;
         public bool UpdateFound;
         public string UpdateUrl;
         private const string FilesUrl = "gitextensions.googlecode.com/files/GitExtensions";
         private readonly SynchronizationContext syncContext;
 
-        public Updates(string currentVersion)
+        public Updates(Version currentVersion)
         {
             syncContext = SynchronizationContext.Current;
             InitializeComponent();
@@ -53,7 +56,7 @@ namespace AutoCheckForUpdates
             webClient.Encoding = Encoding.UTF8;
             webClient.DownloadProgressChanged += webClient_DownloadProgressChanged;
             webClient.DownloadStringCompleted += webClient_DownloadStringCompleted;
-            webClient.DownloadStringAsync(new Uri(@"http://code.google.com/p/gitextensions/"));
+            webClient.DownloadStringAsync(new Uri(@"https://raw.github.com/gitextensions/gitextensions/configdata/GitExtensions.releases"));
         }
 
         void webClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
@@ -73,22 +76,17 @@ namespace AutoCheckForUpdates
                 if (e.Error == null)
                 {
                     string response = e.Result;
-                    // search for string like "http://gitextensions.googlecode.com/files/GitExtensions170SetupComplete.msi"
-                    var regEx = new Regex(FilesUrl + @"\d{3,6}SetupComplete.msi");
+                    var versions = ReleaseVersion.Parse(response);
+                    var updates = versions.Where(version => version.Version.CompareTo(CurrentVersion) > 0);
 
-                    var matches = regEx.Matches(response);
-
-                    foreach (Match match in matches)
+                    var update = updates.OrderBy(version => version.Version).LastOrDefault();
+                    if (update != null)
                     {
-                        if (match.Value.Equals(FilesUrl + CurrentVersion + "SetupComplete.msi"))
-                            continue;
-
                         UpdateFound = true;
-                        UpdateUrl = "http://" + match.Value;
+                        UpdateUrl = update.DownloadPage;
                         Done();
                         return;
                     }
-
                 }
                 UpdateUrl = "";
                 UpdateFound = false;
@@ -135,4 +133,44 @@ namespace AutoCheckForUpdates
             Process.Start("https://github.com/gitextensions/gitextensions/blob/master/GitUI/Resources/ChangeLog.md");
         }
     }
+
+    public class ReleaseVersion
+    {
+        public Version Version;
+        public string ReleaseType;
+        public string DownloadPage;
+
+        public static ReleaseVersion FromSection(ConfigSection section)
+        {
+            Version ver;
+            try
+            {
+                ver = new Version(section.SubSection);
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e);
+                return null;
+            }
+
+            return new ReleaseVersion()
+            {
+                Version = ver,
+                ReleaseType = section.GetValue("ReleaseType"),
+                DownloadPage = section.GetValue("DownloadPage")
+            };
+
+        }
+
+        public static IEnumerable<ReleaseVersion> Parse(string versionsStr)
+        {
+            ConfigFile cfg = new ConfigFile("", true);
+            cfg.LoadFromString(versionsStr);
+            var sections = cfg.GetConfigSections("Version");
+
+            return sections.Select(section => ReleaseVersion.FromSection(section)).Where(version => version != null);
+        }
+
+    }
+
 }
