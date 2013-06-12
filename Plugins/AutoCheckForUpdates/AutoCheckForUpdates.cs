@@ -42,7 +42,7 @@ namespace AutoCheckForUpdates
 
         public override bool Execute(GitUIBaseEventArgs e)
         {
-            using (var updateForm = new Updates(e.GitModule.GitVersion) { AutoClose = false })
+            using (var updateForm = new Updates(e.GitModule.AppVersion) { AutoClose = false })
                 updateForm.ShowDialog(e.OwnerForm);
             return false;
         }
@@ -76,7 +76,7 @@ namespace AutoCheckForUpdates
                                     DateTime.Now.ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
             }
 
-            using (var updateForm = new Updates(e.GitModule.GitVersion) { AutoClose = true })
+            using (var updateForm = new Updates(e.GitModule.AppVersion) { AutoClose = true })
                 updateForm.ShowDialog();
         }
     }
