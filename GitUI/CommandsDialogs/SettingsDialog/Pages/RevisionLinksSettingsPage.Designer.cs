@@ -45,16 +45,16 @@
             this._NO_TRANSLATE_NestedPatternEdit = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.EnabledChx = new System.Windows.Forms.CheckBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_Name = new System.Windows.Forms.TextBox();
             this.nestedPatternLab = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.MessageChx = new System.Windows.Forms.CheckBox();
             this.LocalBranchChx = new System.Windows.Forms.CheckBox();
             this.RemoteBranchChx = new System.Windows.Forms.CheckBox();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this._NO_TRANSLATE_Name = new System.Windows.Forms.TextBox();
+            this.EnabledChx = new System.Windows.Forms.CheckBox();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -65,8 +65,8 @@
             this.panel1.SuspendLayout();
             this.detailPanel.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -88,7 +88,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.LinksGrid);
             this.splitContainer1.Panel2.Controls.Add(this.panel1);
             this.splitContainer1.Panel2.Controls.Add(this.detailPanel);
-            this.splitContainer1.Size = new System.Drawing.Size(1125, 540);
+            this.splitContainer1.Size = new System.Drawing.Size(1125, 548);
             this.splitContainer1.SplitterDistance = 192;
             this.splitContainer1.TabIndex = 2;
             // 
@@ -101,7 +101,7 @@
             this.tableLayoutPanel1.Controls.Add(this.Remove, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.Add, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 511);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 519);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -147,7 +147,7 @@
             this._NO_TRANSLATE_Categories.Location = new System.Drawing.Point(0, 22);
             this._NO_TRANSLATE_Categories.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this._NO_TRANSLATE_Categories.Name = "_NO_TRANSLATE_Categories";
-            this._NO_TRANSLATE_Categories.Size = new System.Drawing.Size(192, 518);
+            this._NO_TRANSLATE_Categories.Size = new System.Drawing.Size(192, 526);
             this._NO_TRANSLATE_Categories.TabIndex = 1;
             this._NO_TRANSLATE_Categories.SelectedIndexChanged += new System.EventHandler(this._NO_TRANSLATE_Categories_SelectedIndexChanged);
             // 
@@ -169,14 +169,14 @@
             this.CaptionCol,
             this.URICol});
             this.LinksGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LinksGrid.Location = new System.Drawing.Point(0, 160);
+            this.LinksGrid.Location = new System.Drawing.Point(0, 134);
             this.LinksGrid.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.LinksGrid.MultiSelect = false;
             this.LinksGrid.Name = "LinksGrid";
             this.LinksGrid.RowHeadersVisible = false;
             this.LinksGrid.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.LinksGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.LinksGrid.Size = new System.Drawing.Size(929, 380);
+            this.LinksGrid.Size = new System.Drawing.Size(929, 414);
             this.LinksGrid.TabIndex = 8;
             // 
             // CaptionCol
@@ -199,7 +199,7 @@
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panel1.Controls.Add(this.label6);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 145);
+            this.panel1.Location = new System.Drawing.Point(0, 119);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(0, 0, 0, 3);
             this.panel1.Size = new System.Drawing.Size(929, 15);
@@ -226,7 +226,7 @@
             this.detailPanel.Location = new System.Drawing.Point(0, 0);
             this.detailPanel.Name = "detailPanel";
             this.detailPanel.Padding = new System.Windows.Forms.Padding(0, 3, 0, 6);
-            this.detailPanel.Size = new System.Drawing.Size(929, 145);
+            this.detailPanel.Size = new System.Drawing.Size(929, 119);
             this.detailPanel.TabIndex = 6;
             // 
             // tableLayoutPanel3
@@ -240,29 +240,28 @@
             this.tableLayoutPanel3.Controls.Add(this._NO_TRANSLATE_NestedPatternEdit, 1, 4);
             this.tableLayoutPanel3.Controls.Add(this.label4, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel2, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.label3, 0, 2);
             this.tableLayoutPanel3.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this._NO_TRANSLATE_Name, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.nestedPatternLab, 0, 4);
             this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel1, 1, 2);
+            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel2, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 5;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 0F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(929, 136);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(929, 110);
             this.tableLayoutPanel3.TabIndex = 14;
             // 
             // _NO_TRANSLATE_SearchPatternEdit
             // 
             this._NO_TRANSLATE_SearchPatternEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_SearchPatternEdit.Location = new System.Drawing.Point(86, 85);
+            this._NO_TRANSLATE_SearchPatternEdit.Location = new System.Drawing.Point(86, 59);
             this._NO_TRANSLATE_SearchPatternEdit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this._NO_TRANSLATE_SearchPatternEdit.Name = "_NO_TRANSLATE_SearchPatternEdit";
             this._NO_TRANSLATE_SearchPatternEdit.Size = new System.Drawing.Size(841, 21);
@@ -273,7 +272,7 @@
             // 
             this._NO_TRANSLATE_NestedPatternEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_NestedPatternEdit.Location = new System.Drawing.Point(86, 112);
+            this._NO_TRANSLATE_NestedPatternEdit.Location = new System.Drawing.Point(86, 86);
             this._NO_TRANSLATE_NestedPatternEdit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this._NO_TRANSLATE_NestedPatternEdit.Name = "_NO_TRANSLATE_NestedPatternEdit";
             this._NO_TRANSLATE_NestedPatternEdit.Size = new System.Drawing.Size(841, 21);
@@ -285,7 +284,7 @@
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label4.AutoSize = true;
             this.label4.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label4.Location = new System.Drawing.Point(2, 89);
+            this.label4.Location = new System.Drawing.Point(2, 63);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(79, 13);
@@ -300,43 +299,19 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.EnabledChx, 2, 0);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(87, 30);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(21, 20);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(0, 0);
             this.tableLayoutPanel2.TabIndex = 18;
-            // 
-            // EnabledChx
-            // 
-            this.EnabledChx.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.EnabledChx.AutoSize = true;
-            this.EnabledChx.Location = new System.Drawing.Point(3, 3);
-            this.EnabledChx.Name = "EnabledChx";
-            this.EnabledChx.Size = new System.Drawing.Size(15, 14);
-            this.EnabledChx.TabIndex = 21;
-            this.EnabledChx.UseVisualStyleBackColor = true;
-            this.EnabledChx.CheckedChanged += new System.EventHandler(this.EnabledChx_CheckedChanged);
-            // 
-            // label2
-            // 
-            this.label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label2.AutoSize = true;
-            this.label2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label2.Location = new System.Drawing.Point(2, 33);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(45, 13);
-            this.label2.TabIndex = 17;
-            this.label2.Text = "Enabled";
             // 
             // label3
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label3.AutoSize = true;
             this.label3.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label3.Location = new System.Drawing.Point(2, 61);
+            this.label3.Location = new System.Drawing.Point(2, 35);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(51, 13);
@@ -355,23 +330,12 @@
             this.label1.TabIndex = 7;
             this.label1.Text = "Name";
             // 
-            // _NO_TRANSLATE_Name
-            // 
-            this._NO_TRANSLATE_Name.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this._NO_TRANSLATE_Name.Location = new System.Drawing.Point(86, 3);
-            this._NO_TRANSLATE_Name.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this._NO_TRANSLATE_Name.Name = "_NO_TRANSLATE_Name";
-            this._NO_TRANSLATE_Name.Size = new System.Drawing.Size(841, 21);
-            this._NO_TRANSLATE_Name.TabIndex = 10;
-            this._NO_TRANSLATE_Name.Leave += new System.EventHandler(this._NO_TRANSLATE_Name_Leave);
-            // 
             // nestedPatternLab
             // 
             this.nestedPatternLab.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.nestedPatternLab.AutoSize = true;
             this.nestedPatternLab.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.nestedPatternLab.Location = new System.Drawing.Point(2, 116);
+            this.nestedPatternLab.Location = new System.Drawing.Point(2, 90);
             this.nestedPatternLab.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.nestedPatternLab.Name = "nestedPatternLab";
             this.nestedPatternLab.Size = new System.Drawing.Size(80, 13);
@@ -385,7 +349,7 @@
             this.flowLayoutPanel1.Controls.Add(this.MessageChx);
             this.flowLayoutPanel1.Controls.Add(this.LocalBranchChx);
             this.flowLayoutPanel1.Controls.Add(this.RemoteBranchChx);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(87, 56);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(87, 30);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(271, 23);
             this.flowLayoutPanel1.TabIndex = 23;
@@ -423,6 +387,37 @@
             this.RemoteBranchChx.UseVisualStyleBackColor = true;
             this.RemoteBranchChx.CheckedChanged += new System.EventHandler(this.RemoteBranchChx_CheckedChanged);
             // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.AutoSize = true;
+            this.flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel2.Controls.Add(this._NO_TRANSLATE_Name);
+            this.flowLayoutPanel2.Controls.Add(this.EnabledChx);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(84, 0);
+            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(346, 27);
+            this.flowLayoutPanel2.TabIndex = 24;
+            // 
+            // _NO_TRANSLATE_Name
+            // 
+            this._NO_TRANSLATE_Name.Location = new System.Drawing.Point(2, 3);
+            this._NO_TRANSLATE_Name.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this._NO_TRANSLATE_Name.Name = "_NO_TRANSLATE_Name";
+            this._NO_TRANSLATE_Name.Size = new System.Drawing.Size(272, 21);
+            this._NO_TRANSLATE_Name.TabIndex = 11;
+            // 
+            // EnabledChx
+            // 
+            this.EnabledChx.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.EnabledChx.AutoSize = true;
+            this.EnabledChx.Location = new System.Drawing.Point(279, 5);
+            this.EnabledChx.Name = "EnabledChx";
+            this.EnabledChx.Size = new System.Drawing.Size(64, 17);
+            this.EnabledChx.TabIndex = 22;
+            this.EnabledChx.Text = "Enabled";
+            this.EnabledChx.UseVisualStyleBackColor = true;
+            // 
             // dataGridViewTextBoxColumn1
             // 
             this.dataGridViewTextBoxColumn1.DataPropertyName = "Title";
@@ -435,7 +430,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.splitContainer1);
             this.Name = "RevisionLinksSettingsPage";
-            this.Size = new System.Drawing.Size(1125, 540);
+            this.Size = new System.Drawing.Size(1125, 548);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -451,10 +446,10 @@
             this.detailPanel.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
+            this.flowLayoutPanel2.ResumeLayout(false);
+            this.flowLayoutPanel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -470,13 +465,10 @@
         private System.Windows.Forms.Panel detailPanel;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox _NO_TRANSLATE_Name;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.CheckBox EnabledChx;
         private System.Windows.Forms.Label nestedPatternLab;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_SearchPatternEdit;
         private System.Windows.Forms.TextBox _NO_TRANSLATE_NestedPatternEdit;
@@ -489,5 +481,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CaptionCol;
         private System.Windows.Forms.DataGridViewTextBoxColumn URICol;
         private System.Windows.Forms.DataGridView LinksGrid;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+        private System.Windows.Forms.TextBox _NO_TRANSLATE_Name;
+        private System.Windows.Forms.CheckBox EnabledChx;
     }
 }
