@@ -23,7 +23,7 @@ namespace GitExtensionsTest.Plugins.ReleaseNotesGenerator
             var dataObject = HtmlFragment.CreateHtmlFormatClipboardDataObject("<p>Hallo</p>");
             dataObject.GetFormats().Length.Should().Be(2);
             dataObject.GetText().Should().Be("<p>Hallo</p>");
-            ((string)dataObject.GetData("HTML Format")).Should().BeEquivalentTo(@"Version:0.9
+            ((string)dataObject.GetData("HTML Format")).Should().Be(@"Version:0.9
 StartHTML:00000097
 EndHTML:00000177
 StartFragment:00000131
@@ -34,7 +34,7 @@ EndFragment:00000143
         }
 
         [Test]
-        [Ignore("Modifies clipboard content / Thread need STA mode")]
+        [Explicit("Modifies clipboard content / Thread need STA mode")]
         public void CopyToClipboard()
         {
             HtmlFragment.CopyToClipboard("<p>Hallo</p>");
