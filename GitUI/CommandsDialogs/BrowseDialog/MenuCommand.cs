@@ -51,7 +51,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public bool IsSeparator { get; set; }
 
         /// <summary>
-        /// used only for toolstripitem
+        /// used for ToolStripItem and translation identification
         /// </summary>
         public string Name { get; set; }
 
