@@ -48,6 +48,7 @@
             this.buttonCopyAsHtml = new System.Windows.Forms.Button();
             this.textBoxResult = new System.Windows.Forms.TextBox();
             this.buttonGenerate = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxCopy.SuspendLayout();
@@ -260,12 +261,22 @@
             this.buttonGenerate.UseVisualStyleBackColor = true;
             this.buttonGenerate.Click += new System.EventHandler(this.buttonGenerate_Click);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(389, 9);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(214, 26);
+            this.label7.TabIndex = 8;
+            this.label7.Text = "(Commit expressions can be commit hashes,\r\nbranch names, tag names)";
+            // 
             // ReleaseNotesGeneratorForm
             // 
             this.AcceptButton = this.buttonGenerate;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(614, 432);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label4);
@@ -313,5 +324,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.Button buttonCopyOrigOutput;
         private System.Windows.Forms.Button buttonCopyAsTextTableSpace;
+        private System.Windows.Forms.Label label7;
     }
 }
