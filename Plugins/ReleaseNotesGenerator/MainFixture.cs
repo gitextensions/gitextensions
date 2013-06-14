@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using FluentAssertions;
 
-namespace GitExtensionsTest.GitUI
+namespace GitExtensionsTest.Plugins.ReleaseNotesGenerator
 {
     [TestFixture]
     public class MainFixture
@@ -15,6 +15,22 @@ namespace GitExtensionsTest.GitUI
         public void FormatStringTest()
         {
             HtmlFragment.To8DigitString(15).Should().Be("00000015");
+        }
+
+        [Test]
+        public void CreateHtmlFormatClipboardDataObjectTest()
+        {
+            var dataObject = HtmlFragment.CreateHtmlFormatClipboardDataObject("<p>Hallo</p>");
+            dataObject.GetFormats().Length.Should().Be(2);
+            dataObject.GetText().Should().Be("<p>Hallo</p>");
+            ((string)dataObject.GetData("HTML Format")).Should().BeEquivalentTo(@"Version:0.9
+StartHTML:00000097
+EndHTML:00000177
+StartFragment:00000131
+EndFragment:00000143
+<html><body>
+<!--StartFragment--><p>Hallo</p><!--EndFragment-->
+</body></html>");
         }
 
         [Test]
