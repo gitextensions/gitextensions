@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "GotoCurrentRevision";
                 menuCommand.Text = "Go to current revision"; // TODO: what is the best way to translate this item?
-                //// menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCommit;
+                menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCurrentRevision;
                 menuCommand.ShortcutKeyDisplayString = _formBrowse.GetShortcutKeys(GitUI.CommandsDialogs.FormBrowse.Commands.SelectCurrentRevision).ToShortcutKeyDisplayString();
                 menuCommand.ExecuteAction = SelectCurrentRevisionExecute;
 
