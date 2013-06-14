@@ -20,10 +20,12 @@ namespace GitUI.CommandsDialogs
         RevisionGrid RevisionGrid;
         FormBrowse _formBrowse;
 
+        // must be created only once because of translation
+        IEnumerable<MenuCommand> _navigateMenuCommands;
+
         public FormBrowseMenuCommands(FormBrowse formBrowse, GitUICommands uiCommands, GitModule module, RevisionGrid revisionGrid)
         {
             TranslationCategoryName = "FormBrowse"; // TODO: ok here?
-
             Translate(); // TODO: when should this be called?
 
             _formBrowse = formBrowse;
@@ -57,6 +59,16 @@ namespace GitUI.CommandsDialogs
         }
 
         public IEnumerable<MenuCommand> GetNavigateMenuCommands()
+        {
+            if (_navigateMenuCommands == null)
+            {
+                _navigateMenuCommands = CreateNavigateMenuCommands();
+            }
+
+            return _navigateMenuCommands;
+        }
+
+        private IEnumerable<MenuCommand> CreateNavigateMenuCommands()
         {
             var resultList = new List<MenuCommand>();
 
