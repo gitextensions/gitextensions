@@ -10,7 +10,7 @@ using GitUI.Hotkey;
 
 namespace GitUI.CommandsDialogs
 {
-    class FormBrowseMenuCommands : ITranslate
+    class FormBrowseMenuCommands : MenuCommandsBase
     {
         private readonly TranslationString _noRevisionFoundError =
             new TranslationString("No revision found.");
@@ -22,27 +22,14 @@ namespace GitUI.CommandsDialogs
 
         public FormBrowseMenuCommands(FormBrowse formBrowse, GitUICommands uiCommands, GitModule module, RevisionGrid revisionGrid)
         {
-            Translate();
+            TranslationCategoryName = "FormBrowse"; // TODO: ok here?
+
+            Translate(); // TODO: when should this be called?
 
             _formBrowse = formBrowse;
             UICommands = uiCommands;
             Module = module;
             RevisionGrid = revisionGrid;
-        }
-
-        public void Translate()
-        {
-            Translator.Translate(this, Settings.CurrentTranslation);
-        }
-
-        public virtual void AddTranslationItems(Translation translation)
-        {
-            TranslationUtl.AddTranslationItemsFromFields("FormBrowse", this, translation);
-        }
-
-        public virtual void TranslateItems(Translation translation)
-        {
-            TranslationUtl.TranslateItemsFromFields("FormBrowse", this, translation);
         }
 
         public void SelectCurrentRevisionExecute()
@@ -76,9 +63,12 @@ namespace GitUI.CommandsDialogs
             {
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "GotoCurrentRevision";
-                menuCommand.Text = "Go to current revision"; // TODO: what is the best way to translate this item?
+                menuCommand.Text = "Go to current revision";
                 menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCurrentRevision;
-                menuCommand.ShortcutKeyDisplayString = _formBrowse.GetShortcutKeys(GitUI.CommandsDialogs.FormBrowse.Commands.SelectCurrentRevision).ToShortcutKeyDisplayString();
+                if (_formBrowse != null) // null when TranslationApp is called
+                {
+                    menuCommand.ShortcutKeyDisplayString = _formBrowse.GetShortcutKeys(GitUI.CommandsDialogs.FormBrowse.Commands.SelectCurrentRevision).ToShortcutKeyDisplayString();
+                }
                 menuCommand.ExecuteAction = SelectCurrentRevisionExecute;
 
                 resultList.Add(menuCommand);
@@ -87,7 +77,7 @@ namespace GitUI.CommandsDialogs
             {
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "GotoCommit";
-                menuCommand.Text = "Go to commit..."; // TODO: what is the best way to translate this item?
+                menuCommand.Text = "Go to commit...";
                 menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCommit;
                 menuCommand.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.G)));
@@ -97,6 +87,11 @@ namespace GitUI.CommandsDialogs
             }
 
             return resultList;
+        }
+
+        protected override IEnumerable<MenuCommand> GetMenuCommandsForTanslation()
+        {
+            return GetNavigateMenuCommands();
         }
     }
 }

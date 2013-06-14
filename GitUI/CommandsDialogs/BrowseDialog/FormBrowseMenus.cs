@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿
+using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using ResourceManager.Translation;
 using System;
