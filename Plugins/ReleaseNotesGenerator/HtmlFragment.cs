@@ -13,7 +13,7 @@ namespace ReleaseNotesGenerator
     /// Helper class to decode HTML from the clipboard.
     /// See http://blogs.msdn.com/jmstall/archive/2007/01/21/html-clipboard.aspx for details.
     /// </summary>
-    class HtmlFragment
+    internal class HtmlFragment
     {
         #region Read and decode from clipboard
         /// <summary>
@@ -155,9 +155,9 @@ namespace ReleaseNotesGenerator
         #region Write to Clipboard
         // Helper to convert an integer into an 8 digit string.
         // String must be 8 characters, because it will be used to replace an 8 character string within a larger string.    
-        static string To8DigitString(int x)
+        internal static string To8DigitString(int x)
         {
-            return String.Format("{0,8}", x);
+            return string.Format("{0:00000000}", x);
         }
 
         /// <summary>
@@ -208,14 +208,16 @@ EndFragment:<<<<<<<4
             }
             int startHtml = sb.Length;
 
-            const string pre = @"<html><body><!--StartFragment-->";
+            const string pre = @"<html><body>
+<!--StartFragment-->";
             sb.Append(pre);
             int fragmentStart = sb.Length;
 
             sb.Append(htmlFragment);
             int fragmentEnd = sb.Length;
 
-            const string post = @"<!--EndFragment--></body></html>";
+            const string post = @"<!--EndFragment-->
+</body></html>";
             sb.Append(post);
             int endHtml = sb.Length;
 
@@ -227,9 +229,15 @@ EndFragment:<<<<<<<4
 
 
             // Finally copy to clipboard.
+            // http://stackoverflow.com/questions/13332377/how-to-set-html-text-in-clipboard
             string data = sb.ToString();
             Clipboard.Clear();
-            Clipboard.SetText(data, TextDataFormat.Html);
+            var dataObject = new DataObject();
+            dataObject.SetText(data, TextDataFormat.Html);
+            dataObject.SetText(htmlFragment, TextDataFormat.Text);
+            Clipboard.SetDataObject(dataObject);
+            // now the clipboard can be pasted as text (HTML code) to text editor
+            // or as table to MS Word or LibreOffice Writer
         }
 
         #endregion // Write to Clipboard
