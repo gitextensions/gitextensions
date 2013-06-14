@@ -9,7 +9,7 @@ using FluentAssertions;
 namespace GitExtensionsTest.GitUI
 {
     [TestFixture]
-    public class ReleaseNoteGeneratorPluginFixture
+    public class MainFixture
     {
         [Test]
         public void FormatStringTest()
@@ -22,6 +22,8 @@ namespace GitExtensionsTest.GitUI
         public void CopyToClipboard()
         {
             HtmlFragment.CopyToClipboard("<p>Hallo</p>");
+            // Verify manually that the content can be pasted as text and into MS Word or
+            // LibreOffice Writer. There it should create a formatted table.
         }
     }
 }
