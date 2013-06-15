@@ -47,7 +47,7 @@
             // btnReset
             // 
             this.btnReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnReset.Location = new System.Drawing.Point(272, 66);
+            this.btnReset.Location = new System.Drawing.Point(272, 71);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(81, 25);
             this.btnReset.TabIndex = 1;
@@ -59,7 +59,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(359, 66);
+            this.btnCancel.Location = new System.Drawing.Point(359, 71);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 25);
             this.btnCancel.TabIndex = 2;
@@ -67,12 +67,12 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // cbDeleteNewFiles
+            // cbDeleteNewFilesAndDirectories
             // 
             this.cbDeleteNewFilesAndDirectories.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cbDeleteNewFilesAndDirectories.AutoSize = true;
-            this.cbDeleteNewFilesAndDirectories.Location = new System.Drawing.Point(12, 66);
-            this.cbDeleteNewFilesAndDirectories.Name = "cbDeleteNewFiles";
+            this.cbDeleteNewFilesAndDirectories.Location = new System.Drawing.Point(12, 49);
+            this.cbDeleteNewFilesAndDirectories.Name = "cbDeleteNewFilesAndDirectories";
             this.cbDeleteNewFilesAndDirectories.Size = new System.Drawing.Size(230, 19);
             this.cbDeleteNewFilesAndDirectories.TabIndex = 3;
             this.cbDeleteNewFilesAndDirectories.Text = "Also delete new files and/or directories";
