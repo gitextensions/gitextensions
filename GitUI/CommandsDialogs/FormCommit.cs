@@ -730,11 +730,12 @@ namespace GitUI.CommandsDialogs
 
             ClearDiffViewIfNoFilesLeft();
 
-            if (!Staged.SelectedItems.Any())
+            var item = Staged.SelectedItems.FirstOrDefault();
+            if (item == null)
                 return;
 
             Unstaged.SelectedItem = null;
-            ShowChanges(Staged.SelectedItems.First(), true);
+            ShowChanges(item, true);
         }
 
         private void UnstagedSelectionChanged(object sender, EventArgs e)
@@ -746,11 +747,11 @@ namespace GitUI.CommandsDialogs
 
             Unstaged.ContextMenuStrip = null;
 
-            if (!Unstaged.SelectedItems.Any())
+            var item = Unstaged.SelectedItems.FirstOrDefault();
+            if (item == null)
                 return;
 
             Staged.SelectedItem = null;
-            GitItemStatus item = Unstaged.SelectedItems.First();
             ShowChanges(item, false);
 
             if (!item.IsSubmodule)
