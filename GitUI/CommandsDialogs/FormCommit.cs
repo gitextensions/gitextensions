@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -594,6 +595,10 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void LoadUnstagedOutput(IList<GitItemStatus> allChangedFiles)
         {
+            var lastSelection = new List<GitItemStatus>();
+            if (_currentFilesList != null)
+                lastSelection = _currentSelection;
+
             var unStagedFiles = new List<GitItemStatus>();
             var stagedFiles = new List<GitItemStatus>();
 
@@ -619,14 +624,27 @@ namespace GitUI.CommandsDialogs
 
             var inTheMiddleOfConflictedMerge = Module.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
-            Unstaged.SelectStoredNextIndex(0);
-            if (Unstaged.GitItemStatuses.Any())
+            if (_currentFilesList == null || _currentFilesList.IsEmpty)
             {
-                Staged.SelectStoredNextIndex();
+                Unstaged.SelectStoredNextIndex(0);
+                if (Unstaged.GitItemStatuses.Any())
+                {
+                    Staged.SelectStoredNextIndex();
+                }
+                else
+                {
+                    Staged.SelectStoredNextIndex(0);
+                }
             }
             else
             {
-                Staged.SelectStoredNextIndex(0);
+                var newItems = unStagedFiles;
+                if (_currentFilesList == Staged)
+                    newItems = stagedFiles;
+
+                var names = lastSelection.Select(x => x.Name).ToList();
+                var newSelection = newItems.Where(x => names.Contains(x.Name));
+                _currentFilesList.SelectedItems = newSelection;
             }
 
             if (OnStageAreaLoaded != null)
@@ -710,6 +728,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private List<GitItemStatus> _currentSelection;
         private void ClearDiffViewIfNoFilesLeft()
         {
             llShowPreview.Hide();
@@ -953,7 +972,9 @@ namespace GitUI.CommandsDialogs
                 return;
 
             Staged.ClearSelected();
-            GitItemStatus item = Unstaged.SelectedItem;
+
+            _currentSelection = Unstaged.SelectedItems.ToList();
+            GitItemStatus item = _currentSelection.FirstOrDefault();
             ShowChanges(item, false);
 
             if (!item.IsSubmodule)
@@ -1121,7 +1142,9 @@ namespace GitUI.CommandsDialogs
                 return;
 
             Unstaged.ClearSelected();
-            ShowChanges(Staged.SelectedItems.First(), true);
+            _currentSelection = Staged.SelectedItems.ToList();
+            GitItemStatus item = _currentSelection.FirstOrDefault();
+            ShowChanges(item, true);
         }
 
         private void Staged_Enter(object sender, EventArgs e)
