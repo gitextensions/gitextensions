@@ -9,4 +9,4 @@ It can also be set up as a user feedback system (i.e. feature requests).
 Read the quickstart here: http://www.soygul.com/projects/nbug/
 
 ## CodePlex Home
-Orijinal project source is hosted at CodePlex, where you can find more information about the project: http://nbug.codeplex.com/
+Original project source is hosted at CodePlex, where you can find more information about the project: http://nbug.codeplex.com/
