@@ -277,6 +277,22 @@ namespace GitUI
                 return FileStatusListView.SelectedItems.Cast<ListViewItem>().
                     Select(i => (GitItemStatus)i.Tag);
             }
+            set
+            {
+                ClearSelected();
+                if (value == null)
+                    return;
+
+                foreach (var item in FileStatusListView.Items.Cast<ListViewItem>()
+                    .Where(i => value.Contains((GitItemStatus)i.Tag)))
+                {
+                    item.Selected = true;
+                }
+                var first = FileStatusListView.SelectedItems.Cast<ListViewItem>().FirstOrDefault(x => x.Selected);
+                if (first != null)
+                    first.EnsureVisible();
+                StoreNextIndexToSelect();
+            }
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
