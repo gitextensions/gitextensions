@@ -46,7 +46,7 @@ namespace GitUI.CommandsDialogs
                 if (formGoToCommit.ShowDialog(_formBrowse) != DialogResult.OK)
                     return;
 
-                string revisionGuid = formGoToCommit.GetSelectedRevision();
+                string revisionGuid = formGoToCommit.ValidateAndGetSelectedRevision();
                 if (!string.IsNullOrEmpty(revisionGuid))
                 {
                     RevisionGrid.SetSelectedRevision(new GitRevision(Module, revisionGuid));
@@ -101,7 +101,7 @@ namespace GitUI.CommandsDialogs
             return resultList;
         }
 
-        protected override IEnumerable<MenuCommand> GetMenuCommandsForTanslation()
+        protected override IEnumerable<MenuCommand> GetMenuCommandsForTranslation()
         {
             return GetNavigateMenuCommands();
         }

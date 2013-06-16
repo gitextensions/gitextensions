@@ -32,9 +32,10 @@ namespace GitUI.CommandsDialogs
 
         public FormBrowseMenus(MenuStrip menuStrip)
         {
-            Translate();
-
             _menuStrip = menuStrip;
+
+            CreateAdditionalMainMenuItems();
+            Translate();
         }
 
         public void Translate()
@@ -44,12 +45,12 @@ namespace GitUI.CommandsDialogs
 
         public virtual void AddTranslationItems(Translation translation)
         {
-            TranslationUtl.AddTranslationItemsFromFields("FormBrowse", this, translation);
+            TranslationUtl.AddTranslationItemsFromList("FormBrowse", translation, GetAdditionalMainMenuItemsForTranslation());
         }
 
         public virtual void TranslateItems(Translation translation)
         {
-            TranslationUtl.TranslateItemsFromFields("FormBrowse", this, translation);
+            TranslationUtl.TranslateItemsFromList("FormBrowse", translation, GetAdditionalMainMenuItemsForTranslation());
         }
 
         public void ResetMenuCommandSets()
@@ -106,24 +107,46 @@ namespace GitUI.CommandsDialogs
         {
             RemoveAdditionalMainMenuItems();
 
-            _navigateToolStripMenuItem = new ToolStripMenuItem();
-            _navigateToolStripMenuItem.Name = "navigateToolStripMenuItem";
-            _navigateToolStripMenuItem.Text = "Navigate";
             SetDropDownItems(_navigateToolStripMenuItem, _navigateMenuCommands);
-            _menuStrip.Items.Insert(_menuStrip.Items.IndexOf(insertAfterMenuItem) + 1, _navigateToolStripMenuItem);
-
-            _viewToolStripMenuItem = new ToolStripMenuItem();
-            _viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            _viewToolStripMenuItem.Text = "View";
             SetDropDownItems(_viewToolStripMenuItem, _viewMenuCommands);
+
+            _menuStrip.Items.Insert(_menuStrip.Items.IndexOf(insertAfterMenuItem) + 1, _navigateToolStripMenuItem);
             _menuStrip.Items.Insert(_menuStrip.Items.IndexOf(_navigateToolStripMenuItem) + 1, _viewToolStripMenuItem);
 
             // maybe set check marks on menu items
             OnMenuCommandsPropertyChanged();
         }
 
+        /// <summary>
+        /// call in ctor before translation
+        /// </summary>
+        private void CreateAdditionalMainMenuItems()
+        {
+            if (_navigateToolStripMenuItem == null)
+            {
+                _navigateToolStripMenuItem = new ToolStripMenuItem();
+                _navigateToolStripMenuItem.Name = "navigateToolStripMenuItem";
+                _navigateToolStripMenuItem.Text = "Navigate";
+            }
+
+            if (_viewToolStripMenuItem == null)
+            {
+                _viewToolStripMenuItem = new ToolStripMenuItem();
+                _viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+                _viewToolStripMenuItem.Text = "View";
+            }
+        }
+
+        private IEnumerable<Tuple<string, object>> GetAdditionalMainMenuItemsForTranslation()
+        {
+            var list = new List<ToolStripMenuItem> { _navigateToolStripMenuItem, _viewToolStripMenuItem };
+            return list.Select(menuItem => new Tuple<string, object>(menuItem.Name, menuItem));
+        }
+
         private void SetDropDownItems(ToolStripMenuItem toolStripMenuItemTarget, IEnumerable<MenuCommand> menuCommands)
         {
+            toolStripMenuItemTarget.DropDownItems.Clear();
+
             var toolStripItems = new List<ToolStripItem>();
             foreach (var menuCommand in menuCommands)
             {
