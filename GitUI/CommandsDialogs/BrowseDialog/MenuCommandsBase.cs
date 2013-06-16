@@ -20,21 +20,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public virtual void AddTranslationItems(Translation translation)
         {
             TranslationUtl.AddTranslationItemsFromFields(TranslationCategoryName, this, translation);
-            TranslationUtl.AddTranslationItemsFromList(TranslationCategoryName, translation, GetMenuCommandsForTanslationImpl());
+            TranslationUtl.AddTranslationItemsFromList(TranslationCategoryName, translation, GetMenuCommandsForTranslationImpl());
         }
 
         public virtual void TranslateItems(Translation translation)
         {
             TranslationUtl.TranslateItemsFromFields(TranslationCategoryName, this, translation);
-            TranslationUtl.TranslateItemsFromList(TranslationCategoryName, translation, GetMenuCommandsForTanslationImpl());
+            TranslationUtl.TranslateItemsFromList(TranslationCategoryName, translation, GetMenuCommandsForTranslationImpl());
         }
 
         //override and return all commands created by extending class
-        protected abstract IEnumerable<MenuCommand> GetMenuCommandsForTanslation();
+        protected abstract IEnumerable<MenuCommand> GetMenuCommandsForTranslation();
 
-        private IEnumerable<Tuple<string, object>> GetMenuCommandsForTanslationImpl()
+        private IEnumerable<Tuple<string, object>> GetMenuCommandsForTranslationImpl()
         {
-            return GetMenuCommandsForTanslation().Select(menu => new Tuple<string, object>(menu.Name, menu));
+            return GetMenuCommandsForTranslation().Select(menu => new Tuple<string, object>(menu.Name, menu));
         }
     }
 }
