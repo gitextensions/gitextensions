@@ -321,6 +321,8 @@ namespace GitCommands
 
         public static readonly string DetachedBranch = "(no branch)";
 
+        private static readonly string[] DetachedPrefixes = { "(no branch", "(detached from " };
+
         public Settings.PullAction LastPullAction
         {
             get { return Settings.GetEnum("LastPullAction_" + WorkingDir, Settings.PullAction.None); }
@@ -1631,20 +1633,14 @@ namespace GitCommands
 
         public string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase, bool? fetchTags)
         {
-            var progressOption = "";
+            var pullArgs = "";
             if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
-                progressOption = "--progress ";
-
-            if (rebase && !string.IsNullOrEmpty(remoteBranch))
-            {
-                return "pull --rebase " + progressOption + remote + " " +
-                    GitCommandHelpers.GetFullBranchName(remoteBranch);
-            }
+                pullArgs = "--progress ";
 
             if (rebase)
-                return "pull --rebase " + progressOption + remote;
+                pullArgs = "--rebase".Combine(" ", pullArgs);
 
-            return "pull " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch, fetchTags);
+            return "pull " + pullArgs + GetFetchArgs(remote, remoteBranch, localBranch, fetchTags);
         }
 
         public string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase)
@@ -2660,7 +2656,12 @@ namespace GitCommands
 
         public bool IsDetachedHead()
         {
-            return GetSelectedBranch().Equals(DetachedBranch, StringComparison.Ordinal);
+            return IsDetachedHead(GetSelectedBranch());
+        }
+
+        public bool IsDetachedHead(string branch)
+        {
+            return DetachedPrefixes.Any(a => branch.StartsWith(a, StringComparison.Ordinal));
         }
 
         public string GetCurrentRemote()
