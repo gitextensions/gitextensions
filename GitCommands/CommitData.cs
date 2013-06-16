@@ -149,7 +149,7 @@ namespace GitCommands
                     "log -1 --pretty=\"format:" + ShortLogFormat + "\" {0}", sha1);
             var info =
                 module.RunCmd(
-                    Settings.GitCommand,
+                    AppSettings.GitCommand,
                     arguments,
                     GitModule.LosslessEncoding
                     );
@@ -191,7 +191,7 @@ namespace GitCommands
                     "log -1 --pretty=\"format:"+LogFormat+"\" {0}", sha1);
             var info =
                 module.RunCmd(
-                    Settings.GitCommand,
+                    AppSettings.GitCommand,
                     arguments,
                     GitModule.LosslessEncoding
                     );

@@ -2,7 +2,7 @@
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class GitExtensionsSettingsPage : SettingsPageBase
+    public partial class GitExtensionsSettingsPage : SettingsPageWithHeader
     {
         public GitExtensionsSettingsPage()
         {
@@ -11,52 +11,52 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
-            chkCheckForUncommittedChangesInCheckoutBranch.Checked = Settings.CheckForUncommittedChangesInCheckoutBranch;
-            chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
-            chkPlaySpecialStartupSound.Checked = Settings.PlaySpecialStartupSound;
-            chkWriteCommitMessageInCommitWindow.Checked = Settings.UseFormCommitMessage;
-            chkUsePatienceDiffAlgorithm.Checked = Settings.UsePatienceDiffAlgorithm;
-            RevisionGridQuickSearchTimeout.Value = Settings.RevisionGridQuickSearchTimeout;
-            chkFollowRenamesInFileHistory.Checked = Settings.FollowRenamesInFileHistory;
-            chkShowErrorsWhenStagingFiles.Checked = Settings.ShowErrorsWhenStagingFiles;
-            chkStashUntrackedFiles.Checked = Settings.IncludeUntrackedFilesInAutoStash;
-            chkShowCurrentChangesInRevisionGraph.Checked = Settings.RevisionGraphShowWorkingDirChanges;
-            chkShowStashCountInBrowseWindow.Checked = Settings.ShowStashCount;
-            chkShowGitStatusInToolbar.Checked = Settings.ShowGitStatusInBrowseToolbar;
-            SmtpServer.Text = Settings.SmtpServer;
-            SmtpServerPort.Text = Settings.SmtpPort.ToString();
-            chkUseSSL.Checked = Settings.SmtpUseSsl;
-            _NO_TRANSLATE_MaxCommits.Value = Settings.MaxRevisionGraphCommits;
-            chkCloseProcessDialog.Checked = Settings.CloseProcessDialog;
-            chkShowGitCommandLine.Checked = Settings.ShowGitCommandLine;
-            chkUseFastChecks.Checked = Settings.UseFastChecks;
+            chkCheckForUncommittedChangesInCheckoutBranch.Checked = AppSettings.CheckForUncommittedChangesInCheckoutBranch;
+            chkStartWithRecentWorkingDir.Checked = AppSettings.StartWithRecentWorkingDir;
+            chkPlaySpecialStartupSound.Checked = AppSettings.PlaySpecialStartupSound;
+            chkWriteCommitMessageInCommitWindow.Checked = AppSettings.UseFormCommitMessage;
+            chkUsePatienceDiffAlgorithm.Checked = AppSettings.UsePatienceDiffAlgorithm;
+            RevisionGridQuickSearchTimeout.Value = AppSettings.RevisionGridQuickSearchTimeout;
+            chkFollowRenamesInFileHistory.Checked = AppSettings.FollowRenamesInFileHistory;
+            chkShowErrorsWhenStagingFiles.Checked = AppSettings.ShowErrorsWhenStagingFiles;
+            chkStashUntrackedFiles.Checked = AppSettings.IncludeUntrackedFilesInAutoStash;
+            chkShowCurrentChangesInRevisionGraph.Checked = AppSettings.RevisionGraphShowWorkingDirChanges;
+            chkShowStashCountInBrowseWindow.Checked = AppSettings.ShowStashCount;
+            chkShowGitStatusInToolbar.Checked = AppSettings.ShowGitStatusInBrowseToolbar;
+            SmtpServer.Text = AppSettings.SmtpServer;
+            SmtpServerPort.Text = AppSettings.SmtpPort.ToString();
+            chkUseSSL.Checked = AppSettings.SmtpUseSsl;
+            _NO_TRANSLATE_MaxCommits.Value = AppSettings.MaxRevisionGraphCommits;
+            chkCloseProcessDialog.Checked = AppSettings.CloseProcessDialog;
+            chkShowGitCommandLine.Checked = AppSettings.ShowGitCommandLine;
+            chkUseFastChecks.Checked = AppSettings.UseFastChecks;
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
-            Settings.CheckForUncommittedChangesInCheckoutBranch = chkCheckForUncommittedChangesInCheckoutBranch.Checked;
-            Settings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
-            Settings.PlaySpecialStartupSound = chkPlaySpecialStartupSound.Checked;
-            Settings.UseFormCommitMessage = chkWriteCommitMessageInCommitWindow.Checked;
-            Settings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
-            Settings.ShowErrorsWhenStagingFiles = chkShowErrorsWhenStagingFiles.Checked;
-            Settings.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
-            Settings.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;
-            Settings.ShowGitStatusInBrowseToolbar = chkShowGitStatusInToolbar.Checked;
-            Settings.SmtpServer = SmtpServer.Text;
+            AppSettings.CheckForUncommittedChangesInCheckoutBranch = chkCheckForUncommittedChangesInCheckoutBranch.Checked;
+            AppSettings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
+            AppSettings.PlaySpecialStartupSound = chkPlaySpecialStartupSound.Checked;
+            AppSettings.UseFormCommitMessage = chkWriteCommitMessageInCommitWindow.Checked;
+            AppSettings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
+            AppSettings.ShowErrorsWhenStagingFiles = chkShowErrorsWhenStagingFiles.Checked;
+            AppSettings.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
+            AppSettings.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;
+            AppSettings.ShowGitStatusInBrowseToolbar = chkShowGitStatusInToolbar.Checked;
+            AppSettings.SmtpServer = SmtpServer.Text;
             int port;
             if (int.TryParse(SmtpServerPort.Text, out port))
-                Settings.SmtpPort = port;
-            Settings.SmtpUseSsl = chkUseSSL.Checked;
-            Settings.CloseProcessDialog = chkCloseProcessDialog.Checked;
-            Settings.ShowGitCommandLine = chkShowGitCommandLine.Checked;
-            Settings.UseFastChecks = chkUseFastChecks.Checked;
-            Settings.MaxRevisionGraphCommits = (int)_NO_TRANSLATE_MaxCommits.Value;
-            Settings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
-            Settings.RevisionGraphShowWorkingDirChanges = chkShowCurrentChangesInRevisionGraph.Checked;
-            Settings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
+                AppSettings.SmtpPort = port;
+            AppSettings.SmtpUseSsl = chkUseSSL.Checked;
+            AppSettings.CloseProcessDialog = chkCloseProcessDialog.Checked;
+            AppSettings.ShowGitCommandLine = chkShowGitCommandLine.Checked;
+            AppSettings.UseFastChecks = chkUseFastChecks.Checked;
+            AppSettings.MaxRevisionGraphCommits = (int)_NO_TRANSLATE_MaxCommits.Value;
+            AppSettings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
+            AppSettings.RevisionGraphShowWorkingDirChanges = chkShowCurrentChangesInRevisionGraph.Checked;
+            AppSettings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
         }
 
         private void chkUseSSL_CheckedChanged(object sender, System.EventArgs e)
@@ -72,5 +72,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     SmtpServerPort.Text = "587";
             }
         }
+
+        public static SettingsPageReference GetPageReference()
+        {
+            return new SettingsPageReferenceByType(typeof(GitExtensionsSettingsPage));
+        }        
     }
 }

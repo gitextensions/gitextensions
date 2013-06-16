@@ -46,7 +46,7 @@ namespace Gerrit
             var sshCmd = GitCommandHelpers.GetSsh();
             if (GitCommandHelpers.Plink())
             {
-                sshCmd = Settings.Plink;
+                sshCmd = AppSettings.Plink;
             }
             if (string.IsNullOrEmpty(sshCmd))
             {
@@ -98,7 +98,7 @@ namespace Gerrit
 
             if (GitCommandHelpers.Plink())
             {
-                if (!File.Exists(Settings.Pageant))
+                if (!File.Exists(AppSettings.Pageant))
                     MessageBoxes.PAgentNotFound(owner);
                 else
                     aModule.StartPageantForRemote(remote);

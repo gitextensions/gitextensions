@@ -80,8 +80,8 @@ namespace GitUI.CommandsDialogs
                 _branchListLoader.Cancel();
 
                 var dirTo = _NO_TRANSLATE_To.Text;
-                if (!dirTo.EndsWith(Settings.PathSeparator.ToString()) && !dirTo.EndsWith(Settings.PathSeparatorWrong.ToString()))
-                    dirTo += Settings.PathSeparator.ToString();
+                if (!dirTo.EndsWith(AppSettings.PathSeparator.ToString()) && !dirTo.EndsWith(AppSettings.PathSeparatorWrong.ToString()))
+                    dirTo += AppSettings.PathSeparator.ToString();
 
                 dirTo += _NO_TRANSLATE_NewDirectory.Text;
 
@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
 
                 var cloneCmd = GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
                             CentralRepository.Checked, cbIntializeAllSubmodules.Checked, Branches.Text, null);
-                using (var fromProcess = new FormRemoteProcess(Module, Settings.GitCommand, cloneCmd))
+                using (var fromProcess = new FormRemoteProcess(Module, AppSettings.GitCommand, cloneCmd))
                 {
                     fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
                     fromProcess.ShowDialog(this);

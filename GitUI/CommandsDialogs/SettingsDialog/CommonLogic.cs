@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Config;
+using GitCommands.Settings;
 using Microsoft.Win32;
 using ResourceManager.Translation;
 
@@ -23,11 +23,38 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private readonly TranslationString _selectFile =
             new TranslationString("Select file");
 
-        private readonly GitModule _gitModule;
+        public readonly RepoDistSettingsSet RepoDistSettingsSet;
+        public readonly ConfigFileSettingsSet ConfigFileSettingsSet;
+        public readonly GitModule Module;
 
-        public CommonLogic(GitModule gitModule)
+        public CommonLogic(GitModule aModule)
         {
-            _gitModule = gitModule;
+            Module = aModule;
+
+            if (aModule != null)
+            {
+                var repoDistGlobalSettings = RepoDistSettings.CreateGlobal(false);
+                var repoDistPulledSettings = RepoDistSettings.CreateDistributed(Module, false);
+                var repoDistLocalSettings = RepoDistSettings.CreateLocal(Module, false);
+                var repoDistEffectiveSettings = new RepoDistSettings(
+                    new RepoDistSettings(repoDistGlobalSettings, repoDistPulledSettings.SettingsCache),
+                    repoDistLocalSettings.SettingsCache);
+
+                var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
+                var configFileLocalSettings = ConfigFileSettings.CreateLocal(Module, false);
+                var configFileEffectiveSettings = new ConfigFileSettings(configFileGlobalSettings, configFileLocalSettings.SettingsCache);
+
+                RepoDistSettingsSet = new RepoDistSettingsSet(
+                    repoDistEffectiveSettings,
+                    repoDistLocalSettings,
+                    repoDistPulledSettings,
+                    repoDistGlobalSettings);
+
+                ConfigFileSettingsSet = new ConfigFileSettingsSet(
+                    configFileEffectiveSettings,
+                    configFileLocalSettings,
+                    configFileGlobalSettings);
+            }
         }
 
         public const string GitExtensionsShellEx32Name = "GitExtensionsShellEx32.dll";
@@ -35,12 +62,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public string GetGlobalMergeTool()
         {
-            return _gitModule.GetGlobalSetting("merge.tool");
+            return ConfigFileSettingsSet.GlobalSettings.GetValue("merge.tool");
         }
 
         public void SetGlobalMergeTool(string value)
         {
-            _gitModule.SetGlobalSetting("merge.tool", value);
+            ConfigFileSettingsSet.GlobalSettings.SetValue("merge.tool", value);
         }
 
         public bool IsMergeTool(string toolName)
@@ -70,32 +97,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return value ?? string.Empty;
         }
 
-        public void SetRegistryValue(RegistryKey root, string subkey, string key, string value)
-        {
-            try
-            {
-                value = value.Replace("\\", "\\\\");
-                string reg = "Windows Registry Editor Version 5.00" + Environment.NewLine + Environment.NewLine + "[" + root +
-                             "\\" + subkey + "]" + Environment.NewLine + "\"" + key + "\"=\"" + value + "\"";
-
-                TextWriter tw = new StreamWriter(Path.GetTempPath() + "GitExtensions.reg", false);
-                tw.Write(reg);
-                tw.Close();
-                _gitModule.RunCmd("regedit", "\"" + Path.GetTempPath() + "GitExtensions.reg" + "\"");
-            }
-            catch (UnauthorizedAccessException)
-            {
-                MessageBox.Show(_cantReadRegistry + Environment.NewLine +
-                    String.Format(_AddEntryManually.Text, root, subkey, key, value));
-            }
-        }
-
         public string GetGlobalEditor()
         {
             string editor = Environment.GetEnvironmentVariable("GIT_EDITOR");
             if (!string.IsNullOrEmpty(editor))
                 return editor;
-            editor = _gitModule.GetGlobalPathSetting("core.editor");
+            editor = ConfigFileSettingsSet.GlobalSettings.GetValue("core.editor");
             if (!string.IsNullOrEmpty(editor))
                 return editor;
             editor = Environment.GetEnvironmentVariable("VISUAL");
@@ -132,36 +139,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public void FillEncodings(ComboBox combo)
         {
-            combo.Items.AddRange(Settings.AvailableEncodings.Values.ToArray());
+            combo.Items.AddRange(AppSettings.AvailableEncodings.Values.ToArray());
             combo.DisplayMember = "EncodingName";
-        }
-
-        public static void SetCheckboxFromString(CheckBox checkBox, string str)
-        {
-            str = str.Trim().ToLower();
-
-            switch (str)
-            {
-                case "true":
-                    {
-                        checkBox.CheckState = CheckState.Checked;
-                        return;
-                    }
-                case "false":
-                    {
-                        checkBox.CheckState = CheckState.Unchecked;
-                        return;
-                    }
-                default:
-                    checkBox.CheckState = CheckState.Indeterminate;
-                    return;
-            }
-        }
-
-        public static void SetEncoding(Encoding e, ConfigFile configFile, string name)
-        {
-            string value = e == null ? "" : e.HeaderName;
-            configFile.SetValue(name, value);
         }
     }
 }

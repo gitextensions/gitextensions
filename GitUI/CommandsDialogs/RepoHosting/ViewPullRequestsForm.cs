@@ -270,7 +270,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var localBranchName = string.Format("pr/n{0}_{1}", _currentPullRequestInfo.Id, _currentPullRequestInfo.Owner);
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}", _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, localBranchName);
-            var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
+            var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd);
 
             if (errorOccurred)
                 return;
@@ -315,7 +315,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 }
 
                 var cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
-                var errorOccurred = !FormProcess.ShowDialog(this, Settings.GitCommand, cmd);
+                var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd);
 
                 if (errorOccurred)
                     return;
@@ -323,7 +323,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 UICommands.RepoChangedNotifier.Notify();
 
                 cmd = string.Format("checkout {0}/{1}", remoteName, remoteRef);
-                if (FormProcess.ShowDialog(this, Settings.GitCommand, cmd))
+                if (FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd))
                     UICommands.RepoChangedNotifier.Notify();
             }
             finally

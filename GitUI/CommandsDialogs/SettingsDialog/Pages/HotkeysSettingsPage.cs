@@ -1,6 +1,6 @@
 ﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class HotkeysSettingsPage : SettingsPageBase
+    public partial class HotkeysSettingsPage : SettingsPageWithHeader
     {
         public HotkeysSettingsPage()
         {
@@ -9,12 +9,12 @@
             Translate();
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
             controlHotkeys.ReloadSettings();
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             controlHotkeys.SaveSettings();
         }
