@@ -832,12 +832,6 @@ namespace GitCommands
             set { SetString("ownScripts", value); }
         }
 
-        public static bool PushAllTags
-        {
-            get { return GetBool("pushalltags", false); }
-            set { SetBool("pushalltags", value); }
-        }
-
         public static int RecursiveSubmodules
         {
             get { return GetInt("RecursiveSubmodules", 1); }
@@ -878,6 +872,12 @@ namespace GitCommands
         {
             get { return GetBool("NoFastForwardMerge", false); }
             set { SetBool("NoFastForwardMerge", value); }
+        }
+
+        public static bool DontCommitMerge
+        {
+            get { return GetBool("DontCommitMerge", false); }
+            set { SetBool("DontCommitMerge", value); }
         }
 
         public static int CommitValidationMaxCntCharsFirstLine

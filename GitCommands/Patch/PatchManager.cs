@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -161,7 +162,7 @@ namespace PatchApply
         {
             PatchProcessor patchProcessor = new PatchProcessor(filesContentEncoding);
 
-            _patches = patchProcessor.CreatePatchesFromString(text);
+            _patches = patchProcessor.CreatePatchesFromString(text).ToList();
 
             if (!applyPatch)
                 return;
