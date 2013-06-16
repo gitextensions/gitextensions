@@ -7,11 +7,15 @@ using GitUI.Hotkey;
 using System.Windows.Forms;
 using System.ComponentModel;
 using GitUI.CommandsDialogs.BrowseDialog;
+using ResourceManager.Translation;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
     internal class RevisionGridMenuCommands : MenuCommandsBase, INotifyPropertyChanged
     {
+        private readonly TranslationString _quickSearchQuickHelp =
+            new TranslationString("Start typing in revision grid to start quick search.");
+
         RevisionGrid _revisionGrid;
 
         // must both be created only once
@@ -113,7 +117,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "QuickSearch";
                 menuCommand.Text = "Quick search";
-                menuCommand.ExecuteAction = () => MessageBox.Show("Start typing in revision grid to start quick search.");
+                menuCommand.ExecuteAction = () => MessageBox.Show(_quickSearchQuickHelp.Text);
 
                 resultList.Add(menuCommand);
             }
