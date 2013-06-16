@@ -13,7 +13,7 @@ namespace ReleaseNotesGenerator
     /// Helper class to decode HTML from the clipboard.
     /// See http://blogs.msdn.com/jmstall/archive/2007/01/21/html-clipboard.aspx for details.
     /// </summary>
-    class HtmlFragment
+    internal class HtmlFragment
     {
         #region Read and decode from clipboard
         /// <summary>
@@ -155,9 +155,9 @@ namespace ReleaseNotesGenerator
         #region Write to Clipboard
         // Helper to convert an integer into an 8 digit string.
         // String must be 8 characters, because it will be used to replace an 8 character string within a larger string.    
-        static string To8DigitString(int x)
+        internal static string To8DigitString(int x)
         {
-            return String.Format("{0,8}", x);
+            return string.Format("{0:00000000}", x);
         }
 
         /// <summary>
@@ -178,11 +178,18 @@ namespace ReleaseNotesGenerator
         /// </summary>
         /// <param name="htmlFragment">a html fragment</param>
         /// <param name="title">optional title of the HTML document (can be null)</param>
-        /// <param name="sourceUrl">optional Source URL of the HTML document, for resolving relative links (can be null)</param>
-        public static void CopyToClipboard(string htmlFragment, string title, Uri sourceUrl)
+        /// <param name="sourceUri">optional Source URL of the HTML document, for resolving relative links (can be null)</param>
+        public static void CopyToClipboard(string htmlFragment, string title, Uri sourceUri)
         {
-            if (title == null) title = "From Clipboard";
+            var dataObject = CreateHtmlFormatClipboardDataObject(htmlFragment, title, sourceUri);
+            Clipboard.Clear();
+            Clipboard.SetDataObject(dataObject);
+            // now the clipboard can be pasted as text (HTML code) to text editor
+            // or as table to MS Word or LibreOffice Writer
+        }
 
+        internal static DataObject CreateHtmlFormatClipboardDataObject(string htmlFragment, string title = "From Clipboard", Uri sourceUri = null)
+        {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
             // Builds the CF_HTML header. See format specification here:
@@ -202,20 +209,22 @@ EndFragment:<<<<<<<4
 
             sb.Append(header);
 
-            if (sourceUrl != null)
+            if (sourceUri != null)
             {
-                sb.AppendFormat("SourceURL:{0}", sourceUrl);
+                sb.AppendFormat("SourceURL:{0}", sourceUri);
             }
             int startHtml = sb.Length;
 
-            const string pre = @"<html><body><!--StartFragment-->";
+            const string pre = @"<html><body>
+<!--StartFragment-->";
             sb.Append(pre);
             int fragmentStart = sb.Length;
 
             sb.Append(htmlFragment);
             int fragmentEnd = sb.Length;
 
-            const string post = @"<!--EndFragment--></body></html>";
+            const string post = @"<!--EndFragment-->
+</body></html>";
             sb.Append(post);
             int endHtml = sb.Length;
 
@@ -225,11 +234,14 @@ EndFragment:<<<<<<<4
             sb.Replace("<<<<<<<3", To8DigitString(fragmentStart));
             sb.Replace("<<<<<<<4", To8DigitString(fragmentEnd));
 
-
             // Finally copy to clipboard.
+            // http://stackoverflow.com/questions/13332377/how-to-set-html-text-in-clipboard
             string data = sb.ToString();
-            Clipboard.Clear();
-            Clipboard.SetText(data, TextDataFormat.Html);
+            var dataObject = new DataObject();
+            dataObject.SetText(data, TextDataFormat.Html);
+            dataObject.SetText(htmlFragment, TextDataFormat.Text);
+
+            return dataObject;
         }
 
         #endregion // Write to Clipboard

@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             scriptEnabled.Checked = scriptInfo.Enabled;
             scriptNeedsConfirmation.Checked = scriptInfo.AskConfirmation;
             scriptEvent.SelectedItem = scriptInfo.OnEvent;
-            sbtn_icon.Image = scriptInfo.GetIcon();
+            sbtn_icon.Image = ResizeForSplitButton(scriptInfo.GetIcon());
             IconName = scriptInfo.Icon;
 
             foreach (ToolStripItem item in contextMenuStrip_SplitButton.Items)
@@ -239,12 +239,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             ((ToolStripMenuItem)sender).Font = new Font(((ToolStripMenuItem)sender).Font, FontStyle.Bold);
 
             //set new image on button
-            sbtn_icon.Image = ResizeBitmap((Bitmap)((ToolStripMenuItem)sender).Image, 12, 12);
+            sbtn_icon.Image = ResizeForSplitButton((Bitmap)((ToolStripMenuItem)sender).Image);
 
             IconName = ((ToolStripMenuItem)sender).Text;
 
             //store variables
             ScriptInfoEdit_Validating(sender, new System.ComponentModel.CancelEventArgs());
+        }
+
+        private Bitmap ResizeForSplitButton(Bitmap b)
+        {
+            return ResizeBitmap(b, 12, 12);
         }
 
         public Bitmap ResizeBitmap(Bitmap b, int nWidth, int nHeight)
