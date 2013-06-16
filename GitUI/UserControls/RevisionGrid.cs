@@ -513,7 +513,7 @@ namespace GitUI
             Revisions.Select();
         }
 
-        private void SetSelectedRevision(string revision)
+        public void SetSelectedRevision(string revision)
         {
             if (revision != null)
             {
@@ -851,11 +851,11 @@ namespace GitUI
                 LoadRevisions();
                 SetRevisionsLayout();
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 Error.Visible = true;
                 Error.BringToFront();
-                MessageBox.Show(this, exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw;
             }
         }
 

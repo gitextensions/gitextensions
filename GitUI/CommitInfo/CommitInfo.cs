@@ -138,7 +138,7 @@ namespace GitUI.CommitInfo
             _RevisionHeader.Refresh();
 
             string error = "";
-            CommitData data = null;
+            CommitData data;
             if (_revision != null)
             {
                 data = CommitData.CreateFromRevision(_revision);
@@ -147,7 +147,7 @@ namespace GitUI.CommitInfo
             else
                 data = CommitData.GetCommitData(Module, _revisionGuid, ref error);
             data.ChildrenGuids = _children;
-            CommitInformation commitInformation = CommitInformation.GetCommitInfo(data);
+            CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, CommandClick != null);
 
             _RevisionHeader.SetXHTMLText(commitInformation.Header);
             _RevisionHeader.Height = _RevisionHeader.GetPreferredSize(new System.Drawing.Size(0, 0)).Height;

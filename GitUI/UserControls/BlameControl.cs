@@ -261,15 +261,14 @@ namespace GitUI.Blame
         {
             if (_lastBlameLine.CommitGuid == null)
                 return;
-            var gitRevision = GetRevision(_lastBlameLine.CommitGuid);
             if (_revGrid != null)
             {
                 _clickedBlameLine = _lastBlameLine;
-                _revGrid.SetSelectedRevision(gitRevision);
+                _revGrid.SetSelectedRevision(_lastBlameLine.CommitGuid);
             }
             else
             {
-                using (var frm = new FormCommitDiff(UICommands, gitRevision))
+                using (var frm = new FormCommitDiff(UICommands, _lastBlameLine.CommitGuid))
                     frm.ShowDialog(this);
             }
         }
@@ -323,15 +322,15 @@ namespace GitUI.Blame
             GitBlame blame = Module.Blame(_fileName, commit + "^", originalLine + ",+1", _encoding);
             if (blame.Lines.Count > 0)
             {
-                var gitRevision = GetRevision(blame.Lines[0].CommitGuid);
+                var revision = blame.Lines[0].CommitGuid;
                 if (_revGrid != null)
                 {
                     _clickedBlameLine = blame.Lines[0];
-                    _revGrid.SetSelectedRevision(gitRevision);
+                    _revGrid.SetSelectedRevision(revision);
                 }
                 else
                 {
-                    using (var frm = new FormCommitDiff(UICommands, gitRevision))
+                    using (var frm = new FormCommitDiff(UICommands, revision))
                         frm.ShowDialog(this);
                 }
             }
@@ -342,7 +341,7 @@ namespace GitUI.Blame
             string commit = GetBlameCommit();
             if (commit == null)
                 return;
-            using (var frm = new FormCommitDiff(UICommands, GetRevision(commit)))
+            using (var frm = new FormCommitDiff(UICommands, commit))
                 frm.ShowDialog(this);
         }
     }
