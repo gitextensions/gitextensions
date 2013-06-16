@@ -10,7 +10,7 @@ using GitUI.CommandsDialogs.BrowseDialog;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    internal class RevisionGridMenuCommands : INotifyPropertyChanged
+    internal class RevisionGridMenuCommands : MenuCommandsBase, INotifyPropertyChanged
     {
         RevisionGrid _revisionGrid;
 
@@ -21,21 +21,25 @@ namespace GitUI.UserControls.RevisionGridClasses
         public RevisionGridMenuCommands(RevisionGrid revisionGrid)
         {
             _revisionGrid = revisionGrid;
+            CreateOrUpdateMenuCommands(); // for translation
+            TranslationCategoryName = "RevisionGrid";
+            Translate();
         }
 
         #region BusinessLogic
 
         bool _showRemoteBranches = true;
 
-        public bool ShowRemoteBranches { 
+        public bool ShowRemoteBranches
+        {
             get { return _showRemoteBranches; }
-            set { _showRemoteBranches = value; _revisionGrid.InvalidateRevisions(); OnPropertyChanged(); } 
+            set { _showRemoteBranches = value; _revisionGrid.InvalidateRevisions(); OnPropertyChanged(); }
         }
 
         #endregion
 
         /// <summary>
-        /// ... "update" because the hotkey settings might change
+        /// ... "Update" because the hotkey settings might change
         /// </summary>
         public void CreateOrUpdateMenuCommands()
         {
@@ -87,7 +91,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "GotoChildCommit";
                 menuCommand.Text = "Go to child commit";
-                menuCommand.ShortcutKeyDisplayString = _revisionGrid.GetShortcutKeys(GitUI.RevisionGrid.Commands.GoToChild).ToShortcutKeyDisplayString();
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.GoToChild);
                 menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.GoToChild);
 
                 resultList.Add(menuCommand);
@@ -97,7 +101,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "GotoParentCommit";
                 menuCommand.Text = "Go to parent commit";
-                menuCommand.ShortcutKeyDisplayString = _revisionGrid.GetShortcutKeys(GitUI.RevisionGrid.Commands.GoToParent).ToShortcutKeyDisplayString();
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.GoToParent);
                 menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.GoToParent);
 
                 resultList.Add(menuCommand);
@@ -118,7 +122,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "PrevQuickSearch";
                 menuCommand.Text = "Quick search previous";
-                menuCommand.ShortcutKeyDisplayString = _revisionGrid.GetShortcutKeys(GitUI.RevisionGrid.Commands.PrevQuickSearch).ToShortcutKeyDisplayString();
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.PrevQuickSearch);
                 menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.PrevQuickSearch);
 
                 resultList.Add(menuCommand);
@@ -128,13 +132,28 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "NextQuickSearch";
                 menuCommand.Text = "Quick search next";
-                menuCommand.ShortcutKeyDisplayString = _revisionGrid.GetShortcutKeys(GitUI.RevisionGrid.Commands.NextQuickSearch).ToShortcutKeyDisplayString();
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.NextQuickSearch);
                 menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.NextQuickSearch);
 
                 resultList.Add(menuCommand);
             }
 
             return resultList;
+        }
+
+        /// <summary>
+        /// this is needed because _revsionGrid is null when TranslationApp is called
+        /// </summary>
+        /// <param name="revGridCommands"></param>
+        /// <returns></returns>
+        private string GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands revGridCommands)
+        {
+            if (_revisionGrid == null)
+            {
+                return null;
+            }
+
+            return _revisionGrid.GetShortcutKeys(revGridCommands).ToShortcutKeyDisplayString();
         }
 
         private IEnumerable<MenuCommand> CreateViewMenuCommands()
@@ -193,7 +212,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "ToggleHighlightSelectedBranch";
                 menuCommand.Text = "Highlight selected branch (until refresh)";
-                menuCommand.ShortcutKeyDisplayString = _revisionGrid.GetShortcutKeys(GitUI.RevisionGrid.Commands.ToggleHighlightSelectedBranch).ToShortcutKeyDisplayString();
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.ToggleHighlightSelectedBranch);
                 menuCommand.ExecuteAction = () => _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.ToggleHighlightSelectedBranch);
 
                 resultList.Add(menuCommand);
@@ -218,6 +237,11 @@ namespace GitUI.UserControls.RevisionGridClasses
             {
                 handler(this, new PropertyChangedEventArgs(name));
             }
+        }
+
+        protected override IEnumerable<MenuCommand> GetMenuCommandsForTranslation()
+        {
+            return _navigateMenuCommands.Concat(_viewMenuCommands).Where(mc => !mc.IsSeparator);
         }
     }
 }

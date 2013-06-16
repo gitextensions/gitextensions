@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs
 
         public FormBrowseMenuCommands(FormBrowse formBrowse, GitUICommands uiCommands, GitModule module, RevisionGrid revisionGrid)
         {
-            TranslationCategoryName = "FormBrowse"; // TODO: ok here?
+            TranslationCategoryName = "FormBrowse";
             Translate(); // TODO: when should this be called?
 
             _formBrowse = formBrowse;
