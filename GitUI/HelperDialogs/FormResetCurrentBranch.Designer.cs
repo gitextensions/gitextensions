@@ -109,6 +109,7 @@
             // Cancel
             // 
             this.Cancel.Location = new System.Drawing.Point(399, 373);
+            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(91, 25);
             this.Cancel.TabIndex = 7;
@@ -128,8 +129,10 @@
             // FormResetCurrentBranch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AcceptButton = this.Ok;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(502, 410);
+            this.CancelButton = this.Cancel;
             this.Controls.Add(this.commitSummaryUserControl1);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.Ok);
