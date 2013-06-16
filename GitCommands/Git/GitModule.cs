@@ -62,7 +62,7 @@ namespace GitCommands
             }
         }
 
-        public static Func<GitModule, IDisposable> LibGit2SharpThreadLock = WithThreadLock;
+        public static Func<GitModule, IDisposable> LibGit2SharpThreadLock = WithoutThreadLock;
 
         internal static void EnableThreadLock(GitModule module)
         {
