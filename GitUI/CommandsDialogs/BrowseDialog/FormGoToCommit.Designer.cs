@@ -56,12 +56,12 @@
             this.goButton.UseVisualStyleBackColor = true;
             this.goButton.Click += new System.EventHandler(this.goButton_Click);
             // 
-            // commitExpression
+            // textboxCommitExpression
             // 
             this.textboxCommitExpression.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textboxCommitExpression.Location = new System.Drawing.Point(155, 13);
-            this.textboxCommitExpression.Name = "commitExpression";
+            this.textboxCommitExpression.Name = "textboxCommitExpression";
             this.textboxCommitExpression.Size = new System.Drawing.Size(360, 23);
             this.textboxCommitExpression.TabIndex = 0;
             this.textboxCommitExpression.TextChanged += new System.EventHandler(this.commitExpression_TextChanged);
@@ -181,6 +181,7 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Go to commit";
+            this.Load += new System.EventHandler(this.FormGoToCommit_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
