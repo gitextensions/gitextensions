@@ -2094,6 +2094,10 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
           <Source>Merge</Source>
           <Value>Merge</Value>
         </TranslationItem>
+        <TranslationItem Name="navigateToolStripMenuItem" Property="Text">
+          <Source>Navigate</Source>
+          <Value>Navigieren</Value>
+        </TranslationItem>
         <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Open containing folder(s)</Source>
           <OldSource>Open containing folder</OldSource>
@@ -2315,9 +2319,9 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
           <Source>View stash</Source>
           <Value>Stash anzeigen</Value>
         </TranslationItem>
-        <TranslationItem Name="goToToolStripMenuItem" Property="Text" type="obsolete">
-          <Source>Go to commit...</Source>
-          <Value>Commit suchen...</Value>
+        <TranslationItem Name="viewToolStripMenuItem" Property="Text">
+          <Source>View</Source>
+          <Value>Ansicht</Value>
         </TranslationItem>
         <TranslationItem Name="remotesToolStripMenuItem" Property="Text" type="obsolete">
           <Source>Remotes</Source>
@@ -3469,10 +3473,6 @@ Wählen Sie 'Nein' um alle neuen Dateien beizubehalten.</Value>
         <TranslationItem Name="pushTag" Property="Text">
           <Source>Push tag to '{0}'</Source>
           <Value>Pushen Tag nach {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noTagMassage" Property="Text" type="obsolete">
-          <Source>Please enter a tag message</Source>
-          <Value>Bitte geben Sie eine Tag-Nachricht ein</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7952,18 +7952,6 @@ Details: {1} als {2} erwartet</Value>
           <Source>Orphan</Source>
           <Value>Orphan</Value>
         </TranslationItem>
-        <TranslationItem Name="_branchNameIsEmpty" Property="Text" type="obsolete">
-          <Source>Enter branch name.</Source>
-          <Value>Branchnamen eingeben.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_branchNameIsNotValud" Property="Text" type="obsolete">
-          <Source>“{0}” is not valid branch name.</Source>
-          <Value>'{0}' ist kein gültiger Branchname.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noRevisionSelected" Property="Text" type="obsolete">
-          <Source>Select 1 revision to create the branch on.</Source>
-          <Value>Wählen Sie eine Revision aus worauf der Branch basieren soll.</Value>
-        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="FormRevert">
@@ -8017,10 +8005,6 @@ Details: {1} als {2} erwartet</Value>
         <TranslationItem Name="Commit" Property="Text" type="obsolete">
           <Source>Commit:</Source>
           <Value>Commit:</Value>
-        </TranslationItem>
-        <TranslationItem Name="Date" Property="Text" type="obsolete">
-          <Source>Commit date:</Source>
-          <Value>Commit Datum:</Value>
         </TranslationItem>
         <TranslationItem Name="Message" Property="Text" type="obsolete">
           <Source>Message:</Source>
