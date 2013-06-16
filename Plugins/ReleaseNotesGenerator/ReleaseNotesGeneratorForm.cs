@@ -37,6 +37,13 @@ namespace ReleaseNotesGenerator
             string logArgs = string.Format(textBoxGitLogArguments.Text, textBoxRevFrom.Text, textBoxRevTo.Text);
             string result = _gitUiCommands.GitModule.RunGit("log " + logArgs, out exitCode);
 
+            if (!result.Contains("\r\n"))
+            {
+                // if result does not contain \r\n we have to assume that line separator is only \n
+                // but \r\n is needed for correctly shown in text box
+                result = result.Replace("\n", "\r\n");
+            }
+
             textBoxResult.Text = result;
 
             try
@@ -145,11 +152,11 @@ namespace ReleaseNotesGenerator
         private string CreateHtmlTable(IEnumerable<LogLine> logLines)
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.Append("<table>");
+            stringBuilder.Append("<table>\r\n");
             foreach (var logLine in logLines)
             {
                 string message = string.Join("<br/>", logLine.MessageLines.Select(a => WebUtility.HtmlEncode(a)));
-                stringBuilder.AppendFormat("<tr><td>{0}</td><td>{1}</td></tr>", logLine.Commit, message);
+                stringBuilder.AppendFormat("<tr>\r\n  <td>{0}</td>\r\n  <td>{1}</td>\r\n</tr>\r\n", logLine.Commit, message);
             }
             stringBuilder.Append("</table>");
             return stringBuilder.ToString();
