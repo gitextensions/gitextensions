@@ -4310,14 +4310,6 @@ defaultrebase=0</Value>
           <Source>Go to commit</Source>
           <Value>Zu Commit springen</Value>
         </TranslationItem>
-        <TranslationItem Name="comboBoxBranches" Property="Text">
-          <Source>Loading data...</Source>
-          <Value>Lade Daten...</Value>
-        </TranslationItem>
-        <TranslationItem Name="comboBoxTags" Property="Text">
-          <Source>Loading data...</Source>
-          <Value>Lade Daten...</Value>
-        </TranslationItem>
         <TranslationItem Name="goButton" Property="Text">
           <Source>Go</Source>
           <Value>Los</Value>
@@ -7352,6 +7344,14 @@ können.</Value>
           <Source>Edit .gitignore</Source>
           <Value>.gitignore bearbeiten</Value>
         </TranslationItem>
+        <TranslationItem Name="GotoChildCommit" Property="Text">
+          <Source>Go to child commit</Source>
+          <Value>Gehe zum Kind-Commit</Value>
+        </TranslationItem>
+        <TranslationItem Name="GotoParentCommit" Property="Text">
+          <Source>Go to parent commit</Source>
+          <Value>Gehe zum Eltern-Commit</Value>
+        </TranslationItem>
         <TranslationItem Name="InitRepository" Property="Text">
           <Source>Initialize repository</Source>
           <Value>Repository initialisieren</Value>
@@ -7359,6 +7359,38 @@ können.</Value>
         <TranslationItem Name="Message" Property="HeaderText">
           <Source>Message</Source>
           <Value>Nachricht</Value>
+        </TranslationItem>
+        <TranslationItem Name="NextQuickSearch" Property="Text">
+          <Source>Quick search next</Source>
+          <Value>Schnellsuche nächstes</Value>
+        </TranslationItem>
+        <TranslationItem Name="PrevQuickSearch" Property="Text">
+          <Source>Quick search previous</Source>
+          <Value>Schnellsuche voriges</Value>
+        </TranslationItem>
+        <TranslationItem Name="QuickSearch" Property="Text">
+          <Source>Quick search</Source>
+          <Value>Schnellsuche</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowAllBranches" Property="Text">
+          <Source>Show all branches</Source>
+          <Value>Zeige alle Branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowCurrentBranchOnly" Property="Text">
+          <Source>Show current branch only</Source>
+          <Value>Nur aktuellen Branch anzeigen</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowFilteredBranches" Property="Text">
+          <Source>Show filtered branches</Source>
+          <Value>Zeige gefilterte Branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="ShowRemoteBranches" Property="Text">
+          <Source>Show remote branches</Source>
+          <Value>Zeige Remote Branches</Value>
+        </TranslationItem>
+        <TranslationItem Name="ToggleHighlightSelectedBranch" Property="Text">
+          <Source>Highlight selected branch (until refresh)</Source>
+          <Value>Ausgewählten Branch hervorheben</Value>
         </TranslationItem>
         <TranslationItem Name="_cannotHighlightSelectedBranch" Property="Text" type="unfinished">
           <Source>Cannot highlight selected branch when revision graph is loading.</Source>
@@ -7538,9 +7570,9 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
           <Source>Show revision graph</Source>
           <Value>Zeige Revisionsgraph</Value>
         </TranslationItem>
-        <TranslationItem Name="showTagsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="showTagsToolStripMenuItem" Property="Text">
           <Source>Show tags</Source>
-          <Value />
+          <Value>Zeige Tags</Value>
         </TranslationItem>
         <TranslationItem Name="squashCommitToolStripMenuItem" Property="Text">
           <Source>Squash commit</Source>
@@ -7557,10 +7589,6 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
         <TranslationItem Name="toolStripMenuItemView" Property="Text">
           <Source>View</Source>
           <Value>Anzeigen</Value>
-        </TranslationItem>
-        <TranslationItem Name="ShowRemoteBranches" Property="Text" type="obsolete">
-          <Source>Show remote branches</Source>
-          <Value>Zeige Remote Branches</Value>
         </TranslationItem>
         <TranslationItem Name="_areYouSureYouWantCheckout" Property="Text" type="obsolete">
           <Source>Are you sure to checkout the selected revision?</Source>
