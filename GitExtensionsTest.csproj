@@ -64,6 +64,7 @@
     <Compile Include="GitCommands\Patch\PatchManagerTest.cs" />
     <Compile Include="GitCommands\Patch\PatchTest.cs" />
     <Compile Include="GitUI\GotoUserManualControlFixture.cs" />
+    <Compile Include="Plugins\ReleaseNotesGenerator\MainFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GitCommands\Git\GitBlameTest.cs" />
     <Compile Include="GitCommands\Git\GitBlameHeaderTest.cs" />
@@ -83,6 +84,10 @@
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\ReleaseNotesGenerator\ReleaseNotesGenerator.csproj">
+      <Project>{8b3778f2-6049-4d4c-b94f-d5ff3a5dc7f8}</Project>
+      <Name>ReleaseNotesGenerator</Name>
     </ProjectReference>
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj">
       <Project>{D3440FD7-AFC5-4351-8741-6CDBF15CE944}</Project>
