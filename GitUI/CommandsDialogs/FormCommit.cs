@@ -1012,13 +1012,14 @@ namespace GitUI.CommandsDialogs
         private void StageClick(object sender, EventArgs e)
         {
             Stage(Unstaged.SelectedItems.ToList());
-            Staged.Focus();
+            if (Unstaged.GitItemStatuses.Any())
+                Unstaged.Focus();
         }
 
         private void StageAll()
         {
             Stage(Unstaged.GitItemStatuses);
-            Unstaged.Focus();
+            Staged.Focus();
         }
 
         private void Stage(IList<GitItemStatus> gitItemStatusses)
@@ -1114,7 +1115,8 @@ namespace GitUI.CommandsDialogs
         private void UnstageFilesClick(object sender, EventArgs e)
         {
             Unstage();
-            Unstaged.Focus();
+            if (Staged.GitItemStatuses.Any())
+                Staged.Focus();
         }
 
         private void Unstage()
@@ -1365,7 +1367,7 @@ namespace GitUI.CommandsDialogs
         {
             Module.ResetMixed("HEAD");
             Initialize();
-            Staged.Focus();
+            Unstaged.Focus();
         }
 
         private void FormCommitShown(object sender, EventArgs e)
