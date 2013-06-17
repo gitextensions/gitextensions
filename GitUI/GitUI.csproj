@@ -99,6 +99,10 @@
       <DependentUpon>FormUpdates.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseUtil.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenus.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenuCommands.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
     <Compile Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -877,6 +881,7 @@
     </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\RevisionGridMenuCommands.cs" />
     <Compile Include="UserControls\ToolStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1575,6 +1580,7 @@
     <None Include="Resources\Icons\HelpPullMergeFastForward.png" />
     <None Include="Resources\Icons\HelpCommandMergeFastForward.png" />
     <None Include="Resources\Icons\IconGotoManual.png" />
+    <None Include="Resources\Icons\IconGotoCurrentRevision.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
