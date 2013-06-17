@@ -92,6 +92,7 @@ namespace GitUI.CommandsDialogs
         {
             buttonArchiveRevision.Focus();
             checkBoxPathFilter_CheckedChanged(null, null);
+            checkboxRevisionFilter_CheckedChanged(null, null);
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -172,6 +173,8 @@ namespace GitUI.CommandsDialogs
         private void checkBoxPathFilter_CheckedChanged(object sender, EventArgs e)
         {
             textBoxPaths.Enabled = checkBoxPathFilter.Checked;
+            if (checkBoxPathFilter.Checked)
+                checkboxRevisionFilter.Checked = false;
         }
 
         private void btnDiffChooseRevision_Click(object sender, EventArgs e)
@@ -188,6 +191,11 @@ namespace GitUI.CommandsDialogs
         private void checkboxRevisionFilter_CheckedChanged(object sender, EventArgs e)
         {
             btnDiffChooseRevision.Enabled = checkboxRevisionFilter.Checked;
+            commitSummaryUserControl2.Visible = checkboxRevisionFilter.Checked;
+            lblChooseDiffRevision.Visible = checkboxRevisionFilter.Checked;
+            btnDiffChooseRevision.Visible = checkboxRevisionFilter.Checked;
+            if (checkboxRevisionFilter.Checked)
+                checkBoxPathFilter.Checked = false;
         }
     }
 }
