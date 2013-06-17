@@ -524,6 +524,12 @@ namespace GitCommands
             set { SetInt("commitdialogrightsplitter", value); }
         }
 
+        public static string DefaultCloneDestinationPath
+        {
+            get { return GetString("defaultclonedestinationpath", string.Empty); }
+            set { SetString("defaultclonedestinationpath", value); }
+        }
+
         public static int RevisionGridQuickSearchTimeout
         {
             get { return GetInt("revisiongridquicksearchtimeout", 750); }

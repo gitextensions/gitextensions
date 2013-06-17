@@ -1,4 +1,11 @@
-﻿using GitCommands;
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using GitCommands;
+using GitCommands.Repository;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -13,6 +20,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
+            FillDefaultCloneDestinationDropDown();
+
             chkCheckForUncommittedChangesInCheckoutBranch.Checked = AppSettings.CheckForUncommittedChangesInCheckoutBranch;
             chkStartWithRecentWorkingDir.Checked = AppSettings.StartWithRecentWorkingDir;
             chkPlaySpecialStartupSound.Checked = AppSettings.PlaySpecialStartupSound;
@@ -32,6 +41,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkCloseProcessDialog.Checked = AppSettings.CloseProcessDialog;
             chkShowGitCommandLine.Checked = AppSettings.ShowGitCommandLine;
             chkUseFastChecks.Checked = AppSettings.UseFastChecks;
+            cbDefaultCloneDestination.Text = AppSettings.DefaultCloneDestinationPath;
         }
 
         protected override void PageToSettings()
@@ -57,6 +67,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
             AppSettings.RevisionGraphShowWorkingDirChanges = chkShowCurrentChangesInRevisionGraph.Checked;
             AppSettings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
+            AppSettings.DefaultCloneDestinationPath = cbDefaultCloneDestination.Text;
         }
 
         private void chkUseSSL_CheckedChanged(object sender, System.EventArgs e)
@@ -70,6 +81,44 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 if (SmtpServerPort.Text == "465")
                     SmtpServerPort.Text = "587";
+            }
+        }
+
+        private void FillDefaultCloneDestinationDropDown()
+        {
+            var historicPaths = Repositories.RepositoryHistory.Repositories
+                                           .Select(GetParentPath())
+                                           .Where(x => !string.IsNullOrEmpty(x))
+                                           .Distinct(StringComparer.CurrentCultureIgnoreCase)
+                                           .ToArray();
+
+            cbDefaultCloneDestination.Items.AddRange(historicPaths);
+        }
+
+        private static Func<Repository, string> GetParentPath()
+        {
+            return x =>
+            {
+                if (!Directory.Exists(x.Path))
+                {
+                    return string.Empty;
+                }
+
+                var dir = new DirectoryInfo(x.Path);
+                if (dir.Parent == null)
+                {
+                    return x.Path;
+                }
+                return dir.Parent.FullName;
+            };
+        }
+
+        private void DefaultCloneDestinationBrowseClick(object sender, EventArgs e)
+        {
+            using (var dialog = new FolderBrowserDialog { SelectedPath = cbDefaultCloneDestination.Text })
+            {
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                    cbDefaultCloneDestination.Text = dialog.SelectedPath;
             }
         }
 

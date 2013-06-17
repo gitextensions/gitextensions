@@ -2,7 +2,7 @@
 using System.IO;
 using GitCommands;
 
-namespace GitUI.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGridClasses
 {
     [Serializable]
     public delegate void IndexChangedEventHandler(bool indexChanged);
