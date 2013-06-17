@@ -34,6 +34,11 @@ namespace GitUI.CommandsDialogs
             this.Translate();
         }
 
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            _NO_TRANSLATE_destinationComboBox.Text = AppSettings.DefaultCloneDestinationPath;
+        }
+
         private void okButton_Click(object sender, EventArgs e)
         {
             try
