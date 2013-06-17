@@ -38,10 +38,10 @@
             // _NO_TRANSLATE_commands
             // 
             this._NO_TRANSLATE_commands.AutoSize = true;
-            this._NO_TRANSLATE_commands.Location = new System.Drawing.Point(3, 50);
+            this._NO_TRANSLATE_commands.Location = new System.Drawing.Point(3, 77);
             this._NO_TRANSLATE_commands.Name = "_NO_TRANSLATE_commands";
             this._NO_TRANSLATE_commands.Padding = new System.Windows.Forms.Padding(10, 0, 10, 10);
-            this._NO_TRANSLATE_commands.Size = new System.Drawing.Size(382, 610);
+            this._NO_TRANSLATE_commands.Size = new System.Drawing.Size(337, 789);
             this._NO_TRANSLATE_commands.TabIndex = 0;
             this._NO_TRANSLATE_commands.Text = resources.GetString("_NO_TRANSLATE_commands.Text");
             // 
@@ -51,7 +51,7 @@
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
             this.label1.Padding = new System.Windows.Forms.Padding(10);
-            this.label1.Size = new System.Drawing.Size(373, 50);
+            this.label1.Size = new System.Drawing.Size(316, 77);
             this.label1.TabIndex = 1;
             this.label1.Text = "Supported commandline arguments for\r\ngitex.cmd / gitex (located in the same folde" +
     "r as GitExtensions.exe):";
@@ -78,6 +78,7 @@
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(410, 700);
             this.Name = "FormCommandlineHelp";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commandline usage";
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
