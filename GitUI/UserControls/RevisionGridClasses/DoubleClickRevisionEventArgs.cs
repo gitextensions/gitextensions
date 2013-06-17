@@ -1,7 +1,7 @@
 ﻿using System;
 using GitCommands;
 
-namespace GitUI.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGridClasses
 {
     public class DoubleClickRevisionEventArgs : EventArgs
     {
