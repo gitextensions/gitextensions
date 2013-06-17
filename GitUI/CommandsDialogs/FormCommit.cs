@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -605,6 +606,10 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void LoadUnstagedOutput(IList<GitItemStatus> allChangedFiles)
         {
+            var lastSelection = new List<GitItemStatus>();
+            if (_currentFilesList != null)
+                lastSelection = _currentSelection;
+
             var unStagedFiles = new List<GitItemStatus>();
             var stagedFiles = new List<GitItemStatus>();
 
@@ -630,14 +635,27 @@ namespace GitUI.CommandsDialogs
 
             var inTheMiddleOfConflictedMerge = Module.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
-            Unstaged.SelectStoredNextIndex(0);
-            if (Unstaged.GitItemStatuses.Any())
+            if (_currentFilesList == null)
             {
-                Staged.SelectStoredNextIndex();
+                Unstaged.SelectStoredNextIndex(0);
+                if (Unstaged.GitItemStatuses.Any())
+                {
+                    Staged.SelectStoredNextIndex();
+                }
+                else
+                {
+                    Staged.SelectStoredNextIndex(0);
+                }
             }
             else
             {
-                Staged.SelectStoredNextIndex(0);
+                var newItems = unStagedFiles;
+                if (_currentFilesList == Staged)
+                    newItems = stagedFiles;
+
+                var names = lastSelection.Select(x => x.Name).ToList();
+                var newSelection = newItems.Where(x => names.Contains(x.Name));
+                _currentFilesList.SelectedItems = newSelection;
             }
 
             if (OnStageAreaLoaded != null)
@@ -722,6 +740,7 @@ namespace GitUI.CommandsDialogs
         }
 
         private FileStatusList _currentFilesList;
+        private List<GitItemStatus> _currentSelection;
 
         private void StagedSelectionChanged(object sender, EventArgs e)
         {
@@ -730,11 +749,13 @@ namespace GitUI.CommandsDialogs
 
             ClearDiffViewIfNoFilesLeft();
 
-            if (!Staged.SelectedItems.Any())
+            _currentSelection = Staged.SelectedItems.ToList();
+            var item = _currentSelection.FirstOrDefault();
+            if (item == null)
                 return;
 
             Unstaged.SelectedItem = null;
-            ShowChanges(Staged.SelectedItems.First(), true);
+            ShowChanges(item, true);
         }
 
         private void UnstagedSelectionChanged(object sender, EventArgs e)
@@ -746,11 +767,12 @@ namespace GitUI.CommandsDialogs
 
             Unstaged.ContextMenuStrip = null;
 
-            if (!Unstaged.SelectedItems.Any())
+            _currentSelection = Unstaged.SelectedItems.ToList();
+            var item = _currentSelection.FirstOrDefault();
+            if (item == null)
                 return;
 
             Staged.SelectedItem = null;
-            GitItemStatus item = Unstaged.SelectedItems.First();
             ShowChanges(item, false);
 
             if (!item.IsSubmodule)
@@ -990,13 +1012,14 @@ namespace GitUI.CommandsDialogs
         private void StageClick(object sender, EventArgs e)
         {
             Stage(Unstaged.SelectedItems.ToList());
-            Staged.Focus();
+            if (Unstaged.GitItemStatuses.Any())
+                Unstaged.Focus();
         }
 
         private void StageAll()
         {
             Stage(Unstaged.GitItemStatuses);
-            Unstaged.Focus();
+            Staged.Focus();
         }
 
         private void Stage(IList<GitItemStatus> gitItemStatusses)
@@ -1092,7 +1115,8 @@ namespace GitUI.CommandsDialogs
         private void UnstageFilesClick(object sender, EventArgs e)
         {
             Unstage();
-            Unstaged.Focus();
+            if (Staged.GitItemStatuses.Any())
+                Staged.Focus();
         }
 
         private void Unstage()
@@ -1343,7 +1367,7 @@ namespace GitUI.CommandsDialogs
         {
             Module.ResetMixed("HEAD");
             Initialize();
-            Staged.Focus();
+            Unstaged.Focus();
         }
 
         private void FormCommitShown(object sender, EventArgs e)
