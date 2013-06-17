@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.ComponentModel;
 using GitUI.CommandsDialogs.BrowseDialog;
 using ResourceManager.Translation;
+using System.Diagnostics;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
@@ -67,6 +68,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         public void TriggerPropertyChanged()
         {
+            Debug.WriteLine("RevisionGridMenuCommands.TriggerPropertyChanged()");
             if (PropertyChanged != null)
             {
                 PropertyChanged(null, null);
