@@ -48,10 +48,23 @@
             this.buttonCopyAsHtml = new System.Windows.Forms.Button();
             this.textBoxResult = new System.Windows.Forms.TextBox();
             this.buttonGenerate = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label8 = new System.Windows.Forms.Label();
+            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label9 = new System.Windows.Forms.Label();
+            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label11 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxCopy.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
+            this.flowLayoutPanel3.SuspendLayout();
+            this.flowLayoutPanel4.SuspendLayout();
+            this.flowLayoutPanel5.SuspendLayout();
+            this.flowLayoutPanel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -125,7 +138,7 @@
             this.groupBox1.Controls.Add(this.textBoxResult);
             this.groupBox1.Location = new System.Drawing.Point(15, 156);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(587, 264);
+            this.groupBox1.Size = new System.Drawing.Size(587, 379);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Result";
@@ -176,27 +189,29 @@
             this.groupBoxCopy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxCopy.Controls.Add(this.flowLayoutPanel2);
-            this.groupBoxCopy.Location = new System.Drawing.Point(6, 198);
+            this.groupBoxCopy.Location = new System.Drawing.Point(6, 172);
             this.groupBoxCopy.Name = "groupBoxCopy";
-            this.groupBoxCopy.Size = new System.Drawing.Size(575, 60);
+            this.groupBoxCopy.Size = new System.Drawing.Size(575, 201);
             this.groupBoxCopy.TabIndex = 1;
             this.groupBoxCopy.TabStop = false;
             this.groupBoxCopy.Text = "Copy to clipboard";
             // 
             // flowLayoutPanel2
             // 
-            this.flowLayoutPanel2.Controls.Add(this.buttonCopyOrigOutput);
-            this.flowLayoutPanel2.Controls.Add(this.buttonCopyAsTextTableTab);
-            this.flowLayoutPanel2.Controls.Add(this.buttonCopyAsTextTableSpace);
-            this.flowLayoutPanel2.Controls.Add(this.buttonCopyAsHtml);
+            this.flowLayoutPanel2.Controls.Add(this.flowLayoutPanel3);
+            this.flowLayoutPanel2.Controls.Add(this.flowLayoutPanel4);
+            this.flowLayoutPanel2.Controls.Add(this.flowLayoutPanel5);
+            this.flowLayoutPanel2.Controls.Add(this.flowLayoutPanel6);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(569, 41);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(569, 182);
             this.flowLayoutPanel2.TabIndex = 2;
             // 
             // buttonCopyOrigOutput
             // 
+            this.buttonCopyOrigOutput.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.buttonCopyOrigOutput.Location = new System.Drawing.Point(3, 3);
             this.buttonCopyOrigOutput.Name = "buttonCopyOrigOutput";
             this.buttonCopyOrigOutput.Size = new System.Drawing.Size(125, 25);
@@ -207,7 +222,7 @@
             // 
             // buttonCopyAsTextTableTab
             // 
-            this.buttonCopyAsTextTableTab.Location = new System.Drawing.Point(134, 3);
+            this.buttonCopyAsTextTableTab.Location = new System.Drawing.Point(3, 3);
             this.buttonCopyAsTextTableTab.Name = "buttonCopyAsTextTableTab";
             this.buttonCopyAsTextTableTab.Size = new System.Drawing.Size(125, 25);
             this.buttonCopyAsTextTableTab.TabIndex = 0;
@@ -217,7 +232,7 @@
             // 
             // buttonCopyAsTextTableSpace
             // 
-            this.buttonCopyAsTextTableSpace.Location = new System.Drawing.Point(265, 3);
+            this.buttonCopyAsTextTableSpace.Location = new System.Drawing.Point(3, 3);
             this.buttonCopyAsTextTableSpace.Name = "buttonCopyAsTextTableSpace";
             this.buttonCopyAsTextTableSpace.Size = new System.Drawing.Size(125, 25);
             this.buttonCopyAsTextTableSpace.TabIndex = 3;
@@ -227,7 +242,7 @@
             // 
             // buttonCopyAsHtml
             // 
-            this.buttonCopyAsHtml.Location = new System.Drawing.Point(396, 3);
+            this.buttonCopyAsHtml.Location = new System.Drawing.Point(3, 3);
             this.buttonCopyAsHtml.Name = "buttonCopyAsHtml";
             this.buttonCopyAsHtml.Size = new System.Drawing.Size(125, 25);
             this.buttonCopyAsHtml.TabIndex = 1;
@@ -245,7 +260,7 @@
             this.textBoxResult.Name = "textBoxResult";
             this.textBoxResult.ReadOnly = true;
             this.textBoxResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxResult.Size = new System.Drawing.Size(575, 137);
+            this.textBoxResult.Size = new System.Drawing.Size(575, 116);
             this.textBoxResult.TabIndex = 0;
             this.textBoxResult.WordWrap = false;
             this.textBoxResult.TextChanged += new System.EventHandler(this.textBoxResult_TextChanged);
@@ -260,12 +275,99 @@
             this.buttonGenerate.UseVisualStyleBackColor = true;
             this.buttonGenerate.Click += new System.EventHandler(this.buttonGenerate_Click);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(389, 9);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(214, 26);
+            this.label7.TabIndex = 8;
+            this.label7.Text = "(Commit expressions can be commit hashes,\r\nbranch names, tag names)";
+            // 
+            // flowLayoutPanel3
+            // 
+            this.flowLayoutPanel3.Controls.Add(this.buttonCopyOrigOutput);
+            this.flowLayoutPanel3.Controls.Add(this.label8);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(400, 35);
+            this.flowLayoutPanel3.TabIndex = 4;
+            // 
+            // label8
+            // 
+            this.label8.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(134, 9);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(28, 13);
+            this.label8.TabIndex = 3;
+            this.label8.Text = "as is";
+            // 
+            // flowLayoutPanel4
+            // 
+            this.flowLayoutPanel4.Controls.Add(this.buttonCopyAsTextTableTab);
+            this.flowLayoutPanel4.Controls.Add(this.label9);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(3, 44);
+            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(400, 35);
+            this.flowLayoutPanel4.TabIndex = 5;
+            // 
+            // label9
+            // 
+            this.label9.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(134, 9);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(135, 13);
+            this.label9.TabIndex = 4;
+            this.label9.Text = "separate columns with tabs";
+            // 
+            // flowLayoutPanel5
+            // 
+            this.flowLayoutPanel5.Controls.Add(this.buttonCopyAsTextTableSpace);
+            this.flowLayoutPanel5.Controls.Add(this.label10);
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(3, 85);
+            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(400, 35);
+            this.flowLayoutPanel5.TabIndex = 6;
+            // 
+            // label10
+            // 
+            this.label10.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(134, 9);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(149, 13);
+            this.label10.TabIndex = 5;
+            this.label10.Text = "separate columns with spaces";
+            // 
+            // flowLayoutPanel6
+            // 
+            this.flowLayoutPanel6.Controls.Add(this.buttonCopyAsHtml);
+            this.flowLayoutPanel6.Controls.Add(this.label11);
+            this.flowLayoutPanel6.Location = new System.Drawing.Point(3, 126);
+            this.flowLayoutPanel6.Name = "flowLayoutPanel6";
+            this.flowLayoutPanel6.Size = new System.Drawing.Size(521, 43);
+            this.flowLayoutPanel6.TabIndex = 7;
+            // 
+            // label11
+            // 
+            this.label11.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(134, 2);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(331, 26);
+            this.label11.TabIndex = 4;
+            this.label11.Text = "Clipboard will contain HTML code (plain text) and HTML format\r\nwhich can be paste" +
+    "d to programs like MS Word or LibreOffice Writer.\r\n";
+            // 
             // ReleaseNotesGeneratorForm
             // 
             this.AcceptButton = this.buttonGenerate;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(614, 432);
+            this.ClientSize = new System.Drawing.Size(614, 547);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label4);
@@ -286,6 +388,14 @@
             this.flowLayoutPanel1.PerformLayout();
             this.groupBoxCopy.ResumeLayout(false);
             this.flowLayoutPanel2.ResumeLayout(false);
+            this.flowLayoutPanel3.ResumeLayout(false);
+            this.flowLayoutPanel3.PerformLayout();
+            this.flowLayoutPanel4.ResumeLayout(false);
+            this.flowLayoutPanel4.PerformLayout();
+            this.flowLayoutPanel5.ResumeLayout(false);
+            this.flowLayoutPanel5.PerformLayout();
+            this.flowLayoutPanel6.ResumeLayout(false);
+            this.flowLayoutPanel6.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -313,5 +423,14 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.Button buttonCopyOrigOutput;
         private System.Windows.Forms.Button buttonCopyAsTextTableSpace;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel6;
+        private System.Windows.Forms.Label label11;
     }
 }
