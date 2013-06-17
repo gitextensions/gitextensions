@@ -122,7 +122,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(950, 602);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(950, 641);
             this.tableLayoutPanel3.TabIndex = 2;
             // 
             // settingsTreeView
@@ -133,7 +133,7 @@ namespace GitUI.CommandsDialogs
             this.settingsTreeView.MinimumSize = new System.Drawing.Size(100, 220);
             this.settingsTreeView.Name = "settingsTreeView";
             this.tableLayoutPanel3.SetRowSpan(this.settingsTreeView, 2);
-            this.settingsTreeView.Size = new System.Drawing.Size(194, 558);
+            this.settingsTreeView.Size = new System.Drawing.Size(194, 597);
             this.settingsTreeView.TabIndex = 1;
             this.settingsTreeView.SettingsPageSelected += new System.EventHandler<GitUI.CommandsDialogs.SettingsDialog.SettingsPageSelectedEventArgs>(this.settingsTreeViewUserControl1_SettingsPageSelected);
             // 
@@ -143,7 +143,7 @@ namespace GitUI.CommandsDialogs
             this.panelCurrentSettingsPage.Location = new System.Drawing.Point(203, 3);
             this.panelCurrentSettingsPage.Name = "panelCurrentSettingsPage";
             this.tableLayoutPanel3.SetRowSpan(this.panelCurrentSettingsPage, 2);
-            this.panelCurrentSettingsPage.Size = new System.Drawing.Size(724, 554);
+            this.panelCurrentSettingsPage.Size = new System.Drawing.Size(724, 557);
             this.panelCurrentSettingsPage.TabIndex = 5;
             // 
             // flowLayoutPanel4
@@ -156,7 +156,7 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel4.Controls.Add(this.labelInstantSaveNotice);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Right;
             this.flowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(203, 567);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(203, 606);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(724, 32);
             this.flowLayoutPanel4.TabIndex = 3;
@@ -213,11 +213,11 @@ namespace GitUI.CommandsDialogs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(950, 602);
+            this.ClientSize = new System.Drawing.Size(950, 641);
             this.Controls.Add(this.tableLayoutPanel3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(966, 640);
+            this.MinimumSize = new System.Drawing.Size(966, 680);
             this.Name = "FormSettings";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
