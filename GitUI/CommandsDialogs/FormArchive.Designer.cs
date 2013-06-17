@@ -40,7 +40,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btnChooseRevision = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lblChooseDiffRevision = new System.Windows.Forms.Label();
             this.commitSummaryUserControl2 = new GitUI.UserControls.CommitSummaryUserControl();
             this.btnDiffChooseRevision = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
@@ -200,7 +200,7 @@
             // groupBox2
             // 
             this.tableLayoutPanel4.SetColumnSpan(this.groupBox2, 2);
-            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.lblChooseDiffRevision);
             this.groupBox2.Controls.Add(this.commitSummaryUserControl2);
             this.groupBox2.Controls.Add(this.btnDiffChooseRevision);
             this.groupBox2.Controls.Add(this.label4);
@@ -216,14 +216,14 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filter files";
             // 
-            // label3
+            // lblChooseDiffRevision
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(494, 198);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(91, 45);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Choose revision\r\nto compare\r\nwith first:";
+            this.lblChooseDiffRevision.AutoSize = true;
+            this.lblChooseDiffRevision.Location = new System.Drawing.Point(494, 198);
+            this.lblChooseDiffRevision.Name = "lblChooseDiffRevision";
+            this.lblChooseDiffRevision.Size = new System.Drawing.Size(91, 45);
+            this.lblChooseDiffRevision.TabIndex = 0;
+            this.lblChooseDiffRevision.Text = "Choose revision\r\nto compare\r\nwith first:";
             // 
             // commitSummaryUserControl2
             // 
@@ -329,7 +329,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblChooseDiffRevision;
         private UserControls.CommitSummaryUserControl commitSummaryUserControl2;
         private System.Windows.Forms.Button btnDiffChooseRevision;
         private System.Windows.Forms.Label label4;
