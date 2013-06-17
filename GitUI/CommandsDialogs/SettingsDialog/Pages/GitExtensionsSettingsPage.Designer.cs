@@ -361,7 +361,7 @@
             this.groupBox1.Controls.Add(this.numericUpDown1);
             this.groupBox1.Location = new System.Drawing.Point(3, 488);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(581, 120);
+            this.groupBox1.Size = new System.Drawing.Size(581, 68);
             this.groupBox1.TabIndex = 57;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Email settings for sending patches";
@@ -369,7 +369,7 @@
             // chkUseSSL
             // 
             this.chkUseSSL.AutoSize = true;
-            this.chkUseSSL.Location = new System.Drawing.Point(316, 92);
+            this.chkUseSSL.Location = new System.Drawing.Point(422, 32);
             this.chkUseSSL.Name = "chkUseSSL";
             this.chkUseSSL.Size = new System.Drawing.Size(90, 19);
             this.chkUseSSL.TabIndex = 27;
@@ -379,26 +379,26 @@
             // 
             // SmtpServerPort
             // 
-            this.SmtpServerPort.Location = new System.Drawing.Point(316, 61);
+            this.SmtpServerPort.Location = new System.Drawing.Point(351, 30);
             this.SmtpServerPort.Name = "SmtpServerPort";
-            this.SmtpServerPort.Size = new System.Drawing.Size(242, 23);
+            this.SmtpServerPort.Size = new System.Drawing.Size(49, 23);
             this.SmtpServerPort.TabIndex = 21;
             this.SmtpServerPort.Text = "587";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(19, 63);
+            this.label2.Location = new System.Drawing.Point(316, 33);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 15);
+            this.label2.Size = new System.Drawing.Size(29, 15);
             this.label2.TabIndex = 22;
-            this.label2.Text = "Server port";
+            this.label2.Text = "Port";
             // 
             // SmtpServer
             // 
-            this.SmtpServer.Location = new System.Drawing.Point(316, 30);
+            this.SmtpServer.Location = new System.Drawing.Point(130, 30);
             this.SmtpServer.Name = "SmtpServer";
-            this.SmtpServer.Size = new System.Drawing.Size(242, 23);
+            this.SmtpServer.Size = new System.Drawing.Size(177, 23);
             this.SmtpServer.TabIndex = 19;
             // 
             // label23
@@ -449,7 +449,7 @@
             this.Controls.Add(this.groupBox12);
             this.Controls.Add(this.groupBox11);
             this.Name = "GitExtensionsSettingsPage";
-            this.Size = new System.Drawing.Size(587, 612);
+            this.Size = new System.Drawing.Size(587, 559);
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).EndInit();
