@@ -30,6 +30,7 @@ namespace GitUI
         public FileStatusList()
         {
             InitializeComponent(); Translate();
+            SelectFirstItemOnSetItems = true;
             _noDiffFilesChangesDefaultText = NoFiles.Text;
 #if !__MonoCS__ // TODO Drag'n'Drop doesn't work on Mono/Linux
             FileStatusListView.MouseMove += FileStatusListView_MouseMove;
@@ -86,6 +87,16 @@ namespace GitUI
                     SelectedIndex = 0;
                 FileStatusListView.Focus();
             }
+        }
+
+        public void BeginUpdate()
+        {
+            FileStatusListView.BeginUpdate();
+        }
+
+        public void EndUpdate()
+        {
+            FileStatusListView.EndUpdate();
         }
 
         private string GetItemText(Graphics graphics, GitItemStatus gitItemStatus)
@@ -285,8 +296,11 @@ namespace GitUI
         {
             get
             {
-                foreach (ListViewItem item in FileStatusListView.SelectedItems)
-                    return (GitItemStatus)item.Tag;
+                for (int index = 0; index < FileStatusListView.SelectedItems.Count; index++)
+                {
+                    ListViewItem item = FileStatusListView.SelectedItems[index];
+                    return (GitItemStatus) item.Tag;
+                }
                 return null;
             }
             set
@@ -533,15 +547,18 @@ namespace GitUI
                 FileStatusListView.SetGroupState(ListViewGroupState.Collapsible);
                 if (DataSourceChanged != null)
                     DataSourceChanged(this, new EventArgs());
-                if (FileStatusListView.Items.Count > 0)
-                {
+                if (SelectFirstItemOnSetItems)
                     SelectFirstVisibleItem();
-                }
             }
         }
 
-        private void SelectFirstVisibleItem()
+        [DefaultValue(true)]
+        public bool SelectFirstItemOnSetItems { get; set; }
+
+        public void SelectFirstVisibleItem()
         {
+            if (FileStatusListView.Items.Count == 0)
+                return;
             var group = FileStatusListView.Groups.Cast<ListViewGroup>().
                 FirstOrDefault(gr => gr.Items.Count > 0);
             if (group != null)
