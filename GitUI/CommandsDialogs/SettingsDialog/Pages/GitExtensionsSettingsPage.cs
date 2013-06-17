@@ -1,6 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
@@ -18,7 +20,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void OnLoadSettings()
         {
-            FillFromDropDown();
+            FillDefaultCloneDestinationDropDown();
 
             chkCheckForUncommittedChangesInCheckoutBranch.Checked = Settings.CheckForUncommittedChangesInCheckoutBranch;
             chkStartWithRecentWorkingDir.Checked = Settings.StartWithRecentWorkingDir;
@@ -82,15 +84,33 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        private void FillFromDropDown()
+        private void FillDefaultCloneDestinationDropDown()
         {
-            System.ComponentModel.BindingList<Repository> repos = Repositories.RemoteRepositoryHistory.Repositories;
-            if (cbDefaultCloneDestination.Items.Count != repos.Count)
+            var historicPaths = Repositories.RepositoryHistory.Repositories
+                                           .Select(GetParentPath())
+                                           .Where(x => !string.IsNullOrEmpty(x))
+                                           .Distinct(StringComparer.CurrentCultureIgnoreCase)
+                                           .ToArray();
+
+            cbDefaultCloneDestination.Items.AddRange(historicPaths);
+        }
+
+        private static Func<Repository, string> GetParentPath()
+        {
+            return x =>
             {
-                cbDefaultCloneDestination.Items.Clear();
-                foreach (Repository repo in repos)
-                    cbDefaultCloneDestination.Items.Add(repo.Path);
-            }
+                if (!Directory.Exists(x.Path))
+                {
+                    return string.Empty;
+                }
+
+                var dir = new DirectoryInfo(x.Path);
+                if (dir.Parent == null)
+                {
+                    return x.Path;
+                }
+                return dir.Parent.FullName;
+            };
         }
 
         private void DefaultCloneDestinationBrowseClick(object sender, EventArgs e)
