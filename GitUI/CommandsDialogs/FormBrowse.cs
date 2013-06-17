@@ -1457,14 +1457,18 @@ namespace GitUI.CommandsDialogs
 
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var revisions = RevisionGrid.GetSelectedRevisions().OrderByDescending(r => r.CommitDate);
-            if (revisions.Count() > 2)
+            var revisions = RevisionGrid.GetSelectedRevisions().OrderByDescending(r => r.CommitDate).ToList();
+            if (revisions.Count > 2)
             {
                 MessageBox.Show(this, "Select only one or two revisions. Abort.", "Archive revision");
                 return;
             }
+            GitRevision mainRevision = revisions.First();
+            GitRevision diffRevision = null;
+            if (revisions.Count == 2)
+                diffRevision = revisions.Last();
 
-            UICommands.StartArchiveDialog(this, revisions.First(), revisions.Last());
+            UICommands.StartArchiveDialog(this, mainRevision, diffRevision);
         }
 
         private void EditMailMapToolStripMenuItemClick(object sender, EventArgs e)
