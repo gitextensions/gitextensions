@@ -224,6 +224,7 @@ namespace GitUI.CommandsDialogs
             this.gitItemBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.gitRevisionBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.powerShellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 #if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.toolPanel)).BeginInit();
 #endif
@@ -1904,6 +1905,7 @@ namespace GitUI.CommandsDialogs
             this.gitBashToolStripMenuItem,
             this.gitGUIToolStripMenuItem,
             this.kGitToolStripMenuItem,
+            this.powerShellToolStripMenuItem,
             this.toolStripSeparator6,
             this.PuTTYToolStripMenuItem,
             this.toolStripSeparator41,
@@ -1929,6 +1931,13 @@ namespace GitUI.CommandsDialogs
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
             this.menuStrip1.Size = new System.Drawing.Size(1154, 28);
             this.menuStrip1.TabIndex = 3;
+            // 
+            // powerShellToolStripMenuItem
+            // 
+            this.powerShellToolStripMenuItem.Name = "powerShellToolStripMenuItem";
+            this.powerShellToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.powerShellToolStripMenuItem.Text = "PowerShell";
+            this.powerShellToolStripMenuItem.Click += new System.EventHandler(this.powerShellToolStripMenuItem_Click);
             // 
             // checkForUpdatesToolStripMenuItem
             // 
@@ -2190,5 +2199,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator45;
         private ToolStripSeparator toolStripSeparator46;
         private ToolStripMenuItem checkForUpdatesToolStripMenuItem;
+        private ToolStripMenuItem powerShellToolStripMenuItem;
     }
 }

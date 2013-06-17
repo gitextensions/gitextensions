@@ -1339,6 +1339,11 @@ namespace GitUI.CommandsDialogs
             Module.RunGui();
         }
 
+        private void powerShellToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Module.RunPowerShell();
+        }
+        
         private void FormatPatchToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartFormatPatchDialog(this);
