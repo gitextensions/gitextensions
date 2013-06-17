@@ -1933,14 +1933,19 @@ namespace GitUI
 
         private void ArchiveRevisionToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var selectedRevisions = GetSelectedRevisions().OrderByDescending(r => r.CommitDate);
-            if (selectedRevisions.Count() > 2)
+            var selectedRevisions = GetSelectedRevisions().OrderByDescending(r => r.CommitDate).ToList();
+            if (selectedRevisions.Count > 2)
             {
                 MessageBox.Show(this, "Select only one or two revisions. Abort.", "Archive revision");
                 return;
             }
 
-            UICommands.StartArchiveDialog(this, selectedRevisions.First(), selectedRevisions.Last());
+            GitRevision mainRevision = selectedRevisions.First();
+            GitRevision diffRevision = null;
+            if (selectedRevisions.Count == 2)
+                diffRevision = selectedRevisions.Last();
+
+            UICommands.StartArchiveDialog(this, mainRevision, diffRevision);
         }
 
         private void ShowAuthorDateToolStripMenuItemClick(object sender, EventArgs e)
