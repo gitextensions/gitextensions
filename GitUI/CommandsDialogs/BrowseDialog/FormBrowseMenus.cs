@@ -166,6 +166,7 @@ namespace GitUI.CommandsDialogs
 
         // clear is important to avoid mem leaks of event handlers
         // TODO: is everything cleared correct or are there leftover references?
+        //       is this relevant here at all?
         //         see also ResetMenuCommandSets()?
         public void RemoveAdditionalMainMenuItems()
         {
