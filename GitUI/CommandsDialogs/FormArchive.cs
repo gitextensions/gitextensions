@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _saveFileDialogCaption =
             new TranslationString("Save archive as");
 
-        private readonly TranslationString _noRevisionSelected = 
+        private readonly TranslationString _noRevisionSelected =
             new TranslationString("You need to choose a target revision.");
 
         private readonly TranslationString _noRevisionSelectedCaption =
@@ -43,7 +43,23 @@ namespace GitUI.CommandsDialogs
             set
             {
                 _diffSelectedRevision = value;
-                commitSummaryUserControl2.Revision = _diffSelectedRevision;
+                //commitSummaryUserControl2.Revision = _diffSelectedRevision;
+                if (_diffSelectedRevision == null)
+                {
+                    var defaultString = "...";
+                    labelDateCaption.Text = String.Format("{0}:", Strings.GetCommitDateText());
+                    labelAuthor.Text = defaultString;
+                    gbDiffRevision.Text = defaultString;
+                    labelMessage.Text = defaultString;
+                }
+                else
+                {
+                    labelDateCaption.Text = String.Format("{0}: {1}", Strings.GetCommitDateText(), _diffSelectedRevision.CommitDate);
+                    labelAuthor.Text = _diffSelectedRevision.Author;
+                    gbDiffRevision.Text = _diffSelectedRevision.Guid.Substring(0, 10);
+                    labelMessage.Text = _diffSelectedRevision.Message;
+                }
+
             }
         }
 
@@ -99,7 +115,7 @@ namespace GitUI.CommandsDialogs
         {
             if (checkboxRevisionFilter.Checked && this.DiffSelectedRevision == null)
             {
-                MessageBox.Show(this, _noRevisionSelected.Text,_noRevisionSelectedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, _noRevisionSelected.Text, _noRevisionSelectedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -138,17 +154,18 @@ namespace GitUI.CommandsDialogs
                 // 1. get all lines from text box which are not empty
                 // 2. wrap lines with ""
                 // 3. join together with space as separator
-                return string.Join(" ", textBoxPaths.Lines.Where(a => !a.IsNullOrEmpty()).Select(a => string.Format("\"{0}\"", a)));                
-            } else if(checkboxRevisionFilter.Checked)
+                return string.Join(" ", textBoxPaths.Lines.Where(a => !a.IsNullOrEmpty()).Select(a => string.Format("\"{0}\"", a)));
+            }
+            else if (checkboxRevisionFilter.Checked)
             {
-                
-                 // 1. get all files changed between current revision and selected revision from diff
+
+                // 1. get all files changed between current revision and selected revision from diff
                 var files = UICommands.Module.GetDiffFiles(this.SelectedRevision.Guid, this.DiffSelectedRevision.Guid);
                 // 2. wrap names with ""
                 // 3. join together with space as separator
-                return string.Join(" ", files.Select(f => string.Format("\"{0}\"",f.Name)));
+                return string.Join(" ", files.Where(f => !f.IsDeleted).Select(f => string.Format("\"{0}\"", f.Name)));
             }
-            else 
+            else
             {
                 return "";
             }
@@ -191,9 +208,10 @@ namespace GitUI.CommandsDialogs
         private void checkboxRevisionFilter_CheckedChanged(object sender, EventArgs e)
         {
             btnDiffChooseRevision.Enabled = checkboxRevisionFilter.Checked;
-            commitSummaryUserControl2.Visible = checkboxRevisionFilter.Checked;
-            lblChooseDiffRevision.Visible = checkboxRevisionFilter.Checked;
-            btnDiffChooseRevision.Visible = checkboxRevisionFilter.Checked;
+            //commitSummaryUserControl2.Enabled = checkboxRevisionFilter.Checked;
+            //lblChooseDiffRevision.Enabled = checkboxRevisionFilter.Checked;
+            gbDiffRevision.Enabled = checkboxRevisionFilter.Checked;
+            btnDiffChooseRevision.Enabled = checkboxRevisionFilter.Checked;
             if (checkboxRevisionFilter.Checked)
                 checkBoxPathFilter.Checked = false;
         }

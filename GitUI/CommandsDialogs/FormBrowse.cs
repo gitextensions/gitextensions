@@ -1457,7 +1457,7 @@ namespace GitUI.CommandsDialogs
 
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var revisions = RevisionGrid.GetSelectedRevisions().OrderByDescending(r => r.CommitDate).ToList();
+            var revisions = RevisionGrid.GetSelectedRevisions();
             if (revisions.Count > 2)
             {
                 MessageBox.Show(this, "Select only one or two revisions. Abort.", "Archive revision");
