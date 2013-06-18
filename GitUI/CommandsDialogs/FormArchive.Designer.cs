@@ -40,8 +40,12 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btnChooseRevision = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.gbDiffRevision = new System.Windows.Forms.GroupBox();
+            this.labelAuthorCaption = new System.Windows.Forms.Label();
+            this.labelDateCaption = new System.Windows.Forms.Label();
+            this.labelMessage = new System.Windows.Forms.Label();
+            this.labelAuthor = new System.Windows.Forms.Label();
             this.lblChooseDiffRevision = new System.Windows.Forms.Label();
-            this.commitSummaryUserControl2 = new GitUI.UserControls.CommitSummaryUserControl();
             this.btnDiffChooseRevision = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.checkboxRevisionFilter = new System.Windows.Forms.CheckBox();
@@ -52,6 +56,7 @@
             this.tableLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.gbDiffRevision.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel4
@@ -75,7 +80,7 @@
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(594, 652);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(594, 571);
             this.tableLayoutPanel4.TabIndex = 6;
             // 
             // commitSummaryUserControl1
@@ -107,7 +112,7 @@
             this.buttonArchiveRevision.AutoSize = true;
             this.buttonArchiveRevision.Image = global::GitUI.Properties.Resources.IconSaveAs;
             this.buttonArchiveRevision.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonArchiveRevision.Location = new System.Drawing.Point(480, 624);
+            this.buttonArchiveRevision.Location = new System.Drawing.Point(480, 543);
             this.buttonArchiveRevision.Name = "buttonArchiveRevision";
             this.buttonArchiveRevision.Size = new System.Drawing.Size(111, 25);
             this.buttonArchiveRevision.TabIndex = 3;
@@ -119,9 +124,9 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.tableLayoutPanel2);
-            this.groupBox1.Location = new System.Drawing.Point(365, 594);
+            this.groupBox1.Location = new System.Drawing.Point(365, 523);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(109, 55);
+            this.groupBox1.Size = new System.Drawing.Size(109, 45);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Archive format";
@@ -139,7 +144,7 @@
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(103, 33);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(103, 23);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
             // _NO_TRANSLATE_radioButtonFormatZip
@@ -148,7 +153,7 @@
             this._NO_TRANSLATE_radioButtonFormatZip.Checked = true;
             this._NO_TRANSLATE_radioButtonFormatZip.Location = new System.Drawing.Point(3, 3);
             this._NO_TRANSLATE_radioButtonFormatZip.Name = "_NO_TRANSLATE_radioButtonFormatZip";
-            this._NO_TRANSLATE_radioButtonFormatZip.Size = new System.Drawing.Size(40, 19);
+            this._NO_TRANSLATE_radioButtonFormatZip.Size = new System.Drawing.Size(40, 17);
             this._NO_TRANSLATE_radioButtonFormatZip.TabIndex = 0;
             this._NO_TRANSLATE_radioButtonFormatZip.TabStop = true;
             this._NO_TRANSLATE_radioButtonFormatZip.Text = "zip";
@@ -159,7 +164,7 @@
             this._NO_TRANSLATE_radioButtonFormatTar.AutoSize = true;
             this._NO_TRANSLATE_radioButtonFormatTar.Location = new System.Drawing.Point(54, 3);
             this._NO_TRANSLATE_radioButtonFormatTar.Name = "_NO_TRANSLATE_radioButtonFormatTar";
-            this._NO_TRANSLATE_radioButtonFormatTar.Size = new System.Drawing.Size(39, 19);
+            this._NO_TRANSLATE_radioButtonFormatTar.Size = new System.Drawing.Size(39, 17);
             this._NO_TRANSLATE_radioButtonFormatTar.TabIndex = 1;
             this._NO_TRANSLATE_radioButtonFormatTar.Text = "tar";
             this._NO_TRANSLATE_radioButtonFormatTar.UseVisualStyleBackColor = true;
@@ -200,8 +205,8 @@
             // groupBox2
             // 
             this.tableLayoutPanel4.SetColumnSpan(this.groupBox2, 2);
+            this.groupBox2.Controls.Add(this.gbDiffRevision);
             this.groupBox2.Controls.Add(this.lblChooseDiffRevision);
-            this.groupBox2.Controls.Add(this.commitSummaryUserControl2);
             this.groupBox2.Controls.Add(this.btnDiffChooseRevision);
             this.groupBox2.Controls.Add(this.label4);
             this.groupBox2.Controls.Add(this.checkboxRevisionFilter);
@@ -211,10 +216,68 @@
             this.groupBox2.Location = new System.Drawing.Point(3, 216);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 20, 3, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(588, 365);
+            this.groupBox2.Size = new System.Drawing.Size(588, 300);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Filter files";
+            // 
+            // gbDiffRevision
+            // 
+            this.gbDiffRevision.Controls.Add(this.labelAuthorCaption);
+            this.gbDiffRevision.Controls.Add(this.labelDateCaption);
+            this.gbDiffRevision.Controls.Add(this.labelMessage);
+            this.gbDiffRevision.Controls.Add(this.labelAuthor);
+            this.gbDiffRevision.Location = new System.Drawing.Point(13, 192);
+            this.gbDiffRevision.Name = "gbDiffRevision";
+            this.gbDiffRevision.Size = new System.Drawing.Size(458, 100);
+            this.gbDiffRevision.TabIndex = 4;
+            this.gbDiffRevision.TabStop = false;
+            // 
+            // labelAuthorCaption
+            // 
+            this.labelAuthorCaption.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelAuthorCaption.AutoSize = true;
+            this.labelAuthorCaption.Location = new System.Drawing.Point(5, 78);
+            this.labelAuthorCaption.Name = "labelAuthorCaption";
+            this.labelAuthorCaption.Size = new System.Drawing.Size(47, 15);
+            this.labelAuthorCaption.TabIndex = 23;
+            this.labelAuthorCaption.Text = "Author:";
+            // 
+            // labelDateCaption
+            // 
+            this.labelDateCaption.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelDateCaption.AutoSize = true;
+            this.labelDateCaption.Location = new System.Drawing.Point(225, 80);
+            this.labelDateCaption.Name = "labelDateCaption";
+            this.labelDateCaption.Size = new System.Drawing.Size(80, 15);
+            this.labelDateCaption.TabIndex = 22;
+            this.labelDateCaption.Text = "Commit date:";
+            // 
+            // labelMessage
+            // 
+            this.labelMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelMessage.AutoEllipsis = true;
+            this.labelMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMessage.Location = new System.Drawing.Point(5, 19);
+            this.labelMessage.MaximumSize = new System.Drawing.Size(422, 50);
+            this.labelMessage.Name = "labelMessage";
+            this.labelMessage.Size = new System.Drawing.Size(422, 50);
+            this.labelMessage.TabIndex = 21;
+            this.labelMessage.Text = "...";
+            this.labelMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // labelAuthor
+            // 
+            this.labelAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelAuthor.AutoSize = true;
+            this.labelAuthor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelAuthor.Location = new System.Drawing.Point(93, 81);
+            this.labelAuthor.Name = "labelAuthor";
+            this.labelAuthor.Size = new System.Drawing.Size(19, 13);
+            this.labelAuthor.TabIndex = 20;
+            this.labelAuthor.Text = "...";
             // 
             // lblChooseDiffRevision
             // 
@@ -224,17 +287,6 @@
             this.lblChooseDiffRevision.Size = new System.Drawing.Size(91, 45);
             this.lblChooseDiffRevision.TabIndex = 0;
             this.lblChooseDiffRevision.Text = "Choose revision\r\nto compare\r\nwith first:";
-            // 
-            // commitSummaryUserControl2
-            // 
-            this.commitSummaryUserControl2.AutoSize = true;
-            this.commitSummaryUserControl2.Location = new System.Drawing.Point(30, 198);
-            this.commitSummaryUserControl2.Margin = new System.Windows.Forms.Padding(0);
-            this.commitSummaryUserControl2.MinimumSize = new System.Drawing.Size(440, 160);
-            this.commitSummaryUserControl2.Name = "commitSummaryUserControl2";
-            this.commitSummaryUserControl2.Revision = null;
-            this.commitSummaryUserControl2.Size = new System.Drawing.Size(455, 160);
-            this.commitSummaryUserControl2.TabIndex = 1;
             // 
             // btnDiffChooseRevision
             // 
@@ -294,9 +346,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(594, 652);
+            this.ClientSize = new System.Drawing.Size(594, 571);
             this.Controls.Add(this.tableLayoutPanel4);
-            this.MinimumSize = new System.Drawing.Size(610, 690);
+            this.MinimumSize = new System.Drawing.Size(610, 590);
             this.Name = "FormArchive";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Archive";
@@ -311,6 +363,8 @@
             this.flowLayoutPanel1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.gbDiffRevision.ResumeLayout(false);
+            this.gbDiffRevision.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -330,11 +384,15 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label lblChooseDiffRevision;
-        private UserControls.CommitSummaryUserControl commitSummaryUserControl2;
         private System.Windows.Forms.Button btnDiffChooseRevision;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox checkboxRevisionFilter;
         private System.Windows.Forms.TextBox textBoxPaths;
         private System.Windows.Forms.CheckBox checkBoxPathFilter;
+        private System.Windows.Forms.GroupBox gbDiffRevision;
+        private System.Windows.Forms.Label labelAuthorCaption;
+        private System.Windows.Forms.Label labelDateCaption;
+        private System.Windows.Forms.Label labelMessage;
+        private System.Windows.Forms.Label labelAuthor;
     }
 }

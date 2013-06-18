@@ -1933,7 +1933,7 @@ namespace GitUI
 
         private void ArchiveRevisionToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var selectedRevisions = GetSelectedRevisions().OrderByDescending(r => r.CommitDate).ToList();
+            var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Count > 2)
             {
                 MessageBox.Show(this, "Select only one or two revisions. Abort.", "Archive revision");
