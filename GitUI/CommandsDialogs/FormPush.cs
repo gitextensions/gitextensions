@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pullRepositoryMainInstruction = new TranslationString("Pull latest changes from remote repository");
         private readonly TranslationString _pullRepository =
             new TranslationString("The push was rejected because the tip of your current branch is behind its remote counterpart. " +
-                "Merge the remote changes before pushing again." + Environment.NewLine + Environment.NewLine + 
+                "Merge the remote changes before pushing again." + Environment.NewLine + Environment.NewLine +
                 "Do you want to pull the latest changes?");
         private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with default pull action|Pull with rebase|Pull with merge|Cancel");
         private readonly TranslationString _pullRepositoryCaption = new TranslationString("Push was rejected");
@@ -653,14 +653,14 @@ namespace GitUI.CommandsDialogs
         private void UpdateMultiBranchView()
         {
             _branchTable = new DataTable();
-            _branchTable.Columns.Add("Local",  typeof(string));
+            _branchTable.Columns.Add("Local", typeof(string));
             _branchTable.Columns.Add("Remote", typeof(string));
-            _branchTable.Columns.Add("New",    typeof(string));
-            _branchTable.Columns.Add("Push",   typeof(bool));
-            _branchTable.Columns.Add("Force",  typeof(bool));
+            _branchTable.Columns.Add("New", typeof(string));
+            _branchTable.Columns.Add("Push", typeof(bool));
+            _branchTable.Columns.Add("Force", typeof(bool));
             _branchTable.Columns.Add("Delete", typeof(bool));
             _branchTable.ColumnChanged += BranchTable_ColumnChanged;
-            var bs = new BindingSource {DataSource = _branchTable};
+            var bs = new BindingSource { DataSource = _branchTable };
             BranchGrid.DataSource = bs;
 
             string remote = _NO_TRANSLATE_Remotes.Text.Trim();
@@ -686,7 +686,7 @@ namespace GitUI.CommandsDialogs
 
                 row["Remote"] = remoteName;
                 bool newAtRemote = remoteHeads.Any(h => h.Name == remoteName);
-                row["New"] =  newAtRemote ? _no.Text : _yes.Text;
+                row["New"] = newAtRemote ? _no.Text : _yes.Text;
                 row["Push"] = newAtRemote;
 
                 _branchTable.Rows.Add(row);

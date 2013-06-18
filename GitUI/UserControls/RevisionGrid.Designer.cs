@@ -109,7 +109,6 @@ namespace GitUI
             this.showCurrentBranchOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showFilteredBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.ShowRemoteBranches = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
             this.showRevisionGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.drawNonrelativesGrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -530,8 +529,7 @@ namespace GitUI
             this.showAllBranchesToolStripMenuItem,
             this.showCurrentBranchOnlyToolStripMenuItem,
             this.showFilteredBranchesToolStripMenuItem,
-            this.toolStripSeparator4,
-            this.ShowRemoteBranches});
+            this.toolStripSeparator4});
             this.showBranchesToolStripMenuItem.Name = "showBranchesToolStripMenuItem";
             this.showBranchesToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.showBranchesToolStripMenuItem.Text = "Show branches";
@@ -561,15 +559,6 @@ namespace GitUI
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(242, 6);
-            // 
-            // ShowRemoteBranches
-            // 
-            this.ShowRemoteBranches.Checked = true;
-            this.ShowRemoteBranches.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ShowRemoteBranches.Name = "ShowRemoteBranches";
-            this.ShowRemoteBranches.Size = new System.Drawing.Size(245, 24);
-            this.ShowRemoteBranches.Text = "Show remote branches";
-            this.ShowRemoteBranches.Click += new System.EventHandler(this.ShowRemoteBranchesClick);
             // 
             // toolStripMenuItemView
             // 
@@ -833,7 +822,6 @@ namespace GitUI
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Commit;
         private System.Windows.Forms.Button GitIgnore;
-        private System.Windows.Forms.ToolStripMenuItem ShowRemoteBranches;
         private System.Windows.Forms.ToolStripMenuItem showBranchesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
