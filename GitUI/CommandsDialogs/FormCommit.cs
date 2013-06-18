@@ -954,6 +954,7 @@ namespace GitUI.CommandsDialogs
 
         private void UnstageAllToolStripMenuItemClick(object sender, EventArgs e)
         {
+            _currentFilesList = Unstaged;
             Module.ResetMixed("HEAD");
             Initialize();
             Unstaged.Focus();
