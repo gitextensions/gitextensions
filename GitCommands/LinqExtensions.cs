@@ -63,6 +63,29 @@ namespace System.Linq
             return result;
         }
 
+        public static HashSet<TKey> ToHashSet<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+            if (keySelector == null)
+                throw new ArgumentNullException("Argument keySelector can not be null");
+
+            HashSet<TKey> result = new HashSet<TKey>();
+
+            foreach (TSource sourceElement in source)
+            {
+                TKey key = keySelector(sourceElement);
+                if (key == null)
+                {
+                    var ex = new ArgumentNullException("KeySelector produced a key that is null. See exception data for source.");
+                    ex.Data.Add("source", sourceElement);
+                    throw ex;
+                }
+
+                result.Add(key);
+            }
+
+            return result;
+        }
+
         public static string Join(this IEnumerable<string> source, string separator)
         {
             return string.Join(separator, source.ToArray());
