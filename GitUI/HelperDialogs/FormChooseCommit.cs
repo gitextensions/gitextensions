@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using ResourceManager.Translation;
+using GitUI.UserControls.RevisionGridClasses;
 
 namespace GitUI.HelperDialogs
 {
@@ -58,7 +59,7 @@ namespace GitUI.HelperDialogs
             }
         }
 
-        private void revisionGrid_DoubleClickRevision(object sender, RevisionGridClasses.DoubleClickRevisionEventArgs e)
+        private void revisionGrid_DoubleClickRevision(object sender, DoubleClickRevisionEventArgs e)
         {
             if (e.Revision != null)
             {

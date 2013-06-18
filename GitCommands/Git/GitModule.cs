@@ -1578,20 +1578,14 @@ namespace GitCommands
 
         public string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase, bool? fetchTags)
         {
-            var progressOption = "";
+            var pullArgs = "";
             if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
-                progressOption = "--progress ";
-
-            if (rebase && !string.IsNullOrEmpty(remoteBranch))
-            {
-                return "pull --rebase " + progressOption + remote + " " +
-                    GitCommandHelpers.GetFullBranchName(remoteBranch);
-            }
+                pullArgs = "--progress ";
 
             if (rebase)
-                return "pull --rebase " + progressOption + remote;
+                pullArgs = "--rebase".Combine(" ", pullArgs);
 
-            return "pull " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch, fetchTags);
+            return "pull " + pullArgs + GetFetchArgs(remote, remoteBranch, localBranch, fetchTags);
         }
 
         public string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase)
