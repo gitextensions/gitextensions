@@ -624,12 +624,26 @@ namespace GitUI.CommandsDialogs
 
             var inTheMiddleOfConflictedMerge = Module.InTheMiddleOfConflictedMerge();
             SolveMergeconflicts.Visible = inTheMiddleOfConflictedMerge;
+
+            if (Staged.IsEmpty)
+            {
+                _currentFilesList = Unstaged;
+                if (Staged.ContainsFocus)
+                    Unstaged.Focus();
+            }
+            else if (Unstaged.IsEmpty)
+            {
+                _currentFilesList = Staged;
+                if (Unstaged.ContainsFocus)
+                    Staged.Focus();
+            }
+
             RestoreSelectedFiles(unStagedFiles, stagedFiles, lastSelection);
 
             if (OnStageAreaLoaded != null)
                 OnStageAreaLoaded();
 
-            if (_loadUnstagedOutputFirstTime)
+            if (_loadUnstagedOutputFirstTime && (this.ActiveControl == splitMain))
             {
                 if (Unstaged.GitItemStatuses.Any())
                     Unstaged.Focus();
@@ -641,19 +655,24 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void SelectStoredNextIndex()
+        {
+            Unstaged.SelectStoredNextIndex(0);
+            if (Unstaged.GitItemStatuses.Any())
+            {
+                Staged.SelectStoredNextIndex();
+            }
+            else
+            {
+                Staged.SelectStoredNextIndex(0);
+            }        
+        }
+
         private void RestoreSelectedFiles(IList<GitItemStatus> unStagedFiles, IList<GitItemStatus> stagedFiles, IList<GitItemStatus> lastSelection)
         {
             if (_currentFilesList == null || _currentFilesList.IsEmpty)
             {
-                Unstaged.SelectStoredNextIndex(0);
-                if (Unstaged.GitItemStatuses.Any())
-                {
-                    Staged.SelectStoredNextIndex();
-                }
-                else
-                {
-                    Staged.SelectStoredNextIndex(0);
-                }
+                SelectStoredNextIndex();
             }
             else
             {
@@ -663,7 +682,12 @@ namespace GitUI.CommandsDialogs
 
                 var names = lastSelection.ToHashSet(x => x.Name);
                 var newSelection = newItems.Where(x => names.Contains(x.Name));
-                _currentFilesList.SelectedItems = newSelection;
+
+                if (newSelection.Any())
+                    _currentFilesList.SelectedItems = newSelection;
+                else
+                    SelectStoredNextIndex();
+
             }
         }
 
