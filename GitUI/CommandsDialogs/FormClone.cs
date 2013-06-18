@@ -54,6 +54,8 @@ namespace GitUI.CommandsDialogs
             base.OnRuntimeLoad(e);
             FillFromDropDown();
 
+            _NO_TRANSLATE_To.Text = Settings.DefaultCloneDestinationPath;
+
             if (url != null)
             {
                 _NO_TRANSLATE_From.Text = url;
@@ -64,7 +66,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (Module.IsValidGitWorkingDir())
                     _NO_TRANSLATE_From.Text = Module.WorkingDir;
-                else
+                else if (!string.IsNullOrEmpty(Module.WorkingDir))
                     _NO_TRANSLATE_To.Text = Module.WorkingDir;
             }
 
