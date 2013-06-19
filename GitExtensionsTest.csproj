@@ -63,7 +63,8 @@
     <Compile Include="GitCommands\Helpers\FileInfoExtensionsTest.cs" />
     <Compile Include="GitCommands\Patch\PatchManagerTest.cs" />
     <Compile Include="GitCommands\Patch\PatchTest.cs" />
-    <Compile Include="GitUI\GotoUserManualControlFixture.cs" />
+    <Compile Include="GitUI\SingleHtmlUserManualFixture.cs" />
+    <Compile Include="GitUI\StandardHtmlUserManualFixture.cs" />
     <Compile Include="Plugins\ReleaseNotesGenerator\MainFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GitCommands\Git\GitBlameTest.cs" />
