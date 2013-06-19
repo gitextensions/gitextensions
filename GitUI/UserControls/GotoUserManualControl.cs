@@ -7,30 +7,10 @@ namespace GitUI.UserControls
 {
     public partial class GotoUserManualControl : GitExtensionsControl
     {
-        /// <summary>
-        /// TODO: make customizable
-        /// internal for unit tests
-        /// </summary>
-        internal string ManualLocation;
-
-        /// <summary>
-        /// TODO: make customizable
-        /// internal for unit tests
-        /// </summary>
-        internal ManualType ManualType;
-
         public GotoUserManualControl()
         {
             InitializeComponent();
             Translate();
-
-            // set online manual
-            ManualLocation = @"https://gitextensions.readthedocs.org/en/latest";
-            ManualType = ManualType.StandardHtml;
-
-            // set local singlehtml help / TODO: put manual to GitExt setup
-            ////ManualLocation = @"file:///D:/data2/projects/gitextensions/GitExtensionsDoc/build/singlehtml";
-            ////ManualType = ManualType.SingleHtml;
         }
 
         bool isLoaded = false;
@@ -49,9 +29,6 @@ namespace GitUI.UserControls
         }
 
         string _manualSectionSubfolder;
-        /// <summary>
-        /// only needed when ManualType is StandardHtml (not needed for SingleHtml)
-        /// </summary>
         public string ManualSectionSubfolder
         {
             get { return _manualSectionSubfolder; }
@@ -71,25 +48,9 @@ namespace GitUI.UserControls
             OpenUrlInDefaultBrowser(url);
         }
 
-        /// <summary>
-        /// internal for test
-        /// </summary>
-        /// <returns></returns>
-        internal string GetUrl()
+        private string GetUrl()
         {
-            switch (ManualType)
-            {
-                case UserControls.ManualType.SingleHtml:
-                    return string.Format("{0}/index.html{1}{2}",
-                        ManualLocation, ManualSectionAnchorName.IsNullOrEmpty() ? "" : "#", ManualSectionAnchorName);
-
-                case UserControls.ManualType.StandardHtml:
-                    return string.Format("{0}/{1}/{2}{3}",
-                        ManualLocation, ManualSectionSubfolder, ManualSectionAnchorName.IsNullOrEmpty() ? "" : "#", ManualSectionAnchorName);
-
-                default:
-                    throw new NotImplementedException();
-            }
+            return UserManual.UserManual.UrlFor(ManualSectionSubfolder, ManualSectionAnchorName);
         }
 
         /// <summary>
@@ -115,18 +76,5 @@ namespace GitUI.UserControls
         {
             OpenManual();
         }
-    }
-
-    public enum ManualType
-    {
-        /// <summary>
-        /// all in one html page
-        /// </summary>
-        SingleHtml,
-
-        /// <summary>
-        /// html with subfolders
-        /// </summary>
-        StandardHtml
     }
 }
