@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
+using Microsoft.Win32;
 
 namespace GitUI
 {
@@ -26,6 +28,18 @@ namespace GitUI
         public static void OpenWithFileExplorer(string filePath)
         {
             Process.Start("explorer.exe", filePath);
+        }
+
+        /// <summary>
+        /// opens urls even with anchor
+        /// </summary>
+        public static void OpenUrlInDefaultBrowser(string url)
+        {
+            // Process.Start(url); / does not work with anchors: http://stackoverflow.com/questions/2404449/process-starturl-with-anchor-in-the-url
+
+            var browserRegistryString  = Registry.ClassesRoot.OpenSubKey(@"\http\shell\open\command\").GetValue("").ToString();
+            var defaultBrowserPath = Regex.Match(browserRegistryString, @"(\"".*?\"")").Captures[0].ToString();
+            Process.Start(defaultBrowserPath, url);
         }
     }
 }
