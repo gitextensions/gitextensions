@@ -325,5 +325,17 @@ namespace GitUI
             if (!control.IsDisposed)
                 UISynchronizationContext.Send(checkDisposedAndInvoke, state);
         }
+
+        public static Control FindFocusedControl(this ContainerControl container)
+        {
+            var control = container.ActiveControl;
+            container = control as ContainerControl;
+
+            if (container == null)
+                return control;
+            else
+                return container.FindFocusedControl();
+        }
+
     }
 }
