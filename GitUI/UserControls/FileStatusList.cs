@@ -312,9 +312,9 @@ namespace GitUI
         {
             get
             {
-                for (int index = 0; index < FileStatusListView.SelectedItems.Count; index++)
+                if (FileStatusListView.SelectedItems.Count > 0)
                 {
-                    ListViewItem item = FileStatusListView.SelectedItems[index];
+                    ListViewItem item = FileStatusListView.SelectedItems[0];
                     return (GitItemStatus) item.Tag;
                 }
                 return null;
