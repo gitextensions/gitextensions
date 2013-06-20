@@ -112,7 +112,7 @@
             this.buttonArchiveRevision.AutoSize = true;
             this.buttonArchiveRevision.Image = global::GitUI.Properties.Resources.IconSaveAs;
             this.buttonArchiveRevision.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonArchiveRevision.Location = new System.Drawing.Point(480, 543);
+            this.buttonArchiveRevision.Location = new System.Drawing.Point(480, 545);
             this.buttonArchiveRevision.Name = "buttonArchiveRevision";
             this.buttonArchiveRevision.Size = new System.Drawing.Size(111, 25);
             this.buttonArchiveRevision.TabIndex = 3;
@@ -124,9 +124,9 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.tableLayoutPanel2);
-            this.groupBox1.Location = new System.Drawing.Point(365, 523);
+            this.groupBox1.Location = new System.Drawing.Point(365, 522);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(109, 45);
+            this.groupBox1.Size = new System.Drawing.Size(109, 48);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Archive format";
@@ -141,10 +141,11 @@
             this.tableLayoutPanel2.Controls.Add(this._NO_TRANSLATE_radioButtonFormatTar, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 19);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(103, 23);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(103, 26);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
             // _NO_TRANSLATE_radioButtonFormatZip
@@ -153,7 +154,7 @@
             this._NO_TRANSLATE_radioButtonFormatZip.Checked = true;
             this._NO_TRANSLATE_radioButtonFormatZip.Location = new System.Drawing.Point(3, 3);
             this._NO_TRANSLATE_radioButtonFormatZip.Name = "_NO_TRANSLATE_radioButtonFormatZip";
-            this._NO_TRANSLATE_radioButtonFormatZip.Size = new System.Drawing.Size(40, 17);
+            this._NO_TRANSLATE_radioButtonFormatZip.Size = new System.Drawing.Size(40, 19);
             this._NO_TRANSLATE_radioButtonFormatZip.TabIndex = 0;
             this._NO_TRANSLATE_radioButtonFormatZip.TabStop = true;
             this._NO_TRANSLATE_radioButtonFormatZip.Text = "zip";
@@ -164,7 +165,7 @@
             this._NO_TRANSLATE_radioButtonFormatTar.AutoSize = true;
             this._NO_TRANSLATE_radioButtonFormatTar.Location = new System.Drawing.Point(54, 3);
             this._NO_TRANSLATE_radioButtonFormatTar.Name = "_NO_TRANSLATE_radioButtonFormatTar";
-            this._NO_TRANSLATE_radioButtonFormatTar.Size = new System.Drawing.Size(39, 17);
+            this._NO_TRANSLATE_radioButtonFormatTar.Size = new System.Drawing.Size(39, 19);
             this._NO_TRANSLATE_radioButtonFormatTar.TabIndex = 1;
             this._NO_TRANSLATE_radioButtonFormatTar.Text = "tar";
             this._NO_TRANSLATE_radioButtonFormatTar.UseVisualStyleBackColor = true;
@@ -247,7 +248,7 @@
             // 
             this.labelDateCaption.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelDateCaption.AutoSize = true;
-            this.labelDateCaption.Location = new System.Drawing.Point(225, 80);
+            this.labelDateCaption.Location = new System.Drawing.Point(227, 78);
             this.labelDateCaption.Name = "labelDateCaption";
             this.labelDateCaption.Size = new System.Drawing.Size(80, 15);
             this.labelDateCaption.TabIndex = 22;
@@ -273,7 +274,7 @@
             this.labelAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelAuthor.AutoSize = true;
             this.labelAuthor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelAuthor.Location = new System.Drawing.Point(93, 81);
+            this.labelAuthor.Location = new System.Drawing.Point(98, 79);
             this.labelAuthor.Name = "labelAuthor";
             this.labelAuthor.Size = new System.Drawing.Size(19, 13);
             this.labelAuthor.TabIndex = 20;
@@ -281,18 +282,17 @@
             // 
             // lblChooseDiffRevision
             // 
-            this.lblChooseDiffRevision.AutoSize = true;
-            this.lblChooseDiffRevision.Location = new System.Drawing.Point(494, 198);
+            this.lblChooseDiffRevision.Location = new System.Drawing.Point(479, 198);
             this.lblChooseDiffRevision.Name = "lblChooseDiffRevision";
-            this.lblChooseDiffRevision.Size = new System.Drawing.Size(91, 45);
+            this.lblChooseDiffRevision.Size = new System.Drawing.Size(112, 35);
             this.lblChooseDiffRevision.TabIndex = 0;
-            this.lblChooseDiffRevision.Text = "Choose revision\r\nto compare\r\nwith first:";
+            this.lblChooseDiffRevision.Text = "Choose revision to \r\ncompare with first:";
             // 
             // btnDiffChooseRevision
             // 
             this.btnDiffChooseRevision.Enabled = false;
             this.btnDiffChooseRevision.Image = global::GitUI.Properties.Resources.IconSelectRevision;
-            this.btnDiffChooseRevision.Location = new System.Drawing.Point(494, 246);
+            this.btnDiffChooseRevision.Location = new System.Drawing.Point(479, 234);
             this.btnDiffChooseRevision.Name = "btnDiffChooseRevision";
             this.btnDiffChooseRevision.Size = new System.Drawing.Size(25, 24);
             this.btnDiffChooseRevision.TabIndex = 1;
@@ -313,10 +313,10 @@
             this.checkboxRevisionFilter.AutoSize = true;
             this.checkboxRevisionFilter.Location = new System.Drawing.Point(6, 167);
             this.checkboxRevisionFilter.Name = "checkboxRevisionFilter";
-            this.checkboxRevisionFilter.Size = new System.Drawing.Size(483, 19);
+            this.checkboxRevisionFilter.Size = new System.Drawing.Size(505, 19);
             this.checkboxRevisionFilter.TabIndex = 0;
-            this.checkboxRevisionFilter.Text = "Take the files that have changed from the first revision to the other and take on" +
-    "ly those";
+            this.checkboxRevisionFilter.Text = "Take the files that have changed from the revision above to this one and archive " +
+    "only those";
             this.checkboxRevisionFilter.UseVisualStyleBackColor = true;
             this.checkboxRevisionFilter.CheckedChanged += new System.EventHandler(this.checkboxRevisionFilter_CheckedChanged);
             // 
