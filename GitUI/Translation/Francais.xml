@@ -2661,9 +2661,9 @@ Voulez-vous ouvrir le nouveau dépôt "{0}" maintenant ?</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Supported commandline arguments for
-gitext.cmd / gitext (located in the same folder as GitExtensions.exe):</Source>
+gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
           <Value>Arguments de ligne de commande supporté pour
-gitext.cmd / gitext (situé dans le même répertoire que GitExtensions.exe) :</Value>
+gitex.cmd / gitex (situé dans le même répertoire que GitExtensions.exe) :</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>

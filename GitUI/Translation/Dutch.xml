@@ -2611,7 +2611,7 @@ Wilt u de nieuwe repository "{0}" openen?</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Supported commandline arguments for
-gitext.cmd / gitext (located in the same folder as GitExtensions.exe):</Source>
+gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
           <Value>Ondersteunde commandline argumenten:</Value>
         </TranslationItem>
       </translationItems>
