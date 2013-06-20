@@ -14,7 +14,7 @@ namespace DeleteUnusedBranches
         {
             base.RegisterSettings();
             Settings.AddSetting("Delete obsolete branches older than (days)", "30");
-			Settings.AddSetting("Branch where all branches should be merged in", "HEAD");
+            Settings.AddSetting("Branch where all branches should be merged in", "HEAD");
         }
 
         public override bool Execute(GitUIBaseEventArgs gitUiCommands)
@@ -23,8 +23,11 @@ namespace DeleteUnusedBranches
             if (!int.TryParse(Settings.GetSetting("Delete obsolete branches older than (days)"), out days))
                 days = 30;
 
-	    string referenceBranch = Settings.GetSetting("Branch where all branches should be merged in");
-            using (var frm = new DeleteUnusedBranchesForm(days, referenceBranch, gitUiCommands.GitModule)) frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            string referenceBranch = Settings.GetSetting("Branch where all branches should be merged in");
+            using (var frm = new DeleteUnusedBranchesForm(days, referenceBranch, gitUiCommands.GitModule, gitUiCommands.GitUICommands, this))
+            {
+                frm.ShowDialog(gitUiCommands.OwnerForm as IWin32Window);
+            }
 
             return true;
         }
