@@ -37,10 +37,10 @@
             this.Delete = new System.Windows.Forms.Button();
             this.instructionLabel = new System.Windows.Forms.Label();
             this.buttonSettings = new System.Windows.Forms.Button();
+            this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.deleteDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Result = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.branchBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.BranchesGrid)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -143,6 +143,16 @@
             this.buttonSettings.UseVisualStyleBackColor = true;
             this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
             // 
+            // Result
+            // 
+            this.Result.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Result.DataPropertyName = "Result";
+            this.Result.FillWeight = 2F;
+            this.Result.HeaderText = "Result";
+            this.Result.Name = "Result";
+            this.Result.ReadOnly = true;
+            this.Result.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
             // nameDataGridViewTextBoxColumn
             // 
             this.nameDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -171,16 +181,6 @@
             this.deleteDataGridViewCheckBoxColumn.Name = "deleteDataGridViewCheckBoxColumn";
             this.deleteDataGridViewCheckBoxColumn.Width = 50;
             // 
-            // Result
-            // 
-            this.Result.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Result.DataPropertyName = "Result";
-            this.Result.FillWeight = 2F;
-            this.Result.HeaderText = "Result";
-            this.Result.Name = "Result";
-            this.Result.ReadOnly = true;
-            this.Result.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
             // branchBindingSource
             // 
             this.branchBindingSource.DataSource = typeof(DeleteUnusedBranches.Branch);
@@ -193,6 +193,7 @@
             this.ClientSize = new System.Drawing.Size(760, 421);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "DeleteUnusedBranchesForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Delete obsolete branches";
