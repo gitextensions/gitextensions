@@ -69,10 +69,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         public void TriggerPropertyChanged()
         {
             Debug.WriteLine("RevisionGridMenuCommands.TriggerPropertyChanged()");
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(null, null);
-            }
+            OnPropertyChanged();
         }
 
         private void UpdateMenuCommandShortcutKeyDisplayString(IEnumerable<MenuCommand> targetList, IEnumerable<MenuCommand> sourceList)
@@ -238,10 +235,17 @@ namespace GitUI.UserControls.RevisionGridClasses
         // paramenter name not used
         protected void OnPropertyChanged(string name = null)
         {
+            Debug.WriteLine("RevisionGridMenuCommands.OnPropertyChanged()");
+
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(name));
+            }
+
+            foreach (var menuCommand in _viewMenuCommands)
+            {
+                menuCommand.SetCheckForRegisteredMenuItems();
             }
         }
 
