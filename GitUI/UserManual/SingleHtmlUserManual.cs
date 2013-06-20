@@ -1,10 +1,25 @@
 ﻿using System;
+using System.IO;
+using GitCommands;
 
 namespace GitUI.UserManual
 {
     public class SingleHtmlUserManual : IProvideUserManual
     {
-        private readonly string _location = @"file:///D:/data2/projects/gitextensions/GitExtensionsDoc/build/singlehtml";
+        private static string _Location;
+        public static string Location 
+        {
+            get
+            {
+                if (_Location == null)
+                {
+                    var path = Path.Combine(Settings.GetInstallDir(), "help");
+                    var uri = new System.Uri(path);
+                    _Location = uri.AbsolutePath;
+                }
+                return _Location;
+            }
+        }
         private readonly string _anchorName;
 
         public SingleHtmlUserManual(string anchorName)
@@ -15,7 +30,7 @@ namespace GitUI.UserManual
         public string GetUrl()
         {
             return string.Format("{0}/index.html{1}{2}",
-                                 _location, _anchorName.IsNullOrEmpty() ? "" : "#", _anchorName);
+                                 Location, _anchorName.IsNullOrEmpty() ? "" : "#", _anchorName);
         }
     }
 }
