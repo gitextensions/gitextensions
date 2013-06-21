@@ -212,8 +212,6 @@ namespace GitUI.UserControls.RevisionGridClasses
 
             resultList.Add(MenuCommand.CreateSeparator());
 
-            // TODO BEGIN
-
             {
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "showRevisionGraphToolStripMenuItem";
@@ -283,8 +281,6 @@ namespace GitUI.UserControls.RevisionGridClasses
 
                 resultList.Add(menuCommand);
             }
-
-            // TODO END
 
             resultList.Add(MenuCommand.CreateSeparator());
 
