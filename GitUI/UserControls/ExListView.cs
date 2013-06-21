@@ -6,6 +6,7 @@ using GitCommands.Utils;
 
 namespace GitUI.UserControls
 {
+    [CLSCompliant(false)]
     public enum ListViewGroupState : uint
     {
         /// <summary>
