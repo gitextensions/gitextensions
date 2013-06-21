@@ -90,20 +90,12 @@ namespace GitUI
             _revisionGridMenuCommands.CreateOrUpdateMenuCommands();
 
             // fill View context menu from MenuCommands
-            {
-                var viewMenuCommands = _revisionGridMenuCommands.GetViewMenuCommands();
+            var viewMenuCommands = _revisionGridMenuCommands.GetViewMenuCommands();
+            FillMenuFromMenuCommands(viewMenuCommands, viewToolStripMenuItem);
 
-                foreach (var menuCommand in viewMenuCommands)
-                {
-                    var toolStripItem = (ToolStripItem)MenuCommand.CreateToolStripItem(menuCommand);
-                    var toolStripMenuItem = toolStripItem as ToolStripMenuItem;
-                    if (toolStripMenuItem != null)
-                    {
-                        menuCommand.RegisterMenuItem(toolStripMenuItem);
-                    }
-                    toolStripMenuItemView.DropDownItems.Add(toolStripItem);
-                }
-            }
+            // fill Navigate context menu from MenuCommands
+            var navigateMenuCommands = _revisionGridMenuCommands.GetNavigateMenuCommands();
+            FillMenuFromMenuCommands(navigateMenuCommands, navigateToolStripMenuItem);
 
             NormalFont = Settings.Font;
             Loading.Paint += Loading_Paint;
@@ -140,6 +132,20 @@ namespace GitUI
             catch
             {
                 SetRevisionsLayout(RevisionGridLayout.SmallWithGraph);
+            }
+        }
+
+        private void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
+        {
+            foreach (var menuCommand in menuCommands)
+            {
+                var toolStripItem = (ToolStripItem)MenuCommand.CreateToolStripItem(menuCommand);
+                var toolStripMenuItem = toolStripItem as ToolStripMenuItem;
+                if (toolStripMenuItem != null)
+                {
+                    menuCommand.RegisterMenuItem(toolStripMenuItem);
+                }
+                targetMenuItem.DropDownItems.Add(toolStripItem);
             }
         }
 
