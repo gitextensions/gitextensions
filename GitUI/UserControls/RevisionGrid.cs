@@ -2289,7 +2289,7 @@ namespace GitUI
                 ForceRefreshRevisions();
         }
 
-        private void ShowRevisionGraphToolStripMenuItemClick(object sender, EventArgs e)
+        internal void ShowRevisionGraphToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.Small) Settings.RevisionGraphLayout = (int)RevisionGridLayout.SmallWithGraph;
             else if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.Card) Settings.RevisionGraphLayout = (int)RevisionGridLayout.CardWithGraph;
@@ -2336,7 +2336,6 @@ namespace GitUI
                          ? (RevisionGridLayout)Settings.RevisionGraphLayout
                          : RevisionGridLayout.SmallWithGraph;
 
-            showRevisionGraphToolStripMenuItem.Checked = IsGraphLayout();
             IsCardLayout();
 
             NormalFont = Settings.Font;// new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
@@ -2418,7 +2417,7 @@ namespace GitUI
                    || _layout == RevisionGridLayout.LargeCardWithGraph;
         }
 
-        private bool IsGraphLayout()
+        internal bool IsGraphLayout()
         {
             return _layout == RevisionGridLayout.SmallWithGraph
                    || _layout == RevisionGridLayout.CardWithGraph
