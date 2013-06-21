@@ -103,7 +103,6 @@ namespace GitUI
             this.showFilteredBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
-            this.showRevisionGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.drawNonrelativesGrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.orderRevisionsByDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -556,7 +555,6 @@ namespace GitUI
             // toolStripMenuItemView
             // 
             this.toolStripMenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showRevisionGraphToolStripMenuItem,
             this.drawNonrelativesGrayToolStripMenuItem,
             this.orderRevisionsByDateToolStripMenuItem,
             this.showAuthorDateToolStripMenuItem,
@@ -566,13 +564,6 @@ namespace GitUI
             this.toolStripMenuItemView.Name = "toolStripMenuItemView";
             this.toolStripMenuItemView.Size = new System.Drawing.Size(264, 24);
             this.toolStripMenuItemView.Text = "View";
-            // 
-            // showRevisionGraphToolStripMenuItem
-            // 
-            this.showRevisionGraphToolStripMenuItem.Name = "showRevisionGraphToolStripMenuItem";
-            this.showRevisionGraphToolStripMenuItem.Size = new System.Drawing.Size(234, 24);
-            this.showRevisionGraphToolStripMenuItem.Text = "Show revision graph";
-            this.showRevisionGraphToolStripMenuItem.Click += new System.EventHandler(this.ShowRevisionGraphToolStripMenuItemClick);
             // 
             // drawNonrelativesGrayToolStripMenuItem
             // 
@@ -854,7 +845,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem runScriptToolStripMenuItem;
         private System.Windows.Forms.Button InitRepository;
         private System.Windows.Forms.Button CloneRepository;
-        private System.Windows.Forms.ToolStripMenuItem showRevisionGraphToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem drawNonrelativesGrayToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem orderRevisionsByDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showAuthorDateToolStripMenuItem;
