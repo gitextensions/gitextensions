@@ -97,8 +97,8 @@ namespace GitUI
             this.fixupCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.squashCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.showBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
+            this.navigateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -248,8 +248,8 @@ namespace GitUI
             this.archiveRevisionToolStripMenuItem,
             this.manipulateCommitToolStripMenuItem,
             this.toolStripSeparator1,
-            this.showBranchesToolStripMenuItem,
-            this.toolStripMenuItemView,
+            this.navigateToolStripMenuItem,
+            this.viewToolStripMenuItem,
             this.filterToolStripMenuItem,
             this.toolStripSeparator7,
             this.runScriptToolStripMenuItem});
@@ -507,19 +507,19 @@ namespace GitUI
             // 
             // showBranchesToolStripMenuItem
             // 
-            this.showBranchesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.navigateToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             });
-            this.showBranchesToolStripMenuItem.Name = "showBranchesToolStripMenuItem";
-            this.showBranchesToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
-            this.showBranchesToolStripMenuItem.Text = "Show branches";
+            this.navigateToolStripMenuItem.Name = "navigateToolStripMenuItem";
+            this.navigateToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.navigateToolStripMenuItem.Text = "Navigate";
             // 
             // toolStripMenuItemView
             // 
-            this.toolStripMenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             });
-            this.toolStripMenuItemView.Name = "toolStripMenuItemView";
-            this.toolStripMenuItemView.Size = new System.Drawing.Size(264, 24);
-            this.toolStripMenuItemView.Text = "View";
+            this.viewToolStripMenuItem.Name = "toolStripMenuItemView";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
+            this.viewToolStripMenuItem.Text = "View";
             // 
             // filterToolStripMenuItem
             // 
@@ -720,7 +720,7 @@ namespace GitUI
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Commit;
         private System.Windows.Forms.Button GitIgnore;
-        private System.Windows.Forms.ToolStripMenuItem showBranchesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem navigateToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem revertCommitToolStripMenuItem;
@@ -762,7 +762,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem hashToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bisectSkipRevisionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemView;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.DataGridViewTextBoxColumn Message;
