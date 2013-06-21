@@ -103,7 +103,6 @@ namespace GitUI
             showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
             orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
             showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
-            drawNonrelativesGrayToolStripMenuItem.Checked = Settings.RevisionGraphDrawNonRelativesGray;
             showGitNotesToolStripMenuItem.Checked = Settings.ShowGitNotes;
             showTagsToolStripMenuItem.Checked = Settings.ShowTags;
 
@@ -2093,10 +2092,9 @@ namespace GitUI
             }
         }
 
-        private void drawNonrelativesGrayToolStripMenuItem_Click(object sender, EventArgs e)
+        internal void DrawNonrelativesGrayToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Settings.RevisionGraphDrawNonRelativesGray = !Settings.RevisionGraphDrawNonRelativesGray;
-            drawNonrelativesGrayToolStripMenuItem.Checked = Settings.RevisionGraphDrawNonRelativesGray;
             Revisions.Refresh();
         }
 
@@ -2459,7 +2457,7 @@ namespace GitUI
                 case Commands.ToggleAuthorDateCommitDate: ShowAuthorDateToolStripMenuItemClick(null, null); break;
                 case Commands.ToggleOrderRevisionsByDate: OrderRevisionsByDateToolStripMenuItemClick(null, null); break;
                 case Commands.ToggleShowRelativeDate: ShowRelativeDateToolStripMenuItemClick(null, null); break;
-                case Commands.ToggleDrawNonRelativesGray: drawNonrelativesGrayToolStripMenuItem_Click(null, null); break;
+                case Commands.ToggleDrawNonRelativesGray: DrawNonrelativesGrayToolStripMenuItem_Click(null, null); break;
                 case Commands.ToggleShowGitNotes: ShowGitNotesToolStripMenuItem_Click(null, null); break;
                 case Commands.ToggleRevisionCardLayout: ToggleRevisionCardLayout(); break;
                 case Commands.ShowAllBranches: ShowAllBranchesToolStripMenuItemClick(null, null); break;
