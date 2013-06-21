@@ -246,10 +246,40 @@ namespace GitUI.UserControls.RevisionGridClasses
 
             {
                 var menuCommand = new MenuCommand();
-                menuCommand.Name = "showAuthorDateToolStripMenuItem"; // 2
+                menuCommand.Name = "showAuthorDateToolStripMenuItem";
                 menuCommand.Text = "Show author date";
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowAuthorDateToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => Settings.ShowAuthorDate;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "showRelativeDateToolStripMenuItem";
+                menuCommand.Text = "Show relative date";
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowRelativeDateToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => Settings.RelativeDate;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "showGitNotesToolStripMenuItem";
+                menuCommand.Text = "Show git notes";
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowGitNotesToolStripMenuItem_Click(null, null);
+                menuCommand.IsCheckedFunc = () => Settings.ShowGitNotes;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "showTagsToolStripMenuItem";
+                menuCommand.Text = "Show tags";
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowTagsToolStripMenuItem_Click(null, null);
+                menuCommand.IsCheckedFunc = () => Settings.ShowTags;
 
                 resultList.Add(menuCommand);
             }

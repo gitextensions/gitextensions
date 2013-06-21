@@ -103,9 +103,6 @@ namespace GitUI
             this.showFilteredBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
-            this.showRelativeDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showGitNotesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -552,33 +549,10 @@ namespace GitUI
             // toolStripMenuItemView
             // 
             this.toolStripMenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showRelativeDateToolStripMenuItem,
-            this.showGitNotesToolStripMenuItem,
-            this.showTagsToolStripMenuItem});
+            });
             this.toolStripMenuItemView.Name = "toolStripMenuItemView";
             this.toolStripMenuItemView.Size = new System.Drawing.Size(264, 24);
             this.toolStripMenuItemView.Text = "View";
-            // 
-            // showRelativeDateToolStripMenuItem
-            // 
-            this.showRelativeDateToolStripMenuItem.Name = "showRelativeDateToolStripMenuItem";
-            this.showRelativeDateToolStripMenuItem.Size = new System.Drawing.Size(234, 24);
-            this.showRelativeDateToolStripMenuItem.Text = "Show relative date";
-            this.showRelativeDateToolStripMenuItem.Click += new System.EventHandler(this.ShowRelativeDateToolStripMenuItemClick);
-            // 
-            // showGitNotesToolStripMenuItem
-            // 
-            this.showGitNotesToolStripMenuItem.Name = "showGitNotesToolStripMenuItem";
-            this.showGitNotesToolStripMenuItem.Size = new System.Drawing.Size(234, 24);
-            this.showGitNotesToolStripMenuItem.Text = "Show git notes";
-            this.showGitNotesToolStripMenuItem.Click += new System.EventHandler(this.ShowGitNotesToolStripMenuItem_Click);
-            // 
-            // showTagsToolStripMenuItem
-            // 
-            this.showTagsToolStripMenuItem.Name = "showTagsToolStripMenuItem";
-            this.showTagsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
-            this.showTagsToolStripMenuItem.Text = "Show tags";
-            this.showTagsToolStripMenuItem.Click += new System.EventHandler(this.showTagsToolStripMenuItem_Click);
             // 
             // filterToolStripMenuItem
             // 
@@ -818,8 +792,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem runScriptToolStripMenuItem;
         private System.Windows.Forms.Button InitRepository;
         private System.Windows.Forms.Button CloneRepository;
-        private System.Windows.Forms.ToolStripMenuItem showRelativeDateToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showGitNotesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manipulateCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fixupCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem squashCommitToolStripMenuItem;
@@ -834,6 +806,5 @@ namespace GitUI
         private System.Windows.Forms.DataGridViewTextBoxColumn Author;
         private System.Windows.Forms.DataGridViewTextBoxColumn Date;
         private System.Windows.Forms.DataGridViewTextBoxColumn Graph;
-        private System.Windows.Forms.ToolStripMenuItem showTagsToolStripMenuItem;
     }
 }
