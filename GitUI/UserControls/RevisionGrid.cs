@@ -89,12 +89,20 @@ namespace GitUI
             _revisionGridMenuCommands = new RevisionGridMenuCommands(this);
             _revisionGridMenuCommands.CreateOrUpdateMenuCommands();
 
-            // add "ShowRemoteBranches" to context menu
+            // fill View context menu from MenuCommands
             {
-                var menuCommand = _revisionGridMenuCommands.GetViewMenuCommands().Single(a => a.Name == "ShowRemoteBranches");
-                var toolStripMenuItem = (ToolStripMenuItem)MenuCommand.CreateToolStripItem(menuCommand);
-                menuCommand.RegisterMenuItem(toolStripMenuItem);
-                showBranchesToolStripMenuItem.DropDownItems.Add(toolStripMenuItem);
+                var viewMenuCommands = _revisionGridMenuCommands.GetViewMenuCommands();
+
+                foreach (var menuCommand in viewMenuCommands)
+                {
+                    var toolStripItem = (ToolStripItem)MenuCommand.CreateToolStripItem(menuCommand);
+                    var toolStripMenuItem = toolStripItem as ToolStripMenuItem;
+                    if (toolStripMenuItem != null)
+                    {
+                        menuCommand.RegisterMenuItem(toolStripMenuItem);
+                    }
+                    toolStripMenuItemView.DropDownItems.Add(toolStripItem);
+                }
             }
 
             NormalFont = Settings.Font;
