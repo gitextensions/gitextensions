@@ -100,8 +100,6 @@ namespace GitUI
             Revisions.CellFormatting += RevisionsCellFormatting;
             Revisions.KeyPress += RevisionsKeyPress;
 
-            showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
-            orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
             showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
             showGitNotesToolStripMenuItem.Checked = Settings.ShowGitNotes;
             showTagsToolStripMenuItem.Checked = Settings.ShowTags;
@@ -1973,17 +1971,15 @@ namespace GitUI
             UICommands.StartArchiveDialog(this, selectedRevisions.First());
         }
 
-        private void ShowAuthorDateToolStripMenuItemClick(object sender, EventArgs e)
+        internal void ShowAuthorDateToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Settings.ShowAuthorDate = !showAuthorDateToolStripMenuItem.Checked;
-            showAuthorDateToolStripMenuItem.Checked = Settings.ShowAuthorDate;
+            Settings.ShowAuthorDate = !Settings.ShowAuthorDate;
             ForceRefreshRevisions();
         }
 
-        private void OrderRevisionsByDateToolStripMenuItemClick(object sender, EventArgs e)
+        internal void OrderRevisionsByDateToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Settings.OrderRevisionByDate = !orderRevisionsByDateToolStripMenuItem.Checked;
-            orderRevisionsByDateToolStripMenuItem.Checked = Settings.OrderRevisionByDate;
+            Settings.OrderRevisionByDate = !Settings.OrderRevisionByDate;
             ForceRefreshRevisions();
         }
 
@@ -2095,6 +2091,7 @@ namespace GitUI
         internal void DrawNonrelativesGrayToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Settings.RevisionGraphDrawNonRelativesGray = !Settings.RevisionGraphDrawNonRelativesGray;
+            _revisionGridMenuCommands.TriggerPropertyChanged();
             Revisions.Refresh();
         }
 
@@ -2298,6 +2295,7 @@ namespace GitUI
             else if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.FilledBranchesSmall) Settings.RevisionGraphLayout = (int)RevisionGridLayout.FilledBranchesSmallWithGraph;
             else if (Settings.RevisionGraphLayout == (int)RevisionGridLayout.FilledBranchesSmallWithGraph) Settings.RevisionGraphLayout = (int)RevisionGridLayout.FilledBranchesSmall;
             SetRevisionsLayout();
+            _revisionGridMenuCommands.TriggerPropertyChanged();
             Refresh();
         }
 
