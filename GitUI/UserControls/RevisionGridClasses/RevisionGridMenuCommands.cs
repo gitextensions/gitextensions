@@ -9,6 +9,7 @@ using System.ComponentModel;
 using GitUI.CommandsDialogs.BrowseDialog;
 using ResourceManager.Translation;
 using System.Diagnostics;
+using GitCommands;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
@@ -222,6 +223,17 @@ namespace GitUI.UserControls.RevisionGridClasses
 
                 resultList.Add(menuCommand);
             }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "drawNonrelativesGrayToolStripMenuItem";
+                menuCommand.Text = "Draw non relatives gray";
+                menuCommand.ExecuteAction = () => _revisionGrid.DrawNonrelativesGrayToolStripMenuItem_Click(null, null);
+                menuCommand.IsCheckedFunc = () => Settings.RevisionGraphDrawNonRelativesGray;
+
+                resultList.Add(menuCommand);
+            }
+
 
             // TODO END
 
