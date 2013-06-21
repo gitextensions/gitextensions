@@ -211,6 +211,22 @@ namespace GitUI.UserControls.RevisionGridClasses
 
             resultList.Add(MenuCommand.CreateSeparator());
 
+            // TODO BEGIN
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "showRevisionGraphToolStripMenuItem";
+                menuCommand.Text = "Show revision graph";
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowRevisionGraphToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => _revisionGrid.IsGraphLayout();
+
+                resultList.Add(menuCommand);
+            }
+
+            // TODO END
+
+            resultList.Add(MenuCommand.CreateSeparator());
+
             {
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "ToggleHighlightSelectedBranch";
