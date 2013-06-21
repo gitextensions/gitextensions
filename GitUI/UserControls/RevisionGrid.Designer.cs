@@ -98,9 +98,6 @@ namespace GitUI
             this.squashCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.showBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showAllBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showCurrentBranchOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showFilteredBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -512,34 +509,10 @@ namespace GitUI
             // showBranchesToolStripMenuItem
             // 
             this.showBranchesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showAllBranchesToolStripMenuItem,
-            this.showCurrentBranchOnlyToolStripMenuItem,
-            this.showFilteredBranchesToolStripMenuItem,
             this.toolStripSeparator4});
             this.showBranchesToolStripMenuItem.Name = "showBranchesToolStripMenuItem";
             this.showBranchesToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.showBranchesToolStripMenuItem.Text = "Show branches";
-            // 
-            // showAllBranchesToolStripMenuItem
-            // 
-            this.showAllBranchesToolStripMenuItem.Name = "showAllBranchesToolStripMenuItem";
-            this.showAllBranchesToolStripMenuItem.Size = new System.Drawing.Size(245, 24);
-            this.showAllBranchesToolStripMenuItem.Text = "Show all branches";
-            this.showAllBranchesToolStripMenuItem.Click += new System.EventHandler(this.ShowAllBranchesToolStripMenuItemClick);
-            // 
-            // showCurrentBranchOnlyToolStripMenuItem
-            // 
-            this.showCurrentBranchOnlyToolStripMenuItem.Name = "showCurrentBranchOnlyToolStripMenuItem";
-            this.showCurrentBranchOnlyToolStripMenuItem.Size = new System.Drawing.Size(245, 24);
-            this.showCurrentBranchOnlyToolStripMenuItem.Text = "Show current branch only";
-            this.showCurrentBranchOnlyToolStripMenuItem.Click += new System.EventHandler(this.ShowCurrentBranchOnlyToolStripMenuItemClick);
-            // 
-            // showFilteredBranchesToolStripMenuItem
-            // 
-            this.showFilteredBranchesToolStripMenuItem.Name = "showFilteredBranchesToolStripMenuItem";
-            this.showFilteredBranchesToolStripMenuItem.Size = new System.Drawing.Size(245, 24);
-            this.showFilteredBranchesToolStripMenuItem.Text = "Show filtered branches";
-            this.showFilteredBranchesToolStripMenuItem.Click += new System.EventHandler(this.ShowFilteredBranchesToolStripMenuItemClick);
             // 
             // toolStripSeparator4
             // 
@@ -769,9 +742,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem cherryPickCommitToolStripMenuItem;
         private System.Windows.Forms.Timer quickSearchTimer;
         private System.Windows.Forms.ToolStripMenuItem rebaseOnToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showAllBranchesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showCurrentBranchOnlyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showFilteredBranchesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;

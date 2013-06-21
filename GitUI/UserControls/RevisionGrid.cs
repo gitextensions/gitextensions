@@ -74,6 +74,10 @@ namespace GitUI
 
         private RevisionGridMenuCommands _revisionGridMenuCommands;
 
+        bool showCurrentBranchOnlyToolStripMenuItemChecked; // refactoring
+        bool showAllBranchesToolStripMenuItemChecked; // refactoring
+        bool showFilteredBranchesToolStripMenuItemChecked; // refactoring
+
         public RevisionGrid()
         {
             InitLayout();
@@ -1655,7 +1659,7 @@ namespace GitUI
         // internal because used by RevisonGridMenuCommands
         internal void ShowCurrentBranchOnlyToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (showCurrentBranchOnlyToolStripMenuItem.Checked)
+            if (showCurrentBranchOnlyToolStripMenuItemChecked)
                 return;
 
             Settings.BranchFilterEnabled = true;
@@ -1668,7 +1672,7 @@ namespace GitUI
         // internal because used by RevisonGridMenuCommands
         internal void ShowAllBranchesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (showAllBranchesToolStripMenuItem.Checked)
+            if (showAllBranchesToolStripMenuItemChecked)
                 return;
 
             Settings.BranchFilterEnabled = false;
@@ -1680,7 +1684,7 @@ namespace GitUI
         // internal because used by RevisonGridMenuCommands
         internal void ShowFilteredBranchesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (showFilteredBranchesToolStripMenuItem.Checked)
+            if (showFilteredBranchesToolStripMenuItemChecked)
                 return;
 
             Settings.BranchFilterEnabled = true;
@@ -1690,16 +1694,16 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        internal bool ShowCurrentBranchOnlyToolStripMenuItemChecked { get { return showCurrentBranchOnlyToolStripMenuItem.Checked; } }
-        internal bool ShowAllBranchesToolStripMenuItemChecked { get { return showAllBranchesToolStripMenuItem.Checked; } }
-        internal bool ShowFilteredBranchesToolStripMenuItemChecked { get { return showFilteredBranchesToolStripMenuItem.Checked; } }
+        internal bool ShowCurrentBranchOnlyToolStripMenuItemChecked { get { return showCurrentBranchOnlyToolStripMenuItemChecked; } }
+        internal bool ShowAllBranchesToolStripMenuItemChecked { get { return showAllBranchesToolStripMenuItemChecked; } }
+        internal bool ShowFilteredBranchesToolStripMenuItemChecked { get { return showFilteredBranchesToolStripMenuItemChecked; } }
 
         private void SetShowBranches()
         {
-            showAllBranchesToolStripMenuItem.Checked = !Settings.BranchFilterEnabled;
-            showCurrentBranchOnlyToolStripMenuItem.Checked =
+            showAllBranchesToolStripMenuItemChecked = !Settings.BranchFilterEnabled;
+            showCurrentBranchOnlyToolStripMenuItemChecked =
                 Settings.BranchFilterEnabled && Settings.ShowCurrentBranchOnly;
-            showFilteredBranchesToolStripMenuItem.Checked =
+            showFilteredBranchesToolStripMenuItemChecked =
                 Settings.BranchFilterEnabled && !Settings.ShowCurrentBranchOnly;
 
             BranchFilter = _revisionFilter.GetBranchFilter();
