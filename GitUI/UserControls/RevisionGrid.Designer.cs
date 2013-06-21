@@ -103,8 +103,6 @@ namespace GitUI
             this.showFilteredBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemView = new System.Windows.Forms.ToolStripMenuItem();
-            this.orderRevisionsByDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showRelativeDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGitNotesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -554,28 +552,12 @@ namespace GitUI
             // toolStripMenuItemView
             // 
             this.toolStripMenuItemView.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.orderRevisionsByDateToolStripMenuItem,
-            this.showAuthorDateToolStripMenuItem,
             this.showRelativeDateToolStripMenuItem,
             this.showGitNotesToolStripMenuItem,
             this.showTagsToolStripMenuItem});
             this.toolStripMenuItemView.Name = "toolStripMenuItemView";
             this.toolStripMenuItemView.Size = new System.Drawing.Size(264, 24);
             this.toolStripMenuItemView.Text = "View";
-            // 
-            // orderRevisionsByDateToolStripMenuItem
-            // 
-            this.orderRevisionsByDateToolStripMenuItem.Name = "orderRevisionsByDateToolStripMenuItem";
-            this.orderRevisionsByDateToolStripMenuItem.Size = new System.Drawing.Size(234, 24);
-            this.orderRevisionsByDateToolStripMenuItem.Text = "Order revisions by date";
-            this.orderRevisionsByDateToolStripMenuItem.Click += new System.EventHandler(this.OrderRevisionsByDateToolStripMenuItemClick);
-            // 
-            // showAuthorDateToolStripMenuItem
-            // 
-            this.showAuthorDateToolStripMenuItem.Name = "showAuthorDateToolStripMenuItem";
-            this.showAuthorDateToolStripMenuItem.Size = new System.Drawing.Size(234, 24);
-            this.showAuthorDateToolStripMenuItem.Text = "Show author date";
-            this.showAuthorDateToolStripMenuItem.Click += new System.EventHandler(this.ShowAuthorDateToolStripMenuItemClick);
             // 
             // showRelativeDateToolStripMenuItem
             // 
@@ -836,8 +818,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem runScriptToolStripMenuItem;
         private System.Windows.Forms.Button InitRepository;
         private System.Windows.Forms.Button CloneRepository;
-        private System.Windows.Forms.ToolStripMenuItem orderRevisionsByDateToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showAuthorDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showRelativeDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showGitNotesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manipulateCommitToolStripMenuItem;

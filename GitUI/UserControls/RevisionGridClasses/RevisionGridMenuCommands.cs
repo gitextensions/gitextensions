@@ -234,6 +234,25 @@ namespace GitUI.UserControls.RevisionGridClasses
                 resultList.Add(menuCommand);
             }
 
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "orderRevisionsByDateToolStripMenuItem";
+                menuCommand.Text = "Order revisions by date";
+                menuCommand.ExecuteAction = () => _revisionGrid.OrderRevisionsByDateToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => Settings.OrderRevisionByDate;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "showAuthorDateToolStripMenuItem"; // 2
+                menuCommand.Text = "Show author date";
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowAuthorDateToolStripMenuItemClick(null, null);
+                menuCommand.IsCheckedFunc = () => Settings.ShowAuthorDate;
+
+                resultList.Add(menuCommand);
+            }
 
             // TODO END
 
