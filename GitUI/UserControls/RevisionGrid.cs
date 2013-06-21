@@ -100,10 +100,6 @@ namespace GitUI
             Revisions.CellFormatting += RevisionsCellFormatting;
             Revisions.KeyPress += RevisionsKeyPress;
 
-            showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
-            showGitNotesToolStripMenuItem.Checked = Settings.ShowGitNotes;
-            showTagsToolStripMenuItem.Checked = Settings.ShowTags;
-
             BranchFilter = String.Empty;
             SetShowBranches();
             Filter = "";
@@ -1209,7 +1205,7 @@ namespace GitUI
 
                                     if (gitRef.IsTag)
                                     {
-                                        if (!showTagsToolStripMenuItem.Checked)
+                                        if (!Settings.ShowTags)
                                         {
                                             continue;
                                         }
@@ -2005,10 +2001,9 @@ namespace GitUI
             UICommands.StartSquashCommitDialog(this, GetRevision(LastRow));
         }
 
-        private void ShowRelativeDateToolStripMenuItemClick(object sender, EventArgs e)
+        internal void ShowRelativeDateToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Settings.RelativeDate = !showRelativeDateToolStripMenuItem.Checked;
-            showRelativeDateToolStripMenuItem.Checked = Settings.RelativeDate;
+            Settings.RelativeDate = !Settings.RelativeDate;
             ForceRefreshRevisions();
         }
 
@@ -2259,11 +2254,9 @@ namespace GitUI
         }
         #endregion
 
-        private void ShowGitNotesToolStripMenuItem_Click(object sender, EventArgs e)
+        internal void ShowGitNotesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.ShowGitNotes = !showGitNotesToolStripMenuItem.Checked;
-            showGitNotesToolStripMenuItem.Checked = Settings.ShowGitNotes;
-
+            Settings.ShowGitNotes = !Settings.ShowGitNotes;
             ForceRefreshRevisions();
         }
 
@@ -2299,10 +2292,10 @@ namespace GitUI
             Refresh();
         }
 
-        private void showTagsToolStripMenuItem_Click(object sender, EventArgs e)
+        internal void ShowTagsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            showTagsToolStripMenuItem.Checked = !showTagsToolStripMenuItem.Checked;
-            Settings.ShowTags = showTagsToolStripMenuItem.Checked;
+            Settings.ShowTags = !Settings.ShowTags;
+            _revisionGridMenuCommands.TriggerPropertyChanged();
             Refresh();
         }
         
