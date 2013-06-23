@@ -21,6 +21,20 @@ namespace GitUI.CommandsDialogs
             checkBoxPathFilter_CheckedChanged(null, null);
         }
 
+        public void SetPathArgument(string path)
+        {
+            if (path.IsNullOrEmpty())
+            {
+                checkBoxPathFilter.Checked = false;
+                textBoxPaths.Text = "";
+            }
+            else
+            {
+                checkBoxPathFilter.Checked = true;
+                textBoxPaths.Text = path;
+            }
+        }
+
         private void Preview_Click(object sender, EventArgs e)
         {
             var cleanUpCmd = GitCommandHelpers.CleanUpCmd(true, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked, GetPathArgumentFromGui());
