@@ -2452,7 +2452,8 @@ namespace GitUI
             GoToChild,
             ToggleHighlightSelectedBranch,
             NextQuickSearch,
-            PrevQuickSearch
+            PrevQuickSearch,
+            SelectCurrentRevision,
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -2470,6 +2471,7 @@ namespace GitUI
                 case Commands.ToggleShowGitNotes: ShowGitNotesToolStripMenuItem_Click(null, null); break;
                 case Commands.ToggleRevisionCardLayout: ToggleRevisionCardLayout(); break;
                 case Commands.ShowAllBranches: ShowAllBranchesToolStripMenuItemClick(null, null); break;
+                case Commands.SelectCurrentRevision: SetSelectedRevision(new GitRevision(Module, CurrentCheckout)); break;
                 case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnlyToolStripMenuItemClick(null, null); break;
                 case Commands.GoToParent: goToParentToolStripMenuItem_Click(null, null); break;
                 case Commands.GoToChild: goToChildToolStripMenuItem_Click(null, null); break;
