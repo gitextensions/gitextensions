@@ -40,7 +40,7 @@ namespace GitExtensionsTest
                                  "Committer:\t<a href='mailto:Jane.Doe@test.com'>Jane Doe (Acme Inc) &lt;Jane.Doe@test.com&gt;</a>" + Environment.NewLine +
                                  "Commit date:\t2 days ago (" + GitCommandHelpers.GetFullDateString(commitTime) + ")" + Environment.NewLine +
                                  "Commit hash:\t" + commitGuid + Environment.NewLine +
-                                 "Parent(s):\t<a href='gitex://gotocommit/" + parentGuid1 + "'>" + parentGuid1.Substring(0, 10) + "</a> <a href='gitex://gotocommit/" + parentGuid2 + "'>" + parentGuid2.Substring(0, 10) + "</a>";
+                                 "Parent(s):\t<a href='gitext://gotocommit/" + parentGuid1 + "'>" + parentGuid1.Substring(0, 10) + "</a> <a href='gitext://gotocommit/" + parentGuid2 + "'>" + parentGuid2.Substring(0, 10) + "</a>";
 
             var expectedBody = "\nI made a really neato change." + Environment.NewLine + Environment.NewLine +
                                "Notes (p4notes):" + Environment.NewLine +
