@@ -113,8 +113,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.Name = "GotoCommit";
                 menuCommand.Text = "Go to commit...";
                 menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCommit;
-                menuCommand.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                        | System.Windows.Forms.Keys.G)));
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.GoToCommit);
                 menuCommand.ExecuteAction = GotoCommitExcecute;
 
                 resultList.Add(menuCommand);
