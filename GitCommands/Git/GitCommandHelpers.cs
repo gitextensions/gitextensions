@@ -788,22 +788,25 @@ namespace GitCommands
             return PatchDirCmd() + " --ignore-whitespace";
         }
 
-        public static string CleanUpCmd(bool dryrun, bool directories, bool nonignored, bool ignored)
+        public static string CleanUpCmd(bool dryrun, bool directories, bool nonignored, bool ignored, string paths = null)
         {
-            var stringBuilder = new StringBuilder("clean");
+            string command = "clean";
 
             if (directories)
-                stringBuilder.Append(" -d");
+                command += " -d";
             if (!nonignored && !ignored)
-                stringBuilder.Append(" -x");
+                command += " -x";
             if (ignored)
-                stringBuilder.Append(" -X");
+                command += " -X";
             if (dryrun)
-                stringBuilder.Append(" --dry-run");
+                command += " --dry-run";
             if (!dryrun)
-                stringBuilder.Append(" -f");
+                command += " -f";
 
-            return stringBuilder.ToString();
+            if (!paths.IsNullOrWhiteSpace())
+                command += " " + paths;
+
+            return command;
         }
 
         public static ConfigFile GetGlobalConfig()
