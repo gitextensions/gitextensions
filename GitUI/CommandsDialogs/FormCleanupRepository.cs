@@ -17,6 +17,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent(); Translate();
             PreviewOutput.ReadOnly = true;
+            checkBoxPathFilter_CheckedChanged(null, null);
         }
 
         private void Preview_Click(object sender, EventArgs e)
@@ -37,6 +38,13 @@ namespace GitUI.CommandsDialogs
         private void Cancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void checkBoxPathFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            bool filterByPath = checkBoxPathFilter.Checked;
+            textBoxPaths.Enabled = filterByPath;
+            labelPathHint.Visible = filterByPath;
         }
     }
 }
