@@ -40,7 +40,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxPaths = new System.Windows.Forms.TextBox();
             this.checkBoxPathFilter = new System.Windows.Forms.CheckBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelPathHint = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -182,15 +182,16 @@
             this.checkBoxPathFilter.TabIndex = 0;
             this.checkBoxPathFilter.Text = "Affect the following path(s) only:";
             this.checkBoxPathFilter.UseVisualStyleBackColor = true;
+            this.checkBoxPathFilter.CheckedChanged += new System.EventHandler(this.checkBoxPathFilter_CheckedChanged);
             // 
-            // label2
+            // labelPathHint
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(50, 236);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(104, 15);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "(one line per path)";
+            this.labelPathHint.AutoSize = true;
+            this.labelPathHint.Location = new System.Drawing.Point(50, 236);
+            this.labelPathHint.Name = "labelPathHint";
+            this.labelPathHint.Size = new System.Drawing.Size(104, 15);
+            this.labelPathHint.TabIndex = 7;
+            this.labelPathHint.Text = "(one line per path)";
             // 
             // FormCleanupRepository
             // 
@@ -198,7 +199,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(434, 442);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.labelPathHint);
             this.Controls.Add(this.textBoxPaths);
             this.Controls.Add(this.checkBoxPathFilter);
             this.Controls.Add(this.label1);
@@ -235,6 +236,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxPaths;
         private System.Windows.Forms.CheckBox checkBoxPathFilter;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelPathHint;
     }
 }
