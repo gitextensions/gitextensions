@@ -12,9 +12,6 @@ namespace GitUI.CommandsDialogs
 {
     class FormBrowseMenuCommands : MenuCommandsBase
     {
-        private readonly TranslationString _noRevisionFoundError =
-            new TranslationString("No revision found.");
-
         GitUICommands UICommands;
         GitModule Module;
         RevisionGrid RevisionGrid;
@@ -34,30 +31,6 @@ namespace GitUI.CommandsDialogs
             RevisionGrid = revisionGrid;
         }
 
-        public void SelectCurrentRevisionExecute()
-        {
-            _formBrowse.ExecuteCommand(GitUI.CommandsDialogs.FormBrowse.Commands.SelectCurrentRevision);
-        }
-
-        public void GotoCommitExcecute()
-        {
-            using (FormGoToCommit formGoToCommit = new FormGoToCommit(UICommands))
-            {
-                if (formGoToCommit.ShowDialog(_formBrowse) != DialogResult.OK)
-                    return;
-
-                string revisionGuid = formGoToCommit.ValidateAndGetSelectedRevision();
-                if (!string.IsNullOrEmpty(revisionGuid))
-                {
-                    RevisionGrid.SetSelectedRevision(new GitRevision(Module, revisionGuid));
-                }
-                else
-                {
-                    MessageBox.Show(_formBrowse, _noRevisionFoundError.Text);
-                }
-            }
-        }
-
         public IEnumerable<MenuCommand> GetNavigateMenuCommands()
         {
             if (_navigateMenuCommands == null)
@@ -72,31 +45,7 @@ namespace GitUI.CommandsDialogs
         {
             var resultList = new List<MenuCommand>();
 
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "GotoCurrentRevision";
-                menuCommand.Text = "Go to current revision";
-                menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCurrentRevision;
-                if (_formBrowse != null) // null when TranslationApp is called
-                {
-                    menuCommand.ShortcutKeyDisplayString = _formBrowse.GetShortcutKeys(GitUI.CommandsDialogs.FormBrowse.Commands.SelectCurrentRevision).ToShortcutKeyDisplayString();
-                }
-                menuCommand.ExecuteAction = SelectCurrentRevisionExecute;
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
-                menuCommand.Name = "GotoCommit";
-                menuCommand.Text = "Go to commit...";
-                menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCommit;
-                menuCommand.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
-                        | System.Windows.Forms.Keys.G)));
-                menuCommand.ExecuteAction = GotoCommitExcecute;
-
-                resultList.Add(menuCommand);
-            }
+            // no additional MenuCommands that are not defined in the RevisionGrid
 
             return resultList;
         }

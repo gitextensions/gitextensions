@@ -18,6 +18,9 @@ namespace GitUI.UserControls.RevisionGridClasses
         private readonly TranslationString _quickSearchQuickHelp =
             new TranslationString("Start typing in revision grid to start quick search.");
 
+        private readonly TranslationString _noRevisionFoundError =
+            new TranslationString("No revision found.");
+
         RevisionGrid _revisionGrid;
 
         // must both be created only once
@@ -93,6 +96,31 @@ namespace GitUI.UserControls.RevisionGridClasses
         private IEnumerable<MenuCommand> CreateNavigateMenuCommands()
         {
             var resultList = new List<MenuCommand>();
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "GotoCurrentRevision";
+                menuCommand.Text = "Go to current revision";
+                menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCurrentRevision;
+                menuCommand.ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(GitUI.RevisionGrid.Commands.SelectCurrentRevision);
+                menuCommand.ExecuteAction = SelectCurrentRevisionExecute;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "GotoCommit";
+                menuCommand.Text = "Go to commit...";
+                menuCommand.Image = global::GitUI.Properties.Resources.IconGotoCommit;
+                menuCommand.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
+                        | System.Windows.Forms.Keys.G)));
+                menuCommand.ExecuteAction = GotoCommitExcecute;
+
+                resultList.Add(menuCommand);
+            }
+
+            resultList.Add(MenuCommand.CreateSeparator());
 
             {
                 var menuCommand = new MenuCommand();
@@ -328,6 +356,30 @@ namespace GitUI.UserControls.RevisionGridClasses
         protected override IEnumerable<MenuCommand> GetMenuCommandsForTranslation()
         {
             return _navigateMenuCommands.Concat(_viewMenuCommands).Where(mc => !mc.IsSeparator);
+        }
+
+        public void SelectCurrentRevisionExecute()
+        {
+            _revisionGrid.ExecuteCommand(GitUI.RevisionGrid.Commands.SelectCurrentRevision);
+        }
+
+        public void GotoCommitExcecute()
+        {
+            using (FormGoToCommit formGoToCommit = new FormGoToCommit(_revisionGrid.UICommands))
+            {
+                if (formGoToCommit.ShowDialog(_revisionGrid) != DialogResult.OK)
+                    return;
+
+                string revisionGuid = formGoToCommit.ValidateAndGetSelectedRevision();
+                if (!string.IsNullOrEmpty(revisionGuid))
+                {
+                    _revisionGrid.SetSelectedRevision(new GitRevision(_revisionGrid.Module, revisionGuid));
+                }
+                else
+                {
+                    MessageBox.Show(_revisionGrid, _noRevisionFoundError.Text);
+                }
+            }
         }
     }
 }
