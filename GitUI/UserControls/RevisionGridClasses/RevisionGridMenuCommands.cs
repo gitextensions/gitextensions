@@ -346,13 +346,19 @@ namespace GitUI.UserControls.RevisionGridClasses
                 handler(this, new PropertyChangedEventArgs(name));
             }
 
-            foreach (var menuCommand in _viewMenuCommands)
+            foreach (var menuCommand in GetMenuCommandsWithoutSeparators())
             {
                 menuCommand.SetCheckForRegisteredMenuItems();
+                menuCommand.UpdateMenuItemsShortcutKeyDisplayString();
             }
         }
 
         protected override IEnumerable<MenuCommand> GetMenuCommandsForTranslation()
+        {
+            return GetMenuCommandsWithoutSeparators();
+        }
+
+        private IEnumerable<MenuCommand> GetMenuCommandsWithoutSeparators()
         {
             return _navigateMenuCommands.Concat(_viewMenuCommands).Where(mc => !mc.IsSeparator);
         }
