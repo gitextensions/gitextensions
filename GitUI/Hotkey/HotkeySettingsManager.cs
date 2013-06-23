@@ -82,7 +82,7 @@ namespace GitUI.Hotkey
             if (DidDefaultSettingsChange(defaultSettings, loadedSettings))
                 return defaultSettings;
             else
-            return loadedSettings;
+                return loadedSettings;
         }
 
         private static void GetUsedHotkeys(HotkeySettings[] settings)
@@ -119,7 +119,7 @@ namespace GitUI.Hotkey
             catch { }
         }
 
-        private static bool DidDefaultSettingsChange(HotkeySettings[] defaultSettings, HotkeySettings[] loadedSettings)
+        internal static bool DidDefaultSettingsChange(HotkeySettings[] defaultSettings, HotkeySettings[] loadedSettings)
         {
             if (defaultSettings == null || loadedSettings == null)
                 return true;
@@ -130,10 +130,21 @@ namespace GitUI.Hotkey
             var defaultCmds = defaultSettings.SelectMany(s => s.Commands).ToArray();
             var loadedCmds = loadedSettings.SelectMany(s => s.Commands).ToArray();
 
+            // see if total commands count has changed
             if (defaultCmds.Length != loadedCmds.Length)
                 return true;
 
-            // TODO Add additional checks
+            // detect if total commands count did not change but a command was moved from one set to another
+            for (int i = 0; i < defaultSettings.Length; i++)
+            {
+                var defaultSetting = defaultSettings[i];
+                var loadedSetting = loadedSettings[i];
+
+                if (defaultSetting.Commands.Length != loadedSetting.Commands.Length)
+                {
+                    return true;
+                }
+            }
 
             return false;
         }
