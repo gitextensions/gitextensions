@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager.Translation;
+using System.Linq;
 
 namespace GitUI.CommandsDialogs
 {
@@ -22,7 +23,7 @@ namespace GitUI.CommandsDialogs
 
         private void Preview_Click(object sender, EventArgs e)
         {
-            var cleanUpCmd = GitCommandHelpers.CleanUpCmd(true, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked);
+            var cleanUpCmd = GitCommandHelpers.CleanUpCmd(true, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked, GetPathArgumentFromGui());
             PreviewOutput.Text = FormProcess.ReadDialog(this, cleanUpCmd);
         }
 
@@ -30,8 +31,23 @@ namespace GitUI.CommandsDialogs
         {
             if (MessageBox.Show(this, _reallyCleanupQuestion.Text, _reallyCleanupQuestionCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                var cleanUpCmd = GitCommandHelpers.CleanUpCmd(false, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked);
+                var cleanUpCmd = GitCommandHelpers.CleanUpCmd(false, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked, GetPathArgumentFromGui());
                 PreviewOutput.Text = FormProcess.ReadDialog(this, cleanUpCmd);
+            }
+        }
+
+        private string GetPathArgumentFromGui()
+        {
+            if (!checkBoxPathFilter.Checked)
+            {
+                return null;
+            }
+            else
+            {
+                // 1. get all lines from text box which are not empty
+                // 2. wrap lines with ""
+                // 3. join together with space as separator
+                return string.Join(" ", textBoxPaths.Lines.Where(a => !a.IsNullOrEmpty()).Select(a => string.Format("\"{0}\"", a)));
             }
         }
 
