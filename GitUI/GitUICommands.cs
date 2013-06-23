@@ -565,15 +565,13 @@ namespace GitUI
             return StartSvnCloneDialog(null, null);
         }
 
-        public void StartCleanupRepositoryDialog(IWin32Window owner)
+        public void StartCleanupRepositoryDialog(IWin32Window owner = null, string path = null)
         {
-            using (var frm = new FormCleanupRepository(this))
-                frm.ShowDialog(owner);
-        }
-
-        public void StartCleanupRepositoryDialog()
-        {
-            StartCleanupRepositoryDialog(null);
+            using (var form = new FormCleanupRepository(this))
+            {
+                form.SetPathArgument(path);
+                form.ShowDialog(owner);
+            }
         }
 
         public bool StartSquashCommitDialog(IWin32Window owner, GitRevision revision)
