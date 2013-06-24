@@ -1169,7 +1169,7 @@ namespace GitUI
 
         public bool StartSettingsDialog()
         {
-            return StartSettingsDialog(null);
+            return StartSettingsDialog(null, null);
         }
 
         public bool StartSettingsDialog(IGitPlugin gitPlugin)
