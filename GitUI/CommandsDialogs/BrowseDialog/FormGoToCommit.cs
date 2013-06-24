@@ -228,6 +228,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (!string.IsNullOrEmpty(guid))
             {
                 textboxCommitExpression.Text = text;
+                textboxCommitExpression.SelectAll();
             }
         }
     }
