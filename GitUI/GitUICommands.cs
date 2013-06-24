@@ -1172,6 +1172,12 @@ namespace GitUI
             return StartSettingsDialog(null);
         }
 
+        public bool StartSettingsDialog(IGitPlugin gitPlugin)
+        {
+            // TODO: how to pass the main dialog as owner of the SettingsDialog (first parameter):
+            return StartSettingsDialog(null, new SettingsPageReferenceByPlugin(gitPlugin));
+        }
+
         public bool StartArchiveDialog(IWin32Window owner = null, GitRevision revision = null, string path = null)
         {
             return DoActionOnRepo(owner, true, false, PreArchive, PostArchive, () =>
