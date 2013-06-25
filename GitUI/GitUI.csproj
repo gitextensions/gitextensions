@@ -203,6 +203,10 @@
     <Compile Include="UserControls\GotoUserManualControl.Designer.cs">
       <DependentUpon>GotoUserManualControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserManual\UserManual.cs" />
+    <Compile Include="UserManual\SingleHtmlUserManual.cs" />
+    <Compile Include="UserManual\StandardHtmlUserManual.cs" />
+    <Compile Include="UserManual\IProvideUserManual.cs" />
     <Compile Include="UserControls\RemotesComboboxControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

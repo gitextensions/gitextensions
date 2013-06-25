@@ -116,18 +116,33 @@ namespace GitUI.RevisionGridClasses
                 HighlightBranchRecursive(aId);
             }
 
+            public bool IsRevisionRelative(string aGuid)
+            {
+                Node startNode;
+
+                if (Nodes.TryGetValue(aGuid, out startNode))
+                {
+                    return startNode.Ancestors.Any(a => a.IsRelative);
+                }
+
+                return false;              
+            }
+
             public void HighlightBranchRecursive(string aId)
             {
-                Node startNode = Nodes[aId];
+                Node startNode;
 
-                foreach (Junction junction in startNode.Ancestors)
+                if (Nodes.TryGetValue(aId, out startNode))
                 {
-                    if (junction.HighLight)
-                        continue;
+                    foreach (Junction junction in startNode.Ancestors)
+                    {
+                        if (junction.HighLight)
+                            continue;
 
-                    junction.HighLight = true;
+                        junction.HighLight = true;
 
-                    HighlightBranchRecursive(junction.Parent.Id);
+                        HighlightBranchRecursive(junction.Parent.Id);
+                    }
                 }
             }
 

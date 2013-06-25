@@ -643,14 +643,20 @@ namespace GitUI.CommandsDialogs
             if (OnStageAreaLoaded != null)
                 OnStageAreaLoaded();
 
-            if (_loadUnstagedOutputFirstTime && (this.ActiveControl == splitMain))
+            if (_loadUnstagedOutputFirstTime)
             {
-                if (Unstaged.GitItemStatuses.Any())
-                    Unstaged.Focus();
-                else if (Staged.GitItemStatuses.Any())
-                    Message.Focus();
-                else
-                    Amend.Focus();
+                var fc = this.FindFocusedControl();
+
+                if (fc == this.Ok)
+                {
+                    if (Unstaged.GitItemStatuses.Any())
+                        Unstaged.Focus();
+                    else if (Staged.GitItemStatuses.Any())
+                        Message.Focus();
+                    else
+                        Amend.Focus();
+                }
+
                 _loadUnstagedOutputFirstTime = false;
             }
         }
