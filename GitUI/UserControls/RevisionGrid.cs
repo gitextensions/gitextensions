@@ -546,6 +546,11 @@ namespace GitUI
             Revisions.Select();
         }
 
+        public GitRevision GetRevision(string guid)
+        {
+            return Revisions.GetRevision(guid);
+        }
+
         public void SetSelectedRevision(GitRevision revision)
         {
             SetSelectedRevision(revision != null ? revision.Guid : null);
@@ -553,6 +558,7 @@ namespace GitUI
 
         public void HighlightBranch(string aId)
         {
+            RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
             Revisions.HighlightBranch(aId);
         }
 
@@ -1018,6 +1024,12 @@ namespace GitUI
 
                 FirstVisibleRevisionBeforeUpdate = null;
             }
+
+            if (!Revisions.IsRevisionRelative(FiltredCurrentCheckout))
+            {
+                HighlightBranch(FiltredCurrentCheckout);
+            }
+
         }
 
         private int SearchRevision(string initRevision, out string graphRevision)
@@ -2507,15 +2519,14 @@ namespace GitUI
                 MessageBox.Show(_cannotHighlightSelectedBranch.Text);
                 return;
             }
-            Revisions.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
+
             HighlightSelectedBranch();
         }
 
         public void HighlightSelectedBranch()
         {
             var revisions = GetSelectedRevisions();
-            if (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected &&
-                revisions.Count > 0)
+            if (revisions.Count > 0)
             {
                 HighlightBranch(revisions[0].Guid);
                 Refresh();
