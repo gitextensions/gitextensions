@@ -1024,13 +1024,12 @@ namespace GitUI
             }
 
             FirstVisibleRevisionBeforeUpdate = null;
-        }
 
             if (!Revisions.IsRevisionRelative(FiltredCurrentCheckout))
             {
                 HighlightBranch(FiltredCurrentCheckout);
             }
-
+        }
 
         private int SearchRevision(string initRevision, out string graphRevision)
         {
