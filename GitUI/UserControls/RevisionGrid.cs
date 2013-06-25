@@ -1014,22 +1014,21 @@ namespace GitUI
             }
             LastSelectedRows = null;
 
-            if (FirstVisibleRevisionBeforeUpdate != null)
+            if (FirstVisibleRevisionBeforeUpdate != null && Revisions.SelectedIds == null)
             {
                 var lastRow = Revisions.Rows.Cast<DataGridViewRow>()
                     .FirstOrDefault(row => GetRevision(row.Index).Guid == FirstVisibleRevisionBeforeUpdate);
 
                 if (lastRow != null)
                     Revisions.FirstDisplayedScrollingRowIndex = lastRow.Index;
-
-                FirstVisibleRevisionBeforeUpdate = null;
             }
+
+            FirstVisibleRevisionBeforeUpdate = null;
 
             if (!Revisions.IsRevisionRelative(FiltredCurrentCheckout))
             {
                 HighlightBranch(FiltredCurrentCheckout);
             }
-
         }
 
         private int SearchRevision(string initRevision, out string graphRevision)
