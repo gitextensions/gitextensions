@@ -1343,7 +1343,7 @@ namespace GitCommands
             }
         }
 
-#if !MONO
+#if !__MonoCS__
         static class NativeMethods
         {
             [DllImport("kernel32.dll")]
@@ -1362,7 +1362,7 @@ namespace GitCommands
 
         public static void TerminateTree(this Process process)
         {
-#if !MONO
+#if !__MonoCS__
             if (EnvUtils.RunningOnWindows())
             {
                 // Send Ctrl+C
