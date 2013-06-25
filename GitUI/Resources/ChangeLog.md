@@ -1,6 +1,22 @@
 ﻿Changelog
 =========
 
+### Version 2.45
+* Setup files moved to sourceforge http://sourceforge.net/projects/gitextensions/
+* Putty updated to version 0.62.9768.0 (80% faster for me when cloning repository from GitHub)
+* FormCheckoutBranch behavior fixed again when called from commit dialog
+* Fixed navigation in the blame committer list when double clicking
+* Fixed FormFileHistory selection current revision
+* Fixed issue 1585: IsBinaryAccordingToGitAttribute() rewrited using "git check-attr"
+* Fixed issue 1590: "Show current branch only" fixed
+* Fixed issue 1622: "Show Changes" from Blame window crash fixed
+* Fixed issue 1631: Font size reading from settings fixed
+* Fixed issue 1687: GetSuperprojectCurrentCheckout() now called asynchronously
+* Fixed issue 1727: CreatePullRequestForm crash fixed
+* Updated msysgit to build of version 1.8.3
+* Updated French translation
+* Updated German translation
+
 ### Version 2.44
 * Fixed issue 710: Added icons to shell extensions
 * Fixed issue 1336: Prefix context menu entries with
@@ -49,7 +65,7 @@
 * Added hotkey for "Amend commit"
 * Updated Spanish translation
 * Updated Dutch translations
-* updated Japanese translation
+* Updated Japanese translation
 * Updated German translation
 * Updated Russion translation
 * Updated French translation
