@@ -1477,13 +1477,17 @@ namespace GitUI.CommandsDialogs
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
         {
             var revisions = RevisionGrid.GetSelectedRevisions();
-            if (revisions.Count != 1)
+            if (revisions.Count > 2)
             {
-                MessageBox.Show("Select exactly one revision.");
+                MessageBox.Show(this, "Select only one or two revisions. Abort.", "Archive revision");
                 return;
             }
+            GitRevision mainRevision = revisions.First();
+            GitRevision diffRevision = null;
+            if (revisions.Count == 2)
+                diffRevision = revisions.Last();
 
-            UICommands.StartArchiveDialog(this, revisions.First());
+            UICommands.StartArchiveDialog(this, mainRevision, diffRevision);
         }
 
         private void EditMailMapToolStripMenuItemClick(object sender, EventArgs e)
@@ -2473,7 +2477,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var gitItem = (GitItem)GitTree.SelectedNode.Tag; // this should not fail, if it still does, user should know
-            UICommands.StartArchiveDialog(this, selectedRevisions.First(), gitItem.FileName);
+            UICommands.StartArchiveDialog(this, selectedRevisions.First(), null, gitItem.FileName);
         }
 
         private void DiffContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
