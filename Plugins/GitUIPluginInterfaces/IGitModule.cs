@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GitUIPluginInterfaces
 {
@@ -20,7 +21,7 @@ namespace GitUIPluginInterfaces
 
         string GitCommand { get; }
 
-        string GitVersion { get; }
+        Version AppVersion { get; }
 
         string GravatarCacheDir { get; }
 
