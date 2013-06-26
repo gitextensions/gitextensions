@@ -1169,16 +1169,31 @@ namespace GitUI
 
         public bool StartSettingsDialog()
         {
-            return StartSettingsDialog(null);
+            return StartSettingsDialog(null, null);
         }
 
-        public bool StartArchiveDialog(IWin32Window owner = null, GitRevision revision = null, string path = null)
+        public bool StartSettingsDialog(IGitPlugin gitPlugin)
+        {
+            // TODO: how to pass the main dialog as owner of the SettingsDialog (first parameter):
+            return StartSettingsDialog(null, new SettingsPageReferenceByPlugin(gitPlugin));
+        }
+
+        /// <summary>
+        /// Open the archive dialog
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="revision">Revision to create an archive from</param>
+        /// <param name="revision2">Revision for differencial archive </param>
+        /// <param name="path">Files path for archive</param>
+        /// <returns></returns>
+        public bool StartArchiveDialog(IWin32Window owner = null, GitRevision revision = null, GitRevision revision2 = null, string path = null)
         {
             return DoActionOnRepo(owner, true, false, PreArchive, PostArchive, () =>
                 {
                     using (var form = new FormArchive(this))
                     {
                         form.SelectedRevision = revision;
+                        form.SetDiffSelectedRevision(revision2);
                         form.SetPathArgument(path);
                         form.ShowDialog(owner);
                     }

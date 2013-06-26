@@ -155,8 +155,6 @@ namespace GitUI
         [Browsable(false)]
         public Font SuperprojectFont { get; private set; }
         [Browsable(false)]
-        public string FirstVisibleRevisionBeforeUpdate { get; private set; }
-        [Browsable(false)]
         public string[] LastSelectedRows { get; private set; }
         [Browsable(false)]
         public Font RefsFont { get; private set; }
@@ -546,6 +544,11 @@ namespace GitUI
             Revisions.Select();
         }
 
+        public GitRevision GetRevision(string guid)
+        {
+            return Revisions.GetRevision(guid);
+        }
+
         public void SetSelectedRevision(GitRevision revision)
         {
             SetSelectedRevision(revision != null ? revision.Guid : null);
@@ -553,6 +556,7 @@ namespace GitUI
 
         public void HighlightBranch(string aId)
         {
+            RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
             Revisions.HighlightBranch(aId);
         }
 
@@ -783,17 +787,9 @@ namespace GitUI
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
-                FirstVisibleRevisionBeforeUpdate = null;
                 if (newCurrentCheckout == CurrentCheckout)
                 {
                     LastSelectedRows = Revisions.SelectedIds;
-
-                    if (Revisions.FirstDisplayedScrollingRowIndex != -1)
-                    {
-                        var rows = Revisions.Rows.Cast<DataGridViewRow>();
-                        var row = rows.ElementAt(Revisions.FirstDisplayedScrollingRowIndex);
-                        FirstVisibleRevisionBeforeUpdate = GetRevision(row.Index).Guid;
-                    }
                 }
                 else
                 {
@@ -1008,15 +1004,9 @@ namespace GitUI
             }
             LastSelectedRows = null;
 
-            if (FirstVisibleRevisionBeforeUpdate != null)
+            if (!Revisions.IsRevisionRelative(FiltredCurrentCheckout))
             {
-                var lastRow = Revisions.Rows.Cast<DataGridViewRow>()
-                    .FirstOrDefault(row => GetRevision(row.Index).Guid == FirstVisibleRevisionBeforeUpdate);
-
-                if (lastRow != null)
-                    Revisions.FirstDisplayedScrollingRowIndex = lastRow.Index;
-
-                FirstVisibleRevisionBeforeUpdate = null;
+                HighlightBranch(FiltredCurrentCheckout);
             }
         }
 
@@ -1026,7 +1016,7 @@ namespace GitUI
                 .Rows
                 .Cast<DataGridViewRow>();
             var revisions = rows
-                .Select(row => new { Index = row.Index, Guid = GetRevision(row.Index).Guid });
+                .Select(row => new { row.Index, GetRevision(row.Index).Guid });
 
             var idx = revisions.FirstOrDefault(rev => rev.Guid == initRevision);
             if (idx != null)
@@ -1058,6 +1048,7 @@ namespace GitUI
             graphRevision = null;
             return -1;
         }
+
         private static string GetDateHeaderText()
         {
             return Settings.ShowAuthorDate ? Strings.GetAuthorDateText() : Strings.GetCommitDateText();
@@ -1965,13 +1956,18 @@ namespace GitUI
         private void ArchiveRevisionToolStripMenuItemClick(object sender, EventArgs e)
         {
             var selectedRevisions = GetSelectedRevisions();
-            if (selectedRevisions.Count != 1)
+            if (selectedRevisions.Count > 2)
             {
-                MessageBox.Show(this, "Select exactly one revision. Abort.", "Archive revision");
+                MessageBox.Show(this, "Select only one or two revisions. Abort.", "Archive revision");
                 return;
             }
 
-            UICommands.StartArchiveDialog(this, selectedRevisions.First());
+            GitRevision mainRevision = selectedRevisions.First();
+            GitRevision diffRevision = null;
+            if (selectedRevisions.Count == 2)
+                diffRevision = selectedRevisions.Last();
+
+            UICommands.StartArchiveDialog(this, mainRevision, diffRevision);
         }
 
         private void ShowAuthorDateToolStripMenuItemClick(object sender, EventArgs e)
@@ -2507,15 +2503,14 @@ namespace GitUI
                 MessageBox.Show(_cannotHighlightSelectedBranch.Text);
                 return;
             }
-            Revisions.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
+
             HighlightSelectedBranch();
         }
 
         public void HighlightSelectedBranch()
         {
             var revisions = GetSelectedRevisions();
-            if (RevisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected &&
-                revisions.Count > 0)
+            if (revisions.Count > 0)
             {
                 HighlightBranch(revisions[0].Guid);
                 Refresh();
