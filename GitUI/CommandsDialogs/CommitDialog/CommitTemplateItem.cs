@@ -54,7 +54,8 @@ namespace GitUI.CommandsDialogs.CommitDialog
         {
             try
             {
-                if (UseBinaryFormatter)
+                Func<bool> fncUseBinaryFormatter = () => UseBinaryFormatter;
+                if (fncUseBinaryFormatter())
                 {
                     // Serialize to a base 64 string
                     byte[] bytes;
@@ -90,7 +91,8 @@ namespace GitUI.CommandsDialogs.CommitDialog
             CommitTemplateItem[] commitTemplateItem = null;
             try
             {
-                if (UseBinaryFormatter)
+                Func<bool> fncUseBinaryFormatter = () => UseBinaryFormatter;
+                if (fncUseBinaryFormatter())
                 {
                     int p = serializedString.IndexOf(':');
                     int length = Convert.ToInt32(serializedString.Substring(0, p));
