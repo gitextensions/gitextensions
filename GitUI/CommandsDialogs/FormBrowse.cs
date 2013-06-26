@@ -386,7 +386,7 @@ namespace GitUI.CommandsDialogs
             if (Settings.LastUpdateCheck.AddDays(7) < DateTime.Now)
             {
                 Settings.LastUpdateCheck = DateTime.Now;
-                using (var updateForm = new FormUpdates(Module.GitVersion) { AutoClose = true })
+                using (var updateForm = new FormUpdates(Module.AppVersion) { AutoClose = true })
                     updateForm.ShowDialog(Owner);
             }
 
@@ -3048,7 +3048,7 @@ namespace GitUI.CommandsDialogs
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var updateForm = new FormUpdates(Module.GitVersion))
+            using (var updateForm = new FormUpdates(Module.AppVersion))
                 updateForm.ShowDialog(Owner);
         }
 
