@@ -9,14 +9,14 @@ using Newtonsoft.Json.Linq;
 
 namespace Stash
 {
-    class RequestResponse
+    class StashResponse<T>
     {
         public bool Success { get; set; }
         public IEnumerable<string> Messages { get; set; }
-        public JObject Result { get; set; }
+        public T Result { get; set; }
     }
 
-    abstract class StashRequestBase
+    abstract class StashRequestBase<T>
     {
         protected Settings Settings { get; private set; }
 
@@ -25,7 +25,7 @@ namespace Stash
             Settings = settings;
         }
 
-        public RequestResponse Send()
+        public StashResponse<T> Send()
         {
             try
             {
@@ -54,37 +54,38 @@ namespace Stash
             }
             catch (Exception ex)
             {
-                return new RequestResponse { Success = false, Messages = new[] { ex.Message } };
+                return new StashResponse<T> { Success = false, Messages = new[] { ex.Message } };
             }
         }
 
         protected abstract void WriteRequestBody(HttpWebRequest request);
         protected abstract string ApiUrl { get; }
         protected abstract string RequestMethod { get; }
+        protected abstract T ParseResponse(JObject json);
 
-        protected virtual RequestResponse ReadWebResponse(HttpWebResponse response)
+        protected virtual StashResponse<T> ReadWebResponse(HttpWebResponse response)
         {
             using (var stream = response.GetResponseStream())
             {
                 if (stream == null)
-                    return new RequestResponse { Success = false, Messages = new[] { "Unknown error." } };
+                    return new StashResponse<T> { Success = false, Messages = new[] { "Unknown error." } };
                 using (var reader = new StreamReader(stream))
                 {
-                    return new RequestResponse
+                    return new StashResponse<T>
                                {
                                    Success = true,
-                                   Result = (JObject)JsonConvert.DeserializeObject(reader.ReadToEnd())
+                                   Result = ParseResponse((JObject)JsonConvert.DeserializeObject(reader.ReadToEnd()))
                                };
                 }
             }
         }
 
-        private static RequestResponse ReadErrorWebResponse(WebResponse response)
+        private static StashResponse<T> ReadErrorWebResponse(WebResponse response)
         {
             using (var stream = response.GetResponseStream())
             {
                 if (stream == null)
-                    return new RequestResponse { Success = false, Messages = new[] { "Unknown error." } };
+                    return new StashResponse<T> { Success = false, Messages = new[] { "Unknown error." } };
                 using (var reader = new StreamReader(stream))
                 {
                     return ParseErrorResponse(reader);
@@ -92,13 +93,13 @@ namespace Stash
             }
         }
 
-        private static RequestResponse ParseErrorResponse(StreamReader reader)
+        private static StashResponse<T> ParseErrorResponse(StreamReader reader)
         {
             var jsonString = reader.ReadToEnd();
             var json = (JObject)JsonConvert.DeserializeObject(jsonString);
             if (json["errors"] != null)
             {
-                var errorResponse = new RequestResponse { Success = false };
+                var errorResponse = new StashResponse<T> { Success = false };
                 var messages = json["errors"].Select(error => error["message"].ToString()).ToList();
 
                 if (json["reviewerErrors"] != null)
@@ -111,9 +112,9 @@ namespace Stash
             }
             if (json["message"] != null)
             {
-                return new RequestResponse { Success = false, Messages = new[] { json["message"].ToString() } };
+                return new StashResponse<T> { Success = false, Messages = new[] { json["message"].ToString() } };
             }
-            return new RequestResponse { Success = false, Messages = new[] { "Unknown error." } };
+            return new StashResponse<T> { Success = false, Messages = new[] { "Unknown error." } };
         }
 
         private static void SetBasicAuthHeader(WebRequest request, String userName, String userPassword)
