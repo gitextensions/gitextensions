@@ -6,13 +6,13 @@
 
 namespace NBug.Core.UI
 {
-	internal enum SendReport
+	public enum SendReport
 	{
 		Send, 
 		DoNotSend
 	}
 
-	internal enum ExecutionFlow
+	public enum ExecutionFlow
 	{
 		/// <summary>
 		/// This will handle all unhandled exceptions to be able to continue execution.
@@ -25,12 +25,12 @@ namespace NBug.Core.UI
 		BreakExecution, 
 	}
 
-	internal struct UIDialogResult
+	public struct UIDialogResult
 	{
 		internal ExecutionFlow Execution;
 		internal SendReport Report;
 
-		internal UIDialogResult(ExecutionFlow execution, SendReport report)
+		public UIDialogResult(ExecutionFlow execution, SendReport report)
 		{
 			this.Execution = execution;
 			this.Report = report;

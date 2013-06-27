@@ -26,6 +26,11 @@ namespace NBug.Enums
 		/// <summary>
 		/// Windows Presentation Foundation interface is used for all UI displayed to the user.
 		/// </summary>
-		WPF
+		WPF,
+
+        /// <summary>
+        /// Custom UIProvider.
+        /// </summary>
+        Custom
 	}
 }

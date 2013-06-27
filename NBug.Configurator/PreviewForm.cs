@@ -48,6 +48,11 @@ namespace NBug.Configurator
 				WPFUI.ShowDialog(uiMode, exception, report);
 				this.Close();
 			}
+			else if (uiProvider == UIProvider.Custom)
+			{
+				CustomUI.ShowDialog(uiMode, exception, report);
+				this.Close();
+			}
 			else
 			{
 				throw new ArgumentException("Parameter supplied for UIProvider argument is invalid.");

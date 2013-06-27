@@ -49,10 +49,12 @@ namespace NBug.Core.Reporting.Info
 
 		public override string ToString()
 		{
-			var serializer = new XmlSerializer(typeof (Report));
+            var serializer = CustomInfo != null ? new XmlSerializer(typeof(Report), new[] { CustomInfo.GetType() }) : new XmlSerializer(typeof(Report));
 			using (var stream = new MemoryStream())
 			{
+                stream.SetLength(0);
 				serializer.Serialize(stream, this);
+                stream.Position = 0;
 				var doc = XDocument.Load(stream);
 				return doc.Root.ToString();
 			}

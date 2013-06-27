@@ -36,11 +36,17 @@ namespace NBug.Configurator
 		{
 			InitializeComponent();
 
+			NBug.Settings.CustomUIEvent += Settings_CustomUIEvent;
 			this.openFileDialog.InitialDirectory = Environment.CurrentDirectory;
 			this.createFileDialog.InitialDirectory = Environment.CurrentDirectory;
 			panelLoaders.Add(this.panelLoader1);
 		}
 
+		void Settings_CustomUIEvent(object sender, CustomUIEventArgs e)
+		{
+			var Form = new Normal();
+			e.Result = Form.ShowDialog(e.Report);
+		}
 		/// <summary>
 		/// Enables disabled controls and fills in combo boxes using related enumerations. Resets all values to defaults.
 		/// </summary>
@@ -292,7 +298,7 @@ namespace NBug.Configurator
 			}
 			else
 			{
-				Process.Start(path, "\"" + this.settingsFile.Name + "\"");
+				Process.Start(path, String.Format("\"{0}\"", this.settingsFile.Name));
 			}
 		}
 

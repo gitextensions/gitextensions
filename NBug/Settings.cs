@@ -328,8 +328,24 @@ namespace NBug
 
 		/// <summary>
 		/// Gets or sets a list of additional files to be added to the report zip. The files can use * or ? in the same way as DOS modifiers.
-		/// </summary>
+		/// </summary>        
 		public static List<string> AdditionalReportFiles { get; set; }
+
+        /// <summary>
+        /// Gets or sets a evento for CustomUI.
+        /// </summary>
+        internal static Delegate CustomUIHandle;
+        public static event EventHandler<CustomUIEventArgs> CustomUIEvent
+        {
+            add
+            {
+                CustomUIHandle = Delegate.Combine(CustomUIHandle, value);
+            }
+            remove
+            {
+                CustomUIHandle = Delegate.Remove(CustomUIHandle, value);
+            }
+        }
 
 		#endregion
 

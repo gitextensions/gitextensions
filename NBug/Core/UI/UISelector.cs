@@ -52,13 +52,15 @@ namespace NBug.Core.UI
 							return WPFUI.ShowDialog(UIMode.Minimal, serializableException, report);
 						case UIProvider.Console:
 							return ConsoleUI.ShowDialog(UIMode.Minimal, serializableException, report);
+                        case UIProvider.Custom:
+                            return CustomUI.ShowDialog(UIMode.Minimal, serializableException, report);
 						default:
 							throw new NBugRuntimeException("UISelector.DiscoverUI() returned an invalid UI type.");
 					}
 				}
 				else
 				{
-					throw new NBugRuntimeException("Parameter supplied for '" + typeof(ExceptionThread).Name + "' is not valid.");
+                    throw new NBugRuntimeException(String.Format("Parameter supplied for '{0}' is not valid.", typeof(ExceptionThread).Name));
 				}
 			}
 			else if (Settings.UIMode == UIMode.None)
@@ -85,6 +87,10 @@ namespace NBug.Core.UI
 			{
 				return WPFUI.ShowDialog(Settings.UIMode, serializableException, report);
 			}
+            else if (Settings.UIProvider == UIProvider.Custom)
+            {
+                return CustomUI.ShowDialog(UIMode.Minimal, serializableException, report);
+            }
 			else if (Settings.UIProvider == UIProvider.Auto)
 			{
 				// In this case, UIProvider = Auto & UIMode != Auto so just discover the UI provider and use the selected UI mode
@@ -96,6 +102,8 @@ namespace NBug.Core.UI
 						return WPFUI.ShowDialog(Settings.UIMode, serializableException, report);
 					case UIProvider.Console:
 						return ConsoleUI.ShowDialog(Settings.UIMode, serializableException, report);
+                    case UIProvider.Custom:
+                        return CustomUI.ShowDialog(UIMode.Minimal, serializableException, report);
 					default:
 						throw new NBugRuntimeException("UISelector.DiscoverUI() returned an invalid UI type.");
 				}
