@@ -49,10 +49,15 @@
             this.lblCommitInfoTarget = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.ReviewersDataGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -67,7 +72,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 59);
+            this.label2.Location = new System.Drawing.Point(14, 59);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(41, 13);
             this.label2.TabIndex = 1;
@@ -79,10 +84,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSourceBranch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtSourceBranch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.txtSourceBranch.Location = new System.Drawing.Point(133, 56);
+            this.txtSourceBranch.Location = new System.Drawing.Point(127, 58);
             this.txtSourceBranch.Name = "txtSourceBranch";
-            this.txtSourceBranch.Size = new System.Drawing.Size(184, 20);
+            this.txtSourceBranch.Size = new System.Drawing.Size(178, 20);
             this.txtSourceBranch.TabIndex = 1;
+            this.txtSourceBranch.Leave += new System.EventHandler(this.TxtSourceBranchTextChanged);
             // 
             // txtTargetBranch
             // 
@@ -90,10 +96,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtTargetBranch.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.txtTargetBranch.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
-            this.txtTargetBranch.Location = new System.Drawing.Point(134, 56);
+            this.txtTargetBranch.Location = new System.Drawing.Point(127, 58);
             this.txtTargetBranch.Name = "txtTargetBranch";
-            this.txtTargetBranch.Size = new System.Drawing.Size(184, 20);
+            this.txtTargetBranch.Size = new System.Drawing.Size(178, 20);
             this.txtTargetBranch.TabIndex = 1;
+            this.txtTargetBranch.Leave += new System.EventHandler(this.TxtTargetBranchTextChanged);
             // 
             // lblReviewers
             // 
@@ -120,16 +127,16 @@
             this.txtDescription.Location = new System.Drawing.Point(128, 221);
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
-            this.txtDescription.Size = new System.Drawing.Size(583, 104);
+            this.txtDescription.Size = new System.Drawing.Size(593, 158);
             this.txtDescription.TabIndex = 2;
             // 
             // btnCreate
             // 
-            this.btnCreate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCreate.Location = new System.Drawing.Point(647, 570);
+            this.btnCreate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCreate.Location = new System.Drawing.Point(654, 612);
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(134, 23);
-            this.btnCreate.TabIndex = 0;
+            this.btnCreate.TabIndex = 2;
             this.btnCreate.Text = "Create";
             this.btnCreate.UseVisualStyleBackColor = true;
             this.btnCreate.Click += new System.EventHandler(this.BtnCreateClick);
@@ -143,7 +150,7 @@
             this.GridColumnName});
             this.ReviewersDataGrid.Location = new System.Drawing.Point(129, 38);
             this.ReviewersDataGrid.Name = "ReviewersDataGrid";
-            this.ReviewersDataGrid.Size = new System.Drawing.Size(583, 137);
+            this.ReviewersDataGrid.Size = new System.Drawing.Size(593, 137);
             this.ReviewersDataGrid.TabIndex = 0;
             this.ReviewersDataGrid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.ReviewersDataGridEditingControlShowing);
             // 
@@ -162,7 +169,7 @@
             this.txtTitle.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.txtTitle.Location = new System.Drawing.Point(129, 189);
             this.txtTitle.Name = "txtTitle";
-            this.txtTitle.Size = new System.Drawing.Size(583, 20);
+            this.txtTitle.Size = new System.Drawing.Size(593, 20);
             this.txtTitle.TabIndex = 1;
             // 
             // label4
@@ -177,10 +184,10 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(15, 29);
+            this.label5.Location = new System.Drawing.Point(14, 29);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(57, 13);
-            this.label5.TabIndex = 12;
+            this.label5.TabIndex = 0;
             this.label5.Text = "Repository";
             // 
             // groupBox1
@@ -190,30 +197,36 @@
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.txtSourceBranch);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(15, 13);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(372, 151);
-            this.groupBox1.TabIndex = 14;
+            this.groupBox1.Size = new System.Drawing.Size(382, 169);
+            this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Source";
             // 
             // ddlRepositorySource
             // 
+            this.ddlRepositorySource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddlRepositorySource.DisplayMember = "DisplayName";
+            this.ddlRepositorySource.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlRepositorySource.FormattingEnabled = true;
-            this.ddlRepositorySource.Location = new System.Drawing.Point(134, 24);
+            this.ddlRepositorySource.Location = new System.Drawing.Point(128, 26);
             this.ddlRepositorySource.Name = "ddlRepositorySource";
-            this.ddlRepositorySource.Size = new System.Drawing.Size(183, 21);
+            this.ddlRepositorySource.Size = new System.Drawing.Size(178, 21);
             this.ddlRepositorySource.TabIndex = 0;
             this.ddlRepositorySource.SelectedValueChanged += new System.EventHandler(this.DdlRepositorySourceSelectedValueChanged);
             // 
             // lblCommitInfoSource
             // 
-            this.lblCommitInfoSource.AutoSize = true;
-            this.lblCommitInfoSource.Location = new System.Drawing.Point(131, 90);
+            this.lblCommitInfoSource.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCommitInfoSource.Location = new System.Drawing.Point(127, 90);
             this.lblCommitInfoSource.Name = "lblCommitInfoSource";
-            this.lblCommitInfoSource.Size = new System.Drawing.Size(0, 13);
-            this.lblCommitInfoSource.TabIndex = 14;
+            this.lblCommitInfoSource.Size = new System.Drawing.Size(237, 62);
+            this.lblCommitInfoSource.TabIndex = 2;
             // 
             // groupBox2
             // 
@@ -222,35 +235,41 @@
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.txtTargetBranch);
-            this.groupBox2.Location = new System.Drawing.Point(409, 13);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(372, 151);
-            this.groupBox2.TabIndex = 15;
+            this.groupBox2.Size = new System.Drawing.Size(390, 169);
+            this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Target";
             // 
             // ddlRepositoryTarget
             // 
+            this.ddlRepositoryTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ddlRepositoryTarget.DisplayMember = "DisplayName";
+            this.ddlRepositoryTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ddlRepositoryTarget.FormattingEnabled = true;
-            this.ddlRepositoryTarget.Location = new System.Drawing.Point(134, 24);
+            this.ddlRepositoryTarget.Location = new System.Drawing.Point(128, 26);
             this.ddlRepositoryTarget.Name = "ddlRepositoryTarget";
-            this.ddlRepositoryTarget.Size = new System.Drawing.Size(183, 21);
+            this.ddlRepositoryTarget.Size = new System.Drawing.Size(178, 21);
             this.ddlRepositoryTarget.TabIndex = 0;
             this.ddlRepositoryTarget.SelectedValueChanged += new System.EventHandler(this.DdlRepositoryTargetSelectedValueChanged);
             // 
             // lblCommitInfoTarget
             // 
-            this.lblCommitInfoTarget.AutoSize = true;
-            this.lblCommitInfoTarget.Location = new System.Drawing.Point(131, 90);
+            this.lblCommitInfoTarget.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCommitInfoTarget.Location = new System.Drawing.Point(127, 90);
             this.lblCommitInfoTarget.Name = "lblCommitInfoTarget";
-            this.lblCommitInfoTarget.Size = new System.Drawing.Size(0, 13);
-            this.lblCommitInfoTarget.TabIndex = 15;
+            this.lblCommitInfoTarget.Size = new System.Drawing.Size(237, 62);
+            this.lblCommitInfoTarget.TabIndex = 2;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(15, 29);
+            this.label6.Location = new System.Drawing.Point(14, 29);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(57, 13);
             this.label6.TabIndex = 12;
@@ -258,28 +277,48 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.lblReviewers);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.txtDescription);
             this.groupBox3.Controls.Add(this.txtTitle);
             this.groupBox3.Controls.Add(this.ReviewersDataGrid);
             this.groupBox3.Controls.Add(this.label4);
-            this.groupBox3.Location = new System.Drawing.Point(15, 187);
+            this.groupBox3.Location = new System.Drawing.Point(12, 187);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(766, 364);
-            this.groupBox3.TabIndex = 16;
+            this.groupBox3.Size = new System.Drawing.Size(776, 401);
+            this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Pull Request Info";
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Location = new System.Drawing.Point(12, 12);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
+            this.splitContainer1.Size = new System.Drawing.Size(776, 169);
+            this.splitContainer1.SplitterDistance = 382;
+            this.splitContainer1.TabIndex = 0;
             // 
             // StashPullRequestForm
             // 
             this.AcceptButton = this.btnCreate;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(802, 626);
+            this.ClientSize = new System.Drawing.Size(803, 667);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnCreate);
             this.Name = "StashPullRequestForm";
             this.Text = "Create Pull Request";
@@ -291,6 +330,10 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -318,5 +361,6 @@
         private System.Windows.Forms.Label lblCommitInfoTarget;
         private System.Windows.Forms.ComboBox ddlRepositorySource;
         private System.Windows.Forms.ComboBox ddlRepositoryTarget;
+        private System.Windows.Forms.SplitContainer splitContainer1;
     }
 }
