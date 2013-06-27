@@ -23,7 +23,7 @@ namespace NBug.Examples.WinForms
 
 		internal UIDialogResult ShowDialog(Report report)
 		{
-			this.Text = string.Format("{0} {1}", report.GeneralInfo.HostApplication, Settings.Resources.UI_Dialog_Normal_Title);
+			this.Text = string.Format("{0} CustomUI {1}", report.GeneralInfo.HostApplication, Settings.Resources.UI_Dialog_Normal_Title);
 			this.exceptionMessageLabel.Text = report.GeneralInfo.ExceptionMessage;
 
 			this.ShowDialog();

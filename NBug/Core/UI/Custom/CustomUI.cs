@@ -23,7 +23,7 @@ namespace NBug.Core.UI.WPF
             if (Settings.CustomUIHandle != null)
 			{
                 var e = new CustomUIEventArgs(uiMode, exception, report);
-                Settings.CustomUIHandle.DynamicInvoke(e);
+                Settings.CustomUIHandle.DynamicInvoke(null, e);
                 return e.Result;
             }
 			else
