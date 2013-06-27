@@ -44,8 +44,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
     public class SettingsPageReferenceByPlugin : SettingsPageReferenceByType
     {
-        private readonly IGitPlugin _gitPlugin;
-
         public SettingsPageReferenceByPlugin(IGitPlugin gitPlugin)
             : base(gitPlugin.GetType())
         {
