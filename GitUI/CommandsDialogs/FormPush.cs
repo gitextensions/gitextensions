@@ -431,7 +431,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 bool pullCompleted;
-                UICommands.StartPullDialog(owner, true, out pullCompleted);
+                UICommands.StartPullDialog(owner, true, null, _selectedBranchRemote, out pullCompleted, false);
                 if (pullCompleted)
                 {
                     form.Retry();
