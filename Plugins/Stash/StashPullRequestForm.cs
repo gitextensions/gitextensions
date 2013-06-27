@@ -79,7 +79,8 @@ namespace Stash
             if (response.Success)
                 MessageBox.Show("Success");
             else
-                MessageBox.Show(string.Join(Environment.NewLine, response.Messages));
+                MessageBox.Show(string.Join(Environment.NewLine, response.Messages), 
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private IEnumerable<StashUser> GetStashUsers()

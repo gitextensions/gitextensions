@@ -42,7 +42,7 @@ namespace Stash
             get
             {
                 return string.Format("/projects/{0}/repos/{1}/pull-requests",
-                                     Settings.ProjectKey, Settings.RepoSlug);
+                                     _info.TargetRepo.ProjectKey, _info.TargetRepo.RepoName);
             }
         }
 
