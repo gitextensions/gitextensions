@@ -36,10 +36,24 @@ namespace Stash
 
             _stashUsers.AddRange(GetStashUsers().Select(a => a.Slug));
 
-            txtSourceBranch.AutoCompleteCustomSource.AddRange(GetStashBranches().ToArray());
-            txtTargetBranch.AutoCompleteCustomSource.AddRange(GetStashBranches().ToArray());
+            var relatedRepos = GetRelatedRepos();
+
+            ddlRepositorySource.DataSource = relatedRepos.ToList();
+            ddlRepositoryTarget.DataSource = relatedRepos.ToList();
 
             ReviewersDataGrid.DataSource = _reviewers;
+        }
+
+        private List<Repository> GetRelatedRepos()
+        {
+            var list = new List<Repository>();
+            var getRelatedRepos = new GetRelatedRepoRequest(_settings);
+            var result = getRelatedRepos.Send();
+            if (result.Success)
+            {
+                list.AddRange(result.Result);
+            }
+            return list;
         }
 
         private void BtnCreateClick(object sender, EventArgs e)
@@ -50,6 +64,8 @@ namespace Stash
                                Description = txtDescription.Text,
                                SourceBranch = txtSourceBranch.Text,
                                TargetBranch = txtTargetBranch.Text,
+                               SourceRepo = (Repository) ddlRepositorySource.SelectedValue,
+                               TargetRepo = (Repository) ddlRepositoryTarget.SelectedValue,
                                Reviewers = _reviewers
                            };
 
@@ -76,10 +92,10 @@ namespace Stash
             return list;
         }
 
-        private IEnumerable<string> GetStashBranches()
+        private IEnumerable<string> GetStashBranches(Repository selectedRepo)
         {
             var list = new List<string>();
-            var getBranches = new GetBranchesRequest(_settings);
+            var getBranches = new GetBranchesRequest(selectedRepo, _settings);
             var result = getBranches.Send();
             if (result.Success)
             {
@@ -101,6 +117,23 @@ namespace Stash
                 cellEdit.AutoCompleteSource = AutoCompleteSource.CustomSource;
                 cellEdit.AutoCompleteCustomSource.AddRange(_stashUsers.ToArray());
             }
+        }
+
+        private void DdlRepositorySourceSelectedValueChanged(object sender, EventArgs e)
+        {
+            RefreshAutoCompleteBranch(txtSourceBranch, ((ComboBox) sender).SelectedValue);
+        }
+
+        private void RefreshAutoCompleteBranch(TextBox textBox, object selectedValue)
+        {
+            var branches = GetStashBranches((Repository) selectedValue);
+            textBox.AutoCompleteCustomSource.Clear();
+            textBox.AutoCompleteCustomSource.AddRange(branches.ToArray());
+        }
+
+        private void DdlRepositoryTargetSelectedValueChanged(object sender, EventArgs e)
+        {
+            RefreshAutoCompleteBranch(txtTargetBranch, ((ComboBox)sender).SelectedValue);
         }
     }
 }

@@ -9,12 +9,14 @@ namespace Stash
     {
         public string Title { get; set; }
         public string Description { get; set; }
+        public Repository SourceRepo { get; set; }
+        public Repository TargetRepo { get; set; }
         public string SourceBranch { get; set; }
         public string TargetBranch { get; set; }
         public IEnumerable<StashUser> Reviewers { get; set; }
     }
 
-    class CreatePullRequestRequest : StashRequestBase
+    class CreatePullRequestRequest : StashRequestBase<JObject>
     {
         private readonly PullRequestInfo _info;
 
@@ -49,28 +51,24 @@ namespace Stash
             get { return "POST"; }
         }
 
+        protected override JObject ParseResponse(JObject json)
+        {
+            return json;
+        }
+
         private string GetPullRequestBody()
         {
-            var project = new JObject();
-            project["key"] = "CCA";
-
-            var repository = new JObject();
-            repository["slug"] = "mycca";
-            repository["project"] = project;
-
-            var fromRef = new JObject();
-            fromRef["id"] = _info.SourceBranch;
-            fromRef["repository"] = repository;
-
-            var toRef = new JObject();
-            toRef["id"] = _info.TargetBranch;
-            toRef["repository"] = repository;
-
             var resource = new JObject();
             resource["title"] = _info.Title;
             resource["description"] = _info.Description;
-            resource["fromRef"] = fromRef;
-            resource["toRef"] = toRef;
+
+            resource["fromRef"] = CreatePullRequestRef(
+                _info.SourceRepo.ProjectKey
+                , _info.SourceRepo.RepoName, _info.SourceBranch);
+
+            resource["toRef"] = CreatePullRequestRef(
+                _info.TargetRepo.ProjectKey
+                , _info.TargetRepo.RepoName, _info.TargetBranch);
 
             var reviewers = new JArray();
             foreach (var reviewer in _info.Reviewers)
@@ -86,5 +84,15 @@ namespace Stash
             return resource.ToString();
         }
 
+        private JObject CreatePullRequestRef(string projectKey, string repoName, string branchName)
+        {
+            var reference = new JObject();
+            reference["id"] = branchName;
+            reference["repository"] = new JObject();
+            reference["repository"]["slug"] = repoName;
+            reference["repository"]["project"] = new JObject();
+            reference["repository"]["project"]["key"] = projectKey;
+            return reference;
+        }
     }
 }
