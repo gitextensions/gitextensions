@@ -9,9 +9,16 @@
 		public MainForm()
 		{
 			InitializeComponent();
+            NBug.Settings.CustomUIEvent += Settings_CustomUIEvent;
 
 			this.crashTypeComboBox.SelectedIndex = 0;
 		}
+
+        void Settings_CustomUIEvent(object sender, CustomUIEventArgs e)
+        {
+            var Form = new Normal();
+            e.Result = Form.ShowDialog(e.Report);
+        }
 
 		private unsafe void CrashButton_Click(object sender, EventArgs e)
 		{

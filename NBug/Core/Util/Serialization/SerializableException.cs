@@ -89,7 +89,7 @@ namespace NBug.Core.Util.Serialization
 
 			if (exception.TargetSite != null)
 			{
-				this.TargetSite = exception.TargetSite + " @ " + exception.TargetSite.DeclaringType;
+                this.TargetSite = String.Format("{0} @ {1}", exception.TargetSite, exception.TargetSite.DeclaringType);
 			}
 
 			this.ExtendedInformation = this.GetExtendedInformation(exception);
@@ -148,7 +148,9 @@ namespace NBug.Core.Util.Serialization
 			var serializer = new XmlSerializer(typeof(SerializableException));
 			using (var stream = new MemoryStream())
 			{
+                stream.SetLength(0);
 				serializer.Serialize(stream, this);
+                stream.Position = 0;
 				var doc = XDocument.Load(stream);
 				return doc.Root.ToString();
 			}

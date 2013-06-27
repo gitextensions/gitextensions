@@ -73,6 +73,7 @@
     <Compile Include="Core\Submission\IProtocol.cs" />
     <Compile Include="Core\Submission\IProtocolFactory.cs" />
     <Compile Include="Core\Submission\Tracker\BugNet.cs" />
+    <Compile Include="Core\UI\Custom\CustomUI.cs" />
     <Compile Include="Core\UI\Developer\InternalExceptionViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,6 +94,7 @@
     </Compile>
     <Compile Include="Core\Util\ConnectionStringParser.cs" />
     <Compile Include="Core\Util\PublicResources.cs" />
+    <Compile Include="Events\CustomUIEventArgs.cs" />
     <Compile Include="Enums\MiniDumpType.cs" />
     <Compile Include="Enums\StoragePath.cs" />
     <Compile Include="Enums\UIMode.cs" />
@@ -244,6 +246,7 @@
       <DependentUpon>Normal.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName)==Release copy "$(TargetPath)" "$(SolutionDir)packages\NBug\lib\net40-client" /Y
