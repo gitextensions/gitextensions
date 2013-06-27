@@ -53,7 +53,10 @@
     </Compile>
     <Compile Include="GetBranchesRequest.cs" />
     <Compile Include="CreatePullRequestRequest.cs" />
+    <Compile Include="GetHeadCommitRequest.cs" />
+    <Compile Include="GetInBetweenCommitsRequest.cs" />
     <Compile Include="GetRelatedRepoRequest.cs" />
+    <Compile Include="GetRepoRequest.cs" />
     <Compile Include="GetUserRequest.cs" />
     <Compile Include="StashPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

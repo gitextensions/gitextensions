@@ -6,6 +6,17 @@ namespace Stash
 {
     class Repository
     {
+        public static Repository Parse(JObject json)
+        {
+            return new Repository
+                       {
+                           Id = json["id"].ToString(),
+                           RepoName = json["name"].ToString(),
+                           ProjectName = json["project"]["name"].ToString(),
+                           ProjectKey = json["project"]["key"].ToString()
+                       };
+        }
+        public string Id { get; set; }
         public string ProjectKey { get; set; }
         public string ProjectName { get; set; }
         public string RepoName { get; set; }
@@ -43,22 +54,9 @@ namespace Stash
         protected override List<Repository> ParseResponse(JObject json)
         {
             var result = new List<Repository>();
-            //add current project/repo as the default
-            result.Add(new Repository
-                           {
-                               RepoName = Settings.RepoSlug,
-                               ProjectName = Settings.ProjectKey,
-                               ProjectKey = Settings.ProjectKey
-                           });
-
-            foreach (var val in json["values"])
+            foreach (JObject val in json["values"])
             {
-                result.Add(new Repository
-                               {
-                                   RepoName = val["name"].ToString(),
-                                   ProjectName = val["project"]["name"].ToString(),
-                                   ProjectKey = val["project"]["key"].ToString()
-                               });
+                result.Add(Repository.Parse(val));
             }
             return result;
         }

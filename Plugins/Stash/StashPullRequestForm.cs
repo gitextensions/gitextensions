@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using System.Linq;
@@ -36,17 +37,21 @@ namespace Stash
 
             _stashUsers.AddRange(GetStashUsers().Select(a => a.Slug));
 
-            var relatedRepos = GetRelatedRepos();
+            var repositories = GetRepositories();
 
-            ddlRepositorySource.DataSource = relatedRepos.ToList();
-            ddlRepositoryTarget.DataSource = relatedRepos.ToList();
+            ddlRepositorySource.DataSource = repositories.ToList();
+            ddlRepositoryTarget.DataSource = repositories.ToList();
 
             ReviewersDataGrid.DataSource = _reviewers;
         }
 
-        private List<Repository> GetRelatedRepos()
+        private List<Repository> GetRepositories()
         {
             var list = new List<Repository>();
+            var getDefaultRepo = new GetRepoRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
+            var defaultRepo = getDefaultRepo.Send();
+            if (defaultRepo.Success)
+                list.Add(defaultRepo.Result);
             var getRelatedRepos = new GetRelatedRepoRequest(_settings);
             var result = getRelatedRepos.Send();
             if (result.Success)
@@ -124,16 +129,78 @@ namespace Stash
             RefreshAutoCompleteBranch(txtSourceBranch, ((ComboBox) sender).SelectedValue);
         }
 
+        private void DdlRepositoryTargetSelectedValueChanged(object sender, EventArgs e)
+        {
+            RefreshAutoCompleteBranch(txtTargetBranch, ((ComboBox)sender).SelectedValue);
+        }
+
         private void RefreshAutoCompleteBranch(TextBox textBox, object selectedValue)
         {
-            var branches = GetStashBranches((Repository) selectedValue);
+            var branches = GetStashBranches((Repository)selectedValue);
             textBox.AutoCompleteCustomSource.Clear();
             textBox.AutoCompleteCustomSource.AddRange(branches.ToArray());
         }
 
-        private void DdlRepositoryTargetSelectedValueChanged(object sender, EventArgs e)
+        private void TxtSourceBranchTextChanged(object sender, EventArgs e)
         {
-            RefreshAutoCompleteBranch(txtTargetBranch, ((ComboBox)sender).SelectedValue);
+            var commit = GetCommitInfo((Repository) ddlRepositorySource.SelectedValue,
+                                                txtSourceBranch.Text);
+            txtSourceBranch.Tag = commit;
+            UpdateCommitInfo(lblCommitInfoSource, commit);
+            UpdatePullRequestDescription();
+        }
+
+        private void TxtTargetBranchTextChanged(object sender, EventArgs e)
+        {
+            var commit = GetCommitInfo((Repository) ddlRepositoryTarget.SelectedValue,
+                                                txtTargetBranch.Text);
+            txtTargetBranch.Tag = commit;
+            UpdateCommitInfo(lblCommitInfoTarget, commit);
+            UpdatePullRequestDescription();
+        }
+
+        private Commit GetCommitInfo(Repository repo, string branch)
+        {
+            if (repo == null || string.IsNullOrWhiteSpace(branch))
+                return null;
+            var getCommit = new GetHeadCommitRequest(repo, branch, _settings);
+            var result = getCommit.Send();
+            return result.Success ? result.Result : null;
+        }
+
+        private void UpdateCommitInfo(Label label, Commit commit)
+        {
+            label.Text = string.Format("{0} committed{1}{2}", 
+                    commit.AuthorName, Environment.NewLine, commit.Message);
+        }
+
+        private void UpdatePullRequestDescription()
+        {
+            if (ddlRepositorySource.SelectedValue == null
+                || ddlRepositoryTarget.SelectedValue == null
+                || txtSourceBranch.Tag == null
+                || txtTargetBranch.Tag == null)
+                return;
+
+            var getCommitsInBetween = new GetInBetweenCommitsRequest(
+                (Repository) ddlRepositorySource.SelectedValue,
+                (Repository) ddlRepositoryTarget.SelectedValue,
+                (Commit) txtSourceBranch.Tag,
+                (Commit) txtTargetBranch.Tag,
+                _settings);
+
+            var result = getCommitsInBetween.Send();
+            if (result.Success)
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine();
+                foreach(var commit in result.Result)
+                {
+                    if (!commit.IsMerge)
+                        sb.Append("* ").AppendLine(commit.Message);
+                }
+                txtDescription.Text = sb.ToString();
+            }
         }
     }
 }
