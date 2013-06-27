@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="UI_Console_Full_Message" xml:space="preserve">
-    <value>Uma exceção não tratada ocorreu. Encerando a aplicação. </value>
+    <value>Uma exceção não tratada ocorreu. Encerrando a aplicação. </value>
   </data>
   <data name="UI_Console_Minimal_Message" xml:space="preserve">
-    <value>Uma exceção não tratada ocorreu. Encerando a aplicação.</value>
+    <value>Uma exceção não tratada ocorreu. Encerrando a aplicação.</value>
   </data>
   <data name="UI_Console_Normal_Message" xml:space="preserve">
-    <value>Uma exceção não tratada ocorreu. Encerando a aplicação.</value>
+    <value>Uma exceção não tratada ocorreu. Encerrando a aplicação.</value>
   </data>
   <data name="UI_Dialog_Full_Exception_Tab" xml:space="preserve">
     <value>Exceção </value>
