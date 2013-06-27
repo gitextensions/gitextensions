@@ -99,14 +99,22 @@ namespace Stash
             var json = (JObject)JsonConvert.DeserializeObject(jsonString);
             if (json["errors"] != null)
             {
+                var messages = new List<string>();
                 var errorResponse = new StashResponse<T> { Success = false };
-                var messages = json["errors"].Select(error => error["message"].ToString()).ToList();
-
-                if (json["reviewerErrors"] != null)
+                foreach(var error in json["errors"])
                 {
-                    var reviewerErrors = json["reviewerErrors"].Select(e => e["message"].ToString());
-                    messages.AddRange(reviewerErrors);
+                    var sb = new StringBuilder();
+                    sb.AppendLine(error["message"].ToString());
+                    if (error["reviewerErrors"] != null)
+                    {
+                        foreach(var reviewerError in error["reviewerErrors"])
+                        {
+                            sb.Append("\t").Append(reviewerError["message"]).AppendLine();
+                        }
+                    }
+                    messages.Add(sb.ToString());
                 }
+                
                 errorResponse.Messages = messages;
                 return errorResponse;
             }
