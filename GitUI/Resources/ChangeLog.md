@@ -1,6 +1,9 @@
 ﻿Changelog
 =========
 
+### Version 2.46
+* Fixed issue 1387: Shell extensions not work under Windows XP
+
 ### Version 2.45
 * Setup files moved to sourceforge http://sourceforge.net/projects/gitextensions/
 * Putty updated to version 0.62.9768.0 (80% faster for me when cloning repository from GitHub)
