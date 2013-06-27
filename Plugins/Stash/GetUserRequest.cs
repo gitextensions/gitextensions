@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Newtonsoft.Json.Linq;
 
 namespace Stash
 {
@@ -7,7 +8,7 @@ namespace Stash
         public string Slug { get; set; }
     }
 
-    class GetUserRequest : StashRequestBase
+    class GetUserRequest : StashRequestBase<JObject>
     {
         public GetUserRequest(Settings settings)
             : base(settings)
@@ -29,6 +30,9 @@ namespace Stash
             get { return "GET"; }
         }
 
-
+        protected override JObject ParseResponse(JObject json)
+        {
+            return json;
+        }
     }
 }
