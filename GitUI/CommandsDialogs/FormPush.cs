@@ -352,6 +352,14 @@ namespace GitUI.CommandsDialogs
             if (!isError)
                 return false;
 
+            //there is no way to pull to not current branch
+            if (_selectedBranch != _currentBranch)
+                return false;
+
+            //auto pull from URL not supported. See https://github.com/gitextensions/gitextensions/issues/1887
+            if (!PushToRemote.Checked)
+                return false;
+
             //auto pull only if current branch was rejected
             Regex IsRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranch) + ".*" + Regex.Escape(" (non-fast-forward)"), RegexOptions.Compiled);
 
