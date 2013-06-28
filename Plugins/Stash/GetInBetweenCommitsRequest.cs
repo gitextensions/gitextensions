@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using Newtonsoft.Json.Linq;
+using RestSharp;
 
 namespace Stash
 {
@@ -21,8 +21,14 @@ namespace Stash
             _targetCommit = targetCommit;
         }
 
-        protected override void WriteRequestBody(HttpWebRequest request)
+        protected override object RequestBody
         {
+            get { return null; }
+        }
+
+        protected override Method RequestMethod
+        {
+            get { return Method.GET; }
         }
 
         protected override string ApiUrl
@@ -34,11 +40,6 @@ namespace Stash
                     _sourceRepo.ProjectKey, _sourceRepo.RepoName, 
                     _sourceCommit.Hash, _targetCommit.Hash, _targetRepo.Id);
             }
-        }
-
-        protected override string RequestMethod
-        {
-            get { return"GET"; }
         }
 
         protected override List<Commit> ParseResponse(JObject json)

@@ -1,5 +1,5 @@
-﻿using System.Net;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
+using RestSharp;
 
 namespace Stash
 {
@@ -32,8 +32,14 @@ namespace Stash
             _branch = branchName;
         }
 
-        protected override void WriteRequestBody(HttpWebRequest request)
+        protected override object RequestBody
         {
+            get { return null; }
+        }
+
+        protected override Method RequestMethod
+        {
+            get { return Method.GET; }
         }
 
         protected override string ApiUrl
@@ -43,11 +49,6 @@ namespace Stash
                 return string.Format("/projects/{0}/repos/{1}/commits/refs/heads/{2}",
                                      _repo.ProjectKey, _repo.RepoName, _branch);
             }
-        }
-
-        protected override string RequestMethod
-        {
-            get { return "GET"; }
         }
 
         protected override Commit ParseResponse(JObject json)
