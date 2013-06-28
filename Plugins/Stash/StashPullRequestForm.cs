@@ -171,7 +171,10 @@ namespace Stash
 
         private void UpdateCommitInfo(Label label, Commit commit)
         {
-            label.Text = string.Format("{0} committed{1}{2}", 
+            if (commit == null) 
+                label.Text = string.Empty;
+            else 
+                label.Text = string.Format("{0} committed{1}{2}", 
                     commit.AuthorName, Environment.NewLine, commit.Message);
         }
 
