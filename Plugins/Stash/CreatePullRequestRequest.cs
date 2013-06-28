@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Net;
 using Newtonsoft.Json.Linq;
+using RestSharp;
 
 namespace Stash
 {
@@ -26,15 +25,14 @@ namespace Stash
             _info = info;
         }
 
-        protected override void WriteRequestBody(HttpWebRequest request)
+        protected override object RequestBody
         {
-            using (var bodyStream = request.GetRequestStream())
-            {
-                using (var writer = new StreamWriter(bodyStream))
-                {
-                    writer.Write(GetPullRequestBody());
-                }
-            }
+            get { return GetPullRequestBody(); }
+        }
+
+        protected override Method RequestMethod
+        {
+            get { return Method.POST; }
         }
 
         protected override string ApiUrl
@@ -44,11 +42,6 @@ namespace Stash
                 return string.Format("/projects/{0}/repos/{1}/pull-requests",
                                      _info.TargetRepo.ProjectKey, _info.TargetRepo.RepoName);
             }
-        }
-
-        protected override string RequestMethod
-        {
-            get { return "POST"; }
         }
 
         protected override JObject ParseResponse(JObject json)
