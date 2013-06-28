@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using Newtonsoft.Json.Linq;
+using RestSharp;
 
 namespace Stash
 {
@@ -32,8 +32,14 @@ namespace Stash
         {
         }
 
-        protected override void WriteRequestBody(HttpWebRequest request)
+        protected override object RequestBody
         {
+            get { return null; }
+        }
+
+        protected override Method RequestMethod
+        {
+            get { return Method.GET; }
         }
 
         protected override string ApiUrl
@@ -44,11 +50,6 @@ namespace Stash
                     "/rest/api/latest/projects/{0}/repos/{1}/related?start=0&limit=20",
                     Settings.ProjectKey, Settings.RepoSlug);
             }
-        }
-
-        protected override string RequestMethod
-        {
-            get { return "GET"; }
         }
 
         protected override List<Repository> ParseResponse(JObject json)
