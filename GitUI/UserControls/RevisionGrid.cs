@@ -158,8 +158,6 @@ namespace GitUI
         [Browsable(false)]
         public Font SuperprojectFont { get; private set; }
         [Browsable(false)]
-        public string FirstVisibleRevisionBeforeUpdate { get; private set; }
-        [Browsable(false)]
         public int LastScrollPos { get; private set; }
         [Browsable(false)]
         public string[] LastSelectedRows { get; private set; }
@@ -798,17 +796,9 @@ namespace GitUI
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
-                FirstVisibleRevisionBeforeUpdate = null;
                 if (newCurrentCheckout == CurrentCheckout)
                 {
                     LastSelectedRows = Revisions.SelectedIds;
-
-                    if (Revisions.FirstDisplayedScrollingRowIndex != -1)
-                    {
-                        var rows = Revisions.Rows.Cast<DataGridViewRow>();
-                        var row = rows.ElementAt(Revisions.FirstDisplayedScrollingRowIndex);
-                        FirstVisibleRevisionBeforeUpdate = GetRevision(row.Index).Guid;
-                    }
                 }
                 else
                 {
@@ -1025,22 +1015,10 @@ namespace GitUI
             }
             LastSelectedRows = null;
 
-            if (FirstVisibleRevisionBeforeUpdate != null)
-            {
-                var lastRow = Revisions.Rows.Cast<DataGridViewRow>()
-                    .FirstOrDefault(row => GetRevision(row.Index).Guid == FirstVisibleRevisionBeforeUpdate);
-
-                if (lastRow != null)
-                    Revisions.FirstDisplayedScrollingRowIndex = lastRow.Index;
-
-                FirstVisibleRevisionBeforeUpdate = null;
-            }
-
             if (!Revisions.IsRevisionRelative(FiltredCurrentCheckout))
             {
                 HighlightBranch(FiltredCurrentCheckout);
             }
-
         }
 
         internal int TrySearchRevision(string initRevision, out string graphRevision)
@@ -1049,7 +1027,7 @@ namespace GitUI
                 .Rows
                 .Cast<DataGridViewRow>();
             var revisions = rows
-                .Select(row => new { Index = row.Index, Guid = GetRevision(row.Index).Guid });
+                .Select(row => new { row.Index, GetRevision(row.Index).Guid });
 
             var idx = revisions.FirstOrDefault(rev => rev.Guid == initRevision);
             if (idx != null)

@@ -348,7 +348,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(594, 571);
             this.Controls.Add(this.tableLayoutPanel4);
-            this.MinimumSize = new System.Drawing.Size(610, 590);
+            this.MinimumSize = new System.Drawing.Size(610, 609);
             this.Name = "FormArchive";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Archive";
