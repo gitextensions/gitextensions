@@ -74,7 +74,7 @@
             0});
             this._NO_TRANSLATE_maxRecentRepositories.Name = "_NO_TRANSLATE_maxRecentRepositories";
             this._NO_TRANSLATE_maxRecentRepositories.Size = new System.Drawing.Size(61, 21);
-            this._NO_TRANSLATE_maxRecentRepositories.TabIndex = 58;
+            this._NO_TRANSLATE_maxRecentRepositories.TabIndex = 0;
             this._NO_TRANSLATE_maxRecentRepositories.ValueChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
             // 
             // maxRecentRepositories
@@ -94,7 +94,7 @@
             this.sortLessRecentRepos.Name = "sortLessRecentRepos";
             this.sortLessRecentRepos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.sortLessRecentRepos.Size = new System.Drawing.Size(228, 17);
-            this.sortLessRecentRepos.TabIndex = 56;
+            this.sortLessRecentRepos.TabIndex = 2;
             this.sortLessRecentRepos.Text = "Sort less recent repositories alphabetically";
             this.sortLessRecentRepos.UseVisualStyleBackColor = true;
             this.sortLessRecentRepos.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
@@ -107,7 +107,7 @@
             this.sortMostRecentRepos.Name = "sortMostRecentRepos";
             this.sortMostRecentRepos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.sortMostRecentRepos.Size = new System.Drawing.Size(233, 17);
-            this.sortMostRecentRepos.TabIndex = 55;
+            this.sortMostRecentRepos.TabIndex = 1;
             this.sortMostRecentRepos.Text = "Sort most recent repositories alphabetically";
             this.sortMostRecentRepos.UseVisualStyleBackColor = true;
             this.sortMostRecentRepos.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
@@ -130,10 +130,10 @@
             this.LessRecentLB.DisplayMember = "Caption";
             this.LessRecentLB.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LessRecentLB.FormattingEnabled = true;
-            this.LessRecentLB.Location = new System.Drawing.Point(0, 220);
+            this.LessRecentLB.Location = new System.Drawing.Point(0, 194);
             this.LessRecentLB.Name = "LessRecentLB";
-            this.LessRecentLB.Size = new System.Drawing.Size(233, 202);
-            this.LessRecentLB.TabIndex = 4;
+            this.LessRecentLB.Size = new System.Drawing.Size(233, 228);
+            this.LessRecentLB.TabIndex = 6;
             // 
             // contextMenuStrip1
             // 
@@ -178,7 +178,7 @@
             // 
             this.panel3.Controls.Add(this.label1);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(0, 176);
+            this.panel3.Location = new System.Drawing.Point(0, 169);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(233, 25);
             this.panel3.TabIndex = 3;
@@ -200,8 +200,8 @@
             this.MostRecentLB.FormattingEnabled = true;
             this.MostRecentLB.Location = new System.Drawing.Point(0, 22);
             this.MostRecentLB.Name = "MostRecentLB";
-            this.MostRecentLB.Size = new System.Drawing.Size(281, 154);
-            this.MostRecentLB.TabIndex = 2;
+            this.MostRecentLB.Size = new System.Drawing.Size(233, 147);
+            this.MostRecentLB.TabIndex = 5;
             // 
             // panel2
             // 
@@ -227,7 +227,7 @@
             this.Abort.Location = new System.Drawing.Point(318, 5);
             this.Abort.Name = "Abort";
             this.Abort.Size = new System.Drawing.Size(75, 23);
-            this.Abort.TabIndex = 3;
+            this.Abort.TabIndex = 8;
             this.Abort.Text = "Cancel";
             this.Abort.UseCompatibleTextRendering = true;
             this.Abort.UseVisualStyleBackColor = true;
@@ -256,7 +256,7 @@
             this.Ok.Location = new System.Drawing.Point(237, 5);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
-            this.Ok.TabIndex = 5;
+            this.Ok.TabIndex = 7;
             this.Ok.Text = "OK";
             this.Ok.UseCompatibleTextRendering = true;
             this.Ok.UseVisualStyleBackColor = true;
@@ -270,7 +270,7 @@
             this.shorteningGB.Location = new System.Drawing.Point(12, 81);
             this.shorteningGB.Name = "shorteningGB";
             this.shorteningGB.Size = new System.Drawing.Size(300, 91);
-            this.shorteningGB.TabIndex = 61;
+            this.shorteningGB.TabIndex = 3;
             this.shorteningGB.TabStop = false;
             this.shorteningGB.Text = "Shortening strategy";
             // 
@@ -280,7 +280,7 @@
             this.dontShortenRB.Location = new System.Drawing.Point(6, 22);
             this.dontShortenRB.Name = "dontShortenRB";
             this.dontShortenRB.Size = new System.Drawing.Size(101, 17);
-            this.dontShortenRB.TabIndex = 2;
+            this.dontShortenRB.TabIndex = 0;
             this.dontShortenRB.TabStop = true;
             this.dontShortenRB.Text = "Do not shorten  ";
             this.dontShortenRB.UseVisualStyleBackColor = true;
@@ -292,7 +292,7 @@
             this.middleDotRB.Location = new System.Drawing.Point(6, 68);
             this.middleDotRB.Name = "middleDotRB";
             this.middleDotRB.Size = new System.Drawing.Size(167, 17);
-            this.middleDotRB.TabIndex = 1;
+            this.middleDotRB.TabIndex = 2;
             this.middleDotRB.TabStop = true;
             this.middleDotRB.Text = "Replace middle part with dots ";
             this.middleDotRB.UseVisualStyleBackColor = true;
@@ -304,7 +304,7 @@
             this.mostSigDirRB.Location = new System.Drawing.Point(6, 45);
             this.mostSigDirRB.Name = "mostSigDirRB";
             this.mostSigDirRB.Size = new System.Drawing.Size(165, 17);
-            this.mostSigDirRB.TabIndex = 0;
+            this.mostSigDirRB.TabIndex = 1;
             this.mostSigDirRB.TabStop = true;
             this.mostSigDirRB.Text = "The most significant directory ";
             this.mostSigDirRB.UseVisualStyleBackColor = true;
@@ -320,7 +320,7 @@
             0});
             this.comboMinWidthEdit.Name = "comboMinWidthEdit";
             this.comboMinWidthEdit.Size = new System.Drawing.Size(61, 21);
-            this.comboMinWidthEdit.TabIndex = 63;
+            this.comboMinWidthEdit.TabIndex = 4;
             this.comboMinWidthEdit.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
             // comboMinWidthLabel
