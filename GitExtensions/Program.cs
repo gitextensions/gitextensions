@@ -28,11 +28,11 @@ namespace GitExtensions
                 // Uncomment the following after testing to see that NBug is working as configured
                 NBug.Settings.ReleaseMode = true;
                 NBug.Settings.ExitApplicationImmediately = false;
-                NBug.Settings.WriteLogToDisk = true;
+                NBug.Settings.WriteLogToDisk = false;
                 NBug.Settings.MaxQueuedReports = 10;
                 NBug.Settings.StopReportingAfter = 90;
                 NBug.Settings.SleepBeforeSend = 30;
-                NBug.Settings.StoragePath = "WindowsTemp";
+                NBug.Settings.StoragePath = NBug.Enums.StoragePath.WindowsTemp;
                 
                 AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
                 Application.ThreadException += NBug.Handler.ThreadException;

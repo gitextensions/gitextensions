@@ -722,13 +722,13 @@ namespace GitUI
         /// <param name="pullOnShow"></param>
         /// <param name="pullCompleted">true if pull completed with no errors</param>
         /// <returns>if revision grid should be refreshed</returns>
-        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, string remoteBranch, out bool pullCompleted, bool fetchAll)
+        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, string remoteBranch, string remote, out bool pullCompleted, bool fetchAll)
         {
             var pulled = false;
 
             Func<bool> action = () =>
             {
-                using (FormPull formPull = new FormPull(this, remoteBranch))
+                using (FormPull formPull = new FormPull(this, remoteBranch, remote))
                 {
                     if (fetchAll)
                         formPull.SetForFetchAll();
@@ -757,7 +757,7 @@ namespace GitUI
 
         public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted, bool fetchAll)
         {
-            return StartPullDialog(owner, pullOnShow, null, out pullCompleted, fetchAll);
+            return StartPullDialog(owner, pullOnShow, null, null, out pullCompleted, fetchAll);
         }
 
         public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted)
@@ -778,7 +778,7 @@ namespace GitUI
 
         public bool StartPullDialog(bool pullOnShow, string remoteBranch, out bool pullCompleted)
         {
-            return StartPullDialog(null, pullOnShow, remoteBranch, out pullCompleted, false);
+            return StartPullDialog(null, pullOnShow, remoteBranch, null, out pullCompleted, false);
         }
 
         public bool StartPullDialog(bool pullOnShow)

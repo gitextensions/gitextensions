@@ -56,6 +56,7 @@
         <Directory Id="VS2008" Name="Visual Studio 2008"/>
         <Directory Id="VS2010" Name="Visual Studio 2010"/>
         <Directory Id="VS2012" Name="Visual Studio 2012"/>
+        <Directory Id="VS2013" Name="Visual Studio 2013"/>
       </Directory>
       <Directory Id="ProgramMenuFolder">
         <Directory Id="StartMenuDir" Name="$(var.ProductName)"/>
@@ -63,7 +64,7 @@
       <Directory Id="DesktopFolder"/>
     </Directory>
 
-    <?define VsVersions = 2005;2008;2010;2012?>
+    <?define VsVersions = 2005;2008;2010;2012;2013?>
     
     <?foreach VsVersion in $(var.VsVersions)?>
     <Property Id="VS$(var.VsVersion)">
