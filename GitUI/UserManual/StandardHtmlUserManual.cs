@@ -16,7 +16,7 @@ namespace GitUI.UserManual
 
         public string GetUrl()
         {
-            return string.Format("{0}/{1}/{2}{3}",
+            return string.Format("{0}/{1}.html{2}{3}",
                                  _location, _subFolder, _anchorName.IsNullOrEmpty() ? "" : "#", _anchorName);
         }
     }
