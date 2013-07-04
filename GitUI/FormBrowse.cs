@@ -411,14 +411,6 @@ namespace GitUI
 
         private void RefreshWorkingDirCombo()
         {
-            if (Settings.RecentReposComboMinWidth > 0)
-            {
-                _NO_TRANSLATE_Workingdir.AutoSize = false;
-                _NO_TRANSLATE_Workingdir.Width = Settings.RecentReposComboMinWidth;
-            }
-            else
-                _NO_TRANSLATE_Workingdir.AutoSize = true;
-
             Repository r = null;
             if (Repositories.RepositoryHistory.Repositories.Count > 0)
                 r = Repositories.RepositoryHistory.Repositories[0];
@@ -436,14 +428,24 @@ namespace GitUI
                     graphics = graphics
                 };
                 splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, mostRecentRepos);
+
+                RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Path.Equals(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase));
+
+                if (ri == null)
+                    _NO_TRANSLATE_Workingdir.Text = Module.WorkingDir;
+                else
+                    _NO_TRANSLATE_Workingdir.Text = ri.Caption;
+
+                if (Settings.RecentReposComboMinWidth > 0)
+                {
+                    _NO_TRANSLATE_Workingdir.AutoSize = false;
+                    var captionWidth = graphics.MeasureString(_NO_TRANSLATE_Workingdir.Text, _NO_TRANSLATE_Workingdir.Font).Width;
+                    captionWidth = captionWidth + _NO_TRANSLATE_Workingdir.DropDownButtonWidth + 5;
+                    _NO_TRANSLATE_Workingdir.Width = Math.Max(Settings.RecentReposComboMinWidth, (int)captionWidth);
+                }
+                else
+                    _NO_TRANSLATE_Workingdir.AutoSize = true;
             }
-
-            RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Path.Equals(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase));
-
-            if (ri == null)
-                _NO_TRANSLATE_Workingdir.Text = Module.WorkingDir;
-            else
-                _NO_TRANSLATE_Workingdir.Text = ri.Caption;
         }
 
         /// <summary>
