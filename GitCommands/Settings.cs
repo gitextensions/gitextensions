@@ -506,6 +506,12 @@ namespace GitCommands
             set { SetBool("showgitnotes", value); }
         }
 
+        public static bool ShowMergeCommits
+        {
+            get { return GetBool("showmergecommits", false); }
+            set { SetBool("showmergecommits", value); }
+        }
+
         public static bool ShowTags
         {
             get { return GetBool("showtags", true); }
