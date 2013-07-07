@@ -30,6 +30,7 @@ namespace GitCommands
         public static readonly int GitExtensionsVersionInt;
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
+        public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
         private static readonly string SettingsFileName = "GitExtensions.settings";
         private static readonly double SAVETIME = 2000;
 
@@ -59,7 +60,7 @@ namespace GitCommands
                 }
             );
             
-            Version version = Assembly.GetCallingAssembly().GetName().Version;
+            Version version = AppVersion;
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
             GitExtensionsVersionInt = version.Major * 100 + version.Minor;
             if (version.Build > 0)
@@ -551,6 +552,12 @@ namespace GitCommands
         {
             get { return GetInt("commitdialogrightsplitter", -1); }
             set { SetInt("commitdialogrightsplitter", value); }
+        }
+
+        public static string DefaultCloneDestinationPath
+        {
+            get { return GetString("defaultclonedestinationpath", string.Empty); }
+            set { SetString("defaultclonedestinationpath", value); }
         }
 
         public static int RevisionGridQuickSearchTimeout
