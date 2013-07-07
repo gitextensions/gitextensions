@@ -66,6 +66,13 @@ namespace GitCommands.Config
         }
 
         public static readonly char[] CommentChars = new char[] { ';', '#' };
+        
+        public void LoadFromString(string str)
+        {
+            ConfigFileParser parser = new ConfigFileParser(this);
+            parser.Parse(str);
+        }
+
 
         public static string EscapeValue(string value)
         {
@@ -114,6 +121,11 @@ namespace GitCommands.Config
             {
                 ExceptionUtils.ShowException(ex, false);
             }
+        }
+
+        public IEnumerable<ConfigSection> GetConfigSections(string sectionName)
+        {
+            return ConfigSections.Where(section => section.SectionName.Equals(sectionName, StringComparison.OrdinalIgnoreCase));
         }
 
         private void SetStringValue(string setting, string value)
@@ -273,12 +285,13 @@ namespace GitCommands.Config
 
             public ConfigFileParser(ConfigFile configFile)
             {
-                _configFile = configFile;
-                _fileContent = File.ReadAllText(FileName, ConfigFile.GetEncoding());
+                _configFile = configFile;                
             }
 
-            public void Parse()
+            public void Parse(string aFileContent = null)
             {
+                _fileContent = aFileContent ?? File.ReadAllText(FileName, ConfigFile.GetEncoding());
+
                 ParsePart parseFunc = ReadUnknown;
 
                 for (pos = 0; pos < _fileContent.Length; pos++)

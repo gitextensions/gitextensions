@@ -52,10 +52,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pullRepositoryMainInstruction = new TranslationString("Pull latest changes from remote repository");
         private readonly TranslationString _pullRepository =
             new TranslationString("The push was rejected because the tip of your current branch is behind its remote counterpart. " +
-                "Merge the remote changes before pushing again." + Environment.NewLine + Environment.NewLine +
-                "Do you want to pull the latest changes?");
-        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with default pull action|Pull with rebase|Pull with merge|Cancel");
-        private readonly TranslationString _pullRepositoryCaption = new TranslationString("Push was rejected");
+                "Merge the remote changes before pushing again.");
+        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with default pull action|Pull with rebase|Pull with merge|Force push|Cancel");
+        private readonly TranslationString _pullRepositoryCaption = new TranslationString("Push was rejected from \"{0}\"");
         private readonly TranslationString _dontShowAgain = new TranslationString("Remember my decision.");
 
         #endregion
@@ -352,17 +351,27 @@ namespace GitUI.CommandsDialogs
             if (!isError)
                 return false;
 
+            //there is no way to pull to not current branch
+            if (_selectedBranch != _currentBranch)
+                return false;
+
+            //auto pull from URL not supported. See https://github.com/gitextensions/gitextensions/issues/1887
+            if (!PushToRemote.Checked)
+                return false;
+
             //auto pull only if current branch was rejected
-            Regex IsRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranch) + ".*" + Regex.Escape(" (non-fast-forward)"), RegexOptions.Compiled);
+            Regex IsRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranch) + ".*", RegexOptions.Compiled);
 
             if (IsRejected.IsMatch(form.GetOutputString()))
             {
+                bool forcePush = false;
                 IWin32Window owner = form;
                 if (Settings.AutoPullOnPushRejectedAction == null)
                 {
                     bool cancel = false;
+                    string destination = PushToRemote.Checked ? _NO_TRANSLATE_Remotes.Text : PushDestination.Text;
                     int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
-                                    _pullRepositoryCaption.Text,
+                                    String.Format(_pullRepositoryCaption.Text, destination),
                                     _pullRepositoryMainInstruction.Text,
                                     _pullRepository.Text,
                                     "",
@@ -400,6 +409,9 @@ namespace GitUI.CommandsDialogs
                                 Settings.AutoPullOnPushRejectedAction = Settings.FormPullAction;
                             }
                             break;
+                        case 3:
+                            forcePush = true;
+                            break;
                         default:
                             cancel = true;
                             if (rememberDecision)
@@ -410,6 +422,14 @@ namespace GitUI.CommandsDialogs
                     }
                     if (cancel)
                         return false;
+                }
+
+                if (forcePush)
+                {
+                    if (!form.ProcessArguments.Contains(" -f "))
+                        form.ProcessArguments = form.ProcessArguments.Replace("push", "push -f");
+                    form.Retry();
+                    return true;
                 }
 
                 if (Settings.AutoPullOnPushRejectedAction == Settings.PullAction.None)
@@ -431,7 +451,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 bool pullCompleted;
-                UICommands.StartPullDialog(owner, true, out pullCompleted);
+                UICommands.StartPullDialog(owner, true, null, _selectedBranchRemote, out pullCompleted, false);
                 if (pullCompleted)
                 {
                     form.Retry();

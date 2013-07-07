@@ -46,12 +46,7 @@ namespace GitCommands
 
     public static class GitCommandHelpers
     {
-        public static void SetEnvironmentVariable()
-        {
-            SetEnvironmentVariable(false);
-        }
-
-        public static void SetEnvironmentVariable(bool reload)
+        public static void SetEnvironmentVariable(bool reload = false)
         {
             string path = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
             if (!string.IsNullOrEmpty(Settings.GitBinDir) && !path.Contains(Settings.GitBinDir))
@@ -117,7 +112,7 @@ namespace GitCommands
             }
         }
 
-        public static string FixPath(string path)
+        public static string FixPath([NotNull] string path)
         {
             path = path.Trim();
             return path.Replace('\\', '/');
@@ -193,7 +188,6 @@ namespace GitCommands
 
                 process.WaitForExit();
 
-                startInfo = null;
                 return process.ExitCode;
             }
         }
@@ -234,7 +228,7 @@ namespace GitCommands
             }
         }
 
-        internal static IEnumerable<string> CreateAndStartProcessAsync(string arguments, string cmd, string workDir, string stdInput, Encoding encoding)
+        internal static IEnumerable<string> CreateAndStartProcessAsync(string arguments, string cmd, string workDir, string stdInput)
         {
             if (string.IsNullOrEmpty(cmd))
                 yield break;
@@ -253,11 +247,9 @@ namespace GitCommands
                 process.StartInfo.WorkingDirectory = workDir;
                 process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
                 process.StartInfo.LoadUserProfile = true;
-                process.StartInfo.StandardOutputEncoding = encoding;
-                process.StartInfo.StandardErrorEncoding = encoding;
                 process.Start();
 
-                string line = null;
+                string line;
                 do
                 {
                     line = process.StandardOutput.ReadLine();
@@ -319,8 +311,8 @@ namespace GitCommands
 
         public static string CherryPickCmd(string cherry, bool commit, string arguments)
         {
-            string CherryPickCmd = commit ? "cherry-pick" : "cherry-pick --no-commit";
-            return CherryPickCmd + " " + arguments + " \"" + cherry + "\"";
+            string cherryPickCmd = commit ? "cherry-pick" : "cherry-pick --no-commit";
+            return cherryPickCmd + " " + arguments + " \"" + cherry + "\"";
         }
 
         public static string GetFullBranchName(string branch)
@@ -489,9 +481,9 @@ namespace GitCommands
         /// <param name="files">Files to remove. Fileglobs can be given to remove matching files.</param>
         public static string RemoveCmd(bool force = true, bool isRecursive = true, params string[] files)
         {
-            string file = files.Any()
-                              ? string.Join(" ", files)
-                              : ".";
+            string file = ".";
+            if (files.Any())
+                file = string.Join(" ", files);
 
             return string.Format("rm {0} {1} {2}",
                 force ? "--force" : string.Empty,
@@ -600,12 +592,7 @@ namespace GitCommands
             return cmd;
         }
 
-        public static string PushTagCmd(string path, string tag, bool all)
-        {
-            return PushTagCmd(path, tag, all, false);
-        }
-
-        public static string PushTagCmd(string path, string tag, bool all, bool force)
+        public static string PushTagCmd(string path, string tag, bool all, bool force = false)
         {
             path = FixPath(path);
 
@@ -940,15 +927,10 @@ namespace GitCommands
             return status;
         }
 
-        public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString)
-        {
-            return GetAllChangedFilesFromString(module, statusString, false);
-        }
-
         /*
                source: C:\Program Files\msysgit\doc\git\html\git-status.html
         */
-        public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString, bool fromDiff /*old name and new name are switched.. %^&#^% */)
+        public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString, bool fromDiff  = false)
         {
             var diffFiles = new List<GitItemStatus>();
 
@@ -961,7 +943,7 @@ namespace GitCommands
                 The file will have its original line endings in your working directory.
                 warning: LF will be replaced by CRLF in FxCop.targets.
                 The file will have its original line endings in your working directory.*/
-            var nl = new char[] { '\n', '\r' };
+            var nl = new[] { '\n', '\r' };
             string trimmedStatus = statusString.Trim(nl);
             int lastNewLinePos = trimmedStatus.LastIndexOfAny(nl);
             if (lastNewLinePos > 0)
@@ -1026,7 +1008,7 @@ namespace GitCommands
 
                 if (fromDiff || y == ' ')
                     continue;
-                GitItemStatus gitItemStatusY = null;
+                GitItemStatus gitItemStatusY;
                 if (y == 'R' || y == 'C') // Find renamed files...
                 {
                     string nextfile = n + 1 < files.Length ? files[n + 1] : "";
@@ -1275,9 +1257,10 @@ namespace GitCommands
         /// </summary>
         /// <param name="originDate">Current date.</param>
         /// <param name="previousDate">The date to get relative time string for.</param>
+        /// <param name="displayWeeks">Display weeks in date string.</param>
         /// <returns>The human readable string for relative date.</returns>
         /// <see cref="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
-        public static string GetRelativeDateString(DateTime originDate, DateTime previousDate, bool displayWeeks)
+        public static string GetRelativeDateString(DateTime originDate, DateTime previousDate, bool displayWeeks = true)
         {
             var ts = new TimeSpan(RoundDateTime(originDate).Ticks - RoundDateTime(previousDate).Ticks);
             double delta = Math.Abs(ts.TotalSeconds);
@@ -1314,11 +1297,6 @@ namespace GitCommands
             return Strings.GetNYearsAgoText(years);
         }
 
-        public static string GetRelativeDateString(DateTime originDate, DateTime previousDate)
-        {
-            return GetRelativeDateString(originDate, previousDate, true);
-        }
-
         public static string GetFullDateString(DateTimeOffset datetime)
         {
             // previous format "ddd MMM dd HH':'mm':'ss yyyy"
@@ -1343,7 +1321,7 @@ namespace GitCommands
             }
         }
 
-#if !MONO
+#if !__MonoCS__
         static class NativeMethods
         {
             [DllImport("kernel32.dll")]
@@ -1362,7 +1340,7 @@ namespace GitCommands
 
         public static void TerminateTree(this Process process)
         {
-#if !MONO
+#if !__MonoCS__
             if (EnvUtils.RunningOnWindows())
             {
                 // Send Ctrl+C
