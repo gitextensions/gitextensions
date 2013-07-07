@@ -56,7 +56,7 @@ namespace GitCommands
 
         public static string GetConfigSvnRemoteFetch(GitModule aModule)
         {
-            return aModule.RunCmd(Settings.GitCommand, "config svn-remote.svn.fetch");
+            return aModule.RunGitCmd("config svn-remote.svn.fetch");
         }
 
         public static string RebaseCmd()

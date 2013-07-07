@@ -113,7 +113,7 @@
     <Compile Include="Git\GitRef.cs" />
     <Compile Include="Git\GitItem.cs" />
     <Compile Include="Git\GitStash.cs" />
-    <Compile Include="Git\GitSubmodule.cs" />
+    <Compile Include="Git\GitSubmoduleInfo.cs" />
     <Compile Include="Git\GitVersion.cs" />
     <Compile Include="Git\IGitItem.cs" />
     <Compile Include="Patch\Patch.cs" />
