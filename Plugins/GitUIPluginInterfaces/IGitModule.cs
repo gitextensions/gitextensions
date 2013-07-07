@@ -6,7 +6,7 @@ namespace GitUIPluginInterfaces
 {
     public interface IGitModule
     {
-        IEnumerable<IGitSubmodule> GetSubmodules();
+        string RunCmd(string cmd, string arguments, Encoding encoding = null, byte[] stdIn = null);
 
         string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null);
 
@@ -26,17 +26,17 @@ namespace GitUIPluginInterfaces
 
         string GravatarCacheDir { get; }
 
+        IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo();
+
         IList<string> GetSubmodulesLocalPathes(bool recursive = true);
 
-        IGitModule GetISubmodule(string submoduleName);
+        IGitModule GetSubmodule(string submoduleName);
 
         string[] GetRemotes(bool allowEmpty);
 
-        string GetISetting(string setting);
+        string GetSetting(string setting);
 
         bool StartPageantForRemote(string remote);
-
-        string RunCmd(string cmd, string arguments, Encoding encoding = null, byte[] stdIn = null);
 
         string GetSelectedBranch();
 
