@@ -197,7 +197,7 @@ namespace GitUI.CommandsDialogs
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             }
 
-            _formBrowseMenuCommands = new FormBrowseMenuCommands(this, aCommands, Module, RevisionGrid);
+            _formBrowseMenuCommands = new FormBrowseMenuCommands(this, RevisionGrid);
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
             RevisionGrid.MenuCommands.PropertyChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
         }
@@ -386,7 +386,7 @@ namespace GitUI.CommandsDialogs
             if (Settings.LastUpdateCheck.AddDays(7) < DateTime.Now)
             {
                 Settings.LastUpdateCheck = DateTime.Now;
-                using (var updateForm = new FormUpdates(Module.GitVersion) { AutoClose = true })
+                using (var updateForm = new FormUpdates(Module.AppVersion) { AutoClose = true })
                     updateForm.ShowDialog(Owner);
             }
 
@@ -481,14 +481,6 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshWorkingDirCombo()
         {
-            if (Settings.RecentReposComboMinWidth > 0)
-            {
-                _NO_TRANSLATE_Workingdir.AutoSize = false;
-                _NO_TRANSLATE_Workingdir.Width = Settings.RecentReposComboMinWidth;
-            }
-            else
-                _NO_TRANSLATE_Workingdir.AutoSize = true;
-
             Repository r = null;
             if (Repositories.RepositoryHistory.Repositories.Count > 0)
                 r = Repositories.RepositoryHistory.Repositories[0];
@@ -506,14 +498,24 @@ namespace GitUI.CommandsDialogs
                     graphics = graphics
                 };
                 splitter.SplitRecentRepos(Repositories.RepositoryHistory.Repositories, mostRecentRepos, mostRecentRepos);
+
+                RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Path.Equals(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase));
+
+                if (ri == null)
+                    _NO_TRANSLATE_Workingdir.Text = Module.WorkingDir;
+                else
+                    _NO_TRANSLATE_Workingdir.Text = ri.Caption;
+
+                if (Settings.RecentReposComboMinWidth > 0)
+                {
+                    _NO_TRANSLATE_Workingdir.AutoSize = false;
+                    var captionWidth = graphics.MeasureString(_NO_TRANSLATE_Workingdir.Text, _NO_TRANSLATE_Workingdir.Font).Width;
+                    captionWidth = captionWidth + _NO_TRANSLATE_Workingdir.DropDownButtonWidth + 5;
+                    _NO_TRANSLATE_Workingdir.Width = Math.Max(Settings.RecentReposComboMinWidth, (int)captionWidth);
+                }
+                else
+                    _NO_TRANSLATE_Workingdir.AutoSize = true;
             }
-
-            RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Path.Equals(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase));
-
-            if (ri == null)
-                _NO_TRANSLATE_Workingdir.Text = Module.WorkingDir;
-            else
-                _NO_TRANSLATE_Workingdir.Text = ri.Caption;
         }
 
         /// <summary>
@@ -1477,13 +1479,17 @@ namespace GitUI.CommandsDialogs
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
         {
             var revisions = RevisionGrid.GetSelectedRevisions();
-            if (revisions.Count != 1)
+            if (revisions.Count > 2)
             {
-                MessageBox.Show("Select exactly one revision.");
+                MessageBox.Show(this, "Select only one or two revisions. Abort.", "Archive revision");
                 return;
             }
+            GitRevision mainRevision = revisions.First();
+            GitRevision diffRevision = null;
+            if (revisions.Count == 2)
+                diffRevision = revisions.Last();
 
-            UICommands.StartArchiveDialog(this, revisions.First());
+            UICommands.StartArchiveDialog(this, mainRevision, diffRevision);
         }
 
         private void EditMailMapToolStripMenuItemClick(object sender, EventArgs e)
@@ -2471,7 +2477,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var gitItem = (GitItem)GitTree.SelectedNode.Tag; // this should not fail, if it still does, user should know
-            UICommands.StartArchiveDialog(this, selectedRevisions.First(), gitItem.FileName);
+            UICommands.StartArchiveDialog(this, selectedRevisions.First(), null, gitItem.FileName);
         }
 
         private void DiffContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -3042,7 +3048,7 @@ namespace GitUI.CommandsDialogs
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var updateForm = new FormUpdates(Module.GitVersion))
+            using (var updateForm = new FormUpdates(Module.AppVersion))
                 updateForm.ShowDialog(Owner);
         }
 

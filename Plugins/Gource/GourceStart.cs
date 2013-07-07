@@ -86,7 +86,7 @@ namespace Gource
             Directory.CreateDirectory(gourceAvatarsDir);
             foreach (var file in Directory.GetFiles(gourceAvatarsDir))
                 File.Delete(file);
-            var lines = GitUIArgs.GitModule.RunGit("log --pretty=format:\"%aE|%aN\"").Split('\n');
+            var lines = GitUIArgs.GitModule.RunGitCmd("log --pretty=format:\"%aE|%aN\"").Split('\n');
             HashSet<string> authors = new HashSet<string>();
             foreach (var line in lines)
             {
