@@ -722,13 +722,13 @@ namespace GitUI
         /// <param name="pullOnShow"></param>
         /// <param name="pullCompleted">true if pull completed with no errors</param>
         /// <returns>if revision grid should be refreshed</returns>
-        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, string remoteBranch, out bool pullCompleted, bool fetchAll)
+        public bool StartPullDialog(IWin32Window owner, bool pullOnShow, string remoteBranch, string remote, out bool pullCompleted, bool fetchAll)
         {
             var pulled = false;
 
             Func<bool> action = () =>
             {
-                using (FormPull formPull = new FormPull(this, remoteBranch))
+                using (FormPull formPull = new FormPull(this, remoteBranch, remote))
                 {
                     if (fetchAll)
                         formPull.SetForFetchAll();
@@ -757,7 +757,7 @@ namespace GitUI
 
         public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted, bool fetchAll)
         {
-            return StartPullDialog(owner, pullOnShow, null, out pullCompleted, fetchAll);
+            return StartPullDialog(owner, pullOnShow, null, null, out pullCompleted, fetchAll);
         }
 
         public bool StartPullDialog(IWin32Window owner, bool pullOnShow, out bool pullCompleted)
@@ -778,7 +778,7 @@ namespace GitUI
 
         public bool StartPullDialog(bool pullOnShow, string remoteBranch, out bool pullCompleted)
         {
-            return StartPullDialog(null, pullOnShow, remoteBranch, out pullCompleted, false);
+            return StartPullDialog(null, pullOnShow, remoteBranch, null, out pullCompleted, false);
         }
 
         public bool StartPullDialog(bool pullOnShow)
@@ -1169,16 +1169,31 @@ namespace GitUI
 
         public bool StartSettingsDialog()
         {
-            return StartSettingsDialog(null);
+            return StartSettingsDialog(null, null);
         }
 
-        public bool StartArchiveDialog(IWin32Window owner = null, GitRevision revision = null, string path = null)
+        public bool StartSettingsDialog(IGitPlugin gitPlugin)
+        {
+            // TODO: how to pass the main dialog as owner of the SettingsDialog (first parameter):
+            return StartSettingsDialog(null, new SettingsPageReferenceByPlugin(gitPlugin));
+        }
+
+        /// <summary>
+        /// Open the archive dialog
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="revision">Revision to create an archive from</param>
+        /// <param name="revision2">Revision for differencial archive </param>
+        /// <param name="path">Files path for archive</param>
+        /// <returns></returns>
+        public bool StartArchiveDialog(IWin32Window owner = null, GitRevision revision = null, GitRevision revision2 = null, string path = null)
         {
             return DoActionOnRepo(owner, true, false, PreArchive, PostArchive, () =>
                 {
                     using (var form = new FormArchive(this))
                     {
                         form.SelectedRevision = revision;
+                        form.SetDiffSelectedRevision(revision2);
                         form.SetPathArgument(path);
                         form.ShowDialog(owner);
                     }

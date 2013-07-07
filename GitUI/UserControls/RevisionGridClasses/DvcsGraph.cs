@@ -1232,6 +1232,22 @@ namespace GitUI.RevisionGridClasses
         public void HighlightBranch(string aId)
         {
             _graphData.HighlightBranch(aId);
+            Update();
+        }
+
+        public bool IsRevisionRelative(string aGuid)
+        {
+            return _graphData.IsRevisionRelative(aGuid);
+        }
+
+        public GitRevision GetRevision(string guid)
+        {
+            Node node;
+
+            if(_graphData.Nodes.TryGetValue(guid, out node))
+                return node.Data;
+
+            return null;
         }
 
         private void dataGrid_Resize(object sender, EventArgs e)

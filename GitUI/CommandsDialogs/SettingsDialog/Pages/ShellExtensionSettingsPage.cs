@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
                 else
                 {
-                    topLevel += "GitEx " + chlMenuEntries.Items[i].ToString() + "\r\n";
+                    topLevel += "GitExt " + chlMenuEntries.Items[i].ToString() + "\r\n";
                 }
             }
 
