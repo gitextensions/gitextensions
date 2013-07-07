@@ -256,7 +256,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 var menuCommand = new MenuCommand();
                 menuCommand.Name = "drawNonrelativesGrayToolStripMenuItem";
                 menuCommand.Text = "Draw non relatives gray";
-                menuCommand.ExecuteAction = () => _revisionGrid.DrawNonrelativesGrayToolStripMenuItem_Click(null, null);
+                menuCommand.ExecuteAction = () => _revisionGrid.DrawNonrelativesGrayToolStripMenuItemClick(null, null);
                 menuCommand.IsCheckedFunc = () => Settings.RevisionGraphDrawNonRelativesGray;
 
                 resultList.Add(menuCommand);

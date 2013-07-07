@@ -76,7 +76,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(182, 225);
+            this.label1.Size = new System.Drawing.Size(209, 285);
             this.label1.TabIndex = 1;
             this.label1.Text = resources.GetString("label1.Text");
             // 
@@ -98,6 +98,7 @@
             this.ClientSize = new System.Drawing.Size(634, 474);
             this.Controls.Add(this.splitContainer1);
             this.Name = "FormGitAttributes";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit .gitattributes";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormGitAttributesClosing);
             this.Load += new System.EventHandler(this.FormGitAttributesLoad);

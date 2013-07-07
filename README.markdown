@@ -12,6 +12,7 @@ GitExtensions is a shell extension, a Visual Studio 2005 / 2008 / 2010 / 2012 pl
 * Mailing list: [http://groups.google.com/group/gitextensions](http://groups.google.com/group/gitextensions)
 * ChangeLog: [ChangeLog.md](GitUI/Resources/ChangeLog.md)
 * Source code: [http://github.com/gitextensions/gitextensions](http://github.com/gitextensions/gitextensions)
+* Wiki: [https://github.com/gitextensions/gitextensions/wiki](https://github.com/gitextensions/gitextensions/wiki)
 
 ## How to debug GitExtensions
 
@@ -24,6 +25,7 @@ The installer is build using WiX. You need to install WiX when you want to build
 
 * Login in github (you need an account)
 * Fork the main repository from [github](http://github.com/gitextensions/gitextensions)
+* Read [Coding guide](https://github.com/gitextensions/gitextensions/wiki#coding-guide)
 * Push your changes to your fork
 * Send me a pull request
 
