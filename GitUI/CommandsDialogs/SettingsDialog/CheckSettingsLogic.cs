@@ -147,6 +147,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 yield return programFilesX86 + @"\msysgit\";
             yield return programFiles + @"\msysgit\";
             yield return @"C:\msysgit\";
+            // cygwin has old git version on windows and bash has a lot of bugs
             yield return @"C:\cygwin\";
         }
 
