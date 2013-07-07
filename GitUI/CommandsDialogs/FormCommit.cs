@@ -424,7 +424,7 @@ namespace GitUI.CommandsDialogs
 
             if (patch != null && patch.Length > 0)
             {
-                string output = Module.RunGitCmd(args, patch);
+                string output = Module.RunGitCmd(args, null, patch);
                 ProcessApplyOutput(output, patch);
             }
         }
@@ -505,7 +505,7 @@ namespace GitUI.CommandsDialogs
 
             if (patch != null && patch.Length > 0)
             {
-                string output = Module.RunGitCmd(args, patch);
+                string output = Module.RunGitCmd(args, null, patch);
                 if (EnvUtils.RunningOnWindows())
                 {
                     //remove file mode warnings on windows
