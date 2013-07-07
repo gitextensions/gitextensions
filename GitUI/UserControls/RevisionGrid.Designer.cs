@@ -262,28 +262,28 @@ namespace GitUI
             this.markRevisionAsBadToolStripMenuItem.Name = "markRevisionAsBadToolStripMenuItem";
             this.markRevisionAsBadToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.markRevisionAsBadToolStripMenuItem.Text = "Mark revision as bad";
-            this.markRevisionAsBadToolStripMenuItem.Click += new System.EventHandler(this.markRevisionAsBadToolStripMenuItem_Click);
+            this.markRevisionAsBadToolStripMenuItem.Click += new System.EventHandler(this.MarkRevisionAsBadToolStripMenuItemClick);
             // 
             // markRevisionAsGoodToolStripMenuItem
             // 
             this.markRevisionAsGoodToolStripMenuItem.Name = "markRevisionAsGoodToolStripMenuItem";
             this.markRevisionAsGoodToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.markRevisionAsGoodToolStripMenuItem.Text = "Mark revision as good";
-            this.markRevisionAsGoodToolStripMenuItem.Click += new System.EventHandler(this.markRevisionAsGoodToolStripMenuItem_Click);
+            this.markRevisionAsGoodToolStripMenuItem.Click += new System.EventHandler(this.MarkRevisionAsGoodToolStripMenuItemClick);
             // 
             // bisectSkipRevisionToolStripMenuItem
             // 
             this.bisectSkipRevisionToolStripMenuItem.Name = "bisectSkipRevisionToolStripMenuItem";
             this.bisectSkipRevisionToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.bisectSkipRevisionToolStripMenuItem.Text = "Skip revision";
-            this.bisectSkipRevisionToolStripMenuItem.Click += new System.EventHandler(this.bisectSkipRevisionToolStripMenuItem_Click);
+            this.bisectSkipRevisionToolStripMenuItem.Click += new System.EventHandler(this.BisectSkipRevisionToolStripMenuItemClick);
             // 
             // stopBisectToolStripMenuItem
             // 
             this.stopBisectToolStripMenuItem.Name = "stopBisectToolStripMenuItem";
             this.stopBisectToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.stopBisectToolStripMenuItem.Text = "Stop bisect";
-            this.stopBisectToolStripMenuItem.Click += new System.EventHandler(this.stopBisectToolStripMenuItem_Click);
+            this.stopBisectToolStripMenuItem.Click += new System.EventHandler(this.StopBisectToolStripMenuItemClick);
             // 
             // bisectSeparator
             // 
@@ -311,28 +311,28 @@ namespace GitUI
             this.messageToolStripMenuItem.Name = "messageToolStripMenuItem";
             this.messageToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
             this.messageToolStripMenuItem.Text = "Message";
-            this.messageToolStripMenuItem.Click += new System.EventHandler(this.messageToolStripMenuItem_Click);
+            this.messageToolStripMenuItem.Click += new System.EventHandler(this.MessageToolStripMenuItemClick);
             // 
             // authorToolStripMenuItem
             // 
             this.authorToolStripMenuItem.Name = "authorToolStripMenuItem";
             this.authorToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
             this.authorToolStripMenuItem.Text = "Author";
-            this.authorToolStripMenuItem.Click += new System.EventHandler(this.authorToolStripMenuItem_Click);
+            this.authorToolStripMenuItem.Click += new System.EventHandler(this.AuthorToolStripMenuItemClick);
             // 
             // dateToolStripMenuItem
             // 
             this.dateToolStripMenuItem.Name = "dateToolStripMenuItem";
             this.dateToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
             this.dateToolStripMenuItem.Text = "Date";
-            this.dateToolStripMenuItem.Click += new System.EventHandler(this.dateToolStripMenuItem_Click);
+            this.dateToolStripMenuItem.Click += new System.EventHandler(this.DateToolStripMenuItemClick);
             // 
             // hashToolStripMenuItem
             // 
             this.hashToolStripMenuItem.Name = "hashToolStripMenuItem";
             this.hashToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
             this.hashToolStripMenuItem.Text = "Commit hash";
-            this.hashToolStripMenuItem.Click += new System.EventHandler(this.hashToolStripMenuItem_Click);
+            this.hashToolStripMenuItem.Click += new System.EventHandler(this.HashToolStripMenuItemClick);
             this.hashToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             // 
             // toolStripSeparator6

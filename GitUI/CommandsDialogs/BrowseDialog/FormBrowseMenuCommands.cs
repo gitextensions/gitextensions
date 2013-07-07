@@ -12,22 +12,20 @@ namespace GitUI.CommandsDialogs
 {
     class FormBrowseMenuCommands : MenuCommandsBase
     {
-        GitUICommands UICommands;
-        GitModule Module;
         RevisionGrid RevisionGrid;
         FormBrowse _formBrowse;
+        GitUICommands UICommands { get { return _formBrowse.UICommands; } }
+        GitModule Module { get { return UICommands.Module; } }
 
         // must be created only once because of translation
         IEnumerable<MenuCommand> _navigateMenuCommands;
 
-        public FormBrowseMenuCommands(FormBrowse formBrowse, GitUICommands uiCommands, GitModule module, RevisionGrid revisionGrid)
+        public FormBrowseMenuCommands(FormBrowse formBrowse, RevisionGrid revisionGrid)
         {
             TranslationCategoryName = "FormBrowse";
             Translate();
 
             _formBrowse = formBrowse;
-            UICommands = uiCommands;
-            Module = module;
             RevisionGrid = revisionGrid;
         }
 

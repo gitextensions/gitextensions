@@ -43,8 +43,8 @@ namespace ProxySwitcher
 
         private void RefreshProxy()
         {
-            LocalHttpProxy_TextBox.Text = HidePassword(gitCommands.RunGit("config --get http.proxy"));
-            GlobalHttpProxy_TextBox.Text = HidePassword(gitCommands.RunGit("config --global --get http.proxy"));
+            LocalHttpProxy_TextBox.Text = HidePassword(gitCommands.RunGitCmd("config --get http.proxy"));
+            GlobalHttpProxy_TextBox.Text = HidePassword(gitCommands.RunGitCmd("config --global --get http.proxy"));
             ApplyGlobally_CheckBox.Checked = string.Equals(LocalHttpProxy_TextBox.Text, GlobalHttpProxy_TextBox.Text);
         }
 
@@ -85,11 +85,11 @@ namespace ProxySwitcher
             var httpproxy = BuildHttpProxy();
             if (ApplyGlobally_CheckBox.Checked)
             {
-                gitCommands.RunGit("config --global http.proxy " + httpproxy);
+                gitCommands.RunGitCmd("config --global http.proxy " + httpproxy);
             }
             else
             {
-                gitCommands.RunGit("config http.proxy " + httpproxy);
+                gitCommands.RunGitCmd("config http.proxy " + httpproxy);
             }
             RefreshProxy();
         }
@@ -98,11 +98,11 @@ namespace ProxySwitcher
         {
             if (ApplyGlobally_CheckBox.Checked)
             {
-                gitCommands.RunGit("config --global --unset http.proxy");
+                gitCommands.RunGitCmd("config --global --unset http.proxy");
             }
             else
             {
-                gitCommands.RunGit("config --unset http.proxy");
+                gitCommands.RunGitCmd("config --unset http.proxy");
             }
             RefreshProxy();
         }
