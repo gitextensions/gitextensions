@@ -235,7 +235,7 @@ namespace GitUI.Editor
 
             if (lineAdded.Length - beginOffset - reverseOffset > 0)
             {
-                color = Settings.DiffAddedExtraColor;
+                color = AppSettings.DiffAddedExtraColor;
                 markerStrategy.AddMarker(new TextMarker(lineAdded.Offset + beginOffset,
                                                         lineAdded.Length - beginOffset - reverseOffset,
                                                         TextMarkerType.SolidBlock, color,
@@ -244,7 +244,7 @@ namespace GitUI.Editor
 
             if (lineRemoved.Length - beginOffset - reverseOffset > 0)
             {
-                color = Settings.DiffRemovedExtraColor;
+                color = AppSettings.DiffRemovedExtraColor;
                 markerStrategy.AddMarker(new TextMarker(lineRemoved.Offset + beginOffset,
                                                         lineRemoved.Length - beginOffset - reverseOffset,
                                                         TextMarkerType.SolidBlock, color,
@@ -337,10 +337,10 @@ namespace GitUI.Editor
                 if (line == document.TotalNumberOfLines - 1)
                     forceAbort = true;
 
-                ProcessLineSegment(ref line, lineSegment, '+', Settings.DiffAddedColor);
-                ProcessLineSegment(ref line, lineSegment, '-', Settings.DiffRemovedColor);
-                ProcessLineSegment(ref line, lineSegment, '@', Settings.DiffSectionColor);
-                ProcessLineSegment(ref line, lineSegment, '\\', Settings.DiffSectionColor);
+                ProcessLineSegment(ref line, lineSegment, '+', AppSettings.DiffAddedColor);
+                ProcessLineSegment(ref line, lineSegment, '-', AppSettings.DiffRemovedColor);
+                ProcessLineSegment(ref line, lineSegment, '@', AppSettings.DiffSectionColor);
+                ProcessLineSegment(ref line, lineSegment, '\\', AppSettings.DiffSectionColor);
             }
         }
 

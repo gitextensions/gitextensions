@@ -124,7 +124,7 @@ namespace GitCommands.Statistics
         {
             using (GitCommandsInstance git = new GitCommandsInstance(module, CommandOutputMode.Stream))
             {
-                Process p = git.CmdStartProcess(Settings.GitCommand, command);
+                Process p = git.CmdStartProcess(AppSettings.GitCommand, command);
 
                 // Read line
                 string line = p.StandardOutput.ReadLine();

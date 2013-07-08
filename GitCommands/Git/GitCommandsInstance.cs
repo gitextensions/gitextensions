@@ -48,12 +48,12 @@ namespace GitCommands
                 string quotedCmd = cmd;
                 if (quotedCmd.IndexOf(' ') != -1)
                     quotedCmd = quotedCmd.Quote();
-                Settings.GitLog.Log(quotedCmd + " " + arguments);
+                AppSettings.GitLog.Log(quotedCmd + " " + arguments);
 
                 //process used to execute external commands
                 var process = new Process();
                 var startInfo = GitCommandHelpers.CreateProcessStartInfo(cmd, arguments, WorkingDirectory);
-                startInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
+                startInfo.CreateNoWindow = (!ssh && !AppSettings.ShowGitCommandLine);
                 if (SetupStartInfoCallback != null)
                     SetupStartInfoCallback(startInfo);
                 process.StartInfo = startInfo;
