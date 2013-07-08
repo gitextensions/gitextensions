@@ -192,10 +192,8 @@ namespace GitCommands
                 branchFilter,
                 Filter);
 
-            using (GitCommandsInstance gitGetGraphCommand = new GitCommandsInstance(_module))
+            using (GitCommandsInstance gitGetGraphCommand = new GitCommandsInstance(_module, CommandOutputMode.Stream))
             {
-                gitGetGraphCommand.StreamOutput = true;
-                gitGetGraphCommand.CollectOutput = false;
                 Encoding LogOutputEncoding = _module.LogOutputEncoding;
                 gitGetGraphCommand.SetupStartInfoCallback = startInfo =>
                 {

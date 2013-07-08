@@ -118,21 +118,25 @@ namespace GitCommands
             return path.Replace('\\', '/');
         }
 
-        internal static ProcessStartInfo CreateProcessStartInfo([CanBeNull] Encoding outputEncoding)
+        internal static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding = null)
         {
             if (outputEncoding == null)
                 outputEncoding = GitModule.SystemEncoding;
 
             return new ProcessStartInfo
-                       {
-                           UseShellExecute = false,
-                           ErrorDialog = false,
-                           RedirectStandardOutput = true,
-                           RedirectStandardInput = true,
-                           RedirectStandardError = true,
-                           StandardOutputEncoding = outputEncoding,
-                           StandardErrorEncoding = outputEncoding
-                       };
+            {
+                UseShellExecute = false,
+                ErrorDialog = false,
+                CreateNoWindow = true,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                StandardOutputEncoding = outputEncoding,
+                StandardErrorEncoding = outputEncoding,
+                FileName = fileName,
+                Arguments = arguments,
+                WorkingDirectory = workingDirectory
+            };
         }
 
         internal static bool UseSsh(string arguments)
@@ -164,13 +168,7 @@ namespace GitCommands
                 quotedCmd = quotedCmd.Quote();
             Settings.GitLog.Log(quotedCmd + " " + arguments);
 
-            var startInfo = CreateProcessStartInfo(null);
-            startInfo.CreateNoWindow = true;
-            startInfo.FileName = cmd;
-            startInfo.Arguments = arguments;
-            startInfo.WorkingDirectory = workDir;
-            startInfo.WindowStyle = ProcessWindowStyle.Normal;
-            startInfo.LoadUserProfile = true;
+            var startInfo = CreateProcessStartInfo(cmd, arguments, workDir);
 
             //process used to execute external commands
             using (var process = Process.Start(startInfo))
@@ -200,6 +198,9 @@ namespace GitCommands
             }
         }
 
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         public static IEnumerable<string> ReadCmdOutputLines(string cmd, string arguments, string workDir, string stdInput)
         {
             SetEnvironmentVariable();
@@ -220,12 +221,7 @@ namespace GitCommands
                 quotedCmd = quotedCmd.Quote();
             Settings.GitLog.Log(quotedCmd + " " + arguments);
 
-            var startInfo = CreateProcessStartInfo(null);
-            startInfo.CreateNoWindow = true;
-            startInfo.FileName = cmd;
-            startInfo.Arguments = arguments;
-            startInfo.WorkingDirectory = workDir;
-            startInfo.LoadUserProfile = true;
+            var startInfo = CreateProcessStartInfo(cmd, arguments, workDir);
 
             //process used to execute external commands
             using (var process = Process.Start(startInfo))
@@ -244,6 +240,9 @@ namespace GitCommands
             }
         }
 
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         public static string RunCmd(string cmd, string arguments)
         {
             try
@@ -267,7 +266,7 @@ namespace GitCommands
             }
         }
 
-        internal static int StartProcessAndReadAllBytes(string arguments, string cmd, string workDir, out byte[] stdOutput, out byte[] stdError, byte[] stdInput)
+        private static int StartProcessAndReadAllBytes(string arguments, string cmd, string workDir, out byte[] stdOutput, out byte[] stdError, byte[] stdInput)
         {
             if (string.IsNullOrEmpty(cmd))
             {
@@ -281,12 +280,7 @@ namespace GitCommands
             Settings.GitLog.Log(quotedCmd + " " + arguments);
 
             //data is read from base stream, so encoding doesn't matter
-            var startInfo = CreateProcessStartInfo(Encoding.Default);
-            startInfo.CreateNoWindow = true;
-            startInfo.FileName = cmd;
-            startInfo.Arguments = arguments;
-            startInfo.WorkingDirectory = workDir;
-            startInfo.LoadUserProfile = true;
+            var startInfo = CreateProcessStartInfo(cmd, arguments, workDir, Encoding.Default);
 
             //process used to execute external commands
             using (var process = Process.Start(startInfo))
@@ -305,6 +299,9 @@ namespace GitCommands
             }
         }
 
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         public static int RunCmdByte(string cmd, string arguments, string workingdir, byte[] stdInput, out byte[] output, out byte[] error)
         {
             try
@@ -809,17 +806,7 @@ namespace GitCommands
             return new ConfigFile(Path.Combine(GetHomeDir(), ".gitconfig"), false);
         }
 
-        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool untrackedFiles)
-        {
-            return GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles ? UntrackedFilesMode.Default : UntrackedFilesMode.No);
-        }
-
-        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles)
-        {
-            return GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles, 0);
-        }
-
-        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules)
+        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = 0)
         {
             if (!VersionInUse.SupportGitStatusPorcelain)
                 throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
@@ -1357,12 +1344,10 @@ namespace GitCommands
                 NativeMethods.GenerateConsoleCtrlEvent(0, 0);
                 if (!process.HasExited)
                     System.Threading.Thread.Sleep(500);
-                if (!process.HasExited)
-                    process.Kill();
             }
-#else
-            process.Kill();
 #endif
+            if (!process.HasExited)
+                process.Kill();
         }
     }
 }
