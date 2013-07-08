@@ -17,7 +17,7 @@ namespace CreateLocalBranches
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string[] references = m_gitUiCommands.GitModule.RunGit("branch -a")
+            string[] references = m_gitUiCommands.GitModule.RunGitCmd("branch -a")
                 .Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
 
             if (references.Length == 0)
@@ -34,7 +34,7 @@ namespace CreateLocalBranches
                     string branchName = reference.Trim('*', ' ', '\n', '\r');
 
                     if (branchName.StartsWith("remotes/" + Remote.Text + "/"))
-                        m_gitUiCommands.GitModule.RunGit(string.Concat("branch --track ", branchName.Replace("remotes/" + Remote.Text + "/", ""), " ", branchName));
+                        m_gitUiCommands.GitModule.RunGitCmd(string.Concat("branch --track ", branchName.Replace("remotes/" + Remote.Text + "/", ""), " ", branchName));
                 }
                 catch
                 {

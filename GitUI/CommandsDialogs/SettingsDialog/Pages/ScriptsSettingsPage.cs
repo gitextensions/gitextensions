@@ -8,7 +8,7 @@ using GitUI.Script;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class ScriptsSettingsPage : SettingsPageBase
+    public partial class ScriptsSettingsPage : SettingsPageWithHeader
     {
         private string IconName = "bug";
 
@@ -61,20 +61,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 			}
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
             scriptEvent.DataSource = Enum.GetValues(typeof(ScriptEvent));
             LoadScripts();
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             SaveScripts();
         }
 
         private void SaveScripts()
         {
-            Settings.ownScripts = ScriptManager.SerializeIntoXml();
+            AppSettings.ownScripts = ScriptManager.SerializeIntoXml();
         }
 
         private void LoadScripts()

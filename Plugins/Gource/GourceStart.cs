@@ -37,22 +37,12 @@ namespace Gource
         {
             try
             {
-                new Process
-                    {
-                        StartInfo =
-                            {
-                                UseShellExecute = true,
-                                ErrorDialog = false,
-                                RedirectStandardOutput = false,
-                                RedirectStandardInput = false,
-                                CreateNoWindow = false,
-                                FileName = "\"" + cmd + "\"",
-                                Arguments = arguments,
-                                WorkingDirectory = WorkingDir.Text,
-                                WindowStyle = ProcessWindowStyle.Normal,
-                                LoadUserProfile = true
-                            }
-                    }.Start();
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "\"" + cmd + "\"",
+                    Arguments = arguments,
+                    WorkingDirectory = WorkingDir.Text
+                });
             }
             catch (Exception e)
             {
@@ -86,7 +76,7 @@ namespace Gource
             Directory.CreateDirectory(gourceAvatarsDir);
             foreach (var file in Directory.GetFiles(gourceAvatarsDir))
                 File.Delete(file);
-            var lines = GitUIArgs.GitModule.RunGit("log --pretty=format:\"%aE|%aN\"").Split('\n');
+            var lines = GitUIArgs.GitModule.RunGitCmd("log --pretty=format:\"%aE|%aN\"").Split('\n');
             HashSet<string> authors = new HashSet<string>();
             foreach (var line in lines)
             {
