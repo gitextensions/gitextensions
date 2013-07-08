@@ -366,7 +366,7 @@ namespace GitUI.CommandsDialogs
         {
             Func < IList < GitItemStatus >> getAllChangedFilesWithSubmodulesStatus = () => Module.GetAllChangedFilesWithSubmodulesStatus(
                     !showIgnoredFilesToolStripMenuItem.Checked,
-                    showUntrackedFilesToolStripMenuItem.Checked);
+                    showUntrackedFilesToolStripMenuItem.Checked ? UntrackedFilesMode.Default : UntrackedFilesMode.No);
 
             if (DoAsync)
                 _unstagedLoader.Load(getAllChangedFilesWithSubmodulesStatus, onComputed);
@@ -1708,8 +1708,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var gitItemStatus in Unstaged.SelectedItems)
             {
-                Module.RunGitRealCmd(
-                     string.Format("checkout -p \"{0}\"", gitItemStatus.Name));
+                Module.RunExternalCmdShowConsole(Settings.GitCommand, string.Format("checkout -p \"{0}\"", gitItemStatus.Name));
                 Initialize();
             }
         }

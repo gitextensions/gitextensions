@@ -9,7 +9,6 @@ using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using GitCommands.Config;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
@@ -431,28 +430,42 @@ namespace GitCommands
             return startDir;
         }
 
-        public void RunRealCmd(string cmd, string arguments)
+        private static Process CreateAndStartCommand(string fileName, string arguments, string workingDir, bool showConsole)
+        {
+            GitCommandHelpers.SetEnvironmentVariable();
+
+            Settings.GitLog.Log(fileName + " " + arguments);
+
+            var info = new ProcessStartInfo
+            {
+                FileName = fileName,
+                Arguments = arguments,
+                WorkingDirectory = workingDir
+            };
+            if (!showConsole)
+            {
+                info.UseShellExecute = false;
+                info.CreateNoWindow = true;
+            }
+            return Process.Start(info);
+        }
+
+        /// <summary>
+        /// Run external app, console window is hidden
+        /// </summary>
+        public Process RunExternalCmdDetached(string cmd, string arguments)
+        {
+            return RunExternalCmdDetached(cmd, arguments, _workingdir);
+        }
+
+        /// <summary>
+        /// Run external app, console window is hidden
+        /// </summary>
+        public static Process RunExternalCmdDetached(string cmd, string arguments, string workingdir)
         {
             try
             {
-                CreateAndStartCommand(cmd, arguments, true);
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
-        }
-
-        public void RunGitRealCmd(string arguments)
-        {
-            RunRealCmd(Settings.GitCommand, arguments);
-        }
-
-        public Process RunRealCmdDetached(string cmd, string arguments)
-        {
-            try
-            {
-                return CreateAndStartCommand(cmd, arguments, false);
+                return CreateAndStartCommand(cmd, arguments, workingdir, false);
             }
             catch (Exception ex)
             {
@@ -462,76 +475,44 @@ namespace GitCommands
             return null;
         }
 
-        private Process CreateAndStartCommand(string cmd, string arguments, bool waitForExit)
-        {
-            GitCommandHelpers.SetEnvironmentVariable();
-
-            Settings.GitLog.Log(cmd + " " + arguments);
-            //process used to execute external commands
-
-            var info = new ProcessStartInfo
-                           {
-                               UseShellExecute = true,
-                               ErrorDialog = false,
-                               RedirectStandardOutput = false,
-                               RedirectStandardInput = false,
-                               CreateNoWindow = false,
-                               FileName = cmd,
-                               Arguments = arguments,
-                               WorkingDirectory = _workingdir,
-                               WindowStyle = ProcessWindowStyle.Normal,
-                               LoadUserProfile = true
-                           };
-
-            if (waitForExit)
-            {
-                using (var process = Process.Start(info))
-                {
-                    process.WaitForExit();
-                }
-
-                return null;
-            }
-            else
-            {
-                return Process.Start(info);
-            }
-        }
-
-        public void StartExternalCommand(string cmd, string arguments)
-        {
-            StartExternalCommand(_workingdir, cmd, arguments);
-        }
-
-        public static void StartExternalCommand(string workingdir, string cmd, string arguments)
+        /// <summary>
+        /// Run command, console window is visible, wait for exit
+        /// </summary>
+        public void RunExternalCmdShowConsole(string cmd, string arguments)
         {
             try
             {
-                GitCommandHelpers.SetEnvironmentVariable();
-
-                var processInfo = new ProcessStartInfo
-                                      {
-                                          UseShellExecute = false,
-                                          RedirectStandardOutput = false,
-                                          FileName = cmd,
-                                          WorkingDirectory = workingdir,
-                                          Arguments = arguments,
-                                          CreateNoWindow = true
-                                      };
-
-                using (var process = new Process { StartInfo = processInfo })
-                {
-                    process.Start();
-                }
+                using (var process = CreateAndStartCommand(cmd, arguments, _workingdir, true))
+                    process.WaitForExit();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                Trace.WriteLine(ex.Message);
             }
         }
 
+        /// <summary>
+        /// Run command, console window is visible
+        /// </summary>
+        public Process RunExternalCmdDetachedShowConsole(string cmd, string arguments)
+        {
+            try
+            {
+                return CreateAndStartCommand(cmd, arguments, _workingdir, true);
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.Message);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Run cacheable command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public string RunCachableCmd(string cmd, string arguments = "", Encoding encoding = null)
+        public string RunCacheableCmd(string cmd, string arguments = "", Encoding encoding = null)
         {
             if (encoding == null)
                 encoding = SystemEncoding;
@@ -547,6 +528,9 @@ namespace GitCommands
             return EncodingHelper.DecodeString(cmdout, cmderr, ref encoding);
         }
 
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
@@ -554,6 +538,9 @@ namespace GitCommands
             return RunCmd(cmd, arguments, out exitCode, encoding, stdInput);
         }
 
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCmd(string cmd, string arguments, out int exitCode, Encoding encoding = null, byte[] stdInput = null)
         {
@@ -564,63 +551,43 @@ namespace GitCommands
             return EncodingHelper.GetString(output, error, encoding);
         }
 
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         public string RunGitCmd(string arguments, out int exitCode, Encoding encoding = null, byte[] stdInput = null)
         {
             return RunCmd(Settings.GitCommand, arguments, out exitCode, encoding, stdInput);
         }
 
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         public string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
             int exitCode;
             return RunCmd(Settings.GitCommand, arguments, out exitCode, encoding, stdInput);
         }
 
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         private IEnumerable<string> ReadCmdOutputLines(string cmd, string arguments, string stdInput)
         {
             return GitCommandHelpers.ReadCmdOutputLines(arguments, cmd, _workingdir, stdInput);
         }
 
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         public IEnumerable<string> ReadGitOutputLines(string arguments)
         {
             return ReadCmdOutputLines(Settings.GitCommand, arguments, null);
         }
 
-        [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        public void RunGitCmdAndNotWait(string arguments)
-        {
-            GitCommandHelpers.SetEnvironmentVariable();
-
-            string cmd = Settings.GitCommand;
-            Settings.GitLog.Log(cmd + " " + arguments);
-            //process used to execute external commands
-
-            var info = new ProcessStartInfo
-            {
-                UseShellExecute = true,
-                ErrorDialog = true,
-                RedirectStandardOutput = false,
-                RedirectStandardInput = false,
-                RedirectStandardError = false,
-
-                LoadUserProfile = true,
-                CreateNoWindow = false,
-                FileName = cmd,
-                Arguments = arguments,
-                WorkingDirectory = _workingdir,
-                WindowStyle = ProcessWindowStyle.Hidden
-            };
-
-            try
-            {
-                Process.Start(info);
-            }
-            catch (Win32Exception ex)
-            {
-                Trace.WriteLine(ex);
-            }
-        }
-
+        /// <summary>
+        /// Run batch file, console window is hidden, wait for exit, redirect output
+        /// </summary>
         public string RunBatchFile(string batchFile)
         {
             string tempFileName = Path.ChangeExtension(Path.GetTempFileName(), ".cmd");
@@ -644,7 +611,7 @@ namespace GitCommands
             }
             else
             {
-                RunRealCmd(Settings.GitCommand, "notes edit " + revision);
+                RunExternalCmdShowConsole(Settings.GitCommand, "notes edit " + revision);
             }
         }
 
@@ -915,11 +882,11 @@ namespace GitCommands
         {
             if (EnvUtils.RunningOnUnix())
             {
-                RunRealCmdDetached("gitk", "");
+                RunExternalCmdDetachedShowConsole("gitk", "");
             }
             else
             {
-                StartExternalCommand("cmd.exe", "/c \"\"" + Settings.GitCommand.Replace("git.cmd", "gitk.cmd")
+                RunExternalCmdDetached("cmd.exe", "/c \"\"" + Settings.GitCommand.Replace("git.cmd", "gitk.cmd")
                                                               .Replace("bin\\git.exe", "cmd\\gitk.cmd")
                                                               .Replace("bin/git.exe", "cmd/gitk.cmd") + "\" --branches --tags --remotes\"");
             }
@@ -929,11 +896,11 @@ namespace GitCommands
         {
             if (EnvUtils.RunningOnUnix())
             {
-                RunRealCmdDetached("git", "gui");
+                RunExternalCmdDetachedShowConsole("git", "gui");
             }
             else
             {
-                StartExternalCommand("cmd.exe", "/c \"\"" + Settings.GitCommand + "\" gui\"");
+                RunExternalCmdDetached("cmd.exe", "/c \"\"" + Settings.GitCommand + "\" gui\"");
             }
         }
 
@@ -958,7 +925,7 @@ namespace GitCommands
                     args = "--login -i";
                 }
 
-                return RunRealCmdDetached(cmd, args);
+                return RunExternalCmdDetachedShowConsole(cmd, args);
             }
             else
             {
@@ -973,9 +940,9 @@ namespace GitCommands
                 }
 
                 if (File.Exists(Settings.GitBinDir + "bash.exe"))
-                    return RunRealCmdDetached("cmd.exe", "/c \"\"" + Settings.GitBinDir + "bash\"" + args);
+                    return RunExternalCmdDetachedShowConsole("cmd.exe", "/c \"\"" + Settings.GitBinDir + "bash\"" + args);
                 else
-                    return RunRealCmdDetached("cmd.exe", "/c \"\"" + Settings.GitBinDir + "sh\"" + args);
+                    return RunExternalCmdDetachedShowConsole("cmd.exe", "/c \"\"" + Settings.GitBinDir + "sh\"" + args);
             }
         }
 
@@ -1042,7 +1009,7 @@ namespace GitCommands
 
         public string ShowSha1(string sha1)
         {
-            return ReEncodeShowString(RunCachableCmd(Settings.GitCommand, "show " + sha1, LosslessEncoding));
+            return ReEncodeShowString(RunCacheableCmd(Settings.GitCommand, "show " + sha1, LosslessEncoding));
         }
 
         public string UserCommitCount()
@@ -1412,7 +1379,7 @@ namespace GitCommands
 
         public static void StartPageantWithKey(string sshKeyFile)
         {
-            StartExternalCommand(string.Empty, Settings.Pageant, "\"" + sshKeyFile + "\"");
+            RunExternalCmdDetached(Settings.Pageant, "\"" + sshKeyFile + "\"", "");
         }
 
         public string GetPuttyKeyFileForRemote(string remote)
@@ -1424,17 +1391,6 @@ namespace GitCommands
                 return "";
 
             return GetPathSetting(string.Format("remote.{0}.puttykeyfile", remote));
-        }
-
-        public string Fetch(string remote, string branch)
-        {
-            remote = FixPath(remote);
-
-            Directory.SetCurrentDirectory(_workingdir);
-
-            RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitCommand + "\" " + FetchCmd(remote, null, branch) + "\"");
-
-            return "Done";
         }
 
         public static bool PathIsUrl(string path)
@@ -1452,17 +1408,6 @@ namespace GitCommands
                 return "fetch " + progressOption;
 
             return "fetch " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch, fetchTags);
-        }
-
-        public string Pull(string remote, string remoteBranch, string localBranch, bool rebase)
-        {
-            remote = FixPath(remote);
-
-            Directory.SetCurrentDirectory(_workingdir);
-
-            RunRealCmd("cmd.exe", " /k \"\"" + Settings.GitCommand + "\" " + PullCmd(remote, localBranch, remoteBranch, rebase) + "\"");
-
-            return "Done";
         }
 
         public string PullCmd(string remote, string remoteBranch, string localBranch, bool rebase, bool? fetchTags = false)
@@ -1548,24 +1493,23 @@ namespace GitCommands
         {
             using (var gitCommand = new GitCommandsInstance(this))
             {
-
                 var files = Directory.GetFiles(dir);
 
                 if (files.Length == 0)
                     return "";
 
                 var output = "";
-                using (Process process1 = gitCommand.CmdStartProcess(Settings.GitCommand, amCommand))
+                using (Process process = gitCommand.CmdStartProcess(Settings.GitCommand, amCommand))
                 {
                     foreach (var file in files)
                     {
                         using (FileStream fs = new FileStream(file, FileMode.Open))
                         {
-                            fs.CopyTo(process1.StandardInput.BaseStream);
+                            fs.CopyTo(process.StandardInput.BaseStream);
                         }
                     }
-                    process1.StandardInput.Close();
-                    process1.WaitForExit();
+                    process.StandardInput.Close();
+                    process.WaitForExit();
 
                     if (gitCommand.Output != null)
                         output = gitCommand.Output.ToString().Trim();
@@ -1581,23 +1525,23 @@ namespace GitCommands
             var output = "";
             wereErrors = false;
 
-            Process process1 = null;
+            Process process = null;
             foreach (var file in files)
             {
                 if (file.IsDeleted)
                     continue;
-                if (process1 == null)
-                    process1 = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --add --stdin");
+                if (process == null)
+                    process = gitCommand.CmdStartProcess(Settings.GitCommand, "update-index --add --stdin");
 
                 //process1.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding, "\"" + FixPath(file.Name) + "\"" + process1.StandardInput.NewLine);
-                process1.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
+                byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding, "\"" + FixPath(file.Name) + "\"" + process.StandardInput.NewLine);
+                process.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
             }
-            if (process1 != null)
+            if (process != null)
             {
-                process1.StandardInput.Close();
-                process1.WaitForExit();
-                wereErrors = process1.ExitCode != 0;
+                process.StandardInput.Close();
+                process.WaitForExit();
+                wereErrors = process.ExitCode != 0;
 
                 if (gitCommand.Output != null)
                     output = gitCommand.Output.ToString().Trim();
@@ -2082,7 +2026,7 @@ namespace GitCommands
             var arguments = String.Format("diff {0} -M -C {1} -- {2} {3}", extraDiffArguments, commitRange, fileName, oldFileName);
             string patch;
             if (cacheResult)
-                patch = RunCachableCmd(Settings.GitCommand, arguments, LosslessEncoding);
+                patch = RunCacheableCmd(Settings.GitCommand, arguments, LosslessEncoding);
             else
                 patch = RunCmd(Settings.GitCommand, arguments, LosslessEncoding);
             patchManager.LoadPatch(patch, false, encoding);
@@ -2116,7 +2060,7 @@ namespace GitCommands
         public string GetDiffFilesText(string from, string to, bool noCache)
         {
             string cmd = "diff -M -C --name-status \"" + to + "\" \"" + from + "\"";
-            return noCache ? RunGitCmd(cmd) : this.RunCachableCmd(Settings.GitCommand, cmd, SystemEncoding);
+            return noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(Settings.GitCommand, cmd, SystemEncoding);
         }
 
         public List<GitItemStatus> GetDiffFilesWithSubmodulesStatus(string from, string to)
@@ -2129,7 +2073,7 @@ namespace GitCommands
         public List<GitItemStatus> GetDiffFiles(string from, string to, bool noCache = false)
         {
             string cmd = "diff -M -C -z --name-status \"" + to + "\" \"" + from + "\"";
-            string result = noCache ? RunGitCmd(cmd) : this.RunCachableCmd(Settings.GitCommand, cmd, SystemEncoding);
+            string result = noCache ? RunGitCmd(cmd) : this.RunCacheableCmd(Settings.GitCommand, cmd, SystemEncoding);
             return GitCommandHelpers.GetAllChangedFilesFromString(this, result, true);
         }
 
@@ -2195,14 +2139,14 @@ namespace GitCommands
             return list;
         }
 
-        public IList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true, bool untrackedFiles = true)
+        public IList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
             var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles));
 
             return GitCommandHelpers.GetAllChangedFilesFromString(this, status);
         }
 
-        public IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true, bool untrackedFiles = true)
+        public IList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true, UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
             var status = GetAllChangedFiles(excludeIgnoredFiles, untrackedFiles);
             GetCurrentSubmoduleStatus(status);
@@ -2252,7 +2196,7 @@ namespace GitCommands
 
         public IList<GitItemStatus> GetTrackedChangedFiles()
         {
-            var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(true, false));
+            var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.No));
 
             return GitCommandHelpers.GetAllChangedFilesFromString(this, status);
         }
@@ -2296,7 +2240,7 @@ namespace GitCommands
             if (status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
                 //This command is a little more expensive because it will return both staged and unstaged files
-                string command = GitCommandHelpers.GetAllChangedFilesCmd(true, false);
+                string command = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.No);
                 status = RunGitCmd(command, SystemEncoding);
                 IList<GitItemStatus> stagedFiles = GitCommandHelpers.GetAllChangedFilesFromString(this, status, false);
                 return stagedFiles.Where(f => f.IsStaged).ToList<GitItemStatus>();
@@ -2700,7 +2644,7 @@ namespace GitCommands
 
         public string[] GetFullTree(string id)
         {
-            string tree = this.RunCachableCmd(Settings.GitCommand, String.Format("ls-tree -z -r --name-only {0}", id), SystemEncoding);
+            string tree = this.RunCacheableCmd(Settings.GitCommand, String.Format("ls-tree -z -r --name-only {0}", id), SystemEncoding);
             return tree.Split(new char[] { '\0', '\n' });
         }
 
@@ -2709,7 +2653,7 @@ namespace GitCommands
             string args = "-z";
             if (full)
                 args += " -r";
-            var tree = this.RunCachableCmd(Settings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
+            var tree = this.RunCacheableCmd(Settings.GitCommand, "ls-tree " + args + " \"" + id + "\"", SystemEncoding);
 
             return GitItem.CreateIGitItemsFromString(this, tree);
         }
@@ -2725,7 +2669,7 @@ namespace GitCommands
             filename = FixPath(filename);
             string blameCommand = string.Format("blame --porcelain -M -w -l{0} \"{1}\" -- \"{2}\"", lines != null ? " -L " + lines : "", from, filename);
             var itemsStrings =
-                RunCachableCmd(
+                RunCacheableCmd(
                     Settings.GitCommand,
                     blameCommand,
                     LosslessEncoding
@@ -2801,14 +2745,14 @@ namespace GitCommands
 
         public string GetFileRevisionText(string file, string revision, Encoding encoding)
         {
-            return RunCachableCmd(
+            return RunCacheableCmd(
                     Settings.GitCommand,
                     string.Format("show {0}:\"{1}\"", revision, file.Replace('\\', '/')), encoding);
         }
 
         public string GetFileText(string id, Encoding encoding)
         {
-            return RunCachableCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"", encoding);
+            return RunCacheableCmd(Settings.GitCommand, "cat-file blob \"" + id + "\"", encoding);
         }
 
         public string GetFileBlobHash(string fileName, string revision)
@@ -2855,21 +2799,18 @@ namespace GitCommands
                 GitCommandHelpers.SetEnvironmentVariable();
 
                 Settings.GitLog.Log(Settings.GitCommand + " " + "cat-file blob " + blob);
-                //process used to execute external commands
 
-                var info = new ProcessStartInfo()
+                //process used to execute external commands
+                var info = new ProcessStartInfo
                 {
                     UseShellExecute = false,
-                    ErrorDialog = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = false,
-                    RedirectStandardError = false,
                     CreateNoWindow = true,
+                    RedirectStandardInput = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = false,
                     FileName = "\"" + Settings.GitCommand + "\"",
                     Arguments = "cat-file blob " + blob,
-                    WorkingDirectory = _workingdir,
-                    WindowStyle = ProcessWindowStyle.Normal,
-                    LoadUserProfile = true
+                    WorkingDirectory = _workingdir
                 };
 
                 using (var process = Process.Start(info))
@@ -2930,7 +2871,7 @@ namespace GitCommands
 
             string args = string.Join(" ", extraDiffArguments, revision2.QuoteNE(), revision1.QuoteNE(), "--", filename, oldFileName);
             if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
-                RunGitCmdAndNotWait("difftool --gui --no-prompt " + args);
+                RunExternalCmdDetached(Settings.GitCommand, "difftool --gui --no-prompt " + args);
             else
                 output = RunGitCmd("difftool --no-prompt " + args);
             return output;

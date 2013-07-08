@@ -101,7 +101,7 @@ namespace GitCommands.Statistics
         private Task[] GetTasks(CancellationToken token)
         {
             List<Task> tasks = new List<Task>();
-            string authorName = this.RespectMailmap ? "%aN" : "%an";
+            string authorName = RespectMailmap ? "%aN" : "%an";
 
             string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
 
@@ -122,10 +122,8 @@ namespace GitCommands.Statistics
 
         private void LoadModuleInfo(string command, IGitModule module, CancellationToken token)
         {
-            using (GitCommandsInstance git = new GitCommandsInstance(module))
+            using (GitCommandsInstance git = new GitCommandsInstance(module, CommandOutputMode.Stream))
             {
-                git.StreamOutput = true;
-                git.CollectOutput = false;
                 Process p = git.CmdStartProcess(Settings.GitCommand, command);
 
                 // Read line
@@ -175,13 +173,13 @@ namespace GitCommands.Statistics
                         if (string.IsNullOrEmpty(line))
                             continue;
 
-                        string[] file_line = line.Split('\t');
-                        if (file_line.Length >= 2)
+                        string[] fileLine = line.Split('\t');
+                        if (fileLine.Length >= 2)
                         {
-                            if (file_line[0] != "-")
-                                commit.data.AddedLines += int.Parse(file_line[0]);
-                            if (file_line[1] != "-")
-                                commit.data.DeletedLines += int.Parse(file_line[1]);
+                            if (fileLine[0] != "-")
+                                commit.data.AddedLines += int.Parse(fileLine[0]);
+                            if (fileLine[1] != "-")
+                                commit.data.DeletedLines += int.Parse(fileLine[1]);
                         }
                     }
 
@@ -194,26 +192,26 @@ namespace GitCommands.Statistics
         public static void AddIntermediateEmptyWeeks(
             ref SortedDictionary<DateTime, Dictionary<string, DataPoint>> impact, Dictionary<string, DataPoint> authors)
         {
-            foreach (var author_data in authors)
+            foreach (var authorData in authors)
             {
-                string author = author_data.Key;
+                string author = authorData.Key;
 
                 // Determine first and last commit week of each author
                 DateTime start = new DateTime(), end = new DateTime();
-                bool start_found = false;
+                bool startFound = false;
                 foreach (var week in impact)
                 {
                     if (week.Value.ContainsKey(author))
                     {
-                        if (!start_found)
+                        if (!startFound)
                         {
                             start = week.Key;
-                            start_found = true;
+                            startFound = true;
                         }
                         end = week.Key;
                     }
                 }
-                if (!start_found)
+                if (!startFound)
                     continue;
 
                 // Add 0 commits weeks in between

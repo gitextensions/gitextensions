@@ -151,7 +151,7 @@ namespace GitUI.CommandsDialogs
                 // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
                 // 
 
-                var gitGetGraphCommand = new GitCommandsInstance(Module) { StreamOutput = true, CollectOutput = false };
+                var gitGetGraphCommand = new GitCommandsInstance(Module, CommandOutputMode.Stream);
 
                 string arg = "log --format=\"%n\" --name-only --follow -- \"" + fileName + "\"";
                 Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arg);
