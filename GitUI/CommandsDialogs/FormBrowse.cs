@@ -1543,12 +1543,12 @@ namespace GitUI.CommandsDialogs
 
         private void StartAuthenticationAgentToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Module.StartExternalCommand(Settings.Pageant, "");
+            Module.RunExternalCmdDetached(Settings.Pageant, "");
         }
 
         private void GenerateOrImportKeyToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Module.StartExternalCommand(Settings.Puttygen, "");
+            Module.RunExternalCmdDetached(Settings.Puttygen, "");
         }
 
         private void TabControl1SelectedIndexChanged(object sender, EventArgs e)

@@ -37,22 +37,12 @@ namespace Gource
         {
             try
             {
-                new Process
-                    {
-                        StartInfo =
-                            {
-                                UseShellExecute = true,
-                                ErrorDialog = false,
-                                RedirectStandardOutput = false,
-                                RedirectStandardInput = false,
-                                CreateNoWindow = false,
-                                FileName = "\"" + cmd + "\"",
-                                Arguments = arguments,
-                                WorkingDirectory = WorkingDir.Text,
-                                WindowStyle = ProcessWindowStyle.Normal,
-                                LoadUserProfile = true
-                            }
-                    }.Start();
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "\"" + cmd + "\"",
+                    Arguments = arguments,
+                    WorkingDirectory = WorkingDir.Text
+                });
             }
             catch (Exception e)
             {

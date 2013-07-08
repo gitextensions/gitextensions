@@ -296,11 +296,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             if (File.Exists(path))
             {
-                var pi = new ProcessStartInfo();
-                pi.FileName = "regsvr32";
-                pi.Arguments = string.Format("\"{0}\"", path);
-                pi.Verb = "RunAs";
-                pi.UseShellExecute = true;
+                var pi = new ProcessStartInfo
+                {
+                    FileName = "regsvr32",
+                    Arguments = string.Format("\"{0}\"", path),
+                    Verb = "RunAs",
+                    UseShellExecute = true
+                };
 
                 var process = Process.Start(pi);
                 process.WaitForExit();

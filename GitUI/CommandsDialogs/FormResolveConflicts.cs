@@ -122,7 +122,7 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
             Directory.SetCurrentDirectory(Module.WorkingDir);
-            Module.RunRealCmd(Settings.GitCommand, "mergetool");
+            Module.RunExternalCmdShowConsole(Settings.GitCommand, "mergetool");
             Initialize();
             Cursor.Current = Cursors.Default;
         }

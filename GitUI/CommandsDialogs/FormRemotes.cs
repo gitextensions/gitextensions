@@ -272,7 +272,7 @@ namespace GitUI.CommandsDialogs
             }
             else
                 sshURL = Url.Text;
-            Module.RunRealCmdDetached(
+            Module.RunExternalCmdDetachedShowConsole(
                 "cmd.exe",
                 string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, sshURL));
         }
