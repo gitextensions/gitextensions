@@ -131,7 +131,7 @@ namespace GitUI
                         {
                             Module.RunExternalCmdShowConsole(
                                 "cmd.exe",
-                                string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, remoteUrl));
+                                string.Format("/k \"\"{0}\" -T \"{1}\"\"", AppSettings.Plink, remoteUrl));
 
                             Retry();
                             return true;
@@ -153,7 +153,7 @@ namespace GitUI
                     {
                         string remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
 
-                        Module.RunExternalCmdShowConsole("cmd.exe", string.Format("/k \"\"{0}\" {1}\"", Settings.Plink, string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl));
+                        Module.RunExternalCmdShowConsole("cmd.exe", string.Format("/k \"\"{0}\" {1}\"", AppSettings.Plink, string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl));
 
                         restart = true;
                     }

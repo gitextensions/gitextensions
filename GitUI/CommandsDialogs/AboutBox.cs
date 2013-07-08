@@ -46,7 +46,7 @@ namespace GitUI.CommandsDialogs
             base.OnLoad(e);
 
             _NO_TRANSLATE_labelVersionInfo.Text = string.Format("{0}{1}", _NO_TRANSLATE_labelVersionInfo.Text, 
-                GitCommands.Settings.GitExtensionsVersionString);
+                GitCommands.AppSettings.GitExtensionsVersionString);
         }
 
         //Contributers list 
