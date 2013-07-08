@@ -1,6 +1,6 @@
 ﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class StartPageSettingsPage : SettingsPageBase
+    public partial class StartPageSettingsPage : SettingsPageWithHeader
     {
         public StartPageSettingsPage()
         {
@@ -16,5 +16,15 @@
                 return true;
             }
         }
+
+        protected override void SettingsToPage()
+        {
+        }
+
+        protected override void PageToSettings()
+        {
+        }
+
+
     }
 }

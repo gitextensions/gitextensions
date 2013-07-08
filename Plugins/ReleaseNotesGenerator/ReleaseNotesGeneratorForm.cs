@@ -35,7 +35,7 @@ namespace ReleaseNotesGenerator
         {
             int exitCode;
             string logArgs = string.Format(textBoxGitLogArguments.Text, textBoxRevFrom.Text, textBoxRevTo.Text);
-            string result = _gitUiCommands.GitModule.RunGit("log " + logArgs, out exitCode);
+            string result = _gitUiCommands.GitModule.RunGitCmd("log " + logArgs, out exitCode);
 
             if (!result.Contains("\r\n"))
             {

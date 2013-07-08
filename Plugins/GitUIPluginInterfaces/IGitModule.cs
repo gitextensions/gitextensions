@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace GitUIPluginInterfaces
 {
     public interface IGitModule
     {
-        IEnumerable<IGitSubmodule> GetSubmodules();
+        string RunCmd(string cmd, string arguments, Encoding encoding = null, byte[] stdIn = null);
 
-        string RunGit(string arguments);
+        string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null);
 
-        string RunGit(string arguments, out int exitCode);
+        string RunGitCmd(string arguments, out int exitCode, Encoding encoding = null, byte[] stdInput = null);
 
         string RunBatchFile(string batchFile);
 
@@ -25,19 +26,17 @@ namespace GitUIPluginInterfaces
 
         string GravatarCacheDir { get; }
 
-        IList<string> GetSubmodulesLocalPathes();
+        IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo();
 
-        IGitModule GetISubmodule(string submoduleName);
+        IList<string> GetSubmodulesLocalPathes(bool recursive = true);
+
+        IGitModule GetSubmodule(string submoduleName);
 
         string[] GetRemotes(bool allowEmpty);
 
-        string GetISetting(string setting);
+        string GetSetting(string setting);
 
         bool StartPageantForRemote(string remote);
-
-        string RunCmd(string cmd, string arguments);
-
-        string RunCmd(string cmd, string arguments, byte[] stdIn);
 
         string GetSelectedBranch();
 

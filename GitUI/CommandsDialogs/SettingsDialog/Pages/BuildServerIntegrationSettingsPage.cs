@@ -10,21 +10,23 @@ using Nini.Config;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class BuildServerIntegrationSettingsPage : SettingsPageBase
+    public partial class BuildServerIntegrationSettingsPage : RepoDistSettingsPage
     {
         private const string NoneItem = "<None>";
-        private readonly GitModule _gitModule;
-        private readonly Task<object> _populateBuildServerTypeTask;
+        private Task<object> _populateBuildServerTypeTask;
         private IniConfigSource _buildServerConfigSource;
         private IConfig _buildServerConfig;
 
-        public BuildServerIntegrationSettingsPage(GitModule gitModule)
+        public BuildServerIntegrationSettingsPage()
         {
             InitializeComponent();
             Text = "Build server integration";
             Translate();
+        }
 
-            _gitModule = gitModule;
+        protected override void Init(ISettingsPageHost aPageHost)
+        {
+            base.Init(aPageHost);
 
             _populateBuildServerTypeTask =
                 Task.Factory.StartNew(() =>
@@ -51,10 +53,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             get { return true; }
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
-            base.OnLoadSettings();
-
             bool isRepositoryValid = IsRepositoryValid;
 
             BuildServerType.Enabled = isRepositoryValid;
@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 _populateBuildServerTypeTask.ContinueWith(
                     task =>
                         {
-                            checkBoxEnableBuildServerIntegration.Checked = Settings.EnableBuildServerIntegration;
+                            checkBoxEnableBuildServerIntegration.Checked = CurrentSettings.EnableBuildServerIntegration;
 
                             var fileName = GetBuildServerFileName();
                             if (File.Exists(fileName))
@@ -82,14 +82,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private bool IsRepositoryValid
         {
-            get { return !string.IsNullOrEmpty(_gitModule.GitWorkingDir); }
+            get { return !string.IsNullOrEmpty(Module.GitWorkingDir); }
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
-            base.SaveSettings();
-
-            Settings.EnableBuildServerIntegration = checkBoxEnableBuildServerIntegration.Checked;
+            CurrentSettings.EnableBuildServerIntegration = checkBoxEnableBuildServerIntegration.Checked;
 
             if (IsRepositoryValid)
             {
@@ -131,7 +129,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private string GetBuildServerFileName()
         {
-            return Path.Combine(_gitModule.WorkingDir, ".buildserver");
+            return Path.Combine(Module.WorkingDir, ".buildserver");
         }
 
         private void ActivateBuildServerSettingsControl()
@@ -155,9 +153,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private IBuildServerSettingsUserControl CreateBuildServerSettingsUserControl()
         {
-            if (!Equals(BuildServerType.SelectedItem, NoneItem) && !string.IsNullOrEmpty(_gitModule.GitWorkingDir))
+            if (!Equals(BuildServerType.SelectedItem, NoneItem) && !string.IsNullOrEmpty(Module.GitWorkingDir))
             {
-                var defaultProjectName = _gitModule.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
+                var defaultProjectName = Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
 
                 var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>();
                 var selectedExport = exports.SingleOrDefault(export => export.Metadata.BuildServerType == GetSelectedBuildServerType());

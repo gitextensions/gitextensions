@@ -238,7 +238,7 @@ namespace GitUI.BuildServerIntegration
 
         private IBuildServerAdapter GetBuildServerAdapter()
         {
-            if (GitCommands.Settings.EnableBuildServerIntegration)
+            if (revisionGrid.Module.Settings.EnableBuildServerIntegration)
             {
                 var fileName = Path.Combine(revisionGrid.Module.GitWorkingDir, ".buildserver");
                 if (File.Exists(fileName))

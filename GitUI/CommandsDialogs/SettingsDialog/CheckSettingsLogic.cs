@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Config;
+using GitCommands.Settings;
 using GitCommands.Utils;
 using Microsoft.Win32;
 using ResourceManager.Translation;
@@ -18,13 +18,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public readonly TranslationString MergeToolSuggestCaption = new TranslationString("Suggest mergetool cmd");
 
-        readonly CommonLogic _commonLogic;
-        readonly GitModule _gitModule;
+        public readonly CommonLogic CommonLogic;
+        private GitModule Module { get { return CommonLogic.Module; } }
+        private ConfigFileSettings GlobalConfigFileSettings { get { return CommonLogic.ConfigFileSettingsSet.GlobalSettings; } }
 
-        public CheckSettingsLogic(CommonLogic commonLogic, GitModule gitModule)
+        public CheckSettingsLogic(CommonLogic commonLogic)
         {
-            _commonLogic = commonLogic;
-            _gitModule = gitModule;
+            CommonLogic = commonLogic;
         }
 
         public bool AutoSolveAllSettings()
@@ -41,15 +41,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             valid = SolveEditor() && valid;
             valid = SolveGitCredentialStore() && valid;
 
+            CommonLogic.ConfigFileSettingsSet.EffectiveSettings.Save();
+            CommonLogic.RepoDistSettingsSet.EffectiveSettings.Save();
+
             return valid;
         }
 
         private bool SolveEditor()
         {
-            string editor = _commonLogic.GetGlobalEditor();
+            string editor = CommonLogic.GetGlobalEditor();
             if (string.IsNullOrEmpty(editor))
             {
-                _gitModule.SetGlobalPathSetting("core.editor", "\"" + Settings.GetGitExtensionsFullPath() + "\" fileeditor");
+                GlobalConfigFileSettings.SetPathValue("core.editor", "\"" + AppSettings.GetGitExtensionsFullPath() + "\" fileeditor");
             }
 
             return true;
@@ -59,17 +62,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (!CheckGitCredentialStore())
             {
-                string gcsFileName = Path.Combine(Settings.GetInstallDir(), @"GitCredentialWinStore\git-credential-winstore.exe");
+                string gcsFileName = Path.Combine(AppSettings.GetInstallDir(), @"GitCredentialWinStore\git-credential-winstore.exe");
                 if (File.Exists(gcsFileName))
                 {
-                    ConfigFile config = GitCommandHelpers.GetGlobalConfig();
+                    var config = GlobalConfigFileSettings;
                     if (EnvUtils.RunningOnWindows())
                         config.SetValue("credential.helper", "!\\\"" + GitCommandHelpers.FixPath(gcsFileName) + "\\\"");
                     else if (EnvUtils.RunningOnMacOSX())
                         config.SetValue("credential.helper", "osxkeychain");
                     else
                         config.SetValue("credential.helper", "cache --timeout=300"); // 5 min
-                    config.Save();
+                    
                     return true;
                 }
                 return false;
@@ -79,7 +82,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool CheckGitCredentialStore()
         {
-            string value = GitCommandHelpers.GetGlobalConfig().GetValue("credential.helper");
+            string value = GlobalConfigFileSettings.GetValue("credential.helper");
             bool isValid;
             if (EnvUtils.RunningOnWindows())
                 isValid = value.Contains("git-credential-winstore.exe");
@@ -93,11 +96,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (!EnvUtils.RunningOnWindows())
             {
-                Settings.GitBinDir = "";
+                AppSettings.GitBinDir = "";
                 return true;
             }
 
-            string gitpath = Settings.GitCommand
+            string gitpath = AppSettings.GitCommand
                 .Replace(@"\cmd\git.exe", @"\bin\")
                 .Replace(@"\cmd\git.cmd", @"\bin\")
                 .Replace(@"\bin\git.exe", @"\bin\");
@@ -105,14 +108,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 if (File.Exists(gitpath + "sh.exe") || File.Exists(gitpath + "sh"))
                 {
-                    Settings.GitBinDir = gitpath;
+                    AppSettings.GitBinDir = gitpath;
                     return true;
                 }
             }
 
             if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
             {
-                Settings.GitBinDir = "";
+                AppSettings.GitBinDir = "";
                 return true;
             }
 
@@ -122,7 +125,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 {
                     if (File.Exists(path + @"bin\sh.exe") || File.Exists(path + @"bin\sh"))
                     {
-                        Settings.GitBinDir = path + @"bin\";
+                        AppSettings.GitBinDir = path + @"bin\";
                         return true;
                     }
                 }
@@ -133,7 +136,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private IEnumerable<string> GetGitLocations()
         {
             yield return
-                _commonLogic.GetRegistryValue(Registry.LocalMachine,
+                CommonLogic.GetRegistryValue(Registry.LocalMachine,
                                  "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
             string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
             string programFilesX86 = null;
@@ -147,13 +150,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 yield return programFilesX86 + @"\msysgit\";
             yield return programFiles + @"\msysgit\";
             yield return @"C:\msysgit\";
+            // cygwin has old git version on windows and bash has a lot of bugs
             yield return @"C:\cygwin\";
         }
 
         private IEnumerable<string> GetWindowsCommandLocations()
         {
-            if (!string.IsNullOrEmpty(Settings.GitCommand) && File.Exists(Settings.GitCommand))
-                yield return Settings.GitCommand;
+            if (!string.IsNullOrEmpty(AppSettings.GitCommand) && File.Exists(AppSettings.GitCommand))
+                yield return AppSettings.GitCommand;
             foreach (var path in GetGitLocations())
             {
                 if (Directory.Exists(path + @"bin\"))
@@ -173,11 +177,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool SolveGitExtensionsDir()
         {
-            string fileName = Settings.GetGitExtensionsDirectory();
+            string fileName = AppSettings.GetGitExtensionsDirectory();
 
             if (Directory.Exists(fileName))
             {
-                Settings.SetInstallDir(fileName);
+                AppSettings.SetInstallDir(fileName);
                 return true;
             }
 
@@ -189,19 +193,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             if (EnvUtils.RunningOnWindows())
             {
                 var command = (from cmd in GetWindowsCommandLocations()
-                               let output = _gitModule.RunCmd(cmd, string.Empty)
+                               let output = Module.RunCmd(cmd, string.Empty)
                                where !string.IsNullOrEmpty(output)
                                select cmd).FirstOrDefault();
 
                 if (command != null)
                 {
-                    Settings.GitCommand = command;
+                    AppSettings.GitCommand = command;
                     return true;
                 }
                 return false;
             }
-            Settings.GitCommand = "git";
-            return !string.IsNullOrEmpty(_gitModule.RunGitCmd(""));
+            AppSettings.GitCommand = "git";
+            return !string.IsNullOrEmpty(Module.RunGitCmd(""));
         }
 
         public static bool CheckIfFileIsInPath(string fileName)
@@ -214,11 +218,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool SolveMergeToolForKDiff()
         {
-            string mergeTool = _commonLogic.GetGlobalMergeTool();
+            string mergeTool = CommonLogic.GetGlobalMergeTool();
             if (string.IsNullOrEmpty(mergeTool))
             {
                 mergeTool = "kdiff3";
-                _gitModule.SetGlobalSetting("merge.tool", mergeTool);
+                GlobalConfigFileSettings.SetValue("merge.tool", mergeTool);
             }
 
             if (mergeTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
@@ -229,13 +233,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool SolveDiffToolForKDiff()
         {
-            string diffTool = GetGlobalDiffToolFromConfig();
+            string diffTool = GetDiffToolFromConfig(GlobalConfigFileSettings);
             if (string.IsNullOrEmpty(diffTool))
             {
                 diffTool = "kdiff3";
-                ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
-                SetGlobalDiffToolToConfig(globalConfig, diffTool);
-                globalConfig.Save();
+                SetDiffToolToConfig(GlobalConfigFileSettings, diffTool);
             }
 
             if (diffTool.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
@@ -244,46 +246,46 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return true;
         }
 
-        public static string GetGlobalDiffToolFromConfig()
+        public static string GetDiffToolFromConfig(ConfigFileSettings settings)
         {
             if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
-                return GitCommandHelpers.GetGlobalConfig().GetValue("diff.guitool");
-            return GitCommandHelpers.GetGlobalConfig().GetValue("diff.tool");
+                return settings.GetValue("diff.guitool");
+            return settings.GetValue("diff.tool");
         }
 
-        public static void SetGlobalDiffToolToConfig(ConfigFile configFile, string diffTool)
+        public static void SetDiffToolToConfig(ConfigFileSettings settings, string diffTool)
         {
             if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
             {
-                configFile.SetValue("diff.guitool", diffTool);
+                settings.SetValue("diff.guitool", diffTool);
                 return;
             }
-            configFile.SetValue("diff.tool", diffTool);
+            settings.SetValue("diff.tool", diffTool);
         }
 
         public bool SolveDiffToolPathForKDiff()
         {
-            string kdiff3path = MergeToolsHelper.FindPathForKDiff(_gitModule.GetGlobalSetting("difftool.kdiff3.path"));
+            string kdiff3path = MergeToolsHelper.FindPathForKDiff(GlobalConfigFileSettings.GetValue("difftool.kdiff3.path"));
             if (string.IsNullOrEmpty(kdiff3path))
                 return false;
 
-            _gitModule.SetGlobalPathSetting("difftool.kdiff3.path", kdiff3path);
+            GlobalConfigFileSettings.SetPathValue("difftool.kdiff3.path", kdiff3path);
             return true;
         }
 
         public bool SolveMergeToolPathForKDiff()
         {
-            string kdiff3path = MergeToolsHelper.FindPathForKDiff(_gitModule.GetGlobalSetting("mergetool.kdiff3.path"));
+            string kdiff3path = MergeToolsHelper.FindPathForKDiff(GlobalConfigFileSettings.GetValue("mergetool.kdiff3.path"));
             if (string.IsNullOrEmpty(kdiff3path))
                 return false;
 
-            _gitModule.SetGlobalPathSetting("mergetool.kdiff3.path", kdiff3path);
+            GlobalConfigFileSettings.SetPathValue("mergetool.kdiff3.path", kdiff3path);
             return true;
         }
 
         public bool CanFindGitCmd()
         {
-            return !string.IsNullOrEmpty(_gitModule.RunGitCmd(""));
+            return !string.IsNullOrEmpty(Module.RunGitCmd(""));
         }
 
         public void AutoConfigMergeToolCmd(bool silent)
@@ -306,32 +308,28 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private void SetMergetoolPathText(string text)
         {
-            ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
-            globalConfig.SetPathValue(string.Format("mergetool.{0}.path", GetGlobalMergeToolText()), text);
+            GlobalConfigFileSettings.SetPathValue(string.Format("mergetool.{0}.path", GetGlobalMergeToolText()), text);
             // orig (TODO: remove comment and rename method):
             //// MergetoolPath.Text = ...
         }
 
         private void SetMergeToolCmdText(string text)
         {
-            ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
-            globalConfig.SetPathValue(string.Format("mergetool.{0}.cmd", GetGlobalMergeToolText()), text);
+            GlobalConfigFileSettings.SetPathValue(string.Format("mergetool.{0}.cmd", GetGlobalMergeToolText()), text);
             // orig (TODO: remove comment and rename method):
             //// MergeToolCmd.Text = ...
         }
 
         private string GetGlobalMergeToolText()
         {
-            ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
-            return globalConfig.GetValue("merge.tool");
+            return GlobalConfigFileSettings.GetValue("merge.tool");
             // orig (TODO: remove comment and rename method):
             //// GlobalMergeTool.Text;
         }
 
         public string GetMergeToolCmdText()
         {
-            ConfigFile globalConfig = GitCommandHelpers.GetGlobalConfig();
-            return globalConfig.GetPathValue(string.Format("mergetool.{0}.cmd", GetGlobalMergeToolText()));
+            return GlobalConfigFileSettings.GetValue(string.Format("mergetool.{0}.cmd", GetGlobalMergeToolText()));
             // orig (TODO: remove comment and rename method):
             //// MergeToolCmd.Text
         }
