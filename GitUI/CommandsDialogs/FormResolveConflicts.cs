@@ -122,7 +122,7 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
             Directory.SetCurrentDirectory(Module.WorkingDir);
-            Module.RunExternalCmdShowConsole(Settings.GitCommand, "mergetool");
+            Module.RunExternalCmdShowConsole(AppSettings.GitCommand, "mergetool");
             Initialize();
             Cursor.Current = Cursors.Default;
         }
@@ -208,7 +208,7 @@ namespace GitUI.CommandsDialogs
 
         private string FixPath(string path)
         {
-            return (path ?? "").Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+            return (path ?? "").Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator);
         }
 
         private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>()
@@ -233,7 +233,7 @@ namespace GitUI.CommandsDialogs
                     return false;
 
                 string dir = Path.GetDirectoryName(Application.ExecutablePath) +
-                    Settings.PathSeparator + "Diff-Scripts" + Settings.PathSeparator;
+                    AppSettings.PathSeparator + "Diff-Scripts" + AppSettings.PathSeparator;
                 if (Directory.Exists(dir))
                 {
                     string mergeScript = "";
@@ -739,19 +739,19 @@ namespace GitUI.CommandsDialogs
         
         private static string GetShortFileName(string fileName)
         {
-            if (fileName.Contains(Settings.PathSeparator.ToString()) && fileName.LastIndexOf(Settings.PathSeparator.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeparator) + 1);
-            if (fileName.Contains(Settings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(Settings.PathSeparatorWrong.ToString()) < fileName.Length)
-                fileName = fileName.Substring(fileName.LastIndexOf(Settings.PathSeparatorWrong) + 1);
+            if (fileName.Contains(AppSettings.PathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparator.ToString()) < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf(AppSettings.PathSeparator) + 1);
+            if (fileName.Contains(AppSettings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparatorWrong.ToString()) < fileName.Length)
+                fileName = fileName.Substring(fileName.LastIndexOf(AppSettings.PathSeparatorWrong) + 1);
             return fileName;
         }
 
         private static string GetDirectoryFromFileName(string fileName)
         {
-            if (fileName.Contains(Settings.PathSeparator.ToString()) && fileName.LastIndexOf(Settings.PathSeparator.ToString()) < fileName.Length)
-                fileName = fileName.Substring(0, fileName.LastIndexOf(Settings.PathSeparator));
-            if (fileName.Contains(Settings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(Settings.PathSeparatorWrong.ToString()) < fileName.Length)
-                fileName = fileName.Substring(0, fileName.LastIndexOf(Settings.PathSeparatorWrong));
+            if (fileName.Contains(AppSettings.PathSeparator.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparator.ToString()) < fileName.Length)
+                fileName = fileName.Substring(0, fileName.LastIndexOf(AppSettings.PathSeparator));
+            if (fileName.Contains(AppSettings.PathSeparatorWrong.ToString()) && fileName.LastIndexOf(AppSettings.PathSeparatorWrong.ToString()) < fileName.Length)
+                fileName = fileName.Substring(0, fileName.LastIndexOf(AppSettings.PathSeparatorWrong));
             return fileName;
         }
 

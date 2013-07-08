@@ -274,7 +274,7 @@ namespace GitUI.CommandsDialogs
                 sshURL = Url.Text;
             Module.RunExternalCmdDetachedShowConsole(
                 "cmd.exe",
-                string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, sshURL));
+                string.Format("/k \"\"{0}\" -T \"{1}\"\"", AppSettings.Plink, sshURL));
         }
 
         private void PruneClick(object sender, EventArgs e)
