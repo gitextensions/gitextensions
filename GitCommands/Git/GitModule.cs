@@ -383,7 +383,7 @@ namespace GitCommands
             while (len > 0 && pathSeparators.Any(s => s == startDir[len - 1]))
                 len--;
 
-            startDir = startDir.Substring(0, len) + AppSettings.PathSeparator.ToString();
+            startDir = startDir.Substring(0, len) + AppSettings.PathSeparator;
 
             var dir = startDir;
 
@@ -392,47 +392,42 @@ namespace GitCommands
                 dir = dir.Substring(0, dir.LastIndexOfAny(pathSeparators));
 
                 if (IsValidGitWorkingDir(dir))
-                    return dir + AppSettings.PathSeparator.ToString();
+                    return dir + AppSettings.PathSeparator;
             }
             return startDir;
         }
 
-        private static Process CreateAndStartCommand(string fileName, string arguments, string workingDir, bool showConsole)
+        private static Process StartProccess(string fileName, string arguments, string workingDir, bool showConsole)
         {
             GitCommandHelpers.SetEnvironmentVariable();
 
-            AppSettings.GitLog.Log(fileName + " " + arguments);
+            string quotedCmd = fileName;
+            if (quotedCmd.IndexOf(' ') != -1)
+                quotedCmd = quotedCmd.Quote();
+            AppSettings.GitLog.Log(quotedCmd + " " + arguments);
 
-            var info = new ProcessStartInfo
-            {
-                FileName = fileName,
-                Arguments = arguments,
-                WorkingDirectory = workingDir
-            };
+            var startInfo = new ProcessStartInfo
+                                {
+                                    FileName = fileName,
+                                    Arguments = arguments,
+                                    WorkingDirectory = workingDir
+                                };
             if (!showConsole)
             {
-                info.UseShellExecute = false;
-                info.CreateNoWindow = true;
+                startInfo.UseShellExecute = false;
+                startInfo.CreateNoWindow = true;
             }
-            return Process.Start(info);
+            return Process.Start(startInfo);
         }
 
         /// <summary>
-        /// Run external app, console window is hidden
+        /// Run command, console window is visible
         /// </summary>
-        public Process RunExternalCmdDetached(string cmd, string arguments)
-        {
-            return RunExternalCmdDetached(cmd, arguments, _workingdir);
-        }
-
-        /// <summary>
-        /// Run external app, console window is hidden
-        /// </summary>
-        public static Process RunExternalCmdDetached(string cmd, string arguments, string workingdir)
+        public Process RunExternalCmdDetachedShowConsole(string cmd, string arguments)
         {
             try
             {
-                return CreateAndStartCommand(cmd, arguments, workingdir, false);
+                return StartProccess(cmd, arguments, _workingdir, showConsole: true);
             }
             catch (Exception ex)
             {
@@ -449,7 +444,7 @@ namespace GitCommands
         {
             try
             {
-                using (var process = CreateAndStartCommand(cmd, arguments, _workingdir, true))
+                using (var process = StartProccess(cmd, arguments, _workingdir, showConsole: true))
                     process.WaitForExit();
             }
             catch (Exception ex)
@@ -459,13 +454,13 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Run command, console window is visible
+        /// Run command, console window is hidden
         /// </summary>
-        public Process RunExternalCmdDetachedShowConsole(string cmd, string arguments)
+        public static Process RunExternalCmdDetached(string fileName, string arguments, string workingDir)
         {
             try
             {
-                return CreateAndStartCommand(cmd, arguments, _workingdir, true);
+                return StartProccess(fileName, arguments, workingDir, showConsole: false);
             }
             catch (Exception ex)
             {
@@ -476,7 +471,26 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Run cacheable command, console window is hidden, wait for exit, redirect output
+        /// Run command, console window is hidden
+        /// </summary>
+        public Process RunExternalCmdDetached(string cmd, string arguments)
+        {
+            return RunExternalCmdDetached(cmd, arguments, _workingdir);
+        }
+
+        /// <summary>
+        /// Run git command, console window is hidden, redirect output
+        /// </summary>
+        public Process RunGitCmdDetached(string arguments, Encoding encoding = null)
+        {
+            if (encoding == null)
+                encoding = SystemEncoding;
+
+            return GitCommandHelpers.StartProcess(AppSettings.GitCommand, arguments, _workingdir, encoding);
+        }
+
+        /// <summary>
+        /// Run command, cache results, console window is hidden, wait for exit, redirect output
         /// </summary>
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public string RunCacheableCmd(string cmd, string arguments = "", Encoding encoding = null)
@@ -860,7 +874,7 @@ namespace GitCommands
         {
             if (EnvUtils.RunningOnUnix())
             {
-                RunExternalCmdDetachedShowConsole("git", "gui");
+                RunExternalCmdDetachedShowConsole(AppSettings.GitCommand, "gui");
             }
             else
             {
@@ -896,27 +910,22 @@ namespace GitCommands
                 string args;
                 if (string.IsNullOrWhiteSpace(bashCommand))
                 {
-                    args = " --login -i\"";
+                    args = "--login -i\"";
                 }
                 else
                 {
-                    args = " --login -i -c \"" + bashCommand.Replace("\"", "\\\"") + "\"";
+                    args = "--login -i -c \"" + bashCommand.Replace("\"", "\\\"") + "\"";
                 }
 
-                if (File.Exists(AppSettings.GitBinDir + "bash.exe"))
-                    return RunExternalCmdDetachedShowConsole("cmd.exe", "/c \"\"" + AppSettings.GitBinDir + "bash\"" + args);
-                else
-                    return RunExternalCmdDetachedShowConsole("cmd.exe", "/c \"\"" + AppSettings.GitBinDir + "sh\"" + args);
+                string termCmd = File.Exists(AppSettings.GitBinDir + "bash.exe") ? "bash" : "sh";
+                return RunExternalCmdDetachedShowConsole("cmd.exe",
+                    string.Format("/c \"\"{0}{1}\" {2}", AppSettings.GitBinDir, termCmd, args));
             }
         }
 
         public string Init(bool bare, bool shared)
         {
-            if (bare && shared)
-                return RunGitCmd("init --bare --shared=all");
-            if (bare)
-                return RunGitCmd("init --bare");
-            return RunGitCmd("init");
+            return RunGitCmd(string.Format("init{0}{1}", bare ? " --bare" : "", shared ? " --shared=all" : ""));
         }
 
         public bool IsMerge(string commit)
@@ -1453,87 +1462,69 @@ namespace GitCommands
             return "";
         }
 
+        private ProcessStartInfo CreateGitStartInfo(string arguments)
+        {
+            return GitCommandHelpers.CreateProcessStartInfo(AppSettings.GitCommand, arguments, _workingdir, SystemEncoding);
+        }
+
         public string ApplyPatch(string dir, string amCommand)
         {
-            using (var gitCommand = new GitCommandsInstance(this))
+            var startInfo = CreateGitStartInfo(amCommand);
+
+            using (var process = Process.Start(startInfo))
             {
                 var files = Directory.GetFiles(dir);
 
                 if (files.Length == 0)
                     return "";
 
-                var output = "";
-                using (Process process = gitCommand.CmdStartProcess(AppSettings.GitCommand, amCommand))
+                foreach (var file in files)
                 {
-                    foreach (var file in files)
+                    using (var fs = new FileStream(file, FileMode.Open))
                     {
-                        using (FileStream fs = new FileStream(file, FileMode.Open))
-                        {
-                            fs.CopyTo(process.StandardInput.BaseStream);
-                        }
+                        fs.CopyTo(process.StandardInput.BaseStream);
                     }
-                    process.StandardInput.Close();
-                    process.WaitForExit();
-
-                    if (gitCommand.Output != null)
-                        output = gitCommand.Output.ToString().Trim();
                 }
-                return output;
+                process.StandardInput.Close();
+                process.WaitForExit();
+
+                return process.StandardOutput.ReadToEnd().Trim();
             }
         }
 
         public string StageFiles(IList<GitItemStatus> files, out bool wereErrors)
         {
-            var gitCommand = new GitCommandsInstance(this);
-
             var output = "";
             wereErrors = false;
-
-            Process process = null;
-            foreach (var file in files)
+            var startInfo = CreateGitStartInfo("update-index --add --stdin");
+            var process = new Lazy<Process>(() => Process.Start(startInfo));
+            foreach (var file in files.Where(file => !file.IsDeleted))
             {
-                if (file.IsDeleted)
-                    continue;
-                if (process == null)
-                    process = gitCommand.CmdStartProcess(AppSettings.GitCommand, "update-index --add --stdin");
-
-                //process1.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
-                byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding, "\"" + FixPath(file.Name) + "\"" + process.StandardInput.NewLine);
-                process.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
+                UpdateIndex(process, file.Name);
             }
-            if (process != null)
+            if (process.IsValueCreated)
             {
-                process.StandardInput.Close();
-                process.WaitForExit();
-                wereErrors = process.ExitCode != 0;
-
-                if (gitCommand.Output != null)
-                    output = gitCommand.Output.ToString().Trim();
+                process.Value.StandardInput.Close();
+                process.Value.WaitForExit();
+                wereErrors = process.Value.ExitCode != 0;
+                output = process.Value.StandardOutput.ReadToEnd().Trim();
             }
 
-            Lazy<Process> process2 = new Lazy<Process>(() => 
-                gitCommand.CmdStartProcess(AppSettings.GitCommand, "update-index --remove --stdin"));
-
-            foreach (var file in files)
+            startInfo.Arguments = "update-index --remove --stdin";
+            process = new Lazy<Process>(() => Process.Start(startInfo));
+            foreach (var file in files.Where(file => file.IsDeleted))
             {
-                if (!file.IsDeleted)
-                    continue;
-                UpdateIndex(process2, file.Name);
+                UpdateIndex(process, file.Name);
             }
-            if (process2.IsValueCreated)
+            if (process.IsValueCreated)
             {
-                process2.Value.StandardInput.Close();
-                process2.Value.WaitForExit();
-                wereErrors = wereErrors || process2.Value.ExitCode != 0;
+                process.Value.StandardInput.Close();
+                process.Value.WaitForExit();
+                wereErrors = wereErrors || process.Value.ExitCode != 0;
 
-                if (gitCommand.Output != null)
-                {
-                    if (!string.IsNullOrEmpty(output))
-                    {
-                        output += Environment.NewLine;
-                    }
-                    output += gitCommand.Output.ToString().Trim();
-                }
+                if (!string.IsNullOrEmpty(output))
+                    output += Environment.NewLine;
+                output += process.Value.StandardOutput.ReadToEnd().Trim();
             }
 
             return output;
@@ -1541,53 +1532,42 @@ namespace GitCommands
 
         public string UnstageFiles(IList<GitItemStatus> files)
         {
-            var gitCommand = new GitCommandsInstance(this);
-
             var output = "";
-
-            Process process1 = null;
-            foreach (var file in files)
+            var startInfo = CreateGitStartInfo("update-index --info-only --index-info");
+            var process = new Lazy<Process>(() => Process.Start(startInfo));
+            foreach (var file in files.Where(file => !file.IsNew))
             {
-                if (file.IsNew)
-                    continue;
-                if (process1 == null)
-                    process1 = gitCommand.CmdStartProcess(AppSettings.GitCommand, "update-index --info-only --index-info");
-
-                process1.StandardInput.WriteLine("0 0000000000000000000000000000000000000000\t\"" + FixPath(file.Name) +
-                                                 "\"");
+                process.Value.StandardInput.WriteLine("0 0000000000000000000000000000000000000000\t\"" + FixPath(file.Name) + "\"");
             }
-            if (process1 != null)
+            if (process.IsValueCreated)
             {
-                process1.StandardInput.Close();
-                process1.WaitForExit();
+                process.Value.StandardInput.Close();
+                process.Value.WaitForExit();
+                output = process.Value.StandardOutput.ReadToEnd().Trim();
             }
 
-            if (gitCommand.Output != null)
-                output = gitCommand.Output.ToString();
-
-            Lazy<Process> process2 = new Lazy<Process>(() =>
-                gitCommand.CmdStartProcess(AppSettings.GitCommand, "update-index --force-remove --stdin"));
-
-            foreach (var file in files)
+            startInfo.Arguments = "update-index --force-remove --stdin";
+            process = new Lazy<Process>(() => Process.Start(startInfo));
+            foreach (var file in files.Where(file => file.IsNew))
             {
-                if (!file.IsNew)
-                    continue;
-                UpdateIndex(process2, file.Name);
+                UpdateIndex(process, file.Name);
             }
-            if (process2.IsValueCreated)
+            if (process.IsValueCreated)
             {
-                process2.Value.StandardInput.Close();
-                process2.Value.WaitForExit();
-            }
+                process.Value.StandardInput.Close();
+                process.Value.WaitForExit();
 
-            if (gitCommand.Output != null)
-                output += gitCommand.Output.ToString();
+                if (!string.IsNullOrEmpty(output))
+                    output += Environment.NewLine;
+                output += process.Value.StandardOutput.ReadToEnd().Trim();
+            }
 
             return output;
         }
 
         private static void UpdateIndex(Lazy<Process> process, string filename)
         {
+            //process.StandardInput.WriteLine("\"" + FixPath(file.Name) + "\"");
             byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding,
                                                       "\"" + FixPath(filename) + "\"" + process.Value.StandardInput.NewLine);
             process.Value.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
@@ -2765,24 +2745,7 @@ namespace GitCommands
             {
                 var newStream = new MemoryStream();
 
-                GitCommandHelpers.SetEnvironmentVariable();
-
-                AppSettings.GitLog.Log(AppSettings.GitCommand + " " + "cat-file blob " + blob);
-
-                //process used to execute external commands
-                var info = new ProcessStartInfo
-                {
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    RedirectStandardInput = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = false,
-                    FileName = "\"" + AppSettings.GitCommand + "\"",
-                    Arguments = "cat-file blob " + blob,
-                    WorkingDirectory = _workingdir
-                };
-
-                using (var process = Process.Start(info))
+                using (var process = RunGitCmdDetached("cat-file blob " + blob))
                 {
                     StreamCopy(process.StandardOutput.BaseStream, newStream);
                     newStream.Position = 0;
@@ -2840,7 +2803,7 @@ namespace GitCommands
 
             string args = string.Join(" ", extraDiffArguments, revision2.QuoteNE(), revision1.QuoteNE(), "--", filename, oldFileName);
             if (GitCommandHelpers.VersionInUse.GuiDiffToolExist)
-                RunExternalCmdDetached(AppSettings.GitCommand, "difftool --gui --no-prompt " + args);
+                RunGitCmdDetached("difftool --gui --no-prompt " + args);
             else
                 output = RunGitCmd("difftool --no-prompt " + args);
             return output;
