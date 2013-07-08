@@ -221,7 +221,7 @@ namespace GitCommands
         public static CommitData CreateFromFormatedData(string data, GitModule aModule)
         {
             if (data == null)
-                throw new ArgumentNullException("Data");
+                throw new ArgumentNullException("data");
 
             var lines = data.Split('\n');
             
@@ -265,7 +265,7 @@ namespace GitCommands
         public static void UpdateBodyInCommitData(CommitData commitData, string data, GitModule aModule)
         {
             if (data == null)
-                throw new ArgumentNullException("Data");
+                throw new ArgumentNullException("data");
 
             var lines = data.Split('\n');
 

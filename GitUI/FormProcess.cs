@@ -125,7 +125,7 @@ namespace GitUI
             if (QuotedProcessString.IndexOf(' ') != -1)
                 QuotedProcessString = QuotedProcessString.Quote();
             AddMessageLine(QuotedProcessString + " " + ProcessArguments);
-            gitCommand = new GitCommandsInstance(WorkingDirectory, CommandOutputMode.Async);
+            gitCommand = new GitCommandsInstance(WorkingDirectory);
 
             try
             {

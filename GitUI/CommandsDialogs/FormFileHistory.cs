@@ -151,10 +151,8 @@ namespace GitUI.CommandsDialogs
                 // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
                 // 
 
-                var gitGetGraphCommand = new GitCommandsInstance(Module, CommandOutputMode.Stream);
-
                 string arg = "log --format=\"%n\" --name-only --follow -- \"" + fileName + "\"";
-                Process p = gitGetGraphCommand.CmdStartProcess(AppSettings.GitCommand, arg);
+                Process p = Module.RunGitCmdDetached(arg);
 
                 // the sequence of (quoted) file names - start with the initial filename for the search.
                 var listOfFileNames = new StringBuilder("\"" + fileName + "\"");
