@@ -679,22 +679,17 @@ namespace GitUI.CommandsDialogs
             if (_currentFilesList == null || _currentFilesList.IsEmpty)
             {
                 SelectStoredNextIndex();
+                return;
             }
+
+            var newItems = _currentFilesList == Staged ? stagedFiles : unStagedFiles;
+            var names = lastSelection.ToHashSet(x => x.Name);
+            var newSelection = newItems.Where(x => names.Contains(x.Name)).ToList();
+
+            if (newSelection.Any())
+                _currentFilesList.SelectedItems = newSelection;
             else
-            {
-                var newItems = unStagedFiles;
-                if (_currentFilesList == Staged)
-                    newItems = stagedFiles;
-
-                var names = lastSelection.ToHashSet(x => x.Name);
-                var newSelection = newItems.Where(x => names.Contains(x.Name));
-
-                if (newSelection.Any())
-                    _currentFilesList.SelectedItems = newSelection;
-                else
-                    SelectStoredNextIndex();
-
-            }
+                SelectStoredNextIndex();
         }
 
         /// <summary>Returns if there are any changes at all, staged or unstaged.</summary>
