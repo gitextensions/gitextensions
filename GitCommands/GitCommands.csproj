@@ -70,10 +70,26 @@
     <Compile Include="AsyncLoader.cs" />
     <Compile Include="CommitData.cs" />
     <Compile Include="Config\SettingKeyString.cs" />
+    <Compile Include="Core\SimpleStructured.cs" />
     <Compile Include="DateTimeUtils.cs" />
     <Compile Include="ExceptionUtils.cs" />
     <Compile Include="FileHelper.cs" />
+    <Compile Include="Settings\BasicSettingTypes.cs" />
+    <Compile Include="Settings\CommonSettingsTypes.cs" />
+    <Compile Include="Settings\ConfigFileSettings.cs" />
+    <Compile Include="Settings\ConfigFileSettingsCache.cs" />
+    <Compile Include="Settings\FileSettingsCache.cs" />
+    <Compile Include="Settings\GitExtSettingsCache.cs" />
+    <Compile Include="Settings\ISettingsSource.cs" />
+    <Compile Include="Settings\RepoDistSettings.cs" />
+    <Compile Include="Settings\Setting.cs" />
+    <Compile Include="Settings\SettingsCache.cs" />
+    <Compile Include="Settings\SettingsContainer.cs" />
+    <Compile Include="Settings\SettingsPath.cs" />
     <Compile Include="Utils\EnvUtils.cs" />
+    <Compile Include="GitExtLinks\GitExtLink.cs" />
+    <Compile Include="GitExtLinks\GitExtLinkDef.cs" />
+    <Compile Include="GitExtLinks\GitExtLinksParser.cs" />
     <Compile Include="Git\GitBisectOption.cs" />
     <Compile Include="Git\GitCheckoutBranchCmd.cs" />
     <Compile Include="Git\GitCommand.cs" />
@@ -113,7 +129,7 @@
     <Compile Include="Git\GitRef.cs" />
     <Compile Include="Git\GitItem.cs" />
     <Compile Include="Git\GitStash.cs" />
-    <Compile Include="Git\GitSubmodule.cs" />
+    <Compile Include="Git\GitSubmoduleInfo.cs" />
     <Compile Include="Git\GitVersion.cs" />
     <Compile Include="Git\IGitItem.cs" />
     <Compile Include="Patch\Patch.cs" />
@@ -124,13 +140,14 @@
     <Compile Include="Repository\RepositoryHistory.cs" />
     <Compile Include="Repository\RepositoryType.cs" />
     <Compile Include="RevisionGraph.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
     <Compile Include="Statistics\ImpactLoader.cs" />
     <Compile Include="Strings.cs" />
     <Compile Include="FileInfoExtensions.cs" />
     <Compile Include="SynchronizedProcessReader.cs" />
     <Compile Include="System.cs" />
+    <Compile Include="Utils\WeakRefCache.cs" />
     <Compile Include="XmlSerializableDictionary.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -17,7 +17,7 @@ namespace GitUI.Script
         {
             if (Scripts == null)
             {
-                DeserializeFromXml(Settings.ownScripts);
+                DeserializeFromXml(AppSettings.ownScripts);
             }
 
             return Scripts;

@@ -8,7 +8,7 @@ namespace GitUI.Script
 {
     public static class ScriptRunner
     {
-        public static bool ExecuteScriptCommand(GitModule aModule, int command)
+        public static bool ExecuteScriptCommand(GitModule aModule, int command, RevisionGrid revisionGrid = null)
         {
             var curScripts = ScriptManager.GetScripts();
             bool anyScriptExecuted = false;
@@ -17,15 +17,14 @@ namespace GitUI.Script
             {
                 if (s.HotkeyCommandIdentifier == command)
                 {
-                    RunScript(aModule, s.Name, null);
+                    RunScript(aModule, s.Name, revisionGrid);
                     anyScriptExecuted = true;
                 }
             }
             return anyScriptExecuted;
         }
 
-
-        public static void RunScript(GitModule aModule, string script, RevisionGrid RevisionGrid)
+        public static void RunScript(GitModule aModule, string script, RevisionGrid revisionGrid)
         {
             if (string.IsNullOrEmpty(script))
                 return;
@@ -48,17 +47,17 @@ namespace GitUI.Script
                     continue;
                 if (!option.StartsWith("{s"))
                     continue;
-                if (RevisionGrid != null)
+                if (revisionGrid != null)
                     continue;
                 MessageBox.Show(
                     string.Format("Option {0} is only supported when started from revision grid.", option),
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            RunScript(aModule, scriptInfo, RevisionGrid);
+            RunScript(aModule, scriptInfo, revisionGrid);
         }
 
-        internal static void RunScript(GitModule aModule, ScriptInfo scriptInfo, RevisionGrid RevisionGrid)
+        internal static void RunScript(GitModule aModule, ScriptInfo scriptInfo, RevisionGrid revisionGrid)
         {
             string command = scriptInfo.Command;
             string argument = scriptInfo.Arguments;
@@ -84,11 +83,11 @@ namespace GitUI.Script
                     continue;
                 if (!option.StartsWith("{s") || selectedRevision != null)
                 {
-                    currentRevision = GetCurrentRevision(aModule, RevisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision, option);
+                    currentRevision = GetCurrentRevision(aModule, revisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision, option);
                 }
                 else
                 {
-                    selectedRevision = CalculateSelectedRevision(RevisionGrid, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
+                    selectedRevision = CalculateSelectedRevision(revisionGrid, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
                 }
 
                 switch (option)
@@ -241,11 +240,11 @@ namespace GitUI.Script
             FormProcess.ShowDialog(null, command, argument, aModule.WorkingDir, null, true);
         }
 
-        private static GitRevision CalculateSelectedRevision(RevisionGrid RevisionGrid, List<GitRef> selectedRemoteBranches,
+        private static GitRevision CalculateSelectedRevision(RevisionGrid revisionGrid, List<GitRef> selectedRemoteBranches,
                                                              List<string> selectedRemotes, List<GitRef> selectedLocalBranches,
                                                              List<GitRef> selectedBranches, List<GitRef> selectedTags)
         {
-            GitRevision selectedRevision = RevisionGrid.GetRevision(RevisionGrid.LastRow);
+            GitRevision selectedRevision = revisionGrid.GetRevision(revisionGrid.LastRow);
             foreach (GitRef head in selectedRevision.Refs)
             {
                 if (head.IsTag)
@@ -342,13 +341,13 @@ namespace GitUI.Script
             //Make sure we are able to run git, even if git is not in the path
             if (originalCommand.Equals("git", System.StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("{git}", System.StringComparison.CurrentCultureIgnoreCase))
-                return Settings.GitCommand;
+                return AppSettings.GitCommand;
 
             if (originalCommand.Equals("gitextensions", System.StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("{gitextensions}", System.StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("gitex", System.StringComparison.CurrentCultureIgnoreCase) ||
                 originalCommand.Equals("{gitex}", System.StringComparison.CurrentCultureIgnoreCase))
-                return Settings.GetGitExtensionsFullPath();
+                return AppSettings.GetGitExtensionsFullPath();
             return originalCommand;
         }
 

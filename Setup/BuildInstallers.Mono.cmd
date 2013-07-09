@@ -4,7 +4,7 @@ cd /d "%~p0"
 
 if "%MONOPATH%"=="" SET MONOPATH=C:\Program Files (x86)\Mono-2.10.9\bin\
 
-set version=2.47
+set version=2.48
 set msbuild="%MONOPATH%\xbuild"
 set project=..\GitExtensionsMono.sln
 set nuget=..\.nuget\nuget.exe
