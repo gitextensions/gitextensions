@@ -7,9 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using System.Xml;
 using GitCommands.Logging;
 using GitCommands.Repository;
+using GitCommands.Settings;
 using GitCommands.Utils;
 using Microsoft.Win32;
 
@@ -23,7 +23,7 @@ namespace GitCommands
         Stash
     }
 
-    public static class Settings
+    public static class AppSettings
     {
         //semi-constants
         public static readonly string GitExtensionsVersionString;
@@ -31,36 +31,31 @@ namespace GitCommands
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
         public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
-        private static readonly string SettingsFileName = "GitExtensions.settings";
-        private static readonly double SAVETIME = 2000;
-
-        private static DateTime? LastFileRead = null;
-
-        private static readonly Dictionary<String, object> ByNameMap = new Dictionary<String, object>();
-        private static readonly XmlSerializableDictionary<string, string> EncodedNameMap = new XmlSerializableDictionary<string, string>();
-        static System.Timers.Timer SaveTimer = new System.Timers.Timer(SAVETIME);
-        private static bool UseTimer = true;
+        public const string SettingsFileName = "GitExtensions.settings";
 
         public static Lazy<string> ApplicationDataPath;
-        private static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
+        public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
+        public static readonly SettingsContainer<RepoDistSettings> SettingsContainer;
 
-        static Settings()
+        static AppSettings()
         {
             ApplicationDataPath = new Lazy<string>(() =>
+            {
+                if (IsPortable())
                 {
-                    if (IsPortable())
-                    {
-                        return GetGitExtensionsDirectory();
-                    }
-                    else
-                    {
-                        //Make applicationdatapath version independent
-                        return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
-                    }
+                    return GetGitExtensionsDirectory();
                 }
+                else
+                {
+                    //Make applicationdatapath version independent
+                    return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
+                }
+            }
             );
-            
+
+            SettingsContainer = new SettingsContainer<RepoDistSettings>(null, GitExtSettingsCache.FromCache(SettingsFilePath));
             Version version = AppVersion;
+
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
             GitExtensionsVersionInt = version.Major * 100 + version.Minor;
             if (version.Build > 0)
@@ -75,15 +70,11 @@ namespace GitCommands
             }
 
             GitLog = new CommandLogger();
-            
+
             if (!File.Exists(SettingsFilePath))
             {
                 ImportFromRegistry();
-                SaveXMLDictionarySettings(EncodedNameMap, SettingsFilePath);
             }
-            SaveTimer.Enabled = false;
-            SaveTimer.AutoReset = false;
-            SaveTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnSaveTimer);
         }
 
         public static int UserMenuLocationX
@@ -330,33 +321,7 @@ namespace GitCommands
             set { SetBool("revisiongraphdrawnonrelativestextgray", value); }
         }
 
-        public static bool EnableBuildServerIntegration
-        {
-            get { return GetBool("enablebuildserverintegration", true); }
-            set { SetBool("enablebuildserverintegration", value); }
-        }
-
         public static readonly Dictionary<string, Encoding> AvailableEncodings = new Dictionary<string, Encoding>();
-        private static readonly Dictionary<string, Encoding> EncodingSettings = new Dictionary<string, Encoding>();
-
-        internal static bool GetEncoding(string settingName, out Encoding encoding)
-        {
-            lock (EncodingSettings)
-            {
-                return EncodingSettings.TryGetValue(settingName, out encoding);
-            }
-        }
-
-        internal static void SetEncoding(string settingName, Encoding encoding)
-        {
-            lock (EncodingSettings)
-            {
-                var items = EncodingSettings.Keys.Where(item => item.StartsWith(settingName)).ToList();
-                foreach (var item in items)
-                    EncodingSettings.Remove(item);
-                EncodingSettings[settingName] = encoding;
-            }
-        }
 
         public enum PullAction
         {
@@ -442,7 +407,7 @@ namespace GitCommands
 
         public static PullAction? AutoPullOnPushRejectedAction
         {
-            get { return GetNullableEnum<PullAction>("AutoPullOnPushRejectedAction", null); }
+            get { return GetNullableEnum<PullAction>("AutoPullOnPushRejectedAction"); }
             set { SetNullableEnum<PullAction>("AutoPullOnPushRejectedAction", value); }
         }
 
@@ -790,7 +755,7 @@ namespace GitCommands
 #endif
 #endif
 
-            return GetGitExtensionsDirectory();            
+            return GetGitExtensionsDirectory();
         }
 
         //for repair only
@@ -803,14 +768,13 @@ namespace GitCommands
         {
             try
             {
-                UseTimer = false;
+                SettingsContainer.LockedAction(() =>
+                {
+                    SetString("gitssh", GitCommandHelpers.GetSsh());
+                    Repositories.SaveSettings();
 
-                SetString("gitssh", GitCommandHelpers.GetSsh());
-                Repositories.SaveSettings();
-
-                UseTimer = true;
-
-                SaveXMLDictionarySettings(EncodedNameMap, SettingsFilePath);
+                    SettingsContainer.Save();
+                });
             }
             catch
             { }
@@ -879,12 +843,6 @@ namespace GitCommands
         {
             get { return GetBool("SortLessRecentRepos", false); }
             set { SetBool("SortLessRecentRepos", value); }
-        }
-
-        public static bool NoFastForwardMerge
-        {
-            get { return GetBool("NoFastForwardMerge", false); }
-            set { SetBool("NoFastForwardMerge", value); }
         }
 
         public static bool DontCommitMerge
@@ -980,400 +938,174 @@ namespace GitCommands
                 return _VersionIndependentRegKey;
             }
         }
-        private static void ReadXMLDicSettings<T>(XmlSerializableDictionary<string, T> Dic, string FilePath)
-        {
 
-            if (File.Exists(FilePath))
-            {
-
-                try
-                {
-                    lock (Dic)
-                    {
-
-                        XmlReaderSettings rSettings = new XmlReaderSettings
-                        {
-                            IgnoreWhitespace = true
-                        };
-                        using (System.Xml.XmlReader xr = XmlReader.Create(FilePath, rSettings))
-                        {
-
-                            Dic.ReadXml(xr);
-                            LastFileRead = DateTime.UtcNow;
-                        }
-                    }
-                }
-                catch (IOException e)
-                {
-                    System.Diagnostics.Debug.WriteLine(e.Message);
-                    throw;
-                }
-
-            }
-
-        }
         public static bool IsPortable()
         {
             return Properties.Settings.Default.IsPortable;
 
         }
 
-        public static void ImportFromRegistry()
+        private static IEnumerable<Tuple<string, string>> GetSettingsFromRegistry()
         {
-            lock (EncodedNameMap)
+            foreach (String name in VersionIndependentRegKey.GetValueNames())
             {
-                foreach (String name in VersionIndependentRegKey.GetValueNames())
-                {
-                    object value = VersionIndependentRegKey.GetValue(name, null);
-                    if (value != null)
-                        EncodedNameMap[name] = value.ToString();
-                }
+                object value = VersionIndependentRegKey.GetValue(name, null);
+                if (value != null)
+                    yield return new Tuple<string, string>(name, value.ToString());
             }
         }
 
-        private static DateTime GetLastFileModificationUTC(String FilePath)
+        private static void ImportFromRegistry()
         {
-            try
-            {
-                if (File.Exists(FilePath))
-                    return File.GetLastWriteTimeUtc(FilePath);
-                else
-                    return DateTime.MaxValue;
-            }
-            catch (Exception)
-            {
-                return DateTime.MaxValue;
-            }
-
-        }
-
-        private static void SaveXMLDictionarySettings<T>(XmlSerializableDictionary<string, T> Dic, String FilePath)
-        {
-            try
-            {
-                var tmpFile = FilePath + ".tmp";
-                lock (Dic)
-                {
-
-                    using (System.Xml.XmlTextWriter xtw = new System.Xml.XmlTextWriter(tmpFile, Encoding.UTF8))
-                    {
-                        xtw.Formatting = Formatting.Indented;
-                        xtw.WriteStartDocument();
-                        xtw.WriteStartElement("dictionary");
-
-                        Dic.WriteXml(xtw);
-                        xtw.WriteEndElement();
-                    }
-                    if (File.Exists(FilePath))
-                    {
-                        File.Replace(tmpFile, FilePath, FilePath + ".backup", true);
-                    }
-                    else
-                    {
-                        File.Move(tmpFile, FilePath);
-                    }
-                    LastFileRead = GetLastFileModificationUTC(FilePath);
-                }
-            }
-            catch (IOException e)
-            {
-                System.Diagnostics.Debug.WriteLine(e.Message);
-                throw;
-            }
-
-        }
-        //Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME milliseconds after the last setvalue is called
-        private static void OnSaveTimer(object source, System.Timers.ElapsedEventArgs e)
-        {
-            System.Timers.Timer t = (System.Timers.Timer)source;
-            t.Stop();
-            SaveXMLDictionarySettings(EncodedNameMap, SettingsFilePath);
-        }
-
-        static void StartSaveTimer()
-        {
-            //Resets timer so that the last call will let the timer event run and will cause the settings to be saved.
-            SaveTimer.Stop();
-            SaveTimer.AutoReset = true;
-            SaveTimer.Interval = SAVETIME;
-            SaveTimer.AutoReset = false;
-
-            SaveTimer.Start();
-        }
-
-        private static bool NeedRefresh()
-        {
-            DateTime lastMod = GetLastFileModificationUTC(SettingsFilePath);
-            return !LastFileRead.HasValue || lastMod > LastFileRead.Value;
-        }
-
-        private static void EnsureSettingsAreUpToDate()
-        {
-            if (NeedRefresh())
-            {
-                lock (EncodedNameMap)
-                {
-                    ByNameMap.Clear();
-                    EncodedNameMap.Clear();
-                    ReadXMLDicSettings(EncodedNameMap, SettingsFilePath);
-                }
-            }
-        }
-
-        private static void SetValue(string name, string value)
-        {
-            lock (EncodedNameMap)
-            {
-                //will refresh EncodedNameMap if needed
-                string inMemValue = GetValue(name);
-                
-                if (string.Equals(inMemValue, value))
-                    return;
-
-                if (value == null)
-                    EncodedNameMap.Remove(name);
-                else
-                    EncodedNameMap[name] = value;
-            }
-
-            if (UseTimer)
-                StartSaveTimer();
-        }
-
-        private static string GetValue(string name)
-        {
-            lock (EncodedNameMap)
-            {
-                EnsureSettingsAreUpToDate();
-                string o = null;
-                EncodedNameMap.TryGetValue(name, out o);
-                return o;
-            }
-        }
-
-        public static T GetByName<T>(string name, T defaultValue, Func<string, T> decode)
-        {
-            object o;
-            lock (EncodedNameMap)
-            {
-                EnsureSettingsAreUpToDate();
-
-                if (ByNameMap.TryGetValue(name, out o))
-                {
-                    if (o == null || o is T)
-                    {
-                        return (T)o;
-                    }
-                    else
-                    {
-                        throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
-                    }
-                }
-                else
-                {
-                    if (decode == null)
-                        throw new ArgumentNullException("decode", string.Format("The decode parameter for setting {0} is null.", name));
-
-                    string s = GetValue(name);
-                    T result = s == null ? defaultValue : decode(s);
-                    ByNameMap[name] = result;
-                    return result;
-                }
-            }
-        }
-
-        public static void SetByName<T>(string name, T value, Func<T, string> encode)
-        {
-            string s;
-            if (value == null)
-                s = null;
-            else
-                s = encode(value);
-
-            lock (EncodedNameMap)
-            {
-                SetValue(name, s);
-                ByNameMap[name] = value;
-            }
-        }
-
-        public static bool? GetBool(string name)
-        {
-            return GetByName<bool?>(name, null, x =>
-            {
-                var val = x.ToString().ToLower();
-                if (val == "true") return true;
-                if (val == "false") return false;
-                return null;
-            });
-        }
-
-        public static bool GetBool(string name, bool defaultValue)
-        {
-            return GetBool(name) ?? defaultValue;
-        }
-
-        public static void SetBool(string name, bool? value)
-        {
-            SetByName<bool?>(name, value, (bool? b) => b.Value ? "true" : "false");
-        }
-
-        public static void SetInt(string name, int? value)
-        {
-            SetByName<int?>(name, value, (int? b) => b.HasValue ? b.ToString() : null);
-        }
-
-        public static int? GetInt(string name)
-        {
-            return GetByName<int?>(name, null, x =>
-            {
-                int result;
-                if (int.TryParse(x, out result))
-                {
-                    return result;
-                }
-
-                return null;
-            });
-        }
-
-        public static DateTime GetDate(string name, DateTime defaultValue)
-        {
-            return GetDate(name) ?? defaultValue;
-        }
-
-        public static void SetDate(string name, DateTime? value)
-        {
-            SetByName<DateTime?>(name, value, (DateTime? b) => b.HasValue ? b.Value.ToString("yyyy/M/dd", CultureInfo.InvariantCulture) : null);
-        }
-
-        public static DateTime? GetDate(string name)
-        {
-            return GetByName<DateTime?>(name, null, x =>
-            {
-                DateTime result;
-                if (DateTime.TryParseExact(x, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
-                    return result;
-
-                return null;
-            });
-        }
-
-        public static int GetInt(string name, int defaultValue)
-        {
-            return GetInt(name) ?? defaultValue;
-        }
-
-        public static void SetFont(string name, Font value)
-        {
-            SetByName<Font>(name, value, x => x.AsString());
-        }
-
-        public static Font GetFont(string name, Font defaultValue)
-        {
-            return GetByName<Font>(name, defaultValue, x => x.Parse(defaultValue));
-        }
-
-        public static void SetColor(string name, Color? value)
-        {
-            SetByName<Color?>(name, value, x => x.HasValue ? ColorTranslator.ToHtml(x.Value) : null);
-        }
-
-        public static Color? GetColor(string name)
-        {
-            return GetByName<Color?>(name, null, x => ColorTranslator.FromHtml(x));
-        }
-
-        public static Color GetColor(string name, Color defaultValue)
-        {
-            return GetColor(name) ?? defaultValue;
-        }
-
-        public static void SetEnum<T>(string name, T value)
-        {
-            SetByName<T>(name, value, x => x.ToString());
-        }
-
-        public static T GetEnum<T>(string name, T defaultValue)
-        {
-            return GetByName<T>(name, defaultValue, x =>
-            {
-                var val = x.ToString();
-                return (T)Enum.Parse(typeof(T), val, true);
-            });
-        }
-
-        public static void SetNullableEnum<T>(string name, T? value) where T : struct
-        {
-            SetByName<T?>(name, value, x => x.HasValue ? x.ToString() : string.Empty);
-        }
-
-        public static T? GetNullableEnum<T>(string name, T? defaultValue) where T : struct
-        {
-            return GetByName<T?>(name, defaultValue, x =>
-            {
-                var val = x.ToString();
-
-                if (val.IsNullOrEmpty())
-                    return null;
-
-                return (T?)Enum.Parse(typeof(T), val, true);
-            });
-        }
-
-        public static void SetString(string name, string value)
-        {
-            SetByName<string>(name, value, s => s);
-        }
-
-        public static string GetString(string name, string defaultValue)
-        {
-            return GetByName<string>(name, defaultValue, x => x);
+            SettingsContainer.SettingsCache.Import(GetSettingsFromRegistry());
         }
 
         public static string PrefixedName(string prefix, string name)
         {
             return prefix == null ? name : prefix + '_' + name;
         }
+
+        public static bool? GetBool(string name)
+        {
+            return SettingsContainer.GetBool(name);
+        }
+
+        public static bool GetBool(string name, bool defaultValue)
+        {
+            return SettingsContainer.GetBool(name, defaultValue);
+        }
+
+        public static void SetBool(string name, bool? value)
+        {
+            SettingsContainer.SetBool(name, value);
+        }
+
+        public static void SetInt(string name, int? value)
+        {
+            SettingsContainer.SetInt(name, value);
+        }
+
+        public static int? GetInt(string name)
+        {
+            return SettingsContainer.GetInt(name);
+        }
+
+        public static DateTime GetDate(string name, DateTime defaultValue)
+        {
+            return SettingsContainer.GetDate(name, defaultValue);
+        }
+
+        public static void SetDate(string name, DateTime? value)
+        {
+            SettingsContainer.SetDate(name, value);
+        }
+
+        public static DateTime? GetDate(string name)
+        {
+            return SettingsContainer.GetDate(name);
+        }
+
+        public static int GetInt(string name, int defaultValue)
+        {
+            return SettingsContainer.GetInt(name, defaultValue);
+        }
+
+        public static void SetFont(string name, Font value)
+        {
+            SettingsContainer.SetFont(name, value);
+        }
+
+        public static Font GetFont(string name, Font defaultValue)
+        {
+            return SettingsContainer.GetFont(name, defaultValue);
+        }
+
+        public static void SetColor(string name, Color? value)
+        {
+            SettingsContainer.SetColor(name, value);
+        }
+
+        public static Color? GetColor(string name)
+        {
+            return SettingsContainer.GetColor(name);
+        }
+
+        public static Color GetColor(string name, Color defaultValue)
+        {
+            return SettingsContainer.GetColor(name, defaultValue);
+        }
+
+        public static void SetEnum<T>(string name, T value)
+        {
+            SettingsContainer.SetEnum(name, value);
+        }
+
+        public static T GetEnum<T>(string name, T defaultValue) where T : struct
+        {
+            return SettingsContainer.GetEnum(name, defaultValue);
+        }
+
+        public static void SetNullableEnum<T>(string name, T? value) where T : struct
+        {
+            SettingsContainer.SetNullableEnum(name, value);
+        }
+
+        public static T? GetNullableEnum<T>(string name) where T : struct
+        {
+            return SettingsContainer.GetNullableEnum<T>(name);
+        }
+
+        public static void SetString(string name, string value)
+        {
+            SettingsContainer.SetString(name, value);
+        }
+
+        public static string GetString(string name, string defaultValue)
+        {
+            return SettingsContainer.GetString(name, defaultValue);
+        }
+
     }
 
-    public static class FontParser
+    /*
+    public abstract class Setting<T> : IXmlSerializable
     {
+        public SettingsContainer SettingsSource { get; private set; }
+        private T _Value;
+        public bool HasValue { get; private set; }
+        public string Name { get; private set; }
+        public T DefaultValue { get; private set; }
 
-        private static readonly string InvariantCultureId = "_IC_";
-        public static string AsString(this Font value)
+        public Setting(SettingsContainer aSettingsSource, string aName, T aDefaultValue)
         {
-            return String.Format(CultureInfo.InvariantCulture,
-                "{0};{1};{2}", value.FontFamily.Name, value.Size, InvariantCultureId);
+            SettingsSource = aSettingsSource;
+            Name = aName;
+            DefaultValue = aDefaultValue;
+            HasValue = false;
         }
 
-        public static Font Parse(this string value, Font defaultValue)
+        public T Value
         {
-            if (value == null)
-                return defaultValue;
-
-            string[] parts = value.Split(';');
-
-            if (parts.Length < 2)
-                return defaultValue;
-
-            try
+            get
             {
-                string fontSize;
-                if (parts.Length == 3 && InvariantCultureId.Equals(parts[2]))
-                    fontSize = parts[1];
-                else
-                {
-                    fontSize = parts[1].Replace(",", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
-                    fontSize = fontSize.Replace(".", CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator);
-                }
-
-                return new Font(parts[0], Single.Parse(fontSize, CultureInfo.InvariantCulture));
+                return SettingsSource.GetValue(Name, DefaultValue, (s) => DefaultValue);
             }
-            catch (Exception)
+
+            set
             {
-                return defaultValue;
+                //SettingsSource.SetValue(this, value);
             }
         }
+
+        public virtual System.Xml.Schema.XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public abstract void ReadXml(XmlReader reader);
+        public abstract void WriteXml(XmlWriter writer);
     }
+
+    */
+
 }

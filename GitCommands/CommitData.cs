@@ -147,12 +147,7 @@ namespace GitCommands
             //Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
                     "log -1 --pretty=\"format:" + ShortLogFormat + "\" {0}", sha1);
-            var info =
-                module.RunCmd(
-                    Settings.GitCommand,
-                    arguments,
-                    GitModule.LosslessEncoding
-                    );
+            var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
 
             if (info.Trim().StartsWith("fatal"))
             {
@@ -189,12 +184,7 @@ namespace GitCommands
             //Do not cache this command, since notes can be added
             string arguments = string.Format(CultureInfo.InvariantCulture,
                     "log -1 --pretty=\"format:"+LogFormat+"\" {0}", sha1);
-            var info =
-                module.RunCmd(
-                    Settings.GitCommand,
-                    arguments,
-                    GitModule.LosslessEncoding
-                    );
+            var info = module.RunGitCmd(arguments, GitModule.LosslessEncoding);
 
             if (info.Trim().StartsWith("fatal"))
             {

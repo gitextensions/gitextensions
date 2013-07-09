@@ -25,21 +25,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void LoadSettings()
         {
-            SetShorteningStrategy(Settings.ShorteningRecentRepoPathStrategy);
-            sortMostRecentRepos.Checked = Settings.SortMostRecentRepos;
-            sortLessRecentRepos.Checked = Settings.SortLessRecentRepos;
-            _NO_TRANSLATE_maxRecentRepositories.Value = Settings.MaxMostRecentRepositories;
-            comboMinWidthEdit.Value = Settings.RecentReposComboMinWidth;
+            SetShorteningStrategy(AppSettings.ShorteningRecentRepoPathStrategy);
+            sortMostRecentRepos.Checked = AppSettings.SortMostRecentRepos;
+            sortLessRecentRepos.Checked = AppSettings.SortLessRecentRepos;
+            _NO_TRANSLATE_maxRecentRepositories.Value = AppSettings.MaxMostRecentRepositories;
+            comboMinWidthEdit.Value = AppSettings.RecentReposComboMinWidth;
 
         }
 
         private void SaveSettings()
         {
-            Settings.ShorteningRecentRepoPathStrategy = GetShorteningStrategy();
-            Settings.SortMostRecentRepos = sortMostRecentRepos.Checked;
-            Settings.SortLessRecentRepos = sortLessRecentRepos.Checked;
-            Settings.MaxMostRecentRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
-            Settings.RecentReposComboMinWidth = (int)comboMinWidthEdit.Value;
+            AppSettings.ShorteningRecentRepoPathStrategy = GetShorteningStrategy();
+            AppSettings.SortMostRecentRepos = sortMostRecentRepos.Checked;
+            AppSettings.SortLessRecentRepos = sortLessRecentRepos.Checked;
+            AppSettings.MaxMostRecentRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
+            AppSettings.RecentReposComboMinWidth = (int)comboMinWidthEdit.Value;
         }
 
         private string GetShorteningStrategy()
@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (comboMinWidthEdit.Value == 0)
                 comboPanel.Width = ComboWidth;
             else
-                comboPanel.Width = (int)comboMinWidthEdit.Value;
+                comboPanel.Width = (int)comboMinWidthEdit.Value + 30;
             this.Width = FormWidth + comboPanel.Width - ComboWidth;
         }
 

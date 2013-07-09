@@ -4,7 +4,7 @@ namespace GitUI.UserManual
 {
     public class StandardHtmlUserManual : IProvideUserManual
     {
-        private readonly string _location = @"https://git-extensions-documentation.readthedocs.org/en/latest";
+        private readonly string _location = @"https://git-extensions-documentation.readthedocs.org/en/latest/";
         private readonly string _subFolder;
         private readonly string _anchorName;
 
@@ -16,8 +16,9 @@ namespace GitUI.UserManual
 
         public string GetUrl()
         {
-            return string.Format("{0}/{1}/{2}{3}",
-                                 _location, _subFolder, _anchorName.IsNullOrEmpty() ? "" : "#", _anchorName);
+            var subFolder = _subFolder.IsNullOrEmpty() ? string.Empty : _subFolder + ".html";
+
+            return (_location + subFolder).Combine("#", _anchorName);
         }
     }
 }
