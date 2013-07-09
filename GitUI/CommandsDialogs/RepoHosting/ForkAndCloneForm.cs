@@ -52,9 +52,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void Init()
         {
-            if (!string.IsNullOrEmpty(Settings.DefaultCloneDestinationPath))
+            if (!string.IsNullOrEmpty(AppSettings.DefaultCloneDestinationPath))
             {
-                _destinationTB.Text = Settings.DefaultCloneDestinationPath;
+                _destinationTB.Text = AppSettings.DefaultCloneDestinationPath;
             }
             else
             {
@@ -287,7 +287,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir);
 
-            FormRemoteProcess formRemoteProcess = new FormRemoteProcess(new GitModule(null), Settings.GitCommand, cmd);
+            FormRemoteProcess formRemoteProcess = new FormRemoteProcess(new GitModule(null), AppSettings.GitCommand, cmd);
             formRemoteProcess.Remote = repoSrc;
             formRemoteProcess.ShowDialog();
 

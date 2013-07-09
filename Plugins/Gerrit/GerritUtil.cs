@@ -21,7 +21,7 @@ namespace Gerrit
 
         public static Uri GetFetchUrl(IGitModule aModule, string remote)
         {
-            string remotes = aModule.RunGit("remote show -n \"" + remote + "\"");
+            string remotes = aModule.RunGitCmd("remote show -n \"" + remote + "\"");
 
             string fetchUrlLine = remotes.Split('\n').Select(p => p.Trim()).First(p => p.StartsWith("Push"));
 
@@ -46,7 +46,7 @@ namespace Gerrit
             var sshCmd = GitCommandHelpers.GetSsh();
             if (GitCommandHelpers.Plink())
             {
-                sshCmd = Settings.Plink;
+                sshCmd = AppSettings.Plink;
             }
             if (string.IsNullOrEmpty(sshCmd))
             {
@@ -83,6 +83,7 @@ namespace Gerrit
             return aModule.RunCmd(
                 sshCmd,
                 sb.ToString(),
+                null,
                 stdIn
             );
         }
@@ -98,7 +99,7 @@ namespace Gerrit
 
             if (GitCommandHelpers.Plink())
             {
-                if (!File.Exists(Settings.Pageant))
+                if (!File.Exists(AppSettings.Pageant))
                     MessageBoxes.PAgentNotFound(owner);
                 else
                     aModule.StartPageantForRemote(remote);

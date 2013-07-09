@@ -80,7 +80,7 @@ namespace GitUI.CommandsDialogs
             if (GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesCheck)
             {
                 RecursiveSubmodules.Enabled = true;
-                RecursiveSubmodules.SelectedIndex = Settings.RecursiveSubmodules;
+                RecursiveSubmodules.SelectedIndex = AppSettings.RecursiveSubmodules;
                 if (!GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesOnDemand)
                     RecursiveSubmodules.Items.RemoveAt(2);
             }
@@ -191,7 +191,7 @@ namespace GitUI.CommandsDialogs
                     !Module.GetRefs(true, true).Any(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.LocalName == RemoteBranch.Text))
                 {
                     //Ask if this is really what the user wants
-                    if (!Settings.DontConfirmPushNewBranch &&
+                    if (!AppSettings.DontConfirmPushNewBranch &&
                         MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo) ==
                             DialogResult.No)
                     {
@@ -202,7 +202,7 @@ namespace GitUI.CommandsDialogs
 
             if (PushToUrl.Checked)
                 Repositories.AddMostRecentRepository(PushDestination.Text);
-            Settings.RecursiveSubmodules = RecursiveSubmodules.SelectedIndex;
+            AppSettings.RecursiveSubmodules = RecursiveSubmodules.SelectedIndex;
 
             var remote = "";
             string destination;
@@ -214,7 +214,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (GitCommandHelpers.Plink())
                 {
-                    if (!File.Exists(Settings.Pageant))
+                    if (!File.Exists(AppSettings.Pageant))
                         MessageBoxes.PAgentNotFound(owner);
                     else
                         Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
@@ -239,7 +239,7 @@ namespace GitUI.CommandsDialogs
                             if (!string.IsNullOrEmpty(remoteBranch) && _NO_TRANSLATE_Branch.Text.StartsWith(remoteBranch))
                                 track = false;
 
-                    if (track && !Settings.DontConfirmAddTrackingRef)
+                    if (track && !AppSettings.DontConfirmAddTrackingRef)
                     {
                         DialogResult result = MessageBox.Show(String.Format(_updateTrackingReference.Text, selectedLocalBranch.Name, RemoteBranch.Text), _pushCaption.Text, MessageBoxButtons.YesNoCancel);
 
@@ -332,7 +332,7 @@ namespace GitUI.CommandsDialogs
 
         private bool IsRebasingMergeCommit()
         {
-            if (Settings.FormPullAction == Settings.PullAction.Rebase && _candidateForRebasingMergeCommit)
+            if (AppSettings.FormPullAction == AppSettings.PullAction.Rebase && _candidateForRebasingMergeCommit)
             {
                 if (_selectedBranch == _currentBranch && _selectedBranchRemote == _currentBranchRemote)
                 {
@@ -366,7 +366,7 @@ namespace GitUI.CommandsDialogs
             {
                 bool forcePush = false;
                 IWin32Window owner = form;
-                if (Settings.AutoPullOnPushRejectedAction == null)
+                if (AppSettings.AutoPullOnPushRejectedAction == null)
                 {
                     bool cancel = false;
                     string destination = PushToRemote.Checked ? _NO_TRANSLATE_Remotes.Text : PushDestination.Text;
@@ -387,26 +387,26 @@ namespace GitUI.CommandsDialogs
                         case 0:
                             if (rememberDecision)
                             {
-                                Settings.AutoPullOnPushRejectedAction = Settings.PullAction.Default;
+                                AppSettings.AutoPullOnPushRejectedAction = AppSettings.PullAction.Default;
                             }
-                            if (Module.LastPullAction == Settings.PullAction.None)
+                            if (Module.LastPullAction == AppSettings.PullAction.None)
                             {
                                 return false;
                             }
                             Module.LastPullActionToFormPullAction();
                             break;
                         case 1:
-                            Settings.FormPullAction = Settings.PullAction.Rebase;
+                            AppSettings.FormPullAction = AppSettings.PullAction.Rebase;
                             if (rememberDecision)
                             {
-                                Settings.AutoPullOnPushRejectedAction = Settings.FormPullAction;
+                                AppSettings.AutoPullOnPushRejectedAction = AppSettings.FormPullAction;
                             }
                             break;
                         case 2:
-                            Settings.FormPullAction = Settings.PullAction.Merge;
+                            AppSettings.FormPullAction = AppSettings.PullAction.Merge;
                             if (rememberDecision)
                             {
-                                Settings.AutoPullOnPushRejectedAction = Settings.FormPullAction;
+                                AppSettings.AutoPullOnPushRejectedAction = AppSettings.FormPullAction;
                             }
                             break;
                         case 3:
@@ -416,7 +416,7 @@ namespace GitUI.CommandsDialogs
                             cancel = true;
                             if (rememberDecision)
                             {
-                                Settings.AutoPullOnPushRejectedAction = Settings.PullAction.None;
+                                AppSettings.AutoPullOnPushRejectedAction = AppSettings.PullAction.None;
                             }
                             break;
                     }
@@ -432,10 +432,10 @@ namespace GitUI.CommandsDialogs
                     return true;
                 }
 
-                if (Settings.AutoPullOnPushRejectedAction == Settings.PullAction.None)
+                if (AppSettings.AutoPullOnPushRejectedAction == AppSettings.PullAction.None)
                     return false;
 
-                if (Settings.FormPullAction == Settings.PullAction.Fetch)
+                if (AppSettings.FormPullAction == AppSettings.PullAction.Fetch)
                 {
                     form.AppendOutputLine(Environment.NewLine +
                         "Can not perform auto pull, when merge option is set to fetch.");
@@ -636,7 +636,7 @@ namespace GitUI.CommandsDialogs
 
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
-            if (!File.Exists(Settings.Pageant))
+            if (!File.Exists(AppSettings.Pageant))
                 MessageBoxes.PAgentNotFound(this);
             else
                 Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
