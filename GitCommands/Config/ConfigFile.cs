@@ -9,24 +9,6 @@ namespace GitCommands.Config
 {
     public class ConfigFile
     {
-        private static readonly Regex RegParseIsSection =
-            new Regex(
-                @"(?<IsSection>
-                        ^\s*\[(?<SectionName>[^\]]+)?\]\s*$
-                  )",
-                RegexOptions.Compiled |
-                RegexOptions.IgnorePatternWhitespace
-                );
-
-        private static readonly Regex RegParseIsKey =
-            new Regex(
-                @"(?<IsKeyValue>
-                        ^\s*(?<Key>[^(\s*\=\s*)]+)?\s*\=\s*(?<Value>[\d\D]*)$
-                   )",
-                RegexOptions.Compiled |
-                RegexOptions.IgnorePatternWhitespace
-                );
-
         private readonly string _fileName;
         public string FileName { get { return _fileName; } }
 
@@ -50,6 +32,11 @@ namespace GitCommands.Config
         }
 
         public IList<ConfigSection> ConfigSections { get; private set; }
+
+        public IEnumerable<ConfigSection> GetConfigSections(string sectionName)
+        {
+            return ConfigSections.Where(section => section.SectionName.Equals(sectionName, StringComparison.OrdinalIgnoreCase));
+        }
 
         private static Encoding GetEncoding()
         {
@@ -89,6 +76,11 @@ namespace GitCommands.Config
 
         public void Save()
         {
+            Save(_fileName);
+        }
+
+        public void Save(string fileName)
+        {
             var configFileContent = new StringBuilder();
 
             foreach (var section in ConfigSections)
@@ -113,19 +105,14 @@ namespace GitCommands.Config
             try
             {
                 FileInfoExtensions
-                    .MakeFileTemporaryWritable(_fileName,
+                    .MakeFileTemporaryWritable(fileName,
                                        x =>
-                                       File.WriteAllText(_fileName, configFileContent.ToString(), GetEncoding()));
+                                       File.WriteAllText(fileName, configFileContent.ToString(), GetEncoding()));
             }
             catch (Exception ex)
             {
                 ExceptionUtils.ShowException(ex, false);
             }
-        }
-
-        public IEnumerable<ConfigSection> GetConfigSections(string sectionName)
-        {
-            return ConfigSections.Where(section => section.SectionName.Equals(sectionName, StringComparison.OrdinalIgnoreCase));
         }
 
         private void SetStringValue(string setting, string value)
@@ -182,6 +169,16 @@ namespace GitCommands.Config
 
         private string GetStringValue(string setting)
         {
+            return GetValue(setting, string.Empty);
+        }
+
+        public string GetValue(string setting)
+        {
+            return GetValue(setting, string.Empty);
+        }
+
+        public string GetValue(string setting, string defaultValue)
+        {
             if (String.IsNullOrEmpty(setting))
                 throw new ArgumentNullException();
 
@@ -193,14 +190,9 @@ namespace GitCommands.Config
             var configSection = FindConfigSection(configSectionName);
 
             if (configSection == null)
-                return string.Empty;
+                return defaultValue;
 
-            return configSection.GetValue(keyName);
-        }
-
-        public string GetValue(string setting)
-        {
-            return GetStringValue(setting);
+            return configSection.GetValue(keyName, defaultValue);
         }
 
         public string GetPathValue(string setting)
@@ -250,6 +242,14 @@ namespace GitCommands.Config
             return result;
         }
 
+        public void AddConfigSection(ConfigSection configSection)
+        {
+            if (FindConfigSection(configSection) != null)
+                throw new ArgumentException("Can not add a section that already exists: " + configSection.SectionName);
+
+            ConfigSections.Add(configSection);
+        }
+
         public void RemoveConfigSection(string configSectionName)
         {
             var configSection = FindConfigSection(configSectionName);
@@ -260,11 +260,27 @@ namespace GitCommands.Config
             ConfigSections.Remove(configSection);
         }
 
-        public ConfigSection FindConfigSection(string name)
+        public void RemoveConfigSections(string configSectionName)
+        {
+            var toRemove = GetConfigSections(configSectionName).ToArray();
+            toRemove.ForEach(section => ConfigSections.Remove(section));
+        }
+
+        private ConfigSection FindConfigSection(string name)
         {
             var configSectionToFind = new ConfigSection(name, true);
 
-            return ConfigSections.FirstOrDefault(configSectionToFind.Equals);
+            return FindConfigSection(configSectionToFind);
+        }
+
+        private ConfigSection FindConfigSection(ConfigSection configSectionToFind)
+        {
+            foreach (var configSection in ConfigSections)
+            {
+                if (configSectionToFind.Equals(configSection))
+                    return configSection;
+            }
+            return null;
         }
 
         #region ConfigFileParser
@@ -297,6 +313,11 @@ namespace GitCommands.Config
                 for (pos = 0; pos < _fileContent.Length; pos++)
                 {
                     parseFunc = parseFunc(_fileContent[pos]);
+                }
+
+                if (_fileContent.Length > 0 && !_fileContent.EndsWith("\n"))
+                {
+                    parseFunc('\n');
                 }
             }
 

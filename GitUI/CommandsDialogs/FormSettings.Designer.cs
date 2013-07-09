@@ -43,8 +43,6 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.settingsTreeView = new GitUI.CommandsDialogs.SettingsDialog.SettingsTreeViewUserControl();
             this.panelCurrentSettingsPage = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.labelSettingsPageTitle = new System.Windows.Forms.Label();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonApply = new System.Windows.Forms.Button();
             this.buttonDiscard = new System.Windows.Forms.Button();
@@ -54,7 +52,6 @@ namespace GitUI.CommandsDialogs
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).BeginInit();
             this.tableLayoutPanel3.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -115,8 +112,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel3.Controls.Add(this.settingsTreeView, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.panelCurrentSettingsPage, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.panel2, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.panelCurrentSettingsPage, 1, 0);
             this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel4, 1, 2);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
@@ -144,35 +140,11 @@ namespace GitUI.CommandsDialogs
             // panelCurrentSettingsPage
             // 
             this.panelCurrentSettingsPage.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelCurrentSettingsPage.Location = new System.Drawing.Point(203, 43);
+            this.panelCurrentSettingsPage.Location = new System.Drawing.Point(203, 3);
             this.panelCurrentSettingsPage.Name = "panelCurrentSettingsPage";
+            this.tableLayoutPanel3.SetRowSpan(this.panelCurrentSettingsPage, 2);
             this.panelCurrentSettingsPage.Size = new System.Drawing.Size(724, 557);
             this.panelCurrentSettingsPage.TabIndex = 5;
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.labelSettingsPageTitle);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(203, 3);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(724, 34);
-            this.panel2.TabIndex = 4;
-            // 
-            // labelSettingsPageTitle
-            // 
-            this.labelSettingsPageTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelSettingsPageTitle.AutoSize = true;
-            this.labelSettingsPageTitle.BackColor = System.Drawing.SystemColors.Control;
-            this.labelSettingsPageTitle.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSettingsPageTitle.Location = new System.Drawing.Point(6, 5);
-            this.labelSettingsPageTitle.Margin = new System.Windows.Forms.Padding(0);
-            this.labelSettingsPageTitle.Name = "labelSettingsPageTitle";
-            this.labelSettingsPageTitle.Padding = new System.Windows.Forms.Padding(20, 2, 20, 2);
-            this.labelSettingsPageTitle.Size = new System.Drawing.Size(101, 24);
-            this.labelSettingsPageTitle.TabIndex = 2;
-            this.labelSettingsPageTitle.Text = "...title...";
-            this.labelSettingsPageTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // flowLayoutPanel4
             // 
@@ -258,8 +230,6 @@ namespace GitUI.CommandsDialogs
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).EndInit();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.flowLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel4.PerformLayout();
             this.ResumeLayout(false);
@@ -278,11 +248,9 @@ namespace GitUI.CommandsDialogs
         private BindingSource scriptInfoBindingSource;
         private TableLayoutPanel tableLayoutPanel3;
         private SettingsDialog.SettingsTreeViewUserControl settingsTreeView;
-        private Label labelSettingsPageTitle;
         private FlowLayoutPanel flowLayoutPanel4;
         private Button buttonApply;
         private Button buttonCancel;
-        private Panel panel2;
         private Panel panelCurrentSettingsPage;
         private Label labelInstantSaveNotice;
         private Button buttonDiscard;

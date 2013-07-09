@@ -7,23 +7,31 @@ using GitUIPluginInterfaces;
 namespace GitCommands
 {
     public delegate void SetupStartInfo(ProcessStartInfo startInfo);
-    
+
+    public enum CommandOutputMode
+    {
+        Async,
+        Collect,
+        Stream
+    }
+
     public sealed class GitCommandsInstance : IDisposable
     {
         private Process _myProcess;
         private readonly object _processLock = new object();
 
         public SetupStartInfo SetupStartInfoCallback { get; set; }
-        public readonly string WorkingDirectory;
+        public string WorkingDirectory { get; private set; }
 
-        public GitCommandsInstance(IGitModule module)
-            : this(module.GitWorkingDir)
+        public GitCommandsInstance(IGitModule module, CommandOutputMode mode = CommandOutputMode.Collect)
+            : this(module.GitWorkingDir, mode)
         {
         }
 
-        public GitCommandsInstance(string aWorkingDirectory)
+        public GitCommandsInstance(string aWorkingDirectory, CommandOutputMode mode = CommandOutputMode.Collect)
         {
             WorkingDirectory = aWorkingDirectory;
+            OutputMode = mode;
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
@@ -40,21 +48,18 @@ namespace GitCommands
                 string quotedCmd = cmd;
                 if (quotedCmd.IndexOf(' ') != -1)
                     quotedCmd = quotedCmd.Quote();
-                Settings.GitLog.Log(quotedCmd + " " + arguments);
+                AppSettings.GitLog.Log(quotedCmd + " " + arguments);
 
                 //process used to execute external commands
-                var process = new Process { StartInfo = GitCommandHelpers.CreateProcessStartInfo(null) };
-                process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
-                process.StartInfo.FileName = cmd;
-                process.StartInfo.Arguments = arguments;
-                process.StartInfo.WorkingDirectory = WorkingDirectory;
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-                process.StartInfo.LoadUserProfile = true;
+                var process = new Process();
+                var startInfo = GitCommandHelpers.CreateProcessStartInfo(cmd, arguments, WorkingDirectory);
+                startInfo.CreateNoWindow = (!ssh && !AppSettings.ShowGitCommandLine);
                 if (SetupStartInfoCallback != null)
-                    SetupStartInfoCallback(process.StartInfo);
+                    SetupStartInfoCallback(startInfo);
+                process.StartInfo = startInfo;
                 process.EnableRaisingEvents = true;
 
-                if (!StreamOutput)
+                if (OutputMode != CommandOutputMode.Stream)
                 {
                     process.OutputDataReceived += ProcessOutputDataReceived;
                     process.ErrorDataReceived += ProcessErrorDataReceived;
@@ -68,10 +73,10 @@ namespace GitCommands
                 {
                     _myProcess = process;
                 }
-                if (!StreamOutput)
+                if (OutputMode != CommandOutputMode.Stream)
                 {
-                    process.BeginErrorReadLine();
                     process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
                 }
 
                 return process;
@@ -149,7 +154,7 @@ namespace GitCommands
 
         private void ProcessErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (CollectOutput)
+            if (OutputMode == CommandOutputMode.Collect)
                 Output.Append(e.Data + Environment.NewLine);
             if (DataReceived != null)
                 DataReceived(this, e);
@@ -157,14 +162,13 @@ namespace GitCommands
 
         private void ProcessOutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (CollectOutput)
+            if (OutputMode == CommandOutputMode.Collect)
                 Output.Append(e.Data + Environment.NewLine);
             if (DataReceived != null)
                 DataReceived(this, e);
         }
 
-        public bool CollectOutput = true;
-        public bool StreamOutput;
+        public CommandOutputMode OutputMode { get; set; }
         public int ExitCode { get; set; }
         public bool IsRunning { get { return _myProcess != null && !_myProcess.HasExited; } }
         public StringBuilder Output { get; private set; }
