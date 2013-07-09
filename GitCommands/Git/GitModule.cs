@@ -15,6 +15,7 @@ using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using PatchApply;
+using SmartFormat;
 
 namespace GitCommands
 {
@@ -925,7 +926,7 @@ namespace GitCommands
 
         public string Init(bool bare, bool shared)
         {
-            return RunGitCmd(string.Format("init{0}{1}", bare ? " --bare" : "", shared ? " --shared=all" : ""));
+            return RunGitCmd(Smart.Format("init{0: --bare|}{1: --shared=all|}", bare, shared));
         }
 
         public bool IsMerge(string commit)
