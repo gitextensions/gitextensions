@@ -1879,9 +1879,9 @@ namespace GitUI
             var searchWindow = new SearchWindow<string>(FindFileMatches);
             Application.Run(searchWindow);
             if (searchWindow.SelectedItem != null)
-				//We need to return the file that has been found, the visual studio plugin uses the return value
-				//to open the selected file.
-				Console.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
+                //We need to return the file that has been found, the visual studio plugin uses the return value
+                //to open the selected file.
+                Console.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
         }
 
         private void RunBrowseCommand(string[] args)
