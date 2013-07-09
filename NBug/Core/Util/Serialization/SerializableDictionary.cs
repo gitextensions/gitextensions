@@ -58,6 +58,8 @@ namespace NBug.Core.Util.Serialization
 					this.Add((TKey)Convert.ChangeType(element.Name.ToString(), typeof(TKey)), (TValue)Convert.ChangeType(element.Value, typeof(TValue)));
 				}
 			}
+
+			reader.ReadEndElement();
 		}
 
 		public void WriteXml(XmlWriter writer)
