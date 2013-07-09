@@ -8,7 +8,7 @@ namespace GitCommands
         // public only because of FormTranslate
         public Strings()
         {
-            Translator.Translate(this, Settings.CurrentTranslation);
+            Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
         private static Strings _instance;

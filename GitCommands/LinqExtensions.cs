@@ -37,7 +37,7 @@ namespace System.Linq
         public static Dictionary<TKey, List<TSource>> ToDictionaryOfList<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
             if (keySelector == null)
-                throw new ArgumentNullException("Argument keySelector can not be null");
+                throw new ArgumentNullException("keySelector");
 
             Dictionary<TKey, List<TSource>> result = new Dictionary<TKey, List<TSource>>();
 
@@ -66,7 +66,7 @@ namespace System.Linq
         public static HashSet<TKey> ToHashSet<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
             if (keySelector == null)
-                throw new ArgumentNullException("Argument keySelector can not be null");
+                throw new ArgumentNullException("keySelector");
 
             HashSet<TKey> result = new HashSet<TKey>();
 

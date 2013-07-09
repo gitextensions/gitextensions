@@ -42,9 +42,9 @@ namespace GitCommands.Repository
 
             if (!Repository.PathIsUrl(repo))
             {
-                repo = repo.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
-                if (!repo.EndsWith(Settings.PathSeparator.ToString()))
-                repo += Settings.PathSeparator.ToString();
+                repo = repo.Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator);
+                if (!repo.EndsWith(AppSettings.PathSeparator.ToString()))
+                repo += AppSettings.PathSeparator.ToString();
             }
 
             Repository.RepositoryAnchor anchor = Repository.RepositoryAnchor.None;
