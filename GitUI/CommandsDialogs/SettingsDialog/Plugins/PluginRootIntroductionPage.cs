@@ -8,5 +8,13 @@
             Text = "Plugins Settings";
             Translate();
         }
+
+        protected override void SettingsToPage()
+        {            
+        }
+
+        protected override void PageToSettings()
+        {
+        }
     }
 }

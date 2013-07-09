@@ -1,6 +1,6 @@
 ﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    partial class GlobalSettingsSettingsPage
+    partial class GitConfigSettingsPage
     {
         /// <summary> 
         /// Required designer variable.
@@ -319,6 +319,7 @@
             this.GlobalKeepMergeBackup.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.GlobalKeepMergeBackup.Size = new System.Drawing.Size(15, 14);
             this.GlobalKeepMergeBackup.TabIndex = 57;
+            this.GlobalKeepMergeBackup.ThreeState = true;
             this.GlobalKeepMergeBackup.UseVisualStyleBackColor = true;
             // 
             // label7
