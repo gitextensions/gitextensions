@@ -63,7 +63,7 @@ namespace GitUI
 
         protected bool ExecuteScriptCommand(int command)
         {
-            return Script.ScriptRunner.ExecuteScriptCommand(Module, command);
+            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command);
         }
     }
 }

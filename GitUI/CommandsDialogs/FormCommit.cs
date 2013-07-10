@@ -854,7 +854,7 @@ namespace GitUI.CommandsDialogs
                     SetCommitMessageFromTextBox(Message.Text);
                 }
 
-                ScriptManager.RunEventScripts(Module, ScriptEvent.BeforeCommit);
+                ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
 
                 var errorOccurred = !FormProcess.ShowDialog(this, Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text, _useFormCommitMessage));
 
@@ -865,7 +865,7 @@ namespace GitUI.CommandsDialogs
 
                 Amend.Checked = false;
 
-                ScriptManager.RunEventScripts(Module, ScriptEvent.AfterCommit);
+                ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
 
                 Message.Text = string.Empty;
                 CommitHelper.SetCommitMessage(Module, string.Empty);
