@@ -817,7 +817,7 @@ namespace GitCommands
             addEncoding(new ASCIIEncoding());
             addEncoding(new UnicodeEncoding());
             addEncoding(new UTF7Encoding());
-            addEncoding(new UTF8Encoding());
+            addEncoding(new UTF8Encoding(false));
 
             try
             {
