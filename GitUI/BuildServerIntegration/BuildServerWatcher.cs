@@ -9,11 +9,12 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using GitCommands;
+using GitCommands.Config;
 using GitUI.HelperDialogs;
 using GitUI.RevisionGridClasses;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using Nini.Config;
 
 namespace GitUI.BuildServerIntegration
 {
@@ -21,6 +22,7 @@ namespace GitUI.BuildServerIntegration
     {
         private readonly RevisionGrid revisionGrid;
         private readonly DvcsGraph revisions;
+        private GitModule Module { get { return revisionGrid.Module; } }
 
         private int buildStatusImageColumnIndex = -1;
         private int buildStatusMessageColumnIndex = -1;
@@ -96,7 +98,6 @@ namespace GitUI.BuildServerIntegration
             {
                 IBuildServerCredentials buildServerCredentials = new BuildServerCredentials { UseGuestAccess = true };
 
-                IniConfigSource buildServerConfigSource = null;
                 const string CredentialsConfigName = "Credentials";
                 const string UseGuestAccessKey = "UseGuestAccess";
                 const string UsernameKey = "Username";
@@ -112,18 +113,20 @@ namespace GitUI.BuildServerIntegration
                         byte[] unprotectedData = ProtectedData.Unprotect(protectedData, null, DataProtectionScope.CurrentUser);
                         using (var memoryStream = new MemoryStream(unprotectedData))
                         {
+                            ConfigFile credentialsConfig = new ConfigFile("", false);
+
                             using (var textReader = new StreamReader(memoryStream, Encoding.UTF8))
                             {
-                                buildServerConfigSource = new IniConfigSource(textReader);
+                                credentialsConfig.LoadFromString(textReader.ReadToEnd());
                             }
 
-                            var credentialsConfig = buildServerConfigSource.Configs[CredentialsConfigName];
+                            ConfigSection section = credentialsConfig.FindConfigSection(CredentialsConfigName);
 
-                            if (credentialsConfig != null)
+                            if (section != null)
                             {
-                                buildServerCredentials.UseGuestAccess = credentialsConfig.GetBoolean(UseGuestAccessKey, true);
-                                buildServerCredentials.Username = credentialsConfig.GetString(UsernameKey);
-                                buildServerCredentials.Password = credentialsConfig.GetString(PasswordKey);
+                                buildServerCredentials.UseGuestAccess = section.GetValueAsBool(UseGuestAccessKey, true);
+                                buildServerCredentials.Username = section.GetValue(UsernameKey);
+                                buildServerCredentials.Password = section.GetValue(PasswordKey);
 
                                 if (useStoredCredentialsIfExisting)
                                 {
@@ -140,15 +143,13 @@ namespace GitUI.BuildServerIntegration
 
                     if (buildServerCredentials != null)
                     {
-                        if (buildServerConfigSource == null)
-                            buildServerConfigSource = new IniConfigSource();
+                        ConfigFile credentialsConfig = new ConfigFile("", true);
 
-                        var credentialsConfig = buildServerConfigSource.Configs[CredentialsConfigName] ??
-                                                buildServerConfigSource.AddConfig(CredentialsConfigName);
+                        ConfigSection section = credentialsConfig.FindOrCreateConfigSection(CredentialsConfigName);
 
-                        credentialsConfig.Set(UseGuestAccessKey, buildServerCredentials.UseGuestAccess);
-                        credentialsConfig.Set(UsernameKey, buildServerCredentials.Username);
-                        credentialsConfig.Set(PasswordKey, buildServerCredentials.Password);
+                        section.SetValueAsBool(UseGuestAccessKey, buildServerCredentials.UseGuestAccess);
+                        section.SetValue(UsernameKey, buildServerCredentials.Username);
+                        section.SetValue(PasswordKey, buildServerCredentials.Password);
 
                         using (var stream = GetBuildServerOptionsIsolatedStorageStream(buildServerAdapter, FileAccess.Write, FileShare.None))
                         {
@@ -156,7 +157,7 @@ namespace GitUI.BuildServerIntegration
                             {
                                 using (var textWriter = new StreamWriter(memoryStream, Encoding.UTF8))
                                 {
-                                    buildServerConfigSource.Save(textWriter);
+                                    textWriter.Write(credentialsConfig.GetAsString());
                                 }
 
                                 var protectedData = ProtectedData.Protect(memoryStream.ToArray(), null, DataProtectionScope.CurrentUser);
@@ -238,41 +239,30 @@ namespace GitUI.BuildServerIntegration
 
         private IBuildServerAdapter GetBuildServerAdapter()
         {
-            if (revisionGrid.Module.Settings.EnableBuildServerIntegration)
+            if (Module.Settings.BuildServer.EnableIntegration)
             {
-                var fileName = Path.Combine(revisionGrid.Module.GitWorkingDir, ".buildserver");
-                if (File.Exists(fileName))
+                var buildServerType = Module.Settings.BuildServer.Type.Value;
+                if (!string.IsNullOrEmpty(buildServerType))
                 {
-                    var buildServerConfigSource = new IniConfigSource(fileName);
-                    var buildServerConfig = buildServerConfigSource.Configs["General"];
+                    var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+                    var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
 
-                    if (buildServerConfig != null)
+                    if (export != null)
                     {
-                        var buildServerType = buildServerConfig.GetString("ActiveBuildServerType");
-                        if (!string.IsNullOrEmpty(buildServerType))
+                        try
                         {
-                            var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
-                            var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
-
-                            if (export != null)
-                            {
-                                try
-                                {
-                                    var buildServerAdapter = export.Value;
-                                    var config = buildServerConfigSource.Configs[buildServerType];
-                                    buildServerAdapter.Initialize(this, config);
-                                    return buildServerAdapter;
-                                }
-                                catch (InvalidOperationException)
-                                {
-                                    // Invalid arguments, do not return a build server adapter
-                                }
-                            }
+                            var buildServerAdapter = export.Value;
+                            buildServerAdapter.Initialize(this, Module.Settings.BuildServer.TypeSettings);
+                            return buildServerAdapter;
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            System.Diagnostics.Debug.Write(ex);
+                            // Invalid arguments, do not return a build server adapter
                         }
                     }
                 }
             }
-
             return null;
         }
 

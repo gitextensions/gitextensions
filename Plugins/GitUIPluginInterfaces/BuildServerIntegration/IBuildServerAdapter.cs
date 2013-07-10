@@ -1,12 +1,11 @@
 using System;
 using System.Reactive.Concurrency;
-using Nini.Config;
 
 namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     public interface IBuildServerAdapter : IDisposable
     {
-        void Initialize(IBuildServerWatcher buildServerWatcher, IConfig config);
+        void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config);
 
         /// <summary>
         /// Gets a unique key which identifies this build server.

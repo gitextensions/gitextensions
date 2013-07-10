@@ -15,8 +15,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
+using GitCommands.Settings;
+using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using Nini.Config;
 
 namespace TeamCityIntegration
 {
@@ -35,15 +36,15 @@ namespace TeamCityIntegration
 
         private string ProjectName { get; set; }
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, IConfig config)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config)
         {
             if (this.buildServerWatcher != null)
                 throw new InvalidOperationException("Already initialized");
 
             this.buildServerWatcher = buildServerWatcher;
 
-            ProjectName = config.Get("ProjectName");
-            var hostName = config.Get("BuildServerUrl");
+            ProjectName = config.GetString("ProjectName", null);
+            var hostName = config.GetString("BuildServerUrl", null);
             if (!string.IsNullOrEmpty(hostName))
             {
                 httpClient = new HttpClient
