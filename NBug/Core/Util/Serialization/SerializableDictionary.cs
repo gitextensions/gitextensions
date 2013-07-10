@@ -50,7 +50,9 @@ namespace NBug.Core.Util.Serialization
 				return;
 			}*/
 
-			var xElement = XElement.Load(reader.ReadSubtree());
+			var inner = reader.ReadSubtree();
+
+			var xElement = XElement.Load(inner);
 			if (xElement.HasElements)
 			{
 				foreach (var element in xElement.Elements())
@@ -58,6 +60,8 @@ namespace NBug.Core.Util.Serialization
 					this.Add((TKey)Convert.ChangeType(element.Name.ToString(), typeof(TKey)), (TValue)Convert.ChangeType(element.Value, typeof(TValue)));
 				}
 			}
+
+			inner.Close();
 
 			reader.ReadEndElement();
 		}
