@@ -18,6 +18,7 @@ namespace GitCommands.Settings
         public RepoDistSettings(RepoDistSettings aLowerPriority, SettingsCache aSettingsCache)
             : base(aLowerPriority, aSettingsCache)
         {
+            BuildServer = new BuildServer(this);
         }
 
         #region CreateXXX
@@ -69,17 +70,38 @@ namespace GitCommands.Settings
                 LowerPriority.LowerPriority.SetValue(name, value, encode);
         }
 
-
-        public bool EnableBuildServerIntegration
-        {
-            get { return this.GetBool("enablebuildserverintegration", true); }
-            set { this.SetBool("enablebuildserverintegration", value); }
-        }
+        public readonly BuildServer BuildServer;
         
         public bool NoFastForwardMerge
         {
             get { return this.GetBool("NoFastForwardMerge", false); }
             set { this.SetBool("NoFastForwardMerge", value); }
+        }
+    }
+
+
+    public class BuildServer : SettingsPath
+    {
+        public readonly StringSetting Type;
+
+        public BuildServer(RepoDistSettings container)
+            : base(container, "BuildServer")
+        {
+            Type = new StringSetting("Type", this, null);
+        }
+
+        public SettingsPath TypeSettings
+        {
+            get
+            {
+                return new SettingsPath(this, Type.Value);
+            }
+        }
+
+        public bool EnableIntegration
+        {
+            get { return this.GetBool("enablebuildserverintegration", true); }
+            set { this.SetBool("enablebuildserverintegration", value); }
         }
     }
 

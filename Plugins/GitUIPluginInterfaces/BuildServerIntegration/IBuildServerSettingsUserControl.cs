@@ -1,4 +1,3 @@
-using Nini.Config;
 
 namespace GitUIPluginInterfaces.BuildServerIntegration
 {
@@ -6,7 +5,7 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
     {
         void Initialize(string defaultProjectName);
 
-        void LoadSettings(IConfig buildServerConfig);
-        void SaveSettings(IConfig buildServerConfig);
+        void LoadSettings(ISettingsSource buildServerConfig);
+        void SaveSettings(ISettingsSource buildServerConfig);
     }
 }
