@@ -76,7 +76,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgroundFetch", "Plugins\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCompileSubmodules", "Plugins\AutoCompileSubmodules\AutoCompileSubmodules.csproj", "{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamCityIntegration", "TeamCityIntegration\TeamCityIntegration.csproj", "{121965D1-4399-4538-B8BF-403EB5B847C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamCityIntegration", "Plugins\BuildServerIntegration\TeamCityIntegration\TeamCityIntegration.csproj", "{121965D1-4399-4538-B8BF-403EB5B847C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

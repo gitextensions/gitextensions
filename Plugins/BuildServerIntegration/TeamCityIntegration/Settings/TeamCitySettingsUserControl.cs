@@ -1,8 +1,9 @@
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
+using GitCommands.Settings;
 using GitUI;
+using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using Nini.Config;
 
 namespace TeamCityIntegration.Settings
 {
@@ -26,19 +27,19 @@ namespace TeamCityIntegration.Settings
             _defaultProjectName = defaultProjectName;
         }
 
-        public void LoadSettings(IConfig buildServerConfig)
+        public void LoadSettings(ISettingsSource buildServerConfig)
         {
             if (buildServerConfig != null)
             {
-                TeamCityServerUrl.Text = buildServerConfig.GetString("BuildServerUrl");
+                TeamCityServerUrl.Text = buildServerConfig.GetString("BuildServerUrl", string.Empty);
                 TeamCityProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
             }
         }
 
-        public void SaveSettings(IConfig buildServerConfig)
+        public void SaveSettings(ISettingsSource buildServerConfig)
         {
-            buildServerConfig.Set("BuildServerUrl", TeamCityServerUrl.Text);
-            buildServerConfig.Set("ProjectName", TeamCityProjectName.Text);
+            buildServerConfig.SetString("BuildServerUrl", TeamCityServerUrl.Text);
+            buildServerConfig.SetString("ProjectName", TeamCityProjectName.Text);
         }
     }
 }
