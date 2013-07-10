@@ -556,7 +556,7 @@ namespace GitCommands
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         private IEnumerable<string> ReadCmdOutputLines(string cmd, string arguments, string stdInput)
         {
-            return GitCommandHelpers.ReadCmdOutputLines(arguments, cmd, _workingdir, stdInput);
+            return GitCommandHelpers.ReadCmdOutputLines(cmd, arguments, _workingdir, stdInput);
         }
 
         /// <summary>
