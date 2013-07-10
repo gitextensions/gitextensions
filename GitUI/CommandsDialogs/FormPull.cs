@@ -269,7 +269,7 @@ namespace GitUI.CommandsDialogs
 
             var source = CalculateSource();
 
-            ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePull);
+            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
 
             var stashed = CalculateStashedValue(owner);
 
@@ -355,7 +355,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                ScriptManager.RunEventScripts(Module, ScriptEvent.AfterPull);
+                ScriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
             }
 
             return DialogResult.No;
