@@ -2303,9 +2303,10 @@ namespace GitUI.CommandsDialogs
             if (Unstaged.SelectedItem == null)
                 return;
 
-            Process bashProcess = Module.RunBash("git add -p \"" + Unstaged.SelectedItem.Name + "\"");
+            Process gitProcess = Module.RunExternalCmdDetachedShowConsole(AppSettings.GitCommand, 
+                "add -p \"" + Unstaged.SelectedItem.Name + "\"");
 
-            if (bashProcess != null)
+            if (gitProcess != null)
             {
                 _interactiveAddBashCloseWaitCts.Cancel();
                 _interactiveAddBashCloseWaitCts = new CancellationTokenSource();
@@ -2314,8 +2315,8 @@ namespace GitUI.CommandsDialogs
 
                 Task.Factory.StartNew(() =>
                     {
-                        bashProcess.WaitForExit();
-                        bashProcess.Dispose();
+                        gitProcess.WaitForExit();
+                        gitProcess.Dispose();
                     })
                     .ContinueWith(_ => RescanChanges(),
                     _interactiveAddBashCloseWaitCts.Token,
