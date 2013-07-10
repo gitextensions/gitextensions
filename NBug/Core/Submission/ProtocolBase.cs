@@ -5,18 +5,16 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using NBug.Core.Util;
+using System;
 
 namespace NBug.Core.Submission
 {
 	using System.IO;
 	using System.Linq;
 	using System.Reflection;
-	using System.Xml.Linq;
-	using System.Xml.Serialization;
 
 	using NBug.Core.Reporting.Info;
 	using NBug.Core.Util.Serialization;
-	using NBug.Core.Util.Storage;
 
 	public abstract class ProtocolBase : IProtocol
 	{
@@ -27,11 +25,18 @@ namespace NBug.Core.Submission
 		protected ProtocolBase(string connectionString)
 		{
 			var fields = ConnectionStringParser.Parse(connectionString);
-			var properties = this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+			var properties = GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
 			foreach (var property in properties.Where(property => property.Name != "Type" && fields.ContainsKey(property.Name)))
 			{
-				property.SetValue(this, fields[property.Name], null);
+                if(property.PropertyType == typeof(bool))
+                    property.SetValue(this, Convert.ToBoolean(fields[property.Name]), null);
+                else if (property.PropertyType == typeof(int))
+                    property.SetValue(this, Convert.ToInt32(fields[property.Name]), null);
+                else if (property.PropertyType.BaseType == typeof(Enum))
+                    property.SetValue(this, Convert.ToInt32(fields[property.Name]), null);
+                else
+                    property.SetValue(this, fields[property.Name], null);
 			}
 		}
 
@@ -47,8 +52,8 @@ namespace NBug.Core.Submission
 		{
 			get
 			{
-				var connectionString = "Type=" + this.GetType().Name + ";";
-				var properties = this.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty | BindingFlags.GetProperty)
+                var connectionString = String.Format("Type={0};", GetType().Name);
+				var properties = GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty | BindingFlags.GetProperty)
 					.Where(p => p.Name != "ConnectionString");
 
 				foreach (var property in properties)
@@ -61,7 +66,7 @@ namespace NBug.Core.Submission
 						if (!string.IsNullOrEmpty(val))
 						{
 							// Escape = and ; characters
-							connectionString += property.Name.Replace(";", @"\;").Replace("=", @"\=") + "=" + val.Replace(";", @"\;").Replace("=", @"\=") + ";";
+                            connectionString += String.Format("{0}={1};", property.Name.Replace(";", @"\;").Replace("=", @"\="), val.Replace(";", @"\;").Replace("=", @"\="));
 						}
 					}
 				}

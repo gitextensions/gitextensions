@@ -8,13 +8,14 @@ namespace NBug.Configurator.SubmitPanels.Web
 {
 	using System;
 	using System.Windows.Forms;
+    using System.Net.Mail;
 
 	public partial class Mail : UserControl, ISubmitPanel
 	{
 		public Mail()
 		{
 			InitializeComponent();
-			this.portNumericUpDown.Maximum = decimal.MaxValue;
+			this.portNumericUpDown.Maximum = decimal.MaxValue;            
 		}
 
 		public string ConnectionString
@@ -24,7 +25,7 @@ namespace NBug.Configurator.SubmitPanels.Web
 				// Check the mendatory fields
 				if (this.toListBox.Items.Count == 0)
 				{
-					MessageBox.Show("Mandatory field \"" + toLabel.Name + "\" cannot be left blank.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(String.Format("Mandatory field \"{0}\" cannot be left blank.", toLabel.Name), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					return null;
 				}
 
@@ -36,7 +37,7 @@ namespace NBug.Configurator.SubmitPanels.Web
 						CustomSubject = this.customSubjectTextBox.Text,
 						CustomBody = this.customBodyTextBox.Text,
 						SmtpServer = this.smtpServerTextBox.Text,
-						Priority = this.priorityComboBox.Text
+						Priority = (MailPriority)this.priorityComboBox.SelectedIndex
 					};
 
 				foreach (var item in this.toListBox.Items)
@@ -68,7 +69,7 @@ namespace NBug.Configurator.SubmitPanels.Web
 				
 				if (!this.defaultPortCheckBox.Checked)
 				{
-					mail.Port = this.portNumericUpDown.Text;
+					mail.Port = (int)this.portNumericUpDown.Value;
 				}
 
 
@@ -77,22 +78,15 @@ namespace NBug.Configurator.SubmitPanels.Web
 					// Make sure that we can use authentication even with emtpy username and password
 					if (string.IsNullOrEmpty(this.usernameTextBox.Text))
 					{
-						mail.UseAuthentication = "true";
+						mail.UseAuthentication = true;
 					}
 
 					mail.Username = this.usernameTextBox.Text;
 					mail.Password = this.passwordTextBox.Text;
 				}
 
-				if (this.useSslCheckBox.Checked)
-				{
-					mail.UseSsl = "true";
-				}
-
-				if (this.useAttachmentCheckBox.Checked)
-				{
-					mail.UseAttachment = "true";
-				}
+                mail.UseSsl = this.useSslCheckBox.Checked;
+                mail.UseAttachment = this.useAttachmentCheckBox.Checked;
 
 				return mail.ConnectionString;
 			}
@@ -104,22 +98,18 @@ namespace NBug.Configurator.SubmitPanels.Web
 				this.fromTextBox.Text = mail.From;
 				this.fromNameTextBox.Text = mail.FromName;
 				this.smtpServerTextBox.Text = mail.SmtpServer;
-				this.useSslCheckBox.Checked = Convert.ToBoolean(mail.UseSsl);
+				this.useSslCheckBox.Checked = mail.UseSsl;
 				this.priorityComboBox.SelectedItem = mail.Priority;
-				this.useAuthenticationCheckBox.Checked = Convert.ToBoolean(mail.UseAuthentication);
+				this.useAuthenticationCheckBox.Checked = mail.UseAuthentication;
 				this.usernameTextBox.Text = mail.Username;
 				this.passwordTextBox.Text = mail.Password;
 				this.customSubjectTextBox.Text = mail.CustomSubject;
 				this.customBodyTextBox.Text = mail.CustomBody;
 				this.replyToTextBox.Text = mail.ReplyTo;
-				this.useAttachmentCheckBox.Checked = Convert.ToBoolean(mail.UseAttachment);
+				this.useAttachmentCheckBox.Checked = mail.UseAttachment;
+                this.portNumericUpDown.Value = mail.Port;
 
-				if (!string.IsNullOrEmpty(mail.Port))
-				{
-					this.portNumericUpDown.Value = Convert.ToInt32(mail.Port);
-				}
-
-				if (this.portNumericUpDown.Value == 25 || this.portNumericUpDown.Value == 465 || string.IsNullOrEmpty(mail.Port))
+				if (this.portNumericUpDown.Value == 25 || this.portNumericUpDown.Value == 465 || mail.Port > 0)
 				{
 					this.defaultPortCheckBox.Checked = true;
 				}
