@@ -10,8 +10,8 @@ namespace GitUI.RevisionGridClasses
             InitializeComponent();
             Translate();
 
-            LimitCheck.Checked = Settings.MaxRevisionGraphCommits > 0;
-            _NO_TRANSLATE_Limit.Value = Settings.MaxRevisionGraphCommits;
+            LimitCheck.Checked = AppSettings.MaxRevisionGraphCommits > 0;
+            _NO_TRANSLATE_Limit.Value = AppSettings.MaxRevisionGraphCommits;
         }
 
         private void FormRevisionFilterLoad(object sender, EventArgs e)
@@ -26,13 +26,13 @@ namespace GitUI.RevisionGridClasses
 
         private void OnBranchFilterCheckedChanged(object sender, EventArgs e)
         {
-            Settings.BranchFilterEnabled = BranchFilterCheck.Checked;
+            AppSettings.BranchFilterEnabled = BranchFilterCheck.Checked;
             EnableFilters();
         }
 
         private void OnShowCurrentBranchOnlyCheckedChanged(object sender, EventArgs e)
         {
-            Settings.ShowCurrentBranchOnly = CurrentBranchOnlyCheck.Checked;
+            AppSettings.ShowCurrentBranchOnly = CurrentBranchOnlyCheck.Checked;
             EnableFilters();
         }
 
@@ -46,8 +46,8 @@ namespace GitUI.RevisionGridClasses
             _NO_TRANSLATE_Limit.Enabled = LimitCheck.Checked;
             FileFilter.Enabled = FileFilterCheck.Checked;
 
-            BranchFilterCheck.Checked = Settings.BranchFilterEnabled;
-            CurrentBranchOnlyCheck.Checked = Settings.ShowCurrentBranchOnly;
+            BranchFilterCheck.Checked = AppSettings.BranchFilterEnabled;
+            CurrentBranchOnlyCheck.Checked = AppSettings.ShowCurrentBranchOnly;
 
             CurrentBranchOnlyCheck.Enabled = BranchFilterCheck.Checked;
             BranchFilter.Enabled = BranchFilterCheck.Checked &&
@@ -121,7 +121,7 @@ namespace GitUI.RevisionGridClasses
 
         public string GetBranchFilter()
         {
-            if (!Settings.BranchFilterEnabled || Settings.ShowCurrentBranchOnly)
+            if (!AppSettings.BranchFilterEnabled || AppSettings.ShowCurrentBranchOnly)
                 return String.Empty;
 
             return BranchFilter.Text;

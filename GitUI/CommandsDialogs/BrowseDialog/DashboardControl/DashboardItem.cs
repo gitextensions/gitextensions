@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             string branchName = string.Empty;
 
-            if (GitCommands.Settings.DashboardShowCurrentBranch)
+            if (GitCommands.AppSettings.DashboardShowCurrentBranch)
             {
                 if (!GitCommands.GitModule.IsBareRepository(repository.Path))
                     branchName = GitCommands.GitModule.GetSelectedBranchFast(repository.Path);

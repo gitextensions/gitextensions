@@ -40,7 +40,7 @@ namespace GitStatistics
                 if (Settings.GetSetting("Ignore submodules (true/false)")
                     .Equals("true", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    foreach (var submodule in gitUIEventArgs.GitModule.GetSubmodules())
+                    foreach (var submodule in gitUIEventArgs.GitModule.GetSubmodulesInfo())
                     {
                         formGitStatistics.DirectoriesToIgnore += ";";
                         formGitStatistics.DirectoriesToIgnore += Path.Combine(gitUIEventArgs.GitModule.GitWorkingDir, submodule.LocalPath);

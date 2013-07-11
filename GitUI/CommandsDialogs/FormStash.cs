@@ -41,14 +41,14 @@ namespace GitUI.CommandsDialogs
 
         private void FormStashFormClosing(object sender, FormClosingEventArgs e)
         {
-            Settings.StashKeepIndex = StashKeepIndex.Checked;
-            Settings.IncludeUntrackedFilesInManualStash = chkIncludeUntrackedFiles.Checked;
+            AppSettings.StashKeepIndex = StashKeepIndex.Checked;
+            AppSettings.IncludeUntrackedFilesInManualStash = chkIncludeUntrackedFiles.Checked;
         }
 
         private void FormStashLoad(object sender, EventArgs e)
         {
-            StashKeepIndex.Checked = Settings.StashKeepIndex;
-            chkIncludeUntrackedFiles.Checked = Settings.IncludeUntrackedFilesInManualStash;
+            StashKeepIndex.Checked = AppSettings.StashKeepIndex;
+            chkIncludeUntrackedFiles.Checked = AppSettings.IncludeUntrackedFilesInManualStash;
 
             splitContainer2_SplitterMoved(null, null);
         }
@@ -192,7 +192,7 @@ namespace GitUI.CommandsDialogs
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            if (Settings.StashConfirmDropShow)
+            if (AppSettings.StashConfirmDropShow)
             {
                 DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
                                         this,
@@ -215,7 +215,7 @@ namespace GitUI.CommandsDialogs
 
                 if (PSTaskDialog.cTaskDialog.VerificationChecked)
                 {
-                    Settings.StashConfirmDropShow = false;
+                    AppSettings.StashConfirmDropShow = false;
                 }
             }
             else
