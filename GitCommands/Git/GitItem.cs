@@ -50,7 +50,7 @@ namespace GitCommands
 
                     foreach (GitItem item in subItems)
                     {
-                        item.FileName = FileName + Settings.PathSeparator.ToString() + item.FileName;
+                        item.FileName = FileName + AppSettings.PathSeparator.ToString() + item.FileName;
                     }
                 }
 
