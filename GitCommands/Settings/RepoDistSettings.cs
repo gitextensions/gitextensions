@@ -18,6 +18,7 @@ namespace GitCommands.Settings
         public RepoDistSettings(RepoDistSettings aLowerPriority, SettingsCache aSettingsCache)
             : base(aLowerPriority, aSettingsCache)
         {
+            BuildServer = new BuildServer(this);
         }
 
         #region CreateXXX
@@ -62,24 +63,42 @@ namespace GitCommands.Settings
             //Settings stored in Distributed always have to be set directly
             if (LowerPriority == null 
                 || LowerPriority.LowerPriority == null
-                || SettingsCache.HasValue(name) 
-                || LowerPriority.SettingsCache.HasValue(name))
+                || SettingsCache.HasValue(name))
                 SettingsCache.SetValue(name, value, encode);
+            else if (LowerPriority.SettingsCache.HasValue(name))
+                LowerPriority.SetValue(name, value, encode);
             else
                 LowerPriority.LowerPriority.SetValue(name, value, encode);
         }
 
-
-        public bool EnableBuildServerIntegration
-        {
-            get { return this.GetBool("enablebuildserverintegration", true); }
-            set { this.SetBool("enablebuildserverintegration", value); }
-        }
+        public readonly BuildServer BuildServer;
         
         public bool NoFastForwardMerge
         {
             get { return this.GetBool("NoFastForwardMerge", false); }
             set { this.SetBool("NoFastForwardMerge", value); }
+        }
+    }
+
+
+    public class BuildServer : SettingsPath
+    {
+        public readonly StringSetting Type;
+        public readonly BoolNullableSetting EnableIntegration;
+
+        public BuildServer(RepoDistSettings container)
+            : base(container, "BuildServer")
+        {
+            Type = new StringSetting("Type", this, null);
+            EnableIntegration = new BoolNullableSetting("EnableIntegration", this, false);
+        }
+
+        public SettingsPath TypeSettings
+        {
+            get
+            {
+                return new SettingsPath(this, Type.Value);
+            }
         }
     }
 
