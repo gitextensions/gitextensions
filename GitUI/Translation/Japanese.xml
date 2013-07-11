@@ -7367,40 +7367,24 @@ When OpenSSH is used, command line dialogs are shown!
           <Source>Date</Source>
           <Value>日付</Value>
         </TranslationItem>
-        <TranslationItem Name="_dayAgo" Property="Text">
-          <Source>{0} day ago</Source>
-          <Value>{0}日前</Value>
-        </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Source>{0} days ago</Source>
+          <Source>{0} {1:day|days} ago</Source>
           <Value>{0}日前</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hourAgo" Property="Text">
-          <Source>{0} hour ago</Source>
-          <Value>{0}時間前</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Source>{0} hours ago</Source>
+          <Source>{0} {1:hour|hours} ago</Source>
           <Value>{0}時間前</Value>
         </TranslationItem>
         <TranslationItem Name="_messageText" Property="Text">
           <Source>Message</Source>
           <Value>メッセージ</Value>
         </TranslationItem>
-        <TranslationItem Name="_minuteAgo" Property="Text">
-          <Source>{0} minute ago</Source>
-          <Value>{0}分前</Value>
-        </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Source>{0} minutes ago</Source>
+          <Source>{0} {1:minute|minutes} ago</Source>
           <Value>{0}分前</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthAgo" Property="Text">
-          <Source>{0} month ago</Source>
-          <Value>{0}か月前</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Source>{0} months ago</Source>
+          <Source>{0} {1:month|months} ago</Source>
           <Value>{0}か月前</Value>
         </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text">

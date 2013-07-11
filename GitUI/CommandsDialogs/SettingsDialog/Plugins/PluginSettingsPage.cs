@@ -7,22 +7,25 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 {
-    public partial class PluginSettingsPage : SettingsPageBase
+    public partial class PluginSettingsPage : SettingsPageWithHeader
     {
-        private readonly IGitPlugin _gitPlugin;
+        private IGitPlugin _gitPlugin;
         private readonly IList<string> _autoGenKeywords = new List<string>();
         private bool pageInited = false;
 
-        public PluginSettingsPage(IGitPlugin gitPlugin)
+        public PluginSettingsPage()
         {
             InitializeComponent();
             Translate();
-            _gitPlugin = gitPlugin;
         }
 
-        public static PluginSettingsPage CreateSettingsPageFromPlugin(IGitPlugin gitPlugin)
+
+
+        public static PluginSettingsPage CreateSettingsPageFromPlugin(ISettingsPageHost aPageHost, IGitPlugin gitPlugin)
         {
-            return new PluginSettingsPage(gitPlugin);
+            var result = SettingsPageBase.Create<PluginSettingsPage>(aPageHost);
+            result._gitPlugin = gitPlugin;
+            return result;
         }
 
         public override string GetTitle()
@@ -44,7 +47,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             CreateAndInitPluginSettingsControls();
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
             if (_gitPlugin == null)
                 throw new ApplicationException();
@@ -59,7 +62,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             }
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             SavePluginSettingsFromGeneratedControls();
         }

@@ -13,7 +13,7 @@ namespace GitUI.UserManual
             {
                 if (_Location == null)
                 {
-                    var path = Path.Combine(Settings.GetInstallDir(), "help");
+                    var path = Path.Combine(AppSettings.GetInstallDir(), "help");
                     var uri = new System.Uri(path);
                     _Location = uri.AbsolutePath;
                 }
