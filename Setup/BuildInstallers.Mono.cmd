@@ -37,6 +37,7 @@ xcopy /y ..\bin\ICSharpCode.TextEditor.dll GitExtensions\
 xcopy /y ..\bin\Microsoft.WindowsAPICodePack.dll GitExtensions\
 xcopy /y ..\bin\Microsoft.WindowsAPICodePack.Shell.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\NBug.dll GitExtensions\
+xcopy /y ..\GitExtensions\bin\Release\SmartFormat.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\NetSpell.SpellChecker.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\PSTaskDialog.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\ResourceManager.dll GitExtensions\
