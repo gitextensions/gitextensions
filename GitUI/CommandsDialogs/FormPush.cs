@@ -297,7 +297,7 @@ namespace GitUI.CommandsDialogs
                 pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
             }
 
-            ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
+            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
             //controls can be accessed only from UI thread
             _selectedBranch = _NO_TRANSLATE_Branch.Text;
@@ -319,7 +319,7 @@ namespace GitUI.CommandsDialogs
                 if (!Module.InTheMiddleOfConflictedMerge() &&
                     !Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
                 {
-                    ScriptManager.RunEventScripts(Module, ScriptEvent.AfterPush);
+                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
                     if (_createPullRequestCB.Checked)
                         UICommands.StartCreatePullRequest(owner);
                     return true;

@@ -137,6 +137,9 @@
       <Component Id="NBug.dll" Guid="*">
         <File Source="..\packages\NBug.1.1.1\lib\net40-client\NBug.dll"/>
       </Component>
+      <Component Id="SmartFormat.dll" Guid="*">
+        <File Source="..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll"/>
+      </Component>
 
       <Component Id="System.Reactive.Core.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\System.Reactive.Core.dll"/>
@@ -544,6 +547,7 @@
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll"/>
       <ComponentRef Id="NBug.dll"/>
+      <ComponentRef Id="SmartFormat.dll"/>
       <ComponentRef Id="NetSpell.SpellChecker.dll"/>
       <ComponentRef Id="ResourceManager.dll"/>
       <ComponentRef Id="GitUIPluginInterfaces.dll"/>
