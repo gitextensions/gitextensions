@@ -239,7 +239,7 @@ namespace GitUI.BuildServerIntegration
 
         private IBuildServerAdapter GetBuildServerAdapter()
         {
-            if (Module.Settings.BuildServer.EnableIntegration)
+            if (Module.Settings.BuildServer.EnableIntegration.ValueOrDefault)
             {
                 var buildServerType = Module.Settings.BuildServer.Type.Value;
                 if (!string.IsNullOrEmpty(buildServerType))

@@ -84,11 +84,13 @@ namespace GitCommands.Settings
     public class BuildServer : SettingsPath
     {
         public readonly StringSetting Type;
+        public readonly BoolNullableSetting EnableIntegration;
 
         public BuildServer(RepoDistSettings container)
             : base(container, "BuildServer")
         {
             Type = new StringSetting("Type", this, null);
+            EnableIntegration = new BoolNullableSetting("EnableIntegration", this, false);
         }
 
         public SettingsPath TypeSettings
@@ -97,12 +99,6 @@ namespace GitCommands.Settings
             {
                 return new SettingsPath(this, Type.Value);
             }
-        }
-
-        public bool EnableIntegration
-        {
-            get { return this.GetBool("enablebuildserverintegration", true); }
-            set { this.SetBool("enablebuildserverintegration", value); }
         }
     }
 
