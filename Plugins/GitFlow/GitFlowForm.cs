@@ -4,8 +4,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
+using GitCommands;
 using GitFlow.Properties;
 using GitUIPluginInterfaces;
 
@@ -17,7 +17,8 @@ namespace GitFlow
 
         Dictionary<string,List<string>> Branches { get; set; }
 
-        readonly BackgroundWorker _bw = new BackgroundWorker();
+        readonly AsyncLoader _task = new AsyncLoader();
+
         public bool IsRefreshNeeded { get; set; }
         private const string refHeads = "refs/heads/";
 
@@ -70,9 +71,6 @@ namespace GitFlow
                 var remotes = m_gitUiCommands.GitModule.GetRemotes(true).Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
                 cbRemote.DataSource = remotes;
                 btnPull.Enabled = btnPublish.Enabled = remotes.Any();
-                _bw.WorkerSupportsCancellation = true;
-                _bw.DoWork += bw_DoWork;
-                _bw.RunWorkerCompleted += bw_RunWorkerCompleted;
 
                 cbType.DataSource = BranchTypes;
                 var types = new List<string> { string.Empty };
@@ -109,20 +107,10 @@ namespace GitFlow
         {
             cbManageType.Enabled = false;
             cbBranches.DataSource = new List<string> {"Loading..."};
-            while (_bw.IsBusy)
-            {
-                Thread.Sleep(100);
-            }
             if (!Branches.ContainsKey(branchType))
-                _bw.RunWorkerAsync(branchType);
+                _task.Load(() => GetBranches(branchType), (branches) => { Branches.Add(branchType, branches); DisplayBranchDatas(); }); 
             else
                 DisplayBranchDatas();
-        }
-
-        void bw_DoWork(object sender, DoWorkEventArgs e)
-        {
-            var branchType = (string)e.Argument;
-            Branches.Add(branchType, GetBranches(branchType));
         }
 
         private List<string> GetBranches(string typeBranch)
@@ -142,11 +130,6 @@ namespace GitFlow
                                                  .Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
 
             return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
-        }
-
-        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            DisplayBranchDatas();
         }
 
         private void DisplayBranchDatas()
