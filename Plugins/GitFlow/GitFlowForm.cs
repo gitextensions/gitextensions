@@ -39,7 +39,7 @@ namespace GitFlow
 
         private bool IsGitFlowInited
         {
-            get { return !string.IsNullOrWhiteSpace(m_gitUiCommands.GitModule.RunGit("config --get gitflow.branch.master")); }
+            get { return !string.IsNullOrWhiteSpace(m_gitUiCommands.GitModule.RunGitCmd("config --get gitflow.branch.master")); }
         }
 
         public GitFlowForm(GitUIBaseEventArgs gitUiCommands)
@@ -115,7 +115,7 @@ namespace GitFlow
 
         private List<string> GetBranches(string typeBranch)
         {
-            string[] references = m_gitUiCommands.GitModule.RunGit("flow " + typeBranch)
+            string[] references = m_gitUiCommands.GitModule.RunGitCmd("flow " + typeBranch)
                                                  .Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
 
             if (references.Length == 0 || references.Any(l=>l.StartsWith("No " + typeBranch + " branches exist.")))
@@ -126,7 +126,7 @@ namespace GitFlow
 
         private List<string> GetLocalBranches()
         {
-            string[] references = m_gitUiCommands.GitModule.RunGit("branch")
+            string[] references = m_gitUiCommands.GitModule.RunGitCmd("branch")
                                                  .Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
 
             return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
@@ -217,7 +217,7 @@ namespace GitFlow
         private bool RunCommand(string commandText)
         {
             int exitCode;
-            var result = m_gitUiCommands.GitModule.RunGit(commandText, out exitCode);
+            var result = m_gitUiCommands.GitModule.RunGitCmd(commandText, out exitCode);
 
             IsRefreshNeeded = true;
 
@@ -285,7 +285,7 @@ namespace GitFlow
 
         private void DisplayHead()
         {
-            var head = m_gitUiCommands.GitModule.RunGit("symbolic-ref HEAD").Trim('*', ' ', '\n', '\r');
+            var head = m_gitUiCommands.GitModule.RunGitCmd("symbolic-ref HEAD").Trim('*', ' ', '\n', '\r');
             lblHead.Text = head;
             var currentRef = head.StartsWith(refHeads) ? head.Substring(refHeads.Length) : head;
 
