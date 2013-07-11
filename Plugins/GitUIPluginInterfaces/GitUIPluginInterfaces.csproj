@@ -57,9 +57,6 @@
     <CodeAnalysisRuleSet>..\..\FxCopRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Nini">
-      <HintPath>..\..\packages\DeveloperInTheFlow.Nini.1.1.0.1\lib\net40-client\Nini.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Drawing" />
@@ -87,6 +84,7 @@
     <Compile Include="IGitModule.cs" />
     <Compile Include="IGitRemoteCommand.cs" />
     <Compile Include="ILockableNotifier.cs" />
+    <Compile Include="ISettingsSource.cs" />
     <Compile Include="ManagedExtensibility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryHosts\IRepositoryHostPlugin.cs" />

@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs
         {
             var pushCmd = string.Format("push \"{0}\" :refs/tags/{1}", remotesComboboxControl1.SelectedRemote, tagName);
 
-            ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
+            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
             using (var form = new FormRemoteProcess(Module, pushCmd)
                                     {
@@ -58,7 +58,7 @@ namespace GitUI.CommandsDialogs
                 if (!Module.InTheMiddleOfConflictedMerge() &&
                     !Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
                 {
-                    ScriptManager.RunEventScripts(Module, ScriptEvent.AfterPush);
+                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
                 }
             }
         }
