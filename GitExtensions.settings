@@ -2,6 +2,30 @@
 <dictionary>
   <item>
     <key>
+      <string>BuildServer.TeamCity.BuildServerUrl</string>
+    </key>
+    <value>
+      <string>teamcity.codebetter.com</string>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>BuildServer.TeamCity.ProjectName</string>
+    </key>
+    <value>
+      <string>Git Extensions</string>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>BuildServer.Type</string>
+    </key>
+    <value>
+      <string>TeamCity</string>
+    </value>
+  </item>
+  <item>
+    <key>
       <string>RevisionLinkDefs</string>
     </key>
     <value>
