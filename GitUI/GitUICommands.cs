@@ -114,9 +114,6 @@ namespace GitUI
         public event GitUIEventHandler PreEditGitIgnore;
         public event GitUIPostActionEventHandler PostEditGitIgnore;
 
-        public event GitUIEventHandler PreEditBuildServer;
-        public event GitUIPostActionEventHandler PostEditBuildServer;
-
         public event GitUIEventHandler PreSettings;
         public event GitUIPostActionEventHandler PostSettings;
 
