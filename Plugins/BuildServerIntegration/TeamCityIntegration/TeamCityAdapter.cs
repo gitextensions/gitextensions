@@ -268,7 +268,9 @@ namespace TeamCityIntegration
 
         private Task<Stream> GetStreamAsync(string restServicePath, CancellationToken cancellationToken)
         {
-            return httpClient.GetAsync(FormatRelativePath(restServicePath), HttpCompletionOption.ResponseHeadersRead)
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return httpClient.GetAsync(FormatRelativePath(restServicePath), HttpCompletionOption.ResponseHeadersRead, cancellationToken)
                              .ContinueWith(
                                  task => GetStreamFromHttpResponseAsync(task, restServicePath, cancellationToken),
                                  cancellationToken,
@@ -424,7 +426,6 @@ namespace TeamCityIntegration
             if (httpClient != null)
             {
                 httpClient.Dispose();
-                httpClient = null;
             }
         }
     }
