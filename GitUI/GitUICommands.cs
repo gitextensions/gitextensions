@@ -114,9 +114,6 @@ namespace GitUI
         public event GitUIEventHandler PreEditGitIgnore;
         public event GitUIPostActionEventHandler PostEditGitIgnore;
 
-        public event GitUIEventHandler PreEditBuildServer;
-        public event GitUIPostActionEventHandler PostEditBuildServer;
-
         public event GitUIEventHandler PreSettings;
         public event GitUIPostActionEventHandler PostSettings;
 
@@ -1882,7 +1879,9 @@ namespace GitUI
             var searchWindow = new SearchWindow<string>(FindFileMatches);
             Application.Run(searchWindow);
             if (searchWindow.SelectedItem != null)
-                Debug.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
+                //We need to return the file that has been found, the visual studio plugin uses the return value
+                //to open the selected file.
+                Console.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
         }
 
         private void RunBrowseCommand(string[] args)

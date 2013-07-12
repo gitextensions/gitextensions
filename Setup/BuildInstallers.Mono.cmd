@@ -13,7 +13,7 @@ set szip="..\packages\7-Zip.CommandLine.9.20.0\tools\7za"
 
 %nuget% install ..\.nuget\packages.config -OutputDirectory ..\packages
 %nuget% install ..\Plugins\BackgroundFetch\packages.config -OutputDirectory ..\packages
-%nuget% install ..\TeamCityIntegration\packages.config -OutputDirectory ..\packages
+%nuget% install ..\Plugins\BuildServerIntegration\TeamCityIntegration\packages.config -OutputDirectory ..\packages
 
 call %msbuild% %project% /t:clean
 call %msbuild% %project% /p:TargetFrameworkProfile="" /p:Platform="Any CPU" /p:Configuration=Release /t:Rebuild /nologo /v:m
@@ -29,14 +29,16 @@ xcopy /y ..\GitExtensions\bin\Release\GitExtensions.exe GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\GitUI.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\GitUIPluginInterfaces.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\Gravatar.dll GitExtensions\
-xcopy /y ..\GitExtensions\bin\Release\TeamCityIntegration.dll GitExtensions\
-xcopy /y ..\GitExtensions\bin\Release\System.Net.Http*.dll GitExtensions\
-xcopy /y ..\GitExtensions\bin\Release\Nini.dll GitExtensions\
+xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Runtime.dll GitExtensions\Plugins\
+xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Threading.Tasks.dll GitExtensions\Plugins\
+xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll GitExtensions\Plugins\
+xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http*.dll GitExtensions\Plugins\
 xcopy /y ..\bin\ICSharpCode.SharpZipLib.dll GitExtensions\
 xcopy /y ..\bin\ICSharpCode.TextEditor.dll GitExtensions\
 xcopy /y ..\bin\Microsoft.WindowsAPICodePack.dll GitExtensions\
 xcopy /y ..\bin\Microsoft.WindowsAPICodePack.Shell.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\NBug.dll GitExtensions\
+xcopy /y ..\GitExtensions\bin\Release\SmartFormat.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\NetSpell.SpellChecker.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\PSTaskDialog.dll GitExtensions\
 xcopy /y ..\GitExtensions\bin\Release\ResourceManager.dll GitExtensions\

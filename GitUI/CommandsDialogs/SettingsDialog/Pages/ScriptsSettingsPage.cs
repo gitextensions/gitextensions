@@ -145,6 +145,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 selectedScriptInfo.Arguments = argumentsTextBox.Text;
                 selectedScriptInfo.AddToRevisionGridContextMenu = inMenuCheckBox.Checked;
                 selectedScriptInfo.Enabled = scriptEnabled.Checked;
+                selectedScriptInfo.ShowProgress = scriptShowProgress.Checked;
                 selectedScriptInfo.AskConfirmation = scriptNeedsConfirmation.Checked;
                 selectedScriptInfo.OnEvent = (ScriptEvent)scriptEvent.SelectedItem;
                 selectedScriptInfo.Icon = IconName;
@@ -296,6 +297,8 @@ Selected Branch:
 {sLocalBranch}
 {sRemoteBranch}
 {sRemote}
+{sRemoteUrl}
+{sRemotePathFromUrl}
 {sHash}
 {sMessage}
 {sAuthor}
@@ -314,7 +317,9 @@ Current Branch:
 {cCommitter}
 {cAuthorDate}
 {cCommitDate}
-{cDefaultRemote}".Replace("\n", Environment.NewLine);
+{cDefaultRemote}
+{cDefaultRemoteUrl}
+{cDefaultRemotePathFromUrl}".Replace("\n", Environment.NewLine);
 
             helpDisplayDialog.ShowDialog();
         }

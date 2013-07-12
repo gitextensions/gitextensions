@@ -89,6 +89,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.checkBoxEnableBuildServerIntegration.Size = new System.Drawing.Size(186, 19);
             this.checkBoxEnableBuildServerIntegration.TabIndex = 1;
             this.checkBoxEnableBuildServerIntegration.Text = "Enable build server integration";
+            this.checkBoxEnableBuildServerIntegration.ThreeState = true;
             this.checkBoxEnableBuildServerIntegration.UseVisualStyleBackColor = true;
             // 
             // BuildServerIntegrationSettingsPage
