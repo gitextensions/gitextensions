@@ -59,9 +59,6 @@
     <CodeAnalysisRuleSet>..\FxCopRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Nini, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DeveloperInTheFlow.Nini.1.1.0.1\lib\net40-client\Nini.dll</HintPath>
-    </Reference>
     <Reference Include="PSTaskDialog">
       <HintPath>..\Bin\PSTaskDialog.dll</HintPath>
     </Reference>
@@ -171,7 +168,7 @@
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\RevisionLinksSettingsPage.Designer.cs">
       <DependentUpon>RevisionLinksSettingsPage.cs</DependentUpon>
-    </Compile>    
+    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\ConfigFileSettingsSet.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\RepoDistSettingsPage.cs">
       <SubType>UserControl</SubType>

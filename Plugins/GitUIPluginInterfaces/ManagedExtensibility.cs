@@ -19,7 +19,7 @@ namespace GitUIPluginInterfaces
                 {
                     if (compositionContainer == null)
                     {
-                        var catalog = new DirectoryCatalog(@".\", "*.dll");
+                        var catalog = new DirectoryCatalog(@".\Plugins\", "*.dll");
                         compositionContainer = new CompositionContainer(catalog);
                     }
 

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Settings;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using Nini.Config;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -14,8 +14,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private const string NoneItem = "<None>";
         private Task<object> _populateBuildServerTypeTask;
-        private IniConfigSource _buildServerConfigSource;
-        private IConfig _buildServerConfig;
 
         public BuildServerIntegrationSettingsPage()
         {
@@ -55,81 +53,33 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
-            bool isRepositoryValid = IsRepositoryValid;
+            _populateBuildServerTypeTask.ContinueWith(
+                task =>
+                {
+                    checkBoxEnableBuildServerIntegration.SetNullableChecked(CurrentSettings.BuildServer.EnableIntegration.Value);
 
-            BuildServerType.Enabled = isRepositoryValid;
-            if (isRepositoryValid)
-            {
-                _populateBuildServerTypeTask.ContinueWith(
-                    task =>
-                        {
-                            checkBoxEnableBuildServerIntegration.Checked = CurrentSettings.EnableBuildServerIntegration;
-
-                            var fileName = GetBuildServerFileName();
-                            if (File.Exists(fileName))
-                            {
-                                _buildServerConfigSource = new IniConfigSource(fileName);
-                                _buildServerConfig = GetBuildServerConfig("General");
-                            }
-
-                            BuildServerType.SelectedItem = _buildServerConfig != null
-                                                                ? _buildServerConfig.GetString("ActiveBuildServerType", NoneItem)
-                                                                : NoneItem;
-                        },
-                    TaskScheduler.FromCurrentSynchronizationContext());
-            }
+                    BuildServerType.SelectedItem = CurrentSettings.BuildServer.Type.Value ?? NoneItem;
+                },
+                TaskScheduler.FromCurrentSynchronizationContext());
         }
-
         private bool IsRepositoryValid
         {
             get { return !string.IsNullOrEmpty(Module.GitWorkingDir); }
-        }
+        }        
 
         protected override void PageToSettings()
         {
-            CurrentSettings.EnableBuildServerIntegration = checkBoxEnableBuildServerIntegration.Checked;
+            CurrentSettings.BuildServer.EnableIntegration.Value = checkBoxEnableBuildServerIntegration.GetNullableChecked();
 
-            if (IsRepositoryValid)
-            {
-                try
-                {
-                    var fileName = GetBuildServerFileName();
-                    var selectedBuildServerType = GetSelectedBuildServerType();
+            var selectedBuildServerType = GetSelectedBuildServerType();
 
-                    if (File.Exists(fileName) || selectedBuildServerType != NoneItem)
-                    {
-                        FileInfoExtensions.MakeFileTemporaryWritable(
-                            fileName,
-                            x =>
-                                {
-                                    if (_buildServerConfig == null)
-                                    {
-                                        _buildServerConfigSource = new IniConfigSource();
-                                    }
+            CurrentSettings.BuildServer.Type.Value = NoneItem.Equals(selectedBuildServerType) ? null : selectedBuildServerType;
 
-                                    _buildServerConfig = GetBuildServerConfig("General");
-                                    _buildServerConfig.Set("ActiveBuildServerType", selectedBuildServerType ?? NoneItem);
-
-                                    var control =
-                                        buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>()
-                                                                .SingleOrDefault();
-                                    if (control != null)
-                                        control.SaveSettings(GetBuildServerConfig(selectedBuildServerType));
-
-                                    _buildServerConfigSource.Save(fileName);
-                                });
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(this, ex.ToString());
-                }
-            }
-        }
-
-        private string GetBuildServerFileName()
-        {
-            return Path.Combine(Module.WorkingDir, ".buildserver");
+            var control =
+                buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>()
+                                        .SingleOrDefault();
+            if (control != null)
+                control.SaveSettings(CurrentSettings.BuildServer.TypeSettings);
         }
 
         private void ActivateBuildServerSettingsControl()
@@ -144,8 +94,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (control != null)
             {
-                if (_buildServerConfigSource != null && _buildServerConfigSource.Configs != null)
-                    control.LoadSettings(_buildServerConfigSource.Configs[GetSelectedBuildServerType()]);
+                control.LoadSettings(CurrentSettings.BuildServer.TypeSettings);
 
                 buildServerSettingsPanel.Controls.Add((Control)control);
             }
@@ -178,11 +127,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void BuildServerType_SelectedIndexChanged(object sender, System.EventArgs e)
         {
             ActivateBuildServerSettingsControl();
-        }
-
-        private IConfig GetBuildServerConfig(string configName)
-        {
-            return _buildServerConfigSource.Configs[configName] ?? _buildServerConfigSource.AddConfig(configName);
         }
     }
 }
