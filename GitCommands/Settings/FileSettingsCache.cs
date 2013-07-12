@@ -35,6 +35,14 @@ namespace GitCommands.Settings
             _fileWatcher.EnableRaisingEvents = false;
             _fileWatcher.Changed += _fileWatcher_Changed;
             _fileWatcher.Renamed += _fileWatcher_Renamed;
+            _fileWatcher.Created += _fileWatcher_Created;
+            _fileWatcher.EnableRaisingEvents = Directory.Exists(_fileWatcher.Path);
+            FileChanged();
+        }
+
+        void _fileWatcher_Created(object sender, FileSystemEventArgs e)
+        {
+            LastFileRead = null;
             FileChanged();
         }
 
@@ -54,6 +62,7 @@ namespace GitCommands.Settings
                     SaveTimer = null;
                     _fileWatcher.Changed -= _fileWatcher_Changed;
                     _fileWatcher.Renamed -= _fileWatcher_Renamed;
+                    _fileWatcher.Created -= _fileWatcher_Created;
 
                     if (_autoSave)
                     {
@@ -80,12 +89,8 @@ namespace GitCommands.Settings
         }
 
         private void FileChanged()
-        {
-            _fileWatcher.EnableRaisingEvents = File.Exists(SettingsFilePath);
-            if (_fileWatcher.EnableRaisingEvents)
-                LastFileModificationDate = GetLastFileModificationUTC();
-            else
-                LastFileModificationDate = DateTime.MaxValue;
+        {           
+            LastFileModificationDate = GetLastFileModificationUTC();
         }
 
         private DateTime GetLastFileModificationUTC()
@@ -157,6 +162,11 @@ namespace GitCommands.Settings
                     System.Diagnostics.Debug.WriteLine(e.Message);
                     throw;
                 }
+            }
+            else
+            {
+                LastFileRead = DateTime.UtcNow;
+                LastFileModificationDate = LastFileRead.Value;
             }
         }
 
