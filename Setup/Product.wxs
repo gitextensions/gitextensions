@@ -137,6 +137,9 @@
       <Component Id="NBug.dll" Guid="*">
         <File Source="..\packages\NBug.1.1.1\lib\net40-client\NBug.dll"/>
       </Component>
+      <Component Id="SmartFormat.dll" Guid="*">
+        <File Source="..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll"/>
+      </Component>
 
       <Component Id="System.Reactive.Core.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\System.Reactive.Core.dll"/>
@@ -149,30 +152,6 @@
       </Component>
       <Component Id="System.Reactive.PlatformServices.dll" Guid="*">
         <File Source="..\GitExtensions\bin\Release\System.Reactive.PlatformServices.dll"/>
-      </Component>
-      <Component Id="System.Net.Http.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\System.Net.Http.dll"/>
-      </Component>
-      <Component Id="System.Net.Http.WebRequest.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\System.Net.Http.WebRequest.dll"/>
-      </Component>
-      <Component Id="System.Net.Http.Extensions.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\System.Net.Http.Extensions.dll"/>
-      </Component>
-      <Component Id="System.Net.Http.Primitives.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\System.Net.Http.Primitives.dll"/>
-      </Component>
-      <Component Id="System.Runtime.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\System.Runtime.dll"/>
-      </Component>
-      <Component Id="System.Threading.Tasks.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\System.Threading.Tasks.dll"/>
-      </Component>
-      <Component Id="Nini.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\Nini.dll"/>
-      </Component>
-      <Component Id="TeamCityIntegration.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\Release\TeamCityIntegration.dll"/>
       </Component>
 
       <!--Remove unused dll, installed in versions <= 2.31-->
@@ -291,6 +270,28 @@
       </Component>
       <Component Id="ProxySwitcher.dll" Guid="*">
         <File Source="..\Plugins\ProxySwitcher\bin\Release\ProxySwitcher.dll"/>
+      </Component>
+        
+      <Component Id="System.Net.Http.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.dll"/>
+      </Component>
+      <Component Id="System.Net.Http.WebRequest.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.WebRequest.dll"/>
+      </Component>
+      <Component Id="System.Net.Http.Extensions.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Extensions.dll"/>
+      </Component>
+      <Component Id="System.Net.Http.Primitives.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Primitives.dll"/>
+      </Component>
+      <Component Id="System.Runtime.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Runtime.dll"/>
+      </Component>
+      <Component Id="System.Threading.Tasks.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Threading.Tasks.dll"/>
+      </Component>
+      <Component Id="TeamCityIntegration.dll" Guid="*">
+          <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll"/>
       </Component>
     </DirectoryRef>
 
@@ -544,6 +545,7 @@
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll"/>
       <ComponentRef Id="NBug.dll"/>
+      <ComponentRef Id="SmartFormat.dll"/>
       <ComponentRef Id="NetSpell.SpellChecker.dll"/>
       <ComponentRef Id="ResourceManager.dll"/>
       <ComponentRef Id="GitUIPluginInterfaces.dll"/>
@@ -570,7 +572,6 @@
       <ComponentRef Id="System.Reactive.Interfaces.dll" />
       <ComponentRef Id="System.Reactive.Linq.dll" />
       <ComponentRef Id="System.Reactive.PlatformServices.dll" />
-      <ComponentRef Id="Nini.dll" />
 
       <!--Remove unused dll, installed in versions <= 2.31-->
       <ComponentRef Id="Github.dll"/>

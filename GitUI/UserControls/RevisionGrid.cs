@@ -2185,28 +2185,28 @@ namespace GitUI
         private void AddOwnScripts()
         {
             IList<ScriptInfo> scripts = ScriptManager.GetScripts();
-            int addedScripts = 0;
-            if (scripts != null)
+            if (scripts == null)
+                return;
+            int lastIndex = mainContextMenu.Items.Count;
+            foreach (ScriptInfo scriptInfo in scripts)
             {
-                foreach (ScriptInfo scriptInfo in scripts)
+                if (scriptInfo.Enabled)
                 {
-                    if (scriptInfo.Enabled)
-                    {
-                        addedScripts++;
-                        ToolStripItem item = new ToolStripMenuItem(scriptInfo.Name);
-                        item.Name = item.Text + "_ownScript";
-                        item.Click += RunScript;
-                        if (scriptInfo.AddToRevisionGridContextMenu)
-                            mainContextMenu.Items.Add(item);
-                        else
-                            runScriptToolStripMenuItem.DropDown.Items.Add(item);
-                    }
+                    ToolStripItem item = new ToolStripMenuItem(scriptInfo.Name);
+                    item.Name = item.Text + "_ownScript";
+                    item.Click += RunScript;
+                    if (scriptInfo.AddToRevisionGridContextMenu)
+                        mainContextMenu.Items.Add(item);
+                    else
+                        runScriptToolStripMenuItem.DropDown.Items.Add(item);
                 }
-
-                bool showScriptsMenu = addedScripts > 1;
-                toolStripSeparator7.Visible = showScriptsMenu;
-                runScriptToolStripMenuItem.Visible = showScriptsMenu; 
             }
+
+            if (lastIndex != mainContextMenu.Items.Count)
+                mainContextMenu.Items.Insert(lastIndex, new ToolStripSeparator());
+            bool showScriptsMenu = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
+            toolStripSeparator7.Visible = showScriptsMenu;
+            runScriptToolStripMenuItem.Visible = showScriptsMenu;
         }
 
         private void RemoveOwnScripts()
@@ -2218,6 +2218,8 @@ namespace GitUI
             foreach (ToolStripItem item in list)
                 if (item.Name.Contains("_ownScript"))
                     mainContextMenu.Items.RemoveByKey(item.Name);
+            if (mainContextMenu.Items[mainContextMenu.Items.Count - 1] is ToolStripSeparator)
+                mainContextMenu.Items.RemoveAt(mainContextMenu.Items.Count - 1);
         }
 
         private bool _settingsLoaded;
@@ -2229,7 +2231,7 @@ namespace GitUI
                 new FormSettings(UICommands).LoadSettings();
                 _settingsLoaded = true;
             }
-            ScriptRunner.RunScript(Module, sender.ToString(), this);
+            ScriptRunner.RunScript(this, Module, sender.ToString(), this);
             RefreshRevisions();
         }
 
