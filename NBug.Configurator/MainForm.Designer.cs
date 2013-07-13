@@ -809,7 +809,7 @@
 			// 
 			// mainToolTips
 			// 
-			this.mainToolTips.AutoPopDelay = 120000;
+			this.mainToolTips.AutoPopDelay = 20000;
 			this.mainToolTips.InitialDelay = 500;
 			this.mainToolTips.ReshowDelay = 100;
 			// 

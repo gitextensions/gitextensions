@@ -16,7 +16,6 @@ Add F1 help to configurator via .chm documentation file
 Update DbgHelp library to detect x64/x86 platform changes
 Unit tests for: Can use Settings.StopReportingAfter <= 0 and Settings.MaxQueuedReports <= 0 for infinite reports
 Refactor the code for NBug.Settings.AdditionalReportFiles.Add(Environment.CurrentDirectory + "\\Log.txt"); (the report generation part)
-The property red from the file '***' is undefined. (it should be 'read' not 'red').
 	static void Main(string[] args)
 	{
 		AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
