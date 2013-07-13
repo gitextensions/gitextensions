@@ -155,7 +155,7 @@ namespace GitCommands
             // the filename is the next line after the commit-format defined above.
 
             string logParam;
-            if (Settings.OrderRevisionByDate)
+            if (AppSettings.OrderRevisionByDate)
             {
                 logParam = " --date-order";
             }
@@ -192,43 +192,33 @@ namespace GitCommands
                 branchFilter,
                 Filter);
 
-            using (GitCommandsInstance gitGetGraphCommand = new GitCommandsInstance(_module))
+            Encoding logOutputEncoding = _module.LogOutputEncoding;
+
+            Process p = _module.RunGitCmdDetached(arguments, GitModule.LosslessEncoding);
+
+            if (taskState.IsCancellationRequested)
+                return;
+
+            _previousFileName = null;
+            if (BeginUpdate != null)
+                BeginUpdate(this, EventArgs.Empty);
+
+            string line;
+            do
             {
-                gitGetGraphCommand.StreamOutput = true;
-                gitGetGraphCommand.CollectOutput = false;
-                Encoding LogOutputEncoding = _module.LogOutputEncoding;
-                gitGetGraphCommand.SetupStartInfoCallback = startInfo =>
+                line = p.StandardOutput.ReadLine();
+                //commit message is not encoded by git
+                if (_nextStep != ReadStep.CommitMessage)
+                    line = GitModule.ReEncodeString(line, GitModule.LosslessEncoding, logOutputEncoding);
+
+                if (line != null)
                 {
-                    startInfo.StandardOutputEncoding = GitModule.LosslessEncoding;
-                    startInfo.StandardErrorEncoding = GitModule.LosslessEncoding;
-                };
-
-                Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arguments);
-                
-                if (taskState.IsCancellationRequested)
-                    return;
-
-                _previousFileName = null;
-                if (BeginUpdate != null)
-                    BeginUpdate(this, EventArgs.Empty);
-
-                string line;
-                do
-                {
-                    line = p.StandardOutput.ReadLine();
-                    //commit message is not encoded by git
-                    if (_nextStep != ReadStep.CommitMessage)
-                        line = GitModule.ReEncodeString(line, GitModule.LosslessEncoding, LogOutputEncoding);
-
-                    if (line != null)
+                    foreach (string entry in line.Split('\0'))
                     {
-                        foreach (string entry in line.Split('\0'))
-                        {
-                            DataReceived(entry);
-                        }
+                        DataReceived(entry);
                     }
-                } while (line != null && !taskState.IsCancellationRequested);
-            }
+                }
+            } while (line != null && !taskState.IsCancellationRequested);
         }
 
         private void ProccessGitLogExecuted()

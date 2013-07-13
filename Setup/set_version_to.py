@@ -61,3 +61,32 @@ if __name__ == '__main__':
            makeInstallers[i] = '='.join(data)
     outfile = open(filename, "w")
     outfile.writelines(makeInstallers)
+    
+    filename = "BuildInstallers.Mono.cmd"
+    makeInstallers = open(filename, "r").readlines()
+    for i in range(1, len(verSplitted)):
+        if len(verSplitted[i]) == 1:
+            verSplitted[i] = "0" + verSplitted[i]
+    for i in range(len(makeInstallers)):
+        line = makeInstallers[i]
+        if line.find("set version=") != -1:
+           data = line.split('=')
+           data[1] = '.'.join(verSplitted) + '\n'
+           makeInstallers[i] = '='.join(data)
+    outfile = open(filename, "w")
+    outfile.writelines(makeInstallers)
+
+    filename = "..\GitExtensionsDoc\source\conf.py"
+    docoConf = open(filename, "r").readlines()
+    for i in range(len(docoConf)):
+        line = docoConf[i]
+        if line.find("release = ") != -1:
+           data = line.split(' = ')
+           data[1] = '.'.join(verSplitted)
+           docoConf[i] = " = '".join(data) + "'\n"
+        if line.find("version = ") != -1:
+           data = line.split(' = ')
+           data[1] = '.'.join([verSplitted[0], verSplitted[1]])
+           docoConf[i] = " = '".join(data) + "'\n"
+    outfile = open(filename, "w")
+    outfile.writelines(docoConf)
