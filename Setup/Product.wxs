@@ -56,6 +56,7 @@
         <Directory Id="VS2008" Name="Visual Studio 2008"/>
         <Directory Id="VS2010" Name="Visual Studio 2010"/>
         <Directory Id="VS2012" Name="Visual Studio 2012"/>
+        <Directory Id="VS2013" Name="Visual Studio 2013"/>
       </Directory>
       <Directory Id="ProgramMenuFolder">
         <Directory Id="StartMenuDir" Name="$(var.ProductName)"/>
@@ -63,7 +64,7 @@
       <Directory Id="DesktopFolder"/>
     </Directory>
 
-    <?define VsVersions = 2005;2008;2010;2012?>
+    <?define VsVersions = 2005;2008;2010;2012;2013?>
     
     <?foreach VsVersion in $(var.VsVersions)?>
     <Property Id="VS$(var.VsVersion)">
@@ -135,6 +136,9 @@
       </Component>
       <Component Id="NBug.dll" Guid="*">
         <File Source="..\packages\NBug.1.1.1\lib\net40-client\NBug.dll"/>
+      </Component>
+      <Component Id="SmartFormat.dll" Guid="*">
+        <File Source="..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll"/>
       </Component>
 
       <Component Id="System.Reactive.Core.dll" Guid="*">
@@ -519,6 +523,7 @@
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll"/>
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll"/>
       <ComponentRef Id="NBug.dll"/>
+      <ComponentRef Id="SmartFormat.dll"/>
       <ComponentRef Id="NetSpell.SpellChecker.dll"/>
       <ComponentRef Id="ResourceManager.dll"/>
       <ComponentRef Id="GitUIPluginInterfaces.dll"/>

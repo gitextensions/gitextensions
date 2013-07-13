@@ -6,22 +6,22 @@ namespace GitUI
 {
     public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
     {
-        private GitUICommands _UICommands;
+        private GitUICommands _uiCommands;
         [Browsable(false)]
         public GitUICommands UICommands
         {
             get
             {
-                if (_UICommands == null)
+                if (_uiCommands == null)
                     throw new NullReferenceException("Commands");
 
-                return _UICommands;
+                return _uiCommands;
             }
 
             protected set
             {
-                GitUICommands oldCommands = _UICommands;
-                _UICommands = value;
+                GitUICommands oldCommands = _uiCommands;
+                _uiCommands = value;
                 if (GitUICommandsChanged != null)
                     GitUICommandsChanged(this, oldCommands);
             }
@@ -31,7 +31,7 @@ namespace GitUI
         {
             get
             {
-                return _UICommands != null;
+                return _uiCommands != null;
             }
         }
 
@@ -58,14 +58,12 @@ namespace GitUI
         {
             if (ExecuteScriptCommand(command))
                 return true;
-            else
-                return base.ExecuteCommand(command);
+            return base.ExecuteCommand(command);
         }
 
-        protected virtual bool ExecuteScriptCommand(int command)
+        protected bool ExecuteScriptCommand(int command)
         {
-            return GitUI.Script.ScriptRunner.ExecuteScriptCommand(Module, command);
+            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command);
         }
-
     }
 }
