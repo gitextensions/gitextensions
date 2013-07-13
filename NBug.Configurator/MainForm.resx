@@ -152,7 +152,7 @@ Use other settings in combination with proper UI provider, which also enables th
   </data>
   <data name="uiProviderComboBox.ToolTip" xml:space="preserve">
     <value>Selects one of the available UI providers in combination with the proper UI mode. Don’t forget to preview your selection if you change this.
-Note that the Auto mode decides the best UI provider on the run for you so it is preferable to set both  &amp; UIProvider to Auto
+Note that the Auto mode decides the best UI provider on the run for you so it is preferable to set both UIMode &amp; UIProvider to Auto
 if you want to get best result automatically.</value>
   </data>
   <data name="handleProcessCorruptedStateExceptionsCheckBox.ToolTip" xml:space="preserve">
