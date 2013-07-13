@@ -12,30 +12,31 @@ namespace GitUI
 
         [Browsable(false)]
         public event GitUICommandsSourceSetEventHandler GitUICommandsSourceSet;
-        private IGitUICommandsSource _UICommandsSource;
+        private IGitUICommandsSource _uiCommandsSource;
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public IGitUICommandsSource UICommandsSource 
         {
             get
             {
-                if (_UICommandsSource == null)
+                if (_uiCommandsSource == null)
                     SearchForUICommandsSource();
-                if (_UICommandsSource == null)
+                if (_uiCommandsSource == null)
                     throw new NullReferenceException("UICommandsSource");
-                return _UICommandsSource;
+                return _uiCommandsSource;
             }
             set
             {
                 if (value == null)
                     throw new ArgumentException("Can not assign null value to UICommandsSource");
-                if (_UICommandsSource != null)
+                if (_uiCommandsSource != null)
                     throw new ArgumentException("UICommandsSource is already set");
 
-                _UICommandsSource = value;
+                _uiCommandsSource = value;
 
                 if (GitUICommandsSourceSet != null)
-                    GitUICommandsSourceSet(this, _UICommandsSource);
+                    GitUICommandsSourceSet(this, _uiCommandsSource);
             }
 
         }
@@ -65,7 +66,7 @@ namespace GitUI
 
         protected override void Dispose(bool disposing)
         {
-            if (_UICommandsSource != null)
+            if (_uiCommandsSource != null)
                 DisposeUICommandsSource();
 
             base.Dispose(disposing);
@@ -73,7 +74,7 @@ namespace GitUI
 
         protected virtual void DisposeUICommandsSource()
         {
-            _UICommandsSource = null;
+            _uiCommandsSource = null;
         }
 
         private void SearchForUICommandsSource()
@@ -83,7 +84,7 @@ namespace GitUI
 
             lock (this)
             {
-                if (_UICommandsSource != null)
+                if (_uiCommandsSource != null)
                     return;
 
                 IGitUICommandsSource cs = null;
@@ -104,13 +105,12 @@ namespace GitUI
         {
             if (ExecuteScriptCommand(command))
                 return true;
-            else
-                return base.ExecuteCommand(command);
+            return base.ExecuteCommand(command);
         }
 
-        protected virtual bool ExecuteScriptCommand(int command)
+        protected bool ExecuteScriptCommand(int command)
         {
-            return GitUI.Script.ScriptRunner.ExecuteScriptCommand(Module, command);
+            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, this as RevisionGrid);
         }
     }
 }

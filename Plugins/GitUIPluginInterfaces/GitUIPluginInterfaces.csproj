@@ -73,7 +73,7 @@
     <Compile Include="RepositoryHosts\IRepositoryHostPlugin.cs" />
     <Compile Include="IGitPlugin.cs" />
     <Compile Include="IGitPluginSettingsContainer.cs" />
-    <Compile Include="IGitSubmodule.cs" />
+    <Compile Include="IGitSubmoduleInfo.cs" />
     <Compile Include="IGitUICommands.cs" />
     <Compile Include="GitUIBaseEventArgs.cs" />
     <Compile Include="RepositoryHosts\IHostedRepository.cs" />

@@ -397,7 +397,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         {
             int position = rtb.SelectionStart;
             if (position < 0 || position > rtb.Text.Length)
-                throw new ArgumentOutOfRangeException("position");
+                throw new InvalidOperationException("SelectionStart has invalid value");
 
             rtb.SelectionStart = position;
             rtb.SelectedText = text;
@@ -411,7 +411,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         {
             int position = rtb.SelectionStart;
             if (position < 0 || position > rtb.Text.Length)
-                throw new ArgumentOutOfRangeException("position");
+                throw new InvalidOperationException("SelectionStart has invalid value");
 
             rtb.SelectionStart = position;
             rtb.SelectedText = text;
@@ -424,7 +424,6 @@ namespace GitUI.Editor.RichTextBoxExtension
                 string head = rtfText.Substring(0, idx);
                 string tail = rtfText.Substring(idx);
                 rtb.SelectedRtf = head + @"\v #" + hyperlink + @"\v0" + tail;
-                length = rtb.SelectionStart - position;
             }
             rtb.SelectedRtf = ("{\rtf1\ansi " + text + "\v #") + hyperlink + "\v0}";
             rtb.Select(position, text.Length + hyperlink.Length + 1);

@@ -264,7 +264,7 @@ namespace GitUI
 
         private String RunStatusCommand()
         {
-            string command = GitCommandHelpers.GetAllChangedFilesCmd(true, true);
+            string command = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default);
             return Module.RunGitCmd(command);
         }
 

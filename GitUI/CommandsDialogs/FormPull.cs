@@ -11,7 +11,7 @@ using GitCommands.Repository;
 using GitUI.Properties;
 using GitUI.Script;
 using ResourceManager.Translation;
-using Settings = GitCommands.Settings;
+using Settings = GitCommands.AppSettings;
 
 namespace GitUI.CommandsDialogs
 {
@@ -81,10 +81,10 @@ namespace GitUI.CommandsDialogs
         private const string AllRemotes = "[ All ]";
 
         private FormPull()
-            : this(null, null)
+            : this(null, null, null)
         { }
 
-        public FormPull(GitUICommands aCommands, string defaultRemoteBranch)
+        public FormPull(GitUICommands aCommands, string defaultRemoteBranch, string defaultRemote)
             : base(aCommands)
         {
             InitializeComponent();
@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
 
             if (aCommands != null)
-                Init();
+                Init(defaultRemote);
 
             Merge.Checked = Settings.FormPullAction == Settings.PullAction.Merge;
             Rebase.Checked = Settings.FormPullAction == Settings.PullAction.Rebase;
@@ -108,12 +108,22 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Init()
+        private void Init(string defaultRemote)
         {            
             UpdateRemotesList();
 
             _branch = Module.GetSelectedBranch();
-            string currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", _branch));
+
+            string currentBranchRemote;
+            if (defaultRemote.IsNullOrEmpty())
+            {
+                currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", _branch));
+            }
+            else
+            {
+                currentBranchRemote = defaultRemote;
+            }
+
             if (currentBranchRemote.IsNullOrEmpty() && _NO_TRANSLATE_Remotes.Items.Count >= 3)
             {
                 IList<string> remotes = (IList<string>)_NO_TRANSLATE_Remotes.DataSource;
@@ -151,7 +161,7 @@ namespace GitUI.CommandsDialogs
 
         private void MergetoolClick(object sender, EventArgs e)
         {
-            Module.RunGitRealCmd("mergetool");
+            Module.RunExternalCmdShowConsole(Settings.GitCommand, "mergetool");
 
             if (MessageBox.Show(this, _allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
                                 MessageBoxButtons.YesNo) != DialogResult.Yes)
@@ -259,7 +269,7 @@ namespace GitUI.CommandsDialogs
 
             var source = CalculateSource();
 
-            ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePull);
+            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
 
             var stashed = CalculateStashedValue(owner);
 
@@ -345,7 +355,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                ScriptManager.RunEventScripts(Module, ScriptEvent.AfterPull);
+                ScriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
             }
 
             return DialogResult.No;

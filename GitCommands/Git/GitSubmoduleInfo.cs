@@ -3,36 +3,24 @@ using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
-    public sealed class GitSubmodule : IGitSubmodule
+    public sealed class GitSubmoduleInfo : IGitSubmoduleInfo
     {
-        private readonly GitModule Module;
+        private readonly GitModule _module;
         public string LocalPath { get; set; }
 
-        public GitSubmodule(GitModule aModule)
+        public GitSubmoduleInfo(GitModule module)
         {
-            Module = aModule;
+            _module = module;
         }
 
         public string Name
         {
-            get
-            {
-                return Module.GetSubmoduleNameByPath(LocalPath);
-            }
-            set
-            {
-            }
+            get { return _module.GetSubmoduleNameByPath(LocalPath); }
         }
 
         public string RemotePath
         {
-            get
-            {
-                return Module.GetSubmoduleRemotePath(Name);
-            }
-            set
-            {
-            }
+            get { return _module.GetSubmoduleRemotePath(Name); }
         }
 
         public string CurrentCommitGuid { get; set; }
@@ -54,10 +42,10 @@ namespace GitCommands
             }
         }
 
-        public static bool operator ==(GitSubmodule a, GitSubmodule b)
+        public static bool operator ==(GitSubmoduleInfo a, GitSubmoduleInfo b)
         {
             // If both are null, or both are same instance, return true.
-            if (System.Object.ReferenceEquals(a, b))
+            if (ReferenceEquals(a, b))
             {
                 return true;
             }
@@ -72,14 +60,14 @@ namespace GitCommands
             return a.LocalPath == b.LocalPath;
         }
 
-        public static bool operator !=(GitSubmodule a, GitSubmodule b)
+        public static bool operator !=(GitSubmoduleInfo a, GitSubmoduleInfo b)
         {
             return !(a == b);
         }
 
         public override bool Equals(Object obj)
         {
-            return obj is GitSubmodule && this == (GitSubmodule)obj;
+            return obj is GitSubmoduleInfo && this == (GitSubmoduleInfo)obj;
         }
 
         public override int GetHashCode()
