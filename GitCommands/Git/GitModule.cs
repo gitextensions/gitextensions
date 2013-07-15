@@ -931,10 +931,74 @@ namespace GitCommands
 
         public bool IsMerge(string commit)
         {
-            string output = RunGitCmd("log -n 1 --format=format:%P \"" + commit + "\"");
-            string[] parents = output.Split(' ');
+            string[] parents = GetParents(commit);
             if (parents.Length > 1) return true;
             return false;
+        }
+
+        private static string ProccessDiffNotes(int startIndex, string[] lines)
+        {
+            int endIndex = lines.Length - 1;
+            if (lines[endIndex] == "Notes:")
+                endIndex--;
+
+            var message = new StringBuilder();
+            bool bNotesStart = false;
+            for (int i = startIndex; i <= endIndex; i++)
+            {
+                string line = lines[i];
+                if (bNotesStart)
+                    line = "    " + line;
+                message.AppendLine(line);
+                if (lines[i] == "Notes:")
+                    bNotesStart = true;
+            }
+
+            return message.ToString();
+        }
+
+        public GitRevision GetRevision(string commit, bool shortFormat = false)
+        {
+            const string formatString =
+                /* Hash           */ "%H%n" +
+                /* Tree           */ "%T%n" +
+                /* Parents        */ "%P%n" +
+                /* Author Name    */ "%aN%n" +
+                /* Author EMail   */ "%aE%n" +
+                /* Author Date    */ "%at%n" +
+                /* Committer Name */ "%cN%n" +
+                /* Committer EMail*/ "%cE%n" +
+                /* Committer Date */ "%ct%n";
+            const string messageFormat = "%e%n%B%nNotes:%n%-N";
+            string cmd = "log -n1 --format=format:" + formatString + (shortFormat ? "%e%n%s" : messageFormat) + " " + commit;
+            var revInfo = RunGitCmd(cmd);
+            string[] lines = revInfo.Split('\n');
+            var revision = new GitRevision(this, lines[0])
+            {
+                TreeGuid = lines[1],
+                ParentGuids = lines[2].Split(new[]{' '}),
+                Author = ReEncodeStringFromLossless(lines[3]),
+                AuthorEmail = ReEncodeStringFromLossless(lines[4]),
+                Committer = ReEncodeStringFromLossless(lines[6]),
+                CommitterEmail = ReEncodeStringFromLossless(lines[7])
+            };
+            revision.AuthorDate = DateTimeUtils.ParseUnixTime(lines[5]);
+            revision.CommitDate = DateTimeUtils.ParseUnixTime(lines[8]);
+            revision.MessageEncoding = lines[9];
+            if (shortFormat)
+            {
+                revision.Message = ReEncodeCommitMessage(lines[10], revision.MessageEncoding);
+            }
+            else
+            {
+                string message = ProccessDiffNotes(10, lines);
+
+                //commit message is not reencoded by git when format is given
+                revision.Body = ReEncodeCommitMessage(message, revision.MessageEncoding);
+                revision.Message = revision.Body.Substring(0, revision.Body.IndexOfAny(new[] {'\r', '\n'}));
+            }
+
+            return revision;
         }
 
         public string[] GetParents(string commit)
@@ -948,31 +1012,7 @@ namespace GitCommands
             string[] parents = GetParents(commit);
             var parentsRevisions = new GitRevision[parents.Length];
             for (int i = 0; i < parents.Length; i++)
-            {
-                const string formatString =
-                    /* Tree           */ "%T%n" +
-                    /* Author Name    */ "%aN%n" +
-                    /* Author Date    */ "%ai%n" +
-                    /* Committer Name */ "%cN%n" +
-                    /* Committer Date */ "%ci%n" +
-                    /* Commit Message */ "%s";
-                string cmd = "log -n 1 --format=format:" + formatString + " " + parents[i];
-                var revInfo = RunGitCmd(cmd);
-                string[] infos = revInfo.Split('\n');
-                var revision = new GitRevision(this, parents[i])
-                {
-                    TreeGuid = infos[0],
-                    Author = infos[1],
-                    Committer = infos[3],
-                    Message = infos[5]
-                };
-                DateTime date;
-                DateTime.TryParse(infos[2], out date);
-                revision.AuthorDate = date;
-                DateTime.TryParse(infos[4], out date);
-                revision.CommitDate = date;
-                parentsRevisions[i] = revision;
-            }
+                parentsRevisions[i] = GetRevision(parents[i], true);
             return parentsRevisions;
         }
 
