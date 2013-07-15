@@ -627,37 +627,16 @@ namespace GitUI
 
         public GitRevision GetCurrentRevision()
         {
-            const string formatString =
-                /* Tree           */ "%T%n" +
-                /* Author Name    */ "%aN%n" +
-                /* Author Date    */ "%ai%n" +
-                /* Committer Name */ "%cN%n" +
-                /* Committer Date */ "%ci%n" +
-                /* Commit Message */ "%s";
-            string cmd = "log -n 1 --pretty=format:" + formatString + " " + CurrentCheckout;
-            var RevInfo = Module.RunGitCmd(cmd);
-            string[] Infos = RevInfo.Split('\n');
-            var Revision = new GitRevision(Module, CurrentCheckout)
-            {
-                TreeGuid = Infos[0],
-                Author = Infos[1],
-                Committer = Infos[3],
-                Message = Infos[5]
-            };
-            DateTime date;
-            DateTime.TryParse(Infos[2], out date);
-            Revision.AuthorDate = date;
-            DateTime.TryParse(Infos[4], out date);
-            Revision.CommitDate = date;
+            var revision = Module.GetRevision(CurrentCheckout, true);
             var refs = Module.GetRefs(true, true);
             foreach (var gitRef in refs)
             {
-                if (gitRef.Guid.Equals(Revision.Guid))
+                if (gitRef.Guid.Equals(revision.Guid))
                 {
-                    Revision.Refs.Add(gitRef);
+                    revision.Refs.Add(gitRef);
                 }
             }
-            return Revision;
+            return revision;
         }
 
         public void RefreshRevisions()
@@ -2159,28 +2138,28 @@ namespace GitUI
         private void AddOwnScripts()
         {
             IList<ScriptInfo> scripts = ScriptManager.GetScripts();
-            int addedScripts = 0;
-            if (scripts != null)
+            if (scripts == null)
+                return;
+            int lastIndex = mainContextMenu.Items.Count;
+            foreach (ScriptInfo scriptInfo in scripts)
             {
-                foreach (ScriptInfo scriptInfo in scripts)
+                if (scriptInfo.Enabled)
                 {
-                    if (scriptInfo.Enabled)
-                    {
-                        addedScripts++;
-                        ToolStripItem item = new ToolStripMenuItem(scriptInfo.Name);
-                        item.Name = item.Text + "_ownScript";
-                        item.Click += RunScript;
-                        if (scriptInfo.AddToRevisionGridContextMenu)
-                            mainContextMenu.Items.Add(item);
-                        else
-                            runScriptToolStripMenuItem.DropDown.Items.Add(item);
-                    }
+                    ToolStripItem item = new ToolStripMenuItem(scriptInfo.Name);
+                    item.Name = item.Text + "_ownScript";
+                    item.Click += RunScript;
+                    if (scriptInfo.AddToRevisionGridContextMenu)
+                        mainContextMenu.Items.Add(item);
+                    else
+                        runScriptToolStripMenuItem.DropDown.Items.Add(item);
                 }
-
-                bool showScriptsMenu = addedScripts > 1;
-                toolStripSeparator7.Visible = showScriptsMenu;
-                runScriptToolStripMenuItem.Visible = showScriptsMenu; 
             }
+
+            if (lastIndex != mainContextMenu.Items.Count)
+                mainContextMenu.Items.Insert(lastIndex, new ToolStripSeparator());
+            bool showScriptsMenu = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
+            toolStripSeparator7.Visible = showScriptsMenu;
+            runScriptToolStripMenuItem.Visible = showScriptsMenu;
         }
 
         private void RemoveOwnScripts()
@@ -2192,6 +2171,8 @@ namespace GitUI
             foreach (ToolStripItem item in list)
                 if (item.Name.Contains("_ownScript"))
                     mainContextMenu.Items.RemoveByKey(item.Name);
+            if (mainContextMenu.Items[mainContextMenu.Items.Count - 1] is ToolStripSeparator)
+                mainContextMenu.Items.RemoveAt(mainContextMenu.Items.Count - 1);
         }
 
         private bool _settingsLoaded;
@@ -2203,7 +2184,7 @@ namespace GitUI
                 new FormSettings(UICommands).LoadSettings();
                 _settingsLoaded = true;
             }
-            ScriptRunner.RunScript(Module, sender.ToString(), this);
+            ScriptRunner.RunScript(this, Module, sender.ToString(), this);
             RefreshRevisions();
         }
 

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using GitCommands.Config;
 using GitCommands.Settings;
 
 
@@ -98,6 +96,11 @@ namespace GitCommands.GitExtLinks
                 try
                 {
                     var xml = Settings.GetString("RevisionLinkDefs", null);
+                    if (xml == null)
+                    {
+                        LinkDefs = new List<GitExtLinkDef>();
+                        return;
+                    }
                     stringReader = new StringReader(xml);
                     using (var xmlReader = new XmlTextReader(stringReader))
                     {
