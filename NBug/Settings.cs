@@ -347,6 +347,22 @@ namespace NBug
             }
         }
 
+		/// <summary>
+		/// Gets or sets an event for a CustomSubmission.
+		/// </summary>
+		internal static Delegate CustomSubmissionHandle;
+		public static event EventHandler<CustomSubmissionEventArgs> CustomSubmissionEvent
+		{
+			add
+			{
+				CustomSubmissionHandle = Delegate.Combine(CustomSubmissionHandle, value);
+			}
+			remove
+			{
+				CustomSubmissionHandle = Delegate.Remove(CustomSubmissionHandle, value);
+			}
+		}
+
 		#endregion
 
 		#region Internal Settings
