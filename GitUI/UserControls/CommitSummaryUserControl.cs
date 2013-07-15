@@ -12,19 +12,19 @@ namespace GitUI.UserControls
     /// </summary>
     public partial class CommitSummaryUserControl : GitExtensionsControl
     {
-        private readonly TranslationString noRevision = new TranslationString("No revision");
-        private readonly TranslationString notAvailable = new TranslationString("n/a");
-        private readonly string tagsCaption;
-        private readonly string branchesCaption;
-        private readonly Color tagsBackColor = Color.LightSteelBlue;
-        private readonly Color branchesBackColor = Color.LightSalmon;
+        private readonly TranslationString _noRevision = new TranslationString("No revision");
+        private readonly TranslationString _notAvailable = new TranslationString("n/a");
+        private readonly string _tagsCaption;
+        private readonly string _branchesCaption;
+        private readonly Color _tagsBackColor = Color.LightSteelBlue;
+        private readonly Color _branchesBackColor = Color.LightSalmon;
 
         public CommitSummaryUserControl()
         {
             InitializeComponent();
             Translate();
-            tagsCaption = labelTagsCaption.Text;
-            branchesCaption = labelBranchesCaption.Text;
+            _tagsCaption = labelTagsCaption.Text;
+            _branchesCaption = labelBranchesCaption.Text;
 
             _messageY = labelMessage.Location.Y;
             _messageHeight = labelMessage.Height;
@@ -48,8 +48,8 @@ namespace GitUI.UserControls
                 _revision = value;
 
                 labelAuthorCaption.Text = Strings.GetAuthorText() + ":";
-                labelTagsCaption.Text = tagsCaption;
-                labelBranchesCaption.Text = branchesCaption;
+                labelTagsCaption.Text = _tagsCaption;
+                labelBranchesCaption.Text = _branchesCaption;
 
                 if (Revision != null)
                 {
@@ -60,10 +60,10 @@ namespace GitUI.UserControls
                     
                     var tagList = Revision.Refs.Where(r => r.IsTag).ToList();
                     string tagListStr = string.Join(", ", tagList.Select(h => h.LocalName).ToArray());
-                    labelTags.Text = string.Format("{0}", tagListStr.IsNullOrEmpty() ? notAvailable.Text : tagListStr);
+                    labelTags.Text = string.Format("{0}", tagListStr.IsNullOrEmpty() ? _notAvailable.Text : tagListStr);
                     if (tagList.Any())
                     {
-                        labelTags.BackColor = tagsBackColor;
+                        labelTags.BackColor = _tagsBackColor;
                     }
                     else
                     {
@@ -72,10 +72,10 @@ namespace GitUI.UserControls
                     
                     var branchesList = Revision.Refs.Where(r => r.IsHead).ToList();
                     string branchesListStr = string.Join(", ", branchesList.Select(h => h.LocalName).ToArray());
-                    labelBranches.Text = string.Format("{0}", branchesListStr.IsNullOrEmpty() ? notAvailable.Text : branchesListStr);
+                    labelBranches.Text = string.Format("{0}", branchesListStr.IsNullOrEmpty() ? _notAvailable.Text : branchesListStr);
                     if (branchesList.Any())
                     {
-                        labelBranches.BackColor = branchesBackColor;
+                        labelBranches.BackColor = _branchesBackColor;
                     }
                     else
                     {
@@ -84,7 +84,7 @@ namespace GitUI.UserControls
                 }
                 else
                 {
-                    groupBox1.Text = noRevision.Text;
+                    groupBox1.Text = _noRevision.Text;
                     labelAuthor.Text = "---";
                     labelDate.Text = "---";
                     labelMessage.Text = "---";
