@@ -514,7 +514,7 @@ namespace GitUI
                 FileStatusListView.Groups.Clear();
                 FileStatusListView.Items.Clear();
                 _itemsDictionary = new Dictionary<string, IList<GitItemStatus>>();
-                if (value == null || value.Count == 0)
+                if (value == null || value.All(pair => pair.Value.Count == 0))
                 {
                     if (!empty)
                     {
