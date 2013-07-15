@@ -6,6 +6,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Statistics", "Statistics", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtensions", "GitExtensions\GitExtensions.csproj", "{F15A69AF-7EBD-4F69-A026-5071FA3EC61B}"
 	ProjectSection(ProjectDependencies) = postProject
+		{121965D1-4399-4538-B8BF-403EB5B847C3} = {121965D1-4399-4538-B8BF-403EB5B847C3}
 		{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC} = {EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}
 	EndProjectSection
 EndProject
