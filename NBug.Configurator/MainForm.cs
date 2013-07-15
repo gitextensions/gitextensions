@@ -89,6 +89,7 @@ namespace NBug.Configurator
 			this.mainTabs.SelectedIndex = 0;
 			this.runTestAppButton.Enabled = true;
 			this.saveButton.Enabled = true;
+			this.addDestinationButton.Enabled = true;
 		}
 
 		/// <summary>

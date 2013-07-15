@@ -809,7 +809,7 @@
 			// 
 			// mainToolTips
 			// 
-			this.mainToolTips.AutoPopDelay = 120000;
+			this.mainToolTips.AutoPopDelay = 20000;
 			this.mainToolTips.InitialDelay = 500;
 			this.mainToolTips.ReshowDelay = 100;
 			// 
@@ -890,6 +890,7 @@
 			// 
 			// addDestinationButton
 			// 
+			this.addDestinationButton.Enabled = false;
 			this.addDestinationButton.Location = new System.Drawing.Point(12, 439);
 			this.addDestinationButton.Name = "addDestinationButton";
 			this.addDestinationButton.Size = new System.Drawing.Size(98, 23);
