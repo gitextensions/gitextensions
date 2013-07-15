@@ -507,7 +507,7 @@ namespace GitCommands
 
         public static bool ShowMergeCommits
         {
-            get { return GetBool("showmergecommits", false); }
+            get { return GetBool("showmergecommits", true); }
             set { SetBool("showmergecommits", value); }
         }
 
