@@ -627,37 +627,16 @@ namespace GitUI
 
         public GitRevision GetCurrentRevision()
         {
-            const string formatString =
-                /* Tree           */ "%T%n" +
-                /* Author Name    */ "%aN%n" +
-                /* Author Date    */ "%ai%n" +
-                /* Committer Name */ "%cN%n" +
-                /* Committer Date */ "%ci%n" +
-                /* Commit Message */ "%s";
-            string cmd = "log -n 1 --pretty=format:" + formatString + " " + CurrentCheckout;
-            var RevInfo = Module.RunGitCmd(cmd);
-            string[] Infos = RevInfo.Split('\n');
-            var Revision = new GitRevision(Module, CurrentCheckout)
-            {
-                TreeGuid = Infos[0],
-                Author = Infos[1],
-                Committer = Infos[3],
-                Message = Infos[5]
-            };
-            DateTime date;
-            DateTime.TryParse(Infos[2], out date);
-            Revision.AuthorDate = date;
-            DateTime.TryParse(Infos[4], out date);
-            Revision.CommitDate = date;
+            var revision = Module.GetRevision(CurrentCheckout, true);
             var refs = Module.GetRefs(true, true);
             foreach (var gitRef in refs)
             {
-                if (gitRef.Guid.Equals(Revision.Guid))
+                if (gitRef.Guid.Equals(revision.Guid))
                 {
-                    Revision.Refs.Add(gitRef);
+                    revision.Refs.Add(gitRef);
                 }
             }
-            return Revision;
+            return revision;
         }
 
         public void RefreshRevisions()
