@@ -13,6 +13,7 @@ namespace NBug.Core.Submission.Web
 	using System.Net;
 
 	using NBug.Core.Util.Logging;
+	using NBug.Core.Util.Web;
 
 	public class HttpFactory : IProtocolFactory
 	{
@@ -42,7 +43,7 @@ namespace NBug.Core.Submission.Web
 		// Warning: There should be no semicolon (;) or equals sign (=) used in any field.
 		// Note: Url should be a full url with a trailing slash (/) or file extension (i.e. .php), like: http://....../ -or- http://....../upload.php
 
-		/* Type=HTTP;
+		/* Type=Http;
 		 * Url=http://tracker.mydomain.com/myproject/upload.php;
 		 */
 
@@ -78,16 +79,14 @@ namespace NBug.Core.Submission.Web
 			 * ?>
 			 */
 
-			using (var webClient = new WebClient())
-			using (var data = new MemoryStream())
-			{
-				file.Position = 0;
-				file.CopyTo(data);
-				data.Position = 0;
-				var response = webClient.UploadData(this.Url, data.GetBuffer());
-				Logger.Info("Response from HTTP server: " + System.Text.Encoding.ASCII.GetString(response));
-			}
+			file.Position = 0;
 
+			var response = StreamUpload.Create()
+				.Add(file, "file", fileName, "application/zip")
+				.Upload(this.Url)
+				.Response();
+
+			Logger.Info("Response from HTTP server: " + response);
 			file.Position = 0;
 
 			return true;

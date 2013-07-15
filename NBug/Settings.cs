@@ -195,13 +195,13 @@ namespace NBug
 		}
 		
 		/// <summary>
-		/// Gets or sets the UI mode. You should only change this if you red the documentation and understood it. Otherwise leave it to auto.
+		/// Gets or sets the UI mode. You should only change this if you read the documentation and understood it. Otherwise leave it to auto.
 		/// Default value is Auto.
 		/// </summary>
 		public static UIMode UIMode { get; set; }
 
 		/// <summary>
-		/// Gets or sets the UI provider. You should only change this if you red the documentation and understood it. Otherwise leave it to auto.
+		/// Gets or sets the UI provider. You should only change this if you read the documentation and understood it. Otherwise leave it to auto.
 		/// Default value is Auto.
 		/// </summary>
 		public static UIProvider UIProvider { get; set; }
@@ -214,7 +214,7 @@ namespace NBug
 		public static int SleepBeforeSend { get; set; }
 
 		/// <summary>
-		/// Gets or sets the number of bug reports that can be queued for submission. Each time an unhandled occurs, the bug report is prepared to
+		/// Gets or sets the number of bug reports that can be queued for submission. Each time an unhandled exception occurs, the bug report is prepared to
 		/// be send at the next application startup. If submission fails (i.e. there is no Internet connection), the queue grows with each additional
 		/// unhandled exception and resulting bug reports. This limits the max no of queued reports to limit the disk space usage.
 		/// Default value is 5.
@@ -255,35 +255,35 @@ namespace NBug
 		public static bool WriteLogToDisk { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether to to exit application after handling an unhandled exception or sending error report. This value
-		/// is disregarded for anything but UIMode.None. For UIMode.None, you can choose not to exit application which will result in
+		/// Gets or sets a value indicating whether the application will exit after handling and logging an unhandled exception.
+		/// This value is disregarded for anything but UIMode.None. For UIMode.None, you can choose not to exit the application which will result in
 		/// 'Windows Error Reporting' (aka Dr. Watson) window to kick in. One reason to do so would be to keep in line with Windows 7 Logo requirements,
-		/// which is a corner case. This may also be helpful in using NBug library as a simple unhandled exception logger facility, just to log and submit
-		/// exceptions but does not interfere with the application execution flow. Default value is true.
+		/// which is a corner case. This may also be helpful in using the NBug library as a simple unhandled exception logger facility, just to log and submit
+		/// exceptions but not interfering with the application execution flow. Default value is true.
 		/// </summary>
 		public static bool ExitApplicationImmediately { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether to handled exceptions even in a corrupted process thought the 'HandleProcessCorruptedStateExceptions'
+		/// Gets or sets a value indicating whether to handle exceptions even in a corrupted process thought the 'HandleProcessCorruptedStateExceptions'
 		/// flag. The default value for this is false since generating bug reports for a corrupted process may not be successful so use with caution.
 		/// </summary>
 		public static bool HandleProcessCorruptedStateExceptions { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether to use deferred reporting feature. With this feature enabled, all bug reports are sent 
+		/// Gets or sets a value indicating whether to use the deferred reporting feature. With this feature enabled, all bug reports are sent 
 		/// after the next application start and as a background task. This helps facilitate sending of bug reports with large memory dumps
 		/// with them. When this feature is disabled, bug reports are sent as soon as an unhandled exception is caught. For the users, it is
 		/// very uncomfortable to wait for bug reports to be sent after an application crash, so it is best to leave this feature on.
 		/// Default value is true.
 		/// </summary>
-		private static bool DeferredReporting { get; set; } // ToDo: Complete the implementation for non-defered report sending
+		private static bool DeferredReporting { get; set; } // ToDo: Complete the implementation for non-deferred report sending
 
 		private static bool releaseMode; // False by default
 
 		/// <summary>
-		/// Gets or sets a value indicating whether to enable release mode for NBug library. In release mode, internal developer UI is not displayed and
+		/// Gets or sets a value indicating whether to enable release mode for the NBug library. In release mode the internal developer UI is not displayed and
 		/// unhandled exceptions are only handled if there is no debugger attached to the process. Once properly configured and verified to be working
-		/// as intended, NBug release mode should be enabled to be able properly to use Visual Studio debugger, without NBug trying to handle exceptions
+		/// as intended, NBug release mode should be enabled to be able to properly use the Visual Studio debugger, without NBug trying to handle exceptions.
 		/// before Visual Studio does. Default value is false.
 		/// </summary>
 		public static bool ReleaseMode
@@ -328,11 +328,11 @@ namespace NBug
 
 		/// <summary>
 		/// Gets or sets a list of additional files to be added to the report zip. The files can use * or ? in the same way as DOS modifiers.
-		/// </summary>        
+		/// </summary>
 		public static List<string> AdditionalReportFiles { get; set; }
 
         /// <summary>
-        /// Gets or sets a evento for CustomUI.
+        /// Gets or sets an event for a CustomUI.
         /// </summary>
         internal static Delegate CustomUIHandle;
         public static event EventHandler<CustomUIEventArgs> CustomUIEvent
@@ -398,7 +398,7 @@ namespace NBug
 		internal static bool HandleExceptions { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether the dispatcher, the class deals with sending of reports to their destinations like mail
+		/// Gets or sets a value indicating whether the dispatcher the class deals with sending of reports to their destinations like mail
 		/// address or an issue tracker, runs asynchronously (in a background worker thread as a <see cref="System.Threading.Tasks.Task"/>).
 		/// By default dispatcher runs on a background thread except for debug builds, where it blocks the UI and runs in a synchronous manner.
 		/// This is made so to prevent any exceptions thrown by the dispatcher from being swallowed by the CLR since background thread exceptions
@@ -412,10 +412,10 @@ namespace NBug
 		internal static bool SkipDispatching { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether to remove the all the <see cref="System.Threading.Thread.Sleep(int)"/> statements from 
-		/// the thread executions. Some thread sleep statements are place around to increase the host application performance i.e. the 
+		/// Gets or sets a value indicating whether to remove all the <see cref="System.Threading.Thread.Sleep(int)"/> statements from 
+		/// the thread executions. Some thread sleep statements are used to increase the host application performance i.e. the 
 		/// <see cref="Settings.SleepBeforeSend"/> halts the execution of <see cref="Dispatcher.Dispatch()"/> for a given number of
-		/// seconds to let host application initialize properly.
+		/// seconds to let the host application initialize properly.
 		/// </summary>
 		internal static bool RemoveThreadSleep { get; set; }
 
@@ -424,7 +424,7 @@ namespace NBug
 		#region Load Save Settings Methods
 
 		/// <summary>
-		/// This should not be used directly. Rather, <see cref="SettingsOverride.LoadCustomSettings(Stream)"/> should be prefered.
+		/// This should not be used directly. Rather, <see cref="SettingsOverride.LoadCustomSettings(Stream)"/> should be preferred.
 		/// </summary>
 		internal static void LoadCustomSettings(XElement config)
 		{
@@ -515,7 +515,7 @@ namespace NBug
 				}
 				else
 				{
-					Logger.Error("There is a problem with the 'applicationSettings' section of the configuration file. The property red from the file '" + property + "' is undefined. This is probably a refactoring problem, or malformed config file.");
+					Logger.Error("There is a problem with the 'applicationSettings' section of the configuration file. The property read from the file '" + property + "' is undefined. This is probably a refactoring problem, or a malformed config file.");
 				}
 			}
 
@@ -549,7 +549,7 @@ namespace NBug
 				}
 				else
 				{
-					Logger.Error("There is a problem with the 'connectionStrings' section of the configuration file. The property red from the file '" + property + "' is undefined. This is probably a refactoring problem, or malformed config file.");
+					Logger.Error("There is a problem with the 'connectionStrings' section of the configuration file. The property read from the file '" + property + "' is undefined. This is probably a refactoring problem, or malformed config file.");
 				}
 			}
 
@@ -557,7 +557,7 @@ namespace NBug
 		}
 
 		/// <summary>
-		/// This should not be used directly. Rather, <see cref="SettingsOverride.SaveCustomSettings(Stream)"/> should be prefered.
+		/// This should not be used directly. Rather <see cref="SettingsOverride.SaveCustomSettings(Stream)"/> should be preferred.
 		/// </summary>
 		internal static void SaveCustomSettings(Stream settingsFile, bool encryptConnectionStrings)
 		{
@@ -715,7 +715,7 @@ namespace NBug
 			settingsFile.Flush();
 			config.Save(settingsFile);
 			settingsFile.Flush();
-		} 
+		}
 
 		#endregion
 
@@ -758,7 +758,7 @@ namespace NBug
 			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination3));
 			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination4));
 			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination5));
-  		}
+		}
 
 		private static string Decrypt(string connectionString)
 		{
@@ -867,7 +867,7 @@ namespace NBug
 		private static string GetPropertyName<T>(Expression<Func<T>> propertyExpression)
 		{
 			return ((MemberExpression)propertyExpression.Body).Member.Name;
-		} 
+		}
 
 		#endregion
 	}
