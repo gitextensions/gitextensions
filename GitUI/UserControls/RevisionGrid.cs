@@ -2287,9 +2287,13 @@ namespace GitUI
 
             // must show MergeCommits when showing revision graph
             if (!Settings.ShowMergeCommits && IsGraphLayout())
+            {
                 Settings.ShowMergeCommits = true;
-
-            Refresh();
+                showMergeCommitsToolStripMenuItem.Checked = true;
+                ForceRefreshRevisions();
+            }
+            else
+                Refresh();
         }
 
         private void ToggleRevisionGraph()
@@ -2308,8 +2312,7 @@ namespace GitUI
                 Settings.RevisionGraphLayout = (int) RevisionGridLayout.LargeCard;
             else if (Settings.RevisionGraphLayout == (int) RevisionGridLayout.FilledBranchesSmall)
                 Settings.RevisionGraphLayout = (int) RevisionGridLayout.FilledBranchesSmallWithGraph;
-            else if (Settings.RevisionGraphLayout ==
-                     (int) RevisionGridLayout.FilledBranchesSmallWithGraph)
+            else if (Settings.RevisionGraphLayout == (int) RevisionGridLayout.FilledBranchesSmallWithGraph)
                 Settings.RevisionGraphLayout = (int) RevisionGridLayout.FilledBranchesSmall;
         }
 
