@@ -62,9 +62,10 @@ namespace GitCommands.Settings
             //Settings stored in Distributed always have to be set directly
             if (LowerPriority == null 
                 || LowerPriority.LowerPriority == null
-                || SettingsCache.HasValue(name) 
-                || LowerPriority.SettingsCache.HasValue(name))
+                || SettingsCache.HasValue(name))
                 SettingsCache.SetValue(name, value, encode);
+            else if (LowerPriority.SettingsCache.HasValue(name))
+                LowerPriority.SetValue(name, value, encode);
             else
                 LowerPriority.LowerPriority.SetValue(name, value, encode);
         }
