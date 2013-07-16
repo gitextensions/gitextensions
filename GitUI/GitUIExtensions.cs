@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Settings;
 using GitUI.Editor;
 using ICSharpCode.TextEditor.Util;
 
@@ -318,6 +319,24 @@ namespace GitUI
 
             if (!control.IsDisposed)
                 UISynchronizationContext.Send(checkDisposedAndInvoke, state);
+        }
+
+        public static bool? GetNullableChecked(this CheckBox chx)
+        {
+            if (chx.CheckState == CheckState.Indeterminate)
+                return null;
+            else
+                return chx.Checked;
+
+        }
+
+        public static void SetNullableChecked(this CheckBox chx, bool? Checked)
+        {
+            if (Checked.HasValue)
+                chx.CheckState = Checked.Value ? CheckState.Checked : CheckState.Unchecked;
+            else
+                chx.CheckState = CheckState.Indeterminate;
+
         }
 
         public static Control FindFocusedControl(this ContainerControl container)
