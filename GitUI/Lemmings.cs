@@ -8,7 +8,7 @@ namespace GitUI
     {
         public static Bitmap GetPictureBoxImage(DateTime currentDate)
         {
-            if (GitCommands.Settings.IconStyle.Equals("Cow", StringComparison.OrdinalIgnoreCase))
+            if (GitCommands.AppSettings.IconStyle.Equals("Cow", StringComparison.OrdinalIgnoreCase))
             {
                 // Lemmings
                 // Also, we removed repeated calls to DateTime.Now and made this method testable

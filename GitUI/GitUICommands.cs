@@ -12,7 +12,7 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Gravatar;
-using Settings = GitCommands.Settings;
+using Settings = GitCommands.AppSettings;
 
 namespace GitUI
 {
@@ -1381,7 +1381,7 @@ namespace GitUI
 
         public bool StartRepoSettingsDialog(IWin32Window owner)
         {
-            return StartSettingsDialog(owner, GitUI.CommandsDialogs.SettingsDialog.Pages.LocalSettingsSettingsPage.GetPageReference());
+            return StartSettingsDialog(owner, GitUI.CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
         }
 
         public bool StartBrowseDialog(IWin32Window owner, string filter)
@@ -1879,7 +1879,9 @@ namespace GitUI
             var searchWindow = new SearchWindow<string>(FindFileMatches);
             Application.Run(searchWindow);
             if (searchWindow.SelectedItem != null)
-                Debug.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
+                //We need to return the file that has been found, the visual studio plugin uses the return value
+                //to open the selected file.
+                Console.WriteLine(Path.Combine(Module.WorkingDir, searchWindow.SelectedItem));
         }
 
         private void RunBrowseCommand(string[] args)

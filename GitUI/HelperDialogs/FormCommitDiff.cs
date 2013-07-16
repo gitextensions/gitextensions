@@ -49,7 +49,7 @@ namespace GitUI.HelperDialogs
             {
                 DiffFiles.SetGitItemStatuses(_revision + "^", Module.GetDiffFiles(_revisionGuid, _revisionGuid + "^"));
 
-                commitInfo.RevisionGuid = _revisionGuid;
+                commitInfo.Revision = Module.GetRevision(_revisionGuid);
             }
         }
 
