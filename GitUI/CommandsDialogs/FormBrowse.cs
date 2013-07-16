@@ -2476,8 +2476,14 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var gitItem = (GitItem)GitTree.SelectedNode.Tag; // this should not fail, if it still does, user should know
+            var gitItem = (GitItem)GitTree.SelectedNode.Tag;
             UICommands.StartArchiveDialog(this, selectedRevisions.First(), null, gitItem.FileName);
+        }
+
+        private void fileTreeCleanWorkingTreeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var gitItem = (GitItem)GitTree.SelectedNode.Tag;
+            UICommands.StartCleanupRepositoryDialog(this, gitItem.FileName + "/"); // the trailing / marks a directory
         }
 
         private void DiffContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
