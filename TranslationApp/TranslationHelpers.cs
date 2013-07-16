@@ -14,7 +14,7 @@ namespace TranslationApp
             try
             {
                 //Set language to neutral to get neutral translations
-                GitCommands.Settings.CurrentTranslation = "";
+                GitCommands.AppSettings.CurrentTranslation = "";
 
                 List<Type> translatableTypes = TranslationUtl.GetTranslatableTypes();
                 foreach (Type type in translatableTypes)
@@ -29,7 +29,7 @@ namespace TranslationApp
                 neutralTranslation.Sort();
 
                 //Restore translation
-                GitCommands.Settings.CurrentTranslation = null;
+                GitCommands.AppSettings.CurrentTranslation = null;
             }
 
             IList<TranslationItemWithCategory> neutralItems =
@@ -126,7 +126,7 @@ namespace TranslationApp
         public static void SaveTranslation(string languageCode, IEnumerable<TranslationItemWithCategory> items, string filename)
         {
             Translation foreignTranslation = new Translation {
-                GitExVersion = GitCommands.Settings.GitExtensionsVersionString,
+                GitExVersion = GitCommands.AppSettings.GitExtensionsVersionString,
                 LanguageCode = languageCode };
             foreach (TranslationItemWithCategory translateItem in items)
             {

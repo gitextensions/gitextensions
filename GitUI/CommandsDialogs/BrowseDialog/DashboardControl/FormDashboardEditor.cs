@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void FormDashboardEditor_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Settings.SaveSettings();
+            AppSettings.SaveSettings();
         }
     }
 }
