@@ -1934,9 +1934,9 @@ namespace GitUI
             StartRebaseDialog(branch);
         }
 
-        public bool StartFileEditorDialog(string filename)
+        public bool StartFileEditorDialog(string filename, bool showWarning = false)
         {
-            using (var formEditor = new FormEditor(this, filename))
+            using (var formEditor = new FormEditor(this, filename, showWarning))
                 return formEditor.ShowDialog() != DialogResult.Cancel;
         }
 
