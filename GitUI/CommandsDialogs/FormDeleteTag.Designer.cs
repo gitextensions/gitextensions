@@ -36,13 +36,15 @@
             this.label2 = new System.Windows.Forms.Label();
             this.gotoUserManualControl1 = new GitUI.UserControls.GotoUserManualControl();
             this.label3 = new System.Windows.Forms.Label();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // Ok
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.ForeColor = System.Drawing.Color.Black;
-            this.Ok.Location = new System.Drawing.Point(379, 10);
+            this.Ok.Location = new System.Drawing.Point(369, 10);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 25);
             this.Ok.TabIndex = 8;
@@ -70,7 +72,7 @@
             this.Tags.FormattingEnabled = true;
             this.Tags.Location = new System.Drawing.Point(126, 12);
             this.Tags.Name = "Tags";
-            this.Tags.Size = new System.Drawing.Size(247, 23);
+            this.Tags.Size = new System.Drawing.Size(237, 23);
             this.Tags.TabIndex = 7;
             // 
             // label1
@@ -103,31 +105,44 @@
             // 
             // gotoUserManualControl1
             // 
-            this.gotoUserManualControl1.Location = new System.Drawing.Point(10, 151);
+            this.gotoUserManualControl1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.gotoUserManualControl1.AutoSize = true;
+            this.gotoUserManualControl1.Location = new System.Drawing.Point(3, 3);
             this.gotoUserManualControl1.ManualSectionAnchorName = "delete-tag";
             this.gotoUserManualControl1.ManualSectionSubfolder = "tag";
+            this.gotoUserManualControl1.MinimumSize = new System.Drawing.Size(70, 20);
             this.gotoUserManualControl1.Name = "gotoUserManualControl1";
-            this.gotoUserManualControl1.Size = new System.Drawing.Size(60, 18);
+            this.gotoUserManualControl1.Size = new System.Drawing.Size(70, 20);
             this.gotoUserManualControl1.TabIndex = 14;
             // 
             // label3
             // 
+            this.label3.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(65, 151);
+            this.label3.Location = new System.Drawing.Point(76, 5);
             this.label3.Margin = new System.Windows.Forms.Padding(0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(367, 15);
             this.label3.TabIndex = 15;
             this.label3.Text = "(includes information about deleting tags which are already pushed)";
             // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.gotoUserManualControl1);
+            this.flowLayoutPanel1.Controls.Add(this.label3);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 147);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(454, 25);
+            this.flowLayoutPanel1.TabIndex = 16;
+            // 
             // FormDeleteTag
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(464, 172);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.gotoUserManualControl1);
+            this.ClientSize = new System.Drawing.Size(454, 172);
+            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.remotesComboboxControl1);
             this.Controls.Add(this.deleteTag);
@@ -142,6 +157,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Delete tag";
             this.Load += new System.EventHandler(this.FormDeleteTagLoad);
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -157,5 +174,6 @@
         private System.Windows.Forms.Label label2;
         private UserControls.GotoUserManualControl gotoUserManualControl1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }
