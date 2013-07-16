@@ -257,7 +257,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.Name = "drawNonrelativesGrayToolStripMenuItem";
                 menuCommand.Text = "Draw non relatives gray";
                 menuCommand.ExecuteAction = () => _revisionGrid.DrawNonrelativesGrayToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => Settings.RevisionGraphDrawNonRelativesGray;
+                menuCommand.IsCheckedFunc = () => AppSettings.RevisionGraphDrawNonRelativesGray;
 
                 resultList.Add(menuCommand);
             }
@@ -267,7 +267,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.Name = "orderRevisionsByDateToolStripMenuItem";
                 menuCommand.Text = "Order revisions by date";
                 menuCommand.ExecuteAction = () => _revisionGrid.OrderRevisionsByDateToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => Settings.OrderRevisionByDate;
+                menuCommand.IsCheckedFunc = () => AppSettings.OrderRevisionByDate;
 
                 resultList.Add(menuCommand);
             }
@@ -277,7 +277,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.Name = "showAuthorDateToolStripMenuItem";
                 menuCommand.Text = "Show author date";
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowAuthorDateToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => Settings.ShowAuthorDate;
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowAuthorDate;
 
                 resultList.Add(menuCommand);
             }
@@ -287,7 +287,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.Name = "showRelativeDateToolStripMenuItem";
                 menuCommand.Text = "Show relative date";
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowRelativeDateToolStripMenuItemClick(null, null);
-                menuCommand.IsCheckedFunc = () => Settings.RelativeDate;
+                menuCommand.IsCheckedFunc = () => AppSettings.RelativeDate;
 
                 resultList.Add(menuCommand);
             }
@@ -297,7 +297,17 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.Name = "showGitNotesToolStripMenuItem";
                 menuCommand.Text = "Show git notes";
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowGitNotesToolStripMenuItem_Click(null, null);
-                menuCommand.IsCheckedFunc = () => Settings.ShowGitNotes;
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowGitNotes;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "showMergeCommitsToolStripMenuItem";
+                menuCommand.Text = "Show merge commits";
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowMergeCommitsToolStripMenuItem_Click(null, null);
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowMergeCommits;
 
                 resultList.Add(menuCommand);
             }
@@ -307,7 +317,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.Name = "showTagsToolStripMenuItem";
                 menuCommand.Text = "Show tags";
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowTagsToolStripMenuItem_Click(null, null);
-                menuCommand.IsCheckedFunc = () => Settings.ShowTags;
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowTags;
 
                 resultList.Add(menuCommand);
             }

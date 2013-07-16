@@ -11,7 +11,7 @@ using GitCommands.Repository;
 using GitUI.Properties;
 using GitUI.Script;
 using ResourceManager.Translation;
-using Settings = GitCommands.Settings;
+using Settings = GitCommands.AppSettings;
 
 namespace GitUI.CommandsDialogs
 {
@@ -161,7 +161,7 @@ namespace GitUI.CommandsDialogs
 
         private void MergetoolClick(object sender, EventArgs e)
         {
-            Module.RunGitRealCmd("mergetool");
+            Module.RunExternalCmdShowConsole(Settings.GitCommand, "mergetool");
 
             if (MessageBox.Show(this, _allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
                                 MessageBoxButtons.YesNo) != DialogResult.Yes)
@@ -269,7 +269,7 @@ namespace GitUI.CommandsDialogs
 
             var source = CalculateSource();
 
-            ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePull);
+            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
 
             var stashed = CalculateStashedValue(owner);
 
@@ -355,7 +355,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                ScriptManager.RunEventScripts(Module, ScriptEvent.AfterPull);
+                ScriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
             }
 
             return DialogResult.No;

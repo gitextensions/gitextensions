@@ -99,6 +99,7 @@ namespace GitUI
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.navigateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showMergeCommitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -521,6 +522,7 @@ namespace GitUI
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.viewToolStripMenuItem.Text = "View";
             // 
+            // 
             // filterToolStripMenuItem
             // 
             this.filterToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFilter;
@@ -755,6 +757,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem runScriptToolStripMenuItem;
         private System.Windows.Forms.Button InitRepository;
         private System.Windows.Forms.Button CloneRepository;
+        private System.Windows.Forms.ToolStripMenuItem showMergeCommitsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manipulateCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fixupCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem squashCommitToolStripMenuItem;
