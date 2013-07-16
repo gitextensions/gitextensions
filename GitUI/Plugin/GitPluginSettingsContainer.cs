@@ -17,12 +17,12 @@ namespace GitUI
 
         public void AddSetting(string name, string defaultValue)
         {
-            var value = Settings.GetString(pluginName + name, null);
+            var value = AppSettings.GetString(pluginName + name, null);
 
             if (value == null)
             {
                 settings.Add(name, defaultValue);
-                Settings.SetString(pluginName + name, defaultValue);
+                AppSettings.SetString(pluginName + name, defaultValue);
             }
             else
             {
@@ -37,7 +37,7 @@ namespace GitUI
 
             settings[name] = value;
 
-            Settings.SetString(pluginName + name, value);
+            AppSettings.SetString(pluginName + name, value);
         }
 
         public string GetSetting(string name) 
@@ -45,7 +45,7 @@ namespace GitUI
             if (!settings.ContainsKey(name))
                 throw new ArgumentOutOfRangeException("name", "Cannot find setting. Dit you add the setting in the Register() function of the plugin?");
 
-            var value = Settings.GetString(pluginName + name, null);
+            var value = AppSettings.GetString(pluginName + name, null);
             
             if (value == null)
                 return settings[name];

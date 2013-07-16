@@ -1,25 +1,17 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Security.Permissions;
-using System.Text;
-using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
     public delegate void SetupStartInfo(ProcessStartInfo startInfo);
-    
+
     public sealed class GitCommandsInstance : IDisposable
     {
         private Process _myProcess;
         private readonly object _processLock = new object();
 
-        public SetupStartInfo SetupStartInfoCallback { get; set; }
-        public readonly string WorkingDirectory;
-
-        public GitCommandsInstance(IGitModule module)
-            : this(module.GitWorkingDir)
-        {
-        }
+        public string WorkingDirectory { get; private set; }
 
         public GitCommandsInstance(string aWorkingDirectory)
         {
@@ -40,39 +32,26 @@ namespace GitCommands
                 string quotedCmd = cmd;
                 if (quotedCmd.IndexOf(' ') != -1)
                     quotedCmd = quotedCmd.Quote();
-                Settings.GitLog.Log(quotedCmd + " " + arguments);
+                AppSettings.GitLog.Log(quotedCmd + " " + arguments);
 
                 //process used to execute external commands
-                var process = new Process { StartInfo = GitCommandHelpers.CreateProcessStartInfo(null) };
-                process.StartInfo.CreateNoWindow = (!ssh && !Settings.ShowGitCommandLine);
-                process.StartInfo.FileName = cmd;
-                process.StartInfo.Arguments = arguments;
-                process.StartInfo.WorkingDirectory = WorkingDirectory;
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-                process.StartInfo.LoadUserProfile = true;
-                if (SetupStartInfoCallback != null)
-                    SetupStartInfoCallback(process.StartInfo);
+                var process = new Process();
+                var startInfo = GitCommandHelpers.CreateProcessStartInfo(cmd, arguments, WorkingDirectory, GitModule.SystemEncoding);
+                startInfo.CreateNoWindow = (!ssh && !AppSettings.ShowGitCommandLine);
+                process.StartInfo = startInfo;
+
                 process.EnableRaisingEvents = true;
-
-                if (!StreamOutput)
-                {
-                    process.OutputDataReceived += ProcessOutputDataReceived;
-                    process.ErrorDataReceived += ProcessErrorDataReceived;
-                }
-                Output = new StringBuilder();
-                ErrorOutput = new StringBuilder();
-
+                process.OutputDataReceived += ProcessOutputDataReceived;
+                process.ErrorDataReceived += ProcessErrorDataReceived;
                 process.Exited += ProcessExited;
+
                 process.Start();
                 lock (_processLock)
                 {
                     _myProcess = process;
                 }
-                if (!StreamOutput)
-                {
-                    process.BeginErrorReadLine();
-                    process.BeginOutputReadLine();
-                }
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
 
                 return process;
             }
@@ -149,25 +128,17 @@ namespace GitCommands
 
         private void ProcessErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (CollectOutput)
-                Output.Append(e.Data + Environment.NewLine);
             if (DataReceived != null)
                 DataReceived(this, e);
         }
 
         private void ProcessOutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (CollectOutput)
-                Output.Append(e.Data + Environment.NewLine);
             if (DataReceived != null)
                 DataReceived(this, e);
         }
 
-        public bool CollectOutput = true;
-        public bool StreamOutput;
         public int ExitCode { get; set; }
         public bool IsRunning { get { return _myProcess != null && !_myProcess.HasExited; } }
-        public StringBuilder Output { get; private set; }
-        public StringBuilder ErrorOutput { get; private set; }
     }
 }

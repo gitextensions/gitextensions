@@ -22,7 +22,7 @@ using GitUI.Properties;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using ResourceManager.Translation;
-using Settings = GitCommands.Settings;
+using Settings = GitCommands.AppSettings;
 #if !__MonoCS__
 using Microsoft.WindowsAPICodePack.Taskbar;
 #endif
@@ -452,7 +452,7 @@ namespace GitUI.CommandsDialogs
             {
                 // add Navigate and View menu
                 _formBrowseMenus.ResetMenuCommandSets();
-                _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, _formBrowseMenuCommands.GetNavigateMenuCommands());
+                //// _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, _formBrowseMenuCommands.GetNavigateMenuCommands()); // not used at the moment
                 _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, RevisionGrid.MenuCommands.GetNavigateMenuCommands());
                 _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, RevisionGrid.MenuCommands.GetViewMenuCommands());
 
@@ -580,7 +580,7 @@ namespace GitUI.CommandsDialogs
 
         private void UserMenu_Click(object sender, EventArgs e)
         {
-            ScriptRunner.RunScript(Module, ((ToolStripButton)sender).Text, null);
+            ScriptRunner.RunScript(this, Module, ((ToolStripButton)sender).Text, null);
             RevisionGrid.RefreshRevisions();
         }
 
@@ -1455,8 +1455,8 @@ namespace GitUI.CommandsDialogs
 
         private void SaveUserMenuPosition()
         {
-            GitCommands.Settings.UserMenuLocationX = UserMenuToolStrip.Location.X;
-            GitCommands.Settings.UserMenuLocationY = UserMenuToolStrip.Location.Y;
+            GitCommands.AppSettings.UserMenuLocationX = UserMenuToolStrip.Location.X;
+            GitCommands.AppSettings.UserMenuLocationY = UserMenuToolStrip.Location.Y;
         }
 
         private void EditGitignoreToolStripMenuItem1Click(object sender, EventArgs e)
@@ -1549,12 +1549,12 @@ namespace GitUI.CommandsDialogs
 
         private void StartAuthenticationAgentToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Module.StartExternalCommand(Settings.Pageant, "");
+            Module.RunExternalCmdDetached(Settings.Pageant, "");
         }
 
         private void GenerateOrImportKeyToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Module.StartExternalCommand(Settings.Puttygen, "");
+            Module.RunExternalCmdDetached(Settings.Puttygen, "");
         }
 
         private void TabControl1SelectedIndexChanged(object sender, EventArgs e)
@@ -2184,7 +2184,6 @@ namespace GitUI.CommandsDialogs
             Commit,
             AddNotes,
             FindFileInSelectedCommit,
-            SelectCurrentRevision,
             CheckoutBranch,
             QuickFetch,
             QuickPull,
@@ -2226,7 +2225,6 @@ namespace GitUI.CommandsDialogs
                 case Commands.Commit: CommitToolStripMenuItemClick(null, null); break;
                 case Commands.AddNotes: AddNotes(); break;
                 case Commands.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
-                case Commands.SelectCurrentRevision: RevisionGrid.SetSelectedRevision(new GitRevision(Module, RevisionGrid.CurrentCheckout)); break;
                 case Commands.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
                 case Commands.QuickFetch: QuickFetch(); break;
                 case Commands.QuickPull:

@@ -56,7 +56,7 @@
             // gitCredentialWinStore_Fix
             // 
             this.gitCredentialWinStore_Fix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.gitCredentialWinStore_Fix.Location = new System.Drawing.Point(573, 333);
+            this.gitCredentialWinStore_Fix.Location = new System.Drawing.Point(573, 344);
             this.gitCredentialWinStore_Fix.Name = "gitCredentialWinStore_Fix";
             this.gitCredentialWinStore_Fix.Size = new System.Drawing.Size(91, 25);
             this.gitCredentialWinStore_Fix.TabIndex = 69;
@@ -74,7 +74,7 @@
             this.gitCredentialWinStore.FlatAppearance.BorderSize = 0;
             this.gitCredentialWinStore.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.gitCredentialWinStore.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gitCredentialWinStore.Location = new System.Drawing.Point(3, 331);
+            this.gitCredentialWinStore.Location = new System.Drawing.Point(3, 342);
             this.gitCredentialWinStore.Name = "gitCredentialWinStore";
             this.gitCredentialWinStore.Size = new System.Drawing.Size(564, 29);
             this.gitCredentialWinStore.TabIndex = 68;
@@ -86,7 +86,7 @@
             // translationConfig_Fix
             // 
             this.translationConfig_Fix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.translationConfig_Fix.Location = new System.Drawing.Point(573, 299);
+            this.translationConfig_Fix.Location = new System.Drawing.Point(573, 310);
             this.translationConfig_Fix.Name = "translationConfig_Fix";
             this.translationConfig_Fix.Size = new System.Drawing.Size(91, 25);
             this.translationConfig_Fix.TabIndex = 67;
@@ -98,7 +98,7 @@
             // SshConfig_Fix
             // 
             this.SshConfig_Fix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.SshConfig_Fix.Location = new System.Drawing.Point(573, 265);
+            this.SshConfig_Fix.Location = new System.Drawing.Point(573, 276);
             this.SshConfig_Fix.Name = "SshConfig_Fix";
             this.SshConfig_Fix.Size = new System.Drawing.Size(91, 25);
             this.SshConfig_Fix.TabIndex = 66;
@@ -110,7 +110,7 @@
             // GitExtensionsInstall_Fix
             // 
             this.GitExtensionsInstall_Fix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.GitExtensionsInstall_Fix.Location = new System.Drawing.Point(573, 231);
+            this.GitExtensionsInstall_Fix.Location = new System.Drawing.Point(573, 242);
             this.GitExtensionsInstall_Fix.Name = "GitExtensionsInstall_Fix";
             this.GitExtensionsInstall_Fix.Size = new System.Drawing.Size(91, 25);
             this.GitExtensionsInstall_Fix.TabIndex = 65;
@@ -122,7 +122,7 @@
             // GitBinFound_Fix
             // 
             this.GitBinFound_Fix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.GitBinFound_Fix.Location = new System.Drawing.Point(573, 197);
+            this.GitBinFound_Fix.Location = new System.Drawing.Point(573, 208);
             this.GitBinFound_Fix.Name = "GitBinFound_Fix";
             this.GitBinFound_Fix.Size = new System.Drawing.Size(91, 25);
             this.GitBinFound_Fix.TabIndex = 64;
@@ -134,7 +134,7 @@
             // ShellExtensionsRegistered_Fix
             // 
             this.ShellExtensionsRegistered_Fix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ShellExtensionsRegistered_Fix.Location = new System.Drawing.Point(573, 163);
+            this.ShellExtensionsRegistered_Fix.Location = new System.Drawing.Point(573, 174);
             this.ShellExtensionsRegistered_Fix.Name = "ShellExtensionsRegistered_Fix";
             this.ShellExtensionsRegistered_Fix.Size = new System.Drawing.Size(91, 25);
             this.ShellExtensionsRegistered_Fix.TabIndex = 63;
@@ -146,7 +146,7 @@
             // DiffTool_Fix
             // 
             this.DiffTool_Fix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.DiffTool_Fix.Location = new System.Drawing.Point(573, 129);
+            this.DiffTool_Fix.Location = new System.Drawing.Point(573, 140);
             this.DiffTool_Fix.Name = "DiffTool_Fix";
             this.DiffTool_Fix.Size = new System.Drawing.Size(91, 25);
             this.DiffTool_Fix.TabIndex = 62;
@@ -158,7 +158,7 @@
             // MergeTool_Fix
             // 
             this.MergeTool_Fix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.MergeTool_Fix.Location = new System.Drawing.Point(573, 95);
+            this.MergeTool_Fix.Location = new System.Drawing.Point(573, 106);
             this.MergeTool_Fix.Name = "MergeTool_Fix";
             this.MergeTool_Fix.Size = new System.Drawing.Size(91, 25);
             this.MergeTool_Fix.TabIndex = 61;
@@ -170,7 +170,7 @@
             // UserNameSet_Fix
             // 
             this.UserNameSet_Fix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.UserNameSet_Fix.Location = new System.Drawing.Point(573, 61);
+            this.UserNameSet_Fix.Location = new System.Drawing.Point(573, 72);
             this.UserNameSet_Fix.Name = "UserNameSet_Fix";
             this.UserNameSet_Fix.Size = new System.Drawing.Size(91, 25);
             this.UserNameSet_Fix.TabIndex = 60;
@@ -182,7 +182,7 @@
             // GitFound_Fix
             // 
             this.GitFound_Fix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.GitFound_Fix.Location = new System.Drawing.Point(573, 27);
+            this.GitFound_Fix.Location = new System.Drawing.Point(573, 38);
             this.GitFound_Fix.Name = "GitFound_Fix";
             this.GitFound_Fix.Size = new System.Drawing.Size(91, 25);
             this.GitFound_Fix.TabIndex = 59;
@@ -200,7 +200,7 @@
             this.translationConfig.FlatAppearance.BorderSize = 0;
             this.translationConfig.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.translationConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.translationConfig.Location = new System.Drawing.Point(3, 297);
+            this.translationConfig.Location = new System.Drawing.Point(3, 308);
             this.translationConfig.Name = "translationConfig";
             this.translationConfig.Size = new System.Drawing.Size(564, 29);
             this.translationConfig.TabIndex = 58;
@@ -218,7 +218,7 @@
             this.DiffTool.FlatAppearance.BorderSize = 0;
             this.DiffTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.DiffTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.DiffTool.Location = new System.Drawing.Point(3, 127);
+            this.DiffTool.Location = new System.Drawing.Point(3, 138);
             this.DiffTool.Name = "DiffTool";
             this.DiffTool.Size = new System.Drawing.Size(564, 29);
             this.DiffTool.TabIndex = 57;
@@ -236,7 +236,7 @@
             this.SshConfig.FlatAppearance.BorderSize = 0;
             this.SshConfig.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.SshConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SshConfig.Location = new System.Drawing.Point(3, 263);
+            this.SshConfig.Location = new System.Drawing.Point(3, 274);
             this.SshConfig.Name = "SshConfig";
             this.SshConfig.Size = new System.Drawing.Size(564, 29);
             this.SshConfig.TabIndex = 56;
@@ -254,7 +254,7 @@
             this.GitBinFound.FlatAppearance.BorderSize = 0;
             this.GitBinFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitBinFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GitBinFound.Location = new System.Drawing.Point(3, 195);
+            this.GitBinFound.Location = new System.Drawing.Point(3, 206);
             this.GitBinFound.Name = "GitBinFound";
             this.GitBinFound.Size = new System.Drawing.Size(564, 29);
             this.GitBinFound.TabIndex = 55;
@@ -266,7 +266,7 @@
             // Rescan
             // 
             this.Rescan.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Rescan.Location = new System.Drawing.Point(497, 389);
+            this.Rescan.Location = new System.Drawing.Point(497, 400);
             this.Rescan.Name = "Rescan";
             this.Rescan.Size = new System.Drawing.Size(169, 25);
             this.Rescan.TabIndex = 54;
@@ -277,7 +277,7 @@
             // CheckAtStartup
             // 
             this.CheckAtStartup.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.CheckAtStartup.Location = new System.Drawing.Point(6, 394);
+            this.CheckAtStartup.Location = new System.Drawing.Point(6, 405);
             this.CheckAtStartup.Name = "CheckAtStartup";
             this.CheckAtStartup.Size = new System.Drawing.Size(451, 57);
             this.CheckAtStartup.TabIndex = 53;
@@ -289,9 +289,9 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(3, 0);
+            this.label11.Location = new System.Drawing.Point(3, 11);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(434, 13);
+            this.label11.Size = new System.Drawing.Size(442, 13);
             this.label11.TabIndex = 52;
             this.label11.Text = "The checklist below validates the basic settings needed for GitExtensions to work" +
     " properly.";
@@ -305,7 +305,7 @@
             this.GitFound.FlatAppearance.BorderSize = 0;
             this.GitFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GitFound.Location = new System.Drawing.Point(3, 25);
+            this.GitFound.Location = new System.Drawing.Point(3, 36);
             this.GitFound.Name = "GitFound";
             this.GitFound.Size = new System.Drawing.Size(564, 29);
             this.GitFound.TabIndex = 51;
@@ -323,7 +323,7 @@
             this.MergeTool.FlatAppearance.BorderSize = 0;
             this.MergeTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.MergeTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MergeTool.Location = new System.Drawing.Point(3, 93);
+            this.MergeTool.Location = new System.Drawing.Point(3, 104);
             this.MergeTool.Name = "MergeTool";
             this.MergeTool.Size = new System.Drawing.Size(564, 29);
             this.MergeTool.TabIndex = 50;
@@ -341,7 +341,7 @@
             this.UserNameSet.FlatAppearance.BorderSize = 0;
             this.UserNameSet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.UserNameSet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.UserNameSet.Location = new System.Drawing.Point(3, 59);
+            this.UserNameSet.Location = new System.Drawing.Point(3, 70);
             this.UserNameSet.Name = "UserNameSet";
             this.UserNameSet.Size = new System.Drawing.Size(564, 29);
             this.UserNameSet.TabIndex = 49;
@@ -359,7 +359,7 @@
             this.ShellExtensionsRegistered.FlatAppearance.BorderSize = 0;
             this.ShellExtensionsRegistered.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.ShellExtensionsRegistered.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ShellExtensionsRegistered.Location = new System.Drawing.Point(3, 161);
+            this.ShellExtensionsRegistered.Location = new System.Drawing.Point(3, 172);
             this.ShellExtensionsRegistered.Name = "ShellExtensionsRegistered";
             this.ShellExtensionsRegistered.Size = new System.Drawing.Size(564, 29);
             this.ShellExtensionsRegistered.TabIndex = 48;
@@ -377,7 +377,7 @@
             this.GitExtensionsInstall.FlatAppearance.BorderSize = 0;
             this.GitExtensionsInstall.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitExtensionsInstall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.GitExtensionsInstall.Location = new System.Drawing.Point(3, 229);
+            this.GitExtensionsInstall.Location = new System.Drawing.Point(3, 240);
             this.GitExtensionsInstall.Name = "GitExtensionsInstall";
             this.GitExtensionsInstall.Size = new System.Drawing.Size(564, 29);
             this.GitExtensionsInstall.TabIndex = 47;
