@@ -6,12 +6,10 @@
 
 namespace NBug
 {
-	using System;
-
 	using NBug.Core.Reporting;
 	using NBug.Core.Reporting.MiniDump;
-	using NBug.Core.Submission;
 	using NBug.Core.Util;
+	using System;
 
 	public static class Exceptions
 	{
@@ -19,12 +17,12 @@ namespace NBug
 		/// This function acts as an exception filter for any exception that is raised from within the action body (you can see
 		/// MSDN subject "Exception Filters" to get more info on the subject). As the name implies, exceptions raised from within
 		/// the action block is simply filtered to be sent as an error report, and never actually caught or handled. Filters all
-		/// the exceptions inside the action body and queues an error report. Note that the exceptions are not actually handled, 
-		/// but filtered, so if the exception is left unhandled in an upper block, it will crash the application. This is very 
+		/// the exceptions inside the action body and queues an error report. Note that the exceptions are not actually handled,
+		/// but filtered, so if the exception is left unhandled in an upper block, it will crash the application. This is very
 		/// useful for situations where you need to log exceptions inside a code block and get a good minidump of the exception.
 		/// Use the <see cref="Handle(bool,Action)"/> method to actually handle the exception and show an exception dialog to the
 		/// user and shut down the application gracefully (if set so). You can simply use <c>Filter(() => { MyCodeHere(); })</c>
-		/// </summary> 
+		/// </summary>
 		/// <param name="body">Body of code to be executed.</param>
 		public static void Filter(Action body)
 		{
@@ -46,18 +44,18 @@ namespace NBug
 			ExceptionFilters.Filter(
 				body,
 				ex =>
-					{
-						// Filtering the exception
-						new BugReport().Report(ex, ExceptionThread.Main);
-						return true; // Yes proceed to handling the exception
-					},
+				{
+					// Filtering the exception
+					new BugReport().Report(ex, ExceptionThread.Main);
+					return true; // Yes proceed to handling the exception
+				},
 				ex =>
+				{
+					if (!continueExecution)
 					{
-						if (!continueExecution)
-						{
-							Environment.Exit(0);
-						}
-					});
+						Environment.Exit(0);
+					}
+				});
 		}
 
 		/// <summary>

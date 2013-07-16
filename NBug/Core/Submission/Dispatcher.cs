@@ -4,21 +4,17 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 using NBug.Core.Reporting.Info;
 using NBug.Core.Util.Serialization;
+using System.Xml.Serialization;
 
 namespace NBug.Core.Submission
 {
+	using NBug.Core.Util.Logging;
+	using NBug.Core.Util.Storage;
 	using System;
 	using System.IO;
 	using System.Threading.Tasks;
-
-	using NBug.Core.Util.Logging;
-	using NBug.Core.Util.Storage;
 
 	internal class Dispatcher
 	{
@@ -71,7 +67,7 @@ namespace NBug.Core.Submission
 			Storer.TruncateReportFiles();
 
 			// Now go through configured destinations and submit to all automatically
-			for (bool hasReport = true; hasReport;)
+			for (bool hasReport = true; hasReport; )
 			{
 				using (Storer storer = new Storer())
 				using (Stream stream = storer.GetFirstReportFile())
@@ -98,6 +94,7 @@ namespace NBug.Core.Submission
 		private class ExceptionData
 		{
 			public Report Report { get; set; }
+
 			public SerializableException Exception { get; set; }
 		}
 
@@ -135,16 +132,16 @@ namespace NBug.Core.Submission
 		}
 
 		/// <summary>
-		/// Enumerate all protocols to see if they are properly configured and send using the ones that are configured 
+		/// Enumerate all protocols to see if they are properly configured and send using the ones that are configured
 		/// as many times as necessary.
 		/// </summary>
 		/// <param name="reportFile">The file to read the report from.</param>
-		/// <returns>Returns <see langword="true"/> if the sending was successful. 
+		/// <returns>Returns <see langword="true"/> if the sending was successful.
 		/// Returns <see langword="true"/> if the report was submitted to at least one destination.</returns>
 		private bool EnumerateDestinations(Stream reportFile, ExceptionData exceptionData)
 		{
 			bool sentSuccessfullyAtLeastOnce = false;
-			string fileName = Path.GetFileName(((FileStream) reportFile).Name);
+			string fileName = Path.GetFileName(((FileStream)reportFile).Name);
 			foreach (var destination in Settings.Destinations)
 			{
 				try

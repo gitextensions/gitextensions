@@ -6,16 +6,15 @@
 
 namespace NBug.Configurator
 {
-	using System;
-	using System.IO;
-	using System.Windows.Forms;
-
 	using NBug.Core.Reporting.Info;
 	using NBug.Core.UI.Console;
 	using NBug.Core.UI.WinForms;
 	using NBug.Core.UI.WPF;
 	using NBug.Core.Util.Serialization;
 	using NBug.Enums;
+	using System;
+	using System.IO;
+	using System.Windows.Forms;
 
 	internal partial class PreviewForm : Form
 	{

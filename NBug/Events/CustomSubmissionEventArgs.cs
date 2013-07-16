@@ -1,11 +1,9 @@
 namespace NBug
 {
-	using System;
-	using System.IO;
-	using System.Collections.Generic;
-	using System.Linq;
 	using NBug.Core.Reporting.Info;
 	using NBug.Core.Util.Serialization;
+	using System;
+	using System.IO;
 
 	public class CustomSubmissionEventArgs : EventArgs
 	{
@@ -19,9 +17,13 @@ namespace NBug
 		}
 
 		public string FileName { get; private set; }
+
 		public Stream File { get; private set; }
+
 		public Report Report { get; private set; }
+
 		public SerializableException Exception { get; private set; }
+
 		public bool Result { get; set; }
 	}
 }

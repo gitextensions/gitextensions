@@ -6,13 +6,16 @@
 
 namespace NBug.Configurator
 {
+	using NBug.Configurator.SubmitPanels;
+	using NBug.Enums;
+
 	/* Dear maintainer:
-	 * 
-	 * Once you are done trying to 'optimize' this file, and have realized what a terrible mistake that was,
-	 * please increment the following counter as a warning to the next guy:
-	 * 
-	 * total_hours_wasted_here = 20
-	 */
+		 *
+		 * Once you are done trying to 'optimize' this file, and have realized what a terrible mistake that was,
+		 * please increment the following counter as a warning to the next guy:
+		 *
+		 * total_hours_wasted_here = 20
+		 */
 
 	using System;
 	using System.Collections.Generic;
@@ -21,10 +24,6 @@ namespace NBug.Configurator
 	using System.IO;
 	using System.Linq;
 	using System.Windows.Forms;
-
-
-	using NBug.Configurator.SubmitPanels;
-	using NBug.Enums;
 
 	public partial class MainForm : Form
 	{
@@ -42,11 +41,12 @@ namespace NBug.Configurator
 			panelLoaders.Add(this.panelLoader1);
 		}
 
-		void Settings_CustomUIEvent(object sender, CustomUIEventArgs e)
+		private void Settings_CustomUIEvent(object sender, CustomUIEventArgs e)
 		{
 			var Form = new Normal();
 			e.Result = Form.ShowDialog(e.Report);
 		}
+
 		/// <summary>
 		/// Enables disabled controls and fills in combo boxes using related enumerations. Resets all values to defaults.
 		/// </summary>
@@ -80,7 +80,7 @@ namespace NBug.Configurator
 			{
 				loader.UnloadPanel();
 			}
-			
+
 			this.sleepBeforeSendNumericUpDown.Maximum = decimal.MaxValue;
 			this.maxQueuedReportsNumericUpDown.Maximum = decimal.MaxValue;
 			this.stopReportingAfterNumericUpDown.Maximum = decimal.MaxValue;
@@ -103,7 +103,7 @@ namespace NBug.Configurator
 			this.InitializeControls();
 
 			this.fileTextBox.Text = createNew == false ? this.openFileDialog.FileName : this.createFileDialog.FileName;
-			
+
 			// Read application settings
 			this.uiProviderComboBox.SelectedItem = Settings.UIProvider;
 			this.uiModeComboBox.SelectedItem = Settings.UIMode; // Should come after uiProviderComboBox = ...
@@ -200,7 +200,6 @@ namespace NBug.Configurator
 				.Where(p => p.Controls.Count == 2)
 				.Select(p => ((ISubmitPanel)p.Controls[0]).ConnectionString)
 				.Where(s => !string.IsNullOrEmpty(s)))
-
 			{
 				Settings.AddDestinationFromConnectionString(connectionString);
 			}

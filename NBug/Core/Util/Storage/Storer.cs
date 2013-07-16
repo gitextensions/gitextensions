@@ -6,13 +6,12 @@
 
 namespace NBug.Core.Util.Storage
 {
+	using NBug.Core.Util.Exceptions;
+	using NBug.Core.Util.Logging;
 	using System;
 	using System.IO;
 	using System.IO.IsolatedStorage;
 	using System.Linq;
-
-	using NBug.Core.Util.Exceptions;
-	using NBug.Core.Util.Logging;
 
 	/// <summary>
 	/// Initializes a new instance of the Storage class. This class implements <see cref="IDisposable"/> interface
@@ -117,7 +116,7 @@ namespace NBug.Core.Util.Storage
 						{
 							Logger.Trace("Truncating extra " + extraCount + " report files from the isolates storage.");
 						}
-						
+
 						foreach (var file in isoFile.GetFileNames("Exception_*.zip"))
 						{
 							extraCount--;
@@ -193,7 +192,7 @@ namespace NBug.Core.Util.Storage
 		internal void DeleteCurrentReportFile()
 		{
 			this.stream.Close();
-			
+
 			if (this.stream is IsolatedStorageFileStream)
 			{
 				Logger.Trace("Deleting report file from isolated storage: " + this.FileName);
@@ -270,7 +269,7 @@ namespace NBug.Core.Util.Storage
 			else if (Settings.StoragePath == Enums.StoragePath.IsolatedStorage)
 			{
 				this.isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly | IsolatedStorageScope.Domain, null, null);
-				
+
 				if (this.isoStore.GetFileNames("Exception_*.zip").Count() > 0)
 				{
 					try

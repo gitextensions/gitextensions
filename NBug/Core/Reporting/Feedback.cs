@@ -6,10 +6,9 @@
 
 namespace NBug.Core.Reporting
 {
-	using System;
-
 	using NBug.Core.Reporting.Info;
 	using NBug.Core.Util.Logging;
+	using System;
 
 	internal class Feedback
 	{

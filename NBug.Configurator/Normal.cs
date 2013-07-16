@@ -6,11 +6,10 @@
 
 namespace NBug.Configurator
 {
-	using System;
-	using System.Drawing;
-	using System.Windows.Forms;
-    using NBug.Core.UI;
 	using NBug.Core.Reporting.Info;
+	using NBug.Core.UI;
+	using System;
+	using System.Windows.Forms;
 
 	internal partial class Normal : Form
 	{
@@ -18,7 +17,7 @@ namespace NBug.Configurator
 
 		internal Normal()
 		{
-			InitializeComponent();	
+			InitializeComponent();
 		}
 
 		internal UIDialogResult ShowDialog(Report report)

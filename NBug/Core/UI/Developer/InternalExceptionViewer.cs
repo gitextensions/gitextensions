@@ -6,14 +6,13 @@
 
 namespace NBug.Core.UI.Developer
 {
+	using NBug.Core.Util.Exceptions;
+	using NBug.Core.Util.Serialization;
+	using NBug.Properties;
 	using System;
 	using System.Diagnostics;
 	using System.Drawing;
 	using System.Windows.Forms;
-
-	using NBug.Core.Util.Exceptions;
-	using NBug.Core.Util.Serialization;
-	using NBug.Properties;
 
 	internal partial class InternalExceptionViewer : Form
 	{
@@ -41,7 +40,7 @@ namespace NBug.Core.UI.Developer
 				this.DisplayExceptionDetails(exception);
 			}
 		}
-		
+
 		internal void ShowDialog(NBugConfigurationException configurationException)
 		{
 			this.messageLabel.Text = "An internal configuration exception has occurred. Please correct the invalid configuration regarding the information below. You may also use discussion forum to get help or read the online documentation's configuration section.";
@@ -65,9 +64,9 @@ namespace NBug.Core.UI.Developer
 			new Dispatcher(false);
 			MessageBox.Show("Successfully sent bug report to NBug developer community.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);*/
 			MessageBox.Show(
-				"Internal bug reporting feature is not implemented yet but you can still manually submit a bug report using the bug tracker.", 
-				"Information", 
-				MessageBoxButtons.OK, 
+				"Internal bug reporting feature is not implemented yet but you can still manually submit a bug report using the bug tracker.",
+				"Information",
+				MessageBoxButtons.OK,
 				MessageBoxIcon.Information);
 			this.bugReportButton.Enabled = false;
 		}

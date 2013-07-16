@@ -9,11 +9,9 @@ using NBug.Core.Util.Serialization;
 
 namespace NBug.Core.Submission.Web
 {
-	using System.IO;
-	using System.Net;
-
 	using NBug.Core.Util.Logging;
 	using NBug.Core.Util.Web;
+	using System.IO;
 
 	public class HttpFactory : IProtocolFactory
 	{
@@ -58,20 +56,20 @@ namespace NBug.Core.Submission.Web
 			// http://netomatix.com/HttpPostData.aspx
 
 			/* upload.php file my look like the one below (note that uploaded files are not statically named in this case script may need modification)
-			 * 
+			 *
 			 * <?php
-			 * $uploadDir = 'Upload/'; 
+			 * $uploadDir = 'Upload/';
 			 * $uploadFile = $uploadDir . basename($_FILES['file']['name']);
-			 * if (is_uploaded_file($_FILES['file']['tmp_name'])) 
+			 * if (is_uploaded_file($_FILES['file']['tmp_name']))
 			 * {
 			 *     echo "File ". $_FILES['file']['name'] ." is successfully uploaded!\r\n";
-			 *     if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) 
+			 *     if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile))
 			 *     {
 			 *         echo "File is successfully stored! ";
 			 *     }
 			 *     else print_r($_FILES);
 			 * }
-			 * else 
+			 * else
 			 * {
 			 *     echo "Upload Failed!";
 			 *     print_r($_FILES);

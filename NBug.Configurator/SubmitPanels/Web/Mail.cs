@@ -7,8 +7,8 @@
 namespace NBug.Configurator.SubmitPanels.Web
 {
 	using System;
+	using System.Net.Mail;
 	using System.Windows.Forms;
-    using System.Net.Mail;
 
 	public partial class Mail : UserControl, ISubmitPanel
 	{
@@ -54,7 +54,7 @@ namespace NBug.Configurator.SubmitPanels.Web
 					{
 						mail.Cc += item + ",";
 					}
-		
+
 					mail.Cc = mail.Cc.TrimEnd(new[] { ',' });
 				}
 
@@ -67,12 +67,11 @@ namespace NBug.Configurator.SubmitPanels.Web
 
 					mail.Bcc = mail.Bcc.TrimEnd(new[] { ',' });
 				}
-				
+
 				if (!this.defaultPortCheckBox.Checked)
 				{
 					mail.Port = (int)this.portNumericUpDown.Value;
 				}
-
 
 				if (this.useAuthenticationCheckBox.Checked)
 				{
@@ -85,9 +84,9 @@ namespace NBug.Configurator.SubmitPanels.Web
 					mail.Username = this.usernameTextBox.Text;
 					mail.Password = this.passwordTextBox.Text;
 				}
-				
+
 				mail.UseSsl = this.useSslCheckBox.Checked;
-                mail.UseAttachment = this.useAttachmentCheckBox.Checked;
+				mail.UseAttachment = this.useAttachmentCheckBox.Checked;
 
 				return mail.ConnectionString;
 			}
@@ -108,7 +107,7 @@ namespace NBug.Configurator.SubmitPanels.Web
 				this.customBodyTextBox.Text = mail.CustomBody;
 				this.replyToTextBox.Text = mail.ReplyTo;
 				this.useAttachmentCheckBox.Checked = mail.UseAttachment;
-                this.portNumericUpDown.Value = mail.Port;
+				this.portNumericUpDown.Value = mail.Port;
 
 				if (this.portNumericUpDown.Value == 25 || this.portNumericUpDown.Value == 465 || mail.Port > 0)
 				{

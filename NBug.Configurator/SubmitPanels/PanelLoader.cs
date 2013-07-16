@@ -11,8 +11,6 @@ namespace NBug.Configurator.SubmitPanels
 	using System;
 	using System.Windows.Forms;
 
-	using NBug.Core.Submission;
-
 	public partial class PanelLoader : UserControl
 	{
 		private string connString;
@@ -75,12 +73,15 @@ namespace NBug.Configurator.SubmitPanels
 				case "E-Mail":
 					this.Controls.Add(new Web.Mail());
 					break;
+
 				case "Redmine Issue Tracker":
 					this.Controls.Add(new Tracker.Redmine());
 					break;
+
 				case "FTP":
 					this.Controls.Add(new Web.Ftp());
 					break;
+
 				case "HTTP":
 					this.Controls.Add(new Web.Http());
 					break;

@@ -6,12 +6,11 @@
 
 namespace NBug.Core.UI.WinForms.Panels
 {
+	using NBug.Core.Util.Serialization;
 	using System;
 	using System.Collections.Generic;
 	using System.Drawing;
 	using System.Windows.Forms;
-
-	using NBug.Core.Util.Serialization;
 
 	internal partial class ExceptionDetails : UserControl
 	{
@@ -82,7 +81,7 @@ namespace NBug.Core.UI.WinForms.Panels
 			if (exception.Source != null) this.exceptionDetailsListView.Items.Add("Source").SubItems.Add(exception.Source);
 			if (exception.HelpLink != null) this.exceptionDetailsListView.Items.Add("Help Link").SubItems.Add(exception.HelpLink);
 			if (exception.StackTrace != null) this.exceptionDetailsListView.Items.Add("Stack Trace").SubItems.Add(exception.StackTrace);
-			
+
 			if (exception.Data != null)
 			{
 				foreach (var pair in exception.Data)
@@ -110,7 +109,7 @@ namespace NBug.Core.UI.WinForms.Panels
 			using (var detailView = new ExceptionDetailView())
 			{
 				detailView.ShowDialog(
-					this.exceptionDetailsListView.SelectedItems[0].Text, 
+					this.exceptionDetailsListView.SelectedItems[0].Text,
 					this.exceptionDetailsListView.SelectedItems[0].SubItems[1].Text);
 			}
 		}

@@ -11,6 +11,7 @@ namespace NBug.Core.Util
 	public class PublicResources
 	{
 		private string ui_Console_Full_Message;
+
 		public string UI_Console_Full_Message
 		{
 			get
@@ -25,6 +26,7 @@ namespace NBug.Core.Util
 		}
 
 		private string ui_Console_Minimal_Message;
+
 		public string UI_Console_Minimal_Message
 		{
 			get
@@ -39,6 +41,7 @@ namespace NBug.Core.Util
 		}
 
 		private string ui_Console_Normal_Message;
+
 		public string UI_Console_Normal_Message
 		{
 			get
@@ -51,8 +54,9 @@ namespace NBug.Core.Util
 				this.ui_Console_Normal_Message = value;
 			}
 		}
-		
+
 		private string ui_Dialog_Minimal_Message;
+
 		public string UI_Dialog_Minimal_Message
 		{
 			get
@@ -67,6 +71,7 @@ namespace NBug.Core.Util
 		}
 
 		private string ui_Dialog_Normal_Message;
+
 		public string UI_Dialog_Normal_Message
 		{
 			get
@@ -81,6 +86,7 @@ namespace NBug.Core.Util
 		}
 
 		private string ui_Dialog_Normal_Title;
+
 		public string UI_Dialog_Normal_Title
 		{
 			get
@@ -95,6 +101,7 @@ namespace NBug.Core.Util
 		}
 
 		private string ui_Dialog_Normal_Continue_Button;
+
 		public string UI_Dialog_Normal_Continue_Button
 		{
 			get
@@ -109,6 +116,7 @@ namespace NBug.Core.Util
 		}
 
 		private string ui_Dialog_Normal_Quit_Button;
+
 		public string UI_Dialog_Normal_Quit_Button
 		{
 			get
@@ -123,6 +131,7 @@ namespace NBug.Core.Util
 		}
 
 		private string ui_Dialog_Full_Message;
+
 		public string UI_Dialog_Full_Message
 		{
 			get
@@ -137,6 +146,7 @@ namespace NBug.Core.Util
 		}
 
 		private string ui_Dialog_Full_Title;
+
 		public string UI_Dialog_Full_Title
 		{
 			get
@@ -151,6 +161,7 @@ namespace NBug.Core.Util
 		}
 
 		private string ui_Dialog_Full_General_Tab;
+
 		public string UI_Dialog_Full_General_Tab
 		{
 			get
@@ -165,6 +176,7 @@ namespace NBug.Core.Util
 		}
 
 		private string ui_Dialog_Full_Exception_Tab;
+
 		public string UI_Dialog_Full_Exception_Tab
 		{
 			get
@@ -179,6 +191,7 @@ namespace NBug.Core.Util
 		}
 
 		private string ui_Dialog_Full_Report_Contents_Tab;
+
 		public string UI_Dialog_Full_Report_Contents_Tab
 		{
 			get
@@ -193,6 +206,7 @@ namespace NBug.Core.Util
 		}
 
 		private string ui_Dialog_Full_How_to_Reproduce_the_Error_Notification;
+
 		public string UI_Dialog_Full_How_to_Reproduce_the_Error_Notification
 		{
 			get
@@ -207,6 +221,7 @@ namespace NBug.Core.Util
 		}
 
 		private string ui_Dialog_Full_Quit_Button;
+
 		public string UI_Dialog_Full_Quit_Button
 		{
 			get
@@ -221,6 +236,7 @@ namespace NBug.Core.Util
 		}
 
 		private string ui_Dialog_Full_Send_and_Quit_Button;
+
 		public string UI_Dialog_Full_Send_and_Quit_Button
 		{
 			get

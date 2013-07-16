@@ -7,7 +7,7 @@
 	using System.Runtime.CompilerServices;
 
 	/// <summary>
-	/// This class provides some utilities for working with exceptions and exception filters. The assembly will 
+	/// This class provides some utilities for working with exceptions and exception filters. The assembly will
 	/// get generated (with automatic locking) on first use of this class with <see cref="ILGenerator.Emit(OpCode)"/>.
 	/// </summary>
 	/// <remarks>
@@ -15,7 +15,7 @@
 	/// Code inside of exception filters runs before the stack has been logically unwound, and so the throw point
 	/// is still visible in tools like debuggers, and backout code from finally blocks has not yet been run.
 	/// See http://blogs.msdn.com/rmbyers/archive/2008/12/22/getting-good-dumps-when-an-exception-is-thrown.aspx.
-	/// Filters can also be used to provide more fine-grained control over which exceptions are caught.  
+	/// Filters can also be used to provide more fine-grained control over which exceptions are caught.
 	/// </para><para>
 	/// Be aware, however, that filters run at a surprising time - after an exception has occurred but before
 	/// any finally clause has been run to restore broken invariants for things lexically in scope.  This can lead to
@@ -62,12 +62,12 @@
 		internal static void Filter(Action body, Action<Exception> filter)
 		{
 			Filter(
-				body, 
+				body,
 				e =>
-					{
-						filter(e);
-						return false;
-					}, 
+				{
+					filter(e);
+					return false;
+				},
 				null);
 		}
 
@@ -78,7 +78,7 @@
 		/// The code to run inside the "try" block
 		/// </param>
 		/// <param name="filter">
-		/// Called whenever an exception escapes body, passing the exeption object.  
+		/// Called whenever an exception escapes body, passing the exeption object.
 		/// For exceptions that aren't derived from System.Exception, they'll show up as an instance of RuntimeWrappedException.
 		/// </param>
 		/// <param name="handler">
@@ -193,31 +193,31 @@
 			where TExceptionBase : Exception
 		{
 			// Verify that every type in typesToCatch is a sub-type of TExceptionBase
-			#if DEBUG
+#if DEBUG
 			foreach (var tc in typesToCatch)
 			{
 				Debug.Assert(
-					typeof(TExceptionBase).IsAssignableFrom(tc), 
+					typeof(TExceptionBase).IsAssignableFrom(tc),
 					String.Format("Error: {0} is not a sub-class of {1}", tc.FullName, typeof(TExceptionBase).FullName));
 			}
-			#endif
+#endif
 
 			Filter(
-				body, 
+				body,
 				e =>
+				{
+					// If the thrown exception is a sub-type (including the same time) of at least one of the provided types then
+					// catch it.
+					foreach (var catchType in typesToCatch)
 					{
-						// If the thrown exception is a sub-type (including the same time) of at least one of the provided types then
-						// catch it.
-						foreach (var catchType in typesToCatch)
+						if (catchType.IsAssignableFrom(e.GetType()))
 						{
-							if (catchType.IsAssignableFrom(e.GetType()))
-							{
-								return true;
-							}
+							return true;
 						}
+					}
 
-						return false;
-					}, 
+					return false;
+				},
 				e => handler((TExceptionBase)e));
 		}
 
@@ -289,15 +289,15 @@
 			// (so the cast to Exception in the code will always succeed).  C# and VB always do this, C++/CLI doesn't.
 			assembly.SetCustomAttribute(
 				new CustomAttributeBuilder(
-					typeof(RuntimeCompatibilityAttribute).GetConstructor(new Type[] { }), 
-					new object[] { }, 
-					new[] { typeof(RuntimeCompatibilityAttribute).GetProperty("WrapNonExceptionThrows") }, 
+					typeof(RuntimeCompatibilityAttribute).GetConstructor(new Type[] { }),
+					new object[] { },
+					new[] { typeof(RuntimeCompatibilityAttribute).GetProperty("WrapNonExceptionThrows") },
 					new object[] { true }));
 
 			// Add an assembly attribute that tells the CLR not to attempt to load PDBs when compiling this assembly
 			assembly.SetCustomAttribute(
 				new CustomAttributeBuilder(
-					typeof(DebuggableAttribute).GetConstructor(new[] { typeof(DebuggableAttribute.DebuggingModes) }), 
+					typeof(DebuggableAttribute).GetConstructor(new[] { typeof(DebuggableAttribute.DebuggingModes) }),
 					new object[] { DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints }));
 
 			// Create the type and method which will contain the filter

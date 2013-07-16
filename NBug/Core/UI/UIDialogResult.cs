@@ -8,7 +8,7 @@ namespace NBug.Core.UI
 {
 	public enum SendReport
 	{
-		Send, 
+		Send,
 		DoNotSend
 	}
 
@@ -17,12 +17,12 @@ namespace NBug.Core.UI
 		/// <summary>
 		/// This will handle all unhandled exceptions to be able to continue execution.
 		/// </summary>
-		ContinueExecution, 
+		ContinueExecution,
 
 		/// <summary>
 		/// This will handle all unhandled exceptions and exit the application.
 		/// </summary>
-		BreakExecution, 
+		BreakExecution,
 	}
 
 	public struct UIDialogResult

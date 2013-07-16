@@ -9,7 +9,7 @@ namespace NBug.Properties
 	using System.IO;
 	using System.Xml;
 	using System.Xml.Linq;
-	
+
 	public static class SettingsOverride
 	{
 		/// <summary>

@@ -15,7 +15,7 @@ namespace NBug.Enums
 		NBugTrace,
 
 		/// <summary>
-		/// This category outputs results of substantial events like the server response after submitting a bug report to the a server. 
+		/// This category outputs results of substantial events like the server response after submitting a bug report to the a server.
 		/// </summary>
 		NBugInfo,
 

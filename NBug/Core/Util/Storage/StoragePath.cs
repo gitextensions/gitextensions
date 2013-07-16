@@ -28,7 +28,7 @@ namespace NBug.Core.Util.Storage
 			storagePathString = storagePath;
 			storagePathEnum = Enums.StoragePath.Custom;
 		}
-		
+
 		public static implicit operator StoragePath(Enums.StoragePath path)
 		{
 			return new StoragePath(path);

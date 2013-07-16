@@ -4,19 +4,16 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System.Xml.Linq;
-using System.Xml.Serialization;
 using NBug.Core.Reporting.Info;
 using NBug.Core.Util.Serialization;
 
 namespace NBug.Core.Submission.Web
 {
+	using NBug.Core.Util.Logging;
 	using System;
 	using System.IO;
 	using System.Net;
 	using System.Net.Mail;
-
-	using NBug.Core.Util.Logging;
 
 	public class MailFactory : IProtocolFactory
 	{
@@ -40,7 +37,7 @@ namespace NBug.Core.Submission.Web
 
 		public Mail()
 		{
-            Port = 25;
+			Port = 25;
 		}
 
 		// Connection string format (single line)
@@ -93,7 +90,7 @@ namespace NBug.Core.Submission.Web
 
 		public int Port { get; set; }
 
-        public MailPriority Priority { get; set; }
+		public MailPriority Priority { get; set; }
 
 		public bool UseAuthentication { get; set; }
 
@@ -103,7 +100,6 @@ namespace NBug.Core.Submission.Web
 
 		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
 		{
-
 			if (string.IsNullOrEmpty(this.From) || string.IsNullOrEmpty(this.To))
 			{
 				return false;
@@ -112,7 +108,7 @@ namespace NBug.Core.Submission.Web
 			if (string.IsNullOrEmpty(this.ReplyTo))
 			{
 				this.ReplyTo = this.From;
-			}	
+			}
 
 			if (this.Port <= 0)
 			{
@@ -138,15 +134,14 @@ namespace NBug.Core.Submission.Web
 					smtpClient.Host = this.SmtpServer;
 				}
 
-				
-                smtpClient.Port = this.Port;
+				smtpClient.Port = this.Port;
 
 				if (this.UseAuthentication)
 				{
 					smtpClient.Credentials = new NetworkCredential(this.Username, this.Password);
 				}
-                
-                smtpClient.EnableSsl = this.UseSsl;		
+
+				smtpClient.EnableSsl = this.UseSsl;
 
 				if (!string.IsNullOrEmpty(this.Cc))
 				{
@@ -158,7 +153,7 @@ namespace NBug.Core.Submission.Web
 					message.Bcc.Add(this.Bcc);
 				}
 
-                message.Priority = this.Priority;
+				message.Priority = this.Priority;
 
 				message.To.Add(this.To);
 				message.ReplyToList.Add(this.ReplyTo);
@@ -186,11 +181,11 @@ namespace NBug.Core.Submission.Web
 				if (!string.IsNullOrEmpty(this.CustomBody))
 				{
 					message.Body = this.CustomBody + Environment.NewLine + Environment.NewLine + report +
-					               Environment.NewLine + Environment.NewLine + exception;
+								   Environment.NewLine + Environment.NewLine + exception;
 				}
 				else
 				{
-					message.Body =  report + Environment.NewLine + Environment.NewLine + exception;
+					message.Body = report + Environment.NewLine + Environment.NewLine + exception;
 				}
 
 				smtpClient.Send(message);

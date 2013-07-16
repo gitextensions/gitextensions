@@ -14,7 +14,6 @@ namespace NBug.Core.Submission.Tracker
 
 	internal class BugNet : ProtocolBase
 	{
-
 		internal BugNet(string connectionString)
 			: base(connectionString)
 		{

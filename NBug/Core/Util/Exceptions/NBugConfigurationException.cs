@@ -12,12 +12,14 @@ namespace NBug.Core.Util.Exceptions
 	[Serializable]
 	public class NBugConfigurationException : NBugException
 	{
-		public NBugConfigurationException(string message, Exception inner) : base(message, inner)
+		public NBugConfigurationException(string message, Exception inner)
+			: base(message, inner)
 		{
 			this.MisconfiguredProperty = string.Empty;
 		}
 
-		private NBugConfigurationException(string propertyName, string message) : base(message)
+		private NBugConfigurationException(string propertyName, string message)
+			: base(message)
 		{
 			this.MisconfiguredProperty = propertyName;
 		}

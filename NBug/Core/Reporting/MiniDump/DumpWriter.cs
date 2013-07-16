@@ -1,21 +1,20 @@
 ﻿namespace NBug.Core.Reporting.MiniDump
 {
+	using NBug.Core.Util.Exceptions;
+	using NBug.Core.Util.Logging;
+	using NBug.Enums;
 	using System;
 	using System.Diagnostics;
 	using System.IO;
 	using System.Runtime.InteropServices;
 
-	using NBug.Core.Util.Exceptions;
-	using NBug.Core.Util.Logging;
-	using NBug.Enums;
-
 	/// <summary>
 	/// Sample usage:
 	/// <code>
-	/// using (FileStream fs = new FileStream("minidump.mdmp", FileMode.Create, FileAccess.ReadWrite, FileShare.Write)) 
-	/// { 
-	///		DumpWriter.Write(fs.SafeFileHandle, DumpTypeFlag.WithDataSegs | DumpTypeFlag.WithHandleData); 
-	/// } 
+	/// using (FileStream fs = new FileStream("minidump.mdmp", FileMode.Create, FileAccess.ReadWrite, FileShare.Write))
+	/// {
+	///		DumpWriter.Write(fs.SafeFileHandle, DumpTypeFlag.WithDataSegs | DumpTypeFlag.WithHandleData);
+	/// }
 	/// </code>
 	/// </summary>
 	/// <remarks>Code snippet is from http://blogs.msdn.com/b/dondu/archive/2010/10/24/writing-minidumps-in-c.aspx </remarks>
@@ -132,33 +131,34 @@
 		 * } MINIDUMP_EXCEPTION_INFORMATION, *PMINIDUMP_EXCEPTION_INFORMATION;
 		 */
 
-		[StructLayout(LayoutKind.Sequential, Pack = 4)]  // Pack=4 is important! So it works also for x64! 
+		[StructLayout(LayoutKind.Sequential, Pack = 4)]  // Pack=4 is important! So it works also for x64!
 		private struct MiniDumpExceptionInformation
 		{
 			public uint ThreadId;
 			public IntPtr ExceptionPointers;
+
 			[MarshalAs(UnmanagedType.Bool)]
 			public bool ClientPointers;
 		}
 
-		/* BOOL 
-		 * WINAPI 
-		 * MiniDumpWriteDump( 
-		 *    __in HANDLE hProcess, 
-		 *    __in DWORD ProcessId, 
-		 *    __in HANDLE hFile, 
-		 *    __in MINIDUMP_TYPE DumpType, 
-		 *    __in_opt PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam, 
-		 *    __in_opt PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam, 
-		 *    __in_opt PMINIDUMP_CALLBACK_INFORMATION CallbackParam 
-		 *    ); 
+		/* BOOL
+		 * WINAPI
+		 * MiniDumpWriteDump(
+		 *    __in HANDLE hProcess,
+		 *    __in DWORD ProcessId,
+		 *    __in HANDLE hFile,
+		 *    __in MINIDUMP_TYPE DumpType,
+		 *    __in_opt PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam,
+		 *    __in_opt PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam,
+		 *    __in_opt PMINIDUMP_CALLBACK_INFORMATION CallbackParam
+		 *    );
 		 */
 
-		// Overload requiring MiniDumpExceptionInformation 
+		// Overload requiring MiniDumpExceptionInformation
 		[DllImport("dbghelp.dll", EntryPoint = "MiniDumpWriteDump", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
 		private static extern bool MiniDumpWriteDump(IntPtr hProcess, uint processId, SafeHandle hFile, uint dumpType, ref MiniDumpExceptionInformation expParam, IntPtr userStreamParam, IntPtr callbackParam);
 
-		// Overload supporting MiniDumpExceptionInformation == NULL 
+		// Overload supporting MiniDumpExceptionInformation == NULL
 		[DllImport("dbghelp.dll", EntryPoint = "MiniDumpWriteDump", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
 		private static extern bool MiniDumpWriteDump(IntPtr hProcess, uint processId, SafeHandle hFile, uint dumpType, IntPtr expParam, IntPtr userStreamParam, IntPtr callbackParam);
 
