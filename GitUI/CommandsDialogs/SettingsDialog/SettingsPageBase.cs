@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -8,12 +10,44 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     /// </summary>
     public class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
+        private ISettingsPageHost _PageHost;
+        protected ISettingsPageHost PageHost
+        {
+            get
+            {
+                if (_PageHost == null)
+                    throw new NullReferenceException("PageHost instance was not passed to page: " + GetType().FullName);
+
+                return _PageHost;
+            }
+        }
+
+        protected CheckSettingsLogic CheckSettingsLogic { get { return PageHost.CheckSettingsLogic; } }
+        protected CommonLogic CommonLogic { get { return CheckSettingsLogic.CommonLogic; } }
+
+
+        protected GitModule Module { get { return this.CommonLogic.Module; } }
+
+        protected virtual void Init(ISettingsPageHost aPageHost)
+        {
+            _PageHost = aPageHost;        
+        }
+
+        public static T Create<T>(ISettingsPageHost aPageHost) where T : SettingsPageBase, new()
+        {
+            T result = new T();
+
+            result.Init(aPageHost);
+
+            return result;
+        }
+
         public virtual string GetTitle()
         {
             return Text;
         }
 
-        public Control GuiControl { get { return this; } }
+        public virtual Control GuiControl { get { return this; } }
 
         /// <summary>
         /// Called when SettingsPage is shown (again);
@@ -39,29 +73,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public void LoadSettings()
         {
             _loadingSettings = true;
-            OnLoadSettings();
+            SettingsToPage();
             _loadingSettings = false;
         }
 
-        ////public void SaveSettings()
-        ////{
-        ////    OnSaveSettings();
-        ////}
-
-        /// <summary>
-        /// use GitCommands.Settings to load settings in derived classes
-        /// </summary>
-        protected virtual void OnLoadSettings()
+        public void SaveSettings()
         {
-            // to be overridden
+            PageToSettings();
         }
 
-        /// <summary>
-        /// use GitCommands.Settings to save settings in derived classes
-        /// </summary>
-        public virtual void SaveSettings()
-        {
-            // to be overridden
+        protected virtual void SettingsToPage()
+        { 
+        }
+
+        protected virtual void PageToSettings()
+        { 
         }
 
         IList<string> childrenText;

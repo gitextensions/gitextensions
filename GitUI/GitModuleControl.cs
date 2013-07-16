@@ -110,7 +110,7 @@ namespace GitUI
 
         protected bool ExecuteScriptCommand(int command)
         {
-            return Script.ScriptRunner.ExecuteScriptCommand(Module, command, this as RevisionGrid);
+            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, this as RevisionGrid);
         }
     }
 }

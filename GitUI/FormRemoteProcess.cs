@@ -129,9 +129,9 @@ namespace GitUI
                     if (!string.IsNullOrEmpty(remoteUrl))
                         if (MessageBox.Show(this, _serverHotkeyNotCachedText.Text, "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                         {
-                            Module.RunRealCmd(
+                            Module.RunExternalCmdShowConsole(
                                 "cmd.exe",
-                                string.Format("/k \"\"{0}\" -T \"{1}\"\"", Settings.Plink, remoteUrl));
+                                string.Format("/k \"\"{0}\" -T \"{1}\"\"", AppSettings.Plink, remoteUrl));
 
                             Retry();
                             return true;
@@ -153,10 +153,7 @@ namespace GitUI
                     {
                         string remoteUrl = Module.GetPathSetting(string.Format(SettingKeyString.RemoteUrl, Remote));
 
-                        if (string.IsNullOrEmpty(remoteUrl))
-                            Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + Remote + "\"");
-                        else
-                            Module.RunRealCmd("cmd.exe", "/k \"\"" + Settings.Plink + "\" " + remoteUrl + "\"");
+                        Module.RunExternalCmdShowConsole("cmd.exe", string.Format("/k \"\"{0}\" {1}\"", AppSettings.Plink, string.IsNullOrEmpty(remoteUrl) ? Remote : remoteUrl));
 
                         restart = true;
                     }
