@@ -30,11 +30,11 @@ namespace NBug.Core.Submission
 			foreach (var property in properties.Where(property => property.Name != "Type" && fields.ContainsKey(property.Name)))
 			{
                 if(property.PropertyType == typeof(bool))
-                    property.SetValue(this, Convert.ToBoolean(fields[property.Name]), null);
+                    property.SetValue(this, Convert.ToBoolean(fields[property.Name].Trim()), null);
                 else if (property.PropertyType == typeof(int))
-                    property.SetValue(this, Convert.ToInt32(fields[property.Name]), null);
+                    property.SetValue(this, Convert.ToInt32(fields[property.Name].Trim()), null);
                 else if (property.PropertyType.BaseType == typeof(Enum))
-                    property.SetValue(this, Convert.ToInt32(fields[property.Name]), null);
+                    property.SetValue(this, Enum.Parse(property.PropertyType ,fields[property.Name]), null);
                 else
                     property.SetValue(this, fields[property.Name], null);
 			}
