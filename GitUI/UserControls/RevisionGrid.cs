@@ -105,6 +105,7 @@ namespace GitUI
             drawNonrelativesGrayToolStripMenuItem.Checked = AppSettings.RevisionGraphDrawNonRelativesGray;
             showGitNotesToolStripMenuItem.Checked = AppSettings.ShowGitNotes;
             showTagsToolStripMenuItem.Checked = AppSettings.ShowTags;
+            showMergeCommitsToolStripMenuItem.Checked = AppSettings.ShowMergeCommits;
 
             BranchFilter = String.Empty;
             SetShowBranches();
@@ -816,6 +817,9 @@ namespace GitUI
 
                 if (AppSettings.ShowGitNotes)
                     _refsOptions &= ~RefsFiltringOptions.ShowGitNotes;
+
+                if (!AppSettings.ShowMergeCommits)
+                    _refsOptions |= RefsFiltringOptions.NoMerges;
 
                 RevisionGridInMemFilter revisionFilterIMF = RevisionGridInMemFilter.CreateIfNeeded(_revisionFilter.GetInMemAuthorFilter(),
                                                                                                    _revisionFilter.GetInMemCommitterFilter(),
@@ -2248,6 +2252,23 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
+        private void ShowMergeCommitsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.ShowMergeCommits = !showMergeCommitsToolStripMenuItem.Checked;
+            showMergeCommitsToolStripMenuItem.Checked = AppSettings.ShowMergeCommits;
+
+            // hide revision graph when hiding merge commits, reasons:
+            // 1, revison graph is no longer relevant, as we are not sohwing all commits
+            // 2, performance hit when both revision graph and no merge commits are enabled
+            if (IsGraphLayout() && !AppSettings.ShowMergeCommits)
+            {
+                ToggleRevisionGraph();
+                SetRevisionsLayout();
+            }
+
+            ForceRefreshRevisions();
+        }
+
         public void OnModuleChanged(GitModule aModule)
         {
             if (GitModuleChanged != null)
@@ -2267,16 +2288,39 @@ namespace GitUI
 
         private void ShowRevisionGraphToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Small) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.SmallWithGraph;
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Card) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.CardWithGraph;
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCard) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.LargeCardWithGraph;
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.Small;
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.Card;
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCardWithGraph) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.LargeCard;
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.FilledBranchesSmall) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.FilledBranchesSmallWithGraph;
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.FilledBranchesSmallWithGraph) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.FilledBranchesSmall;
+
+            ToggleRevisionGraph();
             SetRevisionsLayout();
-            Refresh();
+
+            // must show MergeCommits when showing revision graph
+            if (!AppSettings.ShowMergeCommits && IsGraphLayout())
+            {
+                AppSettings.ShowMergeCommits = true;
+                showMergeCommitsToolStripMenuItem.Checked = true;
+                ForceRefreshRevisions();
+            }
+            else
+                Refresh();
+        }
+
+        private void ToggleRevisionGraph()
+        {
+            if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.Small)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.SmallWithGraph;
+            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.Card)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.CardWithGraph;
+            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.LargeCard)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.LargeCardWithGraph;
+            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.SmallWithGraph)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.Small;
+            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.CardWithGraph)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.Card;
+            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.LargeCardWithGraph)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.LargeCard;
+            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.FilledBranchesSmall)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.FilledBranchesSmallWithGraph;
+            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.FilledBranchesSmallWithGraph)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.FilledBranchesSmall;
         }
 
         private void showTagsToolStripMenuItem_Click(object sender, EventArgs e)
