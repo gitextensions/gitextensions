@@ -11,11 +11,11 @@ namespace NBug.Configurator
 	using System;
 	using System.Windows.Forms;
 
-	internal partial class Normal : Form
+	internal partial class CustomPreviewForm : Form
 	{
 		private UIDialogResult uiDialogResult;
 
-		internal Normal()
+		internal CustomPreviewForm()
 		{
 			InitializeComponent();
 		}

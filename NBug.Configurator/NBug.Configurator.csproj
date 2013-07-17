@@ -107,11 +107,11 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Normal.cs">
+    <Compile Include="CustomPreviewForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Normal.Designer.cs">
-      <DependentUpon>Normal.cs</DependentUpon>
+    <Compile Include="CustomPreviewForm.Designer.cs">
+      <DependentUpon>CustomPreviewForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PreviewForm.cs">
       <SubType>Form</SubType>
@@ -158,8 +158,8 @@
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Normal.resx">
-      <DependentUpon>Normal.cs</DependentUpon>
+    <EmbeddedResource Include="CustomPreviewForm.resx">
+      <DependentUpon>CustomPreviewForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PreviewForm.resx">
       <DependentUpon>PreviewForm.cs</DependentUpon>

@@ -535,7 +535,7 @@ namespace NBug
 				}
 				else
 				{
-					Logger.Error("There is a problem with the 'applicationSettings' section of the configuration file. The property read from the file '" + property + "' is undefined. This is probably a refactoring problem, or a malformed config file.");
+                    Logger.Error(String.Format("There is a problem with the 'applicationSettings' section of the configuration file. The property read from the file '{0}' is undefined. This is probably a refactoring problem, or a malformed config file.", property));
 				}
 			}
 
