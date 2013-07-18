@@ -63,12 +63,17 @@
             this.ttDebug = new System.Windows.Forms.ToolTip(this.components);
             this.lblCaptionHead = new System.Windows.Forms.Label();
             this.lblHead = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.panel3 = new System.Windows.Forms.GroupBox();
+            this.txtResult = new System.Windows.Forms.TextBox();
+            this.lblRunCommand = new System.Windows.Forms.Label();
             this.gbManage.SuspendLayout();
             this.pnlManageBranch.SuspendLayout();
             this.pnlPull.SuspendLayout();
             this.gbStart.SuspendLayout();
             this.pnlBasedOn.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbResultCommand)).BeginInit();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnInit
@@ -239,7 +244,7 @@
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(284, 318);
+            this.btnClose.Location = new System.Drawing.Point(287, 525);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(83, 23);
             this.btnClose.TabIndex = 0;
@@ -323,7 +328,7 @@
             // lblDebug
             // 
             this.lblDebug.AutoSize = true;
-            this.lblDebug.Location = new System.Drawing.Point(21, 323);
+            this.lblDebug.Location = new System.Drawing.Point(24, 530);
             this.lblDebug.Name = "lblDebug";
             this.lblDebug.Size = new System.Drawing.Size(238, 13);
             this.lblDebug.TabIndex = 7;
@@ -388,11 +393,55 @@
             this.lblHead.Text = "ref/...";
             this.lblHead.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 14);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(56, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "command:";
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.txtResult);
+            this.panel3.Controls.Add(this.lblRunCommand);
+            this.panel3.Controls.Add(this.label2);
+            this.panel3.Location = new System.Drawing.Point(12, 319);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(629, 200);
+            this.panel3.TabIndex = 11;
+            this.panel3.TabStop = false;
+            this.panel3.Text = "Result of git flow command run";
+            // 
+            // txtResult
+            // 
+            this.txtResult.AcceptsReturn = true;
+            this.txtResult.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtResult.Location = new System.Drawing.Point(6, 32);
+            this.txtResult.Multiline = true;
+            this.txtResult.Name = "txtResult";
+            this.txtResult.ReadOnly = true;
+            this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtResult.Size = new System.Drawing.Size(617, 162);
+            this.txtResult.TabIndex = 2;
+            this.txtResult.Text = " -";
+            // 
+            // lblRunCommand
+            // 
+            this.lblRunCommand.AutoSize = true;
+            this.lblRunCommand.Location = new System.Drawing.Point(60, 14);
+            this.lblRunCommand.Name = "lblRunCommand";
+            this.lblRunCommand.Size = new System.Drawing.Size(10, 13);
+            this.lblRunCommand.TabIndex = 1;
+            this.lblRunCommand.Text = "-";
+            // 
             // GitFlowForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(653, 348);
+            this.ClientSize = new System.Drawing.Size(653, 556);
+            this.Controls.Add(this.panel3);
             this.Controls.Add(this.pbResultCommand);
             this.Controls.Add(this.lnkGitFlow);
             this.Controls.Add(this.gbStart);
@@ -417,6 +466,8 @@
             this.pnlBasedOn.ResumeLayout(false);
             this.pnlBasedOn.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbResultCommand)).EndInit();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -457,5 +508,9 @@
         private System.Windows.Forms.ToolTip ttDebug;
         private System.Windows.Forms.Label lblCaptionHead;
         private System.Windows.Forms.Label lblHead;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox panel3;
+        private System.Windows.Forms.Label lblRunCommand;
+        private System.Windows.Forms.TextBox txtResult;
     }
 }
