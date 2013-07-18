@@ -178,8 +178,8 @@ namespace GitUI
             set
             {
                 _normalFont = value;
-                Message.DefaultCellStyle.Font = _normalFont;
-                Date.DefaultCellStyle.Font = _normalFont;
+                MessageDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
+                DateDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
 
                 RefsFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
                 HeadFont = new Font(_normalFont, FontStyle.Bold);
@@ -1056,9 +1056,9 @@ namespace GitUI
 
             Revisions.SuspendLayout();
 
-            Revisions.Columns[1].HeaderText = Strings.GetMessageText();
-            Revisions.Columns[2].HeaderText = Strings.GetAuthorText();
-            Revisions.Columns[3].HeaderText = GetDateHeaderText();
+            Revisions.MessageColumn.HeaderText = Strings.GetMessageText();
+            Revisions.AuthorColumn.HeaderText = Strings.GetAuthorText();
+            Revisions.DateColumn.HeaderText = GetDateHeaderText();
 
             Revisions.SelectionChanged -= RevisionsSelectionChanged;
 
