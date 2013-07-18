@@ -217,6 +217,12 @@ namespace GitFlow
         private bool RunCommand(string commandText)
         {
             int exitCode;
+            pbResultCommand.Image = Resource.StatusHourglass;
+            ShowToolTip(pbResultCommand, "running command : " + commandText);
+            pbResultCommand.Invalidate();
+            pbResultCommand.Update();
+            pbResultCommand.Refresh();
+
             var result = m_gitUiCommands.GitModule.RunGitCmd(commandText, out exitCode);
 
             IsRefreshNeeded = true;
