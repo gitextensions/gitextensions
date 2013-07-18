@@ -1756,7 +1756,7 @@ namespace GitUI
 
             //For now there is no action that could be done on currentBranch
             string currentBranch = Module.GetSelectedBranch();
-            var clipboardUtil = new CopyToClipboardUtil(revision);
+            var clipboardUtil = new GitRefListsForRevision(revision);
             var allBranches = clipboardUtil.AllBranches;
             var localBranches = clipboardUtil.LocalBranches;
             var branchesWithNoIdenticalRemotes = clipboardUtil.BranchesWithNoIdenticalRemotes;
@@ -1794,7 +1794,8 @@ namespace GitUI
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
 
-            { // clipboard brach menu handling
+            // clipboard brach menu handling
+            {
 
                 // remove previous items
                 copyToClipboardToolStripMenuItem.DropDownItems.OfType<ToolStripMenuItem>()
