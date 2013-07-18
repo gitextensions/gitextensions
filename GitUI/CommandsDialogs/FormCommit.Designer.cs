@@ -1301,11 +1301,15 @@ namespace GitUI.CommandsDialogs
             ((System.ComponentModel.ISupportInitialize)(this.gitItemStatusBindingSource)).EndInit();
             this.splitMain.Panel1.ResumeLayout(false);
             this.splitMain.Panel2.ResumeLayout(false);
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
+#endif
             this.splitMain.ResumeLayout(false);
             this.splitLeft.Panel1.ResumeLayout(false);
             this.splitLeft.Panel2.ResumeLayout(false);
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitLeft)).EndInit();
+#endif
             this.splitLeft.ResumeLayout(false);
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);
             this.toolStripContainer1.TopToolStripPanel.ResumeLayout(false);
@@ -1323,7 +1327,9 @@ namespace GitUI.CommandsDialogs
             this.splitRight.Panel1.ResumeLayout(false);
             this.splitRight.Panel1.PerformLayout();
             this.splitRight.Panel2.ResumeLayout(false);
+#if Mono212Released //waiting for mono 2.12
             ((System.ComponentModel.ISupportInitialize)(this.splitRight)).EndInit();
+#endif
             this.splitRight.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
