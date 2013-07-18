@@ -1743,7 +1743,6 @@ namespace GitUI
             var renameDropDown = new ContextMenuStrip();
 
             var tagNameCopy = new ContextMenuStrip();
-            var branchNameCopy = new ContextMenuStrip();
 
             foreach (var head in revision.Refs.Where(h => h.IsTag))
             {
@@ -1795,12 +1794,29 @@ namespace GitUI
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
 
-            clipboardUtil.GetAllBranchNames().ForEach(branchName =>
-                {
-                    var branchNameItem = new ToolStripMenuItem(branchName);
-                    branchNameItem.Click += CopyToClipBoard;
-                    branchNameCopy.Items.Add(branchNameItem);
-                });
+            { // clipboard brach menu handling
+
+                // remove previous items
+                copyToClipboardToolStripMenuItem.DropDownItems.OfType<ToolStripMenuItem>()
+                    .Where(item => (item.Tag as string) == "branchNameItem")
+                    .ToArray()
+                    .ForEach(item => copyToClipboardToolStripMenuItem.DropDownItems.Remove(item));
+
+                // insert items
+                var branchNameItemInsertAfter = branchNameToolStripMenuItem;
+                clipboardUtil.GetAllBranchNames().ForEach(branchName =>
+                    {
+                        var branchNameItem = new ToolStripMenuItem(branchName);
+                        branchNameItem.Tag = "branchNameItem"; // to delete items from previous opening
+                        branchNameItem.Click += CopyToClipBoard;
+                        int insertAfterIndex = copyToClipboardToolStripMenuItem.DropDownItems.IndexOf(branchNameItemInsertAfter);
+                        copyToClipboardToolStripMenuItem.DropDownItems.Insert(insertAfterIndex + 1, branchNameItem);
+                        branchNameItemInsertAfter = branchNameItem;
+                    });
+
+                // visibility of caption
+                branchNameToolStripMenuItem.Visible = clipboardUtil.AllBranches.Any();
+            }
 
             foreach (var head in allBranches)
             {
@@ -1850,9 +1866,6 @@ namespace GitUI
 
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
             renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
-
-            branchNameToolStripMenuItem.DropDown = branchNameCopy;
-            branchNameToolStripMenuItem.Enabled = branchNameCopy.Items.Count > 0;
 
             tagToolStripMenuItem.DropDown = tagNameCopy;
             tagToolStripMenuItem.Enabled = tagNameCopy.Items.Count > 0;
