@@ -1709,7 +1709,7 @@ namespace GitUI
             UICommands.StartRevertCommitDialog(this, GetRevision(LastRow));
         }
 
-        private void FilterToolStripMenuItemClick(object sender, EventArgs e)
+        internal void FilterToolStripMenuItemClick(object sender, EventArgs e)
         {
             _revisionFilter.ShowDialog(this);
             ForceRefreshRevisions();
@@ -2153,7 +2153,6 @@ namespace GitUI
             if (lastIndex != mainContextMenu.Items.Count)
                 mainContextMenu.Items.Insert(lastIndex, new ToolStripSeparator());
             bool showScriptsMenu = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
-            toolStripSeparator7.Visible = showScriptsMenu;
             runScriptToolStripMenuItem.Visible = showScriptsMenu;
         }
 
