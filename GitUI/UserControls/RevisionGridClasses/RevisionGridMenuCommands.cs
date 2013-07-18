@@ -334,6 +334,18 @@ namespace GitUI.UserControls.RevisionGridClasses
                 resultList.Add(menuCommand);
             }
 
+            resultList.Add(MenuCommand.CreateSeparator());
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "filterToolStripMenuItem";
+                menuCommand.Text = "Set advanced filter";
+                menuCommand.Image = global::GitUI.Properties.Resources.IconFilter;
+                menuCommand.ExecuteAction = () => _revisionGrid.FilterToolStripMenuItemClick(null, null);
+
+                resultList.Add(menuCommand);
+            }
+
             return resultList;
         }
 
