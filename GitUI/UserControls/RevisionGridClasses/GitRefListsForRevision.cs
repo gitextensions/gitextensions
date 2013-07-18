@@ -6,13 +6,13 @@ using System.Text;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
-    class CopyToClipboardUtil
+    class GitRefListsForRevision
     {
         private GitRef[] _allBranches;
         private GitRef[] _localBranches;
         private GitRef[] _branchesWithNoIdenticalRemotes;
 
-        public CopyToClipboardUtil(GitRevision revision)
+        public GitRefListsForRevision(GitRevision revision)
         {
             _allBranches = revision.Refs.Where(h => !h.IsTag && (h.IsHead || h.IsRemote)).ToArray();
             _localBranches = _allBranches.Where(b => !b.IsRemote).ToArray();
