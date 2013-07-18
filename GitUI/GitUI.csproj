@@ -133,7 +133,7 @@
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\RevisionLinksSettingsPage.Designer.cs">
       <DependentUpon>RevisionLinksSettingsPage.cs</DependentUpon>
-    </Compile>    
+    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\ConfigFileSettingsSet.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\RepoDistSettingsPage.cs">
       <SubType>UserControl</SubType>
@@ -188,6 +188,7 @@
     <Compile Include="UserControls\GotoUserManualControl.Designer.cs">
       <DependentUpon>GotoUserManualControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\RevisionGridClasses\CopyToClipboardUtil.cs" />
     <Compile Include="UserManual\UserManual.cs" />
     <Compile Include="UserManual\SingleHtmlUserManual.cs" />
     <Compile Include="UserManual\StandardHtmlUserManual.cs" />
