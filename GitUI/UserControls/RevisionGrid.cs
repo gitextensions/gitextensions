@@ -1757,11 +1757,10 @@ namespace GitUI
 
             //For now there is no action that could be done on currentBranch
             string currentBranch = Module.GetSelectedBranch();
-            var allBranches = revision.Refs.Where(h => !h.IsTag && (h.IsHead || h.IsRemote)).ToArray();
-            var localBranches = allBranches.Where(b => !b.IsRemote);
-
-            var branchesWithNoIdenticalRemotes = allBranches.Where(
-                b => !b.IsRemote || !localBranches.Any(lb => lb.TrackingRemote == b.Remote && lb.MergeWith == b.LocalName));
+            var clipboardUtil = new CopyToClipboardUtil(revision);
+            var allBranches = clipboardUtil.AllBranches;
+            var localBranches = clipboardUtil.LocalBranches;
+            var branchesWithNoIdenticalRemotes = clipboardUtil.BranchesWithNoIdenticalRemotes;
 
             bool currentBranchPointsToRevision = false;
             foreach (var head in branchesWithNoIdenticalRemotes)
@@ -1796,13 +1795,16 @@ namespace GitUI
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
 
+            clipboardUtil.GetAllBranchNames().ForEach(branchName =>
+                {
+                    var branchNameItem = new ToolStripMenuItem(branchName);
+                    branchNameItem.Click += CopyToClipBoard;
+                    branchNameCopy.Items.Add(branchNameItem);
+                });
 
             foreach (var head in allBranches)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                ToolStripItem branchName = new ToolStripMenuItem(head.Name);
-                branchName.Click += CopyToClipBoard;
-                branchNameCopy.Items.Add(branchName);
 
                 //skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
