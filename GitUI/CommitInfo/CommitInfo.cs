@@ -79,19 +79,10 @@ namespace GitUI.CommitInfo
         }
 
         private GitRevision _revision;
-        private string _revisionGuid;
         private List<string> _children;
         public void SetRevisionWithChildren(GitRevision revision, List<string> children)
         {
             _revision = revision;
-            _revisionGuid = revision.Guid;
-            _children = children;
-            ReloadCommitInfo();
-        }
-        public void SetRevisionWithChildren(string revision, List<string> children)
-        {
-            _revision = null;
-            _revisionGuid = revision;
             _children = children;
             ReloadCommitInfo();
         }
@@ -116,11 +107,7 @@ namespace GitUI.CommitInfo
         {
             get
             {
-                return _revisionGuid;
-            }
-            set
-            {
-                SetRevisionWithChildren(value, null);
+                return _revision.Guid;
             }
         }
 
@@ -138,7 +125,7 @@ namespace GitUI.CommitInfo
 
             ResetTextAndImage();
 
-            if (string.IsNullOrEmpty(_revisionGuid))
+            if (string.IsNullOrEmpty(_revision.Guid))
                 return; //is it regular case or should throw an exception
 
             _RevisionHeader.SelectionTabs = GetRevisionHeaderTabStops(); 
@@ -146,16 +133,13 @@ namespace GitUI.CommitInfo
             _RevisionHeader.Refresh();
 
             string error = "";
-            CommitData data;
-            if (_revision != null)
+            CommitData data = CommitData.CreateFromRevision(_revision);
+            if (_revision.Body == null)
             {
-                data = CommitData.CreateFromRevision(_revision);
-                CommitData.UpdateCommitMessage(data, Module, _revisionGuid, ref error);
+                CommitData.UpdateCommitMessage(data, Module, _revision.Guid, ref error);
                 _revision.Body = data.Body;
                 ThreadPool.QueueUserWorkItem(_ => loadLinksForRevision(_revision));
             }
-            else
-                data = CommitData.GetCommitData(Module, _revisionGuid, ref error);
             data.ChildrenGuids = _children;
             CommitInformation commitInformation = CommitInformation.GetCommitInfo(data, CommandClick != null);
 
@@ -166,10 +150,10 @@ namespace GitUI.CommitInfo
             LoadAuthorImage(data.Author ?? data.Committer);
 
             if (AppSettings.CommitInfoShowContainedInBranches)
-                ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revisionGuid));
+                ThreadPool.QueueUserWorkItem(_ => loadBranchInfo(_revision.Guid));
 
             if (AppSettings.CommitInfoShowContainedInTags)
-                ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revisionGuid));
+                ThreadPool.QueueUserWorkItem(_ => loadTagInfo(_revision.Guid));
         }
 
         private int[] _revisionHeaderTabStops;
@@ -346,7 +330,7 @@ namespace GitUI.CommitInfo
 
         private void addNoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Module.EditNotes(_revisionGuid);
+            Module.EditNotes(_revision.Guid);
             ReloadCommitInfo();
         }
     }
