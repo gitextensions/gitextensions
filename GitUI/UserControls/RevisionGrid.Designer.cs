@@ -100,8 +100,6 @@ namespace GitUI
             this.navigateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showMergeCommitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.filterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -251,8 +249,6 @@ namespace GitUI
             this.toolStripSeparator1,
             this.navigateToolStripMenuItem,
             this.viewToolStripMenuItem,
-            this.filterToolStripMenuItem,
-            this.toolStripSeparator7,
             this.runScriptToolStripMenuItem});
             this.mainContextMenu.Name = "CreateTag";
             this.mainContextMenu.Size = new System.Drawing.Size(265, 620);
@@ -522,20 +518,6 @@ namespace GitUI
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.viewToolStripMenuItem.Text = "View";
             // 
-            // 
-            // filterToolStripMenuItem
-            // 
-            this.filterToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFilter;
-            this.filterToolStripMenuItem.Name = "filterToolStripMenuItem";
-            this.filterToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
-            this.filterToolStripMenuItem.Text = "Set advanced filter";
-            this.filterToolStripMenuItem.Click += new System.EventHandler(this.FilterToolStripMenuItemClick);
-            // 
-            // toolStripSeparator7
-            // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(261, 6);
-            // 
             // runScriptToolStripMenuItem
             // 
             this.runScriptToolStripMenuItem.Name = "runScriptToolStripMenuItem";
@@ -728,7 +710,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem revertCommitToolStripMenuItem;
         private System.Windows.Forms.Panel NoGit;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ToolStripMenuItem filterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteTagToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkoutRevisionToolStripMenuItem;
@@ -753,7 +734,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem stopBisectToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator bisectSeparator;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem runScriptToolStripMenuItem;
         private System.Windows.Forms.Button InitRepository;
         private System.Windows.Forms.Button CloneRepository;
