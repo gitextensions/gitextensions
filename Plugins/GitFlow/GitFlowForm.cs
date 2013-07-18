@@ -218,12 +218,14 @@ namespace GitFlow
         {
             int exitCode;
             pbResultCommand.Image = Resource.StatusHourglass;
-            ShowToolTip(pbResultCommand, "running command : " + commandText);
-            pbResultCommand.Invalidate();
-            pbResultCommand.Update();
-            pbResultCommand.Refresh();
+            ShowToolTip(pbResultCommand, "running command : git " + commandText);
+            ForceRefresh(pbResultCommand);
+            lblRunCommand.Text = "git " + commandText;
+            ForceRefresh(lblRunCommand);
+            txtResult.Text = "running...";
+            ForceRefresh(txtResult);
 
-            var result = m_gitUiCommands.GitModule.RunGitCmd(commandText, out exitCode);
+            var result = m_gitUiCommands.GitModule.RunGitCmd(commandText, out exitCode).Trim().Replace("\n", Environment.NewLine);
 
             IsRefreshNeeded = true;
 
@@ -235,17 +237,26 @@ namespace GitFlow
                 pbResultCommand.Image = Resource.success;
                 ShowToolTip(pbResultCommand, result);
                 DisplayHead();
+                txtResult.Text = result;
             }
             else
             {
                 pbResultCommand.Image = Resource.error;
                 ShowToolTip(pbResultCommand, "error: " + result);
+                txtResult.Text = result;
             }
             return exitCode == 0;
         }
         #endregion
 
         #region GUI interactions
+        private void ForceRefresh(Control c)
+        {
+            c.Invalidate();
+            c.Update();
+            c.Refresh();
+        }
+
         private void ShowToolTip(Control c, string msg)
         {
             ttCommandResult.RemoveAll();
