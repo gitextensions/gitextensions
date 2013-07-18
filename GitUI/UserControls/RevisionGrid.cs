@@ -76,6 +76,10 @@ namespace GitUI
 
         private readonly RevisionGridMenuCommands _revisionGridMenuCommands;
 
+        bool showCurrentBranchOnlyToolStripMenuItemChecked; // refactoring
+        bool showAllBranchesToolStripMenuItemChecked; // refactoring
+        bool showFilteredBranchesToolStripMenuItemChecked; // refactoring
+
         public RevisionGrid()
         {
             InitLayout();
@@ -87,13 +91,13 @@ namespace GitUI
             _revisionGridMenuCommands = new RevisionGridMenuCommands(this);
             _revisionGridMenuCommands.CreateOrUpdateMenuCommands();
 
-            // add "ShowRemoteBranches" to context menu
-            {
-                var menuCommand = _revisionGridMenuCommands.GetViewMenuCommands().Single(a => a.Name == "ShowRemoteBranches");
-                var toolStripMenuItem = (ToolStripMenuItem)MenuCommand.CreateToolStripItem(menuCommand);
-                menuCommand.RegisterMenuItem(toolStripMenuItem);
-                showBranchesToolStripMenuItem.DropDownItems.Add(toolStripMenuItem);
-            }
+            // fill View context menu from MenuCommands
+            var viewMenuCommands = _revisionGridMenuCommands.GetViewMenuCommands();
+            FillMenuFromMenuCommands(viewMenuCommands, viewToolStripMenuItem);
+
+            // fill Navigate context menu from MenuCommands
+            var navigateMenuCommands = _revisionGridMenuCommands.GetNavigateMenuCommands();
+            FillMenuFromMenuCommands(navigateMenuCommands, navigateToolStripMenuItem);
 
             NormalFont = AppSettings.Font;
             Loading.Paint += Loading_Paint;
@@ -102,13 +106,7 @@ namespace GitUI
             Revisions.CellFormatting += RevisionsCellFormatting;
             Revisions.KeyPress += RevisionsKeyPress;
 
-            showAuthorDateToolStripMenuItem.Checked = AppSettings.ShowAuthorDate;
-            orderRevisionsByDateToolStripMenuItem.Checked = AppSettings.OrderRevisionByDate;
-            showRelativeDateToolStripMenuItem.Checked = AppSettings.RelativeDate;
-            drawNonrelativesGrayToolStripMenuItem.Checked = AppSettings.RevisionGraphDrawNonRelativesGray;
-            showGitNotesToolStripMenuItem.Checked = AppSettings.ShowGitNotes;
-            showTagsToolStripMenuItem.Checked = AppSettings.ShowTags;
-
+            showMergeCommitsToolStripMenuItem.Checked = AppSettings.ShowMergeCommits;
             BranchFilter = String.Empty;
             SetShowBranches();
             Filter = "";
@@ -137,6 +135,20 @@ namespace GitUI
             catch
             {
                 SetRevisionsLayout(RevisionGridLayout.SmallWithGraph);
+            }
+        }
+
+        private void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
+        {
+            foreach (var menuCommand in menuCommands)
+            {
+                var toolStripItem = (ToolStripItem)MenuCommand.CreateToolStripItem(menuCommand);
+                var toolStripMenuItem = toolStripItem as ToolStripMenuItem;
+                if (toolStripMenuItem != null)
+                {
+                    menuCommand.RegisterMenuItem(toolStripMenuItem);
+                }
+                targetMenuItem.DropDownItems.Add(toolStripItem);
             }
         }
 
@@ -634,37 +646,16 @@ namespace GitUI
 
         public GitRevision GetCurrentRevision()
         {
-            const string formatString =
-                /* Tree           */ "%T%n" +
-                /* Author Name    */ "%aN%n" +
-                /* Author Date    */ "%ai%n" +
-                /* Committer Name */ "%cN%n" +
-                /* Committer Date */ "%ci%n" +
-                /* Commit Message */ "%s";
-            string cmd = "log -n 1 --pretty=format:" + formatString + " " + CurrentCheckout;
-            var RevInfo = Module.RunGitCmd(cmd);
-            string[] Infos = RevInfo.Split('\n');
-            var Revision = new GitRevision(Module, CurrentCheckout)
-            {
-                TreeGuid = Infos[0],
-                Author = Infos[1],
-                Committer = Infos[3],
-                Message = Infos[5]
-            };
-            DateTime date;
-            DateTime.TryParse(Infos[2], out date);
-            Revision.AuthorDate = date;
-            DateTime.TryParse(Infos[4], out date);
-            Revision.CommitDate = date;
+            var revision = Module.GetRevision(CurrentCheckout, true);
             var refs = Module.GetRefs(true, true);
             foreach (var gitRef in refs)
             {
-                if (gitRef.Guid.Equals(Revision.Guid))
+                if (gitRef.Guid.Equals(revision.Guid))
                 {
-                    Revision.Refs.Add(gitRef);
+                    revision.Refs.Add(gitRef);
                 }
             }
-            return Revision;
+            return revision;
         }
 
         public void RefreshRevisions()
@@ -846,6 +837,9 @@ namespace GitUI
 
                 if (AppSettings.ShowGitNotes)
                     _refsOptions &= ~RefsFiltringOptions.ShowGitNotes;
+
+                if (!AppSettings.ShowMergeCommits)
+                    _refsOptions |= RefsFiltringOptions.NoMerges;
 
                 RevisionGridInMemFilter revisionFilterIMF = RevisionGridInMemFilter.CreateIfNeeded(_revisionFilter.GetInMemAuthorFilter(),
                                                                                                    _revisionFilter.GetInMemCommitterFilter(),
@@ -1219,7 +1213,7 @@ namespace GitUI
 
                                     if (gitRef.IsTag)
                                     {
-                                        if (!showTagsToolStripMenuItem.Checked)
+                                        if (!AppSettings.ShowTags)
                                         {
                                             continue;
                                         }
@@ -1664,12 +1658,6 @@ namespace GitUI
             UICommands.StartEditGitIgnoreDialog(this);
         }
 
-        private void ShowRemoteBranchesClick(object sender, EventArgs e)
-        {
-            // TODO: replace with autogenerated menu item later
-            _revisionGridMenuCommands.ShowRemoteBranches = !_revisionGridMenuCommands.ShowRemoteBranches;
-        }
-
         internal void InvalidateRevisions()
         {
             Revisions.Invalidate();
@@ -1678,7 +1666,7 @@ namespace GitUI
         // internal because used by RevisonGridMenuCommands
         internal void ShowCurrentBranchOnlyToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (showCurrentBranchOnlyToolStripMenuItem.Checked)
+            if (showCurrentBranchOnlyToolStripMenuItemChecked)
                 return;
 
             AppSettings.BranchFilterEnabled = true;
@@ -1691,7 +1679,7 @@ namespace GitUI
         // internal because used by RevisonGridMenuCommands
         internal void ShowAllBranchesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (showAllBranchesToolStripMenuItem.Checked)
+            if (showAllBranchesToolStripMenuItemChecked)
                 return;
 
             AppSettings.BranchFilterEnabled = false;
@@ -1703,7 +1691,7 @@ namespace GitUI
         // internal because used by RevisonGridMenuCommands
         internal void ShowFilteredBranchesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (showFilteredBranchesToolStripMenuItem.Checked)
+            if (showFilteredBranchesToolStripMenuItemChecked)
                 return;
 
             AppSettings.BranchFilterEnabled = true;
@@ -1713,16 +1701,16 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        internal bool ShowCurrentBranchOnlyToolStripMenuItemChecked { get { return showCurrentBranchOnlyToolStripMenuItem.Checked; } }
-        internal bool ShowAllBranchesToolStripMenuItemChecked { get { return showAllBranchesToolStripMenuItem.Checked; } }
-        internal bool ShowFilteredBranchesToolStripMenuItemChecked { get { return showFilteredBranchesToolStripMenuItem.Checked; } }
+        internal bool ShowCurrentBranchOnlyToolStripMenuItemChecked { get { return showCurrentBranchOnlyToolStripMenuItemChecked; } }
+        internal bool ShowAllBranchesToolStripMenuItemChecked { get { return showAllBranchesToolStripMenuItemChecked; } }
+        internal bool ShowFilteredBranchesToolStripMenuItemChecked { get { return showFilteredBranchesToolStripMenuItemChecked; } }
 
         private void SetShowBranches()
         {
-            showAllBranchesToolStripMenuItem.Checked = !AppSettings.BranchFilterEnabled;
-            showCurrentBranchOnlyToolStripMenuItem.Checked =
+            showAllBranchesToolStripMenuItemChecked = !AppSettings.BranchFilterEnabled;
+            showCurrentBranchOnlyToolStripMenuItemChecked =
                 AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
-            showFilteredBranchesToolStripMenuItem.Checked =
+            showFilteredBranchesToolStripMenuItemChecked =
                 AppSettings.BranchFilterEnabled && !AppSettings.ShowCurrentBranchOnly;
 
             BranchFilter = _revisionFilter.GetBranchFilter();
@@ -1747,7 +1735,7 @@ namespace GitUI
             UICommands.StartRevertCommitDialog(this, GetRevision(LastRow));
         }
 
-        private void FilterToolStripMenuItemClick(object sender, EventArgs e)
+        internal void FilterToolStripMenuItemClick(object sender, EventArgs e)
         {
             _revisionFilter.ShowDialog(this);
             ForceRefreshRevisions();
@@ -1995,17 +1983,15 @@ namespace GitUI
             UICommands.StartArchiveDialog(this, mainRevision, diffRevision);
         }
 
-        private void ShowAuthorDateToolStripMenuItemClick(object sender, EventArgs e)
+        internal void ShowAuthorDateToolStripMenuItemClick(object sender, EventArgs e)
         {
-            AppSettings.ShowAuthorDate = !showAuthorDateToolStripMenuItem.Checked;
-            showAuthorDateToolStripMenuItem.Checked = AppSettings.ShowAuthorDate;
+            AppSettings.ShowAuthorDate = !AppSettings.ShowAuthorDate;
             ForceRefreshRevisions();
         }
 
-        private void OrderRevisionsByDateToolStripMenuItemClick(object sender, EventArgs e)
+        internal void OrderRevisionsByDateToolStripMenuItemClick(object sender, EventArgs e)
         {
-            AppSettings.OrderRevisionByDate = !orderRevisionsByDateToolStripMenuItem.Checked;
-            orderRevisionsByDateToolStripMenuItem.Checked = AppSettings.OrderRevisionByDate;
+            AppSettings.OrderRevisionByDate = !AppSettings.OrderRevisionByDate;
             ForceRefreshRevisions();
         }
 
@@ -2031,10 +2017,9 @@ namespace GitUI
             UICommands.StartSquashCommitDialog(this, GetRevision(LastRow));
         }
 
-        private void ShowRelativeDateToolStripMenuItemClick(object sender, EventArgs e)
+        internal void ShowRelativeDateToolStripMenuItemClick(object sender, EventArgs e)
         {
-            AppSettings.RelativeDate = !showRelativeDateToolStripMenuItem.Checked;
-            showRelativeDateToolStripMenuItem.Checked = AppSettings.RelativeDate;
+            AppSettings.RelativeDate = !AppSettings.RelativeDate;
             ForceRefreshRevisions();
         }
 
@@ -2114,10 +2099,10 @@ namespace GitUI
             }
         }
 
-        private void DrawNonrelativesGrayToolStripMenuItemClick(object sender, EventArgs e)
+        internal void DrawNonrelativesGrayToolStripMenuItemClick(object sender, EventArgs e)
         {
             AppSettings.RevisionGraphDrawNonRelativesGray = !AppSettings.RevisionGraphDrawNonRelativesGray;
-            drawNonrelativesGrayToolStripMenuItem.Checked = AppSettings.RevisionGraphDrawNonRelativesGray;
+            _revisionGridMenuCommands.TriggerPropertyChanged();
             Revisions.Refresh();
         }
 
@@ -2205,7 +2190,6 @@ namespace GitUI
             if (lastIndex != mainContextMenu.Items.Count)
                 mainContextMenu.Items.Insert(lastIndex, new ToolStripSeparator());
             bool showScriptsMenu = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
-            toolStripSeparator7.Visible = showScriptsMenu;
             runScriptToolStripMenuItem.Visible = showScriptsMenu;
         }
 
@@ -2287,11 +2271,25 @@ namespace GitUI
         }
         #endregion
 
-        private void ShowGitNotesToolStripMenuItem_Click(object sender, EventArgs e)
+        internal void ShowGitNotesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AppSettings.ShowGitNotes = !showGitNotesToolStripMenuItem.Checked;
-            showGitNotesToolStripMenuItem.Checked = AppSettings.ShowGitNotes;
+            AppSettings.ShowGitNotes = !AppSettings.ShowGitNotes;
+            ForceRefreshRevisions();
+        }
 
+        internal void ShowMergeCommitsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.ShowMergeCommits = !showMergeCommitsToolStripMenuItem.Checked;
+            showMergeCommitsToolStripMenuItem.Checked = AppSettings.ShowMergeCommits;
+
+            // hide revision graph when hiding merge commits, reasons:
+            // 1, revison graph is no longer relevant, as we are not sohwing all commits
+            // 2, performance hit when both revision graph and no merge commits are enabled
+            if (IsGraphLayout() && !AppSettings.ShowMergeCommits)
+            {
+                ToggleRevisionGraph();
+                SetRevisionsLayout();
+            }
             ForceRefreshRevisions();
         }
 
@@ -2312,24 +2310,47 @@ namespace GitUI
                 ForceRefreshRevisions();
         }
 
-        private void ShowRevisionGraphToolStripMenuItemClick(object sender, EventArgs e)
+        internal void ShowRevisionGraphToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Small) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.SmallWithGraph;
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Card) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.CardWithGraph;
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCard) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.LargeCardWithGraph;
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.Small;
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.Card;
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCardWithGraph) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.LargeCard;
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.FilledBranchesSmall) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.FilledBranchesSmallWithGraph;
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.FilledBranchesSmallWithGraph) AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.FilledBranchesSmall;
+
+            ToggleRevisionGraph();
             SetRevisionsLayout();
-            Refresh();
+            _revisionGridMenuCommands.TriggerPropertyChanged();
+            // must show MergeCommits when showing revision graph
+            if (!AppSettings.ShowMergeCommits && IsGraphLayout())
+            {
+                AppSettings.ShowMergeCommits = true;
+                showMergeCommitsToolStripMenuItem.Checked = true;
+                ForceRefreshRevisions();
+            }
+            else
+                Refresh();
         }
 
-        private void showTagsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ToggleRevisionGraph()
         {
-            showTagsToolStripMenuItem.Checked = !showTagsToolStripMenuItem.Checked;
-            AppSettings.ShowTags = showTagsToolStripMenuItem.Checked;
+            if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.Small)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.SmallWithGraph;
+            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.Card)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.CardWithGraph;
+            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.LargeCard)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.LargeCardWithGraph;
+            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.SmallWithGraph)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.Small;
+            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.CardWithGraph)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.Card;
+            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.LargeCardWithGraph)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.LargeCard;
+            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.FilledBranchesSmall)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.FilledBranchesSmallWithGraph;
+            else if (AppSettings.RevisionGraphLayout == (int) RevisionGridLayout.FilledBranchesSmallWithGraph)
+                AppSettings.RevisionGraphLayout = (int) RevisionGridLayout.FilledBranchesSmall;
+        }
+
+        internal void ShowTagsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.ShowTags = !AppSettings.ShowTags;
+            _revisionGridMenuCommands.TriggerPropertyChanged();
             Refresh();
         }
         
@@ -2359,7 +2380,6 @@ namespace GitUI
                          ? (RevisionGridLayout)AppSettings.RevisionGraphLayout
                          : RevisionGridLayout.SmallWithGraph;
 
-            showRevisionGraphToolStripMenuItem.Checked = IsGraphLayout();
             IsCardLayout();
 
             NormalFont = AppSettings.Font;// new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
@@ -2441,7 +2461,7 @@ namespace GitUI
                    || _layout == RevisionGridLayout.LargeCardWithGraph;
         }
 
-        private bool IsGraphLayout()
+        internal bool IsGraphLayout()
         {
             return _layout == RevisionGridLayout.SmallWithGraph
                    || _layout == RevisionGridLayout.CardWithGraph
@@ -2469,7 +2489,9 @@ namespace GitUI
             GoToChild,
             ToggleHighlightSelectedBranch,
             NextQuickSearch,
-            PrevQuickSearch
+            PrevQuickSearch,
+            SelectCurrentRevision,
+            GoToCommit
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -2487,6 +2509,8 @@ namespace GitUI
                 case Commands.ToggleShowGitNotes: ShowGitNotesToolStripMenuItem_Click(null, null); break;
                 case Commands.ToggleRevisionCardLayout: ToggleRevisionCardLayout(); break;
                 case Commands.ShowAllBranches: ShowAllBranchesToolStripMenuItemClick(null, null); break;
+                case Commands.SelectCurrentRevision: SetSelectedRevision(new GitRevision(Module, CurrentCheckout)); break;
+                case Commands.GoToCommit: _revisionGridMenuCommands.GotoCommitExcecute(); break;
                 case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnlyToolStripMenuItemClick(null, null); break;
                 case Commands.GoToParent: goToParentToolStripMenuItem_Click(null, null); break;
                 case Commands.GoToChild: goToChildToolStripMenuItem_Click(null, null); break;

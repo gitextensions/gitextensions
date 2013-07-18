@@ -454,7 +454,7 @@ namespace GitUI.CommandsDialogs
             {
                 // add Navigate and View menu
                 _formBrowseMenus.ResetMenuCommandSets();
-                _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, _formBrowseMenuCommands.GetNavigateMenuCommands());
+                //// _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, _formBrowseMenuCommands.GetNavigateMenuCommands()); // not used at the moment
                 _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, RevisionGrid.MenuCommands.GetNavigateMenuCommands());
                 _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, RevisionGrid.MenuCommands.GetViewMenuCommands());
 
@@ -1517,6 +1517,12 @@ namespace GitUI.CommandsDialogs
             UICommands.StartMailMapDialog(this);
         }
 
+        private void EditLocalGitConfigToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var fileName = Path.Combine(Module.WorkingDir, ".git/config");
+            UICommands.StartFileEditorDialog(fileName, true);
+        }
+
         private void CompressGitDatabaseToolStripMenuItemClick(object sender, EventArgs e)
         {
             FormProcess.ShowModeless(this, "gc");
@@ -2199,7 +2205,6 @@ namespace GitUI.CommandsDialogs
             Commit,
             AddNotes,
             FindFileInSelectedCommit,
-            SelectCurrentRevision,
             CheckoutBranch,
             QuickFetch,
             QuickPull,
@@ -2241,7 +2246,6 @@ namespace GitUI.CommandsDialogs
                 case Commands.Commit: CommitToolStripMenuItemClick(null, null); break;
                 case Commands.AddNotes: AddNotes(); break;
                 case Commands.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
-                case Commands.SelectCurrentRevision: RevisionGrid.SetSelectedRevision(new GitRevision(Module, RevisionGrid.CurrentCheckout)); break;
                 case Commands.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
                 case Commands.QuickFetch: QuickFetch(); break;
                 case Commands.QuickPull:
@@ -2499,8 +2503,14 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var gitItem = (GitItem)GitTree.SelectedNode.Tag; // this should not fail, if it still does, user should know
+            var gitItem = (GitItem)GitTree.SelectedNode.Tag;
             UICommands.StartArchiveDialog(this, selectedRevisions.First(), null, gitItem.FileName);
+        }
+
+        private void fileTreeCleanWorkingTreeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var gitItem = (GitItem)GitTree.SelectedNode.Tag;
+            UICommands.StartCleanupRepositoryDialog(this, gitItem.FileName + "/"); // the trailing / marks a directory
         }
 
         private void DiffContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)

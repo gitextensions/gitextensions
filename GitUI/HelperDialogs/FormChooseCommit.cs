@@ -9,9 +9,6 @@ namespace GitUI.HelperDialogs
 {
     public partial class FormChooseCommit : GitModuleForm
     {
-        private readonly TranslationString _noRevisionFoundError =
-            new TranslationString("No revision found.");
-
         private FormChooseCommit()
             : this(null)
         { }
@@ -71,21 +68,7 @@ namespace GitUI.HelperDialogs
 
         private void buttonGotoCommit_Click(object sender, EventArgs e)
         {
-            using (var formGoToCommit = new FormGoToCommit(UICommands))
-            {
-                if (formGoToCommit.ShowDialog(this) == DialogResult.OK)
-                {
-                    string revisionGuid = formGoToCommit.ValidateAndGetSelectedRevision();
-                    if (!string.IsNullOrEmpty(revisionGuid))
-                    {
-                        revisionGrid.SetSelectedRevision(new GitRevision(Module, revisionGuid));
-                    }
-                    else
-                    {
-                        MessageBox.Show(this, _noRevisionFoundError.Text);
-                    }
-                }
-            }
+            revisionGrid.MenuCommands.GotoCommitExcecute();
         }
     }
 }
