@@ -1650,6 +1650,7 @@
     <Content Include="Resources\Icons\BuildFailed.png" />
     <Content Include="Resources\Icons\BuildSuccessful.png" />
     <None Include="Resources\Icons\IconGotoManual.png" />
+    <None Include="Resources\Icons\IconWarning.png" />
     <None Include="Resources\Icons\IconGotoCurrentRevision.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
