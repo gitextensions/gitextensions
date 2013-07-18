@@ -1742,24 +1742,21 @@ namespace GitUI
             var rebaseDropDown = new ContextMenuStrip();
             var renameDropDown = new ContextMenuStrip();
 
-            var tagNameCopy = new ContextMenuStrip();
+            var gitRefListsForRevision = new GitRefListsForRevision(revision);
 
-            foreach (var head in revision.Refs.Where(h => h.IsTag))
+            foreach (var head in gitRefListsForRevision.AllTags)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
                 ToolStripItem tagName = new ToolStripMenuItem(head.Name);
                 toolStripItem.Click += ToolStripItemClickDeleteTag;
                 deleteTagDropDown.Items.Add(toolStripItem);
-                tagName.Click += CopyToClipBoard;
-                tagNameCopy.Items.Add(tagName);
             }
 
             //For now there is no action that could be done on currentBranch
             string currentBranch = Module.GetSelectedBranch();
-            var clipboardUtil = new GitRefListsForRevision(revision);
-            var allBranches = clipboardUtil.AllBranches;
-            var localBranches = clipboardUtil.LocalBranches;
-            var branchesWithNoIdenticalRemotes = clipboardUtil.BranchesWithNoIdenticalRemotes;
+            var allBranches = gitRefListsForRevision.AllBranches;
+            var localBranches = gitRefListsForRevision.LocalBranches;
+            var branchesWithNoIdenticalRemotes = gitRefListsForRevision.BranchesWithNoIdenticalRemotes;
 
             bool currentBranchPointsToRevision = false;
             foreach (var head in branchesWithNoIdenticalRemotes)
@@ -1794,29 +1791,13 @@ namespace GitUI
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
 
-            // clipboard brach menu handling
+            // clipboard branch and tag menu handling
             {
+                CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(
+                    copyToClipboardToolStripMenuItem, branchNameToolStripMenuItem, gitRefListsForRevision.GetAllBranchNames(), "branchNameItem");
 
-                // remove previous items
-                copyToClipboardToolStripMenuItem.DropDownItems.OfType<ToolStripMenuItem>()
-                    .Where(item => (item.Tag as string) == "branchNameItem")
-                    .ToArray()
-                    .ForEach(item => copyToClipboardToolStripMenuItem.DropDownItems.Remove(item));
-
-                // insert items
-                var branchNameItemInsertAfter = branchNameToolStripMenuItem;
-                clipboardUtil.GetAllBranchNames().ForEach(branchName =>
-                    {
-                        var branchNameItem = new ToolStripMenuItem(branchName);
-                        branchNameItem.Tag = "branchNameItem"; // to delete items from previous opening
-                        branchNameItem.Click += CopyToClipBoard;
-                        int insertAfterIndex = copyToClipboardToolStripMenuItem.DropDownItems.IndexOf(branchNameItemInsertAfter);
-                        copyToClipboardToolStripMenuItem.DropDownItems.Insert(insertAfterIndex + 1, branchNameItem);
-                        branchNameItemInsertAfter = branchNameItem;
-                    });
-
-                // visibility of caption
-                branchNameToolStripMenuItem.Visible = clipboardUtil.AllBranches.Any();
+                CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(
+                    copyToClipboardToolStripMenuItem, tagToolStripMenuItem, gitRefListsForRevision.GetAllTagNames(), "tagNameItem");
             }
 
             foreach (var head in allBranches)
@@ -1867,9 +1848,6 @@ namespace GitUI
 
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
             renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
-
-            tagToolStripMenuItem.DropDown = tagNameCopy;
-            tagToolStripMenuItem.Enabled = tagNameCopy.Items.Count > 0;
 
             toolStripSeparator6.Enabled = branchNameToolStripMenuItem.Enabled || tagToolStripMenuItem.Enabled;
 
@@ -2114,11 +2092,6 @@ namespace GitUI
         private void HashToolStripMenuItemClick(object sender, EventArgs e)
         {
             Clipboard.SetText(GetRevision(LastRow).Guid);
-        }
-
-        private static void CopyToClipBoard(object sender, EventArgs e)
-        {
-            Clipboard.SetText(sender.ToString());
         }
 
         private void MarkRevisionAsBadToolStripMenuItemClick(object sender, EventArgs e)

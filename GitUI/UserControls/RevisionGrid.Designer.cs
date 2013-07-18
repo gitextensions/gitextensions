@@ -352,7 +352,8 @@ namespace GitUI
             // 
             this.tagToolStripMenuItem.Name = "tagToolStripMenuItem";
             this.tagToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.tagToolStripMenuItem.Text = "Tag";
+            this.tagToolStripMenuItem.Text = "Tag name(s):";
+            this.tagToolStripMenuItem.Enabled = false;
             // 
             // toolStripSeparator8
             // 
