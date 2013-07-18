@@ -11,6 +11,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         private GitRef[] _allBranches;
         private GitRef[] _localBranches;
         private GitRef[] _branchesWithNoIdenticalRemotes;
+        private GitRef[] _tags;
 
         public GitRefListsForRevision(GitRevision revision)
         {
@@ -18,6 +19,8 @@ namespace GitUI.UserControls.RevisionGridClasses
             _localBranches = _allBranches.Where(b => !b.IsRemote).ToArray();
             _branchesWithNoIdenticalRemotes = _allBranches.Where(
                 b => !b.IsRemote || !_localBranches.Any(lb => lb.TrackingRemote == b.Remote && lb.MergeWith == b.LocalName)).ToArray();
+
+            _tags = revision.Refs.Where(h => h.IsTag).ToArray();
         }
 
         public GitRef[] AllBranches
@@ -35,6 +38,11 @@ namespace GitUI.UserControls.RevisionGridClasses
             get { return _branchesWithNoIdenticalRemotes; }
         }
 
+        public GitRef[] AllTags
+        {
+            get { return _tags; }
+        }
+
         public string[] GetAllBranchNames()
         {
             return AllBranches.Select(b => b.Name).ToArray();
@@ -43,6 +51,11 @@ namespace GitUI.UserControls.RevisionGridClasses
         public string[] GetAllNonRemoteBranchNames()
         {
             return AllBranches.Where(head => !head.IsRemote).Select(b => b.Name).ToArray();
+        }
+
+        public string[] GetAllTagNames()
+        {
+            return AllTags.Select(t => t.Name).ToArray();
         }
     }
 }
