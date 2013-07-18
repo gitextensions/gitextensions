@@ -17,7 +17,8 @@ namespace GitCommands
         Stashes = 8,        //
         All = 15,           // --all
         Boundary = 16,      // --boundary
-        ShowGitNotes = 32   // --not --glob=notes --not
+        ShowGitNotes = 32,  // --not --glob=notes --not
+        NoMerges = 64       // --no-merges
     }
 
     public abstract class RevisionGraphInMemFilter
@@ -179,6 +180,9 @@ namespace GitCommands
                 logParam += " --boundary";
             if ((RefsOptions & RefsFiltringOptions.ShowGitNotes) == RefsFiltringOptions.ShowGitNotes)
                 logParam += " --not --glob=notes --not";
+
+            if ((RefsOptions & RefsFiltringOptions.NoMerges) == RefsFiltringOptions.NoMerges)
+                logParam += " --no-merges";
 
             string branchFilter = BranchFilter;
             if ((!string.IsNullOrWhiteSpace(BranchFilter)) && 

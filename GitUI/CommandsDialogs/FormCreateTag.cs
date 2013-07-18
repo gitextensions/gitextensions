@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
         {
             var pushCmd = GitCommandHelpers.PushTagCmd(_currentRemote, tagName, false);
 
-            ScriptManager.RunEventScripts(Module, ScriptEvent.BeforePush);
+            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
             using (var form = new FormRemoteProcess(Module, pushCmd)
             {
@@ -107,7 +107,7 @@ namespace GitUI.CommandsDialogs
                 if (!Module.InTheMiddleOfConflictedMerge() &&
                     !Module.InTheMiddleOfRebase() && !form.ErrorOccurred())
                 {
-                    ScriptManager.RunEventScripts(Module, ScriptEvent.AfterPush);
+                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
                 }
             }
         }
