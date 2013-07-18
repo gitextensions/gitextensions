@@ -477,6 +477,12 @@ namespace GitCommands
             set { SetBool("showgitnotes", value); }
         }
 
+        public static bool ShowMergeCommits
+        {
+            get { return GetBool("showmergecommits", true); }
+            set { SetBool("showmergecommits", value); }
+        }
+
         public static bool ShowTags
         {
             get { return GetBool("showtags", true); }
@@ -787,7 +793,7 @@ namespace GitCommands
             addEncoding(new ASCIIEncoding());
             addEncoding(new UnicodeEncoding());
             addEncoding(new UTF7Encoding());
-            addEncoding(new UTF8Encoding());
+            addEncoding(new UTF8Encoding(false));
 
             try
             {
