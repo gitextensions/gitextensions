@@ -81,6 +81,9 @@
     <Content Include="..\..\GitUI\Resources\Icons\error.png">
       <Link>Properties\error.png</Link>
     </Content>
+    <Content Include="..\..\GitUI\Resources\Icons\StatusHourglass.png">
+      <Link>Properties\StatusHourglass.png</Link>
+    </Content>
     <Content Include="..\..\GitUI\Resources\Icons\success.png">
       <Link>Properties\success.png</Link>
     </Content>
