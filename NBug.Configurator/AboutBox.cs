@@ -1,3 +1,9 @@
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="AboutBox.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
 namespace NBug.Configurator
 {
 	using System;
@@ -34,7 +40,7 @@ namespace NBug.Configurator
 			get
 			{
 				// Get all Company attributes on this assembly
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
+				var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
 
 				// If there aren't any Company attributes, return an empty string
 				if (attributes.Length == 0)
@@ -52,7 +58,7 @@ namespace NBug.Configurator
 			get
 			{
 				// Get all Copyright attributes on this assembly
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+				var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
 
 				// If there aren't any Copyright attributes, return an empty string
 				if (attributes.Length == 0)
@@ -70,8 +76,7 @@ namespace NBug.Configurator
 			get
 			{
 				// Get all Description attributes on this assembly
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(
-					typeof(AssemblyDescriptionAttribute), false);
+				var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
 
 				// If there aren't any Description attributes, return an empty string
 				if (attributes.Length == 0)
@@ -84,12 +89,20 @@ namespace NBug.Configurator
 			}
 		}
 
+		internal string AssemblyFileVersion
+		{
+			get
+			{
+				return FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+			}
+		}
+
 		internal string AssemblyProduct
 		{
 			get
 			{
 				// Get all Product attributes on this assembly
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
+				var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
 
 				// If there aren't any Product attributes, return an empty string
 				if (attributes.Length == 0)
@@ -107,7 +120,7 @@ namespace NBug.Configurator
 			get
 			{
 				// Get all Title attributes on this assembly
-				object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+				var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
 
 				// If there is at least one Title attribute
 				if (attributes.Length > 0)
@@ -127,22 +140,14 @@ namespace NBug.Configurator
 			}
 		}
 
-		internal string AssemblyFileVersion
+		private void LeadDeveloperLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			get
-			{
-				return FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
-			}
+			Process.Start("http://www.soygul.com/");
 		}
 
 		private void OkButton_Click(object sender, EventArgs e)
 		{
 			this.Close();
-		}
-
-		private void LeadDeveloperLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-		{
-			Process.Start("http://www.soygul.com/");
 		}
 	}
 }

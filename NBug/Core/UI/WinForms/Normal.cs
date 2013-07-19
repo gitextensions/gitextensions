@@ -1,15 +1,19 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Normal.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Normal.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug.Core.UI.WinForms
 {
-	using NBug.Core.Reporting.Info;
 	using System;
 	using System.Drawing;
 	using System.Windows.Forms;
+
+	using NBug.Core.Reporting.Info;
+	using NBug.Properties;
+
+	using Settings = NBug.Settings;
 
 	internal partial class Normal : Form
 	{
@@ -17,8 +21,8 @@ namespace NBug.Core.UI.WinForms
 
 		internal Normal()
 		{
-			InitializeComponent();
-			this.Icon = Properties.Resources.NBug_icon_16;
+			this.InitializeComponent();
+			this.Icon = Resources.NBug_icon_16;
 			this.warningPictureBox.Image = SystemIcons.Warning.ToBitmap();
 			this.warningLabel.Text = Settings.Resources.UI_Dialog_Normal_Message;
 			this.continueButton.Text = Settings.Resources.UI_Dialog_Normal_Continue_Button;

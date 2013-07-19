@@ -1,19 +1,11 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Settings.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Settings.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug
 {
-	using NBug.Core.Reporting;
-	using NBug.Core.Reporting.Info;
-	using NBug.Core.Submission;
-	using NBug.Core.Util;
-	using NBug.Core.Util.Exceptions;
-	using NBug.Core.Util.Logging;
-	using NBug.Enums;
-	using NBug.Properties;
 	using System;
 	using System.Collections.Generic;
 	using System.Collections.ObjectModel;
@@ -29,33 +21,62 @@ namespace NBug
 	using System.Xml.Linq;
 	using System.Xml.XPath;
 
+	using NBug.Core.Reporting;
+	using NBug.Core.Reporting.Info;
+	using NBug.Core.Submission;
+	using NBug.Core.Util;
+	using NBug.Core.Util.Exceptions;
+	using NBug.Core.Util.Logging;
+	using NBug.Enums;
+	using NBug.Events;
+	using NBug.Properties;
+
+	using StoragePath = NBug.Core.Util.Storage.StoragePath;
+
 	public static class Settings
 	{
+		/// <summary>
+		/// Gets or sets an event for a CustomSubmission.
+		/// </summary>
+		internal static Delegate CustomSubmissionHandle;
+
+		/// <summary>
+		/// Gets or sets an event for a CustomUI.
+		/// </summary>
+		internal static Delegate CustomUIHandle;
+
 		/// <summary>
 		/// Lookup for quickly finding the type to instantiate for a given connection string type.
 		///
 		/// By making this lazy we don't do the lookup until we know we have to, as
 		/// reflection against all assemblies can be slow.
 		/// </summary>
-		private static readonly Lazy<IDictionary<string, IProtocolFactory>> _availableProtocols
-			= new Lazy<IDictionary<string, IProtocolFactory>>(() =>
-			{
-				// find all concrete implementations of IProtocolFactory
-				var type = typeof(IProtocolFactory);
-				return AppDomain.CurrentDomain.GetAssemblies()
-					.SelectMany(s => s.GetTypes())
-					.Where(type.IsAssignableFrom)
-					.Where(t => t.IsClass)
-					.Where(t => !t.IsAbstract)
-					.Select(t => (IProtocolFactory)Activator.CreateInstance(t))
-					.ToDictionary(f => f.SupportedType);
-			});
+		private static readonly Lazy<IDictionary<string, IProtocolFactory>> _availableProtocols = new Lazy<IDictionary<string, IProtocolFactory>>(
+			() =>
+				{
+					// find all concrete implementations of IProtocolFactory
+					var type = typeof(IProtocolFactory);
+					return
+						AppDomain.CurrentDomain.GetAssemblies()
+						         .SelectMany(s => s.GetTypes())
+						         .Where(type.IsAssignableFrom)
+						         .Where(t => t.IsClass)
+						         .Where(t => !t.IsAbstract)
+						         .Select(t => (IProtocolFactory)Activator.CreateInstance(t))
+						         .ToDictionary(f => f.SupportedType);
+				});
+
+		private static readonly ICollection<IProtocol> destinations = new Collection<IProtocol>();
+
+		private static bool releaseMode; // False by default
 
 		static Settings()
 		{
 			// Crucial startup settings
 			Resources = new PublicResources();
-			EntryAssembly = (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()) ?? Assembly.GetCallingAssembly(); // GetEntryAssembly() is null if there is no initial GUI/CLI
+			EntryAssembly = (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()) ?? Assembly.GetCallingAssembly();
+				
+				// GetEntryAssembly() is null if there is no initial GUI/CLI
 			NBugDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location) ?? Environment.CurrentDirectory;
 			AdditionalReportFiles = new List<string>();
 
@@ -71,11 +92,10 @@ namespace NBug
 				 * 2) NBug.dll.config (fool proof!) (inside the same folder with 'NBug.dll')
 				 * 3) app.config (i.e. MyProduct.exe.config inside the same folder with the main executable 'MyProduct.exe')
 				 */
-
 				var path1 = Path.Combine(NBugDirectory, "NBug.config");
 				var path2 = Path.Combine(NBugDirectory, "NBug.dll.config");
-				/*string path3; // This is automatically handled by System.Configuration*/
 
+				/*string path3; // This is automatically handled by System.Configuration*/
 				if (File.Exists(path1))
 				{
 					try
@@ -111,32 +131,31 @@ namespace NBug
 			}
 		}
 
-		#region Public methods
-
-		/// <summary>
-		/// Adds a destination based on a connection string.
-		/// </summary>
-		/// <param name="connectionString">Connection string.</param>
-		/// <returns>The protocol that was created and added. Null if empty connection string.</returns>
-		/// <exception cref="System.ArgumentException">The protocol corresponding to the Type parameter in the connection string was not found.</exception>
-		public static IProtocol AddDestinationFromConnectionString(string connectionString)
+		public static event EventHandler<CustomSubmissionEventArgs> CustomSubmissionEvent
 		{
-			if (string.IsNullOrEmpty(connectionString)) return null;
-			var connectionStringParts = ConnectionStringParser.Parse(connectionString);
-			var type = connectionStringParts[@"Type"];
-			if (!_availableProtocols.Value.ContainsKey(type))
+			add
 			{
-				throw new ArgumentException(String.Format("No protocol factory found for type '{0}'.", type), "connectionString");
+				CustomSubmissionHandle = Delegate.Combine(CustomSubmissionHandle, value);
 			}
-			var factory = _availableProtocols.Value[type];
-			var protocol = factory.FromConnectionString(connectionString);
-			Destinations.Add(protocol);
-			return protocol;
+
+			remove
+			{
+				CustomSubmissionHandle = Delegate.Remove(CustomSubmissionHandle, value);
+			}
 		}
 
-		#endregion Public methods
+		public static event EventHandler<CustomUIEventArgs> CustomUIEvent
+		{
+			add
+			{
+				CustomUIHandle = Delegate.Combine(CustomUIHandle, value);
+			}
 
-		#region Public Settings
+			remove
+			{
+				CustomUIHandle = Delegate.Remove(CustomUIHandle, value);
+			}
+		}
 
 		/// <summary>
 		/// The internal logger write event for getting notifications for all internal NBug loggers. Using this event, you can attach internal NBug
@@ -189,72 +208,18 @@ namespace NBug
 			}
 		}
 
-		private static readonly ICollection<IProtocol> destinations = new Collection<IProtocol>();
+		/// <summary>
+		/// Gets or sets a list of additional files to be added to the report zip. The files can use * or ? in the same way as DOS modifiers.
+		/// </summary>
+		public static List<string> AdditionalReportFiles { get; set; }
 
 		public static ICollection<IProtocol> Destinations
 		{
-			get { return destinations; }
+			get
+			{
+				return destinations;
+			}
 		}
-
-		/// <summary>
-		/// Gets or sets the UI mode. You should only change this if you read the documentation and understood it. Otherwise leave it to auto.
-		/// Default value is Auto.
-		/// </summary>
-		public static UIMode UIMode { get; set; }
-
-		/// <summary>
-		/// Gets or sets the UI provider. You should only change this if you read the documentation and understood it. Otherwise leave it to auto.
-		/// Default value is Auto.
-		/// </summary>
-		public static UIProvider UIProvider { get; set; }
-
-		/// <summary>
-		/// Gets or sets the time in seconds that report dispatcher waits before starting to submit queued bug reports. Dispatcher initializes as
-		/// soon as the application is run but waits for given number of seconds so that it won't slow down the application startup.
-		/// Default value is 10 seconds.
-		/// </summary>
-		public static int SleepBeforeSend { get; set; }
-
-		/// <summary>
-		/// Gets or sets the number of bug reports that can be queued for submission. Each time an unhandled exception occurs, the bug report is prepared to
-		/// be send at the next application startup. If submission fails (i.e. there is no Internet connection), the queue grows with each additional
-		/// unhandled exception and resulting bug reports. This limits the max no of queued reports to limit the disk space usage.
-		/// Default value is 5.
-		/// </summary>
-		public static int MaxQueuedReports { get; set; }
-
-		/// <summary>
-		/// Gets or sets the number of days that NBug will be collecting bug reports for the application. Most of the time, 30 to 60 days after the
-		/// release, there will be a new release and the current one will be obsolete. Due to this, it is not logical to continue to create and submit
-		/// bug reports after a given number of days. After the predefined no of days, the user will still get to see the bug report UI but the reports
-		/// will not be actually submitted. Default value is 30 days.
-		/// </summary>
-		public static int StopReportingAfter { get; set; }
-
-		/// <summary>
-		/// Gets or sets the bug report items storage path. After and unhandled exception occurs, the bug reports are created and queued for submission
-		/// on the next application startup. Until then, the reports will be stored in this location. Default value is the application executable directory.
-		/// This setting can either be assigned a full path string or a value from <see cref="NBug.Enums.StoragePath"/> enumeration.
-		/// </summary>
-		public static Core.Util.Storage.StoragePath StoragePath { get; set; }
-
-		/// <summary>
-		/// Gets or sets the memory dump type. Memory dumps are quite useful for replicating the exact conditions that the application crashed (i.e.
-		/// getting the stack trace, local variables, etc.) but they take up a great deal of space, so choose wisely. Options are:
-		/// None: No memory dump is generated.
-		/// Tiny: Dump size ~200KB compressed.
-		/// Normal: Dump size ~20MB compressed.
-		/// Full: Dump size ~100MB compressed.
-		/// Default value is Tiny.
-		/// </summary>
-		public static MiniDumpType MiniDumpType { get; set; }
-
-		/// <summary>
-		/// Gets or sets a value indicating whether to write "NLog.log" file to disk. Otherwise, you can subscribe to log events through the
-		/// <see cref="InternalLogWritten"/> event. All the logging is done through System.Diagnostics.Trace.Write() function so you can also get
-		/// the log with any trace listener. Default value is true.
-		/// </summary>
-		public static bool WriteLogToDisk { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the application will exit after handling and logging an unhandled exception.
@@ -272,15 +237,23 @@ namespace NBug
 		public static bool HandleProcessCorruptedStateExceptions { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether to use the deferred reporting feature. With this feature enabled, all bug reports are sent
-		/// after the next application start and as a background task. This helps facilitate sending of bug reports with large memory dumps
-		/// with them. When this feature is disabled, bug reports are sent as soon as an unhandled exception is caught. For the users, it is
-		/// very uncomfortable to wait for bug reports to be sent after an application crash, so it is best to leave this feature on.
-		/// Default value is true.
+		/// Gets or sets the number of bug reports that can be queued for submission. Each time an unhandled exception occurs, the bug report is prepared to
+		/// be send at the next application startup. If submission fails (i.e. there is no Internet connection), the queue grows with each additional
+		/// unhandled exception and resulting bug reports. This limits the max no of queued reports to limit the disk space usage.
+		/// Default value is 5.
 		/// </summary>
-		private static bool DeferredReporting { get; set; } // ToDo: Complete the implementation for non-deferred report sending
+		public static int MaxQueuedReports { get; set; }
 
-		private static bool releaseMode; // False by default
+		/// <summary>
+		/// Gets or sets the memory dump type. Memory dumps are quite useful for replicating the exact conditions that the application crashed (i.e.
+		/// getting the stack trace, local variables, etc.) but they take up a great deal of space, so choose wisely. Options are:
+		/// None: No memory dump is generated.
+		/// Tiny: Dump size ~200KB compressed.
+		/// Normal: Dump size ~20MB compressed.
+		/// Full: Dump size ~100MB compressed.
+		/// Default value is Tiny.
+		/// </summary>
+		public static MiniDumpType MiniDumpType { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether to enable release mode for the NBug library. In release mode the internal developer UI is not displayed and
@@ -329,93 +302,51 @@ namespace NBug
 		public static PublicResources Resources { get; set; }
 
 		/// <summary>
-		/// Gets or sets a list of additional files to be added to the report zip. The files can use * or ? in the same way as DOS modifiers.
+		/// Gets or sets the time in seconds that report dispatcher waits before starting to submit queued bug reports. Dispatcher initializes as
+		/// soon as the application is run but waits for given number of seconds so that it won't slow down the application startup.
+		/// Default value is 10 seconds.
 		/// </summary>
-		public static List<string> AdditionalReportFiles { get; set; }
+		public static int SleepBeforeSend { get; set; }
 
 		/// <summary>
-		/// Gets or sets an event for a CustomUI.
+		/// Gets or sets the number of days that NBug will be collecting bug reports for the application. Most of the time, 30 to 60 days after the
+		/// release, there will be a new release and the current one will be obsolete. Due to this, it is not logical to continue to create and submit
+		/// bug reports after a given number of days. After the predefined no of days, the user will still get to see the bug report UI but the reports
+		/// will not be actually submitted. Default value is 30 days.
 		/// </summary>
-		internal static Delegate CustomUIHandle;
-
-		public static event EventHandler<CustomUIEventArgs> CustomUIEvent
-		{
-			add
-			{
-				CustomUIHandle = Delegate.Combine(CustomUIHandle, value);
-			}
-			remove
-			{
-				CustomUIHandle = Delegate.Remove(CustomUIHandle, value);
-			}
-		}
+		public static int StopReportingAfter { get; set; }
 
 		/// <summary>
-		/// Gets or sets an event for a CustomSubmission.
+		/// Gets or sets the bug report items storage path. After and unhandled exception occurs, the bug reports are created and queued for submission
+		/// on the next application startup. Until then, the reports will be stored in this location. Default value is the application executable directory.
+		/// This setting can either be assigned a full path string or a value from <see cref="NBug.Enums.StoragePath"/> enumeration.
 		/// </summary>
-		internal static Delegate CustomSubmissionHandle;
-
-		public static event EventHandler<CustomSubmissionEventArgs> CustomSubmissionEvent
-		{
-			add
-			{
-				CustomSubmissionHandle = Delegate.Combine(CustomSubmissionHandle, value);
-			}
-			remove
-			{
-				CustomSubmissionHandle = Delegate.Remove(CustomSubmissionHandle, value);
-			}
-		}
-
-		#endregion Public Settings
-
-		#region Internal Settings
+		public static StoragePath StoragePath { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether to enable network tracing and write the network trace log to "NBug.Network.log" file.
-		/// This should only be used for diagnostics, debugging purposes as it slows down network connections considerably.
-		/// Network tracing is disabled by default.
+		/// Gets or sets the UI mode. You should only change this if you read the documentation and understood it. Otherwise leave it to auto.
+		/// Default value is Auto.
 		/// </summary>
-		internal static bool? EnableNetworkTrace { get; set; }
+		public static UIMode UIMode { get; set; }
+
+		/// <summary>
+		/// Gets or sets the UI provider. You should only change this if you read the documentation and understood it. Otherwise leave it to auto.
+		/// Default value is Auto.
+		/// </summary>
+		public static UIProvider UIProvider { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether to write "NLog.log" file to disk. Otherwise, you can subscribe to log events through the
+		/// <see cref="InternalLogWritten"/> event. All the logging is done through System.Diagnostics.Trace.Write() function so you can also get
+		/// the log with any trace listener. Default value is true.
+		/// </summary>
+		public static bool WriteLogToDisk { get; set; }
 
 		/// <summary>
 		/// Gets the Cipher text used for encrypting connection strings before saving to disk. This is automatically generated when the
 		/// method <see cref="SaveCustomSettings(Stream, bool)"/> method is called with encryption set to true.
 		/// </summary>
 		internal static byte[] Cipher { get; private set; }
-
-		/// <summary>
-		/// Gets or sets the entry assembly which hosts the NBug assembly. It is used for retrieving the version and the full name
-		/// of the host application. i.e. Settings.EntryAssembly.GetLoadedModules()[0].Name; @ Info\General.cs
-		/// </summary>
-		internal static Assembly EntryAssembly { get; set; }
-
-		/// <summary>
-		/// Gets or sets the absolute path to the directory that NBug.dll assembly currently resides. This is used in place of CWD
-		/// throughout this assembly to prevent the library from getting affected of CWD changes that happens with Directory.SetCurrentDirectory().
-		/// </summary>
-		internal static string NBugDirectory { get; set; }
-
-		/// <summary>
-		/// Gets or sets a value indicating whether internal <see cref="NBugException"/> derived types are thrown or swallowed.
-		/// Exceptions are NOT thrown by  default except for debug builds. Note that exceptions are caught and re-thrown by the
-		/// Logger.Error() method with added information so stack trace is reset. The inner exceptions should be inspected to get
-		/// the actual stack trace.
-		/// </summary>
-		internal static bool ThrowExceptions { get; set; }
-
-		/// <summary>
-		/// Gets or sets a value indicating whether to enable developer user interface facilities which enable easier diagnosis of
-		/// configuration and other internal errors.
-		/// </summary>
-		internal static bool DisplayDeveloperUI { get; set; }
-
-		/// <summary>
-		/// Gets or sets a value indicating whether the unhandled exception handlers in NBug.Handler class actually handle exceptions.
-		/// Exceptions will not be handled if the application is in release mode via <see cref="Settings.ReleaseMode"/> and a debugger
-		/// is attached to the process. This enables proper debugging of normal exceptions even in the presence of NBug.
-		/// </summary>
-		internal static bool HandleExceptions { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether the dispatcher the class deals with sending of reports to their destinations like mail
@@ -427,9 +358,36 @@ namespace NBug
 		internal static bool DispatcherIsAsynchronous { get; set; }
 
 		/// <summary>
-		/// Gets or sets a value indicating whether to skip the report dispatching process altogether.
+		/// Gets or sets a value indicating whether to enable developer user interface facilities which enable easier diagnosis of
+		/// configuration and other internal errors.
 		/// </summary>
-		internal static bool SkipDispatching { get; set; }
+		internal static bool DisplayDeveloperUI { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether to enable network tracing and write the network trace log to "NBug.Network.log" file.
+		/// This should only be used for diagnostics, debugging purposes as it slows down network connections considerably.
+		/// Network tracing is disabled by default.
+		/// </summary>
+		internal static bool? EnableNetworkTrace { get; set; }
+
+		/// <summary>
+		/// Gets or sets the entry assembly which hosts the NBug assembly. It is used for retrieving the version and the full name
+		/// of the host application. i.e. Settings.EntryAssembly.GetLoadedModules()[0].Name; @ Info\General.cs
+		/// </summary>
+		internal static Assembly EntryAssembly { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the unhandled exception handlers in NBug.Handler class actually handle exceptions.
+		/// Exceptions will not be handled if the application is in release mode via <see cref="Settings.ReleaseMode"/> and a debugger
+		/// is attached to the process. This enables proper debugging of normal exceptions even in the presence of NBug.
+		/// </summary>
+		internal static bool HandleExceptions { get; set; }
+
+		/// <summary>
+		/// Gets or sets the absolute path to the directory that NBug.dll assembly currently resides. This is used in place of CWD
+		/// throughout this assembly to prevent the library from getting affected of CWD changes that happens with Directory.SetCurrentDirectory().
+		/// </summary>
+		internal static string NBugDirectory { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether to remove all the <see cref="System.Threading.Thread.Sleep(int)"/> statements from
@@ -439,9 +397,53 @@ namespace NBug
 		/// </summary>
 		internal static bool RemoveThreadSleep { get; set; }
 
-		#endregion Internal Settings
+		/// <summary>
+		/// Gets or sets a value indicating whether to skip the report dispatching process altogether.
+		/// </summary>
+		internal static bool SkipDispatching { get; set; }
 
-		#region Load Save Settings Methods
+		/// <summary>
+		/// Gets or sets a value indicating whether internal <see cref="NBugException"/> derived types are thrown or swallowed.
+		/// Exceptions are NOT thrown by  default except for debug builds. Note that exceptions are caught and re-thrown by the
+		/// Logger.Error() method with added information so stack trace is reset. The inner exceptions should be inspected to get
+		/// the actual stack trace.
+		/// </summary>
+		internal static bool ThrowExceptions { get; set; }
+
+		/// <summary>
+		/// Gets or sets a value indicating whether to use the deferred reporting feature. With this feature enabled, all bug reports are sent
+		/// after the next application start and as a background task. This helps facilitate sending of bug reports with large memory dumps
+		/// with them. When this feature is disabled, bug reports are sent as soon as an unhandled exception is caught. For the users, it is
+		/// very uncomfortable to wait for bug reports to be sent after an application crash, so it is best to leave this feature on.
+		/// Default value is true.
+		/// </summary>
+		private static bool DeferredReporting { get; set; }
+
+		/// <summary>
+		/// Adds a destination based on a connection string.
+		/// </summary>
+		/// <param name="connectionString">Connection string.</param>
+		/// <returns>The protocol that was created and added. Null if empty connection string.</returns>
+		/// <exception cref="System.ArgumentException">The protocol corresponding to the Type parameter in the connection string was not found.</exception>
+		public static IProtocol AddDestinationFromConnectionString(string connectionString)
+		{
+			if (string.IsNullOrEmpty(connectionString))
+			{
+				return null;
+			}
+
+			var connectionStringParts = ConnectionStringParser.Parse(connectionString);
+			var type = connectionStringParts[@"Type"];
+			if (!_availableProtocols.Value.ContainsKey(type))
+			{
+				throw new ArgumentException(string.Format("No protocol factory found for type '{0}'.", type), "connectionString");
+			}
+
+			var factory = _availableProtocols.Value[type];
+			var protocol = factory.FromConnectionString(connectionString);
+			Destinations.Add(protocol);
+			return protocol;
+		}
 
 		/// <summary>
 		/// This should not be used directly. Rather, <see cref="SettingsOverride.LoadCustomSettings(Stream)"/> should be preferred.
@@ -465,8 +467,8 @@ namespace NBug
 			if (config.XPathSelectElement("system.diagnostics") != null && config.XPathSelectElement("system.diagnostics/sharedListeners") != null)
 			{
 				var traceLog = from networkTrace in config.XPathSelectElements("system.diagnostics/sharedListeners/add")
-							   where networkTrace.Attribute("initializeData") != null && networkTrace.Attribute("initializeData").Value == "NBug.Network.log"
-							   select networkTrace;
+				               where networkTrace.Attribute("initializeData") != null && networkTrace.Attribute("initializeData").Value == "NBug.Network.log"
+				               select networkTrace;
 
 				if (traceLog.Count() != 0)
 				{
@@ -475,12 +477,11 @@ namespace NBug
 			}
 
 			// Read application settings
-			var applicationSettings =
-				from element in config.Elements("applicationSettings").Elements("NBug.Properties.Settings").Elements("setting")
-				where element.Attribute("name") != null && element.Element("value") != null
-				select element;
+			var applicationSettings = from element in config.Elements("applicationSettings").Elements("NBug.Properties.Settings").Elements("setting")
+			                          where element.Attribute("name") != null && element.Element("value") != null
+			                          select element;
 
-			foreach (XElement applicationSetting in applicationSettings)
+			foreach (var applicationSetting in applicationSettings)
 			{
 				var property = applicationSetting.Attribute("name").Value;
 				var value = applicationSetting.Element("value").Value;
@@ -535,17 +536,19 @@ namespace NBug
 				}
 				else
 				{
-                    Logger.Error(String.Format("There is a problem with the 'applicationSettings' section of the configuration file. The property read from the file '{0}' is undefined. This is probably a refactoring problem, or a malformed config file.", property));
+					Logger.Error(
+						string.Format(
+							"There is a problem with the 'applicationSettings' section of the configuration file. The property read from the file '{0}' is undefined. This is probably a refactoring problem, or a malformed config file.", 
+							property));
 				}
 			}
 
 			// Read connection strings
-			var connectionStrings =
-				from element in config.Elements("connectionStrings").Elements("add")
-				where element.Attribute("name") != null && element.Attribute("connectionString") != null
-				select element;
+			var connectionStrings = from element in config.Elements("connectionStrings").Elements("add")
+			                        where element.Attribute("name") != null && element.Attribute("connectionString") != null
+			                        select element;
 
-			foreach (XElement connectionString in connectionStrings)
+			foreach (var connectionString in connectionStrings)
 			{
 				var property = connectionString.Attribute("name").Value;
 				var value = connectionString.Attribute("connectionString").Value;
@@ -569,7 +572,9 @@ namespace NBug
 				}
 				else
 				{
-					Logger.Error("There is a problem with the 'connectionStrings' section of the configuration file. The property read from the file '" + property + "' is undefined. This is probably a refactoring problem, or malformed config file.");
+					Logger.Error(
+						"There is a problem with the 'connectionStrings' section of the configuration file. The property read from the file '" + property
+						+ "' is undefined. This is probably a refactoring problem, or malformed config file.");
 				}
 			}
 
@@ -596,33 +601,43 @@ namespace NBug
 			// Restructure the configuration file
 			if (config.Root == null || config.Root.Name != "configuration")
 			{
-				config = XDocument.Parse("<?xml version=\"1.0\" encoding=\"utf-8\" ?><configuration><configSections><sectionGroup name=\"applicationSettings\" type=\"System.Configuration.ApplicationSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\" ><section name=\"NBug.Properties.Settings\" type=\"System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\" requirePermission=\"false\" /></sectionGroup></configSections><connectionStrings></connectionStrings><applicationSettings><NBug.Properties.Settings></NBug.Properties.Settings></applicationSettings></configuration>");
+				config =
+					XDocument.Parse(
+						"<?xml version=\"1.0\" encoding=\"utf-8\" ?><configuration><configSections><sectionGroup name=\"applicationSettings\" type=\"System.Configuration.ApplicationSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\" ><section name=\"NBug.Properties.Settings\" type=\"System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\" requirePermission=\"false\" /></sectionGroup></configSections><connectionStrings></connectionStrings><applicationSettings><NBug.Properties.Settings></NBug.Properties.Settings></applicationSettings></configuration>");
 			}
 			else
 			{
 				if (config.Root.Element("configSections") == null)
 				{
-					config.Root.AddFirst(XElement.Parse("<configSections><sectionGroup name=\"applicationSettings\" type=\"System.Configuration.ApplicationSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\" ><section name=\"NBug.Properties.Settings\" type=\"System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\" requirePermission=\"false\" /></sectionGroup></configSections>"));
+					config.Root.AddFirst(
+						XElement.Parse(
+							"<configSections><sectionGroup name=\"applicationSettings\" type=\"System.Configuration.ApplicationSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\" ><section name=\"NBug.Properties.Settings\" type=\"System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\" requirePermission=\"false\" /></sectionGroup></configSections>"));
 				}
 				else
 				{
 					var sectionGroup = from setting in config.Root.Element("configSections").Elements()
-									   where setting.Attribute("name") != null && setting.Attribute("name").Value == "applicationSettings"
-									   select setting;
+					                   where setting.Attribute("name") != null && setting.Attribute("name").Value == "applicationSettings"
+					                   select setting;
 
 					if (sectionGroup.Count() == 0)
 					{
-						config.Root.Element("configSections").Add(XElement.Parse("<sectionGroup name=\"applicationSettings\" type=\"System.Configuration.ApplicationSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\" ><section name=\"NBug.Properties.Settings\" type=\"System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\" requirePermission=\"false\" /></sectionGroup>"));
+						config.Root.Element("configSections")
+						      .Add(
+							      XElement.Parse(
+								      "<sectionGroup name=\"applicationSettings\" type=\"System.Configuration.ApplicationSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\" ><section name=\"NBug.Properties.Settings\" type=\"System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\" requirePermission=\"false\" /></sectionGroup>"));
 					}
 					else
 					{
 						var nbugSection = from section in sectionGroup.Elements()
-										  where section.Attribute("name") != null && section.Attribute("name").Value == "NBug.Properties.Settings"
-										  select section;
+						                  where section.Attribute("name") != null && section.Attribute("name").Value == "NBug.Properties.Settings"
+						                  select section;
 
 						if (nbugSection.Count() == 0)
 						{
-							sectionGroup.First().Add(XElement.Parse("<section name=\"NBug.Properties.Settings\" type=\"System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\" requirePermission=\"false\" />"));
+							sectionGroup.First()
+							            .Add(
+								            XElement.Parse(
+									            "<section name=\"NBug.Properties.Settings\" type=\"System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089\" requirePermission=\"false\" />"));
 						}
 					}
 				}
@@ -651,7 +666,9 @@ namespace NBug
 						config.Root.XPathSelectElement("system.diagnostics").Remove();
 					}
 
-					config.Root.Add(XElement.Parse("<system.diagnostics><sources><source name=\"System.Net\" tracemode=\"includehex\" maxdatasize=\"1024\"><listeners><add name=\"System.Net\"/></listeners></source><source name=\"System.Net.Sockets\"><listeners><add name=\"System.Net\"/></listeners></source><source name=\"System.Net.Cache\"><listeners><add name=\"System.Net\"/></listeners></source></sources><switches><add name=\"System.Net\" value=\"Verbose\"/><add name=\"System.Net.Sockets\" value=\"Verbose\"/><add name=\"System.Net.Cache\" value=\"Verbose\"/></switches><sharedListeners><add name=\"System.Net\" type=\"System.Diagnostics.TextWriterTraceListener\" initializeData=\"NBug.Network.log\"/></sharedListeners><trace autoflush=\"true\" indentsize=\"2\"/></system.diagnostics>"));
+					config.Root.Add(
+						XElement.Parse(
+							"<system.diagnostics><sources><source name=\"System.Net\" tracemode=\"includehex\" maxdatasize=\"1024\"><listeners><add name=\"System.Net\"/></listeners></source><source name=\"System.Net.Sockets\"><listeners><add name=\"System.Net\"/></listeners></source><source name=\"System.Net.Cache\"><listeners><add name=\"System.Net\"/></listeners></source></sources><switches><add name=\"System.Net\" value=\"Verbose\"/><add name=\"System.Net.Sockets\" value=\"Verbose\"/><add name=\"System.Net.Cache\" value=\"Verbose\"/></switches><sharedListeners><add name=\"System.Net\" type=\"System.Diagnostics.TextWriterTraceListener\" initializeData=\"NBug.Network.log\"/></sharedListeners><trace autoflush=\"true\" indentsize=\"2\"/></system.diagnostics>"));
 				}
 				else
 				{
@@ -665,9 +682,8 @@ namespace NBug
 			// Replace connection strings
 			var prefix = "NBug.Properties.Settings.";
 			var connectionStrings = from connString in config.Root.Element("connectionStrings").Elements()
-									where connString.Attribute("name") != null &&
-										connString.Attribute("name").Value.StartsWith(prefix)
-									select connString;
+			                        where connString.Attribute("name") != null && connString.Attribute("name").Value.StartsWith(prefix)
+			                        select connString;
 			connectionStrings.Remove();
 
 			if (encryptConnectionStrings)
@@ -677,7 +693,12 @@ namespace NBug
 					Cipher = GenerateKey();
 				}
 
-				config.Root.Element("connectionStrings").Add(new XElement("add", new XAttribute("name", "NBug.Properties.Settings." + GetPropertyName(() => Cipher)), new XAttribute("connectionString", Convert.ToBase64String(Cipher))));
+				config.Root.Element("connectionStrings")
+				      .Add(
+					      new XElement(
+						      "add", 
+						      new XAttribute("name", "NBug.Properties.Settings." + GetPropertyName(() => Cipher)), 
+						      new XAttribute("connectionString", Convert.ToBase64String(Cipher))));
 			}
 			else
 			{
@@ -694,20 +715,21 @@ namespace NBug
 			// Replace application setting
 			// ToDo: This can be simplified using a loop and reflection to get all the Settings.PublicProperties to do remove-add cycle
 			var applicationSettings = from appSetting in config.Root.Element("applicationSettings").Element("NBug.Properties.Settings").Elements()
-									  where appSetting.Attribute("name") != null &&
-										  (appSetting.Attribute("name").Value == GetPropertyName(() => UIMode) ||
-										  appSetting.Attribute("name").Value == GetPropertyName(() => UIProvider) ||
-										  appSetting.Attribute("name").Value == GetPropertyName(() => SleepBeforeSend) ||
-										  appSetting.Attribute("name").Value == GetPropertyName(() => MaxQueuedReports) ||
-										  appSetting.Attribute("name").Value == GetPropertyName(() => StopReportingAfter) ||
-										  appSetting.Attribute("name").Value == GetPropertyName(() => StoragePath) ||
-										  appSetting.Attribute("name").Value == GetPropertyName(() => MiniDumpType) ||
-										  appSetting.Attribute("name").Value == GetPropertyName(() => WriteLogToDisk) ||
-										  appSetting.Attribute("name").Value == GetPropertyName(() => ExitApplicationImmediately) ||
-										  appSetting.Attribute("name").Value == GetPropertyName(() => HandleProcessCorruptedStateExceptions) ||
-										  appSetting.Attribute("name").Value == GetPropertyName(() => ReleaseMode) ||
-										  appSetting.Attribute("name").Value == GetPropertyName(() => DeferredReporting))
-									  select appSetting;
+			                          where
+				                          appSetting.Attribute("name") != null
+				                          && (appSetting.Attribute("name").Value == GetPropertyName(() => UIMode)
+				                              || appSetting.Attribute("name").Value == GetPropertyName(() => UIProvider)
+				                              || appSetting.Attribute("name").Value == GetPropertyName(() => SleepBeforeSend)
+				                              || appSetting.Attribute("name").Value == GetPropertyName(() => MaxQueuedReports)
+				                              || appSetting.Attribute("name").Value == GetPropertyName(() => StopReportingAfter)
+				                              || appSetting.Attribute("name").Value == GetPropertyName(() => StoragePath)
+				                              || appSetting.Attribute("name").Value == GetPropertyName(() => MiniDumpType)
+				                              || appSetting.Attribute("name").Value == GetPropertyName(() => WriteLogToDisk)
+				                              || appSetting.Attribute("name").Value == GetPropertyName(() => ExitApplicationImmediately)
+				                              || appSetting.Attribute("name").Value == GetPropertyName(() => HandleProcessCorruptedStateExceptions)
+				                              || appSetting.Attribute("name").Value == GetPropertyName(() => ReleaseMode)
+				                              || appSetting.Attribute("name").Value == GetPropertyName(() => DeferredReporting))
+			                          select appSetting;
 			applicationSettings.Remove();
 
 			AddApplicationSetting(config, UIMode, () => UIMode);
@@ -737,48 +759,27 @@ namespace NBug
 			settingsFile.Flush();
 		}
 
-		#endregion Load Save Settings Methods
-
-		#region Private Methods
+		private static void AddApplicationSetting<T>(XDocument document, object content, Expression<Func<T>> propertyExpression)
+		{
+			document.Root.Element("applicationSettings")
+			        .Element("NBug.Properties.Settings")
+			        .Add(
+				        new XElement(
+					        "setting", 
+					        new XAttribute("name", GetPropertyName(propertyExpression)), 
+					        new XAttribute("serializeAs", "String"), 
+					        new XElement("value", content)));
+		}
 
 		private static void AddConnectionString(XDocument document, string content, int number)
 		{
 			if (!string.IsNullOrEmpty(content))
 			{
-				document.Root.Element("connectionStrings").Add(new XElement("add", new XAttribute("name", "NBug.Properties.Settings.Connection" + number), new XAttribute("connectionString", Encrypt(content))));
+				document.Root.Element("connectionStrings")
+				        .Add(
+					        new XElement(
+						        "add", new XAttribute("name", "NBug.Properties.Settings.Connection" + number), new XAttribute("connectionString", Encrypt(content))));
 			}
-		}
-
-		private static void AddApplicationSetting<T>(XDocument document, object content, Expression<Func<T>> propertyExpression)
-		{
-			document.Root.Element("applicationSettings")
-				.Element("NBug.Properties.Settings")
-				.Add(new XElement("setting", new XAttribute("name", GetPropertyName(propertyExpression)), new XAttribute("serializeAs", "String"), new XElement("value", content)));
-		}
-
-		private static void LoadAppconfigSettings()
-		{
-			// Application settings
-			UIMode = Properties.Settings.Default.UIMode;
-			UIProvider = Properties.Settings.Default.UIProvider;
-			SleepBeforeSend = Properties.Settings.Default.SleepBeforeSend;
-			MaxQueuedReports = Properties.Settings.Default.MaxQueuedReports;
-			StopReportingAfter = Properties.Settings.Default.StopReportingAfter;
-			StoragePath = Properties.Settings.Default.StoragePath;
-			MiniDumpType = Properties.Settings.Default.MiniDumpType;
-			WriteLogToDisk = Properties.Settings.Default.WriteLogToDisk;
-			ExitApplicationImmediately = Properties.Settings.Default.ExitApplicationImmediately;
-			HandleProcessCorruptedStateExceptions = Properties.Settings.Default.HandleProcessCorruptedStateExceptions;
-			ReleaseMode = Properties.Settings.Default.ReleaseMode;
-			DeferredReporting = Properties.Settings.Default.DeferredReporting;
-
-			// Connection strings
-			Cipher = Convert.FromBase64String(Properties.Settings.Default.Cipher);
-			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination1));
-			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination2));
-			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination3));
-			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination4));
-			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination5));
 		}
 
 		private static string Decrypt(string connectionString)
@@ -809,6 +810,7 @@ namespace NBug
 					var dec = decryptor.CreateDecryptor(key, iv);
 
 					var connectionStringBytes = Convert.FromBase64String(connectionString); // Reading from config file is always in Base64
+
 					// ToDo: check here for wrong password w/ System.Security.Cryptography.HMAC (catch the exception and display a meaningful message to the developer - or swallow the error)
 					var decryptedBytes = dec.TransformFinalBlock(connectionStringBytes, 0, connectionStringBytes.Length);
 
@@ -861,19 +863,11 @@ namespace NBug
 			}
 		}
 
-		/// <summary>
-		/// Replicate the behavior of normal Properties.Settings class via getting default values for null settings.
-		/// Use this like GetDefaultValue(() => SleepBeforeSend);
-		/// </summary>
-		private static string GetDefaultValue<T>(Expression<Func<T>> propertyExpression)
-		{
-			var defaultSetting = typeof(Properties.Settings).GetProperty(((MemberExpression)propertyExpression.Body).Member.Name).GetCustomAttributes(typeof(DefaultSettingValueAttribute), false)[0] as DefaultSettingValueAttribute;
-			return defaultSetting != null ? defaultSetting.Value : null;
-		}
-
 		private static T GetDefaultEnumValue<T>()
 		{
-			var defaultSetting = typeof(Properties.Settings).GetProperty(typeof(T).Name).GetCustomAttributes(typeof(DefaultSettingValueAttribute), false)[0] as DefaultSettingValueAttribute;
+			var defaultSetting =
+				typeof(Properties.Settings).GetProperty(typeof(T).Name).GetCustomAttributes(typeof(DefaultSettingValueAttribute), false)[0] as
+				DefaultSettingValueAttribute;
 
 			try
 			{
@@ -881,8 +875,25 @@ namespace NBug
 			}
 			catch (Exception exception)
 			{
-				throw new NBugRuntimeException("There is no internal default value supplied for '" + typeof(T).Name + "' or the supplied value is invalid. See the inner exception for details.", exception);
+				throw new NBugRuntimeException(
+					"There is no internal default value supplied for '" + typeof(T).Name + "' or the supplied value is invalid. See the inner exception for details.", 
+					exception);
 			}
+		}
+
+		/// <summary>
+		/// Replicate the behavior of normal Properties.Settings class via getting default values for null settings.
+		/// Use this like GetDefaultValue(() =&gt; SleepBeforeSend);
+		/// </summary>
+		/// <returns>
+		/// The <see cref="string"/>.
+		/// </returns>
+		private static string GetDefaultValue<T>(Expression<Func<T>> propertyExpression)
+		{
+			var defaultSetting =
+				typeof(Properties.Settings).GetProperty(((MemberExpression)propertyExpression.Body).Member.Name)
+				                           .GetCustomAttributes(typeof(DefaultSettingValueAttribute), false)[0] as DefaultSettingValueAttribute;
+			return defaultSetting != null ? defaultSetting.Value : null;
 		}
 
 		private static string GetPropertyName<T>(Expression<Func<T>> propertyExpression)
@@ -890,6 +901,29 @@ namespace NBug
 			return ((MemberExpression)propertyExpression.Body).Member.Name;
 		}
 
-		#endregion Private Methods
+		private static void LoadAppconfigSettings()
+		{
+			// Application settings
+			UIMode = Properties.Settings.Default.UIMode;
+			UIProvider = Properties.Settings.Default.UIProvider;
+			SleepBeforeSend = Properties.Settings.Default.SleepBeforeSend;
+			MaxQueuedReports = Properties.Settings.Default.MaxQueuedReports;
+			StopReportingAfter = Properties.Settings.Default.StopReportingAfter;
+			StoragePath = Properties.Settings.Default.StoragePath;
+			MiniDumpType = Properties.Settings.Default.MiniDumpType;
+			WriteLogToDisk = Properties.Settings.Default.WriteLogToDisk;
+			ExitApplicationImmediately = Properties.Settings.Default.ExitApplicationImmediately;
+			HandleProcessCorruptedStateExceptions = Properties.Settings.Default.HandleProcessCorruptedStateExceptions;
+			ReleaseMode = Properties.Settings.Default.ReleaseMode;
+			DeferredReporting = Properties.Settings.Default.DeferredReporting;
+
+			// Connection strings
+			Cipher = Convert.FromBase64String(Properties.Settings.Default.Cipher);
+			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination1));
+			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination2));
+			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination3));
+			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination4));
+			AddDestinationFromConnectionString(Decrypt(Properties.Settings.Default.Destination5));
+		}
 	}
 }

@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Redmine.cs" company="NBusy Project">
-//   Copyright © 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Redmine.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ namespace NBug.Configurator.SubmitPanels.Tracker
 	{
 		public Redmine()
 		{
-			InitializeComponent();
+			this.InitializeComponent();
 		}
 
 		public string ConnectionString
@@ -23,12 +23,14 @@ namespace NBug.Configurator.SubmitPanels.Tracker
 				// Check the mendatory fields
 				if (string.IsNullOrEmpty(this.trackerURLTextBox.Text))
 				{
-					MessageBox.Show("Mandatory field \"" + trackerURLLabel.Name + "\" cannot be left blank.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					MessageBox.Show(
+						"Mandatory field \"" + this.trackerURLLabel.Name + "\" cannot be left blank.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					return null;
 				}
 				else if (string.IsNullOrEmpty(this.projectIDTextBox.Text))
 				{
-					MessageBox.Show("Mandatory field \"" + projectIDLabel.Name + "\" cannot be left blank.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					MessageBox.Show(
+						"Mandatory field \"" + this.projectIDLabel.Name + "\" cannot be left blank.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					return null;
 				}
 
@@ -40,16 +42,16 @@ namespace NBug.Configurator.SubmitPanels.Tracker
 
 				var redmine = new Core.Submission.Tracker.Redmine
 					{
-						Url = this.trackerURLTextBox.Text,
-						ProjectId = this.projectIDTextBox.Text,
-						TrackerId = this.trackerIDTextBox.Text,
-						PriorityId = this.priorityIDTextBox.Text,
-						CategoryId = this.categoryIDTextBox.Text,
-						CustomSubject = this.customSubjectTextBox.Text,
-						FixedVersionId = this.fixedVersionIDTextBox.Text,
-						AssignedToId = this.assignedToIDTextBox.Text,
-						ParentId = this.parentIDTextBox.Text,
-						StatusId = this.statusIDTextBox.Text,
+						Url = this.trackerURLTextBox.Text, 
+						ProjectId = this.projectIDTextBox.Text, 
+						TrackerId = this.trackerIDTextBox.Text, 
+						PriorityId = this.priorityIDTextBox.Text, 
+						CategoryId = this.categoryIDTextBox.Text, 
+						CustomSubject = this.customSubjectTextBox.Text, 
+						FixedVersionId = this.fixedVersionIDTextBox.Text, 
+						AssignedToId = this.assignedToIDTextBox.Text, 
+						ParentId = this.parentIDTextBox.Text, 
+						StatusId = this.statusIDTextBox.Text, 
 						AuthorId = this.authorIDTextBox.Text
 					};
 

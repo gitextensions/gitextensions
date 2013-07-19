@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="WinFormsUITests.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="WinFormsUITests.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -17,14 +17,16 @@ namespace NBug.Tests.Functional
 
 	public class WinFormsUITests : IUseFixture<SettingsFixture>, IUseFixture<UIFixture>
 	{
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void Full()
 		{
 			var exception = new DummySerializableException();
 			WinFormsUI.ShowDialog(UIMode.Full, exception, new Report(exception));
 		}
 
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void Minimal()
 		{
 			var exception = new DummySerializableException();

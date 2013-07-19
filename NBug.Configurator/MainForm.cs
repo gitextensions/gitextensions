@@ -1,52 +1,106 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainForm.cs" company="NBusy Project">
-//   Copyright © 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="MainForm.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug.Configurator
 {
-	using NBug.Configurator.SubmitPanels;
-	using NBug.Enums;
-    using NBug.Core.Util;
-    using NBug.Core.Submission;
-
-	/* Dear maintainer:
-		 *
-		 * Once you are done trying to 'optimize' this file, and have realized what a terrible mistake that was,
-		 * please increment the following counter as a warning to the next guy:
-		 *
-		 * total_hours_wasted_here = 20
-		 */
-
 	using System;
 	using System.Collections.Generic;
 	using System.Collections.ObjectModel;
 	using System.Diagnostics;
 	using System.IO;
 	using System.Linq;
+	using System.Reflection;
 	using System.Windows.Forms;
 
+	using NBug.Configurator.SubmitPanels;
+	using NBug.Core.Submission;
+	using NBug.Core.Submission.Tracker;
+	using NBug.Core.Submission.Web;
+	using NBug.Core.Util;
+	using NBug.Enums;
+	using NBug.Events;
+	using NBug.Properties;
+
+	using Settings = NBug.Settings;
+		/* Dear maintainer:
+		 *
+		 * Once you are done trying to 'optimize' this file, and have realized what a terrible mistake that was,
+		 * please increment the following counter as a warning to the next guy:
+		 *
+		 * total_hours_wasted_here = 20
+		 */
 	public partial class MainForm : Form
 	{
-        private readonly ICollection<PanelLoader> panelLoaders = new Collection<PanelLoader>();
+		private readonly ICollection<PanelLoader> panelLoaders = new Collection<PanelLoader>();
 
 		private FileStream settingsFile;
 
 		public MainForm()
 		{
-			InitializeComponent();
+			this.InitializeComponent();
 
-			NBug.Settings.CustomUIEvent += Settings_CustomUIEvent;
+			Settings.CustomUIEvent += this.Settings_CustomUIEvent;
 			this.openFileDialog.InitialDirectory = Environment.CurrentDirectory;
 			this.createFileDialog.InitialDirectory = Environment.CurrentDirectory;
-            NBug.Settings.Destinations.Clear();
+			Settings.Destinations.Clear();
 		}
 
-		private void Settings_CustomUIEvent(object sender, CustomUIEventArgs e)
+		private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var Form = new CustomPreviewForm();
-			e.Result = Form.ShowDialog(e.Report);
+			using (var about = new AboutBox())
+			{
+				about.ShowDialog();
+			}
+		}
+
+		private void AddDestinationButton_Click(object sender, EventArgs e)
+		{
+			var loader = new PanelLoader();
+			loader.RemoveDestination += this.loader_RemoveDestination;
+			this.panelLoaders.Add(loader);
+			var tabPage = new TabPage(string.Format("Submit #{0}", this.panelLoaders.Count));
+			tabPage.Controls.Add(loader);
+			this.mainTabs.TabPages.Add(tabPage);
+		}
+
+		private void BugTrackerToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Process.Start(this.bugTrackerToolStripMenuItem.Tag.ToString());
+		}
+
+		private void CloseButton_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
+
+		private void CreateButton_Click(object sender, EventArgs e)
+		{
+			if (this.createFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				this.SaveChangesWarning();
+				this.settingsFile = new FileStream(this.createFileDialog.FileName, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
+				this.LoadSettingsFile(true);
+			}
+		}
+
+		private void DiscussionForumToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Process.Start(this.discussionForumToolStripMenuItem.Tag.ToString());
+		}
+
+		private void EmbeddedToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.createFileDialog.FileName = "app.config";
+			this.CreateButton_Click(this, null);
+		}
+
+		private void ExternalToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.createFileDialog.FileName = "NBug.config";
+			this.CreateButton_Click(this, null);
 		}
 
 		/// <summary>
@@ -78,7 +132,7 @@ namespace NBug.Configurator
 				this.storagePathComboBox.Items.Add(value);
 			}
 
-			foreach (var loader in panelLoaders)
+			foreach (var loader in this.panelLoaders)
 			{
 				loader.UnloadPanel();
 			}
@@ -101,7 +155,7 @@ namespace NBug.Configurator
 		private void LoadSettingsFile(bool createNew)
 		{
 			this.settingsFile.Position = 0;
-			NBug.Properties.SettingsOverride.LoadCustomSettings(this.settingsFile);
+			SettingsOverride.LoadCustomSettings(this.settingsFile);
 			this.InitializeControls();
 
 			this.fileTextBox.Text = createNew == false ? this.openFileDialog.FileName : this.createFileDialog.FileName;
@@ -145,23 +199,97 @@ namespace NBug.Configurator
 				}
 			}
 
-			while (mainTabs.TabPages.Count > 2)
+			while (this.mainTabs.TabPages.Count > 2)
 			{
-				mainTabs.TabPages.RemoveAt(2);
+				this.mainTabs.TabPages.RemoveAt(2);
 			}
 
-			panelLoaders.Clear();
+			this.panelLoaders.Clear();
 
 			// Read connection strings
 			foreach (var destination in Settings.Destinations)
 			{
 				var loader = new PanelLoader();
-                loader.RemoveDestination += loader_RemoveDestination;
+				loader.RemoveDestination += this.loader_RemoveDestination;
 				loader.LoadPanel(destination.ConnectionString);
-				panelLoaders.Add(loader);
-				var tabPage = new TabPage(string.Format("Submit #{0}", panelLoaders.Count));
+				this.panelLoaders.Add(loader);
+				var tabPage = new TabPage(string.Format("Submit #{0}", this.panelLoaders.Count));
 				tabPage.Controls.Add(loader);
-				mainTabs.TabPages.Add(tabPage);
+				this.mainTabs.TabPages.Add(tabPage);
+			}
+		}
+
+		private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			this.SaveChangesWarning();
+		}
+
+		private void OnlineDocumentationToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Process.Start(this.onlineDocumentationToolStripMenuItem.Tag.ToString());
+		}
+
+		private void OpenButton_Click(object sender, EventArgs e)
+		{
+			if (this.openFileDialog.ShowDialog() == DialogResult.OK)
+			{
+				this.SaveChangesWarning();
+				File.SetAttributes(this.openFileDialog.FileName, FileAttributes.Normal);
+				this.settingsFile = new FileStream(this.openFileDialog.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+				this.LoadSettingsFile(false);
+			}
+		}
+
+		private void PreviewButton_Click(object sender, EventArgs e)
+		{
+			using (var preview = new PreviewForm())
+			{
+				preview.ShowDialog((UIMode)this.uiModeComboBox.SelectedItem, (UIProvider)this.uiProviderComboBox.SelectedItem);
+			}
+		}
+
+		private void ProjectHomeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Process.Start(this.projectHomeToolStripMenuItem.Tag.ToString());
+		}
+
+		private void RunTestAppButton_Click(object sender, EventArgs e)
+		{
+			this.SaveButton_Click(this, null);
+
+			string testApp;
+
+			if ((UIProvider)this.uiProviderComboBox.SelectedItem == UIProvider.Console)
+			{
+				testApp = "NBug.Examples.Console.exe";
+			}
+			else if ((UIProvider)this.uiProviderComboBox.SelectedItem == UIProvider.WinForms)
+			{
+				testApp = "NBug.Examples.WinForms.exe";
+			}
+			else if ((UIProvider)this.uiProviderComboBox.SelectedItem == UIProvider.WPF)
+			{
+				testApp = "NBug.Examples.WPF.exe";
+			}
+			else
+			{
+				testApp = "NBug.Examples.WinForms.exe";
+			}
+
+			var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), testApp);
+
+			if (!File.Exists(path))
+			{
+				path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "NBug.Examples.WinForms.exe");
+			}
+
+			if (!File.Exists(path))
+			{
+				MessageBox.Show("Test application cannot be found at location: " + path);
+			}
+			else
+			{
+				Process.Start(path, string.Format("\"{0}\"", this.settingsFile.Name));
 			}
 		}
 
@@ -171,9 +299,9 @@ namespace NBug.Configurator
 			if (string.IsNullOrEmpty(this.uiProviderComboBox.Text))
 			{
 				MessageBox.Show(
-					"The 'User Interface > UI Provider' selection should not be left blank. Please select a value for the provider or set the UI Mode to Auto.",
-					"User Interface Provider is Left Blank",
-					MessageBoxButtons.OK,
+					"The 'User Interface > UI Provider' selection should not be left blank. Please select a value for the provider or set the UI Mode to Auto.", 
+					"User Interface Provider is Left Blank", 
+					MessageBoxButtons.OK, 
 					MessageBoxIcon.Warning);
 				this.uiProviderComboBox.Focus();
 				return;
@@ -202,16 +330,17 @@ namespace NBug.Configurator
 			Settings.Destinations.Clear();
 
 			// Save connection strings
-			foreach (var connectionString in panelLoaders
-				.Where(p => p.Controls.Count == 2)
-				.Select(p => ((ISubmitPanel)p.Controls[0]).ConnectionString)
-				.Where(s => !string.IsNullOrEmpty(s)))
+			foreach (
+				var connectionString in
+					this.panelLoaders.Where(p => p.Controls.Count == 2)
+					    .Select(p => ((ISubmitPanel)p.Controls[0]).ConnectionString)
+					    .Where(s => !string.IsNullOrEmpty(s)))
 			{
 				Settings.AddDestinationFromConnectionString(connectionString);
 			}
 
 			this.settingsFile.Position = 0;
-			NBug.Properties.SettingsOverride.SaveCustomSettings(this.settingsFile, this.encryptConnectionStringsCheckBox.Checked);
+			SettingsOverride.SaveCustomSettings(this.settingsFile, this.encryptConnectionStringsCheckBox.Checked);
 			this.status.Text = "Configuration file successfully saved. Please test your configuration.";
 		}
 
@@ -224,14 +353,10 @@ namespace NBug.Configurator
 			}
 		}
 
-		private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+		private void Settings_CustomUIEvent(object sender, CustomUIEventArgs e)
 		{
-			this.SaveChangesWarning();
-		}
-
-		private void CloseButton_Click(object sender, EventArgs e)
-		{
-			this.Close();
+			var Form = new CustomPreviewForm();
+			e.Result = Form.ShowDialog(e.Report);
 		}
 
 		private void StoragePathComboBox_SelectedValueChanged(object sender, EventArgs e)
@@ -245,107 +370,6 @@ namespace NBug.Configurator
 				this.customStoragePathTextBox.Enabled = false;
 				this.customStoragePathTextBox.Text = string.Empty;
 			}
-		}
-
-		private void CreateButton_Click(object sender, EventArgs e)
-		{
-			if (this.createFileDialog.ShowDialog() == DialogResult.OK)
-			{
-				this.SaveChangesWarning();
-				this.settingsFile = new FileStream(this.createFileDialog.FileName, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
-				this.LoadSettingsFile(true);
-			}
-		}
-
-		private void OpenButton_Click(object sender, EventArgs e)
-		{
-			if (this.openFileDialog.ShowDialog() == DialogResult.OK)
-			{
-				this.SaveChangesWarning();
-				File.SetAttributes(this.openFileDialog.FileName, FileAttributes.Normal);
-				this.settingsFile = new FileStream(this.openFileDialog.FileName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-				this.LoadSettingsFile(false);
-			}
-		}
-
-		private void RunTestAppButton_Click(object sender, EventArgs e)
-		{
-			this.SaveButton_Click(this, null);
-
-			string testApp;
-
-			if ((UIProvider)this.uiProviderComboBox.SelectedItem == UIProvider.Console)
-			{
-				testApp = "NBug.Examples.Console.exe";
-			}
-			else if ((UIProvider)this.uiProviderComboBox.SelectedItem == UIProvider.WinForms)
-			{
-				testApp = "NBug.Examples.WinForms.exe";
-			}
-			else if ((UIProvider)this.uiProviderComboBox.SelectedItem == UIProvider.WPF)
-			{
-				testApp = "NBug.Examples.WPF.exe";
-			}
-			else
-			{
-				testApp = "NBug.Examples.WinForms.exe";
-			}
-
-			string path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), testApp);
-
-			if (!File.Exists(path))
-			{
-				path = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "NBug.Examples.WinForms.exe");
-			}
-
-			if (!File.Exists(path))
-			{
-				MessageBox.Show("Test application cannot be found at location: " + path);
-			}
-			else
-			{
-				Process.Start(path, String.Format("\"{0}\"", this.settingsFile.Name));
-			}
-		}
-
-		private void ProjectHomeToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Process.Start(this.projectHomeToolStripMenuItem.Tag.ToString());
-		}
-
-		private void OnlineDocumentationToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Process.Start(this.onlineDocumentationToolStripMenuItem.Tag.ToString());
-		}
-
-		private void DiscussionForumToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Process.Start(this.discussionForumToolStripMenuItem.Tag.ToString());
-		}
-
-		private void BugTrackerToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			Process.Start(this.bugTrackerToolStripMenuItem.Tag.ToString());
-		}
-
-		private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			using (var about = new AboutBox())
-			{
-				about.ShowDialog();
-			}
-		}
-
-		private void ExternalToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			this.createFileDialog.FileName = "NBug.config";
-			this.CreateButton_Click(this, null);
-		}
-
-		private void EmbeddedToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			this.createFileDialog.FileName = "app.config";
-			this.CreateButton_Click(this, null);
 		}
 
 		private void UIModeComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -387,14 +411,6 @@ namespace NBug.Configurator
 			}
 		}
 
-		private void PreviewButton_Click(object sender, EventArgs e)
-		{
-			using (var preview = new PreviewForm())
-			{
-				preview.ShowDialog((UIMode)this.uiModeComboBox.SelectedItem, (UIProvider)this.uiProviderComboBox.SelectedItem);
-			}
-		}
-
 		private void UIProviderComboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (this.uiProviderComboBox.SelectedItem == null)
@@ -411,51 +427,43 @@ namespace NBug.Configurator
 			}
 		}
 
-		private void AddDestinationButton_Click(object sender, EventArgs e)
+		private void loader_RemoveDestination(object sender, EventArgs e)
 		{
-			var loader = new PanelLoader();
-            loader.RemoveDestination += loader_RemoveDestination;
-			panelLoaders.Add(loader);
-			var tabPage = new TabPage(string.Format("Submit #{0}", panelLoaders.Count));
-			tabPage.Controls.Add(loader);
-			mainTabs.TabPages.Add(tabPage);
+			var loader = sender as PanelLoader;
+			var idx = 2;
+			idx += this.panelLoaders.ToList().IndexOf(loader);
+
+			if (!string.IsNullOrEmpty(loader.connString))
+			{
+				var protocol = ConnectionStringParser.Parse(loader.connString)["Type"];
+				IProtocol dest = null;
+
+				if (protocol == typeof(Mail).Name || protocol.ToLower() == "email" || protocol.ToLower() == "e-mail")
+				{
+					dest = new Mail(loader.connString);
+				}
+				else if (protocol == typeof(Redmine).Name)
+				{
+					dest = new Redmine(loader.connString);
+				}
+				else if (protocol == typeof(Ftp).Name)
+				{
+					dest = new Redmine(loader.connString);
+				}
+				else if (protocol == typeof(Http).Name)
+				{
+					dest = new Redmine(loader.connString);
+				}
+
+				if (dest != null)
+				{
+					Settings.Destinations.Remove(dest);
+				}
+			}
+
+			this.panelLoaders.Remove(loader);
+			this.mainTabs.TabPages.RemoveAt(idx);
+			return;
 		}
-
-        void loader_RemoveDestination(object sender, EventArgs e)
-        {
-            var loader = sender as PanelLoader;
-            var idx = 2;
-            idx += (panelLoaders.ToList<PanelLoader>()).IndexOf(loader);
-
-            if (!string.IsNullOrEmpty(loader.connString))
-            {
-                var protocol = ConnectionStringParser.Parse(loader.connString)["Type"];                
-                IProtocol dest = null;
-
-                if (protocol == typeof(Core.Submission.Web.Mail).Name || protocol.ToLower() == "email" || protocol.ToLower() == "e-mail")
-                {
-                    dest = new Core.Submission.Web.Mail(loader.connString);
-                }
-                else if (protocol == typeof(Core.Submission.Tracker.Redmine).Name)
-                {
-                    dest = new Core.Submission.Tracker.Redmine(loader.connString);
-                }
-                else if (protocol == typeof(Core.Submission.Web.Ftp).Name)
-                {
-                    dest = new Core.Submission.Tracker.Redmine(loader.connString);
-                }
-                else if (protocol == typeof(Core.Submission.Web.Http).Name)
-                {
-                    dest = new Core.Submission.Tracker.Redmine(loader.connString);
-                }
-
-                if (dest != null)
-                    Settings.Destinations.Remove(dest);
-            }
-
-            panelLoaders.Remove(loader);
-            mainTabs.TabPages.RemoveAt(idx);
-            return;
-        }
 	}
 }

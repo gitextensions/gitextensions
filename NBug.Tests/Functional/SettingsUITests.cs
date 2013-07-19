@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SettingsUITests.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="SettingsUITests.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -26,7 +26,8 @@ namespace NBug.Tests.Functional
 
 		private SerializableException serializableException;
 
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void ExceptionThread_Task()
 		{
 			// By default UI is not shown for task exceptions
@@ -36,8 +37,7 @@ namespace NBug.Tests.Functional
 
 			Assert.Equal(
 				MessageBox.Show(
-					"ExceptionThread: Task" + Environment.NewLine + Environment.NewLine +
-					"Did you see any UI on the screen?", 
+					"ExceptionThread: Task" + Environment.NewLine + Environment.NewLine + "Did you see any UI on the screen?", 
 					"Assert Question", 
 					MessageBoxButtons.YesNo, 
 					MessageBoxIcon.Question), 
@@ -60,7 +60,8 @@ namespace NBug.Tests.Functional
 			this.report = reportFixture.Report;
 		}
 
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void UIMode_AutoExceptionThread_Main()
 		{
 			// Auto mode displays minimal UI by default
@@ -73,17 +74,16 @@ namespace NBug.Tests.Functional
 
 			Assert.Equal(
 				MessageBox.Show(
-					"UIMode: Auto" + Environment.NewLine +
-					"ExceptionThread: Main" + Environment.NewLine +
-					"Loaded Assembly: System.Windows.Forms" + Environment.NewLine + Environment.NewLine +
-					"Did you see a Minimal WinForms message box?", 
+					"UIMode: Auto" + Environment.NewLine + "ExceptionThread: Main" + Environment.NewLine + "Loaded Assembly: System.Windows.Forms"
+					+ Environment.NewLine + Environment.NewLine + "Did you see a Minimal WinForms message box?", 
 					"Assert Question", 
 					MessageBoxButtons.YesNo, 
 					MessageBoxIcon.Question), 
 				DialogResult.Yes);
 		}
 
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void UIMode_AutoExceptionThread_WPF()
 		{
 			// Auto mode displays minimal UI by default
@@ -96,16 +96,16 @@ namespace NBug.Tests.Functional
 
 			Assert.Equal(
 				MessageBox.Show(
-					"UIMode: Auto" + Environment.NewLine +
-					"ExceptionThread: WPF" + Environment.NewLine + Environment.NewLine +
-					"Did you see a Minimal WPF message box?", 
+					"UIMode: Auto" + Environment.NewLine + "ExceptionThread: WPF" + Environment.NewLine + Environment.NewLine
+					+ "Did you see a Minimal WPF message box?", 
 					"Assert Question", 
 					MessageBoxButtons.YesNo, 
 					MessageBoxIcon.Question), 
 				DialogResult.Yes);
 		}
 
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void UIMode_AutoExceptionThread_WinForms()
 		{
 			// Auto mode displays minimal UI by default
@@ -118,16 +118,16 @@ namespace NBug.Tests.Functional
 
 			Assert.Equal(
 				MessageBox.Show(
-					"UIMode: Auto" + Environment.NewLine +
-					"ExceptionThread: WinForms" + Environment.NewLine + Environment.NewLine +
-					"Did you see a Minimal WinForms message box?", 
+					"UIMode: Auto" + Environment.NewLine + "ExceptionThread: WinForms" + Environment.NewLine + Environment.NewLine
+					+ "Did you see a Minimal WinForms message box?", 
 					"Assert Question", 
 					MessageBoxButtons.YesNo, 
 					MessageBoxIcon.Question), 
 				DialogResult.Yes);
 		}
 
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void UIMode_None()
 		{
 			Settings.UIMode = UIMode.None;
@@ -138,15 +138,15 @@ namespace NBug.Tests.Functional
 
 			Assert.Equal(
 				MessageBox.Show(
-					"ExceptionThread: Task" + Environment.NewLine + Environment.NewLine +
-					"Did you see any UI on the screen?", 
+					"ExceptionThread: Task" + Environment.NewLine + Environment.NewLine + "Did you see any UI on the screen?", 
 					"Assert Question", 
 					MessageBoxButtons.YesNo, 
 					MessageBoxIcon.Question), 
 				DialogResult.No);
 		}
 
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void UIProvider_AutoUIMode_Minimal()
 		{
 			Settings.UIProvider = UIProvider.Auto;
@@ -159,16 +159,16 @@ namespace NBug.Tests.Functional
 			// By default, Visual Studio loads some WinForms dlls so WinForms dialogs will be displayed via auto selection
 			Assert.Equal(
 				MessageBox.Show(
-					"UIProvider: Auto" + Environment.NewLine +
-					"UIMode: Minimal" + Environment.NewLine + Environment.NewLine +
-					"Did you see a Minimal WinForms message box?", 
+					"UIProvider: Auto" + Environment.NewLine + "UIMode: Minimal" + Environment.NewLine + Environment.NewLine
+					+ "Did you see a Minimal WinForms message box?", 
 					"Assert Question", 
 					MessageBoxButtons.YesNo, 
 					MessageBoxIcon.Question), 
 				DialogResult.Yes);
 		}
 
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void UIProvider_AutoUIMode_Normal()
 		{
 			Settings.UIProvider = UIProvider.Auto;
@@ -187,16 +187,16 @@ namespace NBug.Tests.Functional
 			// By default, Visual Studio loads some WinForms dlls so WinForms dialogs will be displayed via auto selection
 			Assert.Equal(
 				MessageBox.Show(
-					"UIProvider: Auto" + Environment.NewLine +
-					"UIMode: Normal" + Environment.NewLine + Environment.NewLine +
-					"Did you see a Normal WinForms error dialog?", 
+					"UIProvider: Auto" + Environment.NewLine + "UIMode: Normal" + Environment.NewLine + Environment.NewLine
+					+ "Did you see a Normal WinForms error dialog?", 
 					"Assert Question", 
 					MessageBoxButtons.YesNo, 
 					MessageBoxIcon.Question), 
 				DialogResult.Yes);
 		}
 
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void UIProvider_ConsoleUIMode_Full()
 		{
 			Settings.UIProvider = UIProvider.Console;
@@ -211,17 +211,16 @@ namespace NBug.Tests.Functional
 
 			Assert.Equal(
 				MessageBox.Show(
-					"UIProvider: Console" + Environment.NewLine +
-					"UIMode: Full" + Environment.NewLine + Environment.NewLine +
-					"Console Message: " + consoleOut + Environment.NewLine +
-					"Is the message written to the console right?", 
+					"UIProvider: Console" + Environment.NewLine + "UIMode: Full" + Environment.NewLine + Environment.NewLine + "Console Message: " + consoleOut
+					+ Environment.NewLine + "Is the message written to the console right?", 
 					"Assert Question", 
 					MessageBoxButtons.YesNo, 
 					MessageBoxIcon.Question), 
 				DialogResult.Yes);
 		}
 
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void UIProvider_ConsoleUIMode_Minimal()
 		{
 			Settings.UIProvider = UIProvider.Console;
@@ -229,24 +228,23 @@ namespace NBug.Tests.Functional
 
 			var consoleOut = new StringWriter();
 			Console.SetOut(consoleOut);
-			
+
 			Assert.Equal(
 				UISelector.DisplayBugReportUI(ExceptionThread.Main, this.serializableException, this.report), 
 				new UIDialogResult(ExecutionFlow.BreakExecution, SendReport.Send));
 
 			Assert.Equal(
 				MessageBox.Show(
-					"UIProvider: Console" + Environment.NewLine +
-					"UIMode: Minimal" + Environment.NewLine + Environment.NewLine +
-					"Console Message: " + consoleOut + Environment.NewLine +
-					"Is the message written to the console right?", 
+					"UIProvider: Console" + Environment.NewLine + "UIMode: Minimal" + Environment.NewLine + Environment.NewLine + "Console Message: " + consoleOut
+					+ Environment.NewLine + "Is the message written to the console right?", 
 					"Assert Question", 
 					MessageBoxButtons.YesNo, 
 					MessageBoxIcon.Question), 
 				DialogResult.Yes);
 		}
 
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void UIProvider_ConsoleUIMode_Normal()
 		{
 			Settings.UIProvider = UIProvider.Console;
@@ -261,17 +259,16 @@ namespace NBug.Tests.Functional
 
 			Assert.Equal(
 				MessageBox.Show(
-					"UIProvider: Console" + Environment.NewLine +
-					"UIMode: Normal" + Environment.NewLine + Environment.NewLine +
-					"Console Message: " + consoleOut + Environment.NewLine +
-					"Is the message written to the console right?", 
+					"UIProvider: Console" + Environment.NewLine + "UIMode: Normal" + Environment.NewLine + Environment.NewLine + "Console Message: " + consoleOut
+					+ Environment.NewLine + "Is the message written to the console right?", 
 					"Assert Question", 
 					MessageBoxButtons.YesNo, 
 					MessageBoxIcon.Question), 
 				DialogResult.Yes);
 		}
 
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void UIProvider_WinFormsUIMode_Full()
 		{
 			Settings.UIProvider = UIProvider.WinForms;
@@ -289,16 +286,16 @@ namespace NBug.Tests.Functional
 
 			Assert.Equal(
 				MessageBox.Show(
-					"UIProvider: WinForms" + Environment.NewLine +
-					"UIMode: Full" + Environment.NewLine + Environment.NewLine +
-					"Did you see a Full WinForms error dialog?", 
+					"UIProvider: WinForms" + Environment.NewLine + "UIMode: Full" + Environment.NewLine + Environment.NewLine
+					+ "Did you see a Full WinForms error dialog?", 
 					"Assert Question", 
 					MessageBoxButtons.YesNo, 
 					MessageBoxIcon.Question), 
 				DialogResult.Yes);
 		}
 
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void UIProvider_WinFormsUIMode_Minimal()
 		{
 			Settings.UIProvider = UIProvider.WinForms;
@@ -310,16 +307,16 @@ namespace NBug.Tests.Functional
 
 			Assert.Equal(
 				MessageBox.Show(
-					"UIProvider: WinForms" + Environment.NewLine +
-					"UIMode: Minimal" + Environment.NewLine + Environment.NewLine +
-					"Did you see a Minimal WinForms message box?", 
+					"UIProvider: WinForms" + Environment.NewLine + "UIMode: Minimal" + Environment.NewLine + Environment.NewLine
+					+ "Did you see a Minimal WinForms message box?", 
 					"Assert Question", 
 					MessageBoxButtons.YesNo, 
 					MessageBoxIcon.Question), 
 				DialogResult.Yes);
 		}
 
-		[Fact, UI]
+		[Fact]
+		[UI]
 		public void UIProvider_WinFormsUIMode_Normal()
 		{
 			Settings.UIProvider = UIProvider.WinForms;
@@ -337,9 +334,8 @@ namespace NBug.Tests.Functional
 
 			Assert.Equal(
 				MessageBox.Show(
-					"UIProvider: WinForms" + Environment.NewLine +
-					"UIMode: Normal" + Environment.NewLine + Environment.NewLine +
-					"Did you see a Normal WinForms error dialog?", 
+					"UIProvider: WinForms" + Environment.NewLine + "UIMode: Normal" + Environment.NewLine + Environment.NewLine
+					+ "Did you see a Normal WinForms error dialog?", 
 					"Assert Question", 
 					MessageBoxButtons.YesNo, 
 					MessageBoxIcon.Question), 

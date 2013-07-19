@@ -1,20 +1,21 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Dispatcher.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Dispatcher.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using NBug.Core.Reporting.Info;
-using NBug.Core.Util.Serialization;
-using System.Xml.Serialization;
-
 namespace NBug.Core.Submission
 {
-	using NBug.Core.Util.Logging;
-	using NBug.Core.Util.Storage;
 	using System;
 	using System.IO;
+	using System.Threading;
 	using System.Threading.Tasks;
+	using System.Xml.Serialization;
+
+	using NBug.Core.Reporting.Info;
+	using NBug.Core.Util.Logging;
+	using NBug.Core.Util.Serialization;
+	using NBug.Core.Util.Storage;
 
 	internal class Dispatcher
 	{
@@ -28,14 +29,16 @@ namespace NBug.Core.Submission
 		{
 			// Test if it has NOT been more than x many days since entry assembly was last modified)
 			// This is the exact verifier code in the BugReport.cs of CreateReportZip() function
-			if (Settings.StopReportingAfter < 0 || File.GetLastWriteTime(Settings.EntryAssembly.Location).AddDays(Settings.StopReportingAfter).CompareTo(DateTime.Now) > 0)
+			if (Settings.StopReportingAfter < 0
+			    || File.GetLastWriteTime(Settings.EntryAssembly.Location).AddDays(Settings.StopReportingAfter).CompareTo(DateTime.Now) > 0)
 			{
 				if (isAsynchronous)
 				{
 					// Log and swallow NBug's internal exceptions by default
-					Task.Factory.StartNew(this.Dispatch).ContinueWith(
-						t => Logger.Error("An exception occurred while dispatching bug report. Check the inner exception for details", t.Exception),
-						TaskContinuationOptions.OnlyOnFaulted);
+					Task.Factory.StartNew(this.Dispatch)
+					    .ContinueWith(
+						    t => Logger.Error("An exception occurred while dispatching bug report. Check the inner exception for details", t.Exception), 
+						    TaskContinuationOptions.OnlyOnFaulted);
 				}
 				else
 				{
@@ -60,21 +63,21 @@ namespace NBug.Core.Submission
 			// Make sure that we are not interfering with the crucial startup work);
 			if (!Settings.RemoveThreadSleep)
 			{
-				System.Threading.Thread.Sleep(Settings.SleepBeforeSend * 1000);
+				Thread.Sleep(Settings.SleepBeforeSend * 1000);
 			}
 
 			// Turncate extra report files and try to send the first one in the queue
 			Storer.TruncateReportFiles();
 
 			// Now go through configured destinations and submit to all automatically
-			for (bool hasReport = true; hasReport; )
+			for (var hasReport = true; hasReport;)
 			{
-				using (Storer storer = new Storer())
-				using (Stream stream = storer.GetFirstReportFile())
+				using (var storer = new Storer())
+				using (var stream = storer.GetFirstReportFile())
 				{
 					if (stream != null)
 					{
-						var exceptionData = GetDataFromZip(stream);
+						var exceptionData = this.GetDataFromZip(stream);
 						if (this.EnumerateDestinations(stream, exceptionData) == false)
 						{
 							break;
@@ -91,11 +94,36 @@ namespace NBug.Core.Submission
 			}
 		}
 
-		private class ExceptionData
+		/// <summary>
+		/// Enumerate all protocols to see if they are properly configured and send using the ones that are configured
+		/// as many times as necessary.
+		/// </summary>
+		/// <param name="reportFile">The file to read the report from.</param>
+		/// <returns>Returns <see langword="true"/> if the sending was successful.
+		/// Returns <see langword="true"/> if the report was submitted to at least one destination.</returns>
+		private bool EnumerateDestinations(Stream reportFile, ExceptionData exceptionData)
 		{
-			public Report Report { get; set; }
+			var sentSuccessfullyAtLeastOnce = false;
+			var fileName = Path.GetFileName(((FileStream)reportFile).Name);
+			foreach (var destination in Settings.Destinations)
+			{
+				try
+				{
+					Logger.Trace(string.Format("Submitting bug report via {0}.", destination.GetType().Name));
+					if (destination.Send(fileName, reportFile, exceptionData.Report, exceptionData.Exception))
+					{
+						sentSuccessfullyAtLeastOnce = true;
+					}
+				}
+				catch (Exception exception)
+				{
+					Logger.Error(
+						string.Format("An exception occurred while submitting bug report with {0}. Check the inner exception for details.", destination.GetType().Name), 
+						exception);
+				}
+			}
 
-			public SerializableException Exception { get; set; }
+			return sentSuccessfullyAtLeastOnce;
 		}
 
 		private ExceptionData GetDataFromZip(Stream stream)
@@ -131,33 +159,11 @@ namespace NBug.Core.Submission
 			return results;
 		}
 
-		/// <summary>
-		/// Enumerate all protocols to see if they are properly configured and send using the ones that are configured
-		/// as many times as necessary.
-		/// </summary>
-		/// <param name="reportFile">The file to read the report from.</param>
-		/// <returns>Returns <see langword="true"/> if the sending was successful.
-		/// Returns <see langword="true"/> if the report was submitted to at least one destination.</returns>
-		private bool EnumerateDestinations(Stream reportFile, ExceptionData exceptionData)
+		private class ExceptionData
 		{
-			bool sentSuccessfullyAtLeastOnce = false;
-			string fileName = Path.GetFileName(((FileStream)reportFile).Name);
-			foreach (var destination in Settings.Destinations)
-			{
-				try
-				{
-					Logger.Trace(string.Format("Submitting bug report via {0}.", destination.GetType().Name));
-					if (destination.Send(fileName, reportFile, exceptionData.Report, exceptionData.Exception))
-					{
-						sentSuccessfullyAtLeastOnce = true;
-					}
-				}
-				catch (Exception exception)
-				{
-					Logger.Error(string.Format("An exception occurred while submitting bug report with {0}. Check the inner exception for details.", destination.GetType().Name), exception);
-				}
-			}
-			return sentSuccessfullyAtLeastOnce;
+			public SerializableException Exception { get; set; }
+
+			public Report Report { get; set; }
 		}
 	}
 }

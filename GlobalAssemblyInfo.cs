@@ -1,8 +1,10 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="GlobalAssemblyInfo.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="GlobalAssemblyInfo.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
+
+
 
 using System;
 using System.Reflection;
@@ -15,6 +17,7 @@ using System.Reflection;
 [assembly: AssemblyCopyright("Copyright © 2011 Teoman Soygul")]
 [assembly: AssemblyTrademark("")]
 #if DEBUG
+
 [assembly: AssemblyConfiguration("Debug")]
 #else
 [assembly: AssemblyConfiguration("Release")]

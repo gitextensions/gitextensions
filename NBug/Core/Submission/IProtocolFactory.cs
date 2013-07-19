@@ -1,4 +1,10 @@
-﻿namespace NBug.Core.Submission
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="IProtocolFactory.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace NBug.Core.Submission
 {
 	/// <summary>
 	/// The protocol factory creates an IProtocol instance.
@@ -15,8 +21,8 @@
 	/// </summary>
 	public interface IProtocolFactory
 	{
-		IProtocol FromConnectionString(string connectionString);
-
 		string SupportedType { get; }
+
+		IProtocol FromConnectionString(string connectionString);
 	}
 }

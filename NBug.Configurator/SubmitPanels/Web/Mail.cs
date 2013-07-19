@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Mail.cs" company="NBusy Project">
-//   Copyright © 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Mail.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ namespace NBug.Configurator.SubmitPanels.Web
 	{
 		public Mail()
 		{
-			InitializeComponent();
+			this.InitializeComponent();
 			this.portNumericUpDown.Maximum = decimal.MaxValue;
 			this.priorityComboBox.SelectedIndex = 1;
 		}
@@ -26,20 +26,21 @@ namespace NBug.Configurator.SubmitPanels.Web
 				// Check the mendatory fields
 				if (this.toListBox.Items.Count == 0)
 				{
-					MessageBox.Show(String.Format("Mandatory field \"{0}\" cannot be left blank.", toLabel.Name), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					MessageBox.Show(
+						string.Format("Mandatory field \"{0}\" cannot be left blank.", this.toLabel.Name), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					return null;
 				}
 
 				var mail = new Core.Submission.Web.Mail
-				{
-					From = this.fromTextBox.Text,
-					FromName = this.fromNameTextBox.Text,
-					ReplyTo = this.replyToTextBox.Text,
-					CustomSubject = this.customSubjectTextBox.Text,
-					CustomBody = this.customBodyTextBox.Text,
-					SmtpServer = this.smtpServerTextBox.Text,
-					Priority = (MailPriority)Enum.Parse(typeof(MailPriority), this.priorityComboBox.SelectedItem.ToString())
-				};
+					{
+						From = this.fromTextBox.Text, 
+						FromName = this.fromNameTextBox.Text, 
+						ReplyTo = this.replyToTextBox.Text, 
+						CustomSubject = this.customSubjectTextBox.Text, 
+						CustomBody = this.customBodyTextBox.Text, 
+						SmtpServer = this.smtpServerTextBox.Text, 
+						Priority = (MailPriority)Enum.Parse(typeof(MailPriority), this.priorityComboBox.SelectedItem.ToString())
+					};
 
 				foreach (var item in this.toListBox.Items)
 				{
@@ -50,7 +51,7 @@ namespace NBug.Configurator.SubmitPanels.Web
 
 				if (this.ccListBox.Items.Count != 0)
 				{
-					foreach (var item in ccListBox.Items)
+					foreach (var item in this.ccListBox.Items)
 					{
 						mail.Cc += item + ",";
 					}
@@ -147,14 +148,14 @@ namespace NBug.Configurator.SubmitPanels.Web
 			}
 		}
 
-		private void ToAddButton_Click(object sender, EventArgs e)
+		private void BccAddButton_Click(object sender, EventArgs e)
 		{
-			this.toListBox.Items.Add(this.toTextBox.Text);
+			this.bccListBox.Items.Add(this.bccTextBox.Text);
 		}
 
-		private void ToRemoveButton_Click(object sender, EventArgs e)
+		private void BccRemoveButton_Click(object sender, EventArgs e)
 		{
-			this.toListBox.Items.RemoveAt(this.toListBox.SelectedIndex);
+			this.bccListBox.Items.RemoveAt(this.bccListBox.SelectedIndex);
 		}
 
 		private void CcAddButton_Click(object sender, EventArgs e)
@@ -167,19 +168,27 @@ namespace NBug.Configurator.SubmitPanels.Web
 			this.ccListBox.Items.RemoveAt(this.ccListBox.SelectedIndex);
 		}
 
-		private void BccAddButton_Click(object sender, EventArgs e)
+		private void DefaultPortCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
-			this.bccListBox.Items.Add(this.bccTextBox.Text);
+			if (this.defaultPortCheckBox.Checked)
+			{
+				this.portNumericUpDown.Enabled = false;
+				this.portNumericUpDown.Value = this.useSslCheckBox.Checked ? 465 : 25;
+			}
+			else
+			{
+				this.portNumericUpDown.Enabled = true;
+			}
 		}
 
-		private void BccRemoveButton_Click(object sender, EventArgs e)
+		private void ToAddButton_Click(object sender, EventArgs e)
 		{
-			this.bccListBox.Items.RemoveAt(this.bccListBox.SelectedIndex);
+			this.toListBox.Items.Add(this.toTextBox.Text);
 		}
 
-		private void UseSslCheckBox_CheckedChanged(object sender, EventArgs e)
+		private void ToRemoveButton_Click(object sender, EventArgs e)
 		{
-			this.portNumericUpDown.Value = this.useSslCheckBox.Checked ? 465 : 25;
+			this.toListBox.Items.RemoveAt(this.toListBox.SelectedIndex);
 		}
 
 		private void UseAuthenticationCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -196,17 +205,9 @@ namespace NBug.Configurator.SubmitPanels.Web
 			}
 		}
 
-		private void DefaultPortCheckBox_CheckedChanged(object sender, EventArgs e)
+		private void UseSslCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
-			if (this.defaultPortCheckBox.Checked)
-			{
-				this.portNumericUpDown.Enabled = false;
-				this.portNumericUpDown.Value = this.useSslCheckBox.Checked ? 465 : 25;
-			}
-			else
-			{
-				this.portNumericUpDown.Enabled = true;
-			}
+			this.portNumericUpDown.Value = this.useSslCheckBox.Checked ? 465 : 25;
 		}
 	}
 }

@@ -1,31 +1,34 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PreviewForm.cs" company="NBusy Project">
-//   Copyright © 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="PreviewForm.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug.Configurator
 {
+	using System;
+	using System.IO;
+	using System.Windows.Forms;
+
 	using NBug.Core.Reporting.Info;
 	using NBug.Core.UI.Console;
+	using NBug.Core.UI.Custom;
 	using NBug.Core.UI.WinForms;
 	using NBug.Core.UI.WPF;
 	using NBug.Core.Util.Serialization;
 	using NBug.Enums;
-	using System;
-	using System.IO;
-	using System.Windows.Forms;
 
 	internal partial class PreviewForm : Form
 	{
 		public PreviewForm()
 		{
-			InitializeComponent();
+			this.InitializeComponent();
 		}
 
 		internal void ShowDialog(UIMode uiMode, UIProvider uiProvider)
 		{
-			var exception = new SerializableException(new ArgumentException("Argument exception preview.", new Exception("Inner exception for argument exception.")));
+			var exception =
+				new SerializableException(new ArgumentException("Argument exception preview.", new Exception("Inner exception for argument exception.")));
 			var report = new Report(exception);
 
 			var consoleOut = new StringWriter();

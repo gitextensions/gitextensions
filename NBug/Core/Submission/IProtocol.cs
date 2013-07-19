@@ -1,16 +1,28 @@
-﻿namespace NBug.Core.Submission
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="IProtocol.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace NBug.Core.Submission
 {
+	using System.IO;
+
 	using NBug.Core.Reporting.Info;
 	using NBug.Core.Util.Serialization;
-	using System.IO;
 
 	/// <summary>
 	/// Implement this to support sending data to a specific location.
-	///
+	/// 
 	/// We recommend you base your implementation on ProtocolBase.
 	/// </summary>
 	public interface IProtocol
 	{
+		/// <summary>
+		/// Connection string suitable for serialization.
+		/// </summary>
+		string ConnectionString { get; }
+
 		/// <summary>
 		/// Send the report file to the destination.
 		/// </summary>
@@ -20,10 +32,5 @@
 		/// <param name="exception"></param>
 		/// <returns>True if report was sent successfully.</returns>
 		bool Send(string fileName, Stream file, Report report, SerializableException exception);
-
-		/// <summary>
-		/// Connection string suitable for serialization.
-		/// </summary>
-		string ConnectionString { get; }
 	}
 }

@@ -1,21 +1,24 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Handler.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Handler.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug
 {
-	using NBug.Core.Reporting;
-	using NBug.Core.UI;
-	using NBug.Core.Util;
-	using NBug.Core.Util.Logging;
 	using System;
 	using System.Runtime.ExceptionServices;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using System.Windows.Forms;
 	using System.Windows.Threading;
+
+	using NBug.Core.Reporting;
+	using NBug.Core.UI;
+	using NBug.Core.Util;
+	using NBug.Core.Util.Logging;
+
+	using Dispatcher = NBug.Core.Submission.Dispatcher;
 
 	public static class Handler
 	{
@@ -24,27 +27,27 @@ namespace NBug
 			// Submit any queued reports on a seperate thread asynchronously, while exceptions handlers are being set);
 			if (!Settings.SkipDispatching)
 			{
-				new Core.Submission.Dispatcher(Settings.DispatcherIsAsynchronous);
+				new Dispatcher(Settings.DispatcherIsAsynchronous);
 			}
 		}
 
 		// Using delegates to make sure that static constructor gets called on delegate access
 
 		/// <summary>
-		/// Used for handling general exceptions bound to the main thread.
-		/// Handles the <see cref="AppDomain.UnhandledException"/> events in <see cref="System"/> namespace.
+		/// Used for handling WPF exceptions bound to the UI thread.
+		/// Handles the <see cref="Application.DispatcherUnhandledException"/> events in <see cref="System.Windows"/> namespace.
 		/// </summary>
-		public static UnhandledExceptionEventHandler UnhandledException
+		public static DispatcherUnhandledExceptionEventHandler DispatcherUnhandledException
 		{
 			get
 			{
 				if (Settings.HandleProcessCorruptedStateExceptions)
 				{
-					return CorruptUnhandledExceptionHandler;
+					return CorruptDispatcherUnhandledExceptionHandler;
 				}
 				else
 				{
-					return UnhandledExceptionHandler;
+					return DispatcherUnhandledExceptionHandler;
 				}
 			}
 		}
@@ -69,20 +72,20 @@ namespace NBug
 		}
 
 		/// <summary>
-		/// Used for handling WPF exceptions bound to the UI thread.
-		/// Handles the <see cref="Application.DispatcherUnhandledException"/> events in <see cref="System.Windows"/> namespace.
+		/// Used for handling general exceptions bound to the main thread.
+		/// Handles the <see cref="AppDomain.UnhandledException"/> events in <see cref="System"/> namespace.
 		/// </summary>
-		public static DispatcherUnhandledExceptionEventHandler DispatcherUnhandledException
+		public static UnhandledExceptionEventHandler UnhandledException
 		{
 			get
 			{
 				if (Settings.HandleProcessCorruptedStateExceptions)
 				{
-					return CorruptDispatcherUnhandledExceptionHandler;
+					return CorruptUnhandledExceptionHandler;
 				}
 				else
 				{
-					return DispatcherUnhandledExceptionHandler;
+					return UnhandledExceptionHandler;
 				}
 			}
 		}
@@ -106,23 +109,16 @@ namespace NBug
 			}
 		}
 
-		/// <summary>
-		/// Used for handling general exceptions bound to the main thread.
-		/// Handles the <see cref="AppDomain.UnhandledException"/> events in <see cref="System"/> namespace.
-		/// </summary>
-		/// <param name="sender">Exception sender object.</param>
-		/// <param name="e">Real exception is in: ((Exception)e.ExceptionObject)</param>
-		private static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+		[HandleProcessCorruptedStateExceptions]
+		private static void CorruptDispatcherUnhandledExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
-			if (Settings.HandleExceptions)
-			{
-				Logger.Trace("Starting to handle a System.AppDomain.UnhandledException.");
-				var executionFlow = new BugReport().Report((Exception)e.ExceptionObject, ExceptionThread.Main);
-				if (executionFlow == ExecutionFlow.BreakExecution)
-				{
-					Environment.Exit(0);
-				}
-			}
+			DispatcherUnhandledExceptionHandler(sender, e);
+		}
+
+		[HandleProcessCorruptedStateExceptions]
+		private static void CorruptThreadExceptionHandler(object sender, ThreadExceptionEventArgs e)
+		{
+			ThreadExceptionHandler(sender, e);
 		}
 
 		[HandleProcessCorruptedStateExceptions]
@@ -131,31 +127,10 @@ namespace NBug
 			UnhandledExceptionHandler(sender, e);
 		}
 
-		/// <summary>
-		/// Used for handling WinForms exceptions bound to the UI thread.
-		/// Handles the <see cref="Application.ThreadException"/> events in <see cref="System.Windows.Forms"/> namespace.
-		/// </summary>
-		/// <param name="sender">Exception sender object.</param>
-		/// <param name="e">Real exception is in: e.Exception</param>
-		private static void ThreadExceptionHandler(object sender, ThreadExceptionEventArgs e)
-		{
-			if (Settings.HandleExceptions)
-			{
-				Logger.Trace("Starting to handle a System.Windows.Forms.Application.ThreadException.");
-
-				// WinForms UI thread exceptions do not propagate to more general handlers unless: Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
-				var executionFlow = new BugReport().Report(e.Exception, ExceptionThread.UI_WinForms);
-				if (executionFlow == ExecutionFlow.BreakExecution)
-				{
-					Environment.Exit(0);
-				}
-			}
-		}
-
 		[HandleProcessCorruptedStateExceptions]
-		private static void CorruptThreadExceptionHandler(object sender, ThreadExceptionEventArgs e)
+		private static void CorruptUnobservedTaskExceptionHandler(object sender, UnobservedTaskExceptionEventArgs e)
 		{
-			ThreadExceptionHandler(sender, e);
+			UnobservedTaskExceptionHandler(sender, e);
 		}
 
 		/// <summary>
@@ -182,10 +157,44 @@ namespace NBug
 			}
 		}
 
-		[HandleProcessCorruptedStateExceptions]
-		private static void CorruptDispatcherUnhandledExceptionHandler(object sender, DispatcherUnhandledExceptionEventArgs e)
+		/// <summary>
+		/// Used for handling WinForms exceptions bound to the UI thread.
+		/// Handles the <see cref="Application.ThreadException"/> events in <see cref="System.Windows.Forms"/> namespace.
+		/// </summary>
+		/// <param name="sender">Exception sender object.</param>
+		/// <param name="e">Real exception is in: e.Exception</param>
+		private static void ThreadExceptionHandler(object sender, ThreadExceptionEventArgs e)
 		{
-			DispatcherUnhandledExceptionHandler(sender, e);
+			if (Settings.HandleExceptions)
+			{
+				Logger.Trace("Starting to handle a System.Windows.Forms.Application.ThreadException.");
+
+				// WinForms UI thread exceptions do not propagate to more general handlers unless: Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
+				var executionFlow = new BugReport().Report(e.Exception, ExceptionThread.UI_WinForms);
+				if (executionFlow == ExecutionFlow.BreakExecution)
+				{
+					Environment.Exit(0);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Used for handling general exceptions bound to the main thread.
+		/// Handles the <see cref="AppDomain.UnhandledException"/> events in <see cref="System"/> namespace.
+		/// </summary>
+		/// <param name="sender">Exception sender object.</param>
+		/// <param name="e">Real exception is in: ((Exception)e.ExceptionObject)</param>
+		private static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
+		{
+			if (Settings.HandleExceptions)
+			{
+				Logger.Trace("Starting to handle a System.AppDomain.UnhandledException.");
+				var executionFlow = new BugReport().Report((Exception)e.ExceptionObject, ExceptionThread.Main);
+				if (executionFlow == ExecutionFlow.BreakExecution)
+				{
+					Environment.Exit(0);
+				}
+			}
 		}
 
 		/// <summary>
@@ -210,12 +219,6 @@ namespace NBug
 					e.SetObserved();
 				}
 			}
-		}
-
-		[HandleProcessCorruptedStateExceptions]
-		private static void CorruptUnobservedTaskExceptionHandler(object sender, UnobservedTaskExceptionEventArgs e)
-		{
-			UnobservedTaskExceptionHandler(sender, e);
 		}
 	}
 }

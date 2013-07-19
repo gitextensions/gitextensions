@@ -1,17 +1,17 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Report.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Report.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System.IO;
-using System.Xml.Linq;
-
 namespace NBug.Core.Reporting.Info
 {
-	using NBug.Core.Util.Serialization;
 	using System;
+	using System.IO;
+	using System.Xml.Linq;
 	using System.Xml.Serialization;
+
+	using NBug.Core.Util.Serialization;
 
 	[Serializable]
 	public class Report
@@ -44,10 +44,11 @@ namespace NBug.Core.Reporting.Info
 		/// <see cref="NBug.Settings.ProcessingException"/> event to fill this property with required information.
 		/// </summary>
 		public object StaticInfo { get; set; }*/
-
 		public override string ToString()
 		{
-			var serializer = CustomInfo != null ? new XmlSerializer(typeof(Report), new[] { CustomInfo.GetType() }) : new XmlSerializer(typeof(Report));
+			var serializer = this.CustomInfo != null
+				                 ? new XmlSerializer(typeof(Report), new[] { this.CustomInfo.GetType() })
+				                 : new XmlSerializer(typeof(Report));
 			using (var stream = new MemoryStream())
 			{
 				stream.SetLength(0);

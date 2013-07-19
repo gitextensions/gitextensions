@@ -1,28 +1,31 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Http.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Http.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using NBug.Core.Reporting.Info;
-using NBug.Core.Util.Serialization;
-
 namespace NBug.Core.Submission.Web
 {
-	using NBug.Core.Util.Logging;
-	using NBug.Core.Util.Web;
 	using System.IO;
+
+	using NBug.Core.Reporting.Info;
+	using NBug.Core.Util.Logging;
+	using NBug.Core.Util.Serialization;
+	using NBug.Core.Util.Web;
 
 	public class HttpFactory : IProtocolFactory
 	{
+		public string SupportedType
+		{
+			get
+			{
+				return "Http";
+			}
+		}
+
 		public IProtocol FromConnectionString(string connectionString)
 		{
 			return new Http(connectionString);
-		}
-
-		public string SupportedType
-		{
-			get { return "Http"; }
 		}
 	}
 
@@ -44,7 +47,6 @@ namespace NBug.Core.Submission.Web
 		/* Type=Http;
 		 * Url=http://tracker.mydomain.com/myproject/upload.php;
 		 */
-
 		public string Url { get; set; }
 
 		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
@@ -76,13 +78,9 @@ namespace NBug.Core.Submission.Web
 			 * }
 			 * ?>
 			 */
-
 			file.Position = 0;
 
-			var response = StreamUpload.Create()
-				.Add(file, "file", fileName, "application/zip")
-				.Upload(this.Url)
-				.Response();
+			var response = StreamUpload.Create().Add(file, "file", fileName, "application/zip").Upload(this.Url).Response();
 
 			Logger.Info("Response from HTTP server: " + response);
 			file.Position = 0;

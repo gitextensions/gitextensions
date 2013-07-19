@@ -1,15 +1,16 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Normal.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="CustomPreviewForm.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug.Configurator
 {
-	using NBug.Core.Reporting.Info;
-	using NBug.Core.UI;
 	using System;
 	using System.Windows.Forms;
+
+	using NBug.Core.Reporting.Info;
+	using NBug.Core.UI;
 
 	internal partial class CustomPreviewForm : Form
 	{
@@ -17,7 +18,7 @@ namespace NBug.Configurator
 
 		internal CustomPreviewForm()
 		{
-			InitializeComponent();
+			this.InitializeComponent();
 		}
 
 		internal UIDialogResult ShowDialog(Report report)

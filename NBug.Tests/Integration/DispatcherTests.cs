@@ -1,11 +1,8 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="DispatcherTests.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="DispatcherTests.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-
-using NBug.Core.Submission.Tracker;
-using NBug.Core.Submission.Web;
 
 namespace NBug.Tests.Integration
 {
@@ -14,6 +11,8 @@ namespace NBug.Tests.Integration
 
 	using NBug.Core.Reporting;
 	using NBug.Core.Submission;
+	using NBug.Core.Submission.Tracker;
+	using NBug.Core.Submission.Web;
 	using NBug.Core.Util;
 	using NBug.Core.Util.Storage;
 	using NBug.Enums;
@@ -104,7 +103,6 @@ namespace NBug.Tests.Integration
 		[Fact]
 		public void MixedDestinations()
 		{
-			
 			Settings.AddDestinationFromConnectionString(this.settings.ReadCustomDispatcherDestinationSettings(typeof(Mail).Name)[0]);
 			Settings.AddDestinationFromConnectionString(this.settings.ReadCustomDispatcherDestinationSettings(typeof(Http).Name)[0]);
 			Settings.AddDestinationFromConnectionString(this.settings.ReadCustomDispatcherDestinationSettings(typeof(Ftp).Name)[0]);
