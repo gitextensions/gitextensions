@@ -1794,10 +1794,10 @@ namespace GitUI
             // clipboard branch and tag menu handling
             {
                 CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(
-                    copyToClipboardToolStripMenuItem, branchNameToolStripMenuItem, gitRefListsForRevision.GetAllBranchNames(), "branchNameItem");
+                    copyToClipboardToolStripMenuItem, branchNameCopyToolStripMenuItem, gitRefListsForRevision.GetAllBranchNames(), "branchNameItem");
 
                 CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(
-                    copyToClipboardToolStripMenuItem, tagToolStripMenuItem, gitRefListsForRevision.GetAllTagNames(), "tagNameItem");
+                    copyToClipboardToolStripMenuItem, tagNameCopyToolStripMenuItem, gitRefListsForRevision.GetAllTagNames(), "tagNameItem");
             }
 
             foreach (var head in allBranches)
@@ -1849,7 +1849,7 @@ namespace GitUI
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
             renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
 
-            toolStripSeparator6.Enabled = branchNameToolStripMenuItem.Enabled || tagToolStripMenuItem.Enabled;
+            toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
 
             RefreshOwnScripts();
         }
@@ -2564,53 +2564,10 @@ namespace GitUI
         private void copyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
         {
             var revision = GetRevision(LastRow);
-            AddOrUpdateTextPostfix(hashToolStripMenuItem, StrLimitWithElipses(revision.Guid, 15));
-            AddOrUpdateTextPostfix(messageToolStripMenuItem, StrLimitWithElipses(revision.Message, 30));
-            AddOrUpdateTextPostfix(authorToolStripMenuItem, revision.Author);
-            AddOrUpdateTextPostfix(dateToolStripMenuItem, revision.CommitDate.ToString());
-        }
-
-        /// <summary>
-        /// adds or updates text in parentheses (...)
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="postfix"></param>
-        private void AddOrUpdateTextPostfix(ToolStripItem target, string postfix)
-        {
-            if (target.Text.EndsWith(")"))
-            {
-                target.Text = target.Text.Substring(0, target.Text.IndexOf("     ("));
-            }
-
-            target.Text += string.Format("     ({0})", postfix);
-        }
-
-        /// <summary>
-        /// Substring with elipses but OK if shorter, will take 3 characters off character count if necessary
-        /// from http://blog.abodit.com/2010/02/string-extension-methods-for-truncating-and-adding-ellipsis/
-        /// </summary>
-        public static string StrLimitWithElipses(string str, int characterCount)
-        {
-            if (characterCount < 5)
-                return StrLimit(str, characterCount); // Can’t do much with such a short limit
-            if (str.Length <= characterCount - 3)
-                return str;
-            else
-                return str.Substring(0, characterCount - 3) + "...";
-        }
-
-        /// <summary>
-        /// Substring but OK if shorter
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="characterCount"></param>
-        /// <returns></returns>
-        public static string StrLimit(string str, int characterCount)
-        {
-            if (str.Length <= characterCount)
-                return str;
-            else
-                return str.Substring(0, characterCount).TrimEnd(' ');
+            CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(hashCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(revision.Guid, 15));
+            CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(revision.Message, 30));
+            CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(authorCopyToolStripMenuItem, revision.Author);
+            CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(dateCopyToolStripMenuItem, revision.CommitDate.ToString());
         }
 
         /// <summary>
