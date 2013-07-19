@@ -1,31 +1,34 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Redmine.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Redmine.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using NBug.Core.Reporting.Info;
-using NBug.Core.Util.Serialization;
-
 namespace NBug.Core.Submission.Tracker
 {
-	using NBug.Core.Util.Logging;
 	using System;
 	using System.IO;
 	using System.Net;
 	using System.Text;
 	using System.Xml.Linq;
 
+	using NBug.Core.Reporting.Info;
+	using NBug.Core.Util.Logging;
+	using NBug.Core.Util.Serialization;
+
 	public class RedmineFactory : IProtocolFactory
 	{
+		public string SupportedType
+		{
+			get
+			{
+				return "Redmine";
+			}
+		}
+
 		public IProtocol FromConnectionString(string connectionString)
 		{
 			return new Redmine(connectionString);
-		}
-
-		public string SupportedType
-		{
-			get { return "Redmine"; }
 		}
 	}
 
@@ -39,6 +42,12 @@ namespace NBug.Core.Submission.Tracker
 		public Redmine()
 		{
 		}
+
+		public string ApiKey { get; set; }
+
+		public string AssignedToId { get; set; }
+
+		public string AuthorId { get; set; }
 
 		// Connection string format (single line)
 		// Warning: There should be no semicolon (;) or equals sign (=) used in any field except for password
@@ -58,30 +67,23 @@ namespace NBug.Core.Submission.Tracker
 		 * AuthorId=;
 		 * ApiKey=myapikey;
 		 */
-
-		public string Url { get; set; }
-
-		public string ProjectId { get; set; }
-
-		public string TrackerId { get; set; }
-
-		public string PriorityId { get; set; }
-
 		public string CategoryId { get; set; }
 
 		public string CustomSubject { get; set; }
 
 		public string FixedVersionId { get; set; }
 
-		public string AssignedToId { get; set; }
-
 		public string ParentId { get; set; }
+
+		public string PriorityId { get; set; }
+
+		public string ProjectId { get; set; }
 
 		public string StatusId { get; set; }
 
-		public string AuthorId { get; set; }
+		public string TrackerId { get; set; }
 
-		public string ApiKey { get; set; }
+		public string Url { get; set; }
 
 		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
 		{
@@ -126,14 +128,10 @@ namespace NBug.Core.Submission.Tracker
 			 *   <updated_on></updated_on>
 			 * </issue>
 			 */
+			var subject = "NBug: " + report.GeneralInfo.HostApplication + " (" + report.GeneralInfo.HostApplicationVersion + "): "
+			              + report.GeneralInfo.ExceptionType + " @ " + report.GeneralInfo.TargetSite;
 
-			var subject = "NBug: " + report.GeneralInfo.HostApplication + " (" +
-										report.GeneralInfo.HostApplicationVersion + "): " +
-										report.GeneralInfo.ExceptionType + " @ " +
-										report.GeneralInfo.TargetSite;
-
-			var description = "<pre>" + report + Environment.NewLine + Environment.NewLine +
-							  exception + "</pre>";
+			var description = "<pre>" + report + Environment.NewLine + Environment.NewLine + exception + "</pre>";
 
 			var redmineRequestXml = new XElement("issue", new XElement("project_id", this.ProjectId));
 

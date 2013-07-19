@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="UIAttribute.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="UIAttribute.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -10,7 +10,8 @@ namespace NBug.Tests.Tools.Extensions
 
 	public class UIAttribute : TraitAttribute
 	{
-		public UIAttribute() : base("Category", "UI")
+		public UIAttribute()
+			: base("Category", "UI")
 		{
 		}
 	}

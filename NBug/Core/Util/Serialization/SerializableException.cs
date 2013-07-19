@@ -1,19 +1,18 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SerializableException.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="SerializableException.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-
-using System.IO;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 
 namespace NBug.Core.Util.Serialization
 {
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
+	using System.IO;
 	using System.Linq;
+	using System.Xml.Linq;
+	using System.Xml.Serialization;
 
 	[Serializable]
 	public class SerializableException
@@ -88,7 +87,7 @@ namespace NBug.Core.Util.Serialization
 
 			if (exception.TargetSite != null)
 			{
-				this.TargetSite = String.Format("{0} @ {1}", exception.TargetSite, exception.TargetSite.DeclaringType);
+				this.TargetSite = string.Format("{0} @ {1}", exception.TargetSite, exception.TargetSite.DeclaringType);
 			}
 
 			this.ExtendedInformation = this.GetExtendedInformation(exception);
@@ -116,14 +115,27 @@ namespace NBug.Core.Util.Serialization
 
 		public string Type { get; set; }
 
+		public override string ToString()
+		{
+			var serializer = new XmlSerializer(typeof(SerializableException));
+			using (var stream = new MemoryStream())
+			{
+				stream.SetLength(0);
+				serializer.Serialize(stream, this);
+				stream.Position = 0;
+				var doc = XDocument.Load(stream);
+				return doc.Root.ToString();
+			}
+		}
+
 		private SerializableDictionary<string, object> GetExtendedInformation(Exception exception)
 		{
 			var extendedProperties = from property in exception.GetType().GetProperties()
-									 where
-																property.Name != "Data" && property.Name != "InnerExceptions" && property.Name != "InnerException" &&
-										property.Name != "Message" && property.Name != "Source" && property.Name != "StackTrace" &&
-																property.Name != "TargetSite" && property.Name != "HelpLink" && property.CanRead
-									 select property;
+			                         where
+				                         property.Name != "Data" && property.Name != "InnerExceptions" && property.Name != "InnerException"
+				                         && property.Name != "Message" && property.Name != "Source" && property.Name != "StackTrace"
+				                         && property.Name != "TargetSite" && property.Name != "HelpLink" && property.CanRead
+			                         select property;
 
 			if (extendedProperties.Count() != 0)
 			{
@@ -139,19 +151,6 @@ namespace NBug.Core.Util.Serialization
 			else
 			{
 				return null;
-			}
-		}
-
-		public override string ToString()
-		{
-			var serializer = new XmlSerializer(typeof(SerializableException));
-			using (var stream = new MemoryStream())
-			{
-				stream.SetLength(0);
-				serializer.Serialize(stream, this);
-				stream.Position = 0;
-				var doc = XDocument.Load(stream);
-				return doc.Root.ToString();
 			}
 		}
 	}

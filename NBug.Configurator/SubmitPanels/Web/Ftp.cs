@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Ftp.cs" company="NBusy Project">
-//   Copyright © 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Ftp.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ namespace NBug.Configurator.SubmitPanels.Web
 	{
 		public Ftp()
 		{
-			InitializeComponent();
+			this.InitializeComponent();
 		}
 
 		public string ConnectionString
@@ -23,7 +23,8 @@ namespace NBug.Configurator.SubmitPanels.Web
 				// Check the mendatory fields
 				if (string.IsNullOrEmpty(this.urlTextBox.Text))
 				{
-					MessageBox.Show("Mandatory field \"" + urlTextBox.Name + "\" cannot be left blank.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					MessageBox.Show(
+						"Mandatory field \"" + this.urlTextBox.Name + "\" cannot be left blank.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					return null;
 				}
 
@@ -33,10 +34,7 @@ namespace NBug.Configurator.SubmitPanels.Web
 					this.urlTextBox.Text += "/";
 				}
 
-				var ftp = new Core.Submission.Web.Ftp
-					{
-						Url = this.urlTextBox.Text
-					};
+				var ftp = new Core.Submission.Web.Ftp { Url = this.urlTextBox.Text };
 
 				if (this.useSslCheckBox.Checked)
 				{

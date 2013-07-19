@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HandlerTests.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="HandlerTests.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -32,7 +32,8 @@ namespace NBug.Tests.Integration
 			Settings.HandleProcessCorruptedStateExceptions = true;
 
 			// Since there are no UI related assemblies loaded, this should behave as a console app exception
-			Handler.UnhandledException(this, new UnhandledExceptionEventArgs(new AccessViolationException("Testing a corrupt ConsoleApp main thread AccessViolationException."), true));
+			Handler.UnhandledException(
+				this, new UnhandledExceptionEventArgs(new AccessViolationException("Testing a corrupt ConsoleApp main thread AccessViolationException."), true));
 			this.report.VerifyAndDeleteCompressedReportFile();
 		}
 
@@ -40,7 +41,10 @@ namespace NBug.Tests.Integration
 		public void CorruptUnobservedTaskExceptionHandler()
 		{
 			Settings.HandleProcessCorruptedStateExceptions = true;
-			Handler.UnobservedTaskException(this, new UnobservedTaskExceptionEventArgs(new AggregateException("Testing a corrupt Task exception.", new Exception("Task exception inner exception as aggregated exception."))));
+			Handler.UnobservedTaskException(
+				this, 
+				new UnobservedTaskExceptionEventArgs(
+					new AggregateException("Testing a corrupt Task exception.", new Exception("Task exception inner exception as aggregated exception."))));
 			this.report.VerifyAndDeleteCompressedReportFile();
 		}
 
@@ -75,7 +79,10 @@ namespace NBug.Tests.Integration
 		[Fact]
 		public void UnobservedTaskExceptionHandler()
 		{
-			Handler.UnobservedTaskException(this, new UnobservedTaskExceptionEventArgs(new AggregateException("Testing a Task exception.", new Exception("Task exception inner exception as aggregated exception."))));
+			Handler.UnobservedTaskException(
+				this, 
+				new UnobservedTaskExceptionEventArgs(
+					new AggregateException("Testing a Task exception.", new Exception("Task exception inner exception as aggregated exception."))));
 			this.report.VerifyAndDeleteCompressedReportFile();
 		}
 	}

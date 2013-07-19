@@ -1,11 +1,15 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BugReport.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="BugReport.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug.Core.Reporting
 {
+	using System;
+	using System.IO;
+	using System.Xml.Serialization;
+
 	using NBug.Core.Reporting.Info;
 	using NBug.Core.Reporting.MiniDump;
 	using NBug.Core.UI;
@@ -13,9 +17,6 @@ namespace NBug.Core.Reporting
 	using NBug.Core.Util.Logging;
 	using NBug.Core.Util.Serialization;
 	using NBug.Core.Util.Storage;
-	using System;
-	using System.IO;
-	using System.Xml.Serialization;
 
 	internal class BugReport
 	{
@@ -57,41 +58,84 @@ namespace NBug.Core.Reporting
 			}
 		}
 
-		private void WindowsScreenshot(Stream stream)
+		// ToDo: PRIORITY TASK! This code needs more testing & condensation
+		private void AddAdditionalFiles(ZipStorer zipStorer)
 		{
-			// Full
-			/*Rectangle bounds = Screen.GetBounds(Point.Empty);
-			using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
+			foreach (var mask in Settings.AdditionalReportFiles)
 			{
-				using (Graphics g = Graphics.FromImage(bitmap))
-				{
-					g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
-				}
-				bitmap.Save("test.jpg", ImageFormat.Jpeg);
-			}*/
+				// Join before spliting because the mask may have some folders inside it
+				var fullPath = Path.Combine(Settings.NBugDirectory, mask);
+				var dir = Path.GetDirectoryName(fullPath);
+				var file = Path.GetFileName(fullPath);
 
-			// Window
-			/*Rectangle bounds = this.Bounds;
-			using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
-			{
-				using (Graphics g = Graphics.FromImage(bitmap))
+				if (!Directory.Exists(dir))
 				{
-					g.CopyFromScreen(new Point(bounds.Left, bounds.Top), Point.Empty, bounds.Size);
+					continue;
 				}
-				bitmap.Save("C://test.jpg", ImageFormat.Jpeg);
-			}*/
+
+				if (file.Contains("*") || file.Contains("?"))
+				{
+					foreach (var item in Directory.GetFiles(dir, file))
+					{
+						this.AddToZip(zipStorer, Settings.NBugDirectory, item);
+					}
+				}
+				else
+				{
+					this.AddToZip(zipStorer, Settings.NBugDirectory, fullPath);
+				}
+			}
+		}
+
+		// ToDo: PRIORITY TASK! This code needs more testing & condensation
+		private void AddToZip(ZipStorer zipStorer, string basePath, string path)
+		{
+			path = Path.GetFullPath(path);
+
+			// If this is not inside basePath, lets change the basePath so at least some directories are kept
+			if (!path.StartsWith(basePath))
+			{
+				basePath = Path.GetDirectoryName(path);
+			}
+
+			if (Directory.Exists(path))
+			{
+				foreach (var file in Directory.GetFiles(path))
+				{
+					this.AddToZip(zipStorer, basePath, file);
+				}
+
+				foreach (var dir in Directory.GetDirectories(path))
+				{
+					this.AddToZip(zipStorer, basePath, dir);
+				}
+			}
+			else if (File.Exists(path))
+			{
+				var nameInZip = path.Substring(basePath.Length);
+				if (nameInZip.StartsWith("\\") || nameInZip.StartsWith("/"))
+				{
+					nameInZip = nameInZip.Substring(1);
+				}
+
+				nameInZip = Path.Combine("files", nameInZip);
+
+				zipStorer.AddFile(ZipStorer.Compression.Deflate, path, nameInZip, string.Empty);
+			}
 		}
 
 		private void CreateReportZip(SerializableException serializableException, Report report)
 		{
 			// Test if it has NOT been more than x many days since entry assembly was last modified)
-			if (Settings.StopReportingAfter < 0 || File.GetLastWriteTime(Settings.EntryAssembly.Location).AddDays(Settings.StopReportingAfter).CompareTo(DateTime.Now) > 0)
+			if (Settings.StopReportingAfter < 0
+			    || File.GetLastWriteTime(Settings.EntryAssembly.Location).AddDays(Settings.StopReportingAfter).CompareTo(DateTime.Now) > 0)
 			{
 				// Test if there is already more than enough queued report files
 				if (Settings.MaxQueuedReports < 0 || Storer.GetReportCount() < Settings.MaxQueuedReports)
 				{
 					var reportFileName = "Exception_" + DateTime.UtcNow.ToFileTime() + ".zip";
-					var minidumpFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Exception_MiniDump_" + DateTime.UtcNow.ToFileTime() + ".mdmp");
+					var minidumpFilePath = Path.Combine(
+						Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Exception_MiniDump_" + DateTime.UtcNow.ToFileTime() + ".mdmp");
 
 					using (var storer = new Storer())
 					using (var zipStorer = ZipStorer.Create(storer.CreateReportFile(reportFileName), string.Empty))
@@ -108,13 +152,19 @@ namespace NBug.Core.Reporting
 
 						try
 						{
-							serializer = report.CustomInfo != null ? new XmlSerializer(typeof(Report), new[] { report.CustomInfo.GetType() }) : new XmlSerializer(typeof(Report));
+							serializer = report.CustomInfo != null
+								             ? new XmlSerializer(typeof(Report), new[] { report.CustomInfo.GetType() })
+								             : new XmlSerializer(typeof(Report));
 
 							serializer.Serialize(stream, report);
 						}
 						catch (Exception exception)
 						{
-							Logger.Error(string.Format("The given custom info of type [{0}] cannot be serialized. Make sure that given type and inner types are XML serializable.", report.CustomInfo.GetType()), exception);
+							Logger.Error(
+								string.Format(
+									"The given custom info of type [{0}] cannot be serialized. Make sure that given type and inner types are XML serializable.", 
+									report.CustomInfo.GetType()), 
+								exception);
 							report.CustomInfo = null;
 							serializer = new XmlSerializer(typeof(Report));
 							serializer.Serialize(stream, report);
@@ -142,75 +192,51 @@ namespace NBug.Core.Reporting
 				}
 				else
 				{
-					Logger.Trace("Current report count is at its limit as per 'Settings.MaxQueuedReports (" +
-						Settings.MaxQueuedReports + ")' setting: Skipping bug report generation.");
+					Logger.Trace(
+						"Current report count is at its limit as per 'Settings.MaxQueuedReports (" + Settings.MaxQueuedReports
+						+ ")' setting: Skipping bug report generation.");
 				}
 			}
 			else
 			{
-				Logger.Trace("As per setting 'Settings.StopReportingAfter(" + Settings.StopReportingAfter +
-					")', bug reporting feature was enabled for a certain amount of time which has now expired: Bug reporting is now disabled.");
+				Logger.Trace(
+					"As per setting 'Settings.StopReportingAfter(" + Settings.StopReportingAfter
+					+ ")', bug reporting feature was enabled for a certain amount of time which has now expired: Bug reporting is now disabled.");
 
 				// ToDo: Completely eliminate this with SettingsOverride.DisableReporting = true; since enumerating filesystem adds overhead);
 				if (Storer.GetReportCount() > 0)
 				{
-					Logger.Trace("As per setting 'Settings.StopReportingAfter(" + Settings.StopReportingAfter +
-						")', bug reporting feature was enabled for a certain amount of time which has now expired: Truncating all expired bug reports.");
+					Logger.Trace(
+						"As per setting 'Settings.StopReportingAfter(" + Settings.StopReportingAfter
+						+ ")', bug reporting feature was enabled for a certain amount of time which has now expired: Truncating all expired bug reports.");
 					Storer.TruncateReportFiles(0);
 				}
 			}
 		}
 
-		// ToDo: PRIORITY TASK! This code needs more testing & condensation
-		private void AddAdditionalFiles(ZipStorer zipStorer)
+		private void WindowsScreenshot(Stream stream)
 		{
-			foreach (var mask in Settings.AdditionalReportFiles)
+			// Full
+			/*Rectangle bounds = Screen.GetBounds(Point.Empty);
+			using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
 			{
-				// Join before spliting because the mask may have some folders inside it
-				var fullPath = Path.Combine(Settings.NBugDirectory, mask);
-				var dir = Path.GetDirectoryName(fullPath);
-				var file = Path.GetFileName(fullPath);
-
-				if (!Directory.Exists(dir))
-					continue;
-
-				if (file.Contains("*") || file.Contains("?"))
+				using (Graphics g = Graphics.FromImage(bitmap))
 				{
-					foreach (var item in Directory.GetFiles(dir, file))
-						AddToZip(zipStorer, Settings.NBugDirectory, item);
+					g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
 				}
-				else
+				bitmap.Save("test.jpg", ImageFormat.Jpeg);
+			}*/
+
+			// Window
+			/*Rectangle bounds = this.Bounds;
+			using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
+			{
+				using (Graphics g = Graphics.FromImage(bitmap))
 				{
-					AddToZip(zipStorer, Settings.NBugDirectory, fullPath);
+					g.CopyFromScreen(new Point(bounds.Left, bounds.Top), Point.Empty, bounds.Size);
 				}
-			}
-		}
-
-		// ToDo: PRIORITY TASK! This code needs more testing & condensation
-		private void AddToZip(ZipStorer zipStorer, string basePath, string path)
-		{
-			path = Path.GetFullPath(path);
-
-			// If this is not inside basePath, lets change the basePath so at least some directories are kept
-			if (!path.StartsWith(basePath))
-				basePath = Path.GetDirectoryName(path);
-
-			if (Directory.Exists(path))
-			{
-				foreach (var file in Directory.GetFiles(path))
-					AddToZip(zipStorer, basePath, file);
-				foreach (var dir in Directory.GetDirectories(path))
-					AddToZip(zipStorer, basePath, dir);
-			}
-			else if (File.Exists(path))
-			{
-				var nameInZip = path.Substring(basePath.Length);
-				if (nameInZip.StartsWith("\\") || nameInZip.StartsWith("/"))
-					nameInZip = nameInZip.Substring(1);
-				nameInZip = Path.Combine("files", nameInZip);
-
-				zipStorer.AddFile(ZipStorer.Compression.Deflate, path, nameInZip, string.Empty);
-			}
+				bitmap.Save("C://test.jpg", ImageFormat.Jpeg);
+			}*/
 		}
 	}
 }

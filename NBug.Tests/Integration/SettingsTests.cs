@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SettingsTests.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="SettingsTests.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -31,18 +31,6 @@ namespace NBug.Tests.Integration
 		public void Dispose()
 		{
 			this.reportFixture.DeleteGarbageReportFile();
-		}
-
-		public void SetFixture(SettingsFixture settings)
-		{
-			settings.ReloadDefaults();
-			settings.InitializeStandardSettings();
-		}
-
-		public void SetFixture(ReportFixture reportFix)
-		{
-			reportFix.DeleteGarbageReportFile();
-			this.reportFixture = reportFix;
 		}
 
 		[Fact]
@@ -78,7 +66,8 @@ namespace NBug.Tests.Integration
 		{
 			Settings.ExitApplicationImmediately = false;
 			Settings.HandleProcessCorruptedStateExceptions = true;
-			Handler.UnhandledException(this, new UnhandledExceptionEventArgs(new AccessViolationException("Testing a corrupt ConsoleApp main thread AccessViolationException."), true));
+			Handler.UnhandledException(
+				this, new UnhandledExceptionEventArgs(new AccessViolationException("Testing a corrupt ConsoleApp main thread AccessViolationException."), true));
 			this.reportFixture.VerifyAndDeleteCompressedReportFile();
 		}
 
@@ -87,39 +76,14 @@ namespace NBug.Tests.Integration
 		{
 			var message = string.Empty;
 			var category = LoggerCategory.NBugTrace;
-			Settings.InternalLogWritten += (m, c) => { message = m; category = c; };
+			Settings.InternalLogWritten += (m, c) =>
+				{
+					message = m;
+					category = c;
+				};
 			Logger.Info("Testing logger info message");
 			Assert.Equal(message, "Testing logger info message");
 			Assert.Equal(category, LoggerCategory.NBugInfo);
-		}
-
-		[Fact]
-		public void ProcessingException()
-		{
-			Settings.ProcessingException += (e, r) => { r.CustomInfo = "Some custom info string"; };
-			new BugReport().Report(new DummyArgumentException(), ExceptionThread.Main);
-			this.reportFixture.VerifyAndDeleteCompressedReportFile(true);
-
-			var list = new List<string> { "Some custom info string", "Some more info" };
-			Settings.ProcessingException += (e, r) => { r.CustomInfo = list; };
-			new BugReport().Report(new DummyArgumentException(), ExceptionThread.Main);
-			this.reportFixture.VerifyAndDeleteCompressedReportFile(true);
-
-			Settings.ProcessingException += (e, r) => { r.CustomInfo = new DummySerializableException(); };
-			new BugReport().Report(new DummyArgumentException(), ExceptionThread.Main);
-			this.reportFixture.VerifyAndDeleteCompressedReportFile(true);
-		}
-
-		[Fact]
-		public void ProcessingExceptionNonSerializableCustomInfo()
-		{
-			Settings.ThrowExceptions = false;
-			Settings.DisplayDeveloperUI = false;
-
-			// Should not throw even if the custom info cannot be serialized
-			Settings.ProcessingException += (e, r) => { r.CustomInfo = new Exception("Just testing"); };
-			new BugReport().Report(new DummyArgumentException(), ExceptionThread.Main);
-			this.reportFixture.VerifyAndDeleteCompressedReportFile();
 		}
 
 		[Fact]
@@ -213,6 +177,47 @@ namespace NBug.Tests.Integration
 		public void NBugDirectory()
 		{
 			Assert.Equal(Settings.NBugDirectory, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+		}
+
+		[Fact]
+		public void ProcessingException()
+		{
+			Settings.ProcessingException += (e, r) => { r.CustomInfo = "Some custom info string"; };
+			new BugReport().Report(new DummyArgumentException(), ExceptionThread.Main);
+			this.reportFixture.VerifyAndDeleteCompressedReportFile(true);
+
+			var list = new List<string> { "Some custom info string", "Some more info" };
+			Settings.ProcessingException += (e, r) => { r.CustomInfo = list; };
+			new BugReport().Report(new DummyArgumentException(), ExceptionThread.Main);
+			this.reportFixture.VerifyAndDeleteCompressedReportFile(true);
+
+			Settings.ProcessingException += (e, r) => { r.CustomInfo = new DummySerializableException(); };
+			new BugReport().Report(new DummyArgumentException(), ExceptionThread.Main);
+			this.reportFixture.VerifyAndDeleteCompressedReportFile(true);
+		}
+
+		[Fact]
+		public void ProcessingExceptionNonSerializableCustomInfo()
+		{
+			Settings.ThrowExceptions = false;
+			Settings.DisplayDeveloperUI = false;
+
+			// Should not throw even if the custom info cannot be serialized
+			Settings.ProcessingException += (e, r) => { r.CustomInfo = new Exception("Just testing"); };
+			new BugReport().Report(new DummyArgumentException(), ExceptionThread.Main);
+			this.reportFixture.VerifyAndDeleteCompressedReportFile();
+		}
+
+		public void SetFixture(SettingsFixture settings)
+		{
+			settings.ReloadDefaults();
+			settings.InitializeStandardSettings();
+		}
+
+		public void SetFixture(ReportFixture reportFix)
+		{
+			reportFix.DeleteGarbageReportFile();
+			this.reportFixture = reportFix;
 		}
 
 		[Fact]

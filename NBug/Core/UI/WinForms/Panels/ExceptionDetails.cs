@@ -1,16 +1,17 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ExceptionDetails.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="ExceptionDetails.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug.Core.UI.WinForms.Panels
 {
-	using NBug.Core.Util.Serialization;
 	using System;
 	using System.Collections.Generic;
 	using System.Drawing;
 	using System.Windows.Forms;
+
+	using NBug.Core.Util.Serialization;
 
 	internal partial class ExceptionDetails : UserControl
 	{
@@ -74,13 +75,40 @@ namespace NBug.Core.UI.WinForms.Panels
 			this.exceptionDetailsListView.SuspendLayout();
 			this.exceptionDetailsListView.Items.Clear();
 
-			if (exception.Type != null) this.exceptionDetailsListView.Items.Add("Exception").SubItems.Add(exception.Type);
-			if (exception.Message != null) this.exceptionDetailsListView.Items.Add("Message").SubItems.Add(exception.Message);
-			if (exception.TargetSite != null) this.exceptionDetailsListView.Items.Add("Target Site").SubItems.Add(exception.TargetSite);
-			if (exception.InnerException != null) this.exceptionDetailsListView.Items.Add("Inner Exception").SubItems.Add(exception.InnerException.Type);
-			if (exception.Source != null) this.exceptionDetailsListView.Items.Add("Source").SubItems.Add(exception.Source);
-			if (exception.HelpLink != null) this.exceptionDetailsListView.Items.Add("Help Link").SubItems.Add(exception.HelpLink);
-			if (exception.StackTrace != null) this.exceptionDetailsListView.Items.Add("Stack Trace").SubItems.Add(exception.StackTrace);
+			if (exception.Type != null)
+			{
+				this.exceptionDetailsListView.Items.Add("Exception").SubItems.Add(exception.Type);
+			}
+
+			if (exception.Message != null)
+			{
+				this.exceptionDetailsListView.Items.Add("Message").SubItems.Add(exception.Message);
+			}
+
+			if (exception.TargetSite != null)
+			{
+				this.exceptionDetailsListView.Items.Add("Target Site").SubItems.Add(exception.TargetSite);
+			}
+
+			if (exception.InnerException != null)
+			{
+				this.exceptionDetailsListView.Items.Add("Inner Exception").SubItems.Add(exception.InnerException.Type);
+			}
+
+			if (exception.Source != null)
+			{
+				this.exceptionDetailsListView.Items.Add("Source").SubItems.Add(exception.Source);
+			}
+
+			if (exception.HelpLink != null)
+			{
+				this.exceptionDetailsListView.Items.Add("Help Link").SubItems.Add(exception.HelpLink);
+			}
+
+			if (exception.StackTrace != null)
+			{
+				this.exceptionDetailsListView.Items.Add("Stack Trace").SubItems.Add(exception.StackTrace);
+			}
 
 			if (exception.Data != null)
 			{
@@ -108,9 +136,7 @@ namespace NBug.Core.UI.WinForms.Panels
 		{
 			using (var detailView = new ExceptionDetailView())
 			{
-				detailView.ShowDialog(
-					this.exceptionDetailsListView.SelectedItems[0].Text,
-					this.exceptionDetailsListView.SelectedItems[0].SubItems[1].Text);
+				detailView.ShowDialog(this.exceptionDetailsListView.SelectedItems[0].Text, this.exceptionDetailsListView.SelectedItems[0].SubItems[1].Text);
 			}
 		}
 

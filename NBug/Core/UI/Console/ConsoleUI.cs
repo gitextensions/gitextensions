@@ -1,16 +1,17 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ConsoleUI.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="ConsoleUI.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug.Core.UI.Console
 {
+	using System;
+
 	using NBug.Core.Reporting.Info;
 	using NBug.Core.Util.Exceptions;
 	using NBug.Core.Util.Serialization;
 	using NBug.Enums;
-	using System;
 
 	internal static class ConsoleUI
 	{

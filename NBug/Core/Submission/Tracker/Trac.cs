@@ -1,15 +1,15 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Trac.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Trac.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-
-using NBug.Core.Reporting.Info;
-using NBug.Core.Util.Serialization;
 
 namespace NBug.Core.Submission.Tracker
 {
 	using System.IO;
+
+	using NBug.Core.Reporting.Info;
+	using NBug.Core.Util.Serialization;
 
 	internal class Trac : ProtocolBase
 	{
@@ -28,7 +28,6 @@ namespace NBug.Core.Submission.Tracker
 		/* Type=Trac;
 		 * Url=http://tracker.mydomain.com/xmlrpc;
 		 */
-
 		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
 		{
 			// ToDo: Check to see if XML-RPC.NET is referenced and if not, show a developer UI as a waning -or- even better, dynamically load the assembly and use that and not the referenced one!

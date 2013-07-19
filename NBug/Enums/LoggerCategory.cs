@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="LoggerCategory.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="LoggerCategory.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -12,17 +12,17 @@ namespace NBug.Enums
 		/// This category outputs most detailed information about the internal state of the library. Every single major event (like
 		/// generating a bug report, submitting a bug report, truncating internal files, etc.) is logged in this category.
 		/// </summary>
-		NBugTrace,
+		NBugTrace, 
 
 		/// <summary>
 		/// This category outputs results of substantial events like the server response after submitting a bug report to the a server.
 		/// </summary>
-		NBugInfo,
+		NBugInfo, 
 
 		/// <summary>
 		/// This category outputs warning messages from non-exceptional but important errors like a missing or inaccessable files.
 		/// </summary>
-		NBugWarning,
+		NBugWarning, 
 
 		/// <summary>
 		/// This category outputs error messages for exceptional and critical situations. These situations generally disable some functionality

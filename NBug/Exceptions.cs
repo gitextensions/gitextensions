@@ -1,15 +1,16 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Exceptions.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Exceptions.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug
 {
+	using System;
+
 	using NBug.Core.Reporting;
 	using NBug.Core.Reporting.MiniDump;
 	using NBug.Core.Util;
-	using System;
 
 	public static class Exceptions
 	{
@@ -26,9 +27,7 @@ namespace NBug
 		/// <param name="body">Body of code to be executed.</param>
 		public static void Filter(Action body)
 		{
-			ExceptionFilters.Filter(
-				body,
-				ex => new BugReport().Report(ex, ExceptionThread.Main));
+			ExceptionFilters.Filter(body, ex => new BugReport().Report(ex, ExceptionThread.Main));
 		}
 
 		/// <summary>
@@ -42,20 +41,20 @@ namespace NBug
 		public static void Handle(bool continueExecution, Action body)
 		{
 			ExceptionFilters.Filter(
-				body,
+				body, 
 				ex =>
-				{
-					// Filtering the exception
-					new BugReport().Report(ex, ExceptionThread.Main);
-					return true; // Yes proceed to handling the exception
-				},
-				ex =>
-				{
-					if (!continueExecution)
 					{
-						Environment.Exit(0);
-					}
-				});
+						// Filtering the exception
+						new BugReport().Report(ex, ExceptionThread.Main);
+						return true; // Yes proceed to handling the exception
+					}, 
+				ex =>
+					{
+						if (!continueExecution)
+						{
+							Environment.Exit(0);
+						}
+					});
 		}
 
 		/// <summary>

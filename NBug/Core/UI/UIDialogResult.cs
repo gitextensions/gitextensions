@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="UIDialogResult.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="UIDialogResult.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -8,7 +8,8 @@ namespace NBug.Core.UI
 {
 	public enum SendReport
 	{
-		Send,
+		Send, 
+
 		DoNotSend
 	}
 
@@ -17,17 +18,18 @@ namespace NBug.Core.UI
 		/// <summary>
 		/// This will handle all unhandled exceptions to be able to continue execution.
 		/// </summary>
-		ContinueExecution,
+		ContinueExecution, 
 
 		/// <summary>
 		/// This will handle all unhandled exceptions and exit the application.
 		/// </summary>
-		BreakExecution,
+		BreakExecution, 
 	}
 
 	public struct UIDialogResult
 	{
 		internal ExecutionFlow Execution;
+
 		internal SendReport Report;
 
 		public UIDialogResult(ExecutionFlow execution, SendReport report)

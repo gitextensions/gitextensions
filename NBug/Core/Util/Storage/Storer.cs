@@ -1,17 +1,18 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Storer.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Storer.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug.Core.Util.Storage
 {
-	using NBug.Core.Util.Exceptions;
-	using NBug.Core.Util.Logging;
 	using System;
 	using System.IO;
 	using System.IO.IsolatedStorage;
 	using System.Linq;
+
+	using NBug.Core.Util.Exceptions;
+	using NBug.Core.Util.Logging;
 
 	/// <summary>
 	/// Initializes a new instance of the Storage class. This class implements <see cref="IDisposable"/> interface
@@ -54,7 +55,8 @@ namespace NBug.Core.Util.Storage
 			}
 			else if (Settings.StoragePath == Enums.StoragePath.IsolatedStorage)
 			{
-				using (var isoFile = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly | IsolatedStorageScope.Domain, null, null))
+				using (
+					var isoFile = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly | IsolatedStorageScope.Domain, null, null))
 				{
 					return isoFile.GetFileNames("Exception_*.zip").Count();
 				}
@@ -100,13 +102,14 @@ namespace NBug.Core.Util.Storage
 			}
 			else if (Settings.StoragePath == Enums.StoragePath.IsolatedStorage)
 			{
-				using (IsolatedStorageFile isoFile = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly | IsolatedStorageScope.Domain, null, null))
+				using (
+					var isoFile = IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Assembly | IsolatedStorageScope.Domain, null, null))
 				{
-					int reportCount = isoFile.GetFileNames("Exception_*.zip").Count();
+					var reportCount = isoFile.GetFileNames("Exception_*.zip").Count();
 
 					if (reportCount > maxQueuedReports)
 					{
-						int extraCount = reportCount - maxQueuedReports;
+						var extraCount = reportCount - maxQueuedReports;
 
 						if (maxQueuedReports == 0)
 						{
@@ -132,7 +135,7 @@ namespace NBug.Core.Util.Storage
 			}
 			else if (Settings.StoragePath == Enums.StoragePath.Custom)
 			{
-				string path = Path.GetFullPath(Settings.StoragePath);
+				var path = Path.GetFullPath(Settings.StoragePath);
 				TruncateFiles(path, maxQueuedReports);
 			}
 			else
@@ -147,7 +150,7 @@ namespace NBug.Core.Util.Storage
 
 			if (Settings.StoragePath == Enums.StoragePath.WindowsTemp)
 			{
-				string directoryPath = Path.Combine(new[] { Path.GetTempPath(), Settings.EntryAssembly.GetName().Name });
+				var directoryPath = Path.Combine(new[] { Path.GetTempPath(), Settings.EntryAssembly.GetName().Name });
 
 				if (Directory.Exists(directoryPath) == false)
 				{
@@ -172,7 +175,7 @@ namespace NBug.Core.Util.Storage
 			}
 			else if (Settings.StoragePath == Enums.StoragePath.Custom)
 			{
-				string directoryPath = Path.GetFullPath(Settings.StoragePath); // In case this is a relative path
+				var directoryPath = Path.GetFullPath(Settings.StoragePath); // In case this is a relative path
 
 				if (Directory.Exists(directoryPath) == false)
 				{
@@ -218,7 +221,7 @@ namespace NBug.Core.Util.Storage
 
 			if (Settings.StoragePath == Enums.StoragePath.WindowsTemp)
 			{
-				string path = Path.Combine(new[] { Path.GetTempPath(), Settings.EntryAssembly.GetName().Name });
+				var path = Path.Combine(new[] { Path.GetTempPath(), Settings.EntryAssembly.GetName().Name });
 
 				if (Directory.Exists(path) && Directory.EnumerateFiles(path, "Exception_*.zip").Count() > 0)
 				{
@@ -232,7 +235,8 @@ namespace NBug.Core.Util.Storage
 					{
 						// If the file is locked (as per IOException), then probably another instance of the library is already accessing
 						// the file so let the other instance handle the file
-						Logger.Error("Cannot access the report file at Windows temp directory (it is probably locked, see the inner exception): " + this.FilePath, exception);
+						Logger.Error(
+							"Cannot access the report file at Windows temp directory (it is probably locked, see the inner exception): " + this.FilePath, exception);
 						return null;
 					}
 				}
@@ -243,7 +247,7 @@ namespace NBug.Core.Util.Storage
 			}
 			else if (Settings.StoragePath == Enums.StoragePath.CurrentDirectory)
 			{
-				string path = Settings.NBugDirectory;
+				var path = Settings.NBugDirectory;
 
 				if (path != null && Directory.Exists(path) && Directory.EnumerateFiles(path, "Exception_*.zip").Count() > 0)
 				{
@@ -257,7 +261,8 @@ namespace NBug.Core.Util.Storage
 					{
 						// If the file is locked (as per IOException), then probably another instance of the library is already accessing
 						// the file so let the other instance handle the file
-						Logger.Error("Cannot access the report file at entry assembly directory (it is probably locked, see the inner exception): " + this.FilePath, exception);
+						Logger.Error(
+							"Cannot access the report file at entry assembly directory (it is probably locked, see the inner exception): " + this.FilePath, exception);
 						return null;
 					}
 				}
@@ -283,7 +288,10 @@ namespace NBug.Core.Util.Storage
 					{
 						// If the file is locked (as per IOException), then probably another instance of the library is already accessing
 						// the file so let the other instance handle the file
-						Logger.Error("Cannot access the report file at isolated storage (it is probably locked, see the inner exception): [Isolated Storage Directory]\\" + this.FileName, exception);
+						Logger.Error(
+							"Cannot access the report file at isolated storage (it is probably locked, see the inner exception): [Isolated Storage Directory]\\"
+							+ this.FileName, 
+							exception);
 						return null;
 					}
 				}
@@ -294,7 +302,7 @@ namespace NBug.Core.Util.Storage
 			}
 			else if (Settings.StoragePath == Enums.StoragePath.Custom)
 			{
-				string path = Path.GetFullPath(Settings.StoragePath);
+				var path = Path.GetFullPath(Settings.StoragePath);
 
 				if (Directory.Exists(path) && Directory.EnumerateFiles(path, "Exception_*.zip").Count() > 0)
 				{
@@ -308,7 +316,8 @@ namespace NBug.Core.Util.Storage
 					{
 						// If the file is locked (as per IOException), then probably another instance of the library is already accessing
 						// the file so let the other instance handle the file
-						Logger.Error("Cannot access the report file from the given custom path (it is probably locked, see the inner exception): " + this.FilePath, exception);
+						Logger.Error(
+							"Cannot access the report file from the given custom path (it is probably locked, see the inner exception): " + this.FilePath, exception);
 						return null;
 					}
 				}
@@ -327,11 +336,11 @@ namespace NBug.Core.Util.Storage
 		{
 			if (Directory.Exists(path))
 			{
-				int reportCount = Directory.EnumerateFiles(path, "Exception_*.zip").Count();
+				var reportCount = Directory.EnumerateFiles(path, "Exception_*.zip").Count();
 
 				if (reportCount > maxQueuedReports)
 				{
-					int extraCount = reportCount - maxQueuedReports;
+					var extraCount = reportCount - maxQueuedReports;
 
 					if (maxQueuedReports == 0)
 					{

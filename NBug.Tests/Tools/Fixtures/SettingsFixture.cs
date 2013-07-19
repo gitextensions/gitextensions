@@ -1,10 +1,8 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SettingsFixture.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="SettingsFixture.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-
-using NBug.Core.Util;
 
 namespace NBug.Tests.Tools.Fixtures
 {
@@ -15,7 +13,7 @@ namespace NBug.Tests.Tools.Fixtures
 	using System.Reflection;
 	using System.Xml.Serialization;
 
-	using NBug.Core.Submission;
+	using NBug.Core.Util;
 	using NBug.Enums;
 	using NBug.Properties;
 
@@ -25,6 +23,7 @@ namespace NBug.Tests.Tools.Fixtures
 	{
 		// This is static for performance reasons (also not disposed at the destructor due to the same reason)
 		private static Stream settings;
+
 		private List<string> dispatcherDestinations;
 
 		public SettingsFixture()
@@ -50,11 +49,13 @@ namespace NBug.Tests.Tools.Fixtures
 			Settings.UIMode = UIMode.None;
 			Settings.WriteLogToDisk = false;
 		}
-		
 
 		/// <summary>
 		/// Returns null if the custom settings file is not found so check for null object reference.
 		/// </summary>
+		/// <returns>
+		/// The <see cref="List"/>.
+		/// </returns>
 		internal List<string> ReadCustomDispatcherDestinationSettings(string protocol)
 		{
 			// This generates a sample settings file for future reference
@@ -73,7 +74,8 @@ namespace NBug.Tests.Tools.Fixtures
 
 				if (!File.Exists(path))
 				{
-					path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Docs\\ASFT\\Dev\\_Tools\\Settings\\DispatcherDestinations.xml");
+					path = Path.Combine(
+						Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Docs\\ASFT\\Dev\\_Tools\\Settings\\DispatcherDestinations.xml");
 
 					if (!File.Exists(path))
 					{
@@ -85,12 +87,12 @@ namespace NBug.Tests.Tools.Fixtures
 				using (var stream = new FileStream(path, FileMode.Open))
 				{
 					this.dispatcherDestinations = (List<string>)serializer.Deserialize(stream);
-				} 
+				}
 			}
 
-			return (from destination in this.dispatcherDestinations
-							where ConnectionStringParser.Parse(destination)["Type"].Equals(protocol)
-							select destination).ToList();
+			return
+				(from destination in this.dispatcherDestinations where ConnectionStringParser.Parse(destination)["Type"].Equals(protocol) select destination)
+					.ToList();
 		}
 
 		internal void ReloadDefaults()

@@ -1,10 +1,17 @@
-using NBug.Core.Util.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ConnectionStringParser.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug.Core.Util
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Text.RegularExpressions;
+
+	using NBug.Core.Util.Exceptions;
+
 	public static class ConnectionStringParser
 	{
 		// Currently ; and = characters are illegal and needs preparsing and escaping
@@ -26,7 +33,8 @@ namespace NBug.Core.Util
 			}
 			catch (Exception exception)
 			{
-				throw new NBugConfigurationException("Cannot parse the connection string supplied. The connection string may be malformed: " + connectionString, exception);
+				throw new NBugConfigurationException(
+					"Cannot parse the connection string supplied. The connection string may be malformed: " + connectionString, exception);
 			}
 		}
 	}

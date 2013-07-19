@@ -1,12 +1,19 @@
-﻿namespace NBug.Core.Reporting.MiniDump
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="DumpWriter.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace NBug.Core.Reporting.MiniDump
 {
-	using NBug.Core.Util.Exceptions;
-	using NBug.Core.Util.Logging;
-	using NBug.Enums;
 	using System;
 	using System.Diagnostics;
 	using System.IO;
 	using System.Runtime.InteropServices;
+
+	using NBug.Core.Util.Exceptions;
+	using NBug.Core.Util.Logging;
+	using NBug.Enums;
 
 	/// <summary>
 	/// Sample usage:
@@ -31,7 +38,7 @@
 			{
 				bool created;
 
-				using (FileStream fileStream = new FileStream(minidumpFilePath, FileMode.Create, FileAccess.Write))
+				using (var fileStream = new FileStream(minidumpFilePath, FileMode.Create, FileAccess.Write))
 				{
 					// ToDo: Create the minidump at a seperate process! Use this to deal with access errors: http://social.msdn.microsoft.com/Forums/en/csharpgeneral/thread/c314e6ca-4892-41e7-ae19-b3a36ad640e9
 					// Bug: In process minidumps causes all sorts of access problems (i.e. one of them is explained below, debugger prevents accessing private memory)
@@ -54,6 +61,26 @@
 			}
 		}
 
+		[DllImport("kernel32.dll", EntryPoint = "GetCurrentThreadId", ExactSpelling = true, SetLastError = true)]
+		private static extern uint GetCurrentThreadId();
+
+		[DllImport("dbghelp.dll", EntryPoint = "MiniDumpWriteDump", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode, 
+			ExactSpelling = true, SetLastError = true)]
+		private static extern bool MiniDumpWriteDump(
+			IntPtr hProcess, 
+			uint processId, 
+			SafeHandle hFile, 
+			uint dumpType, 
+			ref MiniDumpExceptionInformation expParam, 
+			IntPtr userStreamParam, 
+			IntPtr callbackParam);
+
+		// Overload supporting MiniDumpExceptionInformation == NULL
+		[DllImport("dbghelp.dll", EntryPoint = "MiniDumpWriteDump", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode, 
+			ExactSpelling = true, SetLastError = true)]
+		private static extern bool MiniDumpWriteDump(
+			IntPtr hProcess, uint processId, SafeHandle hFile, uint dumpType, IntPtr expParam, IntPtr userStreamParam, IntPtr callbackParam);
+
 		private static bool Write(SafeHandle fileHandle, string dumpType)
 		{
 			if (dumpType.ToLower() == MiniDumpType.Tiny.ToString().ToLower())
@@ -70,7 +97,8 @@
 				else
 				{
 					// Bug: Combination of WithPrivateReadWriteMemory + WithDataSegs hangs Visual Studio 2010 SP1 on some cases while loading the minidump for debugging in mixed mode which was created in by a release build application
-					return Write(fileHandle, DumpTypeFlag.WithPrivateReadWriteMemory | DumpTypeFlag.WithDataSegs | DumpTypeFlag.WithHandleData | DumpTypeFlag.WithUnloadedModules);
+					return Write(
+						fileHandle, DumpTypeFlag.WithPrivateReadWriteMemory | DumpTypeFlag.WithDataSegs | DumpTypeFlag.WithHandleData | DumpTypeFlag.WithUnloadedModules);
 				}
 			}
 			else if (dumpType.ToLower() == MiniDumpType.Full.ToString().ToLower())
@@ -85,16 +113,16 @@
 
 		private static bool Write(SafeHandle fileHandle, DumpTypeFlag dumpTypeFlag)
 		{
-			Process currentProcess = Process.GetCurrentProcess();
-			IntPtr currentProcessHandle = currentProcess.Handle;
-			uint currentProcessId = (uint)currentProcess.Id;
+			var currentProcess = Process.GetCurrentProcess();
+			var currentProcessHandle = currentProcess.Handle;
+			var currentProcessId = (uint)currentProcess.Id;
 			MiniDumpExceptionInformation exp;
 			exp.ThreadId = GetCurrentThreadId();
 			exp.ClientPointers = false;
 			exp.ExceptionPointers = IntPtr.Zero;
 			exp.ExceptionPointers = Marshal.GetExceptionPointers();
 
-			bool bRet = false;
+			var bRet = false;
 
 			try
 			{
@@ -109,7 +137,8 @@
 			}
 			catch (DllNotFoundException)
 			{
-				Logger.Warning("dbghelp.dll was not found inside the application folder, the system path or SDK folder. Minidump was not generated. If you are not planning on using the minidump feature, you can disable it with the Configurator tool.");
+				Logger.Warning(
+					"dbghelp.dll was not found inside the application folder, the system path or SDK folder. Minidump was not generated. If you are not planning on using the minidump feature, you can disable it with the Configurator tool.");
 				return false;
 			}
 
@@ -130,11 +159,11 @@
 		 *    BOOL ClientPointers;
 		 * } MINIDUMP_EXCEPTION_INFORMATION, *PMINIDUMP_EXCEPTION_INFORMATION;
 		 */
-
-		[StructLayout(LayoutKind.Sequential, Pack = 4)]  // Pack=4 is important! So it works also for x64!
+		[StructLayout(LayoutKind.Sequential, Pack = 4)] // Pack=4 is important! So it works also for x64!
 		private struct MiniDumpExceptionInformation
 		{
 			public uint ThreadId;
+
 			public IntPtr ExceptionPointers;
 
 			[MarshalAs(UnmanagedType.Bool)]
@@ -155,14 +184,5 @@
 		 */
 
 		// Overload requiring MiniDumpExceptionInformation
-		[DllImport("dbghelp.dll", EntryPoint = "MiniDumpWriteDump", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
-		private static extern bool MiniDumpWriteDump(IntPtr hProcess, uint processId, SafeHandle hFile, uint dumpType, ref MiniDumpExceptionInformation expParam, IntPtr userStreamParam, IntPtr callbackParam);
-
-		// Overload supporting MiniDumpExceptionInformation == NULL
-		[DllImport("dbghelp.dll", EntryPoint = "MiniDumpWriteDump", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
-		private static extern bool MiniDumpWriteDump(IntPtr hProcess, uint processId, SafeHandle hFile, uint dumpType, IntPtr expParam, IntPtr userStreamParam, IntPtr callbackParam);
-
-		[DllImport("kernel32.dll", EntryPoint = "GetCurrentThreadId", ExactSpelling = true, SetLastError = true)]
-		private static extern uint GetCurrentThreadId();
 	}
 }

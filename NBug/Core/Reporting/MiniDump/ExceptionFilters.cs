@@ -1,4 +1,10 @@
-﻿namespace NBug.Core.Reporting.MiniDump
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ExceptionFilters.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace NBug.Core.Reporting.MiniDump
 {
 	using System;
 	using System.Diagnostics;
@@ -31,6 +37,67 @@
 	internal static class ExceptionFilters
 	{
 		/// <summary>
+		/// The filter.
+		/// </summary>
+		private static readonly Action<Action, Func<Exception, bool>, Action<Exception>> filter = GenerateFilter();
+
+		/// <summary>
+		/// Set to true to write the generated assembly to disk for debugging purposes (eg. to run peverify
+		/// and ildasm on in the case of bad codegen).
+		/// </summary>
+		private static bool writeGeneratedAssemblyToDisk = false;
+
+		/// <summary>
+		/// Execute the body which is not expected to ever throw any exceptions.
+		/// If an exception does escape body, stop in the debugger if one is attached and then fail-fast.
+		/// </summary>
+		/// <param name="body">
+		/// Body of code to be executed.
+		/// </param>
+		/// <example>
+		/// To call code that you don’t expect to ever throw an exception you can just wrap it with ExecuteWithFailFast.  If any exceptions
+		/// escape it’ll immediately fail fast with a watson report and minidump (at the point of throw), or if a debugger is attached break
+		/// at the throw point.
+		/// <code>
+		/// // FailFast on throw
+		/// ExceptionFilters.FailFast(() =>
+		/// {
+		///   // Code you don't expect to throw exceptions
+		///   throw new ApplicationException("Test unexpected exception");
+		/// }); // A minidump will be generated here with good stack trace (not a reseted one like it would happen in a catch block)
+		/// </code>
+		/// </example>
+		internal static void FailFast(Action body)
+		{
+			Filter(
+				body, 
+				e =>
+					{
+						Debugger.Log(10, "ExceptionFilter", "Saw unexpected exception: " + e.ToString());
+
+						// Terminate the process with this fatal error
+						if (Environment.Version.Major >= 4)
+						{
+							// .NET 4 adds a FailFast overload which takes the exception, usefull for getting good watson buckets
+							// This will also cause an attached debugger to stop at the throw point, just as if the exception went unhandled.
+							// Note that this code may be compiled against .NET 2.0 but running in CLR v4, so we want to take advantage of
+							// this API even if it's not available at compile time, so we use a late-bound call.
+							typeof(Environment).InvokeMember(
+								"FailFast", BindingFlags.Static | BindingFlags.InvokeMethod, null, null, new object[] { "Unexpected Exception", e });
+						}
+						else
+						{
+							// The experience isn't quite as nice in CLR v2 and before (no good watson buckets, debugger shows a
+							// 'FatalExecutionEngineErrorException' at this point), but still deubggable.
+							Environment.FailFast("Exception: " + e.GetType().FullName);
+						}
+
+						return false; // should never be reached
+					}, 
+				null);
+		}
+
+		/// <summary>
 		/// Execute the body with the specified filter with no handler ever being invoked
 		/// </summary>
 		/// <param name="body">
@@ -62,12 +129,12 @@
 		internal static void Filter(Action body, Action<Exception> filter)
 		{
 			Filter(
-				body,
+				body, 
 				e =>
-				{
-					filter(e);
-					return false;
-				},
+					{
+						filter(e);
+						return false;
+					}, 
 				null);
 		}
 
@@ -105,60 +172,6 @@
 		}
 
 		/// <summary>
-		/// Execute the body which is not expected to ever throw any exceptions.
-		/// If an exception does escape body, stop in the debugger if one is attached and then fail-fast.
-		/// </summary>
-		/// <param name="body">
-		/// Body of code to be executed.
-		/// </param>
-		/// <example>
-		/// To call code that you don’t expect to ever throw an exception you can just wrap it with ExecuteWithFailFast.  If any exceptions
-		/// escape it’ll immediately fail fast with a watson report and minidump (at the point of throw), or if a debugger is attached break
-		/// at the throw point.
-		/// <code>
-		/// // FailFast on throw
-		/// ExceptionFilters.FailFast(() =>
-		/// {
-		///   // Code you don't expect to throw exceptions
-		///   throw new ApplicationException("Test unexpected exception");
-		/// }); // A minidump will be generated here with good stack trace (not a reseted one like it would happen in a catch block)
-		/// </code>
-		/// </example>
-		internal static void FailFast(Action body)
-		{
-			Filter(
-				body,
-				e =>
-				{
-					Debugger.Log(10, "ExceptionFilter", "Saw unexpected exception: " + e.ToString());
-
-					// Terminate the process with this fatal error
-					if (Environment.Version.Major >= 4)
-					{
-						// .NET 4 adds a FailFast overload which takes the exception, usefull for getting good watson buckets
-						// This will also cause an attached debugger to stop at the throw point, just as if the exception went unhandled.
-						// Note that this code may be compiled against .NET 2.0 but running in CLR v4, so we want to take advantage of
-						// this API even if it's not available at compile time, so we use a late-bound call.
-						typeof(Environment).InvokeMember(
-							"FailFast",
-							BindingFlags.Static | BindingFlags.InvokeMethod,
-							null,
-							null,
-							new object[] { "Unexpected Exception", e });
-					}
-					else
-					{
-						// The experience isn't quite as nice in CLR v2 and before (no good watson buckets, debugger shows a
-						// 'FatalExecutionEngineErrorException' at this point), but still deubggable.
-						Environment.FailFast("Exception: " + e.GetType().FullName);
-					}
-
-					return false; // should never be reached
-				},
-				null);
-		}
-
-		/// <summary>
 		/// Like a normal C# Try/Catch but allows one catch block to catch multiple different types of exceptions.
 		/// </summary>
 		/// <typeparam name="TExceptionBase">
@@ -189,35 +202,34 @@
 		///	});
 		/// </code>
 		/// </example>
-		internal static void TryCatch<TExceptionBase>(Action body, Type[] typesToCatch, Action<TExceptionBase> handler)
-			where TExceptionBase : Exception
+		internal static void TryCatch<TExceptionBase>(Action body, Type[] typesToCatch, Action<TExceptionBase> handler) where TExceptionBase : Exception
 		{
 			// Verify that every type in typesToCatch is a sub-type of TExceptionBase
 #if DEBUG
 			foreach (var tc in typesToCatch)
 			{
 				Debug.Assert(
-					typeof(TExceptionBase).IsAssignableFrom(tc),
-					String.Format("Error: {0} is not a sub-class of {1}", tc.FullName, typeof(TExceptionBase).FullName));
+					typeof(TExceptionBase).IsAssignableFrom(tc), string.Format("Error: {0} is not a sub-class of {1}", tc.FullName, typeof(TExceptionBase).FullName));
 			}
+
 #endif
 
 			Filter(
-				body,
+				body, 
 				e =>
-				{
-					// If the thrown exception is a sub-type (including the same time) of at least one of the provided types then
-					// catch it.
-					foreach (var catchType in typesToCatch)
 					{
-						if (catchType.IsAssignableFrom(e.GetType()))
+						// If the thrown exception is a sub-type (including the same time) of at least one of the provided types then
+						// catch it.
+						foreach (var catchType in typesToCatch)
 						{
-							return true;
+							if (catchType.IsAssignableFrom(e.GetType()))
+							{
+								return true;
+							}
 						}
-					}
 
-					return false;
-				},
+						return false;
+					}, 
 				e => handler((TExceptionBase)e));
 		}
 
@@ -253,17 +265,6 @@
 		}
 
 		/// <summary>
-		/// The filter.
-		/// </summary>
-		private static readonly Action<Action, Func<Exception, bool>, Action<Exception>> filter = GenerateFilter();
-
-		/// <summary>
-		/// Set to true to write the generated assembly to disk for debugging purposes (eg. to run peverify
-		/// and ildasm on in the case of bad codegen).
-		/// </summary>
-		private static bool writeGeneratedAssemblyToDisk = false;
-
-		/// <summary>
 		/// Generate a function which has an EH filter
 		/// </summary>
 		/// <returns>
@@ -273,7 +274,7 @@
 		{
 			// Create a dynamic assembly with reflection emit
 			var name = new AssemblyName("DynamicFilter");
-			AssemblyBuilder assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(
+			var assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(
 				name, writeGeneratedAssemblyToDisk ? AssemblyBuilderAccess.RunAndSave : AssemblyBuilderAccess.Run);
 			ModuleBuilder module;
 			if (writeGeneratedAssemblyToDisk)
@@ -289,22 +290,21 @@
 			// (so the cast to Exception in the code will always succeed).  C# and VB always do this, C++/CLI doesn't.
 			assembly.SetCustomAttribute(
 				new CustomAttributeBuilder(
-					typeof(RuntimeCompatibilityAttribute).GetConstructor(new Type[] { }),
-					new object[] { },
-					new[] { typeof(RuntimeCompatibilityAttribute).GetProperty("WrapNonExceptionThrows") },
+					typeof(RuntimeCompatibilityAttribute).GetConstructor(new Type[] { }), 
+					new object[] { }, 
+					new[] { typeof(RuntimeCompatibilityAttribute).GetProperty("WrapNonExceptionThrows") }, 
 					new object[] { true }));
 
 			// Add an assembly attribute that tells the CLR not to attempt to load PDBs when compiling this assembly
 			assembly.SetCustomAttribute(
 				new CustomAttributeBuilder(
-					typeof(DebuggableAttribute).GetConstructor(new[] { typeof(DebuggableAttribute.DebuggingModes) }),
+					typeof(DebuggableAttribute).GetConstructor(new[] { typeof(DebuggableAttribute.DebuggingModes) }), 
 					new object[] { DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints }));
 
 			// Create the type and method which will contain the filter
-			TypeBuilder type = module.DefineType("Filter", TypeAttributes.Class | TypeAttributes.Public);
+			var type = module.DefineType("Filter", TypeAttributes.Class | TypeAttributes.Public);
 			var argTypes = new[] { typeof(Action), typeof(Func<Exception, bool>), typeof(Action<Exception>) };
-			MethodBuilder meth = type.DefineMethod(
-				"InvokeWithFilter", MethodAttributes.Public | MethodAttributes.Static, typeof(void), argTypes);
+			var meth = type.DefineMethod("InvokeWithFilter", MethodAttributes.Public | MethodAttributes.Static, typeof(void), argTypes);
 
 			var il = meth.GetILGenerator();
 			var exLoc = il.DeclareLocal(typeof(Exception));

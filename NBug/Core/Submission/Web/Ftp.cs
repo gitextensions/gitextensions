@@ -1,29 +1,32 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Ftp.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Ftp.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using NBug.Core.Reporting.Info;
-using NBug.Core.Util.Serialization;
-
 namespace NBug.Core.Submission.Web
 {
-	using NBug.Core.Util.Logging;
 	using System;
 	using System.IO;
 	using System.Net;
 
+	using NBug.Core.Reporting.Info;
+	using NBug.Core.Util.Logging;
+	using NBug.Core.Util.Serialization;
+
 	internal class FtpFactory : IProtocolFactory
 	{
+		public string SupportedType
+		{
+			get
+			{
+				return "Ftp";
+			}
+		}
+
 		public IProtocol FromConnectionString(string connectionString)
 		{
 			return new Ftp(connectionString);
-		}
-
-		public string SupportedType
-		{
-			get { return "Ftp"; }
 		}
 	}
 
@@ -38,6 +41,8 @@ namespace NBug.Core.Submission.Web
 		{
 		}
 
+		public string Password { get; set; }
+
 		// Connection string format (single line)
 		// Warning: There should be no semicolon (;) or equals sign (=) used in any field except for password.
 		// Warning: No fild value value should contain the phrase 'password='
@@ -49,14 +54,11 @@ namespace NBug.Core.Submission.Web
 		 * Username=;
 		 * Password=;
 		 */
-
 		public string Url { get; set; }
-
-		public string Usessl { get; set; }
 
 		public string Username { get; set; }
 
-		public string Password { get; set; }
+		public string Usessl { get; set; }
 
 		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
 		{

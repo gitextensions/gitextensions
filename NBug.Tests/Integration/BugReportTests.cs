@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BugReportTests.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="BugReportTests.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -21,9 +21,7 @@ namespace NBug.Tests.Integration
 		[Fact]
 		public void GenerateBugReport()
 		{
-			Assert.Equal(
-				new BugReport().Report(new DummyArgumentException(), ExceptionThread.UI_WinForms), 
-				ExecutionFlow.BreakExecution);
+			Assert.Equal(new BugReport().Report(new DummyArgumentException(), ExceptionThread.UI_WinForms), ExecutionFlow.BreakExecution);
 
 			this.report.VerifyAndDeleteCompressedReportFile();
 		}

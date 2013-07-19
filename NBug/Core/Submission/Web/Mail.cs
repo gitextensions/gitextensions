@@ -1,30 +1,33 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Mail.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Mail.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using NBug.Core.Reporting.Info;
-using NBug.Core.Util.Serialization;
-
 namespace NBug.Core.Submission.Web
 {
-	using NBug.Core.Util.Logging;
 	using System;
 	using System.IO;
 	using System.Net;
 	using System.Net.Mail;
 
+	using NBug.Core.Reporting.Info;
+	using NBug.Core.Util.Logging;
+	using NBug.Core.Util.Serialization;
+
 	public class MailFactory : IProtocolFactory
 	{
+		public string SupportedType
+		{
+			get
+			{
+				return "Mail";
+			}
+		}
+
 		public IProtocol FromConnectionString(string connectionString)
 		{
 			return new Mail(connectionString);
-		}
-
-		public string SupportedType
-		{
-			get { return "Mail"; }
 		}
 	}
 
@@ -37,7 +40,7 @@ namespace NBug.Core.Submission.Web
 
 		public Mail()
 		{
-			Port = 25;
+			this.Port = 25;
 		}
 
 		// Connection string format (single line)
@@ -65,38 +68,37 @@ namespace NBug.Core.Submission.Web
 		 * Username=my_tracker@gmail.com;
 		 * Password=mypassword;
 		 */
+		public string Bcc { get; set; }
+
+		public string Cc { get; set; }
+
+		public string CustomBody { get; set; }
+
+		public string CustomSubject { get; set; }
 
 		public string From { get; set; }
 
 		public string FromName { get; set; }
 
-		public string To { get; set; }
-
-		public string Cc { get; set; }
-
-		public string Bcc { get; set; }
-
-		public string ReplyTo { get; set; }
-
-		public bool UseAttachment { get; set; }
-
-		public string CustomSubject { get; set; }
-
-		public string CustomBody { get; set; }
-
-		public string SmtpServer { get; set; }
-
-		public bool UseSsl { get; set; }
+		public string Password { get; set; }
 
 		public int Port { get; set; }
 
 		public MailPriority Priority { get; set; }
 
+		public string ReplyTo { get; set; }
+
+		public string SmtpServer { get; set; }
+
+		public string To { get; set; }
+
+		public bool UseAttachment { get; set; }
+
 		public bool UseAuthentication { get; set; }
 
-		public string Username { get; set; }
+		public bool UseSsl { get; set; }
 
-		public string Password { get; set; }
+		public string Username { get; set; }
 
 		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
 		{
@@ -172,16 +174,13 @@ namespace NBug.Core.Submission.Web
 				}
 				else
 				{
-					message.Subject = "NBug: " + report.GeneralInfo.HostApplication + " (" +
-														report.GeneralInfo.HostApplicationVersion + "): " +
-														report.GeneralInfo.ExceptionType + " @ " +
-														report.GeneralInfo.TargetSite;
+					message.Subject = "NBug: " + report.GeneralInfo.HostApplication + " (" + report.GeneralInfo.HostApplicationVersion + "): "
+					                  + report.GeneralInfo.ExceptionType + " @ " + report.GeneralInfo.TargetSite;
 				}
 
 				if (!string.IsNullOrEmpty(this.CustomBody))
 				{
-					message.Body = this.CustomBody + Environment.NewLine + Environment.NewLine + report +
-								   Environment.NewLine + Environment.NewLine + exception;
+					message.Body = this.CustomBody + Environment.NewLine + Environment.NewLine + report + Environment.NewLine + Environment.NewLine + exception;
 				}
 				else
 				{

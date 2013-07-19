@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Http.cs" company="NBusy Project">
-//   Copyright © 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Http.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -12,7 +12,7 @@ namespace NBug.Configurator.SubmitPanels.Web
 	{
 		public Http()
 		{
-			InitializeComponent();
+			this.InitializeComponent();
 		}
 
 		public string ConnectionString
@@ -22,7 +22,8 @@ namespace NBug.Configurator.SubmitPanels.Web
 				// Check the mendatory fields
 				if (string.IsNullOrEmpty(this.urlTextBox.Text))
 				{
-					MessageBox.Show("Mandatory field \"" + urlTextBox.Name + "\" cannot be left blank.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					MessageBox.Show(
+						"Mandatory field \"" + this.urlTextBox.Name + "\" cannot be left blank.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					return null;
 				}
 

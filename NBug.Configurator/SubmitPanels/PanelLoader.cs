@@ -1,59 +1,63 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PanelLoader.cs" company="NBusy Project">
-//   Copyright © 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="PanelLoader.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-
-using NBug.Core.Util;
 
 namespace NBug.Configurator.SubmitPanels
 {
 	using System;
 	using System.Windows.Forms;
 
+	using NBug.Core.Submission.Tracker;
+	using NBug.Core.Submission.Web;
+	using NBug.Core.Util;
+
 	public partial class PanelLoader : UserControl
-	{		
+	{
+		public string connString;
+
 		private string settingsLoadedProtocolType;
-        public string connString;
-        public event EventHandler RemoveDestination;
 
 		public PanelLoader()
 		{
-			InitializeComponent();
+			this.InitializeComponent();
 			this.submitComboBox.SelectedIndex = 0;
 		}
 
+		public event EventHandler RemoveDestination;
+
 		public void LoadPanel(string connectionString)
 		{
-			connString = connectionString;
+			this.connString = connectionString;
 			var protocol = ConnectionStringParser.Parse(connectionString)["Type"];
 
-			if (protocol == typeof(Core.Submission.Web.Mail).Name || protocol.ToLower() == "email" || protocol.ToLower() == "e-mail")
+			if (protocol == typeof(Mail).Name || protocol.ToLower() == "email" || protocol.ToLower() == "e-mail")
 			{
-				submitComboBox.SelectedItem = "E-Mail";
+				this.submitComboBox.SelectedItem = "E-Mail";
 			}
-			else if (protocol == typeof(Core.Submission.Tracker.Redmine).Name)
+			else if (protocol == typeof(Redmine).Name)
 			{
-				submitComboBox.SelectedItem = "Redmine Issue Tracker";
+				this.submitComboBox.SelectedItem = "Redmine Issue Tracker";
 			}
-			else if (protocol == typeof(Core.Submission.Web.Ftp).Name)
+			else if (protocol == typeof(Ftp).Name)
 			{
-				submitComboBox.SelectedItem = "FTP";
+				this.submitComboBox.SelectedItem = "FTP";
 			}
-			else if (protocol == typeof(Core.Submission.Web.Http).Name)
+			else if (protocol == typeof(Http).Name)
 			{
-				submitComboBox.SelectedItem = "HTTP";
+				this.submitComboBox.SelectedItem = "HTTP";
 			}
 			else
 			{
 				MessageBox.Show("Undefined protocol type was selected. This is an internal error, please notify the developers.");
 			}
 
-			settingsLoadedProtocolType = submitComboBox.Text;
+			this.settingsLoadedProtocolType = this.submitComboBox.Text;
 
-			if (Controls.Count == 2)
+			if (this.Controls.Count == 2)
 			{
-				((ISubmitPanel)Controls[0]).ConnectionString = connectionString;
+				((ISubmitPanel)this.Controls[0]).ConnectionString = connectionString;
 			}
 		}
 
@@ -100,9 +104,9 @@ namespace NBug.Configurator.SubmitPanels
 			}
 		}
 
-        private void btnRemove_Click(object sender, EventArgs e)
-        {
-            RemoveDestination.DynamicInvoke(this, new EventArgs());
-        }
+		private void btnRemove_Click(object sender, EventArgs e)
+		{
+			this.RemoveDestination.DynamicInvoke(this, new EventArgs());
+		}
 	}
 }

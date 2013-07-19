@@ -1,20 +1,22 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="UISelector.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="UISelector.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug.Core.UI
 {
+	using System;
+
 	using NBug.Core.Reporting.Info;
 	using NBug.Core.UI.Console;
+	using NBug.Core.UI.Custom;
 	using NBug.Core.UI.WinForms;
 	using NBug.Core.UI.WPF;
 	using NBug.Core.Util;
 	using NBug.Core.Util.Exceptions;
 	using NBug.Core.Util.Serialization;
 	using NBug.Enums;
-	using System;
 
 	/// <summary>
 	/// Initializes a new instance of the UISelector class which displays the user an appropriate user interface in the event of unhandled exceptions.
@@ -63,7 +65,7 @@ namespace NBug.Core.UI
 				}
 				else
 				{
-					throw new NBugRuntimeException(String.Format("Parameter supplied for '{0}' is not valid.", typeof(ExceptionThread).Name));
+					throw new NBugRuntimeException(string.Format("Parameter supplied for '{0}' is not valid.", typeof(ExceptionThread).Name));
 				}
 			}
 			else if (Settings.UIMode == UIMode.None)

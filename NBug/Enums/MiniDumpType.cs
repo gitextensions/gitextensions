@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MiniDumpType.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="MiniDumpType.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -11,18 +11,18 @@ namespace NBug.Enums
 		/// <summary>
 		/// Generate no minidump at all.
 		/// </summary>
-		None,
+		None, 
 
 		/// <summary>
 		/// Generates the smallest possible minidump still with useful information. Dump size is about ~100KB compressed.
 		/// </summary>
-		Tiny,
+		Tiny, 
 
 		/// <summary>
 		/// Generates minidump with private read write memory and data segments. This mode allows retreiving of local values and the stack
 		/// variables. Dump size is about ~5MB compressed.
 		/// </summary>
-		Normal,
+		Normal, 
 
 		/// <summary>
 		/// Generates full application memory dump. This simply dump all memory used by the process. Dump size is about ~100MB compressed.

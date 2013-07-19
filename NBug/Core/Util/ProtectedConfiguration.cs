@@ -1,4 +1,10 @@
-﻿namespace NBug.Core.Util
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ProtectedConfiguration.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace NBug.Core.Util
 {
 	internal class ProtectedConfiguration
 	{

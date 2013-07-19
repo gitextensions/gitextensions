@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="StoragePath.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="StoragePath.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -16,6 +16,7 @@ namespace NBug.Core.Util.Storage
 	public struct StoragePath
 	{
 		private static Enums.StoragePath storagePathEnum;
+
 		private static string storagePathString;
 
 		internal StoragePath(Enums.StoragePath storagePath)

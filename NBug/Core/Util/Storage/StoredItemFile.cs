@@ -1,9 +1,17 @@
-﻿namespace NBug.Core.Util.Storage
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="StoredItemFile.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace NBug.Core.Util.Storage
 {
 	internal enum StoredItemType
 	{
-		Exception,
-		Report,
+		Exception, 
+
+		Report, 
+
 		MiniDump
 	}
 
@@ -11,7 +19,9 @@
 	internal static class StoredItemFile
 	{
 		internal const string Exception = "Exception.xml";
-		internal const string Report = "Report.xml";
+
 		internal const string MiniDump = "MiniDump.mdmp";
+
+		internal const string Report = "Report.xml";
 	}
 }

@@ -1,16 +1,20 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Full.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Full.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug.Core.UI.WinForms
 {
-	using NBug.Core.Reporting.Info;
-	using NBug.Core.Util.Serialization;
 	using System;
 	using System.Drawing;
 	using System.Windows.Forms;
+
+	using NBug.Core.Reporting.Info;
+	using NBug.Core.Util.Serialization;
+	using NBug.Properties;
+
+	using Settings = NBug.Settings;
 
 	internal partial class Full : Form
 	{
@@ -18,8 +22,8 @@ namespace NBug.Core.UI.WinForms
 
 		internal Full()
 		{
-			InitializeComponent();
-			this.Icon = Properties.Resources.NBug_icon_16;
+			this.InitializeComponent();
+			this.Icon = Resources.NBug_icon_16;
 			this.warningLabel.Text = Settings.Resources.UI_Dialog_Full_Message;
 			this.generalTabPage.Text = Settings.Resources.UI_Dialog_Full_General_Tab;
 			this.exceptionTabPage.Text = Settings.Resources.UI_Dialog_Full_Exception_Tab;
@@ -37,7 +41,7 @@ namespace NBug.Core.UI.WinForms
 			this.Text = string.Format("{0} {1}", report.GeneralInfo.HostApplication, Settings.Resources.UI_Dialog_Full_Title);
 
 			// Fill in the 'General' tab
-			warningPictureBox.Image = SystemIcons.Warning.ToBitmap();
+			this.warningPictureBox.Image = SystemIcons.Warning.ToBitmap();
 			this.exceptionTextBox.Text = exception.Type;
 			this.exceptionMessageTextBox.Text = exception.Message;
 			this.targetSiteTextBox.Text = exception.TargetSite;
@@ -50,18 +54,11 @@ namespace NBug.Core.UI.WinForms
 			this.exceptionDetails.Initialize(exception);
 
 			// ToDo: Fill in the 'Report Contents' tab);
-
 			this.ShowDialog();
 
 			// Write back the user description (as we passed 'report' as a reference since it is a refence object anyway)
 			report.GeneralInfo.UserDescription = this.descriptionTextBox.Text;
 			return this.uiDialogResult;
-		}
-
-		private void SendAndQuitButton_Click(object sender, EventArgs e)
-		{
-			this.uiDialogResult = new UIDialogResult(ExecutionFlow.BreakExecution, SendReport.Send);
-			this.Close();
 		}
 
 		private void QuitButton_Click(object sender, EventArgs e)
@@ -86,6 +83,12 @@ namespace NBug.Core.UI.WinForms
 					this.reportContentsListView.Items.Add(entry.FilenameInZip);
 				}
 			}*/
+		}
+
+		private void SendAndQuitButton_Click(object sender, EventArgs e)
+		{
+			this.uiDialogResult = new UIDialogResult(ExecutionFlow.BreakExecution, SendReport.Send);
+			this.Close();
 		}
 	}
 }

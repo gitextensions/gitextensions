@@ -1,17 +1,18 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Logger.cs" company="NBusy Project">
-//   Copyright (c) 2010 - 2011 Teoman Soygul. Licensed under LGPLv3 (http://www.gnu.org/licenses/lgpl.html).
+// <copyright file="Logger.cs" company="NBug Project">
+//   Copyright (c) 2011 - 2013 Teoman Soygul. Licensed under MIT license.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NBug.Core.Util.Logging
 {
-	using NBug.Core.UI.Developer;
-	using NBug.Core.Util.Exceptions;
-	using NBug.Enums;
 	using System;
 	using System.IO;
 	using System.Linq.Expressions;
+
+	using NBug.Core.UI.Developer;
+	using NBug.Core.Util.Exceptions;
+	using NBug.Enums;
 
 	/// <summary>
 	/// Uses <see cref="System.Diagnostics.Trace.Write(string, string)"/> method to log important messages. Also provides a <see cref="LogWritten"/>
@@ -40,7 +41,8 @@ namespace NBug.Core.Util.Logging
 		{
 			if (Settings.WriteLogToDisk)
 			{
-				LogWritten += (message, category) => File.AppendAllText(Path.Combine(Settings.NBugDirectory, "NBug.log"), category + ": " + message + Environment.NewLine);
+				LogWritten +=
+					(message, category) => File.AppendAllText(Path.Combine(Settings.NBugDirectory, "NBug.log"), category + ": " + message + Environment.NewLine);
 			}
 		}
 
@@ -48,21 +50,6 @@ namespace NBug.Core.Util.Logging
 		/// First parameters is message string, second one is the category.
 		/// </summary>
 		internal static event Action<string, LoggerCategory> LogWritten;
-
-		internal static void Trace(string message)
-		{
-			Write(message, LoggerCategory.NBugTrace);
-		}
-
-		internal static void Info(string message)
-		{
-			Write(message, LoggerCategory.NBugInfo);
-		}
-
-		internal static void Warning(string message)
-		{
-			Write(message, LoggerCategory.NBugWarning);
-		}
 
 		internal static void Error(string message)
 		{
@@ -116,6 +103,21 @@ namespace NBug.Core.Util.Logging
 			{
 				throw NBugConfigurationException.Create(propertyExpression, message);
 			}
+		}
+
+		internal static void Info(string message)
+		{
+			Write(message, LoggerCategory.NBugInfo);
+		}
+
+		internal static void Trace(string message)
+		{
+			Write(message, LoggerCategory.NBugTrace);
+		}
+
+		internal static void Warning(string message)
+		{
+			Write(message, LoggerCategory.NBugWarning);
 		}
 
 		private static void Write(string message, LoggerCategory category)
