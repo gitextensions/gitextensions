@@ -11,12 +11,11 @@ namespace NBug.Configurator.SubmitPanels
 	using System;
 	using System.Windows.Forms;
 
-	using NBug.Core.Submission;
-
 	public partial class PanelLoader : UserControl
-	{
-		private string connString;
+	{		
 		private string settingsLoadedProtocolType;
+        public string connString;
+        public event EventHandler RemoveDestination;
 
 		public PanelLoader()
 		{
@@ -26,35 +25,35 @@ namespace NBug.Configurator.SubmitPanels
 
 		public void LoadPanel(string connectionString)
 		{
-			this.connString = connectionString;
+			connString = connectionString;
 			var protocol = ConnectionStringParser.Parse(connectionString)["Type"];
 
-			if (protocol == typeof(Core.Submission.Web.Mail).Name || protocol.ToString().ToLower() == "email" || protocol.ToString().ToLower() == "e-mail")
+			if (protocol == typeof(Core.Submission.Web.Mail).Name || protocol.ToLower() == "email" || protocol.ToLower() == "e-mail")
 			{
-				this.submitComboBox.SelectedItem = "E-Mail";
+				submitComboBox.SelectedItem = "E-Mail";
 			}
 			else if (protocol == typeof(Core.Submission.Tracker.Redmine).Name)
 			{
-				this.submitComboBox.SelectedItem = "Redmine Issue Tracker";
+				submitComboBox.SelectedItem = "Redmine Issue Tracker";
 			}
 			else if (protocol == typeof(Core.Submission.Web.Ftp).Name)
 			{
-				this.submitComboBox.SelectedItem = "FTP";
+				submitComboBox.SelectedItem = "FTP";
 			}
 			else if (protocol == typeof(Core.Submission.Web.Http).Name)
 			{
-				this.submitComboBox.SelectedItem = "HTTP";
+				submitComboBox.SelectedItem = "HTTP";
 			}
 			else
 			{
 				MessageBox.Show("Undefined protocol type was selected. This is an internal error, please notify the developers.");
 			}
 
-			this.settingsLoadedProtocolType = this.submitComboBox.Text;
+			settingsLoadedProtocolType = submitComboBox.Text;
 
-			if (this.Controls.Count == 2)
+			if (Controls.Count == 2)
 			{
-				((ISubmitPanel)this.Controls[0]).ConnectionString = connectionString;
+				((ISubmitPanel)Controls[0]).ConnectionString = connectionString;
 			}
 		}
 
@@ -75,12 +74,15 @@ namespace NBug.Configurator.SubmitPanels
 				case "E-Mail":
 					this.Controls.Add(new Web.Mail());
 					break;
+
 				case "Redmine Issue Tracker":
 					this.Controls.Add(new Tracker.Redmine());
 					break;
+
 				case "FTP":
 					this.Controls.Add(new Web.Ftp());
 					break;
+
 				case "HTTP":
 					this.Controls.Add(new Web.Http());
 					break;
@@ -97,5 +99,10 @@ namespace NBug.Configurator.SubmitPanels
 				}
 			}
 		}
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            RemoveDestination.DynamicInvoke(this, new EventArgs());
+        }
 	}
 }

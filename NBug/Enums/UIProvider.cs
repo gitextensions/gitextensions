@@ -28,9 +28,9 @@ namespace NBug.Enums
 		/// </summary>
 		WPF,
 
-        /// <summary>
-        /// Custom UIProvider.
-        /// </summary>
-        Custom
+		/// <summary>
+		/// Custom UIProvider.
+		/// </summary>
+		Custom
 	}
 }

@@ -7,7 +7,6 @@
 using System.IO;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using NBug.Core.Reporting.Info;
 
 namespace NBug.Core.Util.Serialization
 {
@@ -20,7 +19,7 @@ namespace NBug.Core.Util.Serialization
 	public class SerializableException
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SerializableException"/> class. 
+		/// Initializes a new instance of the <see cref="SerializableException"/> class.
 		/// Default constructor provided for XML serialization and de-serialization.
 		/// </summary>
 		public SerializableException()
@@ -89,7 +88,7 @@ namespace NBug.Core.Util.Serialization
 
 			if (exception.TargetSite != null)
 			{
-                this.TargetSite = String.Format("{0} @ {1}", exception.TargetSite, exception.TargetSite.DeclaringType);
+				this.TargetSite = String.Format("{0} @ {1}", exception.TargetSite, exception.TargetSite.DeclaringType);
 			}
 
 			this.ExtendedInformation = this.GetExtendedInformation(exception);
@@ -104,7 +103,7 @@ namespace NBug.Core.Util.Serialization
 		public SerializableException InnerException { get; set; }
 
 		public List<SerializableException> InnerExceptions { get; set; }
-		
+
 		public string Message { get; set; }
 
 		public string Source { get; set; }
@@ -113,18 +112,18 @@ namespace NBug.Core.Util.Serialization
 
 		// This will make TargetSite property XML serializable but RuntimeMethodInfo class does not have a parameterless
 		// constructor thus the serializer throws an exception if full info is used
-		public string TargetSite { get; set;  }
+		public string TargetSite { get; set; }
 
 		public string Type { get; set; }
 
 		private SerializableDictionary<string, object> GetExtendedInformation(Exception exception)
 		{
 			var extendedProperties = from property in exception.GetType().GetProperties()
-			                         where
+									 where
 																property.Name != "Data" && property.Name != "InnerExceptions" && property.Name != "InnerException" &&
-			                         	property.Name != "Message" && property.Name != "Source" && property.Name != "StackTrace" &&
+										property.Name != "Message" && property.Name != "Source" && property.Name != "StackTrace" &&
 																property.Name != "TargetSite" && property.Name != "HelpLink" && property.CanRead
-			                         select property;
+									 select property;
 
 			if (extendedProperties.Count() != 0)
 			{
@@ -148,9 +147,9 @@ namespace NBug.Core.Util.Serialization
 			var serializer = new XmlSerializer(typeof(SerializableException));
 			using (var stream = new MemoryStream())
 			{
-                stream.SetLength(0);
+				stream.SetLength(0);
 				serializer.Serialize(stream, this);
-                stream.Position = 0;
+				stream.Position = 0;
 				var doc = XDocument.Load(stream);
 				return doc.Root.ToString();
 			}

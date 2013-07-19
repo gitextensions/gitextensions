@@ -6,11 +6,10 @@
 
 namespace NBug.Core.Reporting.Info
 {
+	using NBug.Core.Util.Serialization;
 	using System;
 	using System.Diagnostics;
 	using System.Reflection;
-
-	using NBug.Core.Util.Serialization;
 
 	[Serializable]
 	public class GeneralInfo

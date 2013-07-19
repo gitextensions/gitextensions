@@ -78,11 +78,12 @@ namespace NBug.Core.Util.Storage
 		/// </summary>
 		private Stream ZipFileStream;
 
-		#endregion
+		#endregion Constants and Fields
 
 		// File access for Open method
 
 		// Static constructor. Just invoked once in order to create the CRC32 lookup table.
+
 		#region Constructors and Destructors
 
 		/// <summary>
@@ -111,7 +112,7 @@ namespace NBug.Core.Util.Storage
 			}
 		}
 
-		#endregion
+		#endregion Constructors and Destructors
 
 		#region Enums
 
@@ -123,7 +124,7 @@ namespace NBug.Core.Util.Storage
 			/// <summary>
 			///   Uncompressed storage
 			/// </summary>
-			Store = 0, 
+			Store = 0,
 
 			/// <summary>
 			///   Deflate compression method
@@ -131,7 +132,7 @@ namespace NBug.Core.Util.Storage
 			Deflate = 8
 		}
 
-		#endregion
+		#endregion Enums
 
 		#region Public Methods
 
@@ -563,7 +564,7 @@ namespace NBug.Core.Util.Storage
 
 			var result = new List<ZipFileEntry>();
 
-			for (int pointer = 0; pointer < this.CentralDirImage.Length;)
+			for (int pointer = 0; pointer < this.CentralDirImage.Length; )
 			{
 				uint signature = BitConverter.ToUInt32(this.CentralDirImage, pointer);
 				if (signature != 0x02014b50)
@@ -607,7 +608,7 @@ namespace NBug.Core.Util.Storage
 			return result;
 		}
 
-		#endregion
+		#endregion Public Methods
 
 		#region Implemented Interfaces
 
@@ -621,20 +622,21 @@ namespace NBug.Core.Util.Storage
 			this.Close();
 		}
 
-		#endregion
+		#endregion IDisposable
 
-		#endregion
+		#endregion Implemented Interfaces
 
 		/* DOS Date and time:
-            MS-DOS date. The date is a packed value with the following format. Bits Description 
-                0-4 Day of the month (1–31) 
-                5-8 Month (1 = January, 2 = February, and so on) 
-                9-15 Year offset from 1980 (add 1980 to get actual year) 
-            MS-DOS time. The time is a packed value with the following format. Bits Description 
-                0-4 Second divided by 2 
-                5-10 Minute (0–59) 
-                11-15 Hour (0–23 on a 24-hour clock) 
+            MS-DOS date. The date is a packed value with the following format. Bits Description
+                0-4 Day of the month (1–31)
+                5-8 Month (1 = January, 2 = February, and so on)
+                9-15 Year offset from 1980 (add 1980 to get actual year)
+            MS-DOS time. The time is a packed value with the following format. Bits Description
+                0-4 Second divided by 2
+                5-10 Minute (0–59)
+                11-15 Hour (0–23 on a 24-hour clock)
         */
+
 		#region Methods
 
 		/// <summary>
@@ -665,11 +667,11 @@ namespace NBug.Core.Util.Storage
 		private DateTime DosTimeToDateTime(uint _dt)
 		{
 			return new DateTime(
-				(int)(_dt >> 25) + 1980, 
-				(int)(_dt >> 21) & 15, 
-				(int)(_dt >> 16) & 31, 
-				(int)(_dt >> 11) & 31, 
-				(int)(_dt >> 5) & 63, 
+				(int)(_dt >> 25) + 1980,
+				(int)(_dt >> 21) & 15,
+				(int)(_dt >> 16) & 31,
+				(int)(_dt >> 11) & 31,
+				(int)(_dt >> 5) & 63,
 				(int)(_dt & 31) * 2);
 		}
 
@@ -696,7 +698,7 @@ namespace NBug.Core.Util.Storage
 		}
 
 		/* CRC32 algorithm
-          The 'magic number' for the CRC is 0xdebb20e3.  
+          The 'magic number' for the CRC is 0xdebb20e3.
           The proper CRC pre and post conditioning
           is used, meaning that the CRC register is
           pre-conditioned with all ones (a starting value
@@ -846,7 +848,7 @@ namespace NBug.Core.Util.Storage
 
 			// Verify for real compression
 			if (_zfe.Method == Compression.Deflate && !this.ForceDeflating && _source.CanSeek &&
-			    _zfe.CompressedSize > _zfe.FileSize)
+				_zfe.CompressedSize > _zfe.FileSize)
 			{
 				// Start operation again with Store algorithm
 				_zfe.Method = Compression.Store;
@@ -893,7 +895,7 @@ namespace NBug.Core.Util.Storage
 			this.ZipFileStream.Write(new byte[] { 80, 75, 1, 2, 23, 0xB, 20, 0 }, 0, 8);
 			this.ZipFileStream.Write(BitConverter.GetBytes((ushort)(_zfe.EncodeUTF8 ? 0x0800 : 0)), 0, 2);
 
-			// filename and comment encoding 
+			// filename and comment encoding
 			this.ZipFileStream.Write(BitConverter.GetBytes((ushort)_zfe.Method), 0, 2); // zipping method
 			this.ZipFileStream.Write(BitConverter.GetBytes(this.DateTimeToDosTime(_zfe.ModifyTime)), 0, 4);
 
@@ -970,7 +972,7 @@ namespace NBug.Core.Util.Storage
 			this.ZipFileStream.Write(new byte[] { 80, 75, 3, 4, 20, 0 }, 0, 6); // No extra header
 			this.ZipFileStream.Write(BitConverter.GetBytes((ushort)(_zfe.EncodeUTF8 ? 0x0800 : 0)), 0, 2);
 
-			// filename and comment encoding 
+			// filename and comment encoding
 			this.ZipFileStream.Write(BitConverter.GetBytes((ushort)_zfe.Method), 0, 2); // zipping method
 			this.ZipFileStream.Write(BitConverter.GetBytes(this.DateTimeToDosTime(_zfe.ModifyTime)), 0, 4);
 
@@ -985,7 +987,7 @@ namespace NBug.Core.Util.Storage
 			_zfe.HeaderSize = (uint)(this.ZipFileStream.Position - pos);
 		}
 
-		#endregion
+		#endregion Methods
 
 		/// <summary>
 		/// Represents an entry in Zip file directory
@@ -1049,7 +1051,7 @@ namespace NBug.Core.Util.Storage
 			/// </summary>
 			public DateTime ModifyTime;
 
-			#endregion
+			#endregion Constants and Fields
 
 			#region Public Methods
 
@@ -1064,7 +1066,7 @@ namespace NBug.Core.Util.Storage
 				return this.FilenameInZip;
 			}
 
-			#endregion
+			#endregion Public Methods
 		}
 	}
 }

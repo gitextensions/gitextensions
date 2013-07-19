@@ -6,10 +6,6 @@
 
 namespace NBug.Core.Reporting
 {
-	using System;
-	using System.IO;
-	using System.Xml.Serialization;
-
 	using NBug.Core.Reporting.Info;
 	using NBug.Core.Reporting.MiniDump;
 	using NBug.Core.UI;
@@ -17,6 +13,9 @@ namespace NBug.Core.Reporting
 	using NBug.Core.Util.Logging;
 	using NBug.Core.Util.Serialization;
 	using NBug.Core.Util.Storage;
+	using System;
+	using System.IO;
+	using System.Xml.Serialization;
 
 	internal class BugReport
 	{
@@ -42,7 +41,7 @@ namespace NBug.Core.Reporting
 					// Allowing user to add any custom information to the report
 					handler(exception, report);
 				}
-				
+
 				var uiDialogResult = UISelector.DisplayBugReportUI(exceptionThread, serializableException, report);
 				if (uiDialogResult.Report == SendReport.Send)
 				{
@@ -57,7 +56,7 @@ namespace NBug.Core.Reporting
 				return ExecutionFlow.BreakExecution; // Since an internal exception occured
 			}
 		}
-		
+
 		private void WindowsScreenshot(Stream stream)
 		{
 			// Full
@@ -143,7 +142,7 @@ namespace NBug.Core.Reporting
 				}
 				else
 				{
-					Logger.Trace("Current report count is at its limit as per 'Settings.MaxQueuedReports (" + 
+					Logger.Trace("Current report count is at its limit as per 'Settings.MaxQueuedReports (" +
 						Settings.MaxQueuedReports + ")' setting: Skipping bug report generation.");
 				}
 			}
@@ -177,7 +176,6 @@ namespace NBug.Core.Reporting
 
 				if (file.Contains("*") || file.Contains("?"))
 				{
-
 					foreach (var item in Directory.GetFiles(dir, file))
 						AddToZip(zipStorer, Settings.NBugDirectory, item);
 				}

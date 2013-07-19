@@ -6,13 +6,11 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using System.Collections.Specialized;
-using System.Net;
 using System.Globalization;
+using System.IO;
+using System.Net;
+using System.Text;
 
 namespace NBug.Core.Util.Web
 {
@@ -45,13 +43,12 @@ namespace NBug.Core.Util.Web
 			request.ContentType = string.Format("multipart/form-data; boundary={0}", boundary);
 			request.Method = "POST";
 
-			if(credentials != null)
+			if (credentials != null)
 			{
 				var user = credentials.GetCredential(request.RequestUri, "Basic");
 				string auth = string.Format("{0}:{1}", user.UserName, user.Password);
 				request.Headers.Add("Authorization", "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(auth)));
 			}
-
 
 			WriteToHttpStream(request, outputStream);
 			response = request.GetResponse();
@@ -68,10 +65,10 @@ namespace NBug.Core.Util.Web
 
 		public StreamUpload AddNameValues(NameValueCollection nameValues)
 		{
-			foreach(string name in nameValues.Keys)
+			foreach (string name in nameValues.Keys)
 			{
 				Add(name, nameValues[name]);
-			} 
+			}
 			return this;
 		}
 
@@ -91,7 +88,7 @@ namespace NBug.Core.Util.Web
 			byte[] buffer = new byte[inputStream.Length];
 			int bytesRead = 0;
 
-			while((bytesRead = inputStream.Read(buffer, 0, buffer.Length)) != 0)
+			while ((bytesRead = inputStream.Read(buffer, 0, buffer.Length)) != 0)
 			{
 				outputStream.Write(buffer, 0, bytesRead);
 			}
@@ -122,7 +119,7 @@ namespace NBug.Core.Util.Web
 
 		private void WriteNameValuesToStream(MemoryStream stream, NameValueCollection nameValues)
 		{
-			foreach(string name in nameValues.Keys)
+			foreach (string name in nameValues.Keys)
 			{
 				WriteBoundaryToStream(stream, Environment.NewLine);
 
@@ -135,7 +132,7 @@ namespace NBug.Core.Util.Web
 		{
 			request.ContentLength = outputStream.Length;
 
-			using(Stream requestStream = request.GetRequestStream())
+			using (Stream requestStream = request.GetRequestStream())
 			{
 				outputStream.Position = 0;
 

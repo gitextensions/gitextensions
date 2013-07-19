@@ -9,14 +9,12 @@ using NBug.Core.Util.Serialization;
 
 namespace NBug.Core.Submission.Tracker
 {
+	using NBug.Core.Util.Logging;
 	using System;
 	using System.IO;
 	using System.Net;
 	using System.Text;
 	using System.Xml.Linq;
-
-	using NBug.Core.Util.Logging;
-	using NBug.Core.Util.Storage;
 
 	public class RedmineFactory : IProtocolFactory
 	{
@@ -135,7 +133,7 @@ namespace NBug.Core.Submission.Tracker
 										report.GeneralInfo.TargetSite;
 
 			var description = "<pre>" + report + Environment.NewLine + Environment.NewLine +
-			                  exception + "</pre>";
+							  exception + "</pre>";
 
 			var redmineRequestXml = new XElement("issue", new XElement("project_id", this.ProjectId));
 
@@ -194,7 +192,7 @@ namespace NBug.Core.Submission.Tracker
 			{
 				redmineRequestXml.Add(new XElement("author_id", this.AuthorId));
 			}
-		
+
 			var bytes = Encoding.UTF8.GetBytes(redmineRequestXml.ToString());
 
 			request.ContentLength = bytes.Length;

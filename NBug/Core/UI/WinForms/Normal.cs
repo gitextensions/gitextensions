@@ -6,11 +6,10 @@
 
 namespace NBug.Core.UI.WinForms
 {
+	using NBug.Core.Reporting.Info;
 	using System;
 	using System.Drawing;
 	using System.Windows.Forms;
-
-	using NBug.Core.Reporting.Info;
 
 	internal partial class Normal : Form
 	{

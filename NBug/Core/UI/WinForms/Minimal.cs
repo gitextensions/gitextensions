@@ -6,10 +6,9 @@
 
 namespace NBug.Core.UI.WinForms
 {
+	using NBug.Core.Reporting.Info;
 	using System.Windows.Forms;
 
-	using NBug.Core.Reporting.Info;
-	
 	internal class Minimal
 	{
 		internal UIDialogResult ShowDialog(Report report)

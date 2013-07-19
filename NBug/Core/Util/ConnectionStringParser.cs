@@ -1,7 +1,7 @@
+using NBug.Core.Util.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using NBug.Core.Util.Exceptions;
 
 namespace NBug.Core.Util
 {

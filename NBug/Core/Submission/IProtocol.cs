@@ -1,12 +1,12 @@
 ﻿namespace NBug.Core.Submission
 {
-	using System.IO;
 	using NBug.Core.Reporting.Info;
 	using NBug.Core.Util.Serialization;
-	
+	using System.IO;
+
 	/// <summary>
 	/// Implement this to support sending data to a specific location.
-	/// 
+	///
 	/// We recommend you base your implementation on ProtocolBase.
 	/// </summary>
 	public interface IProtocol

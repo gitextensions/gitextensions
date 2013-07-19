@@ -6,12 +6,11 @@
 
 namespace NBug.Core.UI.Console
 {
-	using System;
-
 	using NBug.Core.Reporting.Info;
 	using NBug.Core.Util.Exceptions;
 	using NBug.Core.Util.Serialization;
 	using NBug.Enums;
+	using System;
 
 	internal static class ConsoleUI
 	{

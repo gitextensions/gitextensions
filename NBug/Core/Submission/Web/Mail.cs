@@ -4,20 +4,16 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System.Xml.Linq;
-using System.Xml.Serialization;
 using NBug.Core.Reporting.Info;
 using NBug.Core.Util.Serialization;
 
 namespace NBug.Core.Submission.Web
 {
+	using NBug.Core.Util.Logging;
 	using System;
 	using System.IO;
 	using System.Net;
 	using System.Net.Mail;
-
-	using NBug.Core.Util.Logging;
-	using NBug.Core.Util.Storage;
 
 	public class MailFactory : IProtocolFactory
 	{
@@ -41,6 +37,7 @@ namespace NBug.Core.Submission.Web
 
 		public Mail()
 		{
+			Port = 25;
 		}
 
 		// Connection string format (single line)
@@ -81,7 +78,7 @@ namespace NBug.Core.Submission.Web
 
 		public string ReplyTo { get; set; }
 
-		public string UseAttachment { get; set; }
+		public bool UseAttachment { get; set; }
 
 		public string CustomSubject { get; set; }
 
@@ -89,13 +86,13 @@ namespace NBug.Core.Submission.Web
 
 		public string SmtpServer { get; set; }
 
-		public string UseSsl { get; set; }
+		public bool UseSsl { get; set; }
 
-		public string Port { get; set; }
+		public int Port { get; set; }
 
-		public string Priority { get; set; }
+		public MailPriority Priority { get; set; }
 
-		public string UseAuthentication { get; set; }
+		public bool UseAuthentication { get; set; }
 
 		public string Username { get; set; }
 
@@ -103,7 +100,6 @@ namespace NBug.Core.Submission.Web
 
 		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
 		{
-
 			if (string.IsNullOrEmpty(this.From) || string.IsNullOrEmpty(this.To))
 			{
 				return false;
@@ -114,29 +110,20 @@ namespace NBug.Core.Submission.Web
 				this.ReplyTo = this.From;
 			}
 
-			if (string.IsNullOrEmpty(this.UseSsl))
+			if (this.Port <= 0)
 			{
-				this.UseSsl = "false";
+				this.Port = this.UseSsl ? 465 : 25;
 			}
 
-			if (string.IsNullOrEmpty(this.Port))
+			if (!this.UseAttachment)
 			{
-				this.Port = this.UseSsl == "true" ? "465" : "25";
-			}
-
-			if (string.IsNullOrEmpty(this.UseAttachment))
-			{
-				this.UseAttachment = "false";
+				this.UseAttachment = false;
 			}
 
 			// Make sure that we can use authentication even with emtpy username and password
 			if (!string.IsNullOrEmpty(this.Username))
 			{
-				this.UseAuthentication = "true";
-			}
-			else if (string.IsNullOrEmpty(this.UseAuthentication))
-			{
-				this.UseAuthentication = "false";
+				this.UseAuthentication = true;
 			}
 
 			using (var smtpClient = new SmtpClient())
@@ -147,20 +134,14 @@ namespace NBug.Core.Submission.Web
 					smtpClient.Host = this.SmtpServer;
 				}
 
-				if (!string.IsNullOrEmpty(this.Port))
-				{
-					smtpClient.Port = Convert.ToInt32(this.Port);
-				}
+				smtpClient.Port = this.Port;
 
-				if (this.UseAuthentication.ToLower() == "true")
+				if (this.UseAuthentication)
 				{
 					smtpClient.Credentials = new NetworkCredential(this.Username, this.Password);
 				}
 
-				if (this.UseSsl == "true")
-				{
-					smtpClient.EnableSsl = true;
-				}
+				smtpClient.EnableSsl = this.UseSsl;
 
 				if (!string.IsNullOrEmpty(this.Cc))
 				{
@@ -172,27 +153,13 @@ namespace NBug.Core.Submission.Web
 					message.Bcc.Add(this.Bcc);
 				}
 
-				if (!string.IsNullOrEmpty(this.Priority))
-				{
-					switch (this.Priority.ToLower())
-					{
-						case "high":
-							message.Priority = MailPriority.High;
-							break;
-						case "normal":
-							message.Priority = MailPriority.Normal;
-							break;
-						case "low":
-							message.Priority = MailPriority.Low;
-							break;
-					}
-				}
+				message.Priority = this.Priority;
 
 				message.To.Add(this.To);
 				message.ReplyToList.Add(this.ReplyTo);
 				message.From = !string.IsNullOrEmpty(this.FromName) ? new MailAddress(this.From, this.FromName) : new MailAddress(this.From);
 
-				if (this.UseAttachment.ToLower() == "true")
+				if (this.UseAttachment)
 				{
 					// ToDo: Report file name should be attached to the report file object itself, file shouldn't be accessed directly!
 					file.Position = 0;
@@ -214,11 +181,11 @@ namespace NBug.Core.Submission.Web
 				if (!string.IsNullOrEmpty(this.CustomBody))
 				{
 					message.Body = this.CustomBody + Environment.NewLine + Environment.NewLine + report +
-					               Environment.NewLine + Environment.NewLine + exception;
+								   Environment.NewLine + Environment.NewLine + exception;
 				}
 				else
 				{
-					message.Body =  report + Environment.NewLine + Environment.NewLine + exception;
+					message.Body = report + Environment.NewLine + Environment.NewLine + exception;
 				}
 
 				smtpClient.Send(message);

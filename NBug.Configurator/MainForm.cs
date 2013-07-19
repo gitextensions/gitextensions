@@ -6,13 +6,18 @@
 
 namespace NBug.Configurator
 {
+	using NBug.Configurator.SubmitPanels;
+	using NBug.Enums;
+    using NBug.Core.Util;
+    using NBug.Core.Submission;
+
 	/* Dear maintainer:
-	 * 
-	 * Once you are done trying to 'optimize' this file, and have realized what a terrible mistake that was,
-	 * please increment the following counter as a warning to the next guy:
-	 * 
-	 * total_hours_wasted_here = 20
-	 */
+		 *
+		 * Once you are done trying to 'optimize' this file, and have realized what a terrible mistake that was,
+		 * please increment the following counter as a warning to the next guy:
+		 *
+		 * total_hours_wasted_here = 20
+		 */
 
 	using System;
 	using System.Collections.Generic;
@@ -22,13 +27,9 @@ namespace NBug.Configurator
 	using System.Linq;
 	using System.Windows.Forms;
 
-
-	using NBug.Configurator.SubmitPanels;
-	using NBug.Enums;
-
 	public partial class MainForm : Form
 	{
-		private ICollection<PanelLoader> panelLoaders = new Collection<PanelLoader>();
+        private readonly ICollection<PanelLoader> panelLoaders = new Collection<PanelLoader>();
 
 		private FileStream settingsFile;
 
@@ -39,14 +40,15 @@ namespace NBug.Configurator
 			NBug.Settings.CustomUIEvent += Settings_CustomUIEvent;
 			this.openFileDialog.InitialDirectory = Environment.CurrentDirectory;
 			this.createFileDialog.InitialDirectory = Environment.CurrentDirectory;
-			panelLoaders.Add(this.panelLoader1);
+            NBug.Settings.Destinations.Clear();
 		}
 
-		void Settings_CustomUIEvent(object sender, CustomUIEventArgs e)
+		private void Settings_CustomUIEvent(object sender, CustomUIEventArgs e)
 		{
-			var Form = new Normal();
+			var Form = new CustomPreviewForm();
 			e.Result = Form.ShowDialog(e.Report);
 		}
+
 		/// <summary>
 		/// Enables disabled controls and fills in combo boxes using related enumerations. Resets all values to defaults.
 		/// </summary>
@@ -80,7 +82,7 @@ namespace NBug.Configurator
 			{
 				loader.UnloadPanel();
 			}
-			
+
 			this.sleepBeforeSendNumericUpDown.Maximum = decimal.MaxValue;
 			this.maxQueuedReportsNumericUpDown.Maximum = decimal.MaxValue;
 			this.stopReportingAfterNumericUpDown.Maximum = decimal.MaxValue;
@@ -103,7 +105,7 @@ namespace NBug.Configurator
 			this.InitializeControls();
 
 			this.fileTextBox.Text = createNew == false ? this.openFileDialog.FileName : this.createFileDialog.FileName;
-			
+
 			// Read application settings
 			this.uiProviderComboBox.SelectedItem = Settings.UIProvider;
 			this.uiModeComboBox.SelectedItem = Settings.UIMode; // Should come after uiProviderComboBox = ...
@@ -147,11 +149,14 @@ namespace NBug.Configurator
 			{
 				mainTabs.TabPages.RemoveAt(2);
 			}
+
 			panelLoaders.Clear();
+
 			// Read connection strings
-			foreach (var destination in Settings.Destinations.Take(5))
+			foreach (var destination in Settings.Destinations)
 			{
 				var loader = new PanelLoader();
+                loader.RemoveDestination += loader_RemoveDestination;
 				loader.LoadPanel(destination.ConnectionString);
 				panelLoaders.Add(loader);
 				var tabPage = new TabPage(string.Format("Submit #{0}", panelLoaders.Count));
@@ -195,12 +200,12 @@ namespace NBug.Configurator
 			Settings.StoragePath = this.storagePathComboBox.Text == "Custom" ? this.customStoragePathTextBox.Text : this.storagePathComboBox.Text;
 
 			Settings.Destinations.Clear();
+
 			// Save connection strings
 			foreach (var connectionString in panelLoaders
 				.Where(p => p.Controls.Count == 2)
 				.Select(p => ((ISubmitPanel)p.Controls[0]).ConnectionString)
 				.Where(s => !string.IsNullOrEmpty(s)))
-
 			{
 				Settings.AddDestinationFromConnectionString(connectionString);
 			}
@@ -409,10 +414,48 @@ namespace NBug.Configurator
 		private void AddDestinationButton_Click(object sender, EventArgs e)
 		{
 			var loader = new PanelLoader();
+            loader.RemoveDestination += loader_RemoveDestination;
 			panelLoaders.Add(loader);
 			var tabPage = new TabPage(string.Format("Submit #{0}", panelLoaders.Count));
 			tabPage.Controls.Add(loader);
 			mainTabs.TabPages.Add(tabPage);
 		}
+
+        void loader_RemoveDestination(object sender, EventArgs e)
+        {
+            var loader = sender as PanelLoader;
+            var idx = 2;
+            idx += (panelLoaders.ToList<PanelLoader>()).IndexOf(loader);
+
+            if (!string.IsNullOrEmpty(loader.connString))
+            {
+                var protocol = ConnectionStringParser.Parse(loader.connString)["Type"];                
+                IProtocol dest = null;
+
+                if (protocol == typeof(Core.Submission.Web.Mail).Name || protocol.ToLower() == "email" || protocol.ToLower() == "e-mail")
+                {
+                    dest = new Core.Submission.Web.Mail(loader.connString);
+                }
+                else if (protocol == typeof(Core.Submission.Tracker.Redmine).Name)
+                {
+                    dest = new Core.Submission.Tracker.Redmine(loader.connString);
+                }
+                else if (protocol == typeof(Core.Submission.Web.Ftp).Name)
+                {
+                    dest = new Core.Submission.Tracker.Redmine(loader.connString);
+                }
+                else if (protocol == typeof(Core.Submission.Web.Http).Name)
+                {
+                    dest = new Core.Submission.Tracker.Redmine(loader.connString);
+                }
+
+                if (dest != null)
+                    Settings.Destinations.Remove(dest);
+            }
+
+            panelLoaders.Remove(loader);
+            mainTabs.TabPages.RemoveAt(idx);
+            return;
+        }
 	}
 }

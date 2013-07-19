@@ -6,13 +6,12 @@
 
 namespace NBug.Core.UI.Developer
 {
+	using NBug.Enums;
+	using NBug.Properties;
 	using System;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using System.Windows.Forms;
-
-	using NBug.Enums;
-	using NBug.Properties;
 
 	internal partial class InternalLogViewer : Form
 	{

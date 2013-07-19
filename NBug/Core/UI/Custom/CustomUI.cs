@@ -6,7 +6,6 @@
 
 namespace NBug.Core.UI.WPF
 {
-    using System.ComponentModel;
 	using NBug.Core.Reporting.Info;
 	using NBug.Core.Util.Exceptions;
 	using NBug.Core.Util.Serialization;
@@ -20,12 +19,12 @@ namespace NBug.Core.UI.WPF
 	{
 		internal static UIDialogResult ShowDialog(UIMode uiMode, SerializableException exception, Report report)
 		{
-            if (Settings.CustomUIHandle != null)
+			if (Settings.CustomUIHandle != null)
 			{
-                var e = new CustomUIEventArgs(uiMode, exception, report);
-                Settings.CustomUIHandle.DynamicInvoke(null, e);
-                return e.Result;
-            }
+				var e = new CustomUIEventArgs(uiMode, exception, report);
+				Settings.CustomUIHandle.DynamicInvoke(null, e);
+				return e.Result;
+			}
 			else
 			{
 				throw NBugConfigurationException.Create(() => Settings.UIMode, "Parameter supplied for settings property is invalid.");

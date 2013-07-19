@@ -6,17 +6,16 @@
 
 namespace NBug
 {
+	using NBug.Core.Reporting;
+	using NBug.Core.UI;
+	using NBug.Core.Util;
+	using NBug.Core.Util.Logging;
 	using System;
 	using System.Runtime.ExceptionServices;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using System.Windows.Forms;
 	using System.Windows.Threading;
-
-	using NBug.Core.Reporting;
-	using NBug.Core.UI;
-	using NBug.Core.Util;
-	using NBug.Core.Util.Logging;
 
 	public static class Handler
 	{
@@ -122,7 +121,7 @@ namespace NBug
 				if (executionFlow == ExecutionFlow.BreakExecution)
 				{
 					Environment.Exit(0);
-				} 
+				}
 			}
 		}
 
@@ -149,7 +148,7 @@ namespace NBug
 				if (executionFlow == ExecutionFlow.BreakExecution)
 				{
 					Environment.Exit(0);
-				} 
+				}
 			}
 		}
 
@@ -179,7 +178,7 @@ namespace NBug
 				else if (executionFlow == ExecutionFlow.ContinueExecution)
 				{
 					e.Handled = true;
-				} 
+				}
 			}
 		}
 
@@ -209,7 +208,7 @@ namespace NBug
 				else if (executionFlow == ExecutionFlow.ContinueExecution)
 				{
 					e.SetObserved();
-				} 
+				}
 			}
 		}
 

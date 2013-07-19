@@ -11,11 +11,13 @@ namespace NBug.Core.Util.Exceptions
 	[Serializable]
 	public class NBugRuntimeException : NBugException
 	{
-		public NBugRuntimeException(string message, Exception inner) : base(message, inner)
+		public NBugRuntimeException(string message, Exception inner)
+			: base(message, inner)
 		{
 		}
 
-		public NBugRuntimeException(string message) : base(message)
+		public NBugRuntimeException(string message)
+			: base(message)
 		{
 		}
 	}

@@ -6,13 +6,12 @@
 
 namespace NBug.Core.Util.Logging
 {
-	using System;
-	using System.IO;
-	using System.Linq.Expressions;
-
 	using NBug.Core.UI.Developer;
 	using NBug.Core.Util.Exceptions;
 	using NBug.Enums;
+	using System;
+	using System.IO;
+	using System.Linq.Expressions;
 
 	/// <summary>
 	/// Uses <see cref="System.Diagnostics.Trace.Write(string, string)"/> method to log important messages. Also provides a <see cref="LogWritten"/>
@@ -49,12 +48,12 @@ namespace NBug.Core.Util.Logging
 		/// First parameters is message string, second one is the category.
 		/// </summary>
 		internal static event Action<string, LoggerCategory> LogWritten;
-		
+
 		internal static void Trace(string message)
 		{
 			Write(message, LoggerCategory.NBugTrace);
 		}
-		
+
 		internal static void Info(string message)
 		{
 			Write(message, LoggerCategory.NBugInfo);

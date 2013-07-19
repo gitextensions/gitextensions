@@ -1,6 +1,6 @@
 ﻿namespace NBug.Configurator
 {
-	partial class Normal
+	partial class CustomPreviewForm
 	{
 		/// <summary>
 		/// Required designer variable.

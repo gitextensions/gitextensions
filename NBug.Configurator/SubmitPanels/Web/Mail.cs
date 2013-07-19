@@ -7,6 +7,7 @@
 namespace NBug.Configurator.SubmitPanels.Web
 {
 	using System;
+	using System.Net.Mail;
 	using System.Windows.Forms;
 
 	public partial class Mail : UserControl, ISubmitPanel
@@ -15,6 +16,7 @@ namespace NBug.Configurator.SubmitPanels.Web
 		{
 			InitializeComponent();
 			this.portNumericUpDown.Maximum = decimal.MaxValue;
+			this.priorityComboBox.SelectedIndex = 1;
 		}
 
 		public string ConnectionString
@@ -24,20 +26,20 @@ namespace NBug.Configurator.SubmitPanels.Web
 				// Check the mendatory fields
 				if (this.toListBox.Items.Count == 0)
 				{
-					MessageBox.Show("Mandatory field \"" + toLabel.Name + "\" cannot be left blank.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					MessageBox.Show(String.Format("Mandatory field \"{0}\" cannot be left blank.", toLabel.Name), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 					return null;
 				}
 
 				var mail = new Core.Submission.Web.Mail
-					{
-						From = this.fromTextBox.Text,
-						FromName = this.fromNameTextBox.Text,
-						ReplyTo = this.replyToTextBox.Text,
-						CustomSubject = this.customSubjectTextBox.Text,
-						CustomBody = this.customBodyTextBox.Text,
-						SmtpServer = this.smtpServerTextBox.Text,
-						Priority = this.priorityComboBox.Text
-					};
+				{
+					From = this.fromTextBox.Text,
+					FromName = this.fromNameTextBox.Text,
+					ReplyTo = this.replyToTextBox.Text,
+					CustomSubject = this.customSubjectTextBox.Text,
+					CustomBody = this.customBodyTextBox.Text,
+					SmtpServer = this.smtpServerTextBox.Text,
+					Priority = (MailPriority)Enum.Parse(typeof(MailPriority), this.priorityComboBox.SelectedItem.ToString())
+				};
 
 				foreach (var item in this.toListBox.Items)
 				{
@@ -48,7 +50,7 @@ namespace NBug.Configurator.SubmitPanels.Web
 
 				if (this.ccListBox.Items.Count != 0)
 				{
-					foreach (var item in this.ccListBox.Items)
+					foreach (var item in ccListBox.Items)
 					{
 						mail.Cc += item + ",";
 					}
@@ -65,34 +67,26 @@ namespace NBug.Configurator.SubmitPanels.Web
 
 					mail.Bcc = mail.Bcc.TrimEnd(new[] { ',' });
 				}
-				
+
 				if (!this.defaultPortCheckBox.Checked)
 				{
-					mail.Port = this.portNumericUpDown.Text;
+					mail.Port = (int)this.portNumericUpDown.Value;
 				}
-
 
 				if (this.useAuthenticationCheckBox.Checked)
 				{
 					// Make sure that we can use authentication even with emtpy username and password
 					if (string.IsNullOrEmpty(this.usernameTextBox.Text))
 					{
-						mail.UseAuthentication = "true";
+						mail.UseAuthentication = true;
 					}
 
 					mail.Username = this.usernameTextBox.Text;
 					mail.Password = this.passwordTextBox.Text;
 				}
 
-				if (this.useSslCheckBox.Checked)
-				{
-					mail.UseSsl = "true";
-				}
-
-				if (this.useAttachmentCheckBox.Checked)
-				{
-					mail.UseAttachment = "true";
-				}
+				mail.UseSsl = this.useSslCheckBox.Checked;
+				mail.UseAttachment = this.useAttachmentCheckBox.Checked;
 
 				return mail.ConnectionString;
 			}
@@ -104,22 +98,18 @@ namespace NBug.Configurator.SubmitPanels.Web
 				this.fromTextBox.Text = mail.From;
 				this.fromNameTextBox.Text = mail.FromName;
 				this.smtpServerTextBox.Text = mail.SmtpServer;
-				this.useSslCheckBox.Checked = Convert.ToBoolean(mail.UseSsl);
+				this.useSslCheckBox.Checked = mail.UseSsl;
 				this.priorityComboBox.SelectedItem = mail.Priority;
-				this.useAuthenticationCheckBox.Checked = Convert.ToBoolean(mail.UseAuthentication);
+				this.useAuthenticationCheckBox.Checked = mail.UseAuthentication;
 				this.usernameTextBox.Text = mail.Username;
 				this.passwordTextBox.Text = mail.Password;
 				this.customSubjectTextBox.Text = mail.CustomSubject;
 				this.customBodyTextBox.Text = mail.CustomBody;
 				this.replyToTextBox.Text = mail.ReplyTo;
-				this.useAttachmentCheckBox.Checked = Convert.ToBoolean(mail.UseAttachment);
+				this.useAttachmentCheckBox.Checked = mail.UseAttachment;
+				this.portNumericUpDown.Value = mail.Port;
 
-				if (!string.IsNullOrEmpty(mail.Port))
-				{
-					this.portNumericUpDown.Value = Convert.ToInt32(mail.Port);
-				}
-
-				if (this.portNumericUpDown.Value == 25 || this.portNumericUpDown.Value == 465 || string.IsNullOrEmpty(mail.Port))
+				if (this.portNumericUpDown.Value == 25 || this.portNumericUpDown.Value == 465 || mail.Port > 0)
 				{
 					this.defaultPortCheckBox.Checked = true;
 				}

@@ -70,6 +70,7 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Core\Submission\Custom\Custom.cs" />
     <Compile Include="Core\Submission\IProtocol.cs" />
     <Compile Include="Core\Submission\IProtocolFactory.cs" />
     <Compile Include="Core\Submission\Tracker\BugNet.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Core\Util\Web\StreamUpload.cs" />
     <Compile Include="Core\Util\ConnectionStringParser.cs" />
     <Compile Include="Core\Util\PublicResources.cs" />
+    <Compile Include="Events\CustomSubmissionEventArgs.cs" />
     <Compile Include="Events\CustomUIEventArgs.cs" />
     <Compile Include="Enums\MiniDumpType.cs" />
     <Compile Include="Enums\StoragePath.cs" />

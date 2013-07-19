@@ -7,6 +7,7 @@
 	{
 		// From dbghelp.h:
 		Normal = 0x00000000,
+
 		WithDataSegs = 0x00000001,
 		WithFullMemory = 0x00000002,
 		WithHandleData = 0x00000004,

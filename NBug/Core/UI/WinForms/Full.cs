@@ -6,12 +6,11 @@
 
 namespace NBug.Core.UI.WinForms
 {
+	using NBug.Core.Reporting.Info;
+	using NBug.Core.Util.Serialization;
 	using System;
 	using System.Drawing;
 	using System.Windows.Forms;
-
-	using NBug.Core.Reporting.Info;
-	using NBug.Core.Util.Serialization;
 
 	internal partial class Full : Form
 	{
@@ -36,7 +35,7 @@ namespace NBug.Core.UI.WinForms
 		internal UIDialogResult ShowDialog(SerializableException exception, Report report)
 		{
 			this.Text = string.Format("{0} {1}", report.GeneralInfo.HostApplication, Settings.Resources.UI_Dialog_Full_Title);
-			
+
 			// Fill in the 'General' tab
 			warningPictureBox.Image = SystemIcons.Warning.ToBitmap();
 			this.exceptionTextBox.Text = exception.Type;
@@ -46,10 +45,10 @@ namespace NBug.Core.UI.WinForms
 			this.nbugTextBox.Text = report.GeneralInfo.NBugVersion;
 			this.dateTimeTextBox.Text = report.GeneralInfo.DateTime;
 			this.clrTextBox.Text = report.GeneralInfo.CLRVersion;
-			
+
 			// Fill in the 'Exception' tab
 			this.exceptionDetails.Initialize(exception);
-			
+
 			// ToDo: Fill in the 'Report Contents' tab);
 
 			this.ShowDialog();

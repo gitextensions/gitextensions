@@ -16,15 +16,18 @@ namespace NBug.Core.Util.Exceptions
 		{
 		}
 
-		public NBugException(string message) : base(message)
+		public NBugException(string message)
+			: base(message)
 		{
 		}
 
-		public NBugException(string message, Exception inner) : base(message, inner)
+		public NBugException(string message, Exception inner)
+			: base(message, inner)
 		{
 		}
 
-		protected NBugException(SerializationInfo info, StreamingContext context) : base(info, context)
+		protected NBugException(SerializationInfo info, StreamingContext context)
+			: base(info, context)
 		{
 		}
 	}

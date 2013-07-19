@@ -9,12 +9,10 @@ using NBug.Core.Util.Serialization;
 
 namespace NBug.Core.Submission.Web
 {
+	using NBug.Core.Util.Logging;
 	using System;
 	using System.IO;
 	using System.Net;
-	using System.Text;
-
-	using NBug.Core.Util.Logging;
 
 	internal class FtpFactory : IProtocolFactory
 	{
@@ -62,7 +60,7 @@ namespace NBug.Core.Submission.Web
 
 		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
 		{
-			var request = (FtpWebRequest) WebRequest.Create(new Uri(this.Url + fileName));
+			var request = (FtpWebRequest)WebRequest.Create(new Uri(this.Url + fileName));
 
 			if (!string.IsNullOrEmpty(this.Usessl))
 			{
