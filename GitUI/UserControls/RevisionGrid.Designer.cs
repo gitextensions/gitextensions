@@ -341,13 +341,15 @@ namespace GitUI
             // 
             this.branchNameToolStripMenuItem.Name = "branchNameToolStripMenuItem";
             this.branchNameToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.branchNameToolStripMenuItem.Text = "Branch name";
+            this.branchNameToolStripMenuItem.Text = "Branch name(s):";
+            this.branchNameToolStripMenuItem.Enabled = false;
             // 
             // tagToolStripMenuItem
             // 
             this.tagToolStripMenuItem.Name = "tagToolStripMenuItem";
             this.tagToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.tagToolStripMenuItem.Text = "Tag";
+            this.tagToolStripMenuItem.Text = "Tag name(s):";
+            this.tagToolStripMenuItem.Enabled = false;
             // 
             // toolStripSeparator8
             // 
