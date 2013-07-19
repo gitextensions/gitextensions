@@ -1742,26 +1742,21 @@ namespace GitUI
             var rebaseDropDown = new ContextMenuStrip();
             var renameDropDown = new ContextMenuStrip();
 
-            var tagNameCopy = new ContextMenuStrip();
-            var branchNameCopy = new ContextMenuStrip();
+            var gitRefListsForRevision = new GitRefListsForRevision(revision);
 
-            foreach (var head in revision.Refs.Where(h => h.IsTag))
+            foreach (var head in gitRefListsForRevision.AllTags)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
                 ToolStripItem tagName = new ToolStripMenuItem(head.Name);
                 toolStripItem.Click += ToolStripItemClickDeleteTag;
                 deleteTagDropDown.Items.Add(toolStripItem);
-                tagName.Click += CopyToClipBoard;
-                tagNameCopy.Items.Add(tagName);
             }
 
             //For now there is no action that could be done on currentBranch
             string currentBranch = Module.GetSelectedBranch();
-            var allBranches = revision.Refs.Where(h => !h.IsTag && (h.IsHead || h.IsRemote)).ToArray();
-            var localBranches = allBranches.Where(b => !b.IsRemote);
-
-            var branchesWithNoIdenticalRemotes = allBranches.Where(
-                b => !b.IsRemote || !localBranches.Any(lb => lb.TrackingRemote == b.Remote && lb.MergeWith == b.LocalName));
+            var allBranches = gitRefListsForRevision.AllBranches;
+            var localBranches = gitRefListsForRevision.LocalBranches;
+            var branchesWithNoIdenticalRemotes = gitRefListsForRevision.BranchesWithNoIdenticalRemotes;
 
             bool currentBranchPointsToRevision = false;
             foreach (var head in branchesWithNoIdenticalRemotes)
@@ -1796,13 +1791,18 @@ namespace GitUI
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
 
+            // clipboard branch and tag menu handling
+            {
+                CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(
+                    copyToClipboardToolStripMenuItem, branchNameToolStripMenuItem, gitRefListsForRevision.GetAllBranchNames(), "branchNameItem");
+
+                CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(
+                    copyToClipboardToolStripMenuItem, tagToolStripMenuItem, gitRefListsForRevision.GetAllTagNames(), "tagNameItem");
+            }
 
             foreach (var head in allBranches)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                ToolStripItem branchName = new ToolStripMenuItem(head.Name);
-                branchName.Click += CopyToClipBoard;
-                branchNameCopy.Items.Add(branchName);
 
                 //skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
@@ -1848,12 +1848,6 @@ namespace GitUI
 
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
             renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
-
-            branchNameToolStripMenuItem.DropDown = branchNameCopy;
-            branchNameToolStripMenuItem.Enabled = branchNameCopy.Items.Count > 0;
-
-            tagToolStripMenuItem.DropDown = tagNameCopy;
-            tagToolStripMenuItem.Enabled = tagNameCopy.Items.Count > 0;
 
             toolStripSeparator6.Enabled = branchNameToolStripMenuItem.Enabled || tagToolStripMenuItem.Enabled;
 
@@ -2098,11 +2092,6 @@ namespace GitUI
         private void HashToolStripMenuItemClick(object sender, EventArgs e)
         {
             Clipboard.SetText(GetRevision(LastRow).Guid);
-        }
-
-        private static void CopyToClipBoard(object sender, EventArgs e)
-        {
-            Clipboard.SetText(sender.ToString());
         }
 
         private void MarkRevisionAsBadToolStripMenuItemClick(object sender, EventArgs e)
