@@ -8,6 +8,15 @@ namespace GitUI.UserControls.RevisionGridClasses
 {
     class CopyToClipboardMenuHelper
     {
+        /// <summary>
+        /// ...
+        /// sets also the visibility of captionItem
+        /// ...
+        /// </summary>
+        /// <param name="targetMenu"></param>
+        /// <param name="captionItem"></param>
+        /// <param name="gitNameList"></param>
+        /// <param name="itemFlag"></param>
         public static void SetCopyToClipboardMenuItems(
             ToolStripMenuItem targetMenu,
             ToolStripMenuItem captionItem,
@@ -33,6 +42,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             });
 
             // visibility of caption
+            // TODO: why is the Visible property always false when it is read from?
             captionItem.Visible = gitNameList.Any();
         }
 
