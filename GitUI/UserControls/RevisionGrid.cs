@@ -1793,11 +1793,20 @@ namespace GitUI
 
             // clipboard branch and tag menu handling
             {
-                CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(
-                    copyToClipboardToolStripMenuItem, branchNameCopyToolStripMenuItem, gitRefListsForRevision.GetAllBranchNames(), "branchNameItem");
+                branchNameCopyToolStripMenuItem.Tag = "caption";
+                tagNameCopyToolStripMenuItem.Tag = "caption";
+                MenuUtil.SetAsCaptionMenuItem(branchNameCopyToolStripMenuItem, mainContextMenu);
+                MenuUtil.SetAsCaptionMenuItem(tagNameCopyToolStripMenuItem, mainContextMenu);
 
+                var branchNames = gitRefListsForRevision.GetAllBranchNames();
                 CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(
-                    copyToClipboardToolStripMenuItem, tagNameCopyToolStripMenuItem, gitRefListsForRevision.GetAllTagNames(), "tagNameItem");
+                    copyToClipboardToolStripMenuItem, branchNameCopyToolStripMenuItem, branchNames, "branchNameItem");
+
+                var tagNames = gitRefListsForRevision.GetAllTagNames();
+                CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(
+                    copyToClipboardToolStripMenuItem, tagNameCopyToolStripMenuItem, tagNames, "tagNameItem");
+
+                toolStripSeparator6.Visible = branchNames.Any() || tagNames.Any();
             }
 
             foreach (var head in allBranches)
