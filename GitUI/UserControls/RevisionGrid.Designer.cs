@@ -76,13 +76,13 @@ namespace GitUI
             this.stopBisectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bisectSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.messageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.messageCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.authorCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dateCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hashCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.branchNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.branchNameCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tagNameCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.checkoutBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -297,13 +297,13 @@ namespace GitUI
             // copyToClipboardToolStripMenuItem
             // 
             this.copyToClipboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.hashToolStripMenuItem,
-            this.messageToolStripMenuItem,
-            this.authorToolStripMenuItem,
-            this.dateToolStripMenuItem,
+            this.branchNameCopyToolStripMenuItem,
+            this.tagNameCopyToolStripMenuItem,
             this.toolStripSeparator6,
-            this.branchNameToolStripMenuItem,
-            this.tagToolStripMenuItem});
+            this.hashCopyToolStripMenuItem,
+            this.messageCopyToolStripMenuItem,
+            this.authorCopyToolStripMenuItem,
+            this.dateCopyToolStripMenuItem});
             this.copyToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
             this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
             this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
@@ -312,32 +312,32 @@ namespace GitUI
             // 
             // messageToolStripMenuItem
             // 
-            this.messageToolStripMenuItem.Name = "messageToolStripMenuItem";
-            this.messageToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.messageToolStripMenuItem.Text = "Message";
-            this.messageToolStripMenuItem.Click += new System.EventHandler(this.MessageToolStripMenuItemClick);
+            this.messageCopyToolStripMenuItem.Name = "messageToolStripMenuItem";
+            this.messageCopyToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.messageCopyToolStripMenuItem.Text = "Message";
+            this.messageCopyToolStripMenuItem.Click += new System.EventHandler(this.MessageToolStripMenuItemClick);
             // 
             // authorToolStripMenuItem
             // 
-            this.authorToolStripMenuItem.Name = "authorToolStripMenuItem";
-            this.authorToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.authorToolStripMenuItem.Text = "Author";
-            this.authorToolStripMenuItem.Click += new System.EventHandler(this.AuthorToolStripMenuItemClick);
+            this.authorCopyToolStripMenuItem.Name = "authorToolStripMenuItem";
+            this.authorCopyToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.authorCopyToolStripMenuItem.Text = "Author";
+            this.authorCopyToolStripMenuItem.Click += new System.EventHandler(this.AuthorToolStripMenuItemClick);
             // 
             // dateToolStripMenuItem
             // 
-            this.dateToolStripMenuItem.Name = "dateToolStripMenuItem";
-            this.dateToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.dateToolStripMenuItem.Text = "Date";
-            this.dateToolStripMenuItem.Click += new System.EventHandler(this.DateToolStripMenuItemClick);
+            this.dateCopyToolStripMenuItem.Name = "dateToolStripMenuItem";
+            this.dateCopyToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.dateCopyToolStripMenuItem.Text = "Date";
+            this.dateCopyToolStripMenuItem.Click += new System.EventHandler(this.DateToolStripMenuItemClick);
             // 
             // hashToolStripMenuItem
             // 
-            this.hashToolStripMenuItem.Name = "hashToolStripMenuItem";
-            this.hashToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.hashToolStripMenuItem.Text = "Commit hash";
-            this.hashToolStripMenuItem.Click += new System.EventHandler(this.HashToolStripMenuItemClick);
-            this.hashToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.hashCopyToolStripMenuItem.Name = "hashToolStripMenuItem";
+            this.hashCopyToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.hashCopyToolStripMenuItem.Text = "Commit hash";
+            this.hashCopyToolStripMenuItem.Click += new System.EventHandler(this.HashToolStripMenuItemClick);
+            this.hashCopyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             // 
             // toolStripSeparator6
             // 
@@ -346,15 +346,17 @@ namespace GitUI
             // 
             // branchNameToolStripMenuItem
             // 
-            this.branchNameToolStripMenuItem.Name = "branchNameToolStripMenuItem";
-            this.branchNameToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.branchNameToolStripMenuItem.Text = "Branch name";
+            this.branchNameCopyToolStripMenuItem.Name = "branchNameToolStripMenuItem";
+            this.branchNameCopyToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.branchNameCopyToolStripMenuItem.Text = "Branch name:";
+            this.branchNameCopyToolStripMenuItem.Enabled = false;
             // 
             // tagToolStripMenuItem
             // 
-            this.tagToolStripMenuItem.Name = "tagToolStripMenuItem";
-            this.tagToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.tagToolStripMenuItem.Text = "Tag";
+            this.tagNameCopyToolStripMenuItem.Name = "tagToolStripMenuItem";
+            this.tagNameCopyToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.tagNameCopyToolStripMenuItem.Text = "Tag name:";
+            this.tagNameCopyToolStripMenuItem.Enabled = false;
             // 
             // toolStripSeparator8
             // 
@@ -729,11 +731,11 @@ namespace GitUI
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.ToolStripMenuItem branchNameToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tagToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem messageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem authorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem dateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem branchNameCopyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tagNameCopyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem messageCopyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem authorCopyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dateCopyToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem markRevisionAsBadToolStripMenuItem;
@@ -749,7 +751,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem fixupCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem squashCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem renameBranchToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem hashToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hashCopyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bisectSkipRevisionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
