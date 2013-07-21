@@ -1768,26 +1768,21 @@ namespace GitUI
             var rebaseDropDown = new ContextMenuStrip();
             var renameDropDown = new ContextMenuStrip();
 
-            var tagNameCopy = new ContextMenuStrip();
-            var branchNameCopy = new ContextMenuStrip();
+            var gitRefListsForRevision = new GitRefListsForRevision(revision);
 
-            foreach (var head in revision.Refs.Where(h => h.IsTag))
+            foreach (var head in gitRefListsForRevision.AllTags)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
                 ToolStripItem tagName = new ToolStripMenuItem(head.Name);
                 toolStripItem.Click += ToolStripItemClickDeleteTag;
                 deleteTagDropDown.Items.Add(toolStripItem);
-                tagName.Click += CopyToClipBoard;
-                tagNameCopy.Items.Add(tagName);
             }
 
             //For now there is no action that could be done on currentBranch
             string currentBranch = Module.GetSelectedBranch();
-            var allBranches = revision.Refs.Where(h => !h.IsTag && (h.IsHead || h.IsRemote)).ToArray();
-            var localBranches = allBranches.Where(b => !b.IsRemote);
-
-            var branchesWithNoIdenticalRemotes = allBranches.Where(
-                b => !b.IsRemote || !localBranches.Any(lb => lb.TrackingRemote == b.Remote && lb.MergeWith == b.LocalName));
+            var allBranches = gitRefListsForRevision.AllBranches;
+            var localBranches = gitRefListsForRevision.LocalBranches;
+            var branchesWithNoIdenticalRemotes = gitRefListsForRevision.BranchesWithNoIdenticalRemotes;
 
             bool currentBranchPointsToRevision = false;
             foreach (var head in branchesWithNoIdenticalRemotes)
@@ -1822,13 +1817,27 @@ namespace GitUI
                 mergeBranchDropDown.Items.Add(toolStripItem);
             }
 
+            // clipboard branch and tag menu handling
+            {
+                branchNameCopyToolStripMenuItem.Tag = "caption";
+                tagNameCopyToolStripMenuItem.Tag = "caption";
+                MenuUtil.SetAsCaptionMenuItem(branchNameCopyToolStripMenuItem, mainContextMenu);
+                MenuUtil.SetAsCaptionMenuItem(tagNameCopyToolStripMenuItem, mainContextMenu);
+
+                var branchNames = gitRefListsForRevision.GetAllBranchNames();
+                CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(
+                    copyToClipboardToolStripMenuItem, branchNameCopyToolStripMenuItem, branchNames, "branchNameItem");
+
+                var tagNames = gitRefListsForRevision.GetAllTagNames();
+                CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(
+                    copyToClipboardToolStripMenuItem, tagNameCopyToolStripMenuItem, tagNames, "tagNameItem");
+
+                toolStripSeparator6.Visible = branchNames.Any() || tagNames.Any();
+            }
 
             foreach (var head in allBranches)
             {
                 ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                ToolStripItem branchName = new ToolStripMenuItem(head.Name);
-                branchName.Click += CopyToClipBoard;
-                branchNameCopy.Items.Add(branchName);
 
                 //skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
@@ -1875,13 +1884,7 @@ namespace GitUI
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
             renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
 
-            branchNameToolStripMenuItem.DropDown = branchNameCopy;
-            branchNameToolStripMenuItem.Enabled = branchNameCopy.Items.Count > 0;
-
-            tagToolStripMenuItem.DropDown = tagNameCopy;
-            tagToolStripMenuItem.Enabled = tagNameCopy.Items.Count > 0;
-
-            toolStripSeparator6.Enabled = branchNameToolStripMenuItem.Enabled || tagToolStripMenuItem.Enabled;
+            toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
 
             RefreshOwnScripts();
         }
@@ -2124,11 +2127,6 @@ namespace GitUI
         private void HashToolStripMenuItemClick(object sender, EventArgs e)
         {
             Clipboard.SetText(GetRevision(LastRow).Guid);
-        }
-
-        private static void CopyToClipBoard(object sender, EventArgs e)
-        {
-            Clipboard.SetText(sender.ToString());
         }
 
         private void MarkRevisionAsBadToolStripMenuItemClick(object sender, EventArgs e)
@@ -2601,53 +2599,10 @@ namespace GitUI
         private void copyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
         {
             var revision = GetRevision(LastRow);
-            AddOrUpdateTextPostfix(hashToolStripMenuItem, StrLimitWithElipses(revision.Guid, 15));
-            AddOrUpdateTextPostfix(messageToolStripMenuItem, StrLimitWithElipses(revision.Message, 30));
-            AddOrUpdateTextPostfix(authorToolStripMenuItem, revision.Author);
-            AddOrUpdateTextPostfix(dateToolStripMenuItem, revision.CommitDate.ToString());
-        }
-
-        /// <summary>
-        /// adds or updates text in parentheses (...)
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="postfix"></param>
-        private void AddOrUpdateTextPostfix(ToolStripItem target, string postfix)
-        {
-            if (target.Text.EndsWith(")"))
-            {
-                target.Text = target.Text.Substring(0, target.Text.IndexOf("     ("));
-            }
-
-            target.Text += string.Format("     ({0})", postfix);
-        }
-
-        /// <summary>
-        /// Substring with elipses but OK if shorter, will take 3 characters off character count if necessary
-        /// from http://blog.abodit.com/2010/02/string-extension-methods-for-truncating-and-adding-ellipsis/
-        /// </summary>
-        public static string StrLimitWithElipses(string str, int characterCount)
-        {
-            if (characterCount < 5)
-                return StrLimit(str, characterCount); // Can’t do much with such a short limit
-            if (str.Length <= characterCount - 3)
-                return str;
-            else
-                return str.Substring(0, characterCount - 3) + "...";
-        }
-
-        /// <summary>
-        /// Substring but OK if shorter
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="characterCount"></param>
-        /// <returns></returns>
-        public static string StrLimit(string str, int characterCount)
-        {
-            if (str.Length <= characterCount)
-                return str;
-            else
-                return str.Substring(0, characterCount).TrimEnd(' ');
+            CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(hashCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(revision.Guid, 15));
+            CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, CopyToClipboardMenuHelper.StrLimitWithElipses(revision.Message, 30));
+            CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(authorCopyToolStripMenuItem, revision.Author);
+            CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(dateCopyToolStripMenuItem, revision.CommitDate.ToString());
         }
 
         /// <summary>
