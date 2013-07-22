@@ -1389,7 +1389,7 @@ namespace GitUI
             {
                 if (revision.Body == null && revision.Guid != "0000000000000000000000000000000000000000" && revision.Guid != "1111111111111111111111111111111111111111")
                 {
-                    ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex));
+                    ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex, Revisions.RowCount));
                 }
 
                 if (revision.Body != null)
@@ -1407,7 +1407,14 @@ namespace GitUI
             }
         }
 
-        private void LoadIsMultilineMessageInfo(GitRevision revision, int colIndex, int rowIndex)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="revision"></param>
+        /// <param name="totalRowCount">check if grid has changed while thread is queued</param>
+        /// <param name="colIndex"></param>
+        /// <param name="rowIndex"></param>
+        private void LoadIsMultilineMessageInfo(GitRevision revision, int colIndex, int rowIndex, int totalRowCount)
         {
             // code taken from CommitInfo.cs
             CommitData commitData = CommitData.CreateFromRevision(revision);
@@ -1419,7 +1426,14 @@ namespace GitUI
             }
 
             // now that Body is filled (not null anymore) the revision grid can be refreshed to display the new information
-            this.InvokeAsync(() => Revisions.InvalidateCell(colIndex, rowIndex));
+            this.InvokeAsync(() =>
+            {
+                if (Revisions == null || Revisions.RowCount == 0 || Revisions.RowCount <= rowIndex || Revisions.RowCount != totalRowCount)
+                {
+                    return;
+                }
+                Revisions.InvalidateCell(colIndex, rowIndex);
+            });
         }
 
         private void DrawColumnText(IDeviceContext dc, string text, Font font, Color color, Rectangle bounds)
