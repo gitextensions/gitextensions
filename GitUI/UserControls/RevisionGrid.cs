@@ -1092,13 +1092,19 @@ namespace GitUI
                 }
             }
 
+            var columnIndex = e.ColumnIndex;
+
+            int graphColIndex = GraphDataGridViewColumn.Index;
+            int messageColIndex = MessageDataGridViewColumn.Index;
+            int authorColIndex = AuthorDataGridViewColumn.Index;
+            int dateColIndex = DateDataGridViewColumn.Index;
+
             // The graph column is handled by the DvcsGraph
-            if (e.ColumnIndex == 0)
+            if (e.ColumnIndex == graphColIndex)
             {
                 return;
             }
 
-            var column = e.ColumnIndex;
             if (e.RowIndex < 0 || (e.State & DataGridViewElementStates.Visible) == 0)
                 return;
 
@@ -1139,206 +1145,200 @@ namespace GitUI
                 else if (SuperprojectCurrentCheckout.IsCompleted && SuperprojectCurrentCheckout.Result.Contains(revision.Guid))
                     rowFont = SuperprojectFont;
 
-                switch (column)
+                if (columnIndex == messageColIndex)
                 {
-                    case 1: //Description!!
+                    int baseOffset = 0;
+                    if (IsCardLayout())
+                    {
+                        baseOffset = 5;
+
+                        Rectangle cellRectangle = new Rectangle(e.CellBounds.Left + baseOffset, e.CellBounds.Top + 1, e.CellBounds.Width - (baseOffset * 2), e.CellBounds.Height - 4);
+
+                        if (!AppSettings.RevisionGraphDrawNonRelativesGray || Revisions.RowIsRelative(e.RowIndex))
                         {
-                            int baseOffset = 0;
-                            if (IsCardLayout())
+                            e.Graphics.FillRectangle(
+                                new LinearGradientBrush(cellRectangle,
+                                                        Color.FromArgb(255, 220, 220, 231),
+                                                        Color.FromArgb(255, 240, 240, 250), 90, false), cellRectangle);
+                            using (var pen = new Pen(Color.FromArgb(255, 200, 200, 200), 1))
                             {
-                                baseOffset = 5;
-
-                                Rectangle cellRectangle = new Rectangle(e.CellBounds.Left + baseOffset, e.CellBounds.Top + 1, e.CellBounds.Width - (baseOffset * 2), e.CellBounds.Height - 4);
-
-                                if (!AppSettings.RevisionGraphDrawNonRelativesGray || Revisions.RowIsRelative(e.RowIndex))
-                                {
-                                    e.Graphics.FillRectangle(
-                                        new LinearGradientBrush(cellRectangle,
-                                                                Color.FromArgb(255, 220, 220, 231),
-                                                                Color.FromArgb(255, 240, 240, 250), 90, false), cellRectangle);
-                                    using (var pen = new Pen(Color.FromArgb(255, 200, 200, 200), 1))
-                                    {
-                                        e.Graphics.DrawRectangle(pen, cellRectangle);
-                                    }
-                                }
-                                else
-                                {
-                                    e.Graphics.FillRectangle(
-                                        new LinearGradientBrush(cellRectangle,
-                                                                Color.FromArgb(255, 240, 240, 240),
-                                                                Color.FromArgb(255, 250, 250, 250), 90, false), cellRectangle);
-                                }
-
-                                if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
-                                {
-                                    using (var penSelectionBackColor = new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1))
-                                        e.Graphics.DrawRectangle(penSelectionBackColor, cellRectangle);
-                                }
+                                e.Graphics.DrawRectangle(pen, cellRectangle);
                             }
+                        }
+                        else
+                        {
+                            e.Graphics.FillRectangle(
+                                new LinearGradientBrush(cellRectangle,
+                                                        Color.FromArgb(255, 240, 240, 240),
+                                                        Color.FromArgb(255, 250, 250, 250), 90, false), cellRectangle);
+                        }
 
-                            float offset = baseOffset;
-                            var gitRefs = revision.Refs;
+                        if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
+                        {
+                            using (var penSelectionBackColor = new Pen(Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor, 1))
+                                e.Graphics.DrawRectangle(penSelectionBackColor, cellRectangle);
+                        }
+                    }
 
-                            if (gitRefs.Count > 0)
-                            {
-                                gitRefs.Sort((left, right) =>
-                                               {
-                                                   if (left.IsTag != right.IsTag)
-                                                       return right.IsTag.CompareTo(left.IsTag);
-                                                   if (left.IsRemote != right.IsRemote)
-                                                       return left.IsRemote.CompareTo(right.IsRemote);
-                                                   return left.Name.CompareTo(right.Name);
-                                               });
+                    float offset = baseOffset;
+                    var gitRefs = revision.Refs;
 
-                                foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || _revisionGridMenuCommands.ShowRemoteBranches)))
-                                {
-                                    Font refsFont;
-
-                                    if (gitRef.IsTag)
-                                    {
-                                        if (!AppSettings.ShowTags)
+                    if (gitRefs.Count > 0)
+                    {
+                        gitRefs.Sort((left, right) =>
                                         {
-                                            continue;
-                                        }
-                                    }
+                                            if (left.IsTag != right.IsTag)
+                                                return right.IsTag.CompareTo(left.IsTag);
+                                            if (left.IsRemote != right.IsRemote)
+                                                return left.IsRemote.CompareTo(right.IsRemote);
+                                            return left.Name.CompareTo(right.Name);
+                                        });
 
-                                    if (IsFilledBranchesLayout())
-                                    {
-                                        //refsFont = head.Selected ? rowFont : new Font(rowFont, FontStyle.Regular);
-                                        refsFont = rowFont;
+                        foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || _revisionGridMenuCommands.ShowRemoteBranches)))
+                        {
+                            Font refsFont;
 
-                                        //refsFont = head.Selected
-                                        //    ? new Font(rowFont, rowFont.Style | FontStyle.Italic)
-                                        //    : rowFont;
-                                    }
-                                    else
-                                    {
-                                        refsFont = RefsFont;
-                                    }
-
-                                    Color headColor = GetHeadColor(gitRef);
-                                    Brush textBrush = new SolidBrush(headColor);
-
-                                    string headName;
-
-                                    if (IsCardLayout())
-                                    {
-                                        headName = gitRef.Name;
-                                        offset += e.Graphics.MeasureString(headName, refsFont).Width + 6;
-                                        PointF location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
-                                        var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
-                                                             e.Graphics.MeasureString(headName, RefsFont).Height);
-                                        e.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
-                                                                 location.Y - 1, size.Width + 3, size.Height + 2);
-                                        e.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
-                                                                 location.Y - 1, size.Width + 3, size.Height + 2);
-                                        e.Graphics.DrawString(headName, refsFont, textBrush, location);
-                                    }
-                                    else
-                                    {
-                                        headName = IsFilledBranchesLayout()
-                                                       ? gitRef.Name
-                                                       : string.Concat("[", gitRef.Name, "] ");
-
-                                        var headBounds = AdjustCellBounds(e.CellBounds, offset);
-                                        SizeF textSize = e.Graphics.MeasureString(headName, refsFont);
-
-                                        offset += textSize.Width;
-
-                                        if (IsFilledBranchesLayout())
-                                        {
-                                            offset += 9;
-
-                                            float extraOffset = DrawHeadBackground(isRowSelected, e.Graphics,
-                                                                                   headColor, headBounds.X,
-                                                                                   headBounds.Y,
-                                                                                   RoundToEven(textSize.Width + 3),
-                                                                                   RoundToEven(textSize.Height), 3,
-                                                                                   gitRef.Selected,
-                                                                                   gitRef.SelectedHeadMergeSource);
-
-                                            offset += extraOffset;
-                                            headBounds.Offset((int)(extraOffset + 1), 0);
-                                        }
-
-                                        DrawColumnText(e.Graphics, headName, refsFont, headColor, headBounds);
-                                    }
+                            if (gitRef.IsTag)
+                            {
+                                if (!AppSettings.ShowTags)
+                                {
+                                    continue;
                                 }
                             }
 
-                            if (IsCardLayout())
-                                offset = baseOffset;
+                            if (IsFilledBranchesLayout())
+                            {
+                                //refsFont = head.Selected ? rowFont : new Font(rowFont, FontStyle.Regular);
+                                refsFont = rowFont;
 
-                            var text = (string)e.FormattedValue;
-                            var bounds = AdjustCellBounds(e.CellBounds, offset);
-                            DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
+                                //refsFont = head.Selected
+                                //    ? new Font(rowFont, rowFont.Style | FontStyle.Italic)
+                                //    : rowFont;
+                            }
+                            else
+                            {
+                                refsFont = RefsFont;
+                            }
+
+                            Color headColor = GetHeadColor(gitRef);
+                            Brush textBrush = new SolidBrush(headColor);
+
+                            string headName;
 
                             if (IsCardLayout())
                             {
-                                int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
-                                int gravatarSize = _rowHeigth - textHeight - 12;
-                                int gravatarTop = e.CellBounds.Top + textHeight + 6;
-                                int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
+                                headName = gitRef.Name;
+                                offset += e.Graphics.MeasureString(headName, refsFont).Width + 6;
+                                PointF location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
+                                var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
+                                                        e.Graphics.MeasureString(headName, RefsFont).Height);
+                                e.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
+                                                            location.Y - 1, size.Width + 3, size.Height + 2);
+                                e.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
+                                                            location.Y - 1, size.Width + 3, size.Height + 2);
+                                e.Graphics.DrawString(headName, refsFont, textBrush, location);
+                            }
+                            else
+                            {
+                                headName = IsFilledBranchesLayout()
+                                                ? gitRef.Name
+                                                : string.Concat("[", gitRef.Name, "] ");
 
+                                var headBounds = AdjustCellBounds(e.CellBounds, offset);
+                                SizeF textSize = e.Graphics.MeasureString(headName, refsFont);
 
-                                Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, FallBackService.MonsterId);
+                                offset += textSize.Width;
 
-                                if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
+                                if (IsFilledBranchesLayout())
                                 {
-                                    ThreadPool.QueueUserWorkItem(o =>
-                                            Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
+                                    offset += 9;
+
+                                    float extraOffset = DrawHeadBackground(isRowSelected, e.Graphics,
+                                                                            headColor, headBounds.X,
+                                                                            headBounds.Y,
+                                                                            RoundToEven(textSize.Width + 3),
+                                                                            RoundToEven(textSize.Height), 3,
+                                                                            gitRef.Selected,
+                                                                            gitRef.SelectedHeadMergeSource);
+
+                                    offset += extraOffset;
+                                    headBounds.Offset((int)(extraOffset + 1), 0);
                                 }
 
-                                if (gravatar != null)
-                                    e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
-
-                                e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 1, gravatarSize + 1);
-
-                                string authorText;
-                                string timeText;
-
-                                if (_rowHeigth >= 60)
-                                {
-                                    authorText = revision.Author;
-                                    timeText = TimeToString(AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate);
-                                }
-                                else
-                                {
-                                    timeText = string.Concat(revision.Author, " (", TimeToString(AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate), ")");
-                                    authorText = string.Empty;
-                                }
-
-
-
-                                e.Graphics.DrawString(authorText, rowFont, foreBrush,
-                                                      new PointF(gravatarLeft + gravatarSize + 5, gravatarTop + 6));
-                                e.Graphics.DrawString(timeText, rowFont, foreBrush,
-                                                      new PointF(gravatarLeft + gravatarSize + 5, e.CellBounds.Bottom - textHeight - 4));
+                                DrawColumnText(e.Graphics, headName, refsFont, headColor, headBounds);
                             }
                         }
-                        break;
-                    case 2:
+                    }
+
+                    if (IsCardLayout())
+                        offset = baseOffset;
+
+                    var text = (string)e.FormattedValue;
+                    var bounds = AdjustCellBounds(e.CellBounds, offset);
+                    DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
+
+                    if (IsCardLayout())
+                    {
+                        int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
+                        int gravatarSize = _rowHeigth - textHeight - 12;
+                        int gravatarTop = e.CellBounds.Top + textHeight + 6;
+                        int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
+
+
+                        Image gravatar = Gravatar.GravatarService.GetImageFromCache(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, FallBackService.MonsterId);
+
+                        if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
                         {
-                            var text = (string)e.FormattedValue;
-                            e.Graphics.DrawString(text, rowFont, foreBrush,
-                                                  new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                            ThreadPool.QueueUserWorkItem(o =>
+                                    Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
                         }
-                        break;
-                    case 3:
+
+                        if (gravatar != null)
+                            e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
+
+                        e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 1, gravatarSize + 1);
+
+                        string authorText;
+                        string timeText;
+
+                        if (_rowHeigth >= 60)
                         {
-                            var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
-                            var text = TimeToString(time);
-                            e.Graphics.DrawString(text, rowFont, foreBrush,
-                                                  new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                            authorText = revision.Author;
+                            timeText = TimeToString(AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate);
                         }
-                        break;
+                        else
+                        {
+                            timeText = string.Concat(revision.Author, " (", TimeToString(AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate), ")");
+                            authorText = string.Empty;
+                        }
+
+
+
+                        e.Graphics.DrawString(authorText, rowFont, foreBrush,
+                                                new PointF(gravatarLeft + gravatarSize + 5, gravatarTop + 6));
+                        e.Graphics.DrawString(timeText, rowFont, foreBrush,
+                                                new PointF(gravatarLeft + gravatarSize + 5, e.CellBounds.Bottom - textHeight - 4));
+                    }
+                }
+                else if (columnIndex == authorColIndex)
+                {
+                    var text = (string)e.FormattedValue;
+                    e.Graphics.DrawString(text, rowFont, foreBrush,
+                                            new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                }
+                else if (columnIndex == dateColIndex)
+                {
+                    var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
+                    var text = TimeToString(time);
+                    e.Graphics.DrawString(text, rowFont, foreBrush,
+                                            new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                 }
             }
         }
 
         private void RevisionsCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            var column = e.ColumnIndex;
+            var columnIndex = e.ColumnIndex;
             if (e.RowIndex < 0)
                 return;
 
@@ -1351,29 +1351,34 @@ namespace GitUI
 
             e.FormattingApplied = true;
 
-            switch (column)
+            int graphColIndex = GraphDataGridViewColumn.Index;
+            int messageColIndex = MessageDataGridViewColumn.Index;
+            int authorColIndex = AuthorDataGridViewColumn.Index;
+            int dateColIndex = DateDataGridViewColumn.Index;
+
+            if (columnIndex == graphColIndex)
             {
-                case 0:
-                    e.Value = revision.Guid;
-                    break;
-                case 1:
-                    e.Value = revision.Message;
-                    break;
-                case 2:
-                    e.Value = revision.Author ?? "";
-                    break;
-                case 3:
-                    {
-                        var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
-                        if (time == DateTime.MinValue || time == DateTime.MaxValue)
-                            e.Value = "";
-                        else
-                            e.Value = string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
-                    }
-                    break;
-                default:
-                    e.FormattingApplied = false;
-                    break;
+                e.Value = revision.Guid;
+            }
+            else if (columnIndex == messageColIndex)
+            {
+                e.Value = revision.Message;
+            }
+            else if (columnIndex == authorColIndex)
+            {
+                e.Value = revision.Author ?? "";
+            }
+            else if (columnIndex == dateColIndex)
+            {
+                var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
+                if (time == DateTime.MinValue || time == DateTime.MaxValue)
+                    e.Value = "";
+                else
+                    e.Value = string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
+            }
+            else
+            {
+                e.FormattingApplied = false;
             }
         }
 
