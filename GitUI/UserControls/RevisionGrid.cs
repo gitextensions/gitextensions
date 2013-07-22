@@ -124,6 +124,9 @@ namespace GitUI
             Revisions.AllowDrop = true;
             Revisions.ColumnHeadersVisible = false;
 
+            IsMessageMultilineDataGridViewColumn.Width = 25;
+            IsMessageMultilineDataGridViewColumn.DisplayIndex = 2;
+
             this.HotkeysEnabled = true;
             try
             {
