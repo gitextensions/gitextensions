@@ -60,6 +60,7 @@ namespace GitUI
             this.Revisions = new GitUI.RevisionGridClasses.DvcsGraph();
             this.GraphDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MessageDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.IsMessageMultilineDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AuthorDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DateDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mainContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -145,7 +146,8 @@ namespace GitUI
             this.GraphDataGridViewColumn,
             this.MessageDataGridViewColumn,
             this.AuthorDataGridViewColumn,
-            this.DateDataGridViewColumn});
+            this.DateDataGridViewColumn,
+            this.IsMessageMultilineDataGridViewColumn});
             this.Revisions.ContextMenuStrip = this.mainContextMenu;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
@@ -202,6 +204,14 @@ namespace GitUI
             this.MessageDataGridViewColumn.Name = "Message";
             this.MessageDataGridViewColumn.ReadOnly = true;
             this.MessageDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // IsMessageMultilineDataGridViewColumn
+            // 
+            this.IsMessageMultilineDataGridViewColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.IsMessageMultilineDataGridViewColumn.HeaderText = "IsMessageMultiline";
+            this.IsMessageMultilineDataGridViewColumn.Name = "IsMessageMultiline";
+            this.IsMessageMultilineDataGridViewColumn.ReadOnly = true;
+            this.IsMessageMultilineDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // Author
             // 
@@ -754,5 +764,6 @@ namespace GitUI
         private System.Windows.Forms.DataGridViewTextBoxColumn AuthorDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn GraphDataGridViewColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IsMessageMultilineDataGridViewColumn;
     }
 }
