@@ -20,9 +20,9 @@ namespace GitUI
         #endregion
 
         private readonly string _containRevison;
-        private readonly bool? _isDirtyDir;
         private readonly bool _isLoading;
         private readonly string _rbResetBranchDefaultText;
+        private bool? _isDirtyDir;
         private string _remoteName = "";
         private string _newLocalBranchName = "";
         private string _localBranchName = "";
@@ -206,18 +206,19 @@ namespace GitUI
             LocalChangesAction changes = ChangesMode;
             Settings.CheckoutBranchAction = changes;
 
-            if (IsThereUncommittedChanges() && (Visible || Settings.UseDefaultCheckoutBranchAction))
+            if ((Visible || Settings.UseDefaultCheckoutBranchAction) && IsThereUncommittedChanges())
                 cmd.LocalChanges = changes;
             else
                 cmd.LocalChanges = LocalChangesAction.DontChange;
 
             IWin32Window owner = Visible ? this : Owner;
 
-            //Stash local changes, but only if the setting CheckForUncommittedChangesInCheckoutBranch is true
-            if (Settings.CheckForUncommittedChangesInCheckoutBranch &&
-                changes == LocalChangesAction.Stash && Module.IsDirtyDir())
+            if (changes == LocalChangesAction.Stash)
             {
-                UICommands.Stash(owner);
+                if (_isDirtyDir == null && Visible)
+                    _isDirtyDir = Module.IsDirtyDir();
+                if (_isDirtyDir == true)
+                    UICommands.Stash(owner);
             }
 
             {
