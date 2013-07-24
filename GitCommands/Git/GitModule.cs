@@ -1659,7 +1659,7 @@ namespace GitCommands
 
             if (PathIsUrl(remote) && !string.IsNullOrEmpty(localBranch) && string.IsNullOrEmpty(remoteUrl))
                 localBranchArguments = ":" + GitCommandHelpers.GetFullBranchName(localBranch);
-            else if (localBranch.IsNullOrEmpty() || PathIsUrl(remote) || remoteUrl.IsNullOrEmpty() || remoteBranchArguments.IsNullOrEmpty())
+            else if (string.IsNullOrEmpty(localBranch) || PathIsUrl(remote) || string.IsNullOrEmpty(remoteUrl))
                 localBranchArguments = "";
             else
                 localBranchArguments = ":" + "refs/remotes/" + remote.Trim() + "/" + localBranch + "";
