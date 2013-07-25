@@ -46,7 +46,7 @@ namespace GitUI.CommandsDialogs
                 //commitSummaryUserControl2.Revision = _diffSelectedRevision;
                 if (_diffSelectedRevision == null)
                 {
-                    var defaultString = "...";
+                    const string defaultString = "...";
                     labelDateCaption.Text = String.Format("{0}:", Strings.GetCommitDateText());
                     labelAuthor.Text = defaultString;
                     gbDiffRevision.Text = defaultString;
@@ -59,7 +59,6 @@ namespace GitUI.CommandsDialogs
                     gbDiffRevision.Text = _diffSelectedRevision.Guid.Substring(0, 10);
                     labelMessage.Text = _diffSelectedRevision.Message;
                 }
-
             }
         }
 
