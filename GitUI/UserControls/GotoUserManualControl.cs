@@ -36,7 +36,7 @@ namespace GitUI.UserControls
         private void UpdateTooltip()
         {
             string caption = string.Format("Read more about this feature at {0}", GetUrl());
-            toolTip1.SetToolTip(labelHelpIcon, caption);
+            toolTip1.SetToolTip(pictureBoxHelpIcon, caption);
             toolTip1.SetToolTip(linkLabelHelp, caption);
         }
 

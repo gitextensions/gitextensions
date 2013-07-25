@@ -133,7 +133,7 @@
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\RevisionLinksSettingsPage.Designer.cs">
       <DependentUpon>RevisionLinksSettingsPage.cs</DependentUpon>
-    </Compile>    
+    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\ConfigFileSettingsSet.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\RepoDistSettingsPage.cs">
       <SubType>UserControl</SubType>
@@ -188,6 +188,10 @@
     <Compile Include="UserControls\GotoUserManualControl.Designer.cs">
       <DependentUpon>GotoUserManualControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\RevisionGridClasses\CopyToClipboardMenuHelper.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\CaptionCustomMenuRenderer.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\GitRefListsForRevision.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\MenuUtil.cs" />
     <Compile Include="UserManual\UserManual.cs" />
     <Compile Include="UserManual\SingleHtmlUserManual.cs" />
     <Compile Include="UserManual\StandardHtmlUserManual.cs" />
@@ -1604,6 +1608,7 @@
     <None Include="Resources\Icons\HelpPullMergeFastForward.png" />
     <None Include="Resources\Icons\HelpCommandMergeFastForward.png" />
     <None Include="Resources\Icons\IconGotoManual.png" />
+    <None Include="Resources\Icons\IconWarning.png" />
     <None Include="Resources\Icons\IconGotoCurrentRevision.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
