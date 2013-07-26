@@ -2104,19 +2104,26 @@ namespace GitUI.CommandsDialogs
         private void CurrentBranchDropDownOpening(object sender, EventArgs e)
         {
             branchSelect.DropDownItems.Clear();
+
+			ToolStripMenuItem item = new ToolStripMenuItem(checkoutBranchToolStripMenuItem.Text);
+			item.ShortcutKeys = checkoutBranchToolStripMenuItem.ShortcutKeys;
+			item.ShortcutKeyDisplayString = checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString;
+			branchSelect.DropDownItems.Add(item);
+			item.Click += (hs, he) => CheckoutBranchToolStripMenuItemClick(hs, he);
+
+			branchSelect.DropDownItems.Add(new ToolStripSeparator());
+
             foreach (var branch in Module.GetRefs(false))
             {
                 var toolStripItem = branchSelect.DropDownItems.Add(branch.Name);
                 toolStripItem.Click += BranchSelectToolStripItem_Click;
+
+				//Make sure there are never more than 100 branches added to the menu
+				//GitExtensions will hang when the drop down is to large...
+				if (branchSelect.DropDownItems.Count > 100)
+					break;
             }
 
-            branchSelect.DropDownItems.Add(new ToolStripSeparator());
-
-            ToolStripMenuItem item = new ToolStripMenuItem(checkoutBranchToolStripMenuItem.Text);
-            item.ShortcutKeys = checkoutBranchToolStripMenuItem.ShortcutKeys;
-            item.ShortcutKeyDisplayString = checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString;
-            branchSelect.DropDownItems.Add(item);
-            item.Click += (hs, he) => CheckoutBranchToolStripMenuItemClick(hs, he);
         }
 
         void BranchSelectToolStripItem_Click(object sender, EventArgs e)
