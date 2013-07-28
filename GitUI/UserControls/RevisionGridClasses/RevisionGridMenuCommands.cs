@@ -294,16 +294,6 @@ namespace GitUI.UserControls.RevisionGridClasses
 
             {
                 var menuCommand = new MenuCommand();
-                menuCommand.Name = "showGitNotesToolStripMenuItem";
-                menuCommand.Text = "Show git notes";
-                menuCommand.ExecuteAction = () => _revisionGrid.ShowGitNotesToolStripMenuItem_Click(null, null);
-                menuCommand.IsCheckedFunc = () => AppSettings.ShowGitNotes;
-
-                resultList.Add(menuCommand);
-            }
-
-            {
-                var menuCommand = new MenuCommand();
                 menuCommand.Name = "showMergeCommitsToolStripMenuItem";
                 menuCommand.Text = "Show merge commits";
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowMergeCommitsToolStripMenuItem_Click(null, null);
@@ -318,6 +308,30 @@ namespace GitUI.UserControls.RevisionGridClasses
                 menuCommand.Text = "Show tags";
                 menuCommand.ExecuteAction = () => _revisionGrid.ShowTagsToolStripMenuItem_Click(null, null);
                 menuCommand.IsCheckedFunc = () => AppSettings.ShowTags;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "showGitNotesToolStripMenuItem";
+                menuCommand.Text = "Show git notes";
+                menuCommand.ExecuteAction = () => _revisionGrid.ShowGitNotesToolStripMenuItem_Click(null, null);
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowGitNotes;
+
+                resultList.Add(menuCommand);
+            }
+
+            {
+                var menuCommand = new MenuCommand();
+                menuCommand.Name = "showIsMessageMultilineToolStripMenuItem";
+                menuCommand.Text = "Show indicator for multiline message";
+                menuCommand.ExecuteAction = () => 
+                {
+                    AppSettings.ShowIndicatorForMultilineMessage = !AppSettings.ShowIndicatorForMultilineMessage;
+                    _revisionGrid.ForceRefreshRevisions();
+                };
+                menuCommand.IsCheckedFunc = () => AppSettings.ShowIndicatorForMultilineMessage;
 
                 resultList.Add(menuCommand);
             }
