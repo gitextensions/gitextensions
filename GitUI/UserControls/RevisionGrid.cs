@@ -766,6 +766,7 @@ namespace GitUI
             try
             {
                 RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+                IsMessageMultilineDataGridViewColumn.Visible = AppSettings.ShowIndicatorForMultilineMessage;
 
                 ApplyFilterFromRevisionFilterDialog();
 
@@ -1338,7 +1339,7 @@ namespace GitUI
                     e.Graphics.DrawString(text, rowFont, foreBrush,
                                             new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                 }
-                else if (columnIndex == isMsgMultilineColIndex)
+                else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
                 {
                     var text = (string)e.FormattedValue;
                     e.Graphics.DrawString(text, rowFont, foreBrush,
@@ -1388,7 +1389,7 @@ namespace GitUI
                 else
                     e.Value = string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
             }
-            else if (columnIndex == isMsgMultilineColIndex)
+            else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
             {
                 if (revision.Body == null && revision.Guid != "0000000000000000000000000000000000000000" && revision.Guid != "1111111111111111111111111111111111111111")
                 {
