@@ -252,7 +252,7 @@ namespace GitUI
             this.runScriptToolStripMenuItem});
             this.mainContextMenu.Name = "CreateTag";
             this.mainContextMenu.Size = new System.Drawing.Size(265, 620);
-            this.mainContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTagOpening);
+            this.mainContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuOpening);
             // 
             // markRevisionAsBadToolStripMenuItem
             // 

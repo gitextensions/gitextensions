@@ -390,6 +390,7 @@ namespace GitUI.CommandsDialogs
                     updateForm.ShowDialog(Owner);
             }
 
+            bool bareRepository = Module.IsBareRepository();
             bool validWorkingDir = Module.IsValidGitWorkingDir();
             bool hasWorkingDir = !string.IsNullOrEmpty(Module.WorkingDir);
             branchSelect.Text = validWorkingDir ? Module.GetSelectedBranch() : "";
@@ -397,12 +398,12 @@ namespace GitUI.CommandsDialogs
                 HideDashboard();
             else
                 ShowDashboard();
-            toolStripButtonLevelUp.Enabled = hasWorkingDir;
+            toolStripButtonLevelUp.Enabled = hasWorkingDir && !bareRepository;
             CommitInfoTabControl.Visible = validWorkingDir;
             fileExplorerToolStripMenuItem.Enabled = validWorkingDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
             branchSelect.Enabled = validWorkingDir;
-            toolStripButton1.Enabled = validWorkingDir;
+            toolStripButton1.Enabled = validWorkingDir && !bareRepository;
             if (_toolStripGitStatus != null)
                 _toolStripGitStatus.Enabled = validWorkingDir;
             toolStripButtonPull.Enabled = validWorkingDir;
@@ -423,7 +424,7 @@ namespace GitUI.CommandsDialogs
             editgitignoreToolStripMenuItem1.Enabled = validWorkingDir;
             editgitattributesToolStripMenuItem.Enabled = validWorkingDir;
             editmailmapToolStripMenuItem.Enabled = validWorkingDir;
-            toolStripSplitStash.Enabled = validWorkingDir;
+            toolStripSplitStash.Enabled = validWorkingDir && !bareRepository;
             commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
             _createPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
             _viewPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
@@ -432,6 +433,40 @@ namespace GitUI.CommandsDialogs
             if (RepoHosts.GitHosters.Count == 1)
                 _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
             _filterBranchHelper.InitToolStripBranchFilter();
+
+            if (repositoryToolStripMenuItem.Visible)
+            {
+                manageSubmodulesToolStripMenuItem.Enabled = !bareRepository;
+                updateAllSubmodulesToolStripMenuItem.Enabled = !bareRepository;
+                synchronizeAllSubmodulesToolStripMenuItem.Enabled = !bareRepository;
+                editgitignoreToolStripMenuItem1.Enabled = !bareRepository;
+                editgitattributesToolStripMenuItem.Enabled = !bareRepository;
+                editmailmapToolStripMenuItem.Enabled = !bareRepository;
+            }
+
+            if (commandsToolStripMenuItem.Visible)
+            {
+                commitToolStripMenuItem.Enabled = !bareRepository;
+                mergeToolStripMenuItem.Enabled = !bareRepository;
+                rebaseToolStripMenuItem1.Enabled = !bareRepository;
+                pullToolStripMenuItem1.Enabled = !bareRepository;
+                resetToolStripMenuItem.Enabled = !bareRepository;
+                cleanupToolStripMenuItem.Enabled = !bareRepository;
+                stashToolStripMenuItem.Enabled = !bareRepository;
+                checkoutBranchToolStripMenuItem.Enabled = !bareRepository;
+                mergeBranchToolStripMenuItem.Enabled = !bareRepository;
+                rebaseToolStripMenuItem.Enabled = !bareRepository;
+                runMergetoolToolStripMenuItem.Enabled = !bareRepository;
+                cherryPickToolStripMenuItem.Enabled = !bareRepository;
+                checkoutToolStripMenuItem.Enabled = !bareRepository;
+                bisectToolStripMenuItem.Enabled = !bareRepository;
+                applyPatchToolStripMenuItem.Enabled = !bareRepository;
+                SvnRebaseToolStripMenuItem.Enabled = !bareRepository;
+                SvnDcommitToolStripMenuItem.Enabled = !bareRepository;
+            }
+
+            stashChangesToolStripMenuItem.Enabled = !bareRepository;
+            gitGUIToolStripMenuItem.Enabled = !bareRepository;
 
             SetShortcutKeyDisplayStringsFromHotkeySettings();
 
@@ -1499,7 +1534,7 @@ namespace GitUI.CommandsDialogs
 
         private void EditLocalGitConfigToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var fileName = Path.Combine(Module.WorkingDir, ".git/config");
+            var fileName = Path.Combine(Module.GitWorkingDir, "config");
             UICommands.StartFileEditorDialog(fileName, true);
         }
 

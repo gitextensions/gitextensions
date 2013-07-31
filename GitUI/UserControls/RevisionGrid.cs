@@ -1721,7 +1721,7 @@ namespace GitUI
             SetShowBranches();
         }
 
-        private void CreateTagOpening(object sender, CancelEventArgs e)
+        private void ContextMenuOpening(object sender, CancelEventArgs e)
         {
             if (Revisions.RowCount < LastRow || LastRow < 0 || Revisions.RowCount == 0)
                 return;
@@ -1753,6 +1753,7 @@ namespace GitUI
             }
 
             //For now there is no action that could be done on currentBranch
+            bool bareRepository = Module.IsBareRepository();
             string currentBranch = Module.GetSelectedBranch();
             var allBranches = gitRefListsForRevision.AllBranches;
             var localBranches = gitRefListsForRevision.LocalBranches;
@@ -1847,16 +1848,21 @@ namespace GitUI
             deleteBranchToolStripMenuItem.Enabled = deleteBranchDropDown.Items.Count > 0;
 
             checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
-            checkoutBranchToolStripMenuItem.Enabled = checkoutBranchDropDown.Items.Count > 0;
+            checkoutBranchToolStripMenuItem.Enabled = !bareRepository && checkoutBranchDropDown.Items.Count > 0;
 
             mergeBranchToolStripMenuItem.DropDown = mergeBranchDropDown;
-            mergeBranchToolStripMenuItem.Enabled = mergeBranchDropDown.Items.Count > 0;
+            mergeBranchToolStripMenuItem.Enabled = !bareRepository && mergeBranchDropDown.Items.Count > 0;
 
             rebaseOnToolStripMenuItem.DropDown = rebaseDropDown;
-            rebaseOnToolStripMenuItem.Enabled = rebaseDropDown.Items.Count > 0;
+            rebaseOnToolStripMenuItem.Enabled = !bareRepository && rebaseDropDown.Items.Count > 0;
 
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
             renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
+
+            checkoutRevisionToolStripMenuItem.Enabled = !bareRepository;
+            revertCommitToolStripMenuItem.Enabled = !bareRepository;
+            cherryPickCommitToolStripMenuItem.Enabled = !bareRepository;
+            manipulateCommitToolStripMenuItem.Enabled = !bareRepository;
 
             toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
 
