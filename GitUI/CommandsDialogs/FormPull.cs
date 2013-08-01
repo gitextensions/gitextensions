@@ -411,7 +411,7 @@ namespace GitUI.CommandsDialogs
 
         private bool CalculateStashedValue(IWin32Window owner)
         {
-            if (!Fetch.Checked && AutoStash.Checked &&
+            if (!Fetch.Checked && AutoStash.Checked && !Module.IsBareRepository() &&
                 Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Count > 0)
             {
                 UICommands.Stash(owner);

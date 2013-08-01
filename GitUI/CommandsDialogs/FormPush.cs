@@ -182,7 +182,8 @@ namespace GitUI.CommandsDialogs
             //Extra check if the branch is already known to the remote, give a warning when not.
             //This is not possible when the remote is an URL, but this is ok since most users push to
             //known remotes anyway.
-            if (TabControlTagBranch.SelectedTab == BranchTab && PushToRemote.Checked)
+            if (TabControlTagBranch.SelectedTab == BranchTab && PushToRemote.Checked &&
+                !Module.IsBareRepository())
             {
                 //If the current branch is not the default push, and not known by the remote
                 //(as far as we know since we are disconnected....)
@@ -362,7 +363,7 @@ namespace GitUI.CommandsDialogs
             //auto pull only if current branch was rejected
             Regex IsRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranch) + ".*", RegexOptions.Compiled);
 
-            if (IsRejected.IsMatch(form.GetOutputString()))
+            if (IsRejected.IsMatch(form.GetOutputString()) && !Module.IsBareRepository())
             {
                 bool forcePush = false;
                 IWin32Window owner = form;
