@@ -39,6 +39,23 @@
     &lt;NestedSearchPattern /&gt;
     &lt;Enabled&gt;true&lt;/Enabled&gt;
   &lt;/GitExtLinkDef&gt;
+  &lt;GitExtLinkDef&gt;
+    &lt;SearchInParts&gt;
+      &lt;RevisionPart&gt;Message&lt;/RevisionPart&gt;
+      &lt;RevisionPart&gt;LocalBranches&lt;/RevisionPart&gt;
+      &lt;RevisionPart&gt;RemoteBranches&lt;/RevisionPart&gt;
+    &lt;/SearchInParts&gt;
+    &lt;LinkFormats&gt;
+      &lt;GitExtLinkFormat&gt;
+        &lt;Caption&gt;PR {0}&lt;/Caption&gt;
+        &lt;Format&gt;https://github.com/gitextensions/gitextensions/pull/{0}&lt;/Format&gt;
+      &lt;/GitExtLinkFormat&gt;
+    &lt;/LinkFormats&gt;
+    &lt;Name&gt;GitHub - PR&lt;/Name&gt;
+    &lt;SearchPattern&gt;pr/n\d+_&lt;/SearchPattern&gt;
+    &lt;NestedSearchPattern&gt;\d+&lt;/NestedSearchPattern&gt;
+    &lt;Enabled&gt;true&lt;/Enabled&gt;
+  &lt;/GitExtLinkDef&gt;
 &lt;/ArrayOfGitExtLinkDef&gt;</string>
     </value>
   </item>
