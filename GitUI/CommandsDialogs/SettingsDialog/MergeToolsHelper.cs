@@ -127,6 +127,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "bcomp.exe";
                 case "kdiff3":
                     return "kdiff3.exe";
+                case "meld":
+                    return "meld.exe";
                 case "tmerge":
                     return "TortoiseMerge.exe";
                 case "winmerge":
@@ -156,6 +158,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
                     return FindFileInFolders(exeName, kdiff3path, @"KDiff3\",
                                                           regkdiff3path);
+                case "meld":
+                    string difftoolMeldPath = UnquoteString(GetGlobalSetting("difftool.meld.path"));
+                    string programFilesMeldPath = @"Meld\meld\";
+                    exeName = "meld.exe";
+                    return FindFileInFolders(exeName, difftoolMeldPath, programFilesMeldPath);
+
                 case "tmerge":
                     exeName = "TortoiseGitMerge.exe"; // TortoiseGit 1.8 use new names
                     string difftoolPath = FindFileInFolders(exeName, @"TortoiseGit\bin\");
@@ -186,6 +194,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 case "beyondcompare3":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "kdiff3":
+                    return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
+                case "meld":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
                 case "tmerge":
                     return "\"" + exeFile + "\" \"$LOCAL\" \"$REMOTE\"";
