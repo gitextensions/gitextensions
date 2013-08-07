@@ -9,6 +9,41 @@ namespace GitPlugin.Git
 {
     public static class GitCommands
     {
+        private static string GetRegistryValue(RegistryKey root, string subkey, string key)
+        {
+            try
+            {
+                RegistryKey rk;
+                rk = root.OpenSubKey(subkey, false);
+
+                string value = "";
+
+                if (rk != null && rk.GetValue(key) is string)
+                {
+                    value = rk.GetValue(key).ToString();
+                    rk.Flush();
+                    rk.Close();
+                }
+
+                return value;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show("GitExtensions has insufficient permissions to check the registry.");
+            }
+            return "";
+        }
+
+        private static string GetGitExRegValue(string key)
+        {
+            string result = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions", key);
+
+            if (string.IsNullOrEmpty(result))
+                result = GetRegistryValue(Registry.Users, "Software\\GitExtensions", key);
+
+            return result;
+        }
+
         public static void RunGitEx(string command, string filename)
         {
             if (!string.IsNullOrEmpty(filename))
@@ -120,41 +155,6 @@ namespace GitPlugin.Git
                    Directory.Exists(dir + "\\" + "refs");
         }
 
-        private static string GetRegistryValue(RegistryKey root, string subkey, string key)
-        {
-            try
-            {
-                RegistryKey rk;
-                rk = root.OpenSubKey(subkey, false);
-
-                string value = "";
-
-                if (rk != null && rk.GetValue(key) is string)
-                {
-                    value = rk.GetValue(key).ToString();
-                    rk.Flush();
-                    rk.Close();
-                }
-
-                return value;
-            }
-            catch (UnauthorizedAccessException)
-            {
-                MessageBox.Show("GitExtensions has insufficient permisions to check the registry.");
-            }
-            return "";
-        }
-
-        private static string GetGitExRegValue(string key)
-        {
-            string result = GetRegistryValue(Registry.CurrentUser, "Software\\GitExtensions\\GitExtensions", key);
-
-            if (string.IsNullOrEmpty(result))
-                result = GetRegistryValue(Registry.Users, "Software\\GitExtensions\\GitExtensions", key);
-
-            return result;
-        }
-
         private static void SetupProcessStartInfo(ProcessStartInfo startInfo, string command, string arguments, string workingDir, bool useUTF8, bool show)
         {
             startInfo.UseShellExecute = false;
@@ -186,7 +186,6 @@ namespace GitPlugin.Git
                 SetupProcessStartInfo(process.StartInfo, cmd, arguments, "", true, true);
 
                 process.Start();
-                //process.WaitForExit();
             }
             catch
             {
