@@ -1531,7 +1531,11 @@ namespace GitUI
             var selectedRevisions = GetSelectedRevisions();
             if (selectedRevisions.Count > 0)
             {
-                var form = new FormCommitDiff(UICommands, selectedRevisions[0]);
+                //We cannot use the selected revision to start the commit diff. When a filtered commit list
+                //is shown (file history/normal filter) the parent guids are not the 'real' parents, but the
+                //parents in the filterd list. (DO NOT USE var form = new FormCommitDiff(UICommands, selectedRevisions[0]);)
+                var form = new FormCommitDiff(UICommands, Module.GetRevision(selectedRevisions[0].Guid));
+
                 form.ShowDialog(this);
             }
             else
