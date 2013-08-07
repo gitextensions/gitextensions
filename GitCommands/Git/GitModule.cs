@@ -1137,7 +1137,7 @@ namespace GitCommands
             var revision = new GitRevision(this, lines[0])
             {
                 TreeGuid = lines[1],
-                ParentGuids = lines[2].Split(new[]{' '}),
+                ParentGuids = lines[2].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries),
                 Author = ReEncodeStringFromLossless(lines[3]),
                 AuthorEmail = ReEncodeStringFromLossless(lines[4]),
                 Committer = ReEncodeStringFromLossless(lines[6]),
