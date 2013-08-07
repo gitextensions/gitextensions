@@ -50,10 +50,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             new TranslationString("{0} needs to be registered in order to use the shell extensions.");
 
         private readonly TranslationString _registryKeyGitExtensionsMissing =
-            new TranslationString("Registry entry missing [Software\\GitExtensions\\GitExtensions\\InstallDir].");
+            new TranslationString("Registry entry missing [Software\\GitExtensions\\InstallDir].");
 
         private readonly TranslationString _registryKeyGitExtensionsFaulty =
-            new TranslationString("Invalid installation directory stored in [Software\\GitExtensions\\GitExtensions\\InstallDir].");
+            new TranslationString("Invalid installation directory stored in [Software\\GitExtensions\\InstallDir].");
 
         private readonly TranslationString _registryKeyGitExtensionsCorrect =
             new TranslationString("GitExtensions is properly registered.");
