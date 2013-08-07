@@ -389,8 +389,8 @@ Select no if you want to configure a different mergetool yourself.</Source>
           <Value>GitExtensionsは正しい [Software\GitExtensions\GitExtensions\InstallDir] の位置にインストールされていません。</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text">
-          <Source>Registry entry missing [Software\GitExtensions\GitExtensions\InstallDir].</Source>
-          <Value>レジストリエントリ [Software\GitExtensions\GitExtensions\InstallDir] が見つかりません。</Value>
+          <Source>Registry entry missing [Software\GitExtensions\InstallDir].</Source>
+          <Value>レジストリエントリ [Software\GitExtensions\InstallDir] が見つかりません。</Value>
         </TranslationItem>
         <TranslationItem Name="_shCanBeRun" Property="Text">
           <Source>Command sh can be run using: {0}sh</Source>

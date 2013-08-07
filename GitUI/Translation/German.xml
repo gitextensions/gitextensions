@@ -396,8 +396,8 @@ Wählen Sie Nein aus wenn Sie Ihr eigenes Mergeprogramm verwenden wollen.</Value
           <Value>Ungültiges Installationsverzeichnis gespeichert in [Software\GitExtensions\GitExtensions\InstallDir].</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text">
-          <Source>Registry entry missing [Software\GitExtensions\GitExtensions\InstallDir].</Source>
-          <Value>Eintrag in der Registrierungsdatenbank fehlt [Software\GitExtensions\GitExtensions\InstallDir].</Value>
+          <Source>Registry entry missing [Software\GitExtensions\InstallDir].</Source>
+          <Value>Eintrag in der Registrierungsdatenbank fehlt [Software\GitExtensions\InstallDir].</Value>
         </TranslationItem>
         <TranslationItem Name="_shCanBeRun" Property="Text">
           <Source>Command sh can be run using: {0}sh</Source>
