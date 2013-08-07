@@ -1132,7 +1132,7 @@ namespace GitCommands
                 /* Committer Date */ "%ct%n";
             const string messageFormat = "%e%n%B%nNotes:%n%-N";
             string cmd = "log -n1 --format=format:" + formatString + (shortFormat ? "%e%n%s" : messageFormat) + " " + commit;
-            var revInfo = RunGitCmd(cmd);
+            var revInfo = RunCachableCmd(Settings.GitCommand, cmd);
             string[] lines = revInfo.Split('\n');
             var revision = new GitRevision(this, lines[0])
             {
