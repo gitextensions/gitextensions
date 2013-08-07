@@ -27,7 +27,6 @@ namespace GitCommands
     {
         //semi-constants
         public static readonly string GitExtensionsVersionString;
-        public static readonly int GitExtensionsVersionInt;
         public static readonly char PathSeparator = '\\';
         public static readonly char PathSeparatorWrong = '/';
         public static Version AppVersion { get { return Assembly.GetCallingAssembly().GetName().Version; } }
@@ -57,12 +56,8 @@ namespace GitCommands
             Version version = AppVersion;
 
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
-            GitExtensionsVersionInt = version.Major * 100 + version.Minor;
             if (version.Build > 0)
-            {
                 GitExtensionsVersionString += '.' + version.Build.ToString();
-                GitExtensionsVersionInt = GitExtensionsVersionInt * 100 + version.Build;
-            }
             if (!EnvUtils.RunningOnWindows())
             {
                 PathSeparator = '/';
@@ -74,6 +69,74 @@ namespace GitCommands
             if (!File.Exists(SettingsFilePath))
             {
                 ImportFromRegistry();
+            }
+        }
+
+        public static string GetInstallDir()
+        {
+#if DEBUG
+            string gitExtDir = GetGitExtensionsDirectory().TrimEnd('\\').TrimEnd('/');
+            string debugPath = @"GitExtensions\bin\Debug";
+            int len = debugPath.Length;
+            var path = gitExtDir.Substring(gitExtDir.Length - len);
+            if (debugPath.Replace('\\', '/').Equals(path.Replace('\\', '/')))
+            {
+                string projectPath = gitExtDir.Substring(0, len + 2);
+                return Path.Combine(projectPath, "Bin");
+            }
+#endif
+
+            if (IsPortable())
+            {
+                return GetGitExtensionsDirectory();
+            }
+            else
+            {
+                return (string)VersionIndependentRegKey.GetValue("InstallDir", string.Empty);
+            }
+        }
+
+        //for repair only
+        public static void SetInstallDir(string dir)
+        {
+            VersionIndependentRegKey.SetValue("InstallDir", dir);
+        }
+
+        public static string CascadeShellMenuItems
+        {
+            get { return (string)VersionIndependentRegKey.GetValue("CascadeShellMenuItems", "110111000111111111"); }
+            set { VersionIndependentRegKey.SetValue("CascadeShellMenuItems", value); }
+        }
+
+        public static bool AlwaysShowAllCommands
+        {
+            get { return (int)VersionIndependentRegKey.GetValue("AlwaysShowAllCommands", 0) != 0; }
+            set { VersionIndependentRegKey.SetValue("AlwaysShowAllCommands", value ? 1 : 0); }
+        }
+
+        public static bool ShowCurrentBranchInVisualStudio
+        {
+            //This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
+            //other changes in the Visual Studio plugin itself.
+            get { return (int)VersionIndependentRegKey.GetValue("showcurrentbranchinvisualstudio", 1) != 0; }
+            set { VersionIndependentRegKey.SetValue("showcurrentbranchinvisualstudio", value ? 1 : 0); }
+        }
+
+        public static string GitCommand
+        {
+            get
+            {
+                if (IsPortable())
+                    return GetString("gitcommand", "git");
+                else
+                    return (string)VersionIndependentRegKey.GetValue("gitcommand", "git");
+            }
+            set
+            {
+                if (IsPortable())
+                    SetString("gitcommand", value);
+                else
+                    VersionIndependentRegKey.SetValue("gitcommand", value);
             }
         }
 
@@ -549,12 +612,6 @@ namespace GitCommands
             set { SetString("gravatarfallbackservice", value); }
         }
 
-        public static string GitCommand
-        {
-            get { return GetString("gitcommand", "git"); }
-            set { SetString("gitcommand", value); }
-        }
-
         public static string GitBinDir
         {
             get { return GetString("gitbindir", ""); }
@@ -724,14 +781,6 @@ namespace GitCommands
             set { SetBool("branchborders", value); }
         }
 
-        public static bool ShowCurrentBranchInVisualStudio
-        {
-            //This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
-            //other changes in the Visual Studio plugin itself.
-            get { return GetBool("showcurrentbranchinvisualstudio", true); }
-            set { SetBool("showcurrentbranchinvisualstudio", value); }
-        }
-
         public static string LastFormatPatchDir
         {
             get { return GetString("lastformatpatchdir", ""); }
@@ -741,33 +790,6 @@ namespace GitCommands
         public static string GetDictionaryDir()
         {
             return Path.Combine(GetInstallDir(), "Dictionaries");
-        }
-
-        public static string GetInstallDir()
-        {
-#if DEBUG
-#if INSTALL_DIR_FROM_REG
-            VersionIndependentRegKey.GetValue("InstallDir", string.Empty);
-#else
-            string gitExtDir = GetGitExtensionsDirectory().TrimEnd('\\').TrimEnd('/');
-            string debugPath = @"GitExtensions\bin\Debug";
-            int len = debugPath.Length;
-            var path = gitExtDir.Substring(gitExtDir.Length - len);
-            if (debugPath.Replace('\\', '/').Equals(path.Replace('\\', '/')))
-            {
-                string projectPath = gitExtDir.Substring(0, len + 2);
-                return Path.Combine(projectPath, "Bin");
-            }
-#endif
-#endif
-
-            return GetGitExtensionsDirectory();
-        }
-
-        //for repair only
-        public static void SetInstallDir(string dir)
-        {
-            VersionIndependentRegKey.SetValue("InstallDir", dir);
         }
 
         public static void SaveSettings()
@@ -905,12 +927,6 @@ namespace GitCommands
             set { SetBool("CreateLocalBranchForRemote", value); }
         }
 
-        public static string CascadeShellMenuItems
-        {
-            get { return GetString("CascadeShellMenuItems", "110111000111111111"); }
-            set { SetString("CascadeShellMenuItems", value); }
-        }
-
         public static bool UseFormCommitMessage
         {
             get { return GetBool("UseFormCommitMessage", true); }
@@ -940,7 +956,7 @@ namespace GitCommands
             get
             {
                 if (_VersionIndependentRegKey == null)
-                    _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
+                    _VersionIndependentRegKey = Registry.CurrentUser.CreateSubKey("Software\\GitExtensions", RegistryKeyPermissionCheck.ReadWriteSubTree);
                 return _VersionIndependentRegKey;
             }
         }
