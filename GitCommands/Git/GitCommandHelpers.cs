@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.Permissions;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Config;
@@ -46,26 +45,21 @@ namespace GitCommands
 
     public static class GitCommandHelpers
     {
-        public static void SetEnvironmentVariable()
-        {
-            SetEnvironmentVariable(false);
-        }
-
-        public static void SetEnvironmentVariable(bool reload)
+        public static void SetEnvironmentVariable(bool reload = false)
         {
             string path = Environment.GetEnvironmentVariable("PATH", EnvironmentVariableTarget.Process);
-            if (!string.IsNullOrEmpty(Settings.GitBinDir) && !path.Contains(Settings.GitBinDir))
-                Environment.SetEnvironmentVariable("PATH", string.Concat(path, ";", Settings.GitBinDir), EnvironmentVariableTarget.Process);
+            if (!string.IsNullOrEmpty(AppSettings.GitBinDir) && !path.Contains(AppSettings.GitBinDir))
+                Environment.SetEnvironmentVariable("PATH", string.Concat(path, ";", AppSettings.GitBinDir), EnvironmentVariableTarget.Process);
 
-            if (!string.IsNullOrEmpty(Settings.CustomHomeDir))
+            if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
             {
                 Environment.SetEnvironmentVariable(
                     "HOME",
-                    Settings.CustomHomeDir);
+                    AppSettings.CustomHomeDir);
                 return;
             }
 
-            if (Settings.UserProfileHomeDir)
+            if (AppSettings.UserProfileHomeDir)
             {
                 Environment.SetEnvironmentVariable(
                     "HOME",
@@ -117,27 +111,41 @@ namespace GitCommands
             }
         }
 
-        public static string FixPath(string path)
+        public static string FixPath([NotNull] string path)
         {
             path = path.Trim();
             return path.Replace('\\', '/');
         }
 
-        internal static ProcessStartInfo CreateProcessStartInfo([CanBeNull] Encoding outputEncoding)
+        internal static ProcessStartInfo CreateProcessStartInfo(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
-            if (outputEncoding == null)
-                outputEncoding = GitModule.SystemEncoding;
-
             return new ProcessStartInfo
-                       {
-                           UseShellExecute = false,
-                           ErrorDialog = false,
-                           RedirectStandardOutput = true,
-                           RedirectStandardInput = true,
-                           RedirectStandardError = true,
-                           StandardOutputEncoding = outputEncoding,
-                           StandardErrorEncoding = outputEncoding
-                       };
+            {
+                UseShellExecute = false,
+                ErrorDialog = false,
+                CreateNoWindow = true,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                StandardOutputEncoding = outputEncoding,
+                StandardErrorEncoding = outputEncoding,
+                FileName = fileName,
+                Arguments = arguments,
+                WorkingDirectory = workingDirectory
+            };
+        }
+
+        internal static Process StartProcess(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
+        {
+            SetEnvironmentVariable();
+
+            string quotedCmd = fileName;
+            if (quotedCmd.IndexOf(' ') != -1)
+                quotedCmd = quotedCmd.Quote();
+            AppSettings.GitLog.Log(quotedCmd + " " + arguments);
+
+            var startInfo = CreateProcessStartInfo(fileName, arguments, workingDirectory, outputEncoding);
+            return Process.Start(startInfo);
         }
 
         internal static bool UseSsh(string arguments)
@@ -159,67 +167,13 @@ namespace GitCommands
                    (arguments.Contains("pull"));
         }
 
-        internal static int CreateAndStartProcess(string arguments, string cmd, string workDir, out byte[] stdOutput, out byte[] stdError, byte[] stdInput)
+        private static IEnumerable<string> StartProcessAndReadLines(string arguments, string cmd, string workDir, string stdInput)
         {
             if (string.IsNullOrEmpty(cmd))
-            {
-                stdOutput = stdError = null;
-                return -1;
-            }
+                yield break;
 
-            string quotedCmd = cmd;
-            if (quotedCmd.IndexOf(' ') != -1)
-                quotedCmd = quotedCmd.Quote();
-            Settings.GitLog.Log(quotedCmd + " " + arguments);
             //process used to execute external commands
-
-            //data is read from base stream, so encoding doesn't matter
-            var startInfo = CreateProcessStartInfo(Encoding.Default);
-            startInfo.CreateNoWindow = true;
-            startInfo.FileName = cmd;
-            startInfo.Arguments = arguments;
-            startInfo.WorkingDirectory = workDir;
-            startInfo.LoadUserProfile = true;
-
-            using (var process = Process.Start(startInfo))
-            {
-                if (stdInput != null && stdInput.Length > 0)
-                {
-                    process.StandardInput.BaseStream.Write(stdInput, 0, stdInput.Length);
-                    process.StandardInput.Close();
-                }
-
-                SynchronizedProcessReader.ReadBytes(process, out stdOutput, out stdError);
-
-                process.WaitForExit();
-
-                startInfo = null;
-                return process.ExitCode;
-            }
-        }
-
-        internal static int CreateAndStartProcess(string arguments, string cmd, string workDir, out string stdOutput, out string stdError, string stdInput)
-        {
-            if (string.IsNullOrEmpty(cmd))
-            {
-                stdOutput = stdError = "";
-                return -1;
-            }
-
-            string quotedCmd = cmd;
-            if (quotedCmd.IndexOf(' ') != -1)
-                quotedCmd = quotedCmd.Quote();
-            Settings.GitLog.Log(quotedCmd + " " + arguments);
-            //process used to execute external commands
-
-            var startInfo = CreateProcessStartInfo(null);
-            startInfo.CreateNoWindow = true;
-            startInfo.FileName = cmd;
-            startInfo.Arguments = arguments;
-            startInfo.WorkingDirectory = workDir;
-            startInfo.LoadUserProfile = true;
-
-            using (var process = Process.Start(startInfo))
+            using (var process = StartProcess(cmd, arguments, workDir, GitModule.SystemEncoding))
             {
                 if (!string.IsNullOrEmpty(stdInput))
                 {
@@ -227,37 +181,7 @@ namespace GitCommands
                     process.StandardInput.Close();
                 }
 
-                SynchronizedProcessReader.Read(process, out stdOutput, out stdError);
-
-                process.WaitForExit();
-                return process.ExitCode;
-            }
-        }
-
-        internal static IEnumerable<string> CreateAndStartProcessAsync(string arguments, string cmd, string workDir, string stdInput, Encoding encoding)
-        {
-            if (string.IsNullOrEmpty(cmd))
-                yield break;
-
-            string quotedCmd = cmd;
-            if (quotedCmd.IndexOf(' ') != -1)
-                quotedCmd = quotedCmd.Quote();
-            Settings.GitLog.Log(quotedCmd + " " + arguments);
-
-            //process used to execute external commands
-            using (var process = new Process { StartInfo = CreateProcessStartInfo(null) })
-            {
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.FileName = cmd;
-                process.StartInfo.Arguments = arguments;
-                process.StartInfo.WorkingDirectory = workDir;
-                process.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
-                process.StartInfo.LoadUserProfile = true;
-                process.StartInfo.StandardOutputEncoding = encoding;
-                process.StartInfo.StandardErrorEncoding = encoding;
-                process.Start();
-
-                string line = null;
+                string line;
                 do
                 {
                     line = process.StandardOutput.ReadLine();
@@ -276,7 +200,39 @@ namespace GitCommands
             }
         }
 
-        [PermissionSetAttribute(SecurityAction.Demand, Name = "FullTrust")]
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        public static IEnumerable<string> ReadCmdOutputLines(string cmd, string arguments, string workDir, string stdInput)
+        {
+            SetEnvironmentVariable();
+            arguments = arguments.Replace("$QUOTE$", "\\\"");
+            return StartProcessAndReadLines(arguments, cmd, workDir, stdInput);
+        }
+
+        private static Process StartProcessAndReadAllText(string arguments, string cmd, string workDir, out string stdOutput, out string stdError, string stdInput)
+        {
+            if (string.IsNullOrEmpty(cmd))
+            {
+                stdOutput = stdError = "";
+                return null;
+            }
+
+            //process used to execute external commands
+            var process = StartProcess(cmd, arguments, workDir, GitModule.SystemEncoding);
+            if (!string.IsNullOrEmpty(stdInput))
+            {
+                process.StandardInput.Write(stdInput);
+                process.StandardInput.Close();
+            }
+
+            SynchronizedProcessReader.Read(process, out stdOutput, out stdError);
+            return process;
+        }
+
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         public static string RunCmd(string cmd, string arguments)
         {
             try
@@ -286,7 +242,10 @@ namespace GitCommands
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 
                 string output, error;
-                CreateAndStartProcess(arguments, cmd, "", out output, out error, null);
+                using (var process = StartProcessAndReadAllText(arguments, cmd, "", out output, out error, null))
+                {
+                    process.WaitForExit();
+                }
 
                 if (!string.IsNullOrEmpty(error))
                 {
@@ -300,6 +259,48 @@ namespace GitCommands
             }
         }
 
+        private static Process StartProcessAndReadAllBytes(string arguments, string cmd, string workDir, out byte[] stdOutput, out byte[] stdError, byte[] stdInput)
+        {
+            if (string.IsNullOrEmpty(cmd))
+            {
+                stdOutput = stdError = null;
+                return null;
+            }
+
+            //process used to execute external commands
+            var process = StartProcess(cmd, arguments, workDir, Encoding.Default);
+            if (stdInput != null && stdInput.Length > 0)
+            {
+                process.StandardInput.BaseStream.Write(stdInput, 0, stdInput.Length);
+                process.StandardInput.Close();
+            }
+
+            SynchronizedProcessReader.ReadBytes(process, out stdOutput, out stdError);
+
+            return process;
+        }
+
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        public static int RunCmdByte(string cmd, string arguments, string workingdir, byte[] stdInput, out byte[] output, out byte[] error)
+        {
+            try
+            {
+                arguments = arguments.Replace("$QUOTE$", "\\\"");
+                using (var process = StartProcessAndReadAllBytes(arguments, cmd, workingdir, out output, out error, stdInput))
+                {
+                    process.WaitForExit();
+                    return process.ExitCode;
+                }
+            }
+            catch (Win32Exception)
+            {
+                output = error = null;
+                return 1;
+            }
+        }
+
         private static GitVersion _versionInUse;
         private static readonly string UserHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
 
@@ -309,7 +310,7 @@ namespace GitCommands
             {
                 if (_versionInUse == null || _versionInUse.IsUnknown)
                 {
-                    var result = RunCmd(Settings.GitCommand, "--version");
+                    var result = RunCmd(AppSettings.GitCommand, "--version");
                     _versionInUse = new GitVersion(result);
                 }
 
@@ -319,8 +320,8 @@ namespace GitCommands
 
         public static string CherryPickCmd(string cherry, bool commit, string arguments)
         {
-            string CherryPickCmd = commit ? "cherry-pick" : "cherry-pick --no-commit";
-            return CherryPickCmd + " " + arguments + " \"" + cherry + "\"";
+            string cherryPickCmd = commit ? "cherry-pick" : "cherry-pick --no-commit";
+            return cherryPickCmd + " " + arguments + " \"" + cherry + "\"";
         }
 
         public static string GetFullBranchName(string branch)
@@ -380,27 +381,6 @@ namespace GitCommands
             var forceCmd = force ? " -f" : string.Empty;
 
             return "submodule add" + forceCmd + branch + " \"" + remotePath.Trim() + "\" \"" + localPath.Trim() + "\"";
-        }
-
-        public static GitSubmodule CreateGitSubmodule(GitModule aModule, string submodule)
-        {
-            var gitSubmodule =
-                new GitSubmodule(aModule)
-                    {
-                        Initialized = submodule[0] != '-',
-                        UpToDate = submodule[0] != '+',
-                        CurrentCommitGuid = submodule.Substring(1, 40).Trim()
-                    };
-
-            var name = submodule.Substring(42).Trim();
-            if (name.Contains("("))
-            {
-                gitSubmodule.Name = name.Substring(0, name.IndexOf("("));
-                gitSubmodule.Branch = name.Substring(name.IndexOf("(")).Trim(new[] { '(', ')', ' ' });
-            }
-            else
-                gitSubmodule.Name = name;
-            return gitSubmodule;
         }
 
         public static string RevertCmd(string commit, bool autoCommit, int parentIndex)
@@ -489,9 +469,9 @@ namespace GitCommands
         /// <param name="files">Files to remove. Fileglobs can be given to remove matching files.</param>
         public static string RemoveCmd(bool force = true, bool isRecursive = true, params string[] files)
         {
-            string file = files.Any()
-                              ? string.Join(" ", files)
-                              : ".";
+            string file = ".";
+            if (files.Any())
+                file = string.Join(" ", files);
 
             return string.Format("rm {0} {1} {2}",
                 force ? "--force" : string.Empty,
@@ -600,12 +580,7 @@ namespace GitCommands
             return cmd;
         }
 
-        public static string PushTagCmd(string path, string tag, bool all)
-        {
-            return PushTagCmd(path, tag, all, false);
-        }
-
-        public static string PushTagCmd(string path, string tag, bool all, bool force)
+        public static string PushTagCmd(string path, string tag, bool all, bool force = false)
         {
             path = FixPath(path);
 
@@ -639,7 +614,7 @@ namespace GitCommands
 
         public static bool PathIsUrl(string path)
         {
-            return path.Contains(Settings.PathSeparator.ToString()) || path.Contains(Settings.PathSeparatorWrong.ToString());
+            return path.Contains(AppSettings.PathSeparator.ToString()) || path.Contains(AppSettings.PathSeparatorWrong.ToString());
         }
 
         public static string ContinueRebaseCmd()
@@ -788,22 +763,25 @@ namespace GitCommands
             return PatchDirCmd() + " --ignore-whitespace";
         }
 
-        public static string CleanUpCmd(bool dryrun, bool directories, bool nonignored, bool ignored)
+        public static string CleanUpCmd(bool dryrun, bool directories, bool nonignored, bool ignored, string paths = null)
         {
-            var stringBuilder = new StringBuilder("clean");
+            string command = "clean";
 
             if (directories)
-                stringBuilder.Append(" -d");
+                command += " -d";
             if (!nonignored && !ignored)
-                stringBuilder.Append(" -x");
+                command += " -x";
             if (ignored)
-                stringBuilder.Append(" -X");
+                command += " -X";
             if (dryrun)
-                stringBuilder.Append(" --dry-run");
+                command += " --dry-run";
             if (!dryrun)
-                stringBuilder.Append(" -f");
+                command += " -f";
 
-            return stringBuilder.ToString();
+            if (!paths.IsNullOrWhiteSpace())
+                command += " " + paths;
+
+            return command;
         }
 
         public static ConfigFile GetGlobalConfig()
@@ -814,17 +792,7 @@ namespace GitCommands
             return new ConfigFile(Path.Combine(GetHomeDir(), ".gitconfig"), false);
         }
 
-        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, bool untrackedFiles)
-        {
-            return GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles ? UntrackedFilesMode.Default : UntrackedFilesMode.No);
-        }
-
-        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles)
-        {
-            return GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles, 0);
-        }
-
-        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules)
+        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = 0)
         {
             if (!VersionInUse.SupportGitStatusPorcelain)
                 throw new Exception("The version of git you are using is not supported for this action. Please upgrade to git 1.7.3 or newer.");
@@ -940,15 +908,10 @@ namespace GitCommands
             return status;
         }
 
-        public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString)
-        {
-            return GetAllChangedFilesFromString(module, statusString, false);
-        }
-
         /*
                source: C:\Program Files\msysgit\doc\git\html\git-status.html
         */
-        public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString, bool fromDiff /*old name and new name are switched.. %^&#^% */)
+        public static List<GitItemStatus> GetAllChangedFilesFromString(GitModule module, string statusString, bool fromDiff  = false)
         {
             var diffFiles = new List<GitItemStatus>();
 
@@ -961,7 +924,7 @@ namespace GitCommands
                 The file will have its original line endings in your working directory.
                 warning: LF will be replaced by CRLF in FxCop.targets.
                 The file will have its original line endings in your working directory.*/
-            var nl = new char[] { '\n', '\r' };
+            var nl = new[] { '\n', '\r' };
             string trimmedStatus = statusString.Trim(nl);
             int lastNewLinePos = trimmedStatus.LastIndexOfAny(nl);
             if (lastNewLinePos > 0)
@@ -1026,7 +989,7 @@ namespace GitCommands
 
                 if (fromDiff || y == ' ')
                     continue;
-                GitItemStatus gitItemStatusY = null;
+                GitItemStatus gitItemStatusY;
                 if (y == 'R' || y == 'C') // Find renamed files...
                 {
                     string nextfile = n + 1 < files.Length ? files[n + 1] : "";
@@ -1275,9 +1238,10 @@ namespace GitCommands
         /// </summary>
         /// <param name="originDate">Current date.</param>
         /// <param name="previousDate">The date to get relative time string for.</param>
+        /// <param name="displayWeeks">Display weeks in date string.</param>
         /// <returns>The human readable string for relative date.</returns>
         /// <see cref="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
-        public static string GetRelativeDateString(DateTime originDate, DateTime previousDate, bool displayWeeks)
+        public static string GetRelativeDateString(DateTime originDate, DateTime previousDate, bool displayWeeks = true)
         {
             var ts = new TimeSpan(RoundDateTime(originDate).Ticks - RoundDateTime(previousDate).Ticks);
             double delta = Math.Abs(ts.TotalSeconds);
@@ -1314,11 +1278,6 @@ namespace GitCommands
             return Strings.GetNYearsAgoText(years);
         }
 
-        public static string GetRelativeDateString(DateTime originDate, DateTime previousDate)
-        {
-            return GetRelativeDateString(originDate, previousDate, true);
-        }
-
         public static string GetFullDateString(DateTimeOffset datetime)
         {
             // previous format "ddd MMM dd HH':'mm':'ss yyyy"
@@ -1343,7 +1302,7 @@ namespace GitCommands
             }
         }
 
-#if !MONO
+#if !__MonoCS__
         static class NativeMethods
         {
             [DllImport("kernel32.dll")]
@@ -1362,7 +1321,7 @@ namespace GitCommands
 
         public static void TerminateTree(this Process process)
         {
-#if !MONO
+#if !__MonoCS__
             if (EnvUtils.RunningOnWindows())
             {
                 // Send Ctrl+C
@@ -1371,12 +1330,10 @@ namespace GitCommands
                 NativeMethods.GenerateConsoleCtrlEvent(0, 0);
                 if (!process.HasExited)
                     System.Threading.Thread.Sleep(500);
-                if (!process.HasExited)
-                    process.Kill();
             }
-#else
-            process.Kill();
 #endif
+            if (!process.HasExited)
+                process.Kill();
         }
     }
 }

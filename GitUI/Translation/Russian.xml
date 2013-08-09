@@ -382,7 +382,7 @@ Select no if you want to configure a different mergetool yourself.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text" type="unfinished">
-          <Source>Registry entry missing [Software\GitExtensions\GitExtensions\InstallDir].</Source>
+          <Source>Registry entry missing [Software\GitExtensions\InstallDir].</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_shCanBeRun" Property="Text" type="unfinished">
@@ -7353,69 +7353,41 @@ When OpenSSH is used, command line dialogs are shown!
           <Source>Date</Source>
           <Value>Дата</Value>
         </TranslationItem>
-        <TranslationItem Name="_dayAgo" Property="Text">
-          <Source>{0} day ago</Source>
-          <Value>{0} день назад</Value>
-        </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Source>{0} days ago</Source>
-          <Value>{0} дня(ей) назад</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hourAgo" Property="Text">
-          <Source>{0} hour ago</Source>
-          <Value>{0} час назад</Value>
+          <Source>{0} {1:day|days} ago</Source>
+          <Value>{0} {1:день|дня(ей)} назад</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Source>{0} hours ago</Source>
-          <Value>{0} часа(ов) назад</Value>
+          <Source>{0} {1:hour|hours} ago</Source>
+          <Value>{0} {1:час|часа(ов)} назад</Value>
         </TranslationItem>
         <TranslationItem Name="_messageText" Property="Text">
           <Source>Message</Source>
           <Value>Сообщение</Value>
         </TranslationItem>
-        <TranslationItem Name="_minuteAgo" Property="Text">
-          <Source>{0} minute ago</Source>
-          <Value>{0} минута назад</Value>
-        </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Source>{0} minutes ago</Source>
-          <Value>{0} минут назад</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthAgo" Property="Text">
-          <Source>{0} month ago</Source>
-          <Value>месяц назад</Value>
+          <Source>{0} {1:minute|minutes} ago</Source>
+          <Value>{0} {1:минута|минут} назад</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Source>{0} months ago</Source>
-          <Value>{0} месяця(ев) назад</Value>
+          <Source>{0} {1:month|months} ago</Source>
+          <Value>{0} {1:месяц|месяця(ев)} назад</Value>
         </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text">
           <Source>Parent(s)</Source>
           <Value>Предки</Value>
         </TranslationItem>
-        <TranslationItem Name="_secondAgo" Property="Text">
-          <Source>{0} second ago</Source>
-          <Value>{0} секунда назад</Value>
-        </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
-          <Source>{0} seconds ago</Source>
-          <Value>{0} секунд назад</Value>
-        </TranslationItem>
-        <TranslationItem Name="_weekAgo" Property="Text">
-          <Source>{0} week ago</Source>
-          <Value>{0} неделя назад</Value>
+          <Source>{0} {1:second|seconds} ago</Source>
+          <Value>{0} {1:секунда|секунд} назад</Value>
         </TranslationItem>
         <TranslationItem Name="_weeksAgo" Property="Text">
-          <Source>{0} weeks ago</Source>
-          <Value>{0} недель назад</Value>
-        </TranslationItem>
-        <TranslationItem Name="_yearAgo" Property="Text">
-          <Source>{0} year ago</Source>
-          <Value>{0} год назад</Value>
+          <Source>{0} {1:week|weeks} ago</Source>
+          <Value>{0} {1:неделя|недель} назад</Value>
         </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Source>{0} years ago</Source>
-          <Value>{0} года/лет назад</Value>
+          <Source>{0} {1:year|years} ago</Source>
+          <Value>{0} {1:год|года/лет} назад</Value>
         </TranslationItem>
         <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>

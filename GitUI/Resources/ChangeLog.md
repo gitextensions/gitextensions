@@ -1,5 +1,89 @@
 ﻿Changelog
 =========
+### Version 2.47
+* Main menu restructured. Issues: 1576, 1629
+* Display diff files list for each parent in separete collapsible group
+* Fixed issue 1590: Checking "Show current branch only" results in unexpected behaviour
+* ShellExtensionSettingsPage: add simple preview for context menu items. PR 1661.
+* Fixed issue 1655: Add ellipsis to menu items which will require input.
+* Fixed issue 1575: Remove old "Create branch" dialog.
+* Allow pushing a non-branch source rev to a remote branch. PR 1676.
+* FormChooseCommit: double click behaves like OK button instead of opening the CommitInfo dialog. PR 1681.
+* Remove old Create tag dialog and related changes. PR 1680.
+* FormCheckoutRevision: make similar to CreateBranch/Tag dialogs and use in RevisionGrid. PR 1685.
+* Fixed issue 1317: Exception after closing File History dialog (from Commit Dialog) which was not completely loaded.
+* Added BackgroundFetch plugin in order to allow perioding fetching of all remotes automatically.
+* Fixed issue 1704: The link to the git-review command page moved from project openstack-ci to openstack-infra.
+* FormChooseCommit: add button that opens the Go to commit dialog that helps to find a specific commit. PR 1723.
+* GitPlugin icon transparency fixed.
+* FormPuttyError Retry() button fixed.
+* Add Help link that opens GitExt manual in browser at predefined section. PR 1739.
+* Push dialog now asks pull changes if push was rejected.
+* Improvements for FormResetCurrentBranch. PR 1750.
+* FormFormatPatch support sending from gmail server.
+* Close commit dialog when all changes are commited - now considers new file as a change.
+* Fixed issue 1633: Move Plugins --> Update menu option to Help menu. 
+* Disabled offer commit for resolve conflicts dialog when it called from commit window. Closes #1623.
+* Support pull latest submodule changes from FormSubmodules dialog window.
+* Asynchronous RepositoryHistory loading implemented.
+* Switch for selection gravatar image size added.
+* Menu in revision grid sorted to simply common branch operations.
+* Fixed issue 1658: Portable Settings.
+* Fixed issue 1790: GitCommands.Settings#GetGitExtensionsDirectory: Crash if fileName.LastIndexOfAny returns -1.
+* Fixed issue 1799: Refresh dontSetAsDefaultToolStripMenuItem.Checked.
+* Suggest prune branches if remote branch no longer exist.
+* Added a "Show tags" menu item. PR 1814.
+* Branch filter wildcards. PR 1815.
+* Disallow to cache stash diffs.
+* FormResolveConflicts show submodule hashes for merge conflicts.
+* Menu ShortcutKey improvements. PR 1863.
+* FormBrowse: Diff Tab: new context menu item: "Show in File tree". PR 1850.
+* File tree tab: "Open containing folder" now also works on directory nodes (instead of file nodes only).
+* Diff tab: If a file does not exist then "Open containing folder" now opens the parent directory of the non-existing file.
+* Add "Archive..." to context menu of File tree tab / Archive filter by path. PR 1868.
+* Blame previous revision fixed.
+* Fixed issue 1874: "Show changes" crash fixed in Blame dialog.
+* Combined diff processing improved
+* Fixed issue 1889: Push dialog remembers "Push all tags" but does not show it to the user.
+* Don't commit merge - now generic option. Closes #1882.
+* Current checkout detection fixed for bare repositories.
+* Autopull from remote to which push was rejected. Closes #1887.
+* Updating current file in commit window improved.
+* Fix Plugin: Release Notes Generator. PR 1907.
+* Fixed issue 1883: Script on event ShowInUserMenuBar very large icon.
+* Set the default buttons in the "Reset Current Branch" popup to fix Enter/Escape keys not working. PR 1911.
+* Fixed issue 1604: Add configuration option to specify a default clone destination directory.
+* Selecting items in FormCommit improved, should update diff view only when needed.
+* Fixed issue 1899: Commit dialog steals focus.
+* Open corresponding SettingsPage directly from Plugin. PR 1925.
+* Fixed issue 1923: File History shows entire history graph in gray.
+* Fixed issue 1361: Export difference between revisions.
+* Added support for installing GitPlugin in VS2013.
+* Force push option added to "Push rejected" dialog.
+* Fix diff for initial branch commit
+* Fixed issue 1939: Running script with "{cHash}" in arguments using hotkey causes runtime exception.
+* Fixed issue #1957: Search file inside Visual Studio does not open file.
+* Many bugfixes and minor changes
+
+
+### Version 2.46
+* Fixed issue 1387: Shell extensions not work under Windows XP
+
+### Version 2.45
+* Setup files moved to sourceforge http://sourceforge.net/projects/gitextensions/
+* Putty updated to version 0.62.9768.0 (80% faster for me when cloning repository from GitHub)
+* FormCheckoutBranch behavior fixed again when called from commit dialog
+* Fixed navigation in the blame committer list when double clicking
+* Fixed FormFileHistory selection current revision
+* Fixed issue 1585: IsBinaryAccordingToGitAttribute() rewrited using "git check-attr"
+* Fixed issue 1590: "Show current branch only" fixed
+* Fixed issue 1622: "Show Changes" from Blame window crash fixed
+* Fixed issue 1631: Font size reading from settings fixed
+* Fixed issue 1687: GetSuperprojectCurrentCheckout() now called asynchronously
+* Fixed issue 1727: CreatePullRequestForm crash fixed
+* Updated msysgit to build of version 1.8.3
+* Updated French translation
+* Updated German translation
 
 ### Version 2.44
 * Fixed issue 710: Added icons to shell extensions
@@ -49,7 +133,7 @@
 * Added hotkey for "Amend commit"
 * Updated Spanish translation
 * Updated Dutch translations
-* updated Japanese translation
+* Updated Japanese translation
 * Updated German translation
 * Updated Russion translation
 * Updated French translation

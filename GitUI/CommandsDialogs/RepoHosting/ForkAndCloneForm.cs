@@ -52,13 +52,20 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void Init()
         {
-            var hist = Repositories.RepositoryHistory;
-            var lastRepo = hist.Repositories.FirstOrDefault();
-            if (lastRepo != null && !string.IsNullOrEmpty(lastRepo.Path))
+            if (!string.IsNullOrEmpty(AppSettings.DefaultCloneDestinationPath))
             {
-                string p = lastRepo.Path.Trim('/', '\\');
+                _destinationTB.Text = AppSettings.DefaultCloneDestinationPath;
+            }
+            else
+            {
+                var hist = Repositories.RepositoryHistory;
+                var lastRepo = hist.Repositories.FirstOrDefault();
+                if (lastRepo != null && !string.IsNullOrEmpty(lastRepo.Path))
+                {
+                    string p = lastRepo.Path.Trim('/', '\\');
 
-                _destinationTB.Text = Path.GetDirectoryName(p);
+                    _destinationTB.Text = Path.GetDirectoryName(p);
+                }
             }
 
             Text = _gitHoster.Description + ": " + Text;
@@ -280,7 +287,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir);
 
-            FormRemoteProcess formRemoteProcess = new FormRemoteProcess(new GitModule(null), Settings.GitCommand, cmd);
+            FormRemoteProcess formRemoteProcess = new FormRemoteProcess(new GitModule(null), AppSettings.GitCommand, cmd);
             formRemoteProcess.Remote = repoSrc;
             formRemoteProcess.ShowDialog();
 

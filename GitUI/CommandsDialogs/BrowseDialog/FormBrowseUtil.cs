@@ -9,11 +9,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 {
     internal class FormBrowseUtil
     {
-        // prepare file path
-        // does file path exist
-        // open file path
-        // etc. (Code vereinheitlichen von "opening" und "click")
-
         public static string GetFullPathFromGitItem(GitModule gitModule, GitItem gitItem)
         {
             return GetFullPathFromFilename(gitModule, gitItem.FileName);
@@ -26,7 +21,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public static string GetFullPathFromFilename(GitModule gitModule, string filename)
         {
-            var filePath = Path.Combine(gitModule.WorkingDir, filename.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+            var filePath = Path.Combine(gitModule.WorkingDir, filename.Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
 
             return filePath;
         }

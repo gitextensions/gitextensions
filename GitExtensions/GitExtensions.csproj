@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\FxCop.targets" />
   <PropertyGroup>
@@ -14,7 +14,6 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <NoWin32Manifest>true</NoWin32Manifest>
     <ApplicationIcon>..\Bin\Logo\git-extensions-logo-final_mixed-256.ico</ApplicationIcon>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -55,10 +54,16 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="NBug, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a4292a325f69b123, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NBug.1.1.1\lib\net40-client\NBug.dll</HintPath>
+    </Reference>
+    <Reference Include="SmartFormat">
+      <HintPath>..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -83,6 +88,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

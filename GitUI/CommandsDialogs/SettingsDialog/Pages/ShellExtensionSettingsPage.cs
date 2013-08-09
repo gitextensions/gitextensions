@@ -3,7 +3,7 @@ using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class ShellExtensionSettingsPage : SettingsPageBase
+    public partial class ShellExtensionSettingsPage : SettingsPageWithHeader
     {
         public ShellExtensionSettingsPage()
         {
@@ -12,17 +12,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
-            for (int i = 0; i < Settings.CascadeShellMenuItems.Length; i++)
+            for (int i = 0; i < AppSettings.CascadeShellMenuItems.Length; i++)
             {
-                chlMenuEntries.SetItemChecked(i, Settings.CascadeShellMenuItems[i] == '1');
+                chlMenuEntries.SetItemChecked(i, AppSettings.CascadeShellMenuItems[i] == '1');
             }
+            cbAlwaysShowAllCommands.Checked = AppSettings.AlwaysShowAllCommands;
 
             UpdatePreview();
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
             String l_CascadeShellMenuItems = "";
 
@@ -38,7 +39,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
             }
 
-            Settings.CascadeShellMenuItems = l_CascadeShellMenuItems;            
+            AppSettings.CascadeShellMenuItems = l_CascadeShellMenuItems;
+            AppSettings.AlwaysShowAllCommands = cbAlwaysShowAllCommands.Checked;
         }
 
         private void chlMenuEntries_SelectedValueChanged(object sender, EventArgs e)
@@ -59,7 +61,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
                 else
                 {
-                    topLevel += "GitEx " + chlMenuEntries.Items[i].ToString() + "\r\n";
+                    topLevel += "GitExt " + chlMenuEntries.Items[i].ToString() + "\r\n";
                 }
             }
 

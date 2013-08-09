@@ -384,7 +384,7 @@ Select no if you want to configure a different mergetool yourself.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text" type="unfinished">
-          <Source>Registry entry missing [Software\GitExtensions\GitExtensions\InstallDir].</Source>
+          <Source>Registry entry missing [Software\GitExtensions\InstallDir].</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_shCanBeRun" Property="Text">
@@ -7405,68 +7405,40 @@ voor windows gebruikers.</Value>
           <Source>Date</Source>
           <Value>Datum</Value>
         </TranslationItem>
-        <TranslationItem Name="_dayAgo" Property="Text">
-          <Source>{0} day ago</Source>
-          <Value>{0} dag geleden</Value>
-        </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Source>{0} days ago</Source>
-          <Value>{0} dagen geleden</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hourAgo" Property="Text">
-          <Source>{0} hour ago</Source>
-          <Value>{0} uur geleden</Value>
+          <Source>{0} {1:day|days} ago</Source>
+          <Value>{0} {1:dag|dagen} geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Source>{0} hours ago</Source>
-          <Value>{0} uren geleden</Value>
+          <Source>{0} {1:hour|hours} ago</Source>
+          <Value>{0} {1:uur|uren} geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_messageText" Property="Text">
           <Source>Message</Source>
           <Value>Bericht</Value>
         </TranslationItem>
-        <TranslationItem Name="_minuteAgo" Property="Text">
-          <Source>{0} minute ago</Source>
-          <Value>{0} minuten geleden</Value>
-        </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Source>{0} minutes ago</Source>
+          <Source>{0} {1:minute|minutes} ago</Source>
           <Value>{0} minuten geleden</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthAgo" Property="Text">
-          <Source>{0} month ago</Source>
-          <Value>{0} maand geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Source>{0} months ago</Source>
-          <Value>{0} maanden geleden</Value>
+          <Source>{0} {1:month|months} ago</Source>
+          <Value>{0} {1:maand|maanden} geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text">
           <Source>Parent(s)</Source>
           <Value>Ouder{s}</Value>
         </TranslationItem>
-        <TranslationItem Name="_secondAgo" Property="Text">
-          <Source>{0} second ago</Source>
-          <Value>{0} seconden geleden</Value>
-        </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
-          <Source>{0} seconds ago</Source>
+          <Source>{0} {1:second|seconds} ago</Source>
           <Value>{0} seconden geleden</Value>
-        </TranslationItem>
-        <TranslationItem Name="_weekAgo" Property="Text">
-          <Source>{0} week ago</Source>
-          <Value>{0} week geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_weeksAgo" Property="Text">
-          <Source>{0} weeks ago</Source>
-          <Value>{0} weken geleden</Value>
-        </TranslationItem>
-        <TranslationItem Name="_yearAgo" Property="Text">
-          <Source>{0} year ago</Source>
-          <Value>{0} jaar geleden</Value>
+          <Source>{0} {1:week|weeks} ago</Source>
+          <Value>{0} {1:week|weken} geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Source>{0} years ago</Source>
+          <Source>{0} {1:year|years} ago</Source>
           <Value>{0} jaar geleden</Value>
         </TranslationItem>
         <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">

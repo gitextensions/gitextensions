@@ -151,6 +151,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(434, 222);
             this.tableLayoutPanel1.TabIndex = 7;
             // 
@@ -220,7 +221,7 @@ namespace GitUI.CommandsDialogs
             this.panel2.Size = new System.Drawing.Size(428, 105);
             this.panel2.TabIndex = 4;
             // 
-            // FormCreateTagAtRevision
+            // FormCreateTag
             // 
             this.AcceptButton = this.Ok;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -230,7 +231,7 @@ namespace GitUI.CommandsDialogs
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(450, 260);
-            this.Name = "FormCreateTagAtRevision";
+            this.Name = "FormCreateTag";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Create tag";
             this.Load += new System.EventHandler(this.FormCreateTag_Load);

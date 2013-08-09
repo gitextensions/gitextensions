@@ -150,7 +150,7 @@ namespace Github3
             string[] remotes = aModule.GetRemotes(false);
             foreach (string remote in remotes)
             {
-                var url = aModule.GetISetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                var url = aModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                 if (string.IsNullOrEmpty(url))
                     continue;
 

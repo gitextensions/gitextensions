@@ -58,7 +58,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormFormatPath_Load(object sender, EventArgs e)
         {
-            OutputPath.Text = Settings.LastFormatPatchDir;
+            OutputPath.Text = AppSettings.LastFormatPatchDir;
             string selectedHead = Module.GetSelectedBranch();
             SelectedBranch.Text = _currentBranchText.Text + " " + selectedHead;
 
@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs
         private void OutputPath_TextChanged(object sender, EventArgs e)
         {
             if (Directory.Exists(OutputPath.Text))
-               Settings.LastFormatPatchDir = OutputPath.Text;
+               AppSettings.LastFormatPatchDir = OutputPath.Text;
         }
 
         private void FormatPatch_Click(object sender, EventArgs e)
@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (!SaveToDir.Checked && string.IsNullOrEmpty(Settings.SmtpServer))
+            if (!SaveToDir.Checked && string.IsNullOrEmpty(AppSettings.SmtpServer))
             {
                 MessageBox.Show(this, _wrongSmtpSettingsText.Text);
                 return;
@@ -196,9 +196,9 @@ namespace GitUI.CommandsDialogs
                         mail.Attachments.Add(attacheMent);
                     }
 
-                    var smtpClient = new SmtpClient(Settings.SmtpServer);
-                    smtpClient.Port = Settings.SmtpPort;
-                    smtpClient.EnableSsl = Settings.SmtpUseSsl;
+                    var smtpClient = new SmtpClient(AppSettings.SmtpServer);
+                    smtpClient.Port = AppSettings.SmtpPort;
+                    smtpClient.EnableSsl = AppSettings.SmtpUseSsl;
                     using (var credentials = new SmtpCredentials())
                     {
                         credentials.login.Text = from;

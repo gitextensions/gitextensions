@@ -99,6 +99,10 @@
       <DependentUpon>FormUpdates.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseUtil.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenus.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\FormBrowseMenuCommands.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
     <Compile Include="CommandsDialogs\RepoHosting\CreatePullRequestForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -124,11 +128,34 @@
     <Compile Include="CommandsDialogs\FormatPatchDialog\SmtpCredentials.Designer.cs">
       <DependentUpon>SmtpCredentials.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\RevisionLinksSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\RevisionLinksSettingsPage.Designer.cs">
+      <DependentUpon>RevisionLinksSettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\ConfigFileSettingsSet.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\RepoDistSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\ConfigFileSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\SettingsPageHeader.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\SettingsPageHeader.Designer.cs">
+      <DependentUpon>SettingsPageHeader.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.Designer.cs">
       <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\RepoDistSettingsSet.cs" />
+    <Compile Include="CommandsDialogs\SettingsDialog\SettingsPageWithHeader.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
     <Compile Include="RepoHosts.cs" />
@@ -161,6 +188,14 @@
     <Compile Include="UserControls\GotoUserManualControl.Designer.cs">
       <DependentUpon>GotoUserManualControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\RevisionGridClasses\CopyToClipboardMenuHelper.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\CaptionCustomMenuRenderer.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\GitRefListsForRevision.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\MenuUtil.cs" />
+    <Compile Include="UserManual\UserManual.cs" />
+    <Compile Include="UserManual\SingleHtmlUserManual.cs" />
+    <Compile Include="UserManual\StandardHtmlUserManual.cs" />
+    <Compile Include="UserManual\IProvideUserManual.cs" />
     <Compile Include="UserControls\RemotesComboboxControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -504,11 +539,11 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitSettingsPage.Designer.cs">
       <DependentUpon>GitSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GlobalSettingsSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitConfigSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GlobalSettingsSettingsPage.Designer.cs">
-      <DependentUpon>GlobalSettingsSettingsPage.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitConfigSettingsPage.Designer.cs">
+      <DependentUpon>GitConfigSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\GroupSettingsPage.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\HotkeysSettingsPage.cs">
@@ -516,12 +551,6 @@
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\HotkeysSettingsPage.Designer.cs">
       <DependentUpon>HotkeysSettingsPage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\LocalSettingsSettingsPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\LocalSettingsSettingsPage.Designer.cs">
-      <DependentUpon>LocalSettingsSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\ScriptsSettingsPage.cs">
       <SubType>UserControl</SubType>
@@ -877,6 +906,7 @@
     </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\RevisionGridMenuCommands.cs" />
     <Compile Include="UserControls\ToolStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -925,6 +955,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormatPatchDialog\SmtpCredentials.resx">
       <DependentUpon>SmtpCredentials.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\RevisionLinksSettingsPage.resx">
+      <DependentUpon>RevisionLinksSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\SettingsPageHeader.resx">
+      <DependentUpon>SettingsPageHeader.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.resx">
       <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>
@@ -1096,14 +1132,11 @@
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GitSettingsPage.resx">
       <DependentUpon>GitSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GlobalSettingsSettingsPage.resx">
-      <DependentUpon>GlobalSettingsSettingsPage.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GitConfigSettingsPage.resx">
+      <DependentUpon>GitConfigSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\HotkeysSettingsPage.resx">
       <DependentUpon>HotkeysSettingsPage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\LocalSettingsSettingsPage.resx">
-      <DependentUpon>LocalSettingsSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ScriptsSettingsPage.resx">
       <DependentUpon>ScriptsSettingsPage.cs</DependentUpon>
@@ -1579,6 +1612,8 @@
     <None Include="Resources\Icons\HelpPullMergeFastForward.png" />
     <None Include="Resources\Icons\HelpCommandMergeFastForward.png" />
     <None Include="Resources\Icons\IconGotoManual.png" />
+    <None Include="Resources\Icons\IconWarning.png" />
+    <None Include="Resources\Icons\IconGotoCurrentRevision.png" />
     <Content Include="Resources\Sounds\cow-moo.wav" />
     <Content Include="Translation\Francais.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

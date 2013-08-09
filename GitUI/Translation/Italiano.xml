@@ -385,7 +385,7 @@ Select no if you want to configure a different mergetool yourself.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text" type="unfinished">
-          <Source>Registry entry missing [Software\GitExtensions\GitExtensions\InstallDir].</Source>
+          <Source>Registry entry missing [Software\GitExtensions\InstallDir].</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_shCanBeRun" Property="Text" type="unfinished">
@@ -7351,68 +7351,40 @@ Quando si usa OpenSSH, vengono visualizzate finestre della linea di comando!</Va
           <Source>Date</Source>
           <Value>Data</Value>
         </TranslationItem>
-        <TranslationItem Name="_dayAgo" Property="Text">
-          <Source>{0} day ago</Source>
-          <Value>{0} giorni fa</Value>
-        </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Source>{0} days ago</Source>
+          <Source>{0} {1:day|days} ago</Source>
           <Value>{0} giorni fa</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hourAgo" Property="Text">
-          <Source>{0} hour ago</Source>
-          <Value>{0} ora fa</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Source>{0} hours ago</Source>
-          <Value>{0} ore fa</Value>
+          <Source>{0} {1:hour|hours} ago</Source>
+          <Value>{0} {1:ora|ore} fa</Value>
         </TranslationItem>
         <TranslationItem Name="_messageText" Property="Text">
           <Source>Message</Source>
           <Value>Messaggio</Value>
         </TranslationItem>
-        <TranslationItem Name="_minuteAgo" Property="Text">
-          <Source>{0} minute ago</Source>
-          <Value>{0} minuti fa</Value>
-        </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Source>{0} minutes ago</Source>
+          <Source>{0} {1:minute|minutes} ago</Source>
           <Value>{0} minuti fa</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthAgo" Property="Text">
-          <Source>{0} month ago</Source>
-          <Value>{0} mese fa</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Source>{0} months ago</Source>
-          <Value>{0} mesi fa</Value>
+          <Source>{0} {1:month|months} ago</Source>
+          <Value>{0} {1:mese|mesi} fa</Value>
         </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text" type="unfinished">
           <Source>Parent(s)</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_secondAgo" Property="Text">
-          <Source>{0} second ago</Source>
-          <Value>{0} secondi fa</Value>
-        </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
-          <Source>{0} seconds ago</Source>
+          <Source>{0} {1:second|seconds} ago</Source>
           <Value>{0} secondi fa</Value>
-        </TranslationItem>
-        <TranslationItem Name="_weekAgo" Property="Text" type="unfinished">
-          <Source>{0} week ago</Source>
-          <Value />
         </TranslationItem>
         <TranslationItem Name="_weeksAgo" Property="Text" type="unfinished">
-          <Source>{0} weeks ago</Source>
+          <Source>{0} {1:week|weeks} ago</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_yearAgo" Property="Text">
-          <Source>{0} year ago</Source>
-          <Value>{0} anni fa</Value>
-        </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Source>{0} years ago</Source>
+          <Source>{0} {1:year|years} ago</Source>
           <Value>{0} anni fa</Value>
         </TranslationItem>
         <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
