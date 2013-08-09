@@ -28,10 +28,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Translate();
             _tagsLoader = new AsyncLoader();
             _branchesLoader = new AsyncLoader();
+        }
+
+        private void FormGoToCommit_Load(object sender, EventArgs e)
+        {
             LoadTagsAsync();
             LoadBranchesAsync();
-            if (aCommands != null)
-                SetCommitExpressionFromClipboard();
+            SetCommitExpressionFromClipboard();
         }
 
         /// <summary>
@@ -225,6 +228,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (!string.IsNullOrEmpty(guid))
             {
                 textboxCommitExpression.Text = text;
+                textboxCommitExpression.SelectAll();
             }
         }
     }

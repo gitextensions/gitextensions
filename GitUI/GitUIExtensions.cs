@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Settings;
 using GitUI.Editor;
 using ICSharpCode.TextEditor.Util;
 
@@ -102,7 +103,7 @@ namespace GitUI
                 if (revisionToCmp == null)
                     return;
 
-                output = grid.Module.OpenWithDifftool(fileName, revisionToCmp);            
+                output = grid.Module.OpenWithDifftool(fileName, null, revisionToCmp);            
             }
 
             if (!string.IsNullOrEmpty(output))
@@ -147,22 +148,16 @@ namespace GitUI
         public static string GetSelectedPatch(this FileViewer diffViewer, RevisionGrid grid, GitItemStatus file)
         {
             IList<GitRevision> revisions = grid.GetSelectedRevisions();
-            return GetSelectedPatch(diffViewer, revisions, file);
-        }
-
-        public static string GetSelectedPatch(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file)
-        {
-            if (revisions.Count == 0)
-                return null;
-
-            string firstRevision = revisions[0].Guid;
+            string firstRevision = revisions.Count > 0 ? revisions[0].Guid : null;
             string secondRevision = revisions.Count == 2 ? revisions[1].Guid : null;
-
             return GetSelectedPatch(diffViewer, firstRevision, secondRevision, file);
         }
 
         public static string GetSelectedPatch(this FileViewer diffViewer, string firstRevision, string secondRevision, GitItemStatus file)
         {
+            if (firstRevision == null)
+                return null;
+
             //to simplify if-ology
             if (GitRevision.IsArtificial(secondRevision) && firstRevision != GitRevision.UnstagedGuid)
             {
@@ -195,10 +190,19 @@ namespace GitUI
 
         public static void ViewChanges(this FileViewer diffViewer, IList<GitRevision> revisions, GitItemStatus file, string defaultText)
         {
-            if (revisions.Count == 1 && (revisions[0].ParentGuids == null || revisions[0].ParentGuids.Length == 0))
+            string revision = revisions.Count > 0 ? revisions[0].Guid : null;
+            string parentRevision = revisions.Count == 2 ? revisions[1].Guid : null;
+            if (parentRevision == null && revisions[0].ParentGuids != null && revisions[0].ParentGuids.Length > 0)
+                parentRevision = revisions[0].ParentGuids[0];
+            ViewChanges(diffViewer, revision, parentRevision, file, defaultText);
+        }
+
+        public static void ViewChanges(this FileViewer diffViewer, string revision, string parentRevision, GitItemStatus file, string defaultText)
+        {
+            if (parentRevision == null)
             {
                 if (file.TreeGuid.IsNullOrEmpty())
-                    diffViewer.ViewGitItemRevision(file.Name, revisions[0].Guid);
+                    diffViewer.ViewGitItemRevision(file.Name, revision);
                 else if (!file.IsSubmodule)
                     diffViewer.ViewGitItem(file.Name, file.TreeGuid);
                 else
@@ -209,19 +213,10 @@ namespace GitUI
             {
                 diffViewer.ViewPatch(() =>
                     {
-                        string selectedPatch = diffViewer.GetSelectedPatch(revisions, file);
+                        string selectedPatch = diffViewer.GetSelectedPatch(revision, parentRevision, file);
                         return selectedPatch ?? defaultText;
                     });
             }
-        }
-
-        public static void ViewChanges(this FileViewer diffViewer, string revision, string parentRevision, GitItemStatus file, string defaultText)
-        {
-            diffViewer.ViewPatch(() =>
-                {
-                    string selectedPatch = diffViewer.GetSelectedPatch(revision, parentRevision, file);
-                    return selectedPatch ?? defaultText;
-                });
         }
 
         public static void RemoveIfExists(this TabControl tabControl, TabPage page)
@@ -325,5 +320,35 @@ namespace GitUI
             if (!control.IsDisposed)
                 UISynchronizationContext.Send(checkDisposedAndInvoke, state);
         }
+
+        public static bool? GetNullableChecked(this CheckBox chx)
+        {
+            if (chx.CheckState == CheckState.Indeterminate)
+                return null;
+            else
+                return chx.Checked;
+
+        }
+
+        public static void SetNullableChecked(this CheckBox chx, bool? Checked)
+        {
+            if (Checked.HasValue)
+                chx.CheckState = Checked.Value ? CheckState.Checked : CheckState.Unchecked;
+            else
+                chx.CheckState = CheckState.Indeterminate;
+
+        }
+
+        public static Control FindFocusedControl(this ContainerControl container)
+        {
+            var control = container.ActiveControl;
+            container = control as ContainerControl;
+
+            if (container == null)
+                return control;
+            else
+                return container.FindFocusedControl();
+        }
+
     }
 }

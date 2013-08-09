@@ -394,8 +394,8 @@ Elija no si desea utilizar otra herramienta de fusión.</Value>
           <Value>Directorio de instalación inválido guardado en [Software\GitExtensions\GitExtensions\InstallDir].</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text">
-          <Source>Registry entry missing [Software\GitExtensions\GitExtensions\InstallDir].</Source>
-          <Value>Entrada del registro faltante [Software\GitExtensions\GitExtensions\InstallDir].</Value>
+          <Source>Registry entry missing [Software\GitExtensions\InstallDir].</Source>
+          <Value>Entrada del registro faltante [Software\GitExtensions\InstallDir].</Value>
         </TranslationItem>
         <TranslationItem Name="_shCanBeRun" Property="Text">
           <Source>Command sh can be run using: {0}sh</Source>
@@ -7657,68 +7657,40 @@ en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea d
           <Source>Date</Source>
           <Value>Fecha</Value>
         </TranslationItem>
-        <TranslationItem Name="_dayAgo" Property="Text">
-          <Source>{0} day ago</Source>
-          <Value>hace {0} día</Value>
-        </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Source>{0} days ago</Source>
-          <Value>hace {0} días</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hourAgo" Property="Text">
-          <Source>{0} hour ago</Source>
-          <Value>hace {0} hora</Value>
+          <Source>{0} {1:day|days} ago</Source>
+          <Value>hace {0} {1:día|días}</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Source>{0} hours ago</Source>
-          <Value>hace {0} horas</Value>
+          <Source>{0} {1:hour|hours} ago</Source>
+          <Value>hace {0} {1:hora|horas}</Value>
         </TranslationItem>
         <TranslationItem Name="_messageText" Property="Text">
           <Source>Message</Source>
           <Value>Mensaje</Value>
         </TranslationItem>
-        <TranslationItem Name="_minuteAgo" Property="Text">
-          <Source>{0} minute ago</Source>
-          <Value>hace {0} minutos</Value>
-        </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Source>{0} minutes ago</Source>
+          <Source>{0} {1:minute|minutes} ago</Source>
           <Value>hace {0} minutos</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthAgo" Property="Text">
-          <Source>{0} month ago</Source>
-          <Value>hace {0} mes</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Source>{0} months ago</Source>
-          <Value>hace {0} meses</Value>
+          <Source>{0} {1:month|months} ago</Source>
+          <Value>hace {0} {1:mes|meses}</Value>
         </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text">
           <Source>Parent(s)</Source>
           <Value>Padre(s)</Value>
         </TranslationItem>
-        <TranslationItem Name="_secondAgo" Property="Text">
-          <Source>{0} second ago</Source>
-          <Value>hace {0} segundos</Value>
-        </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
-          <Source>{0} seconds ago</Source>
+          <Source>{0} {1:second|seconds} ago</Source>
           <Value>hace {0} segundos</Value>
-        </TranslationItem>
-        <TranslationItem Name="_weekAgo" Property="Text">
-          <Source>{0} week ago</Source>
-          <Value>hace {0} semana</Value>
         </TranslationItem>
         <TranslationItem Name="_weeksAgo" Property="Text">
-          <Source>{0} weeks ago</Source>
-          <Value>hace {0} semanas</Value>
-        </TranslationItem>
-        <TranslationItem Name="_yearAgo" Property="Text">
-          <Source>{0} year ago</Source>
-          <Value>hace {0} años</Value>
+          <Source>{0} {1:week|weeks} ago</Source>
+          <Value>hace {0} {1:semana|semanas}</Value>
         </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Source>{0} years ago</Source>
+          <Source>{0} {1:year|years} ago</Source>
           <Value>hace {0} años</Value>
         </TranslationItem>
       </translationItems>

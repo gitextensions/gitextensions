@@ -16,8 +16,8 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _removeSelectedSubmoduleCaption = new TranslationString("Remove");
 
-        private BindingList<IGitSubmodule> modules = new BindingList<IGitSubmodule>();
-        private GitSubmodule oldSubmodule;
+        private BindingList<IGitSubmoduleInfo> modules = new BindingList<IGitSubmoduleInfo>();
+        private GitSubmoduleInfo _oldSubmoduleInfo;
 
         public FormSubmodules(GitUICommands aCommands)
             : base(aCommands)
@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs
         private void bw_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker bw = sender as BackgroundWorker;
-            foreach (var oldSubmodule in Module.GetSubmodules())
+            foreach (var oldSubmodule in Module.GetSubmodulesInfo())
             {
                 if (bw.CancellationPending)
                 {
@@ -58,12 +58,12 @@ namespace GitUI.CommandsDialogs
             lock (modules)
             {
                 lock (modules)
-                    modules.Add(e.UserState as GitSubmodule);
-                if (oldSubmodule != null)
+                    modules.Add(e.UserState as GitSubmoduleInfo);
+                if (_oldSubmoduleInfo != null)
                 {
                     DataGridViewRow row = Submodules.Rows
                         .Cast<DataGridViewRow>()
-                        .FirstOrDefault(r => r.DataBoundItem as GitSubmodule == oldSubmodule);
+                        .FirstOrDefault(r => r.DataBoundItem as GitSubmoduleInfo == _oldSubmoduleInfo);
 
                     if (row != null)
                         row.Selected = true;
@@ -83,9 +83,9 @@ namespace GitUI.CommandsDialogs
             if (bw != null)
                 bw.CancelAsync();
             UseWaitCursor = true;
-            oldSubmodule = null;
+            _oldSubmoduleInfo = null;
             if (Submodules.SelectedRows.Count == 1)
-                oldSubmodule = Submodules.SelectedRows[0].DataBoundItem as GitSubmodule;
+                _oldSubmoduleInfo = Submodules.SelectedRows[0].DataBoundItem as GitSubmoduleInfo;
             lock (modules)
                 modules.Clear();
             bw = new BackgroundWorker();

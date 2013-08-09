@@ -54,6 +54,8 @@ namespace GitUI.CommandsDialogs
             base.OnRuntimeLoad(e);
             FillFromDropDown();
 
+            _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
+
             if (url != null)
             {
                 _NO_TRANSLATE_From.Text = url;
@@ -64,7 +66,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (Module.IsValidGitWorkingDir())
                     _NO_TRANSLATE_From.Text = Module.WorkingDir;
-                else
+                else if (!string.IsNullOrEmpty(Module.WorkingDir))
                     _NO_TRANSLATE_To.Text = Module.WorkingDir;
             }
 
@@ -80,8 +82,8 @@ namespace GitUI.CommandsDialogs
                 _branchListLoader.Cancel();
 
                 var dirTo = _NO_TRANSLATE_To.Text;
-                if (!dirTo.EndsWith(Settings.PathSeparator.ToString()) && !dirTo.EndsWith(Settings.PathSeparatorWrong.ToString()))
-                    dirTo += Settings.PathSeparator.ToString();
+                if (!dirTo.EndsWith(AppSettings.PathSeparator.ToString()) && !dirTo.EndsWith(AppSettings.PathSeparatorWrong.ToString()))
+                    dirTo += AppSettings.PathSeparator.ToString();
 
                 dirTo += _NO_TRANSLATE_NewDirectory.Text;
 
@@ -93,7 +95,7 @@ namespace GitUI.CommandsDialogs
 
                 var cloneCmd = GitCommandHelpers.CloneCmd(_NO_TRANSLATE_From.Text, dirTo,
                             CentralRepository.Checked, cbIntializeAllSubmodules.Checked, Branches.Text, null);
-                using (var fromProcess = new FormRemoteProcess(Module, Settings.GitCommand, cloneCmd))
+                using (var fromProcess = new FormRemoteProcess(Module, AppSettings.GitCommand, cloneCmd))
                 {
                     fromProcess.SetUrlTryingToConnect(_NO_TRANSLATE_From.Text);
                     fromProcess.ShowDialog(this);

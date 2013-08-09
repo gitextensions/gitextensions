@@ -393,8 +393,8 @@ Selectionnez non si vous voulez vous-même configurer un autre outil de fusion.<
           <Value>Répertoire d'installation invalide stocké dans [Software\GitExtensions\GitExtensions\InstallDir].</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text">
-          <Source>Registry entry missing [Software\GitExtensions\GitExtensions\InstallDir].</Source>
-          <Value>Entrée de registre manquante [Software\GitExtensions\GitExtensions\InstallDir].</Value>
+          <Source>Registry entry missing [Software\GitExtensions\InstallDir].</Source>
+          <Value>Entrée de registre manquante [Software\GitExtensions\InstallDir].</Value>
         </TranslationItem>
         <TranslationItem Name="_shCanBeRun" Property="Text">
           <Source>Command sh can be run using: {0}sh</Source>
@@ -7507,69 +7507,41 @@ mais nécessite que le client d'authentification tourne en arrière-plan.</Value
           <Source>Date</Source>
           <Value>Date</Value>
         </TranslationItem>
-        <TranslationItem Name="_dayAgo" Property="Text">
-          <Source>{0} day ago</Source>
-          <Value>Il y a {0} jour</Value>
-        </TranslationItem>
         <TranslationItem Name="_daysAgo" Property="Text">
-          <Source>{0} days ago</Source>
-          <Value>Il y a {0} jours</Value>
-        </TranslationItem>
-        <TranslationItem Name="_hourAgo" Property="Text">
-          <Source>{0} hour ago</Source>
-          <Value>Il y a {0} heure</Value>
+          <Source>{0} {1:day|days} ago</Source>
+          <Value>Il y a {0} {1:jour|jours}</Value>
         </TranslationItem>
         <TranslationItem Name="_hoursAgo" Property="Text">
-          <Source>{0} hours ago</Source>
-          <Value>Il y a {0} heures</Value>
+          <Source>{0} {1:hour|hours} ago</Source>
+          <Value>Il y a {0} {1:heure|heures}</Value>
         </TranslationItem>
         <TranslationItem Name="_messageText" Property="Text" type="unfinished">
           <Source>Message</Source>
           <Value>Message</Value>
         </TranslationItem>
-        <TranslationItem Name="_minuteAgo" Property="Text">
-          <Source>{0} minute ago</Source>
-          <Value>Il y a {0} minute</Value>
-        </TranslationItem>
         <TranslationItem Name="_minutesAgo" Property="Text">
-          <Source>{0} minutes ago</Source>
-          <Value>Il y a {0} minutes</Value>
-        </TranslationItem>
-        <TranslationItem Name="_monthAgo" Property="Text">
-          <Source>{0} month ago</Source>
-          <Value>Il y a {0} mois</Value>
+          <Source>{0} {1:minute|minutes} ago</Source>
+          <Value>Il y a {0} {1:minute|minutes}</Value>
         </TranslationItem>
         <TranslationItem Name="_monthsAgo" Property="Text">
-          <Source>{0} months ago</Source>
+          <Source>{0} {1:month|months} ago</Source>
           <Value>Il y a {0} mois</Value>
         </TranslationItem>
         <TranslationItem Name="_parentsText" Property="Text">
           <Source>Parent(s)</Source>
           <Value>Parent(s)</Value>
         </TranslationItem>
-        <TranslationItem Name="_secondAgo" Property="Text">
-          <Source>{0} second ago</Source>
-          <Value>Il y a {0} seconde</Value>
-        </TranslationItem>
         <TranslationItem Name="_secondsAgo" Property="Text">
-          <Source>{0} seconds ago</Source>
-          <Value>Il y a {0} secondes</Value>
-        </TranslationItem>
-        <TranslationItem Name="_weekAgo" Property="Text">
-          <Source>{0} week ago</Source>
-          <Value>Il y a {0} semaine</Value>
+          <Source>{0} {1:second|seconds} ago</Source>
+          <Value>Il y a {0} {1:seconde|secondes}</Value>
         </TranslationItem>
         <TranslationItem Name="_weeksAgo" Property="Text">
-          <Source>{0} weeks ago</Source>
-          <Value>Il y a {0} semaines</Value>
-        </TranslationItem>
-        <TranslationItem Name="_yearAgo" Property="Text">
-          <Source>{0} year ago</Source>
-          <Value>Il y a {0} an</Value>
+          <Source>{0} {1:week|weeks} ago</Source>
+          <Value>Il y a {0} {1:semaine|semaines}</Value>
         </TranslationItem>
         <TranslationItem Name="_yearsAgo" Property="Text">
-          <Source>{0} years ago</Source>
-          <Value>Il y a {0} ans</Value>
+          <Source>{0} {1:year|years} ago</Source>
+          <Value>Il y a {0} {1:an|ans}</Value>
         </TranslationItem>
         <TranslationItem Name="_pageantNotFound" Property="Text" type="obsolete">
           <Source>Cannot load SSH key. PuTTY is not configured properly.</Source>

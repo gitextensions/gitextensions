@@ -12,7 +12,6 @@ namespace GitCommands
         public const string Sha1HashPattern = @"[a-f\d]{40}";
         public static readonly Regex Sha1HashRegex = new Regex("^" + Sha1HashPattern + "$", RegexOptions.Compiled);
 
-
         public string[] ParentGuids;
         private IList<IGitItem> _subItems;
         private readonly List<GitRef> _refs = new List<GitRef>();
@@ -37,6 +36,7 @@ namespace GitCommands
         public DateTime CommitDate { get; set; }
 
         public string Message { get; set; }
+        public string Body { get; set; }
         //UTF-8 when is null or empty
         public string MessageEncoding { get; set; }
 
@@ -70,9 +70,8 @@ namespace GitCommands
             if ((searchString.Length > 2) && Guid.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase))
                 return true;
 
-            return
-                (Author != null && Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase)) ||
-                Message.ToLower().Contains(searchString);
+            return (Author != null && Author.StartsWith(searchString, StringComparison.CurrentCultureIgnoreCase)) ||
+                    Message.ToLower().Contains(searchString);
         }
 
         public bool IsArtificial()

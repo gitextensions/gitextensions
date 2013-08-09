@@ -30,6 +30,7 @@ namespace GitUI
         public FileStatusList()
         {
             InitializeComponent(); Translate();
+            SelectFirstItemOnSetItems = true;
             _noDiffFilesChangesDefaultText = NoFiles.Text;
 #if !__MonoCS__ // TODO Drag'n'Drop doesn't work on Mono/Linux
             FileStatusListView.MouseMove += FileStatusListView_MouseMove;
@@ -86,6 +87,16 @@ namespace GitUI
                     SelectedIndex = 0;
                 FileStatusListView.Focus();
             }
+        }
+
+        public void BeginUpdate()
+        {
+            FileStatusListView.BeginUpdate();
+        }
+
+        public void EndUpdate()
+        {
+            FileStatusListView.EndUpdate();
         }
 
         private string GetItemText(Graphics graphics, GitItemStatus gitItemStatus)
@@ -277,6 +288,22 @@ namespace GitUI
                 return FileStatusListView.SelectedItems.Cast<ListViewItem>().
                     Select(i => (GitItemStatus)i.Tag);
             }
+            set
+            {
+                ClearSelected();
+                if (value == null)
+                    return;
+
+                foreach (var item in FileStatusListView.Items.Cast<ListViewItem>()
+                    .Where(i => value.Contains((GitItemStatus)i.Tag)))
+                {
+                    item.Selected = true;
+                }
+                var first = FileStatusListView.SelectedItems.Cast<ListViewItem>().FirstOrDefault(x => x.Selected);
+                if (first != null)
+                    first.EnsureVisible();
+                StoreNextIndexToSelect();
+            }
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -285,8 +312,11 @@ namespace GitUI
         {
             get
             {
-                foreach (ListViewItem item in FileStatusListView.SelectedItems)
-                    return (GitItemStatus)item.Tag;
+                if (FileStatusListView.SelectedItems.Count > 0)
+                {
+                    ListViewItem item = FileStatusListView.SelectedItems[0];
+                    return (GitItemStatus) item.Tag;
+                }
                 return null;
             }
             set
@@ -484,7 +514,7 @@ namespace GitUI
                 FileStatusListView.Groups.Clear();
                 FileStatusListView.Items.Clear();
                 _itemsDictionary = new Dictionary<string, IList<GitItemStatus>>();
-                if (value == null || value.Count == 0)
+                if (value == null || value.All(pair => pair.Value.Count == 0))
                 {
                     if (!empty)
                     {
@@ -533,15 +563,18 @@ namespace GitUI
                 FileStatusListView.SetGroupState(ListViewGroupState.Collapsible);
                 if (DataSourceChanged != null)
                     DataSourceChanged(this, new EventArgs());
-                if (FileStatusListView.Items.Count > 0)
-                {
+                if (SelectFirstItemOnSetItems)
                     SelectFirstVisibleItem();
-                }
             }
         }
 
-        private void SelectFirstVisibleItem()
+        [DefaultValue(true)]
+        public bool SelectFirstItemOnSetItems { get; set; }
+
+        public void SelectFirstVisibleItem()
         {
+            if (FileStatusListView.Items.Count == 0)
+                return;
             var group = FileStatusListView.Groups.Cast<ListViewGroup>().
                 FirstOrDefault(gr => gr.Items.Count > 0);
             if (group != null)

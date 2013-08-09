@@ -2,7 +2,7 @@
 using System.IO;
 using GitCommands;
 
-namespace GitUI.RevisionGridClasses
+namespace GitUI.UserControls.RevisionGridClasses
 {
     [Serializable]
     public delegate void IndexChangedEventHandler(bool indexChanged);
@@ -52,7 +52,7 @@ namespace GitUI.RevisionGridClasses
             {
                 try
                 {
-                    enabled = GitCommands.Settings.UseFastChecks;
+                    enabled = GitCommands.AppSettings.UseFastChecks;
 
                     Path = Module.WorkingDirGitDir();
 
@@ -61,7 +61,7 @@ namespace GitUI.RevisionGridClasses
                     GitIndexWatcher.IncludeSubdirectories = false;
                     GitIndexWatcher.EnableRaisingEvents = enabled;
 
-                    RefsWatcher.Path = Path + Settings.PathSeparator + "refs";
+                    RefsWatcher.Path = Path + AppSettings.PathSeparator + "refs";
                     RefsWatcher.IncludeSubdirectories = true;
                     RefsWatcher.EnableRaisingEvents = enabled;
                 }
@@ -120,7 +120,7 @@ namespace GitUI.RevisionGridClasses
         private void RefreshWatcher()
         {
             if (Path != Module.WorkingDirGitDir() ||
-                enabled != GitCommands.Settings.UseFastChecks)
+                enabled != GitCommands.AppSettings.UseFastChecks)
                 SetFileSystemWatcher();
         }
 
