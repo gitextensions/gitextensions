@@ -62,6 +62,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (!CheckGitCredentialStore())
             {
+                if (GitCommandHelpers.VersionInUse.HasBuiltinCredentialHelper)
+                {
+                    var config = GlobalConfigFileSettings;
+                    config.SetValue("credential.helper", "wincred");
+                    return true;
+                }
+
                 string gcsFileName = Path.Combine(AppSettings.GetInstallDir(), @"GitCredentialWinStore\git-credential-winstore.exe");
                 if (File.Exists(gcsFileName))
                 {
