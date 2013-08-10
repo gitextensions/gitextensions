@@ -85,7 +85,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             string value = GlobalConfigFileSettings.GetValue("credential.helper");
             bool isValid;
             if (EnvUtils.RunningOnWindows())
-                isValid = value.Contains("git-credential-winstore.exe");
+                isValid = value.Contains("git-credential-winstore.exe") || value.Contains("wincred");
             else
                 isValid = !string.IsNullOrEmpty(value);
 
