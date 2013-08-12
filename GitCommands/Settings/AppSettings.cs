@@ -966,6 +966,11 @@ namespace GitCommands
             get { return false; }
         }
 
+        public static bool UseLibGit2ForGraph
+        {
+            get { return false; }
+        }
+
         public static bool IsPortable()
         {
             return Properties.Settings.Default.IsPortable;

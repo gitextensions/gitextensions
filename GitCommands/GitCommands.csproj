@@ -79,6 +79,9 @@
     <Compile Include="DateTimeUtils.cs" />
     <Compile Include="ExceptionUtils.cs" />
     <Compile Include="FileHelper.cs" />
+    <Compile Include="RevisionGraph.cs" />
+    <Compile Include="RevisionGraphGit.cs" />
+    <Compile Include="RevisionGraphLibGit2.cs" />
     <Compile Include="Settings\BasicSettingTypes.cs" />
     <Compile Include="Settings\CommonSettingsTypes.cs" />
     <Compile Include="Settings\ConfigFileSettings.cs" />
@@ -144,7 +147,6 @@
     <Compile Include="Repository\RepositoryCategoryType.cs" />
     <Compile Include="Repository\RepositoryHistory.cs" />
     <Compile Include="Repository\RepositoryType.cs" />
-    <Compile Include="RevisionGraph.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
     <Compile Include="Statistics\ImpactLoader.cs" />
