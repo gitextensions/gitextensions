@@ -546,10 +546,10 @@ namespace GitUI
                 {
                     if (GetRevision(i).Guid != revision)
                         continue;
-                        SetSelectedIndex(i);
-                        return;
-                    }
+                    SetSelectedIndex(i);
+                    return;
                 }
+            }
 
             Revisions.ClearSelection();
             Revisions.Select();
@@ -848,7 +848,16 @@ namespace GitUI
                 else
                     revGraphIMF = filterBarIMF;
 
-                _revisionGraphCommand = new RevisionGraph(Module) { BranchFilter = BranchFilter, RefsOptions = _refsOptions, Filter = _revisionFilter.GetFilter() + Filter + FixedFilter };
+                if (_revisionGraphCommand != null)
+                    _revisionGraphCommand.Dispose();
+
+                if (!AppSettings.UseLibGit2ForGraph)
+                    _revisionGraphCommand = new RevisionGraphGit(Module);
+                else
+                    _revisionGraphCommand = new RevisionGraphLibGit2(Module);
+                _revisionGraphCommand.BranchFilter = BranchFilter;
+                _revisionGraphCommand.RefsOptions = _refsOptions;
+                _revisionGraphCommand.Filter = _revisionFilter.GetFilter() + Filter + FixedFilter;
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
@@ -868,7 +877,7 @@ namespace GitUI
         private string[] GetSuperprojectCheckout()
         {
             if (Module.SuperprojectModule == null)
-                return new string[] {};
+                return new string[] { };
             var currentCheckout = Module.GetSuperprojectCurrentCheckout();
             if (currentCheckout.Key == 'U')
             {
@@ -904,7 +913,7 @@ namespace GitUI
 
         private void GitGetCommitsCommandUpdated(object sender, EventArgs e)
         {
-            var updatedEvent = (RevisionGraph.RevisionGraphUpdatedEventArgs)e;
+            var updatedEvent = (RevisionGraphUpdatedEventArgs)e;
             UpdateGraph(updatedEvent.Revision);
         }
 
@@ -1182,13 +1191,13 @@ namespace GitUI
                             if (gitRefs.Count > 0)
                             {
                                 gitRefs.Sort((left, right) =>
-                                               {
-                                                   if (left.IsTag != right.IsTag)
-                                                       return right.IsTag.CompareTo(left.IsTag);
-                                                   if (left.IsRemote != right.IsRemote)
-                                                       return left.IsRemote.CompareTo(right.IsRemote);
-                                                   return left.Name.CompareTo(right.Name);
-                                               });
+                                           {
+                                               if (left.IsTag != right.IsTag)
+                                                   return right.IsTag.CompareTo(left.IsTag);
+                                               if (left.IsRemote != right.IsRemote)
+                                                   return left.IsRemote.CompareTo(right.IsRemote);
+                                               return left.Name.CompareTo(right.Name);
+                                           });
 
                                 foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || _revisionGridMenuCommands.ShowRemoteBranches)))
                                 {
@@ -1229,9 +1238,9 @@ namespace GitUI
                                         var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
                                                              e.Graphics.MeasureString(headName, RefsFont).Height);
                                         e.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
-                                                                 location.Y - 1, size.Width + 3, size.Height + 2);
+                                                             location.Y - 1, size.Width + 3, size.Height + 2);
                                         e.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
-                                                                 location.Y - 1, size.Width + 3, size.Height + 2);
+                                                             location.Y - 1, size.Width + 3, size.Height + 2);
                                         e.Graphics.DrawString(headName, refsFont, textBrush, location);
                                     }
                                     else
@@ -1286,7 +1295,7 @@ namespace GitUI
                                 if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
                                 {
                                     ThreadPool.QueueUserWorkItem(o =>
-                                            Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
+                                                Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
                                 }
 
                                 if (gravatar != null)
@@ -2335,7 +2344,7 @@ namespace GitUI
             _revisionGridMenuCommands.TriggerPropertyChanged();
             Refresh();
         }
-        
+
         public void ToggleRevisionCardLayout()
         {
             var layouts = new List<RevisionGridLayout>((RevisionGridLayout[])Enum.GetValues(typeof(RevisionGridLayout)));
