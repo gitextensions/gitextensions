@@ -1940,9 +1940,8 @@ namespace GitCommands
 
         public string[] GetRemotes(bool allowEmpty = true)
         {
-            if (!IsValidGitWorkingDir())
-                return new string[] { };
-            return Repository.Network.Remotes.Select(r => r.Name).ToArray();
+            string remotes = RunGitCmd("remote show");
+            return allowEmpty ? remotes.Split('\n') : remotes.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         public ConfigFile GetLocalConfig()
