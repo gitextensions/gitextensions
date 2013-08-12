@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
 using ResourceManager.Translation;
+using System.Collections.Generic;
 
 namespace GitUI.CommandsDialogs
 {
@@ -50,6 +51,8 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Fetch Url");
         private readonly TranslationString _labelUrlAsFetchPush =
             new TranslationString("Url");
+
+        private readonly string newRemote = "<new>";
 
         public FormRemotes(GitUICommands aCommands)
             : base(aCommands)
@@ -122,9 +125,10 @@ namespace GitUI.CommandsDialogs
                 checkBoxSepPushUrl.Checked = false;
             }
 
-            if (string.IsNullOrEmpty(_remote))
+            if (string.IsNullOrEmpty(_remote) || _remote == newRemote)
             {
-                if (string.IsNullOrEmpty(RemoteName.Text) && string.IsNullOrEmpty(Url.Text))
+                if ((string.IsNullOrEmpty(RemoteName.Text) || RemoteName.Text == newRemote) &&
+                    string.IsNullOrEmpty(Url.Text))
                 {
                     return;
                 }
@@ -143,7 +147,7 @@ namespace GitUI.CommandsDialogs
 
                     if (!string.IsNullOrEmpty(remoteUrl))
                     {
-                        FormRemoteProcess.ShowDialog(this, "remote update");
+                        FormRemoteProcess.ShowDialog(this, "remote update " + RemoteName.Text);
                         ConfigureRemotes();
                     }
                     else
@@ -204,12 +208,9 @@ namespace GitUI.CommandsDialogs
 
         private void NewClick(object sender, EventArgs e)
         {
-            var output = Module.AddRemote("<new>", "");
-            if (!string.IsNullOrEmpty(output))
-            {
-                MessageBox.Show(this, output, _hintDelete.Text);
-            }
-            Initialize();
+            List<string> list = new List<string>((IEnumerable<string>)Remotes.DataSource);
+            list.Insert(0, newRemote);
+            Remotes.DataSource = list;
         }
 
         private void DeleteClick(object sender, EventArgs e)
@@ -220,7 +221,7 @@ namespace GitUI.CommandsDialogs
             }
 
             if (MessageBox.Show(this, _questionDeleteRemote.Text, _questionDeleteRemoteCaption.Text, MessageBoxButtons.YesNo) ==
-                DialogResult.Yes)
+                DialogResult.Yes && _remote != newRemote)
             {
                 var output = Module.RemoveRemote(_remote);
                 if (!string.IsNullOrEmpty(output))
