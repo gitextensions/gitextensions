@@ -1795,7 +1795,7 @@ revision:</Source>
           <Value>Afficher les demandes de pull</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfBisect" Property="Text">
-          <Source>Your are in the middle of a bisect</Source>
+          <Source>You are in the middle of a bisect</Source>
           <Value>Vous êtes au milieu d'une bisection</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfPatchApply" Property="Text">
