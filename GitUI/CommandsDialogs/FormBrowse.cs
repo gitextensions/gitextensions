@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs
             new TranslationString("stash");
 
         private readonly TranslationString _warningMiddleOfBisect =
-            new TranslationString("Your are in the middle of a bisect");
+            new TranslationString("You are in the middle of a bisect");
         private readonly TranslationString _warningMiddleOfRebase =
             new TranslationString("You are in the middle of a rebase");
         private readonly TranslationString _warningMiddleOfPatchApply =
