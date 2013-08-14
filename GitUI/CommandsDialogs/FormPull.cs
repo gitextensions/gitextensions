@@ -265,7 +265,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (PullFromUrl.Checked)
+            if (PullFromUrl.Checked && Directory.Exists(comboBoxPullSource.Text))
                 Repositories.RepositoryHistory.AddMostRecentRepository(comboBoxPullSource.Text);
 
             var source = CalculateSource();
