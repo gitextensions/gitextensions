@@ -1331,7 +1331,7 @@ namespace GitCommands
         {
             submoduleName = null;
             submodulePath = null;
-            if (String.IsNullOrEmpty(_workingdir))
+            if (!IsValidGitWorkingDir())
                 return null;
 
             string superprojectPath = null;
