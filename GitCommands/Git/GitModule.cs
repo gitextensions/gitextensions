@@ -1293,7 +1293,7 @@ namespace GitCommands
 
         public string GetSubmoduleFullPath(string localPath)
         {
-            string dir = _workingdir + localPath + Settings.PathSeparator.ToString();//
+            string dir = Path.Combine(_workingdir, localPath + Settings.PathSeparator);
             return Path.GetFullPath(dir); // fix slashes
         }
 
@@ -1549,7 +1549,7 @@ namespace GitCommands
         public bool StartPageantForRemote(string remote)
         {
             var sshKeyFile = GetPuttyKeyFileForRemote(remote);
-            if (string.IsNullOrEmpty(sshKeyFile))
+            if (string.IsNullOrEmpty(sshKeyFile) || !File.Exists(sshKeyFile))
                 return false;
 
             StartPageantWithKey(sshKeyFile);
