@@ -617,11 +617,17 @@ namespace GitUI.CommandsDialogs
 
             if (File.Exists(Settings.Pageant))
             {
+                HashSet<string> files = new HashSet<string>(PathUtil.CreatePathEqualityComparer());
                 foreach (var remote in GetSelectedRemotes())
                 {
-                    Module.StartPageantForRemote(remote);
+                    var sshKeyFile = Module.GetPuttyKeyFileForRemote(remote);
+                    if (!string.IsNullOrEmpty(sshKeyFile) && File.Exists(sshKeyFile))
+                        files.Add(sshKeyFile);
                 }
-            }            
+
+                foreach (var sshKeyFile in files)
+                    GitModule.StartPageantWithKey(sshKeyFile);
+            }
             else
                 MessageBoxes.PAgentNotFound(this);
         }
