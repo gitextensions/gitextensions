@@ -315,19 +315,19 @@
 
     <DirectoryRef Id="NativeBinariesDir">
       <Component Id="libgit2.license.txt" Guid="*">
-        <File Source="..\libgit2sharp\LibGit2Sharp\bin\Release\NativeBinaries\libgit2.license.txt"/>
+        <File Source="..\libgit2sharp\Lib\NativeBinaries\libgit2.license.txt"/>
       </Component>
     </DirectoryRef>
 
     <DirectoryRef Id="NativeBinariesX86Dir">
-      <Component Id="git2x86.dll" Guid="*">
-        <File Id="git2x86.dll" Source="..\libgit2sharp\LibGit2Sharp\bin\Release\NativeBinaries\x86\git2.dll"/>
+      <Component Id="git2_x86.dll" Guid="*">
+        <File Id="git2_x86.dll" Source="..\libgit2sharp\Lib\NativeBinaries\x86\git2-7940036.dll"/>
       </Component>
     </DirectoryRef>
     
     <DirectoryRef Id="NativeBinariesX64Dir">
-      <Component Id="git2x64.dll" Guid="*">
-        <File Id="git2x64.dll" Source="..\libgit2sharp\LibGit2Sharp\bin\Release\NativeBinaries\amd64\git2.dll"/>
+      <Component Id="git2_x64.dll" Guid="*">
+        <File Id="git2_x64.dll" Source="..\libgit2sharp\Lib\NativeBinaries\amd64\git2-7940036.dll"/>
       </Component>
     </DirectoryRef>
     
@@ -555,8 +555,8 @@
       <ComponentRef Id="SmartFormat.dll"/>
       <ComponentRef Id="LibGit2Sharp.dll"/>
       <ComponentRef Id="libgit2.license.txt"/>
-      <ComponentRef Id="git2x86.dll"/>
-      <ComponentRef Id="git2x64.dll"/>
+      <ComponentRef Id="git2_x86.dll"/>
+      <ComponentRef Id="git2_x64.dll"/>
       <ComponentRef Id="NetSpell.SpellChecker.dll"/>
       <ComponentRef Id="ResourceManager.dll"/>
       <ComponentRef Id="GitUIPluginInterfaces.dll"/>
