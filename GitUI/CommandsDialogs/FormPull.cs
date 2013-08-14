@@ -621,12 +621,13 @@ namespace GitUI.CommandsDialogs
                 foreach (var remote in GetSelectedRemotes())
                 {
                     var sshKeyFile = Module.GetPuttyKeyFileForRemote(remote);
-                    if (!string.IsNullOrEmpty(sshKeyFile) && File.Exists(sshKeyFile))
+                    if (!string.IsNullOrEmpty(sshKeyFile))
                         files.Add(sshKeyFile);
                 }
 
                 foreach (var sshKeyFile in files)
-                    GitModule.StartPageantWithKey(sshKeyFile);
+                    if(File.Exists(sshKeyFile))
+                        GitModule.StartPageantWithKey(sshKeyFile);
             }
             else
                 MessageBoxes.PAgentNotFound(this);
