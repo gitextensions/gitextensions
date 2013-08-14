@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
@@ -583,13 +584,44 @@ namespace GitUI.CommandsDialogs
             return true;
         }
 
+        private IEnumerable<string> GetSelectedRemotes()
+        {
+
+            if (PullFromUrl.Checked)
+            {
+                yield break;
+            }
+
+            if (IsPullAll())
+            {
+                IEnumerable<string> remotes = (IEnumerable<string>)_NO_TRANSLATE_Remotes.DataSource;
+                foreach (var r in remotes)
+                {
+                    if (!r.Equals(AllRemotes) && !r.IsNullOrWhiteSpace())
+                        yield return r;
+                }
+            }
+            else
+            {
+                if (!_NO_TRANSLATE_Remotes.Text.IsNullOrWhiteSpace())
+                {
+                    yield return _NO_TRANSLATE_Remotes.Text;
+                }
+            }
+        }
+
         private void LoadPuttyKey()
         {
             if (!GitCommandHelpers.Plink())
                 return;
 
             if (File.Exists(Settings.Pageant))
-                Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
+            {
+                foreach (var remote in GetSelectedRemotes())
+                {
+                    Module.StartPageantForRemote(remote);
+                }
+            }            
             else
                 MessageBoxes.PAgentNotFound(this);
         }
