@@ -279,7 +279,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (PullFromUrl.Checked)
+            if (PullFromUrl.Checked && Directory.Exists(comboBoxPullSource.Text))
                 Repositories.RepositoryHistory.AddMostRecentRepository(comboBoxPullSource.Text);
 
             var source = CalculateSource();
@@ -679,11 +679,18 @@ namespace GitUI.CommandsDialogs
 
             if (File.Exists(Settings.Pageant))
             {
+                HashSet<string> files = new HashSet<string>(PathUtil.CreatePathEqualityComparer());
                 foreach (var remote in GetSelectedRemotes())
                 {
-                    Module.StartPageantForRemote(remote);
+                    var sshKeyFile = Module.GetPuttyKeyFileForRemote(remote);
+                    if (!string.IsNullOrEmpty(sshKeyFile))
+                        files.Add(sshKeyFile);
                 }
-            }            
+
+                foreach (var sshKeyFile in files)
+                    if(File.Exists(sshKeyFile))
+                        GitModule.StartPageantWithKey(sshKeyFile);
+            }
             else
                 MessageBoxes.PAgentNotFound(this);
         }
