@@ -2140,11 +2140,17 @@ namespace GitCommands
             return configFile.GetValue(setting);
         }
 
+        public IEnumerable<string> GetSettings(string setting)
+        {
+            var configFile = GetLocalConfig();
+            return configFile.GetValues(setting);
+        }
+
         public string GetISetting(string setting)
         {
             return GetSetting(setting);
         }
-
+        
         public string GetPathSetting(string setting)
         {
             var configFile = GetLocalConfig();
