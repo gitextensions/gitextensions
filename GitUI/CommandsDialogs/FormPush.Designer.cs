@@ -108,7 +108,6 @@
             this.PushToRemote.Text = "Remote";
             this.toolTip1.SetToolTip(this.PushToRemote, "Remote repository to push to");
             this.PushToRemote.UseVisualStyleBackColor = true;
-            this.PushToRemote.CheckedChanged += new System.EventHandler(this.PushToRemoteCheckedChanged);
             // 
             // Push
             // 
