@@ -1896,6 +1896,12 @@ namespace GitCommands
             return new ConfigFile(FullPath(".gitextensions"), true);
         }
 
+        public IEnumerable<string> GetSettings(string setting)
+        {
+            var configFile = GetLocalConfig();
+            return configFile.GetValues(setting);
+        }
+
         public string GetSetting(string setting)
         {
             var configFile = GetLocalConfig();
