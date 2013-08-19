@@ -520,6 +520,13 @@ namespace GitUI.CommandsDialogs
 
         private bool CalculateLocalBranch(string remote, out string curLocalBranch, out string curRemoteBranch)
         {
+            if (IsPullAll())
+            {
+                curLocalBranch = null;
+                curRemoteBranch = null;
+                return true;
+            }
+
             curRemoteBranch = Branches.Text;
 
             if (Module.IsDetachedHead(_branch))
