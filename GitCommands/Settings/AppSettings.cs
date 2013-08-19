@@ -34,7 +34,9 @@ namespace GitCommands
 
         public static Lazy<string> ApplicationDataPath;
         public static string SettingsFilePath { get { return Path.Combine(ApplicationDataPath.Value, SettingsFileName); } }
-        public static readonly SettingsContainer<RepoDistSettings> SettingsContainer;
+
+        private static SettingsContainer<RepoDistSettings> _SettingsContainer;
+        public static SettingsContainer<RepoDistSettings> SettingsContainer { get { return _SettingsContainer; } }
 
         static AppSettings()
         {
@@ -52,7 +54,7 @@ namespace GitCommands
             }
             );
 
-            SettingsContainer = new SettingsContainer<RepoDistSettings>(null, GitExtSettingsCache.FromCache(SettingsFilePath));
+            _SettingsContainer = new SettingsContainer<RepoDistSettings>(null, GitExtSettingsCache.FromCache(SettingsFilePath));
             Version version = AppVersion;
 
             GitExtensionsVersionString = version.Major.ToString() + '.' + version.Minor.ToString();
@@ -70,6 +72,26 @@ namespace GitCommands
             {
                 ImportFromRegistry();
             }
+        }
+
+        public static void UsingContainer(SettingsContainer<RepoDistSettings> aSettingsContainer, Action action)
+        {
+            SettingsContainer.LockedAction(() =>
+                {
+                    var oldSC = SettingsContainer;
+                    try
+                    {
+                        _SettingsContainer = aSettingsContainer;
+                        action();
+                    }
+                    finally
+                    {
+                        _SettingsContainer = oldSC;
+                        //refresh settings if needed
+                        SettingsContainer.GetString(string.Empty, null);
+                    }
+                }
+             );
         }
 
         public static string GetInstallDir()
@@ -448,6 +470,12 @@ namespace GitCommands
         {
             get { return GetBool("DontShowHelpImages", false); }
             set { SetBool("DontShowHelpImages", value); }
+        }
+
+        public static bool AlwaysShowAdvOpt
+        {
+            get { return GetBool("AlwaysShowAdvOpt", false); }
+            set { SetBool("AlwaysShowAdvOpt", value); }
         }
 
         public static bool DontConfirmAmend

@@ -1154,10 +1154,7 @@ namespace GitUI
         {
             Func<bool> action = () =>
             {
-                using (var form = new FormSettings(this, initalPage))
-                {
-                    form.ShowDialog(owner);
-                }
+                FormSettings.ShowSettingsDialog(this, owner, initalPage);
 
                 return true;
             };
