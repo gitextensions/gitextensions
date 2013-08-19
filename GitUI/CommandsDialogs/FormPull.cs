@@ -547,7 +547,7 @@ namespace GitUI.CommandsDialogs
             }
 
             if (Branches.Text.IsNullOrEmpty() && !curLocalBranch.IsNullOrEmpty()
-                && !remote.Equals(currentBranchRemote.Value))
+                && !remote.Equals(currentBranchRemote.Value) && !IsPullAll())
             {
                 int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
                                                         _noRemoteBranchCaption.Text,
@@ -566,7 +566,7 @@ namespace GitUI.CommandsDialogs
             }
 
             if (Branches.Text.IsNullOrEmpty() && !curLocalBranch.IsNullOrEmpty()
-                && Fetch.Checked)
+                && Fetch.Checked && !IsPullAll())
             {
                 int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
                                                         _noRemoteBranchCaption.Text,
