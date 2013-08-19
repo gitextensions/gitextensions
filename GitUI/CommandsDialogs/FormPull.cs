@@ -124,7 +124,7 @@ namespace GitUI.CommandsDialogs
         }
 
         private void Init(string defaultRemote)
-        {            
+        {
             UpdateRemotesList();
 
             _branch = Module.GetSelectedBranch();
@@ -465,7 +465,7 @@ namespace GitUI.CommandsDialogs
             {
                 return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg()));
             }
-            
+
             Debug.Assert(Merge.Checked || Rebase.Checked);
 
             return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, curLocalBranch, Rebase.Checked, GetTagsArg()))
@@ -478,7 +478,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!isError)
                 return false;
-            
+
             if (!PullFromRemote.Checked || string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text))
                 return false;
 
@@ -514,7 +514,7 @@ namespace GitUI.CommandsDialogs
         }
 
         private bool? GetTagsArg()
-        { 
+        {
             return AllTags.Checked ? true : NoTags.Checked ? false : (bool?)null;
         }
 
@@ -528,7 +528,7 @@ namespace GitUI.CommandsDialogs
                 return true;
             }
 
-            var currentBranchRemote = new Lazy<string> (() => Module.GetSetting(string.Format("branch.{0}.remote", localBranch.Text)));
+            var currentBranchRemote = new Lazy<string>(() => Module.GetSetting(string.Format("branch.{0}.remote", localBranch.Text)));
 
             if (_branch == localBranch.Text)
             {
@@ -552,7 +552,7 @@ namespace GitUI.CommandsDialogs
                 int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
                                                         _noRemoteBranchCaption.Text,
                                                         _noRemoteBranch.Text,
-                                                        string.Format(_noRemoteBranchMainInstruction.Text, remote),                                                       
+                                                        string.Format(_noRemoteBranchMainInstruction.Text, remote),
                                                         string.Format(_noRemoteBranchButtons.Text, remote + "/" + curLocalBranch),
                                                         false);
                 switch (idx)
@@ -688,7 +688,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 foreach (var sshKeyFile in files)
-                    if(File.Exists(sshKeyFile))
+                    if (File.Exists(sshKeyFile))
                         GitModule.StartPageantWithKey(sshKeyFile);
             }
             else
