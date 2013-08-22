@@ -255,7 +255,7 @@
       </Component>
 	  <Component Id="ReleaseNotesGenerator.dll" Guid="*">
 		 <File Source="..\Plugins\ReleaseNotesGenerator\bin\Release\ReleaseNotesGenerator.dll"/>
-	  </Component>		
+	  </Component>
       <Component Id="Newtonsoft.Json.dll" Guid="*">
         <File Source="..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll"/>
       </Component>
@@ -273,6 +273,9 @@
       </Component>
       <Component Id="ProxySwitcher.dll" Guid="*">
         <File Source="..\Plugins\ProxySwitcher\bin\Release\ProxySwitcher.dll"/>
+      </Component>
+      <Component Id="Stash.dll" Guid="*">
+        <File Source="..\Plugins\Stash\bin\Release\Stash.dll"/>
       </Component>
     </DirectoryRef>
 
@@ -600,6 +603,9 @@
         <Feature Id="ReleaseNotesGenerator" Title="ReleaseNotesGenerator" Level="1">
 		  <ComponentRef Id="ReleaseNotesGenerator.dll"/>
 		</Feature>
+        <Feature Id="Stash" Title="Atlassian Stash integration" Level="1">
+          <ComponentRef Id="Stash.dll"/>
+        </Feature>
 	  </Feature>
       <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
         <ComponentRef Id="GitExtensions.desktop"/>

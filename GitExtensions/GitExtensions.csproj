@@ -159,6 +159,10 @@
       <Name>ReleaseNotesGenerator</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Plugins\Stash\Stash.csproj">
+      <Project>{50AEAB6C-83C4-45F8-AA01-90E1405C48AF}</Project>
+      <Name>Stash</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Plugins\Statistics\GitImpact\GitImpact.csproj">
       <Project>{0B131F9D-BB10-4C3E-9656-5AB858158DE5}</Project>
       <Name>GitImpact</Name>
