@@ -131,11 +131,13 @@ namespace TeamCityIntegration
                                 NotifyObserverOfBuilds(buildIds, observer, cancellationToken);
                             },
                         cancellationToken,
-                        TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent,
+                        TaskContinuationOptions.AttachedToParent | TaskContinuationOptions.ExecuteSynchronously,
                         TaskScheduler.Current)
                     .ContinueWith(
                         task => localObserver.OnError(task.Exception),
-                        TaskContinuationOptions.AttachedToParent | TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted);
+                        CancellationToken.None,
+                        TaskContinuationOptions.AttachedToParent | TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted,
+                        TaskScheduler.Current);
             }
             catch (OperationCanceledException)
             {
@@ -170,7 +172,7 @@ namespace TeamCityIntegration
                                     }
                                 },
                             cancellationToken,
-                            TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.AttachedToParent,
+                            TaskContinuationOptions.AttachedToParent | TaskContinuationOptions.ExecuteSynchronously,
                             TaskScheduler.Current);
                 
                 tasks.Add(notifyObserverTask);
