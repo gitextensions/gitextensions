@@ -87,7 +87,8 @@ protected:
     FN_BeginBufferedPaint pfnBeginBufferedPaint;
     FN_EndBufferedPaint pfnEndBufferedPaint;
 
-    CString  GetRegistryValue(HKEY	hOpenKey, LPCTSTR szKey, LPCTSTR path);
+    CString GetRegistryValue(HKEY	hOpenKey, LPCTSTR szKey, LPCTSTR path);
+    bool GetRegistryBoolValue(HKEY	hOpenKey, LPCTSTR szKey, LPCTSTR path);
     bool DisplayInSubmenu(CString settings, int id);
 
     HBITMAP IconToBitmapPARGB32(UINT uIcon);
