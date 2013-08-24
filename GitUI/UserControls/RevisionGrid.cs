@@ -1391,7 +1391,7 @@ namespace GitUI
             }
             else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
             {
-                if (revision.Body == null && revision.Guid != "0000000000000000000000000000000000000000" && revision.Guid != "1111111111111111111111111111111111111111")
+                if (revision.Body == null && !revision.IsArtificial())
                 {
                     ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex, Revisions.RowCount));
                 }
