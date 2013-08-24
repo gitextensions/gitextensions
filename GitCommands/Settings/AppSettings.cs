@@ -568,6 +568,12 @@ namespace GitCommands
             set { SetBool("showgitnotes", value); }
         }
 
+        public static bool ShowIndicatorForMultilineMessage
+        {
+            get { return GetBool("showindicatorformultilinemessage", false); }
+            set { SetBool("showindicatorformultilinemessage", value); }
+        }
+
         public static bool ShowMergeCommits
         {
             get { return GetBool("showmergecommits", true); }

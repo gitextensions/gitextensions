@@ -124,6 +124,9 @@ namespace GitUI
             Revisions.AllowDrop = true;
             Revisions.ColumnHeadersVisible = false;
 
+            IsMessageMultilineDataGridViewColumn.Width = 25;
+            IsMessageMultilineDataGridViewColumn.DisplayIndex = 2;
+
             this.HotkeysEnabled = true;
             try
             {
@@ -180,6 +183,7 @@ namespace GitUI
                 _normalFont = value;
                 MessageDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
                 DateDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
+                IsMessageMultilineDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
 
                 RefsFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
                 HeadFont = new Font(_normalFont, FontStyle.Bold);
@@ -762,6 +766,7 @@ namespace GitUI
             try
             {
                 RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+                IsMessageMultilineDataGridViewColumn.Visible = AppSettings.ShowIndicatorForMultilineMessage;
 
                 ApplyFilterFromRevisionFilterDialog();
 
@@ -1098,6 +1103,7 @@ namespace GitUI
             int messageColIndex = MessageDataGridViewColumn.Index;
             int authorColIndex = AuthorDataGridViewColumn.Index;
             int dateColIndex = DateDataGridViewColumn.Index;
+            int isMsgMultilineColIndex = IsMessageMultilineDataGridViewColumn.Index;
 
             // The graph column is handled by the DvcsGraph
             if (e.ColumnIndex == graphColIndex)
@@ -1333,6 +1339,12 @@ namespace GitUI
                     e.Graphics.DrawString(text, rowFont, foreBrush,
                                             new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                 }
+                else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
+                {
+                    var text = (string)e.FormattedValue;
+                    e.Graphics.DrawString(text, rowFont, foreBrush,
+                                            new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                }
             }
         }
 
@@ -1355,6 +1367,7 @@ namespace GitUI
             int messageColIndex = MessageDataGridViewColumn.Index;
             int authorColIndex = AuthorDataGridViewColumn.Index;
             int dateColIndex = DateDataGridViewColumn.Index;
+            int isMsgMultilineColIndex = IsMessageMultilineDataGridViewColumn.Index;
 
             if (columnIndex == graphColIndex)
             {
@@ -1376,10 +1389,55 @@ namespace GitUI
                 else
                     e.Value = string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
             }
+            else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
+            {
+                if (revision.Body == null && revision.Guid != "0000000000000000000000000000000000000000" && revision.Guid != "1111111111111111111111111111111111111111")
+                {
+                    ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex, Revisions.RowCount));
+                }
+
+                if (revision.Body != null)
+                {
+                    e.Value = revision.Body.TrimEnd().Contains("\n") ? "[...]" : "";
+                }
+                else
+                {
+                    e.Value = "";
+                }
+            }
             else
             {
                 e.FormattingApplied = false;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="revision"></param>
+        /// <param name="totalRowCount">check if grid has changed while thread is queued</param>
+        /// <param name="colIndex"></param>
+        /// <param name="rowIndex"></param>
+        private void LoadIsMultilineMessageInfo(GitRevision revision, int colIndex, int rowIndex, int totalRowCount)
+        {
+            // code taken from CommitInfo.cs
+            CommitData commitData = CommitData.CreateFromRevision(revision);
+            string error = "";
+            if (revision.Body == null)
+            {
+                CommitData.UpdateCommitMessage(commitData, Module, revision.Guid, ref error);
+                revision.Body = commitData.Body;
+            }
+
+            // now that Body is filled (not null anymore) the revision grid can be refreshed to display the new information
+            this.InvokeAsync(() =>
+            {
+                if (Revisions == null || Revisions.RowCount == 0 || Revisions.RowCount <= rowIndex || Revisions.RowCount != totalRowCount)
+                {
+                    return;
+                }
+                Revisions.InvalidateCell(colIndex, rowIndex);
+            });
         }
 
         private void DrawColumnText(IDeviceContext dc, string text, Font font, Color color, Rectangle bounds)

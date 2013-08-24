@@ -37,7 +37,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 toolStripMenuItem.Image = menuCommand.Image;
                 toolStripMenuItem.ShortcutKeys = menuCommand.ShortcutKeys;
                 toolStripMenuItem.ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString;
-                toolStripMenuItem.Click += (obj, sender) => menuCommand.ExecuteAction();
+                toolStripMenuItem.Click += (obj, sender) =>
+                    {
+                        if (menuCommand.ExecuteAction != null)
+                        {
+                            menuCommand.ExecuteAction();
+                        }
+                        else
+                        {
+                            MessageBox.Show("No ExecuteAction assigned to this MenuCommand. Please submit a bug report.");
+                        }
+                    };
 
                 return toolStripMenuItem;
             }
