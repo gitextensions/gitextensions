@@ -92,8 +92,8 @@
           </Extension>
         </ProgId>
       </Component>
-      <Component Id="app.config" Guid="*">
-        <File Source="..\GitExtensions\app.config"/>
+      <Component Id="GitExtensions.exe.config" Guid="*">
+        <File Source="..\GitExtensions\bin\Release\GitExtensions.exe.config"/>
       </Component>
       <Component Id="TranslationApp.exe" Guid="*">
         <File Source="..\GitExtensions\bin\Release\TranslationApp.exe"/>
@@ -514,7 +514,7 @@
       <ComponentRef Id="gitex.cmd"/>
       <ComponentRef Id="GitExtensionsUserManual.pdf"/>
       <ComponentRef Id="GitExtensions.exe"/>
-      <ComponentRef Id="app.config"/>
+      <ComponentRef Id="GitExtensions.exe.config"/>
       <ComponentRef Id="TranslationApp.exe"/>
       <ComponentRef Id="Gravatar.dll"/>
       <ComponentRef Id="GitCommands.dll"/>
