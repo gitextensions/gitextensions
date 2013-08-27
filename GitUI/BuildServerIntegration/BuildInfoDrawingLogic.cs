@@ -9,71 +9,63 @@ namespace GitUI.BuildServerIntegration
 {
     static internal class BuildInfoDrawingLogic
     {
-        public static void RevisionsCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Brush foreBrush, Font rowFont)
+        public static void BuildStatusImageColumnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Brush foreBrush, Font rowFont)
         {
-            switch (e.ColumnIndex)
+            if (revision.BuildStatus != null)
             {
-                case 4:
-                    {
-                        if (revision.BuildStatus != null)
-                        {
-                            Image buildStatusImage = null;
+                Image buildStatusImage = null;
 
-                            switch (revision.BuildStatus.Status)
-                            {
-                                case BuildInfo.BuildStatus.Success:
-                                    buildStatusImage = Resources.BuildSuccessful;
-                                    break;
-                                case BuildInfo.BuildStatus.Failure:
-                                    buildStatusImage = Resources.BuildFailed;
-                                    break;
-                                case BuildInfo.BuildStatus.Unknown:
-                                    buildStatusImage = Resources.BuildCancelled;
-                                    break;
-                            }
+                switch (revision.BuildStatus.Status)
+                {
+                    case BuildInfo.BuildStatus.Success:
+                        buildStatusImage = Resources.BuildSuccessful;
+                        break;
+                    case BuildInfo.BuildStatus.Failure:
+                        buildStatusImage = Resources.BuildFailed;
+                        break;
+                    case BuildInfo.BuildStatus.Unknown:
+                        buildStatusImage = Resources.BuildCancelled;
+                        break;
+                }
 
-                            if (buildStatusImage != null)
-                            {
-                                e.Graphics.DrawImage(buildStatusImage, new Rectangle(e.CellBounds.Left, e.CellBounds.Top + 4, 16, 16));
-                            }
-                        }
-                    }
-                    break;
-                case 5:
-                    if (revision.BuildStatus != null)
-                    {
-                        Brush buildStatusForebrush = foreBrush;
-
-                        switch (revision.BuildStatus.Status)
-                        {
-                            case BuildInfo.BuildStatus.Success:
-                                buildStatusForebrush = Brushes.DarkGreen;
-                                break;
-                            case BuildInfo.BuildStatus.Failure:
-                                buildStatusForebrush = Brushes.DarkRed;
-                                break;
-                        }
-
-                        var text = (string)e.FormattedValue;
-                        e.Graphics.DrawString(text, rowFont, buildStatusForebrush, new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
-                    }
-                    break;
+                if (buildStatusImage != null)
+                {
+                    e.Graphics.DrawImage(buildStatusImage, new Rectangle(e.CellBounds.Left, e.CellBounds.Top + 4, 16, 16));
+                }
             }
         }
 
-        public static void RevisionsCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
+        public static void BuildStatusMessageCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Brush foreBrush, Font rowFont)
         {
-            switch (e.ColumnIndex)
+            if (revision.BuildStatus != null)
             {
-                case 4:
-                    e.FormattingApplied = false;
-                    break;
-                case 5:
-                    e.Value = revision.BuildStatus != null && !string.IsNullOrEmpty(revision.BuildStatus.Description)
-                                  ? revision.BuildStatus.Description
-                                  : string.Empty;
-                    break;
+                Brush buildStatusForebrush = foreBrush;
+
+                switch (revision.BuildStatus.Status)
+                {
+                    case BuildInfo.BuildStatus.Success:
+                        buildStatusForebrush = Brushes.DarkGreen;
+                        break;
+                    case BuildInfo.BuildStatus.Failure:
+                        buildStatusForebrush = Brushes.DarkRed;
+                        break;
+                }
+
+                var text = (string)e.FormattedValue;
+                e.Graphics.DrawString(text, rowFont, buildStatusForebrush, new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
             }
+        }
+
+        public static void BuildStatusImageColumnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
+        {
+            e.FormattingApplied = false;
+        }
+
+        public static void BuildStatusMessageCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
+        {
+            e.Value = revision.BuildStatus != null && !string.IsNullOrEmpty(revision.BuildStatus.Description)
+                          ? revision.BuildStatus.Description
+                          : string.Empty;
         }
     }
 }
