@@ -24,8 +24,8 @@ namespace GitUI.BuildServerIntegration
         private readonly DvcsGraph revisions;
         private GitModule Module { get { return revisionGrid.Module; } }
 
-        private int buildStatusImageColumnIndex = -1;
-        private int buildStatusMessageColumnIndex = -1;
+        public int BuildStatusImageColumnIndex { get; private set; }
+        public int BuildStatusMessageColumnIndex { get; private set; }
 
         private IDisposable buildStatusCancellationToken;
         private IBuildServerAdapter buildServerAdapter;
@@ -36,6 +36,9 @@ namespace GitUI.BuildServerIntegration
         {
             this.revisionGrid = revisionGrid;
             this.revisions = revisions;
+            BuildStatusImageColumnIndex = -1;
+            BuildStatusMessageColumnIndex = -1;
+
 
             AddBuildStatusColumns();
         }
@@ -209,8 +212,8 @@ namespace GitUI.BuildServerIntegration
                                                     SortMode = DataGridViewColumnSortMode.NotSortable
                                                 };
 
-            buildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
-            buildStatusMessageColumnIndex = revisions.Columns.Add(buildMessageTextBoxColumn);
+            BuildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
+            BuildStatusMessageColumnIndex = revisions.Columns.Add(buildMessageTextBoxColumn);
         }
 
         private void OnBuildInfoUpdate(BuildInfo buildInfo)
@@ -269,8 +272,8 @@ namespace GitUI.BuildServerIntegration
         private void UpdateUI()
         {
             var columnsAreVisible = buildServerAdapter != null;
-            revisions.Columns[buildStatusImageColumnIndex].Visible = columnsAreVisible;
-            revisions.Columns[buildStatusMessageColumnIndex].Visible = columnsAreVisible;
+            revisions.Columns[BuildStatusImageColumnIndex].Visible = columnsAreVisible;
+            revisions.Columns[BuildStatusMessageColumnIndex].Visible = columnsAreVisible;
         }
 
         public void Dispose()

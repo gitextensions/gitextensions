@@ -206,7 +206,7 @@ namespace GitCommands.Config
             return GetStringValue(setting);
         }
 
-        private IList<string> GetValues(string setting)
+        public IList<string> GetValues(string setting)
         {
             var keyIndex = FindAndCheckKeyIndex(setting);
 

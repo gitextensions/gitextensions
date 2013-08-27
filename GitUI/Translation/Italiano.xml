@@ -385,7 +385,7 @@ Select no if you want to configure a different mergetool yourself.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text" type="unfinished">
-          <Source>Registry entry missing [Software\GitExtensions\GitExtensions\InstallDir].</Source>
+          <Source>Registry entry missing [Software\GitExtensions\InstallDir].</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_shCanBeRun" Property="Text" type="unfinished">

@@ -103,7 +103,7 @@ namespace GitUI
                 if (revisionToCmp == null)
                     return;
 
-                output = grid.Module.OpenWithDifftool(fileName, revisionToCmp);            
+                output = grid.Module.OpenWithDifftool(fileName, null, revisionToCmp);            
             }
 
             if (!string.IsNullOrEmpty(output))
