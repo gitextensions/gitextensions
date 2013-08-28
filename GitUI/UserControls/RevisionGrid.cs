@@ -1008,7 +1008,7 @@ namespace GitUI
             }
         }
 
-        private int SearchRevision(string initRevision, out string graphRevision)
+        internal int TrySearchRevision(string initRevision, out string graphRevision)
         {
             var rows = Revisions
                 .Rows
@@ -1023,6 +1023,19 @@ namespace GitUI
                 return idx.Index;
             }
 
+            graphRevision = null;
+            return -1;
+        }
+
+        private int SearchRevision(string initRevision, out string graphRevision)
+        {
+            int index = TrySearchRevision(initRevision, out graphRevision);
+            if (index >= 0)
+                return index;
+
+            var rows = Revisions
+                .Rows
+                .Cast<DataGridViewRow>();
             var dict = rows
                 .ToDictionary(row => GetRevision(row.Index).Guid, row => row.Index);
             var revListParams = "rev-list ";
@@ -1034,16 +1047,9 @@ namespace GitUI
                 revListParams += string.Format("--max-count=\"{0}\" ", (int)AppSettings.MaxRevisionGraphCommits);
 
             var allrevisions = Module.ReadGitOutputLines(revListParams + initRevision);
-            foreach (var rev in allrevisions)
-            {
-                int index;
-                if (dict.TryGetValue(rev, out index))
-                {
-                    graphRevision = rev;
-                    return index;
-                }
-            }
-            graphRevision = null;
+            graphRevision = allrevisions.FirstOrDefault(rev => dict.TryGetValue(rev, out index));
+            if (graphRevision != null)
+                return index;
             return -1;
         }
 
@@ -1189,7 +1195,7 @@ namespace GitUI
                     float offset = baseOffset;
                     var gitRefs = revision.Refs;
 
-                    if (gitRefs.Count > 0)
+                    if (gitRefs.Any())
                     {
                         gitRefs.Sort((left, right) =>
                                         {
@@ -1227,8 +1233,8 @@ namespace GitUI
                             }
 
                             Color headColor = GetHeadColor(gitRef);
-                            Brush textBrush = new SolidBrush(headColor);
-
+                            using (Brush textBrush = new SolidBrush(headColor))
+                            {
                             string headName;
 
                             if (IsCardLayout())
@@ -1238,9 +1244,9 @@ namespace GitUI
                                 PointF location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
                                 var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
                                                         e.Graphics.MeasureString(headName, RefsFont).Height);
-                                e.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
+                                            e.Graphics.FillRectangle(new SolidBrush(SystemColors.Info), location.X - 1,
                                                             location.Y - 1, size.Width + 3, size.Height + 2);
-                                e.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
+                                            e.Graphics.DrawRectangle(new Pen(SystemColors.InfoText), location.X - 1,
                                                             location.Y - 1, size.Width + 3, size.Height + 2);
                                 e.Graphics.DrawString(headName, refsFont, textBrush, location);
                             }
@@ -1275,6 +1281,7 @@ namespace GitUI
                             }
                         }
                     }
+                            }
 
                     if (IsCardLayout())
                         offset = baseOffset;
@@ -1607,7 +1614,7 @@ namespace GitUI
         public void ViewSelectedRevisions()
         {
             var selectedRevisions = GetSelectedRevisions();
-            if (selectedRevisions.Count > 0)
+            if (selectedRevisions.Any())
             {
                 var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
 
@@ -2101,7 +2108,7 @@ namespace GitUI
             var dataType = DvcsGraph.DataType.Normal;
             if (rev.Guid == FiltredCurrentCheckout)
                 dataType = DvcsGraph.DataType.Active;
-            else if (rev.Refs.Count > 0)
+            else if (rev.Refs.Any())
                 dataType = DvcsGraph.DataType.Special;
 
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
@@ -2114,9 +2121,9 @@ namespace GitUI
             //Only check for tracked files. This usually makes more sense and it performs a lot
             //better then checking for untracked files.
             // TODO: Check FiltredFileName
-            if (Module.GetUnstagedFiles().Count > 0)
+            if (Module.GetUnstagedFiles().Any())
                 unstagedChanges = true;
-            if (Module.GetStagedFiles().Count > 0)
+            if (Module.GetStagedFiles().Any())
                 stagedChanges = true;
 
             // FiltredCurrentCheckout doesn't works here because only calculated after loading all revisions in SelectInitialRevision()
@@ -2636,7 +2643,7 @@ namespace GitUI
         {
             var r = GetRevision(LastRow);
             var children = GetRevisionChildren(r.Guid);
-            if (children.Count > 0)
+            if (children.Any())
                 SetSelectedRevision(children[0]);
         }
 
