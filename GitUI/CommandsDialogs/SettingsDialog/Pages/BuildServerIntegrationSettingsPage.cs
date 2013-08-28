@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
+using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
@@ -29,10 +30,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _populateBuildServerTypeTask =
                 Task.Factory.StartNew(() =>
                         {
-                            var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
-                            var buildServerTypes = exports.Select(export => export.Metadata.BuildServerType).ToArray();
+                            if (EnvUtils.IsNet4FullOrHigher())
+                            {
+                                var exports = ManagedExtensibility.CompositionContainer.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
+                                var buildServerTypes = exports.Select(export => export.Metadata.BuildServerType).ToArray();
 
-                            return buildServerTypes;
+                                return buildServerTypes;
+                            }
+
+                            return new string[] { ".Net 4 full framework required" };
                         })
                     .ContinueWith(
                         task =>
@@ -102,7 +108,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private IBuildServerSettingsUserControl CreateBuildServerSettingsUserControl()
         {
-            if (!Equals(BuildServerType.SelectedItem, NoneItem) && !string.IsNullOrEmpty(Module.GitWorkingDir))
+            if (!Equals(BuildServerType.SelectedItem, NoneItem) && !string.IsNullOrEmpty(Module.GitWorkingDir) && EnvUtils.IsNet4FullOrHigher())
             {
                 var defaultProjectName = Module.GitWorkingDir.Split(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries).Last();
 
