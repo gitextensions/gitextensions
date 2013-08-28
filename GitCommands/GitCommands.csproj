@@ -85,7 +85,6 @@
     <Compile Include="Settings\ConfigFileSettingsCache.cs" />
     <Compile Include="Settings\FileSettingsCache.cs" />
     <Compile Include="Settings\GitExtSettingsCache.cs" />
-    <Compile Include="Settings\ISettingsSource.cs" />
     <Compile Include="Settings\RepoDistSettings.cs" />
     <Compile Include="Settings\Setting.cs" />
     <Compile Include="Settings\SettingsCache.cs" />

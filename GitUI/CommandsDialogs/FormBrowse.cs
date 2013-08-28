@@ -1232,7 +1232,7 @@ namespace GitUI.CommandsDialogs
 
                 var revisions = RevisionGrid.GetSelectedRevisions();
 
-                if (revisions.Count > 0 && GitRevision.IsArtificial(revisions[0].Guid))
+                if (revisions.Any() && GitRevision.IsArtificial(revisions[0].Guid))
                 {
                     CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
                     CommitInfoTabControl.RemoveIfExists(TreeTabPage);
