@@ -234,8 +234,8 @@ namespace GitUI.BuildServerIntegration
                     {
                         rowData.BuildStatus = buildInfo;
 
-                        revisions.UpdateCellValue(4, row);
-                        revisions.UpdateCellValue(5, row);
+                        revisions.UpdateCellValue(BuildStatusImageColumnIndex, row);
+                        revisions.UpdateCellValue(BuildStatusMessageColumnIndex, row);
                     }
                 }
             }
