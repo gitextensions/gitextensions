@@ -39,9 +39,6 @@ namespace GitUI.BuildServerIntegration
             this.revisions = revisions;
             BuildStatusImageColumnIndex = -1;
             BuildStatusMessageColumnIndex = -1;
-
-
-            AddBuildStatusColumns();
         }
 
         public void LaunchBuildServerInfoFetchOperation()
@@ -273,8 +270,17 @@ namespace GitUI.BuildServerIntegration
         private void UpdateUI()
         {
             var columnsAreVisible = buildServerAdapter != null;
-            revisions.Columns[BuildStatusImageColumnIndex].Visible = columnsAreVisible;
-            revisions.Columns[BuildStatusMessageColumnIndex].Visible = columnsAreVisible;
+
+            if (columnsAreVisible && BuildStatusImageColumnIndex == -1)
+            {
+                AddBuildStatusColumns();
+            }
+
+            if (BuildStatusImageColumnIndex != -1)
+            {
+                revisions.Columns[BuildStatusImageColumnIndex].Visible = columnsAreVisible;
+                revisions.Columns[BuildStatusMessageColumnIndex].Visible = columnsAreVisible;
+            }
         }
 
         public void Dispose()
