@@ -1427,7 +1427,7 @@ namespace GitUI
             }
             else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
             {
-                BuildInfoDrawingLogic.BuildStatusImageColumnCellFormatting(e, revision);
+                BuildInfoDrawingLogic.BuildStatusImageColumnCellFormatting(e, Revisions, revision);
             }
             else if (columnIndex == BuildServerWatcher.BuildStatusMessageColumnIndex)
             {
