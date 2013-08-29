@@ -11,6 +11,7 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Utils;
 using GitUI.HelperDialogs;
 using GitUI.RevisionGridClasses;
 using GitUIPluginInterfaces;
@@ -24,8 +25,8 @@ namespace GitUI.BuildServerIntegration
         private readonly DvcsGraph revisions;
         private GitModule Module { get { return revisionGrid.Module; } }
 
-        private int buildStatusImageColumnIndex = -1;
-        private int buildStatusMessageColumnIndex = -1;
+        public int BuildStatusImageColumnIndex { get; private set; }
+        public int BuildStatusMessageColumnIndex { get; private set; }
 
         private IDisposable buildStatusCancellationToken;
         private IBuildServerAdapter buildServerAdapter;
@@ -36,6 +37,9 @@ namespace GitUI.BuildServerIntegration
         {
             this.revisionGrid = revisionGrid;
             this.revisions = revisions;
+            BuildStatusImageColumnIndex = -1;
+            BuildStatusMessageColumnIndex = -1;
+
 
             AddBuildStatusColumns();
         }
@@ -209,8 +213,8 @@ namespace GitUI.BuildServerIntegration
                                                     SortMode = DataGridViewColumnSortMode.NotSortable
                                                 };
 
-            buildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
-            buildStatusMessageColumnIndex = revisions.Columns.Add(buildMessageTextBoxColumn);
+            BuildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
+            BuildStatusMessageColumnIndex = revisions.Columns.Add(buildMessageTextBoxColumn);
         }
 
         private void OnBuildInfoUpdate(BuildInfo buildInfo)
@@ -230,8 +234,8 @@ namespace GitUI.BuildServerIntegration
                     {
                         rowData.BuildStatus = buildInfo;
 
-                        revisions.UpdateCellValue(4, row);
-                        revisions.UpdateCellValue(5, row);
+                        revisions.UpdateCellValue(BuildStatusImageColumnIndex, row);
+                        revisions.UpdateCellValue(BuildStatusMessageColumnIndex, row);
                     }
                 }
             }
@@ -239,7 +243,7 @@ namespace GitUI.BuildServerIntegration
 
         private IBuildServerAdapter GetBuildServerAdapter()
         {
-            if (Module.Settings.BuildServer.EnableIntegration.ValueOrDefault)
+            if (EnvUtils.IsNet4FullOrHigher() && Module.Settings.BuildServer.EnableIntegration.ValueOrDefault)
             {
                 var buildServerType = Module.Settings.BuildServer.Type.Value;
                 if (!string.IsNullOrEmpty(buildServerType))
@@ -269,8 +273,8 @@ namespace GitUI.BuildServerIntegration
         private void UpdateUI()
         {
             var columnsAreVisible = buildServerAdapter != null;
-            revisions.Columns[buildStatusImageColumnIndex].Visible = columnsAreVisible;
-            revisions.Columns[buildStatusMessageColumnIndex].Visible = columnsAreVisible;
+            revisions.Columns[BuildStatusImageColumnIndex].Visible = columnsAreVisible;
+            revisions.Columns[BuildStatusMessageColumnIndex].Visible = columnsAreVisible;
         }
 
         public void Dispose()
