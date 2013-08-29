@@ -92,8 +92,8 @@
           </Extension>
         </ProgId>
       </Component>
-      <Component Id="app.config" Guid="*">
-        <File Source="..\GitExtensions\app.config"/>
+      <Component Id="GitExtensions.exe.config" Guid="*">
+        <File Source="..\GitExtensions\bin\Release\GitExtensions.exe.config"/>
       </Component>
       <Component Id="TranslationApp.exe" Guid="*">
         <File Source="..\GitExtensions\bin\Release\TranslationApp.exe"/>
@@ -539,7 +539,7 @@
       <ComponentRef Id="gitex.cmd"/>
       <ComponentRef Id="GitExtensionsUserManual.pdf"/>
       <ComponentRef Id="GitExtensions.exe"/>
-      <ComponentRef Id="app.config"/>
+      <ComponentRef Id="GitExtensions.exe.config"/>
       <ComponentRef Id="TranslationApp.exe"/>
       <ComponentRef Id="Gravatar.dll"/>
       <ComponentRef Id="GitCommands.dll"/>
@@ -620,6 +620,8 @@
           <ComponentRef Id="ProxySwitcher.dll"/>
         </Feature>
         <Feature Id="ReleaseNotesGenerator" Title="ReleaseNotesGenerator" Level="1">
+		  <ComponentRef Id="ReleaseNotesGenerator.dll"/>
+		</Feature>
         <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
           <ComponentRef Id="System.Net.Http.dll" />
           <ComponentRef Id="System.Net.Http.WebRequest.dll" />
@@ -629,8 +631,6 @@
           <ComponentRef Id="System.Threading.Tasks.dll" />
           <ComponentRef Id="TeamCityIntegration.dll" />
         </Feature>
-		  <ComponentRef Id="ReleaseNotesGenerator.dll"/>
-		</Feature>
 	  </Feature>
       <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
         <ComponentRef Id="GitExtensions.desktop"/>
