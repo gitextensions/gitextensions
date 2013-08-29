@@ -198,6 +198,7 @@ namespace GitUI.CommandsDialogs
             }
 
             FillBuildReport();  // Ensure correct page visibility
+            RevisionGrid.ShowBuildServerInfo = true;
 
             _formBrowseMenuCommands = new FormBrowseMenuCommands(this, RevisionGrid);
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
