@@ -137,7 +137,7 @@ namespace NBug.Core.Util.Serialization
 				                         && property.Name != "TargetSite" && property.Name != "HelpLink" && property.CanRead
 			                         select property;
 
-			if (extendedProperties.Count() != 0)
+			if (extendedProperties.Count() > 0)
 			{
 				var extendedInformation = new SerializableDictionary<string, object>();
 
