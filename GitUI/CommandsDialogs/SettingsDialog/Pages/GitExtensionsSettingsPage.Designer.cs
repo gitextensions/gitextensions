@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.chkShowResetAllButton = new System.Windows.Forms.CheckBox();
             this.btnDefaultDestinationBrowse = new System.Windows.Forms.Button();
             this.cbDefaultCloneDestination = new System.Windows.Forms.ComboBox();
             this.lblDefaultCloneDestination = new System.Windows.Forms.Label();
@@ -71,6 +72,7 @@
             // 
             this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox12.Controls.Add(this.chkShowResetAllButton);
             this.groupBox12.Controls.Add(this.btnDefaultDestinationBrowse);
             this.groupBox12.Controls.Add(this.cbDefaultCloneDestination);
             this.groupBox12.Controls.Add(this.lblDefaultCloneDestination);
@@ -87,14 +89,24 @@
             this.groupBox12.Controls.Add(this.chkFollowRenamesInFileHistory);
             this.groupBox12.Location = new System.Drawing.Point(3, 186);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(581, 296);
+            this.groupBox12.Size = new System.Drawing.Size(1602, 325);
             this.groupBox12.TabIndex = 56;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Behaviour";
             // 
+            // chkShowResetAllButton
+            // 
+            this.chkShowResetAllButton.AutoSize = true;
+            this.chkShowResetAllButton.Location = new System.Drawing.Point(9, 227);
+            this.chkShowResetAllButton.Name = "chkShowResetAllButton";
+            this.chkShowResetAllButton.Size = new System.Drawing.Size(246, 19);
+            this.chkShowResetAllButton.TabIndex = 58;
+            this.chkShowResetAllButton.Text = "Show \"Reset all\" button in Commit dialog";
+            this.chkShowResetAllButton.UseVisualStyleBackColor = true;
+            // 
             // btnDefaultDestinationBrowse
             // 
-            this.btnDefaultDestinationBrowse.Location = new System.Drawing.Point(449, 230);
+            this.btnDefaultDestinationBrowse.Location = new System.Drawing.Point(449, 257);
             this.btnDefaultDestinationBrowse.Name = "btnDefaultDestinationBrowse";
             this.btnDefaultDestinationBrowse.Size = new System.Drawing.Size(75, 23);
             this.btnDefaultDestinationBrowse.TabIndex = 57;
@@ -107,7 +119,7 @@
             this.cbDefaultCloneDestination.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.cbDefaultCloneDestination.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.cbDefaultCloneDestination.FormattingEnabled = true;
-            this.cbDefaultCloneDestination.Location = new System.Drawing.Point(155, 230);
+            this.cbDefaultCloneDestination.Location = new System.Drawing.Point(155, 257);
             this.cbDefaultCloneDestination.Name = "cbDefaultCloneDestination";
             this.cbDefaultCloneDestination.Size = new System.Drawing.Size(288, 23);
             this.cbDefaultCloneDestination.TabIndex = 56;
@@ -115,7 +127,7 @@
             // lblDefaultCloneDestination
             // 
             this.lblDefaultCloneDestination.AutoSize = true;
-            this.lblDefaultCloneDestination.Location = new System.Drawing.Point(7, 233);
+            this.lblDefaultCloneDestination.Location = new System.Drawing.Point(7, 260);
             this.lblDefaultCloneDestination.Name = "lblDefaultCloneDestination";
             this.lblDefaultCloneDestination.Size = new System.Drawing.Size(139, 15);
             this.lblDefaultCloneDestination.TabIndex = 55;
@@ -179,7 +191,7 @@
             0,
             0,
             0});
-            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(320, 263);
+            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(320, 290);
             this.RevisionGridQuickSearchTimeout.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -212,7 +224,7 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(7, 265);
+            this.label24.Location = new System.Drawing.Point(7, 292);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(216, 15);
             this.label24.TabIndex = 32;
@@ -261,7 +273,7 @@
             this.groupBox11.Controls.Add(this._NO_TRANSLATE_MaxCommits);
             this.groupBox11.Location = new System.Drawing.Point(3, 3);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(581, 177);
+            this.groupBox11.Size = new System.Drawing.Size(1602, 177);
             this.groupBox11.TabIndex = 55;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "Performance";
@@ -359,9 +371,9 @@
             this.groupBox1.Controls.Add(this.label23);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.numericUpDown1);
-            this.groupBox1.Location = new System.Drawing.Point(3, 488);
+            this.groupBox1.Location = new System.Drawing.Point(3, 513);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(581, 68);
+            this.groupBox1.Size = new System.Drawing.Size(1602, 68);
             this.groupBox1.TabIndex = 57;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Email settings for sending patches";
@@ -449,7 +461,7 @@
             this.Controls.Add(this.groupBox12);
             this.Controls.Add(this.groupBox11);
             this.Name = "GitExtensionsSettingsPage";
-            this.Size = new System.Drawing.Size(587, 559);
+            this.Size = new System.Drawing.Size(1608, 690);
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).EndInit();
@@ -496,5 +508,6 @@
         private System.Windows.Forms.Label lblDefaultCloneDestination;
         private System.Windows.Forms.ComboBox cbDefaultCloneDestination;
         private System.Windows.Forms.Button btnDefaultDestinationBrowse;
+        private System.Windows.Forms.CheckBox chkShowResetAllButton;
     }
 }
