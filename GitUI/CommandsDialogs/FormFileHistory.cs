@@ -49,6 +49,8 @@ namespace GitUI.CommandsDialogs
             FileChanges.SetInitialRevision(revision);
             Translate();
 
+            FileChanges.ShowBuildServerInfo = true;
+
             FileName = fileName;
             SetTitle(string.Empty);
 
