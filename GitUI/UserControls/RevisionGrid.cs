@@ -250,6 +250,15 @@ namespace GitUI
             get; set;
         }
 
+        [Description("Show build server information in revision grid if enabled in settings.")]
+        [Category("Behavior")]
+        [DefaultValue(false)]
+        public bool ShowBuildServerInfo
+        {
+            get;
+            set;
+        }
+
         [Description("Do not open the commit info dialog on double click. This is used if the double click event is handled elseswhere.")]
         [Category("Behavior")]
         [DefaultValue(false)]
@@ -982,8 +991,8 @@ namespace GitUI
                                           Loading.Visible = false;
                                           SelectInitialRevision();
                                           _isLoading = false;
-
-                                          BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
+                                          if (ShowBuildServerInfo)
+                                            BuildServerWatcher.LaunchBuildServerInfoFetchOperation();
                                       }, this);
             }
 
@@ -1418,7 +1427,7 @@ namespace GitUI
             }
             else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
             {
-                BuildInfoDrawingLogic.BuildStatusImageColumnCellFormatting(e, revision);
+                BuildInfoDrawingLogic.BuildStatusImageColumnCellFormatting(e, Revisions, revision);
             }
             else if (columnIndex == BuildServerWatcher.BuildStatusMessageColumnIndex)
             {

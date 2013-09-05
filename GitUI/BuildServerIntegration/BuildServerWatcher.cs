@@ -39,9 +39,6 @@ namespace GitUI.BuildServerIntegration
             this.revisions = revisions;
             BuildStatusImageColumnIndex = -1;
             BuildStatusMessageColumnIndex = -1;
-
-
-            AddBuildStatusColumns();
         }
 
         public void LaunchBuildServerInfoFetchOperation()
@@ -199,22 +196,29 @@ namespace GitUI.BuildServerIntegration
 
         private void AddBuildStatusColumns()
         {
-            var buildStatusImageColumn = new DataGridViewImageColumn
-                                             {
-                                                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                                                 Width = 16,
-                                                 ReadOnly = true,
-                                                 SortMode = DataGridViewColumnSortMode.NotSortable
-                                             };
-            var buildMessageTextBoxColumn = new DataGridViewTextBoxColumn
+            if (BuildStatusImageColumnIndex == -1)
+            {
+                var buildStatusImageColumn = new DataGridViewImageColumn
+                                                 {
+                                                     AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                                                     Width = 16,
+                                                     ReadOnly = true,
+                                                     SortMode = DataGridViewColumnSortMode.NotSortable
+                                                 };
+                BuildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
+            }
+
+            if (BuildStatusMessageColumnIndex == -1 && Module.Settings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault)
+            {
+                var buildMessageTextBoxColumn = new DataGridViewTextBoxColumn
                                                 {
                                                     AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                                                     ReadOnly = true,
                                                     SortMode = DataGridViewColumnSortMode.NotSortable
                                                 };
 
-            BuildStatusImageColumnIndex = revisions.Columns.Add(buildStatusImageColumn);
-            BuildStatusMessageColumnIndex = revisions.Columns.Add(buildMessageTextBoxColumn);
+                BuildStatusMessageColumnIndex = revisions.Columns.Add(buildMessageTextBoxColumn);
+            }
         }
 
         private void OnBuildInfoUpdate(BuildInfo buildInfo)
@@ -234,8 +238,10 @@ namespace GitUI.BuildServerIntegration
                     {
                         rowData.BuildStatus = buildInfo;
 
-                        revisions.UpdateCellValue(BuildStatusImageColumnIndex, row);
-                        revisions.UpdateCellValue(BuildStatusMessageColumnIndex, row);
+                        if (BuildStatusImageColumnIndex != -1)
+                            revisions.UpdateCellValue(BuildStatusImageColumnIndex, row);
+                        if (BuildStatusMessageColumnIndex != -1)
+                            revisions.UpdateCellValue(BuildStatusMessageColumnIndex, row);
                     }
                 }
             }
@@ -273,8 +279,17 @@ namespace GitUI.BuildServerIntegration
         private void UpdateUI()
         {
             var columnsAreVisible = buildServerAdapter != null;
-            revisions.Columns[BuildStatusImageColumnIndex].Visible = columnsAreVisible;
-            revisions.Columns[BuildStatusMessageColumnIndex].Visible = columnsAreVisible;
+
+            if (columnsAreVisible)
+            {
+                AddBuildStatusColumns();
+            }
+
+            if (BuildStatusImageColumnIndex != -1)
+                revisions.Columns[BuildStatusImageColumnIndex].Visible = columnsAreVisible;
+
+            if (BuildStatusMessageColumnIndex != -1)
+                revisions.Columns[BuildStatusMessageColumnIndex].Visible = columnsAreVisible && Module.Settings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault;
         }
 
         public void Dispose()

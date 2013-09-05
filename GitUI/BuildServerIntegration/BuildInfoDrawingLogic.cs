@@ -56,14 +56,21 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
-        public static void BuildStatusImageColumnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
+        public static void BuildStatusImageColumnCellFormatting(DataGridViewCellFormattingEventArgs e, DataGridView grid, GitRevision revision)
         {
             e.FormattingApplied = false;
+            var cell = grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            cell.ToolTipText = GetBuildStatusMessageText(revision);
         }
 
         public static void BuildStatusMessageCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
         {
-            e.Value = revision.BuildStatus != null && !string.IsNullOrEmpty(revision.BuildStatus.Description)
+            e.Value = GetBuildStatusMessageText(revision);
+        }
+
+        private static string GetBuildStatusMessageText(GitRevision revision)
+        {
+            return revision.BuildStatus != null && !string.IsNullOrEmpty(revision.BuildStatus.Description)
                           ? revision.BuildStatus.Description
                           : string.Empty;
         }
