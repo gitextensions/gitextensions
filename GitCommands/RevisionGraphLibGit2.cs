@@ -24,14 +24,14 @@ namespace GitCommands
             RevisionCount = 0;
             _refs = GetRefs().ToDictionaryOfList(head => head.Guid);
 
-            Filter filter;
+            CommitFilter filter;
             if (AppSettings.OrderRevisionByDate)
             {
-                filter = new Filter { SortBy = GitSortOptions.Time };
+                filter = new CommitFilter { SortBy = CommitSortStrategies.Time };
             }
             else
             {
-                filter = new Filter { SortBy = GitSortOptions.Topological };
+                filter = new CommitFilter { SortBy = CommitSortStrategies.Topological };
             }
 
             foreach (var commit in _module.Repository.Commits.QueryBy(filter))
