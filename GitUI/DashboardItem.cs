@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands.Repository;
 using GitUI.Properties;
-using System.Threading.Tasks;
 using System.Threading;
 
 namespace GitUI
