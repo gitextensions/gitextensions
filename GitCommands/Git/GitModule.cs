@@ -1026,12 +1026,12 @@ namespace GitCommands
                 /* Committer Date */ "%ct%n";
             const string messageFormat = "%e%n%B%nNotes:%n%-N";
             string cmd = "log -n1 --format=format:" + formatString + (shortFormat ? "%e%n%s" : messageFormat) + " " + commit;
-            var revInfo = RunCacheableCmd(AppSettings.GitCommand, cmd);
+            var revInfo = RunCacheableCmd(AppSettings.GitCommand, cmd, LosslessEncoding);
             string[] lines = revInfo.Split('\n');
             var revision = new GitRevision(this, lines[0])
                 {
                 TreeGuid = lines[1],
-                ParentGuids = lines[2].Split(new[]{' '}),
+                ParentGuids = lines[2].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries),
                 Author = ReEncodeStringFromLossless(lines[3]),
                 AuthorEmail = ReEncodeStringFromLossless(lines[4]),
                 Committer = ReEncodeStringFromLossless(lines[6]),
@@ -1190,7 +1190,7 @@ namespace GitCommands
 
         public string GetSubmoduleFullPath(string localPath)
         {
-            string dir = _workingdir + localPath + AppSettings.PathSeparator.ToString();//
+            string dir = Path.Combine(_workingdir, localPath + AppSettings.PathSeparator);
             return Path.GetFullPath(dir); // fix slashes
         }
 
@@ -1249,7 +1249,7 @@ namespace GitCommands
         {
             submoduleName = null;
             submodulePath = null;
-            if (String.IsNullOrEmpty(_workingdir))
+            if (!IsValidGitWorkingDir())
                 return null;
 
             string superprojectPath = null;
@@ -1442,7 +1442,7 @@ namespace GitCommands
         public bool StartPageantForRemote(string remote)
         {
             var sshKeyFile = GetPuttyKeyFileForRemote(remote);
-            if (string.IsNullOrEmpty(sshKeyFile))
+            if (string.IsNullOrEmpty(sshKeyFile) || !File.Exists(sshKeyFile))
                 return false;
 
             StartPageantWithKey(sshKeyFile);
@@ -1952,6 +1952,12 @@ namespace GitCommands
         public ConfigFile GetGitExtensionsConfig()
         {
             return new ConfigFile(FullPath(".gitextensions"), true);
+        }
+
+        public IEnumerable<string> GetSettings(string setting)
+        {
+            var configFile = GetLocalConfig();
+            return configFile.GetValues(setting);
         }
 
         public string GetSetting(string setting)

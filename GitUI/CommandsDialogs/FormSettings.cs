@@ -108,6 +108,23 @@ namespace GitUI.CommandsDialogs
             settingsTreeView.ResumeLayout();
         }
 
+        public static DialogResult ShowSettingsDialog(GitUICommands uiCommands, IWin32Window owner, SettingsPageReference initalPage = null)
+        {
+            DialogResult result = DialogResult.None;
+
+            using (var form = new FormSettings(uiCommands, initalPage))
+            {
+
+                AppSettings.UsingContainer(form._commonLogic.RepoDistSettingsSet.GlobalSettings, () =>
+                {
+                     result = form.ShowDialog(owner);
+                });
+
+            }
+
+            return result;            
+        }
+
         private void FormSettings_Load(object sender, EventArgs e)
         {
             if (DesignMode)

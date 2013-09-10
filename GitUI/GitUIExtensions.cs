@@ -35,7 +35,7 @@ namespace GitUI
             DiffBParentLocal
         }
 
-        public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, DiffWithRevisionKind diffKind)
+        public static void OpenWithDifftool(this RevisionGrid grid, string fileName, string oldFileName, DiffWithRevisionKind diffKind, string parentGuid)
         {
             IList<GitRevision> revisions = grid.GetSelectedRevisions();
 
@@ -69,7 +69,7 @@ namespace GitUI
                         extraDiffArgs = string.Join(" ", extraDiffArgs, "--cached");
                 }
                 else if (secondRevision == null)
-                    secondRevision = firstRevision + "^";
+                    secondRevision = parentGuid ?? firstRevision + "^";
 
                 output = grid.Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, extraDiffArgs);
             }
@@ -80,7 +80,7 @@ namespace GitUI
                 {
                     GitRevision revision = revisions[0];
                     if (diffKind == DiffWithRevisionKind.DiffALocal)
-                        revisionToCmp = revision.ParentGuids.Length == 0 ? null : revision.ParentGuids[0];
+                        revisionToCmp = parentGuid ?? (revision.ParentGuids.Length == 0 ? null : revision.ParentGuids[0]);
                     else if (diffKind == DiffWithRevisionKind.DiffBLocal)
                         revisionToCmp = revision.Guid;
                     else
