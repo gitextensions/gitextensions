@@ -124,6 +124,9 @@ namespace GitUI
             Revisions.AllowDrop = true;
             Revisions.ColumnHeadersVisible = false;
 
+            IsMessageMultilineDataGridViewColumn.Width = 25;
+            IsMessageMultilineDataGridViewColumn.DisplayIndex = 2;
+
             this.HotkeysEnabled = true;
             try
             {
@@ -178,8 +181,9 @@ namespace GitUI
             set
             {
                 _normalFont = value;
-                Message.DefaultCellStyle.Font = _normalFont;
-                Date.DefaultCellStyle.Font = _normalFont;
+                MessageDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
+                DateDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
+                IsMessageMultilineDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
 
                 RefsFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
                 HeadFont = new Font(_normalFont, FontStyle.Bold);
@@ -762,6 +766,7 @@ namespace GitUI
             try
             {
                 RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+                IsMessageMultilineDataGridViewColumn.Visible = AppSettings.ShowIndicatorForMultilineMessage;
 
                 ApplyFilterFromRevisionFilterDialog();
 
@@ -1012,7 +1017,7 @@ namespace GitUI
             }
         }
 
-        private int SearchRevision(string initRevision, out string graphRevision)
+        internal int TrySearchRevision(string initRevision, out string graphRevision)
         {
             var rows = Revisions
                 .Rows
@@ -1027,6 +1032,19 @@ namespace GitUI
                 return idx.Index;
             }
 
+            graphRevision = null;
+            return -1;
+        }
+
+        private int SearchRevision(string initRevision, out string graphRevision)
+        {
+            int index = TrySearchRevision(initRevision, out graphRevision);
+            if (index >= 0)
+                return index;
+
+            var rows = Revisions
+                .Rows
+                .Cast<DataGridViewRow>();
             var dict = rows
                 .ToDictionary(row => GetRevision(row.Index).Guid, row => row.Index);
             var revListParams = "rev-list ";
@@ -1038,16 +1056,9 @@ namespace GitUI
                 revListParams += string.Format("--max-count=\"{0}\" ", (int)AppSettings.MaxRevisionGraphCommits);
 
             var allrevisions = Module.ReadGitOutputLines(revListParams + initRevision);
-            foreach (var rev in allrevisions)
-            {
-                int index;
-                if (dict.TryGetValue(rev, out index))
-                {
-                    graphRevision = rev;
+            graphRevision = allrevisions.FirstOrDefault(rev => dict.TryGetValue(rev, out index));
+            if (graphRevision != null)
                     return index;
-                }
-            }
-            graphRevision = null;
             return -1;
         }
 
@@ -1065,9 +1076,9 @@ namespace GitUI
 
             Revisions.SuspendLayout();
 
-            Revisions.Columns[1].HeaderText = Strings.GetMessageText();
-            Revisions.Columns[2].HeaderText = Strings.GetAuthorText();
-            Revisions.Columns[3].HeaderText = GetDateHeaderText();
+            Revisions.MessageColumn.HeaderText = Strings.GetMessageText();
+            Revisions.AuthorColumn.HeaderText = Strings.GetAuthorText();
+            Revisions.DateColumn.HeaderText = GetDateHeaderText();
 
             Revisions.SelectionChanged -= RevisionsSelectionChanged;
 
@@ -1101,13 +1112,20 @@ namespace GitUI
                 }
             }
 
+            var columnIndex = e.ColumnIndex;
+
+            int graphColIndex = GraphDataGridViewColumn.Index;
+            int messageColIndex = MessageDataGridViewColumn.Index;
+            int authorColIndex = AuthorDataGridViewColumn.Index;
+            int dateColIndex = DateDataGridViewColumn.Index;
+            int isMsgMultilineColIndex = IsMessageMultilineDataGridViewColumn.Index;
+
             // The graph column is handled by the DvcsGraph
-            if (e.ColumnIndex == 0)
+            if (e.ColumnIndex == graphColIndex)
             {
                 return;
             }
 
-            var column = e.ColumnIndex;
             if (e.RowIndex < 0 || (e.State & DataGridViewElementStates.Visible) == 0)
                 return;
 
@@ -1148,10 +1166,8 @@ namespace GitUI
                 else if (SuperprojectCurrentCheckout.IsCompleted && SuperprojectCurrentCheckout.Result.Contains(revision.Guid))
                     rowFont = SuperprojectFont;
 
-                switch (column)
+                if (columnIndex == messageColIndex)
                 {
-                    case 1: //Description!!
-                        {
                             int baseOffset = 0;
                             if (IsCardLayout())
                             {
@@ -1188,16 +1204,16 @@ namespace GitUI
                             float offset = baseOffset;
                             var gitRefs = revision.Refs;
 
-                            if (gitRefs.Count > 0)
+                    if (gitRefs.Any())
                             {
                                 gitRefs.Sort((left, right) =>
-                                           {
-                                               if (left.IsTag != right.IsTag)
-                                                   return right.IsTag.CompareTo(left.IsTag);
-                                               if (left.IsRemote != right.IsRemote)
-                                                   return left.IsRemote.CompareTo(right.IsRemote);
-                                               return left.Name.CompareTo(right.Name);
-                                           });
+                                        {
+                                            if (left.IsTag != right.IsTag)
+                                                return right.IsTag.CompareTo(left.IsTag);
+                                            if (left.IsRemote != right.IsRemote)
+                                                return left.IsRemote.CompareTo(right.IsRemote);
+                                            return left.Name.CompareTo(right.Name);
+                                        });
 
                                 foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || _revisionGridMenuCommands.ShowRemoteBranches)))
                                 {
@@ -1226,8 +1242,8 @@ namespace GitUI
                                     }
 
                                     Color headColor = GetHeadColor(gitRef);
-                                    Brush textBrush = new SolidBrush(headColor);
-
+                            using (Brush textBrush = new SolidBrush(headColor))
+                            {
                                     string headName;
 
                                     if (IsCardLayout())
@@ -1237,10 +1253,10 @@ namespace GitUI
                                         PointF location = new PointF(e.CellBounds.Right - offset, e.CellBounds.Top + 4);
                                         var size = new SizeF(e.Graphics.MeasureString(headName, refsFont).Width,
                                                              e.Graphics.MeasureString(headName, RefsFont).Height);
-                                        e.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
-                                                             location.Y - 1, size.Width + 3, size.Height + 2);
-                                        e.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
-                                                             location.Y - 1, size.Width + 3, size.Height + 2);
+                                            e.Graphics.FillRectangle(new SolidBrush(SystemColors.Info), location.X - 1,
+                                                            location.Y - 1, size.Width + 3, size.Height + 2);
+                                            e.Graphics.DrawRectangle(new Pen(SystemColors.InfoText), location.X - 1,
+                                                            location.Y - 1, size.Width + 3, size.Height + 2);
                                         e.Graphics.DrawString(headName, refsFont, textBrush, location);
                                     }
                                     else
@@ -1274,6 +1290,7 @@ namespace GitUI
                                     }
                                 }
                             }
+                            }
 
                             if (IsCardLayout())
                                 offset = baseOffset;
@@ -1295,7 +1312,7 @@ namespace GitUI
                                 if (gravatar == null && !string.IsNullOrEmpty(revision.AuthorEmail))
                                 {
                                     ThreadPool.QueueUserWorkItem(o =>
-                                                Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
+                                    Gravatar.GravatarService.LoadCachedImage(revision.AuthorEmail + gravatarSize.ToString() + ".png", revision.AuthorEmail, null, AppSettings.AuthorImageCacheDays, gravatarSize, AppSettings.GravatarCachePath, RefreshGravatar, FallBackService.MonsterId));
                                 }
 
                                 if (gravatar != null)
@@ -1325,29 +1342,31 @@ namespace GitUI
                                                       new PointF(gravatarLeft + gravatarSize + 5, e.CellBounds.Bottom - textHeight - 4));
                             }
                         }
-                        break;
-                    case 2:
+                else if (columnIndex == authorColIndex)
                         {
                             var text = (string)e.FormattedValue;
                             e.Graphics.DrawString(text, rowFont, foreBrush,
                                                   new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                         }
-                        break;
-                    case 3:
+                else if (columnIndex == dateColIndex)
                         {
                             var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
                             var text = TimeToString(time);
                             e.Graphics.DrawString(text, rowFont, foreBrush,
                                                   new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                         }
-                        break;
+                else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
+                {
+                    var text = (string)e.FormattedValue;
+                    e.Graphics.DrawString(text, rowFont, foreBrush,
+                                            new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
                 }
             }
         }
 
         private void RevisionsCellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            var column = e.ColumnIndex;
+            var columnIndex = e.ColumnIndex;
             if (e.RowIndex < 0)
                 return;
 
@@ -1360,18 +1379,25 @@ namespace GitUI
 
             e.FormattingApplied = true;
 
-            switch (column)
+            int graphColIndex = GraphDataGridViewColumn.Index;
+            int messageColIndex = MessageDataGridViewColumn.Index;
+            int authorColIndex = AuthorDataGridViewColumn.Index;
+            int dateColIndex = DateDataGridViewColumn.Index;
+            int isMsgMultilineColIndex = IsMessageMultilineDataGridViewColumn.Index;
+
+            if (columnIndex == graphColIndex)
             {
-                case 0:
                     e.Value = revision.Guid;
-                    break;
-                case 1:
+            }
+            else if (columnIndex == messageColIndex)
+            {
                     e.Value = revision.Message;
-                    break;
-                case 2:
+            }
+            else if (columnIndex == authorColIndex)
+            {
                     e.Value = revision.Author ?? "";
-                    break;
-                case 3:
+            }
+            else if (columnIndex == dateColIndex)
                     {
                         var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
                         if (time == DateTime.MinValue || time == DateTime.MaxValue)
@@ -1379,11 +1405,55 @@ namespace GitUI
                         else
                             e.Value = string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
                     }
-                    break;
-                default:
-                    e.FormattingApplied = false;
-                    break;
+            else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
+            {
+                if (revision.Body == null && !revision.IsArtificial())
+                {
+                    ThreadPool.QueueUserWorkItem(o => LoadIsMultilineMessageInfo(revision, columnIndex, e.RowIndex, Revisions.RowCount));
+                }
+
+                if (revision.Body != null)
+                {
+                    e.Value = revision.Body.TrimEnd().Contains("\n") ? "[...]" : "";
+                }
+                else
+                {
+                    e.Value = "";
+                }
             }
+            else
+            {
+                    e.FormattingApplied = false;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="revision"></param>
+        /// <param name="totalRowCount">check if grid has changed while thread is queued</param>
+        /// <param name="colIndex"></param>
+        /// <param name="rowIndex"></param>
+        private void LoadIsMultilineMessageInfo(GitRevision revision, int colIndex, int rowIndex, int totalRowCount)
+        {
+            // code taken from CommitInfo.cs
+            CommitData commitData = CommitData.CreateFromRevision(revision);
+            string error = "";
+            if (revision.Body == null)
+            {
+                CommitData.UpdateCommitMessage(commitData, Module, revision.Guid, ref error);
+                revision.Body = commitData.Body;
+            }
+
+            // now that Body is filled (not null anymore) the revision grid can be refreshed to display the new information
+            this.InvokeAsync(() =>
+            {
+                if (Revisions == null || Revisions.RowCount == 0 || Revisions.RowCount <= rowIndex || Revisions.RowCount != totalRowCount)
+                {
+                    return;
+                }
+                Revisions.InvalidateCell(colIndex, rowIndex);
+            });
         }
 
         private void DrawColumnText(IDeviceContext dc, string text, Font font, Color color, Rectangle bounds)
@@ -1553,12 +1623,9 @@ namespace GitUI
         public void ViewSelectedRevisions()
         {
             var selectedRevisions = GetSelectedRevisions();
-            if (selectedRevisions.Count > 0)
+            if (selectedRevisions.Any())
             {
-                //We cannot use the selected revision to start the commit diff. When a filtered commit list
-                //is shown (file history/normal filter) the parent guids are not the 'real' parents, but the
-                //parents in the filterd list. (DO NOT USE var form = new FormCommitDiff(UICommands, selectedRevisions[0]);)
-                var form = new FormCommitDiff(UICommands, Module.GetRevision(selectedRevisions[0].Guid));
+                var form = new FormCommitDiff(UICommands, selectedRevisions[0].Guid);
 
                 form.ShowDialog(this);
             }
@@ -2050,7 +2117,7 @@ namespace GitUI
             var dataType = DvcsGraph.DataType.Normal;
             if (rev.Guid == FiltredCurrentCheckout)
                 dataType = DvcsGraph.DataType.Active;
-            else if (rev.Refs.Count > 0)
+            else if (rev.Refs.Any())
                 dataType = DvcsGraph.DataType.Special;
 
             Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
@@ -2063,9 +2130,9 @@ namespace GitUI
             //Only check for tracked files. This usually makes more sense and it performs a lot
             //better then checking for untracked files.
             // TODO: Check FiltredFileName
-            if (Module.GetUnstagedFiles().Count > 0)
+            if (Module.GetUnstagedFiles().Any())
                 unstagedChanges = true;
-            if (Module.GetStagedFiles().Count > 0)
+            if (Module.GetStagedFiles().Any())
                 stagedChanges = true;
 
             // FiltredCurrentCheckout doesn't works here because only calculated after loading all revisions in SelectInitialRevision()
@@ -2585,7 +2652,7 @@ namespace GitUI
         {
             var r = GetRevision(LastRow);
             var children = GetRevisionChildren(r.Guid);
-            if (children.Count > 0)
+            if (children.Any())
                 SetSelectedRevision(children[0]);
         }
 

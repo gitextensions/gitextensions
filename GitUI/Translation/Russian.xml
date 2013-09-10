@@ -1737,7 +1737,7 @@ revision:</Source>
           <Value>Обзор pull request'ов</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfBisect" Property="Text">
-          <Source>Your are in the middle of a bisect</Source>
+          <Source>You are in the middle of a bisect</Source>
           <Value>Вы посередине bisect</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfPatchApply" Property="Text">

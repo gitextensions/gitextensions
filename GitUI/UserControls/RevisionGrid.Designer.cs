@@ -58,10 +58,11 @@ namespace GitUI
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
             this.Revisions = new GitUI.RevisionGridClasses.DvcsGraph();
-            this.Graph = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.GraphDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MessageDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.IsMessageMultilineDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AuthorDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DateDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mainContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.markRevisionAsBadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.markRevisionAsGoodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -142,10 +143,11 @@ namespace GitUI
             this.Revisions.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.Revisions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Revisions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Graph,
-            this.Message,
-            this.Author,
-            this.Date});
+            this.GraphDataGridViewColumn,
+            this.MessageDataGridViewColumn,
+            this.AuthorDataGridViewColumn,
+            this.DateDataGridViewColumn,
+            this.IsMessageMultilineDataGridViewColumn});
             this.Revisions.ContextMenuStrip = this.mainContextMenu;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
@@ -187,37 +189,45 @@ namespace GitUI
             // Graph
             // 
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Graph.DefaultCellStyle = dataGridViewCellStyle3;
-            this.Graph.Frozen = true;
-            this.Graph.HeaderText = "";
-            this.Graph.Name = "Graph";
-            this.Graph.ReadOnly = true;
-            this.Graph.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Graph.Width = 70;
+            this.GraphDataGridViewColumn.DefaultCellStyle = dataGridViewCellStyle3;
+            this.GraphDataGridViewColumn.Frozen = true;
+            this.GraphDataGridViewColumn.HeaderText = "";
+            this.GraphDataGridViewColumn.Name = "Graph";
+            this.GraphDataGridViewColumn.ReadOnly = true;
+            this.GraphDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.GraphDataGridViewColumn.Width = 70;
             // 
             // Message
             // 
-            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Message.HeaderText = "Message";
-            this.Message.Name = "Message";
-            this.Message.ReadOnly = true;
-            this.Message.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.MessageDataGridViewColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.MessageDataGridViewColumn.HeaderText = "Message";
+            this.MessageDataGridViewColumn.Name = "Message";
+            this.MessageDataGridViewColumn.ReadOnly = true;
+            this.MessageDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // IsMessageMultilineDataGridViewColumn
+            // 
+            this.IsMessageMultilineDataGridViewColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.IsMessageMultilineDataGridViewColumn.HeaderText = "IsMessageMultiline";
+            this.IsMessageMultilineDataGridViewColumn.Name = "IsMessageMultiline";
+            this.IsMessageMultilineDataGridViewColumn.ReadOnly = true;
+            this.IsMessageMultilineDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // Author
             // 
-            this.Author.HeaderText = "Author";
-            this.Author.Name = "Author";
-            this.Author.ReadOnly = true;
-            this.Author.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Author.Width = 150;
+            this.AuthorDataGridViewColumn.HeaderText = "Author";
+            this.AuthorDataGridViewColumn.Name = "Author";
+            this.AuthorDataGridViewColumn.ReadOnly = true;
+            this.AuthorDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.AuthorDataGridViewColumn.Width = 150;
             // 
             // Date
             // 
-            this.Date.HeaderText = "Date";
-            this.Date.Name = "Date";
-            this.Date.ReadOnly = true;
-            this.Date.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Date.Width = 180;
+            this.DateDataGridViewColumn.HeaderText = "Date";
+            this.DateDataGridViewColumn.Name = "Date";
+            this.DateDataGridViewColumn.ReadOnly = true;
+            this.DateDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.DateDataGridViewColumn.Width = 180;
             // 
             // mainContextMenu
             // 
@@ -750,9 +760,10 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Message;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Author;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Date;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Graph;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MessageDataGridViewColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AuthorDataGridViewColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DateDataGridViewColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn GraphDataGridViewColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IsMessageMultilineDataGridViewColumn;
     }
 }

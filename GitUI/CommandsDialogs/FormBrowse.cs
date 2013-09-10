@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs
             new TranslationString("stash");
 
         private readonly TranslationString _warningMiddleOfBisect =
-            new TranslationString("Your are in the middle of a bisect");
+            new TranslationString("You are in the middle of a bisect");
         private readonly TranslationString _warningMiddleOfRebase =
             new TranslationString("You are in the middle of a rebase");
         private readonly TranslationString _warningMiddleOfPatchApply =
@@ -1233,7 +1233,7 @@ namespace GitUI.CommandsDialogs
 
                 var revisions = RevisionGrid.GetSelectedRevisions();
 
-                if (revisions.Count > 0 && GitRevision.IsArtificial(revisions[0].Guid))
+                if (revisions.Any() && GitRevision.IsArtificial(revisions[0].Guid))
                 {
                     CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
                     CommitInfoTabControl.RemoveIfExists(TreeTabPage);
@@ -1812,7 +1812,9 @@ namespace GitUI.CommandsDialogs
                 diffKind = GitUIExtensions.DiffWithRevisionKind.DiffAB;
             }
 
-            RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind);
+            string parentGuid = RevisionGrid.GetSelectedRevisions().Count() == 1 ? DiffFiles.SelectedItemParent : null;
+
+            RevisionGrid.OpenWithDifftool(selectedItem.Name, selectedItem.OldName, diffKind, parentGuid);
         }
 
         private void AddWorkingdirDropDownItem(Repository repo, string caption)
