@@ -321,13 +321,13 @@
 
     <DirectoryRef Id="NativeBinariesX86Dir">
       <Component Id="git2_x86.dll" Guid="*">
-        <File Id="git2_x86.dll" Source="..\libgit2sharp\Lib\NativeBinaries\x86\git2-7940036.dll"/>
+        <File Id="git2_x86.dll" Source="..\libgit2sharp\Lib\NativeBinaries\x86\git2-32e4992.dll"/>
       </Component>
     </DirectoryRef>
     
     <DirectoryRef Id="NativeBinariesX64Dir">
       <Component Id="git2_x64.dll" Guid="*">
-        <File Id="git2_x64.dll" Source="..\libgit2sharp\Lib\NativeBinaries\amd64\git2-7940036.dll"/>
+        <File Id="git2_x64.dll" Source="..\libgit2sharp\Lib\NativeBinaries\amd64\git2-32e4992.dll"/>
       </Component>
     </DirectoryRef>
     
