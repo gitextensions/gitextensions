@@ -390,8 +390,8 @@ Elija no si desea utilizar otra herramienta de fusión.</Value>
           <Value>GitExtensions esta registrado correctamente.</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsFaulty" Property="Text">
-          <Source>Invalid installation directory stored in [Software\GitExtensions\GitExtensions\InstallDir].</Source>
-          <Value>Directorio de instalación inválido guardado en [Software\GitExtensions\GitExtensions\InstallDir].</Value>
+          <Source>Invalid installation directory stored in [Software\GitExtensions\InstallDir].</Source>
+          <Value>Directorio de instalación inválido guardado en [Software\GitExtensions\InstallDir].</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text">
           <Source>Registry entry missing [Software\GitExtensions\InstallDir].</Source>

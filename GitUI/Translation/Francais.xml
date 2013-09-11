@@ -389,8 +389,8 @@ Selectionnez non si vous voulez vous-même configurer un autre outil de fusion.<
           <Value>GitExtensions est correctement enregistré.</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsFaulty" Property="Text">
-          <Source>Invalid installation directory stored in [Software\GitExtensions\GitExtensions\InstallDir].</Source>
-          <Value>Répertoire d'installation invalide stocké dans [Software\GitExtensions\GitExtensions\InstallDir].</Value>
+          <Source>Invalid installation directory stored in [Software\GitExtensions\InstallDir].</Source>
+          <Value>Répertoire d'installation invalide stocké dans [Software\GitExtensions\InstallDir].</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text">
           <Source>Registry entry missing [Software\GitExtensions\InstallDir].</Source>
