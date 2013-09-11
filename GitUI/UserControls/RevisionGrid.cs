@@ -900,7 +900,7 @@ namespace GitUI
             return result;
         }
 
-        private void _revisionGraphCommand_Error(object sender, EventArgs e)
+        private void _revisionGraphCommand_Error(object sender, AsyncErrorEventArgs e)
         {
             // This has to happen on the UI thread
             this.InvokeSync(o =>
@@ -914,6 +914,12 @@ namespace GitUI
                                   }, this);
 
             DisposeRevisionGraphCommand();
+            this.InvokeAsync(() =>
+                {
+                    throw e.Exception;
+                }
+            );
+            e.Handled = true;
         }
 
         private void GitGetCommitsCommandUpdated(object sender, EventArgs e)
