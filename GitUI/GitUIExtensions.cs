@@ -314,7 +314,17 @@ namespace GitUI
             SendOrPostCallback checkDisposedAndInvoke = (s) =>
             {
                 if (!control.IsDisposed)
-                    action(s);
+                {
+                    try
+                    {
+                        action(s);
+                    }
+                    catch (Exception e)
+                    {
+                        e.Data["StackTrace" + e.Data.Count] = e.StackTrace;
+                        throw;
+                    }
+                }
             };
 
             if (!control.IsDisposed)
