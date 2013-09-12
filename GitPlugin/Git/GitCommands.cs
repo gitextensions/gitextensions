@@ -194,7 +194,7 @@ namespace GitPlugin.Git
 
         public static bool GetShowCurrentBranchSetting()
         {
-            string showCurrentBranchSetting = GetGitExRegValue("showcurrentbranchinvisualstudio");
+            string showCurrentBranchSetting = GetGitExRegValue("ShowCurrentBranchInVS");
             return string.IsNullOrEmpty(showCurrentBranchSetting) || showCurrentBranchSetting.Equals("True", StringComparison.CurrentCultureIgnoreCase);
         }
     }
