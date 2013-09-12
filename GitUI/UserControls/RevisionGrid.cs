@@ -924,6 +924,12 @@ namespace GitUI
                                   }, this);
 
             DisposeRevisionGraphCommand();
+            this.InvokeAsync(() =>
+                {
+                    throw e.Exception;
+                }
+            );
+            e.Handled = true;
         }
 
         private void GitGetCommitsCommandUpdated(object sender, EventArgs e)
