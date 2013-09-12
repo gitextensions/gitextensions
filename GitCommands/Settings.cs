@@ -111,6 +111,12 @@ namespace GitCommands
             VersionIndependentRegKey.SetValue("InstallDir", dir);
         }
 
+        public static bool CheckSettings
+        {
+            get { return (int)VersionIndependentRegKey.GetValue("CheckSettings", 1) != 0; }
+            set { VersionIndependentRegKey.SetValue("CheckSettings", value ? 1 : 0); }
+        }
+
         public static string CascadeShellMenuItems
         {
             get { return (string)VersionIndependentRegKey.GetValue("CascadeShellMenuItems", "110111000111111111"); }
@@ -127,22 +133,22 @@ namespace GitCommands
         {
             //This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
             //other changes in the Visual Studio plugin itself.
-            get { return (int)VersionIndependentRegKey.GetValue("showcurrentbranchinvisualstudio", 1) != 0; }
-            set { VersionIndependentRegKey.SetValue("showcurrentbranchinvisualstudio", value ? 1 : 0); }
+            get { return (int)VersionIndependentRegKey.GetValue("ShowCurrentBranchInVS", 1) != 0; }
+            set { VersionIndependentRegKey.SetValue("ShowCurrentBranchInVS", value ? 1 : 0); }
         }
 
         public static string GitCommand
         {
             get
             {
-                if (Settings.IsPortable())
+                if (IsPortable())
                     return GetString("gitcommand", "git");
                 else
-                    return (string)VersionIndependentRegKey.GetValue("gitcommand", "git");
+                    return (string)VersionIndependentRegKey.GetValue("gitcommand", "");
             }
             set
             {
-                if (Settings.IsPortable())
+                if (IsPortable())
                     SetString("gitcommand", value);
                 else
                     VersionIndependentRegKey.SetValue("gitcommand", value);
