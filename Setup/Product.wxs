@@ -241,9 +241,6 @@
       <Component Id="System.Net.Http.WebRequest.dll" Guid="*">
         <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.WebRequest.dll"/>
       </Component>
-      <Component Id="System.Net.Http.Extensions.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Extensions.dll"/>
-      </Component>
       <Component Id="System.Net.Http.Primitives.dll" Guid="*">
         <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Primitives.dll"/>
       </Component>
@@ -538,7 +535,6 @@
         <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
           <ComponentRef Id="System.Net.Http.dll" />
           <ComponentRef Id="System.Net.Http.WebRequest.dll" />
-          <ComponentRef Id="System.Net.Http.Extensions.dll" />
           <ComponentRef Id="System.Net.Http.Primitives.dll" />
           <ComponentRef Id="System.Runtime.dll" />
           <ComponentRef Id="System.Threading.Tasks.dll" />
