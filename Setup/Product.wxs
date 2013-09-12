@@ -152,7 +152,7 @@
                 <?endforeach ?>
             </Component>
             <Component Id="checksettings.reg" Guid="*">
-                <RegistryValue Name="checksettings" Value="true" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
+                <RegistryValue Name="CheckSettings" Value="true" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
             </Component>
             <Component Id="InstallDir.reg" Guid="*">
                 <RegistryValue Name="InstallDir" Value="[INSTALLDIR]" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
