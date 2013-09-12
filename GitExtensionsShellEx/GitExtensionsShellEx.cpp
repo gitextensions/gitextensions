@@ -716,22 +716,8 @@ CString CGitExtensionsShellEx::GetRegistryValue(HKEY hOpenKey, LPCTSTR szKey, LP
 
 bool CGitExtensionsShellEx::GetRegistryBoolValue(HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path)
 {
-    HKEY key;
-    long res = RegOpenKeyEx(hOpenKey,szKey, 0, KEY_READ | KEY_WOW64_32KEY, &key);
-    if (res != ERROR_SUCCESS)
-    {
+    CString value = GetRegistryValue(hOpenKey, szKey, path);
+    if (value.IsEmpty())
         return false;
-    }
-
-    unsigned long type;
-    DWORD temp;
-    unsigned long size = sizeof(temp);
-    if (RegQueryValueEx(key, path, 0, &type, (BYTE*)&temp, &size) != ERROR_SUCCESS)
-    {
-        RegCloseKey(key);
-        return false;
-    }
-
-    RegCloseKey(key);
-    return temp != 0;
+    return value.CompareNoCase(L"true") == 0;
 }
