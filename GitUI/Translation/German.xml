@@ -392,8 +392,8 @@ Wählen Sie Nein aus wenn Sie Ihr eigenes Mergeprogramm verwenden wollen.</Value
           <Value>GitExtensions erfolgreich registriert.</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsFaulty" Property="Text">
-          <Source>Invalid installation directory stored in [Software\GitExtensions\GitExtensions\InstallDir].</Source>
-          <Value>Ungültiges Installationsverzeichnis gespeichert in [Software\GitExtensions\GitExtensions\InstallDir].</Value>
+          <Source>Invalid installation directory stored in [Software\GitExtensions\InstallDir].</Source>
+          <Value>Ungültiges Installationsverzeichnis gespeichert in [Software\GitExtensions\InstallDir].</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text">
           <Source>Registry entry missing [Software\GitExtensions\InstallDir].</Source>
