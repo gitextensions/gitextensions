@@ -447,7 +447,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void CheckAtStartup_CheckedChanged(object sender, EventArgs e)
         {
-            Settings.SetBool("checksettings", CheckAtStartup.Checked);
+            Settings.CheckSettings = CheckAtStartup.Checked;
         }
 
         public bool CheckSettings()
@@ -476,18 +476,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 MessageBox.Show(this, ex.Message);
             }
 
-            CheckAtStartup.Checked = getCheckAtStartupChecked(bValid);
+            CheckAtStartup.Checked = IsCheckAtStartupChecked(bValid);
 
             return bValid;
         }
 
-        private static bool getCheckAtStartupChecked(bool bValid)
+        private static bool IsCheckAtStartupChecked(bool bValid)
         {
-            var retValue = Settings.GetBool("checksettings", true);
+            var retValue = Settings.CheckSettings;
 
             if (bValid && retValue)
             {
-                Settings.SetBool("checksettings", false);
+                Settings.CheckSettings = false;
                 retValue = false;
             }
             return retValue;
