@@ -16,13 +16,39 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using GitCommands.Settings;
+using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using Microsoft.Win32;
 
 namespace TeamCityIntegration
 {
+
+    [MetadataAttribute]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public class TeamCityIntegrationMetadata : BuildServerAdapterMetadataAttribute
+    {
+        public TeamCityIntegrationMetadata(string buildServerType)
+            : base(buildServerType)
+        {
+        }
+
+        public override string CanBeLoaded
+        {
+            get
+            {
+                if (EnvUtils.IsNet4FullOrHigher())
+                    return null;
+                else
+                    return ".Net 4 full freamwork required";
+            }
+        }
+    }
+
+
+
     [Export(typeof(IBuildServerAdapter))]
-    [BuildServerAdapterMetadata("TeamCity")]
+    [TeamCityIntegrationMetadata("TeamCity")]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     internal class TeamCityAdapter : IBuildServerAdapter
     {

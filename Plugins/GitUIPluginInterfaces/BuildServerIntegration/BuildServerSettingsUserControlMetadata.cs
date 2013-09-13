@@ -5,17 +5,11 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class BuildServerSettingsUserControlMetadata : ExportAttribute
+    public class BuildServerSettingsUserControlMetadata : BuildServerAdapterMetadataAttribute
     {
         public BuildServerSettingsUserControlMetadata(string buildServerType)
-            : base(typeof(IBuildServerTypeMetadata))
+            : base(buildServerType)
         {
-            if (string.IsNullOrEmpty(buildServerType))
-                throw new ArgumentException();
-
-            BuildServerType = buildServerType;
         }
-
-        public string BuildServerType { get; private set; }
     }
 }

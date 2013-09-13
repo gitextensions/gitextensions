@@ -11,7 +11,6 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using GitCommands.Utils;
 using GitUI.HelperDialogs;
 using GitUI.RevisionGridClasses;
 using GitUIPluginInterfaces;
@@ -249,7 +248,7 @@ namespace GitUI.BuildServerIntegration
 
         private IBuildServerAdapter GetBuildServerAdapter()
         {
-            if (EnvUtils.IsNet4FullOrHigher() && Module.Settings.BuildServer.EnableIntegration.ValueOrDefault)
+            if (Module.Settings.BuildServer.EnableIntegration.ValueOrDefault)
             {
                 var buildServerType = Module.Settings.BuildServer.Type.Value;
                 if (!string.IsNullOrEmpty(buildServerType))
@@ -261,6 +260,12 @@ namespace GitUI.BuildServerIntegration
                     {
                         try
                         {
+                            var canBeLoaded = export.Metadata.CanBeLoaded;
+                            if (!canBeLoaded.IsNullOrEmpty())
+                            {
+                                System.Diagnostics.Debug.Write(export.Metadata.BuildServerType + " adapter could not be loaded: " + canBeLoaded);
+                                return null;
+                            }
                             var buildServerAdapter = export.Value;
                             buildServerAdapter.Initialize(this, Module.Settings.BuildServer.TypeSettings);
                             return buildServerAdapter;
