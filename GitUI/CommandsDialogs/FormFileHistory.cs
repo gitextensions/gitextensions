@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -47,6 +48,8 @@ namespace GitUI.CommandsDialogs
         {
             FileChanges.SetInitialRevision(revision);
             Translate();
+
+            FileChanges.ShowBuildServerInfo = true;
 
             FileName = fileName;
             SetTitle(string.Empty);
@@ -256,7 +259,16 @@ namespace GitUI.CommandsDialogs
                 Diff.ViewChanges(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
             }
 
+            if (!EnvUtils.IsMonoRuntime())
+            {
+                if (BuildReportTabPageExtension == null)
+                    BuildReportTabPageExtension = new BuildReportTabPageExtension(tabControl1);
+
+                BuildReportTabPageExtension.FillBuildReport(selectedRows.Count == 1 ? revision : null);
+            }
         }
+
+        private BuildReportTabPageExtension BuildReportTabPageExtension;
 
         private void TabControl1SelectedIndexChanged(object sender, EventArgs e)
         {
