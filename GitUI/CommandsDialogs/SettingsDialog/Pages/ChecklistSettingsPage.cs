@@ -423,7 +423,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            MessageBox.Show(this, String.Format(_gitCanBeRun.Text, AppSettings.GitCommand), _gitCanBeRunCaption.Text);
+            MessageBox.Show(this, String.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue), _gitCanBeRunCaption.Text);
 
             PageHost.GotoPage(GitSettingsPage.GetPageReference());
             SaveAndRescan_Click(null, null);
