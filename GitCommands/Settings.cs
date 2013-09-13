@@ -137,12 +137,12 @@ namespace GitCommands
             set { VersionIndependentRegKey.SetValue("ShowCurrentBranchInVS", value ? "true" : "false"); }
         }
 
-        public static string GitCommand
+        public static string GitCommandValue
         {
             get
             {
                 if (IsPortable())
-                    return GetString("gitcommand", "git");
+                    return GetString("gitcommand", "");
                 else
                     return (string)VersionIndependentRegKey.GetValue("gitcommand", "");
             }
@@ -152,6 +152,16 @@ namespace GitCommands
                     SetString("gitcommand", value);
                 else
                     VersionIndependentRegKey.SetValue("gitcommand", value);
+            }
+        }
+
+        public static string GitCommand
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(GitCommandValue))
+                    return "git";
+                return GitCommandValue;
             }
         }
 

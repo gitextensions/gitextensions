@@ -68,7 +68,7 @@ namespace GitExtensions
 
             try
             {
-                if (Settings.CheckSettings || string.IsNullOrEmpty(Settings.GitCommand))
+                if (Settings.CheckSettings || string.IsNullOrEmpty(Settings.GitCommandValue))
                 {
                     FormSplash.SetAction("Checking settings...");
                     Application.DoEvents();
