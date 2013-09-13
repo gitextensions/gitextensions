@@ -97,7 +97,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 return true;
             }
 
-            string gitpath = Settings.GitCommand
+            string gitpath = Settings.GitCommandValue
                 .Replace(@"\cmd\git.exe", @"\bin\")
                 .Replace(@"\cmd\git.cmd", @"\bin\")
                 .Replace(@"\bin\git.exe", @"\bin\");
@@ -152,8 +152,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private IEnumerable<string> GetWindowsCommandLocations()
         {
-            if (!string.IsNullOrEmpty(Settings.GitCommand) && File.Exists(Settings.GitCommand))
-                yield return Settings.GitCommand;
+            if (!string.IsNullOrEmpty(Settings.GitCommandValue) && File.Exists(Settings.GitCommandValue))
+                yield return Settings.GitCommandValue;
             foreach (var path in GetGitLocations())
             {
                 if (Directory.Exists(path + @"bin\"))
@@ -195,12 +195,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
                 if (command != null)
                 {
-                    Settings.GitCommand = command;
+                    Settings.GitCommandValue = command;
                     return true;
                 }
                 return false;
             }
-            Settings.GitCommand = "git";
+            Settings.GitCommandValue = "git";
             return !string.IsNullOrEmpty(_gitModule.RunGitCmd(""));
         }
 
