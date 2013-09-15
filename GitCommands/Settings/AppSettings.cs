@@ -124,10 +124,25 @@ namespace GitCommands
             VersionIndependentRegKey.SetValue("InstallDir", dir);
         }
 
+        private static bool ReadBoolRegKey(string key, bool defaultValue)
+        {
+            object obj = VersionIndependentRegKey.GetValue(key);
+            if (!(obj is string))
+                obj = null;
+            if (obj == null)
+                return defaultValue;
+            return ((string)obj).Equals("true", StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        private static void WriteBoolRegKey(string key, bool value)
+        {
+            VersionIndependentRegKey.SetValue(key, value ? "true" : "false");
+        }
+
         public static bool CheckSettings
         {
-            get { return ((string)VersionIndependentRegKey.GetValue("CheckSettings", "true")).Equals("true", StringComparison.CurrentCultureIgnoreCase); }
-            set { VersionIndependentRegKey.SetValue("CheckSettings", value ? "true" : "false"); }
+            get { return ReadBoolRegKey("CheckSettings", true); }
+            set { WriteBoolRegKey("CheckSettings", value); }
         }
 
         public static string CascadeShellMenuItems
@@ -138,16 +153,16 @@ namespace GitCommands
 
         public static bool AlwaysShowAllCommands
         {
-            get { return ((string)VersionIndependentRegKey.GetValue("AlwaysShowAllCommands", "false")).Equals("true", StringComparison.CurrentCultureIgnoreCase); }
-            set { VersionIndependentRegKey.SetValue("AlwaysShowAllCommands", value ? "true" : "false"); }
+            get { return ReadBoolRegKey("AlwaysShowAllCommands", false); }
+            set { WriteBoolRegKey("AlwaysShowAllCommands", value); }
         }
 
         public static bool ShowCurrentBranchInVisualStudio
         {
             //This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
             //other changes in the Visual Studio plugin itself.
-            get { return ((string)VersionIndependentRegKey.GetValue("ShowCurrentBranchInVS", "true")).Equals("true", StringComparison.CurrentCultureIgnoreCase); }
-            set { VersionIndependentRegKey.SetValue("ShowCurrentBranchInVS", value ? "true" : "false"); }
+            get { return ReadBoolRegKey("ShowCurrentBranchInVS", true); }
+            set { WriteBoolRegKey("ShowCurrentBranchInVS", value); }
         }
 
         public static string GitCommandValue
