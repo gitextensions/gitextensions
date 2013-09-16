@@ -177,7 +177,7 @@ namespace GitUI.CommandsDialogs
                 //(as far as we know since we are disconnected....)
                 if (_NO_TRANSLATE_Branch.Text != AllRefs &&
                     RemoteBranch.Text != GetDefaultPushRemote(_NO_TRANSLATE_Remotes.Text, _NO_TRANSLATE_Branch.Text) &&
-                    !Module.GetRefs(false, true).Any(x => x.Remote == _NO_TRANSLATE_Remotes.Text && x.Name == RemoteBranch.Text))
+                    !Module.GetRefs(false, true).Any(x => x.TrackingRemote == _NO_TRANSLATE_Remotes.Text && x.Name == RemoteBranch.Text))
                 {
                     //Ask if this is really what the user wants
                     if (!Settings.DontConfirmPushNewBranch &&
