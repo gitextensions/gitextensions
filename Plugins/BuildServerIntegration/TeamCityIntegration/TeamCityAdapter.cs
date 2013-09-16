@@ -322,8 +322,8 @@ namespace TeamCityIntegration
 
                     if (httpContent.Headers.ContentType.MediaType == "text/html")
                     {
-                        // TeamCity responds with an HTML login page when guest access is denied. Retrying the request normally helps.
-                        retry = true;
+                        // TeamCity responds with an HTML login page when guest access is denied.
+                        unauthorized = true;
                     }
                     else
                     {
