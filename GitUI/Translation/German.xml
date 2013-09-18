@@ -3993,9 +3993,9 @@ nur, wenn Sie mit dieser Probleme auftreten.</Value>
           <Source>Submit review as draft</Source>
           <Value>Sende Review als Entwurf</Value>
         </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text">
-          <Source>Download Gerrit Change</Source>
-          <Value>Download von Gerrit Änderung</Value>
+        <TranslationItem Name="_publishGerritChangeCaption" Property="Text">
+          <Source>Publish Gerrit Change</Source>
+          <Value>Gerrit Änderung veröffentlichen</Value>
         </TranslationItem>
         <TranslationItem Name="_publishCaption" Property="Text">
           <Source>Publish change</Source>

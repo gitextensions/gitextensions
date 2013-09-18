@@ -3760,8 +3760,8 @@ caso di problemi.</Value>
           <Source>Submit review as draft</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text" type="unfinished">
-          <Source>Download Gerrit Change</Source>
+        <TranslationItem Name="_publishGerritChangeCaption" Property="Text" type="unfinished">
+          <Source>Publish Gerrit Change</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_publishCaption" Property="Text" type="unfinished">
