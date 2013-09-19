@@ -402,7 +402,7 @@ namespace TeamCityIntegration
 
         private Task<XDocument> GetProjectFromNameXmlResponseAsync(string projectName, CancellationToken cancellationToken)
         {
-            return GetXmlResponseAsync(string.Format("projects/name:{0}", projectName), cancellationToken);
+            return GetXmlResponseAsync(string.Format("projects/{0}", projectName), cancellationToken);
         }
 
         private Task<XDocument> GetFilteredBuildsXmlResponseAsync(string buildTypeId, CancellationToken cancellationToken, DateTime? sinceDate = null, bool? running = null)
