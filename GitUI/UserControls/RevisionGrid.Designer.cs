@@ -19,6 +19,13 @@ namespace GitUI
             if (disposing)
             {
                 DisposeRevisionGraphCommand();
+
+                if (BuildServerWatcher != null)
+                {
+                    BuildServerWatcher.Dispose();
+                    BuildServerWatcher = null;
+                }
+
                 if (_indexWatcher != null)
                 {
                     _indexWatcher.Dispose();

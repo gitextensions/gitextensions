@@ -16,9 +16,6 @@ namespace GitUI.CommandsDialogs
     {
         #region Translation
 
-        private readonly TranslationString _loadingSettingsFailed =
-            new TranslationString("Could not load settings.");
-
         private readonly TranslationString _cantFindGitMessage =
             new TranslationString("The command to run git is not configured correct." + Environment.NewLine +
                 "You need to set the correct path to be able to use GitExtensions." + Environment.NewLine +
@@ -79,6 +76,9 @@ namespace GitUI.CommandsDialogs
 
             var globalSettingsSettingsPage = SettingsPageBase.Create<GitConfigSettingsPage>(this);
             settingsTreeView.AddSettingsPage(globalSettingsSettingsPage, gitExtPageRef);
+
+            var buildServerIntegrationSettingsPage = SettingsPageBase.Create<BuildServerIntegrationSettingsPage>(this);
+            settingsTreeView.AddSettingsPage(buildServerIntegrationSettingsPage, gitExtPageRef);
 
             var _sshSettingsPage = SettingsPageBase.Create<SshSettingsPage>(this);
             settingsTreeView.AddSettingsPage(_sshSettingsPage, gitExtPageRef);
@@ -189,13 +189,13 @@ namespace GitUI.CommandsDialogs
                     settingsPage.LoadSettings();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(this, _loadingSettingsFailed.Text + Environment.NewLine + ex);
-
                 // Bail out before the user saves the incompletely loaded settings
                 // and has their day ruined.
                 DialogResult = DialogResult.Abort;
+
+                throw;
             }
         }
 

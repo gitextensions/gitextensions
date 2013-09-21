@@ -124,6 +124,27 @@ namespace GitCommands
             VersionIndependentRegKey.SetValue("InstallDir", dir);
         }
 
+        private static bool ReadBoolRegKey(string key, bool defaultValue)
+        {
+            object obj = VersionIndependentRegKey.GetValue(key);
+            if (!(obj is string))
+                obj = null;
+            if (obj == null)
+                return defaultValue;
+            return ((string)obj).Equals("true", StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        private static void WriteBoolRegKey(string key, bool value)
+        {
+            VersionIndependentRegKey.SetValue(key, value ? "true" : "false");
+        }
+
+        public static bool CheckSettings
+        {
+            get { return ReadBoolRegKey("CheckSettings", true); }
+            set { WriteBoolRegKey("CheckSettings", value); }
+        }
+
         public static string CascadeShellMenuItems
         {
             get { return (string)VersionIndependentRegKey.GetValue("CascadeShellMenuItems", "110111000111111111"); }
@@ -132,26 +153,26 @@ namespace GitCommands
 
         public static bool AlwaysShowAllCommands
         {
-            get { return (int)VersionIndependentRegKey.GetValue("AlwaysShowAllCommands", 0) != 0; }
-            set { VersionIndependentRegKey.SetValue("AlwaysShowAllCommands", value ? 1 : 0); }
+            get { return ReadBoolRegKey("AlwaysShowAllCommands", false); }
+            set { WriteBoolRegKey("AlwaysShowAllCommands", value); }
         }
 
         public static bool ShowCurrentBranchInVisualStudio
         {
             //This setting MUST be set to false by default, otherwise it will not work in Visual Studio without
             //other changes in the Visual Studio plugin itself.
-            get { return (int)VersionIndependentRegKey.GetValue("showcurrentbranchinvisualstudio", 1) != 0; }
-            set { VersionIndependentRegKey.SetValue("showcurrentbranchinvisualstudio", value ? 1 : 0); }
+            get { return ReadBoolRegKey("ShowCurrentBranchInVS", true); }
+            set { WriteBoolRegKey("ShowCurrentBranchInVS", value); }
         }
 
-        public static string GitCommand
+        public static string GitCommandValue
         {
             get
             {
                 if (IsPortable())
-                    return GetString("gitcommand", "git");
+                    return GetString("gitcommand", "");
                 else
-                    return (string)VersionIndependentRegKey.GetValue("gitcommand", "git");
+                    return (string)VersionIndependentRegKey.GetValue("gitcommand", "");
             }
             set
             {
@@ -159,6 +180,16 @@ namespace GitCommands
                     SetString("gitcommand", value);
                 else
                     VersionIndependentRegKey.SetValue("gitcommand", value);
+            }
+        }
+
+        public static string GitCommand
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(GitCommandValue))
+                    return "git";
+                return GitCommandValue;
             }
         }
 

@@ -326,7 +326,7 @@ namespace GitCommands
 
         public static string GetFullBranchName(string branch)
         {
-            if (branch.StartsWith("refs/"))
+            if (string.IsNullOrEmpty(branch) || branch.StartsWith("refs/"))
                 return branch;
             return "refs/heads/" + branch;
         }
