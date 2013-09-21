@@ -197,6 +197,9 @@ namespace GitUI.CommandsDialogs
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             }
 
+            FillBuildReport();  // Ensure correct page visibility
+            RevisionGrid.ShowBuildServerInfo = true;
+
             _formBrowseMenuCommands = new FormBrowseMenuCommands(this, RevisionGrid);
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
             RevisionGrid.MenuCommands.PropertyChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
@@ -899,6 +902,7 @@ namespace GitUI.CommandsDialogs
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
+                FillBuildReport();
             }
             RevisionGrid.IndexWatcher.Reset();
         }
@@ -1040,6 +1044,22 @@ namespace GitUI.CommandsDialogs
             var revision = RevisionGrid.GetSelectedRevisions()[0];
             var children = RevisionGrid.GetRevisionChildren(revision.Guid);
             RevisionInfo.SetRevisionWithChildren(revision, children);
+        }
+
+        private BuildReportTabPageExtension BuildReportTabPageExtension;
+        
+        private void FillBuildReport()
+        {
+            if(EnvUtils.IsMonoRuntime())
+                return;
+
+            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
+            var revision = selectedRevisions.Count == 1 ? selectedRevisions.Single() : null;
+
+            if (BuildReportTabPageExtension == null)
+                BuildReportTabPageExtension = new BuildReportTabPageExtension(CommitInfoTabControl);
+
+            BuildReportTabPageExtension.FillBuildReport(revision);
         }
 
         public void fileHistoryItem_Click(object sender, EventArgs e)
@@ -1249,6 +1269,7 @@ namespace GitUI.CommandsDialogs
                 FillFileTree();
                 FillDiff();
                 FillCommitInfo();
+                FillBuildReport();
             }
             catch (Exception ex)
             {
@@ -1598,6 +1619,7 @@ namespace GitUI.CommandsDialogs
             FillFileTree();
             FillDiff();
             FillCommitInfo();
+            FillBuildReport();
         }
 
         private void DiffFilesSelectedIndexChanged(object sender, EventArgs e)

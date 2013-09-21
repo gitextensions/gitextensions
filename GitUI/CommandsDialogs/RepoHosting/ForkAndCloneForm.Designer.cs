@@ -308,6 +308,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this._getFromUserBtn.TabIndex = 2;
             this._getFromUserBtn.Text = "Get from user";
             this._getFromUserBtn.UseVisualStyleBackColor = true;
+            this._getFromUserBtn.Click += new System.EventHandler(this._getFromUserBtn_Click);
             // 
             // _forkBtn
             // 

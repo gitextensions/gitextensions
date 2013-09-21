@@ -126,16 +126,16 @@
                 <File Source="..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll" />
             </Component>
             <Component Id="System.Reactive.Core.dll" Guid="*">
-                <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Core.dll" />
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.Core.dll"/>
             </Component>
             <Component Id="System.Reactive.Interfaces.dll" Guid="*">
-                <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Interfaces.dll" />
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.Interfaces.dll"/>
             </Component>
             <Component Id="System.Reactive.Linq.dll" Guid="*">
-                <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.Linq.dll" />
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.Linq.dll"/>
             </Component>
             <Component Id="System.Reactive.PlatformServices.dll" Guid="*">
-                <File Source="..\Plugins\BackgroundFetch\bin\Release\System.Reactive.PlatformServices.dll" />
+                <File Source="..\GitExtensions\bin\Release\System.Reactive.PlatformServices.dll"/>
             </Component>
             <Component Id="LibGit2Sharp.dll" Guid="*">
                 <File Source="..\libgit2sharp\LibGit2Sharp\bin\Release\LibGit2Sharp.dll" />
@@ -159,7 +159,7 @@
                 <?endforeach ?>
             </Component>
             <Component Id="checksettings.reg" Guid="*">
-                <RegistryValue Name="checksettings" Value="true" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
+                <RegistryValue Name="CheckSettings" Value="true" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
             </Component>
             <Component Id="InstallDir.reg" Guid="*">
                 <RegistryValue Name="InstallDir" Value="[INSTALLDIR]" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
@@ -241,6 +241,25 @@
             <Component Id="ProxySwitcher.dll" Guid="*">
                 <File Source="..\Plugins\ProxySwitcher\bin\Release\ProxySwitcher.dll" />
             </Component>
+        
+      <Component Id="System.Net.Http.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.dll"/>
+      </Component>
+      <Component Id="System.Net.Http.WebRequest.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.WebRequest.dll"/>
+      </Component>
+      <Component Id="System.Net.Http.Primitives.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Net.Http.Primitives.dll"/>
+      </Component>
+      <Component Id="System.Runtime.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Runtime.dll"/>
+      </Component>
+      <Component Id="System.Threading.Tasks.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\System.Threading.Tasks.dll"/>
+      </Component>
+      <Component Id="TeamCityIntegration.dll" Guid="*">
+          <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\Release\TeamCityIntegration.dll"/>
+      </Component>
         </DirectoryRef>
         <DirectoryRef Id="IconsDir">
             <Component Id="Blue.ico" Guid="*">
@@ -539,6 +558,14 @@
                 <Feature Id="ReleaseNotesGenerator" Title="ReleaseNotesGenerator" Level="1">
                     <ComponentRef Id="ReleaseNotesGenerator.dll" />
                 </Feature>
+        <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
+          <ComponentRef Id="System.Net.Http.dll" />
+          <ComponentRef Id="System.Net.Http.WebRequest.dll" />
+          <ComponentRef Id="System.Net.Http.Primitives.dll" />
+          <ComponentRef Id="System.Runtime.dll" />
+          <ComponentRef Id="System.Threading.Tasks.dll" />
+          <ComponentRef Id="TeamCityIntegration.dll" />
+        </Feature>
             </Feature>
             <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
                 <ComponentRef Id="GitExtensions.desktop" />
