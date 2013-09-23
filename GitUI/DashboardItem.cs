@@ -11,9 +11,6 @@ namespace GitUI
     {
         private ToolTip toolTip;
 
-        private string branchName = string.Empty;
-        private bool branchNameOk = false;
-
         private DashboardItem()
         {
             InitializeComponent();
@@ -31,29 +28,16 @@ namespace GitUI
 
             if (GitCommands.Settings.DashboardShowCurrentBranch)
             {
-                System.Windows.Forms.Timer tmr = new System.Windows.Forms.Timer();
-
-                tmr.Tick += delegate(object sender, EventArgs e)
-                {
-                    if (branchNameOk)
-                    {
-                        tmr.Stop();
-                        UpdateBranchName();
-                    }
-                };
-
-                tmr.Interval = 250;
-
-                new Thread(delegate()
+                GitCommands.AsyncLoader.DoAsync(() =>
                 {
                     if (!GitCommands.GitModule.IsBareRepository(repository.Path))
                     {
-                        branchName = GitCommands.GitModule.GetSelectedBranchFast(repository.Path);
-                        branchNameOk = true;
+                        return GitCommands.GitModule.GetSelectedBranchFast(repository.Path);
                     }
-                }).Start();
-
-                tmr.Start();
+                    return string.Empty;
+                },
+                UpdateBranchName,
+                ex => UpdateBranchName(string.Empty));
             }
 
             Initialize(icon, repository.Path, repository.Title, repository.Description);
@@ -105,7 +89,7 @@ namespace GitUI
             Icon.Click += Title_Click;
         }
 
-        private void UpdateBranchName()
+        private void UpdateBranchName(string branchName)
         {
             _NO_TRANSLATE_BranchName.Visible = !string.IsNullOrEmpty(branchName);
             _NO_TRANSLATE_BranchName.Text = branchName;
