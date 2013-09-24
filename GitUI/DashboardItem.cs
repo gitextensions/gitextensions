@@ -96,7 +96,7 @@ namespace GitUI
             _NO_TRANSLATE_BranchName.Text = branchName;
         }
 
-        private void CanchelBranchNameLoad()
+        private void CancelBranchNameLoad()
         {
             if (_branchNameLoader != null)
             {
@@ -140,7 +140,7 @@ namespace GitUI
         {
             if (Visible == false)
             {
-                CanchelBranchNameLoad();
+                CancelBranchNameLoad();
             }
         }
 
