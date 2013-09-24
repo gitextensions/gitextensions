@@ -13,6 +13,8 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            CancelBranchNameLoad();
+
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -139,6 +141,7 @@
             this.SizeChanged += new System.EventHandler(this.DashboardItem_SizeChanged);
             this.MouseEnter += new System.EventHandler(this.DashboardItem_MouseEnter);
             this.MouseLeave += new System.EventHandler(this.DashboardItem_MouseLeave);
+            this.VisibleChanged += new System.EventHandler(DashboardItem_VisibleChanged);
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);

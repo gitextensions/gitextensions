@@ -3,12 +3,14 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands.Repository;
 using GitUI.Properties;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
     public sealed partial class DashboardItem : GitExtensionsControl
     {
         private ToolTip toolTip;
+        private readonly AsyncLoader _branchNameLoader;
 
         private DashboardItem()
         {
@@ -27,7 +29,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             if (GitCommands.AppSettings.DashboardShowCurrentBranch)
             {
-                GitCommands.AsyncLoader.DoAsync(() =>
+                _branchNameLoader = new AsyncLoader();
+                _branchNameLoader.Load(() =>
                 {
                     if (!GitCommands.GitModule.IsBareRepository(repository.Path))
                     {
@@ -35,8 +38,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     }
                     return string.Empty;
                 },
-                UpdateBranchName,
-                ex => UpdateBranchName(string.Empty));
+                UpdateBranchName);
             }
 
             Initialize(icon, repository.Path, repository.Title, repository.Description);
@@ -94,6 +96,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             _NO_TRANSLATE_BranchName.Text = branchName;
         }
 
+        private void CancelBranchNameLoad()
+        {
+            if (_branchNameLoader != null)
+            {
+                _branchNameLoader.Cancel();
+            }
+        }
+
         void Title_Click(object sender, EventArgs e)
         {
             OnClick(e);
@@ -124,6 +134,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void DashboardItem_MouseLeave(object sender, EventArgs e)
         {
             BackColor = SystemColors.Control;
+        }
+
+        void DashboardItem_VisibleChanged(object sender, System.EventArgs e)
+        {
+            if (!Visible)
+            {
+                CancelBranchNameLoad();
+            }
         }
 
         private static Bitmap GetRepositoryIcon(Repository repository)
