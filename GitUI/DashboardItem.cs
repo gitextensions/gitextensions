@@ -4,12 +4,14 @@ using System.Windows.Forms;
 using GitCommands.Repository;
 using GitUI.Properties;
 using System.Threading;
+using GitCommands;
 
 namespace GitUI
 {
     public sealed partial class DashboardItem : GitExtensionsControl
     {
         private ToolTip toolTip;
+        private readonly AsyncLoader _branchNameLoader;
 
         private DashboardItem()
         {
@@ -28,7 +30,8 @@ namespace GitUI
 
             if (GitCommands.Settings.DashboardShowCurrentBranch)
             {
-                GitCommands.AsyncLoader.DoAsync(() =>
+                _branchNameLoader = new AsyncLoader();
+                _branchNameLoader.Load(() =>
                 {
                     if (!GitCommands.GitModule.IsBareRepository(repository.Path))
                     {
@@ -36,8 +39,7 @@ namespace GitUI
                     }
                     return string.Empty;
                 },
-                UpdateBranchName,
-                ex => UpdateBranchName(string.Empty));
+                UpdateBranchName);
             }
 
             Initialize(icon, repository.Path, repository.Title, repository.Description);
@@ -95,6 +97,14 @@ namespace GitUI
             _NO_TRANSLATE_BranchName.Text = branchName;
         }
 
+        private void CanchelBranchNameLoad()
+        {
+            if (_branchNameLoader != null)
+            {
+                _branchNameLoader.Cancel();
+            }
+        }
+
         void Title_Click(object sender, EventArgs e)
         {
             OnClick(e);
@@ -125,6 +135,14 @@ namespace GitUI
         private void DashboardItem_MouseLeave(object sender, EventArgs e)
         {
             BackColor = SystemColors.Control;
+        }
+
+        void DashboardItem_VisibleChanged(object sender, System.EventArgs e)
+        {
+            if (Visible == false)
+            {
+                CanchelBranchNameLoad();
+            }
         }
 
         private static Bitmap GetRepositoryIcon(Repository repository)
