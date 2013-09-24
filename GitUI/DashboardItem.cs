@@ -138,7 +138,7 @@ namespace GitUI
 
         void DashboardItem_VisibleChanged(object sender, System.EventArgs e)
         {
-            if (Visible == false)
+            if (!Visible)
             {
                 CancelBranchNameLoad();
             }
