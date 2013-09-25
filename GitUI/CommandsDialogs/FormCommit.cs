@@ -2410,12 +2410,8 @@ namespace GitUI.CommandsDialogs
 
         private void commitCommitter_Click(object sender, EventArgs e)
         {
-           
 
-            if (RepoUserSettings)
-                UICommands.StartSettingsDialog(this, SettingsDialog.Pages.LocalSettingsSettingsPage.GetPageReference());
-            else
-                UICommands.StartSettingsDialog(this, SettingsDialog.Pages.GlobalSettingsSettingsPage.GetPageReference());
+            UICommands.StartSettingsDialog(this, SettingsDialog.Pages.GitSettingsPage.GetPageReference());
         }
 
         private void toolAuthor_Leave(object sender, EventArgs e)
