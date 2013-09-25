@@ -19,6 +19,13 @@ namespace GitUI
             if (disposing)
             {
                 DisposeRevisionGraphCommand();
+
+                if (BuildServerWatcher != null)
+                {
+                    BuildServerWatcher.Dispose();
+                    BuildServerWatcher = null;
+                }
+
                 if (_indexWatcher != null)
                 {
                     _indexWatcher.Dispose();
@@ -58,10 +65,11 @@ namespace GitUI
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
             this.Revisions = new GitUI.RevisionGridClasses.DvcsGraph();
-            this.Graph = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.GraphDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MessageDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.IsMessageMultilineDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AuthorDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.DateDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mainContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.markRevisionAsBadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.markRevisionAsGoodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,13 +77,13 @@ namespace GitUI
             this.stopBisectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bisectSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.messageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.authorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.messageCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.authorCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dateCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hashCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.branchNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tagToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.branchNameCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tagNameCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.checkoutBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -142,10 +150,11 @@ namespace GitUI
             this.Revisions.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.Revisions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Revisions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Graph,
-            this.Message,
-            this.Author,
-            this.Date});
+            this.GraphDataGridViewColumn,
+            this.MessageDataGridViewColumn,
+            this.AuthorDataGridViewColumn,
+            this.DateDataGridViewColumn,
+            this.IsMessageMultilineDataGridViewColumn});
             this.Revisions.ContextMenuStrip = this.mainContextMenu;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
@@ -187,37 +196,45 @@ namespace GitUI
             // Graph
             // 
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Graph.DefaultCellStyle = dataGridViewCellStyle3;
-            this.Graph.Frozen = true;
-            this.Graph.HeaderText = "";
-            this.Graph.Name = "Graph";
-            this.Graph.ReadOnly = true;
-            this.Graph.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Graph.Width = 70;
+            this.GraphDataGridViewColumn.DefaultCellStyle = dataGridViewCellStyle3;
+            this.GraphDataGridViewColumn.Frozen = true;
+            this.GraphDataGridViewColumn.HeaderText = "";
+            this.GraphDataGridViewColumn.Name = "Graph";
+            this.GraphDataGridViewColumn.ReadOnly = true;
+            this.GraphDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.GraphDataGridViewColumn.Width = 70;
             // 
             // Message
             // 
-            this.Message.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Message.HeaderText = "Message";
-            this.Message.Name = "Message";
-            this.Message.ReadOnly = true;
-            this.Message.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.MessageDataGridViewColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.MessageDataGridViewColumn.HeaderText = "Message";
+            this.MessageDataGridViewColumn.Name = "Message";
+            this.MessageDataGridViewColumn.ReadOnly = true;
+            this.MessageDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // IsMessageMultilineDataGridViewColumn
+            // 
+            this.IsMessageMultilineDataGridViewColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.IsMessageMultilineDataGridViewColumn.HeaderText = "IsMessageMultiline";
+            this.IsMessageMultilineDataGridViewColumn.Name = "IsMessageMultiline";
+            this.IsMessageMultilineDataGridViewColumn.ReadOnly = true;
+            this.IsMessageMultilineDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // Author
             // 
-            this.Author.HeaderText = "Author";
-            this.Author.Name = "Author";
-            this.Author.ReadOnly = true;
-            this.Author.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Author.Width = 150;
+            this.AuthorDataGridViewColumn.HeaderText = "Author";
+            this.AuthorDataGridViewColumn.Name = "Author";
+            this.AuthorDataGridViewColumn.ReadOnly = true;
+            this.AuthorDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.AuthorDataGridViewColumn.Width = 150;
             // 
             // Date
             // 
-            this.Date.HeaderText = "Date";
-            this.Date.Name = "Date";
-            this.Date.ReadOnly = true;
-            this.Date.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Date.Width = 180;
+            this.DateDataGridViewColumn.HeaderText = "Date";
+            this.DateDataGridViewColumn.Name = "Date";
+            this.DateDataGridViewColumn.ReadOnly = true;
+            this.DateDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.DateDataGridViewColumn.Width = 180;
             // 
             // mainContextMenu
             // 
@@ -252,7 +269,7 @@ namespace GitUI
             this.runScriptToolStripMenuItem});
             this.mainContextMenu.Name = "CreateTag";
             this.mainContextMenu.Size = new System.Drawing.Size(265, 620);
-            this.mainContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.CreateTagOpening);
+            this.mainContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuOpening);
             // 
             // markRevisionAsBadToolStripMenuItem
             // 
@@ -290,13 +307,13 @@ namespace GitUI
             // copyToClipboardToolStripMenuItem
             // 
             this.copyToClipboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.hashToolStripMenuItem,
-            this.messageToolStripMenuItem,
-            this.authorToolStripMenuItem,
-            this.dateToolStripMenuItem,
+            this.branchNameCopyToolStripMenuItem,
+            this.tagNameCopyToolStripMenuItem,
             this.toolStripSeparator6,
-            this.branchNameToolStripMenuItem,
-            this.tagToolStripMenuItem});
+            this.hashCopyToolStripMenuItem,
+            this.messageCopyToolStripMenuItem,
+            this.authorCopyToolStripMenuItem,
+            this.dateCopyToolStripMenuItem});
             this.copyToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
             this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
             this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
@@ -305,32 +322,32 @@ namespace GitUI
             // 
             // messageToolStripMenuItem
             // 
-            this.messageToolStripMenuItem.Name = "messageToolStripMenuItem";
-            this.messageToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.messageToolStripMenuItem.Text = "Message";
-            this.messageToolStripMenuItem.Click += new System.EventHandler(this.MessageToolStripMenuItemClick);
+            this.messageCopyToolStripMenuItem.Name = "messageToolStripMenuItem";
+            this.messageCopyToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.messageCopyToolStripMenuItem.Text = "Message";
+            this.messageCopyToolStripMenuItem.Click += new System.EventHandler(this.MessageToolStripMenuItemClick);
             // 
             // authorToolStripMenuItem
             // 
-            this.authorToolStripMenuItem.Name = "authorToolStripMenuItem";
-            this.authorToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.authorToolStripMenuItem.Text = "Author";
-            this.authorToolStripMenuItem.Click += new System.EventHandler(this.AuthorToolStripMenuItemClick);
+            this.authorCopyToolStripMenuItem.Name = "authorToolStripMenuItem";
+            this.authorCopyToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.authorCopyToolStripMenuItem.Text = "Author";
+            this.authorCopyToolStripMenuItem.Click += new System.EventHandler(this.AuthorToolStripMenuItemClick);
             // 
             // dateToolStripMenuItem
             // 
-            this.dateToolStripMenuItem.Name = "dateToolStripMenuItem";
-            this.dateToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.dateToolStripMenuItem.Text = "Date";
-            this.dateToolStripMenuItem.Click += new System.EventHandler(this.DateToolStripMenuItemClick);
+            this.dateCopyToolStripMenuItem.Name = "dateToolStripMenuItem";
+            this.dateCopyToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.dateCopyToolStripMenuItem.Text = "Date";
+            this.dateCopyToolStripMenuItem.Click += new System.EventHandler(this.DateToolStripMenuItemClick);
             // 
             // hashToolStripMenuItem
             // 
-            this.hashToolStripMenuItem.Name = "hashToolStripMenuItem";
-            this.hashToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.hashToolStripMenuItem.Text = "Commit hash";
-            this.hashToolStripMenuItem.Click += new System.EventHandler(this.HashToolStripMenuItemClick);
-            this.hashToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.hashCopyToolStripMenuItem.Name = "hashToolStripMenuItem";
+            this.hashCopyToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.hashCopyToolStripMenuItem.Text = "Commit hash";
+            this.hashCopyToolStripMenuItem.Click += new System.EventHandler(this.HashToolStripMenuItemClick);
+            this.hashCopyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             // 
             // toolStripSeparator6
             // 
@@ -339,15 +356,17 @@ namespace GitUI
             // 
             // branchNameToolStripMenuItem
             // 
-            this.branchNameToolStripMenuItem.Name = "branchNameToolStripMenuItem";
-            this.branchNameToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.branchNameToolStripMenuItem.Text = "Branch name";
+            this.branchNameCopyToolStripMenuItem.Name = "branchNameToolStripMenuItem";
+            this.branchNameCopyToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.branchNameCopyToolStripMenuItem.Text = "Branch name:";
+            this.branchNameCopyToolStripMenuItem.Enabled = false;
             // 
             // tagToolStripMenuItem
             // 
-            this.tagToolStripMenuItem.Name = "tagToolStripMenuItem";
-            this.tagToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
-            this.tagToolStripMenuItem.Text = "Tag";
+            this.tagNameCopyToolStripMenuItem.Name = "tagToolStripMenuItem";
+            this.tagNameCopyToolStripMenuItem.Size = new System.Drawing.Size(165, 24);
+            this.tagNameCopyToolStripMenuItem.Text = "Tag name:";
+            this.tagNameCopyToolStripMenuItem.Enabled = false;
             // 
             // toolStripSeparator8
             // 
@@ -722,11 +741,11 @@ namespace GitUI
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.ToolStripMenuItem branchNameToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tagToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem messageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem authorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem dateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem branchNameCopyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tagNameCopyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem messageCopyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem authorCopyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dateCopyToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem markRevisionAsBadToolStripMenuItem;
@@ -742,15 +761,16 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem fixupCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem squashCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem renameBranchToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem hashToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hashCopyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bisectSkipRevisionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Message;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Author;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Date;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Graph;
+        private System.Windows.Forms.DataGridViewTextBoxColumn MessageDataGridViewColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AuthorDataGridViewColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DateDataGridViewColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn GraphDataGridViewColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IsMessageMultilineDataGridViewColumn;
     }
 }
