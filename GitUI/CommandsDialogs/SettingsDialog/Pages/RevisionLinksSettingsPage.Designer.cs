@@ -406,6 +406,7 @@
             this._NO_TRANSLATE_Name.Name = "_NO_TRANSLATE_Name";
             this._NO_TRANSLATE_Name.Size = new System.Drawing.Size(272, 21);
             this._NO_TRANSLATE_Name.TabIndex = 11;
+            this._NO_TRANSLATE_Name.Leave += new System.EventHandler(this._NO_TRANSLATE_Name_Leave);
             // 
             // EnabledChx
             // 

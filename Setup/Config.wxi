@@ -5,7 +5,7 @@
   <?define ProductName = "Git Extensions" ?>
   <?define InstallName = GitExtensions ?>
 
-  <?define AppRegKey = "Software\GitExtensions\GitExtensions" ?>
+  <?define AppRegKey = "Software\GitExtensions" ?>
   <?define InstalledRegKey = "Software\GitExtensions\Installed" ?>
 
   <!-- upgrade code never changes -->
