@@ -96,7 +96,8 @@ namespace GitUI.Help
             {
                 _image1 = value;
                 UpdateImageDisplay();
-                UpdateControlSize();
+                if (IsExpanded)
+                    UpdateControlSize();
             }
         }
 
@@ -107,7 +108,8 @@ namespace GitUI.Help
             {
                 _image2 = value;
                 UpdateImageDisplay();
-                UpdateControlSize();
+                if (IsExpanded)
+                    UpdateControlSize();
             }
         }
 
@@ -148,18 +150,17 @@ namespace GitUI.Help
 
         private void SaveIsExpandedValueInSettings(bool value)
         {
-            Settings.SetBool("HelpIsExpanded" + GetId(), value);
+            AppSettings.SetBool("HelpIsExpanded" + GetId(), value);
         }
 
         private bool LoadIsExpandedValueFromSettings(bool defaultValue)
         {
-            return Settings.GetBool("HelpIsExpanded" + GetId(), defaultValue);
+            return AppSettings.GetBool("HelpIsExpanded" + GetId(), defaultValue);
         }
 
         private void UpdateControlSize()
         {
-            var size = new Size(40, 40); // default size
-
+            Size size;
             if (IsExpanded)
             {
                 if (_image1 != null && _image2 == null)
@@ -172,6 +173,8 @@ namespace GitUI.Help
                     int h = Math.Max(_image1.Size.Height, _image2.Height);
                     size = new Size(w, h);
                 }
+                else
+                    size = new Size(40, 40); // default size
 
                 // add vertical space of other controls
                 size.Height +=
@@ -184,8 +187,32 @@ namespace GitUI.Help
             }
 
             // apply size to control
+            var form = TopLevelControl as Form;
+            var s = new System.Drawing.Size();
+            var ms = new System.Drawing.Size();
+            if (TopLevelControl != null)
+            {
+                s = form.Size;
+                s.Width -= Size.Width;
+                ms = form.MinimumSize;
+                if (!ms.IsEmpty)
+                {
+                    ms.Width -= Size.Width;
+                    form.MinimumSize = new System.Drawing.Size();
+                }
+            }
             Size = size;
             MinimumSize = size;
+            if (TopLevelControl != null)
+            {
+                s.Width += Size.Width;
+                form.Size = s;
+                if (!ms.IsEmpty)
+                {
+                    ms.Width += Size.Width;
+                    form.MinimumSize = ms;
+                }
+            }
         }
 
         private void UpdateImageDisplay()

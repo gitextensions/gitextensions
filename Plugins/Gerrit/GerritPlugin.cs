@@ -37,7 +37,7 @@ namespace Gerrit
         // public only because of FormTranslate
         public GerritPlugin()
         {
-            Translator.Translate(this, GitCommands.Settings.CurrentTranslation);
+            Translator.Translate(this, GitCommands.AppSettings.CurrentTranslation);
         }
 
         public override string Description

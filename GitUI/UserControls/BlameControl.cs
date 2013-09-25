@@ -145,7 +145,7 @@ namespace GitUI.Blame
                 return;
 
             _lastBlameLine = newBlameLine;
-            CommitInfo.RevisionGuid = _lastBlameLine.CommitGuid;
+            CommitInfo.Revision = Module.GetRevision(_lastBlameLine.CommitGuid);
         }
 
         bool _bChangeScrollPosition;
@@ -250,11 +250,6 @@ namespace GitUI.Blame
 
             if (controlToMask != null)
                 controlToMask.UnMask();
-        }
-
-        private GitRevision GetRevision(string hash)
-        {
-            return new GitRevision(Module, hash) { ParentGuids = Module.GetParents(hash) };
         }
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)

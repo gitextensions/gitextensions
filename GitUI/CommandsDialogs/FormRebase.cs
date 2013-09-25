@@ -33,7 +33,9 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-            helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
+            helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
+            if (AppSettings.AlwaysShowAdvOpt)
+                ShowOptions_LinkClicked(null, null);
         }
 
         public FormRebase(GitUICommands aCommands, string defaultBranch)

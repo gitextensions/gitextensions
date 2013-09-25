@@ -26,7 +26,7 @@ namespace GitUI
         // internal for FormTranslate
         internal MessageBoxes()
         {
-            Translator.Translate(this, Settings.CurrentTranslation);
+            Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
         private static MessageBoxes instance;
