@@ -1150,14 +1150,11 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, PreEditGitIgnore, PostEditGitIgnore, action);
         }
 
-        public bool StartSettingsDialog(IWin32Window owner, SettingsPageReference initalPage = null)
+        public bool StartSettingsDialog(IWin32Window owner, SettingsPageReference initialPage = null)
         {
             Func<bool> action = () =>
             {
-                using (var form = new FormSettings(this, initalPage))
-                {
-                    form.ShowDialog(owner);
-                }
+                FormSettings.ShowSettingsDialog(this, owner, initialPage);
 
                 return true;
             };
