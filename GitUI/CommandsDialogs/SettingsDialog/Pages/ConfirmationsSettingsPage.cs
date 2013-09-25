@@ -3,7 +3,7 @@ using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class ConfirmationsSettingsPage : SettingsPageBase
+    public partial class ConfirmationsSettingsPage : SettingsPageWithHeader
     {
         public ConfirmationsSettingsPage()
         {
@@ -12,22 +12,22 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Translate();
         }
 
-        protected override void OnLoadSettings()
+        protected override void SettingsToPage()
         {
-            chkAmend.Checked = Settings.DontConfirmAmend;
-            chkAutoPopStashAfterPull.CheckState = Settings.AutoPopStashAfterPull.ToCheckboxState();
-            chkAutoPopStashAfterCheckout.CheckState = Settings.AutoPopStashAfterCheckoutBranch.ToCheckboxState();
-            chkPushNewBranch.Checked = Settings.DontConfirmPushNewBranch;
-            chkAddTrackingRef.Checked = Settings.DontConfirmAddTrackingRef;
+            chkAmend.Checked = AppSettings.DontConfirmAmend;
+            chkAutoPopStashAfterPull.CheckState = AppSettings.AutoPopStashAfterPull.ToCheckboxState();
+            chkAutoPopStashAfterCheckout.CheckState = AppSettings.AutoPopStashAfterCheckoutBranch.ToCheckboxState();
+            chkPushNewBranch.Checked = AppSettings.DontConfirmPushNewBranch;
+            chkAddTrackingRef.Checked = AppSettings.DontConfirmAddTrackingRef;
         }
 
-        public override void SaveSettings()
+        protected override void PageToSettings()
         {
-            Settings.DontConfirmAmend = chkAmend.Checked;
-            Settings.AutoPopStashAfterPull = chkAutoPopStashAfterPull.CheckState.ToBoolean();
-            Settings.AutoPopStashAfterCheckoutBranch = chkAutoPopStashAfterCheckout.CheckState.ToBoolean();
-            Settings.DontConfirmPushNewBranch = chkPushNewBranch.Checked;
-            Settings.DontConfirmAddTrackingRef = chkAddTrackingRef.Checked;
+            AppSettings.DontConfirmAmend = chkAmend.Checked;
+            AppSettings.AutoPopStashAfterPull = chkAutoPopStashAfterPull.CheckState.ToBoolean();
+            AppSettings.AutoPopStashAfterCheckoutBranch = chkAutoPopStashAfterCheckout.CheckState.ToBoolean();
+            AppSettings.DontConfirmPushNewBranch = chkPushNewBranch.Checked;
+            AppSettings.DontConfirmAddTrackingRef = chkAddTrackingRef.Checked;
         }
 
         public static SettingsPageReference GetPageReference()
