@@ -166,7 +166,7 @@ namespace GitUI.Editor
         protected override void OnRuntimeLoad(EventArgs e)
         {
             this.Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            Font = Settings.DiffFont;
+            Font = AppSettings.DiffFont;
         }
 
         void ContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -859,8 +859,9 @@ namespace GitUI.Editor
             IncreaseNumberOfVisibleLines,
             DecreaseNumberOfVisibleLines,
             ShowEntireFile,
-            TreatFileAsText
-
+            TreatFileAsText,
+            NextChange,
+            PreviousChange
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -875,6 +876,8 @@ namespace GitUI.Editor
                 case Commands.DecreaseNumberOfVisibleLines: this.DescreaseNumberOfLinesToolStripMenuItemClick(null, null); break;
                 case Commands.ShowEntireFile: this.ShowEntireFileToolStripMenuItemClick(null, null); break;
                 case Commands.TreatFileAsText: this.TreatAllFilesAsTextToolStripMenuItemClick(null, null); break;
+                case Commands.NextChange: this.NextChangeButtonClick(null, null); break;
+                case Commands.PreviousChange: this.PreviousChangeButtonClick(null, null); break;
                 default: return base.ExecuteCommand(cmd);
             }
 

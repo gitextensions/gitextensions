@@ -27,9 +27,9 @@ namespace GitUI.CommandsDialogs
         #endregion
 
         private readonly string _containRevison;
-        private readonly bool? _isDirtyDir;
         private readonly bool _isLoading;
         private readonly string _rbResetBranchDefaultText;
+        private bool? _isDirtyDir;
         private string _remoteName = "";
         private string _newLocalBranchName = "";
         private string _localBranchName = "";
@@ -88,13 +88,13 @@ namespace GitUI.CommandsDialogs
 
                 //The dirty check is very expensive on large repositories. Without this setting
                 //the checkout branch dialog is too slow.
-                if (Settings.CheckForUncommittedChangesInCheckoutBranch)
+                if (AppSettings.CheckForUncommittedChangesInCheckoutBranch)
                     _isDirtyDir = Module.IsDirtyDir();
                 else
                     _isDirtyDir = null;
 
                 localChangesGB.Visible = IsThereUncommittedChanges();
-                ChangesMode = Settings.CheckoutBranchAction;
+                ChangesMode = AppSettings.CheckoutBranchAction;
             }
             finally
             {
@@ -110,8 +110,8 @@ namespace GitUI.CommandsDialogs
         public DialogResult DoDefaultActionOrShow(IWin32Window owner)
         {
             bool localBranchSelected = !Branches.Text.IsNullOrWhiteSpace() && !Remotebranch.Checked;
-            if (!Settings.AlwaysShowCheckoutBranchDlg && localBranchSelected &&
-                (!IsThereUncommittedChanges() || Settings.UseDefaultCheckoutBranchAction))
+            if (!AppSettings.AlwaysShowCheckoutBranchDlg && localBranchSelected &&
+                (!IsThereUncommittedChanges() || AppSettings.UseDefaultCheckoutBranchAction))
                 return OkClick();
             else
                 return ShowDialog(owner);
@@ -143,7 +143,7 @@ namespace GitUI.CommandsDialogs
             else
                 Branches.Text = null;
             remoteOptionsPanel.Visible = Remotebranch.Checked;
-            rbCreateBranchWithCustomName.Checked = Settings.CreateLocalBranchForRemote;
+            rbCreateBranchWithCustomName.Checked = AppSettings.CreateLocalBranchForRemote;
         }
 
         private LocalChangesAction ChangesMode
@@ -211,26 +211,30 @@ namespace GitUI.CommandsDialogs
             }
 
             LocalChangesAction changes = ChangesMode;
-            Settings.CheckoutBranchAction = changes;
+            AppSettings.CheckoutBranchAction = changes;
 
-            if (IsThereUncommittedChanges() && (Visible || Settings.UseDefaultCheckoutBranchAction))
+            if ((Visible || AppSettings.UseDefaultCheckoutBranchAction) && IsThereUncommittedChanges())
                 cmd.LocalChanges = changes;
             else
                 cmd.LocalChanges = LocalChangesAction.DontChange;
 
             IWin32Window owner = Visible ? this : Owner;
 
-            bool stash = changes == LocalChangesAction.Stash && (_isDirtyDir ?? Module.IsDirtyDir());
-            if (stash)
+            bool stash = false;
+            if (changes == LocalChangesAction.Stash)
             {
-                UICommands.Stash(owner);
+                if (_isDirtyDir == null && Visible)
+                    _isDirtyDir = Module.IsDirtyDir();
+                stash = _isDirtyDir == true;
+                if (stash)
+                    UICommands.Stash(owner);
             }
 
             if (UICommands.StartCommandLineProcessDialog(cmd, owner))
             {
                 if (stash)
                 {
-                    bool? messageBoxResult = Settings.AutoPopStashAfterCheckoutBranch;
+                    bool? messageBoxResult = AppSettings.AutoPopStashAfterCheckoutBranch;
                     if (messageBoxResult == null)
                     {
                         DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
@@ -246,7 +250,7 @@ namespace GitUI.CommandsDialogs
                             PSTaskDialog.eSysIcons.Question);
                         messageBoxResult = (res == DialogResult.Yes);
                         if (PSTaskDialog.cTaskDialog.VerificationChecked)
-                            Settings.AutoPopStashAfterCheckoutBranch = messageBoxResult;
+                            AppSettings.AutoPopStashAfterCheckoutBranch = messageBoxResult;
                     }
                     if (messageBoxResult ?? false)
                     {

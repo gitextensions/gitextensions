@@ -1,9 +1,5 @@
 ﻿using GitCommands;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -21,7 +17,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public static string GetFullPathFromFilename(GitModule gitModule, string filename)
         {
-            var filePath = Path.Combine(gitModule.WorkingDir, filename.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator));
+            var filePath = Path.Combine(gitModule.WorkingDir, filename.Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator));
 
             return filePath;
         }

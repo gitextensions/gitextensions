@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -48,6 +49,8 @@ namespace GitUI.CommandsDialogs
             FileChanges.SetInitialRevision(revision);
             Translate();
 
+            FileChanges.ShowBuildServerInfo = true;
+
             FileName = fileName;
             SetTitle(string.Empty);
 
@@ -56,10 +59,10 @@ namespace GitUI.CommandsDialogs
             FileChanges.SelectionChanged += FileChangesSelectionChanged;
             FileChanges.DisableContextMenu();
 
-            followFileHistoryToolStripMenuItem.Checked = Settings.FollowRenamesInFileHistory;
-            fullHistoryToolStripMenuItem.Checked = Settings.FullHistoryInFileHistory;
-            loadHistoryOnShowToolStripMenuItem.Checked = Settings.LoadFileHistoryOnShow;
-            loadBlameOnShowToolStripMenuItem.Checked = Settings.LoadBlameOnShow;
+            followFileHistoryToolStripMenuItem.Checked = AppSettings.FollowRenamesInFileHistory;
+            fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
+            loadHistoryOnShowToolStripMenuItem.Checked = AppSettings.LoadFileHistoryOnShow;
+            loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow;
 
             if (filterByRevision && revision != null && revision.Guid != null)
                 _filterBranchHelper.SetBranchFilter(revision.Guid, false);
@@ -74,7 +77,7 @@ namespace GitUI.CommandsDialogs
         {
             base.OnRuntimeLoad(e);
 
-            bool autoLoad = (tabControl1.SelectedTab == BlameTab && Settings.LoadBlameOnShow) || Settings.LoadFileHistoryOnShow;
+            bool autoLoad = (tabControl1.SelectedTab == BlameTab && AppSettings.LoadBlameOnShow) || AppSettings.LoadFileHistoryOnShow;
 
             if (autoLoad)
                 LoadFileHistory();
@@ -140,7 +143,7 @@ namespace GitUI.CommandsDialogs
             FileName = fileName;
 
             string filter;
-            if (Settings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
+            if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
             {
                 // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
                 //
@@ -151,10 +154,8 @@ namespace GitUI.CommandsDialogs
                 // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
                 // 
 
-                var gitGetGraphCommand = new GitCommandsInstance(Module) { StreamOutput = true, CollectOutput = false };
-
                 string arg = "log --format=\"%n\" --name-only --follow -- \"" + fileName + "\"";
-                Process p = gitGetGraphCommand.CmdStartProcess(Settings.GitCommand, arg);
+                Process p = Module.RunGitCmdDetached(arg);
 
                 // the sequence of (quoted) file names - start with the initial filename for the search.
                 var listOfFileNames = new StringBuilder("\"" + fileName + "\"");
@@ -184,7 +185,7 @@ namespace GitUI.CommandsDialogs
                 filter = " --parents -- \"" + fileName + "\"";
             }
 
-            if (Settings.FullHistoryInFileHistory)
+            if (AppSettings.FullHistoryInFileHistory)
             {
                 filter = string.Concat(" --full-history --simplify-by-decoration ", filter);
             }
@@ -258,7 +259,16 @@ namespace GitUI.CommandsDialogs
                 Diff.ViewChanges(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
             }
 
+            if (!EnvUtils.IsMonoRuntime())
+            {
+                if (BuildReportTabPageExtension == null)
+                    BuildReportTabPageExtension = new BuildReportTabPageExtension(tabControl1);
+
+                BuildReportTabPageExtension.FillBuildReport(selectedRows.Count == 1 ? revision : null);
+            }
         }
+
+        private BuildReportTabPageExtension BuildReportTabPageExtension;
 
         private void TabControl1SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -279,7 +289,7 @@ namespace GitUI.CommandsDialogs
             {
                 orgFileName = selectedRows[0].Name;
             }
-            FileChanges.OpenWithDifftool(FileName, orgFileName, GitUIExtensions.DiffWithRevisionKind.DiffAB);
+            FileChanges.OpenWithDifftool(FileName, orgFileName, GitUIExtensions.DiffWithRevisionKind.DiffAB, null);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -293,7 +303,7 @@ namespace GitUI.CommandsDialogs
                 if (string.IsNullOrEmpty(orgFileName))
                     orgFileName = FileName;
 
-                string fullName = Module.WorkingDir + orgFileName.Replace(Settings.PathSeparatorWrong, Settings.PathSeparator);
+                string fullName = Module.WorkingDir + orgFileName.Replace(AppSettings.PathSeparatorWrong, AppSettings.PathSeparator);
 
                 using (var fileDialog = new SaveFileDialog
                 {
@@ -318,16 +328,16 @@ namespace GitUI.CommandsDialogs
 
         private void followFileHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.FollowRenamesInFileHistory = !Settings.FollowRenamesInFileHistory;
-            followFileHistoryToolStripMenuItem.Checked = Settings.FollowRenamesInFileHistory;
+            AppSettings.FollowRenamesInFileHistory = !AppSettings.FollowRenamesInFileHistory;
+            followFileHistoryToolStripMenuItem.Checked = AppSettings.FollowRenamesInFileHistory;
 
             LoadFileHistory();
         }
 
         private void fullHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.FullHistoryInFileHistory = !Settings.FullHistoryInFileHistory;
-            fullHistoryToolStripMenuItem.Checked = Settings.FullHistoryInFileHistory;
+            AppSettings.FullHistoryInFileHistory = !AppSettings.FullHistoryInFileHistory;
+            fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
             LoadFileHistory();
         }
 
@@ -372,7 +382,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
         {
-            FileChanges.OpenWithDifftool(FileName, string.Empty, GitUIExtensions.DiffWithRevisionKind.DiffBLocal);
+            FileChanges.OpenWithDifftool(FileName, string.Empty, GitUIExtensions.DiffWithRevisionKind.DiffBLocal, null);
         }
 
         private void toolStripSplitLoad_ButtonClick(object sender, EventArgs e)
@@ -382,14 +392,14 @@ namespace GitUI.CommandsDialogs
 
         private void loadHistoryOnShowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.LoadFileHistoryOnShow = !Settings.LoadFileHistoryOnShow;
-            loadHistoryOnShowToolStripMenuItem.Checked = Settings.LoadFileHistoryOnShow;
+            AppSettings.LoadFileHistoryOnShow = !AppSettings.LoadFileHistoryOnShow;
+            loadHistoryOnShowToolStripMenuItem.Checked = AppSettings.LoadFileHistoryOnShow;
         }
 
         private void loadBlameOnShowToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.LoadBlameOnShow = !Settings.LoadBlameOnShow;
-            loadBlameOnShowToolStripMenuItem.Checked = Settings.LoadBlameOnShow;
+            AppSettings.LoadBlameOnShow = !AppSettings.LoadBlameOnShow;
+            loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow;
         }
 
         private void Blame_CommandClick(object sender, CommitInfo.CommandEventArgs e)

@@ -14,15 +14,16 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
-            noCommit.Checked = Settings.DontCommitMerge;
-            helpImageDisplayUserControl1.Visible = !Settings.DontShowHelpImages;
+            noCommit.Checked = AppSettings.DontCommitMerge;
+            helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             _defaultBranch = defaultBranch;
 
-            if (Settings.NoFastForwardMerge)
+            if (aCommands != null && Module.Settings.NoFastForwardMerge)
             {
                 noFastForward.Checked = true;
             }
 
+            advanced.Checked = AppSettings.AlwaysShowAdvOpt;
             advanced_CheckedChanged(null, null);
         }
 
@@ -47,8 +48,8 @@ namespace GitUI.CommandsDialogs
 
         private void OkClick(object sender, EventArgs e)
         {
-            Settings.NoFastForwardMerge = noFastForward.Checked;
-            Settings.DontCommitMerge = noCommit.Checked;
+            Module.Settings.NoFastForwardMerge = noFastForward.Checked;
+            AppSettings.DontCommitMerge = noCommit.Checked;
 
             var successfullyMerged = FormProcess.ShowDialog(this, 
                 GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(), fastForward.Checked, squash.Checked, noCommit.Checked, _NO_TRANSLATE_mergeStrategy.Text));

@@ -1,15 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
 
 namespace GitUIPluginInterfaces
 {
     public interface IGitModule
     {
-        IEnumerable<IGitSubmodule> GetSubmodules();
+        /// <summary>
+        /// Run git command, console window is hidden, redirect output
+        /// </summary>
+        Process RunGitCmdDetached(string arguments, Encoding encoding = null);
 
-        string RunGit(string arguments);
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        string RunGitCmd(string arguments, out int exitCode, Encoding encoding = null, byte[] stdInput = null);
 
-        string RunGit(string arguments, out int exitCode);
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null);
+
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        string RunCmd(string cmd, string arguments, out int exitCode, Encoding encoding = null, byte[] stdIn = null);
+
+        /// <summary>
+        /// Run command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        string RunCmd(string cmd, string arguments, Encoding encoding = null, byte[] stdIn = null);
 
         string RunBatchFile(string batchFile);
 
@@ -25,19 +46,17 @@ namespace GitUIPluginInterfaces
 
         string GravatarCacheDir { get; }
 
-        IList<string> GetSubmodulesLocalPathes();
+        IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo();
 
-        IGitModule GetISubmodule(string submoduleName);
+        IList<string> GetSubmodulesLocalPathes(bool recursive = true);
+
+        IGitModule GetSubmodule(string submoduleName);
 
         string[] GetRemotes(bool allowEmpty);
 
-        string GetISetting(string setting);
+        string GetSetting(string setting);
 
         bool StartPageantForRemote(string remote);
-
-        string RunCmd(string cmd, string arguments);
-
-        string RunCmd(string cmd, string arguments, byte[] stdIn);
 
         string GetSelectedBranch();
 
