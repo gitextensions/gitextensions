@@ -23,6 +23,7 @@ namespace GitUI.CommandsDialogs
                 noFastForward.Checked = true;
             }
 
+            advanced.Checked = AppSettings.AlwaysShowAdvOpt;
             advanced_CheckedChanged(null, null);
         }
 

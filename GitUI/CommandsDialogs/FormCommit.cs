@@ -2287,7 +2287,7 @@ namespace GitUI.CommandsDialogs
         {
             foreach (var item in Staged.SelectedItems)
             {
-                string output = Module.OpenWithDifftool(item.Name, null, null, "--cached");
+                string output = Module.OpenWithDifftool(item.Name, null, null, null, "--cached");
                 if (!string.IsNullOrEmpty(output))
                     MessageBox.Show(this, output);
             }

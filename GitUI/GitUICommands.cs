@@ -565,15 +565,13 @@ namespace GitUI
             return StartSvnCloneDialog(null, null);
         }
 
-        public void StartCleanupRepositoryDialog(IWin32Window owner)
+        public void StartCleanupRepositoryDialog(IWin32Window owner = null, string path = null)
         {
-            using (var frm = new FormCleanupRepository(this))
-                frm.ShowDialog(owner);
-        }
-
-        public void StartCleanupRepositoryDialog()
-        {
-            StartCleanupRepositoryDialog(null);
+            using (var form = new FormCleanupRepository(this))
+            {
+                form.SetPathArgument(path);
+                form.ShowDialog(owner);
+            }
         }
 
         public bool StartSquashCommitDialog(IWin32Window owner, GitRevision revision)
@@ -1152,14 +1150,11 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, PreEditGitIgnore, PostEditGitIgnore, action);
         }
 
-        public bool StartSettingsDialog(IWin32Window owner, SettingsPageReference initalPage = null)
+        public bool StartSettingsDialog(IWin32Window owner, SettingsPageReference initialPage = null)
         {
             Func<bool> action = () =>
             {
-                using (var form = new FormSettings(this, initalPage))
-                {
-                    form.ShowDialog(owner);
-                }
+                FormSettings.ShowSettingsDialog(this, owner, initialPage);
 
                 return true;
             };
@@ -1936,9 +1931,9 @@ namespace GitUI
             StartRebaseDialog(branch);
         }
 
-        public bool StartFileEditorDialog(string filename)
+        public bool StartFileEditorDialog(string filename, bool showWarning = false)
         {
-            using (var formEditor = new FormEditor(this, filename))
+            using (var formEditor = new FormEditor(this, filename, showWarning))
                 return formEditor.ShowDialog() != DialogResult.Cancel;
         }
 

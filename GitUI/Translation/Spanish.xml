@@ -390,12 +390,12 @@ Elija no si desea utilizar otra herramienta de fusión.</Value>
           <Value>GitExtensions esta registrado correctamente.</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsFaulty" Property="Text">
-          <Source>Invalid installation directory stored in [Software\GitExtensions\GitExtensions\InstallDir].</Source>
-          <Value>Directorio de instalación inválido guardado en [Software\GitExtensions\GitExtensions\InstallDir].</Value>
+          <Source>Invalid installation directory stored in [Software\GitExtensions\InstallDir].</Source>
+          <Value>Directorio de instalación inválido guardado en [Software\GitExtensions\InstallDir].</Value>
         </TranslationItem>
         <TranslationItem Name="_registryKeyGitExtensionsMissing" Property="Text">
-          <Source>Registry entry missing [Software\GitExtensions\GitExtensions\InstallDir].</Source>
-          <Value>Entrada del registro faltante [Software\GitExtensions\GitExtensions\InstallDir].</Value>
+          <Source>Registry entry missing [Software\GitExtensions\InstallDir].</Source>
+          <Value>Entrada del registro faltante [Software\GitExtensions\InstallDir].</Value>
         </TranslationItem>
         <TranslationItem Name="_shCanBeRun" Property="Text">
           <Source>Command sh can be run using: {0}sh</Source>
@@ -1763,7 +1763,7 @@ revisión:</Value>
           <Value>Ver pedidos de Pull</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfBisect" Property="Text">
-          <Source>Your are in the middle of a bisect</Source>
+          <Source>You are in the middle of a bisect</Source>
           <Value>Está en el medio de una bisección</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfPatchApply" Property="Text">
@@ -3935,9 +3935,9 @@ por defecto sólo si tiene problemas.</Value>
           <Source>Submit review as draft</Source>
           <Value>Enviar revisión como borrador</Value>
         </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text">
-          <Source>Download Gerrit Change</Source>
-          <Value>Descargar cambio Gerrit</Value>
+        <TranslationItem Name="_publishGerritChangeCaption" Property="Text">
+          <Source>Publish Gerrit Change</Source>
+          <Value>Publicar cambio Gerrit</Value>
         </TranslationItem>
         <TranslationItem Name="_publishCaption" Property="Text">
           <Source>Publish change</Source>

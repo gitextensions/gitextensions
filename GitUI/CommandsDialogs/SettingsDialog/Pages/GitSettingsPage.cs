@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public override void OnPageShown()
         {
-            GitPath.Text = AppSettings.GitCommand;
+            GitPath.Text = AppSettings.GitCommandValue;
             GitBinPath.Text = AppSettings.GitBinDir;
         }
 
@@ -38,13 +38,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             GitCommandHelpers.SetEnvironmentVariable();
             homeIsSetToLabel.Text = string.Concat(_homeIsSetToString.Text, " ", GitCommandHelpers.GetHomeDir());
 
-            GitPath.Text = AppSettings.GitCommand;
+            GitPath.Text = AppSettings.GitCommandValue;
             GitBinPath.Text = AppSettings.GitBinDir;
         }
 
         protected override void PageToSettings()
         {
-            AppSettings.GitCommand = GitPath.Text;
+            AppSettings.GitCommandValue = GitPath.Text;
             AppSettings.GitBinDir = GitBinPath.Text;
         }
 
@@ -54,7 +54,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             using (var browseDialog = new OpenFileDialog
             {
-                FileName = AppSettings.GitCommand,
+                FileName = AppSettings.GitCommandValue,
                 Filter = "Git.cmd (git.cmd)|git.cmd|Git.exe (git.exe)|git.exe|Git (git)|git"
             })
             {
@@ -86,7 +86,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             ////    if (loadingSettings)
             ////        return;
 
-            ////    Settings.GitCommand = GitPath.Text;
+            ////    Settings.GitCommandValue = GitPath.Text;
             ////    OnLoadSettings();
         }
 

@@ -79,7 +79,7 @@ namespace GitCommands.Config
             Save(_fileName);
         }
 
-        public void Save(string fileName)
+        public string GetAsString()
         {
             var configFileContent = new StringBuilder();
 
@@ -101,13 +101,19 @@ namespace GitCommands.Config
                 }
             }
 
+            return configFileContent.ToString();
+        }
+
+        public void Save(string fileName)
+        {
+
 
             try
             {
                 FileInfoExtensions
                     .MakeFileTemporaryWritable(fileName,
                                        x =>
-                                       File.WriteAllText(fileName, configFileContent.ToString(), GetEncoding()));
+                                       File.WriteAllText(fileName, GetAsString(), GetEncoding()));
             }
             catch (Exception ex)
             {
@@ -200,7 +206,7 @@ namespace GitCommands.Config
             return GetStringValue(setting);
         }
 
-        private IList<string> GetValues(string setting)
+        public IList<string> GetValues(string setting)
         {
             var keyIndex = FindAndCheckKeyIndex(setting);
 
@@ -230,7 +236,7 @@ namespace GitCommands.Config
             configSection.SetValue(keyName, null);
         }
 
-        private ConfigSection FindOrCreateConfigSection(string name)
+        public ConfigSection FindOrCreateConfigSection(string name)
         {
             var result = FindConfigSection(name);
             if (result == null)
@@ -266,7 +272,7 @@ namespace GitCommands.Config
             toRemove.ForEach(section => ConfigSections.Remove(section));
         }
 
-        private ConfigSection FindConfigSection(string name)
+        public ConfigSection FindConfigSection(string name)
         {
             var configSectionToFind = new ConfigSection(name, true);
 
