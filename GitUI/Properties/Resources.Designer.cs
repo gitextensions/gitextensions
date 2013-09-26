@@ -130,6 +130,27 @@ namespace GitUI.Properties {
             }
         }
         
+        public static System.Drawing.Bitmap BuildCancelled {
+            get {
+                object obj = ResourceManager.GetObject("BuildCancelled", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap BuildFailed {
+            get {
+                object obj = ResourceManager.GetObject("BuildFailed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        public static System.Drawing.Bitmap BuildSuccessful {
+            get {
+                object obj = ResourceManager.GetObject("BuildSuccessful", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Changelog
         ///=========
@@ -1295,6 +1316,16 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap IconViewFile {
             get {
                 object obj = ResourceManager.GetObject("IconViewFile", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconWarning {
+            get {
+                object obj = ResourceManager.GetObject("IconWarning", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

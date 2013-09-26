@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
@@ -63,6 +64,20 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _notOnBranchButtons = new TranslationString("Checkout branch|Continue");
         private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch");
 
+        private readonly TranslationString _noRemoteBranch = new TranslationString("You didn't specify a remote branch");
+        private readonly TranslationString _noRemoteBranchMainInstruction = new TranslationString(
+            "You asked to pull from the remote '{0}'," + Environment.NewLine +
+            "but did not specify a remote branch." + Environment.NewLine +
+            "Because this is not the default configured remote for your local branch," + Environment.NewLine +
+            "you must specify a remote branch.");
+        private readonly TranslationString _noRemoteBranchForFetchMainInstruction = new TranslationString(
+            "You asked to fetch from the remote '{0}'," + Environment.NewLine +
+            "but did not specify a remote branch." + Environment.NewLine +
+            "Because this is not the current branch, you must specify a remote branch.");
+        private readonly TranslationString _noRemoteBranchButtons = new TranslationString("Pull from {0}|Cancel");
+        private readonly TranslationString _noRemoteBranchForFetchButtons = new TranslationString("Fetch from {0}|Cancel");
+        private readonly TranslationString _noRemoteBranchCaption = new TranslationString("Remote branch not specified");
+
         private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
 
         private readonly TranslationString _pruneBranchesCaption = new TranslationString("Pull was rejected");
@@ -109,7 +124,7 @@ namespace GitUI.CommandsDialogs
         }
 
         private void Init(string defaultRemote)
-        {            
+        {
             UpdateRemotesList();
 
             _branch = Module.GetSelectedBranch();
@@ -264,16 +279,22 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (PullFromUrl.Checked)
+            if (PullFromUrl.Checked && Directory.Exists(comboBoxPullSource.Text))
                 Repositories.RepositoryHistory.AddMostRecentRepository(comboBoxPullSource.Text);
 
             var source = CalculateSource();
+
+            string curLocalBranch;
+            string curRemoteBranch;
+
+            if (!CalculateLocalBranch(source, out curLocalBranch, out curRemoteBranch))
+                return DialogResult.No;
 
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
 
             var stashed = CalculateStashedValue(owner);
 
-            using (FormProcess process = CreateFormProcess(source))
+            using (FormProcess process = CreateFormProcess(source, curLocalBranch, curRemoteBranch))
             {
                 ShowProcessDialogBox(owner, source, process);
 
@@ -411,7 +432,7 @@ namespace GitUI.CommandsDialogs
 
         private bool CalculateStashedValue(IWin32Window owner)
         {
-            if (!Fetch.Checked && AutoStash.Checked &&
+            if (!Fetch.Checked && AutoStash.Checked && !Module.IsBareRepository() &&
                 Module.GitStatus(UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Count > 0)
             {
                 UICommands.Stash(owner);
@@ -438,18 +459,16 @@ namespace GitUI.CommandsDialogs
                 UICommands.StartUpdateSubmodulesDialog(this);
         }
 
-        private FormProcess CreateFormProcess(string source)
+        private FormProcess CreateFormProcess(string source, string curLocalBranch, string curRemoteBranch)
         {
-            string curLocalBranch = CalculateLocalBranch(source); 
-
             if (Fetch.Checked)
             {
-                return new FormRemoteProcess(Module, Module.FetchCmd(source, Branches.Text, curLocalBranch, GetTagsArg()));
+                return new FormRemoteProcess(Module, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg()));
             }
-            
+
             Debug.Assert(Merge.Checked || Rebase.Checked);
 
-            return new FormRemoteProcess(Module, Module.PullCmd(source, Branches.Text, curLocalBranch, Rebase.Checked, GetTagsArg()))
+            return new FormRemoteProcess(Module, Module.PullCmd(source, curRemoteBranch, curLocalBranch, Rebase.Checked, GetTagsArg()))
                        {
                            HandleOnExitCallback = HandlePullOnExit
                        };
@@ -459,7 +478,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!isError)
                 return false;
-            
+
             if (!PullFromRemote.Checked || string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text))
                 return false;
 
@@ -495,33 +514,84 @@ namespace GitUI.CommandsDialogs
         }
 
         private bool? GetTagsArg()
-        { 
+        {
             return AllTags.Checked ? true : NoTags.Checked ? false : (bool?)null;
         }
 
-        private string CalculateLocalBranch(string remote)
+        private bool CalculateLocalBranch(string remote, out string curLocalBranch, out string curRemoteBranch)
         {
+            if (IsPullAll())
+            {
+                curLocalBranch = null;
+                curRemoteBranch = null;
+                return true;
+            }
+
+            curRemoteBranch = Branches.Text;
+
             if (Module.IsDetachedHead(_branch))
             {
-                return null;
+                curLocalBranch = null;
+                return true;
             }
+
+            var currentBranchRemote = new Lazy<string>(() => Module.GetSetting(string.Format("branch.{0}.remote", localBranch.Text)));
 
             if (_branch == localBranch.Text)
             {
-                var currentBranchRemote = Module.GetSetting(string.Format("branch.{0}.remote", localBranch.Text));
-                if (remote.Equals(currentBranchRemote))
+                if (remote.Equals(currentBranchRemote.Value))
                 {
-                    return string.IsNullOrEmpty(Branches.Text) ? null : _branch;
+                    curLocalBranch = Branches.Text.IsNullOrEmpty() ? null : _branch;
                 }
                 else
                 {
-                    return localBranch.Text;
+                    curLocalBranch = localBranch.Text;
                 }
             }
             else
             {
-                return localBranch.Text;
+                curLocalBranch = localBranch.Text;
             }
+
+            if (Branches.Text.IsNullOrEmpty() && !curLocalBranch.IsNullOrEmpty()
+                && !remote.Equals(currentBranchRemote.Value))
+            {
+                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
+                                                        _noRemoteBranchCaption.Text,
+                                                        _noRemoteBranch.Text,
+                                                        string.Format(_noRemoteBranchMainInstruction.Text, remote),
+                                                        string.Format(_noRemoteBranchButtons.Text, remote + "/" + curLocalBranch),
+                                                        false);
+                switch (idx)
+                {
+                    case 0:
+                        curRemoteBranch = curLocalBranch;
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            if (Branches.Text.IsNullOrEmpty() && !curLocalBranch.IsNullOrEmpty()
+                && Fetch.Checked)
+            {
+                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
+                                                        _noRemoteBranchCaption.Text,
+                                                        _noRemoteBranch.Text,
+                                                        string.Format(_noRemoteBranchForFetchMainInstruction.Text, remote),
+                                                        string.Format(_noRemoteBranchForFetchButtons.Text, remote + "/" + curLocalBranch),
+                                                        false);
+                switch (idx)
+                {
+                    case 0:
+                        curRemoteBranch = curLocalBranch;
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            return true;
         }
 
         private string CalculateSource()
@@ -583,13 +653,51 @@ namespace GitUI.CommandsDialogs
             return true;
         }
 
+        private IEnumerable<string> GetSelectedRemotes()
+        {
+
+            if (PullFromUrl.Checked)
+            {
+                yield break;
+            }
+
+            if (IsPullAll())
+            {
+                IEnumerable<string> remotes = (IEnumerable<string>)_NO_TRANSLATE_Remotes.DataSource;
+                foreach (var r in remotes)
+                {
+                    if (!r.Equals(AllRemotes) && !r.IsNullOrWhiteSpace())
+                        yield return r;
+                }
+            }
+            else
+            {
+                if (!_NO_TRANSLATE_Remotes.Text.IsNullOrWhiteSpace())
+                {
+                    yield return _NO_TRANSLATE_Remotes.Text;
+                }
+            }
+        }
+
         private void LoadPuttyKey()
         {
             if (!GitCommandHelpers.Plink())
                 return;
 
             if (File.Exists(Settings.Pageant))
-                Module.StartPageantForRemote(_NO_TRANSLATE_Remotes.Text);
+            {
+                HashSet<string> files = new HashSet<string>(PathUtil.CreatePathEqualityComparer());
+                foreach (var remote in GetSelectedRemotes())
+                {
+                    var sshKeyFile = Module.GetPuttyKeyFileForRemote(remote);
+                    if (!string.IsNullOrEmpty(sshKeyFile))
+                        files.Add(sshKeyFile);
+                }
+
+                foreach (var sshKeyFile in files)
+                    if (File.Exists(sshKeyFile))
+                        GitModule.StartPageantWithKey(sshKeyFile);
+            }
             else
                 MessageBoxes.PAgentNotFound(this);
         }
@@ -749,6 +857,12 @@ namespace GitUI.CommandsDialogs
         {
             Branches.DataSource = null;
             _heads = null;
+        }
+
+        private void localBranch_Leave(object sender, EventArgs e)
+        {
+            if (!_branch.Equals(localBranch.Text.Trim()) && Branches.Text.IsNullOrWhiteSpace())
+                Branches.Text = localBranch.Text;
         }
     }
 }

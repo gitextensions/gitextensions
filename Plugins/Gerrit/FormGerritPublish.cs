@@ -13,7 +13,7 @@ namespace Gerrit
         private string _currentBranchRemote;
 
         #region Translation
-        private readonly TranslationString _downloadGerritChangeCaption = new TranslationString("Download Gerrit Change");
+        private readonly TranslationString _publishGerritChangeCaption = new TranslationString("Publish Gerrit Change");
 
         private readonly TranslationString _publishCaption = new TranslationString("Publish change");
 
@@ -161,7 +161,7 @@ namespace Gerrit
 
             _NO_TRANSLATE_Branch.Select();
 
-            Text = string.Concat(_downloadGerritChangeCaption.Text, " (", Module.GitWorkingDir, ")");
+            Text = string.Concat(_publishGerritChangeCaption.Text, " (", Module.GitWorkingDir, ")");
         }
 
         private void AddRemoteClick(object sender, EventArgs e)
