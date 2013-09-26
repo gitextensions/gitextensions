@@ -139,10 +139,10 @@ namespace GitUI.RevisionGridClasses
         protected override void OnCreateControl()
         {
             DataGridViewColumn dataGridColumnGraph;
-            if (ColumnCount <= 0 || Columns[0].HeaderText != "")
+            if (ColumnCount <= 0 || GraphColumn.HeaderText != "")
                 dataGridColumnGraph = new DataGridViewTextBoxColumn();
             else
-                dataGridColumnGraph = Columns[0];
+                dataGridColumnGraph = GraphColumn;
             dataGridColumnGraph.HeaderText = "";
             dataGridColumnGraph.Frozen = true;
             dataGridColumnGraph.Name = "dataGridColumnGraph";
@@ -150,14 +150,34 @@ namespace GitUI.RevisionGridClasses
             dataGridColumnGraph.SortMode = DataGridViewColumnSortMode.NotSortable;
             dataGridColumnGraph.Width = 70;
             dataGridColumnGraph.DefaultCellStyle.Font = SystemFonts.DefaultFont;
-            if (ColumnCount == 0 || Columns[0].HeaderText != "")
+            if (ColumnCount == 0 || GraphColumn.HeaderText != "")
                 Columns.Insert(0, dataGridColumnGraph);
         }
 
+        /// <summary>
+        /// 0
+        /// </summary>
+        internal DataGridViewColumn GraphColumn { get { return Columns[0]; } }
+
+        /// <summary>
+        /// 1
+        /// </summary>
+        internal DataGridViewColumn MessageColumn { get { return Columns[1]; } }
+
+        /// <summary>
+        /// 2
+        /// </summary>
+        internal DataGridViewColumn AuthorColumn { get { return Columns[2]; } }
+
+        /// <summary>
+        /// 3
+        /// </summary>
+        internal DataGridViewColumn DateColumn { get { return Columns[3]; } }
+
         public void ShowAuthor(bool show)
         {
-            this.Columns[2].Visible = show;
-            this.Columns[3].Visible = show;
+            this.AuthorColumn.Visible = show;
+            this.DateColumn.Visible = show;
         }
 
         [DefaultValue(FilterType.None)]
@@ -302,14 +322,14 @@ namespace GitUI.RevisionGridClasses
 
         public void ShowRevisionGraph()
         {
-            Columns[0].Visible = true;
+            GraphColumn.Visible = true;
             //updateData();
             _backgroundEvent.Set();
         }
 
         public void HideRevisionGraph()
         {
-            Columns[0].Visible = false;
+            GraphColumn.Visible = false;
             //updateData();
             _backgroundEvent.Set();
         }
@@ -320,7 +340,7 @@ namespace GitUI.RevisionGridClasses
         {
             get
             {
-                return Columns[0].Visible;
+                return GraphColumn.Visible;
             }
         }
 
@@ -712,17 +732,12 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
-        private DataGridViewColumn ColumnGraph
-        {
-            get { return Columns[0]; }
-        }
-
         private void UpdateColumnWidth()
         {
             lock (_graphData)
             {
                 // Auto scale width on scroll
-                if (ColumnGraph.Visible)
+                if (GraphColumn.Visible)
                 {
                     int laneCount = 2;
                     if (_graphData != null)
@@ -737,8 +752,8 @@ namespace GitUI.RevisionGridClasses
 
                         laneCount = Math.Min(Math.Max(laneCount, width), MaxLanes);
                     }
-                    if (ColumnGraph.Width != _laneWidth * laneCount && _laneWidth * laneCount > ColumnGraph.MinimumWidth)
-                        ColumnGraph.Width = _laneWidth * laneCount;
+                    if (GraphColumn.Width != _laneWidth * laneCount && _laneWidth * laneCount > GraphColumn.MinimumWidth)
+                        GraphColumn.Width = _laneWidth * laneCount;
                 }
             }
         }
@@ -874,7 +889,7 @@ namespace GitUI.RevisionGridClasses
                 #region Make sure the graph cache bitmap is setup
 
                 int height = _cacheCountMax * _rowHeight;
-                int width = ColumnGraph.Width;
+                int width = GraphColumn.Width;
                 if (_graphBitmap == null ||
                     //Resize the bitmap when the with or height is changed. The height won't change very often.
                     //The with changes more often, when branches become visible/invisible.
