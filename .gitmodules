@@ -6,7 +6,7 @@
 	url = git://github.com/gitextensions/GitExtensionsDoc.git
 [submodule "Externals/NBug"]
 	path = Externals/NBug
-	url = git@github.com:gitextensions/NBug.git
+	url = git://github.com/gitextensions/NBug.git
 [submodule "Externals/Git.hub"]
 	path = Externals/Git.hub
-	url = git@github.com:gitextensions/Git.hub.git
+	url = git://github.com/gitextensions/Git.hub.git
