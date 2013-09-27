@@ -50,10 +50,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             new TranslationString("{0} needs to be registered in order to use the shell extensions.");
 
         private readonly TranslationString _registryKeyGitExtensionsMissing =
-            new TranslationString("Registry entry missing [Software\\GitExtensions\\GitExtensions\\InstallDir].");
+            new TranslationString("Registry entry missing [Software\\GitExtensions\\InstallDir].");
 
         private readonly TranslationString _registryKeyGitExtensionsFaulty =
-            new TranslationString("Invalid installation directory stored in [Software\\GitExtensions\\GitExtensions\\InstallDir].");
+            new TranslationString("Invalid installation directory stored in [Software\\GitExtensions\\InstallDir].");
 
         private readonly TranslationString _registryKeyGitExtensionsCorrect =
             new TranslationString("GitExtensions is properly registered.");
@@ -423,7 +423,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            MessageBox.Show(this, String.Format(_gitCanBeRun.Text, AppSettings.GitCommand), _gitCanBeRunCaption.Text);
+            MessageBox.Show(this, String.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue), _gitCanBeRunCaption.Text);
 
             PageHost.GotoPage(GitSettingsPage.GetPageReference());
             SaveAndRescan_Click(null, null);
@@ -440,7 +440,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void CheckAtStartup_CheckedChanged(object sender, EventArgs e)
         {
-            AppSettings.SetBool("checksettings", CheckAtStartup.Checked);
+            AppSettings.CheckSettings = CheckAtStartup.Checked;
         }
 
         public bool CheckSettings()
@@ -469,18 +469,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 MessageBox.Show(this, ex.Message);
             }
 
-            CheckAtStartup.Checked = getCheckAtStartupChecked(bValid);
+            CheckAtStartup.Checked = IsCheckAtStartupChecked(bValid);
 
             return bValid;
         }
 
-        private static bool getCheckAtStartupChecked(bool bValid)
+        private static bool IsCheckAtStartupChecked(bool bValid)
         {
-            var retValue = AppSettings.GetBool("checksettings", true);
+            var retValue = AppSettings.CheckSettings;
 
             if (bValid && retValue)
             {
-                AppSettings.SetBool("checksettings", false);
+                AppSettings.CheckSettings = false;
                 retValue = false;
             }
             return retValue;
