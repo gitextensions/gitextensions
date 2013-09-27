@@ -72,6 +72,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // _selectHostedRepoCB
             // 
             this._selectHostedRepoCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._selectHostedRepoCB.DisplayMember = "DisplayData";
             this._selectHostedRepoCB.FormattingEnabled = true;
             this._selectHostedRepoCB.Location = new System.Drawing.Point(130, 6);
             this._selectHostedRepoCB.Name = "_selectHostedRepoCB";
