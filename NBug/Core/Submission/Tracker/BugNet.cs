@@ -25,7 +25,7 @@ namespace NBug.Core.Submission.Tracker
 
 		public override bool Send(string fileName, Stream file, Report report, SerializableException exception)
 		{
-			HttpWebRequest request;
+			//HttpWebRequest request;
 
 			return true;
 		}
