@@ -82,18 +82,23 @@ namespace GitUI.RepoHosting
                     _hostedRemotes = hostedRemotes;
                     _selectHostedRepoCB.Items.Clear();
                     foreach (var hostedRepo in _hostedRemotes)
-                        _selectHostedRepoCB.Items.Add(hostedRepo.GetHostedRepository());
+                        _selectHostedRepoCB.Items.Add(hostedRepo);
 
-                    SelectNextHostedRepository();
+                    SelectHostedRepositoryForCurrentRemote();
                     this.UnMask();
                 });
         }
 
         private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var hostedRepo = _selectHostedRepoCB.SelectedItem as IHostedRepository;
+            var hostedRemote = _selectHostedRepoCB.SelectedItem as IHostedRemote;
+            if (hostedRemote == null)
+                return;
+
+            var hostedRepo = hostedRemote.GetHostedRepository();
             if (hostedRepo == null)
                 return;
+
             _selectHostedRepoCB.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
 
@@ -125,6 +130,25 @@ namespace GitUI.RepoHosting
             LoadListView();
         }
 
+        private void SelectHostedRepositoryForCurrentRemote()
+        {
+            var currentRemote = Module.GetCurrentRemote();
+            var hostedRemote = _selectHostedRepoCB.Items.
+                Cast<IHostedRemote>().
+                Where(remote => remote.Name.Equals(currentRemote, StringComparison.OrdinalIgnoreCase)).
+                FirstOrDefault();
+
+            if (hostedRemote == null)
+            {
+                if (_selectHostedRepoCB.Items.Count > 0)
+                    _selectHostedRepoCB.SelectedIndex = 0;
+            }
+            else
+            {
+                _selectHostedRepoCB.SelectedItem = hostedRemote;
+            }
+        }
+        
         private void SelectNextHostedRepository()
         {
             if (_selectHostedRepoCB.Items.Count == 0)
