@@ -204,13 +204,10 @@ namespace PatchApply
                 input = GitModule.UnquoteFileName(input);
                 Match regexMatch = Regex.Match(input, "[-]{3} [\\\"]?[aiwco12]/(.*)[\\\"]?");
 
-                if (!regexMatch.Success || patch.FileNameA != (regexMatch.Groups[1].Value.Trim()))
-                {
-                    if (!patch.CombinedDiff)
-                        throw new FormatException("Old filename not parsed correct: " + input);
-                    if (regexMatch.Success)
-                        patch.FileNameA = regexMatch.Groups[1].Value.Trim();
-                }
+                if (regexMatch.Success)
+                    patch.FileNameA = regexMatch.Groups[1].Value.Trim();
+                else
+                    throw new FormatException("Old filename not parsed correct: " + input);
             }
             else if (IsNewFileMissing(input))
             {
@@ -224,13 +221,10 @@ namespace PatchApply
                 input = GitModule.UnquoteFileName(input);
                 Match regexMatch = Regex.Match(input, "[+]{3} [\\\"]?[biwco12]/(.*)[\\\"]?");
 
-                if (!regexMatch.Success || patch.FileNameB != (regexMatch.Groups[1].Value.Trim()))
-                {
-                    if (!patch.CombinedDiff)
-                        throw new FormatException("New filename not parsed correct: " + input);
-                    if (regexMatch.Success)
-                        patch.FileNameB = regexMatch.Groups[1].Value.Trim();
-                }
+                if (regexMatch.Success)
+                    patch.FileNameB = regexMatch.Groups[1].Value.Trim();
+                else
+                    throw new FormatException("New filename not parsed correct: " + input);
             }             
         }
 

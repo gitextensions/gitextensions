@@ -18,6 +18,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 chlMenuEntries.SetItemChecked(i, AppSettings.CascadeShellMenuItems[i] == '1');
             }
+            cbAlwaysShowAllCommands.Checked = AppSettings.AlwaysShowAllCommands;
 
             UpdatePreview();
         }
@@ -38,7 +39,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
             }
 
-            AppSettings.CascadeShellMenuItems = l_CascadeShellMenuItems;            
+            AppSettings.CascadeShellMenuItems = l_CascadeShellMenuItems;
+            AppSettings.AlwaysShowAllCommands = cbAlwaysShowAllCommands.Checked;
         }
 
         private void chlMenuEntries_SelectedValueChanged(object sender, EventArgs e)
