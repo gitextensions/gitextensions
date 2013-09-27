@@ -370,14 +370,14 @@ namespace GitUI.CommandsDialogs
                     string buttons = _pullRepositoryButtons.Text;
                     switch (Module.LastPullAction)
                     {
-                        case Settings.PullAction.Fetch:
-                        case Settings.PullAction.FetchAll:
+                        case AppSettings.PullAction.Fetch:
+                        case AppSettings.PullAction.FetchAll:
                             buttons = string.Format(buttons, _pullActionFetch.Text);
                             break;
-                        case Settings.PullAction.Merge:
+                        case AppSettings.PullAction.Merge:
                             buttons = string.Format(buttons, _pullActionMerge.Text);
                             break;
-                        case Settings.PullAction.Rebase:
+                        case AppSettings.PullAction.Rebase:
                             buttons = string.Format(buttons, _pullActionRebase.Text);
                             break;
                         default:
