@@ -554,7 +554,7 @@ namespace GitUI.CommandsDialogs
             }
 
             if (Branches.Text.IsNullOrEmpty() && !curLocalBranch.IsNullOrEmpty()
-                && !remote.Equals(currentBranchRemote.Value))
+                && !remote.Equals(currentBranchRemote.Value) && !Fetch.Checked)
             {
                 int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
                                                         _noRemoteBranchCaption.Text,
@@ -575,6 +575,14 @@ namespace GitUI.CommandsDialogs
             if (Branches.Text.IsNullOrEmpty() && !curLocalBranch.IsNullOrEmpty()
                 && Fetch.Checked)
             {
+                //if local branch eq to current branch and remote branch is not specified
+                //then run fetch with no refspec
+                if (_branch == curLocalBranch)
+                {
+                    curLocalBranch = null;
+                    return true;
+                }
+
                 int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(this,
                                                         _noRemoteBranchCaption.Text,
                                                         _noRemoteBranch.Text,
