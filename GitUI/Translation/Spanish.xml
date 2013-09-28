@@ -3935,9 +3935,9 @@ por defecto sólo si tiene problemas.</Value>
           <Source>Submit review as draft</Source>
           <Value>Enviar revisión como borrador</Value>
         </TranslationItem>
-        <TranslationItem Name="_downloadGerritChangeCaption" Property="Text">
-          <Source>Download Gerrit Change</Source>
-          <Value>Descargar cambio Gerrit</Value>
+        <TranslationItem Name="_publishGerritChangeCaption" Property="Text">
+          <Source>Publish Gerrit Change</Source>
+          <Value>Publicar cambio Gerrit</Value>
         </TranslationItem>
         <TranslationItem Name="_publishCaption" Property="Text">
           <Source>Publish change</Source>

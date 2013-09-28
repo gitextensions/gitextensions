@@ -105,7 +105,7 @@
                 <File Source="..\bin\ICSharpCode.SharpZipLib.dll" />
             </Component>
             <Component Id="Git.hub.dll" Guid="*">
-                <File Source="..\bin\Git.hub.dll" />
+                <File Source="..\Externals\Git.hub\Git.hub\bin\Release\Git.hub.dll" />
             </Component>
             <Component Id="PSTaskDialog.dll" Guid="*">
                 <File Source="..\bin\PSTaskDialog.dll" />
@@ -120,7 +120,7 @@
                 <File Source="..\bin\Microsoft.WindowsAPICodePack.Shell.dll" />
             </Component>
             <Component Id="NBug.dll" Guid="*">
-                <File Source="..\packages\NBug.1.1.1\lib\net40-client\NBug.dll" />
+                <File Source="..\packages\NBug\lib\net40-client\NBug.dll" />
             </Component>
             <Component Id="SmartFormat.dll" Guid="*">
                 <File Source="..\packages\SmartFormat.NET.1.0.0.0\lib\net35-Client\SmartFormat.dll" />
