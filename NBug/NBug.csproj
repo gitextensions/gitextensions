@@ -257,11 +257,13 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName)==Release copy "$(TargetPath)" "$(SolutionDir)packages\NBug\lib\net40-client" /Y
-if $(ConfigurationName)==Release copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)packages\NBug\lib\net40-client" /Y
-if $(ConfigurationName)==Release copy "$(TargetDir)$(TargetName).xml" "$(SolutionDir)packages\NBug\lib\net40-client" /Y
-if $(ConfigurationName)==Release copy "$(TargetPath)" "$(SolutionDir)packages\NBug\tools" /Y
-if $(ConfigurationName)==Release copy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)packages\NBug\tools" /Y</PostBuildEvent>
+    <PostBuildEvent>if $(ConfigurationName)==Release (
+xcopy "$(TargetPath)" "$(SolutionDir)packages\NBug\lib\net40-client\" /Y
+xcopy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)packages\NBug\lib\net40-client\" /Y
+xcopy "$(TargetDir)$(TargetName).xml" "$(SolutionDir)packages\NBug\lib\net40-client\" /Y
+xcopy "$(TargetPath)" "$(SolutionDir)packages\NBug\tools\" /Y
+xcopy "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)packages\NBug\tools\" /Y
+)</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
