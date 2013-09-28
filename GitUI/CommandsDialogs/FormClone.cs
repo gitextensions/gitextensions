@@ -29,6 +29,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _questionOpenRepoCaption = 
             new TranslationString("Open");
 
+        private readonly TranslationString _serverHotkeyNotCachedText =
+            new TranslationString("The server's host key is not cached in the registry.\n\nDo you want to trust this host key and then try again?");
+        
         private bool openedFromProtocolHandler;
         private readonly string url;
         private GitModuleChangedEventHandler GitModuleChanged;
@@ -263,23 +266,56 @@ namespace GitUI.CommandsDialogs
 
         private readonly AsyncLoader _branchListLoader = new AsyncLoader();
 
-        private void UpdateBranches(IList<GitRef> branchList)
+        private void UpdateBranches(RemoteActionResult<IList<GitRef>> branchList)
         {
-            string text = Branches.Text;
-            Branches.DataSource = branchList;
-            if (branchList.Any(a => a.LocalName == text))
-            {
-                Branches.Text = text;
-            }
             Cursor = Cursors.Default;
+
+            if (branchList.HostKeyFail)
+            {
+                string remoteUrl = _NO_TRANSLATE_From.Text;
+
+                if (!string.IsNullOrEmpty(remoteUrl))
+                {
+                    if (MessageBox.Show(this, _serverHotkeyNotCachedText.Text, "SSH", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                    {
+                        Module.RunExternalCmdShowConsole(
+                                "cmd.exe",
+                                string.Format("/k \"\"{0}\" -T \"{1}\"\"", AppSettings.Plink, remoteUrl));
+
+                        LoadBranches();
+                    }
+                }
+            }
+            else if (branchList.AuthenticationFail)
+            {
+                string loadedKey;
+                if (FormPuttyError.AskForKey(this, out loadedKey))
+                {
+                    LoadBranches();
+                }
+            }
+            else
+            {
+                string text = Branches.Text;
+                Branches.DataSource = branchList.Result;
+                if (branchList.Result.Any(a => a.LocalName == text))
+                {
+                    Branches.Text = text;
+                }
+            }
         }
 
-        private void Branches_DropDown(object sender, EventArgs e)
+        private void LoadBranches()
         {
             Branches.DisplayMember = "LocalName";
             string from = _NO_TRANSLATE_From.Text;
             Cursor = Cursors.AppStarting;
             _branchListLoader.Load(() => Module.GetRemoteRefs(from, false, true), UpdateBranches);
+        }
+
+        private void Branches_DropDown(object sender, EventArgs e)
+        {
+            LoadBranches();
         }
     }
 }
