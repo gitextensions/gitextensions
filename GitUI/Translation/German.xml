@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Translation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="2.46">
+<Translation xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="2.47">
   <translationCategories>
     <TranslationCategory Name="AboutBox">
       <translationItems>
@@ -613,6 +613,14 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
     </TranslationCategory>
     <TranslationCategory Name="CommitSummaryUserControl">
       <translationItems>
+        <TranslationItem Name="_noRevision" Property="Text" type="unfinished">
+          <Source>No revision</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_notAvailable" Property="Text" type="unfinished">
+          <Source>n/a</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="labelAuthorCaption" Property="Text" type="unfinished">
           <Source>Author:</Source>
           <Value>Autor:</Value>
@@ -627,14 +635,6 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
         </TranslationItem>
         <TranslationItem Name="labelTagsCaption" Property="Text" type="unfinished">
           <Source>Tag(s):</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="noRevision" Property="Text" type="unfinished">
-          <Source>No revision</Source>
-          <Value />
-        </TranslationItem>
-        <TranslationItem Name="notAvailable" Property="Text" type="unfinished">
-          <Source>n/a</Source>
           <Value />
         </TranslationItem>
       </translationItems>
@@ -1548,6 +1548,14 @@ You will have push access. {2}</Source>
           <Source>Archive</Source>
           <Value>Archivieren</Value>
         </TranslationItem>
+        <TranslationItem Name="_noRevisionSelected" Property="Text" type="unfinished">
+          <Source>You need to choose a target revision.</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_noRevisionSelectedCaption" Property="Text" type="unfinished">
+          <Source>Error</Source>
+          <Value>Fehler</Value>
+        </TranslationItem>
         <TranslationItem Name="_saveFileDialogCaption" Property="Text">
           <Source>Save archive as</Source>
           <Value>Archiv speichern als</Value>
@@ -1565,7 +1573,11 @@ You will have push access. {2}</Source>
           <Value>Speichern als</Value>
         </TranslationItem>
         <TranslationItem Name="checkBoxPathFilter" Property="Text" type="unfinished">
-          <Source>Archive specific path(s) only (separate paths by new line):</Source>
+          <Source>Archive specific paths only</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="checkboxRevisionFilter" Property="Text" type="unfinished">
+          <Source>Take the files that have changed from the revision above to this one and archive only those</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
@@ -1573,11 +1585,12 @@ You will have push access. {2}</Source>
           <Value>Archivformat</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox2" Property="Text" type="unfinished">
-          <Source>Filter files by path</Source>
+          <Source>Filter files</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text">
-          <Source>Selected revision to archive:</Source>
+        <TranslationItem Name="label1" Property="Text" type="unfinished">
+          <Source>This revision will be archived:</Source>
+          <OldSource>Selected revision to archive:</OldSource>
           <Value>Wählen Sie eine Revision aus, die Sie archivieren möchten</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
@@ -1585,6 +1598,23 @@ You will have push access. {2}</Source>
 revision:</Source>
           <Value>Andere Revision
 auswählen</Value>
+        </TranslationItem>
+        <TranslationItem Name="label4" Property="Text" type="unfinished">
+          <Source>separate each new path by new line</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="labelAuthorCaption" Property="Text" type="unfinished">
+          <Source>Author:</Source>
+          <Value>Autor:</Value>
+        </TranslationItem>
+        <TranslationItem Name="labelDateCaption" Property="Text">
+          <Source>Commit date:</Source>
+          <Value>Commit Datum:</Value>
+        </TranslationItem>
+        <TranslationItem Name="lblChooseDiffRevision" Property="Text" type="unfinished">
+          <Source>Choose revision to 
+compare with first:</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="radioButtonFormatTar" Property="Text" type="obsolete">
           <Source>tar</Source>
@@ -2781,8 +2811,9 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
           <Source>Commit</Source>
           <Value>Commiten</Value>
         </TranslationItem>
-        <TranslationItem Name="Reset" Property="Text">
-          <Source>Reset changes</Source>
+        <TranslationItem Name="Reset" Property="Text" type="unfinished">
+          <Source>Reset all changes</Source>
+          <OldSource>Reset changes</OldSource>
           <Value>Änderungen zurücksetzen</Value>
         </TranslationItem>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
@@ -4935,18 +4966,32 @@ Sind Sie sich sicher, dass Sie diesen Branch pushen wollen?</Value>
           <Source>No</Source>
           <Value>Nein</Value>
         </TranslationItem>
+        <TranslationItem Name="_pullActionFetch" Property="Text" type="unfinished">
+          <Source>fetch</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pullActionMerge" Property="Text" type="unfinished">
+          <Source>merge</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pullActionNone" Property="Text" type="unfinished">
+          <Source>none</Source>
+          <Value />
+        </TranslationItem>
+        <TranslationItem Name="_pullActionRebase" Property="Text" type="unfinished">
+          <Source>rebase</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_pullRepository" Property="Text" type="unfinished">
-          <Source>The push was rejected because the tip of your current branch is behind its remote counterpart. Merge the remote changes before pushing again.
-
-Do you want to pull the latest changes?</Source>
+          <Source>The push was rejected because the tip of your current branch is behind its remote counterpart. Merge the remote changes before pushing again.</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_pullRepositoryButtons" Property="Text" type="unfinished">
-          <Source>Pull with default pull action|Pull with rebase|Pull with merge|Cancel</Source>
+          <Source>Pull with last pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_pullRepositoryCaption" Property="Text" type="unfinished">
-          <Source>Push was rejected</Source>
+          <Source>Push was rejected from "{0}"</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="_pullRepositoryMainInstruction" Property="Text" type="unfinished">
@@ -6803,6 +6848,10 @@ Mehr Optionen im Kontextmenü</Value>
           <Source>Git Extensions</Source>
           <Value>Git Extensions</Value>
         </TranslationItem>
+        <TranslationItem Name="btnDefaultDestinationBrowse" Property="Text" type="unfinished">
+          <Source>Browse</Source>
+          <Value>Durchsuchen</Value>
+        </TranslationItem>
         <TranslationItem Name="chkCheckForUncommittedChangesInCheckoutBranch" Property="Text">
           <Source>Check for uncommitted changes in checkout branch dialog</Source>
           <Value>Auf nicht comittete Änderungen im Branch Checkout Dialog prüfen</Value>
@@ -6888,7 +6937,7 @@ Mehr Optionen im Kontextmenü</Value>
           <Value>Anzahl der commits die beim Start geladen werden beschränken</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text" type="unfinished">
-          <Source>Server port</Source>
+          <Source>Port</Source>
           <Value />
         </TranslationItem>
         <TranslationItem Name="label23" Property="Text" type="unfinished">
@@ -6899,6 +6948,10 @@ Mehr Optionen im Kontextmenü</Value>
         <TranslationItem Name="label24" Property="Text">
           <Source>Revision grid quick search timeout [ms]</Source>
           <Value>Timeout in ms bei der Revision Schnellsuche</Value>
+        </TranslationItem>
+        <TranslationItem Name="lblDefaultCloneDestination" Property="Text" type="unfinished">
+          <Source>Default clone destination</Source>
+          <Value />
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7400,6 +7453,10 @@ können.</Value>
           <Source>For you own protection dropping more than 10 patch files at once is blocked!</Source>
           <Value>Zum Schutz Ihrer Arbeit ist das Hinzufügen von mehr als 10 Patch-Dateien blockiert!</Value>
         </TranslationItem>
+        <TranslationItem Name="_quickSearchQuickHelp" Property="Text" type="unfinished">
+          <Source>Start typing in revision grid to start quick search.</Source>
+          <Value />
+        </TranslationItem>
         <TranslationItem Name="_revisionFilter" Property="Text">
           <Source>Filter</Source>
           <Value>Filter</Value>
@@ -7670,6 +7727,10 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
           <Source>Ask for confirmation</Source>
           <Value>Bestätigung anfordern</Value>
         </TranslationItem>
+        <TranslationItem Name="scriptShowProgress" Property="Text" type="unfinished">
+          <Source>Show progress</Source>
+          <Value />
+        </TranslationItem>
       </translationItems>
     </TranslationCategory>
     <TranslationCategory Name="ShellExtensionSettingsPage">
@@ -7677,6 +7738,10 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
         <TranslationItem Name="$this" Property="Text">
           <Source>Shell extension</Source>
           <Value>Shell-Erweiterung</Value>
+        </TranslationItem>
+        <TranslationItem Name="cbAlwaysShowAllCommands" Property="Text" type="unfinished">
+          <Source>Always show all commands</Source>
+          <Value />
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="unfinished">
           <Source>Context menu preview
