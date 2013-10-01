@@ -582,19 +582,19 @@ S'il vous plait, assurez vous que git (msysgit ou cygwin) est installé ou rense
         </TranslationItem>
         <TranslationItem Name="containedInBranches" Property="Text">
           <Source>Contained in branches:</Source>
-          <Value>Contenu dans les branches :</Value>
+          <Value>Présent dans les branches :</Value>
         </TranslationItem>
         <TranslationItem Name="containedInNoBranch" Property="Text">
           <Source>Contained in no branch</Source>
-          <Value>Contenu dans aucune branche</Value>
+          <Value>Présent dans aucune branche</Value>
         </TranslationItem>
         <TranslationItem Name="containedInNoTag" Property="Text">
           <Source>Contained in no tag</Source>
-          <Value>Contenu dans aucune étiquette</Value>
+          <Value>Présent dans aucune étiquette</Value>
         </TranslationItem>
         <TranslationItem Name="containedInTags" Property="Text">
           <Source>Contained in tags:</Source>
-          <Value>Contenu dans les étiquettes</Value>
+          <Value>Présent dans les étiquettes:</Value>
         </TranslationItem>
         <TranslationItem Name="copyCommitInfoToolStripMenuItem" Property="Text">
           <Source>Copy commit info</Source>
@@ -1930,7 +1930,7 @@ compare with first:</Source>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem" Property="Text">
           <Source>Commit...</Source>
-          <Value>Commit...</Value>
+          <Value>Commiter...</Value>
         </TranslationItem>
         <TranslationItem Name="commitToolStripMenuItem1" Property="Text">
           <Source>Commit</Source>
@@ -2118,15 +2118,15 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Submodules...</Source>
           <OldSource>Manage submodules</OldSource>
-          <Value>Sous-modules...</Value>
+          <Value>Sous modules...</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Source>Merge branches...</Source>
-          <Value>Fusionner branches...</Value>
+          <Value>Fusionner les branches...</Value>
         </TranslationItem>
         <TranslationItem Name="mergeToolStripMenuItem" Property="Text">
           <Source>Merge</Source>
-          <Value>Fusionner</Value>
+          <Value>Fusionner (Merge)</Value>
         </TranslationItem>
         <TranslationItem Name="navigateToolStripMenuItem" Property="Text">
           <Source>Navigate</Source>
@@ -2172,7 +2172,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         </TranslationItem>
         <TranslationItem Name="pluginSettingsToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Settings</Source>
-          <Value>Configuration</Value>
+          <Value>Configuration...</Value>
         </TranslationItem>
         <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
           <Source>Plugins</Source>
@@ -2196,7 +2196,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         </TranslationItem>
         <TranslationItem Name="rebaseToolStripMenuItem1" Property="Text">
           <Source>Rebase</Source>
-          <Value>Rebaser</Value>
+          <Value>Rebaser (Rebase)</Value>
         </TranslationItem>
         <TranslationItem Name="recentToolStripMenuItem" Property="Text">
           <Source>Recent Repositories</Source>
@@ -2244,7 +2244,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         </TranslationItem>
         <TranslationItem Name="resetToolStripMenuItem" Property="Text">
           <Source>Reset changes...</Source>
-          <Value>Réinitialiser changements...</Value>
+          <Value>Réinitialiser les changements...</Value>
         </TranslationItem>
         <TranslationItem Name="runMergetoolToolStripMenuItem" Property="Text">
           <Source>Solve mergeconflicts...</Source>
@@ -2264,11 +2264,11 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         </TranslationItem>
         <TranslationItem Name="settingsToolStripMenuItem2" Property="Text">
           <Source>Settings</Source>
-          <Value>Configuration</Value>
+          <Value>Configuration...</Value>
         </TranslationItem>
         <TranslationItem Name="settingsToolStripMenuItem3" Property="Text" type="unfinished">
           <Source>Settings</Source>
-          <Value>Configuration</Value>
+          <Value>Configuration...</Value>
         </TranslationItem>
         <TranslationItem Name="startAuthenticationAgentToolStripMenuItem" Property="Text">
           <Source>Start authentication agent</Source>
@@ -3498,7 +3498,7 @@ Choisissez 'Non' pour garder les nouveaux fichiers.</Value>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Delete branch</Source>
-          <Value>Supprimer branche</Value>
+          <Value>Supprimer la branche</Value>
         </TranslationItem>
         <TranslationItem Name="ForceDelete" Property="Text">
           <Source>Force delete</Source>
@@ -3778,7 +3778,7 @@ Voulez-vous que Git Extensions vous aide à trouver le répertoire correcte?</Va
           <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
 to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
           <Value>Le fichier de configuration global doit être situé dans l'endroit indiqué par la variable d'environnement %HOME%. Par défaut, %HOME% sera mis
-à %HOMEDRIVE%%HOMEPATH% si vide. Changez le comportement par défaut uniquement si vous rencontrez des problèmes.</Value>
+à %HOMEDRIVE%%HOMEPATH% si vide. Ne changez le comportement par défaut que si vous rencontrez des problèmes.</Value>
         </TranslationItem>
         <TranslationItem Name="ok" Property="Text" type="unfinished">
           <Source>OK</Source>
@@ -4188,11 +4188,11 @@ _ReSharper*/
         </TranslationItem>
         <TranslationItem Name="tabPageCommandCache" Property="Text">
           <Source>Command cache</Source>
-          <Value>Cache de commande</Value>
+          <Value>Cache de commandes</Value>
         </TranslationItem>
         <TranslationItem Name="tabPageCommandLog" Property="Text">
           <Source>Command log</Source>
-          <Value>Journal de commande</Value>
+          <Value>Journal des commandes</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4446,7 +4446,7 @@ commande "git help shortlog"</Value>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Merge branches</Source>
-          <Value>Fusionner branches</Value>
+          <Value>Fusionner les branches</Value>
         </TranslationItem>
         <TranslationItem Name="Currentbranch" Property="Text">
           <Source>Current branch</Source>
@@ -5764,7 +5764,7 @@ Choisissez de supprimer le fichier ou garder la version modifiée.
         </TranslationItem>
         <TranslationItem Name="fileHistoryToolStripMenuItem" Property="Text">
           <Source>File history</Source>
-          <Value>Historique de fichier</Value>
+          <Value>Historique du fichier</Value>
         </TranslationItem>
         <TranslationItem Name="fileIsBinary" Property="Text">
           <Source>The selected file appears to be a binary file.
@@ -5832,14 +5832,14 @@ The conflit de fusion ne sera pas marqué comme résolu. Réessayez s'il vous pl
         </TranslationItem>
         <TranslationItem Name="merge" Property="Text" type="unfinished">
           <Source>Merge</Source>
-          <Value>Fusionner</Value>
+          <Value>Fusionner (Merge)</Value>
         </TranslationItem>
         <TranslationItem Name="mergeConflictIsSubmodule" Property="Text" type="unfinished">
           <Source>The selected mergeconflict is a submodule.
 Stage current submodule commit?</Source>
           <OldSource>The selected mergeconflict is a submodule. Mark conflict as resolved?</OldSource>
           <Value>Le conflit de fusion sélectionné est un sous module.
-Mettre en place le commit du sous-module courrant?</Value>
+Mettre en place le commit du sous module courrant?</Value>
         </TranslationItem>
         <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
           <Source>Submodule</Source>
@@ -6760,7 +6760,7 @@ du menu contextuel pour des opérations supplémentaires</Value>
         </TranslationItem>
         <TranslationItem Name="chkCheckForUncommittedChangesInCheckoutBranch" Property="Text">
           <Source>Check for uncommitted changes in checkout branch dialog</Source>
-          <Value>Vérfifiez les modifications non commitées dans le formulaire de chargelent de branche</Value>
+          <Value>Vérfifiez les modifications non commitées dans le formulaire de chargement de branche</Value>
         </TranslationItem>
         <TranslationItem Name="chkCloseProcessDialog" Property="Text">
           <Source>Close Process dialog when process succeeds</Source>
@@ -6834,11 +6834,11 @@ du menu contextuel pour des opérations supplémentaires</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Limit number of commits that will be loaded at startup</Source>
-          <Value>Limiter le nombre de commits chargés au démarrage</Value>
+          <Value>Limite du nombre de commits chargés au démarrage</Value>
         </TranslationItem>
         <TranslationItem Name="label12" Property="Text">
           <Source>Limit number of commits that will be loaded at startup</Source>
-          <Value>Limiter le nombre de commits chargés au démarrage</Value>
+          <Value>Limiter du nombre de commits chargés au démarrage</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>Port</Source>
@@ -6847,7 +6847,7 @@ du menu contextuel pour des opérations supplémentaires</Value>
         <TranslationItem Name="label23" Property="Text" type="unfinished">
           <Source>SMTP server name</Source>
           <OldSource>SMTP server for sending patches by email</OldSource>
-          <Value>Nom du serveur SMTP</Value>
+          <Value>Nom serveur SMTP</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text">
           <Source>Revision grid quick search timeout [ms]</Source>
@@ -6855,7 +6855,7 @@ du menu contextuel pour des opérations supplémentaires</Value>
         </TranslationItem>
         <TranslationItem Name="lblDefaultCloneDestination" Property="Text">
           <Source>Default clone destination</Source>
-          <Value>Destination du clone par défaut</Value>
+          <Value>Dest. clone par défaut</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6903,7 +6903,7 @@ du menu contextuel pour des opérations supplémentaires</Value>
         </TranslationItem>
         <TranslationItem Name="label14" Property="Text">
           <Source>Path to linux tools (sh). Leave empty when it is in the path.</Source>
-          <Value>Chemin vers les outils linux (sh). Laisser vide si ils sont dans le path.</Value>
+          <Value>Chemin vers les outils linux (sh). Laisser vide s'ils sont dans le path.</Value>
         </TranslationItem>
         <TranslationItem Name="label50" Property="Text">
           <Source>Git Extensions can use msysgit or cygwin to access git repositories. Set the correct paths below.</Source>
@@ -6912,8 +6912,8 @@ du menu contextuel pour des opérations supplémentaires</Value>
         <TranslationItem Name="label51" Property="Text">
           <Source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
 to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems. </Source>
-          <Value>Le fichier de configuration global doit être situé à l'endroit indiqué par la variable d'environnement %HOME%. Par défaut, %HOME% sera mis
-à %HOMEDRIVE%%HOMEPATH% si vide. Changez le comportement par défaut uniquement si vous rencontrez des problèmes.</Value>
+          <Value>Le fichier de configuration global doit être situé à l'endroit indiqué par la variable d'environnement %HOME%. Par défaut, %HOME%
+sera mis à %HOMEDRIVE%%HOMEPATH% si vide. Changez le comportement par défaut seulement si vous rencontrez des problèmes.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6977,11 +6977,11 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>User name</Source>
-          <Value>Nom d'utilisateur</Value>
+          <Value>Nom de l'utilisateur</Value>
         </TranslationItem>
         <TranslationItem Name="label4" Property="Text">
           <Source>User email</Source>
-          <Value>Email utilisateur</Value>
+          <Value>Email de l'utilisateur</Value>
         </TranslationItem>
         <TranslationItem Name="label41" Property="Text" type="unfinished">
           <Source>Difftool</Source>
@@ -7127,11 +7127,11 @@ help</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>User name</Source>
-          <Value>Nom d'utilisateur</Value>
+          <Value>Nom de l'utilisateur</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>User email</Source>
-          <Value>Email utilisateur</Value>
+          <Value>Email de l'utilisateur</Value>
         </TranslationItem>
         <TranslationItem Name="label20" Property="Text">
           <Source>You only need local settings
@@ -7201,7 +7201,7 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="_middleOfRebaseCaption" Property="Text" type="unfinished">
           <Source>Rebase</Source>
-          <Value>Rebaser</Value>
+          <Value>Rebaser (Rebase)</Value>
         </TranslationItem>
         <TranslationItem Name="_notValidGitDirectory" Property="Text">
           <Source>The current directory is not a valid git repository.</Source>
@@ -7405,7 +7405,7 @@ local settings.
         </TranslationItem>
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
           <Source>Delete branch</Source>
-          <Value>Supprimer branche</Value>
+          <Value>Supprimer la branche</Value>
         </TranslationItem>
         <TranslationItem Name="deleteTagToolStripMenuItem" Property="Text">
           <Source>Delete tag</Source>
@@ -7619,7 +7619,7 @@ Si c'est un dépôt central (dépôt nu sans répertoire de travail) :
         </TranslationItem>
         <TranslationItem Name="scriptNeedsConfirmation" Property="Text">
           <Source>Ask for confirmation</Source>
-          <Value>Demander confirmation</Value>
+          <Value>Demander une confirmation</Value>
         </TranslationItem>
         <TranslationItem Name="scriptShowProgress" Property="Text">
           <Source>Show progress</Source>
@@ -7716,7 +7716,7 @@ but requires the PuTTY authentication client to run  in the background.
 When OpenSSH is used, command line dialogs are shown!
 </Source>
           <Value>OpenSSH est un outil console. PuTTY est plus ergonomique sous Windows, 
-mais nécessite que le client d'authentification tourne en arrière-plan.</Value>
+mais nécessite que le client d'authentification fonctionne en arrière-plan.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7729,7 +7729,7 @@ mais nécessite que le client d'authentification tourne en arrière-plan.</Value
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select one of the subnodes to view or edit the settings of a Git Extensions Plugin.</Source>
-          <Value>Sélectionnez un des sous-noeuds pour voir et modifier les paramètres d'un des plugins de Git Extensions.</Value>
+          <Value>Sélectionnez un des sous-noeuds pour voir et modifier les paramètres d'une des extensions de Git Extensions.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
