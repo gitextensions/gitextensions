@@ -635,7 +635,7 @@ S'il vous plait, assurez vous que git (msysgit ou cygwin) est installé ou rense
         <TranslationItem Name="labelBranchesCaption" Property="Text" type="unfinished">
           <Source>Branch(es):</Source>
           <OldSource>Branches:</OldSource>
-          <Value>Branches :</Value>
+          <Value>Branche(s) :</Value>
         </TranslationItem>
         <TranslationItem Name="labelDate" Property="Text">
           <Source>Commit date:</Source>
@@ -644,7 +644,7 @@ S'il vous plait, assurez vous que git (msysgit ou cygwin) est installé ou rense
         <TranslationItem Name="labelTagsCaption" Property="Text" type="unfinished">
           <Source>Tag(s):</Source>
           <OldSource>Tags:</OldSource>
-          <Value>Etiquettes :</Value>
+          <Value>Etiquette(s) :</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -703,7 +703,7 @@ Valeur: {2} = {3}</Value>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text" type="unfinished">
           <Source>Apply stashed changes after successful pull (stash will be popped automatically)</Source>
           <OldSource>Apply stashed changes (Stash will be popped automatically after successful pull)</OldSource>
-          <Value>Appliquer les modifications du stash (Le stash sera retiré automatiquement après une application avec succès)</Value>
+          <Value>Appliquer les modifications du stash après une récupération avec succès (Le stash sera appliqué automatiquement)</Value>
         </TranslationItem>
         <TranslationItem Name="chkPushNewBranch" Property="Text">
           <Source>Push a new branch for the remote</Source>
@@ -860,7 +860,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <OldSource>The selected item is not a valid git repository.
 
 Do you want to abort and remove it from the recent repositories list?</OldSource>
-          <Value>L'item sélectionné n'est pas un dépôt git valide.
+          <Value>L'item selectionné n'est pas un dépôt git valide.
 
 Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         </TranslationItem>
@@ -1600,7 +1600,7 @@ Vous aurez les droits de pousser. {2}</Value>
         <TranslationItem Name="label1" Property="Text" type="unfinished">
           <Source>This revision will be archived:</Source>
           <OldSource>Selected revision to archive:</OldSource>
-          <Value>Sélectionnez la révision à archiver :</Value>
+          <Value>Cette révision sera archivée :</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>Choose another
@@ -1791,7 +1791,7 @@ compare with first:</Source>
         <TranslationItem Name="_repositoryHostsToolStripMenuItem" Property="Text" type="unfinished">
           <Source>(Repository hosts)</Source>
           <OldSource>Repository hosts</OldSource>
-          <Value>Hôte de dépôts</Value>
+          <Value>(Hôtes de dépôts)</Value>
         </TranslationItem>
         <TranslationItem Name="_saveFileFilterAllFiles" Property="Text">
           <Source>All files</Source>
@@ -1820,7 +1820,7 @@ compare with first:</Source>
         <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text" type="unfinished">
           <Source>View pull requests...</Source>
           <OldSource>View pull requests</OldSource>
-          <Value>Afficher les demandes de pull</Value>
+          <Value>Afficher les demandes de pull...</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfBisect" Property="Text">
           <Source>You are in the middle of a bisect</Source>
@@ -1905,7 +1905,7 @@ compare with first:</Source>
         <TranslationItem Name="cleanupToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Clean working tree...</Source>
           <OldSource>Cleanup repository...</OldSource>
-          <Value>Nettoyer le dépôt...</Value>
+          <Value>Nettoyer l'arborescence de travail...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
           <Source>Clone SVN repository...</Source>
@@ -1918,7 +1918,7 @@ compare with first:</Source>
         <TranslationItem Name="closeToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Close (go to Dashboard)</Source>
           <OldSource>Close</OldSource>
-          <Value>Fermer</Value>
+          <Value>Fermer (aller au tableau de bord)</Value>
         </TranslationItem>
         <TranslationItem Name="collapseAllToolStripMenuItem" Property="Text">
           <Source>Collapse all</Source>
@@ -1955,7 +1955,7 @@ compare with first:</Source>
         <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text" type="unfinished">
           <Source>Copy full path(s)</Source>
           <OldSource>Copy full path</OldSource>
-          <Value>Copier le nom de fichier</Value>
+          <Value>Copier le(s) chemin(s) complet(s)</Value>
         </TranslationItem>
         <TranslationItem Name="dashboardToolStripMenuItem" Property="Text">
           <Source>Dashboard</Source>
@@ -2048,7 +2048,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         <TranslationItem Name="fileToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Start</Source>
           <OldSource>File</OldSource>
-          <Value>Fichier</Value>
+          <Value>Démarrer</Value>
         </TranslationItem>
         <TranslationItem Name="fileTreeArchiveToolStripMenuItem" Property="Text">
           <Source>Archive...</Source>
@@ -2113,12 +2113,12 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text" type="unfinished">
           <Source>Remote repositories...</Source>
           <OldSource>Manage remote repositories</OldSource>
-          <Value>Gérer les dépôts distants</Value>
+          <Value>Dépôts distants...</Value>
         </TranslationItem>
         <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Submodules...</Source>
           <OldSource>Manage submodules</OldSource>
-          <Value>Gérer les sous modules</Value>
+          <Value>Sous-modules...</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Source>Merge branches...</Source>
@@ -2135,7 +2135,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</Value>
         <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Open containing folder(s)</Source>
           <OldSource>Open containing folder</OldSource>
-          <Value>Ouvrir le dossier contenant</Value>
+          <Value>Ouvrir le(s) dossier(s) contenant(s)</Value>
         </TranslationItem>
         <TranslationItem Name="openFileToolStripMenuItem" Property="Text">
           <Source>Open this revision (temp file)</Source>
@@ -2478,7 +2478,7 @@ Entrez un nom de branche valide ou sélectionnez une valeur prédéfinie.
         <TranslationItem Name="Force" Property="Text" type="unfinished">
           <Source>Force (reset local changes)</Source>
           <OldSource>Force</OldSource>
-          <Value>Forcer</Value>
+          <Value>Forcer (remettre à zéro les changements locaux)</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text" type="unfinished">
           <Source>Checkout</Source>
@@ -2784,7 +2784,7 @@ gitex.cmd / gitex (situé dans le même répertoire que GitExtensions.exe) :</Va
         <TranslationItem Name="Reset" Property="Text" type="unfinished">
           <Source>Reset all changes</Source>
           <OldSource>Reset changes</OldSource>
-          <Value>Réinitialiser changements</Value>
+          <Value>Réinitialiser tous les changements</Value>
         </TranslationItem>
         <TranslationItem Name="SolveMergeconflicts" Property="Text" type="unfinished">
           <Source>There are unresolved mergeconflicts
@@ -3556,7 +3556,7 @@ en utilisant `forcer la suppression´.</Value>
         <TranslationItem Name="deleteTag" Property="Text" type="unfinished">
           <Source>Delete tag also from the following remote(s):</Source>
           <OldSource>Delete tag from '{0}'</OldSource>
-          <Value>Supprimer l'étiquette depuis '{0}'</Value>
+          <Value>Supprimer l'étiquette aussi depuis le(s) dépôt(s) distant(s) suivant :</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select tag</Source>
@@ -4306,7 +4306,7 @@ defaultrebase=0</Value>
         <TranslationItem Name="linkGitRevParse" Property="Text" type="unfinished">
           <Source>More see git-rev-parse</Source>
           <OldSource>More (git-rev-parse, section SPECIFYING REVISIONS)</OldSource>
-          <Value>Plus (git-rev-parse, section SPECIFIER LES REVISIONS)</Value>
+          <Value>Plus, voir git-rev-parse</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4637,7 +4637,7 @@ Pour activer le support de Gerrit pour un dépôt, un fichier .gitreview doit ê
         <TranslationItem Name="NoTags" Property="Text" type="unfinished">
           <Source>Fetch no tag</Source>
           <OldSource>No tags</OldSource>
-          <Value>Pas d'étiquette</Value>
+          <Value>Récupération d'aucune étiquette</Value>
         </TranslationItem>
         <TranslationItem Name="Pull" Property="Text">
           <Source>&amp;Pull</Source>
@@ -5202,7 +5202,7 @@ Rien à rebaser.</Value>
         </TranslationItem>
         <TranslationItem Name="shorteningGB" Property="Text">
           <Source>Shortening strategy</Source>
-          <Value>Startégie de raccourcicement</Value>
+          <Value>Stratégie de raccourcicement</Value>
         </TranslationItem>
         <TranslationItem Name="sortLessRecentRepos" Property="Text">
           <Source>Sort less recent repositories alphabetically</Source>
@@ -5471,7 +5471,7 @@ fichiers et/ou répertoires</Value>
         <TranslationItem Name="branchInfo" Property="Text" type="unfinished">
           <Source>Reset branch '{0}' to revision:</Source>
           <OldSource>Reset {0} to:</OldSource>
-          <Value>Réinitialiser {0} à :</Value>
+          <Value>Réinitialiser la branche '{0}' à la révision :</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Reset type</Source>
@@ -5838,7 +5838,8 @@ The conflit de fusion ne sera pas marqué comme résolu. Réessayez s'il vous pl
           <Source>The selected mergeconflict is a submodule.
 Stage current submodule commit?</Source>
           <OldSource>The selected mergeconflict is a submodule. Mark conflict as resolved?</OldSource>
-          <Value>Le conflit de fusion sélectionné est un sous module. Marquer le conflit comme résolu?</Value>
+          <Value>Le conflit de fusion sélectionné est un sous module.
+Mettre en place le commit du sous-module courrant?</Value>
         </TranslationItem>
         <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
           <Source>Submodule</Source>
@@ -6076,8 +6077,8 @@ any global setting.
 Therefore the Cancel button does NOT revert any changes made.</Source>
           <OldSource>Changes made on this page will be saved instantly. 
 Thus the Cancel and Discard button will have no effect for this page.</OldSource>
-          <Value>Les modifications faites sur cette page seront sauvées instantanément.
-Par conséquent les boutons Annuler et Rejeter n'auront aucun effet sur cette page.</Value>
+          <Value>Les changements faits sur la page sélectionnée seront sauvées instantanément.
+Par conséquent le bouton Annuler n'annule AUCUN changement fait.</Value>
         </TranslationItem>
         <TranslationItem Name="labelSettingsPageTitle" Property="Text">
           <Source>...title...</Source>
@@ -6846,7 +6847,7 @@ du menu contextuel pour des opérations supplémentaires</Value>
         <TranslationItem Name="label23" Property="Text" type="unfinished">
           <Source>SMTP server name</Source>
           <OldSource>SMTP server for sending patches by email</OldSource>
-          <Value>Serveur SMTP pour l'envoi de patchs par email</Value>
+          <Value>Nom du serveur SMTP</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text">
           <Source>Revision grid quick search timeout [ms]</Source>
@@ -7724,7 +7725,7 @@ mais nécessite que le client d'authentification tourne en arrière-plan.</Value
         <TranslationItem Name="$this" Property="Text" type="unfinished">
           <Source>Plugins Settings</Source>
           <OldSource>Start Page</OldSource>
-          <Value>Page de départ</Value>
+          <Value>Paramètres des Extensions</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select one of the subnodes to view or edit the settings of a Git Extensions Plugin.</Source>
