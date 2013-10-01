@@ -10,6 +10,7 @@ namespace BackgroundFetch
     {
         private IDisposable cancellationToken;
         private IGitUICommands currentGitUiCommands;
+        private const string GitCommandSetting = "Arguments of git command to run";
         private const string FetchIntervalSetting = "Fetch every (seconds) - set to 0 to disable";
         private const string AutoRefreshSetting = "Refresh view after fetch (true / false)";
 
@@ -24,6 +25,7 @@ namespace BackgroundFetch
 
             Settings.AddSetting(FetchIntervalSetting, "0");
             Settings.AddSetting(AutoRefreshSetting, "false");
+            Settings.AddSetting(GitCommandSetting, "fetch --all");
         }
 
         public override void Register(IGitUICommands gitUiCommands)
@@ -63,7 +65,7 @@ namespace BackgroundFetch
                               .ObserveOn(ThreadPoolScheduler.Instance)
                               .Subscribe(i =>
                                   {
-                                      var msg = currentGitUiCommands.GitCommand("fetch --all");
+                                      var msg = currentGitUiCommands.GitCommand(Settings.GetSetting(GitCommandSetting));
                                       if (autoRefresh && msg.IndexOf("From", StringComparison.InvariantCultureIgnoreCase) > 0)
                                           currentGitUiCommands.RepoChangedNotifier.Notify();
                                   }
