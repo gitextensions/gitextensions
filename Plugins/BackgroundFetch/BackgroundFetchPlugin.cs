@@ -65,9 +65,18 @@ namespace BackgroundFetch
                               .ObserveOn(ThreadPoolScheduler.Instance)
                               .Subscribe(i =>
                                   {
-                                      var msg = currentGitUiCommands.GitCommand(Settings.GetSetting(GitCommandSetting));
-                                      if (autoRefresh && msg.IndexOf("From", StringComparison.InvariantCultureIgnoreCase) > 0)
-                                          currentGitUiCommands.RepoChangedNotifier.Notify();
+                                      var gitCmd = Settings.GetSetting(GitCommandSetting).Trim();
+                                      var msg = currentGitUiCommands.GitCommand(gitCmd);
+                                      if (autoRefresh)
+                                      {
+                                          if (gitCmd.StartsWith("fetch", StringComparison.InvariantCultureIgnoreCase))
+                                          {
+                                              if (msg.Contains("From"))
+                                                  currentGitUiCommands.RepoChangedNotifier.Notify();
+                                          }
+                                          else
+                                              currentGitUiCommands.RepoChangedNotifier.Notify();
+                                      }
                                   }
                                   );
             }
