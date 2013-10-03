@@ -26,6 +26,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkStartWithRecentWorkingDir.Checked = AppSettings.StartWithRecentWorkingDir;
             chkPlaySpecialStartupSound.Checked = AppSettings.PlaySpecialStartupSound;
             chkWriteCommitMessageInCommitWindow.Checked = AppSettings.UseFormCommitMessage;
+            _NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Value = AppSettings.CommitDialogNumberOfPreviousMessages;
             chkUsePatienceDiffAlgorithm.Checked = AppSettings.UsePatienceDiffAlgorithm;
             RevisionGridQuickSearchTimeout.Value = AppSettings.RevisionGridQuickSearchTimeout;
             chkFollowRenamesInFileHistory.Checked = AppSettings.FollowRenamesInFileHistory;
@@ -50,6 +51,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
             AppSettings.PlaySpecialStartupSound = chkPlaySpecialStartupSound.Checked;
             AppSettings.UseFormCommitMessage = chkWriteCommitMessageInCommitWindow.Checked;
+            AppSettings.CommitDialogNumberOfPreviousMessages = (int) _NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Value;
             AppSettings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
             AppSettings.ShowErrorsWhenStagingFiles = chkShowErrorsWhenStagingFiles.Checked;
             AppSettings.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
