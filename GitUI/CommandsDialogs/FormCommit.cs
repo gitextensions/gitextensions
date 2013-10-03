@@ -1536,9 +1536,11 @@ namespace GitUI.CommandsDialogs
                 if (!localLastCommitMessage.Trim().Equals(msg.Trim()))
                     AddCommitMessageToMenu(localLastCommitMessage);
 
-            commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
-                toolStripMenuItem1,
-                generateListOfChangesInSubmodulesChangesToolStripMenuItem});
+                commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
+                {
+                    toolStripMenuItem1,
+                    generateListOfChangesInSubmodulesChangesToolStripMenuItem
+                });
             }
         }
 
