@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.lblCommitDialogNumberOfPreviousMessages = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages = new System.Windows.Forms.NumericUpDown();
             this.btnDefaultDestinationBrowse = new System.Windows.Forms.Button();
             this.cbDefaultCloneDestination = new System.Windows.Forms.ComboBox();
             this.lblDefaultCloneDestination = new System.Windows.Forms.Label();
@@ -60,6 +62,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.groupBox12.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).BeginInit();
             this.groupBox11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_MaxCommits)).BeginInit();
@@ -71,6 +74,8 @@
             // 
             this.groupBox12.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox12.Controls.Add(this.lblCommitDialogNumberOfPreviousMessages);
+            this.groupBox12.Controls.Add(this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages);
             this.groupBox12.Controls.Add(this.btnDefaultDestinationBrowse);
             this.groupBox12.Controls.Add(this.cbDefaultCloneDestination);
             this.groupBox12.Controls.Add(this.lblDefaultCloneDestination);
@@ -87,17 +92,48 @@
             this.groupBox12.Controls.Add(this.chkFollowRenamesInFileHistory);
             this.groupBox12.Location = new System.Drawing.Point(3, 186);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(581, 296);
+            this.groupBox12.Size = new System.Drawing.Size(1297, 331);
             this.groupBox12.TabIndex = 56;
             this.groupBox12.TabStop = false;
             this.groupBox12.Text = "Behaviour";
             // 
+            // lblCommitDialogNumberOfPreviousMessages
+            // 
+            this.lblCommitDialogNumberOfPreviousMessages.AutoSize = true;
+            this.lblCommitDialogNumberOfPreviousMessages.Location = new System.Drawing.Point(7, 233);
+            this.lblCommitDialogNumberOfPreviousMessages.Name = "lblCommitDialogNumberOfPreviousMessages";
+            this.lblCommitDialogNumberOfPreviousMessages.Size = new System.Drawing.Size(261, 15);
+            this.lblCommitDialogNumberOfPreviousMessages.TabIndex = 9;
+            this.lblCommitDialogNumberOfPreviousMessages.Text = "Number of previous messages in commit dialog";
+            // 
+            // _NO_TRANSLATE_CommitDialogNumberOfPreviousMessages
+            // 
+            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Location = new System.Drawing.Point(320, 231);
+            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Name = "_NO_TRANSLATE_CommitDialogNumberOfPreviousMessages";
+            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Size = new System.Drawing.Size(123, 23);
+            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.TabIndex = 10;
+            this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // btnDefaultDestinationBrowse
             // 
-            this.btnDefaultDestinationBrowse.Location = new System.Drawing.Point(449, 230);
+            this.btnDefaultDestinationBrowse.Location = new System.Drawing.Point(449, 262);
             this.btnDefaultDestinationBrowse.Name = "btnDefaultDestinationBrowse";
             this.btnDefaultDestinationBrowse.Size = new System.Drawing.Size(75, 23);
-            this.btnDefaultDestinationBrowse.TabIndex = 57;
+            this.btnDefaultDestinationBrowse.TabIndex = 13;
             this.btnDefaultDestinationBrowse.Text = "Browse";
             this.btnDefaultDestinationBrowse.UseVisualStyleBackColor = true;
             this.btnDefaultDestinationBrowse.Click += new System.EventHandler(this.DefaultCloneDestinationBrowseClick);
@@ -107,18 +143,18 @@
             this.cbDefaultCloneDestination.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.cbDefaultCloneDestination.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystemDirectories;
             this.cbDefaultCloneDestination.FormattingEnabled = true;
-            this.cbDefaultCloneDestination.Location = new System.Drawing.Point(155, 230);
+            this.cbDefaultCloneDestination.Location = new System.Drawing.Point(155, 262);
             this.cbDefaultCloneDestination.Name = "cbDefaultCloneDestination";
             this.cbDefaultCloneDestination.Size = new System.Drawing.Size(288, 23);
-            this.cbDefaultCloneDestination.TabIndex = 56;
+            this.cbDefaultCloneDestination.TabIndex = 12;
             // 
             // lblDefaultCloneDestination
             // 
             this.lblDefaultCloneDestination.AutoSize = true;
-            this.lblDefaultCloneDestination.Location = new System.Drawing.Point(7, 233);
+            this.lblDefaultCloneDestination.Location = new System.Drawing.Point(7, 265);
             this.lblDefaultCloneDestination.Name = "lblDefaultCloneDestination";
             this.lblDefaultCloneDestination.Size = new System.Drawing.Size(139, 15);
-            this.lblDefaultCloneDestination.TabIndex = 55;
+            this.lblDefaultCloneDestination.TabIndex = 11;
             this.lblDefaultCloneDestination.Text = "Default clone destination";
             // 
             // chkWriteCommitMessageInCommitWindow
@@ -127,7 +163,7 @@
             this.chkWriteCommitMessageInCommitWindow.Location = new System.Drawing.Point(10, 187);
             this.chkWriteCommitMessageInCommitWindow.Name = "chkWriteCommitMessageInCommitWindow";
             this.chkWriteCommitMessageInCommitWindow.Size = new System.Drawing.Size(329, 34);
-            this.chkWriteCommitMessageInCommitWindow.TabIndex = 54;
+            this.chkWriteCommitMessageInCommitWindow.TabIndex = 8;
             this.chkWriteCommitMessageInCommitWindow.Text = "Compose commit messages in Commit dialog\r\n(otherwise the message will be requeste" +
     "d during commit)";
             this.chkWriteCommitMessageInCommitWindow.UseVisualStyleBackColor = true;
@@ -138,7 +174,7 @@
             this.chkPlaySpecialStartupSound.Location = new System.Drawing.Point(320, 158);
             this.chkPlaySpecialStartupSound.Name = "chkPlaySpecialStartupSound";
             this.chkPlaySpecialStartupSound.Size = new System.Drawing.Size(166, 19);
-            this.chkPlaySpecialStartupSound.TabIndex = 53;
+            this.chkPlaySpecialStartupSound.TabIndex = 7;
             this.chkPlaySpecialStartupSound.Text = "Play Special Startup Sound";
             this.chkPlaySpecialStartupSound.UseVisualStyleBackColor = true;
             // 
@@ -148,7 +184,7 @@
             this.chkCloseProcessDialog.Location = new System.Drawing.Point(10, 20);
             this.chkCloseProcessDialog.Name = "chkCloseProcessDialog";
             this.chkCloseProcessDialog.Size = new System.Drawing.Size(260, 19);
-            this.chkCloseProcessDialog.TabIndex = 9;
+            this.chkCloseProcessDialog.TabIndex = 0;
             this.chkCloseProcessDialog.Text = "Close Process dialog when process succeeds";
             this.chkCloseProcessDialog.UseVisualStyleBackColor = true;
             // 
@@ -158,7 +194,7 @@
             this.chkShowGitCommandLine.Location = new System.Drawing.Point(10, 43);
             this.chkShowGitCommandLine.Name = "chkShowGitCommandLine";
             this.chkShowGitCommandLine.Size = new System.Drawing.Size(290, 19);
-            this.chkShowGitCommandLine.TabIndex = 11;
+            this.chkShowGitCommandLine.TabIndex = 1;
             this.chkShowGitCommandLine.Text = "Show console window when executing git process";
             this.chkShowGitCommandLine.UseVisualStyleBackColor = true;
             // 
@@ -168,7 +204,7 @@
             this.chkStartWithRecentWorkingDir.Location = new System.Drawing.Point(10, 158);
             this.chkStartWithRecentWorkingDir.Name = "chkStartWithRecentWorkingDir";
             this.chkStartWithRecentWorkingDir.Size = new System.Drawing.Size(196, 19);
-            this.chkStartWithRecentWorkingDir.TabIndex = 52;
+            this.chkStartWithRecentWorkingDir.TabIndex = 6;
             this.chkStartWithRecentWorkingDir.Text = "Open last working dir on startup";
             this.chkStartWithRecentWorkingDir.UseVisualStyleBackColor = true;
             // 
@@ -179,7 +215,7 @@
             0,
             0,
             0});
-            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(320, 263);
+            this.RevisionGridQuickSearchTimeout.Location = new System.Drawing.Point(320, 295);
             this.RevisionGridQuickSearchTimeout.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -192,7 +228,7 @@
             0});
             this.RevisionGridQuickSearchTimeout.Name = "RevisionGridQuickSearchTimeout";
             this.RevisionGridQuickSearchTimeout.Size = new System.Drawing.Size(123, 23);
-            this.RevisionGridQuickSearchTimeout.TabIndex = 33;
+            this.RevisionGridQuickSearchTimeout.TabIndex = 15;
             this.RevisionGridQuickSearchTimeout.Value = new decimal(new int[] {
             1000,
             0,
@@ -205,17 +241,17 @@
             this.chkStashUntrackedFiles.Location = new System.Drawing.Point(10, 110);
             this.chkStashUntrackedFiles.Name = "chkStashUntrackedFiles";
             this.chkStashUntrackedFiles.Size = new System.Drawing.Size(188, 19);
-            this.chkStashUntrackedFiles.TabIndex = 51;
+            this.chkStashUntrackedFiles.TabIndex = 4;
             this.chkStashUntrackedFiles.Text = "Include untracked files in stash";
             this.chkStashUntrackedFiles.UseVisualStyleBackColor = true;
             // 
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(7, 265);
+            this.label24.Location = new System.Drawing.Point(7, 297);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(216, 15);
-            this.label24.TabIndex = 32;
+            this.label24.TabIndex = 14;
             this.label24.Text = "Revision grid quick search timeout [ms]";
             // 
             // chkUsePatienceDiffAlgorithm
@@ -224,7 +260,7 @@
             this.chkUsePatienceDiffAlgorithm.Location = new System.Drawing.Point(10, 66);
             this.chkUsePatienceDiffAlgorithm.Name = "chkUsePatienceDiffAlgorithm";
             this.chkUsePatienceDiffAlgorithm.Size = new System.Drawing.Size(169, 19);
-            this.chkUsePatienceDiffAlgorithm.TabIndex = 43;
+            this.chkUsePatienceDiffAlgorithm.TabIndex = 2;
             this.chkUsePatienceDiffAlgorithm.Text = "Use patience diff algorithm";
             this.chkUsePatienceDiffAlgorithm.UseVisualStyleBackColor = true;
             // 
@@ -234,7 +270,7 @@
             this.chkShowErrorsWhenStagingFiles.Location = new System.Drawing.Point(10, 87);
             this.chkShowErrorsWhenStagingFiles.Name = "chkShowErrorsWhenStagingFiles";
             this.chkShowErrorsWhenStagingFiles.Size = new System.Drawing.Size(186, 19);
-            this.chkShowErrorsWhenStagingFiles.TabIndex = 34;
+            this.chkShowErrorsWhenStagingFiles.TabIndex = 3;
             this.chkShowErrorsWhenStagingFiles.Text = "Show errors when staging files";
             this.chkShowErrorsWhenStagingFiles.UseVisualStyleBackColor = true;
             // 
@@ -244,7 +280,7 @@
             this.chkFollowRenamesInFileHistory.Location = new System.Drawing.Point(10, 133);
             this.chkFollowRenamesInFileHistory.Name = "chkFollowRenamesInFileHistory";
             this.chkFollowRenamesInFileHistory.Size = new System.Drawing.Size(259, 19);
-            this.chkFollowRenamesInFileHistory.TabIndex = 26;
+            this.chkFollowRenamesInFileHistory.TabIndex = 5;
             this.chkFollowRenamesInFileHistory.Text = "Follow renames in file history (experimental)";
             this.chkFollowRenamesInFileHistory.UseVisualStyleBackColor = true;
             // 
@@ -261,7 +297,7 @@
             this.groupBox11.Controls.Add(this._NO_TRANSLATE_MaxCommits);
             this.groupBox11.Location = new System.Drawing.Point(3, 3);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(581, 177);
+            this.groupBox11.Size = new System.Drawing.Size(1297, 177);
             this.groupBox11.TabIndex = 55;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "Performance";
@@ -359,9 +395,9 @@
             this.groupBox1.Controls.Add(this.label23);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.numericUpDown1);
-            this.groupBox1.Location = new System.Drawing.Point(3, 488);
+            this.groupBox1.Location = new System.Drawing.Point(3, 523);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(581, 68);
+            this.groupBox1.Size = new System.Drawing.Size(1297, 68);
             this.groupBox1.TabIndex = 57;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Email settings for sending patches";
@@ -449,9 +485,10 @@
             this.Controls.Add(this.groupBox12);
             this.Controls.Add(this.groupBox11);
             this.Name = "GitExtensionsSettingsPage";
-            this.Size = new System.Drawing.Size(587, 559);
+            this.Size = new System.Drawing.Size(1303, 856);
             this.groupBox12.ResumeLayout(false);
             this.groupBox12.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RevisionGridQuickSearchTimeout)).EndInit();
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
@@ -496,5 +533,7 @@
         private System.Windows.Forms.Label lblDefaultCloneDestination;
         private System.Windows.Forms.ComboBox cbDefaultCloneDestination;
         private System.Windows.Forms.Button btnDefaultDestinationBrowse;
+        private System.Windows.Forms.Label lblCommitDialogNumberOfPreviousMessages;
+        private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_CommitDialogNumberOfPreviousMessages;
     }
 }
