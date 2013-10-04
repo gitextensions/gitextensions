@@ -372,7 +372,7 @@ Select no if you want to configure a different mergetool yourself.</Source>
         </TranslationItem>
         <TranslationItem Name="_opensshUsed" Property="Text">
           <Source>Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)</Source>
-          <Value>デフォルトのSSHクライアント OpenSSHが使われます。(プル，プッシュ，クローンを行なう際に、コマンドラインウィンドウが現れます)</Value>
+          <Value>デフォルトのSSHクライアント OpenSSHが使われます。(Pull，Push，Cloneを行なう際に、コマンドラインウィンドウが現れます)</Value>
         </TranslationItem>
         <TranslationItem Name="_plinkputtyGenpageantNotFound" Property="Text">
           <Source>PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.</Source>
@@ -670,7 +670,7 @@ Value:  {2} = {3}</Source>
         </TranslationItem>
         <TranslationItem Name="chkAddTrackingRef" Property="Text">
           <Source>Add a tracking reference for newly pushed branch</Source>
-          <Value>新規ブランチをプッシュする時に追跡先として設定</Value>
+          <Value>新規ブランチをPushする時に追跡先として設定</Value>
         </TranslationItem>
         <TranslationItem Name="chkAmend" Property="Text">
           <Source>Amend last commit</Source>
@@ -682,11 +682,11 @@ Value:  {2} = {3}</Source>
         </TranslationItem>
         <TranslationItem Name="chkAutoPopStashAfterPull" Property="Text">
           <Source>Apply stashed changes after successful pull (stash will be popped automatically)</Source>
-          <Value>退避した変更を適用 (プル成功後に自動で適用されます)</Value>
+          <Value>退避した変更を適用 (Pull成功後に自動で適用されます)</Value>
         </TranslationItem>
         <TranslationItem Name="chkPushNewBranch" Property="Text">
           <Source>Push a new branch for the remote</Source>
-          <Value>新規ブランチをリモートにプッシュ</Value>
+          <Value>新規ブランチをリモートにPush</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -758,7 +758,7 @@ Value:  {2} = {3}</Source>
         </TranslationItem>
         <TranslationItem Name="_strPleaseCloneGitHubRep" Property="Text">
           <Source>Please clone GitHub repository before pull request.</Source>
-          <Value>Pull Requestを行なうには、GitHubのリポジトリをクローンしてください。</Value>
+          <Value>Pull Requestを行なうには、GitHubのリポジトリをCloneしてください。</Value>
         </TranslationItem>
         <TranslationItem Name="_strPullRequest" Property="Text">
           <Source>Pull request</Source>
@@ -814,15 +814,15 @@ Value:  {2} = {3}</Source>
         </TranslationItem>
         <TranslationItem Name="cloneFork" Property="Text">
           <Source>Clone {0} repository</Source>
-          <Value>リポジトリ {0} のクローン</Value>
+          <Value>リポジトリ {0} のClone</Value>
         </TranslationItem>
         <TranslationItem Name="cloneRepository" Property="Text">
           <Source>Clone repository</Source>
-          <Value>リポジトリのクローン</Value>
+          <Value>リポジトリのClone</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSvnRepository" Property="Text">
           <Source>Clone SVN repository</Source>
-          <Value>SVNリポジトリのクローン</Value>
+          <Value>SVNリポジトリのClone</Value>
         </TranslationItem>
         <TranslationItem Name="createRepository" Property="Text">
           <Source>Create new repository</Source>
@@ -1203,7 +1203,7 @@ Do you want to open it?</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Remote repository fork and clone</Source>
-          <Value>リモート リポジトリのフォークとクローン</Value>
+          <Value>リモート リポジトリのForkとClone</Value>
         </TranslationItem>
         <TranslationItem Name="_browseForCloneToDirbtn" Property="Text">
           <Source>Browse...</Source>
@@ -1211,11 +1211,11 @@ Do you want to open it?</Source>
         </TranslationItem>
         <TranslationItem Name="_cloneBtn" Property="Text">
           <Source>Clone</Source>
-          <Value>クローン</Value>
+          <Value>Clone</Value>
         </TranslationItem>
         <TranslationItem Name="_cloneSetupGB" Property="Text">
           <Source>Clone</Source>
-          <Value>クローン</Value>
+          <Value>Clone</Value>
         </TranslationItem>
         <TranslationItem Name="_closeBtn" Property="Text">
           <Source>Close</Source>
@@ -1231,7 +1231,7 @@ Do you want to open it?</Source>
         </TranslationItem>
         <TranslationItem Name="_forkBtn" Property="Text">
           <Source>Fork!</Source>
-          <Value>フォークする</Value>
+          <Value>Forkする</Value>
         </TranslationItem>
         <TranslationItem Name="_getFromUserBtn" Property="Text">
           <Source>Get from user</Source>
@@ -1239,7 +1239,7 @@ Do you want to open it?</Source>
         </TranslationItem>
         <TranslationItem Name="_helpTextLbl" Property="Text">
           <Source>If you want to fork a repository owned by somebody else, go to the Search for repositories tab.</Source>
-          <Value>他の誰かが所有しているリポジトリをフォークしたい場合は、リポジトリの検索タブを開きましょう。</Value>
+          <Value>他の誰かが所有しているリポジトリをForkしたい場合は、リポジトリの検索タブを開きましょう。</Value>
         </TranslationItem>
         <TranslationItem Name="_myReposPage" Property="Text">
           <Source>My repositories</Source>
@@ -1263,7 +1263,7 @@ Do you want to open it?</Source>
         </TranslationItem>
         <TranslationItem Name="_strCloneFolderCanNotBeEmpty" Property="Text">
           <Source>Clone folder can not be empty</Source>
-          <Value>空のフォルダをクローンすることはできません。</Value>
+          <Value>空のフォルダをCloneすることはできません。</Value>
         </TranslationItem>
         <TranslationItem Name="_strCouldNotAddRemote" Property="Text">
           <Source>Could not add remote</Source>
@@ -1279,7 +1279,7 @@ Do you want to open it?</Source>
         </TranslationItem>
         <TranslationItem Name="_strFailedToFork" Property="Text">
           <Source>Failed to fork:</Source>
-          <Value>フォーク失敗:</Value>
+          <Value>Fork失敗:</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToGetRepos" Property="Text">
           <Source>Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu "Plugins/{0}".</Source>
@@ -1320,14 +1320,14 @@ Do you want to open it?</Source>
         <TranslationItem Name="_strWillCloneInfo" Property="Text">
           <Source>Will clone {0} into {1}.
 You can not push unless you are a collaborator. {2}</Source>
-          <Value>{0}を{1}にクローンします。
-あなたがcollaboratorでなければ、プッシュはできません。{2}</Value>
+          <Value>{0}を{1}にCloneします。
+あなたがcollaboratorでなければ、Pushはできません。{2}</Value>
         </TranslationItem>
         <TranslationItem Name="_strWillCloneWithPushAccess" Property="Text">
           <Source>Will clone {0} into {1}.
 You will have push access. {2}</Source>
-          <Value>{0}を{1}にクローンします。
-あなたはプッシュ権限を持っています。{2}</Value>
+          <Value>{0}を{1}にCloneします。
+あなたはPush権限を持っています。{2}</Value>
         </TranslationItem>
         <TranslationItem Name="_strYes" Property="Text" type="unfinished">
           <Source>Yes</Source>
@@ -1339,11 +1339,11 @@ You will have push access. {2}</Source>
         </TranslationItem>
         <TranslationItem Name="columnHeader6" Property="Text">
           <Source>Is fork</Source>
-          <Value>フォーク</Value>
+          <Value>Fork</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Destination folder:</Source>
-          <Value>クローン先フォルダ:</Value>
+          <Value>Clone先フォルダ:</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>Add remote as:</Source>
@@ -1691,11 +1691,11 @@ compare with first:</Source>
         </TranslationItem>
         <TranslationItem Name="SvnFetchToolStripMenuItem" Property="Text">
           <Source>SVN Fetch</Source>
-          <Value>SVNフェッチ</Value>
+          <Value>SVN Fetch</Value>
         </TranslationItem>
         <TranslationItem Name="SvnRebaseToolStripMenuItem" Property="Text">
           <Source>SVN Rebase</Source>
-          <Value>SVNリベース</Value>
+          <Value>SVN リベース</Value>
         </TranslationItem>
         <TranslationItem Name="TreeTabPage" Property="Text">
           <Source>File tree</Source>
@@ -1719,7 +1719,7 @@ compare with first:</Source>
         </TranslationItem>
         <TranslationItem Name="_forkCloneRepositoryToolStripMenuItem" Property="Text">
           <Source>Fork/Clone repository...</Source>
-          <Value>リポジトリのフォーク/クローン...</Value>
+          <Value>リポジトリのFork/Clone...</Value>
         </TranslationItem>
         <TranslationItem Name="_hintUnresolvedMergeConflicts" Property="Text">
           <Source>There are unresolved merge conflicts!</Source>
@@ -1882,11 +1882,11 @@ compare with first:</Source>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
           <Source>Clone SVN repository...</Source>
-          <Value>SVNリポジトリのクローン...</Value>
+          <Value>SVNリポジトリのClone...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneToolStripMenuItem" Property="Text">
           <Source>Clone repository...</Source>
-          <Value>リポジトリのクローン...</Value>
+          <Value>リポジトリのClone...</Value>
         </TranslationItem>
         <TranslationItem Name="closeToolStripMenuItem" Property="Text">
           <Source>Close (go to Dashboard)</Source>
@@ -1998,11 +1998,11 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="fetchAllToolStripMenuItem" Property="Text">
           <Source>Fetch all</Source>
-          <Value>すべてフェッチ</Value>
+          <Value>すべてFetch</Value>
         </TranslationItem>
         <TranslationItem Name="fetchToolStripMenuItem" Property="Text">
           <Source>Fetch</Source>
-          <Value>フェッチ</Value>
+          <Value>Fetch</Value>
         </TranslationItem>
         <TranslationItem Name="fileExplorerToolStripMenuItem" Property="Text">
           <Source>File Explorer</Source>
@@ -2632,7 +2632,7 @@ revision:</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Clone</Source>
-          <Value>クローン</Value>
+          <Value>Clone</Value>
         </TranslationItem>
         <TranslationItem Name="Central" Property="Text">
           <Source>Central repository, no working dir  (--bare --shared=all)</Source>
@@ -2652,7 +2652,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Clone</Source>
-          <Value>クローン</Value>
+          <Value>Clone</Value>
         </TranslationItem>
         <TranslationItem Name="Personal" Property="Text">
           <Source>Personal repository</Source>
@@ -2677,13 +2677,13 @@ revision:</Source>
         <TranslationItem Name="_infoNewRepositoryLocation" Property="Text">
           <Source>The repository will be cloned to a new directory located here:
 {0}</Source>
-          <Value>リポジトリは以下のディレクトリにクローンされます:
+          <Value>リポジトリは以下のディレクトリにCloneされます:
 {0}</Value>
         </TranslationItem>
         <TranslationItem Name="_questionOpenRepo" Property="Text" type="unfinished">
           <Source>The repository has been cloned successfully.
 Do you want to open the new repository "{0}" now?</Source>
-          <Value>リポジトリは正常にクローンされました。
+          <Value>リポジトリは正常にCloneされました。
 今すぐリポジトリ"{0}"を開きますか？</Value>
         </TranslationItem>
         <TranslationItem Name="_questionOpenRepoCaption" Property="Text">
@@ -2704,11 +2704,11 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>&amp;Repository to clone:</Source>
-          <Value>クローンするリポジトリ(&amp;R)</Value>
+          <Value>Cloneするリポジトリ(&amp;R)</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>&amp;Destination:</Source>
-          <Value>クローンを作成する場所(&amp;D)</Value>
+          <Value>Cloneを作成する場所(&amp;D)</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>&amp;Subdirectory to create:</Source>
@@ -2717,8 +2717,8 @@ Do you want to open the new repository "{0}" now?</Source>
         <TranslationItem Name="Info" Property="Text" type="obsolete">
           <Source>The repository will be cloned to a new directory located here:
 [&amp;Destination:]\GitExtensions</Source>
-          <Value>リポジトリは次の新しいディレクトリにクローンされます:
-    [クローン先]\GitExtnsions(&amp;D)</Value>
+          <Value>リポジトリは次の新しいディレクトリにCloneされます:
+    [Clone先]\GitExtnsions(&amp;D)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2755,7 +2755,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
         </TranslationItem>
         <TranslationItem Name="CommitAndPush" Property="Text">
           <Source>C&amp;ommit &amp;&amp; push</Source>
-          <Value>コミット&amp;&amp;プッシュ(&amp;O)</Value>
+          <Value>コミット &amp;&amp; Push(&amp;O)</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Commit</Source>
@@ -3544,7 +3544,7 @@ this using `force delete´.
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>(includes information about deleting tags which are already pushed)</Source>
-          <Value>(すでにプッシュされたタグの削除についての情報が含まれています)</Value>
+          <Value>(すでにPushされたタグの削除についての情報が含まれています)</Value>
         </TranslationItem>
         <TranslationItem Name="_deleteFromCaption" Property="Text" type="obsolete">
           <Source>Delete from '{0}'</Source>
@@ -4463,7 +4463,7 @@ This is a modified recursive strategy. When merging trees A and B, if B correspo
 match the tree structure of A, instead of reading the trees at the same level. This adjustment is also done to the common 
 ancestor tree. </Source>
           <Value>resolve
-3-wayマージアルゴリズムを用いて、2つのブランチ (例えば、現在のブランチとpullしてきたブランチ) のみをマージできます。
+3-wayマージアルゴリズムを用いて、2つのブランチ (例えば、現在のブランチとPullしてきたブランチ) のみをマージできます。
 この戦略はcriss-crossマージの曖昧さを検出します。このアルゴリズムは、高速かつ安全と考えられています。
 訳注：criss-crossマージに遭遇したことがないのでわかりませんが、おそらくcriss-crossマージに遭遇すると、
 この戦略ではマージが中断されるということだと思います。
@@ -4471,11 +4471,11 @@ ancestor tree. </Source>
 recursive 
 3-wayマージアルゴリズムを用いて、2つのブランチのみをマージできます。3-wayマージに使用できる1つ以上の共通の分岐点がある場合、
 この戦略は共通の分岐点のマージされた木を作り、3-wayマージの参照木として使用します。
-さらに、この戦略は名前の変更を含むマージを検出し、扱うこともできます。この戦略は対象が1つのpullやmergeのデフォルトのマージ戦略です。
+さらに、この戦略は名前の変更を含むマージを検出し、扱うこともできます。この戦略は対象が1つのPullやmergeのデフォルトのマージ戦略です。
 
 octopus 
 この戦略は2つ以上のブランチのマージを行いますが、手動による解決が必要な複雑なマージを拒否します。
-この戦略はトピックブランチと一緒に使用します。この戦略は対象が2つ以上のpullやmergeのデフォルトのマージ戦略です。
+この戦略はトピックブランチと一緒に使用します。この戦略は対象が2つ以上のPullやmergeのデフォルトのマージ戦略です。
 
 ours 
 この戦略は複数のブランチのマージを行いますが、マージ結果は常に現在のブランチのみ反映され、ほかのブランチの変更はすべて無視されます。
@@ -4592,7 +4592,7 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
         </TranslationItem>
         <TranslationItem Name="AllTags" Property="Text">
           <Source>Fetch all tags</Source>
-          <Value>全てのタグをフェッチする</Value>
+          <Value>全てのタグをFetchする</Value>
         </TranslationItem>
         <TranslationItem Name="AutoStash" Property="Text">
           <Source>Auto stash</Source>
@@ -4612,11 +4612,11 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
         </TranslationItem>
         <TranslationItem Name="NoTags" Property="Text">
           <Source>Fetch no tag</Source>
-          <Value>タグをフェッチしない</Value>
+          <Value>タグをFetchしない</Value>
         </TranslationItem>
         <TranslationItem Name="Pull" Property="Text" type="unfinished">
           <Source>&amp;Pull</Source>
-          <Value>プル (&amp;P)</Value>
+          <Value>Pull (&amp;P)</Value>
         </TranslationItem>
         <TranslationItem Name="PullFromRemote" Property="Text">
           <Source>Remote</Source>
@@ -4628,7 +4628,7 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
         </TranslationItem>
         <TranslationItem Name="ReachableTags" Property="Text">
           <Source>Follow tagopt, if not specified, fetch tags reachable from remote HEAD</Source>
-          <Value>tagoptに従うが、指定されていなかった場合、リモートのHEADから辿れるタグをフェッチする</Value>
+          <Value>tagoptに従うが、指定されていなかった場合、リモートのHEADから辿れるタグをFetchする</Value>
         </TranslationItem>
         <TranslationItem Name="Rebase" Property="Text">
           <Source>&amp;Rebase current branch on top of remote branch, creates linear history (use with caution)</Source>
@@ -4680,7 +4680,7 @@ If you want to fetch and merge a branch, choose a specific branch.</Source>
           <Source>You cannot "pull" when git head detached.
 
 Do you want to continue?</Source>
-          <Value>遊離したheadの状態では、"pull"は出来ません。
+          <Value>遊離したheadの状態では、"Pull"は出来ません。
 
 続行しますか？</Value>
         </TranslationItem>
@@ -4720,7 +4720,7 @@ Do you want to continue?</Source>
           <Source>The pulled has submodules configured.
 Do you want to initialize the submodules?
 This will initialize and update all submodules recursive.</Source>
-          <Value>pullにはsubmoduleが含まれています。
+          <Value>Pullにはsubmoduleが含まれています。
 submoduleを使えるようにしますか？
 その場合、すべてのサブモジュールが再帰的に更新されます。</Value>
         </TranslationItem>
@@ -4864,7 +4864,7 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="_pullActionFetch" Property="Text">
           <Source>fetch</Source>
-          <Value>フェッチ</Value>
+          <Value>Fetch</Value>
         </TranslationItem>
         <TranslationItem Name="_pullActionMerge" Property="Text">
           <Source>merge</Source>
@@ -4936,7 +4936,7 @@ Are you sure you want to push this branch?</Source>
         </TranslationItem>
         <TranslationItem Name="groupBox4" Property="Text">
           <Source>Select Branches to Push</Source>
-          <Value>プッシュするブランチを選択</Value>
+          <Value>Pushするブランチを選択</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Tag to push</Source>
@@ -5259,7 +5259,7 @@ Nothing to rebase.</Source>
         </TranslationItem>
         <TranslationItem Name="_labelUrlAsFetch" Property="Text">
           <Source>Fetch Url</Source>
-          <Value>フェッチURL</Value>
+          <Value>Fetch URL</Value>
         </TranslationItem>
         <TranslationItem Name="_labelUrlAsFetchPush" Property="Text">
           <Source>Url</Source>
@@ -5315,7 +5315,7 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="checkBoxSepPushUrl" Property="Text">
           <Source>Separate Push Url</Source>
-          <Value>フェッチ元とプッシュ先を分ける</Value>
+          <Value>Fetch元とPush先を分ける</Value>
         </TranslationItem>
         <TranslationItem Name="dataGridViewTextBoxColumn1" Property="HeaderText">
           <Source>Name</Source>
@@ -5351,7 +5351,7 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="labelPushUrl" Property="Text">
           <Source>Push Url</Source>
-          <Value>プッシュURL</Value>
+          <Value>Push URL</Value>
         </TranslationItem>
         <TranslationItem Name="nameDataGridViewTextBoxColumn" Property="HeaderText">
           <Source>Branch</Source>
@@ -5363,7 +5363,7 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="tabPage2" Property="Text">
           <Source>Default pull behavior (fetch &amp; merge)</Source>
-          <Value>デフォルトのpullの振る舞い(fetch &amp; merge)</Value>
+          <Value>デフォルトのPullの振る舞い(Fetch &amp; Merge)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6282,7 +6282,7 @@ Do you want to trust this host key and then try again?</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Svn Clone</Source>
-          <Value>SVNクローン</Value>
+          <Value>SVN Clone</Value>
         </TranslationItem>
         <TranslationItem Name="_questionContinueWithoutAuthors" Property="Text">
           <Source>Authors file "{0}" does not exists. Continue without authors file?</Source>
@@ -6295,7 +6295,7 @@ Do you want to trust this host key and then try again?</Source>
         <TranslationItem Name="_questionOpenRepo" Property="Text">
           <Source>The repository has been cloned successfully.
 Do you want to open the new repository "{0}" now?</Source>
-          <Value>リポジトリは正常にクローンされました。
+          <Value>リポジトリは正常にCloneされました。
 今すぐリポジトリ"{0}"を開きますか？</Value>
         </TranslationItem>
         <TranslationItem Name="_questionOpenRepoCaption" Property="Text">
@@ -6328,11 +6328,11 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Svn repository to clone</Source>
-          <Value>クローンするSVNリポジトリ</Value>
+          <Value>CloneするSVNリポジトリ</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>Destination</Source>
-          <Value>クローン先</Value>
+          <Value>Clone先</Value>
         </TranslationItem>
         <TranslationItem Name="label3" Property="Text">
           <Source>Subdirectory to create</Source>
@@ -6352,7 +6352,7 @@ Do you want to open the new repository "{0}" now?</Source>
         </TranslationItem>
         <TranslationItem Name="okButton" Property="Text">
           <Source>Clone</Source>
-          <Value>クローン</Value>
+          <Value>Clone</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -6801,7 +6801,7 @@ Context menu for additional operations</Source>
         </TranslationItem>
         <TranslationItem Name="lblDefaultCloneDestination" Property="Text">
           <Source>Default clone destination</Source>
-          <Value>デフォルトのクローン先</Value>
+          <Value>デフォルトのClone先</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7227,7 +7227,7 @@ Git の 正しいパスを入力してください。</Value>
         </TranslationItem>
         <TranslationItem Name="CloneRepository" Property="Text">
           <Source>Clone repository</Source>
-          <Value>リポジトリのクローン</Value>
+          <Value>リポジトリのClone</Value>
         </TranslationItem>
         <TranslationItem Name="Commit" Property="Text">
           <Source>Commit</Source>
@@ -7389,7 +7389,7 @@ If this is a central repository (bare repository without a working dir):
 - コミットする
 
 中央のリポジトリの場合は以下の手順を推奨します。
-- 他のリポジトリから変更をpushする</Value>
+- 他のリポジトリから変更をPushする</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text">
           <Source>The current working dir is not a git repository.</Source>
@@ -7796,7 +7796,7 @@ When OpenSSH is used, command line dialogs are shown!
         </TranslationItem>
         <TranslationItem Name="_addAndFetchBtn" Property="Text">
           <Source>Add remote and fetch</Source>
-          <Value>リモートに追加してフェッチ</Value>
+          <Value>リモートに追加してFetch</Value>
         </TranslationItem>
         <TranslationItem Name="_chooseRepo" Property="Text">
           <Source>Choose repository:</Source>
@@ -7808,7 +7808,7 @@ When OpenSSH is used, command line dialogs are shown!
         </TranslationItem>
         <TranslationItem Name="_fetchBtn" Property="Text">
           <Source>Fetch to pr/ branch</Source>
-          <Value>pr/ブランチとしてフェッチ</Value>
+          <Value>pr/ブランチとしてFetch</Value>
         </TranslationItem>
         <TranslationItem Name="_postComment" Property="Text">
           <Source>Post comment</Source>
@@ -7836,7 +7836,7 @@ When OpenSSH is used, command line dialogs are shown!
         </TranslationItem>
         <TranslationItem Name="_strFailedToFetchPullData" Property="Text">
           <Source>Failed to fetch pull data!</Source>
-          <Value>プル データの取得に失敗しました。</Value>
+          <Value>Pullデータの取得に失敗しました。</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToLoadDiffData" Property="Text">
           <Source>Failed to load diff data!</Source>
