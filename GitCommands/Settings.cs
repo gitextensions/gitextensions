@@ -1062,9 +1062,13 @@ namespace GitCommands
         {
             lock (EncodedNameMap)
             {
-                foreach (String name in VersionIndependentRegKey.GetValueNames())
+                RegistryKey oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");
+                if (oldSettings == null)
+                    return;
+
+                foreach (String name in oldSettings.GetValueNames())
                 {
-                    object value = VersionIndependentRegKey.GetValue(name, null);
+                    object value = oldSettings.GetValue(name, null);
                     if (value != null)
                         EncodedNameMap[name] = value.ToString();
                 }
