@@ -33,7 +33,10 @@ namespace GitUI.CommandsDialogs.CommitDialog
             checkBoxUseIndent.Checked = Settings.CommitValidationIndentAfterFirstLine;
             _NO_TRANSLATE_textBoxCommitValidationRegex.Text = Settings.CommitValidationRegEx;
 
-            _commitTemplates = CommitTemplateItem.DeserializeCommitTemplates(Settings.CommitTemplates);
+            bool shouldBeUpdated;
+            _commitTemplates = CommitTemplateItem.DeserializeCommitTemplates(Settings.CommitTemplates, out shouldBeUpdated);
+            if (shouldBeUpdated)
+                Settings.CommitTemplates = CommitTemplateItem.SerializeCommitTemplates(_commitTemplates);
 
             if (null == _commitTemplates)
             {
