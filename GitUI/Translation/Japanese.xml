@@ -730,7 +730,7 @@ Value:  {2} = {3}</Source>
       <translationItems>
         <TranslationItem Name="$this" Property="Text">
           <Source>Create Pull Request</Source>
-          <Value>プル リクエストの作成</Value>
+          <Value>Pull Requestの作成</Value>
         </TranslationItem>
         <TranslationItem Name="_createBtn" Property="Text">
           <Source>Create</Source>
@@ -750,7 +750,7 @@ Value:  {2} = {3}</Source>
         </TranslationItem>
         <TranslationItem Name="_strFailedToCreatePullRequest" Property="Text">
           <Source>Failed to create pull request.</Source>
-          <Value>プル リクエストの作成に失敗しました。</Value>
+          <Value>Pull Requestの作成に失敗しました。</Value>
         </TranslationItem>
         <TranslationItem Name="_strLoading" Property="Text">
           <Source>Loading...</Source>
@@ -758,11 +758,11 @@ Value:  {2} = {3}</Source>
         </TranslationItem>
         <TranslationItem Name="_strPleaseCloneGitHubRep" Property="Text">
           <Source>Please clone GitHub repository before pull request.</Source>
-          <Value>プル リクエストを行なうには、GitHubのリポジトリをクローンしてください。</Value>
+          <Value>Pull Requestを行なうには、GitHubのリポジトリをクローンしてください。</Value>
         </TranslationItem>
         <TranslationItem Name="_strPullRequest" Property="Text">
           <Source>Pull request</Source>
-          <Value>プル リクエスト</Value>
+          <Value>Pull Request</Value>
         </TranslationItem>
         <TranslationItem Name="_strYouMustSpecifyATitle" Property="Text">
           <Source>You must specify a title.</Source>
@@ -1793,7 +1793,7 @@ compare with first:</Source>
         <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text" type="unfinished">
           <Source>View pull requests...</Source>
           <OldSource>View pull requests</OldSource>
-          <Value>プル リクエストの表示</Value>
+          <Value>Pull Requestの表示</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfBisect" Property="Text">
           <Source>You are in the middle of a bisect</Source>
@@ -7804,7 +7804,7 @@ When OpenSSH is used, command line dialogs are shown!
         </TranslationItem>
         <TranslationItem Name="_closePullRequestBtn" Property="Text">
           <Source>Close pull request</Source>
-          <Value>プルリクエストをクローズ</Value>
+          <Value>Pull Requestをクローズ</Value>
         </TranslationItem>
         <TranslationItem Name="_fetchBtn" Property="Text">
           <Source>Fetch to pr/ branch</Source>
@@ -7832,7 +7832,7 @@ When OpenSSH is used, command line dialogs are shown!
         </TranslationItem>
         <TranslationItem Name="_strFailedToClosePullRequest" Property="Text">
           <Source>Failed to close pull request!</Source>
-          <Value>プル リクエストのクローズに失敗しました。</Value>
+          <Value>Pull Requestのクローズに失敗しました。</Value>
         </TranslationItem>
         <TranslationItem Name="_strFailedToFetchPullData" Property="Text">
           <Source>Failed to fetch pull data!</Source>
