@@ -2640,7 +2640,7 @@ revision:</Source>
         </TranslationItem>
         <TranslationItem Name="CentralRepository" Property="Text">
           <Source>P&amp;ublic repository, no working dir  (--bare)</Source>
-          <Value>作業ディレクトリを持たない中央リポジトリ (--bare)</Value>
+          <Value>作業ディレクトリを持たない中央リポジトリ (--bare)(&amp;P)</Value>
         </TranslationItem>
         <TranslationItem Name="FromBrowse" Property="Text">
           <Source>&amp;Browse</Source>
