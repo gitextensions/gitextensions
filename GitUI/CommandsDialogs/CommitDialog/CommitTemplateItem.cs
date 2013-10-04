@@ -4,6 +4,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
 using System.Xml.Serialization;
+using GitCommands.Utils;
 
 namespace GitUI.CommandsDialogs.CommitDialog
 {
@@ -105,24 +106,6 @@ namespace GitUI.CommandsDialogs.CommitDialog
             //assemblyName = assemblyName.Replace(OldNamespace, NewNamespace);
             var type = Type.GetType(string.Format("{0}, {1}", typeName, assemblyName));
             return type;
-        }
-    }
-
-    public static class JsonSerializer
-    {
-        public static string Serialize<T>(T myObject)
-        {
-            var json = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T));
-            var stream = new System.IO.MemoryStream();
-            json.WriteObject(stream, myObject);
-            return System.Text.Encoding.UTF8.GetString(stream.ToArray());
-        }
-
-        public static T Deserialize<T>(string myString)
-        {
-            var json = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T));
-            var stream = new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(myString));
-            return (T)json.ReadObject(stream);
         }
     }
 }
