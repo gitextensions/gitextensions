@@ -49,12 +49,30 @@ namespace GitUI.CommandsDialogs.CommitDialog
             info.AddValue("Text", Text);
         }
 
-        public static string SerializeCommitTemplates(CommitTemplateItem[] items)
+        public static void SaveToSettings(CommitTemplateItem[] items)
+        {
+            string strVal = SerializeCommitTemplates(items);
+            GitCommands.Settings.CommitTemplates = strVal ?? string.Empty;
+        }
+
+        public static CommitTemplateItem[] LoadFromSettings()
+        {
+            string serializedString = GitCommands.Settings.CommitTemplates;
+            bool shouldBeUpdated;
+            var templates = DeserializeCommitTemplates(serializedString, out shouldBeUpdated);
+            if (shouldBeUpdated)
+                SaveToSettings(templates);
+
+            return templates;
+        }
+
+
+        private static string SerializeCommitTemplates(CommitTemplateItem[] items)
         {
             return JsonSerializer.Serialize(items);
         }
 
-        public static CommitTemplateItem[] DeserializeCommitTemplates(string serializedString, out bool shouldBeUpdated)
+        private static CommitTemplateItem[] DeserializeCommitTemplates(string serializedString, out bool shouldBeUpdated)
         {
             shouldBeUpdated = false;
             if (string.IsNullOrEmpty(serializedString))
