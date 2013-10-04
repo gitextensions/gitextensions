@@ -126,9 +126,9 @@ This action will be performed without warning while checking out branch.</Source
           <Source>Application font</Source>
           <Value>Шрифт приложения</Value>
         </TranslationItem>
-        <TranslationItem Name="label34" Property="Text" type="unfinished">
+        <TranslationItem Name="label34" Property="Text">
           <Source>Commit font</Source>
-          <Value />
+          <Value>Шрифт окна Commit</Value>
         </TranslationItem>
         <TranslationItem Name="label44" Property="Text">
           <Source>Image size</Source>
@@ -459,21 +459,21 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
           <Source>Default</Source>
           <Value>По умолчанию</Value>
         </TranslationItem>
-        <TranslationItem Name="DrawNonRelativesGray" Property="Text" type="unfinished">
+        <TranslationItem Name="DrawNonRelativesGray" Property="Text">
           <Source>Draw non relatives graph gray</Source>
-          <Value />
+          <Value>Рисовать не родственные кривые серым</Value>
         </TranslationItem>
-        <TranslationItem Name="DrawNonRelativesTextGray" Property="Text" type="unfinished">
+        <TranslationItem Name="DrawNonRelativesTextGray" Property="Text">
           <Source>Draw non relatives text gray</Source>
-          <Value />
+          <Value>Рисовать не родственный текст серым</Value>
         </TranslationItem>
         <TranslationItem Name="GreenIcon" Property="Text">
           <Source>Green</Source>
           <Value>Зеленый</Value>
         </TranslationItem>
-        <TranslationItem Name="LightblueIcon" Property="Text" type="unfinished">
+        <TranslationItem Name="LightblueIcon" Property="Text">
           <Source>Light blue</Source>
-          <Value />
+          <Value>Голубой</Value>
         </TranslationItem>
         <TranslationItem Name="MulticolorBranches" Property="Text">
           <Source>Multicolor branches</Source>
@@ -499,9 +499,9 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
           <Source>Yellow</Source>
           <Value>Желтый</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox3" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox3" Property="Text">
           <Source>Difference view</Source>
-          <Value />
+          <Value>Просмотр различий</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox4" Property="Text">
           <Source>Revision graph</Source>
@@ -603,29 +603,29 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
     </TranslationCategory>
     <TranslationCategory Name="CommitSummaryUserControl">
       <translationItems>
-        <TranslationItem Name="_noRevision" Property="Text" type="unfinished">
+        <TranslationItem Name="_noRevision" Property="Text">
           <Source>No revision</Source>
-          <Value />
+          <Value>Нет ревизий</Value>
         </TranslationItem>
-        <TranslationItem Name="_notAvailable" Property="Text" type="unfinished">
+        <TranslationItem Name="_notAvailable" Property="Text">
           <Source>n/a</Source>
-          <Value />
+          <Value>недоступно</Value>
         </TranslationItem>
-        <TranslationItem Name="labelAuthorCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="labelAuthorCaption" Property="Text">
           <Source>Author:</Source>
-          <Value />
+          <Value>Автор:</Value>
         </TranslationItem>
-        <TranslationItem Name="labelBranchesCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="labelBranchesCaption" Property="Text">
           <Source>Branch(es):</Source>
-          <Value />
+          <Value>Ветвь(ки):</Value>
         </TranslationItem>
-        <TranslationItem Name="labelDate" Property="Text" type="unfinished">
+        <TranslationItem Name="labelDate" Property="Text">
           <Source>Commit date:</Source>
-          <Value />
+          <Value>Дата коммита:</Value>
         </TranslationItem>
-        <TranslationItem Name="labelTagsCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="labelTagsCaption" Property="Text">
           <Source>Tag(s):</Source>
-          <Value />
+          <Value>Ветка(и):</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1021,17 +1021,17 @@ Do you want to open it?</Source>
           <Source>No changes</Source>
           <Value>Нет изменений</Value>
         </TranslationItem>
-        <TranslationItem Name="_DiffWithParent" Property="Text" type="unfinished">
+        <TranslationItem Name="_DiffWithParent" Property="Text">
           <Source>Diff with parent</Source>
-          <Value />
+          <Value>Сравнить с родителем</Value>
         </TranslationItem>
         <TranslationItem Name="_UnsupportedMultiselectAction" Property="Text">
           <Source>Operation not supported</Source>
           <Value>Операция не поддерживается</Value>
         </TranslationItem>
-        <TranslationItem Name="columnHeader1" Property="Text" type="unfinished">
+        <TranslationItem Name="columnHeader1" Property="Text">
           <Source>Files</Source>
-          <Value />
+          <Value>Файлы</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -1560,18 +1560,17 @@ You will have push access. {2}</Source>
           <Source>Take the files that have changed from the revision above to this one and archive only those</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox1" Property="Text">
           <Source>Archive format</Source>
-          <Value />
+          <Value>Формат архива</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox2" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox2" Property="Text">
           <Source>Filter files</Source>
-          <Value />
+          <Value>Фильтр файлов</Value>
         </TranslationItem>
-        <TranslationItem Name="label1" Property="Text" type="unfinished">
+        <TranslationItem Name="label1" Property="Text">
           <Source>This revision will be archived:</Source>
-          <OldSource>Selected revision to archive:</OldSource>
-          <Value>Выберите ревизию для сжатия</Value>
+          <Value>Эта ревизия будет архивированна:</Value>
         </TranslationItem>
         <TranslationItem Name="label2" Property="Text" type="unfinished">
           <Source>Choose another
@@ -1582,13 +1581,13 @@ revision:</Source>
           <Source>separate each new path by new line</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="labelAuthorCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="labelAuthorCaption" Property="Text">
           <Source>Author:</Source>
-          <Value />
+          <Value>Автор:</Value>
         </TranslationItem>
-        <TranslationItem Name="labelDateCaption" Property="Text" type="unfinished">
+        <TranslationItem Name="labelDateCaption" Property="Text">
           <Source>Commit date:</Source>
-          <Value />
+          <Value>Дата коммита:</Value>
         </TranslationItem>
         <TranslationItem Name="lblChooseDiffRevision" Property="Text" type="unfinished">
           <Source>Choose revision to 
@@ -1675,9 +1674,9 @@ compare with first:</Source>
           <Source>Go to commit...</Source>
           <Value>Перейти к коммиту...</Value>
         </TranslationItem>
-        <TranslationItem Name="GotoCurrentRevision" Property="Text" type="unfinished">
+        <TranslationItem Name="GotoCurrentRevision" Property="Text">
           <Source>Go to current revision</Source>
-          <Value />
+          <Value>Перейти к текущей ревизии</Value>
         </TranslationItem>
         <TranslationItem Name="PuTTYToolStripMenuItem" Property="Text">
           <Source>PuTTY</Source>
@@ -1791,10 +1790,9 @@ compare with first:</Source>
           <Source>Update current submodule</Source>
           <Value>Обновить текущий субмодуль</Value>
         </TranslationItem>
-        <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="_viewPullRequestsToolStripMenuItem" Property="Text">
           <Source>View pull requests...</Source>
-          <OldSource>View pull requests</OldSource>
-          <Value>Обзор pull request'ов</Value>
+          <Value>Обзор pull request'ов...</Value>
         </TranslationItem>
         <TranslationItem Name="_warningMiddleOfBisect" Property="Text">
           <Source>You are in the middle of a bisect</Source>
@@ -1860,9 +1858,9 @@ compare with first:</Source>
           <Source>Changelog</Source>
           <Value>Изменения</Value>
         </TranslationItem>
-        <TranslationItem Name="checkForUpdatesToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="checkForUpdatesToolStripMenuItem" Property="Text">
           <Source>Check for updates</Source>
-          <Value />
+          <Value>Проверить обновления</Value>
         </TranslationItem>
         <TranslationItem Name="checkoutBranchToolStripMenuItem" Property="Text">
           <Source>Checkout branch...</Source>
@@ -1876,10 +1874,9 @@ compare with first:</Source>
           <Source>Cherry pick...</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="cleanupToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="cleanupToolStripMenuItem" Property="Text">
           <Source>Clean working tree...</Source>
-          <OldSource>Cleanup repository...</OldSource>
-          <Value>Очистить...</Value>
+          <Value>Очистить рабочее дерево...</Value>
         </TranslationItem>
         <TranslationItem Name="cloneSVNToolStripMenuItem" Property="Text">
           <Source>Clone SVN repository...</Source>
@@ -1889,10 +1886,9 @@ compare with first:</Source>
           <Source>Clone repository...</Source>
           <Value>Клонировать репозиторий...</Value>
         </TranslationItem>
-        <TranslationItem Name="closeToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="closeToolStripMenuItem" Property="Text">
           <Source>Close (go to Dashboard)</Source>
-          <OldSource>Close</OldSource>
-          <Value>Закрыть</Value>
+          <Value>Закрыть (перейти в Главную панель)</Value>
         </TranslationItem>
         <TranslationItem Name="collapseAllToolStripMenuItem" Property="Text">
           <Source>Collapse all</Source>
@@ -1926,14 +1922,13 @@ compare with first:</Source>
           <Source>Copy full path</Source>
           <Value>Копировать имя файла в буфер обмена</Value>
         </TranslationItem>
-        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text" type="unfinished">
+        <TranslationItem Name="copyFilenameToClipboardToolStripMenuItem1" Property="Text">
           <Source>Copy full path(s)</Source>
-          <OldSource>Copy full path</OldSource>
-          <Value>Копировать имя файла в буфер обмена</Value>
+          <Value>Копировать имя файла(ов) в буфер обмена</Value>
         </TranslationItem>
-        <TranslationItem Name="dashboardToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="dashboardToolStripMenuItem" Property="Text">
           <Source>Dashboard</Source>
-          <Value />
+          <Value>Главная панель</Value>
         </TranslationItem>
         <TranslationItem Name="deleteBranchToolStripMenuItem" Property="Text">
           <Source>Delete branch...</Source>
@@ -1951,9 +1946,9 @@ compare with first:</Source>
           <Source>Diff contains (SLOW)</Source>
           <Value>Diff содержит (МЕДЛЕННО)</Value>
         </TranslationItem>
-        <TranslationItem Name="diffShowInFileTreeToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="diffShowInFileTreeToolStripMenuItem" Property="Text">
           <Source>Show in File tree</Source>
-          <Value />
+          <Value>Показать файл в дереве</Value>
         </TranslationItem>
         <TranslationItem Name="directoryIsNotAValidRepository" Property="Text">
           <Source>The selected item is not a valid git repository.
@@ -2019,14 +2014,13 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>File history</Source>
           <Value>История файла</Value>
         </TranslationItem>
-        <TranslationItem Name="fileToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="fileToolStripMenuItem" Property="Text">
           <Source>Start</Source>
-          <OldSource>File</OldSource>
-          <Value>Файл</Value>
+          <Value>Начать</Value>
         </TranslationItem>
-        <TranslationItem Name="fileTreeArchiveToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="fileTreeArchiveToolStripMenuItem" Property="Text">
           <Source>Archive...</Source>
-          <Value />
+          <Value>Архивировать...</Value>
         </TranslationItem>
         <TranslationItem Name="fileTreeOpenContainingFolderToolStripMenuItem" Property="Text">
           <Source>Open containing folder</Source>
@@ -2084,15 +2078,13 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Local</Source>
           <Value>Локальные</Value>
         </TranslationItem>
-        <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text" type="unfinished">
+        <TranslationItem Name="manageRemoteRepositoriesToolStripMenuItem1" Property="Text">
           <Source>Remote repositories...</Source>
-          <OldSource>Manage remote repositories</OldSource>
-          <Value>Управление внешним репозиториями</Value>
+          <Value>Внешние репозитории...</Value>
         </TranslationItem>
-        <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="manageSubmodulesToolStripMenuItem" Property="Text">
           <Source>Submodules...</Source>
-          <OldSource>Manage submodules</OldSource>
-          <Value>Управление субмодулями</Value>
+          <Value>Субмодулями</Value>
         </TranslationItem>
         <TranslationItem Name="mergeBranchToolStripMenuItem" Property="Text">
           <Source>Merge branches...</Source>
@@ -2102,14 +2094,13 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Merge</Source>
           <Value>Объединить</Value>
         </TranslationItem>
-        <TranslationItem Name="navigateToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="navigateToolStripMenuItem" Property="Text">
           <Source>Navigate</Source>
-          <Value />
+          <Value>Навигация</Value>
         </TranslationItem>
-        <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="openContainingFolderToolStripMenuItem" Property="Text">
           <Source>Open containing folder(s)</Source>
-          <OldSource>Open containing folder</OldSource>
-          <Value>Открыть папку</Value>
+          <Value>Открыть папку(и)</Value>
         </TranslationItem>
         <TranslationItem Name="openFileToolStripMenuItem" Property="Text">
           <Source>Open this revision (temp file)</Source>
@@ -2149,7 +2140,7 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         </TranslationItem>
         <TranslationItem Name="pluginsToolStripMenuItem" Property="Text">
           <Source>Plugins</Source>
-          <Value>Модули</Value>
+          <Value>Плагины</Value>
         </TranslationItem>
         <TranslationItem Name="pullToolStripMenuItem" Property="Text" type="unfinished">
           <Source>Pull...</Source>
@@ -2187,17 +2178,17 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Remote</Source>
           <Value>Внешние репозитории</Value>
         </TranslationItem>
-        <TranslationItem Name="repoSettingsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="repoSettingsToolStripMenuItem" Property="Text">
           <Source>Repository settings</Source>
-          <Value />
+          <Value>Настройки репозитория</Value>
         </TranslationItem>
         <TranslationItem Name="reportAnIssueToolStripMenuItem" Property="Text">
           <Source>Report an issue</Source>
           <Value>Сообщить о проблеме</Value>
         </TranslationItem>
-        <TranslationItem Name="repositoryToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="repositoryToolStripMenuItem" Property="Text">
           <Source>Repository</Source>
-          <Value />
+          <Value>Репозиторий</Value>
         </TranslationItem>
         <TranslationItem Name="resetFileToAToolStripMenuItem" Property="Text">
           <Source>A</Source>
@@ -2267,9 +2258,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>Create tag...</Source>
           <Value>Создать метку...</Value>
         </TranslationItem>
-        <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText" type="unfinished">
+        <TranslationItem Name="toggleSplitViewLayout" Property="ToolTipText">
           <Source>Toggle split view layout</Source>
-          <Value />
+          <Value>Переключить раскладку разделения экрана</Value>
         </TranslationItem>
         <TranslationItem Name="toolStripButton1" Property="Text">
           <Source>Commit</Source>
@@ -2303,9 +2294,9 @@ Do you want to abort and remove it from the recent repositories list?</Source>
           <Source>X</Source>
           <Value>X</Value>
         </TranslationItem>
-        <TranslationItem Name="toolsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="toolsToolStripMenuItem" Property="Text">
           <Source>Tools</Source>
-          <Value />
+          <Value>Утилиты</Value>
         </TranslationItem>
         <TranslationItem Name="translateToolStripMenuItem" Property="Text">
           <Source>Translate</Source>
@@ -2330,10 +2321,6 @@ Do you want to abort and remove it from the recent repositories list?</Source>
         <TranslationItem Name="viewToolStripMenuItem" Property="Text" type="unfinished">
           <Source>View</Source>
           <Value>Показать</Value>
-        </TranslationItem>
-        <TranslationItem Name="goToToolStripMenuItem" Property="Text" type="obsolete">
-          <Source>Go to commit...</Source>
-          <Value>Перейти к коммиту...</Value>
         </TranslationItem>
         <TranslationItem Name="remotesToolStripMenuItem" Property="Text" type="obsolete">
           <Source>Remotes</Source>
@@ -2407,9 +2394,9 @@ Enter valid branch name or select predefined value.</Source>
           <Value>“{0}” неправильное имя ветви.
 Введите правильное имя ветви или выберите предопределенное.</Value>
         </TranslationItem>
-        <TranslationItem Name="_dontShowAgain" Property="Text" type="unfinished">
+        <TranslationItem Name="_dontShowAgain" Property="Text">
           <Source>Don't show me this message again.</Source>
-          <Value />
+          <Value>Не показывать это сообщение снова.</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Select branch</Source>
@@ -2459,10 +2446,9 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Checkout revision</Source>
           <Value>Получить ревизию</Value>
         </TranslationItem>
-        <TranslationItem Name="Force" Property="Text" type="unfinished">
+        <TranslationItem Name="Force" Property="Text">
           <Source>Force (reset local changes)</Source>
-          <OldSource>Force</OldSource>
-          <Value>Принудительно</Value>
+          <Value>Принудительно (сбросить локальные изменения)</Value>
         </TranslationItem>
         <TranslationItem Name="Ok" Property="Text">
           <Source>Checkout</Source>
@@ -2476,13 +2462,13 @@ Enter valid branch name or select predefined value.</Source>
           <Source>Checkout</Source>
           <Value>Забрать</Value>
         </TranslationItem>
-        <TranslationItem Name="label2" Property="Text" type="unfinished">
+        <TranslationItem Name="label2" Property="Text">
           <Source>Checkout this revision</Source>
-          <Value />
+          <Value>Забрать эту ревизию</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text" type="unfinished">
+        <TranslationItem Name="label3" Property="Text">
           <Source>or choose another one.</Source>
-          <Value />
+          <Value>или выберите другую.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -2780,10 +2766,9 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</Source>
           <Source>Commit</Source>
           <Value>Коммит</Value>
         </TranslationItem>
-        <TranslationItem Name="Reset" Property="Text" type="unfinished">
+        <TranslationItem Name="Reset" Property="Text">
           <Source>Reset all changes</Source>
-          <OldSource>Reset changes</OldSource>
-          <Value>Отменить изменения</Value>
+          <Value>Отменить все изменения</Value>
         </TranslationItem>
         <TranslationItem Name="SolveMergeconflicts" Property="Text">
           <Source>There are unresolved mergeconflicts
@@ -3138,9 +3123,9 @@ Do you want to continue?</Source>
           <Source>Stash submodule changes</Source>
           <Value>Stash изменений субмодуля</Value>
         </TranslationItem>
-        <TranslationItem Name="submoduleSummaryMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="submoduleSummaryMenuItem" Property="Text">
           <Source>View summary</Source>
-          <Value />
+          <Value>Просмотреть краткое описание</Value>
         </TranslationItem>
         <TranslationItem Name="toolAuthorLabelItem" Property="Text">
           <Source>Author: (Format: "name &lt;mail&gt;")</Source>
@@ -3256,9 +3241,9 @@ Choose 'No' to keep all new files.</Source>
           <Source>Commit template settings</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_emptyTemplate" Property="Text" type="unfinished">
+        <TranslationItem Name="_emptyTemplate" Property="Text">
           <Source>empty</Source>
-          <Value />
+          <Value>пусто</Value>
         </TranslationItem>
         <TranslationItem Name="buttonCancel" Property="Text">
           <Source>Cancel</Source>
@@ -3344,9 +3329,8 @@ Choose 'No' to keep all new files.</Source>
     </TranslationCategory>
     <TranslationCategory Name="FormCreateBranch">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Create branch</Source>
-          <OldSource>Create Branch</OldSource>
           <Value>Создать ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="CheckoutAfterCreate" Property="Text">
@@ -3361,9 +3345,9 @@ Choose 'No' to keep all new files.</Source>
           <Source>Create branch</Source>
           <Value>Создать ветвь</Value>
         </TranslationItem>
-        <TranslationItem Name="Orphan" Property="Text" type="unfinished">
+        <TranslationItem Name="Orphan" Property="Text">
           <Source>Create orphan</Source>
-          <Value />
+          <Value>Создать висячую ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="_branchNameIsEmpty" Property="Text">
           <Source>Enter branch name.</Source>
@@ -3377,9 +3361,9 @@ Choose 'No' to keep all new files.</Source>
           <Source>Select 1 revision to create the branch on.</Source>
           <Value>Выберите 1 ревизию для создания от неё ветви.</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox1" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox1" Property="Text">
           <Source>Orphan</Source>
-          <Value />
+          <Value>Висячая ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Branch name</Source>
@@ -3389,9 +3373,9 @@ Choose 'No' to keep all new files.</Source>
           <Source>Create branch at this revision</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text" type="unfinished">
+        <TranslationItem Name="label3" Property="Text">
           <Source>or choose another one.</Source>
-          <Value />
+          <Value>или выберите другую.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3441,17 +3425,13 @@ Choose 'No' to keep all new files.</Source>
           <Source>Create tag at this revision</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label4" Property="Text" type="unfinished">
+        <TranslationItem Name="label4" Property="Text">
           <Source>or choose another one.</Source>
-          <Value />
+          <Value>или выберите другую.</Value>
         </TranslationItem>
         <TranslationItem Name="pushTag" Property="Text">
           <Source>Push tag to '{0}'</Source>
           <Value>Push меток в {0}</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noTagMassage" Property="Text" type="obsolete">
-          <Source>Please enter a tag message</Source>
-          <Value>Введите сообщение метки</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -3710,9 +3690,9 @@ Click on the "Support this project" button to get more information about making 
     </TranslationCategory>
     <TranslationCategory Name="FormFixHome">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Home</Source>
-          <Value />
+          <Value>Дом</Value>
         </TranslationItem>
         <TranslationItem Name="_gitGlobalConfigNotFound" Property="Text" type="unfinished">
           <Source>The environment variable HOME does not point to a directory that contains the global git config file:
@@ -3855,9 +3835,9 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Body</Source>
           <Value>Тело</Value>
         </TranslationItem>
-        <TranslationItem Name="label3" Property="Text" type="unfinished">
+        <TranslationItem Name="label3" Property="Text">
           <Source>To</Source>
-          <Value />
+          <Value>Кому</Value>
         </TranslationItem>
         <TranslationItem Name="radioButton1" Property="Text" type="unfinished">
           <Source>Mail patches from</Source>
@@ -3963,25 +3943,25 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
           <Source>Publish change</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_selectBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="_selectBranch" Property="Text">
           <Source>Please enter a branch</Source>
-          <Value />
+          <Value>Пожалуйста введите ветвь</Value>
         </TranslationItem>
         <TranslationItem Name="_selectRemote" Property="Text" type="unfinished">
           <Source>Please select a remote repository</Source>
           <Value>Пожалуйста, выберите внешний репозиторий</Value>
         </TranslationItem>
-        <TranslationItem Name="labelBranch" Property="Text" type="unfinished">
+        <TranslationItem Name="labelBranch" Property="Text">
           <Source>Branch:</Source>
-          <Value />
+          <Value>Ветвь:</Value>
         </TranslationItem>
         <TranslationItem Name="labelRemote" Property="Text" type="unfinished">
           <Source>Remote:</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="labelTopic" Property="Text" type="unfinished">
+        <TranslationItem Name="labelTopic" Property="Text">
           <Source>Topic:</Source>
-          <Value />
+          <Value>Тема:</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4261,10 +4241,9 @@ defaultrebase=0</Source>
           <Source>Go to branch:</Source>
           <Value>Перейти к ветве:</Value>
         </TranslationItem>
-        <TranslationItem Name="linkGitRevParse" Property="Text" type="unfinished">
+        <TranslationItem Name="linkGitRevParse" Property="Text">
           <Source>More see git-rev-parse</Source>
-          <OldSource>More (git-rev-parse, section SPECIFYING REVISIONS)</OldSource>
-          <Value>Смотрите (git-rev-parse, раздел SPECIFYING REVISIONS)</Value>
+          <Value>Подробнее смотрите git-rev-parse</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -4544,9 +4523,9 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
           <Source>Manage</Source>
           <Value>Репозитории</Value>
         </TranslationItem>
-        <TranslationItem Name="AllTags" Property="Text" type="unfinished">
+        <TranslationItem Name="AllTags" Property="Text">
           <Source>Fetch all tags</Source>
-          <Value />
+          <Value>Забрать все теги</Value>
         </TranslationItem>
         <TranslationItem Name="AutoStash" Property="Text">
           <Source>Auto stash</Source>
@@ -4564,10 +4543,9 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
           <Source>Solve conflicts</Source>
           <Value>Решить конфликты</Value>
         </TranslationItem>
-        <TranslationItem Name="NoTags" Property="Text" type="unfinished">
+        <TranslationItem Name="NoTags" Property="Text">
           <Source>Fetch no tag</Source>
-          <OldSource>No tags</OldSource>
-          <Value>Без меток</Value>
+          <Value>Забрать без меток</Value>
         </TranslationItem>
         <TranslationItem Name="Pull" Property="Text" type="unfinished">
           <Source>&amp;Pull</Source>
@@ -4618,9 +4596,9 @@ Are you sure you want to rebase this merge?</Source>
           <Source>Rebase merge commit?</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="_dontShowAgain" Property="Text" type="unfinished">
+        <TranslationItem Name="_dontShowAgain" Property="Text">
           <Source>Don't show me this message again.</Source>
-          <Value />
+          <Value>Не показывать это сообщение снова.</Value>
         </TranslationItem>
         <TranslationItem Name="_fetchAllBranchesCanOnlyWithFetch" Property="Text" type="unfinished">
           <Source>You can only fetch all remote branches (*) without merge or rebase.
@@ -4696,9 +4674,9 @@ This will initialize and update all submodules recursive.</Source>
           <Source>Branch</Source>
           <Value>Ветвь</Value>
         </TranslationItem>
-        <TranslationItem Name="groupBox4" Property="Text" type="unfinished">
+        <TranslationItem Name="groupBox4" Property="Text">
           <Source>Tag options</Source>
-          <Value />
+          <Value>Настройки тегов</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text">
           <Source>Local branch</Source>
@@ -4802,29 +4780,29 @@ Are you sure you want to push this branch?</Source>
           <Source>Create pull request after push</Source>
           <Value>Создать pull request после push</Value>
         </TranslationItem>
-        <TranslationItem Name="_dontShowAgain" Property="Text" type="unfinished">
+        <TranslationItem Name="_dontShowAgain" Property="Text">
           <Source>Remember my decision.</Source>
-          <Value />
+          <Value>Запомнить мой выбор.</Value>
         </TranslationItem>
         <TranslationItem Name="_no" Property="Text">
           <Source>No</Source>
           <Value>Нет</Value>
         </TranslationItem>
-        <TranslationItem Name="_pullActionFetch" Property="Text" type="unfinished">
+        <TranslationItem Name="_pullActionFetch" Property="Text">
           <Source>fetch</Source>
-          <Value />
+          <Value>забрать</Value>
         </TranslationItem>
-        <TranslationItem Name="_pullActionMerge" Property="Text" type="unfinished">
+        <TranslationItem Name="_pullActionMerge" Property="Text">
           <Source>merge</Source>
-          <Value />
+          <Value>объединить</Value>
         </TranslationItem>
-        <TranslationItem Name="_pullActionNone" Property="Text" type="unfinished">
+        <TranslationItem Name="_pullActionNone" Property="Text">
           <Source>none</Source>
-          <Value />
+          <Value>нет</Value>
         </TranslationItem>
-        <TranslationItem Name="_pullActionRebase" Property="Text" type="unfinished">
+        <TranslationItem Name="_pullActionRebase" Property="Text">
           <Source>rebase</Source>
-          <Value />
+          <Value>перебазировать</Value>
         </TranslationItem>
         <TranslationItem Name="_pullRepository" Property="Text" type="unfinished">
           <Source>The push was rejected because the tip of your current branch is behind its remote counterpart. Merge the remote changes before pushing again.</Source>
@@ -5379,11 +5357,11 @@ Value has been reset to empty value.</Source>
           <Source>Cancel</Source>
           <Value>Отмена</Value>
         </TranslationItem>
-        <TranslationItem Name="Hard" Property="Text" type="unfinished">
+        <TranslationItem Name="Hard" Property="Text">
           <Source>Hard: reset working dir and index
 (discard ALL local changes, even uncommitted changes)</Source>
-          <OldSource>Hard: reset working dir and index (discard ALL local changes, even uncommitted changes)</OldSource>
-          <Value>Hard: отменить изменения в рабочей копии и в индексе (удалятся коммиты!)</Value>
+          <Value>Hard: отменить изменения в рабочей копии и в индексе
+(отмениить ВСЕ локальные изменения, даже незакомиченные)</Value>
         </TranslationItem>
         <TranslationItem Name="Mixed" Property="Text">
           <Source>Mixed: leave working dir untouched, reset index</Source>
@@ -5397,10 +5375,9 @@ Value has been reset to empty value.</Source>
           <Source>Soft: leave working dir and index untouched</Source>
           <Value>Soft: рабочую копию и индекс оставить без изменений</Value>
         </TranslationItem>
-        <TranslationItem Name="branchInfo" Property="Text" type="unfinished">
+        <TranslationItem Name="branchInfo" Property="Text">
           <Source>Reset branch '{0}' to revision:</Source>
-          <OldSource>Reset {0} to:</OldSource>
-          <Value>Сбросить {0} в:</Value>
+          <Value>Сбросить ветвь '{0}' к ревизие:</Value>
         </TranslationItem>
         <TranslationItem Name="groupBox1" Property="Text">
           <Source>Reset type</Source>
@@ -5757,11 +5734,11 @@ The merge conflict will not be marked as solved. Please try again.</Source>
           <Source>Merge</Source>
           <Value>Слияние</Value>
         </TranslationItem>
-        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text" type="unfinished">
+        <TranslationItem Name="mergeConflictIsSubmodule" Property="Text">
           <Source>The selected mergeconflict is a submodule.
 Stage current submodule commit?</Source>
-          <OldSource>The selected mergeconflict is a submodule. Mark conflict as resolved?</OldSource>
-          <Value>Выбранный конфликт - субмодуль. Отметить конфликт как разрешенный?</Value>
+          <Value>Выбранный конфликт - субмодуль.
+Stage текущий коммит убмодуля?</Value>
         </TranslationItem>
         <TranslationItem Name="mergeConflictIsSubmoduleCaption" Property="Text">
           <Source>Submodule</Source>
@@ -6081,9 +6058,9 @@ Therefore the Cancel button does NOT revert any changes made.</Source>
           <Source>Current working dir changes</Source>
           <Value>Изменения текущей рабочей директории</Value>
         </TranslationItem>
-        <TranslationItem Name="dontShowAgain" Property="Text" type="unfinished">
+        <TranslationItem Name="dontShowAgain" Property="Text">
           <Source>Don't show me this message again.</Source>
-          <Value />
+          <Value>Не показывать это сообщение снова.</Value>
         </TranslationItem>
         <TranslationItem Name="noStashes" Property="Text" type="unfinished">
           <Source>There are no stashes.</Source>
@@ -6736,10 +6713,9 @@ Context menu for additional operations</Source>
           <Source>Port</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="label23" Property="Text" type="unfinished">
+        <TranslationItem Name="label23" Property="Text">
           <Source>SMTP server name</Source>
-          <OldSource>SMTP server for sending patches by email</OldSource>
-          <Value>SMTP сервер для отправки патчей почтой</Value>
+          <Value>Имя SMTP сервера</Value>
         </TranslationItem>
         <TranslationItem Name="label24" Property="Text" type="unfinished">
           <Source>Revision grid quick search timeout [ms]</Source>
@@ -6928,9 +6904,9 @@ global settings.
           <Source>Clear image cache</Source>
           <Value>Очистить кеш картинок</Value>
         </TranslationItem>
-        <TranslationItem Name="extraLargeToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="extraLargeToolStripMenuItem" Property="Text">
           <Source>Extra Large (320x320)</Source>
-          <Value />
+          <Value>Очень крупный (320x320)</Value>
         </TranslationItem>
         <TranslationItem Name="identiconToolStripMenuItem" Property="Text">
           <Source>Identicon</Source>
@@ -6940,9 +6916,9 @@ global settings.
           <Source>Image size</Source>
           <Value>Размер картинки</Value>
         </TranslationItem>
-        <TranslationItem Name="largeToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="largeToolStripMenuItem" Property="Text">
           <Source>Large (240x240)</Source>
-          <Value />
+          <Value>Крупный (240x240)</Value>
         </TranslationItem>
         <TranslationItem Name="monsterIdToolStripMenuItem" Property="Text">
           <Source>Monster Id</Source>
@@ -6956,9 +6932,9 @@ global settings.
           <Source>None</Source>
           <Value>Нет</Value>
         </TranslationItem>
-        <TranslationItem Name="normalToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="normalToolStripMenuItem" Property="Text">
           <Source>Normal (160x160)</Source>
-          <Value />
+          <Value>Обычный (160x160)</Value>
         </TranslationItem>
         <TranslationItem Name="refreshToolStripMenuItem" Property="Text">
           <Source>Refresh image</Source>
@@ -6972,9 +6948,9 @@ global settings.
           <Source>Retro</Source>
           <Value>Ретро</Value>
         </TranslationItem>
-        <TranslationItem Name="smallToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="smallToolStripMenuItem" Property="Text">
           <Source>Small (80x80)</Source>
-          <Value />
+          <Value>Маленький (80x80)</Value>
         </TranslationItem>
         <TranslationItem Name="wavatarToolStripMenuItem" Property="Text">
           <Source>Wavatar</Source>
@@ -7149,9 +7125,9 @@ local settings.
     </TranslationCategory>
     <TranslationCategory Name="PluginSettingsPage">
       <translationItems>
-        <TranslationItem Name="labelNoSettings" Property="Text" type="unfinished">
+        <TranslationItem Name="labelNoSettings" Property="Text">
           <Source>There are no settings available for this plugin.</Source>
-          <Value />
+          <Value>Настройки не доступны для этого плагина.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7185,13 +7161,13 @@ local settings.
           <Source>Edit .gitignore</Source>
           <Value>Редактировать .gitignore</Value>
         </TranslationItem>
-        <TranslationItem Name="GotoChildCommit" Property="Text" type="unfinished">
+        <TranslationItem Name="GotoChildCommit" Property="Text">
           <Source>Go to child commit</Source>
-          <Value />
+          <Value>Перейти к дочернему коммиту</Value>
         </TranslationItem>
-        <TranslationItem Name="GotoParentCommit" Property="Text" type="unfinished">
+        <TranslationItem Name="GotoParentCommit" Property="Text">
           <Source>Go to parent commit</Source>
-          <Value />
+          <Value>Перейти к родительскому коммиту</Value>
         </TranslationItem>
         <TranslationItem Name="InitRepository" Property="Text">
           <Source>Initialize repository</Source>
@@ -7201,17 +7177,17 @@ local settings.
           <Source>Message</Source>
           <Value>Сообщение</Value>
         </TranslationItem>
-        <TranslationItem Name="NextQuickSearch" Property="Text" type="unfinished">
+        <TranslationItem Name="NextQuickSearch" Property="Text">
           <Source>Quick search next</Source>
-          <Value />
+          <Value>Быстрый поиск следующего</Value>
         </TranslationItem>
-        <TranslationItem Name="PrevQuickSearch" Property="Text" type="unfinished">
+        <TranslationItem Name="PrevQuickSearch" Property="Text">
           <Source>Quick search previous</Source>
-          <Value />
+          <Value>Быстрый поиск предыдущего</Value>
         </TranslationItem>
-        <TranslationItem Name="QuickSearch" Property="Text" type="unfinished">
+        <TranslationItem Name="QuickSearch" Property="Text">
           <Source>Quick search</Source>
-          <Value />
+          <Value>Быстрый поиск</Value>
         </TranslationItem>
         <TranslationItem Name="ShowAllBranches" Property="Text">
           <Source>Show all branches</Source>
@@ -7408,9 +7384,9 @@ If this is a central repository (bare repository without a working dir):
           <Source>Show revision graph</Source>
           <Value>Показать граф ревизий</Value>
         </TranslationItem>
-        <TranslationItem Name="showTagsToolStripMenuItem" Property="Text" type="unfinished">
+        <TranslationItem Name="showTagsToolStripMenuItem" Property="Text">
           <Source>Show tags</Source>
-          <Value />
+          <Value>Показывать теги</Value>
         </TranslationItem>
         <TranslationItem Name="squashCommitToolStripMenuItem" Property="Text">
           <Source>Squash commit</Source>
@@ -7533,13 +7509,11 @@ If this is a central repository (bare repository without a working dir):
 when all items are shown:</Source>
           <Value />
         </TranslationItem>
-        <TranslationItem Name="lblMenuEntries" Property="Text" type="unfinished">
+        <TranslationItem Name="lblMenuEntries" Property="Text">
           <Source>Select items to be shown in the cascaded context menu.
 (Unchecked items will be shown top level for direct access.)</Source>
-          <OldSource>Select items to be shown in
-the cascaded context menu:</OldSource>
-          <Value>Выбранные элементы будут отображаться
-во вложенном контекстном меню:</Value>
+          <Value>Выбранные элементы которые будут отображаться в выпадающем контекстном меню
+(сброшенные пункты будут показаны в верхнем уровне меню).</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
@@ -7614,10 +7588,9 @@ When OpenSSH is used, command line dialogs are shown!
     </TranslationCategory>
     <TranslationCategory Name="StartPageSettingsPage">
       <translationItems>
-        <TranslationItem Name="$this" Property="Text" type="unfinished">
+        <TranslationItem Name="$this" Property="Text">
           <Source>Plugins Settings</Source>
-          <OldSource>Start Page</OldSource>
-          <Value>Начальная страница</Value>
+          <Value>Настройки плагинов</Value>
         </TranslationItem>
         <TranslationItem Name="label1" Property="Text" type="unfinished">
           <Source>Select one of the subnodes to view or edit the settings of a Git Extensions Plugin.</Source>
@@ -7819,22 +7792,6 @@ Details: Is {1} expected {2}</Source>
         <TranslationItem Name="columnHeader4" Property="Text">
           <Source>Created</Source>
           <Value>Создано</Value>
-        </TranslationItem>
-      </translationItems>
-    </TranslationCategory>
-    <TranslationCategory Name="FormBranchSmall">
-      <translationItems>
-        <TranslationItem Name="_branchNameIsEmpty" Property="Text" type="obsolete">
-          <Source>Enter branch name.</Source>
-          <Value>Введите имя ветви.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_branchNameIsNotValud" Property="Text" type="obsolete">
-          <Source>“{0}” is not valid branch name.</Source>
-          <Value>«{0}» — недопустимое имя для ветви.</Value>
-        </TranslationItem>
-        <TranslationItem Name="_noRevisionSelected" Property="Text" type="obsolete">
-          <Source>Select 1 revision to create the branch on.</Source>
-          <Value>Выберите 1 ревизию для создания от неё ветви.</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
