@@ -24,8 +24,6 @@ namespace GitUI.CommandsDialogs.CommitDialog
             set { _text = value; }
         }
 
-        private const bool UseBinaryFormatter = true;
-
         public CommitTemplateItem(string name, string text)
         {
             Name = name;
@@ -74,27 +72,14 @@ namespace GitUI.CommandsDialogs.CommitDialog
             {
                 try
                 {
-                    Func<bool> fncUseBinaryFormatter = () => UseBinaryFormatter;
-                    if (fncUseBinaryFormatter())
-                    {
-                        int p = serializedString.IndexOf(':');
-                        int length = Convert.ToInt32(serializedString.Substring(0, p));
+                    int p = serializedString.IndexOf(':');
+                    int length = Convert.ToInt32(serializedString.Substring(0, p));
 
-                        byte[] memorydata = Convert.FromBase64String(serializedString.Substring(p + 1));
-                        using (MemoryStream rs = new MemoryStream(memorydata, 0, length))
-                        {
-                            BinaryFormatter sf = new BinaryFormatter() {Binder = new MoveNamespaceDeserializationBinder()};
-                            commitTemplateItem = (CommitTemplateItem[]) sf.Deserialize(rs);
-                        }
-                    }
-                    else
+                    byte[] memorydata = Convert.FromBase64String(serializedString.Substring(p + 1));
+                    using (MemoryStream rs = new MemoryStream(memorydata, 0, length))
                     {
-                        var serializer = new XmlSerializer(typeof (CommitTemplateItem[]));
-                        using (var stringReader = new StringReader(serializedString))
-                        {
-                            var xmlReader = new XmlTextReader(stringReader);
-                            commitTemplateItem = serializer.Deserialize(xmlReader) as CommitTemplateItem[];
-                        }
+                        BinaryFormatter sf = new BinaryFormatter() { Binder = new MoveNamespaceDeserializationBinder() };
+                        commitTemplateItem = (CommitTemplateItem[])sf.Deserialize(rs);
                     }
                     shouldBeUpdated = true;
                 }
