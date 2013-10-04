@@ -130,13 +130,13 @@ namespace GitUI.CommandsDialogs.CommitDialog
             var json = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T));
             var stream = new System.IO.MemoryStream();
             json.WriteObject(stream, myObject);
-            return System.Text.Encoding.Default.GetString(stream.ToArray());
+            return System.Text.Encoding.UTF8.GetString(stream.ToArray());
         }
 
         public static T Deserialize<T>(string myString)
         {
             var json = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T));
-            var stream = new System.IO.MemoryStream(System.Text.Encoding.Unicode.GetBytes(myString));
+            var stream = new System.IO.MemoryStream(System.Text.Encoding.UTF8.GetBytes(myString));
             return (T)json.ReadObject(stream);
         }
     }
