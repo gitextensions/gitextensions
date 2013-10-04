@@ -5363,7 +5363,7 @@ Value has been reset to empty value.</Source>
         </TranslationItem>
         <TranslationItem Name="tabPage2" Property="Text">
           <Source>Default pull behavior (fetch &amp; merge)</Source>
-          <Value>デフォルトのPullの振る舞い(Fetch &amp; Merge)</Value>
+          <Value>デフォルトのPullの振る舞い(Fetch &amp; マージ)</Value>
         </TranslationItem>
       </translationItems>
     </TranslationCategory>
