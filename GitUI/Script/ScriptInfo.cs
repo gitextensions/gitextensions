@@ -21,6 +21,7 @@ namespace GitUI.Script
         {
             _Icon = "bug";
             Enabled = true;
+            ShowProgress = true;
         }
 
         public bool Enabled { get; set; }
